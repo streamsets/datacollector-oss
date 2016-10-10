@@ -20,6 +20,7 @@
 
 package com.streamsets.pipeline.stage.origin.http;
 
+import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hasher;
@@ -51,6 +52,8 @@ import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -64,8 +67,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
 import static com.streamsets.pipeline.lib.parser.json.Errors.JSON_PARSER_00;
 
@@ -91,10 +97,12 @@ public class HttpClientSource extends BaseSource {
   private Hasher hasher;
 
   private AccessToken authToken;
+  private ClientBuilder clientBuilder;
   private Client client;
   private Response response;
   private int recordCount;
   private long lastRequestCompletedTime = -1;
+  private boolean lastRequestTimedOut = false;
 
   // Used for record id generation
   private String resolvedUrl;
@@ -114,6 +122,15 @@ public class HttpClientSource extends BaseSource {
   private Link next;
   private boolean haveMorePages;
   private DataParser parser = null;
+
+  private long backoffIntervalLinear = 0;
+  private long backoffIntervalExponential = 0;
+
+  private int lastStatus = 0;
+  private int retryCount = 0;
+
+  private Map<Integer, HttpResponseActionConfigBean> statusToActionConfigs = new HashMap<>();
+  private HttpResponseActionConfigBean timeoutActionConfig;
 
   /**
    * @param conf Configuration object for the HTTP client
@@ -145,6 +162,51 @@ public class HttpClientSource extends BaseSource {
     next = null;
     haveMorePages = false;
 
+    if (conf.responseStatusActionConfigs != null) {
+      final String cfgName = "conf.responseStatusActionConfigs";
+      final EnumSet<ResponseAction> backoffRetries = EnumSet.of(
+          ResponseAction.RETRY_EXPONENTIAL_BACKOFF,
+          ResponseAction.RETRY_LINEAR_BACKOFF
+      );
+
+      for (HttpResponseActionConfigBean actionConfig : conf.responseStatusActionConfigs) {
+        final HttpResponseActionConfigBean prevAction = statusToActionConfigs.put(
+            actionConfig.getStatusCode(),
+            actionConfig
+        );
+
+        if (prevAction != null) {
+          issues.add(
+            getContext().createConfigIssue(
+                Groups.HTTP.name(),
+                cfgName,
+                Errors.HTTP_17,
+                actionConfig.getStatusCode()
+            )
+          );
+        }
+        if (backoffRetries.contains(actionConfig.getAction()) && actionConfig.getBackoffInterval() <= 0) {
+          issues.add(
+            getContext().createConfigIssue(
+                Groups.HTTP.name(),
+                cfgName,
+                Errors.HTTP_15
+            )
+          );
+        }
+        if (actionConfig.getStatusCode() >= 200 && actionConfig.getStatusCode() < 300) {
+          issues.add(
+            getContext().createConfigIssue(
+                Groups.HTTP.name(),
+                cfgName,
+                Errors.HTTP_16
+            )
+          );
+        }
+      }
+    }
+    this.timeoutActionConfig = conf.responseTimeoutActionConfig;
+
     // Validation succeeded so configure the client.
     if (issues.isEmpty()) {
       configureClient();
@@ -164,7 +226,7 @@ public class HttpClientSource extends BaseSource {
         .property(ClientProperties.REQUEST_ENTITY_PROCESSING, conf.client.transferEncoding)
         .connectorProvider(new GrizzlyConnectorProvider());
 
-    ClientBuilder clientBuilder = ClientBuilder.newBuilder().withConfig(clientConfig);
+    clientBuilder = ClientBuilder.newBuilder().withConfig(clientConfig);
 
     configureAuth(clientBuilder);
 
@@ -192,9 +254,20 @@ public class HttpClientSource extends BaseSource {
     }
   }
 
+  private void reconnectClient() {
+    closeHttpResources();
+    client = clientBuilder.build();
+  }
+
   /** {@inheritDoc} */
   @Override
   public void destroy() {
+    closeHttpResources();
+    clientBuilder = null;
+    super.destroy();
+  }
+
+  private void closeHttpResources() {
     if (response != null) {
       response.close();
       response = null;
@@ -203,7 +276,6 @@ public class HttpClientSource extends BaseSource {
       client.close();
       client = null;
     }
-    super.destroy();
   }
 
   /** {@inheritDoc} */
@@ -239,7 +311,20 @@ public class HttpClientSource extends BaseSource {
         }
 
         makeRequest(target);
-        newSourceOffset = processResponse(start, chunksToFetch, batchMaker);
+        if (lastRequestTimedOut) {
+          LOG.warn(
+            String.format(
+              "HTTPClient timed out after waiting %d ms for response from server;" +
+              " reconnecting client and proceeding as per configured %s action",
+              conf.client.readTimeoutMillis,
+              conf.responseTimeoutActionConfig.getAction().name()
+            )
+          );
+          reconnectClient();
+          return nonTerminating(lastSourceOffset);
+        } else {
+          newSourceOffset = processResponse(start, chunksToFetch, batchMaker);
+        }
       } else if (conf.httpMode == HttpClientMode.BATCH) {
         // We are done.
         return null;
@@ -313,6 +398,7 @@ public class HttpClientSource extends BaseSource {
    * Helper method to construct an HTTP request and fetch a response.
    *
    * @param target the target url to fetch.
+   * @return true if the request timed out
    * @throws StageException if an unhandled error is encountered
    */
   private void makeRequest(WebTarget target) throws StageException {
@@ -323,16 +409,121 @@ public class HttpClientSource extends BaseSource {
         .property(OAuth1ClientSupport.OAUTH_PROPERTY_ACCESS_TOKEN, authToken)
         .headers(resolveHeaders());
 
-    if (conf.requestBody != null && !conf.requestBody.isEmpty() && conf.httpMethod != HttpMethod.GET) {
-      final String requestBody = bodyEval.eval(bodyVars, conf.requestBody, String.class);
-      hasher.putString(requestBody, Charset.forName(conf.dataFormatConfig.charset));
-      response = invocationBuilder.method(conf.httpMethod.getLabel(), Entity.json(requestBody));
-    } else {
-      response = invocationBuilder.method(conf.httpMethod.getLabel());
+    boolean keepRequesting = !getContext().isStopped();
+    while (keepRequesting) {
+      try {
+        if (conf.requestBody != null && !conf.requestBody.isEmpty() && conf.httpMethod != HttpMethod.GET) {
+          final String requestBody = bodyEval.eval(bodyVars, conf.requestBody, String.class);
+          hasher.putString(requestBody, Charset.forName(conf.dataFormatConfig.charset));
+          response = invocationBuilder.method(conf.httpMethod.getLabel(), Entity.json(requestBody));
+        } else {
+          response = invocationBuilder.method(conf.httpMethod.getLabel());
+        }
+
+        lastRequestTimedOut = false;
+        final int status = response.getStatus();
+        final boolean statusOk = status >= 200 && status < 300;
+        if (!statusOk && this.statusToActionConfigs.containsKey(status)) {
+          final HttpResponseActionConfigBean actionConf = this.statusToActionConfigs.get(status);
+          final boolean statusChanged = lastStatus != status || lastRequestTimedOut;
+
+          keepRequesting &= applyResponseAction(actionConf, statusChanged, new Function<Void, StageException>() {
+            @Nullable
+            @Override
+            public StageException apply(@Nullable Void input) {
+              return new StageException(Errors.HTTP_14, status, response.readEntity(String.class));
+            }
+          });
+
+        } else {
+          keepRequesting = false;
+          retryCount = 0;
+        }
+        lastStatus = status;
+      } catch (ProcessingException e) {
+        if (e.getCause() != null && e.getCause() instanceof TimeoutException) {
+          LOG.warn(
+            String.format(
+                "TimeoutException attempting to read response in HttpClientSource: %s",
+                e.getMessage()
+            ),
+          e);
+
+          // read timeout; consult configured action to decide on backoff and retry strategy
+          if (this.timeoutActionConfig != null) {
+            final HttpResponseActionConfigBean actionConf = this.timeoutActionConfig;
+
+            final boolean firstTimeout = !lastRequestTimedOut;
+
+            applyResponseAction(actionConf, firstTimeout, new Function<Void, StageException>() {
+              @Nullable
+              @Override
+              public StageException apply(@Nullable Void input) {
+                return new StageException(Errors.HTTP_18);
+              }
+            });
+
+          }
+
+          lastRequestTimedOut = true;
+          keepRequesting = false;
+        } else if (e.getCause() != null && e.getCause() instanceof InterruptedException) {
+          LOG.error(
+            String.format(
+                "InterruptedException attempting to make request in HttpClientSource; stopping: %s",
+                e.getMessage()
+            ),
+          e);
+          keepRequesting = false;
+        } else {
+          LOG.error(
+            String.format(
+                "ProcessingException attempting to make request in HttpClientSource: %s",
+                e.getMessage()
+            ),
+          e);
+        }
+      }
+      keepRequesting &= !getContext().isStopped();
     }
 
     // Calculate request parameter hash
     currentParameterHash = hasher.hash().toString();
+  }
+
+  private boolean applyResponseAction(
+      HttpResponseActionConfigBean actionConf,
+      boolean firstOccurence,
+      Function<Void, StageException> createConfiguredErrorFunction
+  ) throws StageException {
+    if (firstOccurence) {
+      retryCount = 0;
+    } else {
+      retryCount++;
+    }
+    if (actionConf.getMaxNumRetries() > 0 && retryCount > actionConf.getMaxNumRetries()) {
+      throw new StageException(Errors.HTTP_19, actionConf.getMaxNumRetries());
+    }
+
+    boolean uninterrupted = true;
+    final long backoff = actionConf.getBackoffInterval();
+    switch (actionConf.getAction()) {
+      case STAGE_ERROR:
+        throw createConfiguredErrorFunction.apply(null);
+      case RETRY_IMMEDIATELY:
+        break;
+      case RETRY_EXPONENTIAL_BACKOFF:
+        backoffIntervalExponential =
+            firstOccurence ? backoff : backoffIntervalExponential * 2;
+        uninterrupted = ThreadUtil.sleep(backoffIntervalExponential);
+        break;
+      case RETRY_LINEAR_BACKOFF:
+        backoffIntervalLinear =
+            firstOccurence ? backoff : backoffIntervalLinear + backoff;
+        uninterrupted = ThreadUtil.sleep(backoffIntervalLinear);
+        break;
+    }
+    return uninterrupted;
   }
 
   /**
@@ -342,11 +533,15 @@ public class HttpClientSource extends BaseSource {
    * @return true if we should make additional HTTP requests for this batch
    */
   private boolean shouldMakeRequest() {
+    final long now = System.currentTimeMillis();
+
     boolean shouldMakeRequest = lastRequestCompletedTime == -1;
+    shouldMakeRequest |= lastRequestTimedOut;
     shouldMakeRequest |= next != null;
     shouldMakeRequest |= (haveMorePages && conf.pagination.mode != PaginationMode.LINK_HEADER);
-    shouldMakeRequest |= System.currentTimeMillis() > lastRequestCompletedTime + conf.pollingInterval &&
+    shouldMakeRequest |= now > lastRequestCompletedTime + conf.pollingInterval &&
         conf.httpMode == HttpClientMode.POLLING;
+    shouldMakeRequest |= now > lastRequestCompletedTime && conf.httpMode == HttpClientMode.STREAMING;
 
     return shouldMakeRequest;
   }
@@ -565,6 +760,10 @@ public class HttpClientSource extends BaseSource {
       StageException {
     Optional<String> newSourceOffset = Optional.absent();
 
+    if (response == null) {
+      return newSourceOffset;
+    }
+
     // Response was not in the OK range, so treat as an error
     int status = response.getStatus();
     if (status < 200 || status >= 300) {
@@ -592,5 +791,9 @@ public class HttpClientSource extends BaseSource {
     }
 
     return newSourceOffset;
+  }
+
+  protected String nonTerminating(String sourceOffset) {
+    return sourceOffset == null ? "" : sourceOffset;
   }
 }

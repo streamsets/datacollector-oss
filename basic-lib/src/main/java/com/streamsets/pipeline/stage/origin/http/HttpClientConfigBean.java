@@ -23,6 +23,7 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
@@ -140,6 +141,21 @@ public class HttpClientConfigBean {
   )
   @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat = DataFormat.JSON;
+
+  @ConfigDef(
+          required = false,
+          type = ConfigDef.Type.MODEL,
+          label = "Per-Status Actions",
+          description = "List of actions to take for specific response statuses.",
+          displayPosition = 28,
+          group = "HTTP"
+  )
+  @ListBeanModel
+  public List<HttpStatusResponseActionConfigBean> responseStatusActionConfigs;
+
+  @ConfigDefBean(groups = "TIMEOUT")
+  public HttpTimeoutResponseActionConfigBean responseTimeoutActionConfig =
+          new HttpTimeoutResponseActionConfigBean(0, ResponseAction.RETRY_IMMEDIATELY);
 
   @ConfigDefBean(groups = "PAGINATION")
   public PaginationConfigBean pagination = new PaginationConfigBean();

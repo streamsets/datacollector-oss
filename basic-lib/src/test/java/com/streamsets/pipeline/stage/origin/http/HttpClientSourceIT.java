@@ -30,6 +30,7 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.http.AuthenticationType;
 import com.streamsets.pipeline.lib.http.HttpMethod;
+import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.testing.SingleForkNoReuseTest;
@@ -42,6 +43,7 @@ import org.glassfish.jersey.test.TestProperties;
 import org.glassfish.jersey.test.grizzly.GrizzlyWebTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -56,6 +58,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -71,25 +74,142 @@ import static org.junit.Assert.assertTrue;
 public class HttpClientSourceIT extends JerseyTest {
   static long DELAY = 1100;
 
+  private static final String NAMES_JSON = "{\"name\": \"adam\"}\r\n" +
+          "{\"name\": \"joe\"}\r\n" +
+          "{\"name\": \"sally\"}";
+  private static final String EMTPY_RESPONSE = "\n";
+  public static final String[] EXPECTED_NAMES = {"adam", "joe", "sally"};
+
+  private static final int STATUS_TEST_FAIL = 487, STATUS_SLOW_DOWN = 420;
+  private static long BASELINE_BACKOFF_MS = 100;
+  private static final long SLOW_STREAM_UNIT_TIME = BASELINE_BACKOFF_MS;
+  private static final int MAX_NUM_REQUEST_RETRIES = 100;
+
+  private static boolean generalStreamResponseSent = false;
+
+  private static Response entityOnlyOnFirstRequest(Object entity) {
+    return onlyOnFirstRequest(Response.ok(entity));
+  }
+
+  private static Response onlyOnFirstRequest(Response.ResponseBuilder responseBuilder) {
+    if (!generalStreamResponseSent) {
+      generalStreamResponseSent = true;
+      return responseBuilder.build();
+    } else {
+      return Response.ok().build();
+    }
+  }
+
   @Path("/stream")
   @Produces("application/json")
   public static class StreamResource {
+
     @GET
     public Response getStream() {
-      return Response.ok(
-          "{\"name\": \"adam\"}\r\n" +
-          "{\"name\": \"joe\"}\r\n" +
-          "{\"name\": \"sally\"}"
-      ).build();
+      return entityOnlyOnFirstRequest(NAMES_JSON);
+    }
+
+    private static final int NUM_SLOW_DOWN_RESPONSES = 3;
+    private static int linearReqNum = 0;
+    private static int expReqNum = 0;
+    private static long lastReqLinear = 0;
+    private static long lastReqExp = 0;
+
+    private static int slowStreamReqNum = 0;
+
+    private static final Response.ResponseBuilder SLOW_STREAM_KEEPALIVE_RESPONSE = Response.ok("\n");
+
+    @GET
+    @Path("/linear-backoff-ok")
+    public Response getNamesWithLinearBackoff() {
+      final long acceptableTime = BASELINE_BACKOFF_MS*linearReqNum;
+      final Response.ResponseBuilder resp = buildBackoffResponseHelper(linearReqNum++, lastReqLinear, acceptableTime);
+      lastReqLinear = System.currentTimeMillis();
+      return resp.build();
+    }
+
+    @GET
+    @Path("/exp-backoff-ok")
+    public Response getNamesWithExponentialBackoff() {
+      long acceptableTime = BASELINE_BACKOFF_MS;
+      for (int i=1; i<expReqNum; i++) {
+        acceptableTime*=2;
+      }
+      final Response.ResponseBuilder resp = buildBackoffResponseHelper(expReqNum++, lastReqExp, acceptableTime);
+      lastReqExp = System.currentTimeMillis();
+      return resp.build();
+    }
+
+    public Response.ResponseBuilder buildBackoffResponseHelper(int requestNum, long lastRequestTime, long acceptableTime) {
+      final long timeSinceLastReq = System.currentTimeMillis() - lastRequestTime;
+      if (timeSinceLastReq <= acceptableTime) {
+        return Response.status(STATUS_TEST_FAIL);
+      } else if (requestNum <= NUM_SLOW_DOWN_RESPONSES) {
+        return Response.status(STATUS_SLOW_DOWN);
+      } else {
+        return Response.ok(NAMES_JSON);
+      }
+    }
+
+
+    @GET
+    @Path("/slow-stream")
+    public Response getNamesWithSlowStream() {
+      /*
+          simulate the behavior described by the Twitter streaming API
+          https://dev.twitter.com/streaming/overview/connecting
+
+          1 unit = 100ms
+          server newline every 1 unit
+          client times out and reconnects after 3 units
+
+          the script will be
+          1. newline (empty batch)
+          2. newline (empty batch)
+          3. newline (empty batch)
+          4. no response
+          5. no response
+          6. no response (timeout: empty batch)
+          7. newline (empty batch)
+          8. data (names batch)
+
+
+       */
+
+      Response.ResponseBuilder resp = SLOW_STREAM_KEEPALIVE_RESPONSE;
+      switch (++slowStreamReqNum) {
+        case 1:
+          ThreadUtil.sleep(SLOW_STREAM_UNIT_TIME);
+          break;
+        case 2:
+          ThreadUtil.sleep(SLOW_STREAM_UNIT_TIME);
+          break;
+        case 3:
+          ThreadUtil.sleep(SLOW_STREAM_UNIT_TIME);
+          break;
+        case 4:
+          // make the client time out on this one
+          ThreadUtil.sleep(SLOW_STREAM_UNIT_TIME * 6);
+          break;
+        case 5:
+          ThreadUtil.sleep(SLOW_STREAM_UNIT_TIME);
+          break;
+        case 6:
+          resp = Response.ok(NAMES_JSON);
+          break;
+        default:
+          resp = Response.status(STATUS_TEST_FAIL);
+          break;
+      }
+      return resp.build();
     }
 
     @POST
     public Response postStream(String name) {
       Map<String, String> map = ImmutableMap.of("adam", "adam", "joe", "joe", "sally", "sally");
       String queriedName = map.get(name);
-      return Response.ok(
-          "{\"name\": \"" + queriedName + "\"}\r\n"
-      ).build();
+      final String entity = "{\"name\": \"" + queriedName + "\"}\r\n";
+      return entityOnlyOnFirstRequest(entity);
     }
   }
 
@@ -98,11 +218,10 @@ public class HttpClientSourceIT extends JerseyTest {
   public static class NewlineStreamResource {
     @GET
     public Response getStream() {
-      return Response.ok(
+      return entityOnlyOnFirstRequest(
           "{\"name\": \"adam\"}\n" +
           "{\"name\": \"joe\"}\n" +
-          "{\"name\": \"sally\"}"
-      ).build();
+          "{\"name\": \"sally\"}");
     }
   }
 
@@ -111,7 +230,7 @@ public class HttpClientSourceIT extends JerseyTest {
   public static class XmlStreamResource {
     @GET
     public Response getStream() {
-      return Response.ok(
+      return entityOnlyOnFirstRequest(
           "<root>" +
           "<record>" +
           "<name>adam</name>" +
@@ -123,7 +242,7 @@ public class HttpClientSourceIT extends JerseyTest {
           "<name>sally</name>" +
           "</record>" +
           "</root>"
-      ).build();
+      );
     }
   }
 
@@ -132,11 +251,11 @@ public class HttpClientSourceIT extends JerseyTest {
   public static class TextStreamResource {
     @GET
     public Response getStream() {
-      return Response.ok(
+      return entityOnlyOnFirstRequest(
           "adam\r\n" +
-              "joe\r\n" +
-              "sally"
-      ).build();
+          "joe\r\n" +
+          "sally"
+      );
     }
   }
   @Path("/slowstream")
@@ -145,11 +264,11 @@ public class HttpClientSourceIT extends JerseyTest {
     @GET
     public Response getStream() throws InterruptedException {
       Thread.sleep(DELAY);
-      return Response.ok(
+      return entityOnlyOnFirstRequest(
           "adam\r\n" +
               "joe\r\n" +
               "sally"
-      ).build();
+      );
     }
   }
 
@@ -161,11 +280,9 @@ public class HttpClientSourceIT extends JerseyTest {
       // This endpoint will fail if a magic header isnt included
       String headerValue = h.getRequestHeaders().getFirst("abcdef");
       assertNotNull(headerValue);
-      return Response.ok(
-          "{\"name\": \"adam\"}\r\n" +
-              "{\"name\": \"joe\"}\r\n" +
-              "{\"name\": \"sally\"}"
-      ).header("X-Test-Header", "StreamSets").header("X-List-Header", ImmutableList.of("a", "b")).build();
+      return onlyOnFirstRequest(Response.ok(
+              NAMES_JSON
+      ).header("X-Test-Header", "StreamSets").header("X-List-Header", ImmutableList.of("a", "b")));
     }
   }
 
@@ -177,11 +294,7 @@ public class HttpClientSourceIT extends JerseyTest {
       // This endpoint will fail if universal is used and expects preemptive auth (basic)
       String value = h.getRequestHeaders().getFirst("Authorization");
       assertNotNull(value);
-      return Response.ok(
-          "{\"name\": \"adam\"}\r\n" +
-              "{\"name\": \"joe\"}\r\n" +
-              "{\"name\": \"sally\"}"
-      ).build();
+      return entityOnlyOnFirstRequest(NAMES_JSON);
     }
   }
 
@@ -207,11 +320,7 @@ public class HttpClientSourceIT extends JerseyTest {
         assertTrue(requestCount > 1);
       }
 
-      return Response.ok(
-          "{\"name\": \"adam\"}\r\n" +
-              "{\"name\": \"joe\"}\r\n" +
-              "{\"name\": \"sally\"}"
-      ).build();
+      return entityOnlyOnFirstRequest(NAMES_JSON);
     }
   }
 
@@ -220,10 +329,10 @@ public class HttpClientSourceIT extends JerseyTest {
   public static class AlwaysUnauthorized {
     @GET
     public Response get() {
-      return Response
+      return onlyOnFirstRequest(Response
           .status(401)
           .header("WWW-Authenticate", "Basic realm=\"WallyWorld\"")
-          .build();
+      );
     }
   }
 
@@ -271,8 +380,19 @@ public class HttpClientSourceIT extends JerseyTest {
     ).build();
   }
 
+  @Before
+  public void resetServerStatus() {
+    generalStreamResponseSent = false;
+    StreamResource.slowStreamReqNum = 0;
+    StreamResource.linearReqNum = 0;
+    StreamResource.expReqNum = 0;
+    StreamResource.lastReqLinear = 0;
+    StreamResource.lastReqExp = 0;
+  }
+
   @Test
   public void testStreamingHttp() throws Exception {
+    DataFormat dataFormat = DataFormat.JSON;
     HttpClientConfigBean conf = new HttpClientConfigBean();
     conf.client.authType = AuthenticationType.NONE;
     conf.httpMode = HttpClientMode.STREAMING;
@@ -282,9 +402,26 @@ public class HttpClientSourceIT extends JerseyTest {
     conf.basic.maxWaitTime = 1000;
     conf.pollingInterval = 1000;
     conf.httpMethod = HttpMethod.GET;
-    conf.dataFormat = DataFormat.JSON;
+    conf.dataFormat = dataFormat;
     conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
 
+    runBatchAndAssertNames(dataFormat, conf);
+  }
+
+  private void runBatchAndAssertNames(DataFormat dataFormat, HttpClientConfigBean conf) throws StageException {
+    runBatchAndAssertNames(dataFormat, conf, EXPECTED_NAMES, false);
+  }
+
+  private void runBatchAndAssertNames(DataFormat dataFormat, HttpClientConfigBean conf, boolean delayStream) throws StageException {
+    runBatchAndAssertNames(dataFormat, conf, EXPECTED_NAMES, delayStream);
+  }
+
+  private void runBatchAndAssertNames(DataFormat dataFormat, HttpClientConfigBean conf, String[] expectedNames, boolean delayStream) throws StageException {
+    runBatchesAndAssertNames(dataFormat, conf, new String[][] {expectedNames}, delayStream);
+  }
+
+  private void runBatchesAndAssertNames(DataFormat dataFormat, HttpClientConfigBean conf, String[][] expectedNameBatches,
+      boolean delayStream) throws StageException {
     HttpClientSource origin = new HttpClientSource(conf);
 
     SourceRunner runner = new SourceRunner.Builder(HttpClientDSource.class, origin)
@@ -293,15 +430,25 @@ public class HttpClientSourceIT extends JerseyTest {
     runner.runInit();
 
     try {
-      List<Record> parsedRecords = getRecords(runner);
+      for (String[] expectedNames : expectedNameBatches) {
+        StageRunner.Output output = runner.runProduce(null, 1000);
+        Map<String, List<Record>> recordMap = output.getRecords();
+        List<Record> parsedRecords = new ArrayList<>(recordMap.get("lane"));
+        // Before SDC-4337, this would return nothing
+        if (delayStream) {
+          // Before SDC-4337, this would return records 2 and 3, record 1 would be lost
+          parsedRecords.addAll(getRecords(runner));
+        }
 
-      assertEquals(3, parsedRecords.size());
 
-      String[] names = { "adam", "joe", "sally" };
+        assertEquals(expectedNames.length, parsedRecords.size());
 
-      for (int i = 0; i < parsedRecords.size(); i++) {
-        assertTrue(parsedRecords.get(i).has("/name"));
-        assertEquals(names[i], extractValueFromRecord(parsedRecords.get(i), DataFormat.JSON));
+        for (int i = 0; i < parsedRecords.size(); i++) {
+          if (dataFormat == DataFormat.JSON || dataFormat == DataFormat.XML) {
+            assertTrue(parsedRecords.get(i).has("/name"));
+          }
+          assertEquals(expectedNames[i], extractValueFromRecord(parsedRecords.get(i), dataFormat));
+        }
       }
     } finally {
       runner.runDestroy();
@@ -361,28 +508,7 @@ public class HttpClientSourceIT extends JerseyTest {
     conf.dataFormat = DataFormat.JSON;
     conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
 
-    HttpClientSource origin = new HttpClientSource(conf);
-
-    SourceRunner runner = new SourceRunner.Builder(HttpClientDSource.class, origin)
-        .addOutputLane("lane")
-        .build();
-    runner.runInit();
-
-    try {
-      List<Record> parsedRecords = getRecords(runner);
-
-      assertEquals(3, parsedRecords.size());
-
-      String[] names = { "adam", "joe", "sally" };
-
-      for (int i = 0; i < parsedRecords.size(); i++) {
-        assertTrue(parsedRecords.get(i).has("/name"));
-        assertEquals(names[i], extractValueFromRecord(parsedRecords.get(i), DataFormat.JSON));
-      }
-    } finally {
-      runner.runDestroy();
-    }
-
+    runBatchAndAssertNames(DataFormat.JSON, conf);
   }
 
   @Test
@@ -398,27 +524,8 @@ public class HttpClientSourceIT extends JerseyTest {
     conf.httpMethod = HttpMethod.GET;
     conf.dataFormat = DataFormat.XML;
     conf.dataFormatConfig.xmlRecordElement = "record";
-    HttpClientSource origin = new HttpClientSource(conf);
 
-    SourceRunner runner = new SourceRunner.Builder(HttpClientDSource.class, origin)
-        .addOutputLane("lane")
-        .build();
-    runner.runInit();
-
-    try {
-      List<Record> parsedRecords = getRecords(runner);
-
-      assertEquals(3, parsedRecords.size());
-
-      String[] names = { "adam", "joe", "sally" };
-
-      for (int i = 0; i < parsedRecords.size(); i++) {
-        assertTrue(parsedRecords.get(i).has("/name"));
-        assertEquals(names[i], extractValueFromRecord(parsedRecords.get(i), DataFormat.XML));
-      }
-    } finally {
-      runner.runDestroy();
-    }
+    runBatchAndAssertNames(DataFormat.XML, conf);
   }
 
   @Test
@@ -444,32 +551,145 @@ public class HttpClientSourceIT extends JerseyTest {
     conf.pollingInterval = 1000;
     conf.httpMethod = HttpMethod.GET;
     conf.dataFormat = DataFormat.TEXT;
-    HttpClientSource origin = new HttpClientSource(conf);
 
-    SourceRunner runner = new SourceRunner.Builder(HttpClientDSource.class, origin)
-        .addOutputLane("lane")
-        .build();
-    runner.runInit();
+    runBatchAndAssertNames(DataFormat.TEXT, conf, delayStream);
+  }
 
+  @Test
+  public void testHttpWithLinearBackoff() throws Exception {
+    for (final HttpClientMode mode : HttpClientMode.values()) {
+      // this should work for all modes
+      HttpClientConfigBean conf = new HttpClientConfigBean();
+      conf.client.authType = AuthenticationType.NONE;
+      conf.httpMode = mode;
+      conf.resourceUrl = getBaseUri() + "stream/linear-backoff-ok";
+      conf.client.readTimeoutMillis = 0;
+      conf.basic.maxBatchSize = 3;
+      conf.basic.maxWaitTime = 10000;
+      conf.pollingInterval = 1000;
+      conf.httpMethod = HttpMethod.GET;
+      conf.dataFormat = DataFormat.JSON;
+      conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
 
-    try {
-      // Before SDC-4337, this would return nothing
-      List<Record> parsedRecords = new ArrayList<>(getRecords(runner));
-      if (delayStream) {
-        // Before SDC-4337, this would return records 2 and 3, record 1 would be lost
-        parsedRecords.addAll(getRecords(runner));
-      }
+      final HttpStatusResponseActionConfigBean linearBackoff = new HttpStatusResponseActionConfigBean(
+          STATUS_SLOW_DOWN,
+          MAX_NUM_REQUEST_RETRIES,
+          BASELINE_BACKOFF_MS,
+          ResponseAction.RETRY_LINEAR_BACKOFF
+      );
 
-      assertEquals(3, parsedRecords.size());
+      final HttpStatusResponseActionConfigBean failAction = new HttpStatusResponseActionConfigBean(
+          STATUS_TEST_FAIL,
+          MAX_NUM_REQUEST_RETRIES,
+          BASELINE_BACKOFF_MS,
+          ResponseAction.STAGE_ERROR
+      );
 
-      String[] names = { "adam", "joe", "sally" };
+      conf.responseStatusActionConfigs = new LinkedList<>();
+      conf.responseStatusActionConfigs.add(linearBackoff);
+      conf.responseStatusActionConfigs.add(failAction);
 
-      for (int i = 0; i < parsedRecords.size(); i++) {
-        assertEquals(names[i], extractValueFromRecord(parsedRecords.get(i), DataFormat.TEXT));
-      }
-    } finally {
-      runner.runDestroy();
+      runBatchAndAssertNames(DataFormat.JSON, conf);
+      resetServerStatus();
     }
+  }
+
+  @Test
+  public void testHttpWithExponentialBackoff() throws Exception {
+    for (final HttpClientMode mode : HttpClientMode.values()) {
+      // this should work for all modes
+      final HttpClientConfigBean conf = new HttpClientConfigBean();
+      conf.client.authType = AuthenticationType.NONE;
+      conf.httpMode = mode;
+      conf.resourceUrl = getBaseUri() + "stream/exp-backoff-ok";
+      conf.client.readTimeoutMillis = 0;
+      conf.basic.maxBatchSize = 3;
+      conf.basic.maxWaitTime = 10000;
+      conf.pollingInterval = 1000;
+      conf.httpMethod = HttpMethod.GET;
+      conf.dataFormat = DataFormat.JSON;
+      conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
+
+      final HttpStatusResponseActionConfigBean expBackoff = new HttpStatusResponseActionConfigBean(
+          STATUS_SLOW_DOWN,
+          MAX_NUM_REQUEST_RETRIES,
+          BASELINE_BACKOFF_MS,
+          ResponseAction.RETRY_EXPONENTIAL_BACKOFF
+      );
+
+      final HttpStatusResponseActionConfigBean failAction = new HttpStatusResponseActionConfigBean(
+          STATUS_TEST_FAIL,
+          MAX_NUM_REQUEST_RETRIES,
+          BASELINE_BACKOFF_MS,
+          ResponseAction.STAGE_ERROR
+      );
+
+      conf.responseStatusActionConfigs = new LinkedList<>();
+      conf.responseStatusActionConfigs.add(expBackoff);
+      conf.responseStatusActionConfigs.add(failAction);
+
+      runBatchAndAssertNames(DataFormat.JSON, conf);
+      resetServerStatus();
+    }
+  }
+
+
+
+  @Test
+  public void testGetNamesWithSlowStream() throws Exception {
+
+    HttpClientConfigBean conf = new HttpClientConfigBean();
+    conf.client.authType = AuthenticationType.NONE;
+    conf.httpMode = HttpClientMode.STREAMING;
+    conf.resourceUrl = getBaseUri() + "stream/slow-stream";
+    conf.client.readTimeoutMillis = (int)SLOW_STREAM_UNIT_TIME*3;
+    conf.basic.maxBatchSize = 3;
+    conf.basic.maxWaitTime = 10000;
+    conf.pollingInterval = 1000;
+    conf.httpMethod = HttpMethod.GET;
+    conf.dataFormat = DataFormat.JSON;
+    conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
+
+    final HttpStatusResponseActionConfigBean expBackoff = new HttpStatusResponseActionConfigBean(
+        STATUS_SLOW_DOWN,
+        MAX_NUM_REQUEST_RETRIES,
+        BASELINE_BACKOFF_MS,
+        ResponseAction.RETRY_EXPONENTIAL_BACKOFF
+    );
+
+    final HttpStatusResponseActionConfigBean failAction = new HttpStatusResponseActionConfigBean(
+        STATUS_TEST_FAIL,
+        MAX_NUM_REQUEST_RETRIES,
+        BASELINE_BACKOFF_MS,
+        ResponseAction.STAGE_ERROR
+    );
+
+    conf.responseStatusActionConfigs = new LinkedList<>();
+    conf.responseStatusActionConfigs.add(expBackoff);
+    conf.responseStatusActionConfigs.add(failAction);
+
+    conf.responseTimeoutActionConfig = new HttpTimeoutResponseActionConfigBean(0, ResponseAction.RETRY_IMMEDIATELY);
+
+    /*
+          1. newline (empty batch)
+          2. newline (empty batch)
+          3. newline (empty batch)
+          4. no response
+          5. no response
+          6. no response (clienet timeout; empty batch should be returned at this point)
+          7. newline (empty batch)
+          8. data (names batch)
+     */
+
+    runBatchesAndAssertNames(
+      DataFormat.JSON,
+      conf,
+      new String[][] {
+          new String[0],
+          EXPECTED_NAMES
+      },
+      false
+    );
   }
 
   private List<Record> getRecords(SourceRunner runner) throws StageException {
@@ -598,11 +818,9 @@ public class HttpClientSourceIT extends JerseyTest {
 
       assertEquals(3, parsedRecords.size());
 
-      String[] names = { "adam", "joe", "sally" };
-
       for (int i = 0; i < parsedRecords.size(); i++) {
         assertTrue(parsedRecords.get(i).has("/name"));
-        assertEquals(names[i], extractValueFromRecord(parsedRecords.get(i), DataFormat.JSON));
+        assertEquals(EXPECTED_NAMES[i], extractValueFromRecord(parsedRecords.get(i), DataFormat.JSON));
       }
     } finally {
       runner.runDestroy();
@@ -625,27 +843,7 @@ public class HttpClientSourceIT extends JerseyTest {
     conf.dataFormat = DataFormat.JSON;
     conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
 
-    HttpClientSource origin = new HttpClientSource(conf);
-
-    SourceRunner runner = new SourceRunner.Builder(HttpClientDSource.class, origin)
-        .addOutputLane("lane")
-        .build();
-    runner.runInit();
-
-    try {
-      List<Record> parsedRecords = getRecords(runner);
-
-      assertEquals(3, parsedRecords.size());
-
-      String[] names = { "adam", "joe", "sally" };
-
-      for (int i = 0; i < parsedRecords.size(); i++) {
-        assertTrue(parsedRecords.get(i).has("/name"));
-        assertEquals(names[i], extractValueFromRecord(parsedRecords.get(i), DataFormat.JSON));
-      }
-    } finally {
-      runner.runDestroy();
-    }
+    runBatchAndAssertNames(DataFormat.JSON, conf);
   }
 
   @Test
@@ -675,15 +873,13 @@ public class HttpClientSourceIT extends JerseyTest {
 
       assertEquals(3, parsedRecords.size());
 
-      String[] names = { "adam", "joe", "sally" };
-
       for (int i = 0; i < parsedRecords.size(); i++) {
         assertTrue(parsedRecords.get(i).has("/name"));
         // Grizzly is from some reason lower-casing the header attribute names. That is however correct as RFC 2616 clearly
         // states that header names are case-insensitive.
         assertEquals("StreamSets", parsedRecords.get(i).getHeader().getAttribute("x-test-header"));
         assertEquals("[a, b]", parsedRecords.get(i).getHeader().getAttribute("x-list-header"));
-        assertEquals(names[i], extractValueFromRecord(parsedRecords.get(i), DataFormat.JSON));
+        assertEquals(EXPECTED_NAMES[i], extractValueFromRecord(parsedRecords.get(i), DataFormat.JSON));
       }
     } finally {
       runner.runDestroy();

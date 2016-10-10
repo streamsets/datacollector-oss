@@ -38,6 +38,12 @@ public enum Errors implements ErrorCode {
   HTTP_11("Record already contains field {}, cannot write response header."),
   HTTP_12("Record does not contain result field path '{}'"),
   HTTP_13("Invalid Proxy URI. Reason : {}"),
+  HTTP_14("Failing stage as per configuration for status {}. Reason : {}"),
+  HTTP_15("When using backoff, base interval must be greater than 0"),
+  HTTP_16("Actions can only be configured for non-OK statuses (i.e. not in the [200,300) range)"),
+  HTTP_17("A particular status code can only be mapped to one action.  Code {} was mapped more than once."),
+  HTTP_18("Failing stage as per configuration for read timeout"),
+  HTTP_19("Failing stage because number of request retries exceeded configured maximum of {}"),
   ;
 
   private final String msg;

@@ -9,7 +9,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,28 +20,22 @@
 
 package com.streamsets.pipeline.stage.origin.http;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  HTTP("HTTP"),
-  PAGINATION("Pagination"),
-  CREDENTIALS("Credentials"),
-  PROXY("Proxy"),
-  SSL("SSL/TLS"),
-  DATA_FORMAT("Data Format"),
-  TIMEOUT("Timeout Handling"),
-  ;
+public enum ResponseAction implements Label {
+  RETRY_LINEAR_BACKOFF("Retry with linear backoff"),
+  RETRY_EXPONENTIAL_BACKOFF("Retry with exponential backoff"),
+  RETRY_IMMEDIATELY("Retry immediately"),
+  STAGE_ERROR("Cause the stage to fail");
 
   private final String label;
 
-  private Groups(String label) {
+  ResponseAction(String label) {
     this.label = label;
   }
 
   @Override
   public String getLabel() {
-    return this.label;
+    return label;
   }
 }

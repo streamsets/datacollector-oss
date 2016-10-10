@@ -40,6 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class TestHttpClientSourceUpgrader {
@@ -236,6 +237,31 @@ public class TestHttpClientSourceUpgrader {
     assertTrue(configValues.containsKey("conf.pagination.startAt"));
     assertTrue(configValues.containsKey("conf.pagination.resultFieldPath"));
     assertTrue(configValues.containsKey("conf.pagination.rateLimit"));
+  }
+
+  @Test
+  public void testV9ToV10() throws Exception {
+    List<Config> configs = new ArrayList<>();
+
+    HttpClientSourceUpgrader httpClientSourceUpgrader = new HttpClientSourceUpgrader();
+    httpClientSourceUpgrader.upgrade("a", "b", "c", 9, 10, configs);
+
+    Map<String, Object> configValues = getConfigsAsMap(configs);
+    assertTrue(configValues.containsKey("conf.responseStatusActionConfigs"));
+    assertEquals(HttpResponseActionConfigBean.DEFAULT_MAX_NUM_RETRIES,
+            configValues.get("conf.responseTimeoutActionConfig.maxNumRetries"));
+    assertEquals(HttpResponseActionConfigBean.DEFAULT_BACKOFF_INTERVAL_MS,
+            configValues.get("conf.responseTimeoutActionConfig.backoffInterval"));
+    assertEquals(HttpTimeoutResponseActionConfigBean.DEFAULT_ACTION,
+            configValues.get("conf.responseTimeoutActionConfig.action"));
+    List<Map<String, Object>> statusActions =
+            (List<Map<String, Object>>) configValues.get("conf.responseStatusActionConfigs");
+    Assert.assertEquals(1, statusActions.size());
+    Map<String, Object> defaultStatusAction = statusActions.get(0);
+    assertEquals(HttpResponseActionConfigBean.DEFAULT_MAX_NUM_RETRIES, defaultStatusAction.get("maxNumRetries"));
+    assertEquals(HttpResponseActionConfigBean.DEFAULT_BACKOFF_INTERVAL_MS, defaultStatusAction.get("backoffInterval"));
+    assertEquals(HttpStatusResponseActionConfigBean.DEFAULT_ACTION, defaultStatusAction.get("action"));
+    assertEquals(HttpStatusResponseActionConfigBean.DEFAULT_STATUS_CODE, defaultStatusAction.get("statusCode"));
   }
 
   private static Map<String, Object> getConfigsAsMap(List<Config> configs) {

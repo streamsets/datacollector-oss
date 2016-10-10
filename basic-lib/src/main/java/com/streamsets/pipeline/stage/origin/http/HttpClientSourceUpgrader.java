@@ -29,6 +29,7 @@ import com.streamsets.pipeline.lib.http.AuthenticationType;
 import com.streamsets.pipeline.lib.http.JerseyClientUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -93,6 +94,12 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
         // fall through
       case 8:
         upgradeV8ToV9(configs);
+        if (toVersion == 9) {
+          break;
+        }
+        // fall through
+      case 9:
+        upgradeV9ToV10(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -102,6 +109,25 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
 
   private static void upgradeV8ToV9(List<Config> configs) {
     DataFormatUpgradeHelper.upgradeAvroParserWithSchemaRegistrySupport(configs);
+  }
+
+  private static void upgradeV9ToV10(List<Config> configs) {
+    ArrayList<Map<String, Object>> statusActions = new ArrayList<>();
+    final Map<String, Object> defaultStatusAction = new HashMap<>();
+    defaultStatusAction.put("statusCode", HttpStatusResponseActionConfigBean.DEFAULT_STATUS_CODE);
+    defaultStatusAction.put("action", HttpStatusResponseActionConfigBean.DEFAULT_ACTION);
+    defaultStatusAction.put("backoffInterval",
+            HttpStatusResponseActionConfigBean.DEFAULT_BACKOFF_INTERVAL_MS);
+    defaultStatusAction.put("maxNumRetries",
+            HttpStatusResponseActionConfigBean.DEFAULT_MAX_NUM_RETRIES);
+    statusActions.add(defaultStatusAction);
+    configs.add(new Config("conf.responseStatusActionConfigs", statusActions));
+    configs.add(new Config(joiner.join(CONF, "responseTimeoutActionConfig", "action"),
+            HttpTimeoutResponseActionConfigBean.DEFAULT_ACTION));
+    configs.add(new Config(joiner.join(CONF, "responseTimeoutActionConfig", "backoffInterval"),
+            HttpResponseActionConfigBean.DEFAULT_BACKOFF_INTERVAL_MS));
+    configs.add(new Config(joiner.join(CONF, "responseTimeoutActionConfig", "maxNumRetries"),
+            HttpResponseActionConfigBean.DEFAULT_MAX_NUM_RETRIES));
   }
 
   private void upgradeV1ToV2(List<Config> configs) {

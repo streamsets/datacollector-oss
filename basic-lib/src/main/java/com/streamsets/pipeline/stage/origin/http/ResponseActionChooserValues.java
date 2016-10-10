@@ -9,7 +9,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,28 +20,15 @@
 
 package com.streamsets.pipeline.stage.origin.http;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  HTTP("HTTP"),
-  PAGINATION("Pagination"),
-  CREDENTIALS("Credentials"),
-  PROXY("Proxy"),
-  SSL("SSL/TLS"),
-  DATA_FORMAT("Data Format"),
-  TIMEOUT("Timeout Handling"),
-  ;
-
-  private final String label;
-
-  private Groups(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return this.label;
+public class ResponseActionChooserValues extends BaseEnumChooserValues<ResponseAction> {
+  public ResponseActionChooserValues() {
+    super(
+        ResponseAction.RETRY_LINEAR_BACKOFF,
+        ResponseAction.RETRY_EXPONENTIAL_BACKOFF,
+        ResponseAction.RETRY_IMMEDIATELY,
+        ResponseAction.STAGE_ERROR
+    );
   }
 }

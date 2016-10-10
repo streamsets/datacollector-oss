@@ -9,7 +9,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,31 +17,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.streamsets.pipeline.stage.origin.http;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ValueChooserModel;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  HTTP("HTTP"),
-  PAGINATION("Pagination"),
-  CREDENTIALS("Credentials"),
-  PROXY("Proxy"),
-  SSL("SSL/TLS"),
-  DATA_FORMAT("Data Format"),
-  TIMEOUT("Timeout Handling"),
-  ;
+public abstract class HttpResponseActionConfigBean {
 
-  private final String label;
+  public static final int DUMMY_STATUS = -1;
+  public static final long DEFAULT_BACKOFF_INTERVAL_MS = 1000;
+  public static final int DEFAULT_MAX_NUM_RETRIES = 10;
 
-  private Groups(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return this.label;
-  }
+  public abstract int getStatusCode();
+  public abstract long getBackoffInterval();
+  public abstract int getMaxNumRetries();
+  public abstract ResponseAction getAction();
 }
