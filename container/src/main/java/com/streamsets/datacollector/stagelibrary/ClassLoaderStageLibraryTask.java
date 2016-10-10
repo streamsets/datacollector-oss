@@ -298,7 +298,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
                 StageDefinition stage = StageDefinitionExtractor.get().
                     extract(libDef, klass, Utils.formatL("Library='{}'", libDef.getName()));
                 String key = createKey(libDef.getName(), stage.getName());
-                LOG.debug("Loaded stage '{}' (library:name)", key);
+                LOG.debug("Loaded stage '{}'  version {} (library:name)", key, stage.getVersion());
                 if (stagesInLibrary.containsKey(key)) {
                   throw new IllegalStateException(Utils.format(
                       "Library '{}' contains more than one definition for stage '{}', class '{}' and class '{}'",
