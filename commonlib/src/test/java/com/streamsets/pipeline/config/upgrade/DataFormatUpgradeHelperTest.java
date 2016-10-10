@@ -95,6 +95,27 @@ public class DataFormatUpgradeHelperTest {
     );
   }
 
+  @Test
+  public void upgradeAvroParserWithSchemaRegistrySupportWithoutSchemaInMessage() throws Exception {
+    List<Config> configs = new ArrayList<>();
+
+    configs.add(new Config(PERIOD.join(prefix, "avroSchema"), ""));
+
+    DataFormatUpgradeHelper.upgradeAvroParserWithSchemaRegistrySupport(configs);
+    assertEquals(OriginAvroSchemaSource.INLINE, findByName(configs, "avroSchemaSource").get().getValue());
+  }
+
+  @Test
+  public void upgradeAvroParserWithSchemaRegistrySupportWithSchemaInMessageSetToFalse() throws Exception {
+    List<Config> configs = new ArrayList<>();
+
+    configs.add(new Config(PERIOD.join(prefix, "avroSchemaInHeader"), false));
+    configs.add(new Config(PERIOD.join(prefix, "avroSchema"), ""));
+
+    DataFormatUpgradeHelper.upgradeAvroParserWithSchemaRegistrySupport(configs);
+    assertEquals(OriginAvroSchemaSource.INLINE, findByName(configs, "avroSchemaSource").get().getValue());
+  }
+
   private void checkConfig(List<Config> configs, String name, Class type) {
     Optional<Config> config = findByName(configs, name);
     assertTrue(config.isPresent());
