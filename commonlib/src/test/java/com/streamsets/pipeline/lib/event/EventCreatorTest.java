@@ -96,7 +96,7 @@ public class EventCreatorTest {
   @Before
   public void setUp() {
     context = mock(Stage.Context.class);
-    when(context.createEventRecord(anyString(), anyInt())).thenReturn(new CustomEventRecordImpl());
+    when(context.createEventRecord(anyString(), anyInt(), anyString())).thenReturn(new CustomEventRecordImpl());
 
     creator = new EventCreator.Builder("custom-event", 1)
       .withRequiredField("A")

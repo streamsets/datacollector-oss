@@ -25,6 +25,7 @@ import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.HashMap;
@@ -164,7 +165,8 @@ public class EventCreator {
       Preconditions.checkState(unknownFields.size() == 0, "There are unknown fields: " + StringUtils.join(unknownFields, ","));
 
       // And finally build the event itself
-      EventRecord event = context.createEventRecord(name, version);
+      String recordSourceId = Utils.format("event:{}:{}:{}", name, version, System.currentTimeMillis());
+      EventRecord event = context.createEventRecord(name, version, recordSourceId);
       event.set(Field.create(Field.Type.MAP, rootMap));
       return event;
     }

@@ -30,6 +30,7 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
@@ -139,7 +140,8 @@ public class HdfsMetadataExecutor extends BaseExecutor {
             }
 
             // Issue event with the final file name (e.g. the renamed one if applicable)
-            EventRecord event = getContext().createEventRecord("file-changed", 1);
+            String recordSourceId = Utils.format("event:{}:{}:{}", "event-target", 1, System.currentTimeMillis());
+            EventRecord event = getContext().createEventRecord("file-changed", 1, recordSourceId);
             event.set(Field.create(Field.Type.MAP, new ImmutableMap.Builder<String, Field>()
               .put("filepath", Field.create(Field.Type.STRING, workingFile.toString()))
               .build()

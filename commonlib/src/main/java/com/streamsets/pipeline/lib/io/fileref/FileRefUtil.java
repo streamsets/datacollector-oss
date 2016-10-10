@@ -32,7 +32,6 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ChecksumAlgorithm;
 import com.streamsets.pipeline.lib.event.EventCreator;
 import com.streamsets.pipeline.lib.generator.StreamCloseEventHandler;
-import com.streamsets.pipeline.lib.hashing.HashingUtil;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -197,7 +196,8 @@ public final class FileRefUtil {
   }
 
   public static EventRecord createAndInitWholeFileEventRecord(Stage.Context context) {
-    EventRecord wholeFileEventRecord = context.createEventRecord(WHOLE_FILE_WRITE_FINISH_EVENT, 1);
+    String recordSourceId = Utils.format("event:{}:{}:{}", WHOLE_FILE_WRITE_FINISH_EVENT, 1, System.currentTimeMillis());
+    EventRecord wholeFileEventRecord = context.createEventRecord(WHOLE_FILE_WRITE_FINISH_EVENT, 1, recordSourceId);
     Map<String, Field> fieldMap = new HashMap<>();
     fieldMap.put(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO, Field.create(Field.Type.MAP, new HashMap<String, Field>()));
     fieldMap.put(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO, Field.create(Field.Type.MAP, new HashMap<String, Field>()));

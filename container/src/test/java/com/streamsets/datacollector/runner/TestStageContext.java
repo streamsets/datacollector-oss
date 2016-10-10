@@ -25,18 +25,12 @@ import com.codahale.metrics.Meter;
 import com.codahale.metrics.Timer;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.icegreen.greenmail.util.GreenMail;
-import com.icegreen.greenmail.util.GreenMailUtil;
-import com.icegreen.greenmail.util.ServerSetup;
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.email.EmailException;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.record.EventRecordImpl;
 import com.streamsets.datacollector.record.RecordImpl;
-import com.streamsets.datacollector.runner.ErrorSink;
-import com.streamsets.datacollector.runner.StageContext;
 import com.streamsets.datacollector.util.Configuration;
-import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -44,14 +38,10 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -274,7 +264,7 @@ public class TestStageContext {
       new EmailSender(new Configuration())
     );
 
-    EventRecord event = context.createEventRecord("custom_type", 2);
+    EventRecord event = context.createEventRecord("custom_type", 2, "eventSourceId");
     Assert.assertNotNull(event);
     Assert.assertEquals("custom_type", event.getHeader().getAttribute(EventRecord.TYPE));
     Assert.assertEquals("2", event.getHeader().getAttribute(EventRecord.VERSION));

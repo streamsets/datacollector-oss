@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.FileRollMode;
 import com.streamsets.pipeline.config.PostProcessingOptions;
@@ -467,7 +468,9 @@ public class FileTailSource extends BaseSource {
         batchMaker.addRecord(metadataRecord, metadataLane);
 
         // We're also sending the same information on event lane
-        EventRecord eventRecord = getContext().createEventRecord(event.getAction().name(), 1);
+        String eventRecordSourceId =
+            Utils.format("event:{}:{}:{}", event.getAction().name(), 1, file.getPath().toString());
+        EventRecord eventRecord = getContext().createEventRecord(event.getAction().name(), 1, eventRecordSourceId);
         eventRecord.set(Field.create(map));
         getContext().toEvent(eventRecord);
       } catch (IOException ex) {

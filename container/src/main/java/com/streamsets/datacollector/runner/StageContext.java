@@ -431,8 +431,8 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   }
 
   @Override
-  public EventRecord createEventRecord(String type, int version) {
-    return new EventRecordImpl(type, version, instanceName, Utils.format("event:{}:{}:{}:{}", type, version, instanceName, System.currentTimeMillis()), null, null);
+  public EventRecord createEventRecord(String type, int version, String recordSourceId) {
+    return new EventRecordImpl(type, version, instanceName, recordSourceId, null, null);
   }
 
   @Override

@@ -621,7 +621,7 @@ public class TestProductionPipeline {
 
     @Override
     public void destroy() {
-      EventRecord event = getContext().createEventRecord("x", 1);
+      EventRecord event = getContext().createEventRecord("x", 1, "recordSourceId");
       event.set(Field.create("event"));
       getContext().toEvent(event);
     }

@@ -32,6 +32,7 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
@@ -165,7 +166,8 @@ public class MapReduceExecutor extends BaseExecutor {
 
       if(job != null) {
         // And generate event with further job details
-        EventRecord event = getContext().createEventRecord("job-created", 1);
+        String recordSourceId = Utils.format("event:{}:{}:{}", "job-created", 1, System.currentTimeMillis());
+        EventRecord event = getContext().createEventRecord("job-created", 1, recordSourceId);
         Map<String, Field> eventMap = ImmutableMap.of(
           "tracking-url", Field.create(job.getTrackingURL()),
           "job-id", Field.create(job.getJobID().toString())

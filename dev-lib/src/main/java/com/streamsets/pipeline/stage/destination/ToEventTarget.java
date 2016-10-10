@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.Iterator;
 
@@ -42,8 +43,10 @@ public class ToEventTarget extends BaseTarget {
   @Override
   public void write(Batch batch) throws StageException {
     Iterator<Record> it = batch.getRecords();
+    int counter = 1;
     while(it.hasNext()) {
-      EventRecord event = getContext().createEventRecord("event-target", 1);
+      String recordSourceId = Utils.format("event:{}:{}:{}", "event-target", 1, counter++);
+      EventRecord event = getContext().createEventRecord("event-target", 1, recordSourceId);
       event.set(it.next().get());
       getContext().toEvent(event);
     }

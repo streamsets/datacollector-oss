@@ -31,6 +31,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 
 import java.math.BigDecimal;
@@ -138,7 +139,8 @@ public class RandomDataGeneratorSource extends BaseSource {
     batchMaker.addRecord(record);
 
     if(generateEvents) {
-      EventRecord event = getContext().createEventRecord(EVENT_TYPE, EVENT_VERSION);
+      String recordSourceId = Utils.format("event:{}:{}:{}", EVENT_TYPE, EVENT_VERSION, batchOffset);
+      EventRecord event = getContext().createEventRecord(EVENT_TYPE, EVENT_VERSION, recordSourceId);
       fillRecord(event, map);
       getContext().toEvent(event);
     }

@@ -21,12 +21,19 @@ package com.streamsets.datacollector.record;
 
 import com.streamsets.pipeline.api.EventRecord;
 
-import java.util.Date;
-
 public class EventRecordImpl extends RecordImpl implements EventRecord {
 
-  public EventRecordImpl(String type, int version, String stageCreator, String recordSourceId, byte[] raw, String rawMime) {
+  public EventRecordImpl(
+      String type,
+      int version,
+      String stageCreator,
+      String recordSourceId,
+      byte[] raw,
+      String rawMime
+  ) {
     super(stageCreator, recordSourceId, raw, rawMime);
+    this.addStageToStagePath(stageCreator);
+    this.createTrackingId();
     setEventAtributes(type, version);
   }
 
