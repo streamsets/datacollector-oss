@@ -690,6 +690,13 @@
                         decimal data in Hive is 38.</note>
             </p>
             <p>
+                  <draft-comment author="Loretta">Using the following in Hive Metadata Processor >
+                        Hive Names and Supported Characters and in the Hive
+                        Metastore</draft-comment>
+            </p>
+            <p><ph id="HM-HiveNames">Hive table names, column names, and partition names are created
+                        with lowercase letters.</ph></p>
+            <p>
                   <draft-comment author="Loretta">D-HM-CreatesAndNot_Note , D-HM-CreatesAndNot_PH:
                         the following is used in a couple places.</draft-comment>
             </p>

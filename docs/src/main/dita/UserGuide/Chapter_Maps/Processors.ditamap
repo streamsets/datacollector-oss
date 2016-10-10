@@ -112,7 +112,9 @@
    </topicmeta>
    <topicref href="../Processors/HiveMeta-OutputStreams.dita"/>
    <topicref href="../Processors/HiveMeta-MRecordStageAtts.dita"/>
-   <topicref href="../Processors/HiveMeta-DBtablePartition.dita"/>
+   <topicref href="../Processors/HiveMeta-DBtablePartition.dita">
+    <topicref href="../Processors/HiveMeta-HiveNames.dita"/>
+   </topicref>
    <topicref href="../Processors/HiveMeta-DecimalFieldEx.dita"/>
    <topicref href="../Processors/HiveMeta-TimeBasis.dita"/>
    <topicref href="../Processors/HiveMeta-Cache.dita">
