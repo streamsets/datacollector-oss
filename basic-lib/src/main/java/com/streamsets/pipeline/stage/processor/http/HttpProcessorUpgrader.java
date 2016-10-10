@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
 import com.streamsets.pipeline.lib.http.JerseyClientUtil;
 
 import java.util.ArrayList;
@@ -56,6 +57,11 @@ public class HttpProcessorUpgrader implements StageUpgrader {
         // fall through
       case 3:
         upgradeV3ToV4(configs);
+        if (toVersion == 4) {
+          break;
+        }
+      case 4:
+        upgradeV4ToV5(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -86,5 +92,9 @@ public class HttpProcessorUpgrader implements StageUpgrader {
 
     configs.removeAll(configsToRemove);
     configs.addAll(configsToAdd);
+  }
+
+  private void upgradeV4ToV5(List<Config> configs) {
+    DataFormatUpgradeHelper.upgradeAvroParserWithSchemaRegistrySupport(configs);
   }
 }
