@@ -92,6 +92,8 @@ public class DataFormatUpgradeHelper {
     if (avroSchemaInHeader.isPresent()) {
       if ((boolean) avroSchemaInHeader.get().getValue()) {
         toAdd.add(new Config(PERIOD.join(prefix, "avroSchemaSource"), DestinationAvroSchemaSource.HEADER));
+      } else {
+        toAdd.add(new Config(PERIOD.join(prefix, "avroSchemaSource"), DestinationAvroSchemaSource.INLINE));
       }
       toRemove.add(avroSchemaInHeader.get());
     } else {
