@@ -53,16 +53,14 @@ public class MapRStreamsDTarget extends DTarget {
     KafkaTargetConfig kafkaConfigBean = new KafkaTargetConfig();
     kafkaConfigBean.dataFormat = maprStreamsTargetConfigBean.dataFormat;
     kafkaConfigBean.dataGeneratorFormatConfig = maprStreamsTargetConfigBean.dataGeneratorFormatConfig;
-
-    KafkaTargetConfig kafkaTargetConfig = new KafkaTargetConfig();
-    kafkaTargetConfig.kafkaProducerConfigs = maprStreamsTargetConfigBean.mapRStreamsTargetConfig.kafkaProducerConfigs;
-    kafkaTargetConfig.partition = maprStreamsTargetConfigBean.mapRStreamsTargetConfig.partition;
-    kafkaTargetConfig.partitionStrategy = maprStreamsTargetConfigBean.mapRStreamsTargetConfig.partitionStrategy;
-    kafkaTargetConfig.runtimeTopicResolution = maprStreamsTargetConfigBean.mapRStreamsTargetConfig.runtimeTopicResolution;
-    kafkaTargetConfig.singleMessagePerBatch = maprStreamsTargetConfigBean.mapRStreamsTargetConfig.singleMessagePerBatch;
-    kafkaTargetConfig.topic = maprStreamsTargetConfigBean.mapRStreamsTargetConfig.topic;
-    kafkaTargetConfig.topicExpression = maprStreamsTargetConfigBean.mapRStreamsTargetConfig.topicExpression;
-    kafkaTargetConfig.topicWhiteList = maprStreamsTargetConfigBean.mapRStreamsTargetConfig.topicWhiteList;
+    kafkaConfigBean.kafkaProducerConfigs = maprStreamsTargetConfigBean.mapRStreamsTargetConfig.kafkaProducerConfigs;
+    kafkaConfigBean.partition = maprStreamsTargetConfigBean.mapRStreamsTargetConfig.partition;
+    kafkaConfigBean.partitionStrategy = maprStreamsTargetConfigBean.mapRStreamsTargetConfig.partitionStrategy;
+    kafkaConfigBean.runtimeTopicResolution = maprStreamsTargetConfigBean.mapRStreamsTargetConfig.runtimeTopicResolution;
+    kafkaConfigBean.singleMessagePerBatch = maprStreamsTargetConfigBean.mapRStreamsTargetConfig.singleMessagePerBatch;
+    kafkaConfigBean.topic = maprStreamsTargetConfigBean.mapRStreamsTargetConfig.topic;
+    kafkaConfigBean.topicExpression = maprStreamsTargetConfigBean.mapRStreamsTargetConfig.topicExpression;
+    kafkaConfigBean.topicWhiteList = maprStreamsTargetConfigBean.mapRStreamsTargetConfig.topicWhiteList;
 
     return kafkaConfigBean;
   }
