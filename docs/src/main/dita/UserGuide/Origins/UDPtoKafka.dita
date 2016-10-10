@@ -27,10 +27,15 @@
         <p>If you need to process data before writing it to Kafka, need to write to a destination
             system other than Kafka, or if the origin does not need to process high volumes of data,
             use the UDP Source origin.</p>
-        <p>UDP to Kafka can read syslog messages, Netflow messages from NetFlow Version 5, and
-            collectd messages. When you configure UDP Source, you specify the UDP ports to use,
-            Kafka configuration information, and advanced properties such as the maximum number of
-            write requests.</p>
+        <p>UDP to Kafka <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/UDP-messagetypes"
+                /><ul
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/UDP-syslog"
+                id="ul_zwj_rm4_4x">
+                <li/>
+            </ul>When you configure UDP Source, you specify the UDP ports to use, Kafka
+            configuration information, and advanced properties such as the maximum number of write
+            requests.</p>
         <p>You can add Kafka configuration properties and enable Kafka security as needed. </p>
     </conbody>
 </concept>

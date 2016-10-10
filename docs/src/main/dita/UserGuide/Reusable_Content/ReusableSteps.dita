@@ -631,9 +631,16 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row
-                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-UDPdataformat">
-                                    <entry/>
+                                <row>
+                                    <entry>Data Format <xref href="../Origins/KConsumer-DataFormats.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_bmy_h8q_ds"
+                                        /></xref></entry>
+                                    <entry>Message type: <ul
+                                            conref="#task_kzs_5vz_sq/ul-UDPDataFormat"
+                                            id="ul_q1q_yp4_4x">
+                                            <li/>
+                                        </ul></entry>
                                 </row>
                                 <row>
                                     <entry
@@ -1830,8 +1837,9 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>O-UDPprops</uicontrol> - whole step
-                        used by UDP Source. Rows in this table by UDP to Kafka. Data Format is also
-                        used by Configuring the Kafka Consumer > Datagram step.</draft-comment>
+                        used by UDP Source. Rows in this table by UDP to Kafka. Data format
+                        bulletted list is also used by Configuring the Kafka Consumer > Datagram
+                        step.</draft-comment>
                 </cmd>
             </step>
             <step id="O-step-UDPprops">
@@ -1861,7 +1869,7 @@
                                 </row>
                                 <row id="row-UDPdataformat">
                                     <entry>Data Format</entry>
-                                    <entry>Data format passed by UDP:<ul id="ul_dfw_dqj_ks">
+                                    <entry>Data format passed by UDP:<ul id="ul-UDPDataFormat">
                                             <li>collectd</li>
                                             <li>NetFlow</li>
                                             <li>syslog </li>
