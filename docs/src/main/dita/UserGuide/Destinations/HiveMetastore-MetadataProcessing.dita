@@ -30,7 +30,13 @@
                                 a table, the destination checks Hive for the table. </li>
                             <li>If the table in the metadata record does not exist or differs from
                                 the Hive table, the destination creates or updates the table as
-                                needed. </li>
+                                needed. <p>
+                                    <note><ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HM-HiveNames"
+                                        /> For more information, see <xref
+                                            href="../Processors/HiveMeta-HiveNames.dita#concept_vt5_z5l_nx"
+                                        />.</note>
+                                </p></li>
                         </ol>
                     </dd>
                 </dlentry>

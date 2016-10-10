@@ -63,17 +63,23 @@
                                                 placement="inline" id="image_jwt_11l_gw"
                                         /></xref></entry>
                                     <entry>Name of the table to use. You can use an expression that
-                                        evaluates to a table name. </entry>
+                                        evaluates to a table name. <p>Note that Hive table names are
+                                            all lowercase.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Partition Column Name</entry>
-                                    <entry>Name of the partition column in the Hive table. </entry>
+                                    <entry>Name of the partition column in the Hive table. <p>Note
+                                            that Hive partition column names are all
+                                        lowercase.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Partition Value Type</entry>
                                     <entry>The data type of partition values. <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/P-HM-phPartitionDF"
-                                        /></entry>
+                                            /><p>Partition values should not include the following
+                                            characters: comma, slash (/), backslash (\), single and
+                                            double quotation marks, equals (=), and brackets ( []
+                                            ).</p></entry>
                                 </row>
                                 <row>
                                     <entry>Partition Value Expression <xref
