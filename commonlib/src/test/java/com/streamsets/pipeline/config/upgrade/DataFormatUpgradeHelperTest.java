@@ -62,6 +62,27 @@ public class DataFormatUpgradeHelperTest {
   }
 
   @Test
+  public void upgradeAvroParserWithSchemaRegistrySupportWithoutSchemaInMessage() throws Exception {
+    List<Config> configs = new ArrayList<>();
+
+    configs.add(new Config(PERIOD.join(prefix, "avroSchema"), ""));
+
+    DataFormatUpgradeHelper.upgradeAvroParserWithSchemaRegistrySupport(configs);
+    assertEquals(OriginAvroSchemaSource.SOURCE, findByName(configs, "avroSchemaSource").get().getValue());
+  }
+
+  @Test
+  public void upgradeAvroParserWithSchemaRegistrySupportWithSchemaInMessageSetToFalse() throws Exception {
+    List<Config> configs = new ArrayList<>();
+
+    configs.add(new Config(PERIOD.join(prefix, "avroSchemaInHeader"), false));
+    configs.add(new Config(PERIOD.join(prefix, "avroSchema"), ""));
+
+    DataFormatUpgradeHelper.upgradeAvroParserWithSchemaRegistrySupport(configs);
+    assertEquals(OriginAvroSchemaSource.SOURCE, findByName(configs, "avroSchemaSource").get().getValue());
+  }
+
+  @Test
   public void upgradeAvroGeneratorWithSchemaRegistrySupport() throws Exception {
     List<Config> configs = new ArrayList<>();
 
@@ -96,24 +117,24 @@ public class DataFormatUpgradeHelperTest {
   }
 
   @Test
-  public void upgradeAvroParserWithSchemaRegistrySupportWithoutSchemaInMessage() throws Exception {
+  public void upgradeAvroGeneratorWithSchemaRegistrySupportWithoutSchemaInMessage() throws Exception {
     List<Config> configs = new ArrayList<>();
 
     configs.add(new Config(PERIOD.join(prefix, "avroSchema"), ""));
 
-    DataFormatUpgradeHelper.upgradeAvroParserWithSchemaRegistrySupport(configs);
-    assertEquals(OriginAvroSchemaSource.INLINE, findByName(configs, "avroSchemaSource").get().getValue());
+    DataFormatUpgradeHelper.upgradeAvroGeneratorWithSchemaRegistrySupport(configs);
+    assertEquals(DestinationAvroSchemaSource.INLINE, findByName(configs, "avroSchemaSource").get().getValue());
   }
 
   @Test
-  public void upgradeAvroParserWithSchemaRegistrySupportWithSchemaInMessageSetToFalse() throws Exception {
+  public void upgradeAvroGeneratorWithSchemaRegistrySupportWithSchemaInMessageSetToFalse() throws Exception {
     List<Config> configs = new ArrayList<>();
 
     configs.add(new Config(PERIOD.join(prefix, "avroSchemaInHeader"), false));
     configs.add(new Config(PERIOD.join(prefix, "avroSchema"), ""));
 
-    DataFormatUpgradeHelper.upgradeAvroParserWithSchemaRegistrySupport(configs);
-    assertEquals(OriginAvroSchemaSource.INLINE, findByName(configs, "avroSchemaSource").get().getValue());
+    DataFormatUpgradeHelper.upgradeAvroGeneratorWithSchemaRegistrySupport(configs);
+    assertEquals(DestinationAvroSchemaSource.INLINE, findByName(configs, "avroSchemaSource").get().getValue());
   }
 
   private void checkConfig(List<Config> configs, String name, Class type) {

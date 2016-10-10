@@ -55,13 +55,18 @@ public class DataFormatUpgradeHelper {
     // schemaInMessage was removed and superseded by OriginAvroSchemaSource.SOURCE
     Optional<Config> schemaInMessage = findByName(configs, "schemaInMessage");
 
+    // This upgrader intentionally behaves differently then plain new stage on the canvas. On new stage user is forced
+    // to chose where is the Avro schema as this decision is no longer "simple". However for people who are upgrading
+    // we're making the same decision that they selected in the past.
     if (schemaInMessage.isPresent()) {
       if ((boolean) schemaInMessage.get().<Boolean>getValue()) {
         toAdd.add(new Config(PERIOD.join(prefix, "avroSchemaSource"), OriginAvroSchemaSource.SOURCE));
+      } else {
+        toAdd.add(new Config(PERIOD.join(prefix, "avroSchemaSource"), OriginAvroSchemaSource.INLINE));
       }
       toRemove.add(schemaInMessage.get());
     } else {
-      toAdd.add(new Config(PERIOD.join(prefix, "avroSchemaSource"), OriginAvroSchemaSource.INLINE));
+      toAdd.add(new Config(PERIOD.join(prefix, "avroSchemaSource"), OriginAvroSchemaSource.SOURCE));
     }
 
     // New configs added
