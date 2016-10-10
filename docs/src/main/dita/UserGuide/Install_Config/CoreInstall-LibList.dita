@@ -487,8 +487,14 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-stats-lib</entry>
-                            <entry>Includes the Static Lookup processor. Installs with the core
-                                installation. </entry>
+                            <entry>Installs automatically with the core installation.<p><ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"
+                                    /> (<ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                                    />) requires that the statistics stage library be installed on
+                                    each registered <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    />.</p></entry>
                         </row>
                     </tbody>
                 </tgroup>
