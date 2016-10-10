@@ -54,22 +54,28 @@ angular.module('dataCollectorApp.common')
 
       angular.forEach(batchData, function (stageOutput) {
         if(stageOutput.instanceName === stageInstance.instanceName) {
-
           angular.forEach(stageOutput.output, function(outputs, laneName) {
             angular.forEach(outputs, function(output) {
               output.laneName = laneName;
               stagePreviewData.output.push(output);
             });
           });
-
           stagePreviewData.errorRecords = stageOutput.errorRecords;
           stagePreviewData.stageErrors = stageOutput.stageErrors;
+          stagePreviewData.eventRecords = stageOutput.eventRecords;
+        } else if (stageOutput.eventRecords && stageOutput.i) {
+
         }
 
         if(stageOutput.output && stageInstance.inputLanes && stageInstance.inputLanes.length) {
           angular.forEach(stageInstance.inputLanes, function(inputLane) {
             if(stageOutput.output[inputLane]) {
               angular.forEach(stageOutput.output[inputLane], function(input) {
+                input.laneName = inputLane;
+                stagePreviewData.input.push(input);
+              });
+            } else if (inputLane === stageOutput.instanceName + '_EventLane')  {
+              angular.forEach(stageOutput.eventRecords, function(input) {
                 input.laneName = inputLane;
                 stagePreviewData.input.push(input);
               });

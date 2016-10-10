@@ -36,7 +36,6 @@
       </td>
 
       <td>
-
         <table class="table preview-table">
           <tbody>
           <tr ng-repeat="record in stagePreviewData.output">
@@ -58,9 +57,23 @@
               </record-tree>
             </td>
           </tr>
+
+          <tr ng-repeat="record in stagePreviewData.eventRecords">
+            <td>
+              <record-tree
+                record="record"
+                record-value="record.value"
+                field-name="('global.form.eventRecord' | translate)+($index+1)"
+                is-root="true"
+                editable="previewMode"
+                show-header="snapshotMode || pipelineConfig.uiInfo.previewConfig.showHeader"
+                show-field-type="snapshotMode || pipelineConfig.uiInfo.previewConfig.showFieldType">
+              </record-tree>
+            </td>
+          </tr>
+
           </tbody>
         </table>
-
       </td>
     </tr>
 

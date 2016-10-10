@@ -581,9 +581,7 @@ angular
         console.log($scope.producingEventsConfig);
         if ($scope.producingEventsConfig.value && $scope.detailPaneConfigDefn.producingEvents &&
           (!$scope.detailPaneConfig.eventLanes || $scope.detailPaneConfig.eventLanes.length === 0)) {
-          $scope.detailPaneConfig.eventLanes = [
-            $scope.detailPaneConfigDefn.instanceName + 'EventLane' + (new Date()).getTime()
-          ];
+          $scope.detailPaneConfig.eventLanes = [$scope.detailPaneConfig.instanceName + '_EventLane'];
         } else if (!$scope.producingEventsConfig.value) {
           if ($scope.detailPaneConfig.eventLanes && $scope.detailPaneConfig.eventLanes.length) {
             var eventLane = $scope.detailPaneConfig.eventLanes[0];
