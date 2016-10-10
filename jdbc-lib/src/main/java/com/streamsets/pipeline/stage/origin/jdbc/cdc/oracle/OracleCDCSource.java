@@ -214,7 +214,7 @@ public class OracleCDCSource extends BaseSource {
           dateChanges = connection.prepareStatement( // NOSONAR -- sonar thinks this is not closed, while it is.
               Utils.format(baseLogEntriesSql,
                   "COMMIT_TIMESTAMP >= TO_DATE('" + configBean.startDate + "', 'DD-MM-YYYY HH24:MI:SS')"));
-          LOG.info(Utils.format(baseLogEntriesSql, "COMMIT_TIMESTAMP >= " +
+          LOG.debug(Utils.format(baseLogEntriesSql, "COMMIT_TIMESTAMP >= " +
               "TO_DATE('" + configBean.startDate + "', 'DD-MM-YYYY HH24:MI:SS')"));
           selectChanges = dateChanges;
         } else {
@@ -466,6 +466,8 @@ public class OracleCDCSource extends BaseSource {
         table = table.trim();
         if (!configBean.baseConfigBean.caseSensitive) {
           tables.add(table.toUpperCase());
+        } else {
+          tables.add(table);
         }
       }
       validateTablePresence(reusedStatement, tables, issues);
@@ -610,7 +612,7 @@ public class OracleCDCSource extends BaseSource {
         throw new SQLException("Missing SCN");
       }
       BigDecimal scn = rs.getBigDecimal(1);
-      LOG.info("Current latest SCN is: " + scn.toPlainString());
+      LOG.debug("Current latest SCN is: " + scn.toPlainString());
       return scn;
     }
   }
@@ -618,7 +620,7 @@ public class OracleCDCSource extends BaseSource {
   private void validateTablePresence(Statement statement, List<String> tables, List<ConfigIssue> issues) {
     for (String table : tables) {
       try {
-        statement.execute("SELECT * FROM " + configBean.baseConfigBean.database + "." + table + " WHERE 1 = 0");
+        statement.execute("SELECT * FROM \"" + configBean.baseConfigBean.database + "\".\"" + table + "\" WHERE 1 = 0");
       } catch (SQLException ex) {
         StringBuilder sb = new StringBuilder("Table: ").append(table).append(" does not exist.");
         if (StringUtils.isEmpty(configBean.pdb)) {
@@ -632,7 +634,7 @@ public class OracleCDCSource extends BaseSource {
 
   private Map<String, Integer> getTableSchema(String tableName) throws SQLException {
     Map<String, Integer> columns = new HashMap<>();
-    String query = "SELECT * FROM " + configBean.baseConfigBean.database + "." + tableName + " WHERE 1 = 0";
+    String query = "SELECT * FROM \"" + configBean.baseConfigBean.database + "\".\"" + tableName + "\" WHERE 1 = 0";
     try(Statement schemaStatement = connection.createStatement();
         ResultSet rs = schemaStatement.executeQuery(query)) {
       ResultSetMetaData md = rs.getMetaData();
