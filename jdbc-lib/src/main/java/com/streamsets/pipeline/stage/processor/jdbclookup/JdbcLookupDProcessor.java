@@ -32,14 +32,16 @@ import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnMapping;
 import com.streamsets.pipeline.stage.destination.jdbc.Groups;
+import com.streamsets.pipeline.stage.processor.kv.CacheConfig;
 
 import java.util.List;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "JDBC Lookup",
     description = "Lookup values via JDBC to enrich records.",
     icon = "rdbms.png",
+    upgrader = JdbcLookupProcessorUpgrader.class,
     onlineHelpRefUrl = "index.html#Processors/JDBCLookup.html#task_kbr_2cy_hw"
 )
 @ConfigGroups(Groups.class)
@@ -94,6 +96,9 @@ public class JdbcLookupDProcessor extends DProcessor {
   @ConfigDefBean()
   public HikariPoolConfigBean hikariConfigBean;
 
+  @ConfigDefBean(groups = "JDBC")
+  public CacheConfig cacheConfig = new CacheConfig();
+
   @Override
   protected Processor createProcessor() {
     return new JdbcLookupProcessor(
@@ -101,7 +106,8 @@ public class JdbcLookupDProcessor extends DProcessor {
         columnMappings,
         maxClobSize,
         maxBlobSize,
-        hikariConfigBean
+        hikariConfigBean,
+        cacheConfig
     );
   }
 }
