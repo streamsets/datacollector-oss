@@ -50,7 +50,7 @@
                 </tgroup>
             </table></p>
         <p>
-            <note>When a table, parition or column name associated with a record includes
+            <note>When a table, partition or column name associated with a record includes
                 unsupported characters or an invalid format, the processor sends the record to
                 error.</note>
         </p>
