@@ -654,8 +654,10 @@ public class HttpClientSourceIT extends JerseyTest {
 
       for (int i = 0; i < parsedRecords.size(); i++) {
         assertTrue(parsedRecords.get(i).has("/name"));
-        assertEquals("StreamSets", parsedRecords.get(i).getHeader().getAttribute("X-Test-Header"));
-        assertEquals("[a, b]", parsedRecords.get(i).getHeader().getAttribute("X-List-Header"));
+        // Grizzly is from some reason lower-casing the header attribute names. That is however correct as RFC 2616 clearly
+        // states that header names are case-insensitive.
+        assertEquals("StreamSets", parsedRecords.get(i).getHeader().getAttribute("x-test-header"));
+        assertEquals("[a, b]", parsedRecords.get(i).getHeader().getAttribute("x-list-header"));
         assertEquals(names[i], extractValueFromRecord(parsedRecords.get(i), DataFormat.JSON));
       }
     } finally {
