@@ -40,10 +40,19 @@
             system other than Kafka, or if the origin does not need to process high volumes of data,
             use the UDP Source origin.</p>
 
-        <p class="p">UDP to Kafka can read syslog messages, Netflow messages from NetFlow Version 5, and
-            collectd messages. When you configure UDP Source, you specify the UDP ports to use,
-            Kafka configuration information, and advanced properties such as the maximum number of
-            write requests.</p>
+        <div class="p">UDP to Kafka <span class="ph">can read collectd messages, Netflow messages from NetFlow
+                        Version 5, and the following types of syslog messages:</span><ul class="ul" id="concept_jzq_jcz_pw__ul_zwj_rm4_4x">
+                        <li class="li">RFC 5424 (<a class="xref" href="https://tools.ietf.org/html/rfc5424" target="_blank">https://tools.ietf.org/html/rfc5424</a>)</li>
+
+                        <li class="li">RFC 3164 (<a class="xref" href="https://tools.ietf.org/html/rfc3164" target="_blank">https://tools.ietf.org/html/rfc3164</a>)</li>
+
+                        <li class="li">Non-standard common messages, such as RFC 3339 dates with no version
+                              digit</li>
+
+                  </ul>
+When you configure UDP Source, you specify the UDP ports to use, Kafka
+            configuration information, and advanced properties such as the maximum number of write
+            requests.</div>
 
         <p class="p">You can add Kafka configuration properties and enable Kafka security as needed. </p>
 
@@ -86,7 +95,7 @@
             as necessary.</p>
 
         <div class="note note"><span class="notetitle">Note:</span> Because the stage uses several configuration properties, it ignores
-                user-defined values for the following properties:<ul class="ul" id="concept_owg_1hc_rw__d23028e36">
+                user-defined values for the following properties:<ul class="ul" id="concept_owg_1hc_rw__d23163e36">
                     <li class="li">key.serializer.class</li>
 
                     <li class="li">metadata.broker.list</li>
@@ -127,11 +136,11 @@
             origin to use SSL to connect to <span class="ph">Kafka 0.9.0.0</span>. </p>
 
         <div class="p">
-            <ol class="ol" id="concept_wb5_sxc_rw__d20105e27">
+            <ol class="ol" id="concept_wb5_sxc_rw__d20240e27">
                 <li class="li">To use SSL to connect, first make sure Kafka is configured for SSL as described
                     in the Kafka documentation: <a class="xref" href="http://kafka.apache.org/documentation.html#security_ssl" target="_blank">http://kafka.apache.org/documentation.html#security_ssl</a>. </li>
 
-                <li class="li" id="concept_wb5_sxc_rw__d20105e34">On the <span class="ph uicontrol">General</span> tab of the stage, set
+                <li class="li" id="concept_wb5_sxc_rw__d20240e34">On the <span class="ph uicontrol">General</span> tab of the stage, set
                     the <span class="ph uicontrol">Stage Library</span> property to <span class="ph uicontrol">Apache Kafka
                         0.9.0.0</span>.</li>
 
@@ -139,8 +148,8 @@
                         <span class="ph uicontrol">security.protocol</span> Kafka configuration property and
                     set it to <span class="ph uicontrol">SSL</span>.</li>
 
-                <li class="li" id="concept_wb5_sxc_rw__d20105e58">Then, add the following SSL Kafka configuration
-                        properties:<ul class="ul" id="concept_wb5_sxc_rw__d20105e60">
+                <li class="li" id="concept_wb5_sxc_rw__d20240e58">Then, add the following SSL Kafka configuration
+                        properties:<ul class="ul" id="concept_wb5_sxc_rw__d20240e60">
                         <li class="li">ssl.truststore.location</li>
 
                         <li class="li">ssl.truststore.password</li>
@@ -148,7 +157,7 @@
                     </ul>
 <div class="p">When the Kafka broker requires client authentication - when the
                         ssl.client.auth broker property is set to "required" - add and configure the
-                        following properties: <ul class="ul" id="concept_wb5_sxc_rw__d20105e70">
+                        following properties: <ul class="ul" id="concept_wb5_sxc_rw__d20240e70">
                             <li class="li">ssl.keystore.location</li>
 
                             <li class="li">ssl.keystore.password</li>
@@ -158,7 +167,7 @@
                         </ul>
 </div>
 <div class="p">Some brokers might require adding the following properties as
-                            well:<ul class="ul" id="concept_wb5_sxc_rw__d20105e83">
+                            well:<ul class="ul" id="concept_wb5_sxc_rw__d20240e83">
                             <li class="li">ssl.enabled.protocols</li>
 
                             <li class="li">ssl.truststore.type</li>
@@ -199,7 +208,7 @@
                 <li class="li">To use Kerberos, first make sure Kafka is configured for Kerberos as described
                     in the Kafka documentation: <a class="xref" href="http://kafka.apache.org/documentation.html#security_sasl" target="_blank">http://kafka.apache.org/documentation.html#security_sasl</a>.</li>
 
-                <li class="li" id="concept_xyx_mtd_rw__d20020e46">In the <span class="ph">Data
+                <li class="li" id="concept_xyx_mtd_rw__d20155e46">In the <span class="ph">Data
                   Collector</span>
                     configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>, make sure the
                     following Kerberos properties are configured: <ul class="ul" id="concept_xyx_mtd_rw__ul_epq_gbd_rw">
@@ -219,7 +228,7 @@
                         <span class="ph uicontrol">security.protocol</span> Kafka configuration property, and
                     set it to <span class="ph uicontrol">SASL_PLAINTEXT</span>.</li>
 
-                <li class="li" id="concept_xyx_mtd_rw__d20020e79">Then, add the
+                <li class="li" id="concept_xyx_mtd_rw__d20155e79">Then, add the
                         <span class="ph uicontrol">sasl.kerberos.service.name</span> configuration property,
                     and set it to the Kerberos principal name that Kafka runs as. </li>
 
@@ -229,7 +238,7 @@
 
         <p class="p">For example, the following Kafka properties enable connecting to <span class="ph">Kafka 0.9.0.0</span> with Kerberos:</p>
 
-        <p class="p"><img class="image" id="concept_xyx_mtd_rw__d20020e93" src="../Reusable_Content/Reusable_Topics/../../Graphics/Kafka-Kerberos.png" height="58" width="561"></img></p>
+        <p class="p"><img class="image" id="concept_xyx_mtd_rw__d20155e93" src="../Reusable_Content/Reusable_Topics/../../Graphics/Kafka-Kerberos.png" height="58" width="561"></img></p>
 
     </div>
 
@@ -242,9 +251,9 @@
             enable the UDP to Kafka origin to use SSL and Kerberos to connect to <span class="ph">Kafka 0.9.0.0</span>.</p>
 
         <div class="p">To use SSL and Kerberos, combine the steps required to enable each and set the
-            security.protocol property as follows: <ol class="ol" id="concept_xgk_4yd_rw__d20170e31">
+            security.protocol property as follows: <ol class="ol" id="concept_xgk_4yd_rw__d20305e31">
                 <li class="li">Make sure Kafka is configured to use SSL and Kerberos (SASL) as described in the
-                    following Kafka documentation:<ul class="ul" id="concept_xgk_4yd_rw__d20170e35">
+                    following Kafka documentation:<ul class="ul" id="concept_xgk_4yd_rw__d20305e35">
                         <li class="li"><a class="xref" href="http://kafka.apache.org/documentation.html#security_ssl" target="_blank">http://kafka.apache.org/documentation.html#security_ssl</a></li>
 
                         <li class="li"><a class="xref" href="http://kafka.apache.org/documentation.html#security_sasl" target="_blank">http://kafka.apache.org/documentation.html#security_sasl</a></li>
@@ -277,7 +286,7 @@
                     and set it to the Kerberos principal name that Kafka runs as. </li>
 
                 <li class="li">Then, add the following SSL Kafka configuration
-                        properties:<ul class="ul" id="concept_xgk_4yd_rw__d20105e60">
+                        properties:<ul class="ul" id="concept_xgk_4yd_rw__d20240e60">
                         <li class="li">ssl.truststore.location</li>
 
                         <li class="li">ssl.truststore.password</li>
@@ -285,7 +294,7 @@
                     </ul>
 <div class="p">When the Kafka broker requires client authentication - when the
                         ssl.client.auth broker property is set to "required" - add and configure the
-                        following properties: <ul class="ul" id="concept_xgk_4yd_rw__d20105e70">
+                        following properties: <ul class="ul" id="concept_xgk_4yd_rw__d20240e70">
                             <li class="li">ssl.keystore.location</li>
 
                             <li class="li">ssl.keystore.password</li>
@@ -295,7 +304,7 @@
                         </ul>
 </div>
 <div class="p">Some brokers might require adding the following properties as
-                            well:<ul class="ul" id="concept_xgk_4yd_rw__d20105e83">
+                            well:<ul class="ul" id="concept_xgk_4yd_rw__d20240e83">
                             <li class="li">ssl.enabled.protocols</li>
 
                             <li class="li">ssl.truststore.type</li>
@@ -330,14 +339,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tvh_bhz_pw__d17202e519" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_tvh_bhz_pw__d17320e519" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d162374e546">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d162525e568">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d162374e549">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d162525e571">Description</th>
 
                                 </tr>
 
@@ -345,31 +354,31 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d162374e546 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d162525e568 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d162374e549 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d162374e546 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d162374e549 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d162525e571 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d162374e546 ">Stage Library</td>
+                                    <td class="entry" valign="top" width="30%" headers="d162525e568 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d162374e549 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d162525e571 ">Optional description.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d162374e546 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_tvh_bhz_pw__d17202e574" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d162525e568 ">Stage Library</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d162374e549 ">Error record handling for the stage: <ul class="ul" id="task_tvh_bhz_pw__d17202e578">
+                                    <td class="entry" valign="top" width="70%" headers="d162525e571 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d162525e568 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_tvh_bhz_pw__d17320e574" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d162525e571 ">Error record handling for the stage: <ul class="ul" id="task_tvh_bhz_pw__d17320e578">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -399,9 +408,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d162374e640">UDP Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d162525e662">UDP Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d162374e643">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d162525e665">Description</th>
 
                                 </tr>
 
@@ -409,9 +418,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d162374e640 ">Port</td>
+                                    <td class="entry" valign="top" width="30%" headers="d162525e662 ">Port</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d162374e643 ">Port to listen to for data. To list additional ports,
+                                    <td class="entry" valign="top" width="70%" headers="d162525e665 ">Port to listen to for data. To list additional ports,
                                         click the<span class="ph uicontrol"> Add</span> icon.<div class="note note"><span class="notetitle">Note:</span> To listen to
                                             a port below 1024, <span class="ph">Data
                   Collector</span> must be run by a user with root privileges.
@@ -422,9 +431,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d162374e640 ">Data Format</td>
+                                    <td class="entry" valign="top" width="30%" headers="d162525e662 ">Data Format</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d162374e643 ">Data format passed by UDP:<ul class="ul" id="task_tvh_bhz_pw__d17202e3343">
+                                    <td class="entry" valign="top" width="70%" headers="d162525e665 ">Data format passed by UDP:<ul class="ul" id="task_tvh_bhz_pw__d17320e3354">
                                             <li class="li">collectd</li>
 
                                             <li class="li">NetFlow</li>
@@ -453,9 +462,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d162374e717">UDP Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d162525e739">UDP Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d162374e720">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d162525e742">Description</th>
 
                                 </tr>
 
@@ -463,9 +472,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d162374e717 ">Broker URI</td>
+                                    <td class="entry" valign="top" width="30%" headers="d162525e739 ">Broker URI</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d162374e720 ">Connection string for the Kafka broker. Use the following
+                                    <td class="entry" valign="top" width="70%" headers="d162525e742 ">Connection string for the Kafka broker. Use the following
                                         format: <samp class="ph codeph">&lt;host&gt;:&lt;port&gt;</samp>. <p class="p">To ensure a
                                             connection, enter a comma-separated list of additional
                                             broker URI.</p>
@@ -473,18 +482,18 @@
 
                                 </tr>
  <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d162374e717 ">Topic</td>
+                                    <td class="entry" valign="top" width="30%" headers="d162525e739 ">Topic</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d162374e720 ">Kafka topic to read.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d162525e742 ">Kafka topic to read.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d162374e717 ">Kafka Configuration <a class="xref" href="UDPtoKafka.html#concept_owg_1hc_rw">
+                                    <td class="entry" valign="top" width="30%" headers="d162525e739 ">Kafka Configuration <a class="xref" href="UDPtoKafka.html#concept_owg_1hc_rw">
                                         <img class="image" id="task_tvh_bhz_pw__image_mwv_b52_zq" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d162374e720 ">
+                                    <td class="entry" valign="top" width="70%" headers="d162525e742 ">
                                         <p class="p">Additional Kafka configuration
                                             properties to use. To add properties, click
                                                 <span class="ph uicontrol">Add</span> and define the Kafka
@@ -517,9 +526,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d162374e807">Advanced Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d162525e829">Advanced Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d162374e810">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d162525e832">Description</th>
 
                                 </tr>
 
@@ -527,9 +536,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d162374e807 ">Accept Threads</td>
+                                    <td class="entry" valign="top" width="30%" headers="d162525e829 ">Accept Threads</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d162374e810 ">The expected number of CPU cores of the <span class="ph">Data
+                                    <td class="entry" valign="top" width="70%" headers="d162525e832 ">The expected number of CPU cores of the <span class="ph">Data
                   Collector</span> machine that are dedicated to the <span class="ph">Data
                   Collector</span>.<p class="p">Default is 1.</p>
 </td>
@@ -537,9 +546,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d162374e807 ">Write Concurrency</td>
+                                    <td class="entry" valign="top" width="30%" headers="d162525e829 ">Write Concurrency</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d162374e810 ">Maximum number of Kafka clients that the origin can use
+                                    <td class="entry" valign="top" width="70%" headers="d162525e832 ">Maximum number of Kafka clients that the origin can use
                                         to write to Kafka. <p class="p">When configuring this property,
                                             consider the number of Kafka brokers, partitions, and
                                             volume of data to be written.</p>
