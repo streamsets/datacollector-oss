@@ -44,7 +44,7 @@
                             <entry>vault.app.id</entry>
                             <entry>Required. App ID for <ph
                                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                />. The App ID must exist in in Vault and should be a UUID or a
+                                />. The App ID must exist in Vault and should be a UUID or a
                                 similarly complex string to ensure better security.</entry>
                         </row>
                         <row>
