@@ -592,14 +592,19 @@ angular.module('dataCollectorApp.common')
 
       if (options.insertBetweenEdge && (stage.outputStreams > 0 || stage.variableOutputStreams)) {
         //Insert stage instance in the middle of edge
-        var edge = options.insertBetweenEdge,
-          targetInstance = edge.target,
-          laneIndex;
+        var edge = options.insertBetweenEdge;
+        var targetInstance = edge.target;
+        var laneIndex;
+        var lane = edge.outputLane;
 
-        stageInstance.inputLanes.push(edge.outputLane);
+        if (edge.eventLane) {
+          lane = edge.eventLane;
+        }
+
+        stageInstance.inputLanes.push(lane);
 
         angular.forEach(targetInstance.inputLanes, function(laneName, index) {
-          if (laneName === edge.outputLane) {
+          if (laneName === lane) {
             laneIndex = index;
           }
         });

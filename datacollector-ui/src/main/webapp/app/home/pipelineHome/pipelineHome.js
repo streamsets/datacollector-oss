@@ -201,23 +201,43 @@ angular
         }
 
         if(insertBetweenEdge) {
-          edges = _.filter(edges, function(e) {
-            return (e.outputLane !== insertBetweenEdge.outputLane &&
+          if (insertBetweenEdge.outputLane) {
+            edges = _.filter(edges, function(e) {
+              return e.eventLane || (e.outputLane !== insertBetweenEdge.outputLane &&
               e.source.instanceName !== insertBetweenEdge.source.instanceName &&
               e.target.instanceName !== insertBetweenEdge.target.instanceName);
-          });
+            });
 
-          edges.push({
-            source: insertBetweenEdge.source,
-            target: stageInstance,
-            outputLane: insertBetweenEdge.outputLane
-          });
+            edges.push({
+              source: insertBetweenEdge.source,
+              target: stageInstance,
+              outputLane: insertBetweenEdge.outputLane
+            });
 
-          edges.push({
-            source: stageInstance,
-            target: insertBetweenEdge.target,
-            outputLane: stageInstance.outputLanes[0]
-          });
+            edges.push({
+              source: stageInstance,
+              target: insertBetweenEdge.target,
+              outputLane: stageInstance.outputLanes[0]
+            });
+          } else if (insertBetweenEdge.eventLane) {
+            edges = _.filter(edges, function(e) {
+              return e.outputLane || (e.eventLane !== insertBetweenEdge.eventLane &&
+              e.source.instanceName !== insertBetweenEdge.source.instanceName &&
+              e.target.instanceName !== insertBetweenEdge.target.instanceName);
+            });
+
+            edges.push({
+              source: insertBetweenEdge.source,
+              target: stageInstance,
+              eventLane: insertBetweenEdge.eventLane
+            });
+
+            edges.push({
+              source: stageInstance,
+              target: insertBetweenEdge.target,
+              outputLane: stageInstance.outputLanes[0]
+            });
+          }
         }
 
         $scope.$broadcast('addNode', stageInstance, edges, relativeXPos, relativeYPos);
