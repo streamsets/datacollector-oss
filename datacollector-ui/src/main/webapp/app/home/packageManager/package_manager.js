@@ -296,8 +296,9 @@ angular
 
         $scope.isManagedByClouderaManager = configuration.isManagedByClouderaManager();
       },
-      function (results) {
+      function (res) {
         $scope.loaded = true;
+        $rootScope.common.errors = [res.data];
       }
     );
 
