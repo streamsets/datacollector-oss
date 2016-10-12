@@ -62,6 +62,8 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
   private final DocumentBuilderFactory factory;
   private ErrorRecordHandler errorRecordHandler;
 
+  private int flattenerPerRecordCount = 0;
+
   public XMLFlatteningProcessor(
       String fieldPath,
       boolean keepExistingFields,
@@ -115,7 +117,6 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
 
   @Override
   public void process(Record record, SingleLaneBatchMaker singleLaneBatchMaker) throws StageException {
-
     if (keepExistingFields && !record.get().getType().isOneOf(Field.Type.MAP, Field.Type.LIST_MAP)) {
       String errorValue;
       if (record.get().getType() == Field.Type.LIST) {
@@ -148,10 +149,12 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
         List<Record> results = new LinkedList<>();
         if (recordDelimiter == null || recordDelimiter.isEmpty() || root.getNodeName().equals(recordDelimiter)) {
           currentlyInRecord = true;
+          //Increment record count.
+          flattenerPerRecordCount++;
           if (keepExistingFields) {
-            newR = getContext().cloneRecord(record);
+            newR = getContext().cloneRecord(record, String.valueOf(flattenerPerRecordCount));
           } else {
-            newR = getContext().createRecord(record);
+            newR = getContext().createRecord(record, String.valueOf(flattenerPerRecordCount));
             newR.set(Field.create(new HashMap<String, Field>()));
           }
           prefix = root.getTagName();
@@ -179,6 +182,9 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
                 ex
             )
         );
+      } finally {
+        //Reset record count
+        flattenerPerRecordCount = 0;
       }
     }
   }
@@ -226,11 +232,16 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
         if (!currentlyInRecord && element.getNodeName().equals(recordDelimiter)) {
           // Create a new record
           elementPrefix = tagName;
+
+          //Increment record count
+          flattenerPerRecordCount++;
+
           Record newR;
+          //Add the node index as sourceRecordIdPostFix for newly created/cloned record.
           if (keepExistingFields) {
-            newR = getContext().cloneRecord(originalRecord);
+            newR = getContext().cloneRecord(originalRecord, String.valueOf(flattenerPerRecordCount));
           } else {
-            newR = getContext().createRecord(originalRecord);
+            newR = getContext().createRecord(originalRecord, String.valueOf(flattenerPerRecordCount));
             newR.set(Field.create(new HashMap<String, Field>()));
           }
           recordList.add(newR);

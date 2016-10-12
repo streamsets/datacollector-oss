@@ -243,6 +243,61 @@ public class TestXMLFlatteningProcessor {
     }
   }
 
+  @Test
+  public void testSourceIdPostFixWithoutRecordDelimiter() throws Exception {
+    Record record = RecordCreator.create("", "s:s1");
+
+    String xml = "<contacts>" + getXML("0") + getXML("1") + "</contacts>";
+
+    Map<String, Field> rootMap = new HashMap<>();
+    rootMap.put("text", Field.create(xml));
+    record.set(Field.create(rootMap));
+
+    processor = new XMLFlatteningProcessor("/text", true, false, "contact", "", "", false, false);
+    ProcessorRunner runner = new ProcessorRunner.Builder(dProcessorClass, processor)
+        .addOutputLane("xml").setOnRecordError(OnRecordError.STOP_PIPELINE).build();
+    try {
+      runner.runInit();
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      List<Record> records = output.getRecords().get("xml");
+      Assert.assertEquals(2, records.size());
+
+      Record record1 = records.get(0);
+      Assert.assertEquals(record.getHeader().getSourceId() + "_" + 1, record1.getHeader().getSourceId());
+
+      Record record2 = records.get(1);
+      Assert.assertEquals(record.getHeader().getSourceId() + "_" + 2, record2.getHeader().getSourceId());
+
+    } finally {
+      runner.runDestroy();
+    }
+
+  }
+
+  @Test
+  public void testSourceIdPostFixWithRecordDelimiter() throws Exception {
+    Record record1 = RecordCreator.create("", "s:s1");
+    Map<String, Field> rootMap = new HashMap<>();
+    rootMap.put("text", Field.create("<tag></tag>"));
+    record1.set(Field.create(rootMap));
+
+    processor = new XMLFlatteningProcessor("/text", true, false, "", "", "", false, false);
+    ProcessorRunner runner = new ProcessorRunner.Builder(dProcessorClass, processor)
+        .addOutputLane("xml").setOnRecordError(OnRecordError.STOP_PIPELINE).build();
+    try {
+      runner.runInit();
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record1));
+      String expectedSourceId = record1.getHeader().getSourceId() + "_" + 1;
+      List<Record> records = output.getRecords().get("xml");
+      Assert.assertEquals(1, records.size());
+      record1 = records.get(0);
+      Assert.assertEquals(expectedSourceId, record1.getHeader().getSourceId());
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
   private void doTest(String xml, String delimiter, List<Record> expected, List<Record> error, OnRecordError onRecordError,
       boolean ignoreAttrs, boolean ignoreNS, boolean keepFields, boolean newFieldOverwrites) throws Exception {
     doTest(xml, delimiter, ".", "#", expected, error, onRecordError, ignoreAttrs, ignoreNS, keepFields, newFieldOverwrites);

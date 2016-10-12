@@ -44,8 +44,8 @@ public class RecordCreatorProcessor extends SingleLaneProcessor {
     Iterator<Record> it = batch.getRecords();
     while (it.hasNext()) {
       Record record = it.next();
-      Record record1 = getContext().cloneRecord(record);
-      Record record2 = getContext().cloneRecord(record);
+      Record record1 = getContext().cloneRecord(record, "clone_1");
+      Record record2 = getContext().cloneRecord(record, "clone_2");
       record1.getHeader().setAttribute("expanded", "1");
       record2.getHeader().setAttribute("expanded", "2");
       batchMaker.addRecord(record1);
