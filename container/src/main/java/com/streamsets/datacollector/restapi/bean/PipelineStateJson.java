@@ -29,6 +29,7 @@ import java.util.Map;
 public class PipelineStateJson {
 
   private final PipelineState pipelineState;
+  private boolean ignoreMetrics = false;
 
   @JsonCreator
   public PipelineStateJson(
@@ -48,8 +49,9 @@ public class PipelineStateJson {
       BeanHelper.unwrapExecutionMode(executionModeJson), metrics, retryAttempt, nextRetryTimeStamp);
   }
 
-  public PipelineStateJson(com.streamsets.datacollector.execution.PipelineState pipelineState) {
+  public PipelineStateJson(PipelineState pipelineState, boolean ignoreMetrics) {
     this.pipelineState = pipelineState;
+    this.ignoreMetrics = ignoreMetrics;
   }
 
   public String getRev() {
@@ -85,7 +87,11 @@ public class PipelineStateJson {
   }
 
   public String getMetrics() {
-    return pipelineState.getMetrics();
+    if (!ignoreMetrics) {
+      return pipelineState.getMetrics();
+    } else {
+      return null;
+    }
   }
 
   public int getRetryAttempt() {
