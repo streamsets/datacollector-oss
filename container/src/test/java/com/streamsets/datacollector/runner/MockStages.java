@@ -789,7 +789,7 @@ public class MockStages {
         }
         return this;
       }
-      public Builder overrideClass(String name, Class klass) {
+      public Builder overrideClass(String name, Class<? extends Stage> klass) {
         if (stages.containsKey(name)) {
           StageDefinition oldDef = stages.get(name);
           StageDefinition newDef = new StageDefinition(StageDefinitionBuilder.createLibraryDef(klass.getClassLoader()),

@@ -453,6 +453,7 @@ public abstract class WebServerTask extends AbstractTask {
     return false;
   }
 
+  @SuppressWarnings("unchecked")
   private ConstraintSecurityHandler configureSSO(
       final Configuration appConf, ServletContextHandler appHandler, final String appContext
   ) {

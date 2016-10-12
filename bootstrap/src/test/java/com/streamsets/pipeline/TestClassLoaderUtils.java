@@ -118,7 +118,9 @@ public class TestClassLoaderUtils {
     Assert.assertTrue(systemPackage.isSystem("b.Some"));
     Assert.assertTrue(systemPackage.isSystem("b.Some$Inner"));
   }
+
   @Test
+  @SuppressWarnings("unchecked")
   public void testRemoveLogicalDuplicates() throws Exception {
     SortedSet<String> packages = new TreeSet<>();
     ApplicationPackage.removeLogicalDuplicates(packages);

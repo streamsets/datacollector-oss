@@ -89,6 +89,7 @@ public class FullPipeBatch implements PipeBatch {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public BatchImpl getBatch(final Pipe pipe) {
     List<Record> records = new ArrayList<>();
     List<String> inputLanes = pipe.getInputLanes();
@@ -118,6 +119,7 @@ public class FullPipeBatch implements PipeBatch {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public void skipStage(Pipe pipe) {
     // Fill expected stage output lanes with empty lists
     for(String lane : (List<String>)pipe.getOutputLanes()) {

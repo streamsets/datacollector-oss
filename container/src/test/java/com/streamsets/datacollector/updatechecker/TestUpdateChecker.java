@@ -135,12 +135,13 @@ public class TestUpdateChecker {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
       Map map = ObjectMapperFactory.get().readValue(req.getInputStream(), Map.class);
       Assert.assertTrue(map.containsKey("sdc.sha256"));
       resp.setContentType(UpdateChecker.APPLICATION_JSON_MIME);
       resp.setStatus(HttpServletResponse.SC_OK);
-      map = new HashMap();
+      map = new HashMap<>();
       map.put("update", "Hello");
       ObjectMapperFactory.getOneLine().writeValue(resp.getOutputStream(), map);
     }

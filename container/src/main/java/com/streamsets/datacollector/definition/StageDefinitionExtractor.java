@@ -83,6 +83,7 @@ public abstract class StageDefinitionExtractor {
     return new ArrayList<>(set);
   }
 
+  @SuppressWarnings("unchecked")
   private static void addGroupsToList(Class<?> klass, Set<String> set) {
     ConfigGroups groups = klass.getAnnotation(ConfigGroups.class);
     if (groups != null) {
@@ -201,7 +202,7 @@ public abstract class StageDefinitionExtractor {
         boolean preconditions = !errorStage && type != StageType.SOURCE &&
             ((hideConfigs == null) || !hideConfigs.preconditions());
         boolean onRecordError = !errorStage && ((hideConfigs == null) || !hideConfigs.onErrorRecord());
-        List<ConfigDefinition> configDefinitions = extractConfigDefinitions(libraryDef, klass, hideConfigs, new ArrayList(), contextMsg);
+        List<ConfigDefinition> configDefinitions = extractConfigDefinitions(libraryDef, klass, hideConfigs, new ArrayList<ErrorMessage>(), contextMsg);
         RawSourceDefinition rawSourceDefinition = RawSourceDefinitionExtractor.get().extract(klass, contextMsg);
         ConfigGroupDefinition configGroupDefinition = ConfigGroupExtractor.get().extract(klass, contextMsg);
         String outputStreamLabelProviderClass = (type != StageType.TARGET) ? sDef.outputStreams().getName() : null;

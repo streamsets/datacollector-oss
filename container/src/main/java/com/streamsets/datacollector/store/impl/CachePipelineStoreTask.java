@@ -110,7 +110,7 @@ public class CachePipelineStoreTask implements PipelineStoreTask {
 
   @Override
   public List<PipelineInfo> getPipelines() throws PipelineStoreException {
-    return Collections.unmodifiableList(new ArrayList(pipelineInfoMap.values()));
+    return Collections.unmodifiableList(new ArrayList<>(pipelineInfoMap.values()));
   }
 
   @Override

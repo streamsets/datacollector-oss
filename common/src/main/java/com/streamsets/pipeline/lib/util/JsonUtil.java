@@ -42,6 +42,7 @@ public class JsonUtil {
 
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
+  @SuppressWarnings("unchecked")
   public static Field jsonToField(Object json) throws IOException {
     Field field;
     if (json == null) {

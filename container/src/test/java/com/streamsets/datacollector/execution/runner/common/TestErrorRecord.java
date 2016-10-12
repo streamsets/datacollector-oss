@@ -177,6 +177,8 @@ public class TestErrorRecord {
         errorRecord.get().getValueAsString()
     );
   }
+
+  @SuppressWarnings("unchecked")
   private void runAndCheckErrorRecords(String errorStage, String expectedFieldValue) throws Exception {
     final List<Record> badHandlerErrorRecords = new ArrayList<>();
     latch = new CountDownLatch(1);

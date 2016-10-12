@@ -233,6 +233,7 @@ public class TestLDAPAuthentication extends AbstractLdapTestUnit {
     }
   }
 
+  @SuppressWarnings("unchecked")
   private void testAuthenticationAndRoleMapping(String baseURL, String  authType, String username, String password,
                                                 String role) {
     String userInfoURI = baseURL  + "/rest/v1/system/info/currentUser";

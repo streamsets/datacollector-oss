@@ -131,6 +131,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
   }
 
   @Override
+  @SuppressWarnings("deprecation")
   public Runner getRunner(final String user, final String name, final String rev) throws PipelineStoreException, PipelineManagerException {
     if (!pipelineStore.hasPipeline(name)) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);

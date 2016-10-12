@@ -402,6 +402,12 @@
         <configuration>
           <source>${javaVersion}</source>
           <target>${javaVersion}</target>
+          <!-- We need to clean up SDC project a bit more before enabling this
+          <compilerArgs>
+            <arg>-Xlint:unchecked</arg>
+            <arg>-Xlint:deprecation</arg>
+          </compilerArgs>
+          -->
         </configuration>
       </plugin>
       <plugin>

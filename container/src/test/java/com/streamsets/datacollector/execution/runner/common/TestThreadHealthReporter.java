@@ -28,6 +28,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("unchecked")
 public class TestThreadHealthReporter {
 
   private static final String PIPELINE_NAME = "myPipeline";

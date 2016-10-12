@@ -39,7 +39,7 @@ public class RecordCreator {
   }
 
   public static Record create(String stageCreator, String recordSourceId) {
-    return create(stageCreator, recordSourceId, Collections.EMPTY_LIST, null, null);
+    return create(stageCreator, recordSourceId, Collections.<String>emptyList(), null, null);
   }
 
   public static Record create(String stageCreator, String recordSourceId, List<String> stagesPath) {

@@ -58,7 +58,7 @@ public class MemoryUsageCollector {
   private final Instrumentation instrumentation;
   private final Object targetObject;
   private final ClassLoader targetClassloader;
-  private final Deque stack;
+  private final Deque<Object> stack;
   private final IntOpenHashSet countedObjectSet;
   private final boolean traverseClassLoaderClasses;
   private final MemoryUsageSnapshot memoryUsageSnapshot;
@@ -131,6 +131,7 @@ public class MemoryUsageCollector {
     }
   }
 
+  @SuppressWarnings("unchecked")
   private MemoryUsageCollector(Instrumentation instrumentation, Object targetObject, ClassLoader targetClassloader,
                                Deque stack, IntOpenHashSet countedObjectSet,
                                boolean traverseClassLoaderClasses) {
@@ -143,6 +144,7 @@ public class MemoryUsageCollector {
     this.memoryUsageSnapshot = new MemoryUsageSnapshot(targetObject, targetClassloader);
   }
 
+  @SuppressWarnings("unchecked")
   private void initialize() {
     try {
       if (CLASSLOADER_CLASSES_FIELD == null) {

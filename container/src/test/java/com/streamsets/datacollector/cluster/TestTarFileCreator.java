@@ -110,16 +110,16 @@ public class TestTarFileCreator {
     File containerLibDir = new File(tempDir, "container-lib");
     File streamsetsLibsDir = new File(tempDir, "streamsets-libs");
     File userLibsDir = new File(tempDir, "user-libs");
-    URLClassLoader apiCl = new URLClassLoader(new URL[]{createJar(apiLibDir).toURL()});
-    URLClassLoader containerCL = new URLClassLoader(new URL[]{createJar(containerLibDir).toURL()});
+    URLClassLoader apiCl = new URLClassLoader(new URL[]{createJar(apiLibDir).toURI().toURL()});
+    URLClassLoader containerCL = new URLClassLoader(new URL[]{createJar(containerLibDir).toURI().toURL()});
     Map<String, List<URL>> streamsetsLibsCl = new LinkedHashMap<>();
     Map<String, List<URL>> userLibsCL = new LinkedHashMap<>();
     streamsetsLibsCl.put("abc123", ImmutableList.copyOf(new URLClassLoader(new URL[]{createJar(new File(streamsetsLibsDir, "abc123"))
-      .toURL()}).getURLs()));
+      .toURI().toURL()}).getURLs()));
     streamsetsLibsCl.put("abc456", ImmutableList.copyOf(new URLClassLoader(new URL[]{createJar(new File(streamsetsLibsDir, "abc456"))
-      .toURL()}).getURLs()));
+      .toURI().toURL()}).getURLs()));
     userLibsCL.put("yxz456", ImmutableList.copyOf(new URLClassLoader(new URL[]{createJar(new File(userLibsDir, "yxz456"))
-      .toURL(), createJar(new File(tempDir, "yxz789")).toURL()}).getURLs()));
+      .toURI().toURL(), createJar(new File(tempDir, "yxz789")).toURI().toURL()}).getURLs()));
     File staticWebDir = new File(tempDir, "static-web-dir");
     Assert.assertTrue(staticWebDir.mkdir());
     createJar(new File(staticWebDir, "subdir"));

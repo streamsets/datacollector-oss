@@ -83,6 +83,7 @@ public class TestClassLoaderStageLibraryTask {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testAutoELs() {
     File configDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
     ClassLoader cl = new SDCClassLoader("library", "lib", Collections.<URL>emptyList(), getClass().getClassLoader(),

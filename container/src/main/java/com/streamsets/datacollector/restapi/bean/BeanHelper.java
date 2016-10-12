@@ -646,7 +646,7 @@ public class BeanHelper {
       elFunctionDefinitionJsons.put(e.getName(), new ElFunctionDefinitionJson(e));
     }
 
-    return new ArrayList(elFunctionDefinitionJsons.values());
+    return new ArrayList<>(elFunctionDefinitionJsons.values());
   }
 
   public static Map<String, ElFunctionDefinitionJson> wrapElFunctionDefinitionsIdx(
@@ -1170,6 +1170,7 @@ public class BeanHelper {
     }
   }
 
+  @SuppressWarnings("deprecation")
   public static ExecutionMode unwrapExecutionMode(ExecutionModeJson executionModeJson) {
     if (executionModeJson == null) {
       return null;

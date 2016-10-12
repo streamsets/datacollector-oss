@@ -28,11 +28,12 @@ import org.apache.commons.collections.map.LRUMap;
  * memory leak in the implementation that is tracked by EL-1. This class will
  * be removed once EL-1 fix is available.
  */
+@SuppressWarnings("unchecked")
 public class LruExpressionEvaluatorImpl extends ExpressionEvaluatorImpl {
   /**
    * Max LRU size, right now it's a magic constant.
    */
-  private static int MAX_LRU_SIZE = 5000;
+  private static final int MAX_LRU_SIZE = 5000;
 
   /**
    * Change the static caches to use LRU map rather then normal map.

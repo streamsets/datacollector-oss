@@ -103,7 +103,7 @@ public class EventListenerManager {
       try {
         List<AlertEventListener> alertEventListenerListCopy;
         synchronized (alertEventListenerList) {
-          alertEventListenerListCopy = new ArrayList(alertEventListenerList);
+          alertEventListenerListCopy = new ArrayList<>(alertEventListenerList);
         }
 
         ObjectMapper objectMapper = ObjectMapperFactory.get();
@@ -125,7 +125,7 @@ public class EventListenerManager {
     if(stateEventListenerList.size() > 0) {
       List<StateEventListener> stateEventListenerListCopy;
       synchronized (stateEventListenerList) {
-        stateEventListenerListCopy = new ArrayList(stateEventListenerList);
+        stateEventListenerListCopy = new ArrayList<>(stateEventListenerList);
       }
 
       try {
@@ -149,7 +149,7 @@ public class EventListenerManager {
     if(metricsEventListenerMap.containsKey(pipelineName) && metricsEventListenerMap.get(pipelineName).size() > 0) {
       List<MetricsEventListener> metricsEventListenerListCopy;
       synchronized (metricsEventListenerMap) {
-        metricsEventListenerListCopy = new ArrayList(metricsEventListenerMap.get(pipelineName));
+        metricsEventListenerListCopy = new ArrayList<>(metricsEventListenerMap.get(pipelineName));
       }
 
       for(MetricsEventListener metricsEventListener : metricsEventListenerListCopy) {

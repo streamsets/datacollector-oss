@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+@SuppressWarnings("unchecked")
 public class TestTokenAuthentication {
   private static String createTestDir() {
     File dir = new File("target", UUID.randomUUID().toString());

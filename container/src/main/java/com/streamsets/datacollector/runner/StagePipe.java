@@ -321,6 +321,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     return batchMetrics;
   }
 
+  @SuppressWarnings("unchecked")
   private Gauge<Object> createRuntimeStatsGauge(MetricRegistry metricRegistry) {
     Gauge<Object> runtimeStatsGauge = MetricsConfigurator.getGauge(metricRegistry, RUNTIME_STATS_GAUGE);
     if(runtimeStatsGauge == null) {

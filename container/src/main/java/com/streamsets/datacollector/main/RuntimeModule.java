@@ -44,7 +44,7 @@ public class RuntimeModule {
   public static final String DATA_COLLECTOR_BASE_HTTP_URL = "sdc.base.http.url";
   public static final String SDC_PROPERTY_PREFIX = "sdc";
   public static final String PIPELINE_EXECUTION_MODE_KEY = "pipeline.execution.mode";
-  private static List<ClassLoader> stageLibraryClassLoaders = Collections.EMPTY_LIST;//ImmutableList.of(RuntimeModule.class.getClassLoader());
+  private static List<ClassLoader> stageLibraryClassLoaders = Collections.emptyList();//ImmutableList.of(RuntimeModule.class.getClassLoader());
 
   public static synchronized void setStageLibraryClassLoaders(List<? extends ClassLoader> classLoaders) {
     stageLibraryClassLoaders = ImmutableList.copyOf(classLoaders);

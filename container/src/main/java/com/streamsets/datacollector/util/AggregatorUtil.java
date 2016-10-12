@@ -109,6 +109,7 @@ public class AggregatorUtil {
 
   }
 
+  @SuppressWarnings("unchecked")
   public static Record createMetricRecord(Map<String, Object> pipelineBatchMetrics) {
     Record record = createRecord(METRIC_RULE_RECORD);
     Map<String, Field> map = new HashMap<>();

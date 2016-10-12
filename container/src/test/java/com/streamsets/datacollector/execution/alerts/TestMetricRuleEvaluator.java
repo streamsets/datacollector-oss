@@ -47,6 +47,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+@SuppressWarnings("unchecked")
 public class TestMetricRuleEvaluator {
 
   private static final String LANE = "lane";

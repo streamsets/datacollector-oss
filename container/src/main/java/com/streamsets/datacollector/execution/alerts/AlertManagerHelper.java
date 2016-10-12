@@ -36,6 +36,7 @@ public class AlertManagerHelper {
 
   private static final String USER_PREFIX = "user.";
 
+  @SuppressWarnings("unchecked")
   public static void alertException(
     String pipelineName,
     String revision,
@@ -61,6 +62,7 @@ public class AlertManagerHelper {
       alertResponseGauge, pipelineName, revision);
   }
 
+  @SuppressWarnings("unchecked")
   public static void updateAlertGauge(Gauge gauge, Object value, RuleDefinition ruleDefinition) {
     Map<String, Object> alertResponse = (Map<String, Object>) gauge.getValue();
     // we keep timestamp of first trigger

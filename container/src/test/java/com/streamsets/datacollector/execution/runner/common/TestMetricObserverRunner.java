@@ -71,6 +71,7 @@ TestMetricObserverRunner {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testMetricObserverRunner() {
     Timer t = MetricsConfigurator.createTimer(metrics, "testTimerMatch", PIPELINE_NAME, REVISION);
     t.update(1000, TimeUnit.MILLISECONDS);

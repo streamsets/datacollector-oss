@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+@SuppressWarnings("deprecation")
 public class MultipleMonitorLocker {
   private static final Logger LOG = LoggerFactory.getLogger(MemoryUsageCollector.class);
   private static final Unsafe UNSAFE;

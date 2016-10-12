@@ -50,6 +50,7 @@ public class PipelineConfigurationUtil {
     return result;
   }
 
+  @SuppressWarnings("unchecked")
   public static Map<String, Object> getFlattenedMap(String mapName, PipelineConfiguration pipelineConf) {
     Map<String, Object> constants = new HashMap<>();
     if(pipelineConf != null && pipelineConf.getConfiguration() != null) {

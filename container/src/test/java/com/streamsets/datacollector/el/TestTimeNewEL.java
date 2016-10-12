@@ -53,6 +53,7 @@ public class TestTimeNewEL {
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   public void testTrimDate() throws Exception {
     Date output = eval.eval(variables, "${time:trimDate(time:now())}", Date.class);
     Assert.assertEquals(70, output.getYear());
@@ -63,6 +64,7 @@ public class TestTimeNewEL {
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   public void testTrimTime() throws Exception {
     Date output = eval.eval(variables, "${time:trimTime(time:now())}", Date.class);
     Assert.assertEquals(0, output.getHours());

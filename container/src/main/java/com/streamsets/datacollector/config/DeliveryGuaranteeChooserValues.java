@@ -21,7 +21,7 @@ package com.streamsets.datacollector.config;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public class DeliveryGuaranteeChooserValues extends BaseEnumChooserValues {
+public class DeliveryGuaranteeChooserValues extends BaseEnumChooserValues<DeliveryGuarantee> {
 
   public DeliveryGuaranteeChooserValues() {
     super(DeliveryGuarantee.class);

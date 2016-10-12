@@ -105,6 +105,7 @@ public class AlertManager {
     }
   }
 
+  @SuppressWarnings("unchecked")
   public void alert(Object value, List<String> emailIds, RuleDefinition ruleDefinition) {
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGaugeName(ruleDefinition.getId()));
     if (gauge == null) {

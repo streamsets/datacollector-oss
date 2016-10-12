@@ -24,17 +24,19 @@ import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.EventListener;
 import java.util.Queue;
 
 public class BaseWebSocket extends WebSocketAdapter {
   private final static Logger LOG = LoggerFactory.getLogger(BaseWebSocket.class);
 
   private final String type;
-  private final ListenerManager listenerManager;
+  private final ListenerManager<Object> listenerManager;
   private final Queue<WebSocketMessage> queue;
   private Session webSocketSession = null;
 
 
+  @SuppressWarnings("unchecked")
   public BaseWebSocket(String type, ListenerManager listenerManager, Queue<WebSocketMessage> queue) {
     this.type = type;
     this.listenerManager = listenerManager;

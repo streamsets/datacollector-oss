@@ -104,7 +104,7 @@ public class PreviewResource {
       throws PipelineException, StageException {
 
     if (stageOutputsToOverrideJson == null) {
-      stageOutputsToOverrideJson = Collections.EMPTY_LIST;
+      stageOutputsToOverrideJson = Collections.emptyList();
     }
     RestAPIUtils.injectPipelineInMDC(pipelineName);
     int maxBatchSize = configuration.get(MAX_BATCH_SIZE_KEY, MAX_BATCH_SIZE_DEFAULT);

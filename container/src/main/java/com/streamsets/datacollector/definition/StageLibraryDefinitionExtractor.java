@@ -67,6 +67,7 @@ public abstract class StageLibraryDefinitionExtractor {
     return errors;
   }
 
+  @SuppressWarnings("unchecked")
   public StageLibraryDefinition extract(ClassLoader classLoader) {
     List<ErrorMessage> errors = validate(classLoader);
     if (errors.isEmpty()) {

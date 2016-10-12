@@ -217,7 +217,7 @@ public class PipelineConfigBean implements Stage {
     dependsOn = "executionMode",
     triggeredByValue = {"CLUSTER_BATCH", "CLUSTER_YARN_STREAMING"}
   )
-  public Map clusterLauncherEnv;
+  public Map<String, String> clusterLauncherEnv;
 
   @ConfigDef(
     required = true,

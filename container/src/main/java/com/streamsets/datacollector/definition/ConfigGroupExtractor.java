@@ -95,6 +95,7 @@ public abstract class ConfigGroupExtractor {
     }
   }
 
+  @SuppressWarnings("unchecked")
   private List<ConfigGroups> getAllConfigGroups(Class klass) {
     List<ConfigGroups> groups;
     if (klass == Object.class) {

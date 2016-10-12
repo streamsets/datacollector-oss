@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+@SuppressWarnings("unchecked")
 public class TestDataObserverRunner {
 
   private static final String LANE = "lane";

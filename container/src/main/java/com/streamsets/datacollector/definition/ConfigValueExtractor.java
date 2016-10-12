@@ -233,6 +233,7 @@ public abstract class ConfigValueExtractor {
     return (Class)((ParameterizedType)listField.getGenericType()).getActualTypeArguments()[0];
   }
 
+  @SuppressWarnings("unchecked")
   List convertElementsToEnum(Field listField, List list) {
     Class elementClass = getListType(listField);
     if (elementClass.isEnum()) {

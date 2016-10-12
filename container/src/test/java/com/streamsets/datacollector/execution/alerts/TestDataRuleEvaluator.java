@@ -56,6 +56,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("unchecked")
 public class TestDataRuleEvaluator {
 
   private static final String USER_PREFIX = "user.";

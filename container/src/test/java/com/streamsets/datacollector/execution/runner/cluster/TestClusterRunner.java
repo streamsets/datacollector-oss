@@ -64,8 +64,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import java.io.File;
 import java.net.URL;
@@ -77,17 +75,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.streamsets.datacollector.util.AwaitConditionUtil.desiredPipelineState;
 import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+@SuppressWarnings("unchecked")
 public class TestClusterRunner {
 
   private static final String APPID = "123";
@@ -365,6 +362,7 @@ public class TestClusterRunner {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testPipelineStatusStartError() throws Exception {
     setState(PipelineStatus.EDITED);
     Runner clusterRunner = createClusterRunner();

@@ -57,6 +57,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+@SuppressWarnings("unchecked")
 public class TestPipelineBeanCreator {
 
   private StageDefinition getStageDef() {

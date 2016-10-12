@@ -57,6 +57,7 @@ public class TestStageLibraryResource extends JerseyTest {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testGetAllModules() {
 
     Response response = target("/v1/definitions").request().get();

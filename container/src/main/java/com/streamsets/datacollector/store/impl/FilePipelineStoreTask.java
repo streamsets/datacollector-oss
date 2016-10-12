@@ -186,7 +186,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       PipelineInfo info = new PipelineInfo(name, description, date, date, user, user, REV, uuid, false, null);
       PipelineConfiguration pipeline =
         new PipelineConfiguration(SCHEMA_VERSION, PipelineConfigBean.VERSION, uuid, description, stageLibrary
-          .getPipeline().getPipelineDefaultConfigs(), Collections.EMPTY_MAP, Collections.EMPTY_LIST, null, null);
+          .getPipeline().getPipelineDefaultConfigs(), Collections.<String, Object>emptyMap(), Collections.<StageConfiguration>emptyList(), null, null);
 
       try (
           OutputStream infoFile = Files.newOutputStream(getInfoFile(name));
@@ -346,7 +346,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
           pipeline.getIssues().addAll(errors);
         }
 
-        Map uiInfo = extractUiInfo(pipeline);
+        Map<String, Object> uiInfo = extractUiInfo(pipeline);
         saveUiInfo(name, tag, uiInfo);
 
       } catch (Exception ex) {

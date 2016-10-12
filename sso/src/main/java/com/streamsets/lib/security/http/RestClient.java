@@ -199,6 +199,7 @@ public class RestClient {
       }
     }
 
+    @SuppressWarnings("unchecked")
     public Map getError() throws IOException {
       Map map;
       if (isJson()) {
@@ -227,9 +228,9 @@ public class RestClient {
   HttpURLConnection conn;
 
   Map<String, List<String>> deepCopy(Map<String, List<String>> map) {
-    Map<String, List<String>> copy = new HashMap();
+    Map<String, List<String>> copy = new HashMap<>();
     for (Map.Entry<String, List<String>> entry : map.entrySet()) {
-      copy.put(entry.getKey(), new ArrayList<String>(entry.getValue()));
+      copy.put(entry.getKey(), new ArrayList<>(entry.getValue()));
     }
     return copy;
   }

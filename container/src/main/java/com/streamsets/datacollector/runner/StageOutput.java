@@ -50,8 +50,8 @@ public class StageOutput {
                      List<Record> eventRecords
   ) {
     this.instanceName = instanceName;
-    this.output = (Map) output;
-    this.errorRecords = (List) errorRecords;
+    this.output = output;
+    this.errorRecords = errorRecords;
     this.stageErrors = stageErrors;
     this.eventRecords = eventRecords;
   }

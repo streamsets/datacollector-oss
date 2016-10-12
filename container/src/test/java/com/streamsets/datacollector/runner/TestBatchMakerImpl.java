@@ -236,7 +236,7 @@ public class TestBatchMakerImpl {
     Mockito.when(stageRuntime.getDefinition()).thenReturn(stageDef);
     Mockito.when(stageRuntime.getContext()).thenReturn(context);
 
-    StagePipe pipe = new StagePipe(stageRuntime, Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+    StagePipe pipe = new StagePipe(stageRuntime, Collections.<String>emptyList(), Collections.<String>emptyList(), Collections.<String>emptyList());
 
     Record record = new RecordImpl("s", "s", null, null);
 

@@ -77,7 +77,7 @@ public class StageDefinition {
       StageLibraryDefinition libraryDefinition,
       boolean privateClassLoader,
       ClassLoader classLoader,
-      Class klass,
+      Class<? extends Stage> klass,
       String name,
       int version,
       String label,
@@ -147,6 +147,7 @@ public class StageDefinition {
     this.producesEvents = producesEvents;
   }
 
+  @SuppressWarnings("unchecked")
   public StageDefinition(StageDefinition def, ClassLoader classLoader) {
     libraryDefinition = def.libraryDefinition;
     privateClassLoader = def.privateClassLoader;
@@ -187,7 +188,7 @@ public class StageDefinition {
   public StageDefinition(
       StageLibraryDefinition libraryDefinition,
       boolean privateClassLoader,
-      Class klass,
+      Class<? extends Stage> klass,
       String name,
       int version,
       String label,
@@ -215,8 +216,8 @@ public class StageDefinition {
   ) {
     this.libraryDefinition = libraryDefinition;
     this.privateClassLoader = privateClassLoader;
-      this.onlineHelpRefUrl = onlineHelpRefUrl;
-      this.classLoader = libraryDefinition.getClassLoader();
+    this.onlineHelpRefUrl = onlineHelpRefUrl;
+    this.classLoader = libraryDefinition.getClassLoader();
     this.klass = klass;
     this.name = name;
     this.version = version;
@@ -284,7 +285,7 @@ public class StageDefinition {
     return klass.getName();
   }
 
-  public Class getStageClass() {
+  public Class<? extends Stage> getStageClass() {
     return klass;
   }
 
@@ -420,6 +421,7 @@ public class StageDefinition {
     return map;
   }
 
+  @SuppressWarnings("unchecked")
   public static ConfigGroupDefinition localizeConfigGroupDefinition(ClassLoader classLoader,
       ConfigGroupDefinition groupDefs) {
     if (groupDefs != null) {

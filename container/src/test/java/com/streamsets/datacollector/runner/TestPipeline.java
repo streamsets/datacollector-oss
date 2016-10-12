@@ -56,6 +56,7 @@ public class TestPipeline {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testBuilder() throws Exception {
     StageLibraryTask lib = MockStages.createStageLibrary();
     List<StageConfiguration> stageDefs = ImmutableList.of(

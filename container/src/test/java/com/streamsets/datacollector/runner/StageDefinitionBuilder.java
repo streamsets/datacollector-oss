@@ -29,6 +29,7 @@ import com.streamsets.datacollector.config.StageType;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.Executor;
@@ -43,7 +44,7 @@ import java.util.Properties;
 public class StageDefinitionBuilder {
   StageLibraryDefinition libraryDefinition;
   boolean privateClassLoader = false;
-  Class klass;
+  Class<? extends Stage> klass;
   String name;
   int version = 1;
   String label;
@@ -69,7 +70,7 @@ public class StageDefinitionBuilder {
   boolean offsetCommitTrigger = false;
   boolean producesEvents = false;
 
-  public StageDefinitionBuilder(ClassLoader cl, Class klass, String name) {
+  public StageDefinitionBuilder(ClassLoader cl, Class<? extends Stage> klass, String name) {
     this.libraryDefinition = createLibraryDef(cl);
     this.klass = klass;
     this.name = name;

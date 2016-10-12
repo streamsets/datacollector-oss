@@ -145,7 +145,7 @@ public class AsyncPreviewer implements Previewer {
   }
 
   private void scheduleTimeout(long timeoutMillis) {
-    executorService.schedule(new Callable() {
+    executorService.schedule(new Callable<Object>() {
       @Override
       public Object call() throws PipelineException {
         if (future != null) {

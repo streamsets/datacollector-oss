@@ -82,7 +82,7 @@ public class DisconnectedAuthentication implements Authentication {
           principal.setEmail("-");
           principal.setOrganizationId(userName.substring(userName.indexOf("@") + 1)); // org is extracted from username
           principal.setOrganizationName("-");
-          Set<String> roles = new ImmutableSet.Builder().addAll(entry.getRoles()).add(DISCONNECTED_MODE_ROLE).build();
+          Set<String> roles = new ImmutableSet.Builder<String>().addAll(entry.getRoles()).add(DISCONNECTED_MODE_ROLE).build();
           principal.getRoles().addAll(roles);
           principal.setTokenStr(UUID.randomUUID().toString());
           principal.setExpires(-1);

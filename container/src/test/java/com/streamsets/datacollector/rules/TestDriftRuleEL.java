@@ -38,6 +38,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+@SuppressWarnings("checked")
 public class TestDriftRuleEL {
 
   @Test
@@ -201,6 +202,7 @@ public class TestDriftRuleEL {
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   public void testDriftNamesIncompatibleTypes() throws Exception {
     ELVars vars = new ELVariables();
 
@@ -246,6 +248,7 @@ public class TestDriftRuleEL {
   }
 
   @Test
+  @SuppressWarnings("deprecation")
   public void testDriftOrderIncompatibleTypes() throws Exception {
     ELVars vars = new ELVariables();
 

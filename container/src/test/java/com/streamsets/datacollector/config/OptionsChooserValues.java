@@ -21,7 +21,7 @@ package com.streamsets.datacollector.config;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public class OptionsChooserValues extends BaseEnumChooserValues {
+public class OptionsChooserValues extends BaseEnumChooserValues<Options> {
 
   public OptionsChooserValues() {
     super(Options.class);

@@ -350,6 +350,7 @@ public abstract class PipelineBeanCreator {
     }
   }
 
+  @SuppressWarnings("unchecked")
   Object toEnum(Class klass, Object value, StageDefinition stageDef, String stageName, String groupName,
       String configName, List<Issue> errors) {
     try {

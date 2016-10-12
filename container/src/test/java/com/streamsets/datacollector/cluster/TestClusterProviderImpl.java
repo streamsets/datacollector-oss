@@ -149,8 +149,8 @@ public class TestClusterProviderImpl {
     Assert.assertTrue(avroJar.createNewFile());
     Assert.assertTrue(avroMapReduceJar.createNewFile());
     Assert.assertTrue(maprFsJar.createNewFile());
-    classLoader = new URLClassLoader(new URL[]{sparkKafkaJar.toURL(), avroJar.toURL(), avroMapReduceJar.toURL(),
-        maprFsJar.toURL()}) {
+    classLoader = new URLClassLoader(new URL[]{sparkKafkaJar.toURI().toURL(), avroJar.toURI().toURL(), avroMapReduceJar.toURI().toURL(),
+        maprFsJar.toURI().toURL()}) {
       public String getType() {
         return ClusterModeConstants.USER_LIBS;
       }

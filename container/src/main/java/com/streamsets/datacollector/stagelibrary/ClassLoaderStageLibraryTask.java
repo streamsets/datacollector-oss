@@ -260,6 +260,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   }
 
   @VisibleForTesting
+  @SuppressWarnings("unchecked")
   void loadStages() {
     if (LOG.isDebugEnabled()) {
       for (ClassLoader cl : stageClassLoaders) {

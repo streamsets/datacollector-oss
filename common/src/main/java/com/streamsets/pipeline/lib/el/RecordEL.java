@@ -66,6 +66,7 @@ public class RecordEL {
     prefix = RECORD_EL_PREFIX,
     name = "value",
     description = "Returns the value of the field represented by path 'fieldPath' for the record in context")
+  @SuppressWarnings("unchecked")
   public static Object getValue(
     @ElParam("fieldPath") String fieldPath) {
     Object value = null;
@@ -134,6 +135,7 @@ public class RecordEL {
     ERROR_PIPELINE_NAME, ERROR_TIME
   }
 
+  @SuppressWarnings("unchecked")
   private static <T> T getFromHeader(HeaderProperty prop) {
     Object value = null;
     Record record = getRecordInContext();
@@ -401,8 +403,7 @@ public class RecordEL {
       if (root != null && root.getType() == Field.Type.LIST && root.getValue() != null) {
         Set<String> headers = new HashSet<>();
         List<Field> list = root.getValueAsList();
-        for (int i = 0; i < list.size(); i++) {
-          Field element = list.get(i);
+        for (Field element : list) {
           if (element.getType() == Field.Type.MAP && element.getValue() != null) {
             Map<String, Field> map = element.getValueAsMap();
             Field nameField = map.get("header");

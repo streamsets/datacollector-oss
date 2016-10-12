@@ -447,6 +447,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public List<AlertInfo> getAlerts() throws PipelineStoreException {
     List<AlertInfo> alertInfoList = new ArrayList<>();
     MetricRegistry metrics = (MetricRegistry)getMetrics();

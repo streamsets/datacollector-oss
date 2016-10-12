@@ -184,6 +184,7 @@ public class ClusterRunner extends AbstractRunner {
     this.slaveCallbackManager.setClusterToken(sdcToken);
   }
 
+  @SuppressWarnings("deprecation")
   public ClusterRunner(String user, String name, String rev, ObjectGraph objectGraph) {
     this.name = name;
     this.rev = rev;
@@ -319,6 +320,7 @@ public class ClusterRunner extends AbstractRunner {
     throw new UnsupportedOperationException("ForceQuit is not supported in Cluster mode");
   }
 
+  @SuppressWarnings("unchecked")
   private synchronized void stopPipeline(boolean isNodeShuttingDown) throws PipelineStoreException,
     PipelineRunnerException, PipelineRuntimeException {
     try {
@@ -344,6 +346,7 @@ public class ClusterRunner extends AbstractRunner {
     return pipelineStateStore.getState(name, rev).getAttributes();
   }
 
+  @SuppressWarnings("unchecked")
   private void connectOrStart() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException,
     StageException {
     final Map<String, Object> attributes = new HashMap<>();
@@ -450,7 +453,7 @@ public class ClusterRunner extends AbstractRunner {
 
   @Override
   public List<SnapshotInfo> getSnapshotsInfo() {
-    return Collections.EMPTY_LIST;
+    return Collections.emptyList();
   }
 
   @Override
@@ -503,7 +506,7 @@ public class ClusterRunner extends AbstractRunner {
 
   @Override
   public List<AlertInfo> getAlerts() throws PipelineStoreException {
-    return Collections.EMPTY_LIST;
+    return Collections.emptyList();
   }
 
   @Override
@@ -706,6 +709,7 @@ public class ClusterRunner extends AbstractRunner {
       }
     }
 
+    @SuppressWarnings("unchecked")
     private void checkStatus() throws PipelineStoreException, PipelineRunnerException {
       if (clusterRunner.getState().getStatus().isActive()) {
         PipelineState ps = clusterRunner.getState();

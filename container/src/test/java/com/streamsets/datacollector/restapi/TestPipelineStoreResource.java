@@ -310,6 +310,7 @@ public class TestPipelineStoreResource extends JerseyTest {
 
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testUiInfo() throws Exception {
     PipelineConfiguration conf = MockStages.createPipelineConfigurationSourceProcessorTarget();
     conf.getUiInfo().put("a", "A");

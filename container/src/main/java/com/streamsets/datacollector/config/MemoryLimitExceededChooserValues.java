@@ -21,7 +21,7 @@ package com.streamsets.datacollector.config;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public class MemoryLimitExceededChooserValues extends BaseEnumChooserValues {
+public class MemoryLimitExceededChooserValues extends BaseEnumChooserValues<MemoryLimitExceeded> {
 
   public MemoryLimitExceededChooserValues() {
     super(MemoryLimitExceeded.class);

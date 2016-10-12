@@ -57,6 +57,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@SuppressWarnings("unchecked")
 public abstract class StageRunner<S extends Stage> {
   private static final Logger LOG = LoggerFactory.getLogger(StageRunner.class);
 

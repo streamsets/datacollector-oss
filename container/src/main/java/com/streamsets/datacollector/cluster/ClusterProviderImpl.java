@@ -508,6 +508,7 @@ public class ClusterProviderImpl implements ClusterProvider {
   }
 
 
+  @SuppressWarnings("unchecked")
   private ApplicationState startPipelineInternal(
       SystemProcessFactory systemProcessFactory,
       File clusterManager,

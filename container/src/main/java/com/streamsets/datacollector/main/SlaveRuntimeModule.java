@@ -46,7 +46,7 @@ import java.util.List;
 public class SlaveRuntimeModule {
   private static final Logger LOG = LoggerFactory.getLogger(SlaveRuntimeModule.class);
   public static final String SDC_PROPERTY_PREFIX = "sdc";
-  private static List<ClassLoader> stageLibraryClassLoaders = Collections.EMPTY_LIST;
+  private static List<ClassLoader> stageLibraryClassLoaders = Collections.emptyList();
 
   // Called by BootstrapCluster through reflection
   public static synchronized void setStageLibraryClassLoaders(List<? extends ClassLoader> classLoaders) {
