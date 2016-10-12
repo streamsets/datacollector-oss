@@ -102,7 +102,7 @@ public class ManagerResource {
     List<PipelineState> pipelineStateList = manager.getPipelines();
     Map<String, PipelineStateJson> pipelineStateMap = new HashMap<>();
     for(PipelineState pipelineState: pipelineStateList) {
-      pipelineStateMap.put(pipelineState.getName(), BeanHelper.wrapPipelineState(pipelineState));
+      pipelineStateMap.put(pipelineState.getName(), BeanHelper.wrapPipelineState(pipelineState, true));
     }
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(pipelineStateMap).build();
   }
@@ -120,7 +120,9 @@ public class ManagerResource {
     if(pipelineName != null) {
       Runner runner = manager.getRunner(user, pipelineName, rev);
       if(runner != null) {
-        return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapPipelineState(runner.getState())).build();
+        return Response.ok()
+            .type(MediaType.APPLICATION_JSON)
+            .entity(BeanHelper.wrapPipelineState(runner.getState())).build();
       }
     }
     return Response.noContent().build();
@@ -151,7 +153,9 @@ public class ManagerResource {
         Utils.checkState(runner.getState().getExecutionMode() != ExecutionMode.SLAVE,
           "This operation is not supported in SLAVE mode");
         runner.start();
-        return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapPipelineState(runner.getState())).build();
+        return Response.ok()
+            .type(MediaType.APPLICATION_JSON)
+            .entity(BeanHelper.wrapPipelineState(runner.getState())).build();
       } catch (PipelineRuntimeException ex) {
         if (ex.getErrorCode() == ContainerError.CONTAINER_0165) {
           return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(
@@ -190,7 +194,9 @@ public class ManagerResource {
     Utils.checkState(runner.getState().getExecutionMode() != ExecutionMode.SLAVE,
       "This operation is not supported in SLAVE mode");
     runner.stop();
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapPipelineState(runner.getState())).build();
+    return Response.ok()
+        .type(MediaType.APPLICATION_JSON)
+        .entity(BeanHelper.wrapPipelineState(runner.getState())).build();
   }
 
   @Path("/pipeline/{pipelineName}/forceStop")
@@ -218,7 +224,9 @@ public class ManagerResource {
     Utils.checkState(runner.getState().getExecutionMode() == ExecutionMode.STANDALONE,
         Utils.format("This operation is not supported in {} mode", runner.getState().getExecutionMode()));
     runner.forceQuit();
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapPipelineState(runner.getState())).build();
+    return Response.ok()
+        .type(MediaType.APPLICATION_JSON)
+        .entity(BeanHelper.wrapPipelineState(runner.getState())).build();
   }
 
   @Path("/pipeline/{pipelineName}/resetOffset")
@@ -249,8 +257,10 @@ public class ManagerResource {
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
-  public Response getMetrics(@PathParam("pipelineName") String pipelineName,
-                             @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineStoreException, PipelineManagerException {
+  public Response getMetrics(
+      @PathParam("pipelineName") String pipelineName,
+      @QueryParam("rev") @DefaultValue("0") String rev
+  ) throws PipelineStoreException, PipelineManagerException {
     RestAPIUtils.injectPipelineInMDC(pipelineName);
     if(pipelineName != null) {
       Runner runner = manager.getRunner(user, pipelineName, rev);
@@ -518,7 +528,7 @@ public class ManagerResource {
     Runner runner = manager.getRunner(user, name, rev);
     if(runner != null) {
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(
-        BeanHelper.wrapPipelineStatesNewAPI(runner.getHistory())).build();
+        BeanHelper.wrapPipelineStatesNewAPI(runner.getHistory(), false)).build();
     }
     return Response.noContent().build();
   }

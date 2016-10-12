@@ -19,22 +19,40 @@
  */
 package com.streamsets.datacollector.restapi.bean;
 
+import com.streamsets.datacollector.config.ConfigDefinition;
+import com.streamsets.datacollector.config.ConfigGroupDefinition;
+import com.streamsets.datacollector.config.DataRuleDefinition;
 import com.streamsets.datacollector.config.DriftRuleDefinition;
+import com.streamsets.datacollector.config.MetricElement;
+import com.streamsets.datacollector.config.MetricType;
+import com.streamsets.datacollector.config.MetricsRuleDefinition;
+import com.streamsets.datacollector.config.ModelDefinition;
 import com.streamsets.datacollector.config.ModelType;
+import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.config.PipelineDefinition;
+import com.streamsets.datacollector.config.RawSourceDefinition;
+import com.streamsets.datacollector.config.RuleDefinitions;
+import com.streamsets.datacollector.config.StageConfiguration;
+import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageType;
+import com.streamsets.datacollector.config.ThresholdType;
 import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionArgumentDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
+import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.PreviewOutput;
+import com.streamsets.datacollector.execution.SnapshotInfo;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
 import com.streamsets.datacollector.execution.runner.common.SampledRecord;
 import com.streamsets.datacollector.record.HeaderImpl;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.store.PipelineInfo;
+import com.streamsets.datacollector.store.PipelineRevInfo;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,38 +61,46 @@ import java.util.Map;
 public class BeanHelper {
   private BeanHelper() {}
 
-  public static com.streamsets.datacollector.restapi.bean.PipelineStateJson wrapPipelineState(com.streamsets.datacollector.execution.PipelineState pipelineState) {
+  public static PipelineStateJson wrapPipelineState(PipelineState pipelineState) {
     if(pipelineState == null) {
       return null;
     }
-    return new com.streamsets.datacollector.restapi.bean.PipelineStateJson(pipelineState);
+    return new PipelineStateJson(pipelineState, false);
   }
 
-  public static List<com.streamsets.datacollector.restapi.bean.PipelineStateJson> wrapPipelineStatesNewAPI(
-    List<com.streamsets.datacollector.execution.PipelineState> pipelineStates) {
+  public static PipelineStateJson wrapPipelineState(PipelineState pipelineState, boolean ignoreMetrics) {
+    if(pipelineState == null) {
+      return null;
+    }
+    return new PipelineStateJson(pipelineState, ignoreMetrics);
+  }
+
+  public static List<PipelineStateJson> wrapPipelineStatesNewAPI(
+      List<PipelineState> pipelineStates,
+      boolean ignoreMetrics
+  ) {
     if(pipelineStates == null) {
       return null;
     }
-    List<com.streamsets.datacollector.restapi.bean.PipelineStateJson> states = new ArrayList<>(pipelineStates.size());
-    for(com.streamsets.datacollector.execution.PipelineState p : pipelineStates) {
-      states.add(BeanHelper.wrapPipelineState(p));
+    List<PipelineStateJson> states = new ArrayList<>(pipelineStates.size());
+    for(PipelineState p : pipelineStates) {
+      states.add(BeanHelper.wrapPipelineState(p, ignoreMetrics));
     }
     return states;
   }
 
-  public static List<com.streamsets.datacollector.execution.PipelineState> unwrapPipelineStatesNewAPI(
-    List<com.streamsets.datacollector.restapi.bean.PipelineStateJson> pipelineStateJsons) {
+  public static List<PipelineState> unwrapPipelineStatesNewAPI(List<PipelineStateJson> pipelineStateJsons) {
     if(pipelineStateJsons == null) {
       return null;
     }
-    List<com.streamsets.datacollector.execution.PipelineState> states = new ArrayList<>(pipelineStateJsons.size());
-    for(com.streamsets.datacollector.restapi.bean.PipelineStateJson p : pipelineStateJsons) {
+    List<PipelineState> states = new ArrayList<>(pipelineStateJsons.size());
+    for(PipelineStateJson p : pipelineStateJsons) {
       states.add(p.getPipelineState());
     }
     return states;
   }
 
-  public static List<PipelineInfoJson> wrapPipelineInfo(List<com.streamsets.datacollector.store.PipelineInfo> pipelines) {
+  public static List<PipelineInfoJson> wrapPipelineInfo(List<PipelineInfo> pipelines) {
     if(pipelines == null) {
       return null;
     }
@@ -85,37 +111,33 @@ public class BeanHelper {
     return pipelineInfoJson;
   }
 
-  public static List<com.streamsets.datacollector.restapi.bean.SnapshotInfoJson> wrapSnapshotInfoNewAPI(
-    List<com.streamsets.datacollector.execution.SnapshotInfo> snapshotInfoList) {
+  public static List<SnapshotInfoJson> wrapSnapshotInfoNewAPI(List<SnapshotInfo> snapshotInfoList) {
     if(snapshotInfoList == null) {
       return null;
     }
-    List<com.streamsets.datacollector.restapi.bean.SnapshotInfoJson> snapshotInfoJsonList =
+    List<SnapshotInfoJson> snapshotInfoJsonList =
       new ArrayList<>(snapshotInfoList.size());
-    for(com.streamsets.datacollector.execution.SnapshotInfo p : snapshotInfoList) {
-      snapshotInfoJsonList.add(new com.streamsets.datacollector.restapi.bean.SnapshotInfoJson(p));
+    for(SnapshotInfo p : snapshotInfoList) {
+      snapshotInfoJsonList.add(new SnapshotInfoJson(p));
     }
     return snapshotInfoJsonList;
   }
 
-  public static com.streamsets.datacollector.restapi.bean.SnapshotInfoJson wrapSnapshotInfoNewAPI(
-    com.streamsets.datacollector.execution.SnapshotInfo snapshotInfo) {
+  public static SnapshotInfoJson wrapSnapshotInfoNewAPI(SnapshotInfo snapshotInfo) {
     if(snapshotInfo == null) {
       return null;
     }
-    return new com.streamsets.datacollector.restapi.bean.SnapshotInfoJson(snapshotInfo);
+    return new SnapshotInfoJson(snapshotInfo);
   }
 
-  public static ConfigConfigurationJson wrapConfigConfiguration(
-    Config config) {
+  public static ConfigConfigurationJson wrapConfigConfiguration(Config config) {
     if(config == null) {
       return null;
     }
     return new ConfigConfigurationJson(config);
   }
 
-  public static List<ConfigConfigurationJson> wrapConfigConfiguration(
-    List<Config> config) {
+  public static List<ConfigConfigurationJson> wrapConfigConfiguration(List<Config> config) {
     if(config == null) {
       return null;
     }
@@ -126,8 +148,7 @@ public class BeanHelper {
     return unwrappedConfig;
   }
 
-  public static List<Config> unwrapConfigConfiguration(
-    List<ConfigConfigurationJson> configConfigurationJson) {
+  public static List<Config> unwrapConfigConfiguration(List<ConfigConfigurationJson> configConfigurationJson) {
     if(configConfigurationJson == null) {
       return null;
     }
@@ -138,40 +159,38 @@ public class BeanHelper {
     return unwrappedConfig;
   }
 
-  public static List<com.streamsets.datacollector.config.StageConfiguration> unwrapStageConfigurations(
-    List<StageConfigurationJson> stageConfigurationJson) {
+  public static List<StageConfiguration> unwrapStageConfigurations(
+    List<StageConfigurationJson> stageConfigurationJson
+  ) {
     if(stageConfigurationJson == null) {
       return null;
     }
-    List<com.streamsets.datacollector.config.StageConfiguration> configs = new ArrayList<>(stageConfigurationJson.size());
+    List<StageConfiguration> configs = new ArrayList<>(stageConfigurationJson.size());
     for(StageConfigurationJson s : stageConfigurationJson) {
       configs.add(s.getStageConfiguration());
     }
     return configs;
   }
 
-  public static com.streamsets.datacollector.config.StageConfiguration unwrapStageConfiguration(
-    StageConfigurationJson stageConfigurationJson) {
+  public static StageConfiguration unwrapStageConfiguration(StageConfigurationJson stageConfigurationJson) {
     if(stageConfigurationJson == null) {
       return null;
     }
     return stageConfigurationJson.getStageConfiguration();
   }
 
-  public static List<StageConfigurationJson> wrapStageConfigurations(
-    List<com.streamsets.datacollector.config.StageConfiguration> stageConfiguration) {
+  public static List<StageConfigurationJson> wrapStageConfigurations(List<StageConfiguration> stageConfiguration) {
     if(stageConfiguration == null) {
       return null;
     }
     List<StageConfigurationJson> configs = new ArrayList<>(stageConfiguration.size());
-    for(com.streamsets.datacollector.config.StageConfiguration s : stageConfiguration) {
+    for(StageConfiguration s : stageConfiguration) {
       configs.add(new StageConfigurationJson(s));
     }
     return configs;
   }
 
-  public static StageConfigurationJson wrapStageConfiguration(
-    com.streamsets.datacollector.config.StageConfiguration stageConfiguration) {
+  public static StageConfigurationJson wrapStageConfiguration(StageConfiguration stageConfiguration) {
     if(stageConfiguration == null) {
       return null;
     }
@@ -179,23 +198,25 @@ public class BeanHelper {
   }
 
   public static List<MetricsRuleDefinitionJson> wrapMetricRuleDefinitions(
-    List<com.streamsets.datacollector.config.MetricsRuleDefinition> metricsRuleDefinitions) {
+      List<MetricsRuleDefinition> metricsRuleDefinitions
+  ) {
     if(metricsRuleDefinitions == null) {
       return null;
     }
     List<MetricsRuleDefinitionJson> metricsRuleDefinitionJsonList = new ArrayList<>(metricsRuleDefinitions.size());
-    for(com.streamsets.datacollector.config.MetricsRuleDefinition m : metricsRuleDefinitions) {
+    for(MetricsRuleDefinition m : metricsRuleDefinitions) {
       metricsRuleDefinitionJsonList.add(new MetricsRuleDefinitionJson(m));
     }
     return metricsRuleDefinitionJsonList;
   }
 
-  public static List<com.streamsets.datacollector.config.MetricsRuleDefinition> unwrapMetricRuleDefinitions(
-    List<MetricsRuleDefinitionJson> metricsRuleDefinitionJsons) {
+  public static List<MetricsRuleDefinition> unwrapMetricRuleDefinitions(
+    List<MetricsRuleDefinitionJson> metricsRuleDefinitionJsons
+  ) {
     if(metricsRuleDefinitionJsons == null) {
       return null;
     }
-    List<com.streamsets.datacollector.config.MetricsRuleDefinition> metricsRuleDefinitionList = new ArrayList<>(metricsRuleDefinitionJsons.size());
+    List<MetricsRuleDefinition> metricsRuleDefinitionList = new ArrayList<>(metricsRuleDefinitionJsons.size());
     for(MetricsRuleDefinitionJson m : metricsRuleDefinitionJsons) {
       metricsRuleDefinitionList.add(m.getMetricsRuleDefinition());
     }
@@ -203,23 +224,25 @@ public class BeanHelper {
   }
 
   public static List<DataRuleDefinitionJson> wrapDataRuleDefinitions(
-    List<com.streamsets.datacollector.config.DataRuleDefinition> dataRuleDefinitions) {
+    List<DataRuleDefinition> dataRuleDefinitions
+  ) {
     if(dataRuleDefinitions == null) {
       return null;
     }
     List<DataRuleDefinitionJson> dataRuleDefinitionJsonList = new ArrayList<>(dataRuleDefinitions.size());
-    for(com.streamsets.datacollector.config.DataRuleDefinition d : dataRuleDefinitions) {
+    for(DataRuleDefinition d : dataRuleDefinitions) {
       dataRuleDefinitionJsonList.add(new DataRuleDefinitionJson(d));
     }
     return dataRuleDefinitionJsonList;
   }
 
-  public static List<com.streamsets.datacollector.config.DataRuleDefinition> unwrapDataRuleDefinitions(
-    List<DataRuleDefinitionJson> dataRuleDefinitionJsons) {
+  public static List<DataRuleDefinition> unwrapDataRuleDefinitions(
+    List<DataRuleDefinitionJson> dataRuleDefinitionJsons
+  ) {
     if(dataRuleDefinitionJsons == null) {
       return null;
     }
-    List<com.streamsets.datacollector.config.DataRuleDefinition> dataRuleDefinitionList = new ArrayList<>(dataRuleDefinitionJsons.size());
+    List<DataRuleDefinition> dataRuleDefinitionList = new ArrayList<>(dataRuleDefinitionJsons.size());
     for(DataRuleDefinitionJson m : dataRuleDefinitionJsons) {
       dataRuleDefinitionList.add(m.getDataRuleDefinition());
     }
@@ -248,16 +271,14 @@ public class BeanHelper {
     return rules;
   }
 
-  public static PipelineConfigurationJson wrapPipelineConfiguration(
-    com.streamsets.datacollector.config.PipelineConfiguration pipelineConfiguration) {
+  public static PipelineConfigurationJson wrapPipelineConfiguration(PipelineConfiguration pipelineConfiguration) {
     if(pipelineConfiguration == null) {
       return null;
     }
     return new PipelineConfigurationJson(pipelineConfiguration);
   }
 
-  public static com.streamsets.datacollector.config.PipelineConfiguration unwrapPipelineConfiguration(
-    PipelineConfigurationJson pipelineConfigurationJson) {
+  public static PipelineConfiguration unwrapPipelineConfiguration(PipelineConfigurationJson pipelineConfigurationJson) {
     if(pipelineConfigurationJson == null) {
       return null;
     }
@@ -271,81 +292,76 @@ public class BeanHelper {
     return pipelineInfoJson.getPipelineInfo();
   }
 
-  public static PipelineInfoJson wrapPipelineInfo(com.streamsets.datacollector.store.PipelineInfo pipelineInfo) {
+  public static PipelineInfoJson wrapPipelineInfo(PipelineInfo pipelineInfo) {
     if(pipelineInfo == null) {
       return null;
     }
     return new PipelineInfoJson(pipelineInfo);
   }
 
-  public static List<PipelineRevInfoJson> wrapPipelineRevInfo(
-    List<com.streamsets.datacollector.store.PipelineRevInfo> pipelineRevInfos) {
+  public static List<PipelineRevInfoJson> wrapPipelineRevInfo(List<PipelineRevInfo> pipelineRevInfos) {
     if(pipelineRevInfos == null) {
       return null;
     }
     List<PipelineRevInfoJson> pipelineRevInfoJsonList = new ArrayList<>(pipelineRevInfos.size());
-    for(com.streamsets.datacollector.store.PipelineRevInfo p : pipelineRevInfos) {
+    for(PipelineRevInfo p : pipelineRevInfos) {
       pipelineRevInfoJsonList.add(new PipelineRevInfoJson(p));
     }
     return pipelineRevInfoJsonList;
   }
 
-  public static RuleDefinitionsJson wrapRuleDefinitions(com.streamsets.datacollector.config.RuleDefinitions ruleDefinitions) {
+  public static RuleDefinitionsJson wrapRuleDefinitions(RuleDefinitions ruleDefinitions) {
     if(ruleDefinitions == null) {
       return null;
     }
     return new RuleDefinitionsJson(ruleDefinitions);
   }
 
-  public static com.streamsets.datacollector.config.RuleDefinitions unwrapRuleDefinitions(RuleDefinitionsJson ruleDefinitionsJson) {
+  public static RuleDefinitions unwrapRuleDefinitions(RuleDefinitionsJson ruleDefinitionsJson) {
     if(ruleDefinitionsJson == null) {
       return null;
     }
     return ruleDefinitionsJson.getRuleDefinitions();
   }
 
-  public static List<ConfigDefinitionJson> wrapConfigDefinitions(
-    List<com.streamsets.datacollector.config.ConfigDefinition> configDefinitions) {
+  public static List<ConfigDefinitionJson> wrapConfigDefinitions(List<ConfigDefinition> configDefinitions) {
     if(configDefinitions == null) {
       return null;
     }
     List<ConfigDefinitionJson> configDefinitionlist = new ArrayList<>(configDefinitions.size());
-    for(com.streamsets.datacollector.config.ConfigDefinition c : configDefinitions) {
+    for(ConfigDefinition c : configDefinitions) {
       configDefinitionlist.add(new ConfigDefinitionJson(c));
     }
     return configDefinitionlist;
   }
 
-  public static ModelDefinitionJson wrapModelDefinition(com.streamsets.datacollector.config.ModelDefinition modelDefinition) {
+  public static ModelDefinitionJson wrapModelDefinition(ModelDefinition modelDefinition) {
     if(modelDefinition == null) {
       return null;
     }
     return new ModelDefinitionJson(modelDefinition);
   }
 
-  public static RawSourceDefinitionJson wrapRawSourceDefinition(
-    com.streamsets.datacollector.config.RawSourceDefinition rawSourceDefinition) {
+  public static RawSourceDefinitionJson wrapRawSourceDefinition(RawSourceDefinition rawSourceDefinition) {
     if(rawSourceDefinition == null) {
       return null;
     }
     return new RawSourceDefinitionJson(rawSourceDefinition);
   }
 
-  public static ConfigGroupDefinitionJson wrapConfigGroupDefinition(
-    com.streamsets.datacollector.config.ConfigGroupDefinition configGroupDefinition) {
+  public static ConfigGroupDefinitionJson wrapConfigGroupDefinition(ConfigGroupDefinition configGroupDefinition) {
     if(configGroupDefinition == null) {
       return null;
     }
     return new ConfigGroupDefinitionJson(configGroupDefinition);
   }
 
-  public static List<StageDefinitionJson> wrapStageDefinitions(
-    List<com.streamsets.datacollector.config.StageDefinition> stageDefinitions) {
+  public static List<StageDefinitionJson> wrapStageDefinitions(List<StageDefinition> stageDefinitions) {
     if(stageDefinitions == null) {
       return null;
     }
     List<StageDefinitionJson> stageDefinitionJsonList = new ArrayList<>(stageDefinitions.size());
-    for(com.streamsets.datacollector.config.StageDefinition s : stageDefinitions) {
+    for(StageDefinition s : stageDefinitions) {
       stageDefinitionJsonList.add(new StageDefinitionJson(s));
     }
     return stageDefinitionJsonList;
@@ -363,7 +379,8 @@ public class BeanHelper {
   }
 
   public static Map<String, List<IssueJson>> wrapIssuesMap(
-      Map<String, List<com.streamsets.datacollector.validation.Issue>> stageIssuesMapList) {
+      Map<String, List<com.streamsets.datacollector.validation.Issue>> stageIssuesMapList
+  ) {
     if(stageIssuesMapList == null) {
       return null;
     }
@@ -376,7 +393,8 @@ public class BeanHelper {
 
 
   public static Map<String, List<com.streamsets.datacollector.validation.Issue>> unwrapIssuesMap(
-      Map<String, List<IssueJson>> Issues) {
+      Map<String, List<IssueJson>> Issues
+  ) {
     if(Issues == null) {
       return null;
     }
@@ -583,7 +601,7 @@ public class BeanHelper {
   }
 
   public static PipelineDefinitionJson wrapPipelineDefinition(
-    com.streamsets.datacollector.config.PipelineDefinition pipelineDefinition) {
+    PipelineDefinition pipelineDefinition) {
     if(pipelineDefinition == null) {
       return null;
     }
@@ -691,7 +709,7 @@ public class BeanHelper {
   /*****************************************************/
 
 
-  public static StatusJson wrapState(com.streamsets.datacollector.execution.PipelineStatus status) {
+  public static StatusJson wrapState(PipelineStatus status) {
     if(status == null) {
       return null;
     }
@@ -740,43 +758,43 @@ public class BeanHelper {
     }
     switch(pipelineStatus) {
       case STOPPED:
-        return com.streamsets.datacollector.execution.PipelineStatus.STOPPED;
+        return PipelineStatus.STOPPED;
       case STOPPING:
-        return com.streamsets.datacollector.execution.PipelineStatus.STOPPING;
+        return PipelineStatus.STOPPING;
       case RUNNING:
-        return com.streamsets.datacollector.execution.PipelineStatus.RUNNING;
+        return PipelineStatus.RUNNING;
       case RUN_ERROR:
-        return com.streamsets.datacollector.execution.PipelineStatus.RUN_ERROR;
+        return PipelineStatus.RUN_ERROR;
       case FINISHED:
-        return com.streamsets.datacollector.execution.PipelineStatus.FINISHED;
+        return PipelineStatus.FINISHED;
       case CONNECTING:
-        return com.streamsets.datacollector.execution.PipelineStatus.CONNECTING;
+        return PipelineStatus.CONNECTING;
       case CONNECT_ERROR:
-        return com.streamsets.datacollector.execution.PipelineStatus.CONNECT_ERROR;
+        return PipelineStatus.CONNECT_ERROR;
       case DISCONNECTED:
-        return com.streamsets.datacollector.execution.PipelineStatus.DISCONNECTED;
+        return PipelineStatus.DISCONNECTED;
       case DISCONNECTING:
-        return com.streamsets.datacollector.execution.PipelineStatus.DISCONNECTING;
+        return PipelineStatus.DISCONNECTING;
       case EDITED:
-        return com.streamsets.datacollector.execution.PipelineStatus.EDITED;
+        return PipelineStatus.EDITED;
       case FINISHING:
-        return com.streamsets.datacollector.execution.PipelineStatus.FINISHING;
+        return PipelineStatus.FINISHING;
       case KILLED:
-        return com.streamsets.datacollector.execution.PipelineStatus.KILLED;
+        return PipelineStatus.KILLED;
       case RUNNING_ERROR:
-        return com.streamsets.datacollector.execution.PipelineStatus.RUNNING_ERROR;
+        return PipelineStatus.RUNNING_ERROR;
       case STARTING:
-        return com.streamsets.datacollector.execution.PipelineStatus.STARTING;
+        return PipelineStatus.STARTING;
       case START_ERROR:
-        return com.streamsets.datacollector.execution.PipelineStatus.START_ERROR;
+        return PipelineStatus.START_ERROR;
       case RETRY:
-        return com.streamsets.datacollector.execution.PipelineStatus.RETRY;
+        return PipelineStatus.RETRY;
       default:
         throw new IllegalArgumentException("Unrecognized state");
     }
   }
 
-  public static MetricElementJson wrapMetricElement(com.streamsets.datacollector.config.MetricElement metricElement) {
+  public static MetricElementJson wrapMetricElement(MetricElement metricElement) {
     if(metricElement == null) {
       return null;
     }
@@ -877,107 +895,107 @@ public class BeanHelper {
     }
   }
 
-  public static com.streamsets.datacollector.config.MetricElement unwrapMetricElement(MetricElementJson metricElementJson) {
+  public static MetricElement unwrapMetricElement(MetricElementJson metricElementJson) {
     if(metricElementJson == null) {
       return null;
     }
     switch(metricElementJson) {
       //Related to Counters
       case COUNTER_COUNT:
-        return com.streamsets.datacollector.config.MetricElement.COUNTER_COUNT;
+        return MetricElement.COUNTER_COUNT;
 
       //Related to Histogram
       case HISTOGRAM_COUNT:
-        return com.streamsets.datacollector.config.MetricElement.HISTOGRAM_COUNT;
+        return MetricElement.HISTOGRAM_COUNT;
       case HISTOGRAM_MAX:
-        return com.streamsets.datacollector.config.MetricElement.HISTOGRAM_MAX;
+        return MetricElement.HISTOGRAM_MAX;
       case HISTOGRAM_MIN:
-        return com.streamsets.datacollector.config.MetricElement.HISTOGRAM_MIN;
+        return MetricElement.HISTOGRAM_MIN;
       case HISTOGRAM_MEAN:
-        return com.streamsets.datacollector.config.MetricElement.HISTOGRAM_MEAN;
+        return MetricElement.HISTOGRAM_MEAN;
       case HISTOGRAM_MEDIAN:
-        return com.streamsets.datacollector.config.MetricElement.HISTOGRAM_MEDIAN;
+        return MetricElement.HISTOGRAM_MEDIAN;
       case HISTOGRAM_P75:
-        return com.streamsets.datacollector.config.MetricElement.HISTOGRAM_P75;
+        return MetricElement.HISTOGRAM_P75;
       case HISTOGRAM_P95:
-        return com.streamsets.datacollector.config.MetricElement.HISTOGRAM_P95;
+        return MetricElement.HISTOGRAM_P95;
       case HISTOGRAM_P98:
-        return com.streamsets.datacollector.config.MetricElement.HISTOGRAM_P98;
+        return MetricElement.HISTOGRAM_P98;
       case HISTOGRAM_P99:
-        return com.streamsets.datacollector.config.MetricElement.HISTOGRAM_P99;
+        return MetricElement.HISTOGRAM_P99;
       case HISTOGRAM_P999:
-        return com.streamsets.datacollector.config.MetricElement.HISTOGRAM_P999;
+        return MetricElement.HISTOGRAM_P999;
       case HISTOGRAM_STD_DEV:
-        return com.streamsets.datacollector.config.MetricElement.HISTOGRAM_STD_DEV;
+        return MetricElement.HISTOGRAM_STD_DEV;
 
       //Meters
       case METER_COUNT:
-        return com.streamsets.datacollector.config.MetricElement.METER_COUNT;
+        return MetricElement.METER_COUNT;
       case METER_M1_RATE:
-        return com.streamsets.datacollector.config.MetricElement.METER_M1_RATE;
+        return MetricElement.METER_M1_RATE;
       case METER_M5_RATE:
-        return com.streamsets.datacollector.config.MetricElement.METER_M5_RATE;
+        return MetricElement.METER_M5_RATE;
       case METER_M15_RATE:
-        return com.streamsets.datacollector.config.MetricElement.METER_M15_RATE;
+        return MetricElement.METER_M15_RATE;
       case METER_M30_RATE:
-        return com.streamsets.datacollector.config.MetricElement.METER_M30_RATE;
+        return MetricElement.METER_M30_RATE;
       case METER_H1_RATE:
-        return com.streamsets.datacollector.config.MetricElement.METER_H1_RATE;
+        return MetricElement.METER_H1_RATE;
       case METER_H6_RATE:
-        return com.streamsets.datacollector.config.MetricElement.METER_H6_RATE;
+        return MetricElement.METER_H6_RATE;
       case METER_H12_RATE:
-        return com.streamsets.datacollector.config.MetricElement.METER_H12_RATE;
+        return MetricElement.METER_H12_RATE;
       case METER_H24_RATE:
-        return com.streamsets.datacollector.config.MetricElement.METER_H24_RATE;
+        return MetricElement.METER_H24_RATE;
       case METER_MEAN_RATE:
-        return com.streamsets.datacollector.config.MetricElement.METER_MEAN_RATE;
+        return MetricElement.METER_MEAN_RATE;
 
       //Timer
       case TIMER_COUNT:
-        return com.streamsets.datacollector.config.MetricElement.TIMER_COUNT;
+        return MetricElement.TIMER_COUNT;
       case TIMER_MAX:
-        return com.streamsets.datacollector.config.MetricElement.TIMER_MAX;
+        return MetricElement.TIMER_MAX;
       case TIMER_MIN:
-        return com.streamsets.datacollector.config.MetricElement.TIMER_MIN;
+        return MetricElement.TIMER_MIN;
       case TIMER_MEAN:
-        return com.streamsets.datacollector.config.MetricElement.TIMER_MEAN;
+        return MetricElement.TIMER_MEAN;
       case TIMER_P50:
-        return com.streamsets.datacollector.config.MetricElement.TIMER_P50;
+        return MetricElement.TIMER_P50;
       case TIMER_P75:
-        return com.streamsets.datacollector.config.MetricElement.TIMER_P75;
+        return MetricElement.TIMER_P75;
       case TIMER_P95:
-        return com.streamsets.datacollector.config.MetricElement.TIMER_P95;
+        return MetricElement.TIMER_P95;
       case TIMER_P98:
-        return com.streamsets.datacollector.config.MetricElement.TIMER_P98;
+        return MetricElement.TIMER_P98;
       case TIMER_P99:
-        return com.streamsets.datacollector.config.MetricElement.TIMER_P99;
+        return MetricElement.TIMER_P99;
       case TIMER_P999:
-        return com.streamsets.datacollector.config.MetricElement.TIMER_P999;
+        return MetricElement.TIMER_P999;
       case TIMER_STD_DEV:
-        return com.streamsets.datacollector.config.MetricElement.TIMER_STD_DEV;
+        return MetricElement.TIMER_STD_DEV;
       case TIMER_M1_RATE:
-        return com.streamsets.datacollector.config.MetricElement.TIMER_M1_RATE;
+        return MetricElement.TIMER_M1_RATE;
       case TIMER_M5_RATE:
-        return com.streamsets.datacollector.config.MetricElement.TIMER_M5_RATE;
+        return MetricElement.TIMER_M5_RATE;
       case TIMER_M15_RATE:
-        return com.streamsets.datacollector.config.MetricElement.TIMER_M15_RATE;
+        return MetricElement.TIMER_M15_RATE;
       case TIMER_MEAN_RATE:
-        return com.streamsets.datacollector.config.MetricElement.TIMER_MEAN_RATE;
+        return MetricElement.TIMER_MEAN_RATE;
 
       //Gauge
       case CURRENT_BATCH_AGE:
-        return com.streamsets.datacollector.config.MetricElement.CURRENT_BATCH_AGE;
+        return MetricElement.CURRENT_BATCH_AGE;
       case TIME_IN_CURRENT_STAGE:
-        return com.streamsets.datacollector.config.MetricElement.TIME_IN_CURRENT_STAGE;
+        return MetricElement.TIME_IN_CURRENT_STAGE;
       case TIME_OF_LAST_RECEIVED_RECORD:
-        return com.streamsets.datacollector.config.MetricElement.TIME_OF_LAST_RECEIVED_RECORD;
+        return MetricElement.TIME_OF_LAST_RECEIVED_RECORD;
 
       default:
         throw new IllegalArgumentException("Unrecognized metric element");
     }
   }
 
-  public static MetricTypeJson wrapMetricType(com.streamsets.datacollector.config.MetricType metricType) {
+  public static MetricTypeJson wrapMetricType(MetricType metricType) {
     if(metricType == null) {
       return null;
     }
@@ -997,27 +1015,27 @@ public class BeanHelper {
     }
   }
 
-  public static com.streamsets.datacollector.config.MetricType unwrapMetricType(MetricTypeJson metricType) {
+  public static MetricType unwrapMetricType(MetricTypeJson metricType) {
     if(metricType == null) {
       return null;
     }
     switch(metricType) {
       case GAUGE:
-        return com.streamsets.datacollector.config.MetricType.GAUGE;
+        return MetricType.GAUGE;
       case HISTOGRAM:
-        return com.streamsets.datacollector.config.MetricType.HISTOGRAM;
+        return MetricType.HISTOGRAM;
       case TIMER:
-        return com.streamsets.datacollector.config.MetricType.TIMER;
+        return MetricType.TIMER;
       case COUNTER:
-        return com.streamsets.datacollector.config.MetricType.COUNTER;
+        return MetricType.COUNTER;
       case METER:
-        return com.streamsets.datacollector.config.MetricType.METER;
+        return MetricType.METER;
       default:
         throw new IllegalArgumentException("Unrecognized metric type");
     }
   }
 
-  public static ThresholdTypeJson wrapThresholdType(com.streamsets.datacollector.config.ThresholdType thresholdType) {
+  public static ThresholdTypeJson wrapThresholdType(ThresholdType thresholdType) {
     if(thresholdType == null) {
       return null;
     }
@@ -1031,21 +1049,21 @@ public class BeanHelper {
     }
   }
 
-  public static com.streamsets.datacollector.config.ThresholdType unwrapThresholdType(ThresholdTypeJson thresholdTypeJson) {
+  public static ThresholdType unwrapThresholdType(ThresholdTypeJson thresholdTypeJson) {
     if(thresholdTypeJson == null) {
       return null;
     }
     switch (thresholdTypeJson) {
       case COUNT:
-        return com.streamsets.datacollector.config.ThresholdType.COUNT;
+        return ThresholdType.COUNT;
       case PERCENTAGE:
-        return com.streamsets.datacollector.config.ThresholdType.PERCENTAGE;
+        return ThresholdType.PERCENTAGE;
       default:
         throw new IllegalArgumentException("Unrecognized metric type");
     }
   }
 
-  public static ModelTypeJson wrapModelType(com.streamsets.datacollector.config.ModelType modelType) {
+  public static ModelTypeJson wrapModelType(ModelType modelType) {
     if(modelType == null) {
       return null;
     }
@@ -1067,7 +1085,7 @@ public class BeanHelper {
     }
   }
 
-  public static com.streamsets.datacollector.config.ModelType unwrapModelType(ModelTypeJson modelTypeJson) {
+  public static ModelType unwrapModelType(ModelTypeJson modelTypeJson) {
     if(modelTypeJson == null) {
       return null;
     }
@@ -1089,7 +1107,7 @@ public class BeanHelper {
     }
   }
 
-  public static StageTypeJson wrapStageType(com.streamsets.datacollector.config.StageType stageType) {
+  public static StageTypeJson wrapStageType(StageType stageType) {
     if(stageType == null) {
       return null;
     }
@@ -1107,29 +1125,29 @@ public class BeanHelper {
     }
   }
 
-  public static com.streamsets.datacollector.config.StageType unwrapStageType(StageTypeJson stageTypeJson) {
+  public static StageType unwrapStageType(StageTypeJson stageTypeJson) {
     if(stageTypeJson == null) {
       return null;
     }
     switch (stageTypeJson) {
       case TARGET:
-        return com.streamsets.datacollector.config.StageType.TARGET;
+        return StageType.TARGET;
       case SOURCE:
-        return com.streamsets.datacollector.config.StageType.SOURCE;
+        return StageType.SOURCE;
       case EXECUTOR:
         return StageType.EXECUTOR;
       case PROCESSOR:
-        return com.streamsets.datacollector.config.StageType.PROCESSOR;
+        return StageType.PROCESSOR;
       default:
         throw new IllegalArgumentException("Unrecognized model type");
     }
   }
 
-  public static com.streamsets.datacollector.restapi.bean.CallbackInfoJson wrapCallbackInfo(com.streamsets.datacollector.callback.CallbackInfo callbackInfo) {
+  public static CallbackInfoJson wrapCallbackInfo(com.streamsets.datacollector.callback.CallbackInfo callbackInfo) {
     if(callbackInfo == null) {
       return null;
     }
-    return new com.streamsets.datacollector.restapi.bean.CallbackInfoJson(callbackInfo);
+    return new CallbackInfoJson(callbackInfo);
   }
 
   public static ExecutionModeJson wrapExecutionMode(ExecutionMode executionMode) {
