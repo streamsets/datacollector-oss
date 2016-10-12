@@ -24,6 +24,8 @@
       "dpm": "Dataflow Performance Manager",
       "help": {
         "about": "About",
+        "chatOnSlack": "Chat on Slack",
+        "joinUserGroup": "Join our User Group",
         "main": "Help",
         "helpContents": "Help Contents",
         "useHelp": "Help:",
