@@ -286,6 +286,7 @@
       "validate": "Validate",
       "workerNode": "Worker:"
     },
+    "getStartedWithTutorials": "Try a Tutorial",
     "graphPane": {
       "errorStackTrace": "Error Stack Trace",
       "dontShowAgain": "Don't show again.",
