@@ -230,8 +230,10 @@ public abstract class ConfigDefinitionExtractor {
     cycles.clear();
 
     for (ConfigDefinition def : defs) {
-      if (!def.getDependsOn().isEmpty()) {
-        ConfigDefinition dependsOnDef = definitionsMap.get(def.getDependsOn());
+      String dependsOnKey = def.getDependsOn();
+      if (!StringUtils.isEmpty(dependsOnKey)) {
+        verifyDependencyExists(definitionsMap, def, dependsOnKey, contextMsg);
+        ConfigDefinition dependsOnDef = definitionsMap.get(dependsOnKey);
         // evaluate dependsOn triggers
         ConfigDef annotation = def.getConfigField().getAnnotation(ConfigDef.class);
         Set<Object> triggers = new HashSet<>();
@@ -245,19 +247,20 @@ public abstract class ConfigDefinitionExtractor {
       if (!def.getDependsOnMap().isEmpty()) {
         // Copy same as above.
         for (Map.Entry<String, List<Object>> dependsOn : def.getDependsOnMap().entrySet()) {
-          Set<Object> triggers = new HashSet<>();
-          ConfigDefinition dependsOnDef = definitionsMap.get(dependsOn.getKey());
-
-          if (!StringUtils.isEmpty(dependsOn.getKey())) {
+          dependsOnKey = dependsOn.getKey();
+          if (!StringUtils.isEmpty(dependsOnKey)) {
+            verifyDependencyExists(definitionsMap, def, dependsOnKey, contextMsg);
+            Set<Object> triggers = new HashSet<>();
+            ConfigDefinition dependsOnDef = definitionsMap.get(dependsOnKey);
             for (Object trigger : dependsOn.getValue()) {
               triggers.add(ConfigValueExtractor.get().extract(dependsOnDef.getConfigField(), dependsOnDef.getType(),
                   (String) trigger, contextMsg, true));
             }
             Map<String, Set<Object>> dependencies = dependencyMap.get(def.getName());
-            if (dependencies.containsKey(dependsOn.getKey())) {
-              dependencies.get(dependsOn.getKey()).addAll(triggers);
+            if (dependencies.containsKey(dependsOnKey)) {
+              dependencies.get(dependsOnKey).addAll(triggers);
             } else {
-              dependencies.put(dependsOn.getKey(), triggers);
+              dependencies.put(dependsOnKey, triggers);
             }
           }
         }
@@ -327,6 +330,20 @@ public abstract class ConfigDefinitionExtractor {
       }
       definitionsMap.get(entry.getKey()).setDependsOn("");
     }
+  }
+
+  /**
+   * Verify that the config definition's dependency actually maps to a valid config definition
+   */
+  private void verifyDependencyExists(
+      Map<String, ConfigDefinition> definitionsMap,
+      ConfigDefinition def,
+      String dependsOnKey,
+      Object contextMsg
+  ) {
+    Preconditions.checkState(definitionsMap.containsKey(dependsOnKey),
+        Utils.format("Error while processing {} ConfigDef='{}'. Dependency='{}' does not exist.",
+            contextMsg, def.getName(), dependsOnKey));
   }
 
   /**
