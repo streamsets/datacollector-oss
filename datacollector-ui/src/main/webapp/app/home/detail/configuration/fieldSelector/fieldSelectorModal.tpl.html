@@ -11,7 +11,7 @@
 
     <div show-loading="showLoading"></div>
 
-    <div ng-hide="showLoading">
+    <div ng-if="!showLoading">
       <record-tree
         record="recordObject"
         record-value="recordObject.value"
