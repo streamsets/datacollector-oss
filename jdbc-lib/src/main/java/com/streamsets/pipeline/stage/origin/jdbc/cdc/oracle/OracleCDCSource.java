@@ -260,7 +260,7 @@ public class OracleCDCSource extends BaseSource {
     if (!StringUtils.isEmpty(nextOffset)) {
       return VERSION_STR + OFFSET_DELIM + nextOffset;
     } else {
-      return lastSourceOffset;
+      return lastSourceOffset == null ? "" : lastSourceOffset;
     }
   }
 
