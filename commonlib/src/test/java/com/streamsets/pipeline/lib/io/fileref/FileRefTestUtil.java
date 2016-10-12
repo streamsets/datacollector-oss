@@ -115,17 +115,4 @@ public final class FileRefTestUtil {
     Assert.assertEquals(totalBytesRead1, totalBytesRead2);
   }
 
-  public static void initGauge(Stage.Context context) {
-    final Map<String, Object> gaugeStatistics = new LinkedHashMap<>();
-    gaugeStatistics.put(FileRefUtil.TRANSFER_THROUGHPUT, 0L);
-    gaugeStatistics.put(FileRefUtil.SENT_BYTES, 0L);
-    gaugeStatistics.put(FileRefUtil.REMAINING_BYTES, 0L);
-    context.createGauge(FileRefUtil.GAUGE_NAME, new Gauge<Map<String, Object>>() {
-      @Override
-      public Map<String, Object> getValue() {
-        return gaugeStatistics;
-      }
-    });
-    context.createMeter(FileRefUtil.TRANSFER_THROUGHPUT_METER);
-  }
 }

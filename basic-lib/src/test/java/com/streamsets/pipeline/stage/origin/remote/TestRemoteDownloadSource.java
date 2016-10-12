@@ -903,8 +903,6 @@ public class TestRemoteDownloadSource {
     try {
       runner.runInit();
 
-      FileRefTestUtil.initGauge(runner.getContext());
-
       StageRunner.Output op = runner.runProduce("null", 1000);
 
       List<Record> actual = op.getRecords().get("lane");
@@ -980,9 +978,7 @@ public class TestRemoteDownloadSource {
         .build();
     try {
       runner.runInit();
-
-      FileRefTestUtil.initGauge(runner.getContext());
-
+      
       StageRunner.Output op = runner.runProduce("null", 1000);
 
       List<Record> actual = op.getRecords().get("lane");

@@ -20,7 +20,6 @@
 package com.streamsets.pipeline.lib.io.fileref;
 
 import com.codahale.metrics.Counter;
-import com.codahale.metrics.Gauge;
 import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Stage;
@@ -37,7 +36,6 @@ import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -51,18 +49,6 @@ public class TestMetricsEnabledWrapperStream {
     testDir.mkdirs();
     FileRefTestUtil.writePredefinedTextToFile(testDir);
     context = ContextInfoCreator.createTargetContext("", false, OnRecordError.TO_ERROR);
-    final Map<String, Object> gaugeStatistics = new LinkedHashMap<>();
-    gaugeStatistics.put(FileRefUtil.TRANSFER_THROUGHPUT, 0L);
-    gaugeStatistics.put(FileRefUtil.SENT_BYTES, 0L);
-    gaugeStatistics.put(FileRefUtil.REMAINING_BYTES, 0L);
-    gaugeStatistics.put(FileRefUtil.COMPLETED_FILE_COUNT, 0L);
-    context.createGauge(FileRefUtil.GAUGE_NAME, new Gauge<Map<String, Object>>() {
-      @Override
-      public Map<String, Object> getValue() {
-        return gaugeStatistics;
-      }
-    });
-    context.createMeter(FileRefUtil.TRANSFER_THROUGHPUT_METER);
   }
 
   @After
@@ -173,6 +159,20 @@ public class TestMetricsEnabledWrapperStream {
       }
       checkStateAfterReadCompletion(fileSize, remainingFileSize, is);
     }
+  }
+
+  @Test
+  public void testCompletedFileCountForMultipleClose() throws Exception {
+    InputStream is = FileRefTestUtil.getLocalFileRef(testDir, true, null, null).createInputStream(context, InputStream.class);
+    try {
+      while (is.read() != -1);
+    } finally {
+      is.close();
+      is.close();
+    }
+    Map<String, Object> gaugeMap = (Map<String, Object>)(context.getGauge(FileRefUtil.GAUGE_NAME).getValue());
+    long completedCount = (long)gaugeMap.get(FileRefUtil.COMPLETED_FILE_COUNT);
+    Assert.assertEquals(1, completedCount);
   }
 
   @Test

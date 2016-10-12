@@ -41,6 +41,7 @@ final class MetricEnabledWrapperStream<T extends AutoCloseable> extends Abstract
   private final Counter sentBytesCounter;
   private final Map<String, Object> gaugeStatisticsMap;
   private final long fileSize;
+  private final long completedFileCount;
   private static final String[] UNITS = new String[]{"B", "KB", "MB", "GB", "TB"};
   private static final DecimalFormat df = new DecimalFormat("#.##");
   private static final String PER_SEC = "/s";
@@ -58,6 +59,7 @@ final class MetricEnabledWrapperStream<T extends AutoCloseable> extends Abstract
     FileRefUtil.initMetricsIfNeeded(context);
     dataTransferMeter = context.getMeter(FileRefUtil.TRANSFER_THROUGHPUT_METER);
     gaugeStatisticsMap =  (Map<String, Object>)context.getGauge(FileRefUtil.GAUGE_NAME).getValue();
+    completedFileCount = (long)gaugeStatisticsMap.get(FileRefUtil.COMPLETED_FILE_COUNT);
     //Shows the size of the file in the brack after the file name.
     gaugeStatisticsMap.put(FileRefUtil.FILE, String.format(FileRefUtil.BRACKETED_TEMPLATE, id, convertBytesToDisplayFormat(fileSize)));
   }
@@ -133,8 +135,8 @@ final class MetricEnabledWrapperStream<T extends AutoCloseable> extends Abstract
 
   @Override
   public void close() throws IOException {
-    long completedFileCount = (long) gaugeStatisticsMap.get(FileRefUtil.COMPLETED_FILE_COUNT) + 1;
-    gaugeStatisticsMap.put(FileRefUtil.COMPLETED_FILE_COUNT, completedFileCount);
     super.close();
+    //If close fails, completed file won't be updated.
+    gaugeStatisticsMap.put(FileRefUtil.COMPLETED_FILE_COUNT, completedFileCount + 1);
   }
 }
