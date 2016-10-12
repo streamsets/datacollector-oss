@@ -725,12 +725,13 @@ angular
      * Fetch definitions for Pipeline and Stages, fetch all pipeline configuration info, status and metric.
      */
     $q.all([
-      api.pipelineAgent.getAllPipelineStatus(),
+      api.pipelineAgent.getPipelineStatus(routeParamPipelineName, "0"),
       pipelineService.init(),
       configuration.init()
     ])
       .then(function (results) {
-        var pipelineStatusMap = results[0].data;
+        var pipelineStatusMap = {};
+        pipelineStatusMap[routeParamPipelineName] = results[0].data;
 
         isWebSocketSupported = (typeof(WebSocket) === "function") && configuration.isWebSocketUseEnabled();
         undoLimit = configuration.getUndoLimit();
