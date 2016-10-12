@@ -47,9 +47,7 @@ public final class S3FileRef extends AbstractFileRef {
       String checksum,
       HashingUtil.HashType checksumAlgorithm) {
     super(
-        (Set)ImmutableSet.of(
-            (Class<? extends AutoCloseable>)InputStream.class
-        ),
+        ImmutableSet.<Class<? extends  AutoCloseable>>of(InputStream.class),
         bufferSize,
         createMetrics,
         totalSizeInBytes,

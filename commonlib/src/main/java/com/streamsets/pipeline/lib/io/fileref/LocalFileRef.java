@@ -42,10 +42,7 @@ public final class LocalFileRef extends AbstractFileRef {
       HashingUtil.HashType checksumAlgorithm
   ) {
     super(
-        ImmutableSet.of(
-            (Class<? extends AutoCloseable>)InputStream.class,
-            (Class<? extends AutoCloseable>)ReadableByteChannel.class
-        ),
+        ImmutableSet.<Class<? extends AutoCloseable>>of(InputStream.class, ReadableByteChannel.class),
         bufferSize,
         createMetrics,
         fileSize,

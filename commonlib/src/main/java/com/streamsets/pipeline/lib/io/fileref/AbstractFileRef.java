@@ -78,7 +78,7 @@ public abstract class AbstractFileRef extends FileRef {
   @SuppressWarnings("unchecked")
   public <T extends AutoCloseable> T createInputStream(Stage.Context context, Class<T> streamClassType) throws IOException {
     Utils.checkArgument(
-        getSupportedStreamClasses().contains(streamClassType),
+        supportedStreamClasses.contains(streamClassType),
         Utils.format("Stream class {} not supported for {}.", streamClassType, this.getClass().getName())
     );
     T stream = createInputStream(streamClassType);

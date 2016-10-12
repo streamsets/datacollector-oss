@@ -39,7 +39,15 @@ final class RemoteSourceFileRef extends AbstractFileRef{
       boolean createMetrics,
       long totalSizeInBytes
   ) {
-    super((Set) ImmutableSet.of((Class<? extends AutoCloseable>)InputStream.class), bufferSize, createMetrics, totalSizeInBytes, false, null, null);
+    super(
+        ImmutableSet.<Class<? extends AutoCloseable>>of(InputStream.class),
+        bufferSize,
+        createMetrics,
+        totalSizeInBytes,
+        false,
+        null,
+        null
+    );
     this.remoteFile = remoteFile;
     this.remoteUri = remoteUri;
   }
