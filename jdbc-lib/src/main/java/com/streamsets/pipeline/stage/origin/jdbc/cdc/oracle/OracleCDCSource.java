@@ -434,6 +434,9 @@ public class OracleCDCSource extends BaseSource {
             issues.add(getContext().createConfigIssue(CDC.name(), "oracleCDCConfigBean.startDate", JDBC_49));
           }
           break;
+        case LATEST:
+          configBean.startSCN = scn.toPlainString();
+          break;
         default:
           throw new IllegalStateException("Unknown start value!");
       }
