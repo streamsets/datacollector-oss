@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
@@ -17,25 +17,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.processor.fieldflattener;
+package com.streamsets.testing.fieldbuilder;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.Field;
 
-@GenerateResourceBundle
-public enum FlattenType implements Label {
-  ENTIRE_RECORD("Flatten entire record"),
-  SPECIFIC_FIELDS("Flatten specific fields")
-  ;
+public abstract class BaseFieldBuilder<BT extends BaseFieldBuilder> {
+  protected abstract BT getInstance();
 
-  private String label;
-
-  FlattenType(String label) {
-    this.label = label;
+  public MapFieldBuilder startMap(String name) {
+    return new MapFieldBuilder(name, this);
   }
 
-  @Override
-  public String getLabel() {
-    return label;
+  public ListFieldBuilder startList(String name) {
+    return new ListFieldBuilder(name, this);
   }
+
+  protected abstract void handleEndChildField(String fieldName, Field fieldValue);
+
+  public abstract BaseFieldBuilder<? extends BaseFieldBuilder> end();
 }

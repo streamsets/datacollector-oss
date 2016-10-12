@@ -22,7 +22,9 @@ package com.streamsets.pipeline.stage.processor.fieldflattener;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -45,19 +47,21 @@ public class FieldFlattenerProcessor extends SingleLaneRecordProcessor {
       return;
     }
 
-    // Process the root field and create a new root Map
-    Map<String, Field> newRoot;
     switch (config.flattenType) {
       case ENTIRE_RECORD:
-        newRoot = flattenEntireRecord(rootField);
+        // Process the root field and create a new root Map
+        final Map<String, Field> newRoot = flattenEntireRecord(rootField);
+        // Propagate flattened record through
+        record.set(Field.create(Field.Type.MAP, newRoot));
+        break;
+      case SPECIFIC_FIELDS:
+        flattenSpecificFields(record);
         break;
       default:
         throw new IllegalArgumentException("Unknown flatten type: " + config.flattenType);
     }
-
-    // Propagate flattened record through
-    record.set(Field.create(Field.Type.MAP, newRoot));
     singleLaneBatchMaker.addRecord(record);
+
   }
 
   // Flatten the entire record to one giant map
@@ -76,6 +80,17 @@ public class FieldFlattenerProcessor extends SingleLaneRecordProcessor {
     }
 
     return ret;
+  }
+
+  private void flattenSpecificFields(Record record) throws OnRecordErrorException {
+    for (String flattenField : config.fields) {
+      if (record.has(flattenField)) {
+        final Map<String, Field> flattened = flattenEntireRecord(record.get(flattenField));
+        record.set(flattenField, Field.create(Field.Type.MAP, flattened));
+      } else {
+        throw new OnRecordErrorException(record, Errors.FIELD_FLATTENER_01, flattenField);
+      }
+    }
   }
 
   private void flattenField(String prefix, Field field, Map<String, Field> ret) {

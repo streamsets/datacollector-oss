@@ -19,23 +19,27 @@
  */
 package com.streamsets.pipeline.stage.processor.fieldflattener;
 
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
-public enum FlattenType implements Label {
-  ENTIRE_RECORD("Flatten entire record"),
-  SPECIFIC_FIELDS("Flatten specific fields")
+public enum Errors implements ErrorCode {
+  FIELD_FLATTENER_01("Field with path '{}' was not found in the record"),
   ;
 
-  private String label;
-
-  FlattenType(String label) {
-    this.label = label;
+  private final String msg;
+  Errors(String msg) {
+    this.msg = msg;
   }
 
   @Override
-  public String getLabel() {
-    return label;
+  public String getCode() {
+    return name();
   }
+
+  @Override
+  public String getMessage() {
+    return msg;
+  }
+
 }

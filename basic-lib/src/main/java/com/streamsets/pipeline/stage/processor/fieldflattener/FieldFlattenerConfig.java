@@ -22,6 +22,9 @@ package com.streamsets.pipeline.stage.processor.fieldflattener;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class FieldFlattenerConfig {
 
   @ConfigDef(
@@ -35,6 +38,18 @@ public class FieldFlattenerConfig {
   )
   @ValueChooserModel(FlattenTypeChooserValues.class)
   public FlattenType flattenType;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.LIST,
+    label = "Fields",
+    dependsOn = "flattenType",
+    description = "List of fields to be flattened",
+    displayPosition = 15,
+    group = "FLATTEN",
+    triggeredByValue = { "SPECIFIC_FIELDS" }
+  )
+  public List<String> fields = new LinkedList<>();
 
   @ConfigDef(
     required = true,
