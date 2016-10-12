@@ -79,6 +79,8 @@ public class JythonDProcessor extends DProcessor {
     "#\n" +
     "#  sdcFunctions.getFieldNull(Record, 'field path'): Receive a constant defined above \n" +
     "#                                  to check if the field is typed field with value null\n" +
+    "#  sdcFunctions.createRecord(String recordId): Creates a new record.\n" +
+    "#                            Pass a recordId to uniquely identify the record and include enough information to track down the record source. \n" +
     "#  sdcFunctions.createMap(boolean listMap): Create a map for use as a field in a record.\n" +
     "#                            Pass True to this function to create a list map (ordered map)\n" +
     "#\n" +
@@ -123,7 +125,14 @@ public class JythonDProcessor extends DProcessor {
     "    # newRecord.value = {'field1' : 'val1', 'field2' : 'val2'}\n" +
     "    # output.write(newRecord)\n" +
     "\n" +
-    "    # Write record to procesor output\n" +
+    "    #Applies if the source uses WHOLE_FILE as data format\n" +
+    "    #input_stream = record.value['fileRef'].getInputStream()\n" +
+    "    #try:\n" +
+    "      #input_stream.read() #Process the input stream\n" +
+    "    #finally:  \n" +
+    "      #input_stream.close()\n"+
+    "\n" +
+    "    # Write record to processor output\n" +
     "    output.write(record)\n" +
     "\n" +
     "  except Exception as e:\n" +

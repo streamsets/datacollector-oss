@@ -80,6 +80,8 @@ public class GroovyDProcessor extends DProcessor {
           " *   sdcFunctions.getFieldNull(Record, 'field path'): Receive a constant defined above \n" +
           " *                          to check if the field is typed field with value null\n" +
           " *\n" +
+          " *   sdcFunctions.createRecord(String recordId): Creates a new record.\n" +
+          " *                          Pass a recordId to uniquely identify the record and include enough information to track down the record source. \n" +
           " *   sdcFunctions.createMap(boolean listMap): Create a map for use as a field in a record. \n" +
           " *                          Pass true to this function to create a list map (ordered map)\n" +
           " */ \n" +
@@ -116,6 +118,14 @@ public class GroovyDProcessor extends DProcessor {
           "    // newMap['field'] = 'val' "+
           "    // newRecord.value['field2'] =  newMap\n" +
           "    // output.write(newRecord)\n" +
+          "    \n" +
+          "    //Applies if the source uses WHOLE_FILE as data format\n" +
+          "    //input_stream = record.value['fileRef'].getInputStream();\n" +
+          "    //try {\n" +
+          "      //input_stream.read(); //Process the input stream\n" +
+          "    //} finally {\n" +
+          "      //input_stream.close();\n" +
+          "    //}\n" +
           "    \n" +
           "    // Write a record to the processor output\n" +
           "    output.write(record)\n" +

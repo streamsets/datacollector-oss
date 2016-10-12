@@ -79,6 +79,8 @@ public class JavaScriptDProcessor extends DProcessor {
     " *\n" +
     " *  sdcFunctions.getFieldNull(Record, 'field path'): Receive a constant defined above\n" +
     " *                            to check if the field is typed field with value null\n" +
+    " *  sdcFunctions.createRecord(String recordId): Creates a new record.\n" +
+    " *                            Pass a recordId to uniquely identify the record and include enough information to track down the record source. \n" +
     " *  sdcFunctions.createMap(boolean listMap): Create a map for use as a field in a record.\n" +
     " *                            Pass true to this function to create a list map (ordered map)\n" +
     " */\n" +
@@ -124,7 +126,15 @@ public class JavaScriptDProcessor extends DProcessor {
     "    // newMap['key'] = 'value'\n" +
     "    // records[i].value['b'] = newMap\n" +
     "\n" +
-    "    // Write record to procesor output\n" +
+    "    //Applies if the source uses WHOLE_FILE as data format\n" +
+    "    //var input_stream = record.value['fileRef'].getInputStream();\n" +
+    "    //try {\n" +
+    "      //input_stream.read(); //Process the input stream\n" +
+    "    //} finally{\n" +
+    "      //input_stream.close()\n" +
+    "    //}\n"+
+    "\n" +
+    "    // Write record to processor output\n" +
     "    output.write(records[i]);\n" +
     "  } catch (e) {\n" +
     "    // Send record to error\n" +
