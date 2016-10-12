@@ -122,7 +122,9 @@ public class S3TargetConfigBean {
     defaultValue = "false",
     label = "Compress with gzip",
     displayPosition = 230,
-    group = "S3"
+    group = "S3",
+    dependsOn = "dataFormat",
+    triggeredByValue = {"TEXT", "JSON", "DELIMITED", "AVRO", "BINARY", "PROTOBUF", "SDC_JSON"}
   )
   public boolean compress;
 

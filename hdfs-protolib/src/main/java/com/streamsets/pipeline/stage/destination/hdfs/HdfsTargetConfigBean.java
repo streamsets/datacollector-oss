@@ -209,7 +209,7 @@ public class HdfsTargetConfigBean {
     group = "OUTPUT_FILES",
     min = 0,
     dependsOn = "dataFormat",
-    triggeredByValue = {"TEXT", "JSON", "DELIMITED", "AVRO", "BINARY", "PROTOBUF", "DATAGRAM"}
+    triggeredByValue = {"TEXT", "JSON", "DELIMITED", "AVRO", "BINARY", "PROTOBUF"}
   )
   public long maxRecordsPerFile;
 
@@ -223,7 +223,7 @@ public class HdfsTargetConfigBean {
     group = "OUTPUT_FILES",
     min = 0,
     dependsOn = "dataFormat",
-    triggeredByValue = {"TEXT", "JSON", "DELIMITED", "AVRO", "BINARY", "PROTOBUF", "DATAGRAM"}
+    triggeredByValue = {"TEXT", "JSON", "DELIMITED", "AVRO", "BINARY", "PROTOBUF"}
   )
   public long maxFileSize;
 
@@ -240,7 +240,7 @@ public class HdfsTargetConfigBean {
       elDefs = {TimeEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       dependsOn = "dataFormat",
-      triggeredByValue = {"TEXT", "JSON", "DELIMITED", "AVRO", "BINARY", "PROTOBUF", "DATAGRAM"}
+      triggeredByValue = {"TEXT", "JSON", "DELIMITED", "AVRO", "BINARY", "PROTOBUF"}
   )
   public String idleTimeout;
 
@@ -251,7 +251,9 @@ public class HdfsTargetConfigBean {
     label = "Compression Codec",
     description = "",
     displayPosition = 160,
-    group = "OUTPUT_FILES"
+    group = "OUTPUT_FILES",
+    dependsOn = "dataFormat",
+    triggeredByValue = {"TEXT", "JSON", "DELIMITED", "AVRO", "BINARY", "PROTOBUF"}
   )
   @ValueChooserModel(CompressionChooserValues.class)
   public CompressionMode compression;
