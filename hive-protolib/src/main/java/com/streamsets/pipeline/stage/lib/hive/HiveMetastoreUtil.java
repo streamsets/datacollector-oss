@@ -116,8 +116,9 @@ public final class HiveMetastoreUtil {
   private static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
   private static final String UNSUPPORTED_PARTITION_VALUE_REGEX = "(.*)[\\\\\"\'/?*%?^=\\[\\]]+(.*)";
-  private static final Pattern PATTERN_MATCHER = Pattern.compile(UNSUPPORTED_PARTITION_VALUE_REGEX);
-  private static final Pattern COLUMN_NAME_PATTERN = Pattern.compile("[A-Za-z_][A-Za-z0-9_]*");
+  private static final Pattern UNSUPPORTED_PARTITION_VALUE_PATTERN = Pattern.compile(UNSUPPORTED_PARTITION_VALUE_REGEX);
+  //Letters followed by letters/numbers/underscore
+  private static final Pattern COLUMN_NAME_PATTERN = Pattern.compile("[A-Za-z][A-Za-z0-9_]*");
   private static final String HDFS_LOCATION_REGEX = "((hdfs://[^/]+(:[0-9]+)?)|(maprfs:))/";
 
   public enum MetadataRecordType {
@@ -654,7 +655,7 @@ public final class HiveMetastoreUtil {
    * @return True if the string contains unsuppoted character.
    */
   public static boolean hasUnsupportedChar(String value) {
-    return PATTERN_MATCHER.matcher(value).matches();
+    return UNSUPPORTED_PARTITION_VALUE_PATTERN.matcher(value).matches();
   }
 
   /**

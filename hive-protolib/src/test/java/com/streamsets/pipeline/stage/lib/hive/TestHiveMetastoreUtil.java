@@ -186,6 +186,7 @@ public class TestHiveMetastoreUtil {
     Assert.assertFalse(HiveMetastoreUtil.validateColumnName("cool column"));
     Assert.assertFalse(HiveMetastoreUtil.validateColumnName("0"));
     Assert.assertFalse(HiveMetastoreUtil.validateColumnName("cool@column"));
+    Assert.assertFalse(HiveMetastoreUtil.validateColumnName("_abc"));
   }
 
   @Test
