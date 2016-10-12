@@ -58,6 +58,8 @@ import com.streamsets.pipeline.stage.common.DataFormatConfig;
 import com.streamsets.pipeline.stage.common.DataFormatErrors;
 import com.streamsets.pipeline.stage.common.DataFormatGroups;
 import org.apache.avro.Schema;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -83,6 +85,7 @@ import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SUBJECT_KEY;
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
 public class DataGeneratorFormatConfig implements DataFormatConfig{
+  private final static Logger LOG = LoggerFactory.getLogger(DataGeneratorFormatConfig.class);
 
   @ConfigDef(
     required = true,
@@ -631,6 +634,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
       try {
         dataGeneratorFactory = builder.build();
       } catch (Exception ex) {
+        LOG.error(DataFormatErrors.DATA_FORMAT_201.getMessage(), ex.toString(), ex);
         issues.add(context.createConfigIssue(null, null, DataFormatErrors.DATA_FORMAT_201, ex.toString(), ex));
         valid = false;
       }
