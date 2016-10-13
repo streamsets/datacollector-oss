@@ -680,7 +680,8 @@
    </tgroup>
   </table>
   <draft-comment author="alisontaylor">HBase, Redis, and Static Lookup processors use rows in the
-   table.</draft-comment>
+   table. See below for same properties worded slightly differently for JDBC Lookup. Make same
+   changes in both places.</draft-comment>
   <table frame="all" rowsep="1" colsep="1" id="table_ns1_p1s_zv">
    <tgroup cols="2">
     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -735,6 +736,51 @@
         is 1 second.</p></entry>
      </row>
      <row id="row-timeUnit">
+      <entry>Time Unit</entry>
+      <entry>Unit of time for the expiration time. <p>Default is
+       seconds.</p></entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
+  <draft-comment author="alisontaylor">JDBC Lookup uses rows in this table</draft-comment>
+  <table frame="all" rowsep="1" colsep="1" id="table_ns3_p7s_zv">
+   <tgroup cols="2">
+    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+    <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+    <thead>
+     <row>
+      <entry>Lookup Property</entry>
+      <entry>Description</entry>
+     </row>
+    </thead>
+    <tbody>
+     <row>
+      <entry>Enable Local Caching </entry>
+      <entry id="entry-JDBCLocalCaching">Specifies whether to locally cache the returned
+       values.</entry>
+     </row>
+     <row id="row-JDBCMaxEntriesCache">
+      <entry>Maximum Entries to Cache</entry>
+      <entry>Maximum number of values to cache. When the maximum number is reached, the processor
+       evicts the oldest values from the cache. <p>Default is -1, which means unlimited.</p></entry>
+     </row>
+     <row id="row-JDBCEvictionPolicy">
+      <entry>Eviction Policy Type</entry>
+      <entry>Policy used to evict values from the local cache when the expiration time has
+        passed:<ul id="ul_jik_yns_zv">
+        <li>Expire After Last Access - Measures the expiration time since the value was last
+         accessed by a read or a write.</li>
+        <li>Expire After Last Write - Measures the expiration time since the value was created, or
+         since the value was last replaced.</li>
+       </ul></entry>
+     </row>
+     <row id="row-JDBCExpirationTime">
+      <entry>Expiration Time</entry>
+      <entry>Amount of time that a value can remain in the local cache without being accessed or
+       written to. <p>Default is 1 second.</p></entry>
+     </row>
+     <row id="row-JDBCtimeUnit">
       <entry>Time Unit</entry>
       <entry>Unit of time for the expiration time. <p>Default is
        seconds.</p></entry>

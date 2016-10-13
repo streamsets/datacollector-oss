@@ -56,6 +56,14 @@
                                             query:<codeblock>SELECT DeptName FROM Departments WHERE DeptID = '${record:value('/dept_ID')}'</codeblock></p></entry>
                                 </row>
                                 <row>
+                                    <entry>Enable Local Caching
+                                        <xref
+                                            href="JDBCLookup-Cache.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_h2p_p7v_uh"/></xref></entry>
+                                    <entry conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-JDBCLocalCaching"></entry>
+                                </row>
+                                <row>
                                     <entry>Column Mappings</entry>
                                     <entry>Use to override the default column to field mappings. By
                                         default, columns are written to fields of the same name.
@@ -72,6 +80,22 @@
                                                   /FieldName.</li>
                                             </ul></p><p>Use the <uicontrol>Add</uicontrol> icon to
                                             create additional column mappings.</p></entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-JDBCMaxEntriesCache">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-JDBCEvictionPolicy">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-JDBCExpirationTime">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-JDBCtimeUnit">
+                                    <entry/>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCUseCredentials_row">

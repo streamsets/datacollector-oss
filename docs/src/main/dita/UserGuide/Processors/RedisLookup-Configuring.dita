@@ -74,7 +74,7 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_h2p_p7v_uh"/></xref>
                                     </entry>
-                                    <entry conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-LocalCaching">></entry>
+                                    <entry conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-LocalCaching"></entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-MaxEntriesCache">
