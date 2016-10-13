@@ -175,8 +175,9 @@
     </tgroup>
    </table>
    <draft-comment author="Loretta">The following rows are used in full for the Amazon S3 origin. The
-    Amazon S3 destination and Kinesis Firehose destination reuse individual rows. Data Format and
-    File Compression are also used in Directory and SFTP Client.</draft-comment>
+    Amazon S3 destination and Kinesis Firehose destination reuse individual rows. Data Format, File
+    Compression, and File Name Pattern within Compressed Directory are also used in Directory, File
+    Tail, HTTP Client, and SFTP Client.</draft-comment>
   </p>
   <p>
    <table frame="all" rowsep="1" colsep="1" id="AmazonS3-oProps">
@@ -251,6 +252,12 @@
          <li>Compressed Archive - Processes files archived and compressed by the supported archive
           and compression formats.</li>
         </ul></entry>
+      </row>
+      <row id="Origin-FilePatternCompressed">
+       <entry>File Name Pattern within Compressed Directory</entry>
+       <entry>Regular expression that describes the pattern of the file names to process within the
+        compressed directory. You can use UNIX-style wildcards, such as an asterisk or question
+        mark. For example, *.tar.<p>Default is *, which processes all files.</p></entry>
       </row>
       <row id="S3DataFormat">
        <entry>Data Format <xref href="../Origins/AmazonS3-DataFormat.dita">
