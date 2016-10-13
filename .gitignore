@@ -16,6 +16,9 @@ target
 .project
 .settings
 
+#vim
+*.swp
+
 #Node.js
 node
 node_modules

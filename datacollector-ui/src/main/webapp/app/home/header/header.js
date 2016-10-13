@@ -28,9 +28,8 @@ angular
   .controller('HeaderController', function ($scope, $rootScope, $timeout, _, api, $translate, $location, authService,
                                            pipelineService, pipelineConstant, $modal, $q, $route) {
 
-
-    var pipelineValidationInProgress = 'Validating Pipeline...',
-      pipelineValidationSuccess = 'Validation Successful.',
+    var pipelineValidationInProgress,
+      pipelineValidationSuccess,
       validateConfigStatusTimer;
 
     $translate('global.messages.validate.pipelineValidationInProgress').then(function(translation) {
@@ -81,9 +80,12 @@ angular
         $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Validate Pipeline', 1);
         $scope.$storage.maximizeDetailPane = false;
         $scope.$storage.minimizeDetailPane = false;
+
+        var pipelineBeingValidated = $scope.activeConfigInfo;
         $rootScope.common.infoList.push({
-          message:pipelineValidationInProgress
+          message: pipelineValidationInProgress
         });
+
         api.pipelineAgent.validatePipeline($scope.activeConfigInfo.name).
           then(
           function (res) {
@@ -91,6 +93,9 @@ angular
             checkForValidateConfigStatus(res.data.previewerId, defer);
 
             defer.promise.then(function(previewData) {
+              if (pipelineBeingValidated.name !== $rootScope.$storage.activeConfigInfo.name) {
+                return;
+              }
               $rootScope.common.infoList = [];
               if(previewData.status === 'VALID') {
                 // clear previous errors if any
@@ -114,6 +119,9 @@ angular
 
           },
           function (res) {
+            if (pipelineBeingValidated.name !== $rootScope.$storage.activeConfigInfo.name) {
+              return;
+            }
             $rootScope.common.infoList = [];
             $rootScope.common.errors = [res.data];
           }

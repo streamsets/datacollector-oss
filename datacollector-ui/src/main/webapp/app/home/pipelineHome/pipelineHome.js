@@ -71,6 +71,11 @@ angular
     //Remove search parameter if any, search parameter causing canvas arrow issue
     $location.search({});
 
+    //Clear potentially remaining notifications from previous page views
+    $rootScope.common.errors = [];
+    $rootScope.common.infoList = [];
+    $rootScope.common.successList = [];
+
     angular.extend($scope, {
       _: _,
       showLoading: true,
@@ -718,8 +723,6 @@ angular
         $scope.selectedConfigGroupCache = {};
       }
     });
-
-    $rootScope.common.errors = [];
 
     /**
      * Fetch definitions for Pipeline and Stages, fetch all pipeline configuration info, status and metric.
