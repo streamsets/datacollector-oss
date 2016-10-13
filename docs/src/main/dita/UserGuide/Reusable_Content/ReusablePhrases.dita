@@ -1611,6 +1611,8 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                         conref="#concept_vhs_5tz_xp/pName-long"/> to process MapR data. For more
                   information, see <xref
                         href="../Install_Config/MapR-Prerequisites.dita#concept_jgs_qpg_2v"/>. </p>
+            <draft-comment author="alisontaylor">Two versions of Lookup Cache below. Be sure to make
+                  the same updates to both.</draft-comment>
             <draft-comment author="alisontaylor">Lookup Cache - used for Redis Lookup and HBase
                   Lookup processors</draft-comment>
             <p id="LookupCacheOverview">The processor caches key-value pairs until the cache reaches
@@ -1639,6 +1641,35 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                         </dlentry>
                   </dl></p>
             <p id="LookupCacheSummary">When you stop the pipeline, the processor clears the
+                  cache.</p>
+            <draft-comment author="alisontaylor">Lookup Cache - used for JDBC Lookup
+                  processor</draft-comment>
+            <p id="JDBCLookupCacheOverview">The processor caches values until the cache reaches the
+                  maximum size or the expiration time. When the first limit is reached, the
+                  processor evicts values from the cache.</p>
+            <p id="JDBCLookupCacheOptions">You can configure the following ways to evict values from
+                  the cache:<dl>
+                        <dlentry>
+                              <dt>Size-based eviction</dt>
+                              <dd>Configure the maximum number of values that the processor caches.
+                                    When the maximum number is reached, the processor evicts the
+                                    oldest values from the cache.</dd>
+                        </dlentry>
+                        <dlentry>
+                              <dt>Time-based eviction</dt>
+                              <dd>Configure the amount of time that a value can remain in the cache
+                                    without being written to or accessed. When the expiration time
+                                    is reached, the processor evicts the value from the cache. The
+                                    eviction policy determines whether the processor measures the
+                                    expiration time since the last write of the value or since the
+                                    last access of the value.</dd>
+                              <dd>For example, you set the eviction policy to expire after the last
+                                    access and set the expiration time to 60 seconds. After the
+                                    processor does not access a value for 60 seconds, the processor
+                                    evicts the value from the cache.</dd>
+                        </dlentry>
+                  </dl></p>
+            <p id="JDBCLookupCacheSummary">When you stop the pipeline, the processor clears the
                   cache.</p>
             <draft-comment author="alisontaylor">Used in Field Type Converter chapter and in Data
                   Preview chapter.</draft-comment>
