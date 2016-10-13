@@ -85,7 +85,6 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
     this.ignoreNamespace = ignoreNamespace;
     factory = DocumentBuilderFactory.newInstance();
     factory.setNamespaceAware(true);
-
   }
 
   @Override
@@ -138,7 +137,7 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
               CommonError.CMN_0100, original.getType().toString(), original.getValue().toString(), record.toString());
         }
 
-        xmlData = record.get(fieldPath).getValueAsString();
+        xmlData = record.get(fieldPath).getValueAsString().trim();
         Document doc = factory.newDocumentBuilder().parse(new ByteArrayInputStream(xmlData.getBytes()));
         doc.getDocumentElement().normalize();
         Element root = doc.getDocumentElement();
@@ -217,11 +216,15 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
       Node next = nodeList.item(i);
       // Text node - add it as a field, if we are currently in a record
       if (currentlyInRecord && next.getNodeType() == Node.TEXT_NODE) {
+        String text = ((Text) next).getWholeText();
+        if (text.trim().isEmpty()) {
+          continue;
+        }
         // If we don't need to keep existing fields, just write
         // If we need to keep existing fields, overwrite only if the original field does not exist
         // If we need to keep existing fields, and the current record has the path, overwrite only if newFieldsOverwrite
         if (!keepExistingFields || !record.has("/" + current.prefix) || newFieldsOverwrite) {
-          record.set("/" + current.prefix, Field.create(((Text) next).getWholeText()));
+          record.set("/" + current.prefix, Field.create(text));
         }
       } else if (next.getNodeType() == Node.ELEMENT_NODE) {
         Element element = (Element) next;

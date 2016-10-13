@@ -60,6 +60,11 @@ public class TestXMLFlatteningProcessor {
         "<phone>(111)111-1111" + id + "</phone><phone>(222)222-2222" + id + "</phone></contact>";
   }
 
+  private String getXMLWithWhitespace(String id) {
+    return "<contact type=\"person\">        <name type=\"maiden\" xmlns=\"http://blah.com/blah.xml\">NAME" + id + "</name>\n" +
+        "\t<phone>(111)111-1111" + id + "</phone>\n\t<phone>(222)222-2222" + id + "</phone>\n</contact>";
+  }
+
   private String getInvalidXML() {
     return "<contact><name type=\"maiden\" xmlns=\"http://blah.com/blah.xml\">NAME</name>" +
         "<phone>(111)111-1111</phone><phone>(222)222-2222</phone></contact>" +
@@ -95,6 +100,14 @@ public class TestXMLFlatteningProcessor {
   }
 
   @Test
+  public void testSingleRecordNoAttrsNoNSWithWhiteSpace() throws Exception {
+    String xml = getXMLWithWhitespace("");
+    Record expected = RecordCreator.create();
+    expected.set(Field.create(createExpectedRecord("", "", "", ".", "#", false, false)));
+    doTest(xml, "contact", ImmutableList.of(expected), Collections.EMPTY_LIST, OnRecordError.DISCARD, true, true, false, false);
+  }
+
+  @Test
   public void testSingleRecordAttrsNoNS() throws Exception {
     String xml = getXML("");
     Record expected = RecordCreator.create();
@@ -120,8 +133,28 @@ public class TestXMLFlatteningProcessor {
   }
 
   @Test
+  public void testSingleRecordAttrsNSWithWhitespace() throws Exception {
+    String xml = getXMLWithWhitespace("");
+    Record expected = RecordCreator.create();
+    expected.set(Field.create(createExpectedRecord("", "", "", "_", ".", true, true)));
+    doTest(xml, "contact", "_", ".", ImmutableList.of(expected), Collections.EMPTY_LIST, OnRecordError.DISCARD,
+        false, false, false, false);
+  }
+
+  @Test
   public void testMultipleRecords() throws Exception {
     String xml = "<contacts>" + getXML("0") + getXML("1") + "</contacts>";
+    Record expected1 = RecordCreator.create();
+    expected1.set(Field.create(createExpectedRecord("", "0", "", ".", "#",false, false)));
+    Record expected2 = RecordCreator.create();
+    expected2.set(Field.create(createExpectedRecord("", "1", "", ".", "#",false, false)));
+    List<Record> expected = ImmutableList.of(expected1, expected2);
+    doTest(xml, "contact", expected, Collections.EMPTY_LIST, OnRecordError.DISCARD, true, true, false, false);
+  }
+
+  @Test
+  public void testMultipleRecordsWhitespace() throws Exception {
+    String xml = "<contacts>" + getXMLWithWhitespace("0") + getXMLWithWhitespace("1") + "</contacts>";
     Record expected1 = RecordCreator.create();
     expected1.set(Field.create(createExpectedRecord("", "0", "", ".", "#",false, false)));
     Record expected2 = RecordCreator.create();
@@ -139,6 +172,50 @@ public class TestXMLFlatteningProcessor {
     expected.set(Field.create(allFields));
     doTest(xml, "", ImmutableList.of(expected), Collections.EMPTY_LIST, OnRecordError.DISCARD, true, true, false, false);
   }
+
+  @Test
+  public void testMultipleRecordsNoDelimiterWithWhitespace() throws Exception {
+    String xml = "<contacts>" + getXMLWithWhitespace("0") + getXMLWithWhitespace("1") + "</contacts>";
+    Record expected = RecordCreator.create();
+    Map<String, Field> allFields = createExpectedRecord("contacts.", "0", "(0)", ".", "#", false, false);
+    allFields.putAll(createExpectedRecord("contacts.", "1", "(1)", ".", "#", false, false));
+    expected.set(Field.create(allFields));
+    doTest(xml, "", ImmutableList.of(expected), Collections.EMPTY_LIST, OnRecordError.DISCARD, true, true, false, false);
+  }
+
+  @Test
+  public void testMultipleRecordsNoDelimiterWithAndWithoutWhitespace() throws Exception {
+    String xml = "<contacts>" + getXMLWithWhitespace("0") + getXML("1") + "</contacts>";
+    Record expected = RecordCreator.create();
+    Map<String, Field> allFields = createExpectedRecord("contacts.", "0", "(0)", ".", "#", false, false);
+    allFields.putAll(createExpectedRecord("contacts.", "1", "(1)", ".", "#", false, false));
+    expected.set(Field.create(allFields));
+    doTest(xml, "", ImmutableList.of(expected), Collections.EMPTY_LIST, OnRecordError.DISCARD, true, true, false, false);
+  }
+
+  @Test
+  public void testWhitespaceAfterProlog() throws Exception {
+    String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>            <note><to>Tove</to>   <from>Jani</from>" +
+        "<heading>Reminder</heading>    <body>Don't forget me this weekend!</body></note>";
+    Record r = RecordCreator.create();
+    r.set(Field.create(new HashMap<String, Field>()));
+    r.set(ORIGINAL, Field.create(xml));
+    Record expected = RecordCreator.create();
+    expected.set(Field.create(new HashMap<String, Field>()));
+    expected.set("/note.to", Field.create("Tove"));
+    expected.set("/note.from", Field.create("Jani"));
+    expected.set("/note.heading", Field.create("Reminder"));
+    expected.set("/note.body", Field.create("Don't forget me this weekend!"));
+    processor = new XMLFlatteningProcessor(ORIGINAL,false, false, null, ".", "#", true, true);
+    ProcessorRunner runner = new ProcessorRunner.Builder(dProcessorClass, processor)
+        .addOutputLane("xml").setOnRecordError(OnRecordError.DISCARD).build();
+    runner.runInit();
+    StageRunner.Output output = runner.runProcess(ImmutableList.of(r));
+    List<Record> op = output.getRecords().get("xml");
+    Assert.assertEquals(1, op.size());
+    Assert.assertEquals(expected.get().getValueAsMap(), op.get(0).get().getValueAsMap());
+  }
+
 
   @Test
   public void testInvalidRecordDiscard() throws Exception {
@@ -299,7 +376,7 @@ public class TestXMLFlatteningProcessor {
   }
 
   private void doTest(String xml, String delimiter, List<Record> expected, List<Record> error, OnRecordError onRecordError,
-      boolean ignoreAttrs, boolean ignoreNS, boolean keepFields, boolean newFieldOverwrites) throws Exception {
+                      boolean ignoreAttrs, boolean ignoreNS, boolean keepFields, boolean newFieldOverwrites) throws Exception {
     doTest(xml, delimiter, ".", "#", expected, error, onRecordError, ignoreAttrs, ignoreNS, keepFields, newFieldOverwrites);
   }
 

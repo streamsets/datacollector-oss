@@ -50,4 +50,5 @@ public class XMLFlatteningProcessorUpgrader implements StageUpgrader {
     configs.add(new Config("keepOriginalFields", true));
     configs.add(new Config("newFieldOverwrites", false));
   }
+
 }
