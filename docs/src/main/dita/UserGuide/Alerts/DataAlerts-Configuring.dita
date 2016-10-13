@@ -52,7 +52,11 @@
                                 </row>
                                 <row>
                                     <entry>Condition</entry>
-                                    <entry>Condition that defines the data rule.</entry>
+                                    <entry>Condition that defines the data rule. Use the expression
+                                        language to configure the condition. <p>For more information
+                                            about using the expression language, see <xref
+                                                href="../Expression_Language/ExpressionLanguage_overview.dita#concept_p54_4kl_vq"
+                                            />.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Sampling Percentage</entry>
@@ -76,13 +80,21 @@
                                 <row>
                                     <entry>Enable Alert</entry>
                                     <entry>Enables an alert based on the data rule. Alerts display
-                                        upon when the configured conditions occur.</entry>
+                                        when the configured conditions occur.</entry>
                                 </row>
                                 <row>
                                     <entry>Alert Text</entry>
                                     <entry>Text to display when the alert is triggered. <p>Enter
                                             text that explains the reason for the alert. For
-                                            example, "Over 100 missing phone numbers." </p></entry>
+                                            example, "Over 100 missing phone numbers." </p><p>You
+                                            can use the expression language to define the alert
+                                            text. For example, use the
+                                                <codeph>record:errorMessage()</codeph> function to
+                                            display the error message in the alert text. For more
+                                            information about using the expression language, see
+                                                <xref
+                                                href="../Expression_Language/ExpressionLanguage_overview.dita#concept_p54_4kl_vq"
+                                            />.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Threshold Type</entry>
@@ -108,7 +120,9 @@
                                             email, add email addresses for alerts and configure the
                                                 <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                            /> email properties.</p></entry>
+                                            /> email properties. For more information, see <xref
+                                                href="EmailforAlerts-Configuring.dita#task_f3v_1hw_1r"
+                                            />.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -126,8 +140,4 @@
             </step>
         </steps>
     </taskbody>
-    <related-links>
-        <link href="../Expression_Language/ExpressionLanguage_overview.dita#concept_p54_4kl_vq" type="topic"/>
-        <link href="EmailforAlerts-Configuring.dita#task_f3v_1hw_1r" type="topic"/>
-    </related-links>
 </task>

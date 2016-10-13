@@ -58,7 +58,7 @@
                                     </entry>
                                     <entry>Condition that defines the data drift rule. You can use
                                         data drift functions and other aspects of the expression
-                                        language to create the condition.</entry>
+                                        language to configure the condition.</entry>
                                 </row>
                                 <row>
                                     <entry>Sampling Percentage</entry>
@@ -86,9 +86,12 @@
                                 </row>
                                 <row>
                                     <entry>Alert Text</entry>
-                                    <entry>Text to display when the alert is triggered. <p>By
-                                            default, uses the following expression to  returns text
-                                            related to the drift alert:
+                                    <entry>Text to display when the alert is triggered. You can use
+                                        the expression language to define the alert text. For more
+                                        information about using the expression language, see <xref
+                                            href="../Expression_Language/ExpressionLanguage_overview.dita#concept_p54_4kl_vq"
+                                            />.<p>By default, uses the following expression to
+                                            return text related to the drift alert:
                                                 <codeph>${alert:info()}</codeph>.</p></entry>
                                 </row>
                                 <row>
@@ -97,7 +100,9 @@
                                             email, add email addresses for alerts and configure the
                                                 <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                            /> email properties.</p></entry>
+                                            /> email properties. For more information, see <xref
+                                                href="EmailforAlerts-Configuring.dita#task_f3v_1hw_1r"
+                                            />.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -115,7 +120,4 @@
             </step>
         </steps>
     </taskbody>
-    <related-links>
-        <link href="EmailforAlerts-Configuring.dita#task_f3v_1hw_1r"/>
-    </related-links>
 </task>
