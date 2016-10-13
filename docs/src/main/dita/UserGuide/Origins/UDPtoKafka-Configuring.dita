@@ -112,12 +112,14 @@
                             </thead>
                             <tbody>
                                 <row>
+                                    <entry>Enable UDP Multithreading</entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry_EnableMultithreading"/>
+                                </row>
+                                <row>
                                     <entry>Accept Threads</entry>
-                                    <entry>The expected number of CPU cores of the <ph
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> machine that are dedicated to the <ph
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                            />.<p>Default is 1.</p></entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry_ReceiverThreads"/>
                                 </row>
                                 <row>
                                     <entry>Write Concurrency</entry>
