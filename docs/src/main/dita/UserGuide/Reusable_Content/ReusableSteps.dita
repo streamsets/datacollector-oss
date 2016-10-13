@@ -1867,6 +1867,27 @@
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> to bind to the port.</note></entry>
                                 </row>
+                                <row>
+                                    <entry>Enable Multithreading</entry>
+                                    <entry id="entry_EnableMultithreading">On 64-bit Linux, specifies whether to use multiple receiver threads for
+                                        each port. Using multiple receiver threads can improve
+                                        performance. <p>Because the multithreading requires native
+                                            libraries, it is only available when <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> runs on 64-bit Linux.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Number of Receiver Threads</entry>
+                                    <entry id="entry_ReceiverThreads">Number of receiver threads to use for each port. For
+                                        example, if you configure two threads per port and configure
+                                        the origin to use three ports, the origin uses a total of
+                                        six threads.<p>Set to the expected number of CPU cores of
+                                            the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> machine that are dedicated to the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            />.</p><p>Default is 1.</p></entry>
+                                </row>
                                 <row id="row-UDPdataformat">
                                     <entry>Data Format</entry>
                                     <entry>Data format passed by UDP:<ul id="ul-UDPDataFormat">
