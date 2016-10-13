@@ -722,6 +722,32 @@ public class ScriptingProcessorTestUtil {
     Assert.assertEquals("record_value", records.get(1).get("/record_value").getValueAsString());
   }
 
+  public static <C extends Processor> void verifyRecordHeaderAttribute(
+      Class<C> clazz,
+      Processor processor,
+      Record record
+  ) throws StageException {
+    ProcessorRunner runner = new ProcessorRunner.Builder(clazz, processor)
+        .addOutputLane("lane")
+        .build();
+
+    runner.runInit();
+    StageRunner.Output output;
+    try{
+      List<Record> input = Collections.singletonList(record);
+      output = runner.runProcess(input);
+    } finally {
+      runner.runDestroy();
+    }
+    List<Record> records = output.getRecords().get("lane");
+    Assert.assertEquals(1, records.size());
+    Assert.assertEquals(1, records.get(0).getHeader().getAttributeNames().size());
+
+    final String key = "key1";
+    final String value = "value1";
+    Assert.assertEquals(value, records.get(0).getHeader().getAttribute(key));
+  }
+
   static void assertFieldUtil(String fieldName, Field field, Object obj){
     Field.Type expectedType = null;
 

@@ -441,4 +441,19 @@ public class TestJythonProcessor {
     ScriptingProcessorTestUtil.verifyCreateRecord(JythonProcessor.class, processor);
   }
 
+  @Test
+  public void testRecordHeaderAttributes() throws Exception {
+    String headerKey = "key1";
+    String value = "value1";
+    String script = "for record in records:\n" +
+        "  record.attributes['" + headerKey + "'] = '" + value + "'\n" +
+        "  output.write(record)";
+
+    Processor processor = new JythonProcessor(
+        ProcessingMode.RECORD,
+        script
+    );
+    ScriptingProcessorTestUtil.verifyRecordHeaderAttribute(JythonProcessor.class, processor, RecordCreator.create());
+  }
+
 }

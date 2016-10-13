@@ -534,4 +534,20 @@ public class TestJavaScriptProcessor {
 
     ScriptingProcessorTestUtil.verifyCreateRecord(JavaScriptProcessor.class, processor);
   }
+
+  @Test
+  public void testRecordHeaderAttributes() throws Exception {
+    String headerKey = "key1";
+    String value = "value1";
+    String script = "for (var i = 0; i < records.length; i++) {\n" +
+        "  records[i].attributes['" + headerKey + "'] = '" + value + "'\n" +
+        "  output.write(records[i])\n" +
+        "}";
+
+    Processor processor = new JavaScriptProcessor(
+        ProcessingMode.RECORD,
+        script
+    );
+    ScriptingProcessorTestUtil.verifyRecordHeaderAttribute(JavaScriptProcessor.class, processor, RecordCreator.create());
+  }
 }

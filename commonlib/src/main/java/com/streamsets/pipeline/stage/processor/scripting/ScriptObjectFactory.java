@@ -60,6 +60,8 @@ public class ScriptObjectFactory {
     Record record = scriptRecord.record;
     Field field = scriptToField(scriptRecord.value, record, "");
     record.set(field);
+    // Update Record Header Attributes
+    updateRecordHeader(scriptRecord.attributes, record);
     return record;
   }
 
@@ -171,6 +173,12 @@ public class ScriptObjectFactory {
 
   protected String composeArrayPath(String parent, int arrayIndex) {
     return parent + "[" + arrayIndex + "]";
+  }
+
+  protected void updateRecordHeader(Map<String, String> header, Record record) {
+    for (String key : header.keySet()) {
+      record.getHeader().setAttribute(key, header.get(key));
+    }
   }
 
   @SuppressWarnings("unchecked")

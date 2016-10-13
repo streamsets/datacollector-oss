@@ -317,4 +317,20 @@ public class TestGroovyProcessor {
     );
     ScriptingProcessorTestUtil.verifyCreateRecord(GroovyProcessor.class, processor);
   }
+
+  @Test
+  public void testRecordHeaderAttributes() throws Exception {
+    String headerKey = "key1";
+    String value = "value1";
+    String script = "for (record in records) {\n" +
+        "  record.attributes['" + headerKey + "'] = '" + value + "'\n" +
+        "  output.write(record)\n" +
+        "}";
+
+    Processor processor = new GroovyProcessor(
+        ProcessingMode.RECORD,
+        script
+    );
+    ScriptingProcessorTestUtil.verifyRecordHeaderAttribute(GroovyProcessor.class, processor, RecordCreator.create());
+  }
 }

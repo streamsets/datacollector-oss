@@ -21,12 +21,43 @@ package com.streamsets.pipeline.stage.processor.scripting;
 
 import com.streamsets.pipeline.api.Record;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 public class ScriptRecord {
   final Record record;
   public Object value;
+  public final String stageCreator;
+  public final String sourceId;
+  public final String previousTrackingId;
+  public final Map<String, String> attributes;
+  public final String errorDataCollectorId;
+  public final String errorPipelineName;
+  public final String errorCode;
+  public final String errorMessage;
+  public final String errorStage;
+  public final long errorTimestamp;
+  public final String errorStackTrace;
 
   ScriptRecord(Record record, Object scriptObject) {
     this.record = record;
+    this.stageCreator = record.getHeader().getStageCreator();
+    this.sourceId = record.getHeader().getSourceId();
+    this.previousTrackingId = record.getHeader().getPreviousTrackingId();
+    Set<String> headerAttributeNames = record.getHeader().getAttributeNames();
+    attributes = new HashMap<>();
+    for (String key : headerAttributeNames) {
+      attributes.put(key, record.getHeader().getAttribute(key));
+    }
+    this.errorDataCollectorId = record.getHeader().getErrorDataCollectorId();
+    this.errorPipelineName = record.getHeader().getErrorPipelineName();
+    this.errorCode = record.getHeader().getErrorCode();
+    this.errorMessage = record.getHeader().getErrorMessage();
+    this.errorStage = record.getHeader().getErrorStage();
+    this.errorTimestamp = record.getHeader().getErrorTimestamp();
+    this.errorStackTrace = record.getHeader().getErrorStackTrace();
+
     value = scriptObject;
   }
 

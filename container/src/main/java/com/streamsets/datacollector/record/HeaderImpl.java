@@ -50,6 +50,7 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable {
   private static final String ERROR_DATACOLLECTOR_ID_ATTR = RESERVED_PREFIX + "dataCollectorId";
   private static final String ERROR_PIPELINE_NAME_ATTR = RESERVED_PREFIX + "pipelineName";
   private static final String ERROR_STACKTRACE = RESERVED_PREFIX + "errorStackTrace";
+  //Note: additional fields should also define in ScriptRecord
 
   private final Map<String, Object> map;
 

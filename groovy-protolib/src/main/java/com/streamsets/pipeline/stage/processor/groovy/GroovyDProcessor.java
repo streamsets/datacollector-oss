@@ -84,6 +84,11 @@ public class GroovyDProcessor extends DProcessor {
           " *                          Pass a recordId to uniquely identify the record and include enough information to track down the record source. \n" +
           " *   sdcFunctions.createMap(boolean listMap): Create a map for use as a field in a record. \n" +
           " *                          Pass true to this function to create a list map (ordered map)\n" +
+          " *\n" +
+          " * Available Record Header Variables:\n" +
+          " *   record.attributes: a map of record header attributes.\n" +
+          " *\n" +
+          " *   record.<header name>: get the value of 'header name'.\n" +
           " */ \n" +
           "\n" +
           " // Sample Groovy code\n" +
@@ -125,6 +130,16 @@ public class GroovyDProcessor extends DProcessor {
           "      //input_stream.read(); //Process the input stream\n" +
           "    //} finally {\n" +
           "      //input_stream.close();\n" +
+          "    //}\n" +
+          "    \n" +
+          "    // Modify a record header attribute entry\n" +
+          "    //record.attributes['name'] = record.attributes['first_name'] + ' ' + record.attributes['last_name']\n" +
+          "    \n" +
+          "    // Get a record header with field names ex. get sourceId and errorCode\n" +
+          "    //String sourceId = record.sourceId\n" +
+          "    //String errorCode = ''\n" +
+          "    //if(record.errorCode) {\n" +
+          "    //    errorCode = record.errorCode\n" +
           "    //}\n" +
           "    \n" +
           "    // Write a record to the processor output\n" +
