@@ -86,7 +86,10 @@
                                     <entry>Send Email</entry>
                                     <entry>Sends an email when the alert is triggered. <p>To send an
                                             email, add email addresses for alerts and configure the
-                                            Data Collector email properties.</p></entry>
+                                            Data Collector email properties. For more information,
+                                            see <xref
+                                                href="EmailforAlerts-Configuring.dita#task_f3v_1hw_1r"
+                                            />.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -103,8 +106,4 @@
             </step>
         </steps>
     </taskbody>
-    <related-links>
-        <link href="../Expression_Language/ExpressionLanguage_overview.dita#concept_p54_4kl_vq" type="topic"/>
-        <link href="EmailforAlerts-Configuring.dita#task_f3v_1hw_1r" type="topic"/>
-    </related-links>
 </task>
