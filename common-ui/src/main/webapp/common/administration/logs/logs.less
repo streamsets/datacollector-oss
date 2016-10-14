@@ -25,7 +25,6 @@
 
 .logs-page {
   .panel-heading {
-
     .panel-title {
       h3 {
         padding-top: 3px;
@@ -43,21 +42,23 @@
       .severity-dropdown {
         min-width: 80px;
       }
-
     }
 
     .download-btn-group {
       padding-left: @defaultPadding;
     }
 
+    .pipeline-dropdown {
+      .dropdown-menu {
+        max-height: 300px;
+      }
+    }
   }
-
 
   .panel-body {
     overflow: auto;
     .log-table {
       white-space: nowrap;
-
 
       .log-exception {
         word-wrap: normal;
@@ -67,7 +68,6 @@
           padding-left: 50px;
         }
       }
-
     }
   }
 }
