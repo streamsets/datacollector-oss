@@ -138,6 +138,20 @@ then
   exit 1
 fi
 
+JAVA_VERSION=`$JAVA -version 2>&1 | grep -e '^java version' | sed -e 's/.*"\([0-9]*\)\.\([0-9]*\)\.\([\_0-9]*\)"/\1\.\2/'`
+if [[ "$JAVA_VERSION" = '1.7' ]];
+then
+  echo "Java 1.7 detected; adding \$SDC_JAVA7_OPTS of \"${SDC_JAVA7_OPTS}\" to \$SDC_JAVA_OPTS"
+  echo "WARN: Java 7 is end-of-life and has not received any security patches since April 2015. Please update to Java 8 as soon as possible. Some stage libraries require Java 8 and thus may be disabled."
+  SDC_JAVA_OPTS="${SDC_JAVA_OPTS} ${SDC_JAVA7_OPTS}"
+elif [[ "$JAVA_VERSION" = '1.8' ]];
+then
+  echo "Java 1.8 detected; adding \$SDC_JAVA8_OPTS of \"${SDC_JAVA8_OPTS}\" to \$SDC_JAVA_OPTS"
+  SDC_JAVA_OPTS="${SDC_JAVA_OPTS} ${SDC_JAVA8_OPTS}"
+else
+  echo "WARN: could not determine Java environment version; expected 1.7 or 1.8, which are the supported versions" >&2
+fi
+
 SDC_POLICY_FILE=""
 if [ "${SDC_SECURITY_MANAGER_ENABLED}" = "true" ]
 then

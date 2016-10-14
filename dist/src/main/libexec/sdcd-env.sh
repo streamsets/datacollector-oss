@@ -60,7 +60,15 @@ export SDC_FILE_LIMIT="${SDC_FILE_LIMIT:-8192}"
 
 # JVM options for the data collector process
 #
-export SDC_JAVA_OPTS="-Dhttps.protocols=TLSv1.2,TLSv1.1 -Xmx1024m -Xms1024m -XX:PermSize=256m -XX:MaxPermSize=512m -server ${SDC_JAVA_OPTS}"
+export SDC_JAVA_OPTS="-Xmx1024m -Xms1024m -server ${SDC_JAVA_OPTS}"
+
+# Java 7 (JDK 1.7) specific options
+# by default, set MaxPermSize to 512m and use CMS garbage collector
+export SDC_JAVA7_OPTS=${SDC_JAVA7_OPTS:-"-Dhttps.protocols=TLSv1.2,TLSv1.1 -XX:PermSize=256m -XX:MaxPermSize=512m -XX:+UseConcMarkSweepGC -XX:+UseParNewGC"}
+
+# Java 8 (JDK 1.8) specific options
+# by default, use CMS garbage collector
+export SDC_JAVA8_OPTS=${SDC_JAVA8_OPTS:-"-XX:+UseConcMarkSweepGC -XX:+UseParNewGC"}
 
 # Enables/disables the JVM security manager
 #
