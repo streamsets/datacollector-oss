@@ -46,7 +46,10 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
 @ConfigGroups(Groups.class)
-@HideConfigs(value = "conf.dataFormatConfig.verifyChecksum")
+@HideConfigs(value = {
+  "conf.dataFormatConfig.verifyChecksum",
+  "conf.dataFormatConfig.avroSchemaSource"
+})
 @GenerateResourceBundle
 public class SpoolDirDSource extends DSource {
 
