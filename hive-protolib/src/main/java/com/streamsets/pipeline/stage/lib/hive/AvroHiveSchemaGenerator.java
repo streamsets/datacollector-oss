@@ -56,7 +56,7 @@ public class AvroHiveSchemaGenerator extends AvroSchemaGenerator<Map<String, Hiv
   public String inferSchema(Map<String, HiveTypeInfo> record)
       throws StageException
   {
-    Map<String, Schema> fields = new LinkedHashMap();
+    Map<String, Schema> fields = new LinkedHashMap<>();
     for(Map.Entry<String, HiveTypeInfo> pair:  record.entrySet()) {
       if(!HiveMetastoreUtil.validateColumnName(pair.getKey())) {
         throw new HiveStageCheckedException(Errors.HIVE_30, pair.getKey());
@@ -71,7 +71,7 @@ public class AvroHiveSchemaGenerator extends AvroSchemaGenerator<Map<String, Hiv
   }
 
   private static Schema traverse(Map.Entry<String, HiveTypeInfo> node)
-  throws StageException {
+      throws StageException {
     switch(node.getValue().getHiveType()){
       case STRING:
         return Schema.create(Schema.Type.STRING);
@@ -114,7 +114,7 @@ public class AvroHiveSchemaGenerator extends AvroSchemaGenerator<Map<String, Hiv
     }
   }
 
-  static IntNode getJsonNode(int value){
+  private static IntNode getJsonNode(int value){
     return new IntNode(value);
   }
 }

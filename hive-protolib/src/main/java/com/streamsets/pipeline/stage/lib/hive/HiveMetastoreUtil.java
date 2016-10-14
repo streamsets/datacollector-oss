@@ -268,7 +268,7 @@ public final class HiveMetastoreUtil {
   /**
    * Escape given Hive object name (Table, databse, column) to be safe to used inside SQL queries.
    */
-  public static String escapeHiveObjectName(String name) {
+  private static String escapeHiveObjectName(String name) {
     return HIVE_OBJECT_ESCAPE + name + HIVE_OBJECT_ESCAPE;
   }
 
@@ -527,7 +527,7 @@ public final class HiveMetastoreUtil {
   /**
    *  Evaluate precision or scale in context of record and given field path.
    */
-  public static int resolveScaleOrPrecisionExpression(
+  private static int resolveScaleOrPrecisionExpression(
       String type,
       ELEval elEval,
       ELVars variables,
@@ -592,6 +592,7 @@ public final class HiveMetastoreUtil {
    * @param record incoming Record
    * @return LinkedHashMap version of record. Key is the column name, and value is column type in HiveType
    * @throws HiveStageCheckedException
+   * @throws ELEvalException
    */
   public static LinkedHashMap<String, HiveTypeInfo> convertRecordToHMSType(
       Record record,
@@ -672,7 +673,7 @@ public final class HiveMetastoreUtil {
    * @param typeInfo  Record structure
    * @param qualifiedName qualified name that will be the name of generated avro schema
    * @return String avro schema
-   * @throws StageException
+   * @throws HiveStageCheckedException
    */
   public static String generateAvroSchema(Map<String, HiveTypeInfo> typeInfo, String qualifiedName)
       throws HiveStageCheckedException {
@@ -799,7 +800,7 @@ public final class HiveMetastoreUtil {
     }
   }
 
-  public static String stripHdfsHostAndPort(String location) {
+  static String stripHdfsHostAndPort(String location) {
     Utils.checkNotNull(location, "HDFS Partition location");
     Utils.checkArgument(
         !location.isEmpty(), "HDFS location cannot be empty"
