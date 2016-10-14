@@ -41,6 +41,19 @@
                         script:<codeblock>export SPARK_SUBMIT_YARN_COMMAND=/opt/mapr/spark/spark-1.6.1/bin/spark-submit</codeblock></p></info>
             </step>
             <step>
+                <cmd>If necessary, set the Spark logging level to a severity of INFO or lower.</cmd>
+                <info>By default, MapR sets the Spark logging level to WARN. To change the logging
+                        level:<ol
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ol-Clust-Stream-loglevel"
+                        id="ol_nfd_jgl_px">
+                        <li/>
+                    </ol></info>
+                <info>For example, when using Spark 1.6.1, you would edit
+                        <codeph>/opt/mapr/spark/spark-1.6.1/conf/log4j.properties</codeph>, and you
+                    might set the property as follows:
+                    <codeblock>log4j.rootCategory=INFO</codeblock></info>
+            </step>
+            <step>
                 <cmd>In the pipeline properties, on the <wintitle>General</wintitle> tab, set the
                         <uicontrol>Execution Mode</uicontrol> property to <uicontrol>Cluster YARN
                         Streaming</uicontrol>.</cmd>
