@@ -63,6 +63,13 @@
                             <li>On Mesos, use the SPARK_SUBMIT_MESOS_COMMAND environment
                                 variable.</li>
                         </ul></li>
+                    <li>On YARN, verify that the Spark logging level is set to a severity of INFO or
+                        lower. <p>YARN sets the Spark logging level to INFO by default. To change
+                            the logging level:<ol
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ol-Clust-Stream-loglevel"
+                                id="ol_tzg_ggl_px">
+                                <li/>
+                            </ol></p></li>
                     <li>In the pipeline properties, on the <wintitle>General</wintitle> tab, set the
                             <uicontrol>Execution Mode</uicontrol> property to <uicontrol>Cluster
                             YARN Streaming</uicontrol> or <uicontrol>Cluster Mesos
