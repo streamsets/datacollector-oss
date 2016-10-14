@@ -89,7 +89,7 @@ public class OracleCDCSource extends BaseSource {
   private static final String CONNECTION_STR = HIKARI_CONFIG_PREFIX + "connectionString";
   private static final String CURRENT_SCN = "SELECT CURRENT_SCN FROM V$DATABASE";
   private static final String GET_OLDEST_SCN =
-      "SELECT FIRST_CHANGE# from V$ARCHIVED_LOG ORDER BY FIRST_CHANGE# FETCH NEXT 10 ROWS ONLY";
+      "SELECT FIRST_CHANGE# from V$ARCHIVED_LOG ORDER BY FIRST_CHANGE#";
   private static final int MISSING_LOG_CODE = 1291;
   private static final String SWITCH_TO_CDB_ROOT = "ALTER SESSION SET CONTAINER = CDB$ROOT";
   private static final String PREFIX = "oracle.cdc.";
@@ -108,7 +108,6 @@ public class OracleCDCSource extends BaseSource {
   private static final int INSERT_CODE = 1;
   private static final int DELETE_CODE = 2;
   private static final int UPDATE_CODE = 3;
-  private static final int COMMIT_CODE = 7;
   private static final int SELECT_FOR_UPDATE_CODE = 25;
   private static final String NULL = "NULL";
   private static final String VERSION_STR = "v2";
@@ -229,7 +228,7 @@ public class OracleCDCSource extends BaseSource {
         startLogMiner();
       } catch (SQLException ex) {
         LOG.error("Error while starting LogMiner", ex);
-        throw new StageException(JDBC_52);
+        throw new StageException(JDBC_52, ex);
       }
       nextOffset = generateRecords(batchSize, selectChanges, batchMaker);
     } catch (Exception ex) {
@@ -357,7 +356,7 @@ public class OracleCDCSource extends BaseSource {
           if (ex.getErrorCode() == MISSING_LOG_CODE) {
             LOG.debug("Caught SQLException due to missing log file, trying next oldest SCN", ex);
           } else {
-            throw new StageException(JDBC_52);
+            throw new StageException(JDBC_52, ex);
           }
         }
       }
