@@ -92,7 +92,10 @@
                                 <tr class="row">
                                     <td class="entry" valign="top" width="33.33333333333333%" headers="d3534e95 ">Condition</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d3534e98 ">Condition that defines the data rule.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d3534e98 ">Condition that defines the data rule. Use the expression
+                                        language to configure the condition. <p class="p">For more information
+                                            about using the expression language, see <a class="xref" href="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq" title="The following tables include some examples of how you might use expressions in the Data Collector.">Expression Language</a>.</p>
+</td>
 
                                 </tr>
 
@@ -127,7 +130,7 @@
                                     <td class="entry" valign="top" width="33.33333333333333%" headers="d3534e95 ">Enable Alert</td>
 
                                     <td class="entry" valign="top" width="66.66666666666666%" headers="d3534e98 ">Enables an alert based on the data rule. Alerts display
-                                        upon when the configured conditions occur.</td>
+                                        when the configured conditions occur.</td>
 
                                 </tr>
 
@@ -137,6 +140,13 @@
                                     <td class="entry" valign="top" width="66.66666666666666%" headers="d3534e98 ">Text to display when the alert is triggered. <p class="p">Enter
                                             text that explains the reason for the alert. For
                                             example, "Over 100 missing phone numbers." </p>
+<p class="p">You
+                                            can use the expression language to define the alert
+                                            text. For example, use the
+                                                <samp class="ph codeph">record:errorMessage()</samp> function to
+                                            display the error message in the alert text. For more
+                                            information about using the expression language, see
+                                                <a class="xref" href="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq" title="The following tables include some examples of how you might use expressions in the Data Collector.">Expression Language</a>.</p>
 </td>
 
                                 </tr>
@@ -177,7 +187,7 @@
                                     <td class="entry" valign="top" width="66.66666666666666%" headers="d3534e98 ">Sends an email when the alert is triggered. <p class="p">To send an
                                             email, add email addresses for alerts and configure the
                                                 <span class="ph">Data
-                  Collector</span> email properties.</p>
+                  Collector</span> email properties. For more information, see <a class="xref" href="EmailforAlerts-Configuring.html#task_f3v_1hw_1r" title="You can define the email addresses to receive metric and data alerts. When an alert triggers an email, the Data Collector sends an email to every address in the list.">Configuring Email for Alerts</a>.</p>
 </td>
 
                                 </tr>
@@ -202,11 +212,6 @@
 
     </div>
 
-    <div class="related-links"><div class="relinfo"><strong>Related information</strong><br xmlns="http://www.w3.org/1999/xhtml" />
-<div class="related_link"><a class="navheader_parent_path" href="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq" title="The following tables include some examples of how you might use expressions in the Data Collector.">Expression Language</a></div>
-<div class="related_link"><a class="navheader_parent_path" href="EmailforAlerts-Configuring.html#task_f3v_1hw_1r" title="You can define the email addresses to receive metric and data alerts. When an alert triggers an email, the Data Collector sends an email to every address in the list.">Configuring Email for Alerts</a></div>
-</div>
-</div>
 </div>
 <div class="topic task nested1" id="task_sx1_4qv_q5">
     <h2 class="title topictitle2">Viewing Data Rule Metrics and Sample Data</h2>

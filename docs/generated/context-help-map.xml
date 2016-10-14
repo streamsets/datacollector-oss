@@ -55,7 +55,7 @@
    <appContext helpID="task_opg_yrm_25"
                path="Install_Config/CMInstall-Overview.html#task_opg_yrm_25"/>
    <appContext helpID="task_opg_yrm_25"
-               path="Install_Config/CMInstall-Overview.html#unique_1479927621"/>
+               path="Install_Config/CMInstall-Overview.html#unique_542759526"/>
    <appContext helpID="task_u1v_nkt_25"
                path="Install_Config/CMInstall-Overview.html#task_u1v_nkt_25"/>
    <appContext helpID="task_zn4_qrn_25"
@@ -124,6 +124,8 @@
                path="Install_Config/DCEnvironmentConfig.html#concept_kxf_y2m_sr"/>
    <appContext helpID="concept_txl_qyc_ww"
                path="Install_Config/DCEnvironmentConfig.html#concept_txl_qyc_ww"/>
+   <appContext helpID="concept_wk1_pyw_4x"
+               path="Install_Config/DCEnvironmentConfig.html#concept_wk1_pyw_4x"/>
    <appContext helpID="concept_tm4_pbg_ht"
                path="Install_Config/DCEnvironmentConfig.html#concept_tm4_pbg_ht"/>
    <appContext helpID="concept_hcb_4ks_3v"
@@ -700,6 +702,8 @@
                path="Processors/JDBCLookup.html#concept_ysc_ccy_hw"/>
    <appContext helpID="concept_nw3_t3p_tw"
                path="Processors/JDBCLookup.html#concept_nw3_t3p_tw"/>
+   <appContext helpID="concept_jt5_kx2_px"
+               path="Processors/JDBCLookup.html#concept_jt5_kx2_px"/>
    <appContext helpID="task_kbr_2cy_hw"
                path="Processors/JDBCLookup.html#task_kbr_2cy_hw"/>
    <appContext helpID="concept_qbx_lcy_hw"
@@ -1350,7 +1354,7 @@
    <appContext helpID="concept_a3w_z3m_js"
                path="Troubleshooting/Destinations.html#concept_a3w_z3m_js"/>
    <appContext helpID="concept_a3w_z3m_js"
-               path="Troubleshooting/Destinations.html#unique_2094706297"/>
+               path="Troubleshooting/Destinations.html#unique_2013285122"/>
    <appContext helpID="concept_rp1_ghd_zs"
                path="Troubleshooting/Destinations.html#concept_rp1_ghd_zs"/>
    <appContext helpID="concept_mth_cjm_js"

@@ -34,9 +34,9 @@
                     
                     <thead class="thead" align="left">
                         <tr class="row">
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d23470e33">Component</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d23497e33">Component</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d23470e36">Minimum Requirement</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d23497e36">Minimum Requirement</th>
 
                         </tr>
 
@@ -44,16 +44,16 @@
 
                     <tbody class="tbody">
                         <tr class="row">
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d23470e33 ">Spark Streaming (for cluster streaming mode)</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d23497e33 ">Spark Streaming (for cluster streaming mode)</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d23470e36 ">Spark version 1.5.2 through 1.6</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d23497e36 ">Spark version 1.5.2 through 1.6</td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d23470e33 ">MapR</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d23497e33 ">MapR</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d23470e36 ">MapR version 5.1 or 5.2</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d23497e36 ">MapR version 5.1 or 5.2</td>
 
                         </tr>
 
@@ -134,6 +134,26 @@ If the script is not in this
                         might use the following command to define the location of the
                         script:<pre class="pre codeblock">export SPARK_SUBMIT_YARN_COMMAND=/opt/mapr/spark/spark-1.6.1/bin/spark-submit</pre>
 </div>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">If necessary, set the Spark logging level to a severity of INFO or lower.</span>
+                <div class="itemgroup info">By default, MapR sets the Spark logging level to WARN. To change the logging
+                        level:<ol class="ol" type="a" id="task_i3h_q3w_hx__ol_nfd_jgl_px">
+                              <li class="li">Edit the log4j.properties file, located in the following
+                                    directory:
+                                    <pre class="pre codeblock">&lt;spark-home&gt;/conf/log4j.properties</pre>
+</li>
+
+                              <li class="li">Set the <span class="ph uicontrol">log4j.rootCategory</span> property to a
+                                    severity of INFO or lower, such as DEBUG or TRACE.</li>
+
+                        </ol>
+</div>
+                <div class="itemgroup info">For example, when using Spark 1.6.1, you would edit
+                        <samp class="ph codeph">/opt/mapr/spark/spark-1.6.1/conf/log4j.properties</samp>, and you
+                    might set the property as follows:
+                    <pre class="pre codeblock">log4j.rootCategory=INFO</pre>
 </div>
             </li>
 <li class="li step stepexpand">
