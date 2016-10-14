@@ -83,6 +83,7 @@ public class TestPipelineManagerModule {
 
     //Get an instance of manager
     taskWrapper.init();
+    taskWrapper.run();
     PipelineTask pipelineTask = (PipelineTask) taskWrapper.getTask();
     Manager pipelineManager = pipelineTask.getManager();
     Assert.assertTrue(pipelineManager instanceof StandaloneAndClusterPipelineManager);

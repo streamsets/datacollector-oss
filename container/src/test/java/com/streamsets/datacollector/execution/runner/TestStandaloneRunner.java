@@ -85,6 +85,7 @@ public class TestStandaloneRunner {
     pipelineStateStore = objectGraph.get(PipelineStateStore.class);
     pipelineManager = new StandaloneAndClusterPipelineManager(objectGraph);
     pipelineManager.init();
+    pipelineManager.run();
   }
 
   @After
@@ -243,6 +244,7 @@ public class TestStandaloneRunner {
     pipelineStateStore = objectGraph.get(PipelineStateStore.class);
     pipelineManager = new StandaloneAndClusterPipelineManager(objectGraph);
     pipelineManager.init();
+    pipelineManager.run();
 
     runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
     waitForState(runner, PipelineStatus.RUNNING);
@@ -271,6 +273,7 @@ public class TestStandaloneRunner {
     pipelineStateStore = objectGraph.get(PipelineStateStore.class);
     pipelineManager = new StandaloneAndClusterPipelineManager(objectGraph);
     pipelineManager.init();
+    pipelineManager.run();
 
     //Since SDC went down we need to get the runner again
     runner = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
@@ -334,6 +337,7 @@ public class TestStandaloneRunner {
     pipelineStateStore = objectGraph.get(PipelineStateStore.class);
     pipelineManager = new StandaloneAndClusterPipelineManager(objectGraph);
     pipelineManager.init();
+    pipelineManager.run();
 
     runner1 = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
     runner2 = pipelineManager.getRunner("admin2", TestUtil.MY_SECOND_PIPELINE, "0");
@@ -430,6 +434,7 @@ public class TestStandaloneRunner {
     ObjectGraph objectGraph = ObjectGraph.create(new TestUtil.TestPipelineManagerModule(), ConfigModule.class);
     pipelineManager = new StandaloneAndClusterPipelineManager(objectGraph);
     pipelineManager.init();
+    pipelineManager.run();
 
     //Only one runner can start pipeline at the max since the runner thread pool size is 3
     Runner runner1 = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");

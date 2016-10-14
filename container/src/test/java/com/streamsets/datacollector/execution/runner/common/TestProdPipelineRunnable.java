@@ -78,6 +78,7 @@ public class TestProdPipelineRunnable {
     pipelineStateStore = objectGraph.get(PipelineStateStore.class);
     manager = new StandaloneAndClusterPipelineManager(objectGraph);
     manager.init();
+    manager.run();
     runner = manager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
   }
 

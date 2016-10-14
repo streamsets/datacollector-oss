@@ -21,8 +21,6 @@ package com.streamsets.datacollector.main;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.event.handler.EventHandlerTask;
-import com.streamsets.datacollector.event.handler.remote.RemoteEventHandlerTask;
-import com.streamsets.datacollector.event.handler.remote.RemoteEventHandlerTask;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.http.DataCollectorWebServerTask;
 import com.streamsets.datacollector.http.WebServerTask;
@@ -42,7 +40,7 @@ public class PipelineTask extends CompositeTask {
   @Inject
   public PipelineTask(StageLibraryTask library, PipelineStoreTask store, Manager manager,
       DataCollectorWebServerTask webServerTask, EventHandlerTask eventHandlerTask) {
-    super("pipelineNode", ImmutableList.of(library, store, manager, webServerTask, eventHandlerTask),
+    super("pipelineNode", ImmutableList.of(library, store, webServerTask , manager, eventHandlerTask),
       true);
     this.webServerTask = webServerTask;
     this.stageLibraryTask = library;
