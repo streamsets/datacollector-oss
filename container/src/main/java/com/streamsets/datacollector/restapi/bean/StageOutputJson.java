@@ -37,7 +37,7 @@ public class StageOutputJson {
     @JsonProperty("output") Map<String, List<RecordJson>> output,
     @JsonProperty("errorRecords") List<RecordJson> errorRecordJsons,
     @JsonProperty("stageErrors") List<ErrorMessageJson> stageErrors,
-    @JsonProperty("events") List<RecordJson> eventRecords
+    @JsonProperty("eventRecords") List<RecordJson> eventRecords
     ) {
     this.stageOutput = new StageOutput(instanceName,
       BeanHelper.unwrapRecordsMap(output),
