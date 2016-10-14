@@ -32,7 +32,7 @@
                     then click the <uicontrol>Publish Pipeline</uicontrol> icon <image
                         href="../Graphics/icon_RemoteStore.png" scale="80" id="image_svp_msc_fx"/>.
                     Or to publish a pipeline from the pipeline canvas, click the <uicontrol>DPM
-                        Options</uicontrol> icon <image href="../graphics/icon_RemoteStore.png"
+                        Options</uicontrol> icon <image href="../Graphics/icon_RemoteStore.png"
                         id="image_lc3_kbf_2w" placement="inline" scale="80"/>, and then click
                         <uicontrol>Publish Pipeline</uicontrol>. </cmd>
                 <info>The <uicontrol>Publish Pipeline</uicontrol> dialog box appears.</info>
