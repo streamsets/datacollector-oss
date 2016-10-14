@@ -20,17 +20,16 @@
 package com.streamsets.datacollector.runner.preview;
 
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.record.RecordImpl;
+import com.streamsets.datacollector.restapi.bean.BeanHelper;
+import com.streamsets.datacollector.restapi.bean.StageOutputJson;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRunner;
 import com.streamsets.datacollector.runner.SourceOffsetTracker;
 import com.streamsets.datacollector.runner.StageOutput;
-import com.streamsets.datacollector.runner.preview.PreviewPipeline;
-import com.streamsets.datacollector.runner.preview.PreviewPipelineBuilder;
-import com.streamsets.datacollector.runner.preview.PreviewPipelineOutput;
-import com.streamsets.datacollector.runner.preview.PreviewPipelineRunner;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.pipeline.api.Batch;
@@ -42,7 +41,6 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,7 +48,6 @@ import org.mockito.Mockito;
 
 import java.util.Arrays;
 import java.util.List;
-
 
 public class TestPreviewRun {
   private Configuration configuration;
@@ -96,6 +93,12 @@ public class TestPreviewRun {
     List<StageOutput> output = runner.getBatchesOutput().get(0);
     Assert.assertEquals(1, output.get(0).getOutput().get("s").get(0).get().getValue());
     Assert.assertEquals(2, output.get(1).getOutput().get("p").get(0).get().getValue());
+
+    // Test serializing to json and json to bean
+    List<StageOutputJson> stageOutputJsonList = BeanHelper.wrapStageOutput(output);
+    String outputStr = ObjectMapperFactory.get().writeValueAsString(stageOutputJsonList.get(0));
+    StageOutputJson stageOutputJson = ObjectMapperFactory.get().readValue(outputStr, StageOutputJson.class);
+    Assert.assertNotNull(stageOutputJson);
   }
 
   @Test
