@@ -142,7 +142,7 @@
                                     pairs. You can use the state object to cache data such as
                                     lookups or counters.</dd>
 
-                              <dd class="dd">The state object functions much like an instance variable: <ul class="ul" id="concept_mqn_5vk_sr__d26576e1243">
+                              <dd class="dd">The state object functions much like an instance variable: <ul class="ul" id="concept_mqn_5vk_sr__d26812e1243">
                                           <li class="li">You need to populate the object - it has no default
                                                 value.</li>
 
@@ -205,7 +205,7 @@ The
                                     Includes the following methods: </dd>
 
                               <dd class="dd">
-                                    <ul class="ul" id="concept_mqn_5vk_sr__d26576e1325">
+                                    <ul class="ul" id="concept_mqn_5vk_sr__d26812e1325">
                                           <li class="li"><samp class="ph codeph">getFieldNull(Record, 'field path')</samp> -
                                                 Method that checks if a field is assigned a constant
                                                 such as NULL_INTEGER or NULL_STRING.</li>
@@ -368,14 +368,14 @@ input_stream.read()</pre>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzc_1by_nr__d26514e3528" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzc_1by_nr__d26750e3559" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d197030e482">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d197985e482">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d197030e485">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d197985e485">Description</th>
 
                                 </tr>
 
@@ -383,24 +383,24 @@ input_stream.read()</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d197030e482 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d197985e482 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d197030e485 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d197030e482 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d197030e485 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d197985e485 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d197030e482 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_mzc_1by_nr__d26514e3574" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d197985e482 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d197030e485 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d197985e485 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d197985e482 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_mzc_1by_nr__d26750e3605" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d197985e485 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -408,10 +408,10 @@ input_stream.read()</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d197030e482 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_mzc_1by_nr__d26514e3588" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d197985e482 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_mzc_1by_nr__d26750e3619" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d197030e485 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d197985e485 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -419,10 +419,10 @@ input_stream.read()</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d197030e482 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_mzc_1by_nr__d26514e3603" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d197985e482 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_mzc_1by_nr__d26750e3634" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d197030e485 ">Error record handling for the stage: <ul class="ul" id="task_mzc_1by_nr__d26514e3607">
+                                    <td class="entry" valign="top" width="70%" headers="d197985e485 ">Error record handling for the stage: <ul class="ul" id="task_mzc_1by_nr__d26750e3638">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -453,9 +453,9 @@ input_stream.read()</pre>
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d197030e604">JavaScript Evaluator Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d197985e604">JavaScript Evaluator Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d197030e607">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d197985e607">Description</th>
 
                                 </tr>
 
@@ -463,9 +463,9 @@ input_stream.read()</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d197030e604 ">Record Processing Mode</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d197985e604 ">Record Processing Mode</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d197030e607 ">Determines how the JavaScript Evaluator processes
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d197985e607 ">Determines how the JavaScript Evaluator processes
                                             data:<ul class="ul" id="task_mzc_1by_nr__ul_tzg_vzx_nr">
                                             <li class="li">Record by Record - Processes records individually.
                                                 Performs error handling.</li>
@@ -480,9 +480,9 @@ input_stream.read()</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d197030e604 ">Script</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d197985e604 ">Script</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d197030e607 ">JavaScript code to use in the processor.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d197985e607 ">JavaScript code to use in the processor.</td>
 
                                 </tr>
 

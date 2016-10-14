@@ -138,15 +138,15 @@
         <p class="p">You can add custom Kafka configuration
             properties to the Kafka Producer destination. </p>
 
-        <p class="p" id="concept_wnp_gfc_rw__d8106e26">When you add a Kafka configuration property, enter the exact property name and
+        <p class="p" id="concept_wnp_gfc_rw__d8141e26">When you add a Kafka configuration property, enter the exact property name and
             the value. The stage does not validate the property names or values.</p>
 
-        <p class="p" id="concept_wnp_gfc_rw__d8106e29">Several properties are defined by default, you can edit or remove the properties
+        <p class="p" id="concept_wnp_gfc_rw__d8141e29">Several properties are defined by default, you can edit or remove the properties
             as necessary.</p>
 
         <div class="p">
-            <div class="note note" id="concept_wnp_gfc_rw__d8106e34"><span class="notetitle">Note:</span> Because the stage uses several configuration properties, it ignores
-                user-defined values for the following properties:<ul class="ul" id="concept_wnp_gfc_rw__d8106e36">
+            <div class="note note" id="concept_wnp_gfc_rw__d8141e34"><span class="notetitle">Note:</span> Because the stage uses several configuration properties, it ignores
+                user-defined values for the following properties:<ul class="ul" id="concept_wnp_gfc_rw__d8141e36">
                     <li class="li">key.serializer.class</li>
 
                     <li class="li">metadata.broker.list</li>
@@ -189,11 +189,11 @@
             same steps to configure a Kafka Consumer.</p>
 
         <div class="p">
-            <ol class="ol" id="concept_czm_55c_rw__d8477e27">
+            <ol class="ol" id="concept_czm_55c_rw__d8512e27">
                 <li class="li">To use SSL to connect, first make sure Kafka is configured for SSL as described
                     in the Kafka documentation: <a class="xref" href="http://kafka.apache.org/documentation.html#security_ssl" target="_blank">http://kafka.apache.org/documentation.html#security_ssl</a>. </li>
 
-                <li class="li" id="concept_czm_55c_rw__d8477e34">On the <span class="ph uicontrol">General</span> tab of the stage, set
+                <li class="li" id="concept_czm_55c_rw__d8512e34">On the <span class="ph uicontrol">General</span> tab of the stage, set
                     the <span class="ph uicontrol">Stage Library</span> property to <span class="ph uicontrol">Apache Kafka
                         0.9.0.0</span>.</li>
 
@@ -201,8 +201,8 @@
                         <span class="ph uicontrol">security.protocol</span> Kafka configuration property and
                     set it to <span class="ph uicontrol">SSL</span>.</li>
 
-                <li class="li" id="concept_czm_55c_rw__d8477e58">Then, add the following SSL Kafka configuration
-                        properties:<ul class="ul" id="concept_czm_55c_rw__d8477e60">
+                <li class="li" id="concept_czm_55c_rw__d8512e58">Then, add the following SSL Kafka configuration
+                        properties:<ul class="ul" id="concept_czm_55c_rw__d8512e60">
                         <li class="li">ssl.truststore.location</li>
 
                         <li class="li">ssl.truststore.password</li>
@@ -210,7 +210,7 @@
                     </ul>
 <div class="p">When the Kafka broker requires client authentication - when the
                         ssl.client.auth broker property is set to "required" - add and configure the
-                        following properties: <ul class="ul" id="concept_czm_55c_rw__d8477e70">
+                        following properties: <ul class="ul" id="concept_czm_55c_rw__d8512e70">
                             <li class="li">ssl.keystore.location</li>
 
                             <li class="li">ssl.keystore.password</li>
@@ -220,7 +220,7 @@
                         </ul>
 </div>
 <div class="p">Some brokers might require adding the following properties as
-                            well:<ul class="ul" id="concept_czm_55c_rw__d8477e83">
+                            well:<ul class="ul" id="concept_czm_55c_rw__d8512e83">
                             <li class="li">ssl.enabled.protocols</li>
 
                             <li class="li">ssl.truststore.type</li>
@@ -261,7 +261,7 @@
                 <li class="li">To use Kerberos, first make sure Kafka is configured for Kerberos as described
                     in the Kafka documentation: <a class="xref" href="http://kafka.apache.org/documentation.html#security_sasl" target="_blank">http://kafka.apache.org/documentation.html#security_sasl</a>.</li>
 
-                <li class="li" id="concept_vtc_rvc_rw__d8371e46">In the <span class="ph">Data
+                <li class="li" id="concept_vtc_rvc_rw__d8406e46">In the <span class="ph">Data
                   Collector</span>
                     configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>, make sure the
                     following Kerberos properties are configured: <ul class="ul" id="concept_vtc_rvc_rw__ul_epq_gbd_rw">
@@ -281,7 +281,7 @@
                         <span class="ph uicontrol">security.protocol</span> Kafka configuration property, and
                     set it to <span class="ph uicontrol">SASL_PLAINTEXT</span>.</li>
 
-                <li class="li" id="concept_vtc_rvc_rw__d8371e79">Then, add the
+                <li class="li" id="concept_vtc_rvc_rw__d8406e79">Then, add the
                         <span class="ph uicontrol">sasl.kerberos.service.name</span> configuration property,
                     and set it to the Kerberos principal name that Kafka runs as. </li>
 
@@ -291,7 +291,7 @@
 
         <p class="p">For example, the following Kafka properties enable connecting to <span class="ph">Kafka 0.9.0.0</span> with Kerberos:</p>
 
-        <p class="p"><img class="image" id="concept_vtc_rvc_rw__d8371e93" src="../Reusable_Content/Reusable_Topics/../../Graphics/Kafka-Kerberos.png" height="58" width="561"></img></p>
+        <p class="p"><img class="image" id="concept_vtc_rvc_rw__d8406e93" src="../Reusable_Content/Reusable_Topics/../../Graphics/Kafka-Kerberos.png" height="58" width="561"></img></p>
 
  </div>
 
@@ -304,9 +304,9 @@
             can enable Kafka Producer to use SSL and Kerberos to connect to <span class="ph">Kafka 0.9.0.0</span>.</p>
 
         <div class="p">To use SSL and Kerberos, combine the steps required to enable each and set the
-            security.protocol property as follows: <ol class="ol" id="concept_ksm_svc_rw__d8552e31">
+            security.protocol property as follows: <ol class="ol" id="concept_ksm_svc_rw__d8587e31">
                 <li class="li">Make sure Kafka is configured to use SSL and Kerberos (SASL) as described in the
-                    following Kafka documentation:<ul class="ul" id="concept_ksm_svc_rw__d8552e35">
+                    following Kafka documentation:<ul class="ul" id="concept_ksm_svc_rw__d8587e35">
                         <li class="li"><a class="xref" href="http://kafka.apache.org/documentation.html#security_ssl" target="_blank">http://kafka.apache.org/documentation.html#security_ssl</a></li>
 
                         <li class="li"><a class="xref" href="http://kafka.apache.org/documentation.html#security_sasl" target="_blank">http://kafka.apache.org/documentation.html#security_sasl</a></li>
@@ -339,7 +339,7 @@
                     and set it to the Kerberos principal name that Kafka runs as. </li>
 
                 <li class="li">Then, add the following SSL Kafka configuration
-                        properties:<ul class="ul" id="concept_ksm_svc_rw__d8477e60">
+                        properties:<ul class="ul" id="concept_ksm_svc_rw__d8512e60">
                         <li class="li">ssl.truststore.location</li>
 
                         <li class="li">ssl.truststore.password</li>
@@ -347,7 +347,7 @@
                     </ul>
 <div class="p">When the Kafka broker requires client authentication - when the
                         ssl.client.auth broker property is set to "required" - add and configure the
-                        following properties: <ul class="ul" id="concept_ksm_svc_rw__d8477e70">
+                        following properties: <ul class="ul" id="concept_ksm_svc_rw__d8512e70">
                             <li class="li">ssl.keystore.location</li>
 
                             <li class="li">ssl.keystore.password</li>
@@ -357,7 +357,7 @@
                         </ul>
 </div>
 <div class="p">Some brokers might require adding the following properties as
-                            well:<ul class="ul" id="concept_ksm_svc_rw__d8477e83">
+                            well:<ul class="ul" id="concept_ksm_svc_rw__d8512e83">
                             <li class="li">ssl.enabled.protocols</li>
 
                             <li class="li">ssl.truststore.type</li>
@@ -392,7 +392,7 @@
                                     of the Avro schema definition:</dd>
 
                               <dd class="dd">
-                                    <ul class="ul" id="concept_lww_3b3_kr__d5582e1501">
+                                    <ul class="ul" id="concept_lww_3b3_kr__d5617e1501">
                                           <li class="li"><span class="ph uicontrol">In Pipeline Configuration</span> - Use
                                                 the schema that you provide in the stage
                                                 configuration.</li>
@@ -449,7 +449,7 @@
                               <dt class="dt dlterm">JSON</dt>
 
                               <dd class="dd">The destination writes records as JSON data. You can use one of
-                                    the following formats:<ul class="ul" id="concept_lww_3b3_kr__d5582e1605">
+                                    the following formats:<ul class="ul" id="concept_lww_3b3_kr__d5617e1605">
                                           <li class="li">Array - Each file includes a single array. In the
                                                 array, each element is a JSON representation of each
                                                 record.</li>
@@ -516,46 +516,46 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d5653e3868" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d5688e3899" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d53018e790">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d53097e790">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d53018e793">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d53097e793">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr id="task_q4d_4yl_zq__d5653e3890" class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d53018e790 ">Name</td>
+                                <tr id="task_q4d_4yl_zq__d5688e3921" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d53097e790 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53018e793 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr id="task_q4d_4yl_zq__d5653e3899" class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d53018e790 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d53018e793 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d53097e793 ">Stage name.</td>
 
                                 </tr>
 
-                                <tr id="task_q4d_4yl_zq__d5653e3908" class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d53018e790 ">Stage Library</td>
+                                <tr id="task_q4d_4yl_zq__d5688e3930" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d53097e790 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53018e793 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d53097e793 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr id="task_q4d_4yl_zq__d5688e3939" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d53097e790 ">Stage Library</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d53097e793 ">Library version that you want to use. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d53018e790 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_q4d_4yl_zq__d5653e3923" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d53097e790 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_q4d_4yl_zq__d5688e3954" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53018e793 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d53097e793 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -563,21 +563,21 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d53018e790 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_q4d_4yl_zq__d5653e3937" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d53097e790 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_q4d_4yl_zq__d5688e3968" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53018e793 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d53097e793 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
 
                                 </tr>
 
-                                <tr id="task_q4d_4yl_zq__d5653e3947" class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d53018e790 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_q4d_4yl_zq__d5653e3953" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                <tr id="task_q4d_4yl_zq__d5688e3978" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d53097e790 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_q4d_4yl_zq__d5688e3984" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53018e793 ">Error record handling for the stage: <ul class="ul" id="task_q4d_4yl_zq__d5653e3957">
+                                    <td class="entry" valign="top" width="70%" headers="d53097e793 ">Error record handling for the stage: <ul class="ul" id="task_q4d_4yl_zq__d5688e3988">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -603,24 +603,24 @@
                 <div class="itemgroup info">
                     <div class="p">
                         
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d5653e5995" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d5688e6026" class="table" frame="border" border="1" rules="all">
                                 
                                 
                                 <thead class="thead" align="left">
                                     <tr class="row">
-                                        <th class="entry" valign="top" width="30%" id="d53018e924">Kafka Properties</th>
+                                        <th class="entry" valign="top" width="30%" id="d53097e924">Kafka Properties</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d53018e927">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d53097e927">Description</th>
 
                                     </tr>
 
                                 </thead>
 
                                 <tbody class="tbody">
-                                    <tr id="task_q4d_4yl_zq__d5653e6017" class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d53018e924 ">Broker URI</td>
+                                    <tr id="task_q4d_4yl_zq__d5688e6048" class="row">
+                                        <td class="entry" valign="top" width="30%" headers="d53097e924 ">Broker URI</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d53018e927 ">Connection string for the Kafka broker. Use the
+                                        <td class="entry" valign="top" width="70%" headers="d53097e927 ">Connection string for the Kafka broker. Use the
                                             following format:
                                                 <samp class="ph codeph">&lt;host&gt;:&lt;port&gt;</samp>.<p class="p">To ensure a
                                                 connection, enter a comma-separated list of
@@ -629,37 +629,37 @@
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d5653e6031" class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d53018e924 ">Runtime Topic Resolution <a class="xref" href="KProducer.html#concept_ok1_cwr_xr" title="Kafka Producer can write a record to the topic based on an expression. When Kafka Producer evaluates a record, it calculates the expression based on record values and writes the record to the resulting topic."><img class="image" id="task_q4d_4yl_zq__d5653e6036" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+                                    <tr id="task_q4d_4yl_zq__d5688e6062" class="row">
+                                        <td class="entry" valign="top" width="30%" headers="d53097e924 ">Runtime Topic Resolution <a class="xref" href="KProducer.html#concept_ok1_cwr_xr" title="Kafka Producer can write a record to the topic based on an expression. When Kafka Producer evaluates a record, it calculates the expression based on record values and writes the record to the resulting topic."><img class="image" id="task_q4d_4yl_zq__d5688e6067" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
                                             </a></td>
 
-                                        <td class="entry" id="task_q4d_4yl_zq__d5653e6039" valign="top" width="70%" headers="d53018e927 ">Evaluates an expression at runtime to determine the
+                                        <td class="entry" id="task_q4d_4yl_zq__d5688e6070" valign="top" width="70%" headers="d53097e927 ">Evaluates an expression at runtime to determine the
                                             topic to use for each record.</td>
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d5653e6043" class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d53018e924 ">Topic</td>
+                                    <tr id="task_q4d_4yl_zq__d5688e6074" class="row">
+                                        <td class="entry" valign="top" width="30%" headers="d53097e924 ">Topic</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d53018e927 ">Topic to use. <p class="p">Not available when using runtime
+                                        <td class="entry" valign="top" width="70%" headers="d53097e927 ">Topic to use. <p class="p">Not available when using runtime
                                                 topic resolution.</p>
 </td>
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d5653e6054" class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d53018e924 ">Topic Expression</td>
+                                    <tr id="task_q4d_4yl_zq__d5688e6085" class="row">
+                                        <td class="entry" valign="top" width="30%" headers="d53097e924 ">Topic Expression</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d53018e927 ">Expression used to determine where each record is
+                                        <td class="entry" valign="top" width="70%" headers="d53097e927 ">Expression used to determine where each record is
                                             written when using runtime topic resolution. Use an
                                             expression that evaluates to a topic name. </td>
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d5653e6063" class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d53018e924 ">Topic White List</td>
+                                    <tr id="task_q4d_4yl_zq__d5688e6094" class="row">
+                                        <td class="entry" valign="top" width="30%" headers="d53097e924 ">Topic White List</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d53018e927 ">List of valid topic names to write to when using
+                                        <td class="entry" valign="top" width="70%" headers="d53097e927 ">List of valid topic names to write to when using
                                             runtime topic resolution. Use to avoid writing to
                                             invalid topics. Records that resolve to invalid topic
                                             names are passed to the stage for error handling. <p class="p">Use
@@ -669,10 +669,10 @@
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d5653e6075" class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d53018e924 ">Partition Strategy </td>
+                                    <tr id="task_q4d_4yl_zq__d5688e6106" class="row">
+                                        <td class="entry" valign="top" width="30%" headers="d53097e924 ">Partition Strategy </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d53018e927 ">Strategy to use to write to partitions:<ul class="ul" id="task_q4d_4yl_zq__d5653e6082">
+                                        <td class="entry" valign="top" width="70%" headers="d53097e927 ">Strategy to use to write to partitions:<ul class="ul" id="task_q4d_4yl_zq__d5688e6113">
                                                 <li class="li">Round Robin - Takes turns writing to different
                                                   partitions.</li>
 
@@ -689,11 +689,11 @@
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d5653e6098" class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d53018e924 ">Partition Expression <a class="xref" href="KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
-                                                <img class="image" id="task_q4d_4yl_zq__d5653e6104" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <tr id="task_q4d_4yl_zq__d5688e6129" class="row">
+                                        <td class="entry" valign="top" width="30%" headers="d53097e924 ">Partition Expression <a class="xref" href="KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
+                                                <img class="image" id="task_q4d_4yl_zq__d5688e6135" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                        <td class="entry" id="task_q4d_4yl_zq__d5653e6106" valign="top" width="70%" headers="d53018e927 ">Expression to use when using
+                                        <td class="entry" id="task_q4d_4yl_zq__d5688e6137" valign="top" width="70%" headers="d53097e927 ">Expression to use when using
                                             the expression partition strategy. <p class="p">Define the
                                                 expression to evaluate to the partition where you
                                                 want each record written. Partition numbers start
@@ -704,18 +704,18 @@
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d5653e6113" class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d53018e924 ">One Message per Batch</td>
+                                    <tr id="task_q4d_4yl_zq__d5688e6144" class="row">
+                                        <td class="entry" valign="top" width="30%" headers="d53097e924 ">One Message per Batch</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d53018e927 ">For each batch, writes the records to each partition
+                                        <td class="entry" valign="top" width="70%" headers="d53097e927 ">For each batch, writes the records to each partition
                                             as a single message. </td>
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d5653e6122" class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d53018e924 ">Kafka Configuration</td>
+                                    <tr id="task_q4d_4yl_zq__d5688e6153" class="row">
+                                        <td class="entry" valign="top" width="30%" headers="d53097e924 ">Kafka Configuration</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d53018e927 ">Additional Kafka properties to use. Click the
+                                        <td class="entry" valign="top" width="70%" headers="d53097e927 ">Additional Kafka properties to use. Click the
                                                 <span class="ph uicontrol">Add</span> icon and define the Kafka
                                             property name and value. <p class="p">Use the property names and
                                                 values as expected by Kafka. Do not use the
@@ -726,10 +726,10 @@
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d5653e6140" class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d53018e924 ">Data Format</td>
+                                    <tr id="task_q4d_4yl_zq__d5688e6171" class="row">
+                                        <td class="entry" valign="top" width="30%" headers="d53097e924 ">Data Format</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d53018e927 ">Data format for messages:<ul class="ul" id="task_q4d_4yl_zq__d5653e6147">
+                                        <td class="entry" valign="top" width="70%" headers="d53097e927 ">Data format for messages:<ul class="ul" id="task_q4d_4yl_zq__d5688e6178">
                                                 <li class="li">Avro</li>
 
                                                 <li class="li">Binary</li>
@@ -741,7 +741,7 @@
                                                 <li class="li">Protobuf</li>
 
                                                 <li class="li">SDC Record <a class="xref" href="../Pipeline_Design/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a proprietary data format that Data Collector uses to generate error records. Data Collector can also use the data format to read and write data.">
-                                                  <img class="image" id="task_q4d_4yl_zq__d5653e6169" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></li>
+                                                  <img class="image" id="task_q4d_4yl_zq__d5688e6200" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></li>
 
                                                 <li class="li">Text</li>
 
@@ -751,19 +751,19 @@
                                     </tr>
 
                                     <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d53018e924 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d53097e924 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d53018e927 ">Character set to use when writing data. <p class="p">Not used with all data formats.</p>
+       <td class="entry" valign="top" width="70%" headers="d53097e927 ">Character set to use when writing data. <p class="p">Not used with all data formats.</p>
 </td>
 
       </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d53018e924 ">Key Serializer
+                                        <td class="entry" valign="top" width="30%" headers="d53097e924 ">Key Serializer
                                             <a class="xref" href="KProducer.html#concept_lww_3b3_kr">
-                                                <img class="image" id="task_q4d_4yl_zq__d5653e6188" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                                <img class="image" id="task_q4d_4yl_zq__d5688e6219" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d53018e927 ">Method used to serialize the Kafka message key when
+                                        <td class="entry" valign="top" width="70%" headers="d53097e927 ">Method used to serialize the Kafka message key when
                                             the configured data format is Avro. <p class="p">Set to Confluent
                                                 to embed the Avro schema ID in each message that
                                                 Kafka Producer writes. </p>
@@ -772,9 +772,9 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d53018e924 ">Value Serializer</td>
+                                        <td class="entry" valign="top" width="30%" headers="d53097e924 ">Value Serializer</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d53018e927 ">Method used to serialize the Kafka message value when
+                                        <td class="entry" valign="top" width="70%" headers="d53097e927 ">Method used to serialize the Kafka message value when
                                             the configured data format is Avro. <p class="p">Set to Confluent
                                                 to embed the Avro schema ID in each message that
                                                 Kafka Producer writes.</p>
@@ -796,14 +796,14 @@
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d5653e4493" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d5688e4524" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d53018e1183">Avro Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d53097e1183">Avro Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d53018e1186">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d53097e1186">Description</th>
 
                                 </tr>
 
@@ -811,10 +811,10 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d53018e1183 ">Avro Schema Location</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53097e1183 ">Avro Schema Location</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53018e1186 ">Location of the Avro schema definition to use when
-                                        writing data:<ul class="ul" id="task_q4d_4yl_zq__d5653e4522">
+                                    <td class="entry" valign="top" width="70%" headers="d53097e1186 ">Location of the Avro schema definition to use when
+                                        writing data:<ul class="ul" id="task_q4d_4yl_zq__d5688e4553">
                                             <li class="li">In Pipeline Configuration - Use the schema that you
                                                 provide in the stage configuration. </li>
 
@@ -822,7 +822,7 @@
                                                 record header attribute. Use only when the
                                                 avroSchema attribute is defined for all records.
                                                   <a class="xref" href="Destinations_overview.html#concept_lmn_gdc_1w">
-                                                  <img class="image" id="task_q4d_4yl_zq__d5653e4531" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></li>
+                                                  <img class="image" id="task_q4d_4yl_zq__d5688e4562" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></li>
 
                                             <li class="li">Confluent Schema Registry - Retrieve the schema from
                                                 the Confluent Schema Registry. </li>
@@ -833,9 +833,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d53018e1183 ">Avro Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53097e1183 ">Avro Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53018e1186 ">Avro schema definition used to write the data. <p class="p">You can
+                                    <td class="entry" valign="top" width="70%" headers="d53097e1186 ">Avro schema definition used to write the data. <p class="p">You can
                                         optionally use the runtime:loadResource function to use
                                         a schema definition stored in a runtime resource file.
                                     </p>
@@ -844,17 +844,17 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d53018e1183 ">Register Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53097e1183 ">Register Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53018e1186 ">Select to register a new Avro schema with the Confluent
+                                    <td class="entry" valign="top" width="70%" headers="d53097e1186 ">Select to register a new Avro schema with the Confluent
                                         Schema Registry.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d53018e1183 ">Schema Registry URLs  </td>
+                                    <td class="entry" valign="top" width="30%" headers="d53097e1183 ">Schema Registry URLs  </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53018e1186 ">Confluent Schema Registry URLs used to look up the schema
+                                    <td class="entry" valign="top" width="70%" headers="d53097e1186 ">Confluent Schema Registry URLs used to look up the schema
                                         or to register a new schema. To add a URL, click
                                             <span class="ph uicontrol">Add</span>. Use the following format to
                                         enter the
@@ -864,10 +864,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d53018e1183 ">Look Up Schema By</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53097e1183 ">Look Up Schema By</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53018e1186 ">Method used to look up the schema in the Confluent Schema
-                                            Registry:<ul class="ul" id="task_q4d_4yl_zq__d5653e4579">
+                                    <td class="entry" valign="top" width="70%" headers="d53097e1186 ">Method used to look up the schema in the Confluent Schema
+                                            Registry:<ul class="ul" id="task_q4d_4yl_zq__d5688e4610">
                                             <li class="li">Subject - Look up the specified Avro schema
                                                 subject.</li>
 
@@ -879,9 +879,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d53018e1183 ">Schema Subject</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53097e1183 ">Schema Subject</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53018e1186 ">Avro schema subject to look up or to register in the
+                                    <td class="entry" valign="top" width="70%" headers="d53097e1186 ">Avro schema subject to look up or to register in the
                                         Confluent Schema Registry.<p class="p">If the specified subject to
                                             look up has multiple schema versions, the origin uses
                                             the latest schema version for that subject. To use an
@@ -893,17 +893,17 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d53018e1183 ">Schema ID</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53097e1183 ">Schema ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53018e1186 ">Avro schema ID to look up in the Confluent Schema
+                                    <td class="entry" valign="top" width="70%" headers="d53097e1186 ">Avro schema ID to look up in the Confluent Schema
                                         Registry.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d53018e1183 ">Include Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53097e1183 ">Include Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53018e1186 ">Includes the schema in each message. <div class="note note"><span class="notetitle">Note:</span> If you
+                                    <td class="entry" valign="top" width="70%" headers="d53097e1186 ">Includes the schema in each message. <div class="note note"><span class="notetitle">Note:</span> If you
                                             configured Kafka Producer to embed the Avro schema ID in
                                             each message that it writes, clear this
                                         property.</div>
@@ -912,9 +912,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d53018e1183 ">Avro Compression Codec</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53097e1183 ">Avro Compression Codec</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53018e1186 ">The Avro compression type to use. <p class="p">When using Avro
+                                    <td class="entry" valign="top" width="70%" headers="d53097e1186 ">The Avro compression type to use. <p class="p">When using Avro
                                         compression, do not enable other compression available
                                         in the destination. </p>
 </td>
@@ -933,14 +933,14 @@
                     following property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d5653e4661" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d5688e4692" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d53018e1341">Binary Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d53097e1341">Binary Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d53018e1344">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d53097e1344">Description</th>
 
                                 </tr>
 
@@ -948,9 +948,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d53018e1341 ">Binary Field Path</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53097e1341 ">Binary Field Path</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53018e1344 ">Field that contains the binary data.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d53097e1344 ">Field that contains the binary data.</td>
 
                                 </tr>
 
@@ -966,14 +966,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d5653e4718" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d5688e4749" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d53018e1387">Delimited Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d53097e1387">Delimited Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d53018e1390">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d53097e1390">Description</th>
 
                                 </tr>
 
@@ -981,9 +981,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d53018e1387 ">Delimiter Format</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53097e1387 ">Delimiter Format</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53018e1390 ">Format for delimited data:<ul class="ul" id="task_q4d_4yl_zq__ul_k3j_vvf_jr">
+                                    <td class="entry" valign="top" width="70%" headers="d53097e1390 ">Format for delimited data:<ul class="ul" id="task_q4d_4yl_zq__ul_k3j_vvf_jr">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
 
@@ -1007,16 +1007,16 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d53018e1387 ">Header Line</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53097e1387 ">Header Line</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53018e1390 ">Indicates whether to create a header line.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d53097e1390 ">Indicates whether to create a header line.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d53018e1387 ">Replace New Line Characters</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53097e1387 ">Replace New Line Characters</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53018e1390 ">Replaces new line characters with the configured
+                                    <td class="entry" valign="top" width="70%" headers="d53097e1390 ">Replaces new line characters with the configured
                                             string.<p class="p">Recommended when writing data as a single line
                                             of text.</p>
 </td>
@@ -1024,9 +1024,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d53018e1387 ">New Line Character Replacement</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53097e1387 ">New Line Character Replacement</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53018e1390 ">String to replace each new line character. For example,
+                                    <td class="entry" valign="top" width="70%" headers="d53097e1390 ">String to replace each new line character. For example,
                                         enter a space to replace each new line character with a
                                         space. <p class="p">Leave empty to remove the new line
                                         characters.</p>
@@ -1035,9 +1035,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d53018e1387 ">Delimiter Character</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53097e1387 ">Delimiter Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53018e1390 ">Delimiter character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="70%" headers="d53097e1390 ">Delimiter character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">You can enter a Unicode control character
                                             using the format \u<em class="ph i">NNNN</em>, where ​<em class="ph i">N</em> is a
@@ -1052,9 +1052,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d53018e1387 ">Escape Character </td>
+                                    <td class="entry" valign="top" width="30%" headers="d53097e1387 ">Escape Character </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53018e1390 ">Escape character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="70%" headers="d53097e1390 ">Escape character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the backslash character ( \
                                         ).</p>
@@ -1063,9 +1063,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d53018e1387 ">Quote Character</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53097e1387 ">Quote Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53018e1390 ">Quote character for a custom delimiter format. Select one
+                                    <td class="entry" valign="top" width="70%" headers="d53097e1390 ">Quote character for a custom delimiter format. Select one
                                         of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the quotation mark character ( "
                                             ).</p>
@@ -1085,14 +1085,14 @@
                     property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d5653e4853" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d5688e4884" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d53018e1540">JSON Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d53097e1540">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d53018e1543">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d53097e1543">Description</th>
 
                                 </tr>
 
@@ -1100,9 +1100,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d53018e1540 ">JSON Content</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53097e1540 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53018e1543 ">Determines how JSON data is written:<ul class="ul" id="task_q4d_4yl_zq__d5653e4882">
+                                    <td class="entry" valign="top" width="70%" headers="d53097e1543 ">Determines how JSON data is written:<ul class="ul" id="task_q4d_4yl_zq__d5688e4913">
                                             <li class="li">JSON Array of Objects - Each file includes a single
                                                 array. In the array, each element is a JSON
                                                 representation of each record.</li>
@@ -1128,14 +1128,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d5653e4920" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d5688e4951" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d53018e1594">Protobuf Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d53097e1594">Protobuf Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d53018e1597">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d53097e1597">Description</th>
 
                                 </tr>
 
@@ -1143,22 +1143,22 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d53018e1594 ">Protobuf Descriptor File </td>
+                                    <td class="entry" valign="top" width="30%" headers="d53097e1594 ">Protobuf Descriptor File </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53018e1597 ">Descriptor file (.desc) to use. The descriptor file must
+                                    <td class="entry" valign="top" width="70%" headers="d53097e1597 ">Descriptor file (.desc) to use. The descriptor file must
                                         be in the <span class="ph">Data
                   Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>.
                                             <p class="p">For more information about environment variables, see
-                                                <a class="xref" href="../Install_Config/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.By default, Data Collector is configured to use TLS versions 1.1 and 1.2. To connect to a system that uses an earlier version of TLS, modify the Dhttps.protocols option in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to jar files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>. For information about generating the descriptor
+                                                <a class="xref" href="../Install_Config/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.By default, Data Collector is configured to use TLS versions 1.1 and 1.2. To connect to a system that uses an earlier version of TLS, modify the Dhttps.protocols option in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file.You can enable remote debugging to debug a Data Collector instance running on a remote machine. To enable remote debugging, define debugging options in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to jar files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>. For information about generating the descriptor
                                             file, see <a class="xref" href="../Pipeline_Design/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</p>
 </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d53018e1594 ">Message Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53097e1594 ">Message Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53018e1597 ">The fully-qualified name for the message type to use when
+                                    <td class="entry" valign="top" width="70%" headers="d53097e1597 ">The fully-qualified name for the message type to use when
                                         reading data.<p class="p">Use the following format:
                                                 <samp class="ph codeph">&lt;package name&gt;.&lt;message
                                             type&gt;</samp>. </p>
@@ -1179,14 +1179,14 @@ Use a message type defined in the
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d5653e5003" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d5688e5034" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d53018e1708">Text Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d53097e1715">Text Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d53018e1711">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d53097e1718">Description</th>
 
                                 </tr>
 
@@ -1194,17 +1194,17 @@ Use a message type defined in the
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d53018e1708 ">Text Field Path</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53097e1715 ">Text Field Path</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53018e1711 ">Field that contains the text data to be written. All data
+                                    <td class="entry" valign="top" width="70%" headers="d53097e1718 ">Field that contains the text data to be written. All data
                                         must be incorporated into the specified field. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d53018e1708 ">Record Separator</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53097e1715 ">Record Separator</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53018e1711 ">Characters to use to separate records. Use any valid Java
+                                    <td class="entry" valign="top" width="70%" headers="d53097e1718 ">Characters to use to separate records. Use any valid Java
                                         string literal. For example, when writing to Windows, you
                                         might use \r\n to separate records. <p class="p">By default, the
                                             destination uses \n.</p>
@@ -1213,9 +1213,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d53018e1708 ">Insert Record Separator if No Text</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53097e1715 ">Insert Record Separator if No Text</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53018e1711 ">When a record does not include the text field, inserts
+                                    <td class="entry" valign="top" width="70%" headers="d53097e1718 ">When a record does not include the text field, inserts
                                         the configured record separator string to create an empty
                                             line.<p class="p">When not selected, records without the text
                                             field are discarded.</p>
