@@ -203,6 +203,7 @@ public class TestStandalonePipelineManager {
     pipelineStateStore = objectGraph.get(PipelineStateStore.class);
     pipelineManager = new StandaloneAndClusterPipelineManager(objectGraph);
     pipelineManager.init();
+    pipelineManager.run();
   }
 
   @Before

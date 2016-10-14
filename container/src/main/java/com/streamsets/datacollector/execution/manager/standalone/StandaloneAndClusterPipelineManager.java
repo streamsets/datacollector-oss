@@ -199,7 +199,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
   }
 
   @Override
-  public void initTask() {
+  public void runTask() {
     previewerCache = CacheBuilder.newBuilder()
       .expireAfterAccess(30, TimeUnit.MINUTES).removalListener(new RemovalListener<String, Previewer>() {
         @Override

@@ -98,6 +98,7 @@ public class TestErrorRecord {
     pipelineStateStore = objectGraph.get(PipelineStateStore.class);
     manager = new StandaloneAndClusterPipelineManager(objectGraph);
     manager.init();
+    manager.run();
     runner = manager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
     runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
