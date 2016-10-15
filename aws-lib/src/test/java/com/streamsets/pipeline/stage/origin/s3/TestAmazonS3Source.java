@@ -27,9 +27,11 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.PostProcessingOptions;
@@ -159,6 +161,11 @@ public class TestAmazonS3Source {
     putObjectRequest = new PutObjectRequest(BUCKET_NAME, "NorthAmerica/Canada/file12.log", in, new ObjectMetadata());
     s3client.putObject(putObjectRequest);
 
+    // CSV files
+    in = new ByteArrayInputStream("A,B\n1,2,3\n4,5".getBytes());
+    putObjectRequest = new PutObjectRequest(BUCKET_NAME, "csv/file0.csv", in, new ObjectMetadata());
+    s3client.putObject(putObjectRequest);
+
     int count = 0;
     if(s3client.doesBucketExist(BUCKET_NAME)) {
       for(S3ObjectSummary s : S3Objects.withPrefix(s3client, BUCKET_NAME, "")) {
@@ -166,7 +173,7 @@ public class TestAmazonS3Source {
         count++;
       }
     }
-    Assert.assertEquals(12, count); //12 files + 3 dirs
+    Assert.assertEquals(13, count); // 13 files + 3 dirs
   }
 
   @Test
@@ -213,6 +220,32 @@ public class TestAmazonS3Source {
       output = SourceRunner.getOutput(batchMaker);
       records = output.getRecords().get("lane");
       Assert.assertEquals(0, records.size());
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testProduceDelimitedFileWithRecoverableException() throws Exception {
+    AmazonS3Source source = createSourceWithDelimited();
+    SourceRunner runner = new SourceRunner.Builder(AmazonS3DSource.class, source)
+      .addOutputLane("lane")
+      .setOnRecordError(OnRecordError.TO_ERROR)
+      .build();
+    runner.runInit();
+    try {
+      StageRunner.Output output = runner.runProduce(null, 60000);
+
+      // Verify proper record
+      List<Record> records = output.getRecords().get("lane");
+      Assert.assertNotNull(records);
+      Assert.assertEquals(1, records.size());
+
+      // And error record
+      records = runner.getErrorRecords();
+      Assert.assertEquals(1, records.size());
+
 
     } finally {
       runner.runDestroy();
@@ -528,6 +561,48 @@ public class TestAmazonS3Source {
     s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
     s3ConfigBean.s3Config.commonPrefix = "";
+    s3ConfigBean.s3Config.delimiter = "/";
+    s3ConfigBean.proxyConfig = new ProxyConfig();
+    return new AmazonS3Source(s3ConfigBean);
+  }
+
+  private AmazonS3Source createSourceWithDelimited() {
+
+    S3ConfigBean s3ConfigBean = new S3ConfigBean();
+    s3ConfigBean.basicConfig = new BasicConfig();
+    s3ConfigBean.basicConfig.maxWaitTime = 1000;
+    s3ConfigBean.basicConfig.maxBatchSize = 60000;
+
+    s3ConfigBean.dataFormatConfig = new DataParserFormatConfig();
+    s3ConfigBean.dataFormat = DataFormat.DELIMITED;
+    s3ConfigBean.dataFormatConfig.charset = "UTF-8";
+    s3ConfigBean.dataFormatConfig.csvHeader = CsvHeader.WITH_HEADER;
+
+
+    s3ConfigBean.errorConfig = new S3ErrorConfig();
+    s3ConfigBean.errorConfig.errorHandlingOption = PostProcessingOptions.NONE;
+    s3ConfigBean.errorConfig.errorPrefix = ERROR_PREFIX;
+    s3ConfigBean.errorConfig.errorBucket = ERROR_BUCKET;
+
+    s3ConfigBean.postProcessingConfig = new S3PostProcessingConfig();
+    s3ConfigBean.postProcessingConfig.archivingOption = S3ArchivingOption.MOVE_TO_BUCKET;
+    s3ConfigBean.postProcessingConfig.postProcessing = PostProcessingOptions.NONE;
+    s3ConfigBean.postProcessingConfig.postProcessBucket = POSTPROCESS_BUCKET;
+    s3ConfigBean.postProcessingConfig.postProcessPrefix = POSTPROCESS_PREFIX;
+
+    s3ConfigBean.s3FileConfig = new S3FileConfig();
+    s3ConfigBean.s3FileConfig.overrunLimit = 65;
+    s3ConfigBean.s3FileConfig.prefixPattern = "*.csv";
+    s3ConfigBean.s3FileConfig.objectOrdering = ObjectOrdering.TIMESTAMP;
+
+    s3ConfigBean.s3Config = new S3Config();
+    s3ConfigBean.s3Config.region = AWSRegions.OTHER;
+    s3ConfigBean.s3Config.endpoint = "http://localhost:" + port;
+    s3ConfigBean.s3Config.bucket = BUCKET_NAME;
+    s3ConfigBean.s3Config.awsConfig = new AWSConfig();
+    s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
+    s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
+    s3ConfigBean.s3Config.commonPrefix = "csv";
     s3ConfigBean.s3Config.delimiter = "/";
     s3ConfigBean.proxyConfig = new ProxyConfig();
     return new AmazonS3Source(s3ConfigBean);

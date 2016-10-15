@@ -26,6 +26,7 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.hashing.HashingUtil;
@@ -33,6 +34,7 @@ import com.streamsets.pipeline.lib.io.ObjectLengthException;
 import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.parser.RecoverableDataParserException;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.apache.commons.io.IOUtils;
@@ -102,22 +104,27 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
         //we don't use S3 GetObject range capabilities to skip the already process offset because the parsers cannot
         // pick up from a non root doc depth in the case of a single object with records.
       }
-      for (int i = 0; i < maxBatchSize; i++) {
+      int i = 0;
+      while(i < maxBatchSize) {
         try {
-          Record record = parser.parse();
-          if (record != null) {
-            if(s3ConfigBean.enableMetaData) {
-              // if metadata is enabled, set the metadata to the header
-              Map<String, Object> metaData = AmazonS3Util.getMetaData(object);
-              for(String key : metaData.keySet()) {
-                String value = metaData.get(key) == null ? "" : metaData.get(key).toString();
-                record.getHeader().setAttribute(key, value);
-              }
-              // set file name to the header
-              record.getHeader().setAttribute("Name", object.getKey());
-            }
+          Record record = null;
 
+          try {
+            record = parser.parse();
+          } catch(RecoverableDataParserException ex) {
+            // Propagate partially parsed record to error stream
+            record = ex.getUnparsedRecord();
+            setHeaders(record, object);
+            errorRecordHandler.onError(new OnRecordErrorException(record, ex.getErrorCode(), ex.getParams()));
+
+            // We'll simply continue reading pass this recoverable error
+            continue;
+          }
+
+          if (record != null) {
+            setHeaders(record, object);
             batchMaker.addRecord(record);
+            i++;
             offset = parser.getOffset();
           } else {
             parser.close();
@@ -193,6 +200,19 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
       }
     }
     return offset;
+  }
+
+  private void setHeaders(Record record, S3Object object) {
+    if(s3ConfigBean.enableMetaData) {
+      // if metadata is enabled, set the metadata to the header
+      Map<String, Object> metaData = AmazonS3Util.getMetaData(object);
+      for(String key : metaData.keySet()) {
+        String value = metaData.get(key) == null ? "" : metaData.get(key).toString();
+        record.getHeader().setAttribute(key, value);
+      }
+      // set file name to the header
+      record.getHeader().setAttribute("Name", object.getKey());
+    }
   }
 
   //For whole file we do not care whether it is a preview or not,
