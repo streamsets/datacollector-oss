@@ -42,7 +42,7 @@
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-api</artifactId>
-      <version>${project.version}</version>
+      <version>2.1.0.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
