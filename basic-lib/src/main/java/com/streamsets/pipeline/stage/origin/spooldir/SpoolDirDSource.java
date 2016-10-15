@@ -42,6 +42,7 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
     recordsByRef = true,
     upgrader = SpoolDirSourceUpgrader.class,
     resetOffset = true,
+    producesEvents = true,
     onlineHelpRefUrl = "index.html#Origins/Directory.html#task_gfj_ssv_yq"
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)

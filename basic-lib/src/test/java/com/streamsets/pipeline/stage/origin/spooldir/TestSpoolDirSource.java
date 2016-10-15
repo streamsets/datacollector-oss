@@ -175,6 +175,7 @@ public class TestSpoolDirSource {
     try {
       StageRunner.Output output = runner.runProduce(null, 10);
       Assert.assertEquals(NULL_FILE_OFFSET, output.getNewOffset());
+      Assert.assertEquals(0, runner.getEventRecords().size());
 
       Assert.assertTrue(f.mkdirs());
 
@@ -189,6 +190,7 @@ public class TestSpoolDirSource {
 
       output = runner.runProduce(source.createSourceOffset("file-0.log", "1"), 10);
       Assert.assertEquals(source.createSourceOffset("file-0.log", "1"), output.getNewOffset());
+      Assert.assertEquals(1, runner.getEventRecords().size());
 
     } finally {
       runner.runDestroy();
@@ -204,6 +206,7 @@ public class TestSpoolDirSource {
       StageRunner.Output output = runner.runProduce(null, 10);
       Assert.assertEquals(NULL_FILE_OFFSET, output.getNewOffset());
       Assert.assertFalse(source.produceCalled);
+      Assert.assertEquals(0, runner.getEventRecords().size());
     } finally {
       runner.runDestroy();
     }
@@ -299,12 +302,14 @@ public class TestSpoolDirSource {
       StageRunner.Output output = runner.runProduce(source.createSourceOffset("file-0.log", "0"), 10);
       Assert.assertEquals(source.createSourceOffset("file-0.log", "0"), output.getNewOffset());
       Assert.assertTrue(source.produceCalled);
+      Assert.assertEquals(1, runner.getEventRecords().size());
 
       source.produceCalled = false;
       source.offsetIncrement = -1;
       output = runner.runProduce(output.getNewOffset(), 10);
       Assert.assertEquals(source.createSourceOffset("file-0.log", "-1"), output.getNewOffset());
       Assert.assertTrue(source.produceCalled);
+      Assert.assertEquals(2, runner.getEventRecords().size());
 
       source.file = file2;
       output = runner.runProduce(output.getNewOffset(), 10);
@@ -314,6 +319,7 @@ public class TestSpoolDirSource {
       output = runner.runProduce(output.getNewOffset(), 10);
       Assert.assertEquals(source.createSourceOffset("file-1.log", "-1"), output.getNewOffset());
       Assert.assertFalse(source.produceCalled);
+      Assert.assertEquals(4, runner.getEventRecords().size());
     } finally {
       runner.runDestroy();
     }

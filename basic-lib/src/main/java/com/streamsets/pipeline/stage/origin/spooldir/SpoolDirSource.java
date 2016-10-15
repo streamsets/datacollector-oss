@@ -451,6 +451,13 @@ public class SpoolDirSource extends BaseSource {
             offset = ZERO;
           }
         }
+
+        if(currentFile != null) {
+          SpoolDirEvents.NEW_FILE.create(getContext())
+            .with("filepath", currentFile.getAbsolutePath())
+            .createAndSend();
+        }
+
       } catch (InterruptedException ex) {
         // the spooler was interrupted while waiting for a file, we log and return, the pipeline agent will invoke us
         // again to wait for a file again
@@ -463,6 +470,12 @@ public class SpoolDirSource extends BaseSource {
       try {
         // we ask for a batch from the currentFile starting at offset
         offset = produce(currentFile, offset, batchSize, batchMaker);
+
+        if(MINUS_ONE.equals(offset)) {
+          SpoolDirEvents.FINISHED_FILE.create(getContext())
+            .with("filepath", currentFile.getAbsolutePath())
+            .createAndSend();
+        }
       } catch (BadSpoolFileException ex) {
         LOG.error(Errors.SPOOLDIR_01.getMessage(), ex.getFile(), ex.getPos(), ex.toString(), ex);
         getContext().reportError(Errors.SPOOLDIR_01, ex.getFile(), ex.getPos(), ex.toString(), ex);
