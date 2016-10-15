@@ -66,11 +66,17 @@ while test $# -gt 0; do
       SDC_HTTPS_PORT=`echo $1 | sed -e 's/^[^=]*=//g'`
       shift
       ;;
+    -conf=*)
+      SDC_CONF_TEMP=`echo $1 | sed -e 's/^[^=]*=//g'`
+      shift
+      ;;
     -help)
       echo ""
-      echo "streamsets create-dc -home=<SDC_HOME_DIR> (-httpPort=<SDC_HTTP_PORT> | -httpsPort=<SDC_HTTPS_PORT>)"
+      echo "streamsets create-dc -home=<SDC_HOME_DIR> (-httpPort=<SDC_HTTP_PORT> | -httpsPort=<SDC_HTTPS_PORT>) [-conf=<SDC_CONF_DIR>]"
       echo ""
       echo "  The <SDC_HOME_DIR> directory must not exist."
+      echo ""
+      echo "  The default value for <SDC_CONF_DIR> is '${SDC_DIST}/etc'"
       echo ""
       exit 0
       ;;
@@ -108,6 +114,11 @@ then
   echo "The specified home directory must not exist"
   echo ""
   exit 1
+fi
+
+if [[ -z "${SDC_CONF_TEMP}" ]]
+then
+  SDC_CONF_TEMP=${SDC_DIST}/etc
 fi
 
 SDC_HTTP_PORT=${SDC_HTTP_PORT:="-1"}
@@ -152,7 +163,7 @@ run echo "" >> ${SCRIPT}
 
 
 run chmod a+x ${SCRIPT}
-run cp -r -p "${SDC_DIST}/etc/"* "${SDC_HOME}/etc/"
+run cp -r -p "${SDC_CONF_TEMP}/"* "${SDC_HOME}/etc/"
 run cp -p "${SDC_DIST}/libexec/"*".sh" "${SDC_HOME}/libexec/"
 run rm "${SDC_HOME}/etc/sdc.properties"
 
@@ -167,7 +178,10 @@ then
   SED_OPTIONS="${SED_OPTIONS} -e s|https.port=.*$|https.port=${SDC_HTTPS_PORT}|"
 fi
 
-run sed ${SED_OPTIONS} < "${SDC_DIST}/etc/sdc.properties" > "${SDC_HOME}/etc/sdc.properties"
+run sed ${SED_OPTIONS} < "${SDC_CONF_TEMP}/sdc.properties" > "${SDC_HOME}/etc/sdc.properties"
+
+# drop SDC_CONF_TEMP
+unset -v SDC_CONF_TEMP
 
 echo ""
 echo "New Data Collector created at ${SDC_HOME} on HTTP port ${SDC_HTTP_PORT} and HTTPS port ${SDC_HTTPS_PORT}"
