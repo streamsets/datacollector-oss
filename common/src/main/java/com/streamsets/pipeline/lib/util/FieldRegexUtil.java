@@ -19,6 +19,8 @@
  */
 package com.streamsets.pipeline.lib.util;
 
+
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +29,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FieldRegexUtil {
+
   //This will handle list Fields with wild card. For ex:/list[*]
   //(We do not need to support /list[\\d+]) as * will cover for it (as array indices are just numbers)
   //replace it with /list\[\d+\].
@@ -47,7 +50,7 @@ public class FieldRegexUtil {
   private FieldRegexUtil() {}
 
   public static boolean hasWildCards(String fieldPath) {
-    if(fieldPath.contains("[*]") || fieldPath.contains("/*")) {
+    if(fieldPath.contains("[*]") || fieldPath.contains("/*") || fieldPath.contains("*") || fieldPath.contains("?")) {
       return true;
     }
     return false;
@@ -60,11 +63,16 @@ public class FieldRegexUtil {
     //Any reference to array index brackets [ ] must be escaped in the regex
     //Reference to * in map must be replaced by regex that matches a field name
     //Reference to * in array index must be replaced by \d+
+
+
     fieldPath = fieldPath
         .replace("[*]", "[\\d+]")
         .replace("[", "\\[")
         .replace("]", "\\]")
-        .replaceAll("\\/\\*", "/([^\\\\/\\\\[]+)");
+        .replaceAll("\\/\\*", "/([^\\\\/\\\\[]+)")
+        .replaceAll(Pattern.quote("*"), "\\\\w+")
+        .replaceAll(Pattern.quote("?"), "\\\\w");
+
     Pattern pattern = Pattern.compile(fieldPath);
     List<String> matchingFieldPaths = new ArrayList<>();
     for(String existingFieldPath : fieldPaths) {

@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.FieldRegexUtil;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -95,20 +96,37 @@ public class FieldFilterProcessor extends SingleLaneRecordProcessor {
 
           //remove the field path itself from the fieldsToRemove set
           //Consider wild card characters
+
           List<String> matchingFieldPaths = FieldRegexUtil.getMatchingFieldPaths(field, fieldPaths);
           fieldsToRemove.removeAll(matchingFieldPaths);
-
           //Keep the children of the field
 
           //For each of the fieldPaths that match the argument field path, generate all the child paths
           List<String> childFieldsToRemove = new ArrayList<>();
           for(String matchingFieldPath : matchingFieldPaths) {
             for(String fieldToRemove : fieldsToRemove) {
-              if(fieldToRemove.startsWith(matchingFieldPath)) {
-                childFieldsToRemove.add(fieldToRemove);
+              // this change is due to SDC-3970 and SDC-3942 (and others).
+              // for example, if the record has field1, field12, and field13 and the user
+              // specifies "keep only field1", using startsWith will also match field12 and field13. so
+              // in this case we need "equals".
+              //
+              // for the old way, startsWith is appropriate when we have
+              // different path structures, or "nested" (multiple dimensioned) index structures.
+              //  eg: /USA[0]/SanFrancisco/folsom/streets[0] must still match:
+              //      /USA[0]/SanFrancisco/folsom/streets[0][0]   hence: startsWith.
+              if (StringUtils.countMatches(fieldToRemove, "/") == StringUtils.countMatches(matchingFieldPath, "/")
+                  && StringUtils.countMatches(fieldToRemove, "[") == StringUtils.countMatches(matchingFieldPath, "[")) {
+                if (fieldToRemove.equals(matchingFieldPath)) {
+                  childFieldsToRemove.add(fieldToRemove);
+                }
+              } else {
+                if (fieldToRemove.startsWith(matchingFieldPath)) {
+                  childFieldsToRemove.add(fieldToRemove);
+                }
               }
             }
           }
+
           fieldsToRemove.removeAll(childFieldsToRemove);
         }
         list = new ArrayList<>(fieldsToRemove);

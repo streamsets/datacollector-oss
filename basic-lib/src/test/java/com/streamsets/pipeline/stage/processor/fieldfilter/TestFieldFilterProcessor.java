@@ -32,6 +32,7 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class TestFieldFilterProcessor {
 
@@ -359,8 +360,153 @@ public class TestFieldFilterProcessor {
   }
 
   @Test
-  public void testWildCardKeep1() throws StageException {
+  public void testNestedKeep7() throws StageException {
+    /*
+     */
+    Record record = createNestedRecord();
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldFilterDProcessor.class)
+        .addConfiguration("fields", ImmutableList.of(
+            "/USA[2]/SantaClara/main/streets[*][*]/name1"))
+        .addConfiguration("filterOperation", FilterOperation.KEEP)
+        .addOutputLane("a").build();
+    runner.runInit();
 
+    try {
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+
+      Record resultRecord = output.getRecords().get("a").get(0);
+      Assert.assertNotNull(resultRecord);
+      Assert.assertTrue(resultRecord.has("/USA[0]/SantaClara/main/streets[0][0]/name1"));
+      Assert.assertFalse(resultRecord.has("/USA[0]/SantaClara/main/streets[0][1]/name12"));
+      Assert.assertFalse(resultRecord.has("/USA[0]/SantaClara/main/streets[1][0]/name13"));
+      Assert.assertFalse(resultRecord.has("/USA[0]/SantaClara/main/streets[1][1]/name12AB"));
+      Assert.assertEquals("i", resultRecord.get("/USA[0]/SantaClara/main/streets[0][0]/name1").getValueAsString());
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+  @Test
+  public void testNestedKeep8() throws StageException {
+    /*
+     */
+    Record record = createNestedRecord();
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldFilterDProcessor.class)
+        .addConfiguration("fields", ImmutableList.of(
+            "/USA[2]/SantaClara/main/streets[*][*]/name12*"))
+        .addConfiguration("filterOperation", FilterOperation.KEEP)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+
+      Record resultRecord = output.getRecords().get("a").get(0);
+      Assert.assertNotNull(resultRecord);
+      Set<String> paths = resultRecord.getEscapedFieldPaths();
+      Assert.assertTrue(resultRecord.has("/USA[0]/SantaClara/main/streets[1][1]/name12AB"));
+      Assert.assertFalse(resultRecord.has("/USA[0]/SantaClara/main/streets[0][0]/name1"));
+
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testNestedKeep9() throws StageException {
+    /*check for embedded *
+     */
+    Record record = createNestedRecord();
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldFilterDProcessor.class)
+        .addConfiguration("fields", ImmutableList.of(
+            "/USA[2]/SantaClara/ma*/streets[*][*]/name1"))
+        .addConfiguration("filterOperation", FilterOperation.KEEP)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+
+      Record resultRecord = output.getRecords().get("a").get(0);
+      Set <String> r = resultRecord.getEscapedFieldPaths();
+
+
+      Assert.assertNotNull(resultRecord);
+      Set<String> paths = resultRecord.getEscapedFieldPaths();
+      Assert.assertFalse(resultRecord.has("/USA[0]/SantaClara/main/streets[1][1]/name12AB"));
+      Assert.assertTrue(resultRecord.has("/USA[0]/SantaClara/main/streets[0][0]/name1"));
+
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testNestedKeep10() throws StageException {
+    /* check for embedded ? and * at end of field and after /
+     */
+    Record record = createNestedRecordForRegex();
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldFilterDProcessor.class)
+        .addConfiguration("fields", ImmutableList.of(
+            "/USA[?]/San*/*/streets[*][*]/name?2"))
+        .addConfiguration("filterOperation", FilterOperation.KEEP)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+
+      Record resultRecord = output.getRecords().get("a").get(0);
+
+      Assert.assertNotNull(resultRecord);
+      Set<String> paths = resultRecord.getEscapedFieldPaths();
+      Assert.assertTrue(resultRecord.has("/USA[0]/SanFrancisco/noe/streets[0][1]/name12"));
+      Assert.assertTrue(resultRecord.has("/USA[0]/SanFrancisco/noel/streets[0][0]/name12"));
+      Assert.assertTrue(resultRecord.has("/USA[1]/SantaClara/main/streets[0][1]/name22"));
+      Assert.assertFalse(resultRecord.has("/USA[1]/SantaClara/main/streets[0][0]/name21"));
+      Assert.assertFalse(resultRecord.has("/USA[0]/SanFrancisco/noe/streets[0][1]/name1234"));
+
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+  @Test
+  public void testNestedKeep11() throws StageException {
+    /*
+     check for regex * at the end of the line
+     */
+    Record record = createNestedRecordForRegex();
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldFilterDProcessor.class)
+        .addConfiguration("fields", ImmutableList.of(
+            "/USA[?]/San*/*/streets[*][*]/name2*"))
+        .addConfiguration("filterOperation", FilterOperation.KEEP)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+
+      Record resultRecord = output.getRecords().get("a").get(0);
+
+      Assert.assertNotNull(resultRecord);
+      Set<String> paths = resultRecord.getEscapedFieldPaths();
+      Assert.assertFalse(resultRecord.has("/USA[0]/SanFrancisco/noe/streets[0][1]/name12"));
+      Assert.assertFalse(resultRecord.has("/USA[0]/SanFrancisco/noel/streets[0][0]/name12"));
+      Assert.assertTrue(resultRecord.has("/USA[1]/SantaClara/main/streets[0][1]/name22"));
+      Assert.assertTrue(resultRecord.has("/USA[1]/SantaClara/main/streets[0][0]/name21"));
+      Assert.assertFalse(resultRecord.has("/USA[0]/SanFrancisco/noe/streets[0][1]/name1234"));
+
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+@Test
+  public void testWildCardKeep1() throws StageException {
     /*
      * Use wil card in deep nested paths
      */
@@ -808,10 +954,29 @@ public class TestFieldFilterProcessor {
     Map<String, Field> nameMap8 = new HashMap<>();
     nameMap8.put("name", name8);
 
+    Field name9 = Field.create("i");
+    Map<String, Field> nameMap9 = new HashMap<>();
+    nameMap9.put("name1", name9);
+
+    Field name10 = Field.create("j");
+    Map<String, Field> nameMap10 = new HashMap<>();
+    nameMap10.put("name12", name10);
+
+    Field name11 = Field.create("k");
+    Map<String, Field> nameMap11 = new HashMap<>();
+    nameMap11.put("name13", name11);
+
+    Field name12 = Field.create("l");
+    Map<String, Field> nameMap12 = new HashMap<>();
+    nameMap12.put("name12AB", name12);
+
+
     Field first = Field.create(Field.Type.LIST, ImmutableList.of(Field.create(nameMap1), Field.create(nameMap2)));
     Field second = Field.create(Field.Type.LIST, ImmutableList.of(Field.create(nameMap3), Field.create(nameMap4)));
     Field third = Field.create(Field.Type.LIST, ImmutableList.of(Field.create(nameMap5), Field.create(nameMap6)));
     Field fourth = Field.create(Field.Type.LIST, ImmutableList.of(Field.create(nameMap7), Field.create(nameMap8)));
+    Field fifth = Field.create(Field.Type.LIST, ImmutableList.of(Field.create(nameMap9), Field.create(nameMap10)));
+    Field sixth = Field.create(Field.Type.LIST, ImmutableList.of(Field.create(nameMap11), Field.create(nameMap12)));
 
     Map<String, Field> noe = new HashMap<>();
     noe.put("streets", Field.create(ImmutableList.of(first, second)));
@@ -823,6 +988,9 @@ public class TestFieldFilterProcessor {
     Map<String, Field> cole = new HashMap<>();
     cole.put("streets", Field.create(ImmutableList.of(third)));
 
+    Map<String, Field> main = new HashMap<>();
+    main.put("streets", Field.create(ImmutableList.of(fifth, sixth)));
+
 
     Map<String, Field> sfArea = new HashMap<>();
     sfArea.put("noe", Field.create(noe));
@@ -831,6 +999,9 @@ public class TestFieldFilterProcessor {
     Map<String, Field> utahArea = new HashMap<>();
     utahArea.put("cole", Field.create(cole));
 
+    Map<String, Field> theBayArea = new HashMap<>();
+    theBayArea.put("main", Field.create(main));
+
 
     Map<String, Field> california = new HashMap<>();
     california.put("SanFrancisco", Field.create(sfArea));
@@ -838,9 +1009,12 @@ public class TestFieldFilterProcessor {
     Map<String, Field> utah = new HashMap<>();
     utah.put("SantaMonica", Field.create(utahArea));
 
+    Map<String, Field> theBay = new HashMap<>();
+    theBay.put("SantaClara", Field.create(theBayArea));
+
     Map<String, Field> map = new LinkedHashMap<>();
     map.put("USA", Field.create(Field.Type.LIST,
-      ImmutableList.of(Field.create(california), Field.create(utah))));
+      ImmutableList.of(Field.create(california), Field.create(utah), Field.create(theBay))));
 
     Record record = RecordCreator.create("s", "s:1");
     record.set(Field.create(map));
@@ -864,8 +1038,113 @@ public class TestFieldFilterProcessor {
       Assert.assertEquals(record.get("/USA[1]/SantaMonica/cole/streets[0][1]/name").getValueAsString(), "f");
       Assert.assertEquals(record.get("/USA[0]/SanFrancisco/folsom/streets[0][0]/name").getValueAsString(), "g");
       Assert.assertEquals(record.get("/USA[0]/SanFrancisco/folsom/streets[0][1]/name").getValueAsString(), "h");
+
+      Assert.assertNotEquals(record.get("/USA[2]"), null);
+      Assert.assertNotEquals(record.get("/USA[2]/SantaClara"), null);
+      Assert.assertNotEquals(record.get("/USA[2]/SantaClara/main"), null);
+      Assert.assertNotEquals(record.get("/USA[2]/SantaClara/main/streets[0][0]/name1"), null);
+      Assert.assertNotEquals(record.get("/USA[2]/SantaClara/main/streets[0][1]"), null);
+      Assert.assertNotEquals(record.get("/USA[2]/SantaClara/main/streets[1][0]"), null);
+      Assert.assertNotEquals(record.get("/USA[2]/SantaClara/main/streets[1][1]"), null);
+
+      Assert.assertEquals(record.get("/USA[2]/SantaClara/main/streets[0][0]/name1").getValueAsString(), "i");
+      Assert.assertEquals(record.get("/USA[2]/SantaClara/main/streets[0][1]/name12").getValueAsString(), "j");
+      Assert.assertEquals(record.get("/USA[2]/SantaClara/main/streets[1][0]/name13").getValueAsString(), "k");
+      Assert.assertEquals(record.get("/USA[2]/SantaClara/main/streets[1][1]/name12AB").getValueAsString(), "l");
+
     }
 
     return record;
   }
+
+  private Record  createNestedRecordForRegex()
+  {
+
+    Field name1 = Field.create("a");
+    Field name2 = Field.create("b");
+    Field name3 = Field.create("c");
+    Field name4 = Field.create("d");
+    Field name5 = Field.create("e");
+    Field name6 = Field.create("f");
+    Field name7 = Field.create("g");
+    Field name8 = Field.create("h");
+
+
+    Map<String, Field> nameMap1 = new HashMap<>();
+    nameMap1.put("name1", name1);
+    Map<String, Field> nameMap2 = new HashMap<>();
+    nameMap2.put("name12", name2);
+    Map<String, Field> nameMap3 = new HashMap<>();
+    nameMap3.put("name123", name3);
+    Map<String, Field> nameMap4 = new HashMap<>();
+    nameMap4.put("name1234", name4);
+    Map<String, Field> nameMap5 = new HashMap<>();
+    nameMap5.put("name12", name5);
+    Map<String, Field> nameMap6 = new HashMap<>();
+    nameMap6.put("name123", name6);
+    Map<String, Field> nameMap7 = new HashMap<>();
+    nameMap7.put("name21", name7);
+    Map<String, Field> nameMap8 = new HashMap<>();
+    nameMap8.put("name22", name8);
+
+
+
+    Field first = Field.create(Field.Type.LIST, ImmutableList.of(Field.create(nameMap1), Field.create(nameMap2)));
+    Field second = Field.create(Field.Type.LIST, ImmutableList.of(Field.create(nameMap3), Field.create(nameMap4)));
+    Field third = Field.create(Field.Type.LIST, ImmutableList.of(Field.create(nameMap5), Field.create(nameMap6)));
+    Field fourth = Field.create(Field.Type.LIST, ImmutableList.of(Field.create(nameMap7), Field.create(nameMap8)));
+
+    Map<String, Field> noe = new HashMap<>();
+    noe.put("streets", Field.create(ImmutableList.of(first, second)));
+
+    Map<String, Field> noel = new HashMap<>();
+    noel.put("streets", Field.create(ImmutableList.of(third)));
+
+
+    Map<String, Field> main = new HashMap<>();
+    main.put("streets", Field.create(ImmutableList.of(fourth)));
+
+
+    Map<String, Field> sfArea = new HashMap<>();
+    sfArea.put("noe", Field.create(noe));
+    sfArea.put("noel", Field.create(noel));
+
+
+    Map<String, Field> theBayArea = new HashMap<>();
+    theBayArea.put("main", Field.create(main));
+
+    Map<String, Field> california = new HashMap<>();
+    california.put("SanFrancisco", Field.create(sfArea));
+
+    Map<String, Field> theBay = new HashMap<>();
+    theBay.put("SantaClara", Field.create(theBayArea));
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("USA", Field.create(Field.Type.LIST,
+        ImmutableList.of(Field.create(california), Field.create(theBay))));
+
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+
+      Assert.assertEquals(record.get("/USA[0]/SanFrancisco/noe/streets[0][0]/name1").getValueAsString(), "a");
+      Assert.assertEquals(record.get("/USA[0]/SanFrancisco/noe/streets[0][1]/name12").getValueAsString(), "b");
+      Assert.assertEquals(record.get("/USA[0]/SanFrancisco/noe/streets[1][0]/name123").getValueAsString(), "c");
+      Assert.assertEquals(record.get("/USA[0]/SanFrancisco/noe/streets[1][1]/name1234").getValueAsString(), "d");
+      Assert.assertEquals(record.get("/USA[0]/SanFrancisco/noel/streets[0][0]/name12").getValueAsString(), "e");
+      Assert.assertEquals(record.get("/USA[0]/SanFrancisco/noel/streets[0][1]/name123").getValueAsString(), "f");
+
+      Assert.assertNotEquals(record.get("/USA[1]"), null);
+      Assert.assertNotEquals(record.get("/USA[1]/SantaClara"), null);
+      Assert.assertNotEquals(record.get("/USA[1]/SantaClara/main"), null);
+      Assert.assertNotEquals(record.get("/USA[1]/SantaClara/main/streets[0][0]/name21"), null);
+      Assert.assertNotEquals(record.get("/USA[1]/SantaClara/main/streets[0][1]/name22"), null);
+      Assert.assertEquals(record.get("/USA[1]/SantaClara/main/streets[0][0]/name21").getValueAsString(), "g");
+      Assert.assertEquals(record.get("/USA[1]/SantaClara/main/streets[0][1]/name22").getValueAsString(), "h");
+
+
+
+    return record;
+  }
+
+
 }
