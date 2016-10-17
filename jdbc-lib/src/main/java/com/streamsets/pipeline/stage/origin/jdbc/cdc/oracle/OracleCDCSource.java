@@ -90,7 +90,6 @@ public class OracleCDCSource extends BaseSource {
   private static final String CURRENT_SCN = "SELECT CURRENT_SCN FROM V$DATABASE";
   private static final String GET_OLDEST_SCN =
       "SELECT FIRST_CHANGE# from V$ARCHIVED_LOG ORDER BY FIRST_CHANGE#";
-  private static final int MISSING_LOG_CODE = 1291;
   private static final String SWITCH_TO_CDB_ROOT = "ALTER SESSION SET CONTAINER = CDB$ROOT";
   private static final String PREFIX = "oracle.cdc.";
   private static final String SCN = PREFIX + "scn";
@@ -343,6 +342,7 @@ public class OracleCDCSource extends BaseSource {
   }
 
   private void startLogMiner() throws SQLException, StageException {
+    SQLException lastException = null;
     try (ResultSet rs = getOldestSCN.executeQuery()) {
       while (rs.next()) {
         BigDecimal oldestSCN = rs.getBigDecimal(1);
@@ -353,17 +353,18 @@ public class OracleCDCSource extends BaseSource {
           startedLogMiner = true;
           break;
         } catch (SQLException ex) {
-          if (ex.getErrorCode() == MISSING_LOG_CODE) {
-            LOG.debug("Caught SQLException due to missing log file, trying next oldest SCN", ex);
-          } else {
-            throw new StageException(JDBC_52, ex);
-          }
+          LOG.debug("Caught SQLException", ex);
+          lastException = ex;
         }
       }
     }
     connection.commit();
     if (!startedLogMiner) {
-      throw new StageException(JDBC_52);
+      if (lastException != null) {
+        throw new StageException(JDBC_52, lastException);
+      } else {
+        throw new StageException(JDBC_52);
+      }
     }
   }
 
