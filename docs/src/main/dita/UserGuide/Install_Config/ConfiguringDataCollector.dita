@@ -318,8 +318,8 @@
                                 <entry>monitor.memory</entry>
                                 <entry>Displays the Stage Heap Memory Usage and the Heap Memory
                                     Usage statistics in Monitor mode for the pipeline or for a
-                                    stage. <p>Generally, you should not need to change this
-                                        value.</p></entry>
+                                    stage. <p>Use only during pipeline development or test of
+                                        production loads.</p></entry>
                             </row>
                             <row>
                                 <entry>ui.header.title</entry>
