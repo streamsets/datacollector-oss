@@ -296,6 +296,14 @@ angular
             }
           }
         });
+      },
+
+      /**
+       * Whether the pipeline being previewed has multiple stages.
+       * Used to determine when Multiple Preview is available.
+       */
+      hasMultipleStages: function() {
+        return $scope.pipelineConfig && $scope.pipelineConfig.stages && $scope.pipelineConfig.stages.length > 1;
       }
     });
 

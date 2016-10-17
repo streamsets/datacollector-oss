@@ -162,7 +162,7 @@
       </label>
     </div>
 
-    <div class="pull-right btn-group toggle-toolbar" ng-show="!showLoading">
+    <div class="pull-right btn-group toggle-toolbar" ng-show="!showLoading && hasMultipleStages()">
       <label class="btn btn-default btn-sm" ng-model="previewMultipleStages" btn-radio="false">Single</label>
       <label class="btn btn-default btn-sm" ng-model="previewMultipleStages" btn-radio="true">Multiple</label>
     </div>
