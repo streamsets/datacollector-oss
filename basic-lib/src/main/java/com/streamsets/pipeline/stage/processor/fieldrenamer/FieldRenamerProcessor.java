@@ -62,6 +62,12 @@ public class FieldRenamerProcessor extends SingleLaneRecordProcessor {
   private final Map<Pattern, String> fromPatternToFieldExpMapping;
   private final FieldRenamerPathComparator comparator;
 
+  private Set<String> savedEscapedFieldPaths = null;
+  private Set<String> fieldsThatDoNotExist = new HashSet<>();
+  private Map<String, Set<String>> multipleRegexMatchingSameFields = new HashMap<>();
+  //So that the ordering of fieldPaths will be preserved
+  private Map<String, String> fromFieldToFieldMap = new LinkedHashMap<>();
+
   public FieldRenamerProcessor(
       List<FieldRenamerConfig> renameMapping,
       FieldRenamerProcessorErrorHandler errorHandler
@@ -182,29 +188,38 @@ public class FieldRenamerProcessor extends SingleLaneRecordProcessor {
     }
   }
 
+
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
-    Set<String> fieldsThatDoNotExist = new HashSet<>();
     Set<String> fieldsRequiringOverwrite = new HashSet<>();
-    Map<String, String> matchedByRegularExpression = new HashMap<>();
-    Map<String, Set<String>> multipleRegexMatchingSameFields = new HashMap<>();
-    //So that the ordering of fieldPaths will be preserved
-    Map<String, String> fromFieldToFieldMap = new LinkedHashMap<>();
 
-    for (Map.Entry<Pattern, String> fromPatternToFieldExpEntry : fromPatternToFieldExpMapping.entrySet()) {
-      populateFromAndToFieldsMap(
-          fromPatternToFieldExpEntry.getKey(),
-          fromPatternToFieldExpEntry.getValue(),
-          record.getEscapedFieldPaths(),
-          fieldsThatDoNotExist,
-          multipleRegexMatchingSameFields,
-          matchedByRegularExpression,
-          fromFieldToFieldMap
-      );
-    }
-    //We should not process fields  which are matched by multiple regex
-    for (String fieldsMatchedByMultipleExpression : multipleRegexMatchingSameFields.keySet()) {
-      fromFieldToFieldMap.remove(fieldsMatchedByMultipleExpression);
+    Set<String> newPaths = record.getEscapedFieldPaths();
+    if(!newPaths.equals(savedEscapedFieldPaths)) {
+      savedEscapedFieldPaths = newPaths;
+
+      fieldsThatDoNotExist = new HashSet<>();
+      fieldsRequiringOverwrite = new HashSet<>();
+      multipleRegexMatchingSameFields = new HashMap<>();
+      //So that the ordering of fieldPaths will be preserved
+      fromFieldToFieldMap = new LinkedHashMap<>();
+
+      Map<String, String> matchedByRegularExpression = new HashMap<>();
+      for (Map.Entry<Pattern, String> fromPatternToFieldExpEntry : fromPatternToFieldExpMapping.entrySet()) {
+        populateFromAndToFieldsMap(
+            fromPatternToFieldExpEntry.getKey(),
+            fromPatternToFieldExpEntry.getValue(),
+            newPaths,
+            fieldsThatDoNotExist,
+            multipleRegexMatchingSameFields,
+            matchedByRegularExpression,
+            fromFieldToFieldMap
+        );
+      }
+
+      //We should not process fields  which are matched by multiple regex
+      for (String fieldsMatchedByMultipleExpression : multipleRegexMatchingSameFields.keySet()) {
+        fromFieldToFieldMap.remove(fieldsMatchedByMultipleExpression);
+      }
     }
 
     for (Map.Entry<String, String> fromFieldToFieldEntry : fromFieldToFieldMap.entrySet()) {
