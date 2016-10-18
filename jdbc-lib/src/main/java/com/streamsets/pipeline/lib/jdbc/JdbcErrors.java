@@ -79,6 +79,14 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_50("Error while getting table schema. Please verify the connectivity to the DB and the privileges for the user"),
   JDBC_51("Invalid value: {}"),
   JDBC_52("Error starting LogMiner"),
+
+  JDBC_60("Cannot Serialize Offset: {}"),
+  JDBC_61("Cannot Deserialize Offset: {}"),
+  JDBC_62("Table {} does not have a primary and no partition configuration defined."),
+  JDBC_63("Table {} does not contain the specified partition column {}."),
+  JDBC_64("Table {} has composite partition key which is invalid."),
+  JDBC_65("Invalid value {} for Fetch Size Configuration should not be more than maxBatchSize"),
+  JDBC_66("No Tables matches the configuration in the origin."),
   ;
 
   private final String msg;

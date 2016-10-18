@@ -33,7 +33,7 @@ public final class CommonSourceConfigBean {
   public CommonSourceConfigBean() {}
 
   @VisibleForTesting
-  CommonSourceConfigBean(long queryInterval, int maxBatchSize, int maxClobSize, int maxBlobSize) {
+  public CommonSourceConfigBean(long queryInterval, int maxBatchSize, int maxClobSize, int maxBlobSize) {
     this.queryInterval = queryInterval;
     this.maxBatchSize = maxBatchSize;
     this.maxClobSize = maxClobSize;

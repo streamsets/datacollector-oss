@@ -179,6 +179,31 @@ public class JdbcUtil {
    * Wrapper for {@link java.sql.DatabaseMetaData#getTables(String, String, String, String[])}
    *
    * @param connection An open JDBC connection
+   * @param catalog Catalog name.
+   * @param schemaPattern Schema name, Can be null.
+   * @param schemaLessTablePattern table name / pattern which is not fully qualfied
+   * @return ResultSet containing the table metadata for a table
+   *
+   * @throws SQLException
+   */
+  public static ResultSet getTableMetadata(
+      Connection connection,
+      String catalog,
+      String schemaPattern,
+      String schemaLessTablePattern
+  ) throws SQLException {
+    return connection.getMetaData().getTables(
+        catalog,
+        schemaPattern,
+        schemaLessTablePattern,
+        new String[]{"TABLE"}
+    );
+  }
+
+  /**
+   * Wrapper for {@link java.sql.DatabaseMetaData#getTables(String, String, String, String[])}
+   *
+   * @param connection An open JDBC connection
    * @param tableName table name that is optionally fully qualified with a schema in the form schema.tableName
    * @return ResultSet containing the table metadata for a table
    *
