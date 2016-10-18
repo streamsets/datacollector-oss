@@ -220,8 +220,16 @@ public class HdfsConnectionConfig {
 
   public void destroy() {
     try {
-      fs.close();
-    } catch (IOException e) {
+      if(fs != null) {
+        getUGI().doAs(new PrivilegedExceptionAction<Void>() {
+          @Override
+          public Void run() throws Exception {
+            fs.close();
+            return null;
+          }
+        });
+      }
+    } catch (IOException|InterruptedException e) {
       LOG.error("Ignoring exception when closing HDFS client", e);
     }
   }
