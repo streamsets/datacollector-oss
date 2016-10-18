@@ -34,7 +34,6 @@
 
     <div class="pull-right">
 
-
       <div class="btn-group" dropdown
            ng-if="isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])"
            ng-hide="previewMode || snapshotMode">
@@ -46,6 +45,16 @@
           <i class="fa fa-ellipsis-h fa-14x"></i>
         </span>
         <ul class="dropdown-menu pull-right" role="menu">
+
+          <li role="presentation"
+              ng-class="{'disabled': selectedPipelineList.length === 0}"
+              ng-if="isAuthorized([userRoles.admin, userRoles.manager])">
+            <a href="#" dropdown-toggle
+               ng-click="selectedPipelineList.length === 0 || resetOffsetForSelectedPipelines()">
+              <i class="fa fa-power-off"></i>
+              <span>{{'home.resetOffset.title' | translate}}</span>
+            </a>
+          </li>
 
           <li role="presentation"
               ng-class="{'disabled': selectedPipelineList.length === 0}"

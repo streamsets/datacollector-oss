@@ -251,6 +251,28 @@ public class ManagerResource {
     return Response.ok().build();
   }
 
+  @Path("/pipelines/resetOffsets")
+  @POST
+  @ApiOperation(value = "Reset Origin Offset for multiple pipelines", authorizations = @Authorization(value = "basic"))
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({
+      AuthzRole.MANAGER,
+      AuthzRole.ADMIN,
+      AuthzRole.MANAGER_REMOTE,
+      AuthzRole.ADMIN_REMOTE
+  })
+  public Response resetOffsets(List<String> pipelineNames) throws PipelineException {
+    for (String pipelineName: pipelineNames) {
+      RestAPIUtils.injectPipelineInMDC(pipelineName);
+      if (manager.isRemotePipeline(pipelineName, "0")) {
+        throw new PipelineException(ContainerError.CONTAINER_01101, "RESET_OFFSETS", pipelineName);
+      }
+      Runner runner = manager.getRunner(user, pipelineName, "0");
+      runner.resetOffset();
+    }
+    return Response.ok().build();
+  }
+
   @Path("/pipeline/{pipelineName}/metrics")
   @GET
   @ApiOperation(value = "Return Pipeline Metrics", response = MetricRegistryJson.class,

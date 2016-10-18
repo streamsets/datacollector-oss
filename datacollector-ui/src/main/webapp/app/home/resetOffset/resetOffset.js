@@ -33,28 +33,44 @@ angular
         errors: []
       },
       pipelineInfo: pipelineInfo,
+      isList: _.isArray(pipelineInfo),
 
       /**
        * Callback function Yes button
        */
       yes: function() {
-        if(originStageDef.resetOffset) {
+        if ($scope.isList) {
           $scope.showLoading = true;
-          api.pipelineAgent.resetOffset(pipelineInfo.name).
-              success(function() {
-                $scope.showLoading = false;
-                $scope.isOffsetResetSucceed = true;
-              }).
-              error(function(data) {
-                $scope.showLoading = false;
-                $scope.common.errors = [data];
-              });
+          api.pipelineAgent.resetOffsets(_.pluck(pipelineInfo, 'name'))
+            .success(function() {
+              $scope.showLoading = false;
+              $scope.isOffsetResetSucceed = true;
+            })
+            .error(function(res) {
+              $scope.showLoading = false;
+              $scope.common.errors = [res];
+            });
+
         } else {
-          $translate('home.resetOffset.noSupport', { label: originStageDef.label })
-              .then(function(translation) {
-                $scope.common.errors = [translation];
-              });
+          if(originStageDef.resetOffset) {
+            $scope.showLoading = true;
+            api.pipelineAgent.resetOffset(pipelineInfo.name).
+            success(function() {
+              $scope.showLoading = false;
+              $scope.isOffsetResetSucceed = true;
+            }).
+            error(function(data) {
+              $scope.showLoading = false;
+              $scope.common.errors = [data];
+            });
+          } else {
+            $translate('home.resetOffset.noSupport', { label: originStageDef.label })
+                .then(function(translation) {
+                  $scope.common.errors = [translation];
+                });
+          }
         }
+
       },
 
       /**

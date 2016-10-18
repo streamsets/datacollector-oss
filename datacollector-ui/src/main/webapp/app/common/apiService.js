@@ -907,6 +907,20 @@ angular.module('dataCollectorApp.common')
       },
 
       /**
+       * Reset Offset for Multiple Pipelines
+       *
+       * @param pipelineNames
+       */
+      resetOffsets: function(pipelineNames) {
+        var url = apiBase + '/pipelines/resetOffsets';
+        return $http({
+          method: 'POST',
+          url: url,
+          data: pipelineNames
+        });
+      },
+
+      /**
        * Fetches Pipeline Rules.
        *
        * @param name

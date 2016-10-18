@@ -116,6 +116,16 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   private static final Logger LOG = LoggerFactory.getLogger(StandaloneRunner.class);
   public static final String STATS_NULL_TARGET = "com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget";
 
+  private static final ImmutableList<PipelineStatus> RESET_OFFSET_DISALLOWED_STATUSES = ImmutableList.of(
+      PipelineStatus.CONNECTING,
+      PipelineStatus.DISCONNECTING,
+      PipelineStatus.FINISHING,
+      PipelineStatus.RETRY,
+      PipelineStatus.RUNNING,
+      PipelineStatus.STARTING,
+      PipelineStatus.STOPPING
+  );
+
   @Inject PipelineStoreTask pipelineStoreTask;
   @Inject PipelineStateStore pipelineStateStore;
   @Inject SnapshotStore snapshotStore;
@@ -330,7 +340,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   public synchronized void resetOffset() throws PipelineStoreException, PipelineRunnerException {
     PipelineStatus status = getState().getStatus();
     LOG.debug("Resetting offset for pipeline {}, {}", name, rev);
-    if(status == PipelineStatus.RUNNING) {
+    if (RESET_OFFSET_DISALLOWED_STATUSES.contains(status)) {
       throw new PipelineRunnerException(ContainerError.CONTAINER_0104, name);
     }
     ProductionSourceOffsetTracker offsetTracker = new ProductionSourceOffsetTracker(name, rev, runtimeInfo);

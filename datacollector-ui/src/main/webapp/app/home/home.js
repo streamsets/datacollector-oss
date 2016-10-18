@@ -53,6 +53,16 @@ angular
 
     var pipelinesLimit = 30;
 
+    var RESET_OFFSET_DISALLOWED_STATUSES = [
+      'CONNECTING',
+      'DISCONNECTING',
+      'FINISHING',
+      'RETRY',
+      'RUNNING',
+      'STARTING',
+      'STOPPING'
+    ];
+
     angular.extend($scope, {
       loaded: false,
       pipelines: [],
@@ -252,6 +262,56 @@ angular
       },
 
       /**
+       * Reset Offset to Origin for selected pipelines
+       */
+      resetOffsetForSelectedPipelines: function() {
+        $rootScope.common.trackEvent(
+            pipelineConstant.BUTTON_CATEGORY,
+            pipelineConstant.CLICK_ACTION,
+            'Reset Offsets',
+            1
+        );
+
+        var selectedPipelineList = $scope.selectedPipelineList;
+        var selectedPipelineInfoList = [];
+        var validationIssues = [];
+        angular.forEach($scope.pipelines, function(pipelineInfo) {
+          if (selectedPipelineList.indexOf(pipelineInfo.name) !== -1) {
+            var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
+            if (pipelineStatus && pipelineStatus.name === pipelineInfo.name &&
+                _.contains(RESET_OFFSET_DISALLOWED_STATUSES, pipelineStatus.status)) {
+              validationIssues.push('Reset Origin operation is not supported for Pipeline "' +
+                  pipelineInfo.name + '" with state ' +  pipelineStatus.status);
+            }
+            selectedPipelineInfoList.push(pipelineInfo);
+          }
+        });
+
+        if (validationIssues.length > 0) {
+          $rootScope.common.errors = validationIssues;
+          return;
+        }
+        $rootScope.common.errors = [];
+
+        var modalInstance = $modal.open({
+          templateUrl: 'app/home/resetOffset/resetOffset.tpl.html',
+          controller: 'ResetOffsetModalInstanceController',
+          size: '',
+          backdrop: 'static',
+          resolve: {
+            pipelineInfo: function () {
+              return selectedPipelineInfoList;
+            },
+            originStageDef: function() {
+              return null;
+            }
+          }
+        });
+
+        $scope.unSelectAll();
+      },
+
+      /**
        * Export link command handler
        */
       exportPipelineConfig: function(pipelineInfo, includeDefinitions, $event) {
@@ -267,7 +327,6 @@ angular
         api.pipelineAgent.exportSelectedPipelines(selectedPipelineList, includeDefinitions);
         $scope.unSelectAll();
       },
-
 
       /**
        * Download Remote Pipeline Configuration

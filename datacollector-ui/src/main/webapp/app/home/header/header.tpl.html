@@ -18,7 +18,7 @@
         <ul class="dropdown-menu pull-right" role="menu">
 
           <li role="presentation"
-              ng-if="!isPipelineRunning && isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])"
+              ng-if="!isPipelineRunning && isAuthorized([userRoles.admin, userRoles.manager])"
               ng-class="{'disabled': !pipelineConfig.valid || activeConfigStatus.executionMode != pipelineConstant.STANDALONE}">
             <a href="#" dropdown-toggle ng-click="(!pipelineConfig.valid || activeConfigStatus.executionMode != pipelineConstant.STANDALONE) || resetOffset()">
               <i class="fa fa-power-off"></i> {{'home.resetOffset.title' | translate}}

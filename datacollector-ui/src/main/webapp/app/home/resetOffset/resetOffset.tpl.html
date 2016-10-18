@@ -9,13 +9,18 @@
 
   <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
 
-  <p ng-hide="isOffsetResetSucceed || showLoading"
-     translate="home.resetOffset.confirmationMessage" translate-values="{name: pipelineInfo.name}"></p>
-
   <div class="alert alert-success" role="alert"
        ng-show="isOffsetResetSucceed"
        translate="home.resetOffset.successMessage">
   </div>
+
+  <p ng-hide="isOffsetResetSucceed || showLoading">
+    <div ng-show="isList">
+      <div translate="home.resetOffset.confirmationMessageBulk"></div>
+      <div ng-repeat="pipeline in pipelineInfo">{{pipeline.name}}</div>
+    </div>
+    <div ng-hide="isList" translate="home.resetOffset.confirmationMessage"></div>
+  </p>
 
   <div show-loading="showLoading"></div>
 </div>
