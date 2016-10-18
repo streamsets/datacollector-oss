@@ -759,6 +759,11 @@ angular
             stageLibrary.library !== 'streamsets-datacollector-stats-lib';
         });
 
+        $scope.executors = _.filter($scope.stageLibraries, function (stageLibrary) {
+          return (stageLibrary.type === pipelineConstant.EXECUTOR_STAGE_TYPE &&
+          stageLibrary.library !== 'streamsets-datacollector-stats-lib');
+        });
+
         $scope.targets = _.filter($scope.stageLibraries, function (stageLibrary) {
           return (stageLibrary.type === pipelineConstant.TARGET_STAGE_TYPE &&
           !stageLibrary.errorStage && !stageLibrary.statsAggregatorStage  &&

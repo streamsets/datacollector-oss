@@ -739,7 +739,7 @@ angular.module('pipelineGraphDirectives', [])
 
         //Output Connectors
 
-        if(d.uiInfo.stageType !== pipelineConstant.TARGET_STAGE_TYPE) {
+        if (d.uiInfo.stageType !== pipelineConstant.TARGET_STAGE_TYPE && d.uiInfo.stageType !== pipelineConstant.EXECUTOR_STAGE_TYPE) {
 
           var totalLanes = d.outputLanes.length,
             lanePredicatesConfiguration = _.find(d.configuration, function(configuration) {

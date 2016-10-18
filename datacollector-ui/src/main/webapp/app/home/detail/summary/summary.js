@@ -218,6 +218,14 @@ angular
             };
 
             break;
+          case pipelineConstant.EXECUTOR_STAGE_TYPE:
+            $scope.histogramList = ['inputRecords', 'errorRecords', 'errors'];
+            $scope.summaryHistograms = {
+              inputRecords: inputRecordsHistogram,
+              errorRecords: errorRecordsHistogram,
+              errors: errorsHistogram
+            };
+            break;
           case pipelineConstant.TARGET_STAGE_TYPE:
             $scope.histogramList = ['inputRecords', 'errorRecords', 'errors'];
             $scope.summaryHistograms = {

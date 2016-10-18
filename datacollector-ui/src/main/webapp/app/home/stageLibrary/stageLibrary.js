@@ -73,6 +73,10 @@ angular
       label: 'Processors'
     },{
       group: 'Type',
+      name: pipelineConstant.EXECUTOR_STAGE_TYPE,
+      label: 'Executors'
+    },{
+      group: 'Type',
       name: pipelineConstant.TARGET_STAGE_TYPE,
       label: 'Destinations'
     }];

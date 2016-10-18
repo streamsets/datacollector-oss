@@ -776,6 +776,8 @@ angular.module('dataCollectorApp.common')
             return 'assets/stage/defaultSource.svg';
           case pipelineConstant.PROCESSOR_STAGE_TYPE:
             return 'assets/stage/defaultProcessor.svg';
+          case pipelineConstant.EXECUTOR_STAGE_TYPE:
+            return 'assets/stage/defaultTarget.svg'; // TODO: Need special icon for exeuctor target
           case pipelineConstant.TARGET_STAGE_TYPE:
             return 'assets/stage/defaultTarget.svg';
         }

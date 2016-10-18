@@ -166,7 +166,7 @@
     </td>
 
     <td colspan="{{outputLimit}}"
-        ng-if="outputRecords.length === 0 && errorsRecords.length === 0 && detailPaneConfig.uiInfo.stageType !== pipelineConstant.TARGET_STAGE_TYPE">
+        ng-if="outputRecords.length === 0 && errorsRecords.length === 0 && detailPaneConfig.uiInfo.stageType !== pipelineConstant.TARGET_STAGE_TYPE && detailPaneConfig.uiInfo.stageType !== pipelineConstant.EXECUTOR_STAGE_TYPE">
       <label class="label label-warning">{{'home.previewPane.noOutputWarning' | translate}}</label>
     </td>
 

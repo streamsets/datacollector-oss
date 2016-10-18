@@ -272,6 +272,10 @@ angular
 
             chartData.push(bad);
             break;
+          case pipelineConstant.EXECUTOR_STAGE_TYPE:
+            chartData.push(input);
+            chartData.push(bad);
+            break;
           case pipelineConstant.TARGET_STAGE_TYPE:
             chartData.push(input);
             chartData.push(bad);
@@ -330,6 +334,10 @@ angular
             }
 
             query += " or metric = '" + stageErrorMeter + "')";
+            break;
+
+          case pipelineConstant.EXECUTOR_STAGE_TYPE:
+            query += "(metric = '" + stageInputMeter + "' or metric = '" + stageErrorMeter + "')";
             break;
 
           case pipelineConstant.TARGET_STAGE_TYPE:

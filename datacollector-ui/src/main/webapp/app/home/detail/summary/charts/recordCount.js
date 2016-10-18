@@ -164,6 +164,10 @@ angular
 
             valueList.push(["Error" , errorRecordsMeter.count ]);
             break;
+          case pipelineConstant.EXECUTOR_STAGE_TYPE:
+            valueList.push(["Input" , inputRecordsMeter.count ]);
+            valueList.push(["Error" , errorRecordsMeter.count ]);
+            break;
           case pipelineConstant.TARGET_STAGE_TYPE:
             valueList.push(["Input" , inputRecordsMeter.count ]);
             valueList.push(["Error" , errorRecordsMeter.count ]);
@@ -238,6 +242,10 @@ angular
             }
 
             query += " or metric = '" + stageErrorMeter + "')";
+            break;
+
+          case pipelineConstant.EXECUTOR_STAGE_TYPE:
+            query += "(metric = '" + stageInputMeter + "' or metric = '" + stageErrorMeter + "')";
             break;
 
           case pipelineConstant.TARGET_STAGE_TYPE:
