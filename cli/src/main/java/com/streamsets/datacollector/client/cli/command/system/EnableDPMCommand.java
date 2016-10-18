@@ -60,8 +60,8 @@ public class EnableDPMCommand extends BaseCommand {
 
   @Override
   public void run() {
-    SystemApi systemApi = new SystemApi(getApiClient());
     try {
+      SystemApi systemApi = new SystemApi(getApiClient());
       String organization = getOrganizationId();
       if (organization == null) {
         System.out.println("DPM User ID must be <ID>@<Organization ID>");

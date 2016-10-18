@@ -28,8 +28,8 @@ public class ShutdownCommand extends BaseCommand {
 
   @Override
   public void run() {
-    SystemApi systemApi = new SystemApi(getApiClient());
     try {
+      SystemApi systemApi = new SystemApi(getApiClient());
       systemApi.shutdown();
       System.out.println("Data Collector is stopped.");
     } catch (Exception ex) {

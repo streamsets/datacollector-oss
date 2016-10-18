@@ -141,7 +141,7 @@ public class ApiClient {
    * Helper method to set dpmBaseURL for the first HTTP DPM authentication.
    */
   public void setDPMBaseURL(String dpmBaseURL) {
-    if(dpmBaseURL != null) {
+    if(dpmBaseURL != null && authentication != null) {
       authentication.setDPMBaseURL(dpmBaseURL);
     }
   }

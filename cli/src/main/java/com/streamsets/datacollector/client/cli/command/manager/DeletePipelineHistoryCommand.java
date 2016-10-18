@@ -45,9 +45,8 @@ public class DeletePipelineHistoryCommand extends BaseCommand {
     if(pipelineRev == null) {
       pipelineRev = "0";
     }
-
-    ManagerApi managerApi = new ManagerApi(getApiClient());
     try {
+      ManagerApi managerApi = new ManagerApi(getApiClient());
       managerApi.deleteHistory(pipelineName, pipelineRev);
       System.out.println("Pipeline history deleted successfully");
     } catch (Exception ex) {

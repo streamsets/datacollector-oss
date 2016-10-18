@@ -19,11 +19,16 @@
  */
 package com.streamsets.datacollector.client.cli.command;
 
+import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.client.ApiClient;
 import io.airlift.airline.Option;
 import io.airlift.airline.OptionType;
 
+import java.util.List;
+
 public class BaseCommand implements Runnable {
+  private static List<String> allowedAuthTypes = ImmutableList.of("none", "basic", "digest", "form", "dpm");
+
   @Option(
     type = OptionType.GLOBAL,
     name = {"-U", "--url"},
@@ -52,7 +57,7 @@ public class BaseCommand implements Runnable {
     type = OptionType.GLOBAL,
     name = {"-a", "--auth-type"},
     description = "Data Collector Authentication Type",
-    allowedValues = {"none", "basic", "digest", "form"},
+    allowedValues = {"none", "basic", "digest", "form", "dpm"},
     required = false
   )
   public String sdcAuthType;
@@ -80,6 +85,8 @@ public class BaseCommand implements Runnable {
   public ApiClient getApiClient() {
     if(sdcAuthType == null) {
       sdcAuthType = "form";
+    } else if (!allowedAuthTypes.contains(sdcAuthType)) {
+      throw new RuntimeException("Invalid Authentication Type");
     }
 
     if(sdcUser == null) {

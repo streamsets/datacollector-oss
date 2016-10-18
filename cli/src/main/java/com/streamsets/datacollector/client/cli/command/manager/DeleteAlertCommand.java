@@ -50,8 +50,8 @@ public class DeleteAlertCommand extends BaseCommand {
 
   @Override
   public void run() {
-    ManagerApi managerApi = new ManagerApi(getApiClient());
     try {
+      ManagerApi managerApi = new ManagerApi(getApiClient());
       boolean deleted = managerApi.deleteAlert(pipelineName, pipelineRev, ruleId);
 
       if(deleted) {

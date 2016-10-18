@@ -86,8 +86,8 @@ public class SnapshotCaptureCommand extends BaseCommand {
       snapshotLabel = snapshotName;
     }
 
-    ManagerApi managerApi = new ManagerApi(getApiClient());
     try {
+      ManagerApi managerApi = new ManagerApi(getApiClient());
       managerApi.captureSnapshot(pipelineName, snapshotName, snapshotLabel, pipelineRev, batches, batchSize);
       System.out.println("Capture Snapshot command executed successfully");
     } catch (Exception ex) {

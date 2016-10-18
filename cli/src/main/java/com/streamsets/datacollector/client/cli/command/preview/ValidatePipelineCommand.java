@@ -48,8 +48,8 @@ public class ValidatePipelineCommand extends BaseCommand {
       pipelineRev = "0";
     }
 
-    PreviewApi previewApi = new PreviewApi(getApiClient());
     try {
+      PreviewApi previewApi = new PreviewApi(getApiClient());
       ObjectMapper mapper = new ObjectMapper();
       mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
       System.out.println(mapper.writeValueAsString(previewApi.validateConfigs(pipelineName, pipelineRev, 1000000l)));

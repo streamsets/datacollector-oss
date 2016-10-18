@@ -53,8 +53,8 @@ public class SnapshotDeleteCommand extends BaseCommand {
       pipelineRev = "0";
     }
 
-    ManagerApi managerApi = new ManagerApi(getApiClient());
     try {
+      ManagerApi managerApi = new ManagerApi(getApiClient());
       managerApi.deleteSnapshot(pipelineName, snapshotName, pipelineRev);
       System.out.println("Deleted Snapshot successfully");
     } catch (Exception ex) {

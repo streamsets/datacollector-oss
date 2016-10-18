@@ -59,8 +59,8 @@ public class GetPipelineConfigCommand extends BaseCommand {
     if(get == null) {
       get = "pipeline";
     }
-    StoreApi storeApi = new StoreApi(getApiClient());
     try {
+      StoreApi storeApi = new StoreApi(getApiClient());
       ObjectMapper mapper = new ObjectMapper();
       mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
       System.out.println(mapper.writeValueAsString(storeApi.getPipelineInfo(pipelineName, pipelineRev, get, false)));

@@ -30,8 +30,8 @@ public class ServerTimeCommand extends BaseCommand {
 
   @Override
   public void run() {
-    SystemApi systemApi = new SystemApi(getApiClient());
     try {
+      SystemApi systemApi = new SystemApi(getApiClient());
       ObjectMapper mapper = new ObjectMapper();
       mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
       System.out.println(mapper.writeValueAsString(systemApi.getServerTime()));

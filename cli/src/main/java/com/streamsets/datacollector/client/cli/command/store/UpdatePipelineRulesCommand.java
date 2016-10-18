@@ -62,9 +62,9 @@ public class UpdatePipelineRulesCommand extends BaseCommand {
       pipelineRev = "0";
     }
 
-    ApiClient apiClient = getApiClient();
-    StoreApi storeApi = new StoreApi(apiClient);
     try {
+      ApiClient apiClient = getApiClient();
+      StoreApi storeApi = new StoreApi(apiClient);
       RuleDefinitionsJson ruleDefinitionsJson = null;
 
       if(fileName != null) {

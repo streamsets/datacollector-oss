@@ -45,8 +45,8 @@ public class ResetOriginCommand extends BaseCommand {
     if(pipelineRev == null) {
       pipelineRev = "0";
     }
-    ManagerApi managerApi = new ManagerApi(getApiClient());
     try {
+      ManagerApi managerApi = new ManagerApi(getApiClient());
       managerApi.resetOffset(pipelineName, pipelineRev);
       System.out.println("Reset Origin is successful.");
     } catch (Exception ex) {

@@ -70,9 +70,9 @@ public class UpdatePipelineConfigCommand extends BaseCommand {
       pipelineRev = "0";
     }
 
-    ApiClient apiClient = getApiClient();
-    StoreApi storeApi = new StoreApi(apiClient);
     try {
+      ApiClient apiClient = getApiClient();
+      StoreApi storeApi = new StoreApi(apiClient);
       PipelineConfigurationJson pipelineConfigurationJson = null;
 
       if(fileName != null) {

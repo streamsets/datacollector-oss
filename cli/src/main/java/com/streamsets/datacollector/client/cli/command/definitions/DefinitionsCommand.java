@@ -30,8 +30,8 @@ public class DefinitionsCommand extends BaseCommand {
 
   @Override
   public void run() {
-    DefinitionsApi definitionsApi = new DefinitionsApi(getApiClient());
     try {
+      DefinitionsApi definitionsApi = new DefinitionsApi(getApiClient());
       ObjectMapper mapper = new ObjectMapper();
       mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
       System.out.println(mapper.writeValueAsString(definitionsApi.getDefinitions()));

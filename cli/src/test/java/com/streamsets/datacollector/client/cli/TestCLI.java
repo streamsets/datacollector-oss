@@ -56,6 +56,13 @@ public class TestCLI {
     System.out.println(cliOutput);
   }
 
+  @Test
+  public void testWithInvalidAuthType() {
+    String cliOutput = TestUtil.runCliCommand("-U", "http://localhost:1233", "-a", "invalidAuthType", "ping");
+    Assert.assertTrue(cliOutput.contains("Invalid Authentication Type"));
+    System.out.println(cliOutput);
+  }
+
   @Ignore
   @Test
   public void testForDifferentAuthenticationTypes() {

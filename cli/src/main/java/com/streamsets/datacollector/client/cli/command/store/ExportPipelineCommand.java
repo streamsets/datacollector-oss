@@ -65,9 +65,9 @@ public class ExportPipelineCommand extends BaseCommand {
       pipelineRev = "0";
     }
 
-    ApiClient apiClient = getApiClient();
-    StoreApi storeApi = new StoreApi(apiClient);
     try {
+      ApiClient apiClient = getApiClient();
+      StoreApi storeApi = new StoreApi(apiClient);
       ObjectMapper mapper = apiClient.getJson().getMapper();
       PipelineEnvelopeJson pipelineEnvelopeJson = storeApi.exportPipeline(
           pipelineName,

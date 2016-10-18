@@ -29,8 +29,8 @@ import io.airlift.airline.Command;
 public class ListPipelinesCommand extends BaseCommand {
   @Override
   public void run() {
-    StoreApi storeApi = new StoreApi(getApiClient());
     try {
+      StoreApi storeApi = new StoreApi(getApiClient());
       ObjectMapper mapper = new ObjectMapper();
       mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
       System.out.println(mapper.writeValueAsString(storeApi.getPipelines()));

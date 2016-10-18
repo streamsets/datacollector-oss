@@ -30,8 +30,8 @@ public class AlertsCommand extends BaseCommand {
 
   @Override
   public void run() {
-    ManagerApi managerApi = new ManagerApi(getApiClient());
     try {
+      ManagerApi managerApi = new ManagerApi(getApiClient());
       ObjectMapper mapper = new ObjectMapper();
       mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
       System.out.println(mapper.writeValueAsString(managerApi.getAllAlerts()));

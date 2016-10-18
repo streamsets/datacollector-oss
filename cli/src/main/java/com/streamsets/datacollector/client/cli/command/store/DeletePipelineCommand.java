@@ -35,8 +35,8 @@ public class DeletePipelineCommand extends BaseCommand {
 
   @Override
   public void run() {
-    StoreApi storeApi = new StoreApi(getApiClient());
     try {
+      StoreApi storeApi = new StoreApi(getApiClient());
       storeApi.deletePipeline(pipelineName);
       System.out.println("Deleted Pipeline - '" + pipelineName + "' successfully");
     } catch (Exception ex) {

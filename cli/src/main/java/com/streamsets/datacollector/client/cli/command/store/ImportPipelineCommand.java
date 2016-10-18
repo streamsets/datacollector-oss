@@ -62,9 +62,9 @@ public class ImportPipelineCommand extends BaseCommand {
 
   @Override
   public void run() {
-    ApiClient apiClient = getApiClient();
-    StoreApi storeApi = new StoreApi(apiClient);
     try {
+      ApiClient apiClient = getApiClient();
+      StoreApi storeApi = new StoreApi(apiClient);
       if(fileName != null) {
         JSON json = apiClient.getJson();
         TypeRef returnType = new TypeRef<PipelineEnvelopeJson>() {};

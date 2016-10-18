@@ -27,8 +27,8 @@ import io.airlift.airline.Command;
 public class DisableDPMCommand extends BaseCommand {
   @Override
   public void run() {
-    SystemApi systemApi = new SystemApi(getApiClient());
     try {
+      SystemApi systemApi = new SystemApi(getApiClient());
       systemApi.disableDPM();
       System.out.println("Successfully disabled DPM by updating file'etc/dpm.properties'. " +
           "Restart the Data Collector for the changes to take effect. ");

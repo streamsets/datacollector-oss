@@ -47,8 +47,8 @@ public class StartPipelineCommand extends BaseCommand {
     if(pipelineRev == null) {
       pipelineRev = "0";
     }
-    ManagerApi managerApi = new ManagerApi(getApiClient());
     try {
+      ManagerApi managerApi = new ManagerApi(getApiClient());
       ObjectMapper mapper = new ObjectMapper();
       mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
       System.out.println(mapper.writeValueAsString(managerApi.startPipeline(pipelineName, pipelineRev)));
