@@ -29,11 +29,10 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.configurablestage.DSource;
 import com.streamsets.pipeline.lib.el.OffsetEL;
-import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 
 @StageDef(
-    version = 7,
+    version = 8,
     label = "JDBC Consumer",
     description = "Reads data from a JDBC source.",
     icon = "rdbms.png",
@@ -96,18 +95,6 @@ public class JdbcDSource extends DSource {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.NUMBER,
-      defaultValue = "${10 * SECONDS}",
-      label = "Query Interval",
-      displayPosition = 60,
-      elDefs = {TimeEL.class},
-      evaluation = ConfigDef.Evaluation.IMPLICIT,
-      group = "JDBC"
-  )
-  public long queryInterval;
-
-  @ConfigDef(
-      required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "LIST_MAP",
       label = "Root Field Type",
@@ -117,35 +104,8 @@ public class JdbcDSource extends DSource {
   @ValueChooserModel(JdbcRecordTypeChooserValues.class)
   public JdbcRecordType jdbcRecordType;
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.NUMBER,
-      defaultValue = "1000",
-      label = "Max Batch Size (Records)",
-      displayPosition = 140,
-      group = "JDBC"
-  )
-  public int maxBatchSize;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.NUMBER,
-      defaultValue = "1000",
-      label = "Max Clob Size (Characters)",
-      displayPosition = 150,
-      group = "JDBC"
-  )
-  public int maxClobSize;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.NUMBER,
-      defaultValue = "1000",
-      label = "Max Blob Size (Bytes)",
-      displayPosition = 151,
-      group = "JDBC"
-  )
-  public int maxBlobSize;
+  @ConfigDefBean
+  public CommonSourceConfigBean commonSourceConfigBean;
 
   @ConfigDef(
       required = false,
@@ -201,13 +161,10 @@ public class JdbcDSource extends DSource {
         query,
         initialOffset,
         offsetColumn,
-        queryInterval,
         txnIdColumnName,
         txnMaxSize,
         jdbcRecordType,
-        maxBatchSize,
-        maxClobSize,
-        maxBlobSize,
+        commonSourceConfigBean,
         createJDBCNsHeaders,
         jdbcNsHeaderPrefix,
         hikariConfigBean

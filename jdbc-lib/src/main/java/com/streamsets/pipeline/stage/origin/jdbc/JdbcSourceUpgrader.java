@@ -19,12 +19,15 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc;
 
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.jdbc.JdbcBaseUpgrader;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /** {@inheritDoc} */
 public class JdbcSourceUpgrader extends JdbcBaseUpgrader {
@@ -46,8 +49,12 @@ public class JdbcSourceUpgrader extends JdbcBaseUpgrader {
         // fall through
       case 5:
         upgradeV5toV6(configs);
+        // fall through
       case 6:
         upgradeV6toV7(configs);
+        // fall through
+      case 7:
+        upgradeV7toV8(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -79,6 +86,20 @@ public class JdbcSourceUpgrader extends JdbcBaseUpgrader {
   private void upgradeV6toV7(List<Config> configs) {
     configs.add(new Config("createJDBCNsHeaders", false));
     configs.add(new Config("jdbcNsHeaderPrefix", "jdbc."));
+  }
+
+  private void upgradeV7toV8(List<Config> configs) {
+    List<Config> configsToRemove = new ArrayList<>();
+    List<Config> configsToAdd = new ArrayList<>();
+    Set<String> configsMoved = ImmutableSet.of("queryInterval", "maxBatchSize", "maxClobSize", "maxBlobSize");
+    for (Config config : configs) {
+      if (configsMoved.contains(config.getName())) {
+        configsToRemove.add(config);
+        configsToAdd.add(new Config(CommonSourceConfigBean.COMMON_SOURCE_CONFIG_BEAN_PREFIX + config.getName(), config.getValue()));
+      }
+    }
+    configs.removeAll(configsToRemove);
+    configs.addAll(configsToAdd);
   }
 
 }

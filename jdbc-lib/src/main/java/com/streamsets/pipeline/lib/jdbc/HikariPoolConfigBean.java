@@ -215,6 +215,11 @@ public class HikariPoolConfigBean {
   )
   public boolean readOnly = true;
 
+
+  private static final String HIKARI_CONFIG_PREFIX = "hikariConfigBean.";
+  private static final String DRIVER_CLASSNAME = HIKARI_CONFIG_PREFIX + "driverClassName";
+
+
   public List<Stage.ConfigIssue> validateConfigs(Stage.Context context, List<Stage.ConfigIssue> issues) {
     // Validation for NUMBER fields is currently disabled due to allowing ELs so we do our own here.
     if (maximumPoolSize < MAX_POOL_SIZE_MIN) {
@@ -287,6 +292,14 @@ public class HikariPoolConfigBean {
               MAX_LIFETIME_MIN
           )
       );
+    }
+
+    if (!driverClassName.isEmpty()) {
+      try {
+        Class.forName(driverClassName);
+      } catch (ClassNotFoundException e) {
+        issues.add(context.createConfigIssue(com.streamsets.pipeline.stage.origin.jdbc.Groups.LEGACY.name(), DRIVER_CLASSNAME, JdbcErrors.JDBC_28, e.toString()));
+      }
     }
 
     return issues;

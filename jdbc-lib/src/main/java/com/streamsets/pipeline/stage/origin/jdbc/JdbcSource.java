@@ -60,12 +60,9 @@ public class JdbcSource extends BaseSource {
   private static final String QUERY = "query";
   private static final String OFFSET_COLUMN = "offsetColumn";
   private static final String INITIAL_OFFSET = "initialOffset";
-  private static final String DRIVER_CLASSNAME = HIKARI_CONFIG_PREFIX + "driverClassName";
   private static final String QUERY_INTERVAL_EL = "queryInterval";
   private static final String TXN_ID_COLUMN_NAME = "txnIdColumnName";
   private static final String TXN_MAX_SIZE = "txnMaxSize";
-  private static final String MAX_BATCH_SIZE = "maxBatchSize";
-  private static final String MAX_CLOB_SIZE = "maxClobSize";
   private static final String JDBC_NS_HEADER_PREFIX = "jdbcNsHeaderPrefix";
 
   private final boolean isIncrementalMode;
@@ -75,21 +72,16 @@ public class JdbcSource extends BaseSource {
   private final Properties driverProperties = new Properties();
   private final String txnColumnName;
   private final int txnMaxSize;
-  private final JdbcRecordType recordType;
-  private final int maxBatchSize;
-  private final int maxClobSize;
-  private final int maxBlobSize;
+  private final JdbcRecordType jdbcRecordType;
+  private final CommonSourceConfigBean commonSourceConfigBean;
   private final HikariPoolConfigBean hikariConfigBean;
   private final boolean createJDBCNsHeaders;
   private final String jdbcNsHeaderPrefix;
 
 
   private ErrorRecordHandler errorRecordHandler;
-
   private long queryIntervalMillis = Long.MIN_VALUE;
-
   private HikariDataSource dataSource = null;
-
   private Connection connection = null;
   private ResultSet resultSet = null;
   private long lastQueryCompletedTime = 0L;
@@ -99,13 +91,10 @@ public class JdbcSource extends BaseSource {
       String query,
       String initialOffset,
       String offsetColumn,
-      long queryInterval,
       String txnColumnName,
       int txnMaxSize,
       JdbcRecordType jdbcRecordType,
-      int maxBatchSize,
-      int maxClobSize,
-      int maxBlobSize,
+      CommonSourceConfigBean commonSourceConfigBean,
       boolean createJDBCNsHeaders,
       String jdbcNsHeaderPrefix,
       HikariPoolConfigBean hikariConfigBean
@@ -114,14 +103,12 @@ public class JdbcSource extends BaseSource {
     this.query = query;
     this.initialOffset = initialOffset;
     this.offsetColumn = offsetColumn;
-    this.queryIntervalMillis = 1000 * queryInterval;
+    this.queryIntervalMillis = 1000 * commonSourceConfigBean.queryInterval;
     driverProperties.putAll(hikariConfigBean.driverProperties);
     this.txnColumnName = txnColumnName;
     this.txnMaxSize = txnMaxSize;
-    this.recordType = jdbcRecordType;
-    this.maxBatchSize = maxBatchSize;
-    this.maxClobSize = maxClobSize;
-    this.maxBlobSize = maxBlobSize;
+    this.commonSourceConfigBean = commonSourceConfigBean;
+    this.jdbcRecordType = jdbcRecordType;
     this.hikariConfigBean = hikariConfigBean;
     this.createJDBCNsHeaders = createJDBCNsHeaders;
     this.jdbcNsHeaderPrefix = jdbcNsHeaderPrefix;
@@ -139,13 +126,7 @@ public class JdbcSource extends BaseSource {
       issues.add(getContext().createConfigIssue(Groups.JDBC.name(), QUERY_INTERVAL_EL, JdbcErrors.JDBC_27));
     }
 
-    if (!hikariConfigBean.driverClassName.isEmpty()) {
-      try {
-        Class.forName(hikariConfigBean.driverClassName);
-      } catch (ClassNotFoundException e) {
-        issues.add(context.createConfigIssue(Groups.LEGACY.name(), DRIVER_CLASSNAME, JdbcErrors.JDBC_28, e.toString()));
-      }
-    }
+    issues = commonSourceConfigBean.validateConfigs(context, issues);
 
     // Incremental mode have special requirements for the query form
     if(isIncrementalMode) {
@@ -181,12 +162,6 @@ public class JdbcSource extends BaseSource {
 
     if (txnMaxSize < 0) {
       issues.add(context.createConfigIssue(Groups.ADVANCED.name(), TXN_MAX_SIZE, JdbcErrors.JDBC_10, txnMaxSize, 0));
-    }
-    if (maxBatchSize < 0) {
-      issues.add(context.createConfigIssue(Groups.ADVANCED.name(), MAX_BATCH_SIZE, JdbcErrors.JDBC_10, maxBatchSize, 0));
-    }
-    if (maxClobSize < 0) {
-      issues.add(context.createConfigIssue(Groups.ADVANCED.name(), MAX_CLOB_SIZE, JdbcErrors.JDBC_10, maxClobSize, 0));
     }
 
     if (issues.isEmpty()) {
@@ -262,7 +237,7 @@ public class JdbcSource extends BaseSource {
 
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-    int batchSize = Math.min(this.maxBatchSize, maxBatchSize);
+    int batchSize = Math.min(this.commonSourceConfigBean.maxBatchSize, maxBatchSize);
     String nextSourceOffset = lastSourceOffset == null ? initialOffset : lastSourceOffset;
 
     long now = System.currentTimeMillis();
@@ -384,7 +359,12 @@ public class JdbcSource extends BaseSource {
     ResultSetMetaData md = resultSet.getMetaData();
     int numColumns = md.getColumnCount();
 
-    LinkedHashMap<String, Field> fields = JdbcUtil.resultSetToFields(resultSet, maxClobSize, maxBlobSize, errorRecordHandler);
+    LinkedHashMap<String, Field> fields = JdbcUtil.resultSetToFields(
+        resultSet,
+        commonSourceConfigBean.maxClobSize,
+        commonSourceConfigBean.maxBlobSize,
+        errorRecordHandler
+    );
 
     if (fields.size() != numColumns) {
       errorRecordHandler.onError(JdbcErrors.JDBC_35, fields.size(), numColumns);
@@ -393,9 +373,9 @@ public class JdbcSource extends BaseSource {
 
     final String recordContext = query + "::" + (StringUtils.isEmpty(offsetColumn) ? "rowCount:" + rowCount : resultSet.getString(offsetColumn));
     Record record = context.createRecord(recordContext);
-    if (recordType == JdbcRecordType.LIST_MAP) {
+    if (jdbcRecordType == JdbcRecordType.LIST_MAP) {
       record.set(Field.createListMap(fields));
-    } else if (recordType == JdbcRecordType.MAP) {
+    } else if (jdbcRecordType == JdbcRecordType.MAP) {
       record.set(Field.create(fields));
     } else {
       // type is LIST
