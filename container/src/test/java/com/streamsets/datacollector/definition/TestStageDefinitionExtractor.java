@@ -337,6 +337,7 @@ public class TestStageDefinitionExtractor {
   public void testExtractExecutor1() {
     StageDefinition def = StageDefinitionExtractor.get().extract(MOCK_LIB_DEF, Executor1.class, "x");
     Assert.assertEquals(StageType.EXECUTOR, def.getType());
+    Assert.assertEquals(0, def.getOutputStreams());
   }
 
   @Test

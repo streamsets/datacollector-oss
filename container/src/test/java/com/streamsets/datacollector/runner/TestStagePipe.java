@@ -35,6 +35,7 @@ import com.streamsets.datacollector.runner.StagePipe;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.Executor;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
@@ -200,6 +201,66 @@ public class TestStagePipe {
                                              MockStages.createPipelineConfigurationSourceProcessorTarget())
         .build(pipelineRunner);
     StagePipe pipe = (StagePipe) pipeline.getPipes()[8];
+    BatchMakerImpl batchMaker = Mockito.mock(BatchMakerImpl.class);
+    Mockito.when(batchMaker.getLanes()).thenReturn(ImmutableList.of("t"));
+
+    BatchImpl batch = Mockito.mock(BatchImpl.class);
+    Mockito.when(batch.getSourceOffset()).thenReturn("offset2");
+    Mockito.when(batch.getSize()).thenReturn(1);
+
+    PipeBatch pipeBatch = Mockito.mock(FullPipeBatch.class);
+    Mockito.when(pipeBatch.startStage(Mockito.eq(pipe))).thenReturn(batchMaker);
+    Mockito.when(pipeBatch.getBatch(Mockito.eq(pipe))).thenReturn(batch);
+    Mockito.when(pipeBatch.getErrorSink()).thenReturn(new ErrorSink());
+
+    Assert.assertTrue(pipe.init(new PipeContext()).isEmpty());
+    pipe.process(pipeBatch);
+    pipe.destroy(pipeBatch);
+
+    Mockito.verify(pipeBatch, Mockito.times(1)).startStage(Mockito.eq(pipe));
+    Mockito.verify(pipeBatch, Mockito.times(1)).getBatch(Mockito.eq(pipe));
+    Mockito.verify(pipeBatch, Mockito.times(1)).getPreviousOffset();
+    Mockito.verify(pipeBatch, Mockito.times(1)).getBatchSize();
+    Mockito.verify(pipeBatch, Mockito.times(1)).completeStage(Mockito.eq(batchMaker), Mockito.any(EventSink.class));
+    Mockito.verify(pipeBatch, Mockito.times(1)).completeStage(Mockito.any(StagePipe.class), Mockito.any(EventSink.class));
+    Mockito.verify(pipeBatch, Mockito.times(2)).getErrorSink();
+    Mockito.verifyNoMoreInteractions(pipeBatch);
+    Assert.assertTrue(write);
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testExecutor() throws Exception {
+    write = false;
+    MockStages.setExecutorCapture(new Executor() {
+
+      @Override
+      public List<ConfigIssue> init(Info info, Context context) {
+        return Collections.emptyList();
+      }
+
+      @Override
+      public void write(Batch batch) throws StageException {
+        write = true;
+        Assert.assertEquals("offset2", batch.getSourceOffset());
+      }
+
+      @Override
+      public void destroy() {
+      }
+    });
+
+    PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
+    Mockito.when(pipelineRunner.getMetrics()).thenReturn(new MetricRegistry());
+    Mockito.when(pipelineRunner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
+    Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), new Configuration(), "name", "name", "0",
+                                             MockStages.createPipelineConfigurationSourceTargetWithEventsProcessed())
+        .build(pipelineRunner);
+    final int index = 4;
+    Assert.assertEquals(7, pipeline.getPipes().length);
+    Assert.assertEquals("executorName", pipeline.getPipes()[index].getStage().getDefinition().getName());
+    Assert.assertTrue(pipeline.getPipes()[index] instanceof StagePipe);
+    StagePipe pipe = (StagePipe) pipeline.getPipes()[index];
     BatchMakerImpl batchMaker = Mockito.mock(BatchMakerImpl.class);
     Mockito.when(batchMaker.getLanes()).thenReturn(ImmutableList.of("t"));
 

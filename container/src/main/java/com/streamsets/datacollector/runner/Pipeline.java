@@ -417,6 +417,7 @@ public class Pipeline {
                                        laneResolver.getMultiplexerOutputLanes(idx));
             pipes.add(pipe);
             break;
+          case EXECUTOR:
           case TARGET:
             pipe = new CombinerPipe(stage, laneResolver.getCombinerInputLanes(idx),
                                     laneResolver.getCombinerOutputLanes(idx));

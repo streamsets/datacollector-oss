@@ -45,6 +45,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -152,9 +153,9 @@ public class TestPipeline {
   public void testPipesWithEvents() throws Exception {
     StageLibraryTask lib = MockStages.createStageLibrary();
     List<StageConfiguration> stageDefs = ImmutableList.of(
-        MockStages.createSource("s", ImmutableList.of("s"), ImmutableList.of("se")),  // Source with normal and event output
-        MockStages.createTarget("t", ImmutableList.of("s"), ImmutableList.of("te")),  // Target with event output
-        MockStages.createTarget("e", ImmutableList.of("se", "te"))                    // Even target
+        MockStages.createSource("s", ImmutableList.of("s"), ImmutableList.of("se")),          // Source with normal and event output
+        MockStages.createTarget("t", ImmutableList.of("s"), ImmutableList.of("te")),          // Target with event output
+        MockStages.createExecutor("e", ImmutableList.of("se", "te"), Collections.<String>emptyList()) // Even target
     );
 
     List<Config> pipelineConfigs = new ArrayList<>(2);

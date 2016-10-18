@@ -44,6 +44,7 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.Executor;
 import com.streamsets.pipeline.api.OffsetCommitTrigger;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Processor;
@@ -108,10 +109,18 @@ public class MockStages {
       .build();
   }
 
+  @SuppressWarnings("unchecked")
+  public static StageConfiguration createExecutor(String instanceName, List<String> inputs, List<String> events) {
+    return new StageConfigurationBuilder(instanceName, "executorName")
+      .withInputLanes(inputs)
+      .withEventLanes(events)
+      .build();
+  }
+
   private static Source sourceCapture;
   private static Processor processorCapture;
   private static Target targetCapture;
-  private static Target eventTargetCapture;
+  private static Executor executorCapture;
   private static Target errorCapture;
 
   // it must be called after the pipeline is built
@@ -137,9 +146,10 @@ public class MockStages {
   public static void setErrorStageCapture(Target t) {
     errorCapture = t;
   }
+
   // it must be called after the pipeline is built
-  public static void setTargetEventCapture(Target t) {
-    eventTargetCapture = t;
+  public static void setExecutorCapture(Executor e) {
+    executorCapture = e;
   }
 
 
@@ -387,12 +397,12 @@ public class MockStages {
     }
   }
 
-  public static class MEventTarget implements Target {
+  public static class MExecutor implements Executor {
 
     @Override
     public List<ConfigIssue> init(Info info, Context context) {
-      if (eventTargetCapture != null) {
-        return eventTargetCapture.init(info, context);
+      if (executorCapture != null) {
+        return executorCapture.init(info, context);
       } else {
         return Collections.emptyList();
       }
@@ -400,15 +410,15 @@ public class MockStages {
 
     @Override
     public void destroy() {
-      if (eventTargetCapture != null) {
-        eventTargetCapture.destroy();
+      if (executorCapture != null) {
+        executorCapture.destroy();
       }
     }
 
     @Override
     public void write(Batch batch) throws StageException {
-      if (eventTargetCapture != null) {
-        eventTargetCapture.write(batch);
+      if (executorCapture != null) {
+        executorCapture.write(batch);
       }
     }
   }
@@ -655,7 +665,7 @@ public class MockStages {
           .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
           .build();
 
-        StageDefinition tEventDef = new StageDefinitionBuilder(cl, MEventTarget.class, "targetEventName")
+        StageDefinition tEventDef = new StageDefinitionBuilder(cl, MExecutor.class, "executorName")
           .withConfig(stageReqField)
           .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
           .build();
@@ -1079,10 +1089,10 @@ public class MockStages {
       .withEventLanes("e")
       .build();
     stages.add(source);
-    StageConfiguration eventDest = new StageConfigurationBuilder("e", "targetEventName")
+    StageConfiguration executor = new StageConfigurationBuilder("e", "executorName")
       .withInputLanes("e")
       .build();
-    stages.add(eventDest);
+    stages.add(executor);
     StageConfiguration target = new StageConfigurationBuilder("t", "targetName")
       .withInputLanes("t")
       .build();

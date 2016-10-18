@@ -387,7 +387,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
   }
 
   private boolean isTargetOrExecutor() {
-    if(getStage().getDefinition().getType().isOneOf(StageType.TARGET, StageType.TARGET)) {
+    if(getStage().getDefinition().getType().isOneOf(StageType.TARGET, StageType.EXECUTOR)) {
       return true;
     }
     return false;

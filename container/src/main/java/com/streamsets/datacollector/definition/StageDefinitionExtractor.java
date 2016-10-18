@@ -143,7 +143,7 @@ public abstract class StageDefinitionExtractor {
         errors.add(new ErrorMessage(DefinitionError.DEF_305, contextMsg, sDef.outputStreams().getSimpleName()));
       }
 
-      if (type != null && sDef.outputStreams() != StageDef.DefaultOutputStreams.class && type == StageType.TARGET) {
+      if (type != null && sDef.outputStreams() != StageDef.DefaultOutputStreams.class && type.isOneOf(StageType.TARGET, StageType.EXECUTOR)) {
         errors.add(new ErrorMessage(DefinitionError.DEF_306, contextMsg));
       }
 
@@ -205,9 +205,9 @@ public abstract class StageDefinitionExtractor {
         List<ConfigDefinition> configDefinitions = extractConfigDefinitions(libraryDef, klass, hideConfigs, new ArrayList<ErrorMessage>(), contextMsg);
         RawSourceDefinition rawSourceDefinition = RawSourceDefinitionExtractor.get().extract(klass, contextMsg);
         ConfigGroupDefinition configGroupDefinition = ConfigGroupExtractor.get().extract(klass, contextMsg);
-        String outputStreamLabelProviderClass = (type != StageType.TARGET) ? sDef.outputStreams().getName() : null;
+        String outputStreamLabelProviderClass = (!type.isOneOf(StageType.TARGET, StageType.EXECUTOR)) ? sDef.outputStreams().getName() : null;
         boolean variableOutputStreams = StageDef.VariableOutputStreams.class.isAssignableFrom(sDef.outputStreams());
-        int outputStreams = (variableOutputStreams || type == StageType.TARGET)
+        int outputStreams = (variableOutputStreams || type.isOneOf(StageType.TARGET, StageType.EXECUTOR) )
             ? 0 : sDef.outputStreams().getEnumConstants().length;
         List<ExecutionMode> executionModes = ImmutableList.copyOf(sDef.execution());
         List<ExecutionMode> executionModesLibraryOverride = libraryDef.getStageExecutionModesOverride(klass);

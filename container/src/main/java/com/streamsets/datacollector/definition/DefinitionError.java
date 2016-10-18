@@ -90,7 +90,7 @@ public enum DefinitionError implements ErrorCode {
   DEF_303("{} a SOURCE cannot be an ErrorStage"),
   DEF_304("{} only a SOURCE can have a RawSourcePreviewer"),
   DEF_305("{} outputStreams '{}' must be an enum"),
-  DEF_306("{} a TARGET cannot have an OutputStreams"),
+  DEF_306("{} a TARGET and EXECUTOR cannot have an OutputStreams"),
   DEF_307("{} the Stage must support at least one execution mode"),
   DEF_308("{} A stage with VariableOutputStreams must have  Stage define a 'outputStreamsDrivenByConfig' config"),
   DEF_309("{} outputStreamsDrivenByConfig='{}' not defined as configuration"),

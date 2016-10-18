@@ -518,8 +518,8 @@
       "stageConfigTitle": "Stage Configuration",
       "streamCondition": "Stream Condition",
       "timeout": "Preview Timeout (in milliseconds)",
-      "writeToDestinations": "Write to Destinations",
-      "writeToDestinationsTooltip": "Writes preview data to destination systems",
+      "writeToDestinations": "Write to Destinations and Executors",
+      "writeToDestinationsTooltip": "Writes preview data to destination systems (both executors and destinations)",
       "userProvider": "User Provided"
     },
     "library": {

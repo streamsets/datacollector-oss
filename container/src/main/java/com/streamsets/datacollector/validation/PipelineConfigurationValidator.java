@@ -568,6 +568,7 @@ public class PipelineConfigurationValidator {
             issues.add(issueCreator.create(stageConf.getInstanceName(), ValidationError.VALIDATION_0032));
           }
           break;
+        case EXECUTOR:
         case TARGET:
           if (!errorStage && !statsAggregatorStage && stageConf.getInputLanes().isEmpty()) {
             // target stage must have at least one input lane

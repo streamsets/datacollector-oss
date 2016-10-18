@@ -52,6 +52,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.api.base.BaseExecutor;
 import com.streamsets.pipeline.api.base.BaseProcessor;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
@@ -627,7 +628,7 @@ public class TestProductionPipeline {
     }
   }
 
-  private static class CaptureTarget extends BaseTarget {
+  private static class CaptureExecutor extends BaseExecutor {
     List<Record> records = new ArrayList<>();
 
     @Override
@@ -644,16 +645,16 @@ public class TestProductionPipeline {
   public void testPropagatingEventsOnDestroy() throws Exception {
     Source source = new ProduceEventOnDestroySource();
     MockStages.setSourceCapture(source);
-    CaptureTarget target = new CaptureTarget();
-    MockStages.setTargetEventCapture(target);
+    CaptureExecutor executor = new CaptureExecutor();
+    MockStages.setExecutorCapture(executor);
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, PipelineType.EVENTS);
     pipeline.registerStatusListener(new MyStateListener());
     pipeline.run();
 
-    Assert.assertEquals(1, target.records.size());
+    Assert.assertEquals(1, executor.records.size());
   }
 
-  private static class ToErrorTarget extends BaseTarget {
+  private static class ToErrorExecutor extends BaseExecutor {
 
     @Override
     public List<ConfigIssue> init(Info info, Target.Context context) {
@@ -674,8 +675,8 @@ public class TestProductionPipeline {
   public void testPropagatingEventErrorRecordsOnDestroy() throws Exception {
     Source source = new ProduceEventOnDestroySource();
     MockStages.setSourceCapture(source);
-    ToErrorTarget target = new ToErrorTarget();
-    MockStages.setTargetEventCapture(target);
+    ToErrorExecutor executor = new ToErrorExecutor();
+    MockStages.setExecutorCapture(executor);
     ErrorStageTarget errorStage = new ErrorStageTarget();
     MockStages.setErrorStageCapture(errorStage);
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, PipelineType.EVENTS);

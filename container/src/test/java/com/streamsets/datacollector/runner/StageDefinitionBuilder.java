@@ -77,7 +77,7 @@ public class StageDefinitionBuilder {
     this.label = name + "Label";
     this.description = name + "Description";
     this.type = autoDetectStageType(klass);
-    this.outputStreams = (type == StageType.TARGET) ? 0 : 1;
+    this.outputStreams = type.isOneOf(StageType.TARGET, StageType.EXECUTOR) ? 0 : 1;
   }
 
   public StageDefinitionBuilder withLabel(String label) {
