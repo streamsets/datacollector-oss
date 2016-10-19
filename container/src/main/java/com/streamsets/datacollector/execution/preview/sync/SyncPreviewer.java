@@ -25,6 +25,7 @@ import com.streamsets.datacollector.config.RawSourceDefinition;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageType;
+import com.streamsets.datacollector.el.PipelineEL;
 import com.streamsets.datacollector.execution.PreviewOutput;
 import com.streamsets.datacollector.execution.PreviewStatus;
 import com.streamsets.datacollector.execution.Previewer;
@@ -139,6 +140,8 @@ public class SyncPreviewer implements Previewer {
       changeState(PreviewStatus.VALIDATION_ERROR, new PreviewOutputImpl(PreviewStatus.VALIDATION_ERROR, null, null,
         e.toString()));
       throw new PipelineException(PreviewError.PREVIEW_0003, e.toString(), e) ;
+    } finally {
+      PipelineEL.unsetConstantsInContext();
     }
   }
 
@@ -201,6 +204,7 @@ public class SyncPreviewer implements Previewer {
       changeState(PreviewStatus.RUN_ERROR, new PreviewOutputImpl(PreviewStatus.RUN_ERROR, null, null, e.toString()));
       throw new PipelineException(PreviewError.PREVIEW_0003, e.toString(), e);
     } finally {
+      PipelineEL.unsetConstantsInContext();
       if(previewPipeline != null) {
         previewPipeline.destroy();
         previewPipeline = null;
@@ -221,6 +225,7 @@ public class SyncPreviewer implements Previewer {
     if(previewStatus == PreviewStatus.CANCELLING) {
       changeState(PreviewStatus.CANCELLED, null);
     }
+    PipelineEL.unsetConstantsInContext();
   }
 
   public void timeout() {
@@ -235,6 +240,7 @@ public class SyncPreviewer implements Previewer {
     if(previewStatus == PreviewStatus.TIMING_OUT) {
       changeState(PreviewStatus.TIMED_OUT, null);
     }
+    PipelineEL.unsetConstantsInContext();
   }
 
 
@@ -266,6 +272,7 @@ public class SyncPreviewer implements Previewer {
     batchSize = Math.min(maxBatchSize, batchSize);
     int maxBatches = configuration.get(MAX_BATCHES_KEY, MAX_BATCHES_DEFAULT);
     PipelineConfiguration pipelineConf = pipelineStore.load(name, rev);
+    PipelineEL.setConstantsInContext(pipelineConf);
     batches = Math.min(maxBatches, batches);
     SourceOffsetTracker tracker = new PreviewSourceOffsetTracker(null);
     PreviewPipelineRunner runner = new PreviewPipelineRunner(name, rev, runtimeInfo, tracker, batchSize, batches,

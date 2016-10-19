@@ -38,6 +38,7 @@ import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.el.JvmEL;
+import com.streamsets.datacollector.el.PipelineEL;
 import com.streamsets.datacollector.execution.AbstractRunner;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStateStore;
@@ -88,16 +89,13 @@ import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.lib.log.LogConstants;
-
 import dagger.ObjectGraph;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -708,6 +706,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         runner.setDeliveryGuarantee(pipelineConfigBean.deliveryGuarantee);
         runner.setMemoryLimitConfiguration(memoryLimitConfiguration);
 
+        PipelineEL.setConstantsInContext(pipelineConfiguration);
         prodPipeline = builder.build(pipelineConfiguration);
         prodPipeline.registerStatusListener(this);
 
