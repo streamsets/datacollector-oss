@@ -210,7 +210,11 @@ public class TestRestApiAuthorization {
     list.add(new RestApi("/rest/v1/pipelines/status", Method.GET, AuthzRole.ALL_ROLES));
     list.add(new RestApi("/rest/v1/pipeline/foo/status", Method.GET, AuthzRole.ALL_ROLES));
     list.add(new RestApi("/rest/v1/pipeline/foo/start", Method.POST, AuthzRole.MANAGER, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/pipelines/start", Method.POST, AuthzRole.MANAGER, AuthzRole.ADMIN));
     list.add(new RestApi("/rest/v1/pipeline/foo/stop", Method.POST, AuthzRole.MANAGER, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/pipelines/stop", Method.POST, AuthzRole.MANAGER, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/pipeline/foo/forceStop", Method.POST, AuthzRole.MANAGER, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/pipelines/forceStop", Method.POST, AuthzRole.MANAGER, AuthzRole.ADMIN));
     list.add(new RestApi("/rest/v1/pipeline/foo/resetOffset", Method.POST, AuthzRole.MANAGER, AuthzRole.ADMIN));
     list.add(new RestApi("/rest/v1/pipelines/resetOffsets", Method.POST, AuthzRole.MANAGER, AuthzRole.ADMIN));
     list.add(new RestApi("/rest/v1/pipeline/foo/snapshot/foo", Method.PUT, AuthzRole.MANAGER, AuthzRole.ADMIN));

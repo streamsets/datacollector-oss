@@ -415,16 +415,14 @@ angular
         }
         $rootScope.common.errors = [];
 
-        angular.forEach(selectedPipelineList, function(pipelineName) {
-          api.pipelineAgent.startPipeline(pipelineName, 0)
-            .then(
-              function (res) {
-                $rootScope.common.pipelineStatusMap[pipelineName] = res.data;
-              },
-              function (res) {
-                $rootScope.common.errors.push(res.data);
-              }
-            );
+        api.pipelineAgent.startPipelines(selectedPipelineList).success(function(res) {
+          angular.forEach(res.successEntities, function(pipelineInfo) {
+            $rootScope.common.pipelineStatusMap[pipelineInfo.name] = pipelineInfo.status;
+          });
+
+          $rootScope.common.errors = res.errorMessages;
+        }).error(function(data) {
+          $rootScope.common.errors = [data];
         });
 
         $scope.unSelectAll();
@@ -521,18 +519,16 @@ angular
           }
         });
 
-        modalInstance.result.then(function(statusList) {
-          angular.forEach(selectedPipelineList, function(pipelineName) {
-            $rootScope.common.pipelineStatusMap[pipelineName] = statusList[pipelineName];
-            var alerts = $rootScope.common.alertsMap[pipelineName];
-            if(alerts) {
-              delete $rootScope.common.alertsMap[pipelineName];
+        modalInstance.result.then(function(res) {
+          angular.forEach(res.successEntities, function(pipelineInfo) {
+            $rootScope.common.pipelineStatusMap[pipelineInfo.name] = pipelineInfo.status;
+            var alerts = $rootScope.common.alertsMap[pipelineInfo.name];
+            if (alerts) {
+              delete $rootScope.common.alertsMap[pipelineInfo.name];
               $rootScope.common.alertsTotalCount -= alerts.length;
             }
           });
-        }, function () {
-
-        });
+        }, function () {});
 
         $scope.unSelectAll();
       },

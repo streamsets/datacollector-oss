@@ -31,6 +31,7 @@ import com.streamsets.datacollector.restapi.bean.AlertInfoJson;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.ErrorMessageJson;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
+import com.streamsets.datacollector.restapi.bean.MultiStatusResponseJson;
 import com.streamsets.datacollector.restapi.bean.PipelineStateJson;
 import com.streamsets.datacollector.restapi.bean.RecordJson;
 import com.streamsets.datacollector.restapi.bean.SampledRecordJson;
@@ -131,7 +132,7 @@ public class ManagerResource {
   @Path("/pipeline/{pipelineName}/start")
   @POST
   @ApiOperation(value = "Start Pipeline", response = PipelineStateJson.class,
-    authorizations = @Authorization(value = "basic"))
+      authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({
       AuthzRole.MANAGER,
@@ -142,7 +143,7 @@ public class ManagerResource {
   public Response startPipeline(
       @PathParam("pipelineName") String pipelineName,
       @QueryParam("rev") @DefaultValue("0") String rev)
-    throws StageException, PipelineException {
+      throws StageException, PipelineException {
     if(pipelineName != null) {
       RestAPIUtils.injectPipelineInMDC(pipelineName);
       if (manager.isRemotePipeline(pipelineName, rev)) {
@@ -151,7 +152,7 @@ public class ManagerResource {
       try {
         Runner runner = manager.getRunner(user, pipelineName, rev);
         Utils.checkState(runner.getState().getExecutionMode() != ExecutionMode.SLAVE,
-          "This operation is not supported in SLAVE mode");
+            "This operation is not supported in SLAVE mode");
         runner.start();
         return Response.ok()
             .type(MediaType.APPLICATION_JSON)
@@ -159,7 +160,7 @@ public class ManagerResource {
       } catch (PipelineRuntimeException ex) {
         if (ex.getErrorCode() == ContainerError.CONTAINER_0165) {
           return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(
-            BeanHelper.wrapIssues(ex.getIssues())).build();
+              BeanHelper.wrapIssues(ex.getIssues())).build();
         } else {
           throw ex;
         }
@@ -167,6 +168,48 @@ public class ManagerResource {
     }
 
     return Response.noContent().build();
+  }
+
+  @Path("/pipelines/start")
+  @POST
+  @ApiOperation(value = "Start multiple Pipelines", response = PipelineStateJson.class, responseContainer = "List",
+      authorizations = @Authorization(value = "basic"))
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({
+      AuthzRole.MANAGER,
+      AuthzRole.ADMIN,
+      AuthzRole.MANAGER_REMOTE,
+      AuthzRole.ADMIN_REMOTE
+  })
+  public Response startPipelines(List<String> pipelineNames) throws StageException, PipelineException {
+    List<PipelineState> successEntities = new ArrayList<>();
+    List<String> errorMessages = new ArrayList<>();
+
+    for (String pipelineName: pipelineNames) {
+      if (pipelineName != null) {
+        RestAPIUtils.injectPipelineInMDC(pipelineName);
+
+        if (manager.isRemotePipeline(pipelineName, "0")) {
+          errorMessages.add("Cannot start a remote pipeline: " + pipelineName);
+          continue;
+        }
+
+        Runner runner = manager.getRunner(user, pipelineName, "0");
+        try {
+          Utils.checkState(runner.getState().getExecutionMode() != ExecutionMode.SLAVE,
+              "This operation is not supported in SLAVE mode");
+          runner.start();
+          successEntities.add(runner.getState());
+
+        } catch (Exception ex) {
+          errorMessages.add("Failed starting pipeline: " + pipelineName + ". Error: " + ex.getMessage());
+        }
+      }
+    }
+
+    return Response.status(207)
+        .type(MediaType.APPLICATION_JSON)
+        .entity(new MultiStatusResponseJson<>(successEntities, errorMessages)).build();
   }
 
   @Path("/pipeline/{pipelineName}/stop")
@@ -199,6 +242,48 @@ public class ManagerResource {
         .entity(BeanHelper.wrapPipelineState(runner.getState())).build();
   }
 
+  @Path("/pipelines/stop")
+  @POST
+  @ApiOperation(value = "Stop multiple Pipelines", response = PipelineStateJson.class, responseContainer = "List",
+      authorizations = @Authorization(value = "basic"))
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({
+      AuthzRole.MANAGER,
+      AuthzRole.ADMIN,
+      AuthzRole.MANAGER_REMOTE,
+      AuthzRole.ADMIN_REMOTE
+  })
+  public Response stopPipelines(List<String> pipelineNames) throws StageException, PipelineException {
+    List<PipelineState> successEntities = new ArrayList<>();
+    List<String> errorMessages = new ArrayList<>();
+
+    for (String pipelineName: pipelineNames) {
+      if (pipelineName != null) {
+        RestAPIUtils.injectPipelineInMDC(pipelineName);
+
+        if (manager.isRemotePipeline(pipelineName, "0")) {
+          errorMessages.add("Cannot stop a remote pipeline: " + pipelineName);
+          continue;
+        }
+
+        Runner runner = manager.getRunner(user, pipelineName, "0");
+        try {
+          Utils.checkState(runner.getState().getExecutionMode() != ExecutionMode.SLAVE,
+              "This operation is not supported in SLAVE mode");
+          runner.stop();
+          successEntities.add(runner.getState());
+
+        } catch (Exception ex) {
+          errorMessages.add("Failed stopping pipeline: " + pipelineName + ". Error: " + ex.getMessage());
+        }
+      }
+    }
+
+    return Response.status(207)
+        .type(MediaType.APPLICATION_JSON)
+        .entity(new MultiStatusResponseJson<>(successEntities, errorMessages)).build();
+  }
+
   @Path("/pipeline/{pipelineName}/forceStop")
   @POST
   @ApiOperation(value = "Force Stop Pipeline", response = PipelineStateJson.class,
@@ -227,6 +312,50 @@ public class ManagerResource {
     return Response.ok()
         .type(MediaType.APPLICATION_JSON)
         .entity(BeanHelper.wrapPipelineState(runner.getState())).build();
+  }
+
+  @Path("/pipelines/forceStop")
+  @POST
+  @ApiOperation(value = "Force Stop multiple Pipelines", response = PipelineStateJson.class, responseContainer = "List",
+      authorizations = @Authorization(value = "basic"))
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({
+      AuthzRole.MANAGER,
+      AuthzRole.ADMIN,
+      AuthzRole.MANAGER_REMOTE,
+      AuthzRole.ADMIN_REMOTE
+  })
+  public Response forceStopPipelines(List<String> pipelineNames, @Context SecurityContext context) throws PipelineException {
+    List<PipelineState> successEntities = new ArrayList<>();
+    List<String> errorMessages = new ArrayList<>();
+
+    for (String pipelineName: pipelineNames) {
+      if (pipelineName != null) {
+
+        RestAPIUtils.injectPipelineInMDC(pipelineName);
+        if (manager.isRemotePipeline(pipelineName, "0")) {
+          if (!context.isUserInRole(AuthzRole.ADMIN) && !context.isUserInRole(AuthzRole.ADMIN_REMOTE)) {
+            errorMessages.add("Cannot force stop a remote pipeline: " + pipelineName);
+            continue;
+          }
+        }
+
+        Runner runner = manager.getRunner(user, pipelineName, "0");
+        try {
+          Utils.checkState(runner.getState().getExecutionMode() == ExecutionMode.STANDALONE,
+              Utils.format("This operation is not supported in {} mode", runner.getState().getExecutionMode()));
+          runner.forceQuit();
+          successEntities.add(runner.getState());
+
+        } catch (Exception ex) {
+          errorMessages.add("Failed to force stop pipeline: " + pipelineName + ". Error: " + ex.getMessage());
+        }
+      }
+    }
+
+    return Response.status(207)
+        .type(MediaType.APPLICATION_JSON)
+        .entity(new MultiStatusResponseJson<>(successEntities, errorMessages)).build();
   }
 
   @Path("/pipeline/{pipelineName}/resetOffset")

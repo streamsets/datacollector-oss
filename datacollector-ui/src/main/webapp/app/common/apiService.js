@@ -675,6 +675,21 @@ angular.module('dataCollectorApp.common')
       },
 
       /**
+       * Start multiple Pipelines
+       *
+       * @param pipelineNames
+       * @returns {*}
+       */
+      startPipelines: function(pipelineNames) {
+        var url = apiBase + '/pipelines/start';
+        return $http({
+          method: 'POST',
+          url: url,
+          data: pipelineNames
+        });
+      },
+
+      /**
        * Stop the Pipeline
        *
        * @returns {*}
@@ -687,6 +702,24 @@ angular.module('dataCollectorApp.common')
         return $http({
           method: 'POST',
           url: url
+        });
+      },
+
+      /**
+       * Stop multiple Pipelines
+       *
+       * @param pipelineNames
+       * @returns {*}
+       */
+      stopPipelines: function(pipelineNames, forceStop) {
+        var url = apiBase + '/pipelines/stop';
+        if (forceStop) {
+          url = apiBase + '/pipelines/forceStop';
+        }
+        return $http({
+          method: 'POST',
+          url: url,
+          data: pipelineNames
         });
       },
 

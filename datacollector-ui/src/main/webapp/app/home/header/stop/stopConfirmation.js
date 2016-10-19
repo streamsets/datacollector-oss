@@ -24,8 +24,7 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('StopConfirmationModalInstanceController', function ($scope, $modalInstance, pipelineInfo, forceStop,
-                                                                   api, $q) {
+  .controller('StopConfirmationModalInstanceController', function ($scope, $modalInstance, pipelineInfo, forceStop, api) {
     angular.extend($scope, {
       common: {
         errors: []
@@ -38,22 +37,18 @@ angular
       yes: function() {
         $scope.stopping = true;
         if ($scope.isList) {
-          var deferList = [];
 
-          angular.forEach(pipelineInfo, function(pipeline) {
-            deferList.push(api.pipelineAgent.stopPipeline(pipeline.name, 0, forceStop));
+          var pipelineNames = _.pluck(pipelineInfo, 'name');
+          api.pipelineAgent.stopPipelines(pipelineNames, forceStop).success(function(res) {
+            $modalInstance.close(res);
+            if (res.errorMessages.length > 0) {
+              $scope.stopping = false;
+              $scope.common.errors = errorMessages;
+            }
+          }).error(function(data) {
+            $scope.stopping = false;
+            $scope.common.errors = [data];
           });
-
-          $q.all(deferList)
-            .then(
-              function(results) {
-                $modalInstance.close(results);
-              },
-              function (res) {
-                $scope.stopping = false;
-                $scope.common.errors = [res.data];
-              }
-            );
 
         } else {
           api.pipelineAgent.stopPipeline(pipelineInfo.name, 0, forceStop)
