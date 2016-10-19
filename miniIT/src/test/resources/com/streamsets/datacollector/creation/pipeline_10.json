@@ -1,0 +1,147 @@
+{
+  "schemaVersion" : 1,
+  "version" : 3,
+  "uuid" : "1693eb01-2ae5-4509-8051-463d232305c3",
+  "description" : "",
+  "configuration" : [ {
+    "name" : "executionMode",
+    "value" : "STANDALONE"
+  }, {
+    "name" : "deliveryGuarantee",
+    "value" : "AT_LEAST_ONCE"
+  }, {
+    "name" : "shouldRetry",
+    "value" : true
+  }, {
+    "name" : "retryAttempts",
+    "value" : -1
+  }, {
+    "name" : "memoryLimit",
+    "value" : "${jvm:maxMemoryMB() * 0.65}"
+  }, {
+    "name" : "memoryLimitExceeded",
+    "value" : "STOP_PIPELINE"
+  }, {
+    "name" : "notifyOnStates",
+    "value" : [ "RUN_ERROR", "STOPPED", "FINISHED" ]
+  }, {
+    "name" : "emailIDs",
+    "value" : [ ]
+  }, {
+    "name" : "constants",
+    "value" : [ ]
+  }, {
+    "name" : "badRecordsHandling",
+    "value" : null
+  }, {
+    "name" : "clusterSlaveMemory",
+    "value" : 1024
+  }, {
+    "name" : "clusterSlaveJavaOpts",
+    "value" : "-XX:PermSize=128M -XX:MaxPermSize=256M -Dlog4j.debug"
+  }, {
+    "name" : "clusterLauncherEnv",
+    "value" : [ ]
+  } ],
+  "uiInfo" : {
+    "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
+      "batchSize" : 10,
+      "timeout" : 10000,
+      "writeToDestinations" : false,
+      "showHeader" : false,
+      "showFieldType" : true,
+      "rememberMe" : false
+    }
+  },
+  "stages" : [ {
+    "instanceName" : "com_streamsets_pipeline_stage_origin_kinesis_KinesisDSource1472580142167",
+    "library" : "streamsets-datacollector-aws-lib",
+    "stageName" : "com_streamsets_pipeline_stage_origin_kinesis_KinesisDSource",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "region",
+      "value" : "US_WEST_2"
+    }, {
+      "name" : "applicationName",
+      "value" : "abc"
+    }, {
+      "name" : "streamName",
+      "value" : "xyz"
+    }, {
+      "name" : "dataFormat",
+      "value" : "SDC_JSON"
+    }, {
+      "name" : "maxBatchSize",
+      "value" : 500
+    }, {
+      "name" : "idleTimeBetweenReads",
+      "value" : 1000
+    }, {
+      "name" : "maxWaitTime",
+      "value" : 1000
+    }, {
+      "name" : "previewWaitTime",
+      "value" : 60000
+    }, {
+      "name" : "awsAccessKeyId",
+      "value" : "abc"
+    }, {
+      "name" : "awsSecretAccessKey",
+      "value" : "xyz"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Kinesis Consumer 1",
+      "xPos" : 51,
+      "yPos" : 151,
+      "stageType" : "SOURCE"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_origin_kinesis_KinesisDSource1472580142167OutputLane14725801421670" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget1472580147631",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Trash 1",
+      "xPos" : 513,
+      "yPos" : 152,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_kinesis_KinesisDSource1472580142167OutputLane14725801421670" ],
+    "outputLanes" : [ ]
+  } ],
+  "errorStage" : null,
+  "info" : {
+    "name" : "KinesisConsumertoTrash",
+    "description" : "",
+    "created" : 1472580137966,
+    "lastModified" : 1472580169588,
+    "creator" : "admin",
+    "lastModifier" : "admin",
+    "lastRev" : "0",
+    "uuid" : "b8bec60d-f65b-4013-a262-52bf9a359978",
+    "valid" : false
+  },
+  "issues" : {
+    "pipelineIssues" : [ {
+      "message" : "CREATION_009 - Pipeline error handling is not configured",
+      "level" : "PIPELINE_CONFIG",
+      "instanceName" : null,
+      "configGroup" : "BAD_RECORDS",
+      "configName" : "badRecordsHandling",
+      "additionalInfo" : null
+    } ],
+    "stageIssues" : { },
+    "issueCount" : 1
+  },
+  "valid" : false,
+  "previewable" : false
+}

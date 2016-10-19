@@ -1,0 +1,144 @@
+{
+  "schemaVersion" : 1,
+  "version" : 3,
+  "uuid" : "937d758e-fe46-4e95-abe4-aeaf2b267a25",
+  "description" : "",
+  "configuration" : [ {
+    "name" : "executionMode",
+    "value" : "STANDALONE"
+  }, {
+    "name" : "deliveryGuarantee",
+    "value" : "AT_LEAST_ONCE"
+  }, {
+    "name" : "shouldRetry",
+    "value" : true
+  }, {
+    "name" : "retryAttempts",
+    "value" : -1
+  }, {
+    "name" : "memoryLimit",
+    "value" : "${jvm:maxMemoryMB() * 0.65}"
+  }, {
+    "name" : "memoryLimitExceeded",
+    "value" : "STOP_PIPELINE"
+  }, {
+    "name" : "notifyOnStates",
+    "value" : [ "RUN_ERROR", "STOPPED", "FINISHED" ]
+  }, {
+    "name" : "emailIDs",
+    "value" : [ ]
+  }, {
+    "name" : "constants",
+    "value" : [ ]
+  }, {
+    "name" : "badRecordsHandling",
+    "value" : null
+  }, {
+    "name" : "clusterSlaveMemory",
+    "value" : 1024
+  }, {
+    "name" : "clusterSlaveJavaOpts",
+    "value" : "-XX:PermSize=128M -XX:MaxPermSize=256M -Dlog4j.debug"
+  }, {
+    "name" : "clusterLauncherEnv",
+    "value" : [ ]
+  } ],
+  "uiInfo" : {
+    "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
+      "batchSize" : 10,
+      "timeout" : 10000,
+      "writeToDestinations" : false,
+      "showHeader" : false,
+      "showFieldType" : true,
+      "rememberMe" : false
+    }
+  },
+  "stages" : [ {
+    "instanceName" : "com_streamsets_pipeline_stage_origin_omniture_OmnitureDSource1472578567634",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_origin_omniture_OmnitureDSource",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "resourceUrl",
+      "value" : "https://api2.omniture.com/admin/1.4/rest/"
+    }, {
+      "name" : "reportDescription",
+      "value" : "abcxyz"
+    }, {
+      "name" : "requestTimeoutMillis",
+      "value" : 3000
+    }, {
+      "name" : "httpMode",
+      "value" : "POLLING"
+    }, {
+      "name" : "pollingInterval",
+      "value" : 5000
+    }, {
+      "name" : "batchSize",
+      "value" : 1
+    }, {
+      "name" : "maxBatchWaitTime",
+      "value" : 5000
+    }, {
+      "name" : "username",
+      "value" : "abc"
+    }, {
+      "name" : "sharedSecret",
+      "value" : "xyz"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Omniture 1",
+      "xPos" : 21,
+      "yPos" : 112,
+      "stageType" : "SOURCE"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_origin_omniture_OmnitureDSource1472578567634OutputLane14725785676340" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget1472578572975",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Trash 1",
+      "xPos" : 439,
+      "yPos" : 117,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_omniture_OmnitureDSource1472578567634OutputLane14725785676340" ],
+    "outputLanes" : [ ]
+  } ],
+  "errorStage" : null,
+  "info" : {
+    "name" : "OmnituretoTrash",
+    "description" : "",
+    "created" : 1472578562835,
+    "lastModified" : 1472578613459,
+    "creator" : "admin",
+    "lastModifier" : "admin",
+    "lastRev" : "0",
+    "uuid" : "1c9ff120-7080-4d36-a24f-889f2a805102",
+    "valid" : false
+  },
+  "issues" : {
+    "pipelineIssues" : [ {
+      "message" : "CREATION_009 - Pipeline error handling is not configured",
+      "level" : "PIPELINE_CONFIG",
+      "instanceName" : null,
+      "configGroup" : "BAD_RECORDS",
+      "configName" : "badRecordsHandling",
+      "additionalInfo" : null
+    } ],
+    "stageIssues" : { },
+    "issueCount" : 1
+  },
+  "valid" : false,
+  "previewable" : false
+}

@@ -19,11 +19,12 @@
  */
 package com.streamsets.datacollector;
 
-
 import com.streamsets.pipeline.BootstrapMain;
 import com.streamsets.pipeline.SDCClassLoader;
 import com.streamsets.pipeline.impl.DataCollector;
+import com.streamsets.pipeline.validation.ValidationIssue;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -156,4 +157,7 @@ public class MiniSDC {
     return dataCollector.getWorkerList();
   }
 
+  public List<? extends ValidationIssue> validatePipeline(String name, String pipelineJson) throws IOException {
+    return dataCollector.validatePipeline(name, pipelineJson);
+  }
 }

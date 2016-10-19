@@ -1,5 +1,5 @@
-/**
- * Copyright 2015 StreamSets Inc.
+/*
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,34 +17,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.impl;
 
-import com.streamsets.pipeline.validation.ValidationIssue;
+package com.streamsets.pipeline.validation;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
+import java.util.Map;
 
-public interface DataCollector {
+public interface ValidationIssue {
+  Map getAdditionalInfo();
 
-  void init() throws Exception;
+  String getMessage();
 
-  void destroy();
+  String getErrorCode();
 
-  URI getServerURI();
+  String getInstanceName();
 
-  void startPipeline(String pipelineJson) throws Exception;
+  String getLevel();
 
-  void createPipeline(String pipelineJson) throws Exception;
+  String getConfigGroup();
 
-  List<? extends ValidationIssue> validatePipeline(String name, String pipelineJson) throws IOException;
-
-  void startPipeline() throws Exception;
-
-  void stopPipeline() throws Exception;
-
-  List<URI> getWorkerList() throws URISyntaxException;
-
-  public String storeRules(String name, String tag, String ruleDefinition) throws Exception;
+  String getConfigName();
 }

@@ -1,0 +1,153 @@
+{
+  "schemaVersion" : 1,
+  "version" : 3,
+  "uuid" : "49d3e6c3-ac2a-4e6a-a10f-800c6ebf8e9f",
+  "description" : "",
+  "configuration" : [ {
+    "name" : "executionMode",
+    "value" : "STANDALONE"
+  }, {
+    "name" : "deliveryGuarantee",
+    "value" : "AT_LEAST_ONCE"
+  }, {
+    "name" : "shouldRetry",
+    "value" : true
+  }, {
+    "name" : "retryAttempts",
+    "value" : -1
+  }, {
+    "name" : "memoryLimit",
+    "value" : "${jvm:maxMemoryMB() * 0.65}"
+  }, {
+    "name" : "memoryLimitExceeded",
+    "value" : "STOP_PIPELINE"
+  }, {
+    "name" : "notifyOnStates",
+    "value" : [ "RUN_ERROR", "STOPPED", "FINISHED" ]
+  }, {
+    "name" : "emailIDs",
+    "value" : [ ]
+  }, {
+    "name" : "constants",
+    "value" : [ ]
+  }, {
+    "name" : "badRecordsHandling",
+    "value" : null
+  }, {
+    "name" : "clusterSlaveMemory",
+    "value" : 1024
+  }, {
+    "name" : "clusterSlaveJavaOpts",
+    "value" : "-XX:PermSize=128M -XX:MaxPermSize=256M -Dlog4j.debug"
+  }, {
+    "name" : "clusterLauncherEnv",
+    "value" : [ ]
+  } ],
+  "uiInfo" : {
+    "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
+      "batchSize" : 10,
+      "timeout" : 10000,
+      "writeToDestinations" : false,
+      "showHeader" : false,
+      "showFieldType" : true,
+      "rememberMe" : false
+    }
+  },
+  "stages" : [ {
+    "instanceName" : "com_streamsets_pipeline_stage_origin_mongodb_MongoDBDSource1472578438529",
+    "library" : "streamsets-datacollector-mongodb_3-lib",
+    "stageName" : "com_streamsets_pipeline_stage_origin_mongodb_MongoDBDSource",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "mongoConnectionString",
+      "value" : "abc"
+    }, {
+      "name" : "database",
+      "value" : "xyz"
+    }, {
+      "name" : "collection",
+      "value" : "100"
+    }, {
+      "name" : "isCapped",
+      "value" : true
+    }, {
+      "name" : "initialOffset",
+      "value" : "2015-01-01 00:00:00"
+    }, {
+      "name" : "offsetField",
+      "value" : "_id"
+    }, {
+      "name" : "batchSize",
+      "value" : 1000
+    }, {
+      "name" : "maxBatchWaitTime",
+      "value" : "${5 * SECONDS}"
+    }, {
+      "name" : "authenticationType",
+      "value" : "NONE"
+    }, {
+      "name" : "username",
+      "value" : null
+    }, {
+      "name" : "password",
+      "value" : null
+    }, {
+      "name" : "readPreference",
+      "value" : "SECONDARY_PREFERRED"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "MongoDB 1",
+      "xPos" : 43,
+      "yPos" : 127,
+      "stageType" : "SOURCE"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_origin_mongodb_MongoDBDSource1472578438529OutputLane14725784385290" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget1472578444107",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Trash 1",
+      "xPos" : 428,
+      "yPos" : 126,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_mongodb_MongoDBDSource1472578438529OutputLane14725784385290" ],
+    "outputLanes" : [ ]
+  } ],
+  "errorStage" : null,
+  "info" : {
+    "name" : "MongotoTrash",
+    "description" : "",
+    "created" : 1472578435367,
+    "lastModified" : 1472578464664,
+    "creator" : "admin",
+    "lastModifier" : "admin",
+    "lastRev" : "0",
+    "uuid" : "1fbb90f9-1cf8-46e0-a0fc-81eeb5bfb2b7",
+    "valid" : false
+  },
+  "issues" : {
+    "pipelineIssues" : [ {
+      "message" : "CREATION_009 - Pipeline error handling is not configured",
+      "level" : "PIPELINE_CONFIG",
+      "instanceName" : null,
+      "configGroup" : "BAD_RECORDS",
+      "configName" : "badRecordsHandling",
+      "additionalInfo" : null
+    } ],
+    "stageIssues" : { },
+    "issueCount" : 1
+  },
+  "valid" : false,
+  "previewable" : false
+}

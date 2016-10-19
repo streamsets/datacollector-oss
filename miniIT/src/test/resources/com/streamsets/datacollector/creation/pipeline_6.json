@@ -1,0 +1,814 @@
+{
+  "schemaVersion" : 1,
+  "version" : 3,
+  "uuid" : "f5dd0817-dc28-41ad-b4cb-9a1e005b6941",
+  "description" : "",
+  "configuration" : [ {
+    "name" : "executionMode",
+    "value" : "STANDALONE"
+  }, {
+    "name" : "deliveryGuarantee",
+    "value" : "AT_LEAST_ONCE"
+  }, {
+    "name" : "shouldRetry",
+    "value" : true
+  }, {
+    "name" : "retryAttempts",
+    "value" : -1
+  }, {
+    "name" : "memoryLimit",
+    "value" : "${jvm:maxMemoryMB() * 0.65}"
+  }, {
+    "name" : "memoryLimitExceeded",
+    "value" : "STOP_PIPELINE"
+  }, {
+    "name" : "notifyOnStates",
+    "value" : [ "RUN_ERROR", "STOPPED", "FINISHED" ]
+  }, {
+    "name" : "emailIDs",
+    "value" : [ ]
+  }, {
+    "name" : "constants",
+    "value" : [ ]
+  }, {
+    "name" : "badRecordsHandling",
+    "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_recordstolocalfilesystem_ToErrorLocalFSDTarget::1"
+  }, {
+    "name" : "clusterSlaveMemory",
+    "value" : 1024
+  }, {
+    "name" : "clusterSlaveJavaOpts",
+    "value" : "-XX:PermSize=128M -XX:MaxPermSize=256M -Dlog4j.debug"
+  }, {
+    "name" : "clusterLauncherEnv",
+    "value" : [ ]
+  } ],
+  "uiInfo" : {
+    "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
+      "batchSize" : 10,
+      "timeout" : 10000,
+      "writeToDestinations" : false,
+      "showHeader" : false,
+      "showFieldType" : true,
+      "rememberMe" : false
+    }
+  },
+  "stages" : [ {
+    "instanceName" : "com_streamsets_pipeline_stage_origin_http_HttpClientDSource1472575384767",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_origin_http_HttpClientDSource",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "dataFormat",
+      "value" : "JSON"
+    }, {
+      "name" : "resourceUrl",
+      "value" : "https://stream.twitter.com/1.1/statuses/sample.json"
+    }, {
+      "name" : "httpMethod",
+      "value" : "GET"
+    }, {
+      "name" : "requestData",
+      "value" : null
+    }, {
+      "name" : "requestTimeoutMillis",
+      "value" : 1000
+    }, {
+      "name" : "httpMode",
+      "value" : "STREAMING"
+    }, {
+      "name" : "pollingInterval",
+      "value" : 5000
+    }, {
+      "name" : "isOAuthEnabled",
+      "value" : false
+    }, {
+      "name" : "batchSize",
+      "value" : 100
+    }, {
+      "name" : "maxBatchWaitTime",
+      "value" : 5000
+    }, {
+      "name" : "consumerKey",
+      "value" : null
+    }, {
+      "name" : "consumerSecret",
+      "value" : null
+    }, {
+      "name" : "token",
+      "value" : null
+    }, {
+      "name" : "tokenSecret",
+      "value" : null
+    }, {
+      "name" : "jsonMode",
+      "value" : "MULTIPLE_OBJECTS"
+    }, {
+      "name" : "entityDelimiter",
+      "value" : "\\r\\n"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "HTTP Client 1",
+      "xPos" : -60,
+      "yPos" : 148,
+      "stageType" : "SOURCE"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_origin_http_HttpClientDSource1472575384767OutputLane14725753847670" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_devtest_RandomErrorProcessor1472575396125",
+    "library" : "streamsets-datacollector-dev-lib",
+    "stageName" : "com_streamsets_pipeline_stage_devtest_RandomErrorProcessor",
+    "stageVersion" : "2",
+    "configuration" : [ {
+      "name" : "discardSomeRecords",
+      "value" : false
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Dev Random Error 1",
+      "xPos" : 189,
+      "yPos" : 49,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_http_HttpClientDSource1472575384767OutputLane14725753847670" ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_devtest_RandomErrorProcessor1472575396125OutputLane14725753961330" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_devtest_RecordCreatorProcessor1472575397323",
+    "library" : "streamsets-datacollector-dev-lib",
+    "stageName" : "com_streamsets_pipeline_stage_devtest_RecordCreatorProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Dev Record Creator 1",
+      "xPos" : 348,
+      "yPos" : 51,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_http_HttpClientDSource1472575384767OutputLane14725753847670" ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_devtest_RecordCreatorProcessor1472575397323OutputLane14725753973230" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_processor_fieldtypeconverter_FieldTypeConverterDProcessor1472575399128",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_fieldtypeconverter_FieldTypeConverterDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "fieldTypeConverterConfigs",
+      "value" : [ {
+        "fields" : [ ],
+        "targetType" : "INTEGER",
+        "dataLocale" : "en,US",
+        "dateFormat" : "YYYY_MM_DD",
+        "otherDateFormat" : ""
+      } ]
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Field Converter 1",
+      "xPos" : 176,
+      "yPos" : 173,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_http_HttpClientDSource1472575384767OutputLane14725753847670" ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_processor_fieldtypeconverter_FieldTypeConverterDProcessor1472575399128OutputLane14725753991280" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor1472575409438",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "expressionProcessorConfigs",
+      "value" : [ {
+        "fieldToSet" : "/",
+        "expression" : "${record:value('/')}"
+      } ]
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Expression Evaluator 1",
+      "xPos" : 350,
+      "yPos" : 178,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_http_HttpClientDSource1472575384767OutputLane14725753847670" ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor1472575409438OutputLane14725754094380" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_processor_fieldhasher_FieldHasherDProcessor1472575411608",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_fieldhasher_FieldHasherDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "fieldHasherConfigs",
+      "value" : [ {
+        "fieldsToHash" : [ ],
+        "hashType" : "MD5"
+      } ]
+    }, {
+      "name" : "onStagePreConditionFailure",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Field Hasher 1",
+      "xPos" : 58,
+      "yPos" : 365,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_http_HttpClientDSource1472575384767OutputLane14725753847670" ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_processor_fieldhasher_FieldHasherDProcessor1472575411608OutputLane14725754116080" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_processor_fieldmask_FieldMaskDProcessor1472575433138",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_fieldmask_FieldMaskDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "fieldMaskConfigs",
+      "value" : [ {
+        "fields" : [ ],
+        "maskType" : "VARIABLE_LENGTH",
+        "mask" : "",
+        "regex" : "(.*)",
+        "groupsToShow" : "1"
+      } ]
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Field Masker 1",
+      "xPos" : 221,
+      "yPos" : 343,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_http_HttpClientDSource1472575384767OutputLane14725753847670" ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_processor_fieldmask_FieldMaskDProcessor1472575433138OutputLane14725754331380" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_processor_fieldmerger_FieldMergerDProcessor1472575435568",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_fieldmerger_FieldMergerDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "mergeMapping",
+      "value" : [ {
+        "fromField" : "",
+        "toField" : ""
+      } ]
+    }, {
+      "name" : "onStagePreConditionFailure",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "overwriteExisting",
+      "value" : false
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Field Merger 1",
+      "xPos" : 521,
+      "yPos" : 53,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_http_HttpClientDSource1472575384767OutputLane14725753847670" ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_processor_fieldmerger_FieldMergerDProcessor1472575435568OutputLane14725754355680" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor1472575436745",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "filterOperation",
+      "value" : "REMOVE"
+    }, {
+      "name" : "fields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Field Remover 1",
+      "xPos" : 531,
+      "yPos" : 159,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_http_HttpClientDSource1472575384767OutputLane14725753847670" ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor1472575436745OutputLane14725754367450" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_processor_fieldrenamer_FieldRenamerDProcessor1472575450352",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_fieldrenamer_FieldRenamerDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "renameMapping",
+      "value" : [ {
+        "fromField" : "",
+        "toField" : ""
+      } ]
+    }, {
+      "name" : "onStagePreConditionFailure",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "overwriteExisting",
+      "value" : false
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Field Renamer 1",
+      "xPos" : 394,
+      "yPos" : 341,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_http_HttpClientDSource1472575384767OutputLane14725753847670" ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_processor_fieldrenamer_FieldRenamerDProcessor1472575450352OutputLane14725754503520" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_processor_splitter_SplitterDProcessor1472575451868",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_splitter_SplitterDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "fieldPath",
+      "value" : "abc"
+    }, {
+      "name" : "separator",
+      "value" : " "
+    }, {
+      "name" : "fieldPathsForSplits",
+      "value" : [ "/fieldSplit1", "/fieldSplit2" ]
+    }, {
+      "name" : "onStagePreConditionFailure",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "originalFieldAction",
+      "value" : "REMOVE"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Field Splitter 1",
+      "xPos" : 697,
+      "yPos" : 57,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_http_HttpClientDSource1472575384767OutputLane14725753847670" ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_processor_splitter_SplitterDProcessor1472575451868OutputLane14725754518680" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_processor_geolocation_GeolocationDProcessor1472575460780",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_geolocation_GeolocationDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "geoIP2DBFile",
+      "value" : "abc"
+    }, {
+      "name" : "fieldTypeConverterConfigs",
+      "value" : [ {
+        "inputFieldName" : "",
+        "outputFieldName" : "",
+        "targetType" : "COUNTRY_NAME"
+      } ]
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Geo IP 1",
+      "xPos" : 715,
+      "yPos" : 155,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_http_HttpClientDSource1472575384767OutputLane14725753847670" ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_processor_geolocation_GeolocationDProcessor1472575460780OutputLane14725754607800" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_processor_identity_IdentityProcessor1472575461618",
+    "library" : "streamsets-datacollector-dev-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_identity_IdentityProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Identity 1",
+      "xPos" : 550,
+      "yPos" : 290,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_http_HttpClientDSource1472575384767OutputLane14725753847670" ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_processor_identity_IdentityProcessor1472575461618OutputLane14725754616180" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_processor_javascript_JavaScriptDProcessor1472575499226",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_javascript_JavaScriptDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "processingMode",
+      "value" : "BATCH"
+    }, {
+      "name" : "script",
+      "value" : "/**\n * Sample JavaScript code\n *\n * Available Objects:\n * \n *  records: an array of records to process, depending on the JavaScript processor\n *           processing mode it may have 1 record or all the records in the batch.\n *\n *  state: a dict that is preserved between invocations of this script. \n *        Useful for caching bits of data e.g. counters.\n *\n *  log.<loglevel>(msg, obj...): use instead of print to send log messages to the log4j log instead of stdout.\n *                               loglevel is any log4j level: e.g. info, error, warn, trace.\n *\n *  out.write(record): writes a record to processor output\n *\n *  err.write(record, message): sends a record to error\n *\n */\n\nfor(var i = 0; i < records.length; i++) {\n  try {\n    // Change record root field value to a STRING value\n    //records[i].value = 'Hello ' + i;\n\n\n    // Change record root field value to a MAP value and create an entry\n    //records[i].value = {};\n    //records[i].value.V = 'Hello';\n\n    // Modify a MAP entry\n    //records[i].value.V = 5;\n\n    // Create an ARRAY entry\n    //records[i].value.A = [];\n    //records[i].value.A.push('Element 1');\n    //records[i].value.A.push('Element 2');\n\n    // Modify an existing ARRAY entry\n    //records[i].value.A[0] = 100;\n\n    // Write record to procesor output\n    out.write(records[i]);\n  } catch (e) {\n    // Send record to error\n    err.write(records[i], e);\n  }\n}\n"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "JavaScript Evaluator 1",
+      "xPos" : 865,
+      "yPos" : 56,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_http_HttpClientDSource1472575384767OutputLane14725753847670" ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_processor_javascript_JavaScriptDProcessor1472575499226OutputLane14725754992260" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_processor_jsonparser_JsonParserDProcessor1472575500392",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_jsonparser_JsonParserDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "fieldPathToParse",
+      "value" : "abc"
+    }, {
+      "name" : "removeCtrlChars",
+      "value" : false
+    }, {
+      "name" : "parsedFieldPath",
+      "value" : "xyz"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "JSON Parser 1",
+      "xPos" : 896,
+      "yPos" : 174,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_http_HttpClientDSource1472575384767OutputLane14725753847670" ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_processor_jsonparser_JsonParserDProcessor1472575500392OutputLane14725755003920" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_processor_jython_JythonDProcessor1472575507120",
+    "library" : "streamsets-datacollector-jython_2_7-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_jython_JythonDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "processingMode",
+      "value" : "BATCH"
+    }, {
+      "name" : "script",
+      "value" : "#\n# Sample Jython code\n#\n# Available Objects:\n# \n#  records: an array of records to process, depending on Jython processor\n#           processing mode it may have 1 record or all the records in the batch.\n#\n#  state: a dict that is preserved between invocations of this script. \n#         Useful for caching bits of data e.g. counters.\n#\n#  log.<loglevel>(msg, obj...): use instead of print to send log messages to the log4j log instead of stdout.\n#                               loglevel is any log4j level: e.g. info, error, warn, trace.\n#\n#  out.write(record): writes a record to processor output\n#\n#  err.write(record, message): sends a record to error\n#\n# Add additional module search paths:\n#import sys\n#sys.path.append('/some/other/dir/to/search')\n\nfor record in records:\n  try:\n    # Change record root field value to a STRING value\n    #record.value = 'Hello '\n\n\n    # Change record root field value to a MAP value and create an entry\n    #record.value = { 'V' : 'Hello'}\n\n    # Modify a MAP entry\n    #record.value['V'] = 5\n\n    # Create an ARRAY entry\n    #record.value['A'] = [ 'Element 1', 'Element 2' ]\n\n    # Modify an existing ARRAY entry\n    #record.value['A'][0] = 100\n\n    # Write record to procesor output\n    out.write(record)\n\n  except Exception as e:\n    # Send record to error\n    err.write(record, str(e))\n"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Jython Evaluator 1",
+      "xPos" : 734,
+      "yPos" : 342,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_http_HttpClientDSource1472575384767OutputLane14725753847670" ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_processor_jython_JythonDProcessor1472575507120OutputLane14725755071200" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_processor_dedup_DeDupDProcessor1472575517572",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_dedup_DeDupDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "recordCountWindow",
+      "value" : 1000000
+    }, {
+      "name" : "timeWindowSecs",
+      "value" : 1000
+    }, {
+      "name" : "compareFields",
+      "value" : "ALL_FIELDS"
+    }, {
+      "name" : "fieldsToCompare",
+      "value" : [ ]
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "outputStreamLabels" : [ "Unique Records", "Duplicate Records" ],
+      "yPos" : 171,
+      "stageType" : "PROCESSOR",
+      "description" : "",
+      "label" : "Record Deduplicator 1",
+      "xPos" : 1054
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_http_HttpClientDSource1472575384767OutputLane14725753847670" ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_processor_dedup_DeDupDProcessor1472575517572OutputLane14725755175720", "com_streamsets_pipeline_stage_processor_dedup_DeDupDProcessor1472575517572OutputLane14725755175721" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor1472575521868",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "lanePredicates",
+      "value" : [ {
+        "outputLane" : "com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor1472575521868OutputLane1472575521868",
+        "predicate" : "default"
+      } ]
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Stream Selector 1",
+      "xPos" : 894,
+      "yPos" : 355,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_http_HttpClientDSource1472575384767OutputLane14725753847670" ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor1472575521868OutputLane1472575521868" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_processor_fieldvaluereplacer_FieldValueReplacerDProcessor1472575552152",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_fieldvaluereplacer_FieldValueReplacerDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "fieldsToNull",
+      "value" : [ ]
+    }, {
+      "name" : "fieldsToReplaceIfNull",
+      "value" : [ {
+        "fields" : [ ],
+        "newValue" : ""
+      } ]
+    }, {
+      "name" : "onStagePreConditionFailure",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Value Replacer 1",
+      "xPos" : 1032,
+      "yPos" : 60,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_http_HttpClientDSource1472575384767OutputLane14725753847670" ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_processor_fieldvaluereplacer_FieldValueReplacerDProcessor1472575552152OutputLane14725755521520" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_processor_logparser_LogParserDProcessor1472575512331",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_logparser_LogParserDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "fieldPathToParse",
+      "value" : "/text"
+    }, {
+      "name" : "removeCtrlChars",
+      "value" : false
+    }, {
+      "name" : "parsedFieldPath",
+      "value" : "/"
+    }, {
+      "name" : "logMode",
+      "value" : "COMMON_LOG_FORMAT"
+    }, {
+      "name" : "customLogFormat",
+      "value" : "%h %l %u %t \"%r\" %>s %b"
+    }, {
+      "name" : "regex",
+      "value" : "^(\\S+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\d+)"
+    }, {
+      "name" : "fieldPathsToGroupName",
+      "value" : [ {
+        "fieldPath" : "/",
+        "group" : 1
+      } ]
+    }, {
+      "name" : "grokPatternDefinition",
+      "value" : null
+    }, {
+      "name" : "grokPattern",
+      "value" : "%{COMMONAPACHELOG}"
+    }, {
+      "name" : "enableLog4jCustomLogFormat",
+      "value" : false
+    }, {
+      "name" : "log4jCustomLogFormat",
+      "value" : "%r [%t] %-5p %c %x - %m%n"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Log Parser 1",
+      "xPos" : 1057,
+      "yPos" : 316,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_http_HttpClientDSource1472575384767OutputLane14725753847670", "com_streamsets_pipeline_stage_processor_dedup_DeDupDProcessor1472575517572OutputLane14725755175721" ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_processor_logparser_LogParserDProcessor1472575512331OutputLane14725755123310" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget1472575568207",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Trash 1",
+      "xPos" : 705,
+      "yPos" : 520,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_processor_fieldhasher_FieldHasherDProcessor1472575411608OutputLane14725754116080", "com_streamsets_pipeline_stage_processor_fieldmask_FieldMaskDProcessor1472575433138OutputLane14725754331380", "com_streamsets_pipeline_stage_processor_fieldrenamer_FieldRenamerDProcessor1472575450352OutputLane14725754503520", "com_streamsets_pipeline_stage_processor_jython_JythonDProcessor1472575507120OutputLane14725755071200", "com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor1472575521868OutputLane1472575521868", "com_streamsets_pipeline_stage_processor_logparser_LogParserDProcessor1472575512331OutputLane14725755123310", "com_streamsets_pipeline_stage_processor_dedup_DeDupDProcessor1472575517572OutputLane14725755175720", "com_streamsets_pipeline_stage_processor_jsonparser_JsonParserDProcessor1472575500392OutputLane14725755003920", "com_streamsets_pipeline_stage_processor_geolocation_GeolocationDProcessor1472575460780OutputLane14725754607800", "com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor1472575436745OutputLane14725754367450", "com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor1472575409438OutputLane14725754094380", "com_streamsets_pipeline_stage_processor_fieldtypeconverter_FieldTypeConverterDProcessor1472575399128OutputLane14725753991280", "com_streamsets_pipeline_stage_devtest_RandomErrorProcessor1472575396125OutputLane14725753961330", "com_streamsets_pipeline_stage_devtest_RecordCreatorProcessor1472575397323OutputLane14725753973230", "com_streamsets_pipeline_stage_processor_fieldmerger_FieldMergerDProcessor1472575435568OutputLane14725754355680", "com_streamsets_pipeline_stage_processor_splitter_SplitterDProcessor1472575451868OutputLane14725754518680", "com_streamsets_pipeline_stage_processor_javascript_JavaScriptDProcessor1472575499226OutputLane14725754992260", "com_streamsets_pipeline_stage_processor_fieldvaluereplacer_FieldValueReplacerDProcessor1472575552152OutputLane14725755521520", "com_streamsets_pipeline_stage_processor_identity_IdentityProcessor1472575461618OutputLane14725754616180" ],
+    "outputLanes" : [ ]
+  } ],
+  "errorStage" : {
+    "instanceName" : "com_streamsets_pipeline_stage_destination_recordstolocalfilesystem_ToErrorLocalFSDTarget1472575941408",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_recordstolocalfilesystem_ToErrorLocalFSDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "directory",
+      "value" : "abc"
+    }, {
+      "name" : "uniquePrefix",
+      "value" : "sdc-${sdc:id()}"
+    }, {
+      "name" : "rotationIntervalSecs",
+      "value" : "${1 * HOURS}"
+    }, {
+      "name" : "maxFileSizeMbs",
+      "value" : 512
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Bad Records - Write To File",
+      "xPos" : 925,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ ]
+  },
+  "info" : {
+    "name" : "HTTPProcessors",
+    "description" : "",
+    "created" : 1472575379149,
+    "lastModified" : 1472576023254,
+    "creator" : "admin",
+    "lastModifier" : "admin",
+    "lastRev" : "0",
+    "uuid" : "5f6ad831-2077-4002-b368-ea5ec0992f0b",
+    "valid" : false
+  },
+  "issues" : {
+    "pipelineIssues" : [ ],
+    "stageIssues" : { },
+    "issueCount" : 0
+  },
+  "valid" : true,
+  "previewable" : true
+}

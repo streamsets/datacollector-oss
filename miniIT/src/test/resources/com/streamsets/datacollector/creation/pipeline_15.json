@@ -1,0 +1,147 @@
+{
+  "schemaVersion" : 1,
+  "version" : 3,
+  "uuid" : "5c23fae7-6507-4bd6-9177-44800eb3e67b",
+  "description" : "",
+  "configuration" : [ {
+    "name" : "executionMode",
+    "value" : "STANDALONE"
+  }, {
+    "name" : "deliveryGuarantee",
+    "value" : "AT_LEAST_ONCE"
+  }, {
+    "name" : "shouldRetry",
+    "value" : true
+  }, {
+    "name" : "retryAttempts",
+    "value" : -1
+  }, {
+    "name" : "memoryLimit",
+    "value" : "${jvm:maxMemoryMB() * 0.65}"
+  }, {
+    "name" : "memoryLimitExceeded",
+    "value" : "STOP_PIPELINE"
+  }, {
+    "name" : "notifyOnStates",
+    "value" : [ "RUN_ERROR", "STOPPED", "FINISHED" ]
+  }, {
+    "name" : "emailIDs",
+    "value" : [ ]
+  }, {
+    "name" : "constants",
+    "value" : [ ]
+  }, {
+    "name" : "badRecordsHandling",
+    "value" : null
+  }, {
+    "name" : "clusterSlaveMemory",
+    "value" : 1024
+  }, {
+    "name" : "clusterSlaveJavaOpts",
+    "value" : "-XX:PermSize=128M -XX:MaxPermSize=256M -Dlog4j.debug"
+  }, {
+    "name" : "clusterLauncherEnv",
+    "value" : [ ]
+  } ],
+  "uiInfo" : {
+    "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
+      "batchSize" : 10,
+      "timeout" : 10000,
+      "writeToDestinations" : false,
+      "showHeader" : false,
+      "showFieldType" : true,
+      "rememberMe" : false
+    }
+  },
+  "stages" : [ {
+    "instanceName" : "com_streamsets_pipeline_stage_origin_udp_UDPDSource1472581128249",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_origin_udp_UDPDSource",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "ports",
+      "value" : [ "9995" ]
+    }, {
+      "name" : "dataFormat",
+      "value" : "SYSLOG"
+    }, {
+      "name" : "batchSize",
+      "value" : 1000
+    }, {
+      "name" : "maxWaitTime",
+      "value" : 1000
+    }, {
+      "name" : "syslogCharset",
+      "value" : "UTF-8"
+    }, {
+      "name" : "typesDbPath",
+      "value" : null
+    }, {
+      "name" : "convertTime",
+      "value" : false
+    }, {
+      "name" : "excludeInterval",
+      "value" : true
+    }, {
+      "name" : "authFilePath",
+      "value" : null
+    }, {
+      "name" : "collectdCharset",
+      "value" : "UTF-8"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "UDP Source 1",
+      "xPos" : 31,
+      "yPos" : 130,
+      "stageType" : "SOURCE"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_origin_udp_UDPDSource1472581128249OutputLane14725811282490" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget1472581138330",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Trash 1",
+      "xPos" : 370,
+      "yPos" : 130,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_udp_UDPDSource1472581128249OutputLane14725811282490" ],
+    "outputLanes" : [ ]
+  } ],
+  "errorStage" : null,
+  "info" : {
+    "name" : "UDPsourcetoDestination",
+    "description" : "",
+    "created" : 1472581123085,
+    "lastModified" : 1472581139369,
+    "creator" : "admin",
+    "lastModifier" : "admin",
+    "lastRev" : "0",
+    "uuid" : "81675b64-8412-4ad8-91ab-bcec8a098d93",
+    "valid" : false
+  },
+  "issues" : {
+    "pipelineIssues" : [ {
+      "message" : "CREATION_009 - Pipeline error handling is not configured",
+      "level" : "PIPELINE_CONFIG",
+      "instanceName" : null,
+      "configGroup" : "BAD_RECORDS",
+      "configName" : "badRecordsHandling",
+      "additionalInfo" : null
+    } ],
+    "stageIssues" : { },
+    "issueCount" : 1
+  },
+  "valid" : false,
+  "previewable" : false
+}

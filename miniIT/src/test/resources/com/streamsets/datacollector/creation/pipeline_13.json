@@ -1,0 +1,266 @@
+{
+  "schemaVersion" : 1,
+  "version" : 3,
+  "uuid" : "60a83d3f-43a0-4eb8-9531-69039a4b6c37",
+  "description" : "",
+  "configuration" : [ {
+    "name" : "executionMode",
+    "value" : "STANDALONE"
+  }, {
+    "name" : "deliveryGuarantee",
+    "value" : "AT_LEAST_ONCE"
+  }, {
+    "name" : "shouldRetry",
+    "value" : true
+  }, {
+    "name" : "retryAttempts",
+    "value" : -1
+  }, {
+    "name" : "memoryLimit",
+    "value" : "${jvm:maxMemoryMB() * 0.65}"
+  }, {
+    "name" : "memoryLimitExceeded",
+    "value" : "STOP_PIPELINE"
+  }, {
+    "name" : "notifyOnStates",
+    "value" : [ "RUN_ERROR", "STOPPED", "FINISHED" ]
+  }, {
+    "name" : "emailIDs",
+    "value" : [ ]
+  }, {
+    "name" : "constants",
+    "value" : [ ]
+  }, {
+    "name" : "badRecordsHandling",
+    "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget::1"
+  }, {
+    "name" : "clusterSlaveMemory",
+    "value" : 1024
+  }, {
+    "name" : "clusterSlaveJavaOpts",
+    "value" : "-XX:PermSize=128M -XX:MaxPermSize=256M -Dlog4j.debug"
+  }, {
+    "name" : "clusterLauncherEnv",
+    "value" : [ ]
+  } ],
+  "uiInfo" : {
+    "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
+      "batchSize" : 10,
+      "timeout" : 10000,
+      "writeToDestinations" : false,
+      "showHeader" : false,
+      "showFieldType" : true,
+      "rememberMe" : false
+    }
+  },
+  "stages" : [ {
+    "instanceName" : "com_streamsets_pipeline_stage_origin_logtail_FileTailDSource1472529885943",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_origin_logtail_FileTailDSource",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "dataFormat",
+      "value" : "JSON"
+    }, {
+      "name" : "multiLineMainPattern",
+      "value" : null
+    }, {
+      "name" : "charset",
+      "value" : "UTF-8"
+    }, {
+      "name" : "removeCtrlChars",
+      "value" : false
+    }, {
+      "name" : "maxLineLength",
+      "value" : 1024
+    }, {
+      "name" : "batchSize",
+      "value" : 1000
+    }, {
+      "name" : "maxWaitTimeSecs",
+      "value" : 5
+    }, {
+      "name" : "fileInfos",
+      "value" : [ {
+        "tag" : "",
+        "fileFullPath" : "",
+        "fileRollMode" : "REVERSE_COUNTER",
+        "patternForToken" : ".*",
+        "firstFile" : ""
+      } ]
+    }, {
+      "name" : "postProcessing",
+      "value" : "NONE"
+    }, {
+      "name" : "archiveDir",
+      "value" : null
+    }, {
+      "name" : "logMode",
+      "value" : "COMMON_LOG_FORMAT"
+    }, {
+      "name" : "retainOriginalLine",
+      "value" : false
+    }, {
+      "name" : "customLogFormat",
+      "value" : "%h %l %u %t \"%r\" %>s %b"
+    }, {
+      "name" : "regex",
+      "value" : "^(\\S+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\d+)"
+    }, {
+      "name" : "fieldPathsToGroupName",
+      "value" : [ {
+        "fieldPath" : "/",
+        "group" : 1
+      } ]
+    }, {
+      "name" : "grokPatternDefinition",
+      "value" : null
+    }, {
+      "name" : "grokPattern",
+      "value" : "%{COMMONAPACHELOG}"
+    }, {
+      "name" : "enableLog4jCustomLogFormat",
+      "value" : false
+    }, {
+      "name" : "log4jCustomLogFormat",
+      "value" : "%r [%t] %-5p %c %x - %m%n"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    } ],
+    "uiInfo" : {
+      "outputStreamLabels" : [ "Output", "Metadata" ],
+      "yPos" : 87,
+      "stageType" : "SOURCE",
+      "rawSource" : {
+        "configuration" : [ {
+          "name" : "fileName"
+        } ]
+      },
+      "description" : "",
+      "label" : "File Tail 1",
+      "xPos" : 9
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_origin_logtail_FileTailDSource1472529885943OutputLane14725298859430", "com_streamsets_pipeline_stage_origin_logtail_FileTailDSource1472529885943OutputLane14725298859431" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_processor_fieldhasher_FieldHasherDProcessor1472529893720",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_fieldhasher_FieldHasherDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "fieldHasherConfigs",
+      "value" : [ {
+        "fieldsToHash" : [ ],
+        "hashType" : "MD5"
+      } ]
+    }, {
+      "name" : "onStagePreConditionFailure",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Field Hasher 1",
+      "xPos" : 470,
+      "yPos" : 28,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_logtail_FileTailDSource1472529885943OutputLane14725298859430" ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_processor_fieldhasher_FieldHasherDProcessor1472529893720OutputLane14725298937200" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_processor_fieldmerger_FieldMergerDProcessor1472529900835",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_fieldmerger_FieldMergerDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "mergeMapping",
+      "value" : [ {
+        "fromField" : "",
+        "toField" : ""
+      } ]
+    }, {
+      "name" : "onStagePreConditionFailure",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "overwriteExisting",
+      "value" : false
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Field Merger 1",
+      "xPos" : 310,
+      "yPos" : 190,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_logtail_FileTailDSource1472529885943OutputLane14725298859431" ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_processor_fieldmerger_FieldMergerDProcessor1472529900835OutputLane14725299008350" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_destination_toerror_ToErrorDTarget1472529934757",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_toerror_ToErrorDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "To Error 1",
+      "xPos" : 830,
+      "yPos" : 83,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_processor_fieldmerger_FieldMergerDProcessor1472529900835OutputLane14725299008350", "com_streamsets_pipeline_stage_processor_fieldhasher_FieldHasherDProcessor1472529893720OutputLane14725298937200" ],
+    "outputLanes" : [ ]
+  } ],
+  "errorStage" : {
+    "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget1472530073263",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Bad Records - Discard",
+      "xPos" : 1050,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ ]
+  },
+  "info" : {
+    "name" : "OrigintoTrash",
+    "description" : "",
+    "created" : 1472529877579,
+    "lastModified" : 1472530072317,
+    "creator" : "admin",
+    "lastModifier" : "admin",
+    "lastRev" : "0",
+    "uuid" : "e75e19ed-5c90-4338-808c-43ff447aa907",
+    "valid" : true
+  },
+  "issues" : {
+    "pipelineIssues" : [ ],
+    "stageIssues" : { },
+    "issueCount" : 0
+  },
+  "valid" : true,
+  "previewable" : true
+}

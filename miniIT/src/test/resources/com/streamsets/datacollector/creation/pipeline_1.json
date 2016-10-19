@@ -1,0 +1,126 @@
+{
+  "schemaVersion" : 1,
+  "version" : 3,
+  "uuid" : "de73b0cf-5623-4f04-90fd-58db1be9317c",
+  "description" : "",
+  "configuration" : [ {
+    "name" : "executionMode",
+    "value" : "STANDALONE"
+  }, {
+    "name" : "deliveryGuarantee",
+    "value" : "AT_LEAST_ONCE"
+  }, {
+    "name" : "shouldRetry",
+    "value" : true
+  }, {
+    "name" : "retryAttempts",
+    "value" : -1
+  }, {
+    "name" : "memoryLimit",
+    "value" : "${jvm:maxMemoryMB() * 0.65}"
+  }, {
+    "name" : "memoryLimitExceeded",
+    "value" : "STOP_PIPELINE"
+  }, {
+    "name" : "notifyOnStates",
+    "value" : [ "RUN_ERROR", "STOPPED", "FINISHED" ]
+  }, {
+    "name" : "emailIDs",
+    "value" : [ ]
+  }, {
+    "name" : "constants",
+    "value" : [ ]
+  }, {
+    "name" : "badRecordsHandling",
+    "value" : null
+  }, {
+    "name" : "clusterSlaveMemory",
+    "value" : 1024
+  }, {
+    "name" : "clusterSlaveJavaOpts",
+    "value" : "-XX:PermSize=128M -XX:MaxPermSize=256M -Dlog4j.debug"
+  }, {
+    "name" : "clusterLauncherEnv",
+    "value" : [ ]
+  } ],
+  "uiInfo" : {
+    "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
+      "batchSize" : 10,
+      "timeout" : 10000,
+      "writeToDestinations" : false,
+      "showHeader" : false,
+      "showFieldType" : true,
+      "rememberMe" : false
+    }
+  },
+  "stages" : [ {
+    "instanceName" : "com_streamsets_pipeline_stage_devtest_RandomDataGeneratorSource1472580650643",
+    "library" : "streamsets-datacollector-dev-lib",
+    "stageName" : "com_streamsets_pipeline_stage_devtest_RandomDataGeneratorSource",
+    "stageVersion" : "2",
+    "configuration" : [ {
+      "name" : "dataGenConfigs",
+      "value" : [ {
+        "field" : "",
+        "type" : "STRING"
+      } ]
+    }, {
+      "name" : "rootFieldType",
+      "value" : "MAP"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Dev Data Generator 1",
+      "xPos" : 34,
+      "yPos" : 128,
+      "stageType" : "SOURCE"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_devtest_RandomDataGeneratorSource1472580650643OutputLane14725806506430" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget1472580657041",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Trash 1",
+      "xPos" : 370,
+      "yPos" : 132,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_devtest_RandomDataGeneratorSource1472580650643OutputLane14725806506430" ],
+    "outputLanes" : [ ]
+  } ],
+  "errorStage" : null,
+  "info" : {
+    "name" : "Dev_data_generator",
+    "description" : "",
+    "created" : 1472580646524,
+    "lastModified" : 1472580658082,
+    "creator" : "admin",
+    "lastModifier" : "admin",
+    "lastRev" : "0",
+    "uuid" : "b275a8d8-7e45-4f9a-a039-a396d44ec2f6",
+    "valid" : false
+  },
+  "issues" : {
+    "pipelineIssues" : [ {
+      "message" : "CREATION_009 - Pipeline error handling is not configured",
+      "level" : "PIPELINE_CONFIG",
+      "instanceName" : null,
+      "configGroup" : "BAD_RECORDS",
+      "configName" : "badRecordsHandling",
+      "additionalInfo" : null
+    } ],
+    "stageIssues" : { },
+    "issueCount" : 1
+  },
+  "valid" : false,
+  "previewable" : false
+}

@@ -1,0 +1,251 @@
+{
+  "schemaVersion" : 1,
+  "version" : 3,
+  "uuid" : "e3ff1f0f-c2d7-4b91-8048-d32e0006ceaf",
+  "description" : "",
+  "configuration" : [ {
+    "name" : "executionMode",
+    "value" : "STANDALONE"
+  }, {
+    "name" : "deliveryGuarantee",
+    "value" : "AT_LEAST_ONCE"
+  }, {
+    "name" : "shouldRetry",
+    "value" : true
+  }, {
+    "name" : "retryAttempts",
+    "value" : -1
+  }, {
+    "name" : "memoryLimit",
+    "value" : "${jvm:maxMemoryMB() * 0.65}"
+  }, {
+    "name" : "memoryLimitExceeded",
+    "value" : "STOP_PIPELINE"
+  }, {
+    "name" : "notifyOnStates",
+    "value" : [ "RUN_ERROR", "STOPPED", "FINISHED" ]
+  }, {
+    "name" : "emailIDs",
+    "value" : [ ]
+  }, {
+    "name" : "constants",
+    "value" : [ ]
+  }, {
+    "name" : "badRecordsHandling",
+    "value" : null
+  }, {
+    "name" : "clusterSlaveMemory",
+    "value" : 1024
+  }, {
+    "name" : "clusterSlaveJavaOpts",
+    "value" : "-XX:PermSize=128M -XX:MaxPermSize=256M -Dlog4j.debug"
+  }, {
+    "name" : "clusterLauncherEnv",
+    "value" : [ ]
+  } ],
+  "uiInfo" : {
+    "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
+      "batchSize" : 10,
+      "timeout" : 10000,
+      "writeToDestinations" : false,
+      "showHeader" : false,
+      "showFieldType" : true,
+      "rememberMe" : false
+    }
+  },
+  "stages" : [ {
+    "instanceName" : "com_streamsets_pipeline_stage_origin_kafka_KafkaDSource1472578326393",
+    "library" : "streamsets-datacollector-apache-kafka_0_8_1-lib",
+    "stageName" : "com_streamsets_pipeline_stage_origin_kafka_KafkaDSource",
+    "stageVersion" : "2",
+    "configuration" : [ {
+      "name" : "metadataBrokerList",
+      "value" : "localhost:9092"
+    }, {
+      "name" : "zookeeperConnect",
+      "value" : "localhost:2181"
+    }, {
+      "name" : "consumerGroup",
+      "value" : "streamsetsDataCollector"
+    }, {
+      "name" : "topic",
+      "value" : "topicName"
+    }, {
+      "name" : "dataFormat",
+      "value" : "SDC_JSON"
+    }, {
+      "name" : "charset",
+      "value" : "UTF-8"
+    }, {
+      "name" : "removeCtrlChars",
+      "value" : false
+    }, {
+      "name" : "produceSingleRecordPerMessage",
+      "value" : false
+    }, {
+      "name" : "maxBatchSize",
+      "value" : 1000
+    }, {
+      "name" : "maxWaitTime",
+      "value" : 2000
+    }, {
+      "name" : "kafkaConsumerConfigs",
+      "value" : [ ]
+    }, {
+      "name" : "textMaxLineLen",
+      "value" : 1024
+    }, {
+      "name" : "jsonContent",
+      "value" : "MULTIPLE_OBJECTS"
+    }, {
+      "name" : "jsonMaxObjectLen",
+      "value" : 4096
+    }, {
+      "name" : "csvFileFormat",
+      "value" : "CSV"
+    }, {
+      "name" : "csvHeader",
+      "value" : "NO_HEADER"
+    }, {
+      "name" : "csvMaxObjectLen",
+      "value" : 1024
+    }, {
+      "name" : "csvCustomDelimiter",
+      "value" : "|"
+    }, {
+      "name" : "csvCustomEscape",
+      "value" : "\\"
+    }, {
+      "name" : "csvCustomQuote",
+      "value" : "\""
+    }, {
+      "name" : "csvRecordType",
+      "value" : "LIST_MAP"
+    }, {
+      "name" : "xmlRecordElement",
+      "value" : null
+    }, {
+      "name" : "xmlMaxObjectLen",
+      "value" : 4096
+    }, {
+      "name" : "logMode",
+      "value" : "COMMON_LOG_FORMAT"
+    }, {
+      "name" : "logMaxObjectLen",
+      "value" : 1024
+    }, {
+      "name" : "retainOriginalLine",
+      "value" : false
+    }, {
+      "name" : "customLogFormat",
+      "value" : "%h %l %u %t \"%r\" %>s %b"
+    }, {
+      "name" : "regex",
+      "value" : "^(\\S+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\d+)"
+    }, {
+      "name" : "fieldPathsToGroupName",
+      "value" : [ {
+        "fieldPath" : "/",
+        "group" : 1
+      } ]
+    }, {
+      "name" : "grokPatternDefinition",
+      "value" : null
+    }, {
+      "name" : "grokPattern",
+      "value" : "%{COMMONAPACHELOG}"
+    }, {
+      "name" : "onParseError",
+      "value" : "ERROR"
+    }, {
+      "name" : "maxStackTraceLines",
+      "value" : 50
+    }, {
+      "name" : "enableLog4jCustomLogFormat",
+      "value" : false
+    }, {
+      "name" : "log4jCustomLogFormat",
+      "value" : "%r [%t] %-5p %c %x - %m%n"
+    }, {
+      "name" : "schemaInMessage",
+      "value" : true
+    }, {
+      "name" : "avroSchema",
+      "value" : null
+    }, {
+      "name" : "binaryMaxObjectLen",
+      "value" : 1024
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    } ],
+    "uiInfo" : {
+      "yPos" : 106,
+      "stageType" : "SOURCE",
+      "rawSource" : {
+        "configuration" : [ {
+          "name" : "brokerHost",
+          "value" : "localhost"
+        }, {
+          "name" : "brokerPort",
+          "value" : 9092
+        }, {
+          "name" : "topic",
+          "value" : "myTopic"
+        }, {
+          "name" : "partition"
+        }, {
+          "name" : "maxWaitTime",
+          "value" : 1000
+        } ]
+      },
+      "description" : "",
+      "label" : "Kafka Consumer 1",
+      "xPos" : 57
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_origin_kafka_KafkaDSource1472578326393OutputLane14725783263930" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget1472578332293",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Trash 1",
+      "xPos" : 434,
+      "yPos" : 113,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_kafka_KafkaDSource1472578326393OutputLane14725783263930" ],
+    "outputLanes" : [ ]
+  } ],
+  "errorStage" : null,
+  "info" : {
+    "name" : "KafkatoTrash",
+    "description" : "",
+    "created" : 1472578322479,
+    "lastModified" : 1472578335638,
+    "creator" : "admin",
+    "lastModifier" : "admin",
+    "lastRev" : "0",
+    "uuid" : "a011966b-efc6-4454-8441-6c3ae85c94db",
+    "valid" : false
+  },
+  "issues" : {
+    "pipelineIssues" : [ {
+      "message" : "CREATION_009 - Pipeline error handling is not configured",
+      "level" : "PIPELINE_CONFIG",
+      "instanceName" : null,
+      "configGroup" : "BAD_RECORDS",
+      "configName" : "badRecordsHandling",
+      "additionalInfo" : null
+    } ],
+    "stageIssues" : { },
+    "issueCount" : 1
+  },
+  "valid" : false,
+  "previewable" : false
+}

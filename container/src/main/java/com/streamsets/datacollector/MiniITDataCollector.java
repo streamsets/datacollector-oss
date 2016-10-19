@@ -43,6 +43,7 @@ import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.task.Task;
 import com.streamsets.datacollector.task.TaskWrapper;
+import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.impl.DataCollector;
@@ -52,6 +53,7 @@ import dagger.ObjectGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -232,4 +234,14 @@ public class MiniITDataCollector implements DataCollector {
     return ObjectMapperFactory.get().writeValueAsString(BeanHelper.wrapRuleDefinitions(ruleDefinitions1));
   }
 
+  @Override
+  public List<Issue> validatePipeline(String name, String pipelineJson) throws IOException {
+    final ObjectMapper json = ObjectMapperFactory.get();
+    final PipelineConfigurationJson pipeline = json.readValue(pipelineJson,
+        PipelineConfigurationJson.class);
+    PipelineConfiguration pipelineConfig = BeanHelper.unwrapPipelineConfiguration(pipeline);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(pipelineTask.getStageLibraryTask(), name, pipelineConfig);
+    validator.validate();
+    return validator.getIssues().getIssues();
+  }
 }

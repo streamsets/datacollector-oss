@@ -43,6 +43,7 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.impl.DataCollector;
 
+import com.streamsets.pipeline.validation.ValidationIssue;
 import dagger.ObjectGraph;
 
 import org.slf4j.Logger;
@@ -51,6 +52,7 @@ import org.slf4j.LoggerFactory;
 import javax.security.auth.Subject;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -115,6 +117,11 @@ public class EmbeddedDataCollector implements DataCollector {
   @Override
   public void stopPipeline() throws Exception {
     throw new UnsupportedOperationException("This method is not supported. Use \"startPipeline\" method");
+  }
+
+  @Override
+  public List<? extends ValidationIssue> validatePipeline(String name, String pipelineJson) throws IOException {
+    throw new UnsupportedOperationException("This method is not supported.");
   }
 
   @Override

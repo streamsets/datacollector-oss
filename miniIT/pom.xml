@@ -37,6 +37,7 @@
     <flume.version>1.5.0</flume.version>
     <hadoop.version>2.6.0</hadoop.version>
     <hbase.version>0.98.4-hadoop2</hbase.version>
+    <reflections.version>0.9.10</reflections.version>
   </properties>
 
   <dependencies>
@@ -97,6 +98,13 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.reflections</groupId>
+      <artifactId>reflections</artifactId>
+      <version>${reflections.version}</version>
       <scope>test</scope>
     </dependency>
 

@@ -23,12 +23,13 @@ import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.LocalizableString;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.validation.ValidationIssue;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Issue implements Serializable {
+public class Issue implements Serializable, ValidationIssue {
   private final String instanceName;
   private final String configGroup;
   private final String configName;
@@ -49,22 +50,27 @@ public class Issue implements Serializable {
     additionalInfo.put(key, value);
   }
 
+  @Override
   public Map getAdditionalInfo() {
     return additionalInfo;
   }
 
+  @Override
   public String getMessage() {
     return message.getLocalized();
   }
 
+  @Override
   public String getErrorCode() {
     return ((ErrorMessage)message).getErrorCode();
   }
 
+  @Override
   public String getInstanceName() {
     return instanceName;
   }
 
+  @Override
   public String getLevel() {
     String level;
     if (instanceName == null) {
@@ -75,10 +81,12 @@ public class Issue implements Serializable {
     return level;
   }
 
+  @Override
   public String getConfigGroup() {
     return configGroup;
   }
 
+  @Override
   public String getConfigName() {
     return configName;
   }
