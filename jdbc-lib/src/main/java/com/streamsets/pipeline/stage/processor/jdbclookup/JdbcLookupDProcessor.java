@@ -67,7 +67,7 @@ public class JdbcLookupDProcessor extends DProcessor {
       label = "Column Mappings",
       defaultValue = "",
       description = "Mappings from column names to field names",
-      displayPosition = 40,
+      displayPosition = 30,
       group = "JDBC"
   )
   @ListBeanModel
@@ -78,7 +78,7 @@ public class JdbcLookupDProcessor extends DProcessor {
       type = ConfigDef.Type.NUMBER,
       defaultValue = "1000",
       label = "Max Clob Size (Characters)",
-      displayPosition = 150,
+      displayPosition = 40,
       group = "JDBC"
   )
   public int maxClobSize;
@@ -88,7 +88,7 @@ public class JdbcLookupDProcessor extends DProcessor {
       type = ConfigDef.Type.NUMBER,
       defaultValue = "1000",
       label = "Max Blob Size (Bytes)",
-      displayPosition = 151,
+      displayPosition = 50,
       group = "JDBC"
   )
   public int maxBlobSize;

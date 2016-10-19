@@ -75,7 +75,7 @@ public class HikariPoolConfigBean {
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "true",
       label = "Use Credentials",
-      displayPosition = 100,
+      displayPosition = 11,
       group = "JDBC"
   )
   public boolean useCredentials;

@@ -30,7 +30,7 @@ public class CacheConfig {
       type = ConfigDef.Type.BOOLEAN,
       label = "Enable Local Caching",
       description = "Select to enable caching of lookups. This improves performance, but should only be used when values rarely change",
-      displayPosition = 30,
+      displayPosition = 100,
       group = "#0"
   )
   public boolean enabled = false;
@@ -41,10 +41,10 @@ public class CacheConfig {
       label = "Maximum Entries to Cache",
       min = -1,
       defaultValue = "-1",
-      description = "Maximum number of key-value pairs to cache. If exceeded, oldest values are evicted to make room. Default value is -1 which is unlimited",
+      description = "Maximum number of values to cache. If exceeded, oldest values are evicted to make room. Default value is -1 which is unlimited",
       dependsOn = "enabled",
       triggeredByValue = "true",
-      displayPosition = 40,
+      displayPosition = 110,
       group = "#0"
   )
   public long maxSize = -1;
@@ -53,11 +53,11 @@ public class CacheConfig {
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Eviction Policy Type",
-      description = "Policy type used to evict key-value pairs from the local cache. " +
+      description = "Policy type used to evict values from the local cache. " +
           "Select whether to reset the expiration time after the last write or after the last access of the value.",
       dependsOn = "enabled",
       triggeredByValue = "true",
-      displayPosition = 50,
+      displayPosition = 120,
       group = "#0"
   )
   @ValueChooserModel(EvictionPolicyTypeChooserValues.class)
@@ -71,7 +71,7 @@ public class CacheConfig {
       defaultValue = "1",
       dependsOn = "enabled",
       triggeredByValue = "true",
-      displayPosition = 60,
+      displayPosition = 130,
       group = "#0"
   )
   public long expirationTime;
@@ -83,7 +83,7 @@ public class CacheConfig {
       defaultValue = "SECONDS",
       dependsOn = "enabled",
       triggeredByValue = "true",
-      displayPosition = 70,
+      displayPosition = 140,
       group = "#0"
   )
   @ValueChooserModel(TimeUnitChooserValues.class)
