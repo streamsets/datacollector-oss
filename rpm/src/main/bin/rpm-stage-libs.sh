@@ -21,13 +21,21 @@
 #
 
 # for debugging, it will prints commands and their arguments as they are executed.
-#set -x
+set -x
 
 DIST=$1
 TARGET=$2
+VERSION=$3
+RPM_ALL_DIST=streamsets-datacollector-${VERSION}-all-rpms
 
 cd ${TARGET} || exit
 
+if [ ! -d "${RPM_ALL_DIST}" ];
+then
+  mkdir ${RPM_ALL_DIST}
+fi
+
+# copy all stage-lib rpms to ${RPM_ALL_DIST}
 for STAGE_DIR in ${DIST}/*
 do
   STAGE_LIB=${STAGE_DIR}/target/rpm
@@ -36,6 +44,12 @@ do
   if [ -d "${STAGE_LIB}" ] && [ "${STAGE_NAME}" != "${RPM}" ];
   then
     echo "Processing stage library: ${STAGE_NAME}"
-    cp -Rf ${STAGE_LIB}/* .
+    cp -Rf ${STAGE_LIB}/*/RPMS/noarch/streamsets-datacollector-*.noarch.rpm ${RPM_ALL_DIST}
   fi
 done
+
+# copy core rpm to ${RPM_ALL_DIST}
+cp -Rf ${TARGET}/streamsets-datacollector-streamsets-datacollector/RPMS/noarch/streamsets-datacollector-*.noarch.rpm ${RPM_ALL_DIST}
+
+# additional step to compress all stage-libs into tar file
+tar -cf ${RPM_ALL_DIST}/streamsets-datacollector-${VERSION}-all-rpms.tar ${RPM_ALL_DIST}/streamsets-datacollector-*.noarch.rpm
