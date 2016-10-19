@@ -72,7 +72,7 @@ public class UDPDSource extends DSource {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Enable Multithreading",
-      description = "Only available on 64-bit Linux systems",
+      description = "Use multiple receiver threads for each port. Only available on 64-bit Linux systems",
       defaultValue = "false",
       group = "UDP",
       displayPosition = 15
@@ -82,7 +82,8 @@ public class UDPDSource extends DSource {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      label = "Number of Receive Threads",
+      label = "Number of Receiver Threads",
+      description = "Number of receiver threads for each port. It should be based on the CPU cores expected to be dedicated to the pipeline",
       defaultValue = "1",
       group = "UDP",
       dependsOn = "enableEpoll",

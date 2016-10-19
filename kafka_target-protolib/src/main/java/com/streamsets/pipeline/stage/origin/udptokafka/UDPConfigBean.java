@@ -56,7 +56,7 @@ public class UDPConfigBean {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Enable UDP Multithreading",
-      description = "Only available on 64-bit Linux systems",
+      description = "Use multiple receiver threads for each port. Only available on 64-bit Linux systems",
       defaultValue = "false",
       group = "ADVANCED",
       displayPosition = 25
@@ -67,7 +67,7 @@ public class UDPConfigBean {
       required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Accept Threads",
-      description = "It should be based on the CPU cores expected to be dedicated to the pipeline",
+      description = "Number of receiver threads for each port. It should be based on the CPU cores expected to be dedicated to the pipeline",
       defaultValue = "1",
       min = 1,
       max = 32,
