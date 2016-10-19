@@ -63,8 +63,9 @@ public enum Errors implements ErrorCode {
   HBASE_35("Row key field has empty value"),
   HBASE_36("Errors while reading from HBase: '{}'"),
   HBASE_37("Errors while reading invalid column from HBase: '{}'"),
-  HBASE_38("Could not evaluate row or column expression: {} : {}"),
-  HBASE_39("Cannot resolve host '{}' from ZooKeeper quorum")
+  HBASE_38("Could not evaluate expression: '{}'"),
+  HBASE_39("Cannot resolve host '{}' from ZooKeeper quorum"),
+  HBASE_40("Output field has empty value"),
   ;
   private final String msg;
 

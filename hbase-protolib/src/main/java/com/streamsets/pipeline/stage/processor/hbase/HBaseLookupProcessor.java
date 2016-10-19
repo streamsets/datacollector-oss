@@ -36,6 +36,7 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.hbase.common.Errors;
 import com.streamsets.pipeline.lib.hbase.common.HBaseColumn;
@@ -48,6 +49,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HConstants;
 import org.apache.hadoop.hbase.HTableDescriptor;
+import org.apache.hadoop.hbase.KeyValue;
+import org.apache.hadoop.hbase.util.Bytes;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
@@ -66,13 +69,17 @@ import java.util.Set;
 
 public class HBaseLookupProcessor extends BaseProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(HBaseLookupProcessor.class);
+  private static final String ROW_EXPR = "rowExpr";
+  private static final String COLUMN_EXPR = "columnExpr";
+  private static final String TIMESTAMP_EXPR = "timestampExpr";
   private HBaseLookupConfig conf;
   private Configuration hbaseConf;
   private ErrorRecordHandler errorRecordHandler;
   private ELEval keyExprEval;
+  private ELEval columnExprEval;
+  private ELEval timestampExprEval;
   private HBaseStore store;
   private LoadingCache<Pair<String, HBaseColumn>, Optional<String>> cache;
-  private HTableDescriptor hTableDescriptor = null;
 
   public HBaseLookupProcessor(HBaseLookupConfig conf) {
     if (null != conf.hBaseConnectionConfig.zookeeperQuorum) {
@@ -86,26 +93,99 @@ public class HBaseLookupProcessor extends BaseProcessor {
   protected List<ConfigIssue> init() {
     final List<ConfigIssue> issues = super.init();
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
+    keyExprEval = getContext().createELEval(ROW_EXPR);
+    columnExprEval = getContext().createELEval(COLUMN_EXPR);
+    timestampExprEval = getContext().createELEval(TIMESTAMP_EXPR);
 
-    hbaseConf = HBaseUtil.getHBaseConfiguration(
-        issues,
-        getContext(),
-        Groups.HBASE.getLabel(),
-        conf.hBaseConnectionConfig.hbaseConfDir,
-        conf.hBaseConnectionConfig.tableName,
-        conf.hBaseConnectionConfig.hbaseConfigs
-    );
+    if(conf.lookups.isEmpty()) {
+      issues.add(getContext().createConfigIssue(
+          conf.lookups.toString(),
+          conf.lookups.toString(),
+          Errors.HBASE_36
+      ));
+    }
 
-    HBaseUtil.validateQuorumConfigs(
-      issues,
-      getContext(),
-      Groups.HBASE.getLabel(),
-      conf.hBaseConnectionConfig.zookeeperQuorum,
-      conf.hBaseConnectionConfig.zookeeperParentZNode,
-      conf.hBaseConnectionConfig.clientPort
-    );
+    // Validate EL Expression
+    for(HBaseLookupParameterConfig lookup : conf.lookups) {
+      // Row key is required
+      if(lookup.rowExpr.length() < 1) {
+        issues.add(getContext().createConfigIssue(
+            lookup.rowExpr,
+            lookup.rowExpr,
+            Errors.HBASE_35
+        ));
+      } else {
+        ELUtils.validateExpression(
+            keyExprEval,
+            getContext().createELVars(),
+            lookup.rowExpr,
+            getContext(),
+            Groups.HBASE.getLabel(),
+            lookup.rowExpr,
+            Errors.HBASE_38,
+            String.class,
+            issues
+        );
+      }
 
-    HBaseUtil.validateSecurityConfigs(issues, getContext(), Groups.HBASE.getLabel(), hbaseConf, conf.hBaseConnectionConfig.kerberosAuth);
+      // Column and timestamps are optional
+      ELUtils.validateExpression(
+          columnExprEval,
+          getContext().createELVars(),
+          lookup.columnExpr,
+          getContext(),
+          Groups.HBASE.getLabel(),
+          lookup.columnExpr,
+          Errors.HBASE_38,
+          String.class,
+          issues
+      );
+
+      ELUtils.validateExpression(
+          timestampExprEval,
+          getContext().createELVars(),
+          lookup.timestampExpr,
+          getContext(),
+          Groups.HBASE.getLabel(),
+          lookup.timestampExpr,
+          Errors.HBASE_38,
+          Date.class,
+          issues
+      );
+
+      if(lookup.outputFieldPath.length() < 1) {
+        issues.add(getContext().createConfigIssue(
+            lookup.outputFieldPath,
+            lookup.outputFieldPath,
+            Errors.HBASE_40
+        ));
+      }
+    }
+
+    if(issues.isEmpty()) {
+      hbaseConf = HBaseUtil.getHBaseConfiguration(issues,
+          getContext(),
+          Groups.HBASE.getLabel(),
+          conf.hBaseConnectionConfig.hbaseConfDir,
+          conf.hBaseConnectionConfig.tableName,
+          conf.hBaseConnectionConfig.hbaseConfigs
+      );
+
+      HBaseUtil.validateQuorumConfigs(issues,
+          getContext(),
+          Groups.HBASE.getLabel(),
+          conf.hBaseConnectionConfig.zookeeperQuorum,
+          conf.hBaseConnectionConfig.zookeeperParentZNode,
+          conf.hBaseConnectionConfig.clientPort
+      );
+
+      HBaseUtil.validateSecurityConfigs(issues,
+          getContext(),
+          Groups.HBASE.getLabel(),
+          hbaseConf,
+          conf.hBaseConnectionConfig.kerberosAuth
+      );
+    }
 
     if(issues.isEmpty()) {
       HBaseUtil.setIfNotNull(hbaseConf, HConstants.ZOOKEEPER_QUORUM, conf.hBaseConnectionConfig.zookeeperQuorum);
@@ -115,14 +195,20 @@ public class HBaseLookupProcessor extends BaseProcessor {
 
     if (issues.isEmpty()) {
       try {
-        hTableDescriptor = HBaseUtil.getUGI(conf.hBaseConnectionConfig.hbaseUser).doAs(new PrivilegedExceptionAction<HTableDescriptor>() {
+        HBaseUtil.getUGI(conf.hBaseConnectionConfig.hbaseUser).doAs(new PrivilegedExceptionAction<HTableDescriptor>() {
           @Override
           public HTableDescriptor run() throws Exception {
-            return HBaseUtil.checkConnectionAndTableExistence(issues, getContext(), hbaseConf, Groups.HBASE.getLabel(), conf.hBaseConnectionConfig.tableName);
+            return HBaseUtil.checkConnectionAndTableExistence(
+                issues,
+                getContext(),
+                hbaseConf,
+                Groups.HBASE.getLabel(),
+                conf.hBaseConnectionConfig.tableName
+            );
           }
         });
       } catch (Exception e) {
-        LOG.warn("Unexpected exception", e);
+        LOG.warn("Unexpected exception", e.toString());
         throw new RuntimeException(e);
       }
     }
@@ -220,9 +306,9 @@ public class HBaseLookupProcessor extends BaseProcessor {
       record = records.next();
       ELVars elVars = getContext().createELVars();
       RecordEL.setRecordInContext(elVars, record);
-      for (HBaseLookupParameterConfig parameter : conf.lookups) {
-        final Pair<String, HBaseColumn> key = getKey(record, elVars,parameter.rowExpr, parameter.columnExpr, parameter.timestampExpr);
-        try {
+      try {
+        for (HBaseLookupParameterConfig parameter : conf.lookups) {
+          final Pair<String, HBaseColumn> key = getKey(record, parameter);
           if (key != null) {
             Optional<String> value = HBaseUtil.getUGI(conf.hBaseConnectionConfig.hbaseUser).doAs(new PrivilegedExceptionAction<Optional<String>>() {
               @Override
@@ -233,10 +319,14 @@ public class HBaseLookupProcessor extends BaseProcessor {
 
             updateRecord(record, parameter, key, value);
           }
-        } catch (IOException | InterruptedException | UncheckedExecutionException e) {
-          HBaseUtil.handleNoColumnFamilyException(e, ImmutableList.of(record).iterator(), errorRecordHandler);
         }
+      } catch (ELEvalException | JSONException e1) {
+        LOG.error(Errors.HBASE_38.getMessage(), e1.toString(), e1);
+        errorRecordHandler.onError(new OnRecordErrorException(record, Errors.HBASE_38, e1.toString()));
+      } catch (IOException | InterruptedException | UncheckedExecutionException e) {
+        HBaseUtil.handleNoColumnFamilyException(e, ImmutableList.of(record).iterator(), errorRecordHandler);
       }
+
       batchMaker.addRecord(record);
     }
   }
@@ -255,18 +345,22 @@ public class HBaseLookupProcessor extends BaseProcessor {
       Record record;
       while (records.hasNext()) {
         record = records.next();
-        ELVars elVars = getContext().createELVars();
-        RecordEL.setRecordInContext(elVars, record);
-
         for (HBaseLookupParameterConfig parameter : conf.lookups) {
-          Pair<String, HBaseColumn> key = getKey(record, elVars, parameter.rowExpr, parameter.columnExpr, parameter.timestampExpr);
+          Pair<String, HBaseColumn> key = getKey(record, parameter);
           Optional<String> value = values.get(key);
           updateRecord(record, parameter, key, value);
         }
         batchMaker.addRecord(record);
       }
-    } catch (IOException | InterruptedException | UndeclaredThrowableException e) {
-      HBaseUtil.handleNoColumnFamilyException(e, records, errorRecordHandler);
+    } catch (ELEvalException | JSONException e1) {
+      records = batch.getRecords();
+      while(records.hasNext()) {
+        Record record = records.next();
+        LOG.error(Errors.HBASE_38.getMessage(), e1.toString(), e1);
+        errorRecordHandler.onError(new OnRecordErrorException(record, Errors.HBASE_38, e1.toString()));
+      }
+    } catch (IOException | InterruptedException | UndeclaredThrowableException e2) {
+      HBaseUtil.handleNoColumnFamilyException(e2, records, errorRecordHandler);
     }
   }
 
@@ -277,11 +371,8 @@ public class HBaseLookupProcessor extends BaseProcessor {
     Set<Pair<String, HBaseColumn>> keyList = new HashSet<>();
     while (records.hasNext()) {
       record = records.next();
-      ELVars elVars = getContext().createELVars();
-      RecordEL.setRecordInContext(elVars, record);
-
       for (HBaseLookupParameterConfig parameters : conf.lookups) {
-        Pair<String, HBaseColumn> key = getKey(record, elVars, parameters.rowExpr, parameters.columnExpr, parameters.timestampExpr);
+        Pair<String, HBaseColumn> key = getKey(record, parameters);
         if(key != null) {
           keyList.add(key);
         }
@@ -290,74 +381,57 @@ public class HBaseLookupProcessor extends BaseProcessor {
     return keyList;
   }
 
-  private Pair<String, HBaseColumn> getKey(Record record, ELVars elVars, String rowExpr, String columnExpr, String timestampExpr) throws StageException {
-    if (rowExpr.isEmpty()) {
+  private Pair<String, HBaseColumn> getKey(Record record, HBaseLookupParameterConfig config) throws ELEvalException {
+    if (config.rowExpr.isEmpty()) {
       throw new IllegalArgumentException(Utils.format("Empty lookup Key Expression"));
     }
 
-    String rowKey = "";
-    HBaseColumn hBaseColumn = null;
-    try {
-      rowKey = keyExprEval.eval(elVars, rowExpr, String.class);
-      hBaseColumn = getHBaseColumn(elVars, columnExpr, timestampExpr);
-    } catch (ELEvalException e) {
-      errorRecordHandler.onError(
-        new OnRecordErrorException(
-          record,
-          Errors.HBASE_38,
-          rowExpr,
-          columnExpr
-        )
-      );
+    ELVars elVars = getContext().createELVars();
+    RecordEL.setRecordInContext(elVars, record);
+
+    String rowKey = keyExprEval.eval(elVars, config.rowExpr, String.class);
+    String column = columnExprEval.eval(elVars, config.columnExpr, String.class);
+    byte[][] parts = KeyValue.parseColumn(Bytes.toBytes(column));
+    byte[] cf = null;
+    byte[] qualifier = null;
+    if (parts.length == 2) {
+      cf = parts[0];
+      qualifier = parts[1];
     }
-
-    Pair<String, HBaseColumn> key = Pair.of(rowKey, hBaseColumn);
-    return key;
-  }
-
-  private HBaseColumn getHBaseColumn(ELVars elVars, String columnExpr, String timestampExpr) throws ELEvalException {
-    HBaseColumn hBaseColumn;
-    // if Column Expression is empty, get the row data
-    if (columnExpr.trim().isEmpty()) {
-      hBaseColumn = new HBaseColumn();
-    } else {
-      hBaseColumn = HBaseUtil.getColumn(keyExprEval.eval(elVars, columnExpr, String.class));
-    }
-
-    if(!timestampExpr.trim().isEmpty()) {
-      final Date timestamp = keyExprEval.eval(elVars, timestampExpr, Date.class);
+    Date timestamp = timestampExprEval.eval(elVars, config.timestampExpr, Date.class);
+    HBaseColumn hBaseColumn = new HBaseColumn(cf, qualifier);
+    if(timestamp != null) {
       hBaseColumn.setTimestamp(timestamp.getTime());
     }
-    return hBaseColumn;
+
+    return Pair.of(rowKey, hBaseColumn);
   }
 
-  private void updateRecord(Record record, HBaseLookupParameterConfig parameter, Pair<String, HBaseColumn> key, Optional<String> value) throws StageException {
+  private void updateRecord(Record record, HBaseLookupParameterConfig parameter, Pair<String, HBaseColumn> key, Optional<String> value)
+      throws JSONException {
+    // If the value does not exists in HBase, no updates on record
     if(!value.isPresent()) {
-      LOG.debug("No value found for key '{}' and/or column '{}'", key.getKey(), key.getValue().getCf() + ":" + key.getValue().getQualifier());
+      LOG.debug(
+          "No value found on Record '{}' with key:'{}', column:'{}', timestamp:'{}'",
+          record,
+          key.getKey(),
+          Bytes.toString(key.getValue().getCf()) + ":" + Bytes.toString(key.getValue().getQualifier()),
+          key.getValue().getTimestamp()
+      );
       return;
     }
 
     // if the Column Expression is empty, return the row data ( columnName + value )
     if(parameter.columnExpr.isEmpty()) {
-      try {
-        JSONObject json = new JSONObject(value.get());
-        Iterator<String> iter = json.keys();
-        Map<String, Field> columnMap = new HashMap<>();
-        while(iter.hasNext()) {
-          String columnName = iter.next();
-          String columnValue = json.get(columnName).toString();
-          columnMap.put(columnName, Field.create(columnValue));
-        }
-        record.set(parameter.outputFieldPath, Field.create(columnMap));
-      } catch (JSONException ex) {
-        errorRecordHandler.onError(
-          new OnRecordErrorException(
-            record,
-            Errors.HBASE_10,
-            value.get()
-          )
-        );
+      JSONObject json = new JSONObject(value.get());
+      Iterator<String> iter = json.keys();
+      Map<String, Field> columnMap = new HashMap<>();
+      while(iter.hasNext()) {
+        String columnName = iter.next();
+        String columnValue = json.get(columnName).toString();
+        columnMap.put(columnName, Field.create(columnValue));
       }
+      record.set(parameter.outputFieldPath, Field.create(columnMap));
     } else {
       record.set(parameter.outputFieldPath, Field.create(value.get()));
     }

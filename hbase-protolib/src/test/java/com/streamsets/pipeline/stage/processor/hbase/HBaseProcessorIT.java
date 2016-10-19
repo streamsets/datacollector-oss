@@ -34,6 +34,7 @@ import com.streamsets.pipeline.lib.hbase.common.HBaseColumn;
 import com.streamsets.pipeline.lib.hbase.common.HBaseConnectionConfig;
 import com.streamsets.pipeline.lib.hbase.common.HBaseUtil;
 import com.streamsets.pipeline.stage.common.hbase.HBaseTestUtil;
+import com.streamsets.pipeline.stage.processor.kv.EvictionPolicyType;
 import com.streamsets.pipeline.stage.processor.kv.LookupMode;
 import com.streamsets.testing.SingleForkNoReuseTest;
 import org.apache.commons.lang3.tuple.Pair;
@@ -49,16 +50,19 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -66,6 +70,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(SingleForkNoReuseTest.class)
+@RunWith(Parameterized.class)
 public class HBaseProcessorIT {
   private static final Logger LOG = LoggerFactory.getLogger(HBaseProcessorIT.class);
   private static HBaseTestingUtility utility;
@@ -75,8 +80,20 @@ public class HBaseProcessorIT {
   private static final Configuration conf = HBaseTestUtil.getHBaseTestConfiguration();
   private static Processor.Context context;
 
-  @Parameterized.Parameter
-  public HBaseLookupConfig mode;
+  @Parameterized.Parameters
+  public static Iterable<Object[]> data() {
+    return Arrays.asList(
+        new Object[][]{
+            {LookupMode.RECORD, false}, {LookupMode.RECORD, true}, {LookupMode.BATCH, false}, {LookupMode.BATCH, true}
+        }
+    );
+  }
+
+  @Parameterized.Parameter(0)
+  public LookupMode mode;
+
+  @Parameterized.Parameter(1)
+  public Boolean cacheEnable;
 
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
@@ -180,6 +197,21 @@ public class HBaseProcessorIT {
   }
 
   @Test(timeout = 60000)
+  public void testEmptyKeyExpression() throws Exception {
+    HBaseLookupConfig config = getDefaultConfig();
+    config.lookups.get(0).rowExpr = "";
+    Processor processor = new HBaseLookupProcessor(config);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(HBaseLookupDProcessor.class, processor)
+        .addOutputLane("lane")
+        .setOnRecordError(OnRecordError.DISCARD)
+        .build();
+
+    List<Stage.ConfigIssue> configIssues = runner.runValidateConfigs();
+    assertEquals(1, configIssues.size());
+  }
+
+  @Test(timeout = 60000)
   public void testGetEmptyKey() throws Exception {
     HBaseLookupConfig config = getDefaultConfig();
     config.cache.enabled = false;
@@ -192,7 +224,7 @@ public class HBaseProcessorIT {
 
   @Test(timeout = 60000)
   public void testGetKey() throws Exception {
-    final Optional<String> expected = Optional.fromNullable("value1");
+    final Optional<String> expected = Optional.of("value1");
     HBaseLookupConfig config = getDefaultConfig();
     config.cache.enabled = false;
     Configuration hbaseConfig = getHBaseConfiguration(config);
@@ -206,9 +238,9 @@ public class HBaseProcessorIT {
   @Test(timeout = 60000)
   public void testGetMultipleKeys() throws Exception {
     final List<Optional<String>> expected = ImmutableList.of(
-      Optional.fromNullable("value1"),
-      Optional.fromNullable("value2"),
-      Optional.fromNullable("value3"),
+      Optional.of("value1"),
+      Optional.of("value2"),
+      Optional.of("value3"),
       Optional.<String>absent()
     );
 
@@ -232,7 +264,7 @@ public class HBaseProcessorIT {
 
   @Test(timeout = 60000)
   public void testGetKeyWithTimeStamp() throws Exception {
-    final Optional<String> expected = Optional.fromNullable("valueTimestamp");
+    final Optional<String> expected = Optional.of("valueTimestamp");
     HBaseLookupConfig config = getDefaultConfig();
     config.cache.enabled = false;
     context.isPreview();
@@ -332,7 +364,11 @@ public class HBaseProcessorIT {
     config.hBaseConnectionConfig.tableName = tableName;
     config.hBaseConnectionConfig.hbaseUser = "";
     config.hBaseConnectionConfig.hbaseConfigs = new HashMap<>();
-    config.mode = LookupMode.BATCH;
+    config.mode = mode;
+    config.cache.enabled = cacheEnable;
+    config.cache.evictionPolicyType = EvictionPolicyType.EXPIRE_AFTER_ACCESS;
+    config.cache.timeUnit = TimeUnit.MINUTES;
+    config.lookups = new ArrayList<>();
 
     config.lookups = new ArrayList<>();
     HBaseLookupParameterConfig parameter = new HBaseLookupParameterConfig();
