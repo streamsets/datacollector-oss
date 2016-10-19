@@ -326,7 +326,7 @@
             <configuration>
               <target>
                 <exec executable="/bin/bash" dir="${basedir}" failonerror="true">
-                  <arg line="${basedir}/src/main/bin/rpm-stage-libs.sh ${project.basedir}/.. ${project.build.directory}/rpm"/>
+                  <arg line="${basedir}/src/main/bin/rpm-stage-libs.sh ${project.basedir}/.. ${project.build.directory}/rpm ${project.version}"/>
                 </exec>
               </target>
             </configuration>
