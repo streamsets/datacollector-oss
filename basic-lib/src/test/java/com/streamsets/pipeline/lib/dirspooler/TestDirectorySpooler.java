@@ -55,6 +55,7 @@ public class TestDirectorySpooler {
   private File archiveDir;
 
   private Source.Context context;
+  private Source.Context contextInPreview;
 
   @Before
   public void setUp() {
@@ -62,6 +63,7 @@ public class TestDirectorySpooler {
     spoolDir = new File(dir, "spool");
     archiveDir = new File(dir, "archive");
     context = ContextInfoCreator.createSourceContext("s", false, OnRecordError.TO_ERROR, ImmutableList.of("a"));
+    contextInPreview = ContextInfoCreator.createSourceContext("s", true, OnRecordError.TO_ERROR, ImmutableList.of("a"));
   }
 
   private DirectorySpooler.Builder initializeAndGetBuilder() {
@@ -362,6 +364,43 @@ public class TestDirectorySpooler {
 
     Assert.assertNull(spooler.poolForFile(0, TimeUnit.MILLISECONDS));
     Assert.assertEquals(0, spoolDir.list().length);
+
+    spooler.destroy();
+  }
+
+  @Test
+  public void testDeleteInPreview() throws Exception {
+    Assert.assertTrue(spoolDir.mkdirs());
+    File logFile3 = new File(spoolDir, "x3.log").getAbsoluteFile();
+    new FileWriter(logFile3).close();
+    File logFile1 = new File(spoolDir, "x1.log").getAbsoluteFile();
+    new FileWriter(logFile1).close();
+    File logFile2 = new File(spoolDir, "x2.log").getAbsoluteFile();
+    new FileWriter(logFile2).close();
+
+    DirectorySpooler.Builder builder = initializeAndGetBuilder()
+      .setContext(contextInPreview)
+      .setMaxSpoolFiles(3)
+      .setPostProcessing(DirectorySpooler.FilePostProcessing.DELETE);
+    DirectorySpooler spooler = builder.build();
+
+
+    Assert.assertEquals(3, spoolDir.list().length);
+    Assert.assertTrue(logFile1.exists());
+    Assert.assertTrue(logFile2.exists());
+    Assert.assertTrue(logFile3.exists());
+
+    spooler.init("x2.log");
+    Assert.assertEquals(3, spoolDir.list().length);
+    Assert.assertTrue(logFile1.exists());
+    Assert.assertTrue(logFile2.exists());
+    Assert.assertTrue(logFile3.exists());
+
+    Assert.assertEquals(logFile2, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertEquals(3, spoolDir.list().length);
+    Assert.assertTrue(logFile1.exists());
+    Assert.assertTrue(logFile2.exists());
+    Assert.assertTrue(logFile3.exists());
 
     spooler.destroy();
   }

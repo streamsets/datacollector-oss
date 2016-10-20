@@ -327,7 +327,9 @@ public class DirectorySpooler {
   private void startSpooling(Path currentFile) throws IOException {
     running = true;
 
-    handleOlderFiles(currentFile);
+    if(!context.isPreview()) {
+      handleOlderFiles(currentFile);
+    }
 
     scheduledExecutor = new SafeScheduledExecutorService(1, "directory-spooler");
 
@@ -437,7 +439,7 @@ public class DirectorySpooler {
 
     Preconditions.checkState(running, "Spool directory watcher not running");
     synchronized (this) {
-      if (previousFile != null) {
+      if (previousFile != null && !context.isPreview()) {
         switch (postProcessing) {
           case NONE:
             LOG.debug("Previous file '{}' remains in spool directory", previousFile);
