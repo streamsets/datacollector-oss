@@ -320,6 +320,12 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
+    <!-- Azure libs -->
+    <fileSet>
+      <directory>${basedir}/../azure-lib/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
     <!-- InfluxDB -->
     <fileSet>
       <directory>${basedir}/../influxdb_0_9-lib/target/streamsets-libs/</directory>
