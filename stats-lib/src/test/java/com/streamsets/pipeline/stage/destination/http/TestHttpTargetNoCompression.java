@@ -23,6 +23,6 @@ public class TestHttpTargetNoCompression extends BaseHttpTargetTest {
 
   @Override
   protected HttpTarget createHttpTarget() {
-    return new HttpTarget(getBaseUri() + "send/records", "token", "sdc", "x", "y", 0, false);
+    return new HttpTarget(getBaseUri() + "send/records", "token", "sdc", "x", "y", 0, false, 5);
   }
 }

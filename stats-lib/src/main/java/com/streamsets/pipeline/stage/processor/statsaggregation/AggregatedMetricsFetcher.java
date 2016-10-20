@@ -19,7 +19,6 @@
  */
 package com.streamsets.pipeline.stage.processor.statsaggregation;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.alerts.AlertsUtil;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.restapi.bean.CounterJson;
@@ -36,6 +35,7 @@ import com.streamsets.datacollector.restapi.bean.TimerJson;
 import com.streamsets.datacollector.runner.LaneResolver;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.stage.util.StatsUtil;
 import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import org.glassfish.jersey.message.GZipEncoder;
 import org.slf4j.Logger;
@@ -113,13 +113,13 @@ public class AggregatedMetricsFetcher {
       // No-op
     }
 
-    while (attempts < retryAttempts) {
+    while (attempts < retryAttempts || retryAttempts == -1) {
       if (attempts > 0) {
         delaySecs = delaySecs * 2;
         delaySecs = Math.min(delaySecs, 16);
         LOG.warn("DPM fetchLatestAggregatedMetrics attempt '{}', waiting for '{}' seconds before retrying ...",
             attempts, delaySecs);
-        sleep(delaySecs);
+        StatsUtil.sleep(delaySecs);
       }
       attempts++;
 
@@ -176,17 +176,6 @@ public class AggregatedMetricsFetcher {
     }
 
     return metricRegistryJson;
-  }
-
-  @VisibleForTesting
-  void sleep(int secs) {
-    try {
-      Thread.sleep(secs * 1000);
-    } catch (InterruptedException ex) {
-      String msg = "Interrupted while attempting to fetch latest Metrics from DPM";
-      LOG.error(msg);
-      throw new RuntimeException(msg);
-    }
   }
 
   private MetricRegistryJson buildMetricRegistryJson(

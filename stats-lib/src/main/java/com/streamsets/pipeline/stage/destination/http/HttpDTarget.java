@@ -115,6 +115,18 @@ public class HttpDTarget extends DTargetOffsetCommitTrigger {
   )
   public boolean compressRequests;
 
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.NUMBER,
+    defaultValue = "10",
+    label = "Retry Attempts",
+    group = "HTTP",
+    description = "Max no of retries to write to time-series DPM App." +
+      " To retry indefinitely, use -1. The wait time between retries starts at 2 seconds" +
+      " and doubles until reaching 60 seconds.",
+    displayPosition = 80)
+  public int retryAttempts = 10;
+
   @Override
   protected Target createTarget() {
     return new HttpTarget(
@@ -124,7 +136,8 @@ public class HttpDTarget extends DTargetOffsetCommitTrigger {
         pipelineCommitId,
         jobId,
         waitTimeBetweenUpdates,
-        compressRequests
+        compressRequests,
+        retryAttempts
     );
   }
 }
