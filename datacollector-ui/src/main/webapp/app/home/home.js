@@ -240,9 +240,8 @@ angular
        */
       duplicatePipelineConfig: function(pipelineInfo, $event) {
         pipelineService.duplicatePipelineConfigCommand(pipelineInfo, $event)
-          .then(function(pipelines) {
-            $scope.pipelines = pipelineService.getPipelines();
-            $scope.updateFilteredPipelines();
+          .then(function() {
+            $scope.refreshPipelines();
           });
       },
 
