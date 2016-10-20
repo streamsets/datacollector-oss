@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.impl.LocalizableString;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -52,7 +53,7 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable {
   private static final String ERROR_STACKTRACE = RESERVED_PREFIX + "errorStackTrace";
   //Note: additional fields should also define in ScriptRecord
 
-  private final Map<String, Object> map;
+  private Map<String, Object> map;
 
   public HeaderImpl() {
     map = new HashMap<>();
@@ -337,4 +338,15 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable {
     return Utils.format("HeaderImpl[{}]", getSourceId());
   }
 
+  // ImmutableMap can't have null values and our map could have, so use unmodifiable map
+  public Map<String, Object> getAllAttributes() {
+    return Collections.unmodifiableMap(map);
+  }
+
+  public Map<String, Object> setAllAttributes(Map<String, Object> newAttrs) {
+    // ImmutableMap can't have null values and our map could have, so use unmodifiable map
+    Map<String, Object> old = Collections.unmodifiableMap(map);
+    map = new HashMap<>(newAttrs);
+    return old;
+  }
 }

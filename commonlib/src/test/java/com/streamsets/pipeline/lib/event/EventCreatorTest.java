@@ -22,6 +22,7 @@ package com.streamsets.pipeline.lib.event;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import org.junit.Before;
 import org.junit.Test;
@@ -88,6 +89,11 @@ public class EventCreatorTest {
     public Field set(String fieldPath, Field newField) {
       return null;
     }
+
+    public Header setHeader(Header header) {
+      return null;
+    }
+
   }
 
   Stage.Context context;

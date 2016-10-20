@@ -140,6 +140,16 @@ public class TestRecordSampler {
           public String getErrorStackTrace() {
             return null;
           }
+
+          @Override
+          public Map<String, Object> getAllAttributes() {
+            return null;
+          }
+
+          @Override
+          public Map<String, Object> setAllAttributes(Map<String, Object> newAttrs) {
+            return null;
+          }
         };
         @Override
         public Header getHeader() {
@@ -185,6 +195,7 @@ public class TestRecordSampler {
         public Field set(String fieldPath, Field newField) {
           return null;
         }
+
       });
     }
   }

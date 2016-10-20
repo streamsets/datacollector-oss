@@ -166,6 +166,7 @@
     <module>sdc-solr-api</module>
     <module>sdc-solr_cdh_4</module>
     <module>sdc-solr_6</module>
+    <module>spark-processor-protolib</module>
 
     <!--
          Stage libraries that always built with the data collector (they dont have protolibs)

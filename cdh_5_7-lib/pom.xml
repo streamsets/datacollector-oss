@@ -40,6 +40,7 @@
         <solr.test.jetty.version>8.1.10.v20130312</solr.test.jetty.version>
         <thrift.version>0.9.3</thrift.version>
         <avro.version>1.7.7</avro.version>
+        <spark.version>1.6.0-cdh5.7.2</spark.version>
     </properties>
 
     <dependencies>
@@ -117,6 +118,26 @@
             <artifactId>streamsets-datacollector-mapreduce-protolib</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.streamsets</groupId>
+            <artifactId>streamsets-datacollector-spark-api</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.streamsets</groupId>
+            <artifactId>streamsets-datacollector-spark-processor-protolib</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-core_2.10</artifactId>
+            <version>${spark.version}</version>
         </dependency>
 
         <dependency>
@@ -480,6 +501,7 @@
                                 <source>${basedir}/../hbase-protolib/src/test/java</source>
                                 <source>${basedir}/../flume-protolib/src/test/java</source>
                                 <source>${basedir}/../cluster-hdfs-protolib/src/test/java</source>
+                                <source>${basedir}/../spark-processor-protolib/src/test/java</source>
                             </sources>
                         </configuration>
                     </execution>
@@ -511,6 +533,9 @@
                                 </resource>
                                 <resource>
                                     <directory>${basedir}/../cluster-hdfs-protolib/src/test/resources</directory>
+                                </resource>
+                                <resource>
+                                    <directory>${basedir}/../spark-processor-protolib/src/test/resources</directory>
                                 </resource>
                             </resources>
                         </configuration>

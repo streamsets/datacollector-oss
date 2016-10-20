@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class RuleDefinitionValidator {
@@ -277,6 +278,16 @@ public class RuleDefinitionValidator {
 
           @Override
           public String getErrorStackTrace() {
+            return null;
+          }
+
+          @Override
+          public Map<String, Object> getAllAttributes() {
+            return null;
+          }
+
+          @Override
+          public Map<String, Object> setAllAttributes(Map<String, Object> newAttrs) {
             return null;
           }
         };
