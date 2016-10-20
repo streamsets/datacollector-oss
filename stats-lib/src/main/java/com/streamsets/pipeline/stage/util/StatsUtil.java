@@ -17,34 +17,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.http;
+package com.streamsets.pipeline.stage.util;
 
-import com.streamsets.pipeline.api.ErrorCode;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@GenerateResourceBundle
-public enum Errors implements ErrorCode {
-  HTTP_00("Error creating Http Target : {}"),
-  HTTP_01("Error serializing record '{}': {}"),
-  HTTP_02("Error writing to Http Target : {}"),
-  HTTP_03("Unable to write to Http Target after {} attempts"),
+public class StatsUtil {
 
+  private static final Logger LOG = LoggerFactory.getLogger(StatsUtil.class);
 
-  ;
-
-  private final String msg;
-  Errors(String msg) {
-    this.msg = msg;
+  public static void sleep(int secs) {
+    try {
+      Thread.sleep(secs * 1000);
+    } catch (InterruptedException ex) {
+      String msg = "Interrupted while attempting to fetch latest Metrics from DPM";
+      LOG.error(msg);
+      throw new RuntimeException(msg);
+    }
   }
-
-  @Override
-  public String getCode() {
-    return name();
-  }
-
-  @Override
-  public String getMessage() {
-    return msg;
-  }
-
 }

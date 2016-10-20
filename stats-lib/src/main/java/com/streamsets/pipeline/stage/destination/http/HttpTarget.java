@@ -36,6 +36,7 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.util.StatsUtil;
 import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +47,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -74,6 +76,7 @@ public class HttpTarget extends BaseTarget implements OffsetCommitTrigger {
   private final String pipelineCommitId;
   private final String jobId;
   private final int waitTimeBetweenUpdates;
+  private final int retryAttempts;
   private final boolean compressRequests;
   private final Map<String, Record> sdcIdToRecordMap;
 
@@ -90,7 +93,8 @@ public class HttpTarget extends BaseTarget implements OffsetCommitTrigger {
       String pipelineCommitId,
       String jobId,
       int waitTimeBetweenUpdates,
-      boolean compressRequests
+      boolean compressRequests,
+      int retryAttempts
   ) {
     this.targetUrl = targetUrl;
     this.sdcAuthToken = authToken;
@@ -100,6 +104,7 @@ public class HttpTarget extends BaseTarget implements OffsetCommitTrigger {
     this.waitTimeBetweenUpdates = waitTimeBetweenUpdates;
     this.compressRequests = compressRequests;
     sdcIdToRecordMap = new LinkedHashMap<>();
+    this.retryAttempts = retryAttempts;
   }
 
   @Override
@@ -171,27 +176,54 @@ public class HttpTarget extends BaseTarget implements OffsetCommitTrigger {
   }
 
   private void sendUpdate(List<SDCMetricsJson> sdcMetricsJsonList) throws StageException {
-    Response response = null;
-    try {
-      response = target.request()
+    int delaySecs = 1;
+    int attempts = 0;
+    while (attempts < retryAttempts || retryAttempts == -1) {
+      if (attempts > 0) {
+        delaySecs = delaySecs * 2;
+        delaySecs = Math.min(delaySecs, 60);
+        LOG.warn("Post attempt '{}', waiting for '{}' seconds before retrying ...",
+          attempts, delaySecs);
+        StatsUtil.sleep(delaySecs);
+      }
+      attempts++;
+      Response response = null;
+      try {
+        response = target.request()
           .header(X_REQUESTED_BY, SDC)
           .header(X_SS_APP_AUTH_TOKEN, sdcAuthToken.replaceAll("(\\r|\\n)", ""))
           .header(X_SS_APP_COMPONENT_ID, sdcId)
           .post(
-              Entity.json(
-                  sdcMetricsJsonList
-              )
+            Entity.json(
+              sdcMetricsJsonList
+            )
           );
-      if (response.getStatus() != 200) {
-        String responseMessage = response.readEntity(String.class);
-        LOG.error(Utils.format(Errors.HTTP_02.getMessage(), responseMessage));
-        throw new StageException(Errors.HTTP_02, responseMessage);
-      }
-    } finally {
-      if (response != null) {
-        response.close();
+        if (response.getStatus() == HttpURLConnection.HTTP_OK) {
+          return;
+        } else if (response.getStatus() == HttpURLConnection.HTTP_UNAVAILABLE) {
+          LOG.warn("Error writing to time-series app: DPM unavailable");
+          // retry
+        } else if (response.getStatus() == HttpURLConnection.HTTP_FORBIDDEN) {
+          // no retry in this case
+          String errorResponseMessage = response.readEntity(String.class);
+          LOG.error(Utils.format(Errors.HTTP_02.getMessage(), errorResponseMessage));
+          throw new StageException(Errors.HTTP_02, errorResponseMessage);
+        } else {
+          String responseMessage = response.readEntity(String.class);
+          LOG.error(Utils.format(Errors.HTTP_02.getMessage(), responseMessage));
+          //retry
+        }
+      } catch (Exception ex) {
+        LOG.error(Utils.format(Errors.HTTP_02.getMessage(), ex.toString(), ex));
+        // retry
+      } finally {
+        if (response != null) {
+          response.close();
+        }
       }
     }
+    // no success after retry
+    throw new StageException(Errors.HTTP_03, retryAttempts);
   }
 
   private SDCMetricsJson createSdcMetricJson(Record currentRecord) throws IOException {
@@ -227,4 +259,6 @@ public class HttpTarget extends BaseTarget implements OffsetCommitTrigger {
       sdcIdToRecordMap.put(record.get("/" + AggregatorUtil.SDC_ID).getValueAsString(), record);
     }
   }
+
+
 }

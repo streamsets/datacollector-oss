@@ -37,7 +37,7 @@ public class TestHttpTarget extends BaseHttpTargetTest {
 
   @Override
   protected HttpTarget createHttpTarget() {
-    return new HttpTarget(getBaseUri() + "send/records", "token", "sdc", "x", "y", 0, true);
+    return new HttpTarget(getBaseUri() + "send/records", "token", "sdc", "x", "y", 0, true, 5);
   }
 
   @Override
