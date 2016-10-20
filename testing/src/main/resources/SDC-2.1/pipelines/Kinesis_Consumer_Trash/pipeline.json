@@ -1,0 +1,370 @@
+{
+  "schemaVersion" : 2,
+  "version" : 5,
+  "uuid" : "ced894fb-b287-4481-b722-d22a2357e180",
+  "description" : "",
+  "configuration" : [ {
+    "name" : "executionMode",
+    "value" : "STANDALONE"
+  }, {
+    "name" : "deliveryGuarantee",
+    "value" : "AT_LEAST_ONCE"
+  }, {
+    "name" : "shouldRetry",
+    "value" : true
+  }, {
+    "name" : "retryAttempts",
+    "value" : -1
+  }, {
+    "name" : "memoryLimit",
+    "value" : "${jvm:maxMemoryMB() * 0.65}"
+  }, {
+    "name" : "memoryLimitExceeded",
+    "value" : "STOP_PIPELINE"
+  }, {
+    "name" : "notifyOnStates",
+    "value" : [ "RUN_ERROR", "STOPPED", "FINISHED" ]
+  }, {
+    "name" : "emailIDs",
+    "value" : [ ]
+  }, {
+    "name" : "constants",
+    "value" : [ ]
+  }, {
+    "name" : "badRecordsHandling",
+    "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget::1"
+  }, {
+    "name" : "statsAggregatorStage",
+    "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget::1"
+  }, {
+    "name" : "clusterSlaveMemory",
+    "value" : 1024
+  }, {
+    "name" : "clusterSlaveJavaOpts",
+    "value" : "-XX:PermSize=128M -XX:MaxPermSize=256M -Dlog4j.debug"
+  }, {
+    "name" : "clusterLauncherEnv",
+    "value" : [ ]
+  }, {
+    "name" : "mesosDispatcherURL",
+    "value" : null
+  }, {
+    "name" : "hdfsS3ConfDir",
+    "value" : null
+  }, {
+    "name" : "rateLimit",
+    "value" : 0
+  } ],
+  "uiInfo" : {
+    "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
+      "batchSize" : 10,
+      "timeout" : 10000,
+      "writeToDestinations" : false,
+      "showHeader" : false,
+      "showFieldType" : true,
+      "rememberMe" : false
+    }
+  },
+  "stages" : [ {
+    "instanceName" : "KinesisConsumer_01",
+    "library" : "streamsets-datacollector-aws-lib",
+    "stageName" : "com_streamsets_pipeline_stage_origin_kinesis_KinesisDSource",
+    "stageVersion" : "5",
+    "configuration" : [ {
+      "name" : "kinesisConfig.dataFormatConfig.charset",
+      "value" : "UTF-8"
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.removeCtrlChars",
+      "value" : false
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.compression",
+      "value" : "NONE"
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.filePatternInArchive",
+      "value" : "*"
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.textMaxLineLen",
+      "value" : 1024
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.useCustomDelimiter",
+      "value" : false
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.customDelimiter",
+      "value" : "\\r\\n"
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.includeCustomDelimiterInTheText",
+      "value" : false
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.jsonContent",
+      "value" : "MULTIPLE_OBJECTS"
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.jsonMaxObjectLen",
+      "value" : 4096
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.csvFileFormat",
+      "value" : "CSV"
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.csvHeader",
+      "value" : "NO_HEADER"
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.csvMaxObjectLen",
+      "value" : 1024
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.csvCustomDelimiter",
+      "value" : "|"
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.csvCustomEscape",
+      "value" : "\\"
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.csvCustomQuote",
+      "value" : "\""
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.csvRecordType",
+      "value" : "LIST_MAP"
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.csvSkipStartLines",
+      "value" : 0
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.parseNull",
+      "value" : false
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.nullConstant",
+      "value" : "\\\\N"
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.xmlRecordElement",
+      "value" : null
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.xmlMaxObjectLen",
+      "value" : 4096
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.logMode",
+      "value" : "COMMON_LOG_FORMAT"
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.logMaxObjectLen",
+      "value" : 1024
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.retainOriginalLine",
+      "value" : false
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.customLogFormat",
+      "value" : "%h %l %u %t \"%r\" %>s %b"
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.regex",
+      "value" : "^(\\S+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\d+)"
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.fieldPathsToGroupName",
+      "value" : [ {
+        "fieldPath" : "/",
+        "group" : 1
+      } ]
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.grokPatternDefinition",
+      "value" : null
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.grokPattern",
+      "value" : "%{COMMONAPACHELOG}"
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.onParseError",
+      "value" : "ERROR"
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.maxStackTraceLines",
+      "value" : 50
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.enableLog4jCustomLogFormat",
+      "value" : false
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.log4jCustomLogFormat",
+      "value" : "%r [%t] %-5p %c %x - %m%n"
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.avroSchemaSource",
+      "value" : null
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.avroSchema",
+      "value" : null
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.schemaRegistryUrls",
+      "value" : [ ]
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.schemaLookupMode",
+      "value" : "SUBJECT"
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.subject",
+      "value" : null
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.schemaId",
+      "value" : null
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.protoDescriptorFile",
+      "value" : null
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.messageType",
+      "value" : null
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.isDelimited",
+      "value" : true
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.binaryMaxObjectLen",
+      "value" : 1024
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.datagramMode",
+      "value" : "SYSLOG"
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.typesDbPath",
+      "value" : null
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.convertTime",
+      "value" : false
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.excludeInterval",
+      "value" : true
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.authFilePath",
+      "value" : null
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.wholeFileMaxObjectLen",
+      "value" : 8192
+    }, {
+      "name" : "kinesisConfig.dataFormatConfig.verifyChecksum",
+      "value" : false
+    }, {
+      "name" : "kinesisConfig.proxyConfig.useProxy",
+      "value" : false
+    }, {
+      "name" : "kinesisConfig.proxyConfig.proxyHost",
+      "value" : null
+    }, {
+      "name" : "kinesisConfig.proxyConfig.proxyPort",
+      "value" : null
+    }, {
+      "name" : "kinesisConfig.proxyConfig.proxyUser",
+      "value" : null
+    }, {
+      "name" : "kinesisConfig.proxyConfig.proxyPassword",
+      "value" : null
+    }, {
+      "name" : "kinesisConfig.applicationName",
+      "value" : "abc"
+    }, {
+      "name" : "kinesisConfig.initialPositionInStream",
+      "value" : "LATEST"
+    }, {
+      "name" : "kinesisConfig.dataFormat",
+      "value" : "JSON"
+    }, {
+      "name" : "kinesisConfig.maxBatchSize",
+      "value" : 1000
+    }, {
+      "name" : "kinesisConfig.idleTimeBetweenReads",
+      "value" : 1000
+    }, {
+      "name" : "kinesisConfig.maxWaitTime",
+      "value" : 1000
+    }, {
+      "name" : "kinesisConfig.previewWaitTime",
+      "value" : 5000
+    }, {
+      "name" : "kinesisConfig.awsConfig.awsAccessKeyId",
+      "value" : null
+    }, {
+      "name" : "kinesisConfig.awsConfig.awsSecretAccessKey",
+      "value" : null
+    }, {
+      "name" : "kinesisConfig.region",
+      "value" : "US_WEST_2"
+    }, {
+      "name" : "kinesisConfig.endpoint",
+      "value" : null
+    }, {
+      "name" : "kinesisConfig.streamName",
+      "value" : "abc"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Kinesis Consumer 1",
+      "xPos" : 60,
+      "yPos" : 51,
+      "stageType" : "SOURCE"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ "KinesisConsumer_01OutputLane14768350450960" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "Trash_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Trash 1",
+      "xPos" : 280,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ "KinesisConsumer_01OutputLane14768350450960" ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  } ],
+  "errorStage" : {
+    "instanceName" : "Discard_ErrorStage",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Error Records - Discard",
+      "xPos" : 500,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  },
+  "info" : {
+    "name" : "Kinesis_Consumer_Trash",
+    "description" : "",
+    "created" : 1476835041323,
+    "lastModified" : 1476835078817,
+    "creator" : "admin",
+    "lastModifier" : "admin",
+    "lastRev" : "0",
+    "uuid" : "52218d64-fa49-4795-bb04-978839cf19bc",
+    "valid" : false,
+    "metadata" : {
+      "labels" : [ ]
+    }
+  },
+  "metadata" : {
+    "labels" : [ ]
+  },
+  "statsAggregatorStage" : {
+    "instanceName" : "Discard_StatsAggregatorStage",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Stats Aggregator - Discard",
+      "xPos" : 280,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  },
+  "issues" : {
+    "stageIssues" : { },
+    "issueCount" : 0,
+    "pipelineIssues" : [ ]
+  },
+  "valid" : true,
+  "previewable" : true
+}

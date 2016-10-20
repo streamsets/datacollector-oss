@@ -1,0 +1,256 @@
+{
+  "schemaVersion" : 2,
+  "version" : 5,
+  "uuid" : "0fe88f06-3fde-448a-923a-53868db8e071",
+  "description" : "",
+  "configuration" : [ {
+    "name" : "executionMode",
+    "value" : "STANDALONE"
+  }, {
+    "name" : "deliveryGuarantee",
+    "value" : "AT_LEAST_ONCE"
+  }, {
+    "name" : "shouldRetry",
+    "value" : true
+  }, {
+    "name" : "retryAttempts",
+    "value" : -1
+  }, {
+    "name" : "memoryLimit",
+    "value" : "${jvm:maxMemoryMB() * 0.65}"
+  }, {
+    "name" : "memoryLimitExceeded",
+    "value" : "STOP_PIPELINE"
+  }, {
+    "name" : "notifyOnStates",
+    "value" : [ "RUN_ERROR", "STOPPED", "FINISHED" ]
+  }, {
+    "name" : "emailIDs",
+    "value" : [ ]
+  }, {
+    "name" : "constants",
+    "value" : [ ]
+  }, {
+    "name" : "badRecordsHandling",
+    "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget::1"
+  }, {
+    "name" : "statsAggregatorStage",
+    "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget::1"
+  }, {
+    "name" : "clusterSlaveMemory",
+    "value" : 1024
+  }, {
+    "name" : "clusterSlaveJavaOpts",
+    "value" : "-XX:PermSize=128M -XX:MaxPermSize=256M -Dlog4j.debug"
+  }, {
+    "name" : "clusterLauncherEnv",
+    "value" : [ ]
+  }, {
+    "name" : "mesosDispatcherURL",
+    "value" : null
+  }, {
+    "name" : "hdfsS3ConfDir",
+    "value" : null
+  }, {
+    "name" : "rateLimit",
+    "value" : 0
+  } ],
+  "uiInfo" : {
+    "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
+      "batchSize" : 10,
+      "timeout" : 10000,
+      "writeToDestinations" : false,
+      "showHeader" : false,
+      "showFieldType" : true,
+      "rememberMe" : false
+    }
+  },
+  "stages" : [ {
+    "instanceName" : "MongoDB_01",
+    "library" : "streamsets-datacollector-mongodb_3-lib",
+    "stageName" : "com_streamsets_pipeline_stage_origin_mongodb_MongoDBDSource",
+    "stageVersion" : "2",
+    "configuration" : [ {
+      "name" : "configBean.mongoConfig.connectionString",
+      "value" : "abc"
+    }, {
+      "name" : "configBean.mongoConfig.database",
+      "value" : "abc"
+    }, {
+      "name" : "configBean.mongoConfig.collection",
+      "value" : "abc"
+    }, {
+      "name" : "configBean.mongoConfig.authenticationType",
+      "value" : "NONE"
+    }, {
+      "name" : "configBean.mongoConfig.username",
+      "value" : null
+    }, {
+      "name" : "configBean.mongoConfig.password",
+      "value" : null
+    }, {
+      "name" : "configBean.mongoConfig.connectionsPerHost",
+      "value" : 100
+    }, {
+      "name" : "configBean.mongoConfig.minConnectionsPerHost",
+      "value" : 0
+    }, {
+      "name" : "configBean.mongoConfig.connectTimeout",
+      "value" : 10000
+    }, {
+      "name" : "configBean.mongoConfig.maxConnectionIdleTime",
+      "value" : 0
+    }, {
+      "name" : "configBean.mongoConfig.maxConnectionLifeTime",
+      "value" : 0
+    }, {
+      "name" : "configBean.mongoConfig.maxWaitTime",
+      "value" : 120000
+    }, {
+      "name" : "configBean.mongoConfig.serverSelectionTimeout",
+      "value" : 30000
+    }, {
+      "name" : "configBean.mongoConfig.threadsAllowedToBlockForConnectionMultiplier",
+      "value" : 5
+    }, {
+      "name" : "configBean.mongoConfig.heartbeatFrequency",
+      "value" : 10000
+    }, {
+      "name" : "configBean.mongoConfig.minHeartbeatFrequency",
+      "value" : 500
+    }, {
+      "name" : "configBean.mongoConfig.heartbeatConnectTimeout",
+      "value" : 20000
+    }, {
+      "name" : "configBean.mongoConfig.heartbeatSocketTimeout",
+      "value" : 20000
+    }, {
+      "name" : "configBean.mongoConfig.localThreshold",
+      "value" : 15
+    }, {
+      "name" : "configBean.mongoConfig.requiredReplicaSetName",
+      "value" : null
+    }, {
+      "name" : "configBean.mongoConfig.cursorFinalizerEnabled",
+      "value" : true
+    }, {
+      "name" : "configBean.mongoConfig.socketKeepAlive",
+      "value" : false
+    }, {
+      "name" : "configBean.mongoConfig.socketTimeout",
+      "value" : 0
+    }, {
+      "name" : "configBean.mongoConfig.sslEnabled",
+      "value" : false
+    }, {
+      "name" : "configBean.mongoConfig.sslInvalidHostNameAllowed",
+      "value" : false
+    }, {
+      "name" : "configBean.isCapped",
+      "value" : true
+    }, {
+      "name" : "configBean.initialOffset",
+      "value" : "2015-01-01 00:00:00"
+    }, {
+      "name" : "configBean.offsetField",
+      "value" : "_id"
+    }, {
+      "name" : "configBean.batchSize",
+      "value" : 1000
+    }, {
+      "name" : "configBean.maxBatchWaitTime",
+      "value" : "${5 * SECONDS}"
+    }, {
+      "name" : "configBean.readPreference",
+      "value" : "SECONDARY_PREFERRED"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "MongoDB 1",
+      "xPos" : 60,
+      "yPos" : 50,
+      "stageType" : "SOURCE"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ "MongoDB_01OutputLane14768351105200" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "Trash_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Trash 1",
+      "xPos" : 280,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ "MongoDB_01OutputLane14768351105200" ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  } ],
+  "errorStage" : {
+    "instanceName" : "Discard_ErrorStage",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Error Records - Discard",
+      "xPos" : 500,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  },
+  "info" : {
+    "name" : "MongoDB_Trash",
+    "description" : "",
+    "created" : 1476835106698,
+    "lastModified" : 1476835130163,
+    "creator" : "admin",
+    "lastModifier" : "admin",
+    "lastRev" : "0",
+    "uuid" : "3cd76705-d53d-4389-8e19-470c226b27e1",
+    "valid" : false,
+    "metadata" : {
+      "labels" : [ ]
+    }
+  },
+  "metadata" : {
+    "labels" : [ ]
+  },
+  "statsAggregatorStage" : {
+    "instanceName" : "Discard_StatsAggregatorStage",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Stats Aggregator - Discard",
+      "xPos" : 280,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  },
+  "issues" : {
+    "stageIssues" : { },
+    "issueCount" : 0,
+    "pipelineIssues" : [ ]
+  },
+  "valid" : true,
+  "previewable" : true
+}

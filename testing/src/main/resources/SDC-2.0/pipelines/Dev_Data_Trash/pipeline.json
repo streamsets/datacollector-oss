@@ -1,0 +1,273 @@
+{
+  "schemaVersion" : 2,
+  "version" : 5,
+  "uuid" : "0596eca4-2c73-4cdc-881e-2fb0f5f4696f",
+  "description" : "",
+  "configuration" : [ {
+    "name" : "executionMode",
+    "value" : "STANDALONE"
+  }, {
+    "name" : "deliveryGuarantee",
+    "value" : "AT_LEAST_ONCE"
+  }, {
+    "name" : "shouldRetry",
+    "value" : true
+  }, {
+    "name" : "retryAttempts",
+    "value" : -1
+  }, {
+    "name" : "memoryLimit",
+    "value" : "${jvm:maxMemoryMB() * 0.65}"
+  }, {
+    "name" : "memoryLimitExceeded",
+    "value" : "STOP_PIPELINE"
+  }, {
+    "name" : "notifyOnStates",
+    "value" : [ "RUN_ERROR", "STOPPED", "FINISHED" ]
+  }, {
+    "name" : "emailIDs",
+    "value" : [ ]
+  }, {
+    "name" : "constants",
+    "value" : [ ]
+  }, {
+    "name" : "badRecordsHandling",
+    "value" : "streamsets-datacollector-hdp_2_2-lib::com_streamsets_pipeline_stage_destination_kafka_ToErrorKafkaDTarget::2"
+  }, {
+    "name" : "statsAggregatorStage",
+    "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget::1"
+  }, {
+    "name" : "clusterSlaveMemory",
+    "value" : 1024
+  }, {
+    "name" : "clusterSlaveJavaOpts",
+    "value" : "-XX:PermSize=128M -XX:MaxPermSize=256M -Dlog4j.debug"
+  }, {
+    "name" : "clusterLauncherEnv",
+    "value" : [ ]
+  }, {
+    "name" : "mesosDispatcherURL",
+    "value" : null
+  }, {
+    "name" : "hdfsS3ConfDir",
+    "value" : null
+  }, {
+    "name" : "rateLimit",
+    "value" : 0
+  } ],
+  "uiInfo" : {
+    "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
+      "batchSize" : 10,
+      "timeout" : 10000,
+      "writeToDestinations" : false,
+      "showHeader" : false,
+      "showFieldType" : true,
+      "rememberMe" : false
+    }
+  },
+  "stages" : [ {
+    "instanceName" : "com_streamsets_pipeline_stage_devtest_RandomDataGeneratorSource_01",
+    "library" : "streamsets-datacollector-dev-lib",
+    "stageName" : "com_streamsets_pipeline_stage_devtest_RandomDataGeneratorSource",
+    "stageVersion" : "4",
+    "configuration" : [ {
+      "name" : "dataGenConfigs",
+      "value" : [ {
+        "type" : "STRING",
+        "precision" : 10,
+        "scale" : 2
+      } ]
+    }, {
+      "name" : "rootFieldType",
+      "value" : "MAP"
+    }, {
+      "name" : "headerAttributes",
+      "value" : [ ]
+    }, {
+      "name" : "generateEvents",
+      "value" : false
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "delay",
+      "value" : 1000
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Dev Data Generator 1",
+      "xPos" : 94,
+      "yPos" : 76,
+      "stageType" : "SOURCE"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_devtest_RandomDataGeneratorSource_01OutputLane14743093328610" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Trash 1",
+      "xPos" : 417,
+      "yPos" : 84,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_devtest_RandomDataGeneratorSource_01OutputLane14743093328610" ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  } ],
+  "errorStage" : {
+    "instanceName" : "com_streamsets_pipeline_stage_destination_kafka_ToErrorKafkaDTarget_ErrorStage",
+    "library" : "streamsets-datacollector-hdp_2_2-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_kafka_ToErrorKafkaDTarget",
+    "stageVersion" : "2",
+    "configuration" : [ {
+      "name" : "kafkaConfigBean.kafkaConfig.metadataBrokerList",
+      "value" : "localhost:9092"
+    }, {
+      "name" : "kafkaConfigBean.kafkaConfig.runtimeTopicResolution",
+      "value" : false
+    }, {
+      "name" : "kafkaConfigBean.kafkaConfig.topicExpression",
+      "value" : "${record:value('/topic')}"
+    }, {
+      "name" : "kafkaConfigBean.kafkaConfig.topicWhiteList",
+      "value" : "*"
+    }, {
+      "name" : "kafkaConfigBean.kafkaConfig.topic",
+      "value" : "topicName"
+    }, {
+      "name" : "kafkaConfigBean.kafkaConfig.partitionStrategy",
+      "value" : "ROUND_ROBIN"
+    }, {
+      "name" : "kafkaConfigBean.kafkaConfig.partition",
+      "value" : "${0}"
+    }, {
+      "name" : "kafkaConfigBean.kafkaConfig.singleMessagePerBatch",
+      "value" : false
+    }, {
+      "name" : "kafkaConfigBean.kafkaConfig.kafkaProducerConfigs",
+      "value" : [ ]
+    }, {
+      "name" : "kafkaConfigBean.dataGeneratorFormatConfig.charset",
+      "value" : "UTF-8"
+    }, {
+      "name" : "kafkaConfigBean.dataGeneratorFormatConfig.csvFileFormat",
+      "value" : "CSV"
+    }, {
+      "name" : "kafkaConfigBean.dataGeneratorFormatConfig.csvHeader",
+      "value" : "NO_HEADER"
+    }, {
+      "name" : "kafkaConfigBean.dataGeneratorFormatConfig.csvReplaceNewLines",
+      "value" : true
+    }, {
+      "name" : "kafkaConfigBean.dataGeneratorFormatConfig.csvReplaceNewLinesString",
+      "value" : " "
+    }, {
+      "name" : "kafkaConfigBean.dataGeneratorFormatConfig.csvCustomDelimiter",
+      "value" : "|"
+    }, {
+      "name" : "kafkaConfigBean.dataGeneratorFormatConfig.csvCustomEscape",
+      "value" : "\\"
+    }, {
+      "name" : "kafkaConfigBean.dataGeneratorFormatConfig.csvCustomQuote",
+      "value" : "\""
+    }, {
+      "name" : "kafkaConfigBean.dataGeneratorFormatConfig.jsonMode",
+      "value" : "MULTIPLE_OBJECTS"
+    }, {
+      "name" : "kafkaConfigBean.dataGeneratorFormatConfig.textFieldPath",
+      "value" : "/"
+    }, {
+      "name" : "kafkaConfigBean.dataGeneratorFormatConfig.textEmptyLineIfNull",
+      "value" : false
+    }, {
+      "name" : "kafkaConfigBean.dataGeneratorFormatConfig.avroSchemaInHeader",
+      "value" : true
+    }, {
+      "name" : "kafkaConfigBean.dataGeneratorFormatConfig.avroSchema",
+      "value" : null
+    }, {
+      "name" : "kafkaConfigBean.dataGeneratorFormatConfig.includeSchema",
+      "value" : true
+    }, {
+      "name" : "kafkaConfigBean.dataGeneratorFormatConfig.avroCompression",
+      "value" : "NULL"
+    }, {
+      "name" : "kafkaConfigBean.dataGeneratorFormatConfig.binaryFieldPath",
+      "value" : "/"
+    }, {
+      "name" : "kafkaConfigBean.dataGeneratorFormatConfig.protoDescriptorFile",
+      "value" : null
+    }, {
+      "name" : "kafkaConfigBean.dataGeneratorFormatConfig.messageType",
+      "value" : null
+    }, {
+      "name" : "kafkaConfigBean.dataGeneratorFormatConfig.fileNameEL",
+      "value" : "${record:value('/fileInfo/filename')}"
+    }, {
+      "name" : "kafkaConfigBean.dataGeneratorFormatConfig.wholeFileExistsAction",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "kafkaConfigBean.dataGeneratorFormatConfig.includeChecksumInTheEvents",
+      "value" : false
+    }, {
+      "name" : "kafkaConfigBean.dataGeneratorFormatConfig.checksumAlgorithm",
+      "value" : "MD5"
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Error Records - Write to Kafka",
+      "xPos" : 637,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  },
+  "info" : {
+    "name" : "Dev_Data_Trash",
+    "description" : "",
+    "created" : 1474741945445,
+    "lastModified" : 1474741945445,
+    "creator" : "admin",
+    "lastModifier" : "admin",
+    "lastRev" : "0",
+    "uuid" : "21aa958c-9068-4b5f-89f6-7bfbe3f5cee7",
+    "valid" : false,
+    "metadata" : null
+  },
+  "metadata" : {
+    "labels" : [ ]
+  },
+  "statsAggregatorStage" : {
+    "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget_StatsAggregatorStage",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Stats Aggregator - Discard",
+      "xPos" : 322,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  },
+  "issues" : {
+    "pipelineIssues" : [ ],
+    "stageIssues" : { },
+    "issueCount" : 0
+  },
+  "valid" : true,
+  "previewable" : true
+}

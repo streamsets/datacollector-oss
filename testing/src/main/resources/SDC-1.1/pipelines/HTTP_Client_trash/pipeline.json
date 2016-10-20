@@ -1,0 +1,236 @@
+{
+  "schemaVersion" : 1,
+  "version" : 3,
+  "uuid" : "b823f0bd-8d6d-4310-8410-f71030504ed3",
+  "description" : "",
+  "configuration" : [ {
+    "name" : "executionMode",
+    "value" : "STANDALONE"
+  }, {
+    "name" : "deliveryGuarantee",
+    "value" : "AT_LEAST_ONCE"
+  }, {
+    "name" : "shouldRetry",
+    "value" : true
+  }, {
+    "name" : "retryAttempts",
+    "value" : -1
+  }, {
+    "name" : "memoryLimit",
+    "value" : "${jvm:maxMemoryMB() * 0.65}"
+  }, {
+    "name" : "memoryLimitExceeded",
+    "value" : "STOP_PIPELINE"
+  }, {
+    "name" : "notifyOnStates",
+    "value" : [ "RUN_ERROR", "STOPPED", "FINISHED" ]
+  }, {
+    "name" : "emailIDs",
+    "value" : [ ]
+  }, {
+    "name" : "constants",
+    "value" : [ ]
+  }, {
+    "name" : "badRecordsHandling",
+    "value" : "streamsets-datacollector-hdp_2_3-lib::com_streamsets_pipeline_stage_destination_kafka_ToErrorKafkaDTarget::1"
+  }, {
+    "name" : "clusterSlaveMemory",
+    "value" : 1024
+  }, {
+    "name" : "clusterSlaveJavaOpts",
+    "value" : "-XX:PermSize=128M -XX:MaxPermSize=256M -Dlog4j.debug"
+  }, {
+    "name" : "clusterLauncherEnv",
+    "value" : [ ]
+  } ],
+  "uiInfo" : {
+    "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
+      "batchSize" : 10,
+      "timeout" : 10000,
+      "writeToDestinations" : false,
+      "showHeader" : false,
+      "showFieldType" : true,
+      "rememberMe" : false
+    }
+  },
+  "stages" : [ {
+    "instanceName" : "com_streamsets_pipeline_stage_origin_http_HttpClientDSource1474743618439",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_origin_http_HttpClientDSource",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "dataFormat",
+      "value" : "JSON"
+    }, {
+      "name" : "resourceUrl",
+      "value" : "https://stream.twitter.com/1.1/statuses/sample.json"
+    }, {
+      "name" : "httpMethod",
+      "value" : "GET"
+    }, {
+      "name" : "requestData",
+      "value" : null
+    }, {
+      "name" : "requestTimeoutMillis",
+      "value" : 1000
+    }, {
+      "name" : "httpMode",
+      "value" : "STREAMING"
+    }, {
+      "name" : "pollingInterval",
+      "value" : 5000
+    }, {
+      "name" : "isOAuthEnabled",
+      "value" : false
+    }, {
+      "name" : "batchSize",
+      "value" : 100
+    }, {
+      "name" : "maxBatchWaitTime",
+      "value" : 5000
+    }, {
+      "name" : "consumerKey",
+      "value" : null
+    }, {
+      "name" : "consumerSecret",
+      "value" : null
+    }, {
+      "name" : "token",
+      "value" : null
+    }, {
+      "name" : "tokenSecret",
+      "value" : null
+    }, {
+      "name" : "jsonMode",
+      "value" : "MULTIPLE_OBJECTS"
+    }, {
+      "name" : "entityDelimiter",
+      "value" : "\\r\\n"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "HTTP Client 1",
+      "xPos" : 60,
+      "yPos" : 50,
+      "stageType" : "SOURCE"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_origin_http_HttpClientDSource1474743618439OutputLane14747436184390" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget1474743624301",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Trash 1",
+      "xPos" : 280,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_http_HttpClientDSource1474743618439OutputLane14747436184390" ],
+    "outputLanes" : [ ]
+  } ],
+  "errorStage" : {
+    "instanceName" : "com_streamsets_pipeline_stage_destination_kafka_ToErrorKafkaDTarget1474743634805",
+    "library" : "streamsets-datacollector-hdp_2_3-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_kafka_ToErrorKafkaDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "metadataBrokerList",
+      "value" : "localhost:9092"
+    }, {
+      "name" : "runtimeTopicResolution",
+      "value" : false
+    }, {
+      "name" : "topicExpression",
+      "value" : "${record:value('/topic')}"
+    }, {
+      "name" : "topicWhiteList",
+      "value" : "*"
+    }, {
+      "name" : "topic",
+      "value" : "topicName"
+    }, {
+      "name" : "partitionStrategy",
+      "value" : "ROUND_ROBIN"
+    }, {
+      "name" : "partition",
+      "value" : "${0}"
+    }, {
+      "name" : "singleMessagePerBatch",
+      "value" : false
+    }, {
+      "name" : "csvFileFormat",
+      "value" : "CSV"
+    }, {
+      "name" : "kafkaProducerConfigs",
+      "value" : [ {
+        "key" : "queue.buffering.max.ms",
+        "value" : "5000"
+      }, {
+        "key" : "message.send.max.retries",
+        "value" : "10"
+      }, {
+        "key" : "retry.backoff.ms",
+        "value" : "1000"
+      } ]
+    }, {
+      "name" : "csvHeader",
+      "value" : "NO_HEADER"
+    }, {
+      "name" : "csvReplaceNewLines",
+      "value" : true
+    }, {
+      "name" : "jsonMode",
+      "value" : "MULTIPLE_OBJECTS"
+    }, {
+      "name" : "textFieldPath",
+      "value" : "/"
+    }, {
+      "name" : "textEmptyLineIfNull",
+      "value" : false
+    }, {
+      "name" : "avroSchema",
+      "value" : null
+    }, {
+      "name" : "includeSchema",
+      "value" : true
+    }, {
+      "name" : "binaryFieldPath",
+      "value" : "/"
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Bad Records - Write to Kafka",
+      "xPos" : 500,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ ]
+  },
+  "info" : {
+    "name" : "HTTP_Client_trash",
+    "description" : "",
+    "created" : 1474743613121,
+    "lastModified" : 1474743629541,
+    "creator" : "admin",
+    "lastModifier" : "admin",
+    "lastRev" : "0",
+    "uuid" : "93b8f1a6-3090-41ea-ad3f-f259ba91b753",
+    "valid" : false
+  },
+  "issues" : {
+    "pipelineIssues" : [ ],
+    "stageIssues" : { },
+    "issueCount" : 0
+  },
+  "valid" : true,
+  "previewable" : true
+}

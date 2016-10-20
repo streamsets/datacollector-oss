@@ -1,0 +1,440 @@
+{
+  "schemaVersion" : 2,
+  "version" : 5,
+  "uuid" : "e36126e9-13b5-4f80-bf4a-565a31532342",
+  "description" : "",
+  "configuration" : [ {
+    "name" : "executionMode",
+    "value" : "STANDALONE"
+  }, {
+    "name" : "deliveryGuarantee",
+    "value" : "AT_LEAST_ONCE"
+  }, {
+    "name" : "shouldRetry",
+    "value" : true
+  }, {
+    "name" : "retryAttempts",
+    "value" : -1
+  }, {
+    "name" : "memoryLimit",
+    "value" : "${jvm:maxMemoryMB() * 0.65}"
+  }, {
+    "name" : "memoryLimitExceeded",
+    "value" : "STOP_PIPELINE"
+  }, {
+    "name" : "notifyOnStates",
+    "value" : [ "RUN_ERROR", "STOPPED", "FINISHED" ]
+  }, {
+    "name" : "emailIDs",
+    "value" : [ ]
+  }, {
+    "name" : "constants",
+    "value" : [ ]
+  }, {
+    "name" : "badRecordsHandling",
+    "value" : "streamsets-datacollector-elasticsearch_1_4-lib::com_streamsets_pipeline_stage_destination_elasticsearch_ToErrorElasticSearchDTarget::3"
+  }, {
+    "name" : "statsAggregatorStage",
+    "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget::1"
+  }, {
+    "name" : "clusterSlaveMemory",
+    "value" : 1024
+  }, {
+    "name" : "clusterSlaveJavaOpts",
+    "value" : "-XX:PermSize=128M -XX:MaxPermSize=256M -Dlog4j.debug"
+  }, {
+    "name" : "clusterLauncherEnv",
+    "value" : [ ]
+  }, {
+    "name" : "mesosDispatcherURL",
+    "value" : null
+  }, {
+    "name" : "hdfsS3ConfDir",
+    "value" : null
+  }, {
+    "name" : "rateLimit",
+    "value" : 0
+  } ],
+  "uiInfo" : {
+    "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
+      "batchSize" : 10,
+      "timeout" : 10000,
+      "writeToDestinations" : false,
+      "showHeader" : false,
+      "showFieldType" : true,
+      "rememberMe" : false
+    }
+  },
+  "stages" : [ {
+    "instanceName" : "com_streamsets_pipeline_stage_origin_s3_AmazonS3DSource_01",
+    "library" : "streamsets-datacollector-aws-lib",
+    "stageName" : "com_streamsets_pipeline_stage_origin_s3_AmazonS3DSource",
+    "stageVersion" : "6",
+    "configuration" : [ {
+      "name" : "s3ConfigBean.basicConfig.maxBatchSize",
+      "value" : 1000
+    }, {
+      "name" : "s3ConfigBean.basicConfig.maxWaitTime",
+      "value" : 2000
+    }, {
+      "name" : "s3ConfigBean.proxyConfig.useProxy",
+      "value" : false
+    }, {
+      "name" : "s3ConfigBean.proxyConfig.proxyHost",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.proxyConfig.proxyPort",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.proxyConfig.proxyUser",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.proxyConfig.proxyPassword",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.dataFormat",
+      "value" : "JSON"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.charset",
+      "value" : "UTF-8"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.removeCtrlChars",
+      "value" : false
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.compression",
+      "value" : "NONE"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.filePatternInArchive",
+      "value" : "*"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.textMaxLineLen",
+      "value" : 1024
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.jsonContent",
+      "value" : "MULTIPLE_OBJECTS"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.jsonMaxObjectLen",
+      "value" : 4096
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.csvFileFormat",
+      "value" : "CSV"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.csvHeader",
+      "value" : "NO_HEADER"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.csvMaxObjectLen",
+      "value" : 1024
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.csvCustomDelimiter",
+      "value" : "|"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.csvCustomEscape",
+      "value" : "\\"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.csvCustomQuote",
+      "value" : "\""
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.csvRecordType",
+      "value" : "LIST_MAP"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.csvSkipStartLines",
+      "value" : 0
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.parseNull",
+      "value" : false
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.nullConstant",
+      "value" : "\\\\N"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.xmlRecordElement",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.xmlMaxObjectLen",
+      "value" : 4096
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.logMode",
+      "value" : "COMMON_LOG_FORMAT"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.logMaxObjectLen",
+      "value" : 1024
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.retainOriginalLine",
+      "value" : false
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.customLogFormat",
+      "value" : "%h %l %u %t \"%r\" %>s %b"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.regex",
+      "value" : "^(\\S+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\d+)"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.fieldPathsToGroupName",
+      "value" : [ {
+        "fieldPath" : "/",
+        "group" : 1
+      } ]
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.grokPatternDefinition",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.grokPattern",
+      "value" : "%{COMMONAPACHELOG}"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.onParseError",
+      "value" : "ERROR"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.maxStackTraceLines",
+      "value" : 50
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.enableLog4jCustomLogFormat",
+      "value" : false
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.log4jCustomLogFormat",
+      "value" : "%r [%t] %-5p %c %x - %m%n"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.avroSchema",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.protoDescriptorFile",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.messageType",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.isDelimited",
+      "value" : true
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.binaryMaxObjectLen",
+      "value" : 1024
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.datagramMode",
+      "value" : "SYSLOG"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.typesDbPath",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.convertTime",
+      "value" : false
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.excludeInterval",
+      "value" : true
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.authFilePath",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.wholeFileMaxObjectLen",
+      "value" : 8192
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.verifyChecksum",
+      "value" : false
+    }, {
+      "name" : "s3ConfigBean.errorConfig.errorHandlingOption",
+      "value" : "NONE"
+    }, {
+      "name" : "s3ConfigBean.errorConfig.archivingOption",
+      "value" : "MOVE_TO_PREFIX"
+    }, {
+      "name" : "s3ConfigBean.errorConfig.errorPrefix",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.errorConfig.errorBucket",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.postProcessingConfig.postProcessing",
+      "value" : "NONE"
+    }, {
+      "name" : "s3ConfigBean.postProcessingConfig.archivingOption",
+      "value" : "MOVE_TO_PREFIX"
+    }, {
+      "name" : "s3ConfigBean.postProcessingConfig.postProcessPrefix",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.postProcessingConfig.postProcessBucket",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.s3FileConfig.prefixPattern",
+      "value" : "abc"
+    }, {
+      "name" : "s3ConfigBean.s3FileConfig.overrunLimit",
+      "value" : 128
+    }, {
+      "name" : "s3ConfigBean.s3Config.awsConfig.awsAccessKeyId",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.s3Config.region",
+      "value" : "US_WEST_2"
+    }, {
+      "name" : "s3ConfigBean.s3Config.bucket",
+      "value" : "1000"
+    }, {
+      "name" : "s3ConfigBean.s3Config.commonPrefix",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.s3Config.delimiter",
+      "value" : "/"
+    }, {
+      "name" : "s3ConfigBean.enableMetaData",
+      "value" : false
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "s3ConfigBean.s3FileConfig.objectOrdering",
+      "value" : "TIMESTAMP"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.useCustomDelimiter",
+      "value" : false
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.customDelimiter",
+      "value" : "\r\n"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.includeCustomDelimiterInTheText",
+      "value" : false
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Amazon S3 1",
+      "xPos" : 34,
+      "yPos" : 67,
+      "stageType" : "SOURCE"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_origin_s3_AmazonS3DSource_01OutputLane14743038400720" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Trash 1",
+      "xPos" : 531,
+      "yPos" : 68,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_s3_AmazonS3DSource_01OutputLane14743038400720" ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  } ],
+  "errorStage" : {
+    "instanceName" : "com_streamsets_pipeline_stage_destination_elasticsearch_ToErrorElasticSearchDTarget_ErrorStage",
+    "library" : "streamsets-datacollector-elasticsearch_1_4-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_elasticsearch_ToErrorElasticSearchDTarget",
+    "stageVersion" : "3",
+    "configuration" : [ {
+      "name" : "elasticSearchConfigBean.shieldConfigBean.shieldUser",
+      "value" : "username:password"
+    }, {
+      "name" : "elasticSearchConfigBean.shieldConfigBean.shieldTransportSsl",
+      "value" : true
+    }, {
+      "name" : "elasticSearchConfigBean.shieldConfigBean.sslKeystorePath",
+      "value" : null
+    }, {
+      "name" : "elasticSearchConfigBean.shieldConfigBean.sslKeystorePassword",
+      "value" : null
+    }, {
+      "name" : "elasticSearchConfigBean.shieldConfigBean.sslTruststorePath",
+      "value" : null
+    }, {
+      "name" : "elasticSearchConfigBean.shieldConfigBean.sslTruststorePassword",
+      "value" : null
+    }, {
+      "name" : "elasticSearchConfigBean.clusterName",
+      "value" : "elasticsearch"
+    }, {
+      "name" : "elasticSearchConfigBean.uris",
+      "value" : [ "hostname:port" ]
+    }, {
+      "name" : "elasticSearchConfigBean.httpUri",
+      "value" : "hostname:port"
+    }, {
+      "name" : "elasticSearchConfigBean.useShield",
+      "value" : false
+    }, {
+      "name" : "elasticSearchConfigBean.useElasticCloud",
+      "value" : false
+    }, {
+      "name" : "elasticSearchConfigBean.clientSniff",
+      "value" : false
+    }, {
+      "name" : "elasticSearchConfigBean.configs",
+      "value" : [ ]
+    }, {
+      "name" : "elasticSearchConfigBean.timeDriver",
+      "value" : "${time:now()}"
+    }, {
+      "name" : "elasticSearchConfigBean.timeZoneID",
+      "value" : "UTC"
+    }, {
+      "name" : "elasticSearchConfigBean.indexTemplate",
+      "value" : "1000"
+    }, {
+      "name" : "elasticSearchConfigBean.typeTemplate",
+      "value" : "1000"
+    }, {
+      "name" : "elasticSearchConfigBean.docIdTemplate",
+      "value" : null
+    }, {
+      "name" : "elasticSearchConfigBean.charset",
+      "value" : "UTF-8"
+    }, {
+      "name" : "elasticSearchConfigBean.upsert",
+      "value" : false
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Error Records - Write to Elasticsearch",
+      "xPos" : 751,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  },
+  "info" : {
+    "name" : "source_trash",
+    "description" : "",
+    "created" : 1474742353215,
+    "lastModified" : 1474742353215,
+    "creator" : "admin",
+    "lastModifier" : "admin",
+    "lastRev" : "0",
+    "uuid" : "8a63ba8f-e0bd-48eb-bf11-ff0896efa9df",
+    "valid" : false,
+    "metadata" : null
+  },
+  "metadata" : {
+    "labels" : [ ]
+  },
+  "statsAggregatorStage" : {
+    "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget_StatsAggregatorStage",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Stats Aggregator - Discard",
+      "xPos" : 197,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  },
+  "issues" : {
+    "pipelineIssues" : [ ],
+    "stageIssues" : { },
+    "issueCount" : 0
+  },
+  "valid" : true,
+  "previewable" : true
+}

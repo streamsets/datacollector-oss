@@ -1,0 +1,232 @@
+{
+  "schemaVersion" : 2,
+  "version" : 5,
+  "uuid" : "ca27ca2c-bdf4-4f18-9f7c-bf4536b06622",
+  "description" : "",
+  "configuration" : [ {
+    "name" : "executionMode",
+    "value" : "STANDALONE"
+  }, {
+    "name" : "deliveryGuarantee",
+    "value" : "AT_LEAST_ONCE"
+  }, {
+    "name" : "shouldRetry",
+    "value" : true
+  }, {
+    "name" : "retryAttempts",
+    "value" : -1
+  }, {
+    "name" : "memoryLimit",
+    "value" : "${jvm:maxMemoryMB() * 0.65}"
+  }, {
+    "name" : "memoryLimitExceeded",
+    "value" : "STOP_PIPELINE"
+  }, {
+    "name" : "notifyOnStates",
+    "value" : [ "RUN_ERROR", "STOPPED", "FINISHED" ]
+  }, {
+    "name" : "emailIDs",
+    "value" : [ ]
+  }, {
+    "name" : "constants",
+    "value" : [ ]
+  }, {
+    "name" : "badRecordsHandling",
+    "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget::1"
+  }, {
+    "name" : "statsAggregatorStage",
+    "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget::1"
+  }, {
+    "name" : "clusterSlaveMemory",
+    "value" : 1024
+  }, {
+    "name" : "clusterSlaveJavaOpts",
+    "value" : "-XX:PermSize=128M -XX:MaxPermSize=256M -Dlog4j.debug"
+  }, {
+    "name" : "clusterLauncherEnv",
+    "value" : [ ]
+  }, {
+    "name" : "mesosDispatcherURL",
+    "value" : null
+  }, {
+    "name" : "hdfsS3ConfDir",
+    "value" : null
+  }, {
+    "name" : "rateLimit",
+    "value" : 0
+  } ],
+  "uiInfo" : {
+    "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
+      "batchSize" : 10,
+      "timeout" : 10000,
+      "writeToDestinations" : false,
+      "showHeader" : false,
+      "showFieldType" : true,
+      "rememberMe" : false
+    }
+  },
+  "stages" : [ {
+    "instanceName" : "OracleCDCClient_01",
+    "library" : "streamsets-datacollector-jdbc-lib",
+    "stageName" : "com_streamsets_pipeline_stage_origin_jdbc_cdc_oracle_OracleCDCDSource",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "hikariConf.connectionString",
+      "value" : "abc"
+    }, {
+      "name" : "hikariConf.useCredentials",
+      "value" : true
+    }, {
+      "name" : "hikariConf.username",
+      "value" : "abc"
+    }, {
+      "name" : "hikariConf.password",
+      "value" : "abc"
+    }, {
+      "name" : "hikariConf.driverProperties",
+      "value" : [ ]
+    }, {
+      "name" : "hikariConf.driverClassName",
+      "value" : null
+    }, {
+      "name" : "hikariConf.connectionTestQuery",
+      "value" : null
+    }, {
+      "name" : "hikariConf.maximumPoolSize",
+      "value" : 1
+    }, {
+      "name" : "hikariConf.minIdle",
+      "value" : 1
+    }, {
+      "name" : "hikariConf.connectionTimeout",
+      "value" : "${30 * SECONDS}"
+    }, {
+      "name" : "hikariConf.idleTimeout",
+      "value" : "${10 * MINUTES}"
+    }, {
+      "name" : "hikariConf.maxLifetime",
+      "value" : "${30 * MINUTES}"
+    }, {
+      "name" : "hikariConf.readOnly",
+      "value" : true
+    }, {
+      "name" : "oracleCDCConfigBean.baseConfigBean.maxBatchSize",
+      "value" : 100
+    }, {
+      "name" : "oracleCDCConfigBean.baseConfigBean.database",
+      "value" : "abc"
+    }, {
+      "name" : "oracleCDCConfigBean.baseConfigBean.tables",
+      "value" : [ "" ]
+    }, {
+      "name" : "oracleCDCConfigBean.baseConfigBean.changeTypes",
+      "value" : [ "INSERT", "UPDATE", "DELETE", "SELECT_FOR_UPDATE" ]
+    }, {
+      "name" : "oracleCDCConfigBean.baseConfigBean.caseSensitive",
+      "value" : false
+    }, {
+      "name" : "oracleCDCConfigBean.pdb",
+      "value" : null
+    }, {
+      "name" : "oracleCDCConfigBean.startValue",
+      "value" : "LATEST"
+    }, {
+      "name" : "oracleCDCConfigBean.startDate",
+      "value" : null
+    }, {
+      "name" : "oracleCDCConfigBean.startSCN",
+      "value" : null
+    }, {
+      "name" : "oracleCDCConfigBean.dictionary",
+      "value" : "DICT_FROM_ONLINE_CATALOG"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Oracle CDC Client 1",
+      "xPos" : 60,
+      "yPos" : 50,
+      "stageType" : "SOURCE"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ "OracleCDCClient_01OutputLane14768353870980" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "Trash_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Trash 1",
+      "xPos" : 280,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ "OracleCDCClient_01OutputLane14768353870980" ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  } ],
+  "errorStage" : {
+    "instanceName" : "Discard_ErrorStage",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Error Records - Discard",
+      "xPos" : 500,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  },
+  "info" : {
+    "name" : "OracleCDC_Client_Trash",
+    "description" : "",
+    "created" : 1476835380956,
+    "lastModified" : 1476835418330,
+    "creator" : "admin",
+    "lastModifier" : "admin",
+    "lastRev" : "0",
+    "uuid" : "47996332-3674-48ef-b2c8-b28bd565e01f",
+    "valid" : false,
+    "metadata" : {
+      "labels" : [ ]
+    }
+  },
+  "metadata" : {
+    "labels" : [ ]
+  },
+  "statsAggregatorStage" : {
+    "instanceName" : "Discard_StatsAggregatorStage",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Stats Aggregator - Discard",
+      "xPos" : 280,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  },
+  "issues" : {
+    "stageIssues" : { },
+    "issueCount" : 0,
+    "pipelineIssues" : [ ]
+  },
+  "valid" : true,
+  "previewable" : true
+}

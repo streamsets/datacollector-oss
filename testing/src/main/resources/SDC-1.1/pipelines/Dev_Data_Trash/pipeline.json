@@ -1,0 +1,197 @@
+{
+  "schemaVersion" : 1,
+  "version" : 3,
+  "uuid" : "a2ac9b83-1ebd-4c99-91f1-f58dc4c3e591",
+  "description" : "",
+  "configuration" : [ {
+    "name" : "executionMode",
+    "value" : "STANDALONE"
+  }, {
+    "name" : "deliveryGuarantee",
+    "value" : "AT_LEAST_ONCE"
+  }, {
+    "name" : "shouldRetry",
+    "value" : true
+  }, {
+    "name" : "retryAttempts",
+    "value" : -1
+  }, {
+    "name" : "memoryLimit",
+    "value" : "${jvm:maxMemoryMB() * 0.65}"
+  }, {
+    "name" : "memoryLimitExceeded",
+    "value" : "STOP_PIPELINE"
+  }, {
+    "name" : "notifyOnStates",
+    "value" : [ "RUN_ERROR", "STOPPED", "FINISHED" ]
+  }, {
+    "name" : "emailIDs",
+    "value" : [ ]
+  }, {
+    "name" : "constants",
+    "value" : [ ]
+  }, {
+    "name" : "badRecordsHandling",
+    "value" : "streamsets-datacollector-apache-kafka_0_8_2-lib::com_streamsets_pipeline_stage_destination_kafka_ToErrorKafkaDTarget::1"
+  }, {
+    "name" : "clusterSlaveMemory",
+    "value" : 1024
+  }, {
+    "name" : "clusterSlaveJavaOpts",
+    "value" : "-XX:PermSize=128M -XX:MaxPermSize=256M -Dlog4j.debug"
+  }, {
+    "name" : "clusterLauncherEnv",
+    "value" : [ ]
+  } ],
+  "uiInfo" : {
+    "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
+      "batchSize" : 10,
+      "timeout" : 10000,
+      "writeToDestinations" : false,
+      "showHeader" : false,
+      "showFieldType" : true,
+      "rememberMe" : false
+    }
+  },
+  "stages" : [ {
+    "instanceName" : "com_streamsets_pipeline_stage_devtest_RandomDataGeneratorSource1474743313113",
+    "library" : "streamsets-datacollector-dev-lib",
+    "stageName" : "com_streamsets_pipeline_stage_devtest_RandomDataGeneratorSource",
+    "stageVersion" : "2",
+    "configuration" : [ {
+      "name" : "dataGenConfigs",
+      "value" : [ {
+        "field" : "",
+        "type" : "STRING"
+      } ]
+    }, {
+      "name" : "rootFieldType",
+      "value" : "MAP"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Dev Data Generator 1",
+      "xPos" : 60,
+      "yPos" : 50,
+      "stageType" : "SOURCE"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_devtest_RandomDataGeneratorSource1474743313113OutputLane14747433131130" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget1474743318591",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Trash 1",
+      "xPos" : 280,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_devtest_RandomDataGeneratorSource1474743313113OutputLane14747433131130" ],
+    "outputLanes" : [ ]
+  } ],
+  "errorStage" : {
+    "instanceName" : "com_streamsets_pipeline_stage_destination_kafka_ToErrorKafkaDTarget1474743329372",
+    "library" : "streamsets-datacollector-apache-kafka_0_8_2-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_kafka_ToErrorKafkaDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "metadataBrokerList",
+      "value" : "localhost:9092"
+    }, {
+      "name" : "runtimeTopicResolution",
+      "value" : false
+    }, {
+      "name" : "topicExpression",
+      "value" : "${record:value('/topic')}"
+    }, {
+      "name" : "topicWhiteList",
+      "value" : "*"
+    }, {
+      "name" : "topic",
+      "value" : "topicName"
+    }, {
+      "name" : "partitionStrategy",
+      "value" : "ROUND_ROBIN"
+    }, {
+      "name" : "partition",
+      "value" : "${0}"
+    }, {
+      "name" : "singleMessagePerBatch",
+      "value" : false
+    }, {
+      "name" : "csvFileFormat",
+      "value" : "CSV"
+    }, {
+      "name" : "kafkaProducerConfigs",
+      "value" : [ {
+        "key" : "queue.buffering.max.ms",
+        "value" : "5000"
+      }, {
+        "key" : "message.send.max.retries",
+        "value" : "10"
+      }, {
+        "key" : "retry.backoff.ms",
+        "value" : "1000"
+      } ]
+    }, {
+      "name" : "csvHeader",
+      "value" : "NO_HEADER"
+    }, {
+      "name" : "csvReplaceNewLines",
+      "value" : true
+    }, {
+      "name" : "jsonMode",
+      "value" : "MULTIPLE_OBJECTS"
+    }, {
+      "name" : "textFieldPath",
+      "value" : "/"
+    }, {
+      "name" : "textEmptyLineIfNull",
+      "value" : false
+    }, {
+      "name" : "avroSchema",
+      "value" : null
+    }, {
+      "name" : "includeSchema",
+      "value" : true
+    }, {
+      "name" : "binaryFieldPath",
+      "value" : "/"
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Bad Records - Write to Kafka",
+      "xPos" : 500,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ ]
+  },
+  "info" : {
+    "name" : "Dev_Data_Trash",
+    "description" : "",
+    "created" : 1474743308318,
+    "lastModified" : 1474743324812,
+    "creator" : "admin",
+    "lastModifier" : "admin",
+    "lastRev" : "0",
+    "uuid" : "e044c81d-4a71-4ca6-a7ad-e3213b5610b1",
+    "valid" : false
+  },
+  "issues" : {
+    "pipelineIssues" : [ ],
+    "stageIssues" : { },
+    "issueCount" : 0
+  },
+  "valid" : true,
+  "previewable" : true
+}

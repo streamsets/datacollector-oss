@@ -1,0 +1,215 @@
+{
+  "schemaVersion" : 1,
+  "version" : 3,
+  "uuid" : "12097fd2-3b6a-4af3-a70c-f13f3be0401a",
+  "description" : "",
+  "configuration" : [ {
+    "name" : "executionMode",
+    "value" : "CLUSTER"
+  }, {
+    "name" : "deliveryGuarantee",
+    "value" : "AT_LEAST_ONCE"
+  }, {
+    "name" : "shouldRetry",
+    "value" : true
+  }, {
+    "name" : "retryAttempts",
+    "value" : -1
+  }, {
+    "name" : "memoryLimit",
+    "value" : "${jvm:maxMemoryMB() * 0.65}"
+  }, {
+    "name" : "memoryLimitExceeded",
+    "value" : "STOP_PIPELINE"
+  }, {
+    "name" : "notifyOnStates",
+    "value" : [ "RUN_ERROR", "STOPPED", "FINISHED" ]
+  }, {
+    "name" : "emailIDs",
+    "value" : [ ]
+  }, {
+    "name" : "constants",
+    "value" : [ ]
+  }, {
+    "name" : "badRecordsHandling",
+    "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget::1"
+  }, {
+    "name" : "clusterSlaveMemory",
+    "value" : 1024
+  }, {
+    "name" : "clusterSlaveJavaOpts",
+    "value" : "-XX:PermSize=128M -XX:MaxPermSize=256M -Dlog4j.debug"
+  }, {
+    "name" : "clusterLauncherEnv",
+    "value" : [ ]
+  } ],
+  "uiInfo" : {
+    "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
+      "batchSize" : 10,
+      "timeout" : 10000,
+      "writeToDestinations" : false,
+      "showHeader" : false,
+      "showFieldType" : true,
+      "rememberMe" : false
+    }
+  },
+  "stages" : [ {
+    "instanceName" : "com_streamsets_pipeline_stage_origin_hdfs_cluster_ClusterHdfsDSource1474743659129",
+    "library" : "streamsets-datacollector-cdh_5_2-lib",
+    "stageName" : "com_streamsets_pipeline_stage_origin_hdfs_cluster_ClusterHdfsDSource",
+    "stageVersion" : "2",
+    "configuration" : [ {
+      "name" : "hdfsUri",
+      "value" : null
+    }, {
+      "name" : "hdfsDirLocations",
+      "value" : [ "" ]
+    }, {
+      "name" : "avroSchema",
+      "value" : null
+    }, {
+      "name" : "recursive",
+      "value" : true
+    }, {
+      "name" : "dataFormat",
+      "value" : "AVRO"
+    }, {
+      "name" : "textMaxLineLen",
+      "value" : 1024
+    }, {
+      "name" : "jsonMaxObjectLen",
+      "value" : 4096
+    }, {
+      "name" : "logMaxObjectLen",
+      "value" : 1024
+    }, {
+      "name" : "logMode",
+      "value" : "COMMON_LOG_FORMAT"
+    }, {
+      "name" : "retainOriginalLine",
+      "value" : false
+    }, {
+      "name" : "customLogFormat",
+      "value" : "%h %l %u %t \"%r\" %>s %b"
+    }, {
+      "name" : "regex",
+      "value" : "^(\\S+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\d+)"
+    }, {
+      "name" : "fieldPathsToGroupName",
+      "value" : [ {
+        "fieldPath" : "/",
+        "group" : 1
+      } ]
+    }, {
+      "name" : "grokPatternDefinition",
+      "value" : null
+    }, {
+      "name" : "grokPattern",
+      "value" : "%{COMMONAPACHELOG}"
+    }, {
+      "name" : "enableLog4jCustomLogFormat",
+      "value" : false
+    }, {
+      "name" : "log4jCustomLogFormat",
+      "value" : "%r [%t] %-5p %c %x - %m%n"
+    }, {
+      "name" : "produceSingleRecordPerMessage",
+      "value" : false
+    }, {
+      "name" : "hdfsKerberos",
+      "value" : false
+    }, {
+      "name" : "hdfsConfDir",
+      "value" : "abc"
+    }, {
+      "name" : "hdfsUser",
+      "value" : null
+    }, {
+      "name" : "hdfsConfigs",
+      "value" : [ ]
+    }, {
+      "name" : "csvFileFormat",
+      "value" : "CSV"
+    }, {
+      "name" : "csvHeader",
+      "value" : "NO_HEADER"
+    }, {
+      "name" : "csvMaxObjectLen",
+      "value" : 1024
+    }, {
+      "name" : "csvCustomDelimiter",
+      "value" : "|"
+    }, {
+      "name" : "csvCustomEscape",
+      "value" : "\\"
+    }, {
+      "name" : "csvCustomQuote",
+      "value" : "\""
+    }, {
+      "name" : "csvRecordType",
+      "value" : "LIST_MAP"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Hadoop FS 1",
+      "xPos" : 60,
+      "yPos" : 50,
+      "stageType" : "SOURCE"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_origin_hdfs_cluster_ClusterHdfsDSource1474743659129OutputLane14747436591290" ]
+  }, {
+    "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget1474743672694",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Trash 1",
+      "xPos" : 280,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_hdfs_cluster_ClusterHdfsDSource1474743659129OutputLane14747436591290" ],
+    "outputLanes" : [ ]
+  } ],
+  "errorStage" : {
+    "instanceName" : "com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget1474743726398",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Bad Records - Discard",
+      "xPos" : 500,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ ]
+  },
+  "info" : {
+    "name" : "HadoopFS_trash",
+    "description" : "",
+    "created" : 1474743652261,
+    "lastModified" : 1474743721884,
+    "creator" : "admin",
+    "lastModifier" : "admin",
+    "lastRev" : "0",
+    "uuid" : "be92b1aa-35fb-47ac-a19c-32323838de43",
+    "valid" : false
+  },
+  "issues" : {
+    "pipelineIssues" : [ ],
+    "stageIssues" : { },
+    "issueCount" : 0
+  },
+  "valid" : true,
+  "previewable" : true
+}
