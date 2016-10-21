@@ -21,7 +21,8 @@
                     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Kudu</indexterm></indexterm>When
             you configure the Kudu destination, you specify the connection information for one or
             more Kudu masters, define the table to use, and optionally define field mappings. By
-            default, the destination writes field data to columns with matching names.</p>
+            default, the destination writes field data to columns with matching names. You can
+            configure the destination to perform upserts. </p>
         <p>You can also configure the external consistency mode and the operation timeout to use. </p>
  </conbody>
 </concept>

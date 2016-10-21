@@ -15,9 +15,11 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_yyv_v45_zw">
  <title>Update Vault Pipelines</title>
- <shortdesc>Due to a known issue in version 1.5.0.0, you can use Vault functions to call Vault
-        secrets from within any pipeline or stage property. If you are upgrading from version
-        1.5.0.0, update Vault pipelines as needed.</shortdesc>
+ <shortdesc>Due to a known issue in <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        version 1.5.0.0, you can use Vault functions to call Vault secrets from within any pipeline
+        or stage property. If you are upgrading from version 1.5.0.0, update Vault pipelines as
+        needed.</shortdesc>
  <conbody>
   <p>To protect the security of sensitive information, calling Vault is now
                         restricted to the following properties:</p>

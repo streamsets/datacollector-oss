@@ -69,6 +69,10 @@
                                         Kudu columns. By default, the destination writes field data
                                         to columns with matching names.</entry>
                                 </row>
+                                <row>
+                                    <entry>Enable Upsert</entry>
+                                    <entry>Enables upserts to the Kudu cluster. </entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>

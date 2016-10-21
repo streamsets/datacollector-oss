@@ -65,18 +65,8 @@
                                     </ul></p></entry>
                         </row>
                         <row>
-                            <entry>streamsets-datacollector-apache-kudu-0_7-lib</entry>
-                            <entry>For Kudu version 0.7.<p>Includes the Kudu
-                                destination.</p></entry>
-                        </row>
-                        <row>
-                            <entry>streamsets-datacollector-apache-kudu-0_8-lib</entry>
-                            <entry>For Kudu version 0.8.<p>Includes the Kudu
-                                destination.</p></entry>
-                        </row>
-                        <row>
-                            <entry>streamsets-datacollector-apache-kudu-0_9-lib</entry>
-                            <entry>For Kudu version 0.9.<p>Includes the Kudu
+                            <entry>streamsets-datacollector-apache-kudu_1_0-lib</entry>
+                            <entry>For Kudu version 1.0.x. <p>Includes the Kudu
                                 destination.</p></entry>
                         </row>
                         <row>
