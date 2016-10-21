@@ -294,7 +294,6 @@ public class HiveMetadataProcessor extends RecordProcessor {
     String warehouseDir, avroSchema;
     String partitionStr = "";
     LinkedHashMap<String, String> partitionValMap;
-    boolean schemaChanged = false;
 
     if (dbName.isEmpty()) {
       dbName = DEFAULT_DB;
@@ -390,15 +389,35 @@ public class HiveMetadataProcessor extends RecordProcessor {
           qualifiedName
       );
 
-      // Generate schema only if there is no table exist, or schema is changed.
-      if (tableCache == null || detectSchemaChange(recordStructure,tableCache)) {
-        schemaChanged = true;
-        avroSchema = HiveMetastoreUtil.generateAvroSchema(recordStructure, qualifiedName);
-        handleSchemaChange(dbName, tableName, recordStructure, targetPath,
-            avroSchema, batchMaker, qualifiedName, tableCache, schemaCache);
+      // True if there was a schema drift (including detection of new table)
+      boolean schemaDrift = false;
+
+      // Build final structure of how the table should look like
+      LinkedHashMap<String, HiveTypeInfo> finalStructure;
+      if(tableCache != null) {
+        // Table already exists in Hive - so it's columns will be preserved and in their original order
+        finalStructure = new LinkedHashMap<>();
+        finalStructure.putAll(tableCache.getColumnTypeInfo());
+
+        // If there is any diff (any new columns), we will append them at the end of the table
+        LinkedHashMap<String, HiveTypeInfo> columnDiff = tableCache.getDiff(recordStructure);
+        if(!columnDiff.isEmpty()) {
+          schemaDrift = true;
+          finalStructure.putAll(columnDiff);
+        }
+      } else {
+        // This table doesn't exists yet, so we'll use record own structure as the final table's structure
+        schemaDrift = true;
+        finalStructure = recordStructure;
+      }
+
+      // Generate schema only if the table do not eexist or it's schema is changed.
+      if (schemaDrift) {
+        avroSchema = HiveMetastoreUtil.generateAvroSchema(finalStructure, qualifiedName);
+        handleSchemaChange(dbName, tableName, recordStructure, targetPath, avroSchema, batchMaker, qualifiedName, tableCache, schemaCache);
       } else {
         if (schemaCache == null) { // Table exists in Hive, but this is cold start so the cache is null
-          avroSchema = HiveMetastoreUtil.generateAvroSchema(recordStructure, qualifiedName);
+          avroSchema = HiveMetastoreUtil.generateAvroSchema(finalStructure, qualifiedName);
           updateAvroCache(schemaCache, avroSchema, qualifiedName);
         } else  // No schema change, table already exists in Hive, and we have avro schema in cache.
           avroSchema = schemaCache.getSchema();
@@ -423,7 +442,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       }
       // Send record to HDFS target.
       changeRecordFieldToLowerCase(record);
-      updateRecordForHDFS(record, schemaChanged, avroSchema, targetPath);
+      updateRecordForHDFS(record, schemaDrift, avroSchema, targetPath);
       batchMaker.addRecord(record, hdfsLane);
     } catch (HiveStageCheckedException error) {
       LOG.error("Error happened when processing the record : {}" + record.toString(), error);
@@ -445,20 +464,6 @@ public class HiveMetadataProcessor extends RecordProcessor {
     if (warehouseDir.isEmpty()) {
       throw new HiveStageCheckedException(Errors.HIVE_METADATA_02, warehouseDir);
     }
-  }
-
-  // ------------ Handle New Schema ------------------------//
-  @VisibleForTesting
-  boolean detectSchemaChange(
-      LinkedHashMap<String, HiveTypeInfo> recordStructure,
-      TypeInfoCacheSupport.TypeInfo cache) throws StageException
-  {
-    LinkedHashMap<String, HiveTypeInfo> columnDiff = null;
-    // compare the record structure vs cache
-    if (cache != null) {
-      columnDiff = cache.getDiff(recordStructure);
-    }
-    return columnDiff != null && !columnDiff.isEmpty();
   }
 
   @VisibleForTesting
