@@ -190,17 +190,10 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
       if (c == NON_MASK_CHAR) {
         masked.append(toMask.charAt(index));
         index++;
-      } else if (c == MASK_CHAR) {
+      } else {
+        //We do not care whether it is a MASK_CHAR/something else, we append the character.
         masked.append(c);
         index++;
-      } else {
-        masked.append(c);
-        //The data can be either formatted or not
-        //for example ssn data could be 123456789 or 123-45-6789
-        if(toMask.charAt(index) == c) {
-          //the data is already in the required format
-          index++;
-        }
       }
     }
     return masked.toString();
