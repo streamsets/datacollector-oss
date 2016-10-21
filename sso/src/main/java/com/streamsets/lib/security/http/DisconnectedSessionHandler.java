@@ -29,7 +29,7 @@ public class DisconnectedSessionHandler {
 
   public DisconnectedSessionHandler() {
     principalsCache =
-        CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.SECONDS).expireAfterWrite(24, TimeUnit.HOURS).build();
+        CacheBuilder.newBuilder().expireAfterWrite(24, TimeUnit.HOURS).build();
   }
 
   public void add(SSOPrincipal principal) {
