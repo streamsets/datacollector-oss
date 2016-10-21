@@ -499,6 +499,9 @@ public class TestAmazonS3Source {
     s3ConfigBean.basicConfig.maxWaitTime = 1000;
     s3ConfigBean.basicConfig.maxBatchSize = 60000;
 
+    s3ConfigBean.sseConfig = new S3SSEConfigBean();
+    s3ConfigBean.sseConfig.useCustomerSSEKey = false;
+
     s3ConfigBean.dataFormatConfig = new DataParserFormatConfig();
     s3ConfigBean.dataFormat = DataFormat.TEXT;
     s3ConfigBean.dataFormatConfig.charset = "UTF-8";
@@ -540,6 +543,9 @@ public class TestAmazonS3Source {
     s3ConfigBean.basicConfig.maxWaitTime = 1000;
     s3ConfigBean.basicConfig.maxBatchSize = 60000;
 
+    s3ConfigBean.sseConfig = new S3SSEConfigBean();
+    s3ConfigBean.sseConfig.useCustomerSSEKey = false;
+
     s3ConfigBean.dataFormatConfig = new DataParserFormatConfig();
     s3ConfigBean.dataFormat = DataFormat.TEXT;
     s3ConfigBean.dataFormatConfig.charset = "UTF-8";
@@ -580,6 +586,9 @@ public class TestAmazonS3Source {
     s3ConfigBean.basicConfig = new BasicConfig();
     s3ConfigBean.basicConfig.maxWaitTime = 1000;
     s3ConfigBean.basicConfig.maxBatchSize = 60000;
+
+    s3ConfigBean.sseConfig = new S3SSEConfigBean();
+    s3ConfigBean.sseConfig.useCustomerSSEKey = false;
 
     s3ConfigBean.dataFormatConfig = new DataParserFormatConfig();
     s3ConfigBean.dataFormat = DataFormat.TEXT;
@@ -623,6 +632,9 @@ public class TestAmazonS3Source {
     s3ConfigBean.basicConfig.maxWaitTime = 1000;
     s3ConfigBean.basicConfig.maxBatchSize = 60000;
 
+    s3ConfigBean.sseConfig = new S3SSEConfigBean();
+    s3ConfigBean.sseConfig.useCustomerSSEKey = false;
+
     s3ConfigBean.dataFormatConfig = new DataParserFormatConfig();
     s3ConfigBean.dataFormat = DataFormat.TEXT;
     s3ConfigBean.dataFormatConfig.charset = "UTF-8";
@@ -663,6 +675,9 @@ public class TestAmazonS3Source {
     s3ConfigBean.basicConfig = new BasicConfig();
     s3ConfigBean.basicConfig.maxWaitTime = 1000;
     s3ConfigBean.basicConfig.maxBatchSize = 60000;
+
+    s3ConfigBean.sseConfig = new S3SSEConfigBean();
+    s3ConfigBean.sseConfig.useCustomerSSEKey = false;
 
     s3ConfigBean.dataFormatConfig = new DataParserFormatConfig();
     s3ConfigBean.dataFormat = DataFormat.LOG;
@@ -707,6 +722,9 @@ public class TestAmazonS3Source {
     s3ConfigBean.basicConfig.maxWaitTime = 1000;
     s3ConfigBean.basicConfig.maxBatchSize = 60000;
 
+    s3ConfigBean.sseConfig = new S3SSEConfigBean();
+    s3ConfigBean.sseConfig.useCustomerSSEKey = false;
+
     s3ConfigBean.dataFormatConfig = new DataParserFormatConfig();
     s3ConfigBean.dataFormat = DataFormat.LOG;
     s3ConfigBean.dataFormatConfig.charset = "UTF-8";
@@ -749,6 +767,9 @@ public class TestAmazonS3Source {
     s3ConfigBean.basicConfig = new BasicConfig();
     s3ConfigBean.basicConfig.maxWaitTime = 1000;
     s3ConfigBean.basicConfig.maxBatchSize = 60000;
+
+    s3ConfigBean.sseConfig = new S3SSEConfigBean();
+    s3ConfigBean.sseConfig.useCustomerSSEKey = false;
 
     s3ConfigBean.dataFormatConfig = new DataParserFormatConfig();
     s3ConfigBean.dataFormat = DataFormat.LOG;
@@ -793,6 +814,9 @@ public class TestAmazonS3Source {
     s3ConfigBean.basicConfig = new BasicConfig();
     s3ConfigBean.basicConfig.maxWaitTime = 1000;
     s3ConfigBean.basicConfig.maxBatchSize = 60000;
+
+    s3ConfigBean.sseConfig = new S3SSEConfigBean();
+    s3ConfigBean.sseConfig.useCustomerSSEKey = false;
 
     s3ConfigBean.dataFormatConfig = new DataParserFormatConfig();
     s3ConfigBean.dataFormat = DataFormat.LOG;

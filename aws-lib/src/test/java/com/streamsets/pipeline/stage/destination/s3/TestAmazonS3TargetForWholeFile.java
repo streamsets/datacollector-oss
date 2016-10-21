@@ -45,7 +45,6 @@ import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
 import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
-import com.streamsets.pipeline.stage.lib.aws.SSEConfigBean;
 import com.streamsets.pipeline.stage.lib.aws.TransferManagerConfig;
 import com.streamsets.pipeline.stage.origin.s3.S3Config;
 import com.streamsets.pipeline.stage.origin.s3.S3FileRef;
@@ -257,10 +256,11 @@ public class TestAmazonS3TargetForWholeFile {
       Record record = RecordCreator.create();
       record.set(
           FileRefUtil.getWholeFileRecordRootField(
-              new S3FileRef.Builder().s3Client(s3client)
-                  .verifyChecksum(true)
+              new S3FileRef.Builder()
+                  .s3Client(s3client)
                   .s3ObjectSummary(s3ObjectSummary)
-                  .verifyChecksum(false)
+                  .useSSE(false)
+                  .verifyChecksum(true)
                   .bufferSize(1024)
                   .build(),
               metadata
@@ -299,7 +299,7 @@ public class TestAmazonS3TargetForWholeFile {
     s3TargetConfigBean.timeDriverTemplate = "${time:now()}";
     s3TargetConfigBean.timeZoneID = "UTC";
     s3TargetConfigBean.s3Config = s3Config;
-    s3TargetConfigBean.sseConfig = new SSEConfigBean();
+    s3TargetConfigBean.sseConfig = new S3TargetSSEConfigBean();
     s3TargetConfigBean.proxyConfig = new ProxyConfig();
     s3TargetConfigBean.tmConfig = new TransferManagerConfig();
     s3TargetConfigBean.tmConfig.threadPoolSize = 3;

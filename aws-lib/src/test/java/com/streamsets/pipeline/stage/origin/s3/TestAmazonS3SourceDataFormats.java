@@ -38,6 +38,7 @@ import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.LogMode;
+import com.streamsets.pipeline.config.OriginAvroSchemaSource;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.sdk.SourceRunner;
@@ -391,7 +392,7 @@ public class TestAmazonS3SourceDataFormats {
         //Check file content
 
         verifyStreamCorrectness(
-            AmazonS3Util.getObject(s3client, BUCKET_NAME, s3ObjectSummary.getKey()).getObjectContent(),
+            AmazonS3Util.getObject(s3client, BUCKET_NAME, s3ObjectSummary.getKey(), false, null, null).getObjectContent(),
             record.get(FileRefUtil.FILE_REF_FIELD_PATH).getValueAsFileRef().createInputStream(
                 context,
                 InputStream.class
@@ -414,6 +415,9 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.basicConfig = new BasicConfig();
     s3ConfigBean.basicConfig.maxWaitTime = 1000;
     s3ConfigBean.basicConfig.maxBatchSize = 60000;
+
+    s3ConfigBean.sseConfig = new S3SSEConfigBean();
+    s3ConfigBean.sseConfig.useCustomerSSEKey = false;
 
     s3ConfigBean.dataFormatConfig = new DataParserFormatConfig();
     s3ConfigBean.dataFormat = DataFormat.LOG;
@@ -450,6 +454,9 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.basicConfig = new BasicConfig();
     s3ConfigBean.basicConfig.maxWaitTime = 1000;
     s3ConfigBean.basicConfig.maxBatchSize = 60000;
+
+    s3ConfigBean.sseConfig = new S3SSEConfigBean();
+    s3ConfigBean.sseConfig.useCustomerSSEKey = false;
 
     s3ConfigBean.dataFormatConfig = new DataParserFormatConfig();
     s3ConfigBean.dataFormat = DataFormat.DELIMITED;
@@ -489,6 +496,9 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.basicConfig.maxWaitTime = 1000;
     s3ConfigBean.basicConfig.maxBatchSize = 60000;
 
+    s3ConfigBean.sseConfig = new S3SSEConfigBean();
+    s3ConfigBean.sseConfig.useCustomerSSEKey = false;
+
     s3ConfigBean.dataFormatConfig = new DataParserFormatConfig();
     s3ConfigBean.dataFormat = DataFormat.SDC_JSON;
     s3ConfigBean.dataFormatConfig.charset = "UTF-8";
@@ -522,6 +532,9 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.basicConfig = new BasicConfig();
     s3ConfigBean.basicConfig.maxWaitTime = 1000;
     s3ConfigBean.basicConfig.maxBatchSize = 60000;
+
+    s3ConfigBean.sseConfig = new S3SSEConfigBean();
+    s3ConfigBean.sseConfig.useCustomerSSEKey = false;
 
     s3ConfigBean.dataFormatConfig = new DataParserFormatConfig();
     s3ConfigBean.dataFormat = DataFormat.XML;
@@ -559,6 +572,9 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.basicConfig.maxWaitTime = 1000;
     s3ConfigBean.basicConfig.maxBatchSize = 60000;
 
+    s3ConfigBean.sseConfig = new S3SSEConfigBean();
+    s3ConfigBean.sseConfig.useCustomerSSEKey = false;
+
     s3ConfigBean.dataFormatConfig = new DataParserFormatConfig();
     s3ConfigBean.dataFormat = DataFormat.JSON;
     s3ConfigBean.dataFormatConfig.charset = "UTF-8";
@@ -595,9 +611,13 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.basicConfig.maxWaitTime = 1000;
     s3ConfigBean.basicConfig.maxBatchSize = 60000;
 
+    s3ConfigBean.sseConfig = new S3SSEConfigBean();
+    s3ConfigBean.sseConfig.useCustomerSSEKey = false;
+
     s3ConfigBean.dataFormatConfig = new DataParserFormatConfig();
     s3ConfigBean.dataFormat = DataFormat.AVRO;
     s3ConfigBean.dataFormatConfig.charset = "UTF-8";
+    s3ConfigBean.dataFormatConfig.avroSchemaSource = OriginAvroSchemaSource.SOURCE;
     s3ConfigBean.dataFormatConfig.avroSchema = null;
 
     s3ConfigBean.errorConfig = new S3ErrorConfig();
@@ -628,6 +648,9 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.basicConfig = new BasicConfig();
     s3ConfigBean.basicConfig.maxWaitTime = 1000;
     s3ConfigBean.basicConfig.maxBatchSize = 60000;
+
+    s3ConfigBean.sseConfig = new S3SSEConfigBean();
+    s3ConfigBean.sseConfig.useCustomerSSEKey = false;
 
     s3ConfigBean.dataFormatConfig = new DataParserFormatConfig();
     s3ConfigBean.dataFormat = DataFormat.WHOLE_FILE;

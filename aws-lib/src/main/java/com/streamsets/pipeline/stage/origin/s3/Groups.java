@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.Label;
 @GenerateResourceBundle
 public enum Groups implements Label {
   S3("Amazon S3"),
+  SSE("SSE"),
   ERROR_HANDLING("Error Handling"),
   POST_PROCESSING("Post Processing"),
   ADVANCED("Advanced"),

@@ -31,6 +31,7 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.OriginAvroSchemaSource;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -297,6 +298,9 @@ public class TestAmazonS3Source2 {
     s3ConfigBean.basicConfig.maxWaitTime = 1000;
     s3ConfigBean.basicConfig.maxBatchSize = 60000;
 
+    s3ConfigBean.sseConfig = new S3SSEConfigBean();
+    s3ConfigBean.sseConfig.useCustomerSSEKey = false;
+
     s3ConfigBean.dataFormatConfig = new DataParserFormatConfig();
     s3ConfigBean.dataFormat = DataFormat.TEXT;
     s3ConfigBean.dataFormatConfig.charset = "UTF-8";
@@ -340,6 +344,9 @@ public class TestAmazonS3Source2 {
     s3ConfigBean.basicConfig.maxWaitTime = 1000;
     s3ConfigBean.basicConfig.maxBatchSize = 60000;
 
+    s3ConfigBean.sseConfig = new S3SSEConfigBean();
+    s3ConfigBean.sseConfig.useCustomerSSEKey = false;
+
     s3ConfigBean.dataFormatConfig = new DataParserFormatConfig();
     s3ConfigBean.dataFormat = DataFormat.TEXT;
     s3ConfigBean.dataFormatConfig.charset = "UTF-8";
@@ -378,6 +385,9 @@ public class TestAmazonS3Source2 {
     s3ConfigBean.basicConfig = new BasicConfig();
     s3ConfigBean.basicConfig.maxWaitTime = 1000;
     s3ConfigBean.basicConfig.maxBatchSize = 60000;
+
+    s3ConfigBean.sseConfig = new S3SSEConfigBean();
+    s3ConfigBean.sseConfig.useCustomerSSEKey = false;
 
     s3ConfigBean.dataFormatConfig = new DataParserFormatConfig();
     s3ConfigBean.dataFormat = DataFormat.TEXT;
@@ -418,10 +428,14 @@ public class TestAmazonS3Source2 {
     s3ConfigBean.basicConfig.maxWaitTime = 1000;
     s3ConfigBean.basicConfig.maxBatchSize = 60000;
 
+    s3ConfigBean.sseConfig = new S3SSEConfigBean();
+    s3ConfigBean.sseConfig.useCustomerSSEKey = false;
+
     s3ConfigBean.dataFormatConfig = new DataParserFormatConfig();
     s3ConfigBean.dataFormat = DataFormat.AVRO;
     s3ConfigBean.dataFormatConfig.charset = "UTF-8";
     s3ConfigBean.dataFormatConfig.textMaxLineLen = 102400;
+    s3ConfigBean.dataFormatConfig.avroSchemaSource = OriginAvroSchemaSource.SOURCE;
 
     s3ConfigBean.errorConfig = new S3ErrorConfig();
     s3ConfigBean.errorConfig.errorHandlingOption = PostProcessingOptions.NONE;

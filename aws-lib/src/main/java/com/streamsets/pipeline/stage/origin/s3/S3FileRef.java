@@ -20,13 +20,10 @@
 package com.streamsets.pipeline.stage.origin.s3;
 
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.lib.hashing.HashingUtil;
 import com.streamsets.pipeline.lib.io.fileref.AbstractFileRef;
-import com.streamsets.pipeline.lib.io.fileref.AbstractWrapperStream;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,11 +32,17 @@ import java.util.Set;
 public final class S3FileRef extends AbstractFileRef {
   private final AmazonS3Client s3Client;
   private final S3ObjectSummary s3ObjectSummary;
+  private final boolean useSSE;
+  private final String customerKey;
+  private final String customerKeyMd5;
 
   @SuppressWarnings("unchecked")
   public S3FileRef(
       AmazonS3Client s3Client,
       S3ObjectSummary s3ObjectSummary,
+      boolean useSSE,
+      String customerKey,
+      String customerKeyMd5,
       int bufferSize,
       boolean createMetrics,
       long totalSizeInBytes,
@@ -59,12 +62,23 @@ public final class S3FileRef extends AbstractFileRef {
     );
     this.s3Client = s3Client;
     this.s3ObjectSummary = s3ObjectSummary;
+    this.useSSE = useSSE;
+    this.customerKey = customerKey;
+    this.customerKeyMd5 = customerKeyMd5;
   }
   @Override
   @SuppressWarnings("unchecked")
   public <T extends AutoCloseable> T createInputStream(Class<T> streamClassType) throws IOException {
     //The object is fetched every time a stream needs to be opened.
-    return (T) AmazonS3Util.getObject(s3Client, s3ObjectSummary.getBucketName(), s3ObjectSummary.getKey()).getObjectContent();}
+    return (T) AmazonS3Util.getObject(
+        s3Client,
+        s3ObjectSummary.getBucketName(),
+        s3ObjectSummary.getKey(),
+        useSSE,
+        customerKey,
+        customerKeyMd5
+    ).getObjectContent();
+  }
 
 
   @Override
@@ -78,6 +92,9 @@ public final class S3FileRef extends AbstractFileRef {
   public static final class Builder extends AbstractFileRef.Builder<S3FileRef, Builder> {
     private S3ObjectSummary s3ObjectSummary;
     private AmazonS3Client s3Client;
+    private boolean useSSE;
+    private String customerKey;
+    private String customerKeyMd5;
 
     public Builder s3Client(AmazonS3Client s3Client) {
       this.s3Client = s3Client;
@@ -89,11 +106,29 @@ public final class S3FileRef extends AbstractFileRef {
       return this;
     }
 
+    public Builder useSSE(boolean useSSE) {
+      this.useSSE = useSSE;
+      return this;
+    }
+
+    public Builder customerKey(String customerKey) {
+      this.customerKey = customerKey;
+      return this;
+    }
+
+    public Builder customerKeyMd5(String customerKeyMd5) {
+      this.customerKeyMd5 = customerKeyMd5;
+      return this;
+    }
+
     @Override
     public S3FileRef build() {
       return new S3FileRef(
           s3Client,
           s3ObjectSummary,
+          useSSE,
+          customerKey,
+          customerKeyMd5,
           bufferSize,
           createMetrics,
           totalSizeInBytes,
