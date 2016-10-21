@@ -77,14 +77,14 @@ public class TestAmazonS3TargetUpgrader {
 
     Assert.assertEquals("", configValues.get("s3TargetConfigBean.partitionTemplate"));
 
-    Assert.assertEquals("false", configValues.get("s3TargetConfigBean.sseConfig.useSSE"));
+    Assert.assertEquals(false, configValues.get("s3TargetConfigBean.sseConfig.useSSE"));
 
     Assert.assertEquals("UTC", configValues.get("s3TargetConfigBean.timeZoneID"));
     Assert.assertEquals("${time:now()}", configValues.get("s3TargetConfigBean.timeDriverTemplate"));
 
-    Assert.assertEquals("10", configValues.get("s3TargetConfigBean.tmConfig.threadPoolSize"));
-    Assert.assertEquals("5242880", configValues.get("s3TargetConfigBean.tmConfig.minimumUploadPartSize"));
-    Assert.assertEquals("268435456", configValues.get("s3TargetConfigBean.tmConfig.multipartUploadThreshold"));
+    Assert.assertEquals(10, configValues.get("s3TargetConfigBean.tmConfig.threadPoolSize"));
+    Assert.assertEquals(5242880, configValues.get("s3TargetConfigBean.tmConfig.minimumUploadPartSize"));
+    Assert.assertEquals(268435456, configValues.get("s3TargetConfigBean.tmConfig.multipartUploadThreshold"));
 
     Assert.assertEquals("", configValues.get("s3TargetConfigBean.s3Config.endpoint"));
 

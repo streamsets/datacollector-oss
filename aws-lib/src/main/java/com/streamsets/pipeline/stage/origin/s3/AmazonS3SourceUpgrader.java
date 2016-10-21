@@ -54,15 +54,14 @@ public class AmazonS3SourceUpgrader implements StageUpgrader {
         // fall through
       case 7:
         upgradeV7ToV8(configs);
+        // fall through
+      case 8:
+        upgradeV8ToV9(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
     return configs;
-  }
-
-  private static void upgradeV7ToV8(List<Config> configs) {
-    DataFormatUpgradeHelper.upgradeAvroParserWithSchemaRegistrySupport(configs);
   }
 
   private static void upgradeV1ToV2(List<Config> configs) {
@@ -154,5 +153,14 @@ public class AmazonS3SourceUpgrader implements StageUpgrader {
 
   private static void upgradeV6ToV7(List<Config> configs) {
     configs.add(new Config(S3ConfigBean.S3_CONFIG_PREFIX + "endpoint", ""));
+  }
+
+  private static void upgradeV7ToV8(List<Config> configs) {
+    DataFormatUpgradeHelper.upgradeAvroParserWithSchemaRegistrySupport(configs);
+  }
+
+  private static void upgradeV8ToV9(List<Config> configs) {
+    configs.add(new Config(S3ConfigBean.S3_SSE_CONFIG_PREFIX + "useCustomerSSEKey", false));
+
   }
 }

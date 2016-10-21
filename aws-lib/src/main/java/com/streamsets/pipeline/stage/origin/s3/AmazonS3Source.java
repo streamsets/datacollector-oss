@@ -87,16 +87,35 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
           if(getContext().isPreview()) {
             long fetchSize = s3Object.getSize() > DEFAULT_FETCH_SIZE ? DEFAULT_FETCH_SIZE : s3Object.getSize();
             if(fetchSize > 0) {
-              object = AmazonS3Util.getObjectRange(s3ConfigBean.s3Config.getS3Client(), s3ConfigBean.s3Config.bucket,
-                  s3Object.getKey(), fetchSize);
+              object = AmazonS3Util.getObjectRange(
+                  s3ConfigBean.s3Config.getS3Client(),
+                  s3ConfigBean.s3Config.bucket,
+                  s3Object.getKey(),
+                  fetchSize,
+                  s3ConfigBean.sseConfig.useCustomerSSEKey,
+                  s3ConfigBean.sseConfig.customerKey,
+                  s3ConfigBean.sseConfig.customerKeyMd5
+              );
             }  else {
               LOG.warn("Size of object with key '{}' is 0", s3Object.getKey());
-              object = AmazonS3Util.getObject(s3ConfigBean.s3Config.getS3Client(), s3ConfigBean.s3Config.bucket,
-                  s3Object.getKey());
+              object = AmazonS3Util.getObject(
+                  s3ConfigBean.s3Config.getS3Client(),
+                  s3ConfigBean.s3Config.bucket,
+                  s3Object.getKey(),
+                  s3ConfigBean.sseConfig.useCustomerSSEKey,
+                  s3ConfigBean.sseConfig.customerKey,
+                  s3ConfigBean.sseConfig.customerKeyMd5
+              );
             }
           } else {
-            object = AmazonS3Util.getObject(s3ConfigBean.s3Config.getS3Client(), s3ConfigBean.s3Config.bucket,
-                s3Object.getKey());
+            object = AmazonS3Util.getObject(
+                s3ConfigBean.s3Config.getS3Client(),
+                s3ConfigBean.s3Config.bucket,
+                s3Object.getKey(),
+                s3ConfigBean.sseConfig.useCustomerSSEKey,
+                s3ConfigBean.sseConfig.customerKey,
+                s3ConfigBean.sseConfig.customerKeyMd5
+            );
           }
           parser = s3ConfigBean.dataFormatConfig.getParserFactory().getParser(recordId, object.getObjectContent(),
               offset);
@@ -226,11 +245,17 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
           s3ConfigBean.s3Config.getS3Client(),
           s3ConfigBean.s3Config.bucket,
           s3ObjectSummary.getKey(),
-          1
+          1,
+          s3ConfigBean.sseConfig.useCustomerSSEKey,
+          s3ConfigBean.sseConfig.customerKey,
+          s3ConfigBean.sseConfig.customerKeyMd5
       );
       S3FileRef.Builder s3FileRefBuilder = new S3FileRef.Builder()
           .s3Client(s3ConfigBean.s3Config.getS3Client())
           .s3ObjectSummary(s3ObjectSummary)
+          .useSSE(s3ConfigBean.sseConfig.useCustomerSSEKey)
+          .customerKey(s3ConfigBean.sseConfig.customerKey)
+          .customerKeyMd5(s3ConfigBean.sseConfig.customerKeyMd5)
           .bufferSize(s3ConfigBean.dataFormatConfig.wholeFileMaxObjectLen)
           .createMetrics(true)
           .totalSizeInBytes(s3ObjectSummary.getSize());

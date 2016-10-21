@@ -40,6 +40,7 @@ import java.util.List;
 public class S3ConfigBean {
   public static final String S3_CONFIG_BEAN_PREFIX = "s3ConfigBean.";
   public static final String S3_CONFIG_PREFIX = S3_CONFIG_BEAN_PREFIX + "s3Config.";
+  public static final String S3_SSE_CONFIG_PREFIX = S3_CONFIG_BEAN_PREFIX + "sseConfig.";
   public static final String S3_DATA_FORMAT_CONFIG_PREFIX = S3_CONFIG_BEAN_PREFIX + "dataFormatConfig.";
   public static final String S3_FILE_CONFIG_PREFIX = S3_CONFIG_BEAN_PREFIX + "s3FileConfig.";
   public static final String BASIC_CONFIG_PREFIX = S3_CONFIG_BEAN_PREFIX + "basicConfig.";
@@ -48,6 +49,9 @@ public class S3ConfigBean {
 
   @ConfigDefBean(groups = {"S3"})
   public BasicConfig basicConfig;
+
+  @ConfigDefBean(groups = "SSE")
+  public S3SSEConfigBean sseConfig;
 
   @ConfigDefBean(groups = "ADVANCED")
   public ProxyConfig proxyConfig;

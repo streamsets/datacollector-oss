@@ -160,7 +160,7 @@ public class AmazonS3TargetUpgrader implements StageUpgrader {
   }
 
   private static void upgradeV4ToV5(List<Config> configs) {
-    configs.add(new Config(S3TargetConfigBean.S3_SEE_CONFIG_PREFIX + "useSSE", "false"));
+    configs.add(new Config(S3TargetConfigBean.S3_SSE_CONFIG_PREFIX + "useSSE", false));
   }
 
   private static void upgradeV5ToV6(List<Config> configs) {
@@ -193,9 +193,9 @@ public class AmazonS3TargetUpgrader implements StageUpgrader {
     configs.addAll(configsToAdd);
 
     // add transfer manager configs
-    configs.add(new Config(S3TargetConfigBean.S3_TM_CONFIG_PREFIX + "threadPoolSize", "10"));
-    configs.add(new Config(S3TargetConfigBean.S3_TM_CONFIG_PREFIX + "minimumUploadPartSize", "5242880"));
-    configs.add(new Config(S3TargetConfigBean.S3_TM_CONFIG_PREFIX + "multipartUploadThreshold", "268435456"));
+    configs.add(new Config(S3TargetConfigBean.S3_TM_CONFIG_PREFIX + "threadPoolSize", 10));
+    configs.add(new Config(S3TargetConfigBean.S3_TM_CONFIG_PREFIX + "minimumUploadPartSize", 5242880));
+    configs.add(new Config(S3TargetConfigBean.S3_TM_CONFIG_PREFIX + "multipartUploadThreshold", 268435456));
   }
 
   private static void upgradeV7ToV8(List<Config> configs) {

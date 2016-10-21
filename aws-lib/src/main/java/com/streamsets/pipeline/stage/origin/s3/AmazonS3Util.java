@@ -30,6 +30,7 @@ import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.amazonaws.services.s3.model.SSECustomerKey;
 import com.streamsets.pipeline.common.InterfaceAudience;
 import com.streamsets.pipeline.common.InterfaceStability;
 
@@ -206,8 +207,21 @@ public class AmazonS3Util {
     }
   }
 
-  static S3Object getObject(AmazonS3Client s3Client, String bucket, String objectKey) {
-    return s3Client.getObject(bucket, objectKey);
+  static S3Object getObject(
+      AmazonS3Client s3Client,
+      String bucket,
+      String objectKey,
+      boolean useSSE,
+      String customerKey,
+      String customerKeyMd5
+  ) {
+    GetObjectRequest getObjectRequest = new GetObjectRequest(bucket, objectKey);
+    if (useSSE) {
+      SSECustomerKey sseCustomerKey = new SSECustomerKey(customerKey);
+      sseCustomerKey.setMd5(customerKeyMd5);
+      getObjectRequest.setSSECustomerKey(sseCustomerKey);
+    }
+    return s3Client.getObject(getObjectRequest);
   }
 
   static Map<String, Object> getMetaData(S3Object s3Object) {
@@ -237,15 +251,27 @@ public class AmazonS3Util {
     return metaDataMap;
   }
 
-  static S3Object getObjectRange(AmazonS3Client s3Client, String bucket, String objectKey, long range) {
+  static S3Object getObjectRange(
+      AmazonS3Client s3Client,
+      String bucket,
+      String objectKey,
+      long range,
+      boolean useSSE,
+      String customerKey,
+      String customerKeyMd5
+  ) {
     GetObjectRequest getObjectRequest = new GetObjectRequest(bucket, objectKey).withRange(0, range);
+    if (useSSE) {
+      SSECustomerKey sseCustomerKey = new SSECustomerKey(customerKey);
+      sseCustomerKey.setMd5(customerKeyMd5);
+      getObjectRequest.setSSECustomerKey(sseCustomerKey);
+    }
     return s3Client.getObject(getObjectRequest);
   }
 
   static S3ObjectSummary getObjectSummary(AmazonS3Client s3Client, String bucket, String objectKey) {
     S3ObjectSummary s3ObjectSummary = null;
-    S3Objects s3ObjectSummaries = S3Objects
-        .withPrefix(s3Client, bucket, objectKey);
+    S3Objects s3ObjectSummaries = S3Objects.withPrefix(s3Client, bucket, objectKey);
     for (S3ObjectSummary s : s3ObjectSummaries) {
       if (s.getKey().equals(objectKey)) {
         s3ObjectSummary = s;
