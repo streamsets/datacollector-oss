@@ -44,9 +44,9 @@
                         AWS access key IDs and secret access keys. You can also use the function in
                         HTTP headers and bodies when using HTTPS.</ph></p>
             <p>
-                  <draft-comment author="Loretta">List of origins that are part of the Basic
-                        installation. Used in BasicInstall_Overview and BasicInstall-LibList
-                        (Available Stage Libraries).</draft-comment>
+                  <draft-comment author="Loretta">List of origins that are part of the Basic stage
+                        library. Used in BasicInstall_Overview and BasicInstall-LibList (Available
+                        Stage Libraries).</draft-comment>
             </p>
             <p>
                   <ul id="BasicOrigins">
@@ -58,13 +58,14 @@
                         <li>UDP Source</li>
                   </ul>
             </p>
-            <draft-comment author="Loretta">All processors except... </draft-comment>
-            <p><ph id="BasicNotProcessor">except the Groovy Evaluator, Jython Evaluator, HBase
-                        Lookup, and Redis Lookup.</ph></p>
+            <draft-comment author="Loretta">Core install includes all processors except... </draft-comment>
+            <p><ph id="CoreNotProcessor">except the HBase Lookup and Redis Lookup.</ph></p>
+            <draft-comment author="alisontaylor">Basic stage library includes all processors
+                  except...</draft-comment>
+            <p><ph id="BasicNotProcessor">except the Groovy Evaluator, Jython Evaluator, HBase Lookup, and Redis Lookup.</ph></p>
             <p>
-                  <draft-comment author="Loretta">List of destinations tha are part of the Basic
-                        installation. Used in BasicInstall_Overview and BasicInstall-LibList.
-                  </draft-comment>
+                  <draft-comment author="Loretta">List of destinations the basic stage library. Used
+                        in BasicInstall_Overview and BasicInstall-LibList. </draft-comment>
             </p>
             <p>
                   <ul id="BasicDestinations">

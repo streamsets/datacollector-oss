@@ -332,8 +332,9 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-groovy_2_4-lib</entry>
-                            <entry>For Groovy version 2.4. Installs with the core installation.
-                                    <p>Includes the Groovy Evaluator processor.</p></entry>
+                            <entry>For Groovy version 2.4. Installs automatically with the core
+                                installation. <p>Includes the Groovy Evaluator
+                                processor.</p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-hdp_2_2-lib</entry>
@@ -417,8 +418,9 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-jython_2_7-lib</entry>
-                            <entry>For Jython version 2.7. Installs with the core installation.
-                                    <p>Includes the Jython Evaluator processor.</p></entry>
+                            <entry>For Jython version 2.7. Installs automatically with the core
+                                installation. <p>Includes the Jython Evaluator
+                                processor.</p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-mapr_5_0-lib</entry>
