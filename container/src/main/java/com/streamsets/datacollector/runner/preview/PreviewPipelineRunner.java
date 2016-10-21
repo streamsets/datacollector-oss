@@ -130,6 +130,8 @@ public class PreviewPipelineRunner implements PipelineRunner {
         if (stageOutput == null || (pipe instanceof ObserverPipe) || (pipe instanceof MultiplexerPipe) ) {
           if (!skipTargets || !pipe.getStage().getDefinition().getType().isOneOf(StageType.TARGET, StageType.EXECUTOR)) {
             pipe.process(pipeBatch);
+          } else {
+            pipeBatch.skipStage(pipe);
           }
         } else {
           if (pipe instanceof StagePipe) {
