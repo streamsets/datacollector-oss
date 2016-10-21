@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_mdr_phr_5v">
-    <title>Step 3. Distribute and Activate the New StreamSets Parcel</title>
+    <title>Step 4. Distribute and Activate the New StreamSets Parcel</title>
     <shortdesc>After you add the StreamSets repository to Cloudera Manager, you can download and
         distribute the new StreamSets parcel across the cluster. Stop the StreamSets service and
         deactivate the previous parcel before you activate the new parcel.</shortdesc>

@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_rrx_m3v_xv">
-    <title>Step 1. Install the StreamSets Custom Service Descriptor</title>
+    <title>Step 2. Install the StreamSets Custom Service Descriptor</title>
     <shortdesc>Install the new StreamSets custom service descriptor file (CSD), and then restart
         Cloudera Manager.</shortdesc>
     <taskbody>

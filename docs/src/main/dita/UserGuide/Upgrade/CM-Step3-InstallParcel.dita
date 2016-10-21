@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_cgv_2jv_xv">
-    <title>Step 2. Manually Install the Parcel and Checksum Files (Optional)</title>
+    <title>Step 3. Manually Install the Parcel and Checksum Files (Optional)</title>
     <shortdesc>You can manually install the StreamSets parcel and related checksum files. Manually
         install the files when the Cloudera Manager Server does not have internet
         access.</shortdesc>

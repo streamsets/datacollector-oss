@@ -19,7 +19,7 @@
         file, <codeph>$SDC_DIST/libexec/sdcd-env.sh</codeph>, so that the file is not overwritten
         when you install the new version. </shortdesc>
  <conbody>
-  <p>For example, if you are upgrading version 1.5.0.0, you might create a backup by renaming the
-            file as follows: <codeph>sdcd-env-1500.sh</codeph>.</p>
+  <p>For example, if you are upgrading version 2.0.0.0, you might create a backup by renaming the
+            file as follows: <codeph>sdcd-env-2000.sh</codeph>.</p>
  </conbody>
 </concept>

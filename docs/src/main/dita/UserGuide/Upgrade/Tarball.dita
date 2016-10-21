@@ -35,7 +35,7 @@
                 of <codeph>$SDC_DIST</codeph>, the base <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> runtime directory.</li>
-            <li>Shut down the previous version.</li>
+            <li>Stop all pipelines and then shut down the previous version.</li>
             <li>Install the new version.</li>
             <li>Manually update the environment configuration file.</li>
             <li>Manually update the configuration files.</li>

@@ -30,6 +30,9 @@
                 /> can still use the libraries after the upgrade.</note>To upgrade <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             through Cloudera Manager, perform the following steps:<ol id="ol_dqy_jhv_xv">
+                <li>Stop all pipelines in <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    />.</li>
                 <li>Install the new StreamSets custom service descriptor (CSD).</li>
                 <li>(Optional.) Manually install the parcel and checksum files. Typically only
                     needed when the Cloudera Manager Server does not have internet access.</li>

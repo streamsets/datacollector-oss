@@ -32,7 +32,7 @@
             can still use the libraries after the upgrade.</note>
         <p>To upgrade an installation from the RPM package, perform the following steps:</p>
      <ol id="ol_x5s_qpr_5v">
-         <li>Shut down the previous version.</li>
+         <li>Stop all pipelines and then shut down the previous version.</li>
             <li>Back up the environment configuration file in the previous version.</li>
          <li>Install the new version.</li>
          <li>Manually update the environment configuration file.</li>
