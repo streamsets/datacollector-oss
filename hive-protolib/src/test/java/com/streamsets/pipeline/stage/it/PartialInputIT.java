@@ -57,25 +57,35 @@ public class PartialInputIT extends  BaseHiveMetadataPropagationIT {
     Record record;
 
     record = RecordCreator.create("s", "s:1");
-    record.set(Field.create(Field.Type.MAP, ImmutableSortedMap.of(
+    record.set(Field.create(Field.Type.LIST_MAP, ImmutableSortedMap.of(
+      "index", Field.create(Field.Type.INTEGER, 0)
+    )));
+    records.add(record);
+
+    record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(Field.Type.LIST_MAP, ImmutableSortedMap.of(
+      "index", Field.create(Field.Type.INTEGER, 1),
       "id", Field.create(Field.Type.STRING, "text")
     )));
     records.add(record);
 
     record = RecordCreator.create("s", "s:2");
     record.set(Field.create(Field.Type.MAP, ImmutableSortedMap.of(
+      "index", Field.create(Field.Type.INTEGER, 2),
       "name", Field.create(Field.Type.STRING, "text")
     )));
     records.add(record);
 
     record = RecordCreator.create("s", "s:3");
     record.set(Field.create(Field.Type.MAP, ImmutableSortedMap.of(
+      "index", Field.create(Field.Type.INTEGER, 3),
       "value", Field.create(Field.Type.STRING, "text")
     )));
     records.add(record);
 
     record = RecordCreator.create("s", "s:4");
     record.set(Field.create(Field.Type.MAP, ImmutableSortedMap.of(
+      "index", Field.create(Field.Type.INTEGER, 4),
       "value", Field.create(Field.Type.STRING, "text"),
       "id", Field.create(Field.Type.STRING, "text")
     )));
@@ -83,6 +93,7 @@ public class PartialInputIT extends  BaseHiveMetadataPropagationIT {
 
     record = RecordCreator.create("s", "s:5");
     record.set(Field.create(Field.Type.MAP, ImmutableSortedMap.of(
+      "index", Field.create(Field.Type.INTEGER, 5),
       "name", Field.create(Field.Type.STRING, "text"),
       "id", Field.create(Field.Type.STRING, "text")
     )));
@@ -92,23 +103,51 @@ public class PartialInputIT extends  BaseHiveMetadataPropagationIT {
 
     // End state should be with three columns
     assertTableStructure("default.tbl",
+      new ImmutablePair("tbl.index", Types.INTEGER),
       new ImmutablePair("tbl.id", Types.VARCHAR),
       new ImmutablePair("tbl.name", Types.VARCHAR),
       new ImmutablePair("tbl.value", Types.VARCHAR)
     );
 
-    // 5 rows
-    assertQueryResult("select count(*) from tbl", new QueryValidator() {
+    // 6 rows
+    assertQueryResult("select * from tbl order by index", new QueryValidator() {
       @Override
       public void validateResultSet(ResultSet rs) throws Exception {
         Assert.assertTrue(rs.next());
-        Assert.assertEquals(5, rs.getInt(1));
+        Assert.assertNull(rs.getString("id"));
+        Assert.assertNull(rs.getString("name"));
+        Assert.assertNull(rs.getString("value"));
+
+        Assert.assertTrue(rs.next());
+        Assert.assertEquals("text", rs.getString("id"));
+        Assert.assertNull(rs.getString("name"));
+        Assert.assertNull(rs.getString("value"));
+
+        Assert.assertTrue(rs.next());
+        Assert.assertNull(rs.getString("id"));
+        Assert.assertEquals("text", rs.getString("name"));
+        Assert.assertNull(rs.getString("value"));
+
+        Assert.assertTrue(rs.next());
+        Assert.assertNull(rs.getString("id"));
+        Assert.assertNull(rs.getString("name"));
+        Assert.assertEquals("text", rs.getString("value"));
+
+        Assert.assertTrue(rs.next());
+        Assert.assertEquals("text", rs.getString("id"));
+        Assert.assertNull(rs.getString("name"));
+        Assert.assertEquals("text", rs.getString("value"));
+
+        Assert.assertTrue(rs.next());
+        Assert.assertEquals("text", rs.getString("id"));
+        Assert.assertEquals("text", rs.getString("name"));
+        Assert.assertNull(rs.getString("value"));
+
         Assert.assertFalse(rs.next());
       }
     });
 
-    // And 4 files
-    Assert.assertEquals(3, getDefaultFileSystem().listStatus(new Path("/user/hive/warehouse/tbl/")).length);
+    Assert.assertEquals(4, getDefaultFileSystem().listStatus(new Path("/user/hive/warehouse/tbl/")).length);
   }
 
 }
