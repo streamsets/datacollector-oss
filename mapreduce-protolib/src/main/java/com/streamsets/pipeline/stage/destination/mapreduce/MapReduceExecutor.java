@@ -165,15 +165,10 @@ public class MapReduceExecutor extends BaseExecutor {
       }
 
       if(job != null) {
-        // And generate event with further job details
-        String recordSourceId = Utils.format("event:{}:{}:{}", "job-created", 1, System.currentTimeMillis());
-        EventRecord event = getContext().createEventRecord("job-created", 1, recordSourceId);
-        Map<String, Field> eventMap = ImmutableMap.of(
-          "tracking-url", Field.create(job.getTrackingURL()),
-          "job-id", Field.create(job.getJobID().toString())
-        );
-        event.set(Field.create(eventMap));
-        getContext().toEvent(event);
+        MapReduceExecutorEvents.JOB_CREATED.create(getContext())
+          .with("tracking-url", job.getTrackingURL())
+          .with("job-id", job.getJobID().toString())
+          .createAndSend();
       }
     }
   }
