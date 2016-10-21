@@ -50,7 +50,7 @@ public class DataRuleHandler {
   // Data rule metrics
   private final Map<String, Counter> evaluatedRecordCounterMap;
   private Map<String, Counter> matchedRecordCounterMap;
-  private Map<String, List<String>> ruleToAlertTextForMatchedRecords;
+  private Map<String, BoundedDeque<String>> ruleToAlertTextForMatchedRecords;
   private Map<String, List<String>> stageToOutputLanesMap;
   private final MetricRegistryJson metricRegistryJson;
   private final MetricRegistry metrics;
@@ -59,6 +59,7 @@ public class DataRuleHandler {
   // metric rule id to latest definition map
   private final Map<String, RuleDefinition> ruleDefinitionMap;
   private final RulesEvaluator rulesEvaluator;
+  private final int alertTextsToRetain;
 
   public DataRuleHandler(
       Stage.Context context,
@@ -68,7 +69,8 @@ public class DataRuleHandler {
       PipelineConfigurationJson pipelineConfigurationJson,
       MetricRegistry metrics,
       MetricRegistryJson metricRegistryJson,
-      Map<String, RuleDefinition> ruleDefinitionMap
+      Map<String, RuleDefinition> ruleDefinitionMap,
+      int alertTextsToRetain
   ) {
     this.pipelineName = pipelineName;
     this.revision = revision;
@@ -83,6 +85,7 @@ public class DataRuleHandler {
       stageToOutputLanesMap.put(s.getInstanceName(), s.getOutputLanes());
     }
     this.rulesEvaluator = new RulesEvaluator(pipelineName, revision, pipelineUrl, context);
+    this.alertTextsToRetain = alertTextsToRetain;
   }
 
   void handleDataRuleRecord(Record record) {
@@ -96,11 +99,15 @@ public class DataRuleHandler {
     for(Field f : alertTextFields) {
       alertTexts.add(f.getValueAsString());
     }
-    if (ruleToAlertTextForMatchedRecords.containsKey(ruleId)) {
-      List<String> strings = ruleToAlertTextForMatchedRecords.get(ruleId);
-      strings.addAll(alertTexts);
-    } else {
-      ruleToAlertTextForMatchedRecords.put(ruleId, alertTexts);
+    // For both Data and Drift Rule, We need to cache alert text only if its not the same as the previous alert text
+    // In addition We will store only the last n alert texts
+    BoundedDeque<String> boundedDeque = ruleToAlertTextForMatchedRecords.get(ruleId);
+    if (null == boundedDeque) {
+      boundedDeque = new BoundedDeque<>(alertTextsToRetain);
+      ruleToAlertTextForMatchedRecords.put(ruleId, boundedDeque);
+    }
+    for (String alertText : alertTexts) {
+      boundedDeque.offerLast(alertText);
     }
 
     if (RulesHelper.isDataRuleRecordValid(ruleDefinitionMap, record)) {
@@ -261,4 +268,5 @@ public class DataRuleHandler {
   private String getEvaluatedCounterName(String ruleId) {
     return MetricAggregationConstants.USER_PREFIX + ruleId + ".evaluated";
   }
+
 }

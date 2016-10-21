@@ -54,6 +54,7 @@ public class MetricAggregationProcessor extends SingleLaneProcessor {
   private final String appComponentId;
   private final String jobId;
   private final int retryAttempts;
+  private final int alertTextsToRetain;
 
   // Metadata obtained from pipeline configuration
   private Map<String, Object> metadata;
@@ -71,7 +72,8 @@ public class MetricAggregationProcessor extends SingleLaneProcessor {
       String authToken,
       String appComponentId,
       String jobId,
-      int retryAttempts
+      int retryAttempts,
+      int alertTextsToRetain
   ) {
     ruleDefinitionMap = new HashMap<>();
     this.pipelineConfigJson = pipelineConfigJson;
@@ -82,6 +84,7 @@ public class MetricAggregationProcessor extends SingleLaneProcessor {
     this.appComponentId = appComponentId;
     this.jobId = jobId;
     this.retryAttempts = retryAttempts;
+    this.alertTextsToRetain = alertTextsToRetain;
   }
 
   @Override
@@ -114,7 +117,8 @@ public class MetricAggregationProcessor extends SingleLaneProcessor {
           pipelineConfigurationJson,
           metrics,
           metricRegistryJson,
-          ruleDefinitionMap
+          ruleDefinitionMap,
+          alertTextsToRetain
       );
       metricRuleHandler = new MetricRuleHandler(
           getContext(),

@@ -74,7 +74,7 @@ public class RulesEvaluator {
       MetricRegistry metrics,
       RuleDefinition ruleDefinition,
       Object value,
-      Map<String, List<String>> ruleToAlertTextForMatchedRecords
+      Map<String, BoundedDeque<String>> ruleToAlertTextForMatchedRecords
   ) {
     if (ruleToAlertTextForMatchedRecords.containsKey(ruleDefinition.getId())) {
       if (ruleDefinition instanceof DriftRuleDefinition) {

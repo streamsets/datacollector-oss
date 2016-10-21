@@ -117,13 +117,24 @@ public class MetricAggregationDProcessor extends DProcessor {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.NUMBER,
-      defaultValue = "5",
+      defaultValue = "-1",
       label = "Retry Attempts",
+      group = "STATS",
       description = "Max no of retries to fetch latest metrics from time-series DPM App." +
           " To retry indefinitely, use -1. The wait time between retries starts at 2 seconds" +
           " and doubles until reaching 16 seconds.",
       displayPosition = 80)
-  public int retryAttempts = 5;
+  public int retryAttempts = -1;
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.NUMBER,
+    defaultValue = "10",
+    label = "Alert Texts To Retain",
+    group = "STATS",
+    description = "Number of alert texts to retain in memory",
+    displayPosition = 80)
+  public int alertTextsToRetain = 10;
 
   @Override
   protected Processor createProcessor() {
@@ -135,7 +146,8 @@ public class MetricAggregationDProcessor extends DProcessor {
         authToken,
         sdcId,
         jobId,
-        retryAttempts
+        retryAttempts,
+        alertTextsToRetain
     );
   }
 
