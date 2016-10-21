@@ -116,7 +116,7 @@ public class AggregatedMetricsFetcher {
     while (attempts < retryAttempts || retryAttempts == -1) {
       if (attempts > 0) {
         delaySecs = delaySecs * 2;
-        delaySecs = Math.min(delaySecs, 16);
+        delaySecs = Math.min(delaySecs, 60);
         LOG.warn("DPM fetchLatestAggregatedMetrics attempt '{}', waiting for '{}' seconds before retrying ...",
             attempts, delaySecs);
         StatsUtil.sleep(delaySecs);

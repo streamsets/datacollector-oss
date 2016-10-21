@@ -399,7 +399,7 @@ public class TestMetricAggregationProcessor {
       Charset.defaultCharset()
     );
     return new MetricAggregationProcessor(Base64.encodeBase64String(pipelineConfigJson.getBytes()), null,
-        "myUrl", null, null, null, "x", 5);
+        "myUrl", null, null, null, "x", 5, 10);
   }
 
   private Record createTestMetricRecord() {
