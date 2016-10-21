@@ -694,7 +694,9 @@ angular.module('pipelineGraphDirectives', [])
           'cx': consts.rectWidth/2,
           'cy': consts.rectHeight,
           'r': 10,
-          'class': 'graph-bootstrap-tooltip',
+          'class': function(d) {
+            return 'graph-bootstrap-tooltip ' + d.eventLanes[0]
+          },
           'title': 'Events'
         })
         .on('mousedown', function(d){
