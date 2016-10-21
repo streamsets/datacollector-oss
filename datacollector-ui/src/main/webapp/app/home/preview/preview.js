@@ -137,8 +137,9 @@ angular
           stageOutputs = [];
 
         angular.forEach(previewBatchOutput, function(stageOutput, index) {
-          var lanesList = _.keys(stageOutput.output),
-            intersection = _.intersection(dirtyLanes, lanesList);
+          var lanesList = _.keys(stageOutput.output);
+          lanesList.push(stageOutput.instanceName + '_EventLane');
+          var intersection = _.intersection(dirtyLanes, lanesList);
 
           if((intersection && intersection.length) || index === 0) {
             //Always add Source preview data
@@ -160,14 +161,16 @@ angular
               var updatedPreviewBatchOutput = previewData.batchesOutput[0];
 
               angular.forEach(updatedPreviewBatchOutput, function(stageOutput, index) {
-                var lanesList = _.keys(stageOutput.output),
-                  intersection = _.intersection(dirtyLanes, lanesList),
-                  changedStageOutput = previewBatchOutput[index];
+                var lanesList = _.keys(stageOutput.output);
+                lanesList.push(stageOutput.instanceName + '_EventLane');
+                var intersection = _.intersection(dirtyLanes, lanesList);
+                var changedStageOutput = previewBatchOutput[index];
 
                 if(intersection && intersection.length) {
                   angular.forEach(intersection, function(laneName) {
                     stageOutput.output[laneName] = angular.copy(changedStageOutput.output[laneName]);
                   });
+                  stageOutput.eventRecords = angular.copy(changedStageOutput.eventRecords);
                 }
               });
 

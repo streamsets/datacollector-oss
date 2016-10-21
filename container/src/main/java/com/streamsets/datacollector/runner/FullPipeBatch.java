@@ -199,6 +199,9 @@ public class FullPipeBatch implements PipeBatch {
       String stageLaneName = LaneResolver.removePostFixFromLane(pipeLaneName);
       fullPayload.put(pipeLaneName, stageOutput.getOutput().get(stageLaneName));
     }
+    if(pipe.getEventLanes().size() == 1) {
+      fullPayload.put(pipe.getEventLanes().get(0), stageOutput.getEventRecords());
+    }
     if (stageOutputSnapshot != null) {
       stageOutputSnapshot.add(new StageOutput(stageOutput.getInstanceName(),
                                               (Map) createSnapshot(stageOutput.getOutput()),

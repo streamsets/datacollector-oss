@@ -62,7 +62,14 @@ angular.module('dataCollectorApp.common')
           });
           stagePreviewData.errorRecords = stageOutput.errorRecords;
           stagePreviewData.stageErrors = stageOutput.stageErrors;
-          stagePreviewData.eventRecords = stageOutput.eventRecords;
+          stagePreviewData.eventRecords = [];
+          if (stageOutput.eventRecords && stageOutput.eventRecords.length) {
+            var eventLane = eventRecords = stageOutput.instanceName + '_EventLane';
+            angular.forEach(stageOutput.eventRecords, function(eventRecord) {
+              eventRecord.laneName = eventLane;
+              stagePreviewData.eventRecords.push(eventRecord);
+            });
+          }
         }
 
         if(stageOutput.output && stageInstance.inputLanes && stageInstance.inputLanes.length) {
