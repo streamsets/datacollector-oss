@@ -29,6 +29,8 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 
 import com.streamsets.datacollector.main.SlaveRuntimeInfo;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.codahale.metrics.MetricRegistry;
@@ -45,6 +47,16 @@ import com.streamsets.datacollector.util.PipelineDirectoryUtil;
 
 
 public class TestSlavePipelineStoreExecutionModes {
+
+  @Before
+  public void setup() throws Exception {
+    System.setProperty("sdc.testing-mode", "true");
+  }
+
+  @After
+  public void tearDown() {
+    System.clearProperty("sdc.testing-mode");
+  }
 
   @Test
   public void testSlaveExecutionModeStoreDir() throws Exception {

@@ -28,7 +28,9 @@ import com.streamsets.datacollector.util.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -78,6 +80,16 @@ public class SlaveWebServerTaskIT {
     File dir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(dir.mkdirs());
     return dir.getAbsolutePath();
+  }
+
+  @Before
+  public void setup() throws Exception {
+    System.setProperty("sdc.testing-mode", "true");
+  }
+
+  @After
+  public void tearDown() {
+    System.clearProperty("sdc.testing-mode");
   }
 
   @Test

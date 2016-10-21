@@ -83,7 +83,9 @@ public class LDAPAuthenticationIT {
 
   private static Task server;
   private static String sdcURL;
-  private static String confDir = "target/" + UUID.randomUUID().toString();
+  private static String baseDir = "target/" + UUID.randomUUID().toString();
+  private static String confDir = baseDir + "/conf";
+  private static String dataDir = baseDir + "/data";
 
   @Parameterized.Parameters
   public static Collection<Object[]> data() throws Exception {
@@ -219,6 +221,7 @@ public class LDAPAuthenticationIT {
 
     // Start SDC
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR, confDir);
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR, dataDir);
     ObjectGraph dagger = ObjectGraph.create(MainStandalonePipelineManagerModule.class);
     server = dagger.get(TaskWrapper.class);
     server.init();

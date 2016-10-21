@@ -45,6 +45,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -62,6 +63,7 @@ public class TestFailedProdRun {
   public void testPipelineOpenLanes() throws PipelineRuntimeException, StageException {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
+    Mockito.when(runtimeInfo.getDataDir()).thenReturn("target/" + UUID.randomUUID());
     MockStages.setSourceCapture(new BaseSource() {
       @Override
       public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
@@ -125,6 +127,7 @@ public class TestFailedProdRun {
     ErrorListeningSource.thrownError = new SomeException(msg);
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
+    Mockito.when(runtimeInfo.getDataDir()).thenReturn("target/" + UUID.randomUUID());
     MockStages.setSourceCapture(new ErrorListeningSource());
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
     BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(100, true /*FIFO*/);

@@ -67,10 +67,11 @@ public class TestProdPipelineRunnable {
   private Runner runner;
   private PipelineStateStore pipelineStateStore;
   private Manager manager;
+  private File testDir;
 
   @Before()
   public void setUp() throws Exception {
-    File testDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    testDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
     Assert.assertTrue(testDir.mkdirs());
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR, testDir.getAbsolutePath());
     MockStages.resetStageCaptures();
@@ -158,6 +159,7 @@ public class TestProdPipelineRunnable {
     throws StageException, PipelineException {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
+    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
 
     SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl("1");
     FileSnapshotStore snapshotStore = Mockito.mock(FileSnapshotStore.class);
