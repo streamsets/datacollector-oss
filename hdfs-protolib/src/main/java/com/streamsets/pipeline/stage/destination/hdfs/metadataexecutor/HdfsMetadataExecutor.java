@@ -140,13 +140,9 @@ public class HdfsMetadataExecutor extends BaseExecutor {
             }
 
             // Issue event with the final file name (e.g. the renamed one if applicable)
-            String recordSourceId = Utils.format("event:{}:{}:{}", "event-target", 1, System.currentTimeMillis());
-            EventRecord event = getContext().createEventRecord("file-changed", 1, recordSourceId);
-            event.set(Field.create(Field.Type.MAP, new ImmutableMap.Builder<String, Field>()
-              .put("filepath", Field.create(Field.Type.STRING, workingFile.toString()))
-              .build()
-            ));
-            getContext().toEvent(event);
+            HdfsMetadataExecutorEvents.FILE_CHANGED.create(getContext())
+              .with("filepath", workingFile.toString())
+              .createAndSend();
 
             LOG.debug("Done changing metadata on file: {}", workingFile);
             return null;
