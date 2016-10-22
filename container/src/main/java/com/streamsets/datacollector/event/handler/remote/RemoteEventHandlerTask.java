@@ -92,7 +92,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   public static final String REMOTE_JOB_LABELS = REMOTE_CONTROL + "job.labels";
   private static final String REMOTE_URL_PING_INTERVAL = REMOTE_CONTROL  + "ping.frequency";
   private static final String REMOTE_URL_SEND_ALL_STATUS_EVENTS_INTERVAL = REMOTE_CONTROL + "status.events.interval";
-  private static final String DEFAULT_REMOTE_JOB_LABELS = "";
+  private static final String DEFAULT_REMOTE_JOB_LABELS = "all";
   private static final String REMOTE_CONTROL_EVENTS_RECIPIENT = REMOTE_CONTROL + "events.recipient";
   private static final String DEFAULT_REMOTE_CONTROL_EVENTS_RECIPIENT = "jobrunner-app";
   private final RemoteDataCollector remoteDataCollector;
