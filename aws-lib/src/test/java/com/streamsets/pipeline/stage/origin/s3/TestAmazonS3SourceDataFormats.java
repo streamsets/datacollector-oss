@@ -27,7 +27,6 @@ import com.amazonaws.services.s3.iterable.S3Objects;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
-import com.codahale.metrics.Gauge;
 import com.google.common.io.Resources;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
@@ -38,6 +37,7 @@ import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.LogMode;
+import com.streamsets.pipeline.config.OriginAvroSchemaSource;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.sdk.SourceRunner;
@@ -63,7 +63,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -343,17 +342,6 @@ public class TestAmazonS3SourceDataFormats {
 
     Stage.Context context = ((Stage.Context) Whitebox.getInternalState(source, "context"));
 
-    final Map<String, Object> gaugeStatistics = new LinkedHashMap<>();
-    gaugeStatistics.put(FileRefUtil.TRANSFER_THROUGHPUT, 0L);
-    gaugeStatistics.put(FileRefUtil.SENT_BYTES, 0L);
-    gaugeStatistics.put(FileRefUtil.REMAINING_BYTES, 0L);
-    context.createGauge(FileRefUtil.GAUGE_NAME, new Gauge<Map<String, Object>>() {
-      @Override
-      public Map<String, Object> getValue() {
-        return gaugeStatistics;
-      }
-    });
-    context.createMeter(FileRefUtil.TRANSFER_THROUGHPUT_METER);
     String offset = null;
     try {
       Iterator<S3ObjectSummary> s3ObjectSummaryIterator = S3Objects.inBucket(s3client, BUCKET_NAME).iterator();
@@ -598,6 +586,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.dataFormatConfig = new DataParserFormatConfig();
     s3ConfigBean.dataFormat = DataFormat.AVRO;
     s3ConfigBean.dataFormatConfig.charset = "UTF-8";
+    s3ConfigBean.dataFormatConfig.avroSchemaSource = OriginAvroSchemaSource.SOURCE;
     s3ConfigBean.dataFormatConfig.avroSchema = null;
 
     s3ConfigBean.errorConfig = new S3ErrorConfig();
