@@ -24,7 +24,7 @@ public class ExecutorConstants {
   public static final String PREVIEWER_THREAD_POOL_SIZE_KEY = "previewer.thread.pool.size";
   public static final int PREVIEWER_THREAD_POOL_SIZE_DEFAULT = 4;
   public static final String RUNNER_THREAD_POOL_SIZE_KEY = "runner.thread.pool.size";
-  public static final int RUNNER_THREAD_POOL_SIZE_DEFAULT = 20;
+  public static final int RUNNER_THREAD_POOL_SIZE_DEFAULT = 50;
   public static final int RUNNER_THREAD_POOL_SIZE_MULTIPLIER = 10;
   public static final String MANAGER_EXECUTOR_THREAD_POOL_SIZE_KEY = "manager.executor.thread.pool.size";
   public static final int MANAGER_EXECUTOR_THREAD_POOL_SIZE_DEFAULT = 4;
