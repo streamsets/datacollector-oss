@@ -25,5 +25,6 @@ public class HdfsMetadataExecutorEvents {
 
   public static EventCreator FILE_CHANGED = new EventCreator.Builder("file-changed", 1)
     .withRequiredField("filepath")
+    .withRequiredField("filename")
     .build();
 }

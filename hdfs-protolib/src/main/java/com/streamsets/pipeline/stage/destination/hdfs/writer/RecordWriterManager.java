@@ -179,6 +179,7 @@ public class RecordWriterManager {
     FileStatus status = fs.getFileStatus(finalPath);
     HdfsEvents.CLOSED_FILE.create(context)
       .with("filepath", finalPath.toString())
+      .with("filename", finalPath.getName())
       .with("length", status.getLen())
       .createAndSend();
   }

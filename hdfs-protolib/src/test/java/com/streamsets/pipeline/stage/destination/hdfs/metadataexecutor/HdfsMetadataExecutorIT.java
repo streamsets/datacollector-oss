@@ -192,6 +192,11 @@ public class HdfsMetadataExecutorIT {
     Assert.assertNotNull(path);
     Assert.assertEquals(Field.Type.STRING, path.getType());
     Assert.assertEquals(expectedPath.toString(), path.getValueAsString());
+
+    Field name = event.get("/filename");
+    Assert.assertNotNull(name);
+    Assert.assertEquals(Field.Type.STRING, name.getType());
+    Assert.assertEquals(expectedPath.getName(), name.getValueAsString());
   }
 
   /**

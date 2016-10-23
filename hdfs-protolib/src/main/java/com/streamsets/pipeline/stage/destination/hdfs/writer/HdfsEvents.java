@@ -29,6 +29,7 @@ public final class HdfsEvents {
    */
   public static EventCreator CLOSED_FILE = new EventCreator.Builder("file-closed", 1)
     .withRequiredField("filepath") // Absolute path to the closed file
+    .withRequiredField("filename") // File name of the closed file
     .withRequiredField("length") // Size of the closed file in bytes
     .build();
 

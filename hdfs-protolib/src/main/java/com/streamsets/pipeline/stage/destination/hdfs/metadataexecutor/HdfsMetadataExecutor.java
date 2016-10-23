@@ -142,6 +142,7 @@ public class HdfsMetadataExecutor extends BaseExecutor {
             // Issue event with the final file name (e.g. the renamed one if applicable)
             HdfsMetadataExecutorEvents.FILE_CHANGED.create(getContext())
               .with("filepath", workingFile.toString())
+              .with("filename", workingFile.getName())
               .createAndSend();
 
             LOG.debug("Done changing metadata on file: {}", workingFile);
