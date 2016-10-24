@@ -106,8 +106,10 @@
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                                             /> after you register the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                            />.</p><p>Defaults are label1 and label2. In most cases,
-                                            you'll want to remove the default labels.</p></entry>
+                                            />.</p>Default is "all", which you can use to run a job
+                                        on all registered <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        />s.</entry>
                                 </row>
                             </tbody>
                         </tgroup>

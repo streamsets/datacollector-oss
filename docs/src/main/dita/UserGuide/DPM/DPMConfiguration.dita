@@ -90,9 +90,11 @@
                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                             />s registered with <ph
                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                            />. To assign multiple labels, enter a comma-separated list of
-                                labels.<p>Defaults are label1 and label2. In most cases, you'll want
-                                to remove the default labels.</p></entry>
+                            />. To assign multiple labels, enter a comma-separated list of labels.
+                                <p>Default is "all", which you can use to run a job on all
+                                registered <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                />s. </p></entry>
                     </row>
                     <row>
                         <entry>dpm.remote.control.ping.frequency</entry>
