@@ -49,28 +49,28 @@ angular
         templateId: 'summaryBatchThroughputBarChartTemplate'
       },
       {
-        label: 'global.form.histogram',
-        templateId: 'summaryRecordHistogramTemplate'
+        label: 'home.detailPane.summaryTab.stageBatchProcessingTimer',
+        templateId: 'summaryAllStageBatchTimerBarChartTemplate'
+      },
+      {
+        label: 'home.detailPane.summaryTab.runtimeStatistics',
+        templateId: 'summaryRuntimeStatisticsTemplate'
       },
       {
         label: 'home.detailPane.summaryTab.batchProcessingTimer',
         templateId: 'summaryRecordsProcessedTemplate'
       },
       {
-        label: 'home.detailPane.summaryTab.memoryConsumed',
-        templateId: 'memoryConsumedLineChartTemplate'
-      },
-      {
-        label: 'home.detailPane.summaryTab.stageBatchProcessingTimer',
-        templateId: 'summaryAllStageBatchTimerBarChartTemplate'
+        label: 'global.form.histogram',
+        templateId: 'summaryRecordHistogramTemplate'
       },
       {
         label: 'home.detailPane.summaryTab.stageMemoryConsumed',
         templateId: 'summaryAllStageMemoryConsumedBarChartTemplate'
       },
       {
-        label: 'home.detailPane.summaryTab.runtimeStatistics',
-        templateId: 'summaryRuntimeStatisticsTemplate'
+        label: 'home.detailPane.summaryTab.memoryConsumed',
+        templateId: 'memoryConsumedLineChartTemplate'
       }
     ];
 
