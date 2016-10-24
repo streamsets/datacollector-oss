@@ -64,15 +64,20 @@ function update_users {
 }
 
 function generate_ldap_configs {
-  ldap_configs=`cat "$CONF_DIR"/ldap.properties | grep "ldap" | grep -v "ldap.bindPassword" | sed -e 's/ldap\.\([^=]*\)=\(.*\)/  \1=\"\2\"/g'`
-  echo "ldap {
-  com.streamsets.datacollector.http.LdapLoginModule required
-  bindPassword=\"@ldap-bind-password.txt@\"
-  contextFactory=\"com.sun.jndi.ldap.LdapCtxFactory\"
-$ldap_configs;
-};" > "$CONF_DIR"/ldap-login.conf
-  ldap_bind_password=`cat "$CONF_DIR"/ldap.properties | grep "ldap.bindPassword"`
-  echo "$ldap_bind_password" | awk -F'=' '{ print $2 }' | tr -d '\n' > "$CONF_DIR"/ldap-bind-password.txt
+  if [ ! -z "$USE_LDAP_FILE_CONFIG" ] && [ "$USE_LDAP_FILE_CONFIG" = true ];then
+    log "use.ldap.login.file set to true. Applying the contents in $CONF_DIR/ldap-login.conf"
+  else
+    log "use.ldap.login.file set to false. Applying the configurations from ldap.* entries"
+    ldap_configs=`cat "$CONF_DIR"/ldap.properties | grep "ldap" | grep -v "ldap.bindPassword" | sed -e 's/ldap\.\([^=]*\)=\(.*\)/  \1=\"\2\"/g'`
+    echo "ldap {
+    com.streamsets.datacollector.http.LdapLoginModule required
+    bindPassword=\"@ldap-bind-password.txt@\"
+    contextFactory=\"com.sun.jndi.ldap.LdapCtxFactory\"
+    $ldap_configs;
+    };" > "$CONF_DIR"/ldap-login.conf
+    ldap_bind_password=`cat "$CONF_DIR"/ldap.properties | grep "ldap.bindPassword"`
+    echo "$ldap_bind_password" | awk -F'=' '{ print $2 }' | tr -d '\n' > "$CONF_DIR"/ldap-bind-password.txt
+  fi
 }
 
 # Prepend content of file specified in $2 to the file specified in $1

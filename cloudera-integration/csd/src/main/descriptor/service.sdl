@@ -53,6 +53,7 @@
           "CONFIGURED_USERS": "${datacollector.users}",
           "FILE_AUTH_TYPE": "${http.authentication}",
           "LOGIN_MODULE": "${http.authentication.login.module}",
+          "USE_LDAP_FILE_CONFIG": "${use.ldap.login.file}",
           "DPM_TOKEN_FILE": "${dpm.token.path}",
           "DPM_BASE_URL": "${dpm.base.url}",
           "DPM_USER": "${dpm.user}",
@@ -250,6 +251,9 @@
           {
             "filename": "sdc-env.sh",
             "sourceFilename": "aux/sdc-env.sh"
+          },
+          {
+            "filename": "ldap-login.conf"
           }
         ]
       },
@@ -347,6 +351,14 @@
           "description": "The login module name that identifies the login module to use for data collector. Assumes 'ldap' if none specified.",
           "type": "string",
           "default": ""
+        },
+        {
+          "name": "use.ldap.login.file",
+          "label": "Use Safety Valve to edit LDAP information",
+          "description": "Edit ldap-login.conf directly from Safety Valve instead of entering configuration from Configuration Wizard. If checked, all ldap.* entries are ignored",
+          "type": "boolean",
+          "pathType": "serviceSpecific",
+          "default": "false"
         },
         {
           "name": "datacollector.users",
