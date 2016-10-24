@@ -34,7 +34,7 @@ import com.streamsets.pipeline.lib.waveanalytics.WaveAnalyticsConfigBean;
     description = "Writes data to Salesforce Wave Analytics",
     icon = "waveanalytics.png",
     recordsByRef = true,
-    onlineHelpRefUrl = ""
+    onlineHelpRefUrl = "index.html#Destinations/WaveAnalytics.html#task_mdt_dv3_rx"
 )
 
 @ConfigGroups(value = Groups.class)
