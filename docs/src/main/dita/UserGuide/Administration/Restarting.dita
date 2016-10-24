@@ -29,7 +29,12 @@
                 /> through Cloudera Manager, you must use Cloudera Manager to restart <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 />. For information about how to restart a service through Cloudera Manager, see the
-                Cloudera documentation.</note></context>
+                Cloudera documentation. If you run <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> from Docker, you must restart <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> with the following Docker command: <codeph>docker
+            restart</codeph>.</note></context>
         <steps>
             <step>
                 <cmd>Click <menucascade>
