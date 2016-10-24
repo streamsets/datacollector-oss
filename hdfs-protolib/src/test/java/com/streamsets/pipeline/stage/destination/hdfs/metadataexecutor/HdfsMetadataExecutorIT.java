@@ -63,10 +63,12 @@ public class HdfsMetadataExecutorIT {
   @Rule
   public TestName name = new TestName();
 
+  private static final String CONTENT = "This is a test content for HDFS File.";
+  private static final String INPUT_FILE = "input.file";
+
   private static MiniDFSCluster miniDFS;
   private static UserGroupInformation fooUgi;
   private static FileSystem fs;
-  private static String CONTENT = "This is a test content for HDFS File.";
 
   private static String baseDir = "target/" + HdfsMetadataExecutorIT.class.getCanonicalName() + "/";
   private static String confDir = baseDir + "conf/";
@@ -123,8 +125,8 @@ public class HdfsMetadataExecutorIT {
     inputDir = new Path("/" + name.getMethodName() + "/input/");
     outputDir = new Path("/" + name.getMethodName() + "/output/");
 
-    inputPath = new Path(inputDir, "input.file");
-    writeFile(inputPath, "CONTENT");
+    inputPath = new Path(inputDir, INPUT_FILE);
+    writeFile(inputPath, CONTENT);
   }
 
   @After
@@ -237,11 +239,12 @@ public class HdfsMetadataExecutorIT {
   /**
    * We have one test record for all operations
    */
-  private Record getTestRecord(String outputPath) {
+  private Record getTestRecord() {
     Record record = RecordCreator.create();
     record.set(Field.create(Field.Type.MAP, ImmutableMap.builder()
       .put("path", Field.create(Field.Type.STRING, inputPath.toString()))
-      .put("location", Field.create(Field.Type.STRING, outputPath))
+      .put("new_dir", Field.create(Field.Type.STRING, outputDir))
+      .put("new_name", Field.create(Field.Type.STRING, "new_name.txt"))
       .put("owner", Field.create(Field.Type.STRING, "darth_vader"))
       .put("group", Field.create(Field.Type.STRING, "empire"))
       .put("perms_octal", Field.create(Field.Type.STRING, "777"))
@@ -252,13 +255,9 @@ public class HdfsMetadataExecutorIT {
     return record;
   }
 
-  private Record getTestRecord() {
-    return getTestRecord("");
-  }
-
   @Test
   public void testMoveFile() throws Exception {
-    Path outputPath = new Path(outputDir, "output.file");
+    Path outputPath = new Path(outputDir, INPUT_FILE);
 
     HdfsConnectionConfig conn = new HdfsConnectionConfig();
     conn.hdfsConfDir = confDir;
@@ -266,7 +265,7 @@ public class HdfsMetadataExecutorIT {
     HdfsActionsConfig actions = new HdfsActionsConfig();
     actions.filePath = "${record:value('/path')}";
     actions.shouldMoveFile = true;
-    actions.newLocation = "${record:value('/location')}";
+    actions.newLocation = "${record:value('/new_dir')}";
 
     HdfsMetadataExecutor executor = new HdfsMetadataExecutor(conn, actions);
 
@@ -275,11 +274,65 @@ public class HdfsMetadataExecutorIT {
       .build();
     runner.runInit();
 
-    runner.runWrite(ImmutableList.of(getTestRecord(outputPath.toString())));
+    runner.runWrite(ImmutableList.of(getTestRecord()));
     assertEvent(runner.getEventRecords(), outputPath);
     runner.runDestroy();
 
-    assertFile(outputPath, "CONTENT");
+    assertFile(outputPath, CONTENT);
+  }
+
+  @Test
+  public void testRenameFile() throws Exception {
+    Path outputPath = new Path(inputDir, "new_name.txt");
+
+    HdfsConnectionConfig conn = new HdfsConnectionConfig();
+    conn.hdfsConfDir = confDir;
+
+    HdfsActionsConfig actions = new HdfsActionsConfig();
+    actions.filePath = "${record:value('/path')}";
+    actions.shouldRename = true;
+    actions.newName = "${record:value('/new_name')}";
+
+    HdfsMetadataExecutor executor = new HdfsMetadataExecutor(conn, actions);
+
+    ExecutorRunner runner = new ExecutorRunner.Builder(HdfsMetadataDExecutor.class, executor)
+      .setOnRecordError(OnRecordError.STOP_PIPELINE)
+      .build();
+    runner.runInit();
+
+    runner.runWrite(ImmutableList.of(getTestRecord()));
+    assertEvent(runner.getEventRecords(), outputPath);
+    runner.runDestroy();
+
+    assertFile(outputPath, CONTENT);
+  }
+
+  @Test
+  public void testMoveAndRenameFile() throws Exception {
+    Path outputPath = new Path(outputDir, "new_name.txt");
+
+    HdfsConnectionConfig conn = new HdfsConnectionConfig();
+    conn.hdfsConfDir = confDir;
+
+    HdfsActionsConfig actions = new HdfsActionsConfig();
+    actions.filePath = "${record:value('/path')}";
+    actions.shouldMoveFile = true;
+    actions.newLocation = "${record:value('/new_dir')}";
+    actions.shouldRename = true;
+    actions.newName = "${record:value('/new_name')}";
+
+    HdfsMetadataExecutor executor = new HdfsMetadataExecutor(conn, actions);
+
+    ExecutorRunner runner = new ExecutorRunner.Builder(HdfsMetadataDExecutor.class, executor)
+      .setOnRecordError(OnRecordError.STOP_PIPELINE)
+      .build();
+    runner.runInit();
+
+    runner.runWrite(ImmutableList.of(getTestRecord()));
+    assertEvent(runner.getEventRecords(), outputPath);
+    runner.runDestroy();
+
+    assertFile(outputPath, CONTENT);
   }
 
   @Test
@@ -304,7 +357,7 @@ public class HdfsMetadataExecutorIT {
     assertEvent(runner.getEventRecords(), inputPath);
     runner.runDestroy();
 
-    assertFile(inputPath, "CONTENT");
+    assertFile(inputPath, CONTENT);
     assertOwnership(inputPath, "darth_vader", "empire");
   }
 
@@ -329,7 +382,7 @@ public class HdfsMetadataExecutorIT {
     assertEvent(runner.getEventRecords(), inputPath);
     runner.runDestroy();
 
-    assertFile(inputPath, "CONTENT");
+    assertFile(inputPath, CONTENT);
     assertPermissions(inputPath, "777");
   }
 
@@ -354,7 +407,7 @@ public class HdfsMetadataExecutorIT {
     assertEvent(runner.getEventRecords(), inputPath);
     runner.runDestroy();
 
-    assertFile(inputPath, "CONTENT");
+    assertFile(inputPath, CONTENT);
     assertPermissions(inputPath, "777");
   }
 
@@ -380,7 +433,7 @@ public class HdfsMetadataExecutorIT {
     runner.runDestroy();
 
 
-    assertFile(inputPath, "CONTENT");
+    assertFile(inputPath, CONTENT);
     assertPermissions(inputPath, "760");
     // From some reason HDFS returns group in the ACL listing
     assertAcls(inputPath, AclEntry.parseAclSpec("user:sith:rw-,group::r--", true));

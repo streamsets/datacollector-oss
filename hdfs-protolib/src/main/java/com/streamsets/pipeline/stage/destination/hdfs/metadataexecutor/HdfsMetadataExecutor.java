@@ -100,14 +100,23 @@ public class HdfsMetadataExecutor extends BaseExecutor {
             Path workingFile = new Path(evaluate(variables, "filePath", actions.filePath));
             LOG.info("Working on file: " + workingFile);
 
-            if(actions.shouldMoveFile) {
-              Path destinationFile = new Path(evaluate(variables, "newLocation", actions.newLocation));
+            if(actions.shouldMoveFile || actions.shouldRename) {
 
-              Path destinationParent = destinationFile.getParent();
-              if(!fs.exists(destinationParent)) {
-                LOG.debug("Creating parent directory for destination file: {}", destinationParent);
-                if(!fs.mkdirs(destinationParent)) {
-                  throw new IOException("Can't create directory: " + destinationParent);
+              Path newPath = workingFile.getParent();
+              String newName = workingFile.getName();
+              if(actions.shouldMoveFile) {
+                newPath = new Path(evaluate(variables, "newLocation", actions.newLocation));
+              }
+              if(actions.shouldRename) {
+                newName = evaluate(variables, "newName", actions.newName);
+              }
+
+              Path destinationFile = new Path(newPath, newName);
+
+              if(!fs.exists(newPath)) {
+                LOG.debug("Creating parent directory for destination file: {}", newPath);
+                if(!fs.mkdirs(newPath)) {
+                  throw new IOException("Can't create directory: " + newPath);
                 }
               }
 
