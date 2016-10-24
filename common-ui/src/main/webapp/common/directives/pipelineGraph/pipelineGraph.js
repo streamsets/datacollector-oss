@@ -1710,11 +1710,11 @@ angular.module('pipelineGraphDirectives', [])
       if(nodeIndex !== -1) {
         graph.nodes.splice(nodeIndex, 1);
 
-        //Remove the input lanes in all stages having output lanes of delete node.
+        //Remove the input lanes in all stages having output/event lanes of delete node.
         _.each(graph.edges, function(edge) {
           if(edge.source === selectedNode) {
             edge.target.inputLanes = _.filter(edge.target.inputLanes, function(inputLane) {
-              return !_.contains(edge.source.outputLanes, inputLane);
+              return !_.contains(edge.source.outputLanes, inputLane) && !_.contains(edge.source.eventLanes, inputLane);
             });
           }
         });
