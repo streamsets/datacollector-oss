@@ -280,8 +280,13 @@ public class HBaseLookupProcessor extends BaseProcessor {
       try {
         for (HBaseLookupParameterConfig parameter : conf.lookups) {
           final Pair<String, HBaseColumn> key = getKey(record, parameter);
-          Optional<String> value = HBaseUtil.getUGI().doAs((PrivilegedExceptionAction<Optional<String>>) () -> cache.getUnchecked(key));
-          updateRecord(record, parameter, key, value);
+
+          if (key != null && !key.getKey().trim().isEmpty()) {
+            Optional<String> value = HBaseUtil.getUGI().doAs((PrivilegedExceptionAction<Optional<String>>) () -> cache.getUnchecked(key));
+            updateRecord(record, parameter, key, value);
+          } else {
+            handleEmptyKey(record, key);
+          }
         }
       } catch (ELEvalException | JSONException e1) {
         LOG.error(Errors.HBASE_38.getMessage(), e1.toString(), e1);
@@ -306,8 +311,13 @@ public class HBaseLookupProcessor extends BaseProcessor {
         record = records.next();
         for (HBaseLookupParameterConfig parameter : conf.lookups) {
           Pair<String, HBaseColumn> key = getKey(record, parameter);
-          Optional<String> value = values.get(key);
-          updateRecord(record, parameter, key, value);
+
+          if (key != null && !key.getKey().trim().isEmpty()) {
+            Optional<String> value = HBaseUtil.getUGI().doAs((PrivilegedExceptionAction<Optional<String>>) () -> cache.getUnchecked(key));
+            updateRecord(record, parameter, key, value);
+          } else {
+            handleEmptyKey(record, key);
+          }
         }
         batchMaker.addRecord(record);
       }
@@ -323,6 +333,30 @@ public class HBaseLookupProcessor extends BaseProcessor {
     }
   }
 
+  private void handleEmptyKey(Record record, Pair<String, HBaseColumn> key) throws StageException {
+    if (conf.ignoreMissingFieldPath) {
+      LOG.debug(
+          Errors.HBASE_41.getMessage(),
+          record,
+          key.getKey(),
+          Bytes.toString(key.getValue().getCf()) + ":" + Bytes.toString(key.getValue().getQualifier()),
+          key.getValue().getTimestamp()
+      );
+    } else {
+      LOG.error(
+          Errors.HBASE_41.getMessage(),
+          record,
+          key.getKey(),
+          Bytes.toString(key.getValue().getCf()) + ":" + Bytes.toString(key.getValue().getQualifier()),
+          key.getValue().getTimestamp()
+      );
+      errorRecordHandler.onError(new OnRecordErrorException(record, Errors.HBASE_41, record,
+          key.getKey(),
+          Bytes.toString(key.getValue().getCf()) + ":" + Bytes.toString(key.getValue().getQualifier()),
+          key.getValue().getTimestamp()));
+    }
+  }
+
   private Set<Pair<String, HBaseColumn>> getKeyColumnListMap(Batch batch) throws StageException {
     Iterator<Record> records;
     records = batch.getRecords();
@@ -332,7 +366,17 @@ public class HBaseLookupProcessor extends BaseProcessor {
       record = records.next();
       for (HBaseLookupParameterConfig parameters : conf.lookups) {
         Pair<String, HBaseColumn> key = getKey(record, parameters);
-        keyList.add(key);
+        if(key != null && !key.getKey().trim().isEmpty()) {
+          keyList.add(key);
+        } else {
+          LOG.debug(
+              "No key on Record '{}' with key:'{}', column:'{}', timestamp:'{}'",
+              record,
+              key.getKey(),
+              Bytes.toString(key.getValue().getCf()) + ":" + Bytes.toString(key.getValue().getQualifier()),
+              key.getValue().getTimestamp()
+          );
+        }
       }
     }
     return keyList;
@@ -367,7 +411,7 @@ public class HBaseLookupProcessor extends BaseProcessor {
   private void updateRecord(Record record, HBaseLookupParameterConfig parameter, Pair<String, HBaseColumn> key, Optional<String> value)
       throws JSONException {
     // If the value does not exists in HBase, no updates on record
-    if(!value.isPresent()) {
+    if(value == null || !value.isPresent()) {
       LOG.debug(
           "No value found on Record '{}' with key:'{}', column:'{}', timestamp:'{}'",
           record,
