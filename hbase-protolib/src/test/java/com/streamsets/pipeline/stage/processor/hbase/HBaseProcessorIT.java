@@ -212,14 +212,54 @@ public class HBaseProcessorIT {
   }
 
   @Test(timeout = 60000)
-  public void testGetEmptyKey() throws Exception {
+  public void testGetEmptyKeyToDiscard() throws Exception {
     HBaseLookupConfig config = getDefaultConfig();
     config.cache.enabled = false;
-    Configuration hbaseConfig = getHBaseConfiguration(config);
 
-    HBaseStore hbaseStore = new HBaseStore(config, hbaseConfig);
-    Optional<String> value = hbaseStore.get(Pair.of("", new HBaseColumn(Bytes.toBytes(familyName), Bytes.toBytes("column1"))));
-    assertFalse(value.isPresent());
+    Processor processor = new HBaseLookupProcessor(config);
+
+    List<Record> records = new ArrayList<>();
+    Record record = RecordCreator.create();
+
+    Map<String, Field> fields = new HashMap<>();
+    fields.put("columnField", Field.create("cf1:" + "column"));
+    record.set(Field.create(fields));
+    records.add(record);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(HBaseLookupDProcessor.class, processor)
+        .addOutputLane("lane")
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+    runner.runInit();
+    runner.runProcess(records);
+
+    assertTrue(runner.getErrorRecords().isEmpty());
+  }
+
+  @Test(timeout = 60000)
+  public void testGetEmptyKeyToError() throws Exception {
+    HBaseLookupConfig config = getDefaultConfig();
+    config.cache.enabled = false;
+    config.ignoreMissingFieldPath = false;
+
+    Processor processor = new HBaseLookupProcessor(config);
+
+    List<Record> records = new ArrayList<>();
+    Record record = RecordCreator.create();
+
+    Map<String, Field> fields = new HashMap<>();
+    fields.put("columnField", Field.create("cf1:" + "column"));
+    record.set(Field.create(fields));
+    records.add(record);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(HBaseLookupDProcessor.class, processor)
+        .addOutputLane("lane")
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+    runner.runInit();
+    runner.runProcess(records);
+
+    assertFalse(runner.getErrorRecords().isEmpty());
   }
 
   @Test(timeout = 60000)

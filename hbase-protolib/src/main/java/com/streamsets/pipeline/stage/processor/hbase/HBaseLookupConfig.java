@@ -57,6 +57,18 @@ public class HBaseLookupConfig {
   @ListBeanModel
   public List<HBaseLookupParameterConfig> lookups = new ArrayList<>();
 
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Ignore Row Missing Field",
+      description = "If set, the record will not be treated as error record when a row field path is not present in the " +
+          "record or if the row field value is null",
+      displayPosition = 30,
+      group = "LOOKUP"
+  )
+  public boolean ignoreMissingFieldPath = true;
+
   @ConfigDefBean(groups = "LOOKUP")
   public CacheConfig cache = new CacheConfig();
 }
