@@ -22,6 +22,7 @@ package com.streamsets.pipeline.sdk;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.lib.el.FileEL;
 import com.streamsets.pipeline.lib.el.MathEL;
 import com.streamsets.pipeline.lib.el.StringEL;
 
@@ -66,17 +67,18 @@ class ElUtil {
 
 
   public static Class<?>[] getElDefClasses(Class[] elDefs) {
-    Class<?>[] elDefClasses = new Class<?>[elDefs.length + 2];
+    Class<?>[] elDefClasses = new Class<?>[elDefs.length + 3];
     int i = 0;
 
     for(; i < elDefs.length; i++) {
       elDefClasses[i] = elDefs[i];
     }
-    //inject RuntimeEL, StringEL and MathEL into the evaluator
+    //inject few standard ELs, so that they are available everywhere
     //Since injecting RuntimeEL.class requires RuntimeInfo class in the classpath, not adding it for now.
     //elDefClasses[i++] = RuntimeEL.class;
     elDefClasses[i++] = StringEL.class;
     elDefClasses[i++] = MathEL.class;
+    elDefClasses[i++] = FileEL.class;
     return elDefClasses;
   }
 }
