@@ -56,44 +56,83 @@ public class PartialInputIT extends  BaseHiveMetadataPropagationIT {
     List<Record> records = new LinkedList<>();
     Record record;
 
-    record = RecordCreator.create("s", "s:1");
+    // We insert each record twice to make sure that we can write more then one record to each rolled file
+
+    record = RecordCreator.create("s", "s:0");
     record.set(Field.create(Field.Type.LIST_MAP, ImmutableSortedMap.of(
       "index", Field.create(Field.Type.INTEGER, 0)
     )));
     records.add(record);
-
     record = RecordCreator.create("s", "s:1");
     record.set(Field.create(Field.Type.LIST_MAP, ImmutableSortedMap.of(
-      "index", Field.create(Field.Type.INTEGER, 1),
-      "id", Field.create(Field.Type.STRING, "text")
+      "index", Field.create(Field.Type.INTEGER, 1)
     )));
     records.add(record);
 
     record = RecordCreator.create("s", "s:2");
-    record.set(Field.create(Field.Type.MAP, ImmutableSortedMap.of(
+    record.set(Field.create(Field.Type.LIST_MAP, ImmutableSortedMap.of(
       "index", Field.create(Field.Type.INTEGER, 2),
-      "name", Field.create(Field.Type.STRING, "text")
+      "id", Field.create(Field.Type.STRING, "text")
     )));
     records.add(record);
-
     record = RecordCreator.create("s", "s:3");
-    record.set(Field.create(Field.Type.MAP, ImmutableSortedMap.of(
+    record.set(Field.create(Field.Type.LIST_MAP, ImmutableSortedMap.of(
       "index", Field.create(Field.Type.INTEGER, 3),
-      "value", Field.create(Field.Type.STRING, "text")
+      "id", Field.create(Field.Type.STRING, "text")
     )));
     records.add(record);
 
     record = RecordCreator.create("s", "s:4");
     record.set(Field.create(Field.Type.MAP, ImmutableSortedMap.of(
       "index", Field.create(Field.Type.INTEGER, 4),
+      "name", Field.create(Field.Type.STRING, "text")
+    )));
+    records.add(record);
+    record = RecordCreator.create("s", "s:5");
+    record.set(Field.create(Field.Type.MAP, ImmutableSortedMap.of(
+      "index", Field.create(Field.Type.INTEGER, 5),
+      "name", Field.create(Field.Type.STRING, "text")
+    )));
+    records.add(record);
+
+    record = RecordCreator.create("s", "s:6");
+    record.set(Field.create(Field.Type.MAP, ImmutableSortedMap.of(
+      "index", Field.create(Field.Type.INTEGER, 6),
+      "value", Field.create(Field.Type.STRING, "text")
+    )));
+    records.add(record);
+    record = RecordCreator.create("s", "s:7");
+    record.set(Field.create(Field.Type.MAP, ImmutableSortedMap.of(
+      "index", Field.create(Field.Type.INTEGER, 7),
+      "value", Field.create(Field.Type.STRING, "text")
+    )));
+    records.add(record);
+
+    record = RecordCreator.create("s", "s:8");
+    record.set(Field.create(Field.Type.MAP, ImmutableSortedMap.of(
+      "index", Field.create(Field.Type.INTEGER, 8),
+      "value", Field.create(Field.Type.STRING, "text"),
+      "id", Field.create(Field.Type.STRING, "text")
+    )));
+    records.add(record);
+    record = RecordCreator.create("s", "s:9");
+    record.set(Field.create(Field.Type.MAP, ImmutableSortedMap.of(
+      "index", Field.create(Field.Type.INTEGER, 9),
       "value", Field.create(Field.Type.STRING, "text"),
       "id", Field.create(Field.Type.STRING, "text")
     )));
     records.add(record);
 
-    record = RecordCreator.create("s", "s:5");
+    record = RecordCreator.create("s", "s:10");
     record.set(Field.create(Field.Type.MAP, ImmutableSortedMap.of(
-      "index", Field.create(Field.Type.INTEGER, 5),
+      "index", Field.create(Field.Type.INTEGER, 10),
+      "name", Field.create(Field.Type.STRING, "text"),
+      "id", Field.create(Field.Type.STRING, "text")
+    )));
+    records.add(record);
+    record = RecordCreator.create("s", "s:11");
+    record.set(Field.create(Field.Type.MAP, ImmutableSortedMap.of(
+      "index", Field.create(Field.Type.INTEGER, 11),
       "name", Field.create(Field.Type.STRING, "text"),
       "id", Field.create(Field.Type.STRING, "text")
     )));
@@ -109,39 +148,50 @@ public class PartialInputIT extends  BaseHiveMetadataPropagationIT {
       new ImmutablePair("tbl.value", Types.VARCHAR)
     );
 
-    // 6 rows
     assertQueryResult("select * from tbl order by index", new QueryValidator() {
       @Override
       public void validateResultSet(ResultSet rs) throws Exception {
-        Assert.assertTrue(rs.next());
-        Assert.assertNull(rs.getString("id"));
-        Assert.assertNull(rs.getString("name"));
-        Assert.assertNull(rs.getString("value"));
+        for(int i = 0; i < 2; i++) {
+          Assert.assertTrue(rs.next());
+          Assert.assertNull(rs.getString("id"));
+          Assert.assertNull(rs.getString("name"));
+          Assert.assertNull(rs.getString("value"));
+        }
 
-        Assert.assertTrue(rs.next());
-        Assert.assertEquals("text", rs.getString("id"));
-        Assert.assertNull(rs.getString("name"));
-        Assert.assertNull(rs.getString("value"));
+        for(int i = 0; i < 2; i++) {
+          Assert.assertTrue(rs.next());
+          Assert.assertEquals("text", rs.getString("id"));
+          Assert.assertNull(rs.getString("name"));
+          Assert.assertNull(rs.getString("value"));
+        }
 
-        Assert.assertTrue(rs.next());
-        Assert.assertNull(rs.getString("id"));
-        Assert.assertEquals("text", rs.getString("name"));
-        Assert.assertNull(rs.getString("value"));
+        for(int i = 0; i < 2; i++) {
+          Assert.assertTrue(rs.next());
+          Assert.assertNull(rs.getString("id"));
+          Assert.assertEquals("text", rs.getString("name"));
+          Assert.assertNull(rs.getString("value"));
+        }
 
-        Assert.assertTrue(rs.next());
-        Assert.assertNull(rs.getString("id"));
-        Assert.assertNull(rs.getString("name"));
-        Assert.assertEquals("text", rs.getString("value"));
+        for(int i = 0; i < 2; i++) {
+          Assert.assertTrue(rs.next());
+          Assert.assertNull(rs.getString("id"));
+          Assert.assertNull(rs.getString("name"));
+          Assert.assertEquals("text", rs.getString("value"));
+        }
 
-        Assert.assertTrue(rs.next());
-        Assert.assertEquals("text", rs.getString("id"));
-        Assert.assertNull(rs.getString("name"));
-        Assert.assertEquals("text", rs.getString("value"));
+        for(int i = 0; i < 2; i++) {
+          Assert.assertTrue(rs.next());
+          Assert.assertEquals("text", rs.getString("id"));
+          Assert.assertNull(rs.getString("name"));
+          Assert.assertEquals("text", rs.getString("value"));
+        }
 
-        Assert.assertTrue(rs.next());
-        Assert.assertEquals("text", rs.getString("id"));
-        Assert.assertEquals("text", rs.getString("name"));
-        Assert.assertNull(rs.getString("value"));
+        for(int i = 0; i < 2; i++) {
+          Assert.assertTrue(rs.next());
+          Assert.assertEquals("text", rs.getString("id"));
+          Assert.assertEquals("text", rs.getString("name"));
+          Assert.assertNull(rs.getString("value"));
+        }
 
         Assert.assertFalse(rs.next());
       }

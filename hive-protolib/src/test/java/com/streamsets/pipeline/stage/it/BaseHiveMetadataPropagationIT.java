@@ -97,6 +97,12 @@ public abstract class BaseHiveMetadataPropagationIT extends BaseHiveIT {
     StageRunner.Output output = procesorRunner.runProcess(inputRecords);
     errorRecords.put(Stage.METADATA_PROCESSOR, procesorRunner.getErrorRecords());
 
+    // Dump all record coming from the metadata processor to log in case that we need to debug them later
+    LOG.debug("Dumping records for Hive destination");
+    logRecords(output.getRecords().get("hive"));
+    LOG.debug("Dumping records for HDFS destination");
+    logRecords(output.getRecords().get("hdfs"));
+
     hiveTargetRunner.runInit();
     hiveTargetRunner.runWrite(output.getRecords().get("hive"));
     errorRecords.put(Stage.METASTORE_TARGET, hiveTargetRunner.getErrorRecords());
@@ -123,10 +129,17 @@ public abstract class BaseHiveMetadataPropagationIT extends BaseHiveIT {
         .rollIfHeader(true)
         .rollHeaderName("roll")
         .dataGeneratorFormatConfig(formatConfig)
+        .maxRecordsPerFile(100)
         .build();
   }
 
   List<Record> getErrorRecord(Stage stage) {
     return errorRecords.get(stage);
+  }
+
+  private void logRecords(List<Record> records) {
+    for(Record record : records) {
+      LOG.debug("Record {} with roll flag {}", record, record.getHeader().getAttribute("roll"));
+    }
   }
 }
