@@ -293,6 +293,7 @@
       "errorStackTrace": "Error Stack Trace",
       "dontShowAgain": "Don't show again.",
       "originMissing": "Origin missing",
+      "selectExecutor": "Select Executor to connect...",
       "selectProcessor": "Select Processor to connect...",
       "selectProcessorToAddInBetween": "Select Processor to add in between the selected stream...",
       "selectTarget": "Select Destination to connect...",
