@@ -40,10 +40,11 @@ angular
 
           var pipelineNames = _.pluck(pipelineInfo, 'name');
           api.pipelineAgent.stopPipelines(pipelineNames, forceStop).success(function(res) {
-            $modalInstance.close(res);
-            if (res.errorMessages.length > 0) {
+            if (res.errorMessages.length === 0) {
+              $modalInstance.close(res);
+            } else {
               $scope.stopping = false;
-              $scope.common.errors = errorMessages;
+              $scope.common.errors = res.errorMessages;
             }
           }).error(function(data) {
             $scope.stopping = false;

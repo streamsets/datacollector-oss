@@ -24,25 +24,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public class MultiStatusResponseJson<T> {
+public class AddLabelsRequestJson {
 
-  private final List<T> successEntities;
-  private final List<String> errorMessages;
+  private final List<String> labels;
+  private final List<String> pipelineNames;
 
   @JsonCreator
-  public MultiStatusResponseJson(
-      @JsonProperty("successEntities") List<T> successEntities,
-      @JsonProperty("errorMessages") List<String> errorMessages
+  public AddLabelsRequestJson(
+      @JsonProperty("labels") List<String> labels,
+      @JsonProperty("pipelineNames") List<String> pipelineNames
   ) {
-    this.successEntities = successEntities;
-    this.errorMessages = errorMessages;
+    this.labels = labels;
+    this.pipelineNames = pipelineNames;
   }
 
-  public final List<T> getSuccessEntities() {
-    return successEntities;
+  public final List<String> getLabels() {
+    return labels;
   }
 
-  public final List<String> getErrorMessages() {
-    return errorMessages;
+  public final List<String> getPipelineNames() {
+    return pipelineNames;
   }
 }

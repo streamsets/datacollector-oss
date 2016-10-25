@@ -228,6 +228,11 @@
     "importPipeline": "Import Pipeline",
     "invalidStatus": "Pipeline is invalid",
     "header" : {
+      "addLabels": "Add Labels",
+      "addLabelsTitle": "Add Labels to Pipelines",
+      "addLabelsConfirmationMessage": "Enter labels to be added to the selected pipelines. Duplicate labels will be ignored.",
+      "addLabelsSelectedPipelines": "Selected Pipelines:",
+      "addingLabelsToPipelines": "Adding labels to Pipelines...",
       "addStage": "Add Stage",
       "alerts": "Alerts",
       "continueMonitoring": "Continue Monitoring",

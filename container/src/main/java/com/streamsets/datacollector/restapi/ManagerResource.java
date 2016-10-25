@@ -172,7 +172,7 @@ public class ManagerResource {
 
   @Path("/pipelines/start")
   @POST
-  @ApiOperation(value = "Start multiple Pipelines", response = PipelineStateJson.class, responseContainer = "List",
+  @ApiOperation(value = "Start multiple Pipelines", response = MultiStatusResponseJson.class,
       authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({
@@ -244,7 +244,7 @@ public class ManagerResource {
 
   @Path("/pipelines/stop")
   @POST
-  @ApiOperation(value = "Stop multiple Pipelines", response = PipelineStateJson.class, responseContainer = "List",
+  @ApiOperation(value = "Stop multiple Pipelines", response = MultiStatusResponseJson.class,
       authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({
@@ -316,7 +316,7 @@ public class ManagerResource {
 
   @Path("/pipelines/forceStop")
   @POST
-  @ApiOperation(value = "Force Stop multiple Pipelines", response = PipelineStateJson.class, responseContainer = "List",
+  @ApiOperation(value = "Force Stop multiple Pipelines", response = MultiStatusResponseJson.class,
       authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({

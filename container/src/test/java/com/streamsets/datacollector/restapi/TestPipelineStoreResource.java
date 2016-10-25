@@ -28,6 +28,7 @@ import com.streamsets.datacollector.restapi.bean.DriftRuleDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.MetricElementJson;
 import com.streamsets.datacollector.restapi.bean.MetricTypeJson;
 import com.streamsets.datacollector.restapi.bean.MetricsRuleDefinitionJson;
+import com.streamsets.datacollector.restapi.bean.MultiStatusResponseJson;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.PipelineEnvelopeJson;
 import com.streamsets.datacollector.restapi.bean.PipelineInfoJson;
@@ -64,6 +65,7 @@ import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -245,6 +247,8 @@ public class TestPipelineStoreResource extends JerseyTest {
                 "xyz lastModifier", "1", UUID.randomUUID(), true, null))));
         Mockito.when(pipelineStore.load("xyz", "1")).thenReturn(
             MockStages.createPipelineConfigurationSourceProcessorTarget());
+        Mockito.when(pipelineStore.load(Matchers.matches("abc|def"), Matchers.matches("0"))).thenReturn(
+            MockStages.createPipelineConfigurationWithLabels(new ArrayList<String>()));
         Mockito.when(pipelineStore.create("nobody", "myPipeline", "my description", false)).thenReturn(
           MockStages.createPipelineConfigurationSourceProcessorTarget());
         Mockito.doNothing().when(pipelineStore).delete("myPipeline");
@@ -254,6 +258,10 @@ public class TestPipelineStoreResource extends JerseyTest {
             Matchers.anyString(), Matchers.anyString(), Matchers.anyString(), Matchers.anyString(),
             (com.streamsets.datacollector.config.PipelineConfiguration)Matchers.any())).thenReturn(
           MockStages.createPipelineConfigurationSourceProcessorTarget());
+        Mockito.when(pipelineStore.save(
+            Matchers.anyString(), Matchers.matches("abc|def"), Matchers.matches("0"), Matchers.anyString(),
+            (com.streamsets.datacollector.config.PipelineConfiguration)Matchers.any())).thenReturn(
+            MockStages.createPipelineConfigurationWithLabels(Arrays.asList("foo", "bar")));
 
         List<MetricsRuleDefinitionJson> metricsRuleDefinitionJsons = new ArrayList<>();
         metricsRuleDefinitionJsons.add(new MetricsRuleDefinitionJson("m1", "m1", "a", MetricTypeJson.COUNTER,
@@ -354,7 +362,6 @@ public class TestPipelineStoreResource extends JerseyTest {
     Assert.assertNotNull(pipelineEnvelope.get("libraryDefinitions"));
   }
 
-
   @Test
   public void testImportPipeline() {
     Response response = target("/v1/pipeline/xyz/export").queryParam("rev", "1").request().get();
@@ -372,4 +379,19 @@ public class TestPipelineStoreResource extends JerseyTest {
     Assert.assertNull(pipelineEnvelope.getLibraryDefinitions());
   }
 
+  @Test
+  public void testAddLabelsToPipelines() throws PipelineStoreException {
+    Response response = target("/v1/pipelines/addLabels").request()
+        .post(Entity.json("{\"labels\": [\"foo\", \"bar\"], \"pipelineNames\": [\"abc\", \"def\", \"nonExistent\"]}"));
+
+    MultiStatusResponseJson<String> multiStatusResponse = response.readEntity(MultiStatusResponseJson.class);
+    Assert.assertEquals(207, response.getStatusInfo().getStatusCode());
+
+    List<String> successEntities = multiStatusResponse.getSuccessEntities();
+    Assert.assertEquals(Arrays.asList("abc", "def"), successEntities);
+
+    List<String> errorMessages = multiStatusResponse.getErrorMessages();
+    Assert.assertEquals(Arrays.asList("Failed adding labels [foo, bar] to pipeline: nonExistent. Error: null"),
+        errorMessages);
+  }
 }

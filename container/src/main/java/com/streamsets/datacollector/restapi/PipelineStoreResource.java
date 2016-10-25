@@ -30,8 +30,10 @@ import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.restapi.bean.AddLabelsRequestJson;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.DefinitionsJson;
+import com.streamsets.datacollector.restapi.bean.MultiStatusResponseJson;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.PipelineDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.PipelineEnvelopeJson;
@@ -519,5 +521,56 @@ public class PipelineStoreResource {
     pipelineEnvelope.setPipelineRules(BeanHelper.wrapRuleDefinitions(ruleDefinitions));
     return Response.ok().
         type(MediaType.APPLICATION_JSON).entity(pipelineEnvelope).build();
+  }
+
+  @Path("/pipelines/addLabels")
+  @POST
+  @ApiOperation(value = "Add labels to multiple Pipelines", response = MultiStatusResponseJson.class,
+      authorizations = @Authorization(value = "basic"))
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({
+      AuthzRole.CREATOR,
+      AuthzRole.ADMIN,
+      AuthzRole.MANAGER_REMOTE,
+      AuthzRole.ADMIN_REMOTE
+  })
+  public Response addLabelsToPipelines(AddLabelsRequestJson addLabelsRequestJson) {
+    List<String> labels = addLabelsRequestJson.getLabels();
+    List<String> pipelineNames = addLabelsRequestJson.getPipelineNames();
+    List<String> successEntities = new ArrayList<>();
+    List<String> errorMessages = new ArrayList<>();
+
+    for (String pipelineName: pipelineNames) {
+
+      try {
+        PipelineConfiguration pipelineConfig = store.load(pipelineName, "0");
+        Map<String, Object> metadata = pipelineConfig.getMetadata();
+
+        Object objLabels = metadata.get("labels");
+        List<String> metaLabels = objLabels == null ? new ArrayList<String>() : (List<String>) objLabels;
+
+        for (String label : labels) {
+          if (!metaLabels.contains(label)) {
+            metaLabels.add(label);
+          }
+        }
+
+        metadata.put("labels", metaLabels);
+        RestAPIUtils.injectPipelineInMDC(pipelineName);
+        PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, pipelineName,
+            pipelineConfig);
+        pipelineConfig = validator.validate();
+        store.save(user, pipelineName, "0", pipelineConfig.getDescription(), pipelineConfig);
+        successEntities.add(pipelineName);
+
+      } catch (Exception ex) {
+        errorMessages.add("Failed adding labels " + labels + " to pipeline: " + pipelineName + ". Error: " +
+            ex.getMessage());
+      }
+    }
+
+    return Response.status(207)
+        .type(MediaType.APPLICATION_JSON)
+        .entity(new MultiStatusResponseJson<>(successEntities, errorMessages)).build();
   }
 }

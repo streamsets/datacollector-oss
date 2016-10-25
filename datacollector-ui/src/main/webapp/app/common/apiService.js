@@ -954,6 +954,24 @@ angular.module('dataCollectorApp.common')
       },
 
       /**
+       * Add Labels to Multiple Pipelines
+       *
+       * @param labels
+       * @param pipelineNames
+       */
+      addLabelsToPipelines: function(labels, pipelineNames) {
+        var url = apiBase + '/pipelines/addLabels';
+        return $http({
+          method: 'POST',
+          url: url,
+          data: {
+            labels: labels,
+            pipelineNames: pipelineNames
+          }
+        });
+      },
+
+      /**
        * Fetches Pipeline Rules.
        *
        * @param name

@@ -1275,6 +1275,25 @@ public class MockStages {
                                      null, createPipelineConfigs(), null, stages, getErrorStageConfig(), getStatsAggregatorStageConfig());
   }
 
+  public static PipelineConfiguration createPipelineConfigurationWithLabels(List<String> labels) {
+    PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(
+        PipelineStoreTask.SCHEMA_VERSION,
+        PipelineConfigBean.VERSION,
+        UUID.randomUUID(),
+        null,
+        createPipelineConfigs(),
+        null,
+        null,
+        getErrorStageConfig(),
+        getStatsAggregatorStageConfig()
+    );
+
+    Map<String, Object> metadata = new HashMap<>();
+    metadata.put("labels", labels);
+    pipelineConfiguration.setMetadata(metadata);
+    return pipelineConfiguration;
+  }
+
   @SuppressWarnings("unchecked")
   public static PipelineConfiguration createPipelineConfigurationSourceTarget() {
     List<StageConfiguration> stages = new ArrayList<>();

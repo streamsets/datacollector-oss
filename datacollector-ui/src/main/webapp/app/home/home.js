@@ -53,7 +53,7 @@ angular
 
     var pipelinesLimit = 30;
 
-    var RESET_OFFSET_DISALLOWED_STATUSES = [
+    var PIPELINE_ACTIVE_STATUSES = [
       'CONNECTING',
       'DISCONNECTING',
       'FINISHING',
@@ -278,7 +278,7 @@ angular
           if (selectedPipelineList.indexOf(pipelineInfo.name) !== -1) {
             var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
             if (pipelineStatus && pipelineStatus.name === pipelineInfo.name &&
-                _.contains(RESET_OFFSET_DISALLOWED_STATUSES, pipelineStatus.status)) {
+                _.contains(PIPELINE_ACTIVE_STATUSES, pipelineStatus.status)) {
               validationIssues.push('Reset Origin operation is not supported for Pipeline "' +
                   pipelineInfo.name + '" with state ' +  pipelineStatus.status);
             }
@@ -306,6 +306,64 @@ angular
             }
           }
         });
+
+        $scope.unSelectAll();
+      },
+
+      /**
+       * Add labels to selected pipelines
+       */
+      addLabelsToSelectedPipelines: function() {
+        $rootScope.common.trackEvent(
+            pipelineConstant.BUTTON_CATEGORY,
+            pipelineConstant.CLICK_ACTION,
+            'Add labels to selected pipelines',
+            1
+        );
+
+        var selectedPipelineList = $scope.selectedPipelineList;
+        var selectedPipelineInfoList = [];
+        var validationIssues = [];
+        angular.forEach($scope.pipelines, function(pipelineInfo) {
+          if (selectedPipelineList.indexOf(pipelineInfo.name) !== -1) {
+            var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
+            if (pipelineStatus && pipelineStatus.name === pipelineInfo.name &&
+                _.contains(PIPELINE_ACTIVE_STATUSES, pipelineStatus.status)) {
+              validationIssues.push('Add Label is not supported for Pipeline "' +
+                  pipelineInfo.name + '" with state ' +  pipelineStatus.status );
+            }
+            if (!pipelineInfo.valid) {
+              validationIssues.push('Pipeline "' + pipelineInfo.name + '" is not valid');
+            }
+            selectedPipelineInfoList.push(pipelineInfo);
+          }
+        });
+
+        if (validationIssues.length > 0) {
+          $rootScope.common.errors = validationIssues;
+          return;
+        }
+        $rootScope.common.errors = [];
+
+        var modalInstance = $modal.open({
+          templateUrl: 'app/home/header/addLabel/addLabelConfirmation.tpl.html',
+          controller: 'AddLabelConfirmationModalInstanceController',
+          size: '',
+          backdrop: 'static',
+          resolve: {
+            pipelineInfoList: function () {
+              return selectedPipelineInfoList;
+            }
+          }
+        });
+
+        modalInstance.result.then(function(res) {
+          angular.forEach(res.successEntities, function(pipelineName) {
+            var pipeline = _.find($scope.filteredPipelines, function(p) { return p.name === pipelineName });
+            var mergedLabels = (pipeline.metadata.labels || []).concat(res.labels);
+            pipeline.metadata.labels = _(mergedLabels).uniq();
+          });
+        }, function () {});
 
         $scope.unSelectAll();
       },

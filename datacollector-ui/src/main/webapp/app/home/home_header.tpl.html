@@ -58,6 +58,16 @@
 
           <li role="presentation"
               ng-class="{'disabled': selectedPipelineList.length === 0}"
+              ng-if="isAuthorized([userRoles.admin, userRoles.creator])">
+            <a href="#" dropdown-toggle
+               ng-click="selectedPipelineList.length === 0 || addLabelsToSelectedPipelines()">
+              <i class="fa fa-tags"></i>
+              <span>{{'home.header.addLabels' | translate}}</span>
+            </a>
+          </li>
+
+          <li role="presentation"
+              ng-class="{'disabled': selectedPipelineList.length === 0}"
               ng-if="isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])">
             <a href="#" dropdown-toggle
                ng-click="selectedPipelineList.length === 0 || exportSelectedPipelines(false)">

@@ -1,0 +1,49 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="no()">
+    <span aria-hidden="true">&times;</span>
+    <span class="sr-only">Close</span>
+  </button>
+  <h3 class="modal-title" translate="home.header.addLabelsTitle">Add Labels to Pipelines</h3>
+</div>
+<div class="modal-body multiple-pipelines-modal-body">
+  <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+
+  <p>
+    <p translate="home.header.addLabelsConfirmationMessage"></p>
+
+    <p>
+      <div class="controls">
+        <ui-select multiple
+                   tagging
+                   tagging-label=" - new label"
+                   tagging-tokens=",|ENTER"
+                   ng-model="data.labels"
+                   ng-disabled="addingLabels">
+          <ui-select-match class="ui-select-match">{{$item}}</ui-select-match>
+          <ui-select-choices class="ui-select-choices" repeat="listValue in []">
+            <div ng-bind-html="listValue | highlight: $select.search"></div>
+          </ui-select-choices>
+        </ui-select>
+      </div>
+    </p>
+
+    <p translate="home.header.addLabelsSelectedPipelines"></p>
+    <p ng-repeat="pipeline in pipelineInfo">{{pipeline.name}}</p>
+    <p translate="home.header.addingLabelsToPipelines" ng-if="addingLabels"></p>
+  </div>
+
+</div>
+<div class="modal-footer">
+  <button type="button"
+          class="btn btn-default"
+          ng-if="!common.errors || common.errors.length == 0"
+          ng-click="cancel()"
+          ng-disabled="addingLabels"
+          translate="global.form.cancel">Cancel</button>
+  <button type="button"
+          class="btn btn-primary"
+          ng-if="!common.errors || common.errors.length == 0"
+          ng-click="save()"
+          ng-disabled="addingLabels"
+          translate="global.form.save">Save</button>
+</div>
