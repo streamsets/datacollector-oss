@@ -43,6 +43,7 @@
     "form": {
       "actions": "Actions",
       "add": "Add",
+      "addAndRemoveStages": "Add/Remove Stages",
       "allStages": "All Stages",
       "autoArrange": "Auto Arrange",
       "cancel": "Cancel",

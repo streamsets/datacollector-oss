@@ -19,7 +19,7 @@
 
     <div class="stage-list-container">
       <ul class="stages-list">
-        <li id="item1" draggable drag-data="stageLibrary"
+        <li draggable drag-data="stageLibrary"
             ng-repeat="stageLibrary in filteredStageLibraries | orderBy: 'label'"
             ng-init="icon=getStageIconURL(stageLibrary)"
             tooltip-placement="{{$index < filteredStageLibraries.length - 2 ? 'bottom' : 'top'}}"
@@ -32,6 +32,17 @@
             <span>{{stageLibrary.label}}</span>
           </a>
         </li>
+
+        <li tooltip-placement="top"
+            tooltip="{{'packageManager.title' | translate}}"
+            tooltip-append-to-body="true"
+            tooltip-popup-delay="500">
+          <a role="menuitem" tabindex="-1" href="/collector/packageManager"
+             ng-style="{'background-image': 'url(/assets/add.png)'}">
+            <span>{{'global.form.addAndRemoveStages' | translate}}</span>
+          </a>
+        </li>
+
       </ul>
     </div>
 
