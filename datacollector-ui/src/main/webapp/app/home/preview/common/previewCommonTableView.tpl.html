@@ -210,6 +210,27 @@
     </td>
   </tr>
 
+
+  <tr ng-if="detailPaneConfig.uiInfo.stageType === 'PROCESSOR' && stagePreviewData.newRecords && stagePreviewData.newRecords.length"
+      ng-repeat="outputRecord in stagePreviewData.newRecords"
+      ng-init="flattenRecord = getFlattenRecord(outputRecord)">
+    <td colspan="{{inputLimit}}"></td>
+
+    <td ng-repeat="fieldPath in outputFieldPaths | limitTo: outputLimit"
+        ng-switch="flattenRecord[fieldPath].type">
+      <span ng-switch-when="DATETIME"
+            class="field-value {{flattenRecord[fieldPath].value != null ? flattenRecord[fieldPath].type : ''}}">{{(flattenRecord[fieldPath].value + '' | date:'medium')}}</span>
+      <span ng-switch-when="DATE"
+            class="field-value {{flattenRecord[fieldPath].value != null ? flattenRecord[fieldPath].type : ''}}">{{(flattenRecord[fieldPath].value + '' | date:'mediumDate')}}</span>
+      <span ng-switch-when="TIME"
+            class="field-value {{flattenRecord[fieldPath].value != null ? flattenRecord[fieldPath].type : ''}}">{{(flattenRecord[fieldPath].value + '' | date:'mediumTime')}}</span>
+      <span ng-switch-default
+            class="field-value {{flattenRecord[fieldPath].value != null ? flattenRecord[fieldPath].type : ''}}">{{(flattenRecord[fieldPath].value + '')}}</span>
+    </td>
+  </tr>
+
+
+
   <tr ng-if="stagePreviewData.input.length === 0 &&
                 stagePreviewData.output.length === 0 &&
                 stagePreviewData.errorRecords.length === 0">

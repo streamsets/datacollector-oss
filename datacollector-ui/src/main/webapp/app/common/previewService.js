@@ -49,7 +49,8 @@ angular.module('dataCollectorApp.common')
           input: [],
           output: [],
           errorRecords: [],
-          stageErrors: []
+          stageErrors: [],
+          newRecords: []
         };
 
       angular.forEach(batchData, function (stageOutput) {
@@ -58,6 +59,9 @@ angular.module('dataCollectorApp.common')
             angular.forEach(outputs, function(output) {
               output.laneName = laneName;
               stagePreviewData.output.push(output);
+              if (output.header && !output.header.previousTrackingId) {
+                stagePreviewData.newRecords.push(output);
+              }
             });
           });
           stagePreviewData.errorRecords = stageOutput.errorRecords;

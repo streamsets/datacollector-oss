@@ -133,6 +133,25 @@
       </td>
     </tr>
 
+    <tr ng-if="detailPaneConfig.uiInfo.stageType === 'PROCESSOR' && stagePreviewData.newRecords && stagePreviewData.newRecords.length"
+        ng-repeat="newRecord in stagePreviewData.newRecords">
+      <td>
+      </td>
+      <td>
+        <div>
+          <record-tree
+            record="newRecord"
+            record-value="newRecord.value"
+            field-name="('global.form.newRecord' | translate) +  ($index + 1) + getRecordAdditionalInfo(detailPaneConfig, newRecord, 'output')"
+            is-root="true"
+            editable="false"
+            show-header="snapshotMode || pipelineConfig.uiInfo.previewConfig.showHeader"
+            show-field-type="snapshotMode || pipelineConfig.uiInfo.previewConfig.showFieldType">
+          </record-tree>
+        </div>
+      </td>
+    </tr>
+
     <tr ng-switch-when="TARGET"
         ng-repeat="inputRecord in stagePreviewData.input">
       <td>
