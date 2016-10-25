@@ -127,7 +127,7 @@ public class JythonDProcessor extends DProcessor {
       "    #    record.value['null_int'] = 123\n" +
       "\n" +
       "    # Create a new record with map field \n" +
-      "    # newRecord = sdcFunctions.createRecord('recordId')\n" +
+      "    # newRecord = sdcFunctions.createRecord(record.sourceId + ':newRecordId')\n" +
       "    # newRecord.value = {'field1' : 'val1', 'field2' : 'val2'}\n" +
       "    # output.write(newRecord)\n" +
       "\n" +

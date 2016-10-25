@@ -124,13 +124,13 @@ public class JavaScriptDProcessor extends DProcessor {
       "    //    records[i].value.null_int = 123\n" +
       "\n" +
       "    // Create a new record with map field \n" +
-      "    // var newRecord = sdcFunctions.createRecord('recordId')\n" +
-      "    // newRecord.value = {'field1' : 'val1', 'field2' : 'val2'}\n" +
-      "    // output.write(newRecord)\n" +
+      "    // var newRecord = sdcFunctions.createRecord(records[i].sourceId + ':newRecordId');\n" +
+      "    // newRecord.value = {'field1' : 'val1', 'field2' : 'val2'};\n" +
+      "    // output.write(newRecord);\n" +
       "    // Create a new map and add it to the original record\n" +
-      "    // var newMap = sdcFunctions.createMap(true)\n" +
-      "    // newMap['key'] = 'value'\n" +
-      "    // records[i].value['b'] = newMap\n" +
+      "    // var newMap = sdcFunctions.createMap(true);\n" +
+      "    // newMap['key'] = 'value';\n" +
+      "    // records[i].value['b'] = newMap;\n" +
       "\n" +
       "    //Applies if the source uses WHOLE_FILE as data format\n" +
       "    //var input_stream = record.value['fileRef'].getInputStream();\n" +
