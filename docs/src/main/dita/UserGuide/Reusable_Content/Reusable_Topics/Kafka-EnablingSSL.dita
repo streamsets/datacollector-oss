@@ -31,8 +31,8 @@
                         href="http://kafka.apache.org/documentation.html#security_ssl" format="html"
                         scope="external"/>. </li>
                 <li id="KAFKASetStage">On the <uicontrol>General</uicontrol> tab of the stage, set
-                    the <uicontrol>Stage Library</uicontrol> property to <uicontrol>Apache Kafka
-                        0.9.0.0</uicontrol>.</li>
+                    the <uicontrol>Stage Library</uicontrol> property to Apache Kafka 0.9.0.0 or a
+                    later version.</li>
                 <li>On the <wintitle>Kafka</wintitle> tab, add the
                         <uicontrol>security.protocol</uicontrol> Kafka configuration property and
                     set it to <uicontrol>SSL</uicontrol>.</li>
@@ -55,9 +55,8 @@
                         documentation.</p></li>
             </ol>
         </p>
-        <p id="P3-example">For example, the following properties allow the stage to connect to use
-            SSL to connect to <ph conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>
-            with client authentication:</p>
+        <p id="P3-example">For example, the following properties allow the stage to use SSL to
+            connect to Kafka 0.0.9.0 with client authentication:</p>
         <p><image href="../../Graphics/Kafka-SSLoptions.png" id="P4-image" scale="70"/></p>
     </conbody>
 </concept>

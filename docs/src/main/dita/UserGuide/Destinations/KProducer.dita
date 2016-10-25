@@ -25,13 +25,12 @@
   <p>The Kafka Producer passes data to partitions in the Kafka topic based on the partition strategy
             that you choose. You can optionally write a batch of records to the Kafka cluster as a
             single message.</p>
-        <p>You can add additional Kafka configuration properties as needed. You can also configure
-            the destination to use <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>
-            security features.</p>
-        <p>When using Kafka 0.8.2 or later to write messages in the Avro format, you can configure
-            the Kafka Producer to work with the Confluent Schema Registry. The Confluent Schema
-            Registry is a distributed storage layer for Avro schemas which uses Kafka as its
+        <p>You can add additional Kafka configuration properties as needed. When using <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>,
+            you can also configure the origin to use Kafka security features.</p>
+        <p>When using Kafka version 0.8.2 or later to write messages in the Avro format, you can
+            configure the Kafka Producer to work with the Confluent Schema Registry. The Confluent
+            Schema Registry is a distributed storage layer for Avro schemas which uses Kafka as its
             underlying storage mechanism.</p>
         <p>
             <draft-comment author="Loretta">Make sure changes in Kafka Producer topics go into MapR

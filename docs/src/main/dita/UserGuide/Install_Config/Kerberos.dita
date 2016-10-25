@@ -27,23 +27,19 @@
     <p>You can configure Kerberos authentication for the following stages:<ul id="ul_u5p_x1f_55">
         <li>Hadoop FS origin</li>
         <li>Kafka Consumer origin, <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>
-          only</li>
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/></li>
         <li>MapR FS origin</li>
         <li>SDC RPC to Kafka, <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>
-          only</li>
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/></li>
         <li>UDP to Kafka, <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>
-          only</li>
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/></li>
         <li>HBase Lookup processor</li>
         <li>Hive Metadata processor</li>
         <li>Hadoop FS destination</li>
         <li>HBase destination</li>
         <li>Hive Metastore destination</li>
         <li>Kafka Producer, <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>
-          only</li>
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/></li>
         <li>MapR DB destination</li>
         <li>MapR FS destination</li>
         <li>Solr destination</li>

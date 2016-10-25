@@ -15,20 +15,18 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_zlc_ppn_js">
  <title>Initial and Subsequent Offsets</title>
- <shortdesc>When you start a pipeline for the first time, the Kafka Consumer becomes a new consumer
-  group for the topic. It reads only incoming data - processing data from all partitions - and
-  ignores any existing data in the topic by default. </shortdesc>
  <conbody>
   <p><indexterm>offsets<indexterm>for Kafka Consumer</indexterm></indexterm><indexterm>Kafka
-    Consumer origin<indexterm>initial and subsequent offsets</indexterm></indexterm>After the origin
-   passes data to destinations, it saves the offset with the ZooKeeper. When you stop and restart
-   the pipeline, processing continues based on the offset provided by the ZooKeeper.</p>
-  <p>To configure the origin to read all unread data in the topic, you can add the
-        <uicontrol>auto.offset.reset</uicontrol> Kafka configuration property. Set the property to
-        <uicontrol>smallest</uicontrol> for versions before <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>. Set it
-      to <uicontrol>earliest</uicontrol> for <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/> and
-      later.  For more information about auto.offset.reset, see the Apache Kafka documentation. </p>
+        Consumer origin<indexterm>initial and subsequent offsets</indexterm></indexterm>When you
+      start a pipeline for the first time, the Kafka Consumer becomes a new consumer group for the
+      topic.</p>
+    <p>By default, the origin reads only incoming data, processing data from all partitions and
+      ignoring any existing data in the topic. After the origin passes data to destinations, it
+      saves the offset with Kafka or ZooKeeper. When you stop and restart the pipeline, processing
+      continues based on the offset. </p>
+    <p>For versions before Kafka 0.9.0.0, the offset is stored with Kafka or ZooKeeper based on the
+      offsets.storage Kafka property. For <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>, the
+      offset is stored with Kafka. </p>
  </conbody>
 </concept>

@@ -24,6 +24,6 @@
             pipeline passes data to partitions in the Kafka topic based on the partition strategy
             that you choose. You can add additional Kafka configuration properties as needed. </p>
         <note>At this time, you cannot configure the pipeline to connect securely through SSL or
-            Kerberos when using Kafka 0.9.0.0 or later.</note>
+            Kerberos when using Kafka.</note>
     </conbody>
 </concept>
