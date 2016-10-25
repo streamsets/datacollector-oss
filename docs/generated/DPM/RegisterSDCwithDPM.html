@@ -123,9 +123,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d27609e228">Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d27626e228">Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d27609e231">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d27626e231">Description</th>
 
                                 </tr>
 
@@ -133,33 +133,33 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d27609e228 "><span class="ph">DPM</span> Base URL</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d27626e228 "><span class="ph">DPM</span> Base URL</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d27609e231 ">Set to:
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d27626e231 ">Set to:
                                         <samp class="ph codeph">https://cloud.streamsets.com</samp></td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d27609e228 ">User Name</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d27626e228 ">User Name</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d27609e231 ">Enter your <span class="ph">DPM</span> user name using the following
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d27626e231 ">Enter your <span class="ph">DPM</span> user name using the following
                                         format:<pre class="pre codeblock">&lt;user account name&gt;@&lt;organization name&gt;</pre>
 </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d27609e228 ">User Password</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d27626e228 ">User Password</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d27609e231 ">Enter the password for your <span class="ph">DPM</span> user account.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d27626e231 ">Enter the password for your <span class="ph">DPM</span> user account.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d27609e228 ">Labels</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d27626e228 ">Labels</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d27609e231 ">Assign a label to this <span class="ph">Data
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d27626e231 ">Assign a label to this <span class="ph">Data
                   Collector</span>. Labels that you assign here are defined in the <span class="ph">DPM</span> configuration file,
                                             <samp class="ph codeph">$SDC_CONF/dpm.properties</samp>. To remove
                                         these labels after you register the <span class="ph">Data
@@ -169,8 +169,9 @@
                   Collector</span>s, you can assign labels now. Or you can assign labels
                                             in <span class="ph">DPM</span> after you register the <span class="ph">Data
                   Collector</span>.</p>
-<p class="p">Defaults are label1 and label2. In most cases,
-                                            you'll want to remove the default labels.</p>
+<p class="p">Default is "all", which you can use to run a
+                                            job on all registered <span class="ph">Data
+                  Collector</span>s.</p>
 </td>
 
                                 </tr>
@@ -251,9 +252,9 @@ system enableDPM \
                 
                 <thead class="thead" align="left">
                     <tr class="row">
-                        <th class="entry" valign="top" width="33.33333333333333%" id="d27609e441">Basic Option</th>
+                        <th class="entry" valign="top" width="33.33333333333333%" id="d27626e444">Basic Option</th>
 
-                        <th class="entry" valign="top" width="66.66666666666666%" id="d27609e444">Description</th>
+                        <th class="entry" valign="top" width="66.66666666666666%" id="d27626e447">Description</th>
 
                     </tr>
 
@@ -261,10 +262,10 @@ system enableDPM \
 
                 <tbody class="tbody">
                     <tr class="row">
-                        <td class="entry" valign="top" width="33.33333333333333%" headers="d27609e441 ">-U &lt;sdcURL&gt;<p class="p">or</p>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d27626e444 ">-U &lt;sdcURL&gt;<p class="p">or</p>
 --url &lt;sdcURL&gt;</td>
 
-                        <td class="entry" valign="top" width="66.66666666666666%" headers="d27609e444 ">Required. URL of the <span class="ph">Data
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d27626e447 ">Required. URL of the <span class="ph">Data
                   Collector</span>.<p class="p">The default URL is
                                     <samp class="ph systemoutput">http://localhost:18630</samp>.</p>
 </td>
@@ -272,11 +273,11 @@ system enableDPM \
                     </tr>
 
                     <tr class="row">
-                        <td class="entry" valign="top" width="33.33333333333333%" headers="d27609e441 ">-D &lt;dpmURL&gt;<p class="p">or</p>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d27626e444 ">-D &lt;dpmURL&gt;<p class="p">or</p>
 <p class="p">--dpmURL &lt;dpmURL&gt;</p>
 </td>
 
-                        <td class="entry" valign="top" width="66.66666666666666%" headers="d27609e444 ">Required. Set to:
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d27626e447 ">Required. Set to:
                             <samp class="ph codeph">https://cloud.streamsets.com</samp></td>
 
                     </tr>
@@ -294,9 +295,9 @@ system enableDPM \
                     
                     <thead class="thead" align="left">
                         <tr class="row">
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d27609e506">Enable DPM Option</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d27626e509">Enable DPM Option</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d27609e509">Description</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d27626e512">Description</th>
 
                         </tr>
 
@@ -304,33 +305,33 @@ system enableDPM \
 
                     <tbody class="tbody">
                         <tr class="row">
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d27609e506 ">--dpmUrl &lt;dpmBaseURL&gt;</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d27626e509 ">--dpmUrl &lt;dpmBaseURL&gt;</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d27609e509 ">Required. Set to:
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d27626e512 ">Required. Set to:
                                 <samp class="ph codeph">https://cloud.streamsets.com</samp></td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d27609e506 ">--dpmUser &lt;dpmUserID&gt;</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d27626e509 ">--dpmUser &lt;dpmUserID&gt;</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d27609e509 ">Required. Enter your <span class="ph">DPM</span> user name using the following
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d27626e512 ">Required. Enter your <span class="ph">DPM</span> user name using the following
                                 format:<pre class="pre codeblock">&lt;user account name&gt;@&lt;organization name&gt;</pre>
 </td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d27609e506 ">--dpmPassword &lt;dpmUserPassword&gt;</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d27626e509 ">--dpmPassword &lt;dpmUserPassword&gt;</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d27609e509 ">Required. Enter the password for your <span class="ph">DPM</span> user account.</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d27626e512 ">Required. Enter the password for your <span class="ph">DPM</span> user account.</td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d27609e506 ">--labels &lt;labels&gt;</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d27626e509 ">--labels &lt;labels&gt;</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d27609e509 ">Optional. Assign a label to this <span class="ph">Data
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d27626e512 ">Optional. Assign a label to this <span class="ph">Data
                   Collector</span>. You can enter multiple labels separated by commas. Labels that
                                 you assign here are defined in the <span class="ph">DPM</span> configuration file, <samp class="ph codeph">$SDC_CONF/dpm.properties</samp>. To
                                 remove these labels after you register the <span class="ph">Data
@@ -339,8 +340,9 @@ system enableDPM \
                   Collector</span>s registered with <span class="ph">DPM</span>. If you know how you want to group your <span class="ph">Data
                   Collector</span>s, you can assign labels now. Or you can assign labels in <span class="ph">DPM</span> after you register the <span class="ph">Data
                   Collector</span>.</p>
-<p class="p">Defaults are label1 and label2. In most cases, you'll
-                                    want to remove the default labels.</p>
+<p class="p">Default is "all", which you can use to run a job on
+                                    all registered <span class="ph">Data
+                  Collector</span>s.</p>
 </td>
 
                         </tr>
@@ -400,9 +402,9 @@ For example, the following command registers a <span class="ph">Data
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d27609e703">Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d27626e709">Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d27609e706">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d27626e712">Description</th>
 
                                 </tr>
 
@@ -410,40 +412,40 @@ For example, the following command registers a <span class="ph">Data
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d27609e703 ">Enable <span class="ph">DPM</span></td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d27626e709 ">Enable <span class="ph">DPM</span></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d27609e706 ">Select to enable <span class="ph">DPM</span>.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d27626e712 ">Select to enable <span class="ph">DPM</span>.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d27609e703 "><span class="ph">DPM</span> URL</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d27626e709 "><span class="ph">DPM</span> URL</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d27609e706 ">Set to:
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d27626e712 ">Set to:
                                         <samp class="ph codeph">https://cloud.streamsets.com</samp></td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d27609e703 "><span class="ph">DPM</span> User Name</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d27626e709 "><span class="ph">DPM</span> User Name</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d27609e706 ">Enter your <span class="ph">DPM</span> user name using the following
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d27626e712 ">Enter your <span class="ph">DPM</span> user name using the following
                                         format:<pre class="pre codeblock">&lt;user account name&gt;@&lt;organization name&gt;</pre>
 </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d27609e703 "><span class="ph">DPM</span> Password</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d27626e709 "><span class="ph">DPM</span> Password</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d27609e706 ">Enter the password for your <span class="ph">DPM</span> user account.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d27626e712 ">Enter the password for your <span class="ph">DPM</span> user account.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d27609e703 "><span class="ph">DPM</span> Labels</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d27626e709 "><span class="ph">DPM</span> Labels</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d27609e706 ">Assign a label to this <span class="ph">Data
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d27626e712 ">Assign a label to this <span class="ph">Data
                   Collector</span>. Labels that you assign here are defined in the <span class="ph">DPM</span> configuration file,
                                             <samp class="ph codeph">$SDC_CONF/dpm.properties</samp>. To remove
                                         these labels after you register the <span class="ph">Data
@@ -453,9 +455,9 @@ For example, the following command registers a <span class="ph">Data
                   Collector</span>s, you can assign labels now. Or you can assign labels
                                             in <span class="ph">DPM</span> after you register the <span class="ph">Data
                   Collector</span>.</p>
-<p class="p">Defaults are label1 and label2. In most cases,
-                                            you'll want to remove the default labels.</p>
-</td>
+Default is "all", which you can use to run a job
+                                        on all registered <span class="ph">Data
+                  Collector</span>s.</td>
 
                                 </tr>
 
