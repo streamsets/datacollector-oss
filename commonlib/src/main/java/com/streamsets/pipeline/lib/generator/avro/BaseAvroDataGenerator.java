@@ -118,8 +118,13 @@ abstract public class BaseAvroDataGenerator implements DataGenerator {
       if (state == State.CREATED) {
         initializeSchemaFromRecord(record);
       } else {
-        if (schemaHashCode != AvroTypeUtil.getAvroSchemaFromHeader(record, AVRO_SCHEMA_HEADER).hashCode()) {
-          throw new DataGeneratorException(Errors.AVRO_GENERATOR_04, record.getHeader().getSourceId());
+        String newAvroSchema = AvroTypeUtil.getAvroSchemaFromHeader(record, AVRO_SCHEMA_HEADER);
+        if (schemaHashCode != newAvroSchema.hashCode()) {
+          throw new DataGeneratorException(Errors.AVRO_GENERATOR_04,
+            record.getHeader().getSourceId(),
+            schema.toString(),
+            newAvroSchema
+          );
         }
       }
     }

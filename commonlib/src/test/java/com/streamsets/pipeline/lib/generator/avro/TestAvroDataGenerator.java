@@ -444,7 +444,6 @@ public class TestAvroDataGenerator {
     gen.close();
   }
 
-  @Test(expected = DataGeneratorException.class)
   public void testSchemaInHeaderDifferentSchemaInHeader() throws Exception {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     DataGenerator gen = new AvroDataOutputStreamGenerator(
@@ -460,9 +459,14 @@ public class TestAvroDataGenerator {
     record.getHeader().setAttribute(BaseAvroDataGenerator.AVRO_SCHEMA_HEADER, AVRO_SCHEMA);
     gen.write(record);
 
-    // Second record with different schema should throw an exception
-    record.getHeader().setAttribute(BaseAvroDataGenerator.AVRO_SCHEMA_HEADER, RECORD_SCHEMA);
-    gen.write(record);
+    try {
+      // Second record with different schema should throw an exception
+      record.getHeader().setAttribute(BaseAvroDataGenerator.AVRO_SCHEMA_HEADER, RECORD_SCHEMA);
+      gen.write(record);
+      Assert.fail("Expected exception to be thrown.");
+    } catch(DataGeneratorException e) {
+      Assert.assertTrue(e.getMessage().contains("AVRO_GENERATOR_04"));
+    }
 
     gen.close();
   }
