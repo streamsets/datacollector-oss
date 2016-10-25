@@ -73,18 +73,6 @@ public class ForceConfigBean {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "true",
-      label = "Use Bulk API",
-      description = "If enabled, records will be read and written via the Salesforce Bulk API, " +
-          "otherwise, the Salesforce SOAP API will be used.",
-      displayPosition = 50,
-      group = "FORCE"
-  )
-  public boolean useBulkAPI;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "true",
       label = "Use Compression",
       displayPosition = 1000
   )

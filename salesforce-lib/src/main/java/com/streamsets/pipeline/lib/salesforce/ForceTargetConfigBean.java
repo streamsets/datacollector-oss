@@ -30,6 +30,18 @@ import java.util.List;
 public class ForceTargetConfigBean extends ForceConfigBean {
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Use Bulk API",
+      description = "If enabled, records will be read and written via the Salesforce Bulk API, " +
+          "otherwise, the Salesforce SOAP API will be used.",
+      displayPosition = 50,
+      group = "FORCE"
+  )
+  public boolean useBulkAPI;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.STRING,
       elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,

@@ -38,6 +38,20 @@ public class ForceSourceConfigBean extends ForceConfigBean {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Use Bulk API",
+      description = "If enabled, records will be read and written via the Salesforce Bulk API, " +
+          "otherwise, the Salesforce SOAP API will be used.",
+      displayPosition = 75,
+      dependsOn = "queryExistingData",
+      triggeredByValue = "true",
+      group = "QUERY"
+  )
+  public boolean useBulkAPI;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.TEXT,
       mode = ConfigDef.Mode.SQL,
       defaultValue = "SELECT Id, Name FROM Account WHERE Id > '${OFFSET}' ORDER BY Id",
@@ -49,7 +63,7 @@ public class ForceSourceConfigBean extends ForceConfigBean {
       displayPosition = 80,
       dependsOn = "queryExistingData",
       triggeredByValue = "true",
-      group = "FORCE"
+      group = "QUERY"
   )
   public String soqlQuery;
 
@@ -63,7 +77,7 @@ public class ForceSourceConfigBean extends ForceConfigBean {
       displayPosition = 90,
       dependsOn = "queryExistingData",
       triggeredByValue = "true",
-      group = "FORCE"
+      group = "QUERY"
   )
   public String initialOffset;
 
@@ -76,7 +90,7 @@ public class ForceSourceConfigBean extends ForceConfigBean {
       displayPosition = 100,
       dependsOn = "queryExistingData",
       triggeredByValue = "true",
-      group = "FORCE"
+      group = "QUERY"
   )
   public String offsetColumn;
 
@@ -99,10 +113,10 @@ public class ForceSourceConfigBean extends ForceConfigBean {
       displayPosition = 120,
       dependsOn = "subscribeToStreaming",
       triggeredByValue = "true",
-      group = "FORCE"
+      group = "SUBSCRIBE"
   )
   public String pushTopic;
 
-  @ConfigDefBean(groups = "FORCE")
+  @ConfigDefBean(groups = {"FORCE", "QUERY", "SUBSCRIBE"})
   public BasicConfig basicConfig = new BasicConfig();
 }
