@@ -79,7 +79,7 @@
                         encryption areas. Original value: Kafka 0.9.0.0</draft-comment>
             </p>
             <p>Kafka version that supports SSL and SASL/Kerberos security: <ph id="KafkaSecure"
-                        >Kafka 0.9.0.0</ph></p>
+                        >Kafka version 0.9.0.0 or later</ph></p>
             <draft-comment author="Loretta">Using this in all DC Console topics:</draft-comment>
             <p>
                   <note id="Note-OptionDispay">Some icons and options might not display in the

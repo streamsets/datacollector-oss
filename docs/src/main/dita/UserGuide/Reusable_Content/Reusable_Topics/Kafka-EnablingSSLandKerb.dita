@@ -34,7 +34,7 @@
                     </ul></li>
                 <li conref="Kafka-EnablingKerberos.dita#concept_axt_5gf_55/step-KafkaKERBsdcprops"/>
                 <li>On the <wintitle>General</wintitle> tab of the stage, set the Stage Library
-                    property to <uicontrol>Apache Kafka 0.9.0.0</uicontrol>.</li>
+                    property to Apache Kafka 0.9.0.0 or a later version.</li>
                 <li>On the <wintitle>Kafka</wintitle> tab, add the
                         <uicontrol>security.protocol</uicontrol> property and set it to
                         <uicontrol>SASL_SSL</uicontrol>.</li>
