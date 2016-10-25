@@ -279,29 +279,32 @@ angular
 
     });
 
-    $q.all([
-      api.pipelineAgent.getLibraries(),
-      configuration.init()
-    ]).then(
-      function (results) {
-        $scope.loaded = true;
-        $scope.stageLibraries = results[0].data;
-        $scope.manifestURL = results[0].headers('REPO_URL');
+    if (window.navigator.onLine) {
+      $q.all([
+        api.pipelineAgent.getLibraries(),
+        configuration.init()
+      ]).then(
+        function (results) {
+          $scope.loaded = true;
+          $scope.stageLibraries = results[0].data;
+          $scope.manifestURL = results[0].headers('REPO_URL');
 
-        $scope.updateStageLibraryList();
+          $scope.updateStageLibraryList();
 
-        if(configuration.isAnalyticsEnabled()) {
-          Analytics.trackPage('/collector/packageManager');
+          if(configuration.isAnalyticsEnabled()) {
+            Analytics.trackPage('/collector/packageManager');
+          }
+
+          $scope.isManagedByClouderaManager = configuration.isManagedByClouderaManager();
+        },
+        function (res) {
+          $scope.loaded = true;
+          $rootScope.common.errors = [res.data];
         }
-
-        $scope.isManagedByClouderaManager = configuration.isManagedByClouderaManager();
-      },
-      function (res) {
-        $scope.loaded = true;
-        $rootScope.common.errors = [res.data];
-      }
-    );
-
+      );
+    } else {
+      $rootScope.common.errors = ['Unable to connect to the Internet'];
+    }
 
     var pipelineGridViewWatchListener = $scope.$watch('header.pipelineGridView', function() {
       $rootScope.$storage.pipelineGridView = $scope.header.pipelineGridView;
