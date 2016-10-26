@@ -17,9 +17,9 @@
  <title>Accessing Error Messages</title>
  <conbody>
   <p><indexterm>error
-     messages<indexterm>accessing</indexterm></indexterm><indexterm>troubleshooting<indexterm>accessing
-     error messages</indexterm></indexterm>Informational and error messages display in different
-   location based on the type of information: </p>
+          messages<indexterm>accessing</indexterm></indexterm><indexterm>troubleshooting<indexterm>accessing
+          error messages</indexterm></indexterm>Informational and error messages display in
+      different locations based on the type of information: </p>
   <p>
    <dl>
     <dlentry>
@@ -65,6 +65,11 @@
       can view or download the logs from the <ph
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console.
       For details, see <xref href="../Administration/ViewingLogData.dita#task_gbm_s3k_br"/>.</dd>
+     <dd>By default, <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> logs
+      messages at the INFO severity level. You can modify the log level to display messages at
+      another severity level. For more information, see <xref
+       href="../Install_Config/LogLevel.dita#concept_yrv_ck2_px"/>.</dd>
     </dlentry>
    </dl>
   </p>

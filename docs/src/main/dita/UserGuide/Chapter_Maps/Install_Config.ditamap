@@ -156,5 +156,10 @@
    <topicref href="../Install_Config/JMXMetrics-ViewExternalTools.dita"/>
    <topicref href="../Install_Config/JMXMetrics-Custom.dita"/>
   </topicref>
+  <topicref href="../Install_Config/LogLevel.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   </topicref>
  </topicref>
 </map>
