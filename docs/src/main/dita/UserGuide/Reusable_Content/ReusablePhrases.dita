@@ -644,6 +644,17 @@
                   a prefix and bucket.</p>
             <p id="S3origin-CopyMove2">Copying the object leaves the original object in place. </p>
             <p>
+                  <draft-comment author="Loretta"><uicontrol>ul-S3-custSSE</uicontrol> is used by
+                        Amazon S3 origin and destination in the SSE topic:</draft-comment>
+            </p>
+            <p>
+                  <ul id="ul-S3-custSSE">
+                        <li>Base64 encoded 256-bit encryption key</li>
+                        <li>Base64 encoded 128-bit MD5 digest of the encryption key using RFC
+                              1321</li>
+                  </ul>
+            </p>
+            <p>
                   <draft-comment author="Loretta">JDBC Consumer and Oracle CDC use these in the
                         overview:</draft-comment>
             </p>

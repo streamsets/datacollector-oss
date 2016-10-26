@@ -39,8 +39,11 @@
                 <dlentry>
                     <dt>Customer-Provided Encryption Keys (SSE-C)</dt>
                     <dd>When you use server-side encryption with customer-provided keys, you specify
-                        your own encryption key and the MD5 digest of the encryption key to use.
-                    </dd>
+                        the following information:<ul
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul-S3-custSSE"
+                            id="ul_kl3_bm4_sx">
+                            <li/>
+                        </ul></dd>
                 </dlentry>
             </dl></p>
         <p>For more information about using server-side encryption to protect data in Amazon S3, see

@@ -35,8 +35,8 @@
    <topicref href="../Destinations/AmazonS3-PartitionPrefix.dita">
     <topicref href="../Destinations/AmazonS3-TimeBasis.dita"/>
    </topicref>
-   <topicref href="../Destinations/AmazonS3-DataFormat.dita"/>
    <topicref href="../Destinations/AmazonS3-ServerSideEncryption.dita"/>
+   <topicref href="../Destinations/AmazonS3-DataFormat.dita"/>
    <topicref href="../Destinations/AmazonS3-Configuring.dita"/>
   </topicref>
   <topicref href="../Destinations/Cassandra.dita" chunk="to-content">

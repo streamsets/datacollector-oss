@@ -218,12 +218,12 @@
                                 </row>
                                 <row>
                                     <entry>Customer Encryption Key</entry>
-                                    <entry>The 256-bit and Base64-encoded encryption key to
+                                    <entry>The 256-bit and Base64 encoded encryption key to
                                             use.<p>Used for SSE-C encryption only.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Customer Encryption Key MD5</entry>
-                                    <entry>The 128-bit and Base64-encoded MD5 digest of the
+                                    <entry>The 128-bit and Base64 encoded MD5 digest of the
                                         encryption key according to RFC 1321.<p>Used for SSE-C
                                             encryption only.</p></entry>
                                 </row>
