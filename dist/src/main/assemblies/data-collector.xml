@@ -332,6 +332,12 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
+    <!-- Bigtable -->
+    <fileSet>
+      <directory>${basedir}/../bigtable-lib/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
     <!-- InfluxDB -->
     <fileSet>
       <directory>${basedir}/../influxdb_0_9-lib/target/streamsets-libs/</directory>

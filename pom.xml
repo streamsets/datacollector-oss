@@ -179,6 +179,7 @@
     <module>aws-lib</module>
     <module>azure-lib</module>
     <module>basic-lib</module>
+    <module>bigtable-lib</module>
     <module>dev-lib</module>
     <module>influxdb_0_9-lib</module>
     <module>jdbc-lib</module>
