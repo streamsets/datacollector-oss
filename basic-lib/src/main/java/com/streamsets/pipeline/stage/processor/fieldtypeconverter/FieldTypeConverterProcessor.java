@@ -160,6 +160,19 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
       }
     }
 
+    if (converterConfig.targetType == Field.Type.DECIMAL && field.getType().isOneOf(Field.Type.BYTE, Field.Type.SHORT, Field.Type.INTEGER, Field.Type.FLOAT, Field.Type.LONG, Field.Type.DOUBLE, Field.Type.DECIMAL)) {
+      try {
+        Field changedField = Field.create(converterConfig.targetType, field.getValue());
+        BigDecimal newValue = changedField.getValueAsDecimal();
+        if (converterConfig.scale != -1) {
+         newValue = newValue.setScale(converterConfig.scale, converterConfig.decimalScaleRoundingStrategy.getRoundingStrategy());
+        }
+        return Field.create(newValue);
+      } catch (Exception e) {
+        throw new OnRecordErrorException(Errors.CONVERTER_00, matchingField, field.getType(), field.getValue(), converterConfig.targetType, e);
+      }
+    }
+
     // Use the built in type conversion provided by TypeSupport
     try {
       // Use the built in type conversion provided by TypeSupport
@@ -167,7 +180,8 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
     } catch (IllegalArgumentException e) {
       throw new OnRecordErrorException(Errors.CONVERTER_02,
           matchingField,
-          field.getValueAsString(),
+          field.getType(),
+          field.getValue(),
           converterConfig.targetType.name()
       );
     }

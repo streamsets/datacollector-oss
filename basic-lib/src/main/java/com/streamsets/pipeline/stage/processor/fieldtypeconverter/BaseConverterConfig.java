@@ -24,6 +24,8 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.CharsetChooserValues;
 import com.streamsets.pipeline.config.DateFormat;
+import com.streamsets.pipeline.config.DecimalScaleRoundingStrategy;
+import com.streamsets.pipeline.config.DecimalScaleRoundingStrategyChooserValues;
 import com.streamsets.pipeline.config.LocaleChooserValues;
 import com.streamsets.pipeline.config.DateFormatChooserValues;
 import com.streamsets.pipeline.config.PrimitiveFieldTypeChooserValues;
@@ -59,6 +61,31 @@ public class BaseConverterConfig {
   )
   @ValueChooserModel(LocaleChooserValues.class)
   public String dataLocale;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "-1",
+      label = "Scale",
+      description = "Decimal Value Scale",
+      displayPosition = 40,
+      dependsOn = "targetType",
+      triggeredByValue = {"DECIMAL"}
+  )
+  public int scale;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "ROUND_UNNECESSARY",
+      label = "Rounding Strategy",
+      description = "Rounding strategy during scale conversion",
+      displayPosition = 50,
+      dependsOn = "targetType",
+      triggeredByValue = {"DECIMAL"}
+  )
+  @ValueChooserModel(DecimalScaleRoundingStrategyChooserValues.class)
+  public DecimalScaleRoundingStrategy decimalScaleRoundingStrategy;
 
   private Locale locale;
 

@@ -20,26 +20,38 @@
 package com.streamsets.pipeline.stage.processor.fieldtypeconverter;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.FileRef;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.config.DateFormat;
+import com.streamsets.pipeline.config.DecimalScaleRoundingStrategy;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 
 public class TestFieldTypeConverterProcessorFields {
@@ -47,15 +59,15 @@ public class TestFieldTypeConverterProcessorFields {
   @Test
   public void testStringToNonExistentField() throws StageException {
     FieldTypeConverterConfig fieldTypeConverterConfig =
-      new FieldTypeConverterConfig();
+        new FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/nonExistent", "/beginner", "/expert", "/skilled");
     fieldTypeConverterConfig.targetType = Field.Type.BOOLEAN;
     fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
-      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
-      .addOutputLane("a").build();
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
+        .addOutputLane("a").build();
     runner.runInit();
 
     try {
@@ -66,7 +78,7 @@ public class TestFieldTypeConverterProcessorFields {
       map.put("expert", Field.create("true"));
       map.put("skilled", Field.create("122345566"));
       map.put("null", Field.create(Field.Type.STRING, null));
-            Record record = RecordCreator.create("s", "s:1");
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -95,16 +107,16 @@ public class TestFieldTypeConverterProcessorFields {
   @Test
   public void testStringToBoolean() throws StageException {
     FieldTypeConverterConfig fieldTypeConverterConfig =
-      new FieldTypeConverterConfig();
+        new FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced", "/expert"
-      , "/null");
+        , "/null");
     fieldTypeConverterConfig.targetType = Field.Type.BOOLEAN;
     fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
-      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
-      .addOutputLane("a").build();
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
+        .addOutputLane("a").build();
     runner.runInit();
 
     try {
@@ -115,7 +127,7 @@ public class TestFieldTypeConverterProcessorFields {
       map.put("expert", Field.create("true"));
       map.put("skilled", Field.create("122345566"));
       map.put("null", Field.create(Field.Type.STRING, null));
-            Record record = RecordCreator.create("s", "s:1");
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -144,15 +156,15 @@ public class TestFieldTypeConverterProcessorFields {
   @Test
   public void testStringToByte() throws StageException {
     FieldTypeConverterConfig fieldTypeConverterConfig =
-      new FieldTypeConverterConfig();
+        new FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.BYTE;
     fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
-      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
-      .addOutputLane("a").build();
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
+        .addOutputLane("a").build();
     runner.runInit();
 
     try {
@@ -160,7 +172,7 @@ public class TestFieldTypeConverterProcessorFields {
       map.put("beginner", Field.create("1"));
       map.put("intermediate", Field.create("126"));
       map.put("null", Field.create(Field.Type.STRING, null));
-            Record record = RecordCreator.create("s", "s:1");
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -183,15 +195,15 @@ public class TestFieldTypeConverterProcessorFields {
   @Test
   public void testStringToChar() throws StageException {
     FieldTypeConverterConfig fieldTypeConverterConfig =
-      new FieldTypeConverterConfig();
+        new FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.CHAR;
     fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
-      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
-      .addOutputLane("a").build();
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
+        .addOutputLane("a").build();
     runner.runInit();
 
     try {
@@ -199,7 +211,7 @@ public class TestFieldTypeConverterProcessorFields {
       map.put("beginner", Field.create("a"));
       map.put("intermediate", Field.create("yes"));
       map.put("null", Field.create(Field.Type.STRING, null));
-            Record record = RecordCreator.create("s", "s:1");
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -222,15 +234,15 @@ public class TestFieldTypeConverterProcessorFields {
   @Test
   public void testStringToByteArray() throws StageException {
     FieldTypeConverterConfig fieldTypeConverterConfig =
-      new FieldTypeConverterConfig();
+        new FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.BYTE_ARRAY;
     fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
-      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
-      .addOutputLane("a").build();
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
+        .addOutputLane("a").build();
     runner.runInit();
 
     try {
@@ -261,16 +273,16 @@ public class TestFieldTypeConverterProcessorFields {
   @Test
   public void testStringToDecimalEnglishLocale() throws StageException {
     FieldTypeConverterConfig fieldTypeConverterConfig =
-      new FieldTypeConverterConfig();
+        new FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/advanced", "/expert",
-      "/skilled", "/null");
+        "/skilled", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.DECIMAL;
     fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
-      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
-      .addOutputLane("a").build();
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
+        .addOutputLane("a").build();
     runner.runInit();
 
     try {
@@ -281,7 +293,7 @@ public class TestFieldTypeConverterProcessorFields {
       map.put("intermediate", Field.create("1.234,56789"));
       map.put("skilled", Field.create("-1.23E-12"));
       map.put("null", Field.create(Field.Type.STRING, null));
-            Record record = RecordCreator.create("s", "s:1");
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -310,16 +322,16 @@ public class TestFieldTypeConverterProcessorFields {
   @Test
   public void testStringToDecimalGermanLocale() throws StageException {
     FieldTypeConverterConfig fieldTypeConverterConfig =
-      new FieldTypeConverterConfig();
+        new FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/advanced", "/expert",
-      "/skilled", "/null");
+        "/skilled", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.DECIMAL;
     fieldTypeConverterConfig.dataLocale = "de";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
-      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
-      .addOutputLane("a").build();
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
+        .addOutputLane("a").build();
     runner.runInit();
 
     try {
@@ -330,7 +342,7 @@ public class TestFieldTypeConverterProcessorFields {
       map.put("intermediate", Field.create("1.234,56789"));
       map.put("skilled", Field.create("-1.23E-12"));
       map.put("null", Field.create(Field.Type.STRING, null));
-            Record record = RecordCreator.create("s", "s:1");
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -360,16 +372,16 @@ public class TestFieldTypeConverterProcessorFields {
   @Test
   public void testStringToDoubleEnglishLocale() throws StageException {
     FieldTypeConverterConfig fieldTypeConverterConfig =
-      new FieldTypeConverterConfig();
+        new FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/advanced", "/expert",
-      "/skilled", "/null");
+        "/skilled", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.DOUBLE;
     fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
-      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
-      .addOutputLane("a").build();
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
+        .addOutputLane("a").build();
     runner.runInit();
 
     try {
@@ -380,7 +392,7 @@ public class TestFieldTypeConverterProcessorFields {
       map.put("intermediate", Field.create("1.234,56789"));
       map.put("skilled", Field.create("-1.23E-12"));
       map.put("null", Field.create(Field.Type.STRING, null));
-            Record record = RecordCreator.create("s", "s:1");
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -409,16 +421,16 @@ public class TestFieldTypeConverterProcessorFields {
   @Test
   public void testStringToDoubleGermanLocale() throws StageException {
     FieldTypeConverterConfig fieldTypeConverterConfig =
-      new FieldTypeConverterConfig();
+        new FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/advanced", "/expert",
-      "/skilled", "/null");
+        "/skilled", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.DECIMAL;
     fieldTypeConverterConfig.dataLocale = "de";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
-      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
-      .addOutputLane("a").build();
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
+        .addOutputLane("a").build();
     runner.runInit();
 
     try {
@@ -429,7 +441,7 @@ public class TestFieldTypeConverterProcessorFields {
       map.put("intermediate", Field.create("1.234,56789"));
       map.put("skilled", Field.create("-1.23E-12"));
       map.put("null", Field.create(Field.Type.STRING, null));
-            Record record = RecordCreator.create("s", "s:1");
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -459,16 +471,16 @@ public class TestFieldTypeConverterProcessorFields {
   @Test
   public void testStringToIntegerEnglishLocale() throws StageException {
     FieldTypeConverterConfig fieldTypeConverterConfig =
-      new FieldTypeConverterConfig();
+        new FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
-      "/expert", "/null");
+        "/expert", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.INTEGER;
     fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
-      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
-      .addOutputLane("a").build();
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
+        .addOutputLane("a").build();
     runner.runInit();
 
     try {
@@ -479,7 +491,7 @@ public class TestFieldTypeConverterProcessorFields {
       map.put("expert", Field.create("1.234"));
       map.put("skilled", Field.create("1234"));
       map.put("null", Field.create(Field.Type.STRING, null));
-            Record record = RecordCreator.create("s", "s:1");
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -508,16 +520,16 @@ public class TestFieldTypeConverterProcessorFields {
   @Test
   public void testStringToIntegerGermanLocale() throws StageException {
     FieldTypeConverterConfig fieldTypeConverterConfig =
-      new FieldTypeConverterConfig();
+        new FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
-      "/expert", "/null");
+        "/expert", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.INTEGER;
     fieldTypeConverterConfig.dataLocale = "de";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
-      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
-      .addOutputLane("a").build();
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
+        .addOutputLane("a").build();
     runner.runInit();
 
     try {
@@ -528,7 +540,7 @@ public class TestFieldTypeConverterProcessorFields {
       map.put("expert", Field.create("1.234"));
       map.put("skilled", Field.create("1234"));
       map.put("null", Field.create(Field.Type.STRING, null));
-            Record record = RecordCreator.create("s", "s:1");
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -557,16 +569,16 @@ public class TestFieldTypeConverterProcessorFields {
   @Test
   public void testStringToLongEnglishLocale() throws StageException {
     FieldTypeConverterConfig fieldTypeConverterConfig =
-      new FieldTypeConverterConfig();
+        new FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
-      "/expert", "/null");
+        "/expert", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.LONG;
     fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
-      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
-      .addOutputLane("a").build();
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
+        .addOutputLane("a").build();
     runner.runInit();
 
     try {
@@ -577,7 +589,7 @@ public class TestFieldTypeConverterProcessorFields {
       map.put("expert", Field.create("12,345,678,910"));
       map.put("skilled", Field.create("12.345.678.910"));
       map.put("null", Field.create(Field.Type.STRING, null));
-            Record record = RecordCreator.create("s", "s:1");
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -606,16 +618,16 @@ public class TestFieldTypeConverterProcessorFields {
   @Test
   public void testStringToLongGermanLocale() throws StageException {
     FieldTypeConverterConfig fieldTypeConverterConfig =
-      new FieldTypeConverterConfig();
+        new FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
-      "/expert", "/null");
+        "/expert", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.LONG;
     fieldTypeConverterConfig.dataLocale = "de";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
-      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
-      .addOutputLane("a").build();
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
+        .addOutputLane("a").build();
     runner.runInit();
 
     try {
@@ -626,7 +638,7 @@ public class TestFieldTypeConverterProcessorFields {
       map.put("expert", Field.create("12,345,678,910"));
       map.put("skilled", Field.create("12.345.678.910"));
       map.put("null", Field.create(Field.Type.STRING, null));
-            Record record = RecordCreator.create("s", "s:1");
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -655,16 +667,16 @@ public class TestFieldTypeConverterProcessorFields {
   @Test
   public void testStringToShortEnglishLocale() throws StageException {
     FieldTypeConverterConfig fieldTypeConverterConfig =
-      new FieldTypeConverterConfig();
+        new FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
-      "/expert", "/null");
+        "/expert", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.SHORT;
     fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
-      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
-      .addOutputLane("a").build();
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
+        .addOutputLane("a").build();
     runner.runInit();
 
     try {
@@ -675,7 +687,7 @@ public class TestFieldTypeConverterProcessorFields {
       map.put("expert", Field.create("-32,767"));
       map.put("skilled", Field.create("32.767"));
       map.put("null", Field.create(Field.Type.STRING, null));
-            Record record = RecordCreator.create("s", "s:1");
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -704,16 +716,16 @@ public class TestFieldTypeConverterProcessorFields {
   @Test
   public void testStringToShortGermanLocale() throws StageException {
     FieldTypeConverterConfig fieldTypeConverterConfig =
-      new FieldTypeConverterConfig();
+        new FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
-      "/expert", "/null");
+        "/expert", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.SHORT;
     fieldTypeConverterConfig.dataLocale = "de";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
-      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
-      .addOutputLane("a").build();
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
+        .addOutputLane("a").build();
     runner.runInit();
 
     try {
@@ -724,7 +736,7 @@ public class TestFieldTypeConverterProcessorFields {
       map.put("expert", Field.create("-32,767"));
       map.put("skilled", Field.create("32.767"));
       map.put("null", Field.create(Field.Type.STRING, null));
-            Record record = RecordCreator.create("s", "s:1");
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -753,16 +765,16 @@ public class TestFieldTypeConverterProcessorFields {
   @Test
   public void testStringToFloatEnglishLocale() throws StageException {
     FieldTypeConverterConfig fieldTypeConverterConfig =
-      new FieldTypeConverterConfig();
+        new FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
-      "/expert", "/null");
+        "/expert", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.FLOAT;
     fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
-      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
-      .addOutputLane("a").build();
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
+        .addOutputLane("a").build();
     runner.runInit();
 
     try {
@@ -773,7 +785,7 @@ public class TestFieldTypeConverterProcessorFields {
       map.put("expert", Field.create("-3,767.45"));
       map.put("skilled", Field.create("3.767,45"));
       map.put("null", Field.create(Field.Type.STRING, null));
-            Record record = RecordCreator.create("s", "s:1");
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -802,16 +814,16 @@ public class TestFieldTypeConverterProcessorFields {
   @Test
   public void testStringToFloatGermanLocale() throws StageException {
     FieldTypeConverterConfig fieldTypeConverterConfig =
-      new FieldTypeConverterConfig();
+        new FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/beginner", "/intermediate", "/skilled", "/advanced",
-      "/expert", "/null");
+        "/expert", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.FLOAT;
     fieldTypeConverterConfig.dataLocale = "de";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
-      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
-      .addOutputLane("a").build();
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
+        .addOutputLane("a").build();
     runner.runInit();
 
     try {
@@ -822,7 +834,7 @@ public class TestFieldTypeConverterProcessorFields {
       map.put("expert", Field.create("-3,767.45"));
       map.put("skilled", Field.create("3.767,45"));
       map.put("null", Field.create(Field.Type.STRING, null));
-            Record record = RecordCreator.create("s", "s:1");
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -849,8 +861,8 @@ public class TestFieldTypeConverterProcessorFields {
   }
 
   public void testStringToDateTimeTypes(Field.Type type) throws Exception {
-        FieldTypeConverterConfig beginnerConfig =
-      new FieldTypeConverterConfig();
+    FieldTypeConverterConfig beginnerConfig =
+        new FieldTypeConverterConfig();
     beginnerConfig.fields = ImmutableList.of("/beginner");
     beginnerConfig.targetType = type;
     beginnerConfig.dataLocale = "en";
@@ -858,7 +870,7 @@ public class TestFieldTypeConverterProcessorFields {
     beginnerConfig.otherDateFormat ="yyyy-MM-dd";
 
     FieldTypeConverterConfig intermediateConfig =
-      new FieldTypeConverterConfig();
+        new FieldTypeConverterConfig();
     intermediateConfig.fields = ImmutableList.of("/intermediate");
     intermediateConfig.targetType = type;
     intermediateConfig.dataLocale = "en";
@@ -866,7 +878,7 @@ public class TestFieldTypeConverterProcessorFields {
     intermediateConfig.otherDateFormat = "dd-MM-YYYY";
 
     FieldTypeConverterConfig skilledConfig =
-      new FieldTypeConverterConfig();
+        new FieldTypeConverterConfig();
     skilledConfig.fields = ImmutableList.of("/skilled");
     skilledConfig.targetType = type;
     skilledConfig.dataLocale = "en";
@@ -874,7 +886,7 @@ public class TestFieldTypeConverterProcessorFields {
     skilledConfig.otherDateFormat = "yyyy-MM-dd HH:mm:ss";
 
     FieldTypeConverterConfig advancedConfig =
-      new FieldTypeConverterConfig();
+        new FieldTypeConverterConfig();
     advancedConfig.fields = ImmutableList.of("/advanced");
     advancedConfig.targetType = type;
     advancedConfig.dataLocale = "en";
@@ -882,7 +894,7 @@ public class TestFieldTypeConverterProcessorFields {
     advancedConfig.otherDateFormat = "yyyy-MM-dd HH:mm:ss.SSS";
 
     FieldTypeConverterConfig expertConfig =
-      new FieldTypeConverterConfig();
+        new FieldTypeConverterConfig();
     expertConfig.fields = ImmutableList.of("/expert");
     expertConfig.targetType = type;
     expertConfig.dataLocale = "en";
@@ -890,10 +902,10 @@ public class TestFieldTypeConverterProcessorFields {
     expertConfig.otherDateFormat = "yyyy-MM-dd HH:mm:ss.SSS Z";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
-      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(beginnerConfig, advancedConfig,
-        intermediateConfig, skilledConfig, expertConfig))
-      .addOutputLane("a").build();
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(beginnerConfig, advancedConfig,
+            intermediateConfig, skilledConfig, expertConfig))
+        .addOutputLane("a").build();
     runner.runInit();
 
     try {
@@ -904,7 +916,7 @@ public class TestFieldTypeConverterProcessorFields {
       map.put("expert", Field.create("2015-01-03 21:32:32.333 PST"));//
       map.put("skilled", Field.create("2015-01-03 21:30:01"));//
       map.put("null", Field.create(Field.Type.STRING, null));
-            Record record = RecordCreator.create("s", "s:1");
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -922,14 +934,14 @@ public class TestFieldTypeConverterProcessorFields {
       Assert.assertEquals(type,result.get("advanced").getType());
       SimpleDateFormat advancedDateFormat = new SimpleDateFormat(advancedConfig.otherDateFormat);
       Assert.assertEquals("2015-01-03 21:31:02.777",
-        advancedDateFormat.format(result.get("advanced").getValueAsDate()));
+          advancedDateFormat.format(result.get("advanced").getValueAsDate()));
 
       Assert.assertTrue(result.containsKey("expert"));
       Assert.assertEquals(type,result.get("expert").getType());
       SimpleDateFormat expertDateFormat = new SimpleDateFormat(expertConfig.otherDateFormat);
       SimpleDateFormat expertDataSourceFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS z");
       Assert.assertEquals(expertDateFormat.format(expertDataSourceFormat.parse("2015-01-03 21:32:32.333 PST")),
-        expertDateFormat.format(result.get("expert").getValueAsDate()));
+          expertDateFormat.format(result.get("expert").getValueAsDate()));
 
       Assert.assertTrue(result.containsKey("skilled"));
       Assert.assertEquals(type,result.get("skilled").getType());
@@ -963,22 +975,22 @@ public class TestFieldTypeConverterProcessorFields {
   @Test
   public void testDateTimeToLong() throws Exception {
     FieldTypeConverterConfig dtConfig =
-      new FieldTypeConverterConfig();
+        new FieldTypeConverterConfig();
     dtConfig.fields = ImmutableList.of("/dateTime");
     dtConfig.targetType = Field.Type.LONG;
     dtConfig.dataLocale = "en";
 
     FieldTypeConverterConfig dateConfig =
-      new FieldTypeConverterConfig();
+        new FieldTypeConverterConfig();
     dateConfig.fields = ImmutableList.of("/date");
     dateConfig.targetType = Field.Type.LONG;
     dateConfig.dataLocale = "en";
 
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
-      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(dateConfig, dtConfig))
-      .addOutputLane("a").build();
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(dateConfig, dtConfig))
+        .addOutputLane("a").build();
     runner.runInit();
 
     try {
@@ -1049,20 +1061,20 @@ public class TestFieldTypeConverterProcessorFields {
   @Test
   public void testInvalidConversionFieldsNumber() throws StageException {
     FieldTypeConverterConfig fieldTypeConverterConfig =
-      new FieldTypeConverterConfig();
+        new FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/invalidConversion");
     fieldTypeConverterConfig.targetType = Field.Type.FLOAT;
     fieldTypeConverterConfig.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
-      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
-      .addOutputLane("a").build();
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
+        .addOutputLane("a").build();
     runner.runInit();
 
     Map<String, Field> map = new LinkedHashMap<>();
     map.put("invalidConversion", Field.create("float"));
-          Record record = RecordCreator.create("s", "s:1");
+    Record record = RecordCreator.create("s", "s:1");
     record.set(Field.create(map));
 
     try {
@@ -1078,21 +1090,21 @@ public class TestFieldTypeConverterProcessorFields {
   @Test
   public void testInvalidConversionStringToDate() throws StageException {
     FieldTypeConverterConfig fieldTypeConverterConfig =
-      new FieldTypeConverterConfig();
+        new FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/invalidConversion");
     fieldTypeConverterConfig.targetType = Field.Type.DATE;
     fieldTypeConverterConfig.dataLocale = "en";
     fieldTypeConverterConfig.dateFormat = DateFormat.DD_MM_YYYY;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
-      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
-      .addOutputLane("a").build();
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
+        .addOutputLane("a").build();
     runner.runInit();
 
     Map<String, Field> map = new LinkedHashMap<>();
     map.put("invalidConversion", Field.create("Hello World"));
-          Record record = RecordCreator.create("s", "s:1");
+    Record record = RecordCreator.create("s", "s:1");
     record.set(Field.create(map));
 
     try {
@@ -1108,21 +1120,21 @@ public class TestFieldTypeConverterProcessorFields {
   @Test
   public void testInvalidConversionNonStringToDate() throws StageException {
     FieldTypeConverterConfig fieldTypeConverterConfig =
-      new FieldTypeConverterConfig();
+        new FieldTypeConverterConfig();
     fieldTypeConverterConfig.fields = ImmutableList.of("/invalidConversion");
     fieldTypeConverterConfig.targetType = Field.Type.DATE;
     fieldTypeConverterConfig.dataLocale = "en";
     fieldTypeConverterConfig.dateFormat = DateFormat.DD_MM_YYYY;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
-      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
-      .addOutputLane("a").build();
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(fieldTypeConverterConfig))
+        .addOutputLane("a").build();
     runner.runInit();
 
     Map<String, Field> map = new LinkedHashMap<>();
     map.put("invalidConversion", Field.create(1.0));
-          Record record = RecordCreator.create("s", "s:1");
+    Record record = RecordCreator.create("s", "s:1");
     record.set(Field.create(map));
 
     try {
@@ -1138,24 +1150,24 @@ public class TestFieldTypeConverterProcessorFields {
   @Test
   public void testNonStringFieldToNonStringField() throws StageException {
     FieldTypeConverterConfig decimalToInteger =
-      new FieldTypeConverterConfig();
+        new FieldTypeConverterConfig();
     decimalToInteger.fields = ImmutableList.of("/base");
     decimalToInteger.targetType = Field.Type.INTEGER;
 
     FieldTypeConverterConfig floatToShort =
-      new FieldTypeConverterConfig();
+        new FieldTypeConverterConfig();
     floatToShort.fields = ImmutableList.of("/bonus");
     floatToShort.targetType = Field.Type.SHORT;
 
     FieldTypeConverterConfig longToByte =
-      new FieldTypeConverterConfig();
+        new FieldTypeConverterConfig();
     longToByte.fields = ImmutableList.of("/benefits");
     longToByte.targetType = Field.Type.BYTE;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
-      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(decimalToInteger, floatToShort, longToByte))
-      .addOutputLane("a").build();
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(decimalToInteger, floatToShort, longToByte))
+        .addOutputLane("a").build();
     runner.runInit();
 
     try {
@@ -1163,7 +1175,7 @@ public class TestFieldTypeConverterProcessorFields {
       map.put("base", Field.create(Field.Type.DECIMAL, new BigDecimal(1234.56)));
       map.put("bonus", Field.create(Field.Type.FLOAT, 200.45f));
       map.put("benefits", Field.create(Field.Type.LONG, 123456789L));
-            Record record = RecordCreator.create("s", "s:1");
+      Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
@@ -1240,7 +1252,7 @@ public class TestFieldTypeConverterProcessorFields {
 
     Map<String, Field> map = new LinkedHashMap<>();
     map.put("USA", Field.create(Field.Type.LIST,
-      ImmutableList.of(Field.create(california), Field.create(utah))));
+        ImmutableList.of(Field.create(california), Field.create(utah))));
 
     Record record = RecordCreator.create("s", "s:1");
     record.set(Field.create(map));
@@ -1284,9 +1296,9 @@ public class TestFieldTypeConverterProcessorFields {
     stringToInt.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
-      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(stringToInt))
-      .addOutputLane("a").build();
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(stringToInt))
+        .addOutputLane("a").build();
     runner.runInit();
 
     try {
@@ -1354,9 +1366,9 @@ public class TestFieldTypeConverterProcessorFields {
     date1.dataLocale = "en";
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
-      .addConfiguration("convertBy", ConvertBy.BY_FIELD)
-      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(date1, date2, date3, date4, date5, date6, date7))
-      .addOutputLane("a").build();
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(date1, date2, date3, date4, date5, date6, date7))
+        .addOutputLane("a").build();
     runner.runInit();
 
     try {
@@ -1487,4 +1499,354 @@ public class TestFieldTypeConverterProcessorFields {
       runner.runDestroy();
     }
   }
+
+  @Test
+  public void testConvertToDecimalUnsupportedTypes() throws StageException {
+    FieldTypeConverterConfig converter = new FieldTypeConverterConfig();
+    converter.fields = ImmutableList.of("/");
+    converter.encoding = "UTF-8";
+    converter.targetType = Field.Type.DECIMAL;
+    converter.scale = -1;
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(converter))
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    //MAP
+    Record record1 = RecordCreator.create();
+    record1.set(Field.create(new HashMap<String, Field>()));
+
+    //List_MAP
+    Record record2 = RecordCreator.create();
+    record2.set(Field.createListMap(new LinkedHashMap<String, Field>()));
+
+    //LIST
+    Record record3 = RecordCreator.create();
+    record3.set(Field.create(new ArrayList<Field>()));
+
+    //Byte Array
+    Record record4 = RecordCreator.create();
+    record4.set(Field.create("Sample".getBytes()));
+
+    //Boolean
+    Record record5 = RecordCreator.create();
+    record5.set(Field.create(Boolean.TRUE));
+
+    //char
+    Record record6 = RecordCreator.create();
+    record6.set(Field.create('a'));
+
+    //File Ref
+    Record record7 = RecordCreator.create();
+    record7.set(Field.create(Field.Type.FILE_REF, new FileRef(1000) {
+      @Override
+      @SuppressWarnings("unchecked")
+      public <T extends AutoCloseable> Set<Class<T>> getSupportedStreamClasses() {
+        return ImmutableSet.of((Class<T>)InputStream.class);
+      }
+
+      @Override
+      @SuppressWarnings("unchecked")
+      public <T extends AutoCloseable> T createInputStream(Stage.Context context, Class<T> streamClassType) throws IOException {
+        return (T) new ByteArrayInputStream("Sample".getBytes());
+      }
+    }));
+
+    //Date
+    Record record8 = RecordCreator.create();
+    record8.set(Field.create(Field.Type.DATE, new Date()));
+
+    //Date
+    Record record9 = RecordCreator.create();
+    record9.set(Field.create(Field.Type.DATETIME, new Date()));
+
+    //Time
+    Record record10 = RecordCreator.create();
+    record10.set(Field.create(Field.Type.TIME, new Date()));
+
+
+    List<Record> records =
+        Arrays.asList(record1, record2, record3, record4, record5, record6, record7, record8, record9, record10);
+
+    try {
+      StageRunner.Output output = runner.runProcess(records);
+      List<Record> outputRecords = output.getRecords().get("a");
+      List<Record> errorRecords = runner.getErrorRecords();
+
+      Assert.assertEquals(0, outputRecords.size());
+      Assert.assertEquals(records.size(), errorRecords.size());
+
+      for (Record record : errorRecords) {
+        Assert.assertEquals(Errors.CONVERTER_02.name(), record.getHeader().getErrorCode());
+      }
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  private static BigDecimal convertValueToBigDecimalWithoutScale(Object value) {
+    BigDecimal bigDecimal = null;
+    if (value instanceof Byte) {
+      bigDecimal = new BigDecimal((Byte)value);
+    } else if (value instanceof Short){
+      bigDecimal = new BigDecimal((short)value);
+    } else if (value instanceof Integer) {
+      bigDecimal = new BigDecimal((int)value);
+    } else if (value instanceof Long) {
+      bigDecimal = new BigDecimal((long)value);
+    } else if (value instanceof Float) {
+      bigDecimal = new BigDecimal((float)value);
+    } else if (value instanceof Double) {
+      bigDecimal = new BigDecimal((double)value);
+    } else if (value instanceof BigDecimal) {
+      bigDecimal = (BigDecimal) value;
+    }
+    return bigDecimal;
+  }
+
+  @Test
+  public void testConvertToDecimalSupportedTypesWithoutScale() throws Exception {
+    Map<String, ?> bigDecimalMap =
+        new ImmutableMap.Builder<String, Object>()
+            .put("/byte", (byte)'a')
+            .put("/short1", Short.MAX_VALUE)
+            .put("/short2", Short.MIN_VALUE)
+            .put("/int1", Integer.MIN_VALUE)
+            .put("/int2", Integer.MAX_VALUE)
+            .put("/float1", Float.MIN_VALUE)
+            .put("/float2", Float.MAX_VALUE)
+            .put("/long1", Long.MIN_VALUE)
+            .put("/long2", Long.MAX_VALUE)
+            .put("/double1", Double.MIN_VALUE)
+            .put("/double2", Double.MAX_VALUE)
+            .put("/decimal1", BigDecimal.ZERO)
+            .put("/decimal2", BigDecimal.ONE)
+            .put("/decimal3", BigDecimal.TEN)
+            .build();
+
+    FieldTypeConverterConfig converter = new FieldTypeConverterConfig();
+    converter.fields = new ArrayList<>(bigDecimalMap.keySet());
+    converter.targetType = Field.Type.DECIMAL;
+    converter.scale = -1;
+    converter.decimalScaleRoundingStrategy = DecimalScaleRoundingStrategy.ROUND_UP;
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(converter))
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("byte", Field.create(Field.Type.BYTE, bigDecimalMap.get("/byte")));
+
+      map.put("short1", Field.create(Field.Type.SHORT, bigDecimalMap.get("/short1")));
+      map.put("short2", Field.create(Field.Type.SHORT, bigDecimalMap.get("/short2")));
+
+      map.put("int1", Field.create(Field.Type.INTEGER, bigDecimalMap.get("/int1")));
+      map.put("int2", Field.create(Field.Type.INTEGER, bigDecimalMap.get("/int2")));
+
+      map.put("float1", Field.create(Field.Type.FLOAT, bigDecimalMap.get("/float1")));
+      map.put("float2", Field.create(Field.Type.FLOAT, bigDecimalMap.get("/float2")));
+
+      map.put("long1", Field.create(Field.Type.LONG, bigDecimalMap.get("/long1")));
+      map.put("long2", Field.create(Field.Type.LONG, bigDecimalMap.get("/long2")));
+
+      map.put("double1", Field.create(Field.Type.DOUBLE, bigDecimalMap.get("/double1")));
+      map.put("double2", Field.create(Field.Type.DOUBLE, bigDecimalMap.get("/double2")));
+
+      map.put("decimal1", Field.create(Field.Type.DOUBLE, bigDecimalMap.get("/decimal1")));
+      map.put("decimal2", Field.create(Field.Type.DOUBLE, bigDecimalMap.get("/decimal2")));
+      map.put("decimal3", Field.create(Field.Type.DOUBLE, bigDecimalMap.get("/decimal3")));
+
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Map<String, Field> fieldMap = output.getRecords().get("a").get(0).get().getValueAsMap();
+
+      for (String field : fieldMap.keySet()) {
+        Assert.assertEquals(Field.Type.DECIMAL, fieldMap.get(field).getType());
+        Object expectedValue = bigDecimalMap.get("/" + field);
+        Assert.assertEquals(
+            convertValueToBigDecimalWithoutScale(expectedValue),
+            fieldMap.get(field).getValueAsDecimal()
+        );
+      }
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testConvertDecimalWithDifferentScaleAndRoundingStrategy() throws Exception {
+    FieldTypeConverterConfig converter1 = new FieldTypeConverterConfig();
+
+    converter1.fields = ImmutableList.of("/decimal1", "/decimal2");
+    converter1.targetType = Field.Type.DECIMAL;
+    converter1.scale = 6;
+    converter1.decimalScaleRoundingStrategy = DecimalScaleRoundingStrategy.ROUND_UP;
+
+    FieldTypeConverterConfig converter2 = new FieldTypeConverterConfig();
+    converter2.fields = ImmutableList.of("/decimal3", "/decimal4");
+    converter2.targetType = Field.Type.DECIMAL;
+    converter2.scale = 4;
+    converter2.decimalScaleRoundingStrategy = DecimalScaleRoundingStrategy.ROUND_DOWN;
+
+    FieldTypeConverterConfig converter3 = new FieldTypeConverterConfig();
+    converter3.fields = ImmutableList.of("/decimal5", "/decimal6");
+    converter3.targetType = Field.Type.DECIMAL;
+    converter3.scale = 3;
+    converter3.decimalScaleRoundingStrategy = DecimalScaleRoundingStrategy.ROUND_CEILING;
+
+    FieldTypeConverterConfig converter4 = new FieldTypeConverterConfig();
+    converter4.fields = ImmutableList.of("/decimal7", "/decimal8");
+    converter4.targetType = Field.Type.DECIMAL;
+    converter4.scale = 2;
+    converter4.decimalScaleRoundingStrategy = DecimalScaleRoundingStrategy.ROUND_FLOOR;
+
+
+    FieldTypeConverterConfig converter5 = new FieldTypeConverterConfig();
+    converter5.fields = ImmutableList.of("/decimal9", "/decimal10");
+    converter5.targetType = Field.Type.DECIMAL;
+    converter5.scale = 5;
+    converter5.decimalScaleRoundingStrategy = DecimalScaleRoundingStrategy.ROUND_HALF_UP;
+
+    FieldTypeConverterConfig converter6 = new FieldTypeConverterConfig();
+    converter6.fields = ImmutableList.of("/decimal11", "/decimal12");
+    converter6.targetType = Field.Type.DECIMAL;
+    converter6.scale = 5;
+    converter6.decimalScaleRoundingStrategy = DecimalScaleRoundingStrategy.ROUND_HALF_DOWN;
+
+    FieldTypeConverterConfig converter7 = new FieldTypeConverterConfig();
+    converter7.fields = ImmutableList.of("/decimal13");
+    converter7.targetType = Field.Type.DECIMAL;
+    converter7.scale = 4;
+    converter7.decimalScaleRoundingStrategy = DecimalScaleRoundingStrategy.ROUND_HALF_EVEN;
+
+
+    FieldTypeConverterConfig converter8 = new FieldTypeConverterConfig();
+    converter8.fields = ImmutableList.of("/int");
+    converter8.targetType = Field.Type.DECIMAL;
+    converter8.scale = 5;
+    converter8.decimalScaleRoundingStrategy = DecimalScaleRoundingStrategy.ROUND_UNNECESSARY;
+
+    FieldTypeConverterConfig converter9 = new FieldTypeConverterConfig();
+    converter9.fields = ImmutableList.of("/double1");
+    converter9.targetType = Field.Type.DECIMAL;
+    converter9.scale = 10;
+    converter9.decimalScaleRoundingStrategy = DecimalScaleRoundingStrategy.ROUND_FLOOR;
+
+    FieldTypeConverterConfig converter10 = new FieldTypeConverterConfig();
+    converter10.fields = ImmutableList.of("/double2");
+    converter10.targetType = Field.Type.DECIMAL;
+    converter10.scale = 1;
+    converter10.decimalScaleRoundingStrategy = DecimalScaleRoundingStrategy.ROUND_CEILING;
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration(
+            "fieldTypeConverterConfigs",
+            Arrays.asList(
+                converter1,
+                converter2,
+                converter3,
+                converter4,
+                converter5,
+                converter6,
+                converter7,
+                converter8,
+                converter9,
+                converter10
+            )
+        )
+        .addOutputLane("a").build();
+    runner.runInit();
+    try {
+      Map<String, Field> fieldMap = new HashMap<>();
+
+      //round up
+      fieldMap.put("decimal1", Field.create(new BigDecimal("12345.6789115")));
+      fieldMap.put("decimal2", Field.create(new BigDecimal("-12345.6789115")));
+
+      //round down
+      fieldMap.put("decimal3", Field.create(new BigDecimal("12345.67895")));
+      fieldMap.put("decimal4", Field.create(new BigDecimal("-12345.67895")));
+
+      //round ceil
+      fieldMap.put("decimal5", Field.create(new BigDecimal("12345.67115")));
+      fieldMap.put("decimal6", Field.create(new BigDecimal("-12345.67115")));
+
+      //round floor
+      fieldMap.put("decimal7", Field.create(new BigDecimal("12345.67891")));
+      fieldMap.put("decimal8", Field.create(new BigDecimal("-12345.67891")));
+
+      //round half up
+      fieldMap.put("decimal9", Field.create(new BigDecimal("12345.678945")));
+      fieldMap.put("decimal10", Field.create(new BigDecimal("-12345.678945")));
+
+      //round half down
+      fieldMap.put("decimal11", Field.create(new BigDecimal("12345.678945")));
+      fieldMap.put("decimal12", Field.create(new BigDecimal("-12345.678945")));
+
+      //round half even
+      fieldMap.put("decimal13", Field.create(new BigDecimal("12345.678750")));
+
+      //int - no rounding necessary
+      fieldMap.put("int", Field.create(Field.Type.INTEGER, 1));
+      //double - round floor
+      fieldMap.put("double1", Field.create(Field.Type.DOUBLE, 1234567.98765));
+      //double - round ceiling
+      fieldMap.put("double2", Field.create(Field.Type.DOUBLE, 1234567.98765));
+
+
+      Record record = RecordCreator.create();
+      record.set(Field.create(fieldMap));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+
+      Record outputRecord = output.getRecords().get("a").get(0);
+
+      //round up
+      Assert.assertEquals(new BigDecimal("12345.678912"), outputRecord.get("/decimal1").getValueAsDecimal());
+      Assert.assertEquals(new BigDecimal("-12345.678912"), outputRecord.get("/decimal2").getValueAsDecimal());
+
+      //round down
+      Assert.assertEquals(new BigDecimal("12345.6789"), outputRecord.get("/decimal3").getValueAsDecimal());
+      Assert.assertEquals(new BigDecimal("-12345.6789"), outputRecord.get("/decimal4").getValueAsDecimal());
+
+      //round ceil
+      Assert.assertEquals(new BigDecimal("12345.672"), outputRecord.get("/decimal5").getValueAsDecimal());
+      Assert.assertEquals(new BigDecimal("-12345.671"), outputRecord.get("/decimal6").getValueAsDecimal());
+
+      //round floor
+      Assert.assertEquals(new BigDecimal("12345.67"), outputRecord.get("/decimal7").getValueAsDecimal());
+      Assert.assertEquals(new BigDecimal("-12345.68"), outputRecord.get("/decimal8").getValueAsDecimal());
+
+      //half up
+      Assert.assertEquals(new BigDecimal("12345.67895"), outputRecord.get("/decimal9").getValueAsDecimal());
+      Assert.assertEquals(new BigDecimal("-12345.67895"), outputRecord.get("/decimal10").getValueAsDecimal());
+
+      //half down
+      Assert.assertEquals(new BigDecimal("12345.67894"), outputRecord.get("/decimal11").getValueAsDecimal());
+      Assert.assertEquals(new BigDecimal("-12345.67894"), outputRecord.get("/decimal12").getValueAsDecimal());
+
+      //half even
+      Assert.assertEquals(new BigDecimal("12345.6788"), outputRecord.get("/decimal13").getValueAsDecimal());
+
+      //int with rounding unnecessary and double with different rounding
+      Assert.assertEquals(new BigDecimal("1.00000"), outputRecord.get("/int").getValueAsDecimal());
+      Assert.assertEquals(new BigDecimal("1234567.9876500000"), outputRecord.get("/double1").getValueAsDecimal());
+      Assert.assertEquals(new BigDecimal("1234568.0"), outputRecord.get("/double2").getValueAsDecimal());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
 }
