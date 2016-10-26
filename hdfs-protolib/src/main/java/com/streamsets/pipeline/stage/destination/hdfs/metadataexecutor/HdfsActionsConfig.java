@@ -33,7 +33,7 @@ public class HdfsActionsConfig {
   @ConfigDef(
     required = false,
     type = ConfigDef.Type.STRING,
-    defaultValue = "${record:value('/file_path')}",
+    defaultValue = "${record:value('/filepath')}",
     label = "Input File",
     description = "Full path to the file on which the metadata operations should be executed.",
     displayPosition = 100,
