@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.RecordCreator;
+import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedException;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import org.junit.Assert;
@@ -78,6 +79,14 @@ public class TestHiveMetastoreUtil {
       HiveTypeInfo actualType = actual.get(pair.getKey());
       Assert.assertEquals(pair.getValue().getHiveType(), actualType.getHiveType());
     }
+  }
+
+  @Test(expected = HiveStageCheckedException.class)
+  public void testConvertRecordToHMSTypeIncorrectRootType() throws Exception {
+    Record record = RecordCreator.create();
+    record.set(Field.create(Field.Type.LIST, Collections.emptyList()));
+
+    HiveMetastoreUtil.convertRecordToHMSType(record, null, null, null, null, null);
   }
 
   @Test

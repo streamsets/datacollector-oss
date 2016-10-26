@@ -602,8 +602,12 @@ public final class HiveMetastoreUtil {
       String precisionExpression,
       ELVars variables
   ) throws HiveStageCheckedException, ELEvalException {
+    if(!record.get().getType().isOneOf(Field.Type.MAP, Field.Type.LIST_MAP)) {
+      throw new HiveStageCheckedException(Errors.HIVE_33, record.getHeader().getSourceId(), record.get().getType().toString());
+    }
+
     LinkedHashMap<String, HiveTypeInfo> columns = new LinkedHashMap<>();
-    LinkedHashMap<String, Field> list = record.get().getValueAsListMap();
+    Map<String, Field> list = record.get().getValueAsMap();
     for(Map.Entry<String,Field> pair:  list.entrySet()) {
       if (pair.getKey().isEmpty()) {
         throw new HiveStageCheckedException(Errors.HIVE_01, "Field names are empty");

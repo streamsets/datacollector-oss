@@ -39,6 +39,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.Types;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -109,6 +110,42 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
         Assert.assertFalse("Unexpected number of rows", rs.next());
       }
     });
+  }
+
+  @Test
+  public void testReorderedColumns() throws Exception {
+    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
+      .table("reorder")
+      .partitions(Collections.<PartitionConfig>emptyList())
+      .build();
+    HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
+      .build();
+
+    List<Record> records = new LinkedList<>();
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("first", Field.create(Field.Type.INTEGER, 1));
+    map.put("second", Field.create(Field.Type.INTEGER, 1));
+    map.put("third", Field.create(Field.Type.INTEGER, 1));
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+    records.add(record);
+
+    map = new LinkedHashMap<>();
+    map.put("third", Field.create(Field.Type.INTEGER, 1));
+    map.put("second", Field.create(Field.Type.INTEGER, 1));
+    map.put("first", Field.create(Field.Type.INTEGER, 1));
+    record = RecordCreator.create("s", "s:2");
+    record.set(Field.create(map));
+    records.add(record);
+
+    processRecords(processor, hiveTarget, records);
+
+    assertTableStructure("default.reorder",
+      new ImmutablePair("reorder.first", Types.INTEGER),
+      new ImmutablePair("reorder.second", Types.INTEGER),
+      new ImmutablePair("reorder.third", Types.INTEGER)
+    );
   }
 
   @Test
