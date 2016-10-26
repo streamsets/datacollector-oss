@@ -32,6 +32,7 @@
         </topicref>
         <topicref href="../DPM/RegisterSDCwithDPM.dita" chunk="to-content">
             <topicmeta><shortdesc></shortdesc></topicmeta>
+            <topicref href="../DPM/RegistrationPrerequisites.dita"/>
             <topicref href="../DPM/RegisterFromDataCollector.dita"/>
             <topicref href="../DPM/RegisterFromCommandLine.dita"/>
             <topicref href="../DPM/RegisterFromClouderaManager.dita"/>
