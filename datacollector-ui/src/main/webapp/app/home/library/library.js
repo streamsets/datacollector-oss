@@ -109,16 +109,6 @@ angular
       exportPipelineConfig: function(pipelineInfo, includeDefinitions, $event) {
         $event.stopPropagation();
         api.pipelineAgent.exportPipelineConfig(pipelineInfo.name, includeDefinitions);
-      },
-
-      /**
-       * Download Remote Pipeline Config
-       */
-      downloadRemotePipelineConfig: function() {
-        pipelineService.downloadRemotePipelineConfigCommand()
-          .then(function() {
-            $route.reload();
-          });
       }
 
     });

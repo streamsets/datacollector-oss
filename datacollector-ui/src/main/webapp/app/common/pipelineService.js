@@ -443,13 +443,18 @@ angular.module('dataCollectorApp.common')
     /**
      * Download Remote Pipeline Command Handler
      */
-    this.downloadRemotePipelineConfigCommand = function($event) {
+    this.downloadRemotePipelineConfigCommand = function($event, existingPipelineNames) {
       var defer = $q.defer(),
         modalInstance = $modal.open({
           templateUrl: 'app/home/library/download_remote/downloadRemoteModal.tpl.html',
           controller: 'DownloadRemoteModalInstanceController',
           size: 'lg',
-          backdrop: 'static'
+          backdrop: 'static',
+          resolve: {
+            existingPipelineNames: function() {
+              return existingPipelineNames;
+            }
+          }
         });
 
       if ($event) {

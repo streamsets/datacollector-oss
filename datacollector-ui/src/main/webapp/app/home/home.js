@@ -389,7 +389,8 @@ angular
        * Download Remote Pipeline Configuration
        */
       downloadRemotePipelineConfig: function($event) {
-        pipelineService.downloadRemotePipelineConfigCommand($event)
+        var existingPipelineNames = _.pluck($scope.pipelines, 'name');
+        pipelineService.downloadRemotePipelineConfigCommand($event, existingPipelineNames)
           .then(function() {
             $route.reload();
           });
