@@ -40,7 +40,7 @@ angular
         $modal.open({
           templateUrl: 'common/administration/enableDPM/enableDPM.tpl.html',
           controller: 'EnableDPMModalInstanceController',
-          size: '',
+          size: 'lg',
           backdrop: 'static'
         });
       },
