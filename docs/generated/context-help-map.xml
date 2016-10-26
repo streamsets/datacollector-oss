@@ -55,7 +55,7 @@
    <appContext helpID="task_opg_yrm_25"
                path="Install_Config/CMInstall-Overview.html#task_opg_yrm_25"/>
    <appContext helpID="task_opg_yrm_25"
-               path="Install_Config/CMInstall-Overview.html#unique_812260523"/>
+               path="Install_Config/CMInstall-Overview.html#unique_509571066"/>
    <appContext helpID="task_u1v_nkt_25"
                path="Install_Config/CMInstall-Overview.html#task_u1v_nkt_25"/>
    <appContext helpID="task_zn4_qrn_25"
@@ -1057,6 +1057,8 @@
                path="DPM/OrgUserAccount.html#concept_lry_34g_xw"/>
    <appContext helpID="concept_kc4_xyf_xw"
                path="DPM/RegisterSDCwithDPM.html#concept_kc4_xyf_xw"/>
+   <appContext helpID="concept_w11_n1q_rx"
+               path="DPM/RegisterSDCwithDPM.html#concept_w11_n1q_rx"/>
    <appContext helpID="task_a4y_v1g_xw"
                path="DPM/RegisterSDCwithDPM.html#task_a4y_v1g_xw"/>
    <appContext helpID="concept_js4_2z1_cx"
@@ -1358,7 +1360,7 @@
    <appContext helpID="concept_a3w_z3m_js"
                path="Troubleshooting/Destinations.html#concept_a3w_z3m_js"/>
    <appContext helpID="concept_a3w_z3m_js"
-               path="Troubleshooting/Destinations.html#unique_19031956"/>
+               path="Troubleshooting/Destinations.html#unique_1484628200"/>
    <appContext helpID="concept_rp1_ghd_zs"
                path="Troubleshooting/Destinations.html#concept_rp1_ghd_zs"/>
    <appContext helpID="concept_mth_cjm_js"
