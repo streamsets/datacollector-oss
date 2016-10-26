@@ -28,6 +28,8 @@
   <p>When the pipeline stops, the Amazon S3 origin notes where it stops reading. When the pipeline
             starts again, the origin continues processing from where it stopped by default. You can
             reset the origin to process all requested objects. </p>
-        <p>You can optionally use a proxy to connect to Amazon S3.</p>
+        <p>You can configure the origin to decrypt data stored on Amazon S3 with server-side
+            encryption and customer-provided encryption keys. You can optionally use a proxy to
+            connect to Amazon S3.</p>
  </conbody>
 </concept>
