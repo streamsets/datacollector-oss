@@ -149,8 +149,8 @@ public class RemoteDownloadConfigBean {
       type = ConfigDef.Type.MODEL,
       defaultValue = "JSON",
       label = "Data Format",
-      group = "REMOTE",
-      displayPosition = 50
+      group = "DATA_FORMAT",
+      displayPosition = 1
   )
   @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat = DataFormat.JSON;

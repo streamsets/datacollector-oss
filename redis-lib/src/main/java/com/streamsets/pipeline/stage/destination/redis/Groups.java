@@ -22,19 +22,11 @@ package com.streamsets.pipeline.stage.destination.redis;
 
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
-import com.streamsets.pipeline.config.DataFormat;
 
 @GenerateResourceBundle
 public enum Groups implements Label {
   REDIS("Redis"),
-  TEXT(DataFormat.TEXT.getLabel()),
-  JSON(DataFormat.JSON.getLabel()),
-  DELIMITED(DataFormat.DELIMITED.getLabel()),
-  AVRO(DataFormat.AVRO.getLabel()),
-  BINARY(DataFormat.BINARY.getLabel()),
-  PROTOBUF(DataFormat.PROTOBUF.getLabel()),
-  DATAGRAM(DataFormat.DATAGRAM.getLabel()),
-  WHOLE_FILE(DataFormat.WHOLE_FILE.getLabel()),
+  DATA_FORMAT("Data Format"),
   ;
 
   private final String label;

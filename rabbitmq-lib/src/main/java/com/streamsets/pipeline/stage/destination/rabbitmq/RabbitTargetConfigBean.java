@@ -58,8 +58,8 @@ public class RabbitTargetConfigBean extends BaseRabbitConfigBean{
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Data Format",
-      displayPosition = 3000,
-      group = "#0"
+      displayPosition = 1,
+      group = "DATA_FORMAT"
   )
   @ValueChooserModel(ProducerDataFormatChooserValues.class)
   public DataFormat dataFormat = DataFormat.JSON;

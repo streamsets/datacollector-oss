@@ -40,8 +40,8 @@ public class FileTailConfigBean {
       type = ConfigDef.Type.MODEL,
       label = "Data Format",
       description = "The data format in the files (IMPORTANT: if Log, Log4j files with stack traces are not handled)",
-      displayPosition = 10,
-      group = "FILES"
+      displayPosition = 1,
+      group = "DATA_FORMAT"
   )
   @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat;

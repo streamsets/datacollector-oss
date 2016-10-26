@@ -387,8 +387,8 @@ public class HdfsTargetConfigBean {
     defaultValue = "TEXT",
     label = "Data Format",
     description = "Data Format",
-    displayPosition = 100,
-    group = "OUTPUT_FILES"
+    displayPosition = 1,
+    group = "DATA_FORMAT"
   )
   @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat;
@@ -414,7 +414,7 @@ public class HdfsTargetConfigBean {
       description = "Expression that determines the target file permissions." +
           "Should be a octal/symbolic representation of the permissions.",
       displayPosition = 460,
-      group = "WHOLE_FILE",
+      group = "DATA_FORMAT",
       dependsOn = "dataFormat",
       triggeredByValue = "WHOLE_FILE"
   )

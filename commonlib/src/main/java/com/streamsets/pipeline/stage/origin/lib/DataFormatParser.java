@@ -183,7 +183,7 @@ public class DataFormatParser {
         if (dataFormatConfig.protoDescriptorFile == null || dataFormatConfig.protoDescriptorFile.isEmpty()) {
           issues.add(
             context.createConfigIssue(
-              DataFormatGroups.PROTOBUF.name(),
+              DataFormatGroups.DATA_FORMAT.name(),
               DATA_FORMAT_CONFIG_PREFIX + "protoDescriptorFile",
               DataFormatErrors.DATA_FORMAT_07
             )
@@ -193,7 +193,7 @@ public class DataFormatParser {
           if (!file.exists()) {
             issues.add(
               context.createConfigIssue(
-                DataFormatGroups.PROTOBUF.name(),
+                DataFormatGroups.DATA_FORMAT.name(),
                 DATA_FORMAT_CONFIG_PREFIX + "protoDescriptorFile",
                 DataFormatErrors.DATA_FORMAT_09,
                 file.getAbsolutePath()
@@ -203,7 +203,7 @@ public class DataFormatParser {
           if (dataFormatConfig.messageType == null || dataFormatConfig.messageType.isEmpty()) {
             issues.add(
               context.createConfigIssue(
-                DataFormatGroups.PROTOBUF.name(),
+                DataFormatGroups.DATA_FORMAT.name(),
                 DATA_FORMAT_CONFIG_PREFIX + "messageType",
                 DataFormatErrors.DATA_FORMAT_08
               )

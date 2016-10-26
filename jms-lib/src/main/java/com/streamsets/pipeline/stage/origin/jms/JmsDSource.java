@@ -61,8 +61,8 @@ public class JmsDSource extends DSourceOffsetCommitter implements ErrorListener 
     required = true,
     type = ConfigDef.Type.MODEL,
     label = "Data Format",
-    displayPosition = 3000,
-    group = "JMS"
+    displayPosition = 1,
+    group = "DATA_FORMAT"
   )
   @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat;

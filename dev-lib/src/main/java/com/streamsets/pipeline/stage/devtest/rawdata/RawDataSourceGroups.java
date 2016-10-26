@@ -26,16 +26,7 @@ import com.streamsets.pipeline.config.DataFormat;
 @GenerateResourceBundle
 public enum RawDataSourceGroups implements Label {
   RAW("Raw Data"),
-  TEXT(DataFormat.TEXT.getLabel()),
-  JSON(DataFormat.JSON.getLabel()),
-  DELIMITED(DataFormat.DELIMITED.getLabel()),
-  XML(DataFormat.XML.getLabel()),
-  LOG(DataFormat.LOG.getLabel()),
-  AVRO(DataFormat.AVRO.getLabel()),
-  BINARY(DataFormat.BINARY.getLabel()),
-  PROTOBUF(DataFormat.PROTOBUF.getLabel()),
-  DATAGRAM(DataFormat.DATAGRAM.getLabel()),
-  WHOLE_FILE(DataFormat.WHOLE_FILE.getLabel()),
+  DATA_FORMAT("Data Format"),
   ;
 
   private final String label;

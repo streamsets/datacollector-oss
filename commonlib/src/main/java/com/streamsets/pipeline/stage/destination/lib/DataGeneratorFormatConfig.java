@@ -85,7 +85,7 @@ import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SUBJECT_KEY;
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
 public class DataGeneratorFormatConfig implements DataFormatConfig{
-  private final static Logger LOG = LoggerFactory.getLogger(DataGeneratorFormatConfig.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DataGeneratorFormatConfig.class);
 
   @ConfigDef(
     required = true,
@@ -93,7 +93,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
     defaultValue = "UTF-8",
     label = "Charset",
     displayPosition = 300,
-    group = "#0",
+    group = "DATA_FORMAT",
     dependsOn = "dataFormat^",
     triggeredByValue = {"TEXT", "JSON", "DELIMITED"}
   )
@@ -107,9 +107,8 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
     type = ConfigDef.Type.MODEL,
     defaultValue = "CSV",
     label = "Delimiter Format",
-    description = "",
     displayPosition = 310,
-    group = "DELIMITED",
+    group = "DATA_FORMAT",
     dependsOn = "dataFormat^",
     triggeredByValue = "DELIMITED"
   )
@@ -121,9 +120,8 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
     type = ConfigDef.Type.MODEL,
     defaultValue = "NO_HEADER",
     label = "Header Line",
-    description = "",
     displayPosition = 320,
-    group = "DELIMITED",
+    group = "DATA_FORMAT",
     dependsOn = "dataFormat^",
     triggeredByValue = "DELIMITED"
   )
@@ -137,7 +135,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
     label = "Replace New Line Characters",
     description = "Replaces new lines characters with configured string constant",
     displayPosition = 330,
-    group = "DELIMITED",
+    group = "DATA_FORMAT",
     dependsOn = "dataFormat^",
     triggeredByValue = "DELIMITED"
   )
@@ -150,7 +148,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
     label = "New Line Character Replacement",
     description = "String that will be used to substitute new line characters. Using empty string will remove the new line characters.",
     displayPosition = 335,
-    group = "DELIMITED",
+    group = "DATA_FORMAT",
     dependsOn = "csvReplaceNewLines",
     triggeredByValue = "true"
   )
@@ -162,7 +160,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
     defaultValue = "|",
     label = "Delimiter Character",
     displayPosition = 340,
-    group = "DELIMITED",
+    group = "DATA_FORMAT",
     dependsOn = "csvFileFormat",
     triggeredByValue = "CUSTOM"
   )
@@ -174,7 +172,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
     defaultValue = "\\",
     label = "Escape Character",
     displayPosition = 350,
-    group = "DELIMITED",
+    group = "DATA_FORMAT",
     dependsOn = "csvFileFormat",
     triggeredByValue = "CUSTOM"
   )
@@ -186,7 +184,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
     defaultValue = "\"",
     label = "Quote Character",
     displayPosition = 360,
-    group = "DELIMITED",
+    group = "DATA_FORMAT",
     dependsOn = "csvFileFormat",
     triggeredByValue = "CUSTOM"
   )
@@ -199,9 +197,8 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
     type = ConfigDef.Type.MODEL,
     defaultValue = "MULTIPLE_OBJECTS",
     label = "JSON Content",
-    description = "",
     displayPosition = 370,
-    group = "JSON",
+    group = "DATA_FORMAT",
     dependsOn = "dataFormat^",
     triggeredByValue = "JSON"
   )
@@ -217,7 +214,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
     label = "Text Field Path",
     description = "String field that will be written to the destination",
     displayPosition = 380,
-    group = "TEXT",
+    group = "DATA_FORMAT",
     dependsOn = "dataFormat^",
     triggeredByValue = "TEXT"
   )
@@ -232,7 +229,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
       label = "Record Separator",
       description = "Value to insert in output between records, defaults to newline",
       displayPosition = 385,
-      group = "TEXT",
+      group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
       triggeredByValue = "TEXT",
       evaluation = ConfigDef.Evaluation.EXPLICIT
@@ -246,7 +243,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
     label = "Insert Record Separator If No Text",
     description = "Specifies whether a record separator should be inserted in output even after an empty value (no text in field)",
     displayPosition = 390,
-    group = "TEXT",
+    group = "DATA_FORMAT",
     dependsOn = "dataFormat^",
     triggeredByValue = "TEXT"
   )
@@ -262,7 +259,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
       displayPosition = 400,
       dependsOn = "dataFormat^",
       triggeredByValue = "AVRO",
-      group = "AVRO"
+      group = "DATA_FORMAT"
   )
   @ValueChooserModel(DestinationAvroSchemaSourceChooserValues.class)
   public DestinationAvroSchemaSource avroSchemaSource;
@@ -274,7 +271,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
       description = "Overrides the schema included in the data (if any). Optionally use the " +
           "runtime:loadResource function to use a schema stored in a file",
       displayPosition = 410,
-      group = "AVRO",
+      group = "DATA_FORMAT",
       dependencies = {
           @Dependency(configName = "dataFormat^", triggeredByValues = "AVRO"),
           @Dependency(configName = "avroSchemaSource", triggeredByValues = "INLINE")
@@ -294,7 +291,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
           @Dependency(configName = "avroSchemaSource", triggeredByValues = {"INLINE", "HEADER"}),
       },
       displayPosition = 420,
-      group = "AVRO"
+      group = "DATA_FORMAT"
   )
   public boolean registerSchema;
 
@@ -308,7 +305,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
           @Dependency(configName = "registerSchema", triggeredByValues = "true")
       },
       displayPosition = 430,
-      group = "AVRO"
+      group = "DATA_FORMAT"
 
   )
   // This config property is duplicated for when registering schemas specified inline.
@@ -326,7 +323,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
           @Dependency(configName = "avroSchemaSource", triggeredByValues = "REGISTRY")
       },
       displayPosition = 431,
-      group = "AVRO"
+      group = "DATA_FORMAT"
 
   )
   public List<String> schemaRegistryUrls = new ArrayList<>();
@@ -340,7 +337,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
       dependsOn = "avroSchemaSource",
       triggeredByValue = "REGISTRY",
       displayPosition = 440,
-      group = "AVRO"
+      group = "DATA_FORMAT"
   )
   @ValueChooserModel(DestinationAvroSchemaLookupModeChooserValues.class)
   public AvroSchemaLookupMode schemaLookupMode = AvroSchemaLookupMode.SUBJECT;
@@ -355,7 +352,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
           @Dependency(configName = "schemaLookupMode", triggeredByValues = "SUBJECT")
       },
       displayPosition = 450,
-      group = "AVRO"
+      group = "DATA_FORMAT"
   )
   public String subject;
 
@@ -369,7 +366,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
           @Dependency(configName = "registerSchema", triggeredByValues = "true")
       },
       displayPosition = 451,
-      group = "AVRO"
+      group = "DATA_FORMAT"
   )
   // This config property is duplicated for when registering schemas specified inline.
   // We can't do an AND+OR relationship with dependencies so this is a workaround.
@@ -386,7 +383,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
           @Dependency(configName = "schemaLookupMode", triggeredByValues = "ID")
       },
       displayPosition = 460,
-      group = "AVRO"
+      group = "DATA_FORMAT"
   )
   public int schemaId;
 
@@ -397,7 +394,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
       label = "Include Schema",
       description = "Includes the Avro schema in the output",
       displayPosition = 470,
-      group = "AVRO",
+      group = "DATA_FORMAT",
       dependencies = {
           @Dependency(configName = "dataFormat^", triggeredByValues = "AVRO"),
           @Dependency(configName = "avroSchemaSource", triggeredByValues = {"INLINE", "HEADER"})
@@ -411,7 +408,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
       defaultValue = "NULL",
       label = "Avro Compression Codec",
       displayPosition = 480,
-      group = "AVRO",
+      group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
       triggeredByValue = "AVRO"
   )
@@ -427,7 +424,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
     label = "Binary Field Path",
     description = "Field to write data to Kafka",
     displayPosition = 420,
-    group = "BINARY",
+    group = "DATA_FORMAT",
     dependsOn = "dataFormat^",
     triggeredByValue = "BINARY",
     elDefs = {StringEL.class}
@@ -444,7 +441,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
     label = "Protobuf Descriptor File",
     description = "Protobuf Descriptor File (.desc) path relative to SDC resources directory",
     displayPosition = 430,
-    group = "PROTOBUF",
+    group = "DATA_FORMAT",
     dependsOn = "dataFormat^",
     triggeredByValue = "PROTOBUF"
   )
@@ -457,7 +454,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
     description = "Fully Qualified Message Type name. Use format <packageName>.<messageTypeName>",
     label = "Message Type",
     displayPosition = 440,
-    group = "PROTOBUF",
+    group = "DATA_FORMAT",
     dependsOn = "dataFormat^",
     triggeredByValue = "PROTOBUF"
   )
@@ -473,7 +470,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
       description = "File Name Expression",
       label = "File Name Expression",
       displayPosition = 450,
-      group = "WHOLE_FILE",
+      group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
       triggeredByValue = "WHOLE_FILE"
   )
@@ -486,7 +483,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
       label = "File Exists",
       description = "The action to perform when the file already exists.",
       displayPosition = 470,
-      group = "WHOLE_FILE",
+      group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
       triggeredByValue = "WHOLE_FILE"
   )
@@ -500,7 +497,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
       label = "Event Includes Checksum",
       description = "File Transfer Event should include the checksum of the stream.",
       displayPosition = 480,
-      group = "WHOLE_FILE",
+      group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
       triggeredByValue = "WHOLE_FILE"
   )
@@ -513,7 +510,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
       label = "Checksum Algorithm",
       description = "The checksum algorithm for calculating checksum for the file.",
       displayPosition = 490,
-      group = "WHOLE_FILE",
+      group = "DATA_FORMAT",
       dependsOn = "includeChecksumInTheEvents",
       triggeredByValue = "true"
   )
@@ -668,7 +665,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
       } catch (Exception e) {
         issues.add(
           context.createConfigIssue(
-            DataFormatGroups.AVRO.name(),
+            DataFormatGroups.DATA_FORMAT.name(),
             configPrefix + ".avroSchema",
             DataFormatErrors.DATA_FORMAT_300,
             e.toString(),
@@ -684,7 +681,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
       } catch (IOException e) {
         issues.add(
             context.createConfigIssue(
-                DataFormatGroups.AVRO.name(),
+                DataFormatGroups.DATA_FORMAT.name(),
                 configPrefix + ".avroSchema",
                 DataFormatErrors.DATA_FORMAT_301,
                 e.toString(),
@@ -723,7 +720,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
   ) {
     boolean valid = true;
     if (isEmpty(protoDescriptorFile)) {
-      issues.add(context.createConfigIssue(DataFormatGroups.PROTOBUF.name(),
+      issues.add(context.createConfigIssue(DataFormatGroups.DATA_FORMAT.name(),
           configPrefix + ".protoDescriptorFile",
           DataFormatErrors.DATA_FORMAT_07
       ));
@@ -731,7 +728,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
     } else {
       File file = new File(context.getResourcesDirectory(), protoDescriptorFile);
       if (!file.exists()) {
-        issues.add(context.createConfigIssue(DataFormatGroups.PROTOBUF.name(),
+        issues.add(context.createConfigIssue(DataFormatGroups.DATA_FORMAT.name(),
             configPrefix + ".protoDescriptorFile",
             DataFormatErrors.DATA_FORMAT_09,
             file.getAbsolutePath()
@@ -739,7 +736,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
         valid = false;
       }
       if (isEmpty(messageType)) {
-        issues.add(context.createConfigIssue(DataFormatGroups.PROTOBUF.name(),
+        issues.add(context.createConfigIssue(DataFormatGroups.DATA_FORMAT.name(),
             configPrefix + ".messageType",
             DataFormatErrors.DATA_FORMAT_08
         ));
@@ -757,7 +754,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
     if (isEmpty(binaryFieldPath)) {
       issues.add(
           context.createConfigIssue(
-              DataFormatGroups.BINARY.name(),
+              DataFormatGroups.DATA_FORMAT.name(),
               configPrefix + ".binaryFieldPath",
               DataFormatErrors.DATA_FORMAT_200
           )
@@ -773,7 +770,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
     // required field configuration to be set and it is "/" by default
     boolean valid = true;
     if (isEmpty(textFieldPath)) {
-      issues.add(context.createConfigIssue(DataFormatGroups.TEXT.name(),
+      issues.add(context.createConfigIssue(DataFormatGroups.DATA_FORMAT.name(),
           configPrefix + ".textFieldPath",
           DataFormatErrors.DATA_FORMAT_200
       ));
@@ -787,7 +784,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
     if (isEmpty(fileNameEL)) {
       issues.add(
           context.createConfigIssue(
-              DataFormatGroups.WHOLE_FILE.name(),
+              DataFormatGroups.DATA_FORMAT.name(),
               configPrefix + ".fileNameEL",
               DataFormatErrors.DATA_FORMAT_200
           )

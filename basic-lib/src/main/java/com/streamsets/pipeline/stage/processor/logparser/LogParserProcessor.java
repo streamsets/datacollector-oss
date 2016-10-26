@@ -34,6 +34,7 @@ import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.DataParserFormat;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
+import com.streamsets.pipeline.stage.origin.spooldir.*;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -87,7 +88,7 @@ public class LogParserProcessor extends SingleLaneRecordProcessor {
     logDataFormatValidator = new LogDataFormatValidator(logMode, logMaxObjectLen,
       false, customLogFormat, regex, grokPatternDefinition, grokPattern,
       enableLog4jCustomLogFormat, log4jCustomLogFormat, onParseError, maxStackTraceLines,
-      com.streamsets.pipeline.stage.origin.spooldir.Groups.LOG.name(),
+      com.streamsets.pipeline.stage.origin.spooldir.Groups.DATA_FORMAT.name(),
       getFieldPathToGroupMap(fieldPathsToGroupName));
     logDataFormatValidator.validateLogFormatConfig(getContext(), "", issues);
 

@@ -105,7 +105,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       defaultValue = "UTF-8",
       label = "Charset",
       displayPosition = 300,
-      group = "#0",
+      group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
       triggeredByValue = {"TEXT", "JSON", "DELIMITED", "XML", "LOG", "DATAGRAM"}
   )
@@ -119,7 +119,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "Ignore Control Characters",
       description = "Use only if required as it impacts reading performance",
       displayPosition = 310,
-      group = "#0"
+      group = "DATA_FORMAT"
   )
   public boolean removeCtrlChars = false;
 
@@ -131,7 +131,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       defaultValue = "NONE",
       label = "Compression Format",
       displayPosition = 320,
-      group = "#0"
+      group = "DATA_FORMAT"
   )
   @ValueChooserModel(CompressionChooserValues.class)
   public Compression compression = Compression.NONE;
@@ -157,7 +157,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "Max Line Length",
       description = "Longer lines are truncated",
       displayPosition = 340,
-      group = "TEXT",
+      group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
       triggeredByValue = "TEXT",
       min = 1,
@@ -172,7 +172,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "Use Custom Delimiter",
       description = "Use custom delimiters to create records",
       displayPosition = 342,
-      group = "TEXT",
+      group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
       triggeredByValue = "TEXT"
   )
@@ -185,7 +185,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "Custom Delimiter",
       description = "One or more characters. Leading and trailing spaces are stripped.",
       displayPosition = 344,
-      group = "TEXT",
+      group = "DATA_FORMAT",
       dependsOn = "useCustomDelimiter",
       triggeredByValue = "true"
   )
@@ -198,7 +198,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "Include Custom Delimiter",
       description = "Include custom delimiters in the data",
       displayPosition = 346,
-      group = "TEXT",
+      group = "DATA_FORMAT",
       dependsOn = "useCustomDelimiter",
       triggeredByValue = "true"
   )
@@ -211,7 +211,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "JSON Content",
       description = "",
       displayPosition = 350,
-      group = "JSON",
+      group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
       triggeredByValue = "JSON"
   )
@@ -225,7 +225,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "Max Object Length (chars)",
       description = "Larger objects are not processed",
       displayPosition = 360,
-      group = "JSON",
+      group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
       triggeredByValue = "JSON",
       min = 1,
@@ -240,7 +240,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "Delimiter Format Type",
       description = "",
       displayPosition = 370,
-      group = "DELIMITED",
+      group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
       triggeredByValue = "DELIMITED"
   )
@@ -254,7 +254,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "Header Line",
       description = "",
       displayPosition = 380,
-      group = "DELIMITED",
+      group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
       triggeredByValue = "DELIMITED"
   )
@@ -268,7 +268,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "Max Record Length (chars)",
       description = "Larger objects are not processed",
       displayPosition = 390,
-      group = "DELIMITED",
+      group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
       triggeredByValue = "DELIMITED",
       min = 1,
@@ -282,7 +282,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       defaultValue = "|",
       label = "Delimiter Character",
       displayPosition = 400,
-      group = "DELIMITED",
+      group = "DATA_FORMAT",
       dependsOn = "csvFileFormat",
       triggeredByValue = "CUSTOM"
   )
@@ -294,7 +294,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       defaultValue = "\\",
       label = "Escape Character",
       displayPosition = 410,
-      group = "DELIMITED",
+      group = "DATA_FORMAT",
       dependsOn = "csvFileFormat",
       triggeredByValue = "CUSTOM"
   )
@@ -306,7 +306,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       defaultValue = "\"",
       label = "Quote Character",
       displayPosition = 420,
-      group = "DELIMITED",
+      group = "DATA_FORMAT",
       dependsOn = "csvFileFormat",
       triggeredByValue = "CUSTOM"
   )
@@ -319,7 +319,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "Root Field Type",
       description = "",
       displayPosition = 430,
-      group = "DELIMITED",
+      group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
       triggeredByValue = "DELIMITED"
   )
@@ -333,7 +333,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "Lines to Skip",
       description = "Number of lines to skip before reading",
       displayPosition = 435,
-      group = "DELIMITED",
+      group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
       triggeredByValue = "DELIMITED",
       min = 0
@@ -347,7 +347,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "Parse NULLs",
       description = "When checked, configured string constant will be converted into NULL field.",
       displayPosition = 436,
-      group = "DELIMITED",
+      group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
       triggeredByValue = "DELIMITED"
   )
@@ -360,7 +360,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "NULL constant",
       description = "String constant that should be converted to a NULL rather then passed as it is.",
       displayPosition = 437,
-      group = "DELIMITED",
+      group = "DATA_FORMAT",
       dependsOn = "parseNull",
       triggeredByValue = "true"
   )
@@ -373,7 +373,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       defaultValue = "",
       description = "XML element that acts as a record delimiter. No delimiter will treat the whole XML document as one record.",
       displayPosition = 440,
-      group = "XML",
+      group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
       triggeredByValue = "XML"
   )
@@ -386,7 +386,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "Max Record Length (chars)",
       description = "Larger records are not processed",
       displayPosition = 450,
-      group = "XML",
+      group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
       triggeredByValue = "XML",
       min = 1,
@@ -403,7 +403,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "Log Format",
       description = "",
       displayPosition = 460,
-      group = "LOG",
+      group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
       triggeredByValue = "LOG"
   )
@@ -417,7 +417,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "Max Line Length",
       description = "Longer lines are truncated",
       displayPosition = 470,
-      group = "LOG",
+      group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
       triggeredByValue = "LOG",
       min = 1,
@@ -432,7 +432,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "Retain Original Line",
       description = "Indicates if the original line of log should be retained in the record",
       displayPosition = 480,
-      group = "LOG",
+      group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
       triggeredByValue = "LOG"
   )
@@ -446,7 +446,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "Custom Log Format",
       description = "",
       displayPosition = 490,
-      group = "LOG",
+      group = "DATA_FORMAT",
       dependsOn = "logMode",
       triggeredByValue = "APACHE_CUSTOM_LOG_FORMAT"
   )
@@ -461,7 +461,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "Regular Expression",
       description = "The regular expression which is used to parse the log line.",
       displayPosition = 500,
-      group = "LOG",
+      group = "DATA_FORMAT",
       dependsOn = "logMode",
       triggeredByValue = "REGEX"
   )
@@ -474,7 +474,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "Field Path To RegEx Group Mapping",
       description = "Map groups in the regular expression to field paths",
       displayPosition = 510,
-      group = "LOG",
+      group = "DATA_FORMAT",
       dependsOn = "logMode",
       triggeredByValue = "REGEX"
   )
@@ -490,7 +490,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "Grok Pattern Definition",
       description = "Define your own grok patterns which will be used to parse the logs",
       displayPosition = 520,
-      group = "LOG",
+      group = "DATA_FORMAT",
       dependsOn = "logMode",
       triggeredByValue = "GROK",
       mode = ConfigDef.Mode.PLAIN_TEXT
@@ -504,7 +504,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "Grok Pattern",
       description = "The grok pattern which is used to parse the log line",
       displayPosition = 530,
-      group = "LOG",
+      group = "DATA_FORMAT",
       dependsOn = "logMode",
       triggeredByValue = "GROK"
   )
@@ -519,7 +519,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "On Parse Error",
       description = "",
       displayPosition = 540,
-      group = "LOG",
+      group = "DATA_FORMAT",
       dependsOn = "logMode",
       triggeredByValue = "LOG4J"
   )
@@ -534,7 +534,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       description = "Any line that does not match the expected pattern will be treated as a Stack trace as long as it " +
           "is part of the same message. The stack trace will be trimmed to the specified number of lines.",
       displayPosition = 550,
-      group = "LOG",
+      group = "DATA_FORMAT",
       dependsOn = "onParseError",
       triggeredByValue = "INCLUDE_AS_STACK_TRACE",
       min = 0,
@@ -549,7 +549,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "Use Custom Log Format",
       description = "",
       displayPosition = 560,
-      group = "LOG",
+      group = "DATA_FORMAT",
       dependsOn = "logMode",
       triggeredByValue = "LOG4J"
   )
@@ -563,7 +563,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "Custom Log4J Format",
       description = "Specify your own custom log4j format.",
       displayPosition = 570,
-      group = "LOG",
+      group = "DATA_FORMAT",
       dependsOn = "enableLog4jCustomLogFormat",
       triggeredByValue = "true"
   )
@@ -579,7 +579,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       displayPosition = 400,
       dependsOn = "dataFormat^",
       triggeredByValue = "AVRO",
-      group = "AVRO"
+      group = "DATA_FORMAT"
   )
   @ValueChooserModel(OriginAvroSchemaSourceChooserValues.class)
   public OriginAvroSchemaSource avroSchemaSource;
@@ -591,7 +591,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       description = "Overrides the schema included in the data (if any). Optionally use the runtime:loadResource " +
           "function to use a schema stored in a file.",
       displayPosition = 410,
-      group = "AVRO",
+      group = "DATA_FORMAT",
       dependencies = {
           @Dependency(configName = "dataFormat^", triggeredByValues = "AVRO"),
           @Dependency(configName = "avroSchemaSource", triggeredByValues = "INLINE")
@@ -610,7 +610,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
           @Dependency(configName = "avroSchemaSource", triggeredByValues = "REGISTRY")
       },
       displayPosition = 420,
-      group = "AVRO"
+      group = "DATA_FORMAT"
 
   )
   public List<String> schemaRegistryUrls = new ArrayList<>();
@@ -624,7 +624,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       dependsOn = "avroSchemaSource",
       triggeredByValue = "REGISTRY",
       displayPosition = 430,
-      group = "AVRO"
+      group = "DATA_FORMAT"
   )
   @ValueChooserModel(OriginAvroSchemaLookupModeChooserValues.class)
   public AvroSchemaLookupMode schemaLookupMode = AvroSchemaLookupMode.AUTO;
@@ -639,7 +639,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
           @Dependency(configName = "schemaLookupMode", triggeredByValues = "SUBJECT"),
       },
       displayPosition = 440,
-      group = "AVRO"
+      group = "DATA_FORMAT"
   )
   public String subject;
 
@@ -654,7 +654,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
           @Dependency(configName = "schemaLookupMode", triggeredByValues = "ID"),
       },
       displayPosition = 450,
-      group = "AVRO"
+      group = "DATA_FORMAT"
   )
   public int schemaId;
 
@@ -667,7 +667,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "Protobuf Descriptor File",
       description = "Protobuf Descriptor File (.desc) path relative to SDC resources directory",
       displayPosition = 600,
-      group = "PROTOBUF",
+      group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
       triggeredByValue = "PROTOBUF"
   )
@@ -680,7 +680,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       description = "Fully Qualified Message Type name. Use format <packageName>.<messageTypeName>",
       label = "Message Type",
       displayPosition = 610,
-      group = "PROTOBUF",
+      group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
       triggeredByValue = "PROTOBUF"
   )
@@ -694,7 +694,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       description = "Should be checked when the input data is prepended with the message size. When unchecked " +
           "only a single message can be present in the source file/Kafka message, etc.",
       displayPosition = 620,
-      group = "PROTOBUF",
+      group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
       triggeredByValue = "PROTOBUF"
   )
@@ -709,7 +709,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "Max Data Size (bytes)",
       description = "Larger objects are not processed",
       displayPosition = 700,
-      group = "BINARY",
+      group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
       triggeredByValue = "BINARY",
       min = 1,
@@ -724,7 +724,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
     type = ConfigDef.Type.MODEL,
     label = "Data Format",
     defaultValue = "SYSLOG",
-    group = "DATAGRAM",
+    group = "DATA_FORMAT",
     displayPosition = 800,
     dependsOn = "dataFormat^",
     triggeredByValue = "DATAGRAM"
@@ -738,7 +738,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
     label = "TypesDB File Path",
     description = "User-specified TypesDB file. Overrides the included version.",
     displayPosition = 820,
-    group = "DATAGRAM",
+    group = "DATA_FORMAT",
     dependsOn = "datagramMode",
     triggeredByValue = "COLLECTD"
   )
@@ -751,7 +751,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
     label = "Convert Hi-Res Time & Interval",
     description = "Converts high resolution time format interval and timestamp to unix time in (ms).",
     displayPosition = 830,
-    group = "DATAGRAM",
+    group = "DATA_FORMAT",
     dependsOn = "datagramMode",
     triggeredByValue = "COLLECTD"
   )
@@ -764,7 +764,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
     label = "Exclude Interval",
     description = "Excludes the interval field from output records.",
     displayPosition = 840,
-    group = "DATAGRAM",
+    group = "DATA_FORMAT",
     dependsOn = "datagramMode",
     triggeredByValue = "COLLECTD"
   )
@@ -776,7 +776,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
     label = "Auth File",
     description = "",
     displayPosition = 850,
-    group = "DATAGRAM",
+    group = "DATA_FORMAT",
     dependsOn = "datagramMode",
     triggeredByValue = "COLLECTD"
   )
@@ -790,7 +790,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "Buffer Size (bytes)",
       description = "Size of the Buffer used to copy the file.",
       displayPosition = 900,
-      group = "WHOLE_FILE",
+      group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
       triggeredByValue = "WHOLE_FILE",
       min = 1,
@@ -806,7 +806,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "Verify Checksum",
       description = "When checked verifies the checksum of the stream during read.",
       displayPosition = 1000,
-      group = "WHOLE_FILE",
+      group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
       triggeredByValue = "WHOLE_FILE"
   )
@@ -939,7 +939,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
     if (jsonMaxObjectLen < 1) {
       issues.add(
           context.createConfigIssue(
-              DataFormatGroups.JSON.name(),
+              DataFormatGroups.DATA_FORMAT.name(),
               configPrefix + "jsonMaxObjectLen",
               DataFormatErrors.DATA_FORMAT_01
           )
@@ -954,7 +954,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
     if (textMaxLineLen < 1) {
       issues.add(
           context.createConfigIssue(
-              DataFormatGroups.TEXT.name(),
+              DataFormatGroups.DATA_FORMAT.name(),
               configPrefix + "textMaxLineLen",
               DataFormatErrors.DATA_FORMAT_01
           )
@@ -964,7 +964,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
     if (useCustomDelimiter && customDelimiter.isEmpty()) {
       issues.add(
           context.createConfigIssue(
-              DataFormatGroups.TEXT.name(),
+              DataFormatGroups.DATA_FORMAT.name(),
               configPrefix + "customDelimiter",
               DataFormatErrors.DATA_FORMAT_200
           )
@@ -979,7 +979,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
     if (csvMaxObjectLen < 1) {
       issues.add(
           context.createConfigIssue(
-              DataFormatGroups.DELIMITED.name(),
+              DataFormatGroups.DATA_FORMAT.name(),
               configPrefix + "csvMaxObjectLen",
               DataFormatErrors.DATA_FORMAT_01
           )
@@ -994,7 +994,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
     if (xmlMaxObjectLen < 1) {
       issues.add(
           context.createConfigIssue(
-              DataFormatGroups.XML.name(),
+              DataFormatGroups.DATA_FORMAT.name(),
               configPrefix + "xmlMaxObjectLen",
               DataFormatErrors.DATA_FORMAT_01
           )
@@ -1003,7 +1003,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
     }
     if (xmlRecordElement != null && !xmlRecordElement.isEmpty() && !XMLChar.isValidName(xmlRecordElement)) {
       issues.add(
-          context.createConfigIssue(DataFormatGroups.XML.name(),
+          context.createConfigIssue(DataFormatGroups.DATA_FORMAT.name(),
               configPrefix + "xmlRecordElement",
               DataFormatErrors.DATA_FORMAT_03,
               xmlRecordElement
@@ -1020,7 +1020,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
     if (wholeFileMaxObjectLen < 1) {
       issues.add(
           context.createConfigIssue(
-              DataFormatGroups.WHOLE_FILE.name(),
+              DataFormatGroups.DATA_FORMAT.name(),
               configPrefix + "wholeFileMaxObjectLen",
               DataFormatErrors.DATA_FORMAT_01
           )
@@ -1034,7 +1034,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
     if (protoDescriptorFile == null || protoDescriptorFile.isEmpty()) {
       issues.add(
           context.createConfigIssue(
-              DataFormatGroups.PROTOBUF.name(),
+              DataFormatGroups.DATA_FORMAT.name(),
               configPrefix + "protoDescriptorFile",
               DataFormatErrors.DATA_FORMAT_07
           )
@@ -1044,7 +1044,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       if (!file.exists()) {
         issues.add(
             context.createConfigIssue(
-                DataFormatGroups.PROTOBUF.name(),
+                DataFormatGroups.DATA_FORMAT.name(),
                 configPrefix + "protoDescriptorFile",
                 DataFormatErrors.DATA_FORMAT_09,
                 file.getAbsolutePath()
@@ -1054,7 +1054,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       if (messageType == null || messageType.isEmpty()) {
         issues.add(
             context.createConfigIssue(
-                DataFormatGroups.PROTOBUF.name(),
+                DataFormatGroups.DATA_FORMAT.name(),
                 configPrefix + "messageType",
                 DataFormatErrors.DATA_FORMAT_08
             )
@@ -1076,7 +1076,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
         log4jCustomLogFormat,
         onParseError,
         maxStackTraceLines,
-        DataFormatGroups.LOG.name(),
+        DataFormatGroups.DATA_FORMAT.name(),
         getFieldPathToGroupMap(fieldPathsToGroupName)
     );
     logDataFormatValidator.validateLogFormatConfig(context, configPrefix, issues);
@@ -1088,7 +1088,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       if (!typesDbFile.canRead() || !typesDbFile.isFile()) {
         issues.add(
             context.createConfigIssue(
-                DataFormatGroups.DATAGRAM.name(),
+                DataFormatGroups.DATA_FORMAT.name(),
                 configPrefix + "typesDbPath",
                 DataFormatErrors.DATA_FORMAT_400, typesDbPath
             )
@@ -1100,7 +1100,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       if (!authFile.canRead() || !authFile.isFile()) {
         issues.add(
             context.createConfigIssue(
-                DataFormatGroups.DATAGRAM.name(),
+                DataFormatGroups.DATA_FORMAT.name(),
                 configPrefix + "authFilePath",
                 DataFormatErrors.DATA_FORMAT_401, authFilePath
             )

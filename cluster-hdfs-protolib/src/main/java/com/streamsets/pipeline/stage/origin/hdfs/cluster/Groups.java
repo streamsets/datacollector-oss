@@ -25,16 +25,7 @@ import com.streamsets.pipeline.api.Label;
 @GenerateResourceBundle
 public enum Groups implements Label {
   HADOOP_FS("Hadoop FS"),
-  TEXT("Text"),
-  JSON("JSON"),
-  DELIMITED("Delimited"),
-  XML("XML"),
-  LOG("Log"),
-  AVRO("Avro"),
-  BINARY("Binary"),
-  PROTOBUF("Protobuf"),
-  DATAGRAM("Datagram"),
-  WHOLE_FILE("Whole File"),
+  DATA_FORMAT("Data Format"),
   ;
 
   private final String label;

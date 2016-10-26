@@ -40,9 +40,8 @@ public class MapRStreamsTargetConfigBean {
     type = ConfigDef.Type.MODEL,
     defaultValue = "SDC_JSON",
     label = "Data Format",
-    description = "",
-    displayPosition = 60,
-    group = "MAPR_STREAMS"
+    displayPosition = 1,
+    group = "DATA_FORMAT"
   )
   @ValueChooserModel(ProducerDataFormatChooserValues.class)
   public DataFormat dataFormat;

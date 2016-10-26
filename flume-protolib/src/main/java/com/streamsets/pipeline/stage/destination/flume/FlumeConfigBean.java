@@ -38,9 +38,8 @@ public class FlumeConfigBean {
     type = ConfigDef.Type.MODEL,
     defaultValue = "SDC_JSON",
     label = "Data Format",
-    description = "",
-    displayPosition = 140,
-    group = "FLUME"
+    displayPosition = 1,
+    group = "DATA_FORMAT"
   )
   @ValueChooserModel(FlumeDestinationDataFormatChooserValues.class)
   public DataFormat dataFormat;
@@ -49,9 +48,9 @@ public class FlumeConfigBean {
   public DataGeneratorFormatConfig dataGeneratorFormatConfig;
 
   public boolean init (Stage.Context context, List<Stage.ConfigIssue> issues) {
-    boolean valid = true;
+    boolean valid;
 
-    valid &= flumeConfig.init(context, issues);
+    valid = flumeConfig.init(context, issues);
     valid &= dataGeneratorFormatConfig.init(
         context,
         dataFormat,

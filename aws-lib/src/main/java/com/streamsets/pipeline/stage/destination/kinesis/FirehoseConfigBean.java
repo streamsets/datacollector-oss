@@ -59,8 +59,8 @@ public class FirehoseConfigBean extends KinesisConfigBean {
       defaultValue = "JSON",
       label = "Data Format",
       description = "Data format to use when receiving records from Kinesis",
-      displayPosition = 20,
-      group = "#0"
+      displayPosition = 1,
+      group = "DATA_FORMAT"
   )
   @ValueChooserModel(FirehoseDataFormatChooserValues.class)
   public DataFormat dataFormat;
@@ -91,7 +91,7 @@ public class FirehoseConfigBean extends KinesisConfigBean {
     if (dataFormat == DataFormat.JSON && dataFormatConfig.jsonMode == JsonMode.ARRAY_OBJECTS) {
       issues.add(
           context.createConfigIssue(
-              DataFormatGroups.JSON.name(),
+              DataFormatGroups.DATA_FORMAT.name(),
               KINESIS_CONFIG_BEAN + ".dataFormatConfig.jsonMode",
               Errors.KINESIS_07
           )

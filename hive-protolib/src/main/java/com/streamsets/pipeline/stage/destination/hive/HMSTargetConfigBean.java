@@ -59,8 +59,8 @@ public class HMSTargetConfigBean {
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Data Format",
-      displayPosition = 20,
-      group = "HIVE"
+      displayPosition = 1,
+      group = "DATA_FORMAT"
   )
   @ValueChooserModel(HMSDataFormatChooserValues.class)
   public DataFormat dataFormat = DataFormat.AVRO;

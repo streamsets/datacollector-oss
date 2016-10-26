@@ -97,8 +97,8 @@ public class HttpProcessorConfig {
       defaultValue = "JSON",
       label = "Data Format",
       description = "Data Format of the response. Response will be parsed before being placed in the record.",
-      displayPosition = 50,
-      group = "HTTP"
+      displayPosition = 1,
+      group = "DATA_FORMAT"
   )
   @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat = DataFormat.JSON;

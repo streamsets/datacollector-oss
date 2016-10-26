@@ -27,16 +27,7 @@ public enum Groups implements Label {
   REMOTE("SFTP/FTP"),
   CREDENTIALS("Credentials"),
   ERROR("Error Handling"),
-  TEXT("Text"),
-  JSON("JSON"),
-  DELIMITED("Delimited"),
-  XML("XML"),
-  LOG("Log"),
-  AVRO("Avro"),
-  BINARY("Binary"),
-  PROTOBUF("Protobuf"),
-  DATAGRAM("Datagram"),
-  WHOLE_FILE("Whole File"),
+  DATA_FORMAT("Data Format"),
   ;
 
   private final String label;

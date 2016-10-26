@@ -75,9 +75,8 @@ public class KafkaTargetConfig {
       type = ConfigDef.Type.MODEL,
       defaultValue = "SDC_JSON",
       label = "Data Format",
-      description = "",
-      displayPosition = 60,
-      group = "KAFKA"
+      displayPosition = 1,
+      group = "DATA_FORMAT"
   )
   @ValueChooserModel(ProducerDataFormatChooserValues.class)
   public DataFormat dataFormat;
@@ -384,7 +383,7 @@ public class KafkaTargetConfig {
 
     // If using Confluent Kafka Avro Serializer, user shouldn't check includeSchema.
     if (dataGeneratorFormatConfig.includeSchema) {
-      issues.add(context.createConfigIssue(KafkaDestinationGroups.AVRO.name(),
+      issues.add(context.createConfigIssue(KafkaDestinationGroups.DATA_FORMAT.name(),
           "conf.dataGeneratorFormatConfig.includeSchema",
           KafkaErrors.KAFKA_70
       ));
@@ -392,7 +391,7 @@ public class KafkaTargetConfig {
 
     if (dataGeneratorFormatConfig.schemaRegistryUrls.isEmpty() &&
         dataGeneratorFormatConfig.schemaRegistryUrlsForRegistration.isEmpty()) {
-      issues.add(context.createConfigIssue(KafkaDestinationGroups.AVRO.name(),
+      issues.add(context.createConfigIssue(KafkaDestinationGroups.DATA_FORMAT.name(),
           "conf.dataGeneratorFormatConfig.schemaRegistryUrls",
           KafkaErrors.KAFKA_71
       ));
@@ -400,18 +399,18 @@ public class KafkaTargetConfig {
 
     if (dataGeneratorFormatConfig.avroSchemaSource == REGISTRY) {
       if (dataGeneratorFormatConfig.schemaLookupMode == ID && dataGeneratorFormatConfig.schemaId < 1) {
-        issues.add(context.createConfigIssue(KafkaDestinationGroups.AVRO.name(),
+        issues.add(context.createConfigIssue(KafkaDestinationGroups.DATA_FORMAT.name(),
             "conf.dataGeneratorFormatConfig.schemaId",
             KafkaErrors.KAFKA_72
         ));
       } else if (isEmpty(dataGeneratorFormatConfig.subject)) {
-        issues.add(context.createConfigIssue(KafkaDestinationGroups.AVRO.name(),
+        issues.add(context.createConfigIssue(KafkaDestinationGroups.DATA_FORMAT.name(),
             "conf.dataGeneratorFormatConfig.subject",
             KafkaErrors.KAFKA_72
         ));
       }
     } else if (isEmpty(dataGeneratorFormatConfig.subjectToRegister)) {
-      issues.add(context.createConfigIssue(KafkaDestinationGroups.AVRO.name(),
+      issues.add(context.createConfigIssue(KafkaDestinationGroups.DATA_FORMAT.name(),
           "conf.dataGeneratorFormatConfig.subjectToRegister",
           KafkaErrors.KAFKA_72
       ));

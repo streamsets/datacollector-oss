@@ -27,14 +27,7 @@ public enum Groups implements Label {
   S3("Amazon S3"),
   SSE("SSE"),
   ADVANCED("Advanced"),
-  TEXT("Text"),
-  JSON("JSON"),
-  DELIMITED("Delimited"),
-  AVRO("Avro"),
-  BINARY("Binary"),
-  PROTOBUF("Protobuf"),
-  DATAGRAM("Datagram"),
-  WHOLE_FILE("Whole File"),
+  DATA_FORMAT("Data Format"),
   ;
 
   private final String label;

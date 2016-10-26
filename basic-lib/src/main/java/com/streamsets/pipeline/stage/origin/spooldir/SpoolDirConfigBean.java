@@ -37,8 +37,8 @@ public class SpoolDirConfigBean {
       type = ConfigDef.Type.MODEL,
       label = "Data Format",
       description = "Format of data in the files",
-      displayPosition = 0,
-      group = "FILES"
+      displayPosition = 1,
+      group = "DATA_FORMAT"
   )
   @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat;

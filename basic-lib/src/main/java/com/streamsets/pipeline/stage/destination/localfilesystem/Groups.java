@@ -26,14 +26,7 @@ import com.streamsets.pipeline.api.Label;
 public enum Groups implements Label {
   OUTPUT_FILES("Output Files"),
   LATE_RECORDS("Late Records"),
-  TEXT("Text"),
-  JSON("JSON"),
-  DELIMITED("Delimited"),
-  AVRO("Avro"),
-  BINARY("Binary"),
-  PROTOBUF("Protobuf"),
-  DATAGRAM("Datagram"),
-  WHOLE_FILE("Whole File"),
+  DATA_FORMAT("Data Format"),
   ;
 
   private final String label;

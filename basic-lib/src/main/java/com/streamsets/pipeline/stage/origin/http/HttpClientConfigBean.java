@@ -135,8 +135,8 @@ public class HttpClientConfigBean {
       type = ConfigDef.Type.MODEL,
       defaultValue = "JSON",
       label = "Data Format",
-      displayPosition = 40,
-      group = "HTTP"
+      displayPosition = 1,
+      group = "DATA_FORMAT"
   )
   @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat = DataFormat.JSON;

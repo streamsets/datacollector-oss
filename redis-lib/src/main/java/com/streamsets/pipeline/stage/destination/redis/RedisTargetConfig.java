@@ -85,8 +85,8 @@ public class RedisTargetConfig {
       type = ConfigDef.Type.MODEL,
       label = "Data Format",
       defaultValue = "JSON",
-      displayPosition = 40,
-      group = "REDIS",
+      displayPosition = 1,
+      group = "DATA_FORMAT",
       dependsOn = "mode",
       triggeredByValue = {"PUBLISH"}
   )

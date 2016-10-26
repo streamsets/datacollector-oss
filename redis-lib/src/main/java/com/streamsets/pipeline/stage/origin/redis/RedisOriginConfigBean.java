@@ -78,8 +78,8 @@ public class RedisOriginConfigBean {
       type = ConfigDef.Type.MODEL,
       label = "Data Format",
       description = "Format of data",
-      displayPosition = 60,
-      group = "REDIS"
+      displayPosition = 1,
+      group = "DATA_FORMAT"
   )
   @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat;

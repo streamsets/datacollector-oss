@@ -44,8 +44,8 @@ public class KafkaConfigBean {
       type = ConfigDef.Type.MODEL,
       label = "Data Format",
       description = "Format of data in the topic",
-      displayPosition = 10,
-      group = "KAFKA"
+      displayPosition = 1,
+      group = "DATA_FORMAT"
   )
   @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat;
@@ -184,7 +184,7 @@ public class KafkaConfigBean {
       if (dataFormatConfig.schemaRegistryUrls == null || dataFormatConfig.schemaRegistryUrls.isEmpty()) {
         issues.add(
             context.createConfigIssue(
-                KafkaOriginGroups.AVRO.name(),
+                KafkaOriginGroups.DATA_FORMAT.name(),
                 KAFKA_CONFIG_BEAN_PREFIX + "dataFormatConfig.schemaRegistryUrls",
                 KafkaErrors.KAFKA_43
             )

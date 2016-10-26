@@ -37,8 +37,8 @@ public class MapRStreamsSourceConfigBean {
       type = ConfigDef.Type.MODEL,
       label = "Data Format",
       description = "Format of data in the files",
-      displayPosition = 0,
-      group = "MAPR_STREAMS"
+      displayPosition = 1,
+      group = "DATA_FORMAT"
   )
   @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat;

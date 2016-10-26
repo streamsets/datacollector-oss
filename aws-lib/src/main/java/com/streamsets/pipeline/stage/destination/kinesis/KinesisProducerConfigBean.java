@@ -40,8 +40,8 @@ public class KinesisProducerConfigBean extends KinesisConfigBean {
       defaultValue = "JSON",
       label = "Data Format",
       description = "Data format to use when receiving records from Kinesis",
-      displayPosition = 30,
-      group = "#0"
+      displayPosition = 1,
+      group = "DATA_FORMAT"
   )
   @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat;

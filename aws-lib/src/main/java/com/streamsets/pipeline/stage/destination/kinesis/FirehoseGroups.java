@@ -25,14 +25,7 @@ import com.streamsets.pipeline.api.Label;
 @GenerateResourceBundle
 public enum FirehoseGroups implements Label {
   KINESIS("Kinesis"),
-  TEXT("Text"),
-  JSON("JSON"),
-  DELIMITED("Delimited"),
-  AVRO("Avro"),
-  BINARY("Binary"),
-  PROTOBUF("Protobuf"),
-  DATAGRAM("Datagram"),
-  WHOLE_FILE("Whole File"),
+  DATA_FORMAT("Data Format"),
   ;
 
   private final String label;

@@ -107,7 +107,7 @@ public class XmlParserConfig {
     }
     if (xmlRecordElement != null && !xmlRecordElement.isEmpty() && !XMLChar.isValidName(xmlRecordElement)) {
       issues.add(context.createConfigIssue(
-          DataFormatGroups.XML.name(),
+          Groups.XML.name(),
           "xmlRecordElement",
           DataFormatErrors.DATA_FORMAT_03,
           xmlRecordElement

@@ -25,7 +25,8 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum Groups implements Label {
-  KUDU("Kudu"), ADVANCED("Advanced");
+  KUDU("Kudu"),
+  ADVANCED("Advanced");
   private final String label;
 
   Groups(String label) {
