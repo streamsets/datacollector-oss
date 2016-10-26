@@ -256,7 +256,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
   DirectoryStream.Filter<Path> filterHiddenFiles = new DirectoryStream.Filter<Path>() {
     public boolean accept(Path path) throws IOException {
-      return !path.getFileName().startsWith(".");
+      return !path.getFileName().toString().startsWith(".");
     }
   };
 
