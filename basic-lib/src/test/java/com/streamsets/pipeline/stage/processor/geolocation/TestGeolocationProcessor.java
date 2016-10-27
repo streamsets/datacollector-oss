@@ -55,7 +55,7 @@ import java.util.Map;
 @RunWith(Parameterized.class)
 public class TestGeolocationProcessor {
 
-  @Parameterized.Parameters
+  @Parameterized.Parameters(name = "{0}")
   public static Collection<String> ipAddresses() {
     return ImmutableList.of("128.101.101.101", "2602:ae:14a5::");
   }
@@ -280,14 +280,14 @@ public class TestGeolocationProcessor {
             Utils.checkNotNull(result.get("intStringIpCityName"), "intStringIpCityName").getValue()
         );
         Assert.assertEquals("Minneapolis", Utils.checkNotNull(result.get("intIpCityName"), "intIpCityName").getValue());
+        Assert.assertEquals(
+          "Minneapolis",
+          Utils.checkNotNull(result.get("stringIpCityName"), "stringIpCityName").getValue()
+        );
       }
       Assert.assertEquals(
           "United States",
           Utils.checkNotNull(result.get("stringIpCountry"), "stringIpCountry").getValue()
-      );
-      Assert.assertEquals(
-          "Minneapolis",
-          Utils.checkNotNull(result.get("stringIpCityName"), "stringIpCityName").getValue()
       );
     } finally {
       runner.runDestroy();
@@ -523,4 +523,55 @@ public class TestGeolocationProcessor {
   private static byte[] ipAsStringToBytes(String ip) throws OnRecordErrorException {
     return ipAsIntToBytes(ipAsStringToInt(ip));
   }
+
+  @Test
+  public void testUnknownLocation() throws Exception {
+    List<GeolocationFieldConfig> configs = new ArrayList<>();
+    GeolocationFieldConfig config;
+    config = new GeolocationFieldConfig();
+    config.inputFieldName = "/ip";
+    config.outputFieldName = "/lat";
+    config.targetType = GeolocationField.LATITUDE;
+    configs.add(config);
+    config = new GeolocationFieldConfig();
+    config.inputFieldName = "/ip";
+    config.outputFieldName = "/lon";
+    config.targetType = GeolocationField.LONGITUDE;
+    configs.add(config);
+
+    List<GeolocationDatabaseConfig> dbConfigs = new ArrayList<>();
+    GeolocationDatabaseConfig dbConfig = new GeolocationDatabaseConfig();
+    dbConfig.geoIP2DBFile = cityDb.getAbsolutePath();
+    dbConfig.geoIP2DBType = GeolocationDBType.CITY;
+    dbConfigs.add(dbConfig);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(GeolocationDProcessor.class)
+      .addConfiguration("fieldTypeConverterConfigs", configs)
+      .addConfiguration("dbConfigs", dbConfigs)
+      .addConfiguration("missingAddressAction", GeolocationMissingAddressAction.IGNORE)
+      .addOutputLane("a").build();
+    runner.runInit();
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("ip", Field.create("157.5.65.83"));
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Map<String, Field> result = field.getValueAsMap();
+
+      Assert.assertTrue(result.containsKey("ip"));
+      Assert.assertTrue(result.containsKey("lat"));
+      Assert.assertTrue(result.containsKey("lon"));
+      Assert.assertNull(result.get("lat").getValue());
+      Assert.assertNull(result.get("lon").getValue());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
 }
