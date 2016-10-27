@@ -40,6 +40,7 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.lib.operation.OperationType;
 import org.apache.kudu.ColumnSchema;
 import org.apache.kudu.Schema;
 import org.apache.kudu.Type;
@@ -90,21 +91,17 @@ public class KuduTarget extends BaseTarget {
   private final String tableNameTemplate;
   private final KuduConfigBean configBean;
   private final List<KuduFieldMappingConfig> fieldMappingConfigs;
-  private final LoadingCache<String, KuduTable> kuduTables = CacheBuilder.newBuilder()
-      .maximumSize(500)
-      .expireAfterAccess(1, TimeUnit.HOURS)
-      .build(new CacheLoader<String, KuduTable>() {
-        @Override
-        public KuduTable load(String tableName) throws KuduException {
-          return kuduClient.openTable(tableName);
-        }
-      });
+  private final int tableCacheSize = 500;
+
+  private final LoadingCache<String, KuduTable> kuduTables;
 
   private ErrorRecordHandler errorRecordHandler;
   private ELVars tableNameVars;
   private ELEval tableNameEval;
   private KuduClient kuduClient;
   private KuduSession kuduSession;
+
+  private OperationType defaultOperation;
 
   public KuduTarget(KuduConfigBean configBean) {
     this.configBean = configBean;
@@ -113,6 +110,17 @@ public class KuduTarget extends BaseTarget {
     this.fieldMappingConfigs = configBean.fieldMappingConfigs == null
         ? Collections.<KuduFieldMappingConfig>emptyList()
         : configBean.fieldMappingConfigs;
+    this.defaultOperation = configBean.defaultOperation;
+
+    kuduTables = CacheBuilder.newBuilder()
+        .maximumSize(tableCacheSize)
+        .expireAfterAccess(1, TimeUnit.HOURS)
+        .build(new CacheLoader<String, KuduTable>() {
+          @Override
+          public KuduTable load(String tableName) throws KuduException {
+            return kuduClient.openTable(tableName);
+          }
+        });
   }
 
   @Override
@@ -150,6 +158,21 @@ public class KuduTarget extends BaseTarget {
     kuduClient = new KuduClient.KuduClientBuilder(kuduMaster).defaultOperationTimeoutMs(configBean.operationTimeout).build();
     if (issues.isEmpty()) {
       kuduSession = openKuduSession(issues);
+    }
+
+    // Check if SDC can reach the Kudu Master
+    try {
+      kuduClient.getTablesList();
+    } catch (KuduException ex) {
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.KUDU.name(),
+              KuduConfigBean.CONF_PREFIX + KUDU_MASTER,
+              Errors.KUDU_00,
+              ex.toString(),
+              ex
+          )
+      );
     }
 
     if (tableNameTemplate.contains(EL_PREFIX)) {
@@ -308,22 +331,23 @@ public class KuduTarget extends BaseTarget {
       }
       KuduRecordConverter recordConverter = kuduRecordConverter.get();
 
+      Record record = null;
       try {
         while (it.hasNext()) {
           try {
-            Record record = it.next();
+            record = it.next();
             Operation operation;
-            if (configBean.upsert) {
-              operation = table.newUpsert();
-            } else {
-              operation = table.newInsert();
-            }
+            Optional<String> optOperation = Optional.fromNullable(
+                record.getHeader().getAttribute(OperationType.SDC_OPERATION_TYPE)
+            );
+            String op = optOperation.or(defaultOperation.getLabel()).toUpperCase();
+            operation = getOperation(table, op);
             PartialRow row = operation.getRow();
-            recordConverter.convert(record, row);
+            recordConverter.convert(record, row, op);
             keyToRecordMap.put(operation.getRow().stringifyRowKey(), record);
             session.apply(operation);
-          } catch (OnRecordErrorException onRecordError) {
-            errorRecordHandler.onError(onRecordError);
+          } catch (StageException err) {
+            errorRecordHandler.onError(new OnRecordErrorException(record, err.getErrorCode(), err.getMessage()));
           }
         }
         List<RowError> rowErrors = Collections.emptyList();
@@ -340,17 +364,49 @@ public class KuduTarget extends BaseTarget {
             // duplicate row key
             Operation operation = error.getOperation();
             String rowKey = operation.getRow().stringifyRowKey();
-            Record record = keyToRecordMap.get(rowKey);
-            errorRecordHandler.onError(new OnRecordErrorException(record, Errors.KUDU_08, rowKey));
+            Record errorRecord = keyToRecordMap.get(rowKey);
+            errorRecordHandler.onError(new OnRecordErrorException(errorRecord, Errors.KUDU_08, rowKey));
           } else {
             throw new StageException(Errors.KUDU_03, error.toString());
           }
         }
-      } catch (Exception ex) {
+      } catch (KuduException ex) {
         LOG.error(Errors.KUDU_03.getMessage(), ex.toString(), ex);
-        throw throwStageException(ex);
+        errorRecordHandler.onError(new OnRecordErrorException(record, Errors.KUDU_03, ex.getMessage(), ex));
+      } catch (StageException ex) {
+        LOG.error(Errors.KUDU_03.getMessage(), ex.toString(), ex);
+        errorRecordHandler.onError(ex.getErrorCode(), ex.getMessage(), ex);
       }
     }
+  }
+
+  private Operation getOperation(KuduTable table, String op) throws StageException {
+    Operation operation = null;
+    try {
+      switch (OperationType.getTypeFromString(op)) {
+        case INSERT:
+          operation = table.newInsert();
+          break;
+        case UPSERT:
+          operation = table.newUpsert();
+          break;
+        case UPDATE:
+        case SELECT_FOR_UPDATE:
+        case AFTER_UPDATE:
+          operation = table.newUpdate();
+          break;
+        case DELETE:
+          operation = table.newDelete();
+          break;
+        default:
+          LOG.error("Operation {} not supported", op);
+          throw new StageException(Errors.KUDU_13, op);
+      }
+    } catch (UnsupportedOperationException ex){
+      // get here if op is unsupported operation
+      throw new StageException(Errors.KUDU_13, op);
+    }
+    return operation;
   }
 
   @Override

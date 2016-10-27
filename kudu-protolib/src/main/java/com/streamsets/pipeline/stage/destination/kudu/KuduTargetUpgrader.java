@@ -38,6 +38,9 @@ public class KuduTargetUpgrader implements StageUpgrader {
       case 2:
         upgradeV2ToV3(configs);
         break;
+      case 3:
+        upgradeV3ToV4(configs);
+        break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
@@ -97,5 +100,24 @@ public class KuduTargetUpgrader implements StageUpgrader {
 
     configs.removeAll(configsToRemove);
     configs.addAll(configsToAdd);
+  }
+
+  private void upgradeV3ToV4(List<Config> configs) {
+    List<Config> configsToRemove = new ArrayList<>();
+    List<Config> configsToAdd = new ArrayList<>();
+
+    for (Config config : configs) {
+      if (config.getName().equals(KuduConfigBean.CONF_PREFIX + "upsert")){
+        if ((Boolean)config.getValue()){
+          configsToAdd.add(new Config(KuduConfigBean.CONF_PREFIX + "defaultOperation", "UPSERT"));
+        } else {
+          configsToAdd.add(new Config(KuduConfigBean.CONF_PREFIX + "defaultOperation", "INSERT"));
+        }
+        configsToRemove.add(config);
+        break;
+      }
+    }
+    configs.addAll(configsToAdd);
+    configs.removeAll(configsToRemove);
   }
 }

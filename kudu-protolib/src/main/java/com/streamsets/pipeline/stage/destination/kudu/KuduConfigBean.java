@@ -25,6 +25,8 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.lib.operation.OperationType;
+import com.streamsets.pipeline.lib.operation.OperationTypeChooserValues;
 
 import java.util.List;
 
@@ -69,14 +71,15 @@ public class KuduConfigBean {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
-      label = "Enable Upsert",
-      description = "Select to enable upserts.",
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "",
+      label = "Default Operation",
+      description = "Default operation to perform if sdc.operation.type is not set in record header.",
       displayPosition = 40,
       group = "KUDU"
   )
-  public boolean upsert;
+  @ValueChooserModel(OperationTypeChooserValues.class)
+  public OperationType defaultOperation;
 
   // advanced tab
   @ConfigDef(

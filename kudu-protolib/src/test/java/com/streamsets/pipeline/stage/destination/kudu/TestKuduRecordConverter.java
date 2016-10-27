@@ -111,7 +111,7 @@ public class TestKuduRecordConverter {
 
   @Test
   public void testBasic() throws Exception {
-    kuduRecordConverter.convert(record, partialRow);
+    kuduRecordConverter.convert(record, partialRow, "INSERT");
     Assert.assertEquals(
       "[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 123, 0, 123, 0, 0, 0, 123, 0, 0, 0, 0, 0, 0, 0, 0, 0, -10, " +
         "66, 0, 0, 0, 0, 0, -64, 94, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0]",
@@ -127,7 +127,7 @@ public class TestKuduRecordConverter {
   public void testNotNullable() throws Exception {
     record.delete("/byte");
     try {
-      kuduRecordConverter.convert(record, partialRow);
+      kuduRecordConverter.convert(record, partialRow, "INSERT");
       Assert.fail();
     } catch (OnRecordErrorException ex) {
       Assert.assertEquals(Errors.KUDU_06, ex.getErrorCode());
@@ -138,7 +138,7 @@ public class TestKuduRecordConverter {
   public void testNumberFormatException() throws Exception {
     record.set("/long", Field.create("ABC"));
     try {
-      kuduRecordConverter.convert(record, partialRow);
+      kuduRecordConverter.convert(record, partialRow, "INSERT");
       Assert.fail();
     } catch (OnRecordErrorException ex) {
       Assert.assertEquals(Errors.KUDU_09, ex.getErrorCode());
@@ -148,6 +148,23 @@ public class TestKuduRecordConverter {
   @Test
   public void testNullButExists() throws Exception {
     record.set("/short1", Field.create((String)null));
-    kuduRecordConverter.convert(record, partialRow); // must not throw NPE
+    kuduRecordConverter.convert(record, partialRow, "INSERT"); // must not throw NPE
+  }
+
+  @Test
+  public void testUpdate() throws Exception {
+    record.set("/str", Field.create("val1"));
+    record.set("/long", Field.create((long)10));
+    record.set("/short1", Field.create(Field.Type.SHORT, null));
+    kuduRecordConverter.convert(record, partialRow, "UPDATE"); // must not throw NPE
+  }
+
+  @Test
+  public void testDelete() throws Exception {
+    record.set("/str", Field.create("primary key"));
+    record.set("/long", Field.create((long)10));
+    record.set("/short1", Field.create(Field.Type.SHORT, null));
+    kuduRecordConverter.convert(record, partialRow, "DELETE"); // must not throw NPE
+    Assert.assertEquals("(string str=primary key)", partialRow.stringifyRowKey());
   }
 }

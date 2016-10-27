@@ -35,7 +35,8 @@ public enum Errors implements ErrorCode {
   KUDU_09("Field '{}' does not match destination type '{}': {}"),
   KUDU_10("Column/field '{}' is type '{}' which doesn't have an associated StreamSets type"),
   KUDU_11("Stage not initialized correctly, cannot write batch"),
-  KUDU_12("Invalid table name template expression '{}': {}")
+  KUDU_12("Invalid table name template expression '{}': {}"),
+  KUDU_13("Operation not supported: {}"),
   ;
   private final String msg;
 

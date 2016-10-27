@@ -17,35 +17,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.streamsets.pipeline.lib.operation;
 
-package com.streamsets.pipeline.stage.destination.kudu;
+import com.streamsets.pipeline.api.Label;
 
-import com.streamsets.pipeline.api.ConfigDefBean;
-import com.streamsets.pipeline.api.ConfigGroups;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.configurablestage.DTarget;
+public enum OperationType implements Label {
+  INSERT("INSERT"),
+  UPDATE("UPDATE"),
+  DELETE("DELETE"),
+  UPSERT("UPSERT"),
+  SELECT_FOR_UPDATE("SELECT FOR UPDATE"),
+  BEFORE_UPDATE("BEFORE UPDATE"),
+  AFTER_UPDATE("AFTER UPDATE"),
+  ;
 
-@GenerateResourceBundle
-@StageDef(
-    version = 4,
-    label = "Kudu",
-    description = "Writes data to Kudu",
-    icon = "kudu.png",
-    privateClassLoader = true,
-    onlineHelpRefUrl = "index.html#Destinations/Kudu.html#task_c4x_tmh_4v",
-    upgrader = KuduTargetUpgrader.class
-)
-@ConfigGroups(Groups.class)
-public class KuduDTarget extends DTarget {
+  public static final String SDC_OPERATION_TYPE = "sdc.operation.type";
 
-  @ConfigDefBean
-  public KuduConfigBean kuduConfigBean;
+  private final String label;
 
-  @Override
-  protected Target createTarget() {
-    return new KuduTarget(kuduConfigBean);
+  OperationType(String label) {
+    this.label = label;
   }
 
+
+  @Override
+  public String getLabel() {
+    return label;
+  }
+
+  public static OperationType getTypeFromString(String op) throws UnsupportedOperationException {
+    for(OperationType type : OperationType.values()) {
+      if (type.getLabel().equals(op.toUpperCase()))
+        return type;
+    }
+    throw new UnsupportedOperationException("Operation " + op + " is not supported");
+  }
 }
