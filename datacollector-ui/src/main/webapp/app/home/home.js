@@ -193,7 +193,7 @@ angular
        * Delete Pipeline Configuration
        */
       deletePipelineConfig: function(pipelineInfo, $event) {
-        pipelineService.deletePipelineConfigCommand(pipelineInfo, $event)
+        pipelineService.deletePipelineConfigCommand(pipelineInfo, $rootScope.common.pipelineStatusMap, $event)
           .then(function(pipelines) {
             $scope.pipelines = pipelines;
             $scope.updateFilteredPipelines();
@@ -226,7 +226,7 @@ angular
 
         $rootScope.common.errors = [];
 
-        pipelineService.deletePipelineConfigCommand(selectedPipelineInfoList)
+        pipelineService.deletePipelineConfigCommand(selectedPipelineInfoList, $rootScope.common.pipelineStatusMap)
           .then(function(pipelines) {
             $scope.pipelines = pipelines;
             $scope.updateFilteredPipelines();

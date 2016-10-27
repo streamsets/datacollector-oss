@@ -267,16 +267,17 @@ angular.module('dataCollectorApp.common')
     };
 
     /**
-     * Remove Pipeline from pipelines list
+     * Remove Pipeline from pipelines list and pipelineStatusMap
      *
      * @param configInfo
      */
-    this.removePipeline = function(configInfo) {
+    this.removePipeline = function(configInfo, pipelineStatusMap) {
       var index = _.indexOf(self.pipelines, _.find(self.pipelines, function(pipeline){
         return pipeline.name === configInfo.name;
       }));
 
       self.pipelines.splice(index, 1);
+      delete pipelineStatusMap[configInfo.name];
     };
 
 
@@ -336,7 +337,7 @@ angular.module('dataCollectorApp.common')
     /**
      * Delete Pipeline Configuration Command Handler
      */
-    this.deletePipelineConfigCommand = function(pipelineInfo, $event) {
+    this.deletePipelineConfigCommand = function(pipelineInfo, pipelineStatusMap, $event) {
       var defer = $q.defer(),
         modalInstance = $modal.open({
           templateUrl: 'app/home/library/delete/delete.tpl.html',
@@ -357,10 +358,10 @@ angular.module('dataCollectorApp.common')
       modalInstance.result.then(function (configInfo) {
         if (_.isArray(configInfo)) {
           angular.forEach(configInfo, function(pipelineInfo) {
-            self.removePipeline(pipelineInfo);
+            self.removePipeline(pipelineInfo, pipelineStatusMap);
           });
         } else {
-          self.removePipeline(configInfo);
+          self.removePipeline(configInfo, pipelineStatusMap);
         }
 
         defer.resolve(self.pipelines);
