@@ -86,6 +86,13 @@ fi
 
 # Autodetect JAVA_HOME if not defined
 find_java() {
+JAVA8_HOME_CANDIDATES='\
+    /usr/java/jdk1.8* \
+    /usr/java/jre1.8* \
+    /usr/lib/jvm/j2sdk1.8-oracle \
+    /usr/lib/jvm/j2sdk1.8-oracle/jre \
+    /usr/lib/jvm/java-8-oracle*'
+
 JAVA7_HOME_CANDIDATES='\
     /usr/java/jdk1.7* \
     /usr/java/jre1.7* \
@@ -105,7 +112,7 @@ MISCJAVA_HOME_CANDIDATES='\
     /usr/lib/jvm/java-openjdk \
     /usr/lib/jvm/jre-openjdk'
 
-JAVA_HOME_CANDIDATES="$JAVA7_HOME_CANDIDATES $MISCJAVA_HOME_CANDIDATES $OPENJAVA7_HOME_CANDIDATES"
+JAVA_HOME_CANDIDATES="$JAVA8_HOME_CANDIDATES $JAVA7_HOME_CANDIDATES $MISCJAVA_HOME_CANDIDATES $OPENJAVA7_HOME_CANDIDATES"
 
 # attempt to find java
 if [ -z "$JAVA_HOME" ]
