@@ -54,7 +54,7 @@
           "FILE_AUTH_TYPE": "${http.authentication}",
           "LOGIN_MODULE": "${http.authentication.login.module}",
           "USE_LDAP_FILE_CONFIG": "${use.ldap.login.file}",
-          "DPM_TOKEN_FILE": "${dpm.token.path}",
+          "DPM_TOKEN_PATH": "${dpm.authToken.path}",
           "DPM_BASE_URL": "${dpm.base.url}",
           "DPM_USER": "${dpm.user}",
           "DPM_PASSWORD": "${dpm.password}",
@@ -110,7 +110,7 @@
             "args": ["dpm"],
             "environmentVariables": {
               "SDC_DATA": "${data.directory}",
-              "DPM_TOKEN_FILE": "${dpm.token.path}",
+              "DPM_TOKEN_PATH": "${dpm.authToken.path}",
               "DPM_BASE_URL": "${dpm.base.url}",
               "DPM_USER": "${dpm.user}",
               "DPM_PASSWORD": "${dpm.password}",
@@ -908,9 +908,10 @@
           "required": "false"
         },
         {
-          "name": "dpm.token.path",
-          "type": "string",
-          "default": "/etc/cm-sdc-dpm/applicationToken.txt",
+          "name": "dpm.authToken.path",
+          "type": "path",
+          "pathType": "localDataDir",
+          "default": "/etc/cm-sdc-dpm/",
           "label": "DPM token location",
           "description": "Location on each machine's local drive where DPM authentication token for SDC will be kept.",
           "required": "false"

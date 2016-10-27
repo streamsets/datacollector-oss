@@ -31,6 +31,9 @@ function log {
   echo "$timestamp: $1" 1>&2; #stderr
 }
 
+# Generated variables
+export DPM_TOKEN_FILE="${DPM_TOKEN_PATH}/applicationToken.txt"
+
 # Dump environmental variables
 log "CONF_DIR: $CONF_DIR"
 log "SDC_LOG: $SDC_LOG"
@@ -40,6 +43,7 @@ log "CONFIGURED_USERS: $CONFIGURED_USERS"
 log "AUTH_TYPE: $AUTH_TYPE"
 log "FILE_AUTH_TYPE: $FILE_AUTH_TYPE"
 log "LOGIN_MODULE: $LOGIN_MODULE"
+log "DPM_TOKEN_PATH: $DPM_TOKEN_PATH"
 log "DPM_TOKEN_FILE: $DPM_TOKEN_FILE"
 log "DPM_BASE_URL: $DPM_BASE_URL"
 log "DPM_USER: $DPM_USER"
@@ -236,7 +240,7 @@ function dpm_verify_config {
     log "Configuration 'dpm.base.url' is not properly set."
     die="true"
   fi
-  if [ -z "$DPM_TOKEN_FILE" ]; then
+  if [ -z "$DPM_TOKEN_PATH" ]; then
     log "Configuration 'dpm.token.path' is not properly set."
     die="true"
   fi
@@ -261,7 +265,7 @@ function dpm_verify_config {
 
 # Register auth token for this SDC instance in DPM
 function dpm {
-  if [[ -f $DPM_TOKEN_FILE ]]; then
+  if [[ -f "$DPM_TOKEN_FILE" ]]; then
     echo "DPM token already exists, skipping for now."
     return
   fi
