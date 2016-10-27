@@ -37,6 +37,7 @@ import com.maxmind.geoip2.model.ConnectionTypeResponse;
 import com.maxmind.geoip2.model.CountryResponse;
 import com.maxmind.geoip2.model.DomainResponse;
 import com.maxmind.geoip2.model.IspResponse;
+import com.maxmind.geoip2.record.Location;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -244,6 +245,7 @@ public class  GeolocationProcessor extends SingleLaneRecordProcessor {
 
         try {
           Map<GeolocationDBType, AbstractResponse> responses = responseCache.get(field);
+          Location location = null;
           switch (config.targetType) {
             // Multiple databases support country name and ISO code, so we need to figure out which ones are available
             case COUNTRY_NAME:
@@ -274,11 +276,13 @@ public class  GeolocationProcessor extends SingleLaneRecordProcessor {
               break;
             case LATITUDE:
               cityResp = (CityResponse) responses.get(GeolocationDBType.CITY);
-              record.set(config.outputFieldName, Field.create(cityResp.getLocation().getLatitude()));
+              location = cityResp.getLocation();
+              record.set(config.outputFieldName, Field.create(Field.Type.DOUBLE, location == null ? null : location.getLatitude()));
               break;
             case LONGITUDE:
               cityResp = (CityResponse) responses.get(GeolocationDBType.CITY);
-              record.set(config.outputFieldName, Field.create(cityResp.getLocation().getLongitude()));
+              location = cityResp.getLocation();
+              record.set(config.outputFieldName, Field.create(Field.Type.DOUBLE, location == null ? null : location.getLongitude()));
               break;
             case IS_ANONYMOUS:
               AnonymousIpResponse anonResp = (AnonymousIpResponse) responses.get(GeolocationDBType.ANONYMOUS_IP);
