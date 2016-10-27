@@ -20,8 +20,8 @@
                 properties</indexterm></indexterm><indexterm>HDFS properties<indexterm>Hadoop FS
                     destination</indexterm></indexterm>You can configure the Hadoop FS destination
             to use individual HDFS properties or HDFS configuration files:<draft-comment
-                author="Loretta">Make sure changes go into the origin version of this
-                file.</draft-comment><dl>
+                author="Loretta">Make sure changes go into the origin version of this file and HDFS
+                File Metadata executor.</draft-comment><dl>
                 <dlentry>
                     <dt>HDFS configuration files</dt>
                     <dd>You can use the following HDFS configuration files with the Hadoop FS

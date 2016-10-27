@@ -15,8 +15,10 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_j3r_gcv_sx">
  <title>JDBC Query Executor</title>
- <shortdesc></shortdesc>
  <conbody>
-  <p></p>
+  <p><indexterm>JDBC Query
+                    executor<indexterm>overview</indexterm></indexterm><indexterm>executors<indexterm>JDBC
+                    Query</indexterm></indexterm>JDBC Query executor connects thorugh JDBC to a
+            database and performs a user-defined query each time it receives an event record. </p>
  </conbody>
 </concept>

@@ -12,18 +12,15 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
-<task id="task_m3v_5lk_fx">
-    <title>Configuring an HDFS Metadata Executor</title>
-    <shortdesc/>
-    <taskbody>
-        <context>
-            <p></p>
-        </context>
-        <steps>
-            <step>
-                <cmd></cmd>
-            </step>
-        </steps>
-    </taskbody>
-</task>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_uwh_vck_rx">
+ <title>Changing the File Name or Location</title>
+ <conbody>
+        <p>You can use Hive File Metadata executor to change file names and locations after they
+            close. </p>
+        <p>
+            <draft-comment author="Loretta">add info, examples on how to do it with the new EL when
+                they're in.</draft-comment>
+        </p>
+    </conbody>
+</concept>

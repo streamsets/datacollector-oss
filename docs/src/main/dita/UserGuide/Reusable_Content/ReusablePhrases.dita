@@ -64,8 +64,8 @@
                   except...</draft-comment>
             <p><ph id="BasicNotProcessor">except the Groovy Evaluator, Jython Evaluator, HBase Lookup, and Redis Lookup.</ph></p>
             <p>
-                  <draft-comment author="Loretta">List of destinations the basic stage library. Used
-                        in BasicInstall_Overview and BasicInstall-LibList. </draft-comment>
+                  <draft-comment author="Loretta">List of destinations that are part of the Core
+                        installation. Used in CoreInstall_Overview and CoreInstall-LibList. </draft-comment>
             </p>
             <p>
                   <ul id="BasicDestinations">
@@ -75,6 +75,12 @@
                         <li>Trash</li>
                   </ul>
             </p>
+            <p>
+                  <draft-comment author="Loretta">Executor in the Core installation. Used in
+                        CoreInstall_Overview and CoreInstall-LibList. </draft-comment>
+            </p>
+            <p id="CoreExecutor">The core installation also includes the HDFS Metadata executor.</p>
+            <p/>
             <p>
                   <draft-comment author="Loretta">KafkaSecure - used in KConsumer &amp; Producer
                         encryption areas. Original value: Kafka 0.9.0.0</draft-comment>
@@ -636,16 +642,15 @@
                   </dl>
             </p>
             <p>
-                  <draft-comment author="Loretta">S3origin-CopyMove1 and 2 used in Amazon S3 origin
-                        Configuring.</draft-comment>
+                  <draft-comment author="Loretta">Amazon <uicontrol>S3origin-CopyMove1</uicontrol>
+                        and 2 used in Amazon S3 origin Configuring.</draft-comment>
             </p>
             <p id="S3origin-CopyMove1">You can copy or move the object to another prefix or bucket.
                   When you use another prefix, enter the prefix. When you use another bucket, enter
                   a prefix and bucket.</p>
             <p id="S3origin-CopyMove2">Copying the object leaves the original object in place. </p>
-            <p>
-                  <draft-comment author="Loretta"><uicontrol>ul-S3-custSSE</uicontrol> is used by
-                        Amazon S3 origin and destination in the SSE topic:</draft-comment>
+            <p>                  <draft-comment author="Loretta"><uicontrol>ul-S3-custSSE</uicontrol> is used by
+                  Amazon S3 origin and destination in the SSE topic:</draft-comment>
             </p>
             <p>
                   <ul id="ul-S3-custSSE">
@@ -654,6 +659,57 @@
                               1321</li>
                   </ul>
             </p>
+            <p></p>
+            
+            <p>
+                  <draft-comment author="Loretta"><uicontrol>O-EventHandling-overview</uicontrol> -
+                        used by Directory and File Tail</draft-comment>
+            </p>
+            <p id="O-EventHandling-overview">The origin can also generate events for an event
+                  handling stream. For more information about event handling, see Event Handling on
+                  page 80. </p>
+            <p>
+                  <draft-comment author="Loretta">Event Generation topic with multiple ph and p used
+                        by Directory and File Tail. </draft-comment>
+            </p>
+            <p><ph id="O-ph-EventGen1">can generate events that you can use in an event handling
+                        stream. When you enable event generation, the origin generates event records
+                        each time the origin starts or completes reading a file.</ph>
+            </p>
+            <p><ph id="O-ph-EventGen-FileStorage">events can be used with a destination to store
+                        file completion information for later uses, such as a processing audit. For
+                        an example, see <xref
+                              href="../Event_Handling/CaseStudy-EventStorage.dita#concept_ocb_nnl_px"
+                        />.</ph></p>
+            <p id="O-EventGen-xref">For more information about event handling, see <xref
+                        href="../Event_Handling/EventHandling-Overview.dita#concept_cph_5h4_lx"
+                  />.</p>
+            <p>
+                  <draft-comment author="Loretta">Event Generation topic.  Hadoop FS and MapR FS use
+                        ph and ul. Local FS uses ph and some bullets in the list.</draft-comment>
+            </p>
+            <p><ph id="D-ph-EventGen1">can generate events that you can use in an event handling
+                        stream. When you enable event generation, the destination generates event
+                        records each time the destination closes a file or completes streaming a
+                        whole file. </ph></p>
+            <p>
+                  <ul id="D-ul-Event-UseCases">
+                        <li id="D-li-Event-FilePerms">With the HDFS File Metadata executor to move
+                              or change permissions on closed files. <p>For an example, see <xref
+                                          href="../Event_Handling/CaseStudy-FileManagement.dita#concept_d1q_xl4_lx"
+                                    />.</p></li>
+                        <li>With the MapReduce executor to convert completed Avro files to Parquet.
+                                    <p>For an example, see <xref
+                                          href="../Event_Handling/CaseStudy-Parquet.dita#concept_jkm_rnz_kx"
+                                    />.</p></li>
+                        <li id="D-li-Event-FileStore">With a destination to store file completion
+                              information for later uses, such as a processing audit. <p>For an
+                                    example, see <xref
+                                          href="../Event_Handling/CaseStudy-EventStorage.dita#concept_ocb_nnl_px"
+                                    />.</p></li>
+                  </ul>
+            </p>
+            <p/>
             <p>
                   <draft-comment author="Loretta">JDBC Consumer and Oracle CDC use these in the
                         overview:</draft-comment>
@@ -1594,6 +1650,94 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                         </dlentry>
                   </dl>
             </p>
+            <p>
+                  <draft-comment author="Loretta">Event record DL for Hadoop FS, Local FS, MapR
+                        FS</draft-comment>
+            </p>
+            <p id="D-DL-EventRecords">The destination can generate the following types of event records:<dl>
+                        <dlentry>
+                              <dt>File closure</dt>
+                              <dd>The destination generates a file closure event record when it
+                                    closes an output file. </dd>
+                              <dd>File closure event records have the <codeph>type</codeph> record
+                                    header attribute set to <codeph>file-closed</codeph> and include
+                                    the following fields:<table frame="all" rowsep="1" colsep="1"
+                                          id="table_dh2_5gc_rx">
+                                          <tgroup cols="2">
+                                                <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                                                <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                                                <thead>
+                                                  <row>
+                                                  <entry>Field</entry>
+                                                  <entry>Description</entry>
+                                                  </row>
+                                                </thead>
+                                                <tbody>
+                                                  <row>
+                                                  <entry>filepath</entry>
+                                                  <entry>Absolute path to the closed file. </entry>
+                                                  </row>
+                                                  <row>
+                                                  <entry>filename</entry>
+                                                  <entry>File name of the closed file.</entry>
+                                                  </row>
+                                                  <row>
+                                                  <entry>length</entry>
+                                                  <entry>Size of the closed file in bytes.</entry>
+                                                  </row>
+                                                </tbody>
+                                          </tgroup>
+                                    </table></dd>
+                        </dlentry>
+                        <dlentry>
+                              <dt>Whole file processed</dt>
+                              <dd>The destination generates an event record when it completes
+                                    streaming a whole file. Whole file event records have the
+                                          <codeph>type</codeph> record header attribute set to
+                                          <codeph>wholeFileProcessed</codeph> and </dd>
+                              <dd>have the following fields:<table frame="all" rowsep="1" colsep="1"
+                                          id="table_eh2_5gc_rx">
+                                          <tgroup cols="2">
+                                                <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                                                <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                                                <thead>
+                                                  <row>
+                                                  <entry>Field</entry>
+                                                  <entry>Description</entry>
+                                                  </row>
+                                                </thead>
+                                                <tbody>
+                                                  <row>
+                                                  <entry>sourceFileInfo</entry>
+                                                  <entry>A map of attributes about the original
+                                                  whole file that was processed. The attributes
+                                                  include:<ul id="ul_nbd_cmc_rx">
+                                                  <li>size - Size of the whole file. <draft-comment
+                                                  author="Loretta">in bytes? Or depends on
+                                                  origin?</draft-comment></li>
+                                                  </ul><p>Additional attributes depend on the
+                                                  information provided by the origin system.
+                                                  </p></entry>
+                                                  </row>
+                                                  <row>
+                                                  <entry>targetFileInfo</entry>
+                                                  <entry>A map of attributes about the whole file
+                                                  written to the destination. The attributes
+                                                  include:<ul id="ul_kx1_klc_rx">
+                                                  <li>path - An absolute path the processed whole
+                                                  file.</li>
+                                                  </ul><p>The field can also include the following
+                                                  attributes when the origin is configure to verify
+                                                  checksums:<ul id="ul_lx1_klc_rx">
+                                                  <li>checksum </li>
+                                                  <li>checksumAlgorithm</li>
+                                                  </ul></p></entry>
+                                                  </row>
+                                                </tbody>
+                                          </tgroup>
+                                    </table></dd>
+                        </dlentry>
+                  </dl></p>
             <p>
                   <draft-comment author="Loretta">ul-KERBprops - Kerberos properties in Data
                         Collector config file:</draft-comment>

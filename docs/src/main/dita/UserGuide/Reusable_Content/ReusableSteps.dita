@@ -178,6 +178,63 @@
             </step>
             <step>
                 <cmd>
+                    <draft-comment author="Loretta"><uicontrol>1stStepEventHandling</uicontrol> -
+                        Use this step for event handling origins.</draft-comment>
+                </cmd>
+            </step>
+            <step id="O-1stStep-Event">
+                <cmd>In the Properties panel, on the <wintitle>General</wintitle> tab, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_f5l_np2_px">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>General Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Name</entry>
+                                    <entry>Stage name.</entry>
+                                </row>
+                                <row>
+                                    <entry>Description</entry>
+                                    <entry>Optional description.</entry>
+                                </row>
+                                <row>
+                                    <entry>Generate Events <draft-comment author="Loretta">make sure
+                                            this is right, not Produce
+                                        Events</draft-comment></entry>
+                                    <entry>Generates event records when events occur. Use for event
+                                        handling. <xref
+                                            href="../Event_Handling/EventHandling-Overview.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_plp_tp2_px"/></xref></entry>
+                                </row>
+                                <row>
+                                    <entry>On Record Error <xref
+                                            href="../Pipeline_Design/ErrorHandling-Stage.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_g5l_np2_px"/></xref></entry>
+                                    <entry>Error record handling for the stage: <ul
+                                            id="ul_h5l_np2_px">
+                                            <li>Discard - Discards the record.</li>
+                                            <li>Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+                                            <li>Stop Pipeline - Stops the pipeline. </li>
+                                        </ul></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
                     <draft-comment author="Loretta"><uicontrol>1stStepErrorHandling</uicontrol> -
                         Use this step for origins that are not cluster origins. Standalone
                         only</draft-comment>
@@ -2178,7 +2235,8 @@
                     <draft-comment author="Loretta" id="1stStageLib-ReqField-ErrorH"
                             ><uicontrol>1stStep-StageLib-ReqField-EHandling</uicontrol> - Use this
                         step for destinations with stage library, req fields, and error handling. –
-                        Some rows are used by Hive Metastore.</draft-comment>
+                        Some rows are used by Hive Metastore. Also using these for executors that
+                        don't have event handling.</draft-comment>
                 </cmd>
             </step>
             <step id="1stStep-StageLib-ReqField-EHandling">
@@ -2234,6 +2292,88 @@
                                                 id="image_lqj_pyn_lw"/></xref></entry>
                                     <entry>Error record handling for the stage: <ul
                                             id="ul_fqw_4fy_kt">
+                                            <li>Discard - Discards the record.</li>
+                                            <li>Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+                                            <li>Stop Pipeline - Stops the pipeline.</li>
+                                        </ul></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta"><uicontrol>1stStep-D-E-EventHandling</uicontrol>
+                        - Used by MapR Jobs executor, HDFS Metadata executor, Hadoop FS
+                        destination.</draft-comment>
+                </cmd>
+            </step>
+            <step id="1stStep-D-E-EventHandling">
+                <cmd>In the Properties panel, on the <wintitle>General</wintitle> tab, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_wsl_2rx_mx">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>General Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Name</entry>
+                                    <entry>Stage name.</entry>
+                                </row>
+                                <row>
+                                    <entry>Description</entry>
+                                    <entry>Optional description.</entry>
+                                </row>
+                                <row>
+                                    <entry>Stage Library</entry>
+                                    <entry>Library version that you want to use. </entry>
+                                </row>
+                                <row>
+                                    <entry>Produce Events <xref
+                                            href="../Event_Handling/EventGenerationStages.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_wrq_mrx_mx"/></xref></entry>
+                                    <entry>Generates event records when events occur. Use for event
+                                        handling. <xref
+                                            href="../Event_Handling/EventHandling-Overview.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_l15_ft2_px"/></xref></entry>
+                                </row>
+                                <row>
+                                    <entry>Required Fields <xref
+                                            href="../Pipeline_Design/RequiredFields.dita#concept_dnj_bkm_vq">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_xsl_2rx_mx"/></xref></entry>
+                                    <entry>Fields that must include data to be passed into the
+                                        stage. <note outputclass="" type="tip">You might include
+                                            fields that the stage uses.</note></entry>
+                                </row>
+                                <row>
+                                    <entry>Preconditions <xref
+                                            href="../Pipeline_Design/Preconditions.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_ysl_2rx_mx"/></xref></entry>
+                                    <entry>Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <uicontrol>Add</uicontrol> to create additional
+                                        preconditions. </entry>
+                                </row>
+                                <row>
+                                    <entry>On Record Error <xref
+                                            href="../Pipeline_Design/ErrorHandling-Stage.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_zsl_2rx_mx"/></xref></entry>
+                                    <entry>Error record handling for the stage: <ul
+                                            id="ul_atl_2rx_mx">
                                             <li>Discard - Discards the record.</li>
                                             <li>Send to Error - Sends the record to the pipeline for
                                                 error handling.</li>

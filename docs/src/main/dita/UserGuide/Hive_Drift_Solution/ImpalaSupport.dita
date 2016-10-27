@@ -18,13 +18,12 @@
  <conbody>
   <p><indexterm>Hive Drift Solution<indexterm>Apache Impala support</indexterm></indexterm>Data
             written by the Hive Drift Solution is compatible with Impala.</p>
-        <p>The Hive Drift Solution currently does not invalidate the Impala metadata cache. To
-            capture metadata changes in the Hive Metastore and refresh the Impala metadata cache,
-            manually run the Impala Invalidate Metadata command.</p>
-        <p>
-            <note type="tip">You can add a data rule alert on the link to the Hive Metastore
-                destination to let you know when metadata records are passed to the Hive Metastore.
-            </note>
-        </p>
+        <p>Impala requires using the Invalidate Metadata command to refresh the Impala metadata
+            cache each time changes occur in the Hive Metastore. To automatically refresh the Impala
+            metadata cache, add an event handling branch to your pipeline. For details, see <xref
+                href="../Event_Handling/CaseStudy-Impala.dita#concept_szz_xwm_lx"/>.</p>
+        <p>You can alternatively run the Impala Invalidate Metadata command manually. To be notified
+            of when to run the command, add a data rule alert on the link to the Hive Metastore
+            destination to let you know when metadata records are passed to the Hive Metastore. </p>
  </conbody>
 </concept>

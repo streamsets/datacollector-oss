@@ -23,7 +23,7 @@
         </context>
         <steps id="steps_ljw_44d_br">
             <step
-                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-StageLib-ReqField-EHandling">
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-D-E-EventHandling">
                 <cmd/>
             </step>
             
@@ -58,7 +58,7 @@
                                             /> user to connect to HDFS.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Kerberos Authentication<xref
+                                    <entry>Kerberos Authentication <xref
                                             href="HadoopFS-Kerberos.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 placement="inline" id="image_a5x_jzn_vs"

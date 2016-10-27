@@ -14,9 +14,24 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_kjw_llk_fx">
- <title>Hive Query</title>
- <shortdesc></shortdesc>
+ <title>Hive Query Executor</title>
  <conbody>
-  <p></p>
+  <p><indexterm>Hive Query
+                    executor<indexterm>overview</indexterm></indexterm><indexterm>executors<indexterm>Hive
+                    Query</indexterm></indexterm>The Hive Query executor connects to HDFS and
+            performs a user-defined Hive or Thrift query each time it receives an event record. Use
+            the Hive Query executor as part of an event handling stream to perform event-driven
+            queries in Hive or Impala.</p>
+        <p>For example, you can use Hive Query executor to perform the Invalidate Metadata query for
+            Impala as part of the Hive Drift Solution. For more information, see <xref
+                href="../Event_Handling/CaseStudy-Impala.dita#concept_szz_xwm_lx"/>.<draft-comment
+                author="Loretta">Should I be more specific about particular use cases? No, I think.
+            </draft-comment></p>
+        <p>When you configure the Hive Query executor, you configure JDBC connection information to
+            Hive, optionally add additional HDFS configuration properties that you want to use, and
+            the Hive or Impala query that you want to run.</p>
  </conbody>
+    <related-links>
+        <link href="../Hive_Drift_Solution/HiveDrift-Overview.dita#concept_phk_bdf_2w"/>
+    </related-links>
 </concept>

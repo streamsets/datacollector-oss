@@ -35,6 +35,10 @@
    <topicref href="../Destinations/AmazonS3-PartitionPrefix.dita">
     <topicref href="../Destinations/AmazonS3-TimeBasis.dita"/>
    </topicref>
+   <topicref href="../Destinations/AmazonS3-EventGeneration.dita">
+    <topicref href="../Destinations/AmazonS3-EventRecords.dita"/>
+   </topicref>
+   <topicref href="../Destinations/AmazonS3-DataFormat.dita"/>
    <topicref href="../Destinations/AmazonS3-ServerSideEncryption.dita"/>
    <topicref href="../Destinations/AmazonS3-DataFormat.dita"/>
    <topicref href="../Destinations/AmazonS3-Configuring.dita"/>
@@ -71,6 +75,9 @@
    <topicref href="../Destinations/HadoopFS-IdleTimeout.dita"/>
    <topicref href="../Destinations/HadoopFS-DataFormat.dita"/>
    <topicref href="../Destinations/HadoopFS-AzureHDInsight.dita"/>
+   <topicref href="../Destinations/HadoopFS-EventGeneration.dita">
+    <topicref href="../Destinations/HadoopFS-EventRecords.dita"/>
+   </topicref>
    <topicref href="../Destinations/HadoopFS-Kerberos.dita"/>
    <topicref href="../Destinations/HadoopFS-HDFSUser-dest.dita"/>
    <topicref href="../Destinations/HadoopFS-HadoopProperties-dest.dita"/>
@@ -95,6 +102,9 @@
    <topicref href="../Destinations/HiveMetastore-TableGen.dita"/>
    <topicref href="../Destinations/HiveMetastore-Cache.dita">
     <topicref href="../Reusable_Content/HiveMeta-CacheEvict.dita"/>
+   </topicref>
+   <topicref href="../Destinations/HiveMetastore-EventGeneration.dita">
+    <topicref href="../Destinations/HiveMetastore-EventRecords.dita"/>
    </topicref>
    <topicref href="../Destinations/HiveMetastore-Kerberos.dita"/>
    <topicref href="../Destinations/HiveMetastore-HiveProps.dita"/>
@@ -167,6 +177,9 @@
    <topicref href="../Destinations/LocalFS-TimeBasis.dita"/>
    <topicref href="../Destinations/LocalFS-LateRecordHandling.dita"/>
    <topicref href="../Destinations/LocalFS-IdleTimeout.dita"/>
+   <topicref href="../Destinations/LocalFS-EventGeneration.dita">
+    <topicref href="../Destinations/LocalFS-EventRecords.dita"/>
+   </topicref>
    <topicref href="../Destinations/LocalFS-DataFormat.dita"/>
    <topicref href="../Destinations/LocalFS-Configuring.dita"/>
   </topicref>
@@ -189,6 +202,9 @@
    <topicref href="../Destinations/MapRFS-TimeBasis.dita"/>
    <topicref href="../Destinations/MapRFS-LateRecordHandling.dita"/>
    <topicref href="../Destinations/MapRFS-IdleTimeout.dita"/>
+   <topicref href="../Destinations/MapRFS-EventGeneration.dita">
+    <topicref href="../Destinations/MapRFS-EventRecords.dita"/>
+   </topicref>
    <topicref href="../Destinations/MapRFS-DataFormats.dita"/>
    <topicref href="../Destinations/MapRFS-Kerberos.dita"/>
    <topicref href="../Destinations/MapRFS-HDFSUser.dita"/>

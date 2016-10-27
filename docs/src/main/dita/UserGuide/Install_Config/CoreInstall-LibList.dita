@@ -97,7 +97,9 @@
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/BasicDestinations"
                                         id="ul_bps_cqh_cw">
                                         <li/>
-                                    </ul></p></entry>
+                                    </ul></p><p
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/CoreExecutor"
+                                /></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-cassandra_3-lib</entry>
@@ -160,10 +162,10 @@
                                 <ul id="ul_dp2_ghh_cw">
                                     <li>Hadoop FS origin for cluster mode pipelines </li>
                                     <li>HBase Lookup processor</li>
+                                    <li>Hive Metadata processor</li>
                                     <li>Flume destination </li>
                                     <li>Hadoop FS destination </li>
                                     <li>HBase destination </li>
-                                    <li>Hive Metadata processor</li>
                                     <li>Hive Metastore destination</li>
                                     <li>Hive Streaming destination</li>
                                     <li>Solr destination</li>
@@ -178,10 +180,10 @@
                                 <ul id="ul_oxh_kfh_cw">
                                     <li>Hadoop FS origin for cluster mode pipelines </li>
                                     <li>HBase Lookup processor</li>
+                                    <li>Hive Metadata processor</li>
                                     <li>Flume destination </li>
                                     <li>Hadoop FS destination </li>
                                     <li>HBase destination </li>
-                                    <li>Hive Metadata processor</li>
                                     <li>Hive Metastore destination</li>
                                     <li>Hive Streaming destination</li>
                                     <li>Solr destination</li>
@@ -196,13 +198,16 @@
                                 <ul id="ul_qlz_mpx_1x">
                                     <li>Hadoop FS origin for cluster mode pipelines </li>
                                     <li>HBase Lookup processor</li>
+                                    <li>Hive Metadata processor</li>
                                     <li>Flume destination </li>
                                     <li>Hadoop FS destination </li>
                                     <li>HBase destination </li>
-                                    <li>Hive Metadata processor</li>
                                     <li>Hive Metastore destination</li>
                                     <li>Hive Streaming destination</li>
                                     <li>Solr destination</li>
+                                    <li>HDFS Metadata executor</li>
+                                    <li>Hive Query executor</li>
+                                    <li>MapReduce executor</li>
                                 </ul>
                             </entry>
                         </row>
@@ -385,6 +390,9 @@
                                         <li>Hive Metastore destination</li>
                                         <li>Hive Streaming destination</li>
                                         <li>Kafka Producer destination</li>
+                                        <li>HDFS Metadata executor</li>
+                                        <li>Hive Query executor</li>
+                                        <li>MapReduce executor</li>
                                     </ul></p></entry>
                         </row>
                         <row>

@@ -43,6 +43,8 @@
         <li>MapR DB destination</li>
         <li>MapR FS destination</li>
         <li>Solr destination</li>
+        <li>HDFS File Metadata executor</li>
+        <li>MapReduce executor</li>
       </ul></p>
   <p>To enable Kerberos authentication, perform the following steps:<ol id="ol_rnb_rtl_xs">
         <li>Configure <ph

@@ -19,8 +19,7 @@
         <context><indexterm>File Tail origin<indexterm>configuring</indexterm></indexterm>Configure
             a File Tail origin to read data as it is written to a file. </context>
         <steps id="steps_cfd_j2w_yq">
-            <step
-                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStepErrorHandling">
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-1stStep-Event">
                 <cmd/>
             </step>
             <step>

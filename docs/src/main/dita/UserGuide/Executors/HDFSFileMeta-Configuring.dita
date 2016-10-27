@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="task_m3v_5lk_fx">
+    <title>Configuring an HDFS File Metadata Executor</title>
+    <taskbody>
+        <context>
+            <p><indexterm>HDFS File Metadata
+                executor<indexterm>configuring</indexterm></indexterm>Configure an HDFS File
+                Metadata executor to change file metadata for output files closed by the Hadoop FS,
+                Local FS, or MapR FS destinations.</p>
+        </context>
+        <steps>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-D-E-EventHandling">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>On the <uicontrol>HDFS</uicontrol> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_sp4_dwk_rx">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>HDFS Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>
+                                        <p>Hadoop FS URI </p>
+                                    </entry>
+                                    <entry>
+                                        <p>URI to use to access files:<ul id="ul_py3_ngs_rx">
+                                                <li>
+                                                  <p>To access files in HDFS, enter the HDFS URI to
+                                                  use.</p>
+                                                </li>
+                                                <li>To access files in a local directory,
+                                                  enter:<codeblock>file:///</codeblock></li>
+                                                <li>To connect to MapR: <ul id="ul_pxj_pgs_rx">
+                                                  <li>To connect to a specific MapR cluster, enter
+                                                  <codeblock>maprfs:///mapr/&lt;cluster name></codeblock>For
+                                                  example:
+                                                  <codeph>maprfs:///mapr/my.cluster.com/</codeph></li>
+                                                  <li>To use the first entry defined in the
+                                                  $MAPR_HOME/conf/mapr-clusters.conf file,
+                                                  enter:<codeblock> maprfs:///</codeblock></li>
+                                                  </ul></li>
+                                            </ul></p>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>
+                                        <p>HDFS User </p>
+                                    </entry>
+                                    <entry>
+                                        <p>The HDFS user to use to connect to HDFS or MapR FS. When
+                                            using this property, make sure the destination system is
+                                            configured appropriately. For information about HDFS,
+                                            see <xref
+                                                href="../Destinations/HadoopFS-HDFSUser-dest.dita#concept_u4h_lwt_ls"
+                                            />. For information about MapR FS, see <xref
+                                                href="../Destinations/MapRFS-HDFSUser.dita#concept_kls_lqc_fv"
+                                            />.</p>
+                                        <p>By default, the pipeline uses the Data Collector user to
+                                            connect to the destination system. </p>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>
+                                        <p>Kerberos Authentication <xref href="HDFSFileMeta-Kerberos.dita">
+                                                <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="10" placement="inline"
+                                                  id="image_kqm_3fj_fv"/></xref></p>
+                                    </entry>
+                                    <entry>
+                                        <p>Uses Kerberos credentials to connect to the destination
+                                            system. </p>
+                                        <p>When selected, uses the Kerberos principal and keytab
+                                            defined in the Data Collector configuration file,
+                                            $SDC_CONF/sdc.properties. </p>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>
+                                        <p>Hadoop FS Configuration Directory <xref
+                                                href="HDFSFileMeta-HDFSProperties.dita">
+                                                <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="10" placement="inline"
+                                                  id="image_gtq_n3s_rx"/></xref></p>
+                                    </entry>
+                                    <entry>
+                                        <p>Location of the HDFS configuration files. </p>
+                                        <p>For a Cloudera Manager installation, enter hadoop-conf.
+                                            For all other installations, use a directory or symlink
+                                            within the Data Collector resources directory. </p>
+                                        <p>You can use the following files with the HDFS File
+                                            Metadata executor:<ul id="ul_akq_whs_rx">
+                                                <li>core-site.xml</li>
+                                                <li>hdfs-site.xml </li>
+                                            </ul></p>
+                                        <p>
+                                            <note>Properties in the configuration files are
+                                                overridden by individual properties defined in the
+                                                stage.</note>
+                                        </p>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Hadoop FS Configuration</entry>
+                                    <entry>
+                                        <p>Additional HDFS properties to use. </p>
+                                        <p>To add properties, click <uicontrol>Add</uicontrol> and
+                                            define the property name and value. Use the property
+                                            names and values as expected by the destination system.
+                                        </p>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Tasks</wintitle> tab, configure the following properties as
+                    needed:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_tcf_bhj_rx">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Task Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Input File <xref
+                                            href="HDFSFileMeta-InputFile.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_xsl_2rx_mx"/></xref></entry>
+                                    <entry>Expression that represents the full path to the file.
+                                            <p>By default, the property uses
+                                            ${record:value('/file_path')}, which processes data in
+                                            the file_path field. The Hadoop FS, Local FS, and MapR
+                                            FS destinations all generate event records the file name
+                                            and path of the files that they close in a file_path
+                                            field.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Move File</entry>
+                                    <entry>Select to move the file.</entry>
+                                </row>
+                                <row>
+                                    <entry>New Location</entry>
+                                    <entry>New location for the file. </entry>
+                                </row>
+                                <row>
+                                    <entry>Rename</entry>
+                                    <entry>Select to rename the file.</entry>
+                                </row>
+                                <row>
+                                    <entry>New Name</entry>
+                                    <entry>New name for the file. </entry>
+                                </row>
+                                <row>
+                                    <entry>Change Ownership <xref href="HDFSFileMeta-Permissions.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_o44_lqk_rx"/></xref></entry>
+                                    <entry>Select to change the file owner or group. </entry>
+                                </row>
+                                <row>
+                                    <entry>New Owner</entry>
+                                    <entry>The user name to become the new owner of the file. </entry>
+                                </row>
+                                <row>
+                                    <entry>New Group</entry>
+                                    <entry>The group to become the new group owner of the file. </entry>
+                                </row>
+                                <row>
+                                    <entry>Set Permissions <xref href="HDFSFileMeta-Permissions.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_ajs_lqk_rx"/></xref></entry>
+                                    <entry>Select to set access permissions in an octal or symbolic
+                                        format.</entry>
+                                </row>
+                                <row>
+                                    <entry>New Permissions</entry>
+                                    <entry>Access permissions in octal or symbolic format.</entry>
+                                </row>
+                                <row>
+                                    <entry>Set ACLs <xref href="HDFSFileMeta-Permissions.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_yf1_mqk_rx"/></xref></entry>
+                                    <entry>Select to define ACL permissions. </entry>
+                                </row>
+                                <row>
+                                    <entry>New ACLs</entry>
+                                    <entry>Define ACL permissions for the owner, group, and other.
+                                        You can optionally define other user and group permissions.
+                                        For details, see <xref
+                                            href="HDFSFileMeta-Permissions.dita#concept_zr1_5ck_rx"
+                                        />.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

@@ -28,8 +28,12 @@
   <p>The data from the Stream Selector default stream and all data from Value Replacer pass to
    Expression Evaluator for further processing, but in no particular order and with no record
    merging.</p>
-  <note>Pipeline validation does not prevent duplicate data. To avoid writing duplicate data to
-   destinations, configure the pipeline logic to remove duplicate data or to prevent the generation
-   of duplicate data.</note>
+  <note type="important">Pipeline validation does not prevent duplicate data. To avoid writing
+   duplicate data to destinations, configure the pipeline logic to remove duplicate data or to
+   prevent the generation of duplicate data.</note>
+  <p>Note that that you cannot merge event streams with data streams. Event data must stream from
+   the event-generating stage to a destination or executor without merging with data streams. For
+   more information, see <xref
+    href="../Event_Handling/EventHandling-Overview.dita#concept_cph_5h4_lx"/>.</p>
  </conbody>
 </concept>

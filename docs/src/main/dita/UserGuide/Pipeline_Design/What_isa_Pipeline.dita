@@ -33,5 +33,8 @@
     <p>To process large volumes of data from a Kafka cluster or HDFS, you can configure a pipeline
       to run in cluster execution mode. For more information, see <xref
         href="../Cluster_Mode/ClusterPipelines_title.dita#concept_fpz_5r4_vs"/>.</p>
+    <p>To add event-driven task execution, you can add an event branch to a pipeline. For more
+      information, see <xref href="../Event_Handling/EventHandling-Overview.dita#concept_cph_5h4_lx"
+      />.</p>
  </conbody>
 </concept>

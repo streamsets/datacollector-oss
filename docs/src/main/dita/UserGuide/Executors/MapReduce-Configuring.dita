@@ -15,14 +15,183 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_olh_bmk_fx">
     <title>Configuring a MapReduce Executor</title>
-    <shortdesc/>
     <taskbody>
         <context>
-            <p></p>
+            <p><indexterm>MapReduce executor<indexterm>configuring</indexterm></indexterm>Configure
+                a MapReduce executor to start MapReduce jobs each time the executor receives an
+                event record. </p>
         </context>
         <steps>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-D-E-EventHandling">
+                <cmd/>
+            </step>
             <step>
-                <cmd></cmd>
+                <cmd>On the <uicontrol>MapReduce</uicontrol> tab, configure the following
+                    properties: </cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_wzt_zdy_mx">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>MapReduce Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>MapReduce Configuration Directory</entry>
+                                    <entry>Absolute path to the directory containing the Hive and
+                                        Hadoop configuration files. For a Cloudera Manager
+                                        installation, enter hive-conf. <p>The stage uses the
+                                            following configuration files:<ul id="ul_bhl_zfy_mx">
+                                                <li>core-site.xml</li>
+                                                <li>yarn-site.xml</li>
+                                                <li>mapreduce-site.xml<note>Properties in the
+                                                  configuration files are overridden by individual
+                                                  properties defined in this stage.</note></li>
+                                            </ul></p></entry>
+                                </row>
+                                <row>
+                                    <entry>MapReduce Configuration</entry>
+                                    <entry>
+                                        <p>Additional properties to use. </p>
+                                        <p>To add properties, click <uicontrol>Add</uicontrol> and
+                                            define the property name and value. Use the property
+                                            names and values as expected by HDFS and
+                                                Hive.<draft-comment author="Loretta">HDFS and Hive?
+                                                MapReduce?</draft-comment></p>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Kerberos Authentication <xref
+                                            href="MapReduce-Kerberos.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_a5x_jzn_vs"
+                                        /></xref></entry>
+                                    <entry>Uses Kerberos credentials to connect to HDFS. <p>When
+                                            selected, uses the Kerberos principal and keytab defined
+                                            in the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> configuration file,
+                                                <codeph>$SDC_CONF/sdc.properties</codeph>.
+                                        </p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <uicontrol>Jobs</uicontrol> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_k31_14y_mx">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Job Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Job Name</entry>
+                                    <entry>Name of the job to execute.</entry>
+                                </row>
+                                <row>
+                                    <entry>Job Type</entry>
+                                    <entry>Type of MapReduce job to run.</entry>
+                                </row>
+                                <row>
+                                    <entry>Custom JobCreator</entry>
+                                    <entry>
+                                        <draft-comment author="Loretta">Find out what to say
+                                            here.</draft-comment>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Job Configuration</entry>
+                                    <entry>
+                                        <draft-comment author="Loretta">ditto. And do we need a
+                                            section on this? </draft-comment>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>When using the Avro to Parquet job, configure the following Avro to Parquet
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_fzs_1py_mx">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Avro to Parquet</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Input File <xref href="MapReduce-AvrotoParquet.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_jqd_xz2_nx"
+                                            /></xref><draft-comment author="Loretta">Suggested Avro
+                                            File: SDC-4089</draft-comment></entry>
+                                    <entry>Expression that evaluates to the name and location of the
+                                        Avro file to process. <p>By default, processes the file with
+                                            the name and location specified in the "filepath" field
+                                            of the event record.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Keep Input File</entry>
+                                    <entry>Leaves the processed Avro file in place. By default, the
+                                        executor removes the file after processing.</entry>
+                                </row>
+                                <row>
+                                    <entry>Output Directory</entry>
+                                    <entry>Location to write the resulting Parquet file. Use an
+                                        absolute path. </entry>
+                                </row>
+                                <row>
+                                    <entry>Compression Codec</entry>
+                                    <entry>Conpression codec to use. If you do not enter a
+                                        compression code, the executor uses the default compression
+                                        codec for Parquet.</entry>
+                                </row>
+                                <row>
+                                    <entry>Row Group Size</entry>
+                                    <entry>Parquet row group size. Use -1 to use the Parquet
+                                        default. </entry>
+                                </row>
+                                <row>
+                                    <entry>Page Size</entry>
+                                    <entry>Parquet page size. Use -1 to use the Parquet
+                                        default.</entry>
+                                </row>
+                                <row>
+                                    <entry>Dictionary Page Size</entry>
+                                    <entry>Parquet dictionary page size. Use -1 to use the Parquet
+                                        default. </entry>
+                                </row>
+                                <row>
+                                    <entry>Max Padding Size</entry>
+                                    <entry>Parquet maximum padding size. Use -1 to use the Parquet
+                                        default.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
         </steps>
     </taskbody>

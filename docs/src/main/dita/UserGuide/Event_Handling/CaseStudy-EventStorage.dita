@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ocb_nnl_px">
+ <title>Case Study: Event Storage </title>
+ <conbody>
+  <p><indexterm>event handling<indexterm>event storage case study</indexterm></indexterm> Store
+            events to preserve an audit trail of the events that occur. You can store events from
+            any event-generating stage. For this case study, say you want to keep a log of the
+            objects written to Amazon S3 by the following pipeline: </p>
+        <p><image href="../Graphics/Event-Storage.png" id="image_csj_gwl_px" scale="60"/></p>
+        <p>To do this, you simply:<ol id="ol_xgc_3wl_px">
+                <li>Configure Amazon S3 to generate events.<p>Select the <uicontrol>Produce
+                            Events</uicontrol> property on the General tab. When you do that, the
+                        event output stream becomes available. With this selected, the destination
+                        generates an event each time it stops writing to an object:</p><p><image
+                            href="../Graphics/Event-Storage-S3.png" id="image_zyg_cxl_px" scale="60"
+                        /></p></li>
+                <li>You can write the event records to any destination, but let's assume you want to
+                    write them to Amazon S3 as well: <p><image
+                            href="../Graphics/Event-Storage-S3-S3.png" id="image_orv_fyl_px"
+                            scale="65"/></p><p>You could be done right there, but say you have
+                        multiple pipelines like this, processing data from different HTTP servers.
+                        As with other event streams, you can add processors to perform additional
+                        processing on the event records. You just can't merge event streams with
+                        data streams. </p><p>Let's say you wanted to.…   . <draft-comment
+                            author="Loretta">add some information to the record – checking with J
+                        </draft-comment></p></li>
+                <li>To do that, you can add the &lt;whatever> processor to &lt;blah blah blah>.<p>
+                        <draft-comment author="Loretta">add new pipeline pic. </draft-comment>
+                    </p></li>
+            </ol></p>
+ </conbody>
+</concept>

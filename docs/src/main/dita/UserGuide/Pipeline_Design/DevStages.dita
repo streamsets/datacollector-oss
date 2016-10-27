@@ -31,8 +31,12 @@
   <p>You can use the following development stages when developing or testing pipelines:<dl>
     <dlentry>
      <dt>Dev Data Generator origin</dt>
-     <dd>Generates records with the configured number of fields with the selected data types.</dd>
-     <dd>You can use a Map or List-Map root field type. </dd>
+     <dd>Generates records with the configured number of fields with the selected data types. You
+            can use a Map or List-Map root field type. </dd>
+          <dd>The origin can also generate events for testing event handling functionality. It
+            passes data and events thorugh the same output port, so best practice is to generate
+            data or events, not both. To generate both, use an additional Dev Data
+              Generator.<draft-comment author="Loretta">Correct?</draft-comment></dd>
      <dd>The On Record Error property has no effect in this stage.</dd>
     </dlentry>
     <dlentry>
@@ -67,6 +71,12 @@
      <dd>Generates two records for each record that enters the stage. You can define required fields
       and preconditions, and configure stage error handling. </dd>
     </dlentry>
+        <dlentry>
+          <dt>To Event destination</dt>
+          <dd>Generates events for testing event handling functionality. Use the Generate Event
+            property to generate events.<draft-comment author="Loretta">more on how/when they are
+              generated?</draft-comment></dd>
+        </dlentry>
    </dl></p>
  </conbody>
 </concept>

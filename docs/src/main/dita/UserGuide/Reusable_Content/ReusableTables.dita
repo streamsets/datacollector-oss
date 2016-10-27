@@ -423,7 +423,8 @@
    </table>
   </p>
   <draft-comment author="Loretta">The Hive Metadata processor and the Hive Metastore destination
-   configuring topics use these individual rows and the Max entries description:</draft-comment>
+   configuring topics use these individual rows and the Max entries description. Hive Query executor
+   also uses rows.</draft-comment>
   <p>
    <table frame="all" rowsep="1" colsep="1" id="table_w1l_34y_dw">
     <tgroup cols="2">
@@ -456,7 +457,7 @@
           <li/>
          </ul></p>
         <note>Properties in the configuration files are overridden by individual properties defined
-         in this processor. </note>
+         in this stage. </note>
        </entry>
       </row>
       <row id="P-D-Hive-AddConfig">
@@ -481,6 +482,48 @@
     </tgroup>
    </table>
   </p>
+  <p>
+   <draft-comment author="Loretta">Hadoop FS, MapR FS, Local FS use
+     <uicontrol>D-Event-RHattributes</uicontrol> in Event Records. All others use the creation_date
+    entry: <uicontrol>entry-Event-creationDate</uicontrol>. </draft-comment>
+  </p>
+  <p>
+   <table frame="all" rowsep="1" colsep="1" id="D-Event-RHattributes">
+    <tgroup cols="2">
+     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+     <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+     <thead>
+      <row>
+       <entry>Record Header Attribute</entry>
+       <entry>Description</entry>
+      </row>
+     </thead>
+     <tbody>
+      <row>
+       <entry>type</entry>
+       <entry>Event type. Uses one of the following types:<ul id="ul_m12_mgp_qx">
+         <li>file-closed - Generated when the destination closes a file.</li>
+         <li>wholeFileProcessed - Generated when the destination completes streaming a whole
+          file.</li>
+        </ul></entry>
+      </row>
+      <row>
+       <entry>version</entry>
+       <entry>An integer that indicates the version of the event record type.</entry>
+      </row>
+      <row>
+       <entry>creation_date</entry>
+       <entry id="entry-Event-creationDate">Time when the stage created the event. <draft-comment
+         author="Loretta">in milliseconds? </draft-comment></entry>
+      </row>
+     </tbody>
+    </tgroup>
+   </table>
+  </p>
+  <p>
+   <draft-comment author="Loretta">Hadoop FS, Local FS, MapR FS</draft-comment>
+  </p>
+  <p/>
   <p>
    <draft-comment author="Loretta">DESTINATION rows</draft-comment>
   </p>
@@ -665,7 +708,7 @@
      <row id="row-ProxyPassword">
       <entry>Proxy Password</entry>
       <entry>Password for proxy credentials.<note
-       conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"/></entry>
+        conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"/></entry>
      </row>
      <row>
       <entry>Thread Pool Size for Parallel Uploads</entry>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_szz_xwm_lx">
+    <title>Case Study: Impala Metadata Updates for the HDS</title>
+    <conbody>
+        <p><indexterm>event handling<indexterm>Impala-Hive Drift Solution case
+                study</indexterm></indexterm>You love the <xref
+                href="../Hive_Drift_Solution/HiveDrift-Overview.dita#concept_phk_bdf_2w">Hive Drift
+                Solution</xref> because it automatically updates the Hive Metastore when table
+            structures change. But you've been using it with Impala, which requires running the
+            Invalidate Metadata command after each change. </p>
+        <p>Instead of running the command manually, you can add event handling to your Hive Drift
+            Solution pipeline to execute the command each time the Hive Metastore destination
+            updates a Hive table.</p>
+        <p>Here's how it works:</p>
+        <p>You have the following Hive Drift Solution pipeline that reads files from a directory.The
+            Hive Metadata processor evaluates the data for structural changes. It passes data to
+            Hadoop FS and metadata records to the Hive Metastore destination when table structures
+            change. Hive Metastore creates and updates tables in Hive based on the metadata records
+            it receives:</p>
+        <p><image href="../Graphics/Event-HDS-BasicPipe.png" id="image_lz5_414_lx" scale="75"/></p>
+        <p>
+            <ol id="ol_mtf_tzn_lx">
+                <li>To add an event branch, first configure the Hive Metastore destination to
+                    generate events.<p>Select the <uicontrol>Produce Events</uicontrol> property on
+                        the General tab. When you do that, the event output stream becomes
+                        available. </p><p>With this property selected, Hive Metastore generates an
+                        event record every time it creates or changes a table.</p><p><image
+                            href="../Graphics/Event-HDS-HMetastore.png" id="image_cht_bc4_lx"
+                            scale="75"/></p></li>
+                <li>Connect the Hive Metastore event output stream to a Hive Query executor.<p>Now,
+                        each time the Hive Query executor receives an event, it triggers the query
+                        that you configure it to run. </p><p><image
+                            href="../Graphics/Event-HDS-HiveQuery.png" id="image_vjz_pd4_lx"
+                            scale="75"/></p></li>
+                <li>Configure the Hive Query executor to run the Impala Invalidate Metadata
+                        command.<p>In the Hive Query executor, configure the Hive configuration
+                        details, then enter verify or update the query you want to use. By default,
+                        the executor performs the invalidate metadata query:
+                        <codeblock>invalidate metadata ${record:attribute('/table')}</codeblock></p><p>You
+                        could change this to any valid query. But the default works for this
+                        case:</p><p><image href="../Graphics/Event-HDS-HiveQueryDeets.png"
+                            id="image_ccr_hpr_mx" scale="70"/></p><p>With this event branch added to
+                        the pipeline, each time the Hive Metastore destination creates or changes a
+                        table, it generates an event. When the Hive Query executor receives the
+                        event, it runs the Invalidate Metadata command so Impala can pick up the
+                        changes. <draft-comment author="Loretta">check wording of this last
+                            sentence.</draft-comment></p><p> </p></li>
+            </ol>
+        </p>
+    </conbody>
+</concept>

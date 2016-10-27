@@ -45,6 +45,11 @@
         <li>Solr - Writes data to a Solr node or cluster.</li>
         <li>To Error - Passes records to the pipeline for error handling.</li>
         <li>Trash - Removes records from the pipeline.</li>
+      </ul>To help create or test pipelines, you can use the following development destination:<ul
+        id="ul_wvk_p3f_lx">
+        <li>To Event</li>
       </ul></p>
+    <p>For more information, see <xref href="../Pipeline_Design/DevStages.dita#concept_czx_ktn_ht"
+      />.</p>
  </conbody>
 </concept>

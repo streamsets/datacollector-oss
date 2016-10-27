@@ -13,10 +13,17 @@
   limitations under the License.
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_wgj_slk_fx">
- <title>HDFS Metadata</title>
- <shortdesc></shortdesc>
+<concept id="concept_ttg_vgn_qx">
+ <title>Event Generation</title>
  <conbody>
-  <p></p>
+  <p><indexterm>Directory origin<indexterm>event generation</indexterm></indexterm><indexterm>event
+                    handling<indexterm>Directory event generation</indexterm></indexterm>The
+            Directory origin <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-ph-EventGen1"
+            /></p>
+        <p>Directory <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-ph-EventGen-FileStorage"
+            /></p>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"/>
  </conbody>
 </concept>

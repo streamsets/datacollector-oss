@@ -57,8 +57,9 @@
                                                 placement="inline" id="image_hqm_3fj_fv"
                                         /></xref></entry>
                                     <entry>The HDFS user to use to connect to MapR FS. When using
-                                        this property, make sure MapR FS is configured
-                                            appropriately.<p>By default, the pipeline uses the <ph
+                                        this property, make sure the destination system is
+                                        configured appropriately.<p>By default, the pipeline uses
+                                            the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> user to connect to MapR FS.</p></entry>
                                 </row>

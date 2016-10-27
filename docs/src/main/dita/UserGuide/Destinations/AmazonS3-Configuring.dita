@@ -21,7 +21,7 @@
             destination to write objects to Amazon S3.</context>
         <steps id="steps_tzg_m3r_rt">
             <step
-                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-StageLib-ReqField-EHandling">
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-D-E-EventHandling">
                 <cmd/>
             </step>
             <step>

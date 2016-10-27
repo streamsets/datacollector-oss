@@ -19,16 +19,38 @@
         <topicref href="../Executors/Executors-overview.dita" chunk="to-content">
             <topicmeta><shortdesc></shortdesc></topicmeta>
         </topicref>
-        <topicref href="../Executors/HDFSMetadata.dita" chunk="to-content">
+        <topicref href="../Executors/HDFSFileMeta.dita" chunk="to-content">
             <topicmeta><shortdesc></shortdesc></topicmeta>
-            <topicref href="../Executors/HDFSMetadata-Configuring.dita"/>
+            <topicref href="../Executors/HDFSFileMeta-SourceStages.dita"/>
+            <topicref href="../Executors/HDFSFileMeta-InputFile.dita"/>
+            <topicref href="../Executors/HDFSFileMeta-Location.dita"/>
+            <topicref href="../Executors/HDFSFileMeta-Permissions.dita"/>
+            <topicref href="../Executors/HDFSFileMeta-EventGeneration.dita">
+                <topicref href="../Executors/HDFSFileMeta-EventRecords.dita"/>
+            </topicref>
+            <topicref href="../Executors/HDFSFileMeta-Kerberos.dita"/>
+            <topicref href="../Executors/HDFSFileMeta-HDFSProperties.dita"/>
+            <topicref href="../Executors/HDFSFileMeta-Configuring.dita"/>
         </topicref>
         <topicref href="../Executors/HiveQuery.dita" chunk="to-content">
             <topicmeta><shortdesc></shortdesc></topicmeta>
+            <topicref href="../Executors/HiveQuery-Query.dita"/>
             <topicref href="../Executors/HiveQuery-Configuring.dita"/>
+        </topicref>
+        <topicref href="../Executors/JDBCQuery.dita" chunk="to-content">
+            <topicmeta><shortdesc></shortdesc></topicmeta>
+            <topicref href="../Executors/JDBCQuery-Configuring.dita"/>
         </topicref>
         <topicref href="../Executors/MapReduce.dita" chunk="to-content">
             <topicmeta><shortdesc></shortdesc></topicmeta>
+            <topicref href="../Executors/MapReduce-SourceStages.dita"/>
+            <topicref href="../Executors/MapReduce-Jobs.dita">
+                <topicref href="../Executors/MapReduce-AvrotoParquet.dita"/>
+            </topicref>
+            <topicref href="../Executors/MapReduce-EventGeneration.dita">
+                <topicref href="../Executors/MapReduce-EventRecords.dita"/>
+            </topicref>
+            <topicref href="../Executors/MapReduce-Kerberos.dita"/>
             <topicref href="../Executors/MapReduce-Configuring.dita"/>
         </topicref>
     </topicref>

@@ -15,8 +15,21 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_stt_2lk_fx">
  <title>Executors</title>
- <shortdesc></shortdesc>
  <conbody>
-  <p></p>
+  <p><indexterm>executors<indexterm>overview</indexterm></indexterm>An executor stage executes a
+            task when it receives an event. Use executor stages as part of an event handling branch
+            to perform event-driven, pipeline-related tasks, such as moving a fully-written file
+            when a destination closes it.</p>
+        <p>For more information about event handling, see<xref
+                href="../Event_Handling/EventHandling-Overview.dita#concept_cph_5h4_lx"/>.</p>
+        <p>You can use the following executors in a pipeline:<ul id="ul_htl_4dr_mx">
+                <li>HDFS Metadata - Moves and sets permissions on files in Hadoop FS upon receiving
+                    an event record.</li>
+                <li>Hive Query - Runs a user-defined Hive or Impala query upon receiving an event
+                    record. </li>
+                <li>JDBC Query - Runs a user-defined query upon receiving an event record.</li>
+                <li>MapReduce Job - Starts the specified MapReduce job upon receiving an event
+                    record. </li>
+            </ul></p>
  </conbody>
 </concept>

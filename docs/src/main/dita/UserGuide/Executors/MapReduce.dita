@@ -14,9 +14,25 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_bj2_zlk_fx">
- <title>MapReduce</title>
- <shortdesc></shortdesc>
+ <title>MapReduce Executor</title>
  <conbody>
-  <p></p>
+  <p><indexterm>MapReduce
+                    executor<indexterm>overview</indexterm></indexterm><indexterm>executors<indexterm>MapReduce</indexterm></indexterm>The
+            MapReduce executor triggers a MapReduce job in HDFS each time it receives an event
+            record. Use the MapReduce executor as part of an event handling branch of the pipeline.
+                <draft-comment author="Loretta">Use the MapReduce executor to process files from
+                Hadoop </draft-comment></p>
+        <p>You can use the MapReduce executor to trigger a MapReduce job that converts Avro files to
+            Parquet for more efficient storage and access. You can also use the executor to trigger
+            custom MapReduce jobs. Note that MapReduce executor does not monitor jobs. </p>
+        <draft-comment author="Loretta">1. Say "in HDFS" or something else, or cut it?  2. Say the
+            selling point about Parquet or cut it? </draft-comment>
+        <p>When you configure the MapReduce executor, you specify MapReduce connection and
+            configuration properties as well as job details. When using the Avro to Parquet job, you
+            also specify details such as the output file directory and  optional compression
+            codec.</p>
  </conbody>
+    <related-links>
+        <link href="../Event_Handling/EventHandling-Overview.dita#concept_cph_5h4_lx"/>
+    </related-links>
 </concept>
