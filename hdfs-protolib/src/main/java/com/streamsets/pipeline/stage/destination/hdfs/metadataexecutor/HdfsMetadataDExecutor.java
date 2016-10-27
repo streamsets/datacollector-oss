@@ -30,7 +30,7 @@ import com.streamsets.pipeline.configurablestage.DExecutor;
   version = 1,
   label = "HDFS File Metadata",
   description = "Changes HDFS file metadata such as renaming files or changing permissions.",
-  icon = "hdfs.png",
+  icon = "hdfs-executor.png",
   privateClassLoader = true,
   onlineHelpRefUrl = "index.html#Executors/HDFSMetadata.html#task_m3v_5lk_fx",
   producesEvents = true

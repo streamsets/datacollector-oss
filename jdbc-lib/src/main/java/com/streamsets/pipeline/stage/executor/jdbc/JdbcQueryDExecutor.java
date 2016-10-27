@@ -30,7 +30,7 @@ import com.streamsets.pipeline.configurablestage.DExecutor;
     version = 1,
     label = "JDBC Query",
     description = "Executes queries against JDBC compliant database",
-    icon = "rdbms.png",
+    icon = "rdbms-executor.png",
     onlineHelpRefUrl = "index.html#Executors/JDBCQuery.html#task_ym2_3cv_sx"
 )
 @ConfigGroups(value = Groups.class)

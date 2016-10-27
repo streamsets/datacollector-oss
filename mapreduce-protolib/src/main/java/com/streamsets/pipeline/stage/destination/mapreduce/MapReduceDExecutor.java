@@ -34,7 +34,7 @@ import com.streamsets.pipeline.stage.destination.mapreduce.config.MapReduceConfi
     version = 1,
     label = "MapReduce",
     description = "Starts a MapReduce job",
-    icon = "mapreduce.png",
+    icon = "mapreduce-executor.png",
     privateClassLoader = true,
     producesEvents = true,
     onlineHelpRefUrl = "index.html#Executors/MapReduce.html#task_olh_bmk_fx"
