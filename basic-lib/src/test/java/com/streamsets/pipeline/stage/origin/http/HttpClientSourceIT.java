@@ -55,6 +55,7 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -68,6 +69,7 @@ import static org.junit.Assert.assertTrue;
  */
 @Category(SingleForkNoReuseTest.class)
 public class HttpClientSourceIT extends JerseyTest {
+  static long DELAY = 1100;
 
   @Path("/stream")
   @Produces("application/json")
@@ -132,11 +134,25 @@ public class HttpClientSourceIT extends JerseyTest {
     public Response getStream() {
       return Response.ok(
           "adam\r\n" +
-          "joe\r\n" +
-          "sally"
+              "joe\r\n" +
+              "sally"
       ).build();
     }
   }
+  @Path("/slowstream")
+  @Produces("application/text")
+  public static class SlowTextStreamResource {
+    @GET
+    public Response getStream() throws InterruptedException {
+      Thread.sleep(DELAY);
+      return Response.ok(
+          "adam\r\n" +
+              "joe\r\n" +
+              "sally"
+      ).build();
+    }
+  }
+
 
   @Path("/headers")
   public static class HeaderRequired {
@@ -219,6 +235,7 @@ public class HttpClientSourceIT extends JerseyTest {
             StreamResource.class,
             NewlineStreamResource.class,
             TextStreamResource.class,
+            SlowTextStreamResource.class,
             XmlStreamResource.class,
             PreemptiveAuthResource.class,
             AuthResource.class,
@@ -242,6 +259,7 @@ public class HttpClientSourceIT extends JerseyTest {
                     StreamResource.class,
                     NewlineStreamResource.class,
                     TextStreamResource.class,
+                    SlowTextStreamResource.class,
                     XmlStreamResource.class,
                     PreemptiveAuthResource.class,
                     AuthResource.class,
@@ -275,9 +293,7 @@ public class HttpClientSourceIT extends JerseyTest {
     runner.runInit();
 
     try {
-      StageRunner.Output output = runner.runProduce(null, 1000);
-      Map<String, List<Record>> recordMap = output.getRecords();
-      List<Record> parsedRecords = recordMap.get("lane");
+      List<Record> parsedRecords = getRecords(runner);
 
       assertEquals(3, parsedRecords.size());
 
@@ -315,9 +331,7 @@ public class HttpClientSourceIT extends JerseyTest {
     runner.runInit();
 
     try {
-      StageRunner.Output output = runner.runProduce(null, 1000);
-      Map<String, List<Record>> recordMap = output.getRecords();
-      List<Record> parsedRecords = recordMap.get("lane");
+      List<Record> parsedRecords = getRecords(runner);
 
       assertEquals(1, parsedRecords.size());
 
@@ -355,9 +369,7 @@ public class HttpClientSourceIT extends JerseyTest {
     runner.runInit();
 
     try {
-      StageRunner.Output output = runner.runProduce(null, 1000);
-      Map<String, List<Record>> recordMap = output.getRecords();
-      List<Record> parsedRecords = recordMap.get("lane");
+      List<Record> parsedRecords = getRecords(runner);
 
       assertEquals(3, parsedRecords.size());
 
@@ -394,9 +406,7 @@ public class HttpClientSourceIT extends JerseyTest {
     runner.runInit();
 
     try {
-      StageRunner.Output output = runner.runProduce(null, 1000);
-      Map<String, List<Record>> recordMap = output.getRecords();
-      List<Record> parsedRecords = recordMap.get("lane");
+      List<Record> parsedRecords = getRecords(runner);
 
       assertEquals(3, parsedRecords.size());
 
@@ -413,13 +423,24 @@ public class HttpClientSourceIT extends JerseyTest {
 
   @Test
   public void testStreamingHttpWithText() throws Exception {
+    doTestStreamingHttpWithText("textstream", 1000, false);
+
+  }
+
+  @Test // Tests SDC-4337
+  public void testSlowStreamingHttpWithText() throws Exception {
+    doTestStreamingHttpWithText("slowstream", 1000, true);
+
+  }
+
+  private void doTestStreamingHttpWithText(String endpoint, int timeout, boolean delayStream) throws Exception {
     HttpClientConfigBean conf = new HttpClientConfigBean();
     conf.client.authType = AuthenticationType.NONE;
     conf.httpMode = HttpClientMode.STREAMING;
-    conf.resourceUrl = getBaseUri() + "textstream";
+    conf.resourceUrl = getBaseUri() + endpoint;
     conf.client.readTimeoutMillis = 1000;
     conf.basic.maxBatchSize = 100;
-    conf.basic.maxWaitTime = 1000;
+    conf.basic.maxWaitTime = timeout;
     conf.pollingInterval = 1000;
     conf.httpMethod = HttpMethod.GET;
     conf.dataFormat = DataFormat.TEXT;
@@ -430,10 +451,14 @@ public class HttpClientSourceIT extends JerseyTest {
         .build();
     runner.runInit();
 
+
     try {
-      StageRunner.Output output = runner.runProduce(null, 1000);
-      Map<String, List<Record>> recordMap = output.getRecords();
-      List<Record> parsedRecords = recordMap.get("lane");
+      // Before SDC-4337, this would return nothing
+      List<Record> parsedRecords = new ArrayList<>(getRecords(runner));
+      if (delayStream) {
+        // Before SDC-4337, this would return records 2 and 3, record 1 would be lost
+        parsedRecords.addAll(getRecords(runner));
+      }
 
       assertEquals(3, parsedRecords.size());
 
@@ -445,6 +470,12 @@ public class HttpClientSourceIT extends JerseyTest {
     } finally {
       runner.runDestroy();
     }
+  }
+
+  private List<Record> getRecords(SourceRunner runner) throws StageException {
+    StageRunner.Output output = runner.runProduce(null, 1000);
+    Map<String, List<Record>> recordMap = output.getRecords();
+    return recordMap.get("lane");
   }
 
   @Test
@@ -563,9 +594,7 @@ public class HttpClientSourceIT extends JerseyTest {
     runner.runInit();
 
     try {
-      StageRunner.Output output = runner.runProduce(null, 1000);
-      Map<String, List<Record>> recordMap = output.getRecords();
-      List<Record> parsedRecords = recordMap.get("lane");
+      List<Record> parsedRecords = getRecords(runner);
 
       assertEquals(3, parsedRecords.size());
 
@@ -604,9 +633,7 @@ public class HttpClientSourceIT extends JerseyTest {
     runner.runInit();
 
     try {
-      StageRunner.Output output = runner.runProduce(null, 1000);
-      Map<String, List<Record>> recordMap = output.getRecords();
-      List<Record> parsedRecords = recordMap.get("lane");
+      List<Record> parsedRecords = getRecords(runner);
 
       assertEquals(3, parsedRecords.size());
 
@@ -644,9 +671,7 @@ public class HttpClientSourceIT extends JerseyTest {
     runner.runInit();
 
     try {
-      StageRunner.Output output = runner.runProduce(null, 1000);
-      Map<String, List<Record>> recordMap = output.getRecords();
-      List<Record> parsedRecords = recordMap.get("lane");
+      List<Record> parsedRecords = getRecords(runner);
 
       assertEquals(3, parsedRecords.size());
 

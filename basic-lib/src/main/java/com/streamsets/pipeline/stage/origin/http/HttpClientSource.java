@@ -383,9 +383,16 @@ public class HttpClientSource extends BaseSource {
       }
     }
     try {
-      Record record = parser.parse();
       int subRecordCount = 0;
-      while (record != null && recordCount <= maxRecords && !waitTimeExpired(start)) {
+      Record record =  null;
+
+      do {
+        record = parser.parse();
+
+        if (record == null) {
+          break;
+        }
+
         if (conf.pagination.mode != PaginationMode.NONE && record.has(conf.pagination.resultFieldPath)) {
           subRecordCount = parsePaginatedResult(batchMaker, sourceOffset.toString(), record);
           recordCount += subRecordCount;
@@ -394,8 +401,8 @@ public class HttpClientSource extends BaseSource {
           batchMaker.addRecord(record);
           ++recordCount;
         }
-        record = parser.parse();
-      }
+
+      } while (recordCount < maxRecords && !waitTimeExpired(start));
 
       if (record == null) {
         // Done reading this response
