@@ -678,6 +678,10 @@ public class HdfsTargetConfigBean {
   public void destroy() {
     LOG.info("Destroy");
     try {
+      if(getUGI() == null) {
+        return;
+      }
+
       getUGI().doAs(new PrivilegedExceptionAction<Void>() {
         @Override
         public Void run() throws Exception {
