@@ -18,8 +18,8 @@
  <conbody>
   <p><indexterm>installation<indexterm>service start</indexterm></indexterm><indexterm>launch Data
                     Collector<indexterm>service start</indexterm></indexterm>To install the full
-            Data Collector as a service, you can download the Data Collector RPM zip file or the
-            Data Collector tarball from the StreamSets website. Installing the full Data Collector
-            as a service requires sudo privileges on the root directory.</p>
+            Data Collector as a service, you can download the Data Collector RPM package or the Data
+            Collector tarball from the StreamSets website. Installing the full Data Collector as a
+            service requires sudo privileges on the root directory.</p>
  </conbody>
 </concept>
