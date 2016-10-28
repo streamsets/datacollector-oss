@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="To install the full Data Collector as a service, you can download the Data Collector RPM zip file or the Data Collector tarball from the StreamSets website. Installing the full Data Collector as a ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Full Installation and Launch (Service Start)"></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_e45_3dr_bx"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Full Installation and Launch (Service Start)</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="To install the full Data Collector as a service, you can download the Data Collector RPM package or the Data Collector tarball from the StreamSets website. Installing the full Data Collector as a ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Full Installation and Launch (Service Start)"></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_e45_3dr_bx"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Full Installation and Launch (Service Start)</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -27,9 +27,9 @@
 
  <div class="body conbody">
   <p class="p">To install the full
-            Data Collector as a service, you can download the Data Collector RPM zip file or the
-            Data Collector tarball from the StreamSets website. Installing the full Data Collector
-            as a service requires sudo privileges on the root directory.</p>
+            Data Collector as a service, you can download the Data Collector RPM package or the Data
+            Collector tarball from the StreamSets website. Installing the full Data Collector as a
+            service requires sudo privileges on the root directory.</p>
 
  </div>
 
@@ -58,16 +58,15 @@
 
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">Use the following URL to download the <span class="ph">Data
-                  Collector</span> RPM zip file from the StreamSets website: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>.</span>
+                  Collector</span> RPM package from the StreamSets website: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>.</span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Use the following command to extract the zip file to the desired
-                    location:</span>
+                <span class="ph cmd">Use the following command to extract the file to the desired location:</span>
                 <div class="itemgroup info">
-                    <pre class="pre codeblock">unzip streamsets-datacollector-&lt;version&gt;-all-rpms.zip</pre>
+                    <pre class="pre codeblock">tar -xzf streamsets-datacollector-&lt;version&gt;-all-rpms.tgz</pre>
 
                     <div class="p">For example, to extract version 2.0.0.0, use the following
-                        command:<pre class="pre codeblock">unzip streamsets-datacollector-2.0.0.0-all-rpms.zip</pre>
+                        command:<pre class="pre codeblock">tar -xzf streamsets-datacollector-2.0.0.0-all-rpms.tgz</pre>
 </div>
 
                 </div>
