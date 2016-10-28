@@ -51,7 +51,6 @@
         {{firstOpenLane.stageInstance.uiInfo.label}} has open event stream
       </span>
 
-
       <select class="form-control" name="newPipelineProcessor"
               ng-options="(stage.label + ' - ' +  stage.libraryLabel) for stage in processors | orderBy: 'label'"
               ng-model="connectStage.selected"
@@ -64,7 +63,6 @@
       <span class="pull-left123"> Or </span>
 
       <select class="form-control" name="newPipelineTarget"
-              ng-if="!firstOpenLane.isEventLane"
               ng-options="(stage.label + ' - ' +  stage.libraryLabel) for stage in targets | orderBy: 'label'"
               ng-model="connectStage.selected"
               ng-change="onConnectStageChange()">
@@ -72,6 +70,8 @@
           {{'home.graphPane.selectTarget' | translate}}
         </option>
       </select>
+
+      <span ng-if="firstOpenLane.isEventLane" class="pull-left123"> Or </span>
 
       <select class="form-control" name="newPipelineExecutor"
               ng-if="firstOpenLane.isEventLane"
