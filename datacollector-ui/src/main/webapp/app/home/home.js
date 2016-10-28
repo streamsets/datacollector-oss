@@ -69,10 +69,10 @@ angular
       selectedPipelineLabel: 'All Pipelines',
       filteredPipelines: [],
       header: {
-        pipelineGridView: $rootScope.$storage.pipelineGridView,
+        pipelineGridView: $rootScope.$storage.pipelineListState.gridView,
         sortColumn: 'lastModified',
         sortReverse: true,
-        searchInput: ''
+        searchInput: $scope.$storage.pipelineListState.searchInput
       },
       selectedPipelineMap: {},
       selectedPipelineList: [],
@@ -87,13 +87,15 @@ angular
 
       selectPipelineLabel: function(pipelineLabel) {
         $scope.selectedPipelineLabel = pipelineLabel;
-        $scope.header.searchInput = '';
         $scope.updateFilteredPipelines();
         $scope.unSelectAll();
       },
 
       updateFilteredPipelines: function() {
-        var regex = new RegExp($scope.header.searchInput, 'i');
+        var searchInput = ($scope.header.searchInput || '').trim();
+        var regex = new RegExp(searchInput, 'i');
+        $scope.$storage.pipelineListState.searchInput = searchInput;
+
         switch ($scope.selectedPipelineLabel) {
           case 'All Pipelines':
             $scope.filteredPipelines = _.filter($scope.pipelines, function(pipelineInfo) {
@@ -720,8 +722,11 @@ angular
        * @param columnName
        */
       onSortColumnHeaderClick: function(columnName) {
+        var sortReverse = !$scope.header.sortReverse;
+        $scope.$storage.pipelineListState.sortColumn = columnName;
+        $scope.$storage.pipelineListState.sortReverse = sortReverse;
         $scope.header.sortColumn = columnName;
-        $scope.header.sortReverse = !$scope.header.sortReverse;
+        $scope.header.sortReverse = sortReverse;
       },
 
       /**
@@ -748,6 +753,23 @@ angular
       }
     });
 
+    /**
+     * Load pipeline list state preferences back from storage into view
+     */
+    if ($scope.$storage.pipelineListState.sortColumn) {
+      $scope.header.sortColumn = $scope.$storage.pipelineListState.sortColumn;
+      $scope.header.sortReverse = $scope.$storage.pipelineListState.sortReverse;
+    }
+
+    if ($scope.$storage.pipelineListState.selectedLabel) {
+      $scope.selectPipelineLabel($scope.$storage.pipelineListState.selectedLabel);
+    }
+
+    if ($scope.$storage.pipelineListState.searchInput) {
+      $scope.header.searchInput = $scope.$storage.pipelineListState.searchInput;
+      $scope.updateFilteredPipelines();
+    }
+
     $q.all([
       api.pipelineAgent.getAllPipelineStatus(),
       pipelineService.init(true),
@@ -768,7 +790,7 @@ angular
           Analytics.trackPage('/');
         }
       },
-      function (results) {
+      function () {
         $scope.loaded = true;
       }
     );
@@ -781,7 +803,7 @@ angular
     });
 
     var pipelineGridViewWatchListener = $scope.$watch('header.pipelineGridView', function() {
-      $rootScope.$storage.pipelineGridView = $scope.header.pipelineGridView;
+      $rootScope.$storage.pipelineListState.gridView = $scope.header.pipelineGridView;
     });
 
     $scope.$on('$destroy', function() {

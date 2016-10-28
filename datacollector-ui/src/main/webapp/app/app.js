@@ -132,7 +132,10 @@ angular.module('dataCollectorApp')
       displayDensity: pipelineConstant.DENSITY_COMFORTABLE,
       helpLocation: pipelineConstant.HOSTED_HELP,
       readNotifications: [],
-      pipelineGridView: false
+      pipelineListState: {
+        gridView: false,
+        searchInput: ''
+      }
     });
 
     $rootScope.common = $rootScope.common || {

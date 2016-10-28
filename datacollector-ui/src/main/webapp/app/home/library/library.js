@@ -57,8 +57,8 @@ angular
        * @param pipeline
        */
       onSelectLabel : function(label) {
+        $scope.$storage.pipelineListState.selectedLabel = label;
         $scope.selectPipelineLabel(label);
-
       },
 
       /**

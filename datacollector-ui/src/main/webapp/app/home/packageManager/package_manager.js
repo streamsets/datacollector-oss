@@ -71,7 +71,7 @@ angular
       stageLibraries: [],
       filteredStageLibraries: [],
       header: {
-        pipelineGridView: $rootScope.$storage.pipelineGridView,
+        pipelineGridView: $rootScope.$storage.pipelineListState.gridView,
         sortColumn: 'label',
         sortReverse: false,
         searchInput: ''
@@ -307,7 +307,7 @@ angular
     }
 
     var pipelineGridViewWatchListener = $scope.$watch('header.pipelineGridView', function() {
-      $rootScope.$storage.pipelineGridView = $scope.header.pipelineGridView;
+      $rootScope.$storage.pipelineListState.gridView = $scope.header.pipelineGridView;
     });
 
     $scope.$on('$destroy', function() {
