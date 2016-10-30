@@ -81,6 +81,11 @@ angular
         $scope.$storage.maximizeDetailPane = false;
         $scope.$storage.minimizeDetailPane = false;
 
+        // Cancel previous validation status check timer
+        if (validateConfigStatusTimer) {
+          $timeout.cancel(validateConfigStatusTimer);
+        }
+
         var pipelineBeingValidated = $scope.activeConfigInfo;
         $rootScope.common.infoList.push({
           message: pipelineValidationInProgress
@@ -97,10 +102,10 @@ angular
                 return;
               }
               $rootScope.common.infoList = [];
-              if(previewData.status === 'VALID') {
+              if (previewData.status === 'VALID') {
                 // clear previous errors if any
                 var commonErrors = $rootScope.common.errors;
-                if(commonErrors && commonErrors.length) {
+                if (commonErrors && commonErrors.length) {
                   $rootScope.common.errors = [];
                   $scope.refreshGraph();
                 }
@@ -109,9 +114,9 @@ angular
                   message: pipelineValidationSuccess
                 });
               } else {
-                if(previewData.issues) {
+                if (previewData.issues) {
                   $rootScope.common.errors = [previewData.issues];
-                } else if(previewData.message) {
+                } else if (previewData.message) {
                   $rootScope.common.errors = [previewData.message];
                 }
               }
@@ -134,7 +139,7 @@ angular
        */
       startPipeline: function() {
         $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Start Pipeline', 1);
-        if($rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.name].status !== 'RUNNING') {
+        if ($rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.name].status !== 'RUNNING') {
           var startResponse;
           $scope.$storage.maximizeDetailPane = false;
           $scope.$storage.minimizeDetailPane = false;
@@ -196,7 +201,7 @@ angular
           $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.name] = status;
           var alerts = $rootScope.common.alertsMap[$scope.activeConfigInfo.name];
 
-          if(alerts) {
+          if (alerts) {
             delete $rootScope.common.alertsMap[$scope.activeConfigInfo.name];
             $rootScope.common.alertsTotalCount -= alerts.length;
           }
@@ -230,7 +235,7 @@ angular
         });
 
         modalInstance.result.then(function(snapshotName) {
-          if(snapshotName) {
+          if (snapshotName) {
             $scope.viewSnapshot(snapshotName);
           }
         }, function () {
@@ -280,7 +285,7 @@ angular
        */
       duplicateStage: function() {
         $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Duplicate Stage', 1);
-        if($scope.selectedType === pipelineConstant.STAGE_INSTANCE) {
+        if ($scope.selectedType === pipelineConstant.STAGE_INSTANCE) {
           $scope.$emit('onPasteNode', $scope.selectedObject);
         }
       },
@@ -386,7 +391,7 @@ angular
         function() {
           api.pipelineAgent.getPreviewStatus(previewerId)
             .success(function(data) {
-              if(data && _.contains(['INVALID', 'VALIDATION_ERROR', 'START_ERROR', 'RUN_ERROR', 'CONNECT_ERROR', 'VALID'], data.status)) {
+              if (data && _.contains(['INVALID', 'VALIDATION_ERROR', 'START_ERROR', 'RUN_ERROR', 'CONNECT_ERROR', 'VALID'], data.status)) {
                 fetchValidateConfigData(previewerId, defer);
               } else {
                 checkForValidateConfigStatus(previewerId, defer);
@@ -417,7 +422,7 @@ angular
 
 
     $scope.$on('$destroy', function() {
-      if(validateConfigStatusTimer) {
+      if (validateConfigStatusTimer) {
         $timeout.cancel(validateConfigStatusTimer);
       }
     });
