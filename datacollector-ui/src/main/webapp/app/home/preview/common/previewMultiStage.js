@@ -105,6 +105,13 @@ angular
         batchData = $scope.previewData.snapshotBatches[0];
       }
 
+      $scope.recordPagination = {
+        inputRecords: $scope.recordMaxLimit,
+        outputRecords: $scope.recordMaxLimit,
+        errorRecords: $scope.recordMaxLimit,
+        eventRecords: $scope.recordMaxLimit,
+        newRecords: $scope.recordMaxLimit
+      };
       $scope.multiStagePreviewData = previewService.getPreviewDataForMultiStage(batchData, fromStage, toStage);
       $scope.updateStartAndEndStageInstance(fromStage, toStage);
     };

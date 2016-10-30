@@ -21,9 +21,8 @@
   </thead>
 
   <tbody>
-  <tr ng-repeat="inputRecord in multiStagePreviewData.output"
+  <tr ng-repeat="inputRecord in multiStagePreviewData.output | limitTo: recordPagination.outputRecords"
       ng-init="outputRecords = getInputRecords(multiStagePreviewData.input, inputRecord)">
-
     <td>
       <record-tree
         record="inputRecord"
@@ -37,10 +36,20 @@
         show-header="snapshotMode || pipelineConfig.uiInfo.previewConfig.showHeader"
         show-field-type="snapshotMode || pipelineConfig.uiInfo.previewConfig.showFieldType">
       </record-tree>
+
+      <div class="show-more" ng-if="$last && recordPagination.outputRecords < multiStagePreviewData.output.length">
+        <a class="btn btn-link"
+           ng-click="recordPagination.outputRecords = recordPagination.outputRecords + recordMaxLimit;">Show More...</a>
+
+        <span class="separator">|</span>
+
+        <a class="btn btn-link"
+           ng-click="recordPagination.outputRecords = multiStagePreviewData.output.length;">Show All ({{multiStagePreviewData.output.length}}) ...</a>
+      </div>
     </td>
 
     <td>
-      <div ng-repeat="record in outputRecords">
+      <div ng-repeat="record in outputRecords | limitTo: recordPagination.inputRecords">
         <record-tree
           record="record"
           record-value="record.value"
@@ -53,13 +62,76 @@
           show-header="snapshotMode || pipelineConfig.uiInfo.previewConfig.showHeader"
           show-field-type="snapshotMode || pipelineConfig.uiInfo.previewConfig.showFieldType">
         </record-tree>
+
+        <div class="show-more" ng-if="$last && recordPagination.inputRecords < outputRecords.length">
+          <a class="btn btn-link"
+             ng-click="recordPagination.inputRecords = recordPagination.inputRecords + recordMaxLimit;">Show More...</a>
+
+          <span class="separator">|</span>
+
+          <a class="btn btn-link"
+             ng-click="recordPagination.inputRecords = outputRecords.length;">Show All ({{outputRecords.length}}) ...</a>
+        </div>
+      </div>
+    </td>
+  </tr>
+
+  <tr ng-repeat="inputRecord in multiStagePreviewData.eventRecords | limitTo: recordPagination.eventRecords"
+      ng-init="outputRecords = getInputRecords(multiStagePreviewData.input, inputRecord)">
+    <td>
+      <record-tree
+        record="inputRecord"
+        record-value="inputRecord.value"
+        diff-type="'input'"
+        diff-record="outputRecords"
+        diff-record-value="outputRecords[0].value"
+        field-name="('global.form.eventRecord' | translate)+($index+1) + getRecordAdditionalInfo(fromStage.selected, inputRecord, 'output')"
+        is-root="true"
+        editable="previewMode"
+        show-header="snapshotMode || pipelineConfig.uiInfo.previewConfig.showHeader"
+        show-field-type="snapshotMode || pipelineConfig.uiInfo.previewConfig.showFieldType">
+      </record-tree>
+
+      <div class="show-more" ng-if="$last && recordPagination.eventRecords < multiStagePreviewData.eventRecords.length">
+        <a class="btn btn-link"
+           ng-click="recordPagination.eventRecords = recordPagination.eventRecords + recordMaxLimit;">Show More...</a>
+
+        <span class="separator">|</span>
+
+        <a class="btn btn-link"
+           ng-click="recordPagination.eventRecords = multiStagePreviewData.eventRecords.length;">Show All ({{multiStagePreviewData.eventRecords.length}}) ...</a>
       </div>
     </td>
 
+    <td>
+      <div ng-repeat="record in outputRecords | limitTo: recordPagination.inputRecords">
+        <record-tree
+          record="record"
+          record-value="record.value"
+          diff-type="'output'"
+          diff-record="inputRecord"
+          diff-record-value="inputRecord.value"
+          field-name="('global.form.record' | translate)+($parent.$index+1)"
+          is-root="true"
+          editable="false"
+          show-header="snapshotMode || pipelineConfig.uiInfo.previewConfig.showHeader"
+          show-field-type="snapshotMode || pipelineConfig.uiInfo.previewConfig.showFieldType">
+        </record-tree>
+
+        <div class="show-more" ng-if="$last && recordPagination.inputRecords < outputRecords.length">
+          <a class="btn btn-link"
+             ng-click="recordPagination.inputRecords = recordPagination.inputRecords + recordMaxLimit;">Show More...</a>
+
+          <span class="separator">|</span>
+
+          <a class="btn btn-link"
+             ng-click="recordPagination.inputRecords = outputRecords.length;">Show All ({{outputRecords.length}}) ...</a>
+        </div>
+      </div>
+    </td>
   </tr>
 
-
-  <tr ng-repeat="record in multiStagePreviewData.errorRecords">
+  <tr ng-repeat="record in multiStagePreviewData.errorRecords | limitTo: recordPagination.errorRecords">
 
     <td>
       <record-tree
@@ -72,6 +144,16 @@
         show-header="snapshotMode || pipelineConfig.uiInfo.previewConfig.showHeader"
         show-field-type="snapshotMode || pipelineConfig.uiInfo.previewConfig.showFieldType">
       </record-tree>
+
+      <div class="show-more" ng-if="$last && recordPagination.errorRecords < multiStagePreviewData.errorRecords.length">
+        <a class="btn btn-link"
+           ng-click="recordPagination.errorRecords = recordPagination.errorRecords + recordMaxLimit;">Show More...</a>
+
+        <span class="separator">|</span>
+
+        <a class="btn btn-link"
+           ng-click="recordPagination.errorRecords = multiStagePreviewData.errorRecords.length;">Show All ({{multiStagePreviewData.errorRecordss.length}}) ...</a>
+      </div>
     </td>
 
     <td>

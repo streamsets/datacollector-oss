@@ -125,12 +125,26 @@ angular.module('dataCollectorApp.common')
 
           stagePreviewData.errorRecords = stageOutput.errorRecords;
           stagePreviewData.stageErrors = stageOutput.stageErrors;
+
+          stagePreviewData.eventRecords = [];
+          if (stageOutput.eventRecords && stageOutput.eventRecords.length) {
+            var eventLane = eventRecords = stageOutput.instanceName + '_EventLane';
+            angular.forEach(stageOutput.eventRecords, function(eventRecord) {
+              eventRecord.laneName = eventLane;
+              stagePreviewData.eventRecords.push(eventRecord);
+            });
+          }
         }
 
         if(stageOutput.output && toStageInstance.inputLanes && toStageInstance.inputLanes.length) {
           angular.forEach(toStageInstance.inputLanes, function(inputLane) {
             if(stageOutput.output[inputLane]) {
               angular.forEach(stageOutput.output[inputLane], function(input) {
+                input.laneName = inputLane;
+                stagePreviewData.input.push(input);
+              });
+            } else if (inputLane === stageOutput.instanceName + '_EventLane')  {
+              angular.forEach(stageOutput.eventRecords, function(input) {
                 input.laneName = inputLane;
                 stagePreviewData.input.push(input);
               });

@@ -64,6 +64,15 @@ angular
         },
         lineWrapping : true
       },
+      recordMaxLimit: 10,
+      recordPagination: {
+        inputRecords: 10,
+        outputRecords: 10,
+        errorRecords: 10,
+        eventRecords: 10,
+        newRecords: 10
+      },
+
 
       /**
        * Preview Data for previous stage instance.
@@ -481,6 +490,13 @@ angular
     $scope.$on('onSelectionChange', function(event, options) {
       if($scope.previewMode) {
         if (options.type === pipelineConstant.STAGE_INSTANCE) {
+          $scope.recordPagination = {
+            inputRecords: $scope.recordMaxLimit,
+            outputRecords: $scope.recordMaxLimit,
+            errorRecords: $scope.recordMaxLimit,
+            eventRecords: $scope.recordMaxLimit,
+            newRecords: $scope.recordMaxLimit
+          };
           if(options.selectedObject.uiInfo.stageType === pipelineConstant.PROCESSOR_STAGE_TYPE &&
             currentStage.instanceName != options.selectedObject.instanceName &&
             currentStage.inputLanes && currentStage.inputLanes.length && options.selectedObject.inputLanes &&
