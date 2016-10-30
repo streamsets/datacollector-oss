@@ -385,6 +385,8 @@
         <cdh_5_7-lib>cdh_5_7-lib</cdh_5_7-lib>
         <cdh_5_8-cluster-cdh_kafka_2_0-lib>cdh_5_8-cluster-cdh_kafka_2_0-lib</cdh_5_8-cluster-cdh_kafka_2_0-lib>
         <cdh_5_8-lib>cdh_5_8-lib</cdh_5_8-lib>
+        <cdh_5_9-cluster-cdh_kafka_2_0-lib>cdh_5_9-cluster-cdh_kafka_2_0-lib</cdh_5_9-cluster-cdh_kafka_2_0-lib>
+        <cdh_5_9-lib>cdh_5_9-lib</cdh_5_9-lib>
         <cdh_kafka_1_2-lib>cdh_kafka_1_2-lib</cdh_kafka_1_2-lib>
         <cdh_kafka_1_3-lib>cdh_kafka_1_3-lib</cdh_kafka_1_3-lib>
         <cdh_kafka_2_0-lib>cdh_kafka_2_0-lib</cdh_kafka_2_0-lib>
@@ -431,6 +433,8 @@
         <module>cdh_5_7-lib</module>
         <module>cdh_5_8-cluster-cdh_kafka_2_0-lib</module>
         <module>cdh_5_8-lib</module>
+        <module>cdh_5_9-cluster-cdh_kafka_2_0-lib</module>
+        <module>cdh_5_9-lib</module>
         <module>cdh_kafka_1_2-lib</module>
         <module>cdh_kafka_1_3-lib</module>
         <module>cdh_kafka_2_0-lib</module>
@@ -475,8 +479,8 @@
         <apache-kudu_1_0-lib>apache-kudu_1_0-lib</apache-kudu_1_0-lib>
         <apache-solr_6_1_0-lib>apache-solr_6_1_0-lib</apache-solr_6_1_0-lib>
         <cassandra_3-lib>cassandra_3-lib</cassandra_3-lib>
-        <cdh_5_8-cluster-cdh_kafka_2_0-lib>cdh_5_8-cluster-cdh_kafka_2_0-lib</cdh_5_8-cluster-cdh_kafka_2_0-lib>
-        <cdh_5_8-lib>cdh_5_8-lib</cdh_5_8-lib>
+        <cdh_5_9-cluster-cdh_kafka_2_0-lib>cdh_5_9-cluster-cdh_kafka_2_0-lib</cdh_5_9-cluster-cdh_kafka_2_0-lib>
+        <cdh_5_9-lib>cdh_5_9-lib</cdh_5_9-lib>
         <cdh_kafka_2_0-lib>cdh_kafka_2_0-lib</cdh_kafka_2_0-lib>
         <elasticsearch_2_4-lib>elasticsearch_2_4-lib</elasticsearch_2_4-lib>
         <groovy_2_4-lib>groovy_2_4-lib</groovy_2_4-lib>
@@ -497,8 +501,8 @@
         <module>apache-kudu_1_0-lib</module>
         <module>apache-solr_6_1_0-lib</module>
         <module>cassandra_3-lib</module>
-        <module>cdh_5_8-cluster-cdh_kafka_2_0-lib</module>
-        <module>cdh_5_8-lib</module>
+        <module>cdh_5_9-cluster-cdh_kafka_2_0-lib</module>
+        <module>cdh_5_9-lib</module>
         <module>cdh_kafka_1_3-lib</module>
         <module>elasticsearch_2_4-lib</module>
         <module>groovy_2_4-lib</module>
