@@ -694,6 +694,9 @@ public class ScriptingProcessorTestUtil {
       byte_array[i] = (byte) bytes.get(i).getValueAsInteger();
     }
     Assert.assertEquals(FileRefTestUtil.TEXT, new String(byte_array));
+
+    Assert.assertTrue(record.has("/fileRef"));
+    Assert.assertEquals(Field.Type.FILE_REF, record.get("/fileRef").getType());
   }
 
   public static <C extends Processor> void verifyCreateRecord(
