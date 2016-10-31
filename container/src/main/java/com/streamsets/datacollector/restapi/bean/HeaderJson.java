@@ -32,23 +32,26 @@ public class HeaderJson {
   private final HeaderImpl header;
 
   @JsonCreator
-  public HeaderJson(@JsonProperty("stageCreator") String stageCreator,
-                    @JsonProperty("sourceId") String sourceId,
-                    @JsonProperty("stagesPath") String stagesPath,
-                    @JsonProperty("trackingId") String trackingId,
-                    @JsonProperty("previousTrackingId") String previousTrackingId,
-                    @JsonProperty("raw") byte[] raw,
-                    @JsonProperty("rawMimeType") String rawMimeType,
-                    @JsonProperty("errorDataCollectorId") String errorDataCollectorId,
-                    @JsonProperty("errorPipelineName") String errorPipelineName,
-                    @JsonProperty("errorStage") String errorStageInstance,
-                    @JsonProperty("errorCode") String errorCode,
-                    @JsonProperty("errorMessage") String errorMessage,
-                    @JsonProperty("errorTimestamp") long errorTimestamp,
-                    @JsonProperty("errorStackTrace") String errorStackTrace,
-                    @JsonProperty("values") Map<String, Object> map) {
+  public HeaderJson(
+      @JsonProperty("stageCreator") String stageCreator,
+      @JsonProperty("sourceId") String sourceId,
+      @JsonProperty("stagesPath") String stagesPath,
+      @JsonProperty("trackingId") String trackingId,
+      @JsonProperty("previousTrackingId") String previousTrackingId,
+      @JsonProperty("raw") byte[] raw,
+      @JsonProperty("rawMimeType") String rawMimeType,
+      @JsonProperty("errorDataCollectorId") String errorDataCollectorId,
+      @JsonProperty("errorPipelineName") String errorPipelineName,
+      @JsonProperty("errorStage") String errorStageInstance,
+      @JsonProperty("errorCode") String errorCode,
+      @JsonProperty("errorMessage") String errorMessage,
+      @JsonProperty("errorTimestamp") long errorTimestamp,
+      @JsonProperty("errorStackTrace") String errorStackTrace,
+      @JsonProperty("values") Map<String, Object> map
+  ) {
     this.header = new HeaderImpl(stageCreator, sourceId, stagesPath, trackingId, previousTrackingId, raw, rawMimeType,
-      errorDataCollectorId, errorPipelineName, errorStageInstance, errorCode, errorMessage, errorTimestamp, errorStackTrace, map);
+        errorDataCollectorId, errorPipelineName, errorStageInstance, errorCode, errorMessage, errorTimestamp,
+        errorStackTrace, map);
   }
 
   public HeaderJson(HeaderImpl header) {

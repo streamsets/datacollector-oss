@@ -92,6 +92,31 @@
             </td>
           </tr>
 
+          <tr ng-repeat="record in stagePreviewData.errorRecords | limitTo: recordPagination.errorRecords">
+            <td>
+              <record-tree
+                record="record"
+                record-value="record.value"
+                field-name="('global.form.record' | translate)+($parent.$index+1) + '-' + ('global.form.errorRecord' | translate) + ' ' + escapeHtml(record.header.errorMessage)"
+                is-root="true"
+                is-error="true"
+                editable="false"
+                show-header="snapshotMode || pipelineConfig.uiInfo.previewConfig.showHeader"
+                show-field-type="snapshotMode || pipelineConfig.uiInfo.previewConfig.showFieldType">
+              </record-tree>
+
+              <div class="show-more" ng-if="$last && recordPagination.errorRecords < stagePreviewData.errorRecords.length">
+                <a class="btn btn-link"
+                   ng-click="recordPagination.errorRecords = recordPagination.errorRecords + recordMaxLimit;">Show More...</a>
+
+                <span class="separator">|</span>
+
+                <a class="btn btn-link"
+                   ng-click="recordPagination.errorRecords = stagePreviewData.errorRecords.length;">Show All ({{stagePreviewData.errorRecords.length}}) ...</a>
+              </div>
+            </td>
+          </tr>
+
           </tbody>
         </table>
       </td>

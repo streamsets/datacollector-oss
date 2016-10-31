@@ -72,7 +72,7 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable {
   }
 
   // Record.Header interface
-  
+
   @Override
   public String getStageCreator() {
     return (String) map.get(STAGE_CREATOR_INSTANCE_ATTR);
@@ -179,7 +179,7 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable {
   }
 
   // For Json serialization
-  
+
   @SuppressWarnings("unchecked")
   public Map<String, String> getValues() {
     return (Map) Maps.filterKeys(map, this);
@@ -192,8 +192,12 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable {
     this.map = map;
     setStageCreator(stageCreator);
     setSourceId(sourceId);
-    setStagesPath(stagesPath);
-    setTrackingId(trackingId);
+    if (stagesPath != null) {
+      setStagesPath(stagesPath);
+    }
+    if (trackingId != null) {
+      setTrackingId(trackingId);
+    }
     if (errorDataCollectorId != null && errorPipelineName != null) {
       setErrorContext(errorDataCollectorId, errorPipelineName);
     }
