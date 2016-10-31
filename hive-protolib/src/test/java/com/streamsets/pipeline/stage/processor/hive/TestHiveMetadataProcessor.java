@@ -46,7 +46,6 @@ import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
 import com.streamsets.pipeline.stage.lib.hive.TestHiveMetastoreUtil;
 import com.streamsets.pipeline.stage.lib.hive.cache.HMSCache;
 import com.streamsets.pipeline.stage.lib.hive.cache.HMSCacheType;
-import com.streamsets.pipeline.stage.lib.hive.cache.TypeInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.DecimalHiveTypeSupport;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
@@ -184,6 +183,18 @@ public class TestHiveMetadataProcessor {
     );
     PowerMockito.replace(
         MemberMatcher.method(
+            HiveConfigBean.class,
+            "getHiveConnection"
+        )
+    ).with(new InvocationHandler() {
+      @Override
+      public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        return null;
+      }
+    });
+
+    PowerMockito.replace(
+        MemberMatcher.method(
             BaseHiveIT.class,
             "getHiveConfigBean"
         )
@@ -196,6 +207,7 @@ public class TestHiveMetadataProcessor {
         return bean;
       }
     });
+
   }
 
   /**

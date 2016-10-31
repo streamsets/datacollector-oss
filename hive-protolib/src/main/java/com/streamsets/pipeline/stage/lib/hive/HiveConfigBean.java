@@ -23,6 +23,7 @@ import com.google.common.base.Joiner;
 import com.streamsets.datacollector.security.HadoopSecurityUtil;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.StringEL;
 import org.apache.hadoop.conf.Configuration;
@@ -115,9 +116,19 @@ public class HiveConfigBean {
   public Configuration getConfiguration() {
     return configuration;
   }
-  public Connection getHiveConnection() {return hiveConnection;}
   public String getHiveConfigValue(String name) {
     return hConf.get(name);
+  }
+
+  /**
+   * Returns valid connection to Hive or throws StageException.
+   */
+  public Connection getHiveConnection() throws StageException {
+    if(!HiveMetastoreUtil.isHiveConnectionValid(hiveConnection, loginUgi)) {
+      LOG.info("Connection to Hive become stale, reconnecting.");
+      hiveConnection = HiveMetastoreUtil.getHiveConnection(hiveJDBCUrl, loginUgi);
+    }
+    return hiveConnection;
   }
 
   /**
@@ -234,7 +245,7 @@ public class HiveConfigBean {
     }
 
     try {
-      hiveConnection = HiveMetastoreUtil.getHiveConnection(hiveJDBCUrl, loginUgi);
+      hiveConnection = getHiveConnection();
     } catch(Exception e) {
       LOG.error(Utils.format("Error Connecting to Hive Database with URL {}", hiveJDBCUrl), e);
       issues.add(context.createConfigIssue(
@@ -246,6 +257,7 @@ public class HiveConfigBean {
       ));
     }
   }
+
   public void destroy() {
     if (hiveConnection != null) {
       try {

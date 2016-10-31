@@ -52,7 +52,9 @@ import java.math.BigDecimal;
 import java.security.PrivilegedExceptionAction;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -801,6 +803,40 @@ public final class HiveMetastoreUtil {
     } catch (Exception e) {
       LOG.error("Failed to connect to Hive with JDBC URL:" + jdbcUrl, e);
       throw new StageException(Errors.HIVE_22, jdbcUrl, e.getMessage());
+    }
+  }
+
+  public static boolean isHiveConnectionValid(final Connection connection, UserGroupInformation ugi) {
+    try {
+      return ugi.doAs(new PrivilegedExceptionAction<Boolean>() {
+        @Override
+        public Boolean run() throws SQLException {
+          // This could be simplified to:
+          //
+          // return connection != null && connection.isValid();
+          //
+          // However the method isValid has been only implemented in Hive 2.0 via HIVE-12605 and did not made it's
+          // way to all major hadoop distros yet (for example CDH 5.8 doesn't have this method yet).
+          if(connection == null) {
+            return false;
+          }
+
+          try(
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("select 1");
+          ) {
+            rs.next();
+            if(rs.getInt(1) == 1) {
+              return true;
+            }
+          }
+          return false;
+        }
+      });
+    } catch (Exception e) {
+      LOG.debug("Can't determine if connection to Hive is still valid", e);
+      // Something went wrong when validating the connectivity, so the connection can't be valid.
+      return false;
     }
   }
 

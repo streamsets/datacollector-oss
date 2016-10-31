@@ -31,6 +31,7 @@ import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.BaseHiveIT;
 import com.streamsets.pipeline.stage.HiveMetastoreTargetBuilder;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
+import com.streamsets.pipeline.stage.lib.hive.HiveConfigBean;
 import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
 import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
 import com.streamsets.pipeline.stage.lib.hive.TestHMSCache;
@@ -73,6 +74,7 @@ import java.util.Set;
     HiveMetastoreTarget.class,
     HMSTargetConfigBean.class,
     HiveMetastoreUtil.class,
+    HiveConfigBean.class,
     HMSCache.class,
     HMSCache.Builder.class,
     HMSCacheSupport.HMSCacheLoader.class,
@@ -108,6 +110,18 @@ public class TestHiveMetastoreTarget {
         return method.invoke(proxy, args);
       }
     });
+    PowerMockito.replace(
+        MemberMatcher.method(
+            HiveConfigBean.class,
+            "getHiveConnection"
+        )
+    ).with(new InvocationHandler() {
+      @Override
+      public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        return null;
+      }
+    });
+
     //Suppress queries
     PowerMockito.suppress(MemberMatcher.method(HiveQueryExecutor.class, "executeCreateTableQuery"));
     PowerMockito.suppress(MemberMatcher.method(HiveQueryExecutor.class, "executeAlterTableAddColumnsQuery"));

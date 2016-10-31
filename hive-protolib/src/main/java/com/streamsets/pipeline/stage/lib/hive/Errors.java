@@ -57,6 +57,7 @@ public enum Errors implements ErrorCode {
   HIVE_31("Partition Location mismatch. Actual : {}, Expected: {}"),
   HIVE_32("Table {} is created using unsupported Storage Format Type {} "),
   HIVE_33("Record {} have unsupported root type {}"),
+  HIVE_34("Connection to Hive have failed: {}"),
   ;
   private final String msg;
 
