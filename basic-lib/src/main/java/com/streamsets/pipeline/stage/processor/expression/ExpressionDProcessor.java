@@ -44,9 +44,7 @@ public class ExpressionDProcessor extends DProcessor {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.MODEL,
-      defaultValue="",
       label = "Field Expressions",
-      description = "",
       displayPosition = 10,
       group = "EXPRESSIONS"
   )
@@ -56,9 +54,7 @@ public class ExpressionDProcessor extends DProcessor {
   @ConfigDef(
     required = false,
     type = ConfigDef.Type.MODEL,
-    defaultValue="",
     label = "Header Attribute Expressions",
-    description = "",
     displayPosition = 10,
     group = "EXPRESSIONS"
   )

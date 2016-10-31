@@ -27,7 +27,6 @@ public class HeaderAttributeConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      defaultValue = "/",
       label = "Header Attribute",
       description = "Use an existing header attribute or enter a new attribute. Using an existing attribute " +
         "overwrites the original value.",
@@ -40,7 +39,6 @@ public class HeaderAttributeConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      defaultValue = "${record:value('/')}",
       label = "Header Attribute Expression",
       description = "Use the expression language to modify or set new attributes in the header.",
       displayPosition = 40,
