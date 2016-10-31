@@ -242,7 +242,7 @@ public class ScriptObjectFactory {
     } else if (scriptObject instanceof byte[]) {
       field = Field.create((byte[]) scriptObject);
     } else if (scriptObject instanceof ScriptFileRef) {
-      field = Field.create(((ScriptFileRefImpl)scriptObject).fileRef);
+      field = Field.create(getFileRefFromScriptFileRef((ScriptFileRef)scriptObject));
     } else {
       field = ScriptTypedNullObject.getTypedNullFieldFromScript(scriptObject);
       if (field == null) {
@@ -253,4 +253,7 @@ public class ScriptObjectFactory {
     return field;
   }
 
+  protected FileRef getFileRefFromScriptFileRef(ScriptFileRef scriptObject) {
+    return ((ScriptFileRefImpl)scriptObject).fileRef;
+  }
 }
