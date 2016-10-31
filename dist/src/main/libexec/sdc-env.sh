@@ -47,7 +47,7 @@ export SDC_ROOT_CLASSPATH=${SDC_ROOT_CLASSPATH:-${SDC_DIST}/root-lib/'*'}
 
 # SDC upon start will verify that `ulimit -n` will return at least the following,
 # otherwise SDC start will fail.
-export SDC_FILE_LIMIT="${SDC_FILE_LIMIT:-4096}"
+export SDC_FILE_LIMIT="${SDC_FILE_LIMIT:-8192}"
 
 # JVM options for the data collector process
 #
