@@ -151,7 +151,7 @@ public class SpoolDirConfigBean {
       displayPosition = 50,
       group = "FILES",
       dependsOn = "dataFormat",
-      triggeredByValue = { "TEXT", "JSON", "XML", "DELIMITED", "LOG"}
+      triggeredByValue = { "TEXT", "JSON", "XML", "DELIMITED", "LOG", "WHOLE_FILE"}
   )
   public String initialFileToProcess;
 
