@@ -66,7 +66,7 @@ angular
     angular.extend($scope, {
       loaded: false,
       pipelines: [],
-      selectedPipelineLabel: 'All Pipelines',
+      selectedPipelineLabel: 'system:All Pipelines',
       filteredPipelines: [],
       header: {
         pipelineGridView: $rootScope.$storage.pipelineListState.gridView,
@@ -96,67 +96,80 @@ angular
         var regex = new RegExp(searchInput, 'i');
         $scope.$storage.pipelineListState.searchInput = searchInput;
 
-        switch ($scope.selectedPipelineLabel) {
-          case 'All Pipelines':
-            $scope.filteredPipelines = _.filter($scope.pipelines, function(pipelineInfo) {
-              return regex.test(pipelineInfo.name);
-            });
-            break;
-          case 'Running Pipelines':
-            $scope.filteredPipelines = _.filter($scope.pipelines, function(pipelineInfo) {
-              var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
-              return (pipelineStatus && pipelineStatus.name === pipelineInfo.name && regex.test(pipelineInfo.name) &&
-              _.contains(['RUNNING', 'STARTING', 'CONNECT_ERROR', 'RETRY', 'STOPPING'], pipelineStatus.status));
-            });
-            break;
-          case 'Non Running Pipelines':
-            $scope.filteredPipelines = _.filter($scope.pipelines, function(pipelineInfo) {
-              var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
-              return (pipelineStatus && pipelineStatus.name === pipelineInfo.name && regex.test(pipelineInfo.name) &&
-              !_.contains(['RUNNING', 'STARTING', 'CONNECT_ERROR', 'RETRY', 'STOPPING'], pipelineStatus.status));
-            });
-            break;
-          case 'Invalid Pipelines':
-            $scope.filteredPipelines = _.filter($scope.pipelines, function(pipelineInfo) {
-              return !pipelineInfo.valid && regex.test(pipelineInfo.name);
-            });
-            break;
-          case 'Error Pipelines':
-            $scope.filteredPipelines = _.filter($scope.pipelines, function(pipelineInfo) {
-              var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
-              return (pipelineStatus && pipelineStatus.name === pipelineInfo.name && regex.test(pipelineInfo.name) &&
-              _.contains(['START_ERROR', 'RUNNING_ERROR', 'RUN_ERROR', 'CONNECT_ERROR'], pipelineStatus.status));
-            });
-            break;
-          case 'Published Pipelines':
-            $scope.filteredPipelines = _.filter($scope.pipelines, function(pipelineInfo) {
-              var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
-              return (pipelineStatus && pipelineStatus.name === pipelineInfo.name && regex.test(pipelineInfo.name) &&
-              pipelineInfo.metadata && pipelineInfo.metadata['dpm.pipeline.id'] &&
-              !(pipelineStatus.attributes && pipelineStatus.attributes.IS_REMOTE_PIPELINE));
-            });
-            break;
-          case 'DPM Controlled Pipelines':
-            $scope.filteredPipelines = _.filter($scope.pipelines, function(pipelineInfo) {
-              var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
-              return (pipelineStatus && pipelineStatus.name === pipelineInfo.name && regex.test(pipelineInfo.name) &&
-              pipelineStatus.attributes && pipelineStatus.attributes.IS_REMOTE_PIPELINE);
-            });
-            break;
-          case 'Local Pipelines':
-            $scope.filteredPipelines = _.filter($scope.pipelines, function(pipelineInfo) {
-              var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
-              return (pipelineStatus && pipelineStatus.name === pipelineInfo.name && regex.test(pipelineInfo.name) &&
-              !(pipelineInfo.metadata && pipelineInfo.metadata['dpm.pipeline.id']));
-            });
-            break;
-          default:
-            // User labels
-            $scope.filteredPipelines = _.filter($scope.pipelines, function(pipelineInfo) {
-              return regex.test(pipelineInfo.name) && pipelineInfo.metadata && pipelineInfo.metadata.labels &&
-                _.contains(pipelineInfo.metadata.labels, $scope.selectedPipelineLabel);
-            });
-            break;
+        var labelParts = $scope.selectedPipelineLabel.split(':'),
+            labelType = labelParts[0],
+            userLabel = labelParts[1];
+
+        if (labelType === 'custom') {
+          $scope.filteredPipelines = _.filter($scope.pipelines, function (pipelineInfo) {
+            return regex.test(pipelineInfo.name) && pipelineInfo.metadata && pipelineInfo.metadata.labels &&
+                _.contains(pipelineInfo.metadata.labels, userLabel);
+          });
+
+        } else {
+
+          switch ($scope.selectedPipelineLabel) {
+            case 'system:All Pipelines':
+              $scope.filteredPipelines = _.filter($scope.pipelines, function (pipelineInfo) {
+                return regex.test(pipelineInfo.name);
+              });
+              break;
+
+            case 'system:Running Pipelines':
+              $scope.filteredPipelines = _.filter($scope.pipelines, function (pipelineInfo) {
+                var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
+                return (pipelineStatus && pipelineStatus.name === pipelineInfo.name && regex.test(pipelineInfo.name) &&
+                    _.contains(['RUNNING', 'STARTING', 'CONNECT_ERROR', 'RETRY', 'STOPPING'], pipelineStatus.status));
+              });
+              break;
+
+            case 'system:Non Running Pipelines':
+              $scope.filteredPipelines = _.filter($scope.pipelines, function (pipelineInfo) {
+                var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
+                return (pipelineStatus && pipelineStatus.name === pipelineInfo.name && regex.test(pipelineInfo.name) &&
+                    !_.contains(['RUNNING', 'STARTING', 'CONNECT_ERROR', 'RETRY', 'STOPPING'], pipelineStatus.status));
+              });
+              break;
+
+            case 'system:Invalid Pipelines':
+              $scope.filteredPipelines = _.filter($scope.pipelines, function (pipelineInfo) {
+                return !pipelineInfo.valid && regex.test(pipelineInfo.name);
+              });
+              break;
+
+            case 'system:Error Pipelines':
+              $scope.filteredPipelines = _.filter($scope.pipelines, function (pipelineInfo) {
+                var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
+                return (pipelineStatus && pipelineStatus.name === pipelineInfo.name && regex.test(pipelineInfo.name) &&
+                    _.contains(['START_ERROR', 'RUNNING_ERROR', 'RUN_ERROR', 'CONNECT_ERROR'], pipelineStatus.status));
+              });
+              break;
+
+            case 'system:Published Pipelines':
+              $scope.filteredPipelines = _.filter($scope.pipelines, function (pipelineInfo) {
+                var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
+                return (pipelineStatus && pipelineStatus.name === pipelineInfo.name && regex.test(pipelineInfo.name) &&
+                    pipelineInfo.metadata && pipelineInfo.metadata['dpm.pipeline.id'] &&
+                    !(pipelineStatus.attributes && pipelineStatus.attributes.IS_REMOTE_PIPELINE));
+              });
+              break;
+
+            case 'system:DPM Controlled Pipelines':
+              $scope.filteredPipelines = _.filter($scope.pipelines, function (pipelineInfo) {
+                var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
+                return (pipelineStatus && pipelineStatus.name === pipelineInfo.name && regex.test(pipelineInfo.name) &&
+                    pipelineStatus.attributes && pipelineStatus.attributes.IS_REMOTE_PIPELINE);
+              });
+              break;
+
+            case 'system:Local Pipelines':
+              $scope.filteredPipelines = _.filter($scope.pipelines, function (pipelineInfo) {
+                var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
+                return (pipelineStatus && pipelineStatus.name === pipelineInfo.name && regex.test(pipelineInfo.name) &&
+                    !(pipelineInfo.metadata && pipelineInfo.metadata['dpm.pipeline.id']));
+              });
+              break;
+          }
         }
       },
 

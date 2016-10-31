@@ -36,8 +36,8 @@
     <ul class="list-group predefined-labels">
       <li class="list-group-item pointer clearfix"
           ng-repeat="pipelineLabel in pipelineLabels"
-          ng-class="{'active' : selectedPipelineLabel === pipelineLabel}"
-          ng-click="onSelectLabel(pipelineLabel)">
+          ng-class="{'active' : selectedPipelineLabel === 'system:' + pipelineLabel}"
+          ng-click="onSelectLabel('system:' + pipelineLabel)">
         <span class="pipeline-details-name">{{pipelineLabel}}</span>
       </li>
 
@@ -47,8 +47,8 @@
 
       <li class="list-group-item pointer clearfix"
           ng-repeat="pipelineLabel in existingPipelineLabels"
-          ng-class="{'active' : selectedPipelineLabel === pipelineLabel}"
-          ng-click="onSelectLabel(pipelineLabel)">
+          ng-class="{'active' : selectedPipelineLabel === 'custom:' + pipelineLabel}"
+          ng-click="onSelectLabel('custom:' + pipelineLabel)">
         <span class="pipeline-details-name">{{pipelineLabel}}</span>
       </li>
     </ul>
