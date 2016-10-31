@@ -248,7 +248,7 @@ public class PipelineConfigBean implements Stage {
       type = ConfigDef.Type.NUMBER,
       defaultValue = "0",
       label = "Rate Limit (records / sec)",
-      description = "Maximum number of events per second that should be accepted into the pipeline. " +
+      description = "Maximum number of records per second that should be accepted into the pipeline. " +
           "Rate is not limited if this is not set, or is set to 0",
       displayPosition = 180
   )
