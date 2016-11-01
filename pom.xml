@@ -141,6 +141,7 @@
     <module>sdc-elasticsearch-api</module>
     <module>sdc-elasticsearch_1</module>
     <module>sdc-elasticsearch_2</module>
+    <module>sdc-elasticsearch_5</module>
     <module>elasticsearch-protolib</module>
 
     <module>solr-protolib</module>
@@ -402,6 +403,7 @@
         <elasticsearch_2_2-lib>elasticsearch_2_2-lib</elasticsearch_2_2-lib>
         <elasticsearch_2_3-lib>elasticsearch_2_3-lib</elasticsearch_2_3-lib>
         <elasticsearch_2_4-lib>elasticsearch_2_4-lib</elasticsearch_2_4-lib>
+        <elasticsearch_5_0-lib>elasticsearch_5_0-lib</elasticsearch_5_0-lib>
         <groovy_2_4-lib>groovy_2_4-lib</groovy_2_4-lib>
         <hdp_2_2-lib>hdp_2_2-lib</hdp_2_2-lib>
         <hdp_2_3-lib>hdp_2_3-lib</hdp_2_3-lib>
@@ -450,6 +452,7 @@
         <module>elasticsearch_2_2-lib</module>
         <module>elasticsearch_2_3-lib</module>
         <module>elasticsearch_2_4-lib</module>
+        <module>elasticsearch_5_0-lib</module>
         <module>groovy_2_4-lib</module>
         <module>hdp_2_2-lib</module>
         <module>hdp_2_3-lib</module>
@@ -485,7 +488,7 @@
         <cdh_5_9-cluster-cdh_kafka_2_0-lib>cdh_5_9-cluster-cdh_kafka_2_0-lib</cdh_5_9-cluster-cdh_kafka_2_0-lib>
         <cdh_5_9-lib>cdh_5_9-lib</cdh_5_9-lib>
         <cdh_kafka_2_0-lib>cdh_kafka_2_0-lib</cdh_kafka_2_0-lib>
-        <elasticsearch_2_4-lib>elasticsearch_2_4-lib</elasticsearch_2_4-lib>
+        <elasticsearch_5_0-lib>elasticsearch_5_0-lib</elasticsearch_5_0-lib>
         <groovy_2_4-lib>groovy_2_4-lib</groovy_2_4-lib>
         <hdp_2_4-lib>hdp_2_4-lib</hdp_2_4-lib>
         <jython_2_7-lib>jython_2_7-lib</jython_2_7-lib>
@@ -508,7 +511,7 @@
         <module>cdh_5_9-cluster-cdh_kafka_2_0-lib</module>
         <module>cdh_5_9-lib</module>
         <module>cdh_kafka_1_3-lib</module>
-        <module>elasticsearch_2_4-lib</module>
+        <module>elasticsearch_5_0-lib</module>
         <module>groovy_2_4-lib</module>
         <module>hdp_2_4-lib</module>
         <module>jython_2_7-lib</module>
@@ -659,7 +662,7 @@
     </repository>
     <repository>
       <id>elasticsearch-releases</id>
-      <url>http://maven.elasticsearch.org/releases</url>
+      <url>https://artifacts.elastic.co/maven</url>
       <releases>
         <enabled>true</enabled>
       </releases>

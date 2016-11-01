@@ -20,7 +20,7 @@
 package com.streamsets.pipeline.elasticsearch.api;
 
 import org.elasticsearch.client.Client;
-import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.node.Node;
 
 import java.net.UnknownHostException;
 import java.util.List;
@@ -47,7 +47,7 @@ public abstract class ElasticSearchFactory {
       boolean useElasticCloud
   ) throws UnknownHostException;
 
-  public abstract Settings createSettings(Map<String, Object> configs);
+  public abstract Node createTestNode(Map<String, Object> configs);
 
   static {
     int serviceCount = 0;
@@ -93,7 +93,7 @@ public abstract class ElasticSearchFactory {
     );
   }
 
-  public static Settings settings(Map<String, Object> configs) {
-    return factory.createSettings(configs);
+  public static Node node(Map<String, Object> configs) {
+    return factory.createTestNode(configs);
   }
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,18 +22,22 @@ package com.streamsets.pipeline.elasticsearch.impl;
 import com.streamsets.pipeline.elasticsearch.api.ElasticSearchFactory;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
-import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.node.Node;
-import org.elasticsearch.node.NodeBuilder;
-import org.elasticsearch.plugins.PluginsService;
+import org.elasticsearch.node.internal.InternalSettingsPreparer;
+import org.elasticsearch.transport.Netty3Plugin;
+import org.elasticsearch.transport.Netty4Plugin;
+import org.elasticsearch.xpack.XPackPlugin;
+import org.elasticsearch.xpack.client.PreBuiltXPackTransportClient;
 
+import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class ElasticSearch1Factory extends ElasticSearchFactory {
+public class ElasticSearch5Factory extends ElasticSearchFactory {
 
   @Override
   public Client createClient(
@@ -41,36 +45,41 @@ public class ElasticSearch1Factory extends ElasticSearchFactory {
       List<String> uris,
       boolean clientSniff,
       Map<String, String> configs,
-      boolean useShield,
-      String shieldUser,
-      boolean shieldTransportSsl,
+      boolean useSecurity,
+      String securityUser,
+      boolean securityTransportSsl,
       String sslKeystorePath,
       String sslKeystorePassword,
       String sslTruststorePath,
       String sslTruststorePassword,
       boolean useElasticCloud
   ) throws UnknownHostException {
-    ImmutableSettings.Builder settingsBuilder = ImmutableSettings.settingsBuilder()
+    Settings.Builder settingsBuilder = Settings.builder()
         .put("client.transport.sniff", clientSniff)
         .put("cluster.name", clusterName)
         .put(configs);
 
-    if (useShield) {
+    if (useSecurity) {
       settingsBuilder = settingsBuilder
-          .put("shield.user", shieldUser)
-          .put("shield.transport.ssl", shieldTransportSsl);
+          .put("xpack.security.user", securityUser)
+          .put("xpack.security.transport.ssl.enabled", securityTransportSsl);
       if (sslKeystorePath != null && !sslKeystorePath.isEmpty()) {
-        settingsBuilder = settingsBuilder.put("shield.ssl.keystore.path", sslKeystorePath);
+        settingsBuilder = settingsBuilder.put("xpack.ssl.keystore.path", sslKeystorePath);
       }
       if (sslKeystorePassword != null && !sslKeystorePassword.isEmpty()) {
-        settingsBuilder = settingsBuilder.put("shield.ssl.keystore.password", sslKeystorePassword);
+        settingsBuilder = settingsBuilder.put("xpack.ssl.keystore.password", sslKeystorePassword);
       }
       if (sslTruststorePath != null && !sslTruststorePath.isEmpty()) {
-        settingsBuilder = settingsBuilder.put("shield.ssl.truststore.path", sslTruststorePath);
+        settingsBuilder = settingsBuilder.put("xpack.ssl.truststore.path", sslTruststorePath);
       }
       if (sslTruststorePassword != null && !sslTruststorePassword.isEmpty()) {
-        settingsBuilder = settingsBuilder.put("shield.ssl.truststore.password", sslTruststorePassword);
+        settingsBuilder = settingsBuilder.put("xpack.ssl.truststore.password", sslTruststorePassword);
       }
+    }
+    if (useElasticCloud) {
+      settingsBuilder = settingsBuilder
+          .put("action.bulk.compress", false) // To use Found, action.bulk.compress must be disabled
+          .put("request.headers.X-Found-Cluster", clusterName);
     }
 
     Settings settings = settingsBuilder.build();
@@ -78,20 +87,33 @@ public class ElasticSearch1Factory extends ElasticSearchFactory {
     for (int i = 0; i < uris.size(); i++) {
       String uri = uris.get(i);
       String[] parts = uri.split(":");
-      elasticAddresses[i] = new InetSocketTransportAddress(parts[0], Integer.parseInt(parts[1]));
+      elasticAddresses[i] = new InetSocketTransportAddress(InetAddress.getByName(parts[0]), Integer.parseInt(parts[1]));
     }
-    return new TransportClient(settings, false).addTransportAddresses(elasticAddresses);
+    TransportClient client;
+    if (useSecurity) {
+      client = new PreBuiltXPackTransportClient(settings, XPackPlugin.class);
+    } else {
+      client = new PreBuiltXPackTransportClient(settings);
+    }
+    return client.addTransportAddresses(elasticAddresses);
   }
 
   @Override
   public Node createTestNode(Map<String, Object> configs) {
-    ImmutableSettings.Builder settings = ImmutableSettings.builder();
+    Settings.Builder settings = Settings.builder();
     for (Map.Entry<String, Object> config : configs.entrySet()) {
       settings.put(config.getKey(), config.getValue());
     }
-    // Needed to avoid "shield plugin requires the license plugin to be installed" error in unit tests
-    settings.put("plugins." + PluginsService.LOAD_PLUGIN_FROM_CLASSPATH, false);
-    return NodeBuilder.nodeBuilder().settings(settings.build()).build();
+    return new TestNode(settings.build());
   }
 
+  static class TestNode extends Node {
+    public TestNode(Settings settings) {
+      super(
+          InternalSettingsPreparer.prepareEnvironment(settings, null),
+          // To enable an http port in integration tests, the following plugins must be loaded.
+          Arrays.asList(Netty3Plugin.class, Netty4Plugin.class)
+      );
+    }
+  }
 }

@@ -24,6 +24,8 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.elasticsearch.node.Node;
+import org.elasticsearch.node.NodeBuilder;
 import org.elasticsearch.shield.ShieldPlugin;
 
 import java.net.InetAddress;
@@ -91,12 +93,12 @@ public class ElasticSearch2Factory extends ElasticSearchFactory {
   }
 
   @Override
-  public Settings createSettings(Map<String, Object> configs) {
+  public Node createTestNode(Map<String, Object> configs) {
     Settings.Builder settings = Settings.builder();
     for (Map.Entry<String, Object> config : configs.entrySet()) {
       settings.put(config.getKey(), config.getValue());
     }
-    return settings.build();
+    return NodeBuilder.nodeBuilder().settings(settings.build()).build();
   }
 
 }

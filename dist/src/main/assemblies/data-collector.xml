@@ -407,6 +407,10 @@
       <directory>${basedir}/../${elasticsearch_2_4-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
+    <fileSet>
+      <directory>${basedir}/../${elasticsearch_5_0-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
 
     <!-- Mongo libs -->
     <fileSet>

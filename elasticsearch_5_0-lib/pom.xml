@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2015 StreamSets Inc.
+  Copyright 2016 StreamSets Inc.
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -20,20 +20,20 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.streamsets</groupId>
-    <artifactId>streamsets-datacollector-root-lib</artifactId>
+    <artifactId>streamsets-datacollector-stage-lib-parent</artifactId>
     <version>2.2.0.0-SNAPSHOT</version>
-    <relativePath>../root-lib</relativePath>
+    <relativePath>../stage-lib-parent</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
-  <artifactId>streamsets-datacollector-elasticsearch-protolib</artifactId>
+  <artifactId>streamsets-datacollector-elasticsearch_5_0-lib</artifactId>
   <version>2.2.0.0-SNAPSHOT</version>
-  <description>StreamSets Data Collector Elastic Search ProtoLib</description>
-  <name>StreamSets Data Collector Elastic Search ProtoLib</name>
+  <description>StreamSets Data Collector Elastic Search 5.0.0 Lib</description>
+  <name>StreamSets Data Collector Elastic Search 5.0.0 Lib</name>
   <packaging>jar</packaging>
 
   <properties>
     <elasticsearch.version>5.0.0</elasticsearch.version>
-    <httpclient.version>4.5.1</httpclient.version>
+    <jackson.version>2.8.1</jackson.version>
     <log4j2.version>2.7</log4j2.version>
   </properties>
 
@@ -68,35 +68,16 @@
       <artifactId>streamsets-datacollector-sdk</artifactId>
       <scope>provided</scope>
     </dependency>
+
     <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-sdc-elasticsearch-5</artifactId>
-      <version>${project.version}</version>
-      <scope>provided</scope>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.elasticsearch</groupId>
-      <artifactId>elasticsearch</artifactId>
-      <version>${elasticsearch.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.elasticsearch.client</groupId>
-      <artifactId>x-pack-transport</artifactId>
-      <version>${elasticsearch.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.elasticsearch.plugin</groupId>
-      <artifactId>transport-netty3-client</artifactId>
-      <version>${elasticsearch.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.elasticsearch.plugin</groupId>
-      <artifactId>transport-netty4-client</artifactId>
-      <version>${elasticsearch.version}</version>
-      <scope>provided</scope>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
@@ -111,41 +92,45 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-common</artifactId>
-      <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>commons-io</groupId>
-          <artifactId>commons-io</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-commonlib</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-sdc-elasticsearch-api</artifactId>
+      <artifactId>streamsets-datacollector-elasticsearch-protolib</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>fluent-hc</artifactId>
-      <version>${httpclient.version}</version>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-sdc-elasticsearch-5</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.elasticsearch</groupId>
+      <artifactId>elasticsearch</artifactId>
+      <version>${elasticsearch.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.elasticsearch.client</groupId>
+      <artifactId>x-pack-transport</artifactId>
+      <version>${elasticsearch.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.elasticsearch.plugin</groupId>
+      <artifactId>transport-netty3-client</artifactId>
+      <version>${elasticsearch.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.elasticsearch.plugin</groupId>
+      <artifactId>transport-netty4-client</artifactId>
+      <version>${elasticsearch.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>${jackson.version}</version>
       <scope>compile</scope>
     </dependency>
 
@@ -153,6 +138,38 @@
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>add-test-source</id>
+            <phase>generate-test-sources</phase>
+            <goals>
+              <goal>add-test-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${basedir}/../elasticsearch-protolib/src/test/java</source>
+              </sources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>add-test-resources</id>
+            <phase>generate-test-resources</phase>
+            <goals>
+              <goal>add-test-resource</goal>
+            </goals>
+            <configuration>
+              <resources>
+                <resource>
+                  <directory>${basedir}/../elasticsearch-protolib/src/test/resources</directory>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-deploy-plugin</artifactId>
@@ -163,5 +180,4 @@
       </plugin>
     </plugins>
   </build>
-
 </project>

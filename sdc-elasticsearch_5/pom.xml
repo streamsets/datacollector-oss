@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2015 StreamSets Inc.
+  Copyright 2016 StreamSets Inc.
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -20,15 +20,15 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.streamsets</groupId>
-    <artifactId>streamsets-datacollector-root</artifactId>
+    <artifactId>streamsets-datacollector-root-lib</artifactId>
     <version>2.2.0.0-SNAPSHOT</version>
-    <relativePath>../root</relativePath>
+    <relativePath>../root-lib</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
-  <artifactId>streamsets-datacollector-sdc-elasticsearch-api</artifactId>
+  <artifactId>streamsets-datacollector-sdc-elasticsearch-5</artifactId>
   <version>2.2.0.0-SNAPSHOT</version>
-  <description>StreamSets Data Collector SDC ElasticSearch API</description>
-  <name>StreamSets Data Collector SDC elasticsearch API</name>
+  <description>StreamSets Data Collector SDC ElasticSearch 5</description>
+  <name>StreamSets Data Collector SDC elasticsearch 5</name>
   <packaging>jar</packaging>
 
   <properties>
@@ -36,6 +36,12 @@
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-sdc-elasticsearch-api</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+    </dependency>
     <dependency>
       <groupId>org.elasticsearch</groupId>
       <artifactId>elasticsearch</artifactId>

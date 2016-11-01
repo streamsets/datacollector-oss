@@ -36,7 +36,6 @@ import com.streamsets.testing.NetworkUtils;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.node.Node;
-import org.elasticsearch.node.NodeBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -78,12 +77,12 @@ public class ElasticSearchTargetIT {
     configs.put("path.conf", esDir.getAbsolutePath());
     configs.put("path.data", esDir.getAbsolutePath());
     configs.put("path.logs", esDir.getAbsolutePath());
-    esServer = NodeBuilder.nodeBuilder().settings(ElasticSearchFactory.settings(configs)).build();
+    esServer = ElasticSearchFactory.node(configs);
     esServer.start();
   }
 
   @AfterClass
-  public static void cleanUp() {
+  public static void cleanUp() throws Exception {
     if (esServer != null) {
       esServer.close();
     }

@@ -41,6 +41,7 @@ import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFormat;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.client.fluent.Request;
 import org.elasticsearch.Version;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest;
@@ -50,7 +51,6 @@ import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.Client;
-import org.elasticsearch.common.Base64;
 import org.elasticsearch.common.Strings;
 import org.elasticsearch.common.xcontent.XContentType;
 
@@ -231,7 +231,7 @@ public class ElasticSearchTarget extends BaseTarget {
       if (conf.useShield) {
         // credentials is in form of "username:password".
         byte[] credentials = conf.shieldConfigBean.shieldUser.getBytes();
-        request.addHeader("Authorization", "Basic " + Base64.encodeBytes(credentials));
+        request.addHeader("Authorization", "Basic " + Base64.encodeBase64String(credentials));
       }
       String response = request.execute().returnContent().asString();
       Matcher matcher = VERSION_NUMBER_PATTERN.matcher(response);
