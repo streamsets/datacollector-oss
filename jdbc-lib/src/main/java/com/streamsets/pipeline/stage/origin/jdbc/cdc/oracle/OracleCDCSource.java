@@ -34,6 +34,7 @@ import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.ChangeTypeValues;
+import com.streamsets.pipeline.lib.operation.OperationType;
 import com.zaxxer.hikari.HikariDataSource;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -94,16 +95,12 @@ public class OracleCDCSource extends BaseSource {
   private static final String PREFIX = "oracle.cdc.";
   private static final String SCN = PREFIX + "scn";
   private static final String USER = PREFIX + "user";
-  private static final String OPERATION = PREFIX + "operation";
+  private static final String OPERATION = PREFIX + "operation"; //this will be depricated
   private static final String DATE = "DATE";
   private static final String TIME = "TIME";
   private static final String TIMESTAMP = "TIMESTAMP";
   private static final String TIMESTAMP_HEADER = PREFIX + TIMESTAMP.toLowerCase();
   private static final String TABLE = PREFIX + "table";
-  private static final String INSERT = "INSERT";
-  private static final String DELETE = "DELETE";
-  private static final String UPDATE = "UPDATE";
-  private static final String SELECT_FOR_UPDATE = "SELECT_FOR_UPDATE";
   private static final int INSERT_CODE = 1;
   private static final int DELETE_CODE = 2;
   private static final int UPDATE_CODE = 3;
@@ -292,19 +289,19 @@ public class OracleCDCSource extends BaseSource {
         switch (op) {
           case UPDATE_CODE:
             ruleContext = parser.update_statement();
-            operation = UPDATE;
+            operation = OperationType.UPDATE.getLabel();
             break;
           case INSERT_CODE:
             ruleContext = parser.insert_statement();
-            operation = INSERT;
+            operation = OperationType.INSERT.getLabel();
             break;
           case DELETE_CODE:
             ruleContext = parser.delete_statement();
-            operation = DELETE;
+            operation = OperationType.DELETE.getLabel();
             break;
           case SELECT_FOR_UPDATE_CODE:
             ruleContext = parser.update_statement();
-            operation = SELECT_FOR_UPDATE;
+            operation = OperationType.SELECT_FOR_UPDATE.getLabel();
             break;
           default:
             errorRecordHandler.onError(JDBC_43, redoSQL);
@@ -333,6 +330,7 @@ public class OracleCDCSource extends BaseSource {
         recordHeader.setAttribute(OPERATION, operation);
         recordHeader.setAttribute(TIMESTAMP_HEADER, timestamp);
         recordHeader.setAttribute(TABLE, table);
+        recordHeader.setAttribute(OperationType.SDC_OPERATION_TYPE, operation);
         record.set(Field.create(fields));
         batchMaker.addRecord(record);
         nextOffset = scnSeq;
