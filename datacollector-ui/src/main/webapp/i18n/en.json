@@ -88,6 +88,7 @@
       "import": "Import",
       "install": "Install",
       "installing": "Installing...",
+      "retry": "Retry",
       "label": "Label",
       "labels": "Labels",
       "lastModifiedBy": "Last Modified By",

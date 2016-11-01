@@ -4,7 +4,17 @@
 <div class="modal-body package-manager-modal-body">
   <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
 
-  <div ng-if="!libraryInstalled">
+  <div ng-if="operationStatus === 'complete'"
+       class="alert alert-success alert-dismissible" role="alert"
+       translate="packageManager.install.successMessage">
+  </div>
+
+  <div ng-if="operationStatus === 'restarting'"
+       class="alert alert-success alert-dismissible" role="alert"
+       translate="home.restart.successMessage">
+  </div>
+
+  <div ng-if="operationStatus !== 'complete'">
     <div ng-if="maprStageLib" class="alert alert-info" role="alert">
       You must perform additional steps to install MapR stage libraries. For more information, see <a href="https://streamsets.com/documentation/datacollector/latest/help/#Install_Config/MapR-Prerequisites.html" target="_blank">MapR Prerequisites</a>.
     </div>
@@ -12,28 +22,41 @@
     <div ng-if="solr6StageLib" class="alert alert-info" role="alert">
       You must perform additional steps to install Solr stage libraries. For more information, see <a href="https://streamsets.com/documentation/datacollector/latest/help/#Destinations/Solr.html#concept_gm2_y12_pw" target="_blank">Solr Prerequisites</a>.
     </div>
-
-    <p translate="packageManager.install.confirmationMessage"></p>
-    <p class="stage-library-label" ng-repeat="library in libraryList">{{library.label}}</p>
   </div>
 
-  <div ng-if="libraryInstalled && !isRestartInProgress" class="alert alert-success alert-dismissible" role="alert"
-       translate="packageManager.install.successMessage">
-  </div>
+  <p translate="packageManager.install.confirmationMessage"></p>
 
-  <div class="alert alert-success alert-dismissible" role="alert"
-       ng-show="isRestartInProgress"
-       translate="home.restart.successMessage">
-  </div>
+  <ul class="stage-library-labels">
+    <li ng-repeat="library in libraryList">
+      <span class="icon-wrapper">
+        <i ng-if="inStatus(library, 'installing')" class="fa fa-circle-o-notch fa-spin"></i>
+        <i ng-if="inStatus(library, 'installed')" class="fa fa-check"></i>
+        <i ng-if="inStatus(library, 'failed')" class="fa fa-remove"></i>
+      </span>
+      <span>{{library.label}}</span>
+      <a href="#" ng-click="showError(library)" ng-show="hasError(library)">show error</a>
+    </li>
+  </ul>
+
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-default" ng-click="cancel()" ng-if="!operationInProgress"
+  <button type="button" class="btn btn-default" ng-click="cancel()"
+          ng-if="operationStatus !== 'installing' && operationStatus !== 'restarting'"
           translate="global.form.cancel">Cancel</button>
-  <button type="button" class="btn btn-primary" ng-click="install()" ng-if="!operationInProgress && !libraryInstalled"
+
+  <button type="button" class="btn btn-primary" ng-click="install()"
+          ng-if="operationStatus === 'incomplete'"
           translate="global.form.install">Install</button>
-  <button type="submit" class="btn btn-primary" ng-if="operationInProgress" disabled
+
+  <button type="button" class="btn btn-primary" ng-click="retry()"
+          ng-if="operationStatus === 'complete' && hasErrors()"
+          translate="global.form.retry">Retry</button>
+
+  <button type="button" class="btn btn-primary" disabled
+          ng-if="operationStatus === 'installing'"
           translate="global.form.installing">Installing...</button>
-  <button ng-if="!operationInProgress && libraryInstalled && !isRestartInProgress"
-          ng-click="restart()"
-          class="btn btn-primary" translate="global.form.restart">Restart</button>
+
+  <button ng-click="restart()" class="btn btn-primary"
+          ng-if="operationStatus === 'complete'"
+          translate="global.form.restart">Restart</button>
 </div>

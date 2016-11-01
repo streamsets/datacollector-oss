@@ -317,7 +317,7 @@ angular
     });
 
     var installStageLibraries = function(libraryList) {
-      var modalInstance = $modal.open({
+      $modal.open({
         templateUrl: 'app/home/packageManager/install/install.tpl.html',
         controller: 'InstallModalInstanceController',
         size: '',
@@ -327,18 +327,6 @@ angular
             return libraryList;
           }
         }
-      });
-      modalInstance.result.then(function() {
-        angular.forEach(libraryList, function(library) {
-          library.installed = true;
-          $scope.trackEvent(
-            pipelineConstant.STAGE_LIBRARY_CATEGORY,
-            pipelineConstant.INSTALL_ACTION,
-            library.label,
-            1
-          );
-        });
-      }, function () {
       });
     };
 
