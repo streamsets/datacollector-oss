@@ -98,7 +98,7 @@ public class TestMicrosoftChangeLogWriter {
   public void testInsert() throws Exception {
     Record record = RecordCreator.create();
     Map<String, Field> fields = new HashMap<>();
-    fields.put(MicrosoftJdbcRecordWriter.OP_FIELD.substring(1), Field.create(2));
+    fields.put(MSOperationCode.getOpField().substring(1), Field.create(2));
     fields.put("P_ID", Field.create(100));
     fields.put("MSG", Field.create("unit test"));
     record.set(Field.create(fields));
@@ -119,14 +119,14 @@ public class TestMicrosoftChangeLogWriter {
   public void testUpdate() throws Exception {
     Record insertRecord = RecordCreator.create();
     Map<String, Field> insert = new HashMap<>();
-    insert.put(MicrosoftJdbcRecordWriter.OP_FIELD.substring(1), Field.create(2));
+    insert.put(MSOperationCode.getOpField().substring(1), Field.create(2));
     insert.put("P_ID", Field.create(200));
     insert.put("MSG", Field.create("first message"));
     insertRecord.set(Field.create(insert));
 
     Record updateRecord = RecordCreator.create();
     Map<String, Field> update = new HashMap<>();
-    update.put(MicrosoftJdbcRecordWriter.OP_FIELD.substring(1), Field.create(4));
+    update.put(MSOperationCode.getOpField().substring(1), Field.create(4));
     update.put("P_ID", Field.create(200));
     update.put("MSG", Field.create("second message"));
     updateRecord.set(Field.create(update));
@@ -148,14 +148,14 @@ public class TestMicrosoftChangeLogWriter {
   public void testDelete() throws Exception {
     Record insertRecord = RecordCreator.create();
     Map<String, Field> insert = new HashMap<>();
-    insert.put(MicrosoftJdbcRecordWriter.OP_FIELD.substring(1), Field.create(2));
+    insert.put(MSOperationCode.getOpField().substring(1), Field.create(2));
     insert.put("P_ID", Field.create(300));
     insert.put("MSG", Field.create("message"));
     insertRecord.set(Field.create(insert));
 
     Record deleteRecord = RecordCreator.create();
     Map<String, Field> delete = new HashMap<>();
-    delete.put(MicrosoftJdbcRecordWriter.OP_FIELD.substring(1), Field.create(1));
+    delete.put(MSOperationCode.getOpField().substring(1), Field.create(1));
     delete.put("P_ID", Field.create(300));
     delete.put("MSG", Field.create("message"));
     deleteRecord.set(Field.create(delete));
@@ -176,7 +176,7 @@ public class TestMicrosoftChangeLogWriter {
   public void testUpdateWithCompositeKey() throws Exception {
     Record insertRecord = RecordCreator.create();
     Map<String, Field> insert = new HashMap<>();
-    insert.put(MicrosoftJdbcRecordWriter.OP_FIELD.substring(1), Field.create(2));
+    insert.put(MSOperationCode.getOpField().substring(1), Field.create(2));
     insert.put("P_ID", Field.create(200));
     insert.put("P_IDB", Field.create(250));
     insert.put("MSG", Field.create("first message"));
@@ -184,7 +184,7 @@ public class TestMicrosoftChangeLogWriter {
 
     Record updateRecord = RecordCreator.create();
     Map<String, Field> update = new HashMap<>();
-    update.put(MicrosoftJdbcRecordWriter.OP_FIELD.substring(1), Field.create(4));
+    update.put(MSOperationCode.getOpField().substring(1), Field.create(4));
     update.put("P_ID", Field.create(200));
     update.put("P_IDB", Field.create(250));
     update.put("MSG", Field.create("second message"));
@@ -208,7 +208,7 @@ public class TestMicrosoftChangeLogWriter {
   public void testDeleteWithCompositeKey() throws Exception {
     Record insertRecord = RecordCreator.create();
     Map<String, Field> insert = new HashMap<>();
-    insert.put(MicrosoftJdbcRecordWriter.OP_FIELD.substring(1), Field.create(2));
+    insert.put(MSOperationCode.getOpField().substring(1), Field.create(2));
     insert.put("P_ID", Field.create(300));
     insert.put("P_IDB", Field.create(350));
     insert.put("MSG", Field.create("message"));
@@ -216,7 +216,7 @@ public class TestMicrosoftChangeLogWriter {
 
     Record deleteRecord = RecordCreator.create();
     Map<String, Field> delete = new HashMap<>();
-    delete.put(MicrosoftJdbcRecordWriter.OP_FIELD.substring(1), Field.create(1));
+    delete.put(MSOperationCode.getOpField().substring(1), Field.create(1));
     delete.put("P_ID", Field.create(300));
     delete.put("P_IDB", Field.create(350));
     delete.put("MSG", Field.create("message"));

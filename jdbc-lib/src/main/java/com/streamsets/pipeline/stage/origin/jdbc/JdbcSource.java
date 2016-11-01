@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
+import com.streamsets.pipeline.lib.jdbc.MSOperationCode;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
@@ -391,6 +392,12 @@ public class JdbcSource extends BaseSource {
     if (createJDBCNsHeaders) {
       JdbcUtil.setColumnSpecificHeaders(record, md, jdbcNsHeaderPrefix);
     }
+    // We will add cdc operation type to record header even if createJDBCNsHeaders is false
+    // we currently support CDC on only MS SQL.
+    if (hikariConfigBean.connectionString.startsWith("jdbc:sqlserver")) {
+      MSOperationCode.addOperationCodeToRecordHeader(record);
+    }
+
     return record;
   }
 }

@@ -45,13 +45,8 @@ import java.util.Set;
 public class MicrosoftJdbcRecordWriter implements JdbcRecordWriter {
   private static final Logger LOG = LoggerFactory.getLogger(MicrosoftJdbcRecordWriter.class);
 
-  private static final int DELETE = 1;
-  private static final int INSERT = 2;
-  private static final int BEFORE_UPDATE = 3;
-  private static final int AFTER_UPDATE = 4;
 
   public static final ChangeLogFormat FORMAT = ChangeLogFormat.MSSQL;
-  public static final String OP_FIELD = "/__$operation";
 
   private final String tableName;
   private final DataSource dataSource;
@@ -108,10 +103,10 @@ public class MicrosoftJdbcRecordWriter implements JdbcRecordWriter {
         String query;
         int i;
         Map<String, Object> columnMappings = getColumnMappings(record);
-        if (record.has(OP_FIELD)) {
-          int operation = record.get(OP_FIELD).getValueAsInteger();
+        if (record.has(MSOperationCode.getOpField())) {
+          int operation = record.get(MSOperationCode.getOpField()).getValueAsInteger();
           switch (operation) {
-            case INSERT:
+            case MSOperationCode.INSERT:
               query = String.format(
                   "INSERT INTO %s (%s) VALUES (%s)",
                   tableName,
@@ -119,9 +114,9 @@ public class MicrosoftJdbcRecordWriter implements JdbcRecordWriter {
                   Joiner.on(", ").join(Collections.nCopies(columnMappings.size(), "?"))
               );
               break;
-            case BEFORE_UPDATE:
+            case MSOperationCode.BEFORE_UPDATE:
               continue;
-            case AFTER_UPDATE:
+            case MSOperationCode.AFTER_UPDATE:
               query = String.format(
                   "UPDATE %s SET %s = ? WHERE %s = ?",
                   tableName,
@@ -129,7 +124,7 @@ public class MicrosoftJdbcRecordWriter implements JdbcRecordWriter {
                   Joiner.on(" = ? AND ").join(primaryKeyColumns)
               );
               break;
-            case DELETE:
+            case MSOperationCode.DELETE:
               query = String.format(
                   "DELETE FROM %s WHERE %s = ?",
                   tableName,
@@ -145,14 +140,14 @@ public class MicrosoftJdbcRecordWriter implements JdbcRecordWriter {
           PreparedStatement statement = connection.prepareStatement(query);
 
           i = 1;
-          if (operation != DELETE) {
+          if (operation != MSOperationCode.DELETE) {
             for (Object value : columnMappings.values()) {
               statement.setObject(i, value);
               ++i;
             }
           }
 
-          if (operation == AFTER_UPDATE || operation == DELETE) {
+          if (operation == MSOperationCode.AFTER_UPDATE || operation == MSOperationCode.DELETE) {
             // Also bind the primary keys for the where clause
             for (String key : primaryKeyColumns) {
               if (!columnMappings.containsKey(key)) {
@@ -170,7 +165,7 @@ public class MicrosoftJdbcRecordWriter implements JdbcRecordWriter {
           statement.execute();
           statement.close();
         } else {
-          errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_08, OP_FIELD, FORMAT));
+          errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_08, MSOperationCode.getOpField(), FORMAT));
         }
       }
       connection.commit();
