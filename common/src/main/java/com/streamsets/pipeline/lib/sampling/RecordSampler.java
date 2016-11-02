@@ -21,7 +21,6 @@ package com.streamsets.pipeline.lib.sampling;
 
 import com.codahale.metrics.Timer;
 import com.google.common.annotations.VisibleForTesting;
-import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.Sampler;
@@ -40,23 +39,17 @@ import java.util.concurrent.TimeUnit;
  */
 public class RecordSampler implements Sampler {
 
-  public static final String SDC_RECORD_SAMPLING_POPULATION_SIZE = "sdc.record.sampling.population.size";
-  public static final String SDC_RECORD_SAMPLING_SAMPLE_SIZE = "sdc.record.sampling.sample.size";
-
   private final Stage.Context stageContext;
   private List<Integer> populationSet;
   private final boolean isOrigin;
-  private final int populationSize;
   private final int sampleSize;
   private int recordCounter;
   private Set<Integer> sampleSet;
 
-  public RecordSampler(Configuration configuration, Stage.Context stageContext, boolean isOrigin) {
+  public RecordSampler(Stage.Context stageContext, boolean isOrigin, int sampleSize, int populationSize) {
     this.stageContext = stageContext;
     this.isOrigin = isOrigin;
-
-    sampleSize = configuration.get(SDC_RECORD_SAMPLING_SAMPLE_SIZE, 1);
-    populationSize = configuration.get(SDC_RECORD_SAMPLING_POPULATION_SIZE, 10000);
+    this.sampleSize = sampleSize;
 
     if (sampleSize > 0) {
       sampleSet = new HashSet<>(sampleSize);

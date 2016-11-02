@@ -20,7 +20,6 @@
 package com.streamsets.pipeline.lib.sampling;
 
 import com.codahale.metrics.Timer;
-import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
@@ -193,10 +192,7 @@ public class TestRecordSampler {
   @Test
   public void testSampledRecordHeaderDest() {
 
-    Configuration configuration = new Configuration();
-    configuration.set(RecordSampler.SDC_RECORD_SAMPLING_SAMPLE_SIZE, 5);
-    configuration.set(RecordSampler.SDC_RECORD_SAMPLING_POPULATION_SIZE, 5);
-    Sampler sampler = new RecordSampler(configuration, null, false);
+    Sampler sampler = new RecordSampler(null, false, 5, 5);
     long startTime = System.currentTimeMillis();
     Record record = records.get(0);
     boolean sampled = sampler.sample(record);
@@ -213,11 +209,8 @@ public class TestRecordSampler {
   @Test
   public void testSampledRecordHeaderOrig() {
 
-    Configuration configuration = new Configuration();
-    configuration.set(RecordSampler.SDC_RECORD_SAMPLING_SAMPLE_SIZE, 20);
-    configuration.set(RecordSampler.SDC_RECORD_SAMPLING_POPULATION_SIZE, 20);
     Stage.Context mock = Mockito.mock(Stage.Context.class);
-    Sampler sampler = new RecordSampler(configuration, mock, false);
+    Sampler sampler = new RecordSampler(mock, false, 20, 20);
     Record record = records.get(0);
     // sample in destination
     boolean sampled = sampler.sample(record);
@@ -231,7 +224,7 @@ public class TestRecordSampler {
     Mockito.doNothing().when(mockTimer).update(Mockito.anyLong(), Mockito.any(TimeUnit.class));
 
     // sample in origin
-    sampler = new RecordSampler(configuration, mock, true);
+    sampler = new RecordSampler(mock, true, 20, 20);
     sampler.sample(record);
 
     Mockito.verify(mock, Mockito.times(1)).getTimer(Mockito.anyString());

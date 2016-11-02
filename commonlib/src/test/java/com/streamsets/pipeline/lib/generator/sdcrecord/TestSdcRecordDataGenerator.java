@@ -19,7 +19,6 @@
  */
 package com.streamsets.pipeline.lib.generator.sdcrecord;
 
-import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
@@ -30,7 +29,6 @@ import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFormat;
-import com.streamsets.pipeline.lib.sampling.RecordSampler;
 import com.streamsets.pipeline.lib.util.SdcRecordConstants;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
@@ -130,9 +128,6 @@ public class TestSdcRecordDataGenerator {
   // @Test
   public void testGenerateWithSampler() throws Exception {
     ByteArrayOutputStream writer = new ByteArrayOutputStream();
-    Configuration configuration = new Configuration();
-    configuration.set(RecordSampler.SDC_RECORD_SAMPLING_SAMPLE_SIZE, 1);
-    configuration.set(RecordSampler.SDC_RECORD_SAMPLING_POPULATION_SIZE, 1);
     DataGenerator gen = new SdcRecordDataGenerator(
         getContextExtensions().createRecordWriter(writer),
         getContextExtensions()

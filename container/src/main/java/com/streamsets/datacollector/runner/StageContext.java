@@ -78,6 +78,8 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
 
   private static final Logger LOG = LoggerFactory.getLogger(StageContext.class);
   private static final String CUSTOM_METRICS_PREFIX = "custom.";
+  private static final String SDC_RECORD_SAMPLING_POPULATION_SIZE = "sdc.record.sampling.population.size";
+  private static final String SDC_RECORD_SAMPLING_SAMPLE_SIZE = "sdc.record.sampling.sample.size";
 
   private final List<Stage.Info> pipelineInfo;
   private final StageType stageType;
@@ -150,9 +152,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
 
     // sample all records while testing
     Configuration configuration = new Configuration();
-    configuration.set(RecordSampler.SDC_RECORD_SAMPLING_SAMPLE_SIZE, 0);
-    configuration.set(RecordSampler.SDC_RECORD_SAMPLING_POPULATION_SIZE, 0);
-    this.sampler = new RecordSampler(configuration, this, stageType == StageType.SOURCE);
+    this.sampler = new RecordSampler(this, stageType == StageType.SOURCE, 0, 0);
   }
 
   public StageContext(
@@ -184,7 +184,9 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     this.executionMode = executionMode;
     this.resourcesDir = resourcesDir;
     this.emailSender = emailSender;
-    this.sampler = new RecordSampler(configuration, this, stageType == StageType.SOURCE);
+    int sampleSize = configuration.get(SDC_RECORD_SAMPLING_SAMPLE_SIZE, 1);
+    int populationSize = configuration.get(SDC_RECORD_SAMPLING_POPULATION_SIZE, 10000);
+    this.sampler = new RecordSampler(this, stageType == StageType.SOURCE, sampleSize, populationSize);
   }
 
   private Map<String, Class<?>[]> getConfigToElDefMap(StageRuntime stageRuntime) {
