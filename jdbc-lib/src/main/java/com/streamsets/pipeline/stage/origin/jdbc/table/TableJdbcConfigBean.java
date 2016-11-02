@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.Groups;
@@ -40,6 +41,17 @@ public class TableJdbcConfigBean {
   @ListBeanModel
   public List<TableConfigBean> tableConfigs;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "NONE",
+      label = "Table Order Strategy",
+      description = "Determines the strategy for table ordering",
+      displayPosition = 70,
+      group = "JDBC"
+  )
+  @ValueChooserModel(TableOrderStrategyChooserValues.class)
+  public TableOrderStrategy tableOrderStrategy;
 
   @ConfigDef(
       required = true,
@@ -47,7 +59,7 @@ public class TableJdbcConfigBean {
       defaultValue = "false",
       label = "Configure Fetch Size",
       description = "Determines whether to configure fetch size for the JDBC Statement",
-      displayPosition = 70,
+      displayPosition = 80,
       group = "ADVANCED"
   )
   public boolean configureFetchSize;
@@ -58,7 +70,7 @@ public class TableJdbcConfigBean {
       defaultValue = "-1",
       label = "Fetch Size",
       description = "Fetch Size for the JDBC Statement. Should not be 0 and Should be less than or equal to batch size.",
-      displayPosition = 80,
+      displayPosition = 90,
       group = "ADVANCED",
       dependsOn = "configureFetchSize",
       triggeredByValue = "true"

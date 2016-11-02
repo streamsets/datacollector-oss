@@ -146,7 +146,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
     TableJdbcSource tableJdbcSource = new TableJdbcSource(
         TestTableJdbcSource.createHikariPoolConfigBean(JDBC_URL, USER_NAME, PASSWORD),
         TestTableJdbcSource.createCommonSourceConfigBean(1, 1000, 1000, 1000),
-        TestTableJdbcSource.createPartitionableConfigBean(ImmutableList.of(tableConfigBean), false, -1)
+        TestTableJdbcSource.createTableJdbcConfigBean(ImmutableList.of(tableConfigBean), false, -1, TableOrderStrategy.NONE)
     );
 
     SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
@@ -164,7 +164,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
     TableJdbcSource tableJdbcSource = new TableJdbcSource(
         TestTableJdbcSource.createHikariPoolConfigBean(JDBC_URL, USER_NAME, PASSWORD),
         TestTableJdbcSource.createCommonSourceConfigBean(1, 1000, 1000, 1000),
-        TestTableJdbcSource.createPartitionableConfigBean(ImmutableList.of(tableConfigBean), false, -1)
+        TestTableJdbcSource.createTableJdbcConfigBean(ImmutableList.of(tableConfigBean), false, -1, TableOrderStrategy.NONE)
     );
 
     SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
@@ -190,7 +190,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
     TableJdbcSource tableJdbcSource = new TableJdbcSource(
         TestTableJdbcSource.createHikariPoolConfigBean(JDBC_URL, USER_NAME, PASSWORD),
         TestTableJdbcSource.createCommonSourceConfigBean(1, 1000, 1000, 1000),
-        TestTableJdbcSource.createPartitionableConfigBean(ImmutableList.of(tableConfigBean), false, -1)
+        TestTableJdbcSource.createTableJdbcConfigBean(ImmutableList.of(tableConfigBean), false, -1, TableOrderStrategy.NONE)
     );
     SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
         .addOutputLane("a").build();
@@ -225,7 +225,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
     TableJdbcSource tableJdbcSource = new TableJdbcSource(
         TestTableJdbcSource.createHikariPoolConfigBean(JDBC_URL, USER_NAME, PASSWORD),
         TestTableJdbcSource.createCommonSourceConfigBean(1, 1000, 1000, 1000),
-        TestTableJdbcSource.createPartitionableConfigBean(ImmutableList.of(tableConfigBean1, tableConfigBean2), false, -1)
+        TestTableJdbcSource.createTableJdbcConfigBean(ImmutableList.of(tableConfigBean1, tableConfigBean2), false, -1, TableOrderStrategy.NONE)
     );
 
     SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
@@ -257,7 +257,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
     TableJdbcSource tableJdbcSource = new TableJdbcSource(
         TestTableJdbcSource.createHikariPoolConfigBean(JDBC_URL, USER_NAME, PASSWORD),
         TestTableJdbcSource.createCommonSourceConfigBean(1, 1000, 1000, 1000),
-        TestTableJdbcSource.createPartitionableConfigBean(ImmutableList.of(tableConfigBean), false, -1)
+        TestTableJdbcSource.createTableJdbcConfigBean(ImmutableList.of(tableConfigBean), false, -1, TableOrderStrategy.NONE)
     );
 
     SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
@@ -305,7 +305,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
     TableJdbcSource tableJdbcSource = new TableJdbcSource(
         TestTableJdbcSource.createHikariPoolConfigBean(JDBC_URL, USER_NAME, PASSWORD),
         TestTableJdbcSource.createCommonSourceConfigBean(1, 1000, 1000, 1000),
-        TestTableJdbcSource.createPartitionableConfigBean(ImmutableList.of(tableConfigBean), false, -1)
+        TestTableJdbcSource.createTableJdbcConfigBean(ImmutableList.of(tableConfigBean), false, -1, TableOrderStrategy.NONE)
     );
 
     SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)

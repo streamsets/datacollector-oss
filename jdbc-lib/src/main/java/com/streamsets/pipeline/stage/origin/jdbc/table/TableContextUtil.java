@@ -27,7 +27,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -107,18 +106,18 @@ public final class TableContextUtil {
       Connection connection,
       TableConfigBean tableConfigBean
   ) throws SQLException, StageException {
-    Map<String, TableContext> tableMap = new HashMap<>();
+    Map<String, TableContext> tableContextMap = new LinkedHashMap<>();
     try (ResultSet rs = JdbcUtil.getTableMetadata(connection, null, tableConfigBean.schema, tableConfigBean.tablePattern)) {
       while (rs.next()) {
         String schemaName = rs.getString(TABLE_METADATA_TABLE_SCHEMA_CONSTANT);
         String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);
-        tableMap.put(
+        tableContextMap.put(
             getQualifiedTableName(schemaName, tableName),
             createTableContext(connection, schemaName, tableName, tableConfigBean)
         );
       }
     }
-    return tableMap;
+    return tableContextMap;
   }
 
   /**

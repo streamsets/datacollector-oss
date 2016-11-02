@@ -26,8 +26,6 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
-import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -268,41 +266,11 @@ public class AllTypesIT extends BaseTableJdbcSourceIT {
     }
   }
 
-  private static String getStringRepOfFieldValueForInsert(Field field) {
-    switch (field.getType()) {
-      case BYTE_ARRAY:
-        //Do a hex encode.
-        return Hex.encodeHexString(field.getValueAsByteArray());
-      case BYTE:
-        return String.valueOf(field.getValueAsInteger());
-      case TIME:
-        return DateFormatUtils.format(field.getValueAsDate(), "HH:mm:ss");
-      case DATE:
-        return DateFormatUtils.format(field.getValueAsDate(), "yyyy-MM-dd");
-      case DATETIME:
-        return DateFormatUtils.format(field.getValueAsDate(), "yyyy-MM-dd HH:mm:ss");
-      default:
-        return String.valueOf(field.getValue());
-    }
-  }
-
   @Before
   public void insertRowsInTheTable() throws SQLException {
     String insertTemplate = TABLE_TO_TEMPLATE_AND_RECORDS_MAP.get(table).getLeft();
     List<Record> records = TABLE_TO_TEMPLATE_AND_RECORDS_MAP.get(table).getRight();
-    try (Statement st = connection.createStatement()) {
-      for (Record record : records) {
-        List<String> values = new ArrayList<>();
-        for (String fieldPath : record.getEscapedFieldPaths()) {
-          //Skip root field
-          if (!fieldPath.equals("")) {
-            values.add(getStringRepOfFieldValueForInsert(record.get(fieldPath)));
-          }
-        }
-        st.addBatch(String.format(insertTemplate, values.toArray()));
-      }
-      st.executeBatch();
-    }
+    insertRows(insertTemplate, records);
   }
 
   @Test
@@ -314,7 +282,7 @@ public class AllTypesIT extends BaseTableJdbcSourceIT {
     TableJdbcSource partitionableJdbcSource = new TableJdbcSource(
         TestTableJdbcSource.createHikariPoolConfigBean(JDBC_URL, USER_NAME, PASSWORD),
         TestTableJdbcSource.createCommonSourceConfigBean(1, 1000, 1000, 1000),
-        TestTableJdbcSource.createPartitionableConfigBean(ImmutableList.of(tableConfigBean), false, -1)
+        TestTableJdbcSource.createTableJdbcConfigBean(ImmutableList.of(tableConfigBean), false, -1, TableOrderStrategy.NONE)
     );
     SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, partitionableJdbcSource)
         .addOutputLane("a").build();

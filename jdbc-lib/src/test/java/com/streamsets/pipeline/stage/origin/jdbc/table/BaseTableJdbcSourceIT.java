@@ -21,6 +21,8 @@ package com.streamsets.pipeline.stage.origin.jdbc.table;
 
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -28,6 +30,8 @@ import org.junit.BeforeClass;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -47,6 +51,41 @@ public abstract class BaseTableJdbcSourceIT {
   public static void tearDown() throws SQLException {
     connection.close();
   }
+
+  protected static String getStringRepOfFieldValueForInsert(Field field) {
+    switch (field.getType()) {
+      case BYTE_ARRAY:
+        //Do a hex encode.
+        return Hex.encodeHexString(field.getValueAsByteArray());
+      case BYTE:
+        return String.valueOf(field.getValueAsInteger());
+      case TIME:
+        return DateFormatUtils.format(field.getValueAsDate(), "HH:mm:ss");
+      case DATE:
+        return DateFormatUtils.format(field.getValueAsDate(), "yyyy-MM-dd");
+      case DATETIME:
+        return DateFormatUtils.format(field.getValueAsDate(), "yyyy-MM-dd HH:mm:ss");
+      default:
+        return String.valueOf(field.getValue());
+    }
+  }
+
+  protected static void insertRows(String insertTemplate, List<Record> records) throws SQLException {
+    try (Statement st = connection.createStatement()) {
+      for (Record record : records) {
+        List<String> values = new ArrayList<>();
+        for (String fieldPath : record.getEscapedFieldPaths()) {
+          //Skip root field
+          if (!fieldPath.equals("")) {
+            values.add(getStringRepOfFieldValueForInsert(record.get(fieldPath)));
+          }
+        }
+        st.addBatch(String.format(insertTemplate, values.toArray()));
+      }
+      st.executeBatch();
+    }
+  }
+
 
   private static void checkField(String fieldPath, Field expectedField, Field actualField) throws Exception {
     String errorString = String.format("Error in Field Path: %s", fieldPath);

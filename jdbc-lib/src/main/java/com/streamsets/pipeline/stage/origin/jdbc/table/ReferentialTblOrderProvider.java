@@ -1,0 +1,116 @@
+/**
+ * Copyright 2016 StreamSets Inc.
+ *
+ * Licensed under the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.streamsets.pipeline.stage.origin.jdbc.table;
+
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
+import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
+import com.streamsets.pipeline.stage.origin.jdbc.table.util.DirectedGraph;
+import com.streamsets.pipeline.stage.origin.jdbc.table.util.TopologicalSorter;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
+
+/**
+ * Used to Provide table order based on referential constraints.
+ */
+public final class ReferentialTblOrderProvider extends TableOrderProvider.BaseTableOrderProvider {
+  //Cache will hold a maximum of 1000 table references.
+  private static final int MAX_REFERRED_TABLE_CACHE_SIZE = 1000;
+
+  private final Connection connection;
+  private final DirectedGraph<String> directedGraph;
+  private final LoadingCache<String, Set<String>> referredTables;
+
+  private volatile boolean areAllEdgesConstructed;
+  private Queue<String> orderedTables;
+
+
+  public ReferentialTblOrderProvider(Connection conn) {
+    this.connection = conn;
+    directedGraph = new DirectedGraph<>();
+    referredTables = CacheBuilder.newBuilder().maximumSize(MAX_REFERRED_TABLE_CACHE_SIZE).build(new CacheLoader<String, Set<String>>() {
+      @Override
+      public Set<String> load(String key) throws SQLException {
+        TableContext tableContext =  getTableContext(key);
+        return JdbcUtil.getReferredTables(connection, tableContext.getSchema(), tableContext.getTableName());
+      }
+    });
+    areAllEdgesConstructed = false;
+    orderedTables = new LinkedList<>();
+  }
+
+  @Override
+  public void addTable(String qualifiedTableName) {
+    directedGraph.addVertex(qualifiedTableName);
+    areAllEdgesConstructed = false;
+  }
+
+  @Override
+  public Queue<String> calculateOrGetOrder() throws SQLException, ExecutionException, StageException {
+    if (!areAllEdgesConstructed) {
+      orderedTables = new LinkedList<>();
+      for (String qualifiedTableName : directedGraph.vertices()) {
+        Set<String> referredTableSetForThisContext = referredTables.get(qualifiedTableName);
+        TableContext tableContext = getTableContext(qualifiedTableName);
+        for (String referredTable : referredTableSetForThisContext) {
+          TableContext referredTableContext = getTableContext(tableContext.getSchema(), referredTable);
+          //Checking whether the referred table is used by the origin or has the table has a reference to itself.
+          if (referredTableContext != null && !referredTableContext.getTableName().equals(tableContext.getTableName())) {
+            //This edge states referred table should be ingested first
+            directedGraph.addDirectedEdge(
+                TableContextUtil.getQualifiedTableName(referredTableContext.getSchema(), referredTableContext.getTableName()),
+                qualifiedTableName
+            );
+          }
+        }
+      }
+
+      areAllEdgesConstructed = true;
+      try {
+        Iterator<String> topologicalOrderIterator =
+            new TopologicalSorter<>(directedGraph, new Comparator<String>() {
+              @Override
+              public int compare(String o1, String o2) {
+                return o1.compareTo(o2);
+              }
+            }).sort().iterator();
+
+        while (topologicalOrderIterator.hasNext()) {
+          orderedTables.add(topologicalOrderIterator.next());
+        }
+      } catch(IllegalStateException e) {
+        throw new StageException(JdbcErrors.JDBC_68, e.getMessage());
+      }
+    }
+
+    //Do the topological ordering and return the order.
+    return orderedTables;
+  }
+}

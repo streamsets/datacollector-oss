@@ -77,6 +77,13 @@ public class JdbcUtil {
   private static final String EL_PREFIX = "${";
   private static final String CUSTOM_MAPPINGS = "columnNames";
 
+  /**
+   * Column name for extracting table name for imported keys
+   *
+   * @see java.sql.DatabaseMetaData#getImportedKeys(String, String, String)
+   */
+  private static final String PK_TABLE_NAME = "PKTABLE_NAME";
+
   public static final String TABLE_NAME = "tableNameTemplate";
 
   private JdbcUtil() {
@@ -254,6 +261,26 @@ public class JdbcUtil {
       keys.add(result.getString(COLUMN_NAME));
     }
     return keys;
+  }
+
+  /**
+   * Wrapper for {@link java.sql.DatabaseMetaData#getImportedKeys(String, String, String)}
+   *
+   * @param connection An open JDBC connection
+   * @param tableName table name that is optionally fully qualified with a schema in the form schema.tableName
+   * @return List of Table Names whose primary key are referred as foreign key by the table tableName
+   *
+   * @throws SQLException
+   */
+  public static Set<String> getReferredTables(Connection connection, String schema, String tableName) throws SQLException {
+    DatabaseMetaData metadata = connection.getMetaData();
+
+    ResultSet result = metadata.getImportedKeys(null, schema, tableName);
+    Set<String> referredTables = new HashSet<>();
+    while (result.next()) {
+      referredTables.add(result.getString(PK_TABLE_NAME));
+    }
+    return referredTables;
   }
 
   public static void setColumnSpecificHeaders(

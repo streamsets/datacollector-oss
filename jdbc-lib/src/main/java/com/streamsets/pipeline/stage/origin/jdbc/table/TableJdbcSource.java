@@ -52,14 +52,11 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Queue;
-import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
-
+import java.util.concurrent.ExecutionException;
 
 public class TableJdbcSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(TableJdbcSource.class);
@@ -82,10 +79,10 @@ public class TableJdbcSource extends BaseSource {
   private final CommonSourceConfigBean commonSourceConfigBean;
   private final TableJdbcConfigBean tableJdbcConfigBean;
   private final Properties driverProperties = new Properties();
-  private final Queue<String> tableQueue;
+
+  private TableOrderProvider tableOrderProvider;
 
   private ErrorRecordHandler errorRecordHandler;
-  private Map<String, TableContext> orderedTables;
   private Connection connection = null;
   private HikariDataSource hikariDataSource;
   private long lastQueryIntervalTime;
@@ -104,7 +101,6 @@ public class TableJdbcSource extends BaseSource {
     this.tableJdbcConfigBean = tableJdbcConfigBean;
     lastQueryIntervalTime = -1;
     driverProperties.putAll(hikariConfigBean.driverProperties);
-    tableQueue = new LinkedList<>();
     gaugeMap = new ConcurrentHashMap<>();
   }
 
@@ -171,6 +167,10 @@ public class TableJdbcSource extends BaseSource {
     return queryBuilder.toString();
   }
 
+  private boolean shouldMoveToNextTable(int recordCount, int noOfTablesVisited) {
+    return recordCount == 0 && noOfTablesVisited < tableOrderProvider.getNumberOfTables();
+  }
+
   @VisibleForTesting
   void checkConnectionAndBootstrap(Source.Context context, List<ConfigIssue> issues) {
     try {
@@ -181,14 +181,24 @@ public class TableJdbcSource extends BaseSource {
     if (issues.isEmpty()) {
       try {
         connection = hikariDataSource.getConnection();
-        //TODO:https://issues.streamsets.com/browse/SDC-4281 will introduce the table strategy comparator.
-        orderedTables = new TreeMap<>();
+
+        tableOrderProvider = new TableOrderProviderFactory(connection, tableJdbcConfigBean.tableOrderStrategy).create();
+
+        Map<String, TableContext> allTableContexts = new LinkedHashMap<>();
+
         for (TableConfigBean tableConfigBean : tableJdbcConfigBean.tableConfigs) {
           //No duplicates even though a table matches multiple configurations, we will add it only once.
-          orderedTables.putAll(TableContextUtil.listTablesForConfig(connection, tableConfigBean));
+          allTableContexts.putAll(TableContextUtil.listTablesForConfig(connection, tableConfigBean));
         }
-        if (orderedTables.isEmpty()) {
-          issues.add(context.createConfigIssue(Groups.JDBC.name(), TableJdbcConfigBean.TABLE_CONFIG, JdbcErrors.JDBC_66));
+
+        try {
+          tableOrderProvider.initialize(allTableContexts);
+          if (tableOrderProvider.getNumberOfTables() == 0) {
+            issues.add(context.createConfigIssue(Groups.JDBC.name(), TableJdbcConfigBean.TABLE_CONFIG, JdbcErrors.JDBC_66));
+          }
+        } catch (ExecutionException e) {
+          LOG.debug("Failure happened when fetching nextTable", e);
+          throw new StageException(JdbcErrors.JDBC_67, e);
         }
       } catch (SQLException e) {
         if (connection != null) {
@@ -204,7 +214,7 @@ public class TableJdbcSource extends BaseSource {
         }
         issues.add(context.createConfigIssue(Groups.JDBC.name(), TableJdbcConfigBean.TABLE_CONFIG, e.getErrorCode(), e.getParams()));
       }
-      gaugeMap.put(TABLE_COUNT, orderedTables.size());
+      gaugeMap.put(TABLE_COUNT, tableOrderProvider.getNumberOfTables());
       gaugeMap.put(CURRENT_TABLE, "");
       context.createGauge(TABLE_METRICS, new Gauge<Map<String, Object>>() {
         @Override
@@ -229,13 +239,6 @@ public class TableJdbcSource extends BaseSource {
     return issues;
   }
 
-  private TableContext getTableContextForCurrentBatch(){
-    if (tableQueue.isEmpty()) {
-      tableQueue.addAll(orderedTables.keySet());
-    }
-    return orderedTables.get(tableQueue.poll());
-  }
-
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     int batchSize = Math.min(maxBatchSize, commonSourceConfigBean.maxBatchSize);
@@ -244,12 +247,12 @@ public class TableJdbcSource extends BaseSource {
     long delayBeforeQuery = (commonSourceConfigBean.queryInterval * 1000) - (System.currentTimeMillis() - lastQueryIntervalTime);
     ThreadUtil.sleep((lastQueryIntervalTime < 0 || delayBeforeQuery < 0) ? 0 : delayBeforeQuery);
 
-    int recordCount = 0, noOfTablesVisitedInTheCurrentProduce = 0;
+    int recordCount = 0, noOfTablesVisited = 0;
     TableContext tableContext = null;
     do {
       try {
         connection = (connection == null) ? hikariDataSource.getConnection() : this.connection;
-        tableContext = getTableContextForCurrentBatch();
+        tableContext = tableOrderProvider.nextTable();
         String query = buildQuery(tableContext, offsets.get(tableContext.getTableName()));
         ResultSet rs = null;
         try (Statement statement = connection.createStatement()) {
@@ -298,12 +301,15 @@ public class TableJdbcSource extends BaseSource {
         LOG.debug("Query failed at: {}", lastQueryIntervalTime);
         //Throw Stage Errors
         errorRecordHandler.onError(JdbcErrors.JDBC_34, buildQuery(tableContext, offsets.get(tableContext.getTableName())), formattedError);
+      } catch (ExecutionException e) {
+        LOG.debug("Failure happened when fetching nextTable", e);
+        errorRecordHandler.onError(JdbcErrors.JDBC_67, e);
       } finally {
         //Update lastQuery Time
         lastQueryIntervalTime = System.currentTimeMillis();
       }
-      noOfTablesVisitedInTheCurrentProduce++;
-    } while(recordCount == 0 && noOfTablesVisitedInTheCurrentProduce < orderedTables.size()); //If the current table has no records and if we haven't cycled through all tables.
+      noOfTablesVisited++;
+    } while(shouldMoveToNextTable(recordCount, noOfTablesVisited)); //If the current table has no records and if we haven't cycled through all tables.
     return serializeOffsetMap(offsets);
   }
 

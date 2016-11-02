@@ -45,11 +45,12 @@ public class TestTableJdbcSource {
     return new CommonSourceConfigBean(queryInterval, maxBatchSize, maxClobSize, maxBlobSize);
   }
 
-  static TableJdbcConfigBean createPartitionableConfigBean(List<TableConfigBean> tableConfigs, boolean configureFetchSize, int fetchSize) {
+  static TableJdbcConfigBean createTableJdbcConfigBean(List<TableConfigBean> tableConfigs, boolean configureFetchSize, int fetchSize, TableOrderStrategy tableOrderStrategy) {
     TableJdbcConfigBean tableJdbcConfigBean = new TableJdbcConfigBean();
     tableJdbcConfigBean.tableConfigs = tableConfigs;
     tableJdbcConfigBean.configureFetchSize = configureFetchSize;
     tableJdbcConfigBean.fetchSize = fetchSize;
+    tableJdbcConfigBean.tableOrderStrategy = tableOrderStrategy;
     return tableJdbcConfigBean;
   }
 
@@ -71,7 +72,7 @@ public class TestTableJdbcSource {
     TableJdbcSource tableJdbcSource = new TableJdbcSource(
         createHikariPoolConfigBean("jdbc:h2:mem:database", "sa", "test"),
         createCommonSourceConfigBean(1000, 1000, 1000, 1000),
-        createPartitionableConfigBean(Collections.<TableConfigBean>emptyList(), false, -1)
+        createTableJdbcConfigBean(Collections.<TableConfigBean>emptyList(), false, -1, TableOrderStrategy.NONE)
     );
 
     testWrongConfiguration(tableJdbcSource, true);
@@ -85,7 +86,7 @@ public class TestTableJdbcSource {
     TableJdbcSource tableJdbcSource = new TableJdbcSource(
         createHikariPoolConfigBean("jdbc:h2:mem:database", "sa", "test"),
         createCommonSourceConfigBean(1000, 1000, 1000, 1000),
-        createPartitionableConfigBean(ImmutableList.of(tableConfigBean), true, 2000)
+        createTableJdbcConfigBean(ImmutableList.of(tableConfigBean), true, 2000, TableOrderStrategy.NONE)
     );
     testWrongConfiguration(tableJdbcSource, true);
   }
@@ -97,7 +98,7 @@ public class TestTableJdbcSource {
     TableJdbcSource tableJdbcSource = new TableJdbcSource(
         createHikariPoolConfigBean("jdbc:db://localhost:1000", "sa", "test"),
         createCommonSourceConfigBean(1000, 1000, 1000, 1000),
-        createPartitionableConfigBean(ImmutableList.of(tableConfigBean), false, 1)
+        createTableJdbcConfigBean(ImmutableList.of(tableConfigBean), false, 1, TableOrderStrategy.NONE)
     );
     testWrongConfiguration(tableJdbcSource, false);
   }

@@ -87,6 +87,8 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_64("Table {} has composite partition key which is invalid."),
   JDBC_65("Invalid value {} for Fetch Size Configuration should not be more than maxBatchSize"),
   JDBC_66("No Tables matches the configuration in the origin."),
+  JDBC_67("Internal Error : {}"),
+  JDBC_68("Tables Referring to each other in cyclic fashion.")
   ;
 
   private final String msg;
