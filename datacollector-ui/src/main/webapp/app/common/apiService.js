@@ -306,12 +306,80 @@ angular.module('dataCollectorApp.common')
       },
 
       /**
+       * Return total pipelines count.
+       *
+       * @returns {*}
+       */
+      getPipelinesCount: function() {
+        var url = apiBase + '/pipelines/count';
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+      /**
+       * Returns System Pipeline Labels.
+       *
+       * @returns {*}
+       */
+      getSystemPipelineLabels: function() {
+        var url = apiBase + '/pipelines/systemLabels';
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+      /**
+       * Returns all Pipeline labels.
+       *
+       * @returns {*}
+       */
+      getPipelineLabels: function() {
+        var url = apiBase + '/pipelines/labels';
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+      /**
        * Fetches all Pipeline Configuration Info.
        *
        * @returns {*}
        */
-      getPipelines: function() {
-        var url = apiBase + '/pipelines';
+      getPipelines: function(filterText, label, offset, len, orderBy, order, includeStatus) {
+        if (!orderBy) {
+          orderBy = 'NAME';
+        }
+
+        if (!order) {
+          order = 'ASC';
+        }
+
+        var url = apiBase + '/pipelines?orderBy=' + orderBy + '&order=' + order;
+
+        if (filterText) {
+          url += '&filterText=' + filterText;
+        }
+
+        if (label) {
+          url += '&label=' + label;
+        }
+
+        if (offset !== undefined) {
+          url += '&offset=' + offset;
+        }
+
+        if (len) {
+          url += '&len=' + len;
+        }
+
+        if (includeStatus) {
+          url += '&includeStatus=' + includeStatus;
+        }
+
         return $http({
           method: 'GET',
           url: url
@@ -430,28 +498,18 @@ angular.module('dataCollectorApp.common')
        *
        * @param name
        * @param description
-       * @param pipelineInfo
+       * @param pipelineObject
+       * @param pipelineRulesObject
        * @returns {*|promise}
        */
-      duplicatePipelineConfig: function(name, description, pipelineInfo) {
-        var deferred = $q.defer(),
-          pipelineObject,
-          pipelineRulesObject,
-          duplicatePipelineObject,
-          duplicatePipelineRulesObject;
+      duplicatePipelineConfig: function(name, description, pipelineObject, pipelineRulesObject) {
+        var deferred = $q.defer();
+        var duplicatePipelineObject;
+        var duplicatePipelineRulesObject;
 
-        // Fetch the pipelineInfo full object
-        // then Create new config object
+        // Create new config object
         // then copy the configuration from pipelineInfo to new Object.
-        $q.all([
-          api.pipelineAgent.getPipelineConfig(pipelineInfo.name),
-          api.pipelineAgent.getPipelineRules(pipelineInfo.name)
-        ])
-          .then(function(results) {
-            pipelineObject = results[0].data;
-            pipelineRulesObject = results[1].data;
-            return api.pipelineAgent.createNewPipelineConfig(name, description);
-          })
+        api.pipelineAgent.createNewPipelineConfig(name, description)
           .then(function(res) {
             duplicatePipelineObject = res.data;
             duplicatePipelineObject.configuration = pipelineObject.configuration;

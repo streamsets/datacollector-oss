@@ -12,29 +12,29 @@
            class="glyphicon glyphicon-unchecked fa-12x header-check-box"></i>
 
         <div class="pipeline-name header">
-          <a ng-click="onSortColumnHeaderClick('name')">
+          <a ng-click="onSortColumnHeaderClick('NAME')">
             <span>Name</span>
-            <i ng-if="header.sortColumn !== 'name'" class="fa fa-sort" aria-hidden="true"></i>
-            <i ng-if="header.sortColumn === 'name' && !header.sortReverse" class="fa fa-arrow-down"></i>
-            <i ng-if="header.sortColumn === 'name' && header.sortReverse" class="fa fa-arrow-up"></i>
+            <i ng-if="header.sortColumn !== 'NAME'" class="fa fa-sort" aria-hidden="true"></i>
+            <i ng-if="header.sortColumn === 'NAME' && !header.sortReverse" class="fa fa-arrow-down"></i>
+            <i ng-if="header.sortColumn === 'NAME' && header.sortReverse" class="fa fa-arrow-up"></i>
           </a>
         </div>
 
         <div class="pipeline-update-time header">
-          <a ng-click="onSortColumnHeaderClick('lastModified')">
+          <a ng-click="onSortColumnHeaderClick('LAST_MODIFIED')">
             <span>Last Updated</span>
-            <i ng-if="header.sortColumn !== 'lastModified'" class="fa fa-sort" aria-hidden="true"></i>
-            <i ng-if="header.sortColumn === 'lastModified' && !header.sortReverse" class="fa fa-arrow-down"></i>
-            <i ng-if="header.sortColumn === 'lastModified' && header.sortReverse" class="fa fa-arrow-up"></i>
+            <i ng-if="header.sortColumn !== 'LAST_MODIFIED'" class="fa fa-sort" aria-hidden="true"></i>
+            <i ng-if="header.sortColumn === 'LAST_MODIFIED' && !header.sortReverse" class="fa fa-arrow-down"></i>
+            <i ng-if="header.sortColumn === 'LAST_MODIFIED' && header.sortReverse" class="fa fa-arrow-up"></i>
           </a>
         </div>
 
         <div class="pipeline-status-header header">
-          <a ng-click="onSortColumnHeaderClick('status')">
+          <a ng-click="onSortColumnHeaderClick('STATUS')">
             <span>Status</span>
-            <i ng-if="header.sortColumn !== 'status'" class="fa fa-sort" aria-hidden="true"></i>
-            <i ng-if="header.sortColumn === 'status' && !header.sortReverse" class="fa fa-arrow-down"></i>
-            <i ng-if="header.sortColumn === 'status' && header.sortReverse" class="fa fa-arrow-up"></i>
+            <i ng-if="header.sortColumn !== 'STATUS'" class="fa fa-sort" aria-hidden="true"></i>
+            <i ng-if="header.sortColumn === 'STATUS' && !header.sortReverse" class="fa fa-arrow-down"></i>
+            <i ng-if="header.sortColumn === 'STATUS' && header.sortReverse" class="fa fa-arrow-up"></i>
           </a>
         </div>
 
@@ -51,7 +51,7 @@
 
       <li class="list-group-item"
           ng-class="{'active-info': selectedPipelineMap[pipeline.name]}"
-          ng-repeat="pipeline in filteredPipelines | orderBy:customPipelineSortFunction:header.sortReverse | limitTo: limit">
+          ng-repeat="pipeline in filteredPipelines">
 
         <i ng-if="selectedPipelineMap[pipeline.name]"
            ng-click="unSelectPipeline(pipeline)"
@@ -148,7 +148,6 @@
               </a>
             </li>
 
-
             <li role="presentation"
                 ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && !common.isSlaveNode"
                 ng-show="common.pipelineStatusMap[pipeline.name].status === 'STOPPING'">
@@ -184,7 +183,6 @@
           <span ng-bind="common.alertsMap[pipeline.name].length"></span>
         </div>
 
-
         <div class="clearfix pipeline-details" ng-if="showDetails">
 
           <div class="invalid-status pull-right"
@@ -210,15 +208,18 @@
 
       </li>
 
-      <li class="list-group-item center-align" ng-if="filteredPipelines.length === 0">
+      <li class="list-group-item center-align" ng-if="filteredPipelines.length === 0 && !fetching">
         <span translate="home.noPipelines"></span>
       </li>
 
-
-      <li class="list-group-item center-align" ng-if="limit < filteredPipelines.length">
+      <li class="list-group-item center-align" ng-if="showLoadMore && !fetching">
         <a class="btn btn-default"
            ng-click="onShowMoreClick($event);">{{'global.form.showMore' | translate}}</a>
       </li>
+
+      <div class="pipelines-loading">
+        <div class="pipeline-home-loading" show-loading="fetching"></div>
+      </div>
 
     </ul>
   </div>

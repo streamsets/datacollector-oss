@@ -1,11 +1,5 @@
 <div class="panel panel-default library-pane" ng-controller="LibraryController">
-
-  <!--div class="panel-heading clearfix">
-    <h3 class="panel-title pull-left" translate="global.form.library">Library</h3>
-  </div-->
-
   <div class="panel-body">
-
     <div class="btn-group create-pipeline-btn-group" ng-if="!common.isSlaveNode">
       <button type="button" class="btn btn-primary btn-sm create-pipeline-btn"
               ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator])"
@@ -35,24 +29,22 @@
 
     <ul class="list-group predefined-labels">
       <li class="list-group-item pointer clearfix"
-          ng-repeat="pipelineLabel in pipelineLabels"
-          ng-class="{'active' : selectedPipelineLabel === 'system:' + pipelineLabel}"
-          ng-click="onSelectLabel('system:' + pipelineLabel)">
-        <span class="pipeline-details-name">{{pipelineLabel}}</span>
+          ng-repeat="systemLabel in systemPipelineLabels"
+          ng-class="{'active' : selectedPipelineLabel === systemLabel}"
+          ng-click="onSelectLabel(systemLabel)">
+        <span class="pipeline-details-name">{{'home.library.' + systemLabel | translate}}</span>
       </li>
 
-      <li class="border-list-group-item" ng-if="existingPipelineLabels.length > 0">
+      <li class="border-list-group-item" ng-if="pipelineLabels.length > 0">
         <span translate="global.form.labels">LABELS</span>
       </li>
 
       <li class="list-group-item pointer clearfix"
-          ng-repeat="pipelineLabel in existingPipelineLabels"
-          ng-class="{'active' : selectedPipelineLabel === 'custom:' + pipelineLabel}"
-          ng-click="onSelectLabel('custom:' + pipelineLabel)">
+          ng-repeat="pipelineLabel in pipelineLabels"
+          ng-class="{'active' : selectedPipelineLabel === pipelineLabel}"
+          ng-click="onSelectLabel(pipelineLabel)">
         <span class="pipeline-details-name">{{pipelineLabel}}</span>
       </li>
     </ul>
-
   </div>
-
  </div>

@@ -50,12 +50,10 @@ angular.module('dataCollectorApp.common')
         self.initializeDefer = $q.defer();
 
         $q.all([
-            api.pipelineAgent.getDefinitions(),
-            api.pipelineAgent.getPipelines()
+            api.pipelineAgent.getDefinitions()
           ])
           .then(function (results) {
             var definitions = results[0].data,
-              pipelines = results[1].data,
               rulesElMetadata = definitions.rulesElMetadata,
               elFunctionDefinitions = [],
               elConstantDefinitions = [];
@@ -136,10 +134,6 @@ angular.module('dataCollectorApp.common')
 
             self.runtimeConfigs = definitions.runtimeConfigs;
 
-            //Pipelines
-            self.pipelines = pipelines;
-            self.updatedExistingLabels();
-
             self.initializeDefer.resolve();
           }, function(data) {
             self.initializeDefer.reject(data);
@@ -147,32 +141,6 @@ angular.module('dataCollectorApp.common')
       }
 
       return self.initializeDefer.promise;
-    };
-
-
-    this.updatedExistingLabels = function() {
-      // Extract current labels
-      var labelMap = {};
-      angular.forEach(self.pipelines, function (pipelineInfo) {
-        if (pipelineInfo.metadata && pipelineInfo.metadata.labels && pipelineInfo.metadata.labels) {
-          angular.forEach(pipelineInfo.metadata.labels, function (label) {
-            labelMap[label] = 1;
-          });
-        }
-      });
-      self.existingPipelineLabels = _.keys(labelMap).sort();
-    };
-
-    /**
-     * Refresh pipeline by re fetching from server
-     */
-    this.refreshPipelines = function() {
-      return api.pipelineAgent.getPipelines()
-        .then(function (results) {
-          self.pipelines = results.data;
-          self.updatedExistingLabels();
-          return self.pipelines;
-        });
     };
 
     /**
@@ -243,44 +211,6 @@ angular.module('dataCollectorApp.common')
       return self.runtimeConfigs;
     };
 
-
-    /**
-     * Returns list of Pipelines
-     *
-     * @returns {*}
-     */
-    this.getPipelines = function() {
-      return self.pipelines;
-    };
-
-    /**
-     * Add Pipeline to pipelines list
-     *
-     * @param configObject
-     */
-    this.addPipeline = function(configObject) {
-      var index = _.sortedIndex(self.pipelines, configObject.info, function(obj) {
-        return obj.name.toLowerCase();
-      });
-
-      self.pipelines.splice(index, 0, configObject.info);
-    };
-
-    /**
-     * Remove Pipeline from pipelines list and pipelineStatusMap
-     *
-     * @param configInfo
-     */
-    this.removePipeline = function(configInfo, pipelineStatusMap) {
-      var index = _.indexOf(self.pipelines, _.find(self.pipelines, function(pipeline){
-        return pipeline.name === configInfo.name;
-      }));
-
-      self.pipelines.splice(index, 1);
-      delete pipelineStatusMap[configInfo.name];
-    };
-
-
     /**
      * Add Pipeline Config Command Handler.
      *
@@ -294,7 +224,6 @@ angular.module('dataCollectorApp.common')
       });
 
       modalInstance.result.then(function (configObject) {
-        self.addPipeline(configObject);
         $location.path('/collector/pipeline/' + configObject.info.name);
       }, function () {
 
@@ -323,7 +252,6 @@ angular.module('dataCollectorApp.common')
 
       modalInstance.result.then(function (configObject) {
         if (configObject) {
-          self.addPipeline(configObject);
           $location.path('/collector/pipeline/' + configObject.info.name);
         } else {
           $route.reload();
@@ -356,15 +284,7 @@ angular.module('dataCollectorApp.common')
       }
 
       modalInstance.result.then(function (configInfo) {
-        if (_.isArray(configInfo)) {
-          angular.forEach(configInfo, function(pipelineInfo) {
-            self.removePipeline(pipelineInfo, pipelineStatusMap);
-          });
-        } else {
-          self.removePipeline(configInfo, pipelineStatusMap);
-        }
-
-        defer.resolve(self.pipelines);
+        defer.resolve();
       }, function () {
 
       });
@@ -395,13 +315,6 @@ angular.module('dataCollectorApp.common')
       }
 
       modalInstance.result.then(function (newPipelineConfig) {
-        if (!angular.isArray(newPipelineConfig)) {
-          self.addPipeline(newPipelineConfig);
-        } else {
-          angular.forEach(newPipelineConfig, function(p) {
-            self.addPipeline(p);
-          });
-        }
         defer.resolve(newPipelineConfig);
       }, function () {
 

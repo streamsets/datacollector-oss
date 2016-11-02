@@ -2,12 +2,13 @@
 
   <section class="pipeline-container new-pipeline" ng-if="filteredPipelines.length === 0">
     <div class="centering-container">
-      <span translate="home.noPipelines"></span>
+      <span ng-if="!fetching" translate="home.noPipelines"></span>
+      <div show-loading="fetching"></div>
     </div>
   </section>
 
   <section class="pipeline-container single-pipeline"
-           ng-repeat="pipeline in filteredPipelines | orderBy:header.sortColumn:header.sortReverse | limitTo: limit"
+           ng-repeat="pipeline in filteredPipelines"
            ng-click="openPipeline(pipeline)">
     <header>
       <h2>{{pipeline.name | limitTo: 45}}</h2>
@@ -132,10 +133,13 @@
     </footer>
   </section>
 
-  <section class="pipeline-container new-pipeline" ng-if="limit < filteredPipelines.length">
+  <section class="pipeline-container new-pipeline" ng-if="showLoadMore">
     <div class="centering-container">
       <a class="btn btn-link"
+         ng-if="!fetching"
          ng-click="onShowMoreClick($event);">{{'global.form.showMore' | translate}}</a>
+
+      <div show-loading="fetching"></div>
     </div>
   </section>
 

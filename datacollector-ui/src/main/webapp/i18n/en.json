@@ -546,6 +546,14 @@
       "nameValidation": "Enter alphanumeric characters, spaces and underscores.",
       "processorPlaceholder": "Select Processor...",
       "sourcePlaceholder":"Select Origin...",
+      "system:allPipelines" : "All Pipelines",
+      "system:publishedPipelines": "Published Pipelines",
+      "system:dpmControlledPipelines": "DPM Controlled Pipelines",
+      "system:localPipelines": "Local Pipelines",
+      "system:runningPipelines": "Running Pipelines",
+      "system:nonRunningPipelines": "Non Running Pipelines",
+      "system:invalidPipelines": "Invalid Pipelines",
+      "system:errorPipelines": "Error Pipelines",
       "targetPlaceholder": "Select Destination..."
     },
     "noPipelines": "No Pipeline Found",
@@ -590,10 +598,10 @@
       "noSnapshots": "No Snapshots"
     },
     "sortColumn": {
-      "name": "Name",
-      "created": "Date created",
-      "lastModified": "Date updated",
-      "status": "Status"
+      "NAME": "Name",
+      "CREATED": "Date created",
+      "LAST_MODIFIED": "Date updated",
+      "STATUS": "Status"
     },
     "title": "Pipelines",
     "updated": "Updated"

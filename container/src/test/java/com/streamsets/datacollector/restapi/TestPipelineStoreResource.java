@@ -21,6 +21,10 @@ package com.streamsets.datacollector.restapi;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.execution.Manager;
+import com.streamsets.datacollector.execution.PipelineState;
+import com.streamsets.datacollector.execution.PipelineStatus;
+import com.streamsets.datacollector.execution.manager.PipelineStateImpl;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.DataRuleDefinitionJson;
@@ -33,17 +37,19 @@ import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.PipelineEnvelopeJson;
 import com.streamsets.datacollector.restapi.bean.PipelineInfoJson;
 import com.streamsets.datacollector.restapi.bean.PipelineRevInfoJson;
+import com.streamsets.datacollector.restapi.bean.PipelineStateJson;
 import com.streamsets.datacollector.restapi.bean.RuleDefinitionsJson;
 import com.streamsets.datacollector.restapi.bean.StageConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.ThresholdTypeJson;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.validation.RuleIssue;
 import com.streamsets.datacollector.validation.ValidationError;
-
+import com.streamsets.pipeline.api.ExecutionMode;
 import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -61,12 +67,12 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
-
 import java.net.URI;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -77,7 +83,31 @@ public class TestPipelineStoreResource extends JerseyTest {
 
   @BeforeClass
   public static void beforeClass() {
+  }
 
+  @Test
+  public void testGetPipelinesCount() {
+    Response response = target("/v1/pipelines/count").request().get();
+    Map<String, Object> countRes = (Map<String, Object>)response.readEntity(Map.class);
+    Assert.assertNotNull(countRes);
+    Assert.assertEquals(3, countRes.get("count"));
+  }
+
+  @Test
+  public void testGetSystemPipelineLabels() {
+    Response response = target("/v1/pipelines/systemLabels").request().get();
+    List systemPipelineLabels = response.readEntity(List.class);
+    Assert.assertNotNull(systemPipelineLabels);
+    Assert.assertTrue(systemPipelineLabels.size() > 1);
+  }
+
+  @Test
+  public void testGetPipelineLabels() {
+    Response response = target("/v1/pipelines/labels").request().get();
+    List systemPipelineLabels = response.readEntity(List.class);
+    Assert.assertNotNull(systemPipelineLabels);
+    Assert.assertTrue(systemPipelineLabels.size() == 1);
+    Assert.assertEquals("label1", systemPipelineLabels.get(0));
   }
 
   @Test
@@ -85,7 +115,108 @@ public class TestPipelineStoreResource extends JerseyTest {
     Response response = target("/v1/pipelines").request().get();
     List<PipelineInfoJson> pipelineInfoJsons = response.readEntity(new GenericType<List<PipelineInfoJson>>() {});
     Assert.assertNotNull(pipelineInfoJsons);
+    Assert.assertEquals(3, pipelineInfoJsons.size());
+  }
+
+  @Test
+  public void testGetPipelinesFilteringByText() {
+    Response response = target("/v1/pipelines")
+        .queryParam("filterText", "name1")
+        .request()
+        .get();
+    List<PipelineInfoJson> pipelineInfoJsons = response.readEntity(new GenericType<List<PipelineInfoJson>>() {});
+    Assert.assertNotNull(pipelineInfoJsons);
     Assert.assertEquals(1, pipelineInfoJsons.size());
+  }
+
+  @Test
+  public void testGetPipelinesFilteringByLabel() {
+    Response response = target("/v1/pipelines")
+        .queryParam("label", "label1")
+        .request()
+        .get();
+    List<PipelineInfoJson> pipelineInfoJsons = response.readEntity(new GenericType<List<PipelineInfoJson>>() {});
+    Assert.assertNotNull(pipelineInfoJsons);
+    Assert.assertEquals(2, pipelineInfoJsons.size());
+  }
+
+  @Test
+  public void testGetPipelinesSorting() {
+    Response response = target("/v1/pipelines")
+        .queryParam("orderBy", "NAME")
+        .queryParam("order", "ASC")
+        .request()
+        .get();
+    List<PipelineInfoJson> pipelineInfoJsons = response.readEntity(new GenericType<List<PipelineInfoJson>>() {});
+    Assert.assertNotNull(pipelineInfoJsons);
+    Assert.assertEquals(3, pipelineInfoJsons.size());
+    Assert.assertEquals("name1", pipelineInfoJsons.get(0).getName());
+    Assert.assertEquals("name2", pipelineInfoJsons.get(1).getName());
+    Assert.assertEquals("name3", pipelineInfoJsons.get(2).getName());
+
+    response = target("/v1/pipelines")
+        .queryParam("orderBy", "NAME")
+        .queryParam("order", "DESC")
+        .request()
+        .get();
+    pipelineInfoJsons = response.readEntity(new GenericType<List<PipelineInfoJson>>() {});
+    Assert.assertNotNull(pipelineInfoJsons);
+    Assert.assertEquals(3, pipelineInfoJsons.size());
+    Assert.assertEquals("name3", pipelineInfoJsons.get(0).getName());
+    Assert.assertEquals("name2", pipelineInfoJsons.get(1).getName());
+    Assert.assertEquals("name1", pipelineInfoJsons.get(2).getName());
+
+    response = target("/v1/pipelines")
+        .queryParam("orderBy", "STATUS")
+        .queryParam("order", "ASC")
+        .request()
+        .get();
+    pipelineInfoJsons = response.readEntity(new GenericType<List<PipelineInfoJson>>() {});
+    Assert.assertNotNull(pipelineInfoJsons);
+    Assert.assertEquals(3, pipelineInfoJsons.size());
+    Assert.assertEquals("name2", pipelineInfoJsons.get(0).getName());
+    Assert.assertEquals("name1", pipelineInfoJsons.get(1).getName());
+    Assert.assertEquals("name3", pipelineInfoJsons.get(2).getName());
+  }
+
+  @Test
+  public void testGetPipelinesPagination() {
+    Response response = target("/v1/pipelines")
+        .queryParam("offset", "1")
+        .queryParam("len", "2")
+        .queryParam("orderBy", "NAME")
+        .queryParam("order", "ASC")
+        .request()
+        .get();
+    List<PipelineInfoJson> pipelineInfoJsons = response.readEntity(new GenericType<List<PipelineInfoJson>>() {});
+    Assert.assertNotNull(pipelineInfoJsons);
+    Assert.assertEquals(2, pipelineInfoJsons.size());
+    Assert.assertEquals("name2", pipelineInfoJsons.get(0).getName());
+    Assert.assertEquals("name3", pipelineInfoJsons.get(1).getName());
+    Assert.assertNotNull(response.getHeaders().get("TOTAL_COUNT"));
+    Assert.assertEquals("3", response.getHeaders().get("TOTAL_COUNT").get(0));
+  }
+
+
+  @Test
+  public void testGetPipelinesWithStatus() {
+    Response response = target("/v1/pipelines")
+        .queryParam("includeStatus", true)
+        .request()
+        .get();
+    List responseObj = response.readEntity(new GenericType<List>() {});
+    Assert.assertNotNull(responseObj);
+    Assert.assertEquals(2, responseObj.size());
+    Assert.assertNotNull(responseObj.get(0));
+
+    List<PipelineInfoJson> pipelineInfoJsons = (List<PipelineInfoJson>) responseObj.get(0);
+    Assert.assertNotNull(pipelineInfoJsons);
+    Assert.assertEquals(3, pipelineInfoJsons.size());
+
+    Assert.assertNotNull(responseObj.get(1));
+    List<PipelineStateJson> pipelineStateJsons = (List<PipelineStateJson>) responseObj.get(1);
+    Assert.assertNotNull(pipelineStateJsons);
+    Assert.assertEquals(3, pipelineStateJsons.size());
   }
 
   @Test
@@ -217,6 +348,7 @@ public class TestPipelineStoreResource extends JerseyTest {
       bindFactory(TestUtil.PrincipalTestInjector.class).to(Principal.class);
       bindFactory(TestUtil.URITestInjector.class).to(URI.class);
       bindFactory(TestUtil.RuntimeInfoTestInjector.class).to(RuntimeInfo.class);
+      bindFactory(ManagerTestInjector.class).to(Manager.class);
     }
   }
 
@@ -235,14 +367,22 @@ public class TestPipelineStoreResource extends JerseyTest {
       long timestamp = System.currentTimeMillis();
       pipelineStore = Mockito.mock(PipelineStoreTask.class);
       try {
-        Mockito.when(pipelineStore.getPipelines()).thenReturn(ImmutableList.of(
-            new com.streamsets.datacollector.store.PipelineInfo("name", "description", new java.util.Date(0), new java.util.Date(0), "creator",
-                "lastModifier", "1", UUID.randomUUID(), true, null)));
+        Map<String, Object> metadata = new HashMap<>();
+        metadata.put("labels", ImmutableList.of("label1"));
+        PipelineInfo pipeline1 = new PipelineInfo("name1", "description", new java.util.Date(0), new java.util.Date(0),
+            "creator", "lastModifier", "1", UUID.randomUUID(), true, metadata);
+        PipelineInfo pipeline2 = new PipelineInfo("name2", "description", new java.util.Date(0), new java.util.Date(0),
+            "creator", "lastModifier", "1", UUID.randomUUID(), true, metadata);
+        PipelineInfo pipeline3 = new PipelineInfo("name3", "description", new java.util.Date(0), new java.util.Date(0),
+            "creator", "lastModifier", "1", UUID.randomUUID(), true, null);
+
+        Mockito.when(pipelineStore.getPipelines()).thenReturn(ImmutableList.of(pipeline1, pipeline2, pipeline3));
+
         Mockito.when(pipelineStore.getInfo("xyz")).thenReturn(
-            new com.streamsets.datacollector.store.PipelineInfo("xyz", "xyz description",new java.util.Date(0), new java.util.Date(0), "xyz creator",
+            new PipelineInfo("xyz", "xyz description",new java.util.Date(0), new java.util.Date(0), "xyz creator",
                 "xyz lastModifier", "1", UUID.randomUUID(), true, null));
         Mockito.when(pipelineStore.getHistory("xyz")).thenReturn(ImmutableList.of(
-          new com.streamsets.datacollector.store.PipelineRevInfo(new com.streamsets.datacollector.store.PipelineInfo("xyz",
+          new com.streamsets.datacollector.store.PipelineRevInfo(new PipelineInfo("xyz",
             "xyz description", new java.util.Date(0), new java.util.Date(0), "xyz creator",
                 "xyz lastModifier", "1", UUID.randomUUID(), true, null))));
         Mockito.when(pipelineStore.load("xyz", "1")).thenReturn(
@@ -313,6 +453,74 @@ public class TestPipelineStoreResource extends JerseyTest {
 
     @Override
     public void dispose(PipelineStoreTask pipelineStore) {
+    }
+  }
+
+
+  static Manager manager;
+
+  static class ManagerTestInjector implements Factory<Manager> {
+
+    public ManagerTestInjector() {
+    }
+
+    @Singleton
+    @Override
+    public Manager provide() {
+      manager = Mockito.mock(Manager.class);
+      try {
+        PipelineState pipelineState1 = new PipelineStateImpl(
+            "user",
+            "name1",
+            "1",
+            PipelineStatus.RUNNING,
+            "message",
+            -1,
+            new HashMap<String, Object>(),
+            ExecutionMode.STANDALONE,
+            "",
+            -1,
+            -1
+        );
+        Mockito.when(manager.getPipelineState("name1", "1")).thenReturn(pipelineState1);
+
+        PipelineState pipelineState2 = new PipelineStateImpl(
+            "user",
+            "name2",
+            "1",
+            PipelineStatus.START_ERROR,
+            "message",
+            -1,
+            new HashMap<String, Object>(),
+            ExecutionMode.STANDALONE,
+            "",
+            -1,
+            -1
+        );
+        Mockito.when(manager.getPipelineState("name2", "1")).thenReturn(pipelineState2);
+
+        PipelineState pipelineState3 = new PipelineStateImpl(
+            "user",
+            "name3",
+            "1",
+            PipelineStatus.RUN_ERROR,
+            "message",
+            -1,
+            new HashMap<String, Object>(),
+            ExecutionMode.STANDALONE,
+            "",
+            -1,
+            -1
+        );
+        Mockito.when(manager.getPipelineState("name3", "1")).thenReturn(pipelineState3);
+      } catch (Exception e) {
+        LOG.debug("Ignoring exception", e);
+      }
+      return manager;
+    }
+
+    @Override
+    public void dispose(Manager manager) {
     }
   }
 

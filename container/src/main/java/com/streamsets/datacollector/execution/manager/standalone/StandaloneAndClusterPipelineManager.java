@@ -189,6 +189,12 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
     return pipelineStateList;
   }
 
+
+  @Override
+  public PipelineState getPipelineState(String name, String rev) throws PipelineStoreException {
+    return pipelineStateStore.getState(name, rev);
+  }
+
   @Override
   public boolean isPipelineActive(String name, String rev) throws PipelineStoreException {
     if (!pipelineStore.hasPipeline(name)) {

@@ -40,8 +40,9 @@ angular
       });
   }])
   .controller('PipelineHomeController', function ($scope, $rootScope, $routeParams, $timeout, api, configuration, _, $q,
-                                          $modal, $localStorage, pipelineService, pipelineConstant, visibilityBroadcaster,
-                                          $translate, contextHelpService, $location, authService, userRoles, Analytics) {
+                                          $modal, $localStorage, pipelineService, pipelineConstant,
+                                          visibilityBroadcaster, $translate, contextHelpService, $location, authService,
+                                          userRoles, Analytics) {
     var routeParamPipelineName = $routeParams.pipelineName,
       configTimeout,
       configDirty = false,
@@ -55,7 +56,8 @@ angular
       destroyed = false,
       pageHidden = false,
       isWebSocketSupported,
-      webSocketMetricsURL = $rootScope.common.webSocketBaseURL + 'rest/v1/webSocket?type=metrics&pipelineName=' + routeParamPipelineName,
+      webSocketMetricsURL = $rootScope.common.webSocketBaseURL + 'rest/v1/webSocket?type=metrics&pipelineName=' +
+        routeParamPipelineName,
       metricsWebSocket,
       undoLimit = 10,
       archive = [],
@@ -86,7 +88,6 @@ angular
       selectedType: pipelineConstant.PIPELINE,
       loaded: false,
       isPipelineRunning: false,
-      pipelines: [],
       sourceExists: false,
       stageLibraries: [],
       pipelineGraphData: {},
@@ -140,17 +141,17 @@ angular
           edges = $scope.edges,
           edge;
 
-        if(event) {
+        if (event) {
           event.preventDefault();
         }
 
-        if($scope.isPipelineReadOnly) {
+        if ($scope.isPipelineReadOnly) {
           return;
         }
 
         $scope.trackEvent(pipelineConstant.STAGE_CATEGORY, pipelineConstant.ADD_ACTION, stage.label, 1);
 
-        if(stage.type === pipelineConstant.SOURCE_STAGE_TYPE) {
+        if (stage.type === pipelineConstant.SOURCE_STAGE_TYPE) {
           var sourceExists = false;
           angular.forEach($scope.pipelineConfig.stages, function (sourceStageInstance) {
             if (sourceStageInstance.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE) {
@@ -158,7 +159,7 @@ angular
             }
           });
 
-          if(sourceExists) {
+          if (sourceExists) {
             $translate('global.messages.info.originExists').then(function(translation) {
               $rootScope.common.errors = [translation];
             });
@@ -188,7 +189,7 @@ angular
           ignoreBroadCast: true
         });
 
-        if(firstOpenLane && firstOpenLane.stageInstance) {
+        if (firstOpenLane && firstOpenLane.stageInstance) {
           if (firstOpenLane.isEventLane) {
             edge = {
               source: firstOpenLane.stageInstance,
@@ -205,7 +206,7 @@ angular
           edges.push(edge);
         }
 
-        if(insertBetweenEdge) {
+        if (insertBetweenEdge) {
           if (insertBetweenEdge.outputLane) {
             edges = _.filter(edges, function(e) {
               return e.eventLane || (e.outputLane !== insertBetweenEdge.outputLane &&
@@ -274,7 +275,7 @@ angular
        *
        */
       previewPipeline: function (showPreviewConfig) {
-        if(!$scope.pipelineConfig.uiInfo.previewConfig.rememberMe || showPreviewConfig) {
+        if (!$scope.pipelineConfig.uiInfo.previewConfig.rememberMe || showPreviewConfig) {
           $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Preview Pipeline Configuration', 1);
           var modalInstance = $modal.open({
             templateUrl: 'app/home/preview/configuration/previewConfigModal.tpl.html',
@@ -363,16 +364,16 @@ angular
        *  moveToCenter
        */
       changeStageSelection: function(options) {
-        if(!options.type) {
-          if(options.selectedObject && options.selectedObject.instanceName) {
+        if (!options.type) {
+          if (options.selectedObject && options.selectedObject.instanceName) {
             options.type = pipelineConstant.STAGE_INSTANCE;
           } else {
             options.type = pipelineConstant.PIPELINE;
           }
         }
 
-        if(!options.ignoreBroadCast) {
-          if(options.type !== pipelineConstant.LINK) {
+        if (!options.ignoreBroadCast) {
+          if (options.type !== pipelineConstant.LINK) {
             $scope.$broadcast('selectNode', options.selectedObject, options.moveToCenter);
           } else {
             $scope.$broadcast('selectEdge', options.selectedObject, options.moveToCenter);
@@ -492,8 +493,8 @@ angular
        * Close Metrics and Alerts WebSocket connection
        */
       stopMonitoring: function() {
-        if(isWebSocketSupported) {
-          if(metricsWebSocket) {
+        if (isWebSocketSupported) {
+          if (metricsWebSocket) {
             metricsWebSocket.close();
           }
         } else {
@@ -518,11 +519,11 @@ angular
           }
         });
 
-        if(!instance && errorStage && errorStage.instanceName === stageInstanceName) {
+        if (!instance && errorStage && errorStage.instanceName === stageInstanceName) {
           instance = errorStage;
         }
 
-        if(!instance && statsAggregatorStage && statsAggregatorStage.instanceName === stageInstanceName) {
+        if (!instance && statsAggregatorStage && statsAggregatorStage.instanceName === stageInstanceName) {
           instance = statsAggregatorStage;
         }
 
@@ -562,13 +563,13 @@ angular
         var pipelineConfig = $scope.pipelineConfig,
           stageInstance;
 
-        if(instanceName) {
+        if (instanceName) {
           //Select stage instance
           stageInstance = _.find(pipelineConfig.stages, function(stage) {
             return stage.instanceName === instanceName;
           });
 
-          if(stageInstance) {
+          if (stageInstance) {
             $scope.changeStageSelection({
               selectedObject: stageInstance,
               type: pipelineConstant.STAGE_INSTANCE,
@@ -576,7 +577,7 @@ angular
               configGroup: issue.configGroup,
               configName: issue.configName
             });
-          } else if(pipelineConfig.errorStage && pipelineConfig.errorStage.instanceName === instanceName){
+          } else if (pipelineConfig.errorStage && pipelineConfig.errorStage.instanceName === instanceName){
             //Error Stage Configuration Issue
             $scope.$broadcast('selectNode');
             $scope.changeStageSelection({
@@ -587,7 +588,7 @@ angular
               configName: issue.configName,
               errorStage: true
             });
-          } else if(pipelineConfig.statsAggregatorStage &&
+          } else if (pipelineConfig.statsAggregatorStage &&
             pipelineConfig.statsAggregatorStage.instanceName === instanceName){
             //StatsAggregator Stage Configuration Issue
             $scope.$broadcast('selectNode');
@@ -626,7 +627,7 @@ angular
        */
       deleteTriggeredAlert: function(triggeredAlert, event) {
 
-        if(event) {
+        if (event) {
           event.preventDefault();
           event.stopPropagation();
         }
@@ -739,7 +740,7 @@ angular
         isWebSocketSupported = (typeof(WebSocket) === "function") && configuration.isWebSocketUseEnabled();
         undoLimit = configuration.getUndoLimit();
 
-        if(configuration.isAnalyticsEnabled()) {
+        if (configuration.isAnalyticsEnabled()) {
           Analytics.trackPage('/collector/pipeline/pipelineName');
         }
 
@@ -771,32 +772,14 @@ angular
         });
 
         //Pipelines
-        $scope.pipelines = pipelineService.getPipelines();
-        $scope.existingPipelineLabels = pipelineService.existingPipelineLabels;
 
-        if($scope.pipelines && $scope.pipelines.length) {
-          $rootScope.common.sdcClusterManagerURL = configuration.getSDCClusterManagerURL() +
-            '/collector/pipeline/' + $scope.pipelines[0].name;
-        }
+        $scope.existingPipelineLabels = pipelineService.existingPipelineLabels;
 
         $rootScope.common.pipelineStatusMap = pipelineStatusMap;
 
-        $scope.activeConfigInfo = _.find($scope.pipelines, function(pipelineDefn) {
-          return pipelineDefn.name === routeParamPipelineName;
-        });
-
-        if($scope.activeConfigInfo) {
-          return $q.all([api.pipelineAgent.getPipelineConfig($scope.activeConfigInfo.name),
-            api.pipelineAgent.getPipelineRules($scope.activeConfigInfo.name),
-            api.pipelineAgent.getPipelineMetrics($scope.activeConfigInfo.name, 0)]);
-        } else {
-          $translate('global.messages.info.noPipelineExists', {name: routeParamPipelineName})
-            .then(function(translation) {
-              $location.path('/').search({errors: translation});
-              $location.replace();
-            });
-        }
-
+        return $q.all([api.pipelineAgent.getPipelineConfig(routeParamPipelineName),
+          api.pipelineAgent.getPipelineRules(routeParamPipelineName),
+          api.pipelineAgent.getPipelineMetrics(routeParamPipelineName, 0)]);
       },function(resp) {
         $scope.showLoading = false;
         $rootScope.common.errors = [resp.data];
@@ -804,28 +787,28 @@ angular
       .then(function(results) {
         $scope.showLoading = false;
         //Pipeline Configuration, Rules & Metrics
-        if(results && results.length > 1) {
+        if (results && results.length > 1) {
           var config = results[0].data,
             rules = results[1].data,
             clickedAlert = $rootScope.common.clickedAlert;
 
           $rootScope.common.pipelineMetrics = results[2].data;
-          if(_.contains(['RUNNING', 'STARTING'], $rootScope.common.pipelineStatusMap[routeParamPipelineName].status)) {
+          if (_.contains(['RUNNING', 'STARTING'], $rootScope.common.pipelineStatusMap[routeParamPipelineName].status)) {
             refreshPipelineMetrics();
           }
 
-          if($rootScope.common.pipelineStatusMap[routeParamPipelineName].status === 'RETRY') {
+          if ($rootScope.common.pipelineStatusMap[routeParamPipelineName].status === 'RETRY') {
             updateRetryCountdown($rootScope.common.pipelineStatusMap[routeParamPipelineName].nextRetryTimeStamp);
           }
 
           updateGraph(config, rules, undefined, undefined, true);
 
-          if(clickedAlert && clickedAlert.pipelineName === $scope.activeConfigInfo.name) {
+          if (clickedAlert && clickedAlert.pipelineName === $scope.activeConfigInfo.name) {
             var edges = $scope.edges,
                 edge;
             $rootScope.common.clickedAlert = undefined;
 
-            if(clickedAlert.ruleDefinition.metricId) {
+            if (clickedAlert.ruleDefinition.metricId) {
               //Select Pipeline Config
               updateDetailPane({
                 selectedObject: undefined,
@@ -876,12 +859,12 @@ angular
 
           updateGraph(config, rules);
 
-          if(clickedAlert && clickedAlert.pipelineName === $scope.activeConfigInfo.name) {
+          if (clickedAlert && clickedAlert.pipelineName === $scope.activeConfigInfo.name) {
             var edges = $scope.edges,
                 edge;
             $rootScope.common.clickedAlert = undefined;
 
-            if(clickedAlert.ruleDefinition.metricId) {
+            if (clickedAlert.ruleDefinition.metricId) {
               //Select Pipeline Config
               updateDetailPane({
                 selectedObject: undefined,
@@ -941,7 +924,7 @@ angular
      * @param rules
      */
     var addToArchive = function(config, rules) {
-      if(archiveOp) {
+      if (archiveOp) {
         archiveOp = false;
         return;
       }
@@ -958,7 +941,7 @@ angular
         r: angular.copy(rules)
       });
 
-      if(archive.length > undoLimit) {
+      if (archive.length > undoLimit) {
         //Store only last 10 changes
         archive.shift();
       }
@@ -986,7 +969,7 @@ angular
       $rootScope.common.saveOperationInProgress++;
 
 
-      if(!$scope.isPipelineRunning) {
+      if (!$scope.isPipelineRunning) {
         api.pipelineAgent.savePipelineConfig($scope.activeConfigInfo.name, config).
           success(function (res) {
 
@@ -1068,7 +1051,7 @@ angular
         pipelineMetrics = $rootScope.common.pipelineMetrics,
         pipelineStatus = $rootScope.common.pipelineStatusMap[routeParamPipelineName];
 
-      if(!manualUpdate) {
+      if (!manualUpdate) {
         ignoreUpdate = true;
       }
 
@@ -1080,7 +1063,7 @@ angular
       $scope.pipelineRules = pipelineRules;
 
       //Initialize the pipeline config
-      if(!$scope.pipelineConfig.uiInfo || _.isEmpty($scope.pipelineConfig.uiInfo)) {
+      if (!$scope.pipelineConfig.uiInfo || _.isEmpty($scope.pipelineConfig.uiInfo)) {
         $scope.pipelineConfig.uiInfo = {
           previewConfig : {
             previewSource: pipelineConstant.CONFIGURED_SOURCE,
@@ -1101,18 +1084,12 @@ angular
         };
       }
 
-      //Update Pipeline Info list
-      var index = _.indexOf($scope.pipelines, _.find($scope.pipelines, function(pipeline){
-        return pipeline.name === pipelineConfig.info.name;
-      }));
-      $scope.pipelines[index] = pipelineConfig.info;
-
       //Determine edges from input lanes and output lanes
       //And also set flag sourceExists if pipeline Config contains source
       edges = [];
       $scope.sourceExists = false;
       angular.forEach($scope.pipelineConfig.stages, function (sourceStageInstance) {
-        if(sourceStageInstance.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE) {
+        if (sourceStageInstance.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE) {
           $scope.sourceExists = true;
         }
 
@@ -1153,7 +1130,7 @@ angular
 
       $scope.firstOpenLane = $rootScope.$storage.dontShowHelpAlert ? {} : getFirstOpenLane();
 
-      if(pipelineStatus && pipelineStatus.name === pipelineConfig.info.name &&
+      if (pipelineStatus && pipelineStatus.name === pipelineConfig.info.name &&
         pipelineStatus.status === 'RUNNING' && pipelineMetrics && pipelineMetrics.meters) {
         stageErrorCounts = getStageErrorCounts();
       }
@@ -1173,7 +1150,7 @@ angular
           $scope.detailPaneConfig = $scope.selectedObject = $scope.pipelineConfig;
           $scope.detailPaneConfigDefn = $scope.pipelineConfigDefinition;
           $scope.selectedType = pipelineConstant.PIPELINE;
-        } else if($scope.selectedType === pipelineConstant.STAGE_INSTANCE) {
+        } else if ($scope.selectedType === pipelineConstant.STAGE_INSTANCE) {
           //In case of detail pane is stage instance
           angular.forEach($scope.pipelineConfig.stages, function (stageInstance) {
             if (stageInstance.instanceName === $scope.detailPaneConfig.instanceName) {
@@ -1195,7 +1172,7 @@ angular
 
       if ($scope.selectedType === pipelineConstant.PIPELINE) {
         var errorStage = $scope.pipelineConfig.errorStage;
-        if(errorStage && errorStage.configuration && errorStage.configuration.length) {
+        if (errorStage && errorStage.configuration && errorStage.configuration.length) {
           $scope.errorStageConfig = errorStage;
           $scope.errorStageConfigDefn =  _.find($scope.stageLibraries, function (stageLibrary) {
             return stageLibrary.library === errorStage.library &&
@@ -1208,7 +1185,7 @@ angular
         }
 
         var statsAggregatorStage = $scope.pipelineConfig.statsAggregatorStage;
-        if(statsAggregatorStage && statsAggregatorStage.configuration && statsAggregatorStage.configuration.length) {
+        if (statsAggregatorStage && statsAggregatorStage.configuration && statsAggregatorStage.configuration.length) {
           $scope.statsAggregatorStageConfig = statsAggregatorStage;
           $scope.statsAggregatorStageConfigDefn =  _.find($scope.stageLibraries, function (stageLibrary) {
             return stageLibrary.library === statsAggregatorStage.library &&
@@ -1222,7 +1199,7 @@ angular
 
       }
 
-      if(!ignoreArchive) {
+      if (!ignoreArchive) {
         addToArchive($scope.pipelineConfig, $scope.pipelineRules);
       }
 
@@ -1233,9 +1210,9 @@ angular
           issuesMap;
 
 
-        if(commonErrors && commonErrors.length && commonErrors[0].pipelineIssues) {
+        if (commonErrors && commonErrors.length && commonErrors[0].pipelineIssues) {
           issuesMap = commonErrors[0];
-        } else if(config && config.issues){
+        } else if (config && config.issues){
           issuesMap = config.issues;
         }
 
@@ -1271,7 +1248,7 @@ angular
         stageLibraryList = [],
         optionsLength = Object.keys(options).length;
 
-      if(!$scope.previewMode && !$scope.snapshotMode && $scope.selectedType === type && $scope.selectedObject && selectedObject && optionsLength <= 2 &&
+      if (!$scope.previewMode && !$scope.snapshotMode && $scope.selectedType === type && $scope.selectedObject && selectedObject && optionsLength <= 2 &&
         ((type === pipelineConstant.PIPELINE && $scope.selectedObject.info.name === selectedObject.info.name) ||
           (type === pipelineConstant.STAGE_INSTANCE && $scope.selectedObject.instanceName === selectedObject.instanceName))) {
         //Previous selection remain same
@@ -1284,12 +1261,12 @@ angular
       $scope.statsAggregatorStageConfig = undefined;
       $scope.statsAggregatorStageConfigDefn = undefined;
 
-      if(options.configName) {
+      if (options.configName) {
         $scope.$storage.maximizeDetailPane = false;
         $scope.$storage.minimizeDetailPane = false;
       }
 
-      if(type === pipelineConstant.STAGE_INSTANCE) {
+      if (type === pipelineConstant.STAGE_INSTANCE) {
         $scope.stageSelected = true;
         //Stage Instance Configuration
         $scope.detailPaneConfig = $scope.selectedObject = selectedObject;
@@ -1297,10 +1274,10 @@ angular
         $scope.detailPaneConfigDefn = undefined;
 
         _.each($scope.stageLibraries, function (stageLibrary) {
-          if(stageLibrary.name === selectedObject.stageName &&
+          if (stageLibrary.name === selectedObject.stageName &&
             stageLibrary.version === selectedObject.stageVersion) {
 
-            if(stageLibrary.library === selectedObject.library) {
+            if (stageLibrary.library === selectedObject.library) {
               $scope.detailPaneConfigDefn = stageLibrary;
             }
 
@@ -1313,29 +1290,29 @@ angular
 
         $scope.stageLibraryList = _.sortBy(stageLibraryList, 'libraryLabel');
 
-        if(!options.detailTabName) {
-          if($scope.selectedDetailPaneTabCache[selectedObject.instanceName]) {
+        if (!options.detailTabName) {
+          if ($scope.selectedDetailPaneTabCache[selectedObject.instanceName]) {
             options.detailTabName = $scope.selectedDetailPaneTabCache[selectedObject.instanceName];
           } else {
-            if($scope.isPipelineRunning) {
+            if ($scope.isPipelineRunning) {
               options.detailTabName = 'summary';
             } else {
               options.detailTabName = 'configuration';
             }
           }
 
-          if($scope.selectedConfigGroupCache[selectedObject.instanceName]) {
+          if ($scope.selectedConfigGroupCache[selectedObject.instanceName]) {
             options.configGroup = $scope.selectedConfigGroupCache[selectedObject.instanceName];
           }
         }
 
-      } else if(type === pipelineConstant.PIPELINE){
+      } else if (type === pipelineConstant.PIPELINE){
         //Pipeline Configuration
         $scope.stageSelected = false;
         $scope.detailPaneConfigDefn = $scope.pipelineConfigDefinition;
         $scope.detailPaneConfig = $scope.selectedObject = $scope.pipelineConfig;
 
-        if(errorStage && errorStage.configuration && errorStage.configuration.length) {
+        if (errorStage && errorStage.configuration && errorStage.configuration.length) {
           $scope.errorStageConfig = errorStage;
           $scope.errorStageConfigDefn =  _.find($scope.stageLibraries, function (stageLibrary) {
             return stageLibrary.library === errorStage.library &&
@@ -1344,7 +1321,7 @@ angular
           });
         }
 
-        if(statsAggregatorStage && statsAggregatorStage.configuration && statsAggregatorStage.configuration.length) {
+        if (statsAggregatorStage && statsAggregatorStage.configuration && statsAggregatorStage.configuration.length) {
           $scope.statsAggregatorStageConfig = statsAggregatorStage;
           $scope.statsAggregatorStageConfigDefn =  _.find($scope.stageLibraries, function (stageLibrary) {
             return stageLibrary.library === statsAggregatorStage.library &&
@@ -1353,30 +1330,30 @@ angular
           });
         }
 
-        if(!options.detailTabName) {
-          if($scope.selectedDetailPaneTabCache[$scope.pipelineConfig.info.name]) {
+        if (!options.detailTabName) {
+          if ($scope.selectedDetailPaneTabCache[$scope.pipelineConfig.info.name]) {
             options.detailTabName = $scope.selectedDetailPaneTabCache[$scope.pipelineConfig.info.name];
           } else {
-            if($scope.isPipelineRunning) {
+            if ($scope.isPipelineRunning) {
               options.detailTabName = 'summary';
             } else {
               options.detailTabName = 'configuration';
             }
           }
 
-          if($scope.selectedConfigGroupCache[$scope.pipelineConfig.info.name]) {
+          if ($scope.selectedConfigGroupCache[$scope.pipelineConfig.info.name]) {
             options.configGroup = $scope.selectedConfigGroupCache[$scope.pipelineConfig.info.name];
           }
         }
 
-      } else if(type === pipelineConstant.LINK) {
+      } else if (type === pipelineConstant.LINK) {
         $scope.detailPaneConfig = $scope.selectedObject = selectedObject;
 
-        if(!options.detailTabName) {
-          if($scope.selectedDetailPaneTabCache[$scope.selectedObject.outputLane]) {
+        if (!options.detailTabName) {
+          if ($scope.selectedDetailPaneTabCache[$scope.selectedObject.outputLane]) {
             options.detailTabName = $scope.selectedDetailPaneTabCache[$scope.selectedObject.outputLane];
           } else {
-            if($scope.isPipelineRunning) {
+            if ($scope.isPipelineRunning) {
               options.detailTabName = 'summary';
             } else {
               options.detailTabName = 'dataRules';
@@ -1398,13 +1375,13 @@ angular
      *
      */
     var refreshPipelineMetrics = function() {
-      if(destroyed) {
+      if (destroyed) {
         return;
       }
 
-      if(isWebSocketSupported) {
+      if (isWebSocketSupported) {
 
-        if(metricsWebSocket) {
+        if (metricsWebSocket) {
           metricsWebSocket.close();
         }
 
@@ -1414,7 +1391,7 @@ angular
         metricsWebSocket.onmessage = function (evt) {
           var received_msg = evt.data;
 
-          if(!$scope.monitoringPaused) {
+          if (!$scope.monitoringPaused) {
             $rootScope.$apply(function() {
               $rootScope.common.pipelineMetrics = JSON.parse(received_msg);
             });
@@ -1441,13 +1418,13 @@ angular
           function() {
             api.pipelineAgent.getPipelineMetrics($scope.activeConfigInfo.name, 0)
               .success(function(data) {
-                if(!_.isObject(data) && _.isString(data) && data.indexOf('<!doctype html>') !== -1) {
+                if (!_.isObject(data) && _.isString(data) && data.indexOf('<!doctype html>') !== -1) {
                   //Session invalidated
                   window.location.reload();
                   return;
                 }
 
-                if(!$scope.monitoringPaused) {
+                if (!$scope.monitoringPaused) {
                   $rootScope.common.pipelineMetrics = data;
                 }
                 refreshPipelineMetrics();
@@ -1468,12 +1445,12 @@ angular
       var stageInstanceErrorCounts = {},
         pipelineMetrics = $rootScope.common.pipelineMetrics;
 
-      if(pipelineMetrics && pipelineMetrics.meters) {
+      if (pipelineMetrics && pipelineMetrics.meters) {
         angular.forEach($scope.pipelineConfig.stages, function(stageInstance) {
           var errorRecordsMeter = pipelineMetrics.meters['stage.' + stageInstance.instanceName + '.errorRecords.meter'],
             stageErrorsMeter = pipelineMetrics.meters['stage.' + stageInstance.instanceName + '.stageErrors.meter'];
 
-          if(errorRecordsMeter && stageErrorsMeter) {
+          if (errorRecordsMeter && stageErrorsMeter) {
             stageInstanceErrorCounts[stageInstance.instanceName] = Math.round(
               errorRecordsMeter.count +
               stageErrorsMeter.count
@@ -1499,15 +1476,15 @@ angular
       var firstOpenLaneStageInstanceName;
       var isEventLane = false;
 
-      if(pipelineConfig && pipelineConfig.issues && pipelineConfig.issues.stageIssues) {
+      if (pipelineConfig && pipelineConfig.issues && pipelineConfig.issues.stageIssues) {
         angular.forEach(pipelineConfig.issues.stageIssues, function(issues, instanceName) {
-          if(!firstOpenLaneStageInstanceName ||
+          if (!firstOpenLaneStageInstanceName ||
             (selectedType === pipelineConstant.STAGE_INSTANCE && selectedObject.instanceName === instanceName)) {
             angular.forEach(issues, function(issue) {
-              if(issue.message.indexOf('VALIDATION_0011') !== -1) {
+              if (issue.message.indexOf('VALIDATION_0011') !== -1) {
                 issueObj = issue;
                 firstOpenLaneStageInstanceName = instanceName;
-              } else if(issue.message.indexOf('VALIDATION_0104') !== -1) {
+              } else if (issue.message.indexOf('VALIDATION_0104') !== -1) {
                 issueObj = issue;
                 firstOpenLaneStageInstanceName = instanceName;
                 isEventLane = true;
@@ -1516,13 +1493,13 @@ angular
           }
         });
 
-        if(firstOpenLaneStageInstanceName && issueObj &&
+        if (firstOpenLaneStageInstanceName && issueObj &&
           issueObj.additionalInfo && issueObj.additionalInfo.openStreams) {
           var stageInstance = _.find(pipelineConfig.stages, function(stage) {
               return stage.instanceName === firstOpenLaneStageInstanceName;
             });
 
-          if(stageInstance) {
+          if (stageInstance) {
             if (!isEventLane) {
               firstOpenLane = {
                 stageInstance: stageInstance,
@@ -1583,7 +1560,7 @@ angular
               return savedRule.id === rule.id;
             });
 
-            if(savedRule) {
+            if (savedRule) {
               rule.valid = savedRule.valid;
             }
           });
@@ -1593,7 +1570,7 @@ angular
               return savedRule.id === rule.id;
             });
 
-            if(savedRule) {
+            if (savedRule) {
               rule.valid = savedRule.valid;
             }
           });
@@ -1603,7 +1580,7 @@ angular
               return savedRule.id === rule.id;
             });
 
-            if(savedRule) {
+            if (savedRule) {
               rule.valid = savedRule.valid;
             }
           });
@@ -1624,13 +1601,13 @@ angular
     var updateRetryCountdown = function(nextRetryTimeStamp) {
       $scope.retryCountDown = (nextRetryTimeStamp - $rootScope.common.serverTimeDifference - (new Date()).getTime())/1000;
 
-      if(retryCountDownTimer) {
+      if (retryCountDownTimer) {
         $timeout.cancel(retryCountDownTimer);
       }
 
       var retryCountDownCallback = function(){
         $scope.retryCountDown--;
-        if($scope.retryCountDown > 0) {
+        if ($scope.retryCountDown > 0) {
           retryCountDownTimer = $timeout(retryCountDownCallback,1000);
         } else {
           $scope.retryCountDown = 0;
@@ -1643,7 +1620,7 @@ angular
     //Event Handling
 
     $scope.$watch('pipelineConfig', function (newValue, oldValue) {
-      if(newValue === undefined) {
+      if (newValue === undefined) {
         return;
       }
 
@@ -1675,9 +1652,9 @@ angular
               stageLibrary.version === badRecordHandlingConfigArr[2];
           });
 
-          if(badRecordsStage) {
+          if (badRecordsStage) {
             var configuration;
-            if(errorStageInst && errorStageInst.stageName == badRecordsStage.name  &&
+            if (errorStageInst && errorStageInst.stageName == badRecordsStage.name  &&
               errorStageInst.stageVersion == badRecordsStage.version) {
               configuration = errorStageInst.configuration;
             }
@@ -1710,9 +1687,9 @@ angular
               stageLibrary.version === statsAggregatorStageConfigArr[2];
           });
 
-          if(statsAggregatorStage) {
+          if (statsAggregatorStage) {
             var saConfig;
-            if(statsAggregatorStageInst && statsAggregatorStageInst.stageName == statsAggregatorStage.name  &&
+            if (statsAggregatorStageInst && statsAggregatorStageInst.stageName == statsAggregatorStage.name  &&
               statsAggregatorStageInst.stageVersion == statsAggregatorStage.version) {
               saConfig = statsAggregatorStageInst.configuration;
             }
@@ -1727,7 +1704,7 @@ angular
 
 
 
-        if(configTimeout) {
+        if (configTimeout) {
           $timeout.cancel(configTimeout);
         }
         configTimeout = $timeout(saveUpdates, 1000);
@@ -1783,7 +1760,7 @@ angular
     });
 
     $scope.$on('onPipelineConfigSelect', function(event, configInfo) {
-      if(configInfo) {
+      if (configInfo) {
         $scope.activeConfigInfo = configInfo;
         $scope.closePreview();
         loadPipelineConfig($scope.activeConfigInfo.name);
@@ -1813,45 +1790,47 @@ angular
       }
     });
 
-    pipelineStatusWatchListener = $rootScope.$watch('common.pipelineStatusMap["' + routeParamPipelineName + '"]', function() {
-      var oldActiveConfigStatus = $scope.activeConfigStatus || {};
+    pipelineStatusWatchListener = $rootScope.$watch('common.pipelineStatusMap["' + routeParamPipelineName + '"]',
+      function() {
+        var oldActiveConfigStatus = $scope.activeConfigStatus || {};
 
-      $scope.isPipelineRunning = derivePipelineRunning();
-      $scope.activeConfigStatus = $rootScope.common.pipelineStatusMap[routeParamPipelineName] || {};
+        $scope.isPipelineRunning = derivePipelineRunning();
+        $scope.activeConfigStatus = $rootScope.common.pipelineStatusMap[routeParamPipelineName] || {};
 
-      if(oldActiveConfigStatus.timeStamp && oldActiveConfigStatus.timeStamp !== $scope.activeConfigStatus.timeStamp &&
-        _.contains(['START_ERROR', 'RUNNING_ERROR', 'RUN_ERROR', 'CONNECT_ERROR'], $scope.activeConfigStatus.status)) {
+        if (oldActiveConfigStatus.timeStamp && oldActiveConfigStatus.timeStamp !== $scope.activeConfigStatus.timeStamp &&
+          _.contains(['START_ERROR', 'RUNNING_ERROR', 'RUN_ERROR', 'CONNECT_ERROR'], $scope.activeConfigStatus.status)
+        ) {
 
-        var status = $scope.activeConfigStatus;
+          var status = $scope.activeConfigStatus;
 
-        if(status.attributes && status.attributes.issues) {
-          $rootScope.common.errors = [status.attributes.issues];
-        } else {
-          $rootScope.common.errors = ['Pipeline Status: ' + $scope.activeConfigStatus.status + ': ' +
+          if (status.attributes && status.attributes.issues) {
+            $rootScope.common.errors = [status.attributes.issues];
+          } else {
+            $rootScope.common.errors = ['Pipeline Status: ' + $scope.activeConfigStatus.status + ': ' +
             $scope.activeConfigStatus.message];
+          }
+
         }
 
-      }
+        if ($scope.activeConfigStatus.status === 'RETRY') {
+          updateRetryCountdown($scope.activeConfigStatus.nextRetryTimeStamp);
+        }
 
-      if($scope.activeConfigStatus.status === 'RETRY') {
-        updateRetryCountdown($scope.activeConfigStatus.nextRetryTimeStamp);
-      }
+        if ($scope.activeConfigStatus && $scope.activeConfigStatus.attributes &&
+          $scope.activeConfigStatus.attributes.IS_REMOTE_PIPELINE === true) {
+          $scope.isRemotePipeline = true;
+          $scope.isPipelineReadOnly = true;
+        }
 
-      if ($scope.activeConfigStatus && $scope.activeConfigStatus.attributes &&
-        $scope.activeConfigStatus.attributes.IS_REMOTE_PIPELINE === true) {
-        $scope.isRemotePipeline = true;
-        $scope.isPipelineReadOnly = true;
-      }
-
-    });
+      });
 
     metricsWatchListener = $rootScope.$watch('common.pipelineMetrics', function() {
       var pipelineStatus = $rootScope.common.pipelineStatusMap[routeParamPipelineName],
         config = $scope.pipelineConfig;
-      if(pipelineStatus && config && pipelineStatus.name === config.info.name &&
+      if (pipelineStatus && config && pipelineStatus.name === config.info.name &&
         $scope.isPipelineRunning && $rootScope.common.pipelineMetrics) {
 
-        if(!$scope.snapshotMode) {
+        if (!$scope.snapshotMode) {
           $scope.$broadcast('updateErrorCount', getStageErrorCounts());
         }
 
@@ -1865,13 +1844,13 @@ angular
 
     errorsWatchListener = $rootScope.$watch('common.errors', function() {
       var commonErrors = $rootScope.common.errors;
-      if(commonErrors && commonErrors.length && commonErrors[0].pipelineIssues) {
+      if (commonErrors && commonErrors.length && commonErrors[0].pipelineIssues) {
         $scope.refreshGraph();
       }
     });
 
     $scope.$on('$destroy', function() {
-      if(!reloadingNew) {
+      if (!reloadingNew) {
         //In case of closing page
         setTimeout(function() {
           setTimeout(function() {
@@ -1883,8 +1862,8 @@ angular
 
       reloadingNew = false;
 
-      if(isWebSocketSupported) {
-        if(metricsWebSocket) {
+      if (isWebSocketSupported) {
+        if (metricsWebSocket) {
           metricsWebSocket.close();
         }
       } else {
@@ -1893,19 +1872,19 @@ angular
 
       //Clear all $watch by calling de registration function
 
-      if(infoNameWatchListener) {
+      if (infoNameWatchListener) {
         infoNameWatchListener();
       }
 
-      if(pipelineStatusWatchListener) {
+      if (pipelineStatusWatchListener) {
         pipelineStatusWatchListener();
       }
 
-      if(metricsWatchListener) {
+      if (metricsWatchListener) {
         metricsWatchListener();
       }
 
-      if(errorsWatchListener) {
+      if (errorsWatchListener) {
         errorsWatchListener();
       }
 
@@ -1914,14 +1893,14 @@ angular
 
     $scope.$on('visibilityChange', function(event, isHidden) {
       if (isHidden) {
-        if(isWebSocketSupported && metricsWebSocket) {
+        if (isWebSocketSupported && metricsWebSocket) {
           metricsWebSocket.close();
-        } else if(!isWebSocketSupported){
+        } else if (!isWebSocketSupported){
           $timeout.cancel(pipelineMetricsTimer);
         }
         pageHidden = true;
       } else {
-        if(_.contains(['RUNNING', 'STARTING'], $rootScope.common.pipelineStatusMap[routeParamPipelineName].status)) {
+        if (_.contains(['RUNNING', 'STARTING'], $rootScope.common.pipelineStatusMap[routeParamPipelineName].status)) {
           refreshPipelineMetrics();
         }
         pageHidden = false;
@@ -1929,14 +1908,14 @@ angular
     });
 
     $scope.$on('onAlertClick', function(event, alert) {
-      if(alert && alert.pipelineName === $scope.activeConfigInfo.name) {
+      if (alert && alert.pipelineName === $scope.activeConfigInfo.name) {
         var edges = $scope.edges,
             edge;
 
         $scope.$storage.maximizeDetailPane = false;
         $scope.$storage.minimizeDetailPane = false;
 
-        if(alert.ruleDefinition.metricId) {
+        if (alert.ruleDefinition.metricId) {
           //Select Pipeline Config
           $scope.$broadcast('selectNode');
           $scope.changeStageSelection({

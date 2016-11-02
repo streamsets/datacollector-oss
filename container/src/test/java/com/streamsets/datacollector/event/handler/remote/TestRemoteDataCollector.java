@@ -19,24 +19,8 @@
  */
 package com.streamsets.datacollector.event.handler.remote;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.ws.rs.core.MultivaluedMap;
-
-import com.streamsets.datacollector.callback.CallbackObjectType;
-import com.streamsets.datacollector.execution.StateEventListener;
-import com.streamsets.datacollector.util.Configuration;
-import org.junit.Test;
-
 import com.streamsets.datacollector.callback.CallbackInfo;
+import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.dto.ValidationStatus;
@@ -51,6 +35,7 @@ import com.streamsets.datacollector.execution.RawPreview;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.Snapshot;
 import com.streamsets.datacollector.execution.SnapshotInfo;
+import com.streamsets.datacollector.execution.StateEventListener;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
 import com.streamsets.datacollector.execution.manager.PipelineManagerException;
 import com.streamsets.datacollector.execution.manager.PipelineStateImpl;
@@ -63,13 +48,24 @@ import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineRevInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
+import org.junit.Test;
 import org.mockito.Mockito;
+
+import javax.ws.rs.core.MultivaluedMap;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.*;
 
 public class TestRemoteDataCollector {
 
@@ -211,6 +207,10 @@ public class TestRemoteDataCollector {
       stateMap.put(pipelineStatus4.getName() + "::" + pipelineStatus4.getRev(), pipelineStatus4);
       stateMap.put(pipelineStatus5.getName() + "::" + pipelineStatus5.getRev(), pipelineStatus5);
       return pipelineList;
+    }
+
+    public PipelineState getPipelineState(String name, String rev) throws PipelineStoreException {
+      return stateMap.get(name + "::" + rev);
     }
 
     @Override

@@ -39,7 +39,6 @@ public class PipelineInfo implements Serializable {
   private boolean valid;
   private Map<String, Object> metadata;
 
-
   @JsonCreator
   public PipelineInfo(
       @JsonProperty("name") String name,
@@ -52,7 +51,7 @@ public class PipelineInfo implements Serializable {
       @JsonProperty("uuid") UUID uuid,
       @JsonProperty("valid") boolean valid,
       @JsonProperty("metadata") Map<String, Object> metadata
-      ) {
+  ) {
     this.name = name;
     this.description = description;
     this.created = created;

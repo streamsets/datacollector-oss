@@ -24,109 +24,31 @@
 
 angular
   .module('dataCollectorApp.home')
-
-  .controller('LibraryController', function ($scope, $rootScope,  $route, $location, $modal, _, api,
-                                             pipelineService, configuration, $q) {
-
-    var predefinedLabels = [
-      'All Pipelines',
-      'Running Pipelines',
-      'Non Running Pipelines',
-      'Invalid Pipelines',
-      'Error Pipelines'
-    ];
-
-    var dpmEnabledPredefinedLabels = [
-      'All Pipelines',
-      'Published Pipelines',
-      'DPM Controlled Pipelines',
-      'Local Pipelines',
-      'Running Pipelines',
-      'Non Running Pipelines',
-      'Invalid Pipelines',
-      'Error Pipelines'
-    ];
-
+  .controller('LibraryController', function ($scope, api, $q) {
     angular.extend($scope, {
-      pipelineLabels: predefinedLabels,
-      existingPipelineLabels: [],
+      systemPipelineLabels: [],
+      pipelineLabels: [],
 
       /**
-       * Emit 'onPipelineConfigSelect' event when new configuration is selected in library panel.
+       * Callback function for selecting pipeline label
        *
-       * @param pipeline
+       * @param label
        */
       onSelectLabel : function(label) {
         $scope.$storage.pipelineListState.selectedLabel = label;
         $scope.selectPipelineLabel(label);
-      },
-
-      /**
-       * Add New Pipeline Configuration
-       */
-      addPipelineConfig: function() {
-        pipelineService.addPipelineConfigCommand();
-      },
-
-      /**
-       * Delete Pipeline Configuration
-       */
-      deletePipelineConfig: function(pipelineInfo, $event) {
-        pipelineService.deletePipelineConfigCommand(pipelineInfo, $event)
-          .then(function(pipelines) {
-            if(pipelines.length) {
-              $location.path('/collector/pipeline/' + pipelines[0].name);
-            } else {
-              $location.path('/');
-            }
-          });
-      },
-
-      /**
-       * Duplicate Pipeline Configuration
-       */
-      duplicatePipelineConfig: function(pipelineInfo, $event) {
-        pipelineService.duplicatePipelineConfigCommand(pipelineInfo, $event)
-          .then(function(newPipelineConfig) {
-            if (!angular.isArray(newPipelineConfig)) {
-              $location.path('/collector/pipeline/' + newPipelineConfig.info.name);
-            } else {
-              $location.path('/collector/pipeline/' + newPipelineConfig[0].info.name);
-            }
-          });
-      },
-
-      /**
-       * Import link command handler
-       */
-      importPipelineConfig: function(pipelineInfo, $event) {
-        pipelineService.importPipelineConfigCommand(pipelineInfo, $event);
-      },
-
-      /**
-       * Export link command handler
-       */
-      exportPipelineConfig: function(pipelineInfo, includeDefinitions, $event) {
-        $event.stopPropagation();
-        api.pipelineAgent.exportPipelineConfig(pipelineInfo.name, includeDefinitions);
       }
-
     });
 
-
     $q.all([
-      pipelineService.init(true),
-      configuration.init()
+      api.pipelineAgent.getSystemPipelineLabels(),
+      api.pipelineAgent.getPipelineLabels()
     ]).then(
       function (results) {
-        $scope.existingPipelineLabels = pipelineService.existingPipelineLabels;
-        if ( configuration.isDPMEnabled()) {
-          $scope.pipelineLabels = dpmEnabledPredefinedLabels;
-        }
+        $scope.systemPipelineLabels = results[0].data;
+        $scope.pipelineLabels = results[1].data;
       },
       function (results) {
-
       }
     );
-
   });

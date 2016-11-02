@@ -38,27 +38,56 @@ angular
       save : function () {
         if ($scope.newConfig.numberOfCopies === 1) {
           $scope.operationInProgress = true;
-          $q.when(api.pipelineAgent.duplicatePipelineConfig($scope.newConfig.name, $scope.newConfig.description,
-            pipelineInfo)).
-          then(function(configObject) {
-            $modalInstance.close(configObject);
-          },function(res) {
-            $scope.operationInProgress = false;
-            $scope.common.errors = [res.data];
-          });
+          $q.all([
+            api.pipelineAgent.getPipelineConfig(pipelineInfo.name),
+            api.pipelineAgent.getPipelineRules(pipelineInfo.name)
+          ]).then(function(results) {
+            var pipelineObject = results[0].data;
+            var pipelineRulesObject = results[1].data;
+            return api.pipelineAgent.duplicatePipelineConfig(
+              $scope.newConfig.name,
+              $scope.newConfig.description,
+              pipelineObject,
+              pipelineRulesObject
+            );
+          }).then(
+            function(configObject) {
+              $modalInstance.close(configObject);
+            },
+            function(res) {
+              $scope.operationInProgress = false;
+              $scope.common.errors = [res.data];
+            }
+          );
         } else {
           $scope.operationInProgress = true;
-          var deferList = [];
-          for (var i = 0; i < $scope.newConfig.numberOfCopies; i++) {
-            deferList.push(api.pipelineAgent.duplicatePipelineConfig(
-              $scope.newConfig.name + (i + 1),
-              $scope.newConfig.description,
-              pipelineInfo
-            ));
-          }
-          $q.all(deferList).
-          then(function(configObjects) {
-            $modalInstance.close(configObjects);
+          $q.all([
+            api.pipelineAgent.getPipelineConfig(pipelineInfo.name),
+            api.pipelineAgent.getPipelineRules(pipelineInfo.name)
+          ]).then(function(results) {
+            var pipelineObject = results[0].data;
+            var pipelineRulesObject = results[1].data;
+            var deferList = [];
+            for (var i = 0; i < $scope.newConfig.numberOfCopies; i++) {
+              deferList.push(
+                api.pipelineAgent.duplicatePipelineConfig(
+                  $scope.newConfig.name + (i + 1),
+                  $scope.newConfig.description,
+                  pipelineObject,
+                  pipelineRulesObject
+                )
+              );
+            }
+            $q.all(deferList)
+              .then(
+                function(configObjects) {
+                  $modalInstance.close(configObjects);
+                },
+                function(res) {
+                  $scope.operationInProgress = false;
+                  $scope.common.errors = [res.data];
+                }
+              );
           },function(res) {
             $scope.operationInProgress = false;
             $scope.common.errors = [res.data];
