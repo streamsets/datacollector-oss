@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.common.mongodb.AuthenticationType;
@@ -113,7 +114,7 @@ public class MongoDBTargetIT {
     for(int i = 0; i < logRecords.size(); i++) {
       Record record = logRecords.get(i);
       if(i % 2 == 0) {
-        record.getHeader().setAttribute(MongoDBTarget.OPERATION_KEY, MongoDBTarget.DELETE);
+        record.getHeader().setAttribute(OperationType.SDC_OPERATION_TYPE, MongoDBTarget.DELETE);
       } else {
         record.getHeader().setAttribute(MongoDBTarget.OPERATION_KEY, MongoDBTarget.UPSERT);
         record.get().getValueAsMap().put("updated", Field.create(true));

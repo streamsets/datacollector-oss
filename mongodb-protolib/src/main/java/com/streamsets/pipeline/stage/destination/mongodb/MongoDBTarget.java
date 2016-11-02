@@ -42,6 +42,7 @@ import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.mongodb.Errors;
+import com.streamsets.pipeline.lib.operation.OperationType;
 import org.apache.commons.io.IOUtils;
 import org.bson.Document;
 import org.slf4j.Logger;
@@ -58,6 +59,8 @@ public class MongoDBTarget extends BaseTarget {
 
   private static final Logger LOG = LoggerFactory.getLogger(MongoDBTarget.class);
 
+  // We will be using sdc.operation.type defined in OperationType.
+  // This will be deprecated.
   public static final String OPERATION_KEY = "SDC.MONGODB.OPERATION";
   public static final String INSERT = "INSERT";
   public static final String UPSERT = "UPSERT";
@@ -126,7 +129,9 @@ public class MongoDBTarget extends BaseTarget {
         Document document = Document.parse(new String(baos.toByteArray()));
 
         //create a write model based on record header
-        if (!record.getHeader().getAttributeNames().contains(OPERATION_KEY)) {
+        if (!(record.getHeader().getAttributeNames().contains(OPERATION_KEY) ||
+            record.getHeader().getAttributeNames().contains(OperationType.SDC_OPERATION_TYPE)))
+        {
           LOG.error(
               Errors.MONGODB_15.getMessage(),
               record.getHeader().getSourceId()
@@ -137,8 +142,11 @@ public class MongoDBTarget extends BaseTarget {
           );
         }
 
-        String operation = record.getHeader().getAttribute(OPERATION_KEY);
-        switch (operation) {
+        String operation = record.getHeader().getAttribute(OperationType.SDC_OPERATION_TYPE);
+        if (operation == null) {
+          operation = record.getHeader().getAttribute(OPERATION_KEY);
+        }
+        switch (operation.toUpperCase()) {
           case INSERT:
             documentList.add(new InsertOneModel<>(document));
             recordList.add(record);
