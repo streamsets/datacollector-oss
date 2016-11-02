@@ -196,7 +196,7 @@ public class PipelineConfigBean implements Stage {
     required = true,
     type = ConfigDef.Type.STRING,
     label = "Worker Java Options",
-    defaultValue = "-XX:PermSize=128M -XX:MaxPermSize=256M -Dlog4j.debug",
+    defaultValue = "-XX:PermSize=128M -XX:MaxPermSize=256M -Dhttps.protocols=TLSv1.2,TLSv1.1 -Dlog4j.debug",
     description = "Add properties as needed. Changes to default settings are not recommended.",
     displayPosition = 110,
     group = "CLUSTER",
