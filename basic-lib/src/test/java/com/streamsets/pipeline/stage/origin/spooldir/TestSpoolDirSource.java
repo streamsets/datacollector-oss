@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.sdk.SourceRunner;
@@ -373,6 +374,76 @@ public class TestSpoolDirSource {
       // And error record
       records = runner.getErrorRecords();
       Assert.assertEquals(1, records.size());
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testErrorFileWithoutPreview() throws Exception {
+    errorFile(false);
+  }
+
+  @Test
+  public void testErrorFileInPreview() throws Exception {
+    errorFile(true);
+  }
+
+  public void errorFile(boolean preview) throws Exception {
+    File spoolDir = new File("target", UUID.randomUUID().toString());
+    spoolDir.mkdir();
+    File errorDir = new File("target", UUID.randomUUID().toString());
+    errorDir.mkdir();
+
+    SpoolDirConfigBean conf = new SpoolDirConfigBean();
+    conf.dataFormat = DataFormat.JSON;
+    conf.spoolDir = spoolDir.getAbsolutePath();
+    conf.batchSize = 10;
+    conf.overrunLimit = 100;
+    conf.poolingTimeoutSecs = 1;
+    conf.filePattern = "file-[0-9].log";
+    conf.maxSpoolFiles = 10;
+    conf.initialFileToProcess = "file-0.log";
+    conf.dataFormatConfig.compression = Compression.NONE;
+    conf.dataFormatConfig.filePatternInArchive = "*";
+    conf.dataFormatConfig.csvHeader = CsvHeader.WITH_HEADER;
+    conf.errorArchiveDir = errorDir.getAbsolutePath();
+    conf.postProcessing = PostProcessingOptions.NONE;
+    conf.retentionTimeMins = 10;
+    conf.allowLateDirectory = false;
+    conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
+    conf.dataFormatConfig.onParseError = OnParseError.ERROR;
+
+    FileOutputStream outputStream = new FileOutputStream(new File(conf.spoolDir, "file-0.log"));
+    // Incorrect JSON
+    IOUtils.writeLines(ImmutableList.of("{a"), "\n", outputStream);
+    outputStream.close();
+
+    SpoolDirSource source = new SpoolDirSource(conf);
+    SourceRunner runner = new SourceRunner.Builder(SpoolDirSource.class, source)
+      .setPreview(preview)
+      .setOnRecordError(OnRecordError.TO_ERROR)
+      .addOutputLane("lane")
+      .build();
+    runner.runInit();
+    try {
+      StageRunner.Output output = runner.runProduce(null, 10);
+      Assert.assertNotNull(output);
+
+      // Verify proper record
+      List<Record> records = output.getRecords().get("lane");
+      Assert.assertNotNull(records);
+      Assert.assertEquals(0, records.size());
+
+      // Depending on the preview flag, we should see the file in one directory or the other
+      if(preview) {
+        Assert.assertEquals(0, errorDir.list().length);
+        Assert.assertEquals(1, spoolDir.list().length);
+      } else {
+        Assert.assertEquals(1, errorDir.list().length);
+        Assert.assertEquals(0, spoolDir.list().length);
+      }
 
     } finally {
       runner.runDestroy();

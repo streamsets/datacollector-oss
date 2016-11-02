@@ -496,7 +496,7 @@ public class DirectorySpooler {
   }
 
   public void handleCurrentFileAsError() throws IOException {
-    if (errorArchiveDirPath != null) {
+    if (errorArchiveDirPath != null && !context.isPreview()) {
       Path current = spoolDirPath.resolve(previousFile);
       LOG.error("Archiving file in error '{}' in error archive directory '{}'", previousFile, errorArchiveDirPath);
       moveIt(current, errorArchiveDirPath);
