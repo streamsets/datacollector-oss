@@ -54,10 +54,10 @@ public class ForceSourceConfigBean extends ForceConfigBean {
       required = true,
       type = ConfigDef.Type.TEXT,
       mode = ConfigDef.Mode.SQL,
-      defaultValue = "SELECT Id, Name FROM Account WHERE Id > '${OFFSET}' ORDER BY Id",
+      defaultValue = "",
       label = "SOQL Query",
       description =
-          "SELECT <offset field>, ... FROM <object name> WHERE <offset field>  >  ${OFFSET} ORDER BY <offset field>",
+          "SELECT <offset field>, <more fields>, ... FROM <object name> WHERE <offset field>  >  ${OFFSET} ORDER BY <offset field>",
       elDefs = {OffsetEL.class},
       evaluation = ConfigDef.Evaluation.IMPLICIT,
       displayPosition = 80,
@@ -108,8 +108,9 @@ public class ForceSourceConfigBean extends ForceConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      defaultValue = "AccountUpdates",
+      defaultValue = "",
       label = "Push Topic",
+      description = "Push Topic name, for example AccountUpdates. The Push Topic must be defined in your Salesforce environment.",
       displayPosition = 120,
       dependsOn = "subscribeToStreaming",
       triggeredByValue = "true",

@@ -26,9 +26,9 @@ public class ForceConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      defaultValue = "user@example.com",
+      defaultValue = "",
       label = "Username",
-      description = "Salesforce username",
+      description = "Salesforce username, in the form user@example.com",
       displayPosition = 10,
       elDefs = VaultEL.class,
       group = "FORCE"
@@ -38,9 +38,9 @@ public class ForceConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      defaultValue = "${runtime:loadResource('forcePassword.txt',true)}",
+      defaultValue = "",
       label = "Password",
-      description = "Salesforce password",
+      description = "Salesforce password, or an EL to load the password from a resource, for example, ${runtime:loadResource('forcePassword.txt',true)}",
       displayPosition = 20,
       elDefs = VaultEL.class,
       group = "FORCE"
