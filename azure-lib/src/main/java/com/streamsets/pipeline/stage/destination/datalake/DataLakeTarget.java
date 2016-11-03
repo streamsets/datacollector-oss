@@ -39,7 +39,6 @@ import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
-import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.slf4j.Logger;
@@ -58,7 +57,6 @@ public class DataLakeTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(DataLakeTarget.class);
   private final DataLakeConfigBean conf;
   private static final String EL_PREFIX = "${";
-  private DataGeneratorFactory generatorFactory;
   private ByteArrayOutputStream baos;
   private ADLStoreClient client;
   private ELEval dirPathTemplateEval;
@@ -81,7 +79,6 @@ public class DataLakeTarget extends BaseTarget {
     conf.init(getContext(), issues);
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
     baos = new ByteArrayOutputStream(1024);
-    generatorFactory = conf.dataFormatConfig.getDataGeneratorFactory();
 
     dirPathTemplateEval = getContext().createELEval("dirPathTemplate");
     dirPathTemplateVars = getContext().createELVars();
@@ -92,7 +89,7 @@ public class DataLakeTarget extends BaseTarget {
 
     calendar = Calendar.getInstance(TimeZone.getTimeZone(conf.timeZoneID));
 
-    if(conf.dirPathTemplate.startsWith(EL_PREFIX)) {
+    if (conf.dirPathTemplate.startsWith(EL_PREFIX)) {
       TimeEL.setCalendarInContext(dirPathTemplateVars, calendar);
       TimeNowEL.setTimeNowInContext(dirPathTemplateVars, new Date());
 
@@ -110,7 +107,7 @@ public class DataLakeTarget extends BaseTarget {
       );
     }
 
-    if(conf.fileNameTemplate.startsWith(EL_PREFIX)) {
+    if (conf.fileNameTemplate.startsWith(EL_PREFIX)) {
       TimeEL.setCalendarInContext(fileNameTemplateVars, calendar);
       TimeNowEL.setTimeNowInContext(fileNameTemplateVars, new Date());
 
@@ -128,7 +125,7 @@ public class DataLakeTarget extends BaseTarget {
       );
     }
 
-    if(conf.timeDriver.startsWith(EL_PREFIX)) {
+    if (conf.timeDriver.startsWith(EL_PREFIX)) {
       TimeEL.setCalendarInContext(timeDriverVars, calendar);
       TimeNowEL.setTimeNowInContext(timeDriverVars, new Date());
 
@@ -145,20 +142,11 @@ public class DataLakeTarget extends BaseTarget {
       );
     }
 
-    if(issues.isEmpty()) {
+    if (issues.isEmpty()) {
       // connect to ADLS
       try {
-        AzureADToken token = AzureADAuthenticator.getTokenUsingClientCreds(
-            conf.authTokenEndpoint,
-            conf.clientId,
-            conf.clientKey
-        );
-        client = ADLStoreClient.createClient(conf.accountFQDN, token);
-
-        // check authorization
-        final String path = "dummyPath";
-        client.checkExists(path);
-      } catch (Exception ex) {
+        client = createClient(conf.authTokenEndpoint, conf.clientId, conf.clientKey, conf.accountFQDN);
+      } catch (IOException ex) {
         issues.add(getContext().createConfigIssue(
             Groups.DATALAKE.name(),
             DataLakeConfigBean.ADLS_CONFIG_BEAN_PREFIX + "clientId",
@@ -169,6 +157,17 @@ public class DataLakeTarget extends BaseTarget {
     }
 
     return issues;
+  }
+
+  ADLStoreClient createClient(String authTokenEndpoint, String clientId, String clientKey, String accountFQDN)
+      throws IOException {
+    AzureADToken token = AzureADAuthenticator.getTokenUsingClientCreds(
+        authTokenEndpoint,
+        clientId,
+        clientKey
+    );
+
+    return ADLStoreClient.createClient(accountFQDN, token);
   }
 
   @Override
@@ -185,12 +184,6 @@ public class DataLakeTarget extends BaseTarget {
 
     try {
       for (String filePath : fileNames.keys()) {
-        String directoryPath = filePath.substring(0, filePath.lastIndexOf('/'));
-
-        if (!client.checkExists(directoryPath)) {
-          client.createDirectory(directoryPath);
-        }
-
         if (!client.checkExists(filePath)) {
           stream = client.createFile(filePath, IfExists.FAIL);
         } else {
@@ -198,7 +191,7 @@ public class DataLakeTarget extends BaseTarget {
         }
 
         Iterator<Record> recordIterator = fileNames.get(filePath).iterator();
-        while(recordIterator.hasNext()){
+        while (recordIterator.hasNext()) {
           record = recordIterator.next();
           baos.reset();
           DataGenerator generator = conf.dataFormatConfig.getDataGeneratorFactory().getGenerator(baos);
@@ -209,9 +202,13 @@ public class DataLakeTarget extends BaseTarget {
         stream.close();
       }
     } catch (IOException ex) {
-      LOG.error(Errors.ADLS_03.getMessage(), ex.toString(), ex);
-      if(record != null) {
+      // If authorization error, need to stop the pipeline?
+      if (record != null) {
+        LOG.error(Errors.ADLS_03.getMessage(), ex.toString(), ex);
         errorRecordHandler.onError(new OnRecordErrorException(record, Errors.ADLS_03, ex.toString(), ex));
+      } else {
+        LOG.error(Errors.ADLS_02.getMessage(), ex.toString(), ex);
+        throw new StageException(Errors.ADLS_02, ex, ex);
       }
     } finally {
       try {

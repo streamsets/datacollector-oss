@@ -20,71 +20,28 @@
 
 package com.streamsets.pipeline.stage.destination.datalake;
 
-import com.microsoft.azure.datalake.store.ADLStoreClient;
-import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.sdk.RecordCreator;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.sdk.TargetRunner;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
-import okhttp3.mockwebserver.QueueDispatcher;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+
 public class TestDataLakeTarget {
-  private ADLStoreClient client = null;
-  MockWebServer server = null;
-  private static String accountFQDN;
-  private static String dummyToken;
+  @Test
+  public void testInvalidHostName() throws Exception {
+    DataLakeTarget target = new DataLakeTargetBuilder()
+        .accountFQDN("dummy:9000")
+        .authTokenEndpoint("dummy:9500")
+        .build();
 
-  @Before
-  public void setup() throws IOException {
-    server = new MockWebServer();
-    QueueDispatcher dispatcher = new QueueDispatcher();
-    dispatcher.setFailFast(new MockResponse().setResponseCode(400));
-    server.setDispatcher(dispatcher);
-    server.start();
-    this.accountFQDN = server.getHostName() + ":" + server.getPort();
-    this.dummyToken = "testDummyAdToken";
+    TargetRunner targetRunner = new TargetRunner.Builder(DataLakeDTarget.class, target)
+        .build();
+
+    List<Stage.ConfigIssue> issues = targetRunner.runValidateConfigs();
+
+    assertEquals(1, issues.size());
+
   }
-
-  @After
-  public void teardown() throws IOException {
-    server.shutdown();
-  }
-
-  private DataLakeConfigBean getDataLakeTargetConfig() {
-    DataLakeConfigBean conf = new DataLakeConfigBean();
-    conf.accountFQDN = accountFQDN;
-    conf.clientId = "1";
-    conf.clientKey = dummyToken;
-    conf.dirPathTemplate = "/tmp/out/";
-    conf.fileNameTemplate = "test";
-    conf.timeDriver = "${time:now()}";
-    conf.dataFormat = DataFormat.TEXT;
-    conf.dataFormatConfig.textFieldPath = "/text";
-    conf.timeZoneID = "UTC";
-
-    return conf;
-  }
-
-  private List<Record> createStringRecords() {
-    List<Record> records = new ArrayList<>(9);
-    final String TEST_STRING = "test";
-    final String MIME = "text/plain";
-    for (int i = 0; i < 9; i++) {
-      Record r = RecordCreator.create("text", "s:" + i, (TEST_STRING + i).getBytes(), MIME);
-      r.set(Field.create((TEST_STRING+ i)));
-      records.add(r);
-    }
-    return records;
-  }
-
 }
