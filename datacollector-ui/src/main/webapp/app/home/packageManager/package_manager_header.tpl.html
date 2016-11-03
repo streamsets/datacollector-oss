@@ -19,7 +19,7 @@
 
     <div class="pull-right" ng-if="!isManagedByClouderaManager">
 
-      <a ng-disabled="selectedStageLibraryList.length === 0"
+      <a ng-disabled="hasSelectedLibrary(true)"
          ng-if="isAuthorized([userRoles.admin])"
          ng-click="selectedStageLibraryList.length === 0 || onInstallSelectedLibrariesClick()"
          tooltip-placement="bottom"
@@ -29,7 +29,7 @@
         <i class="fa fa-plus-square fa-14x"></i>
       </a>
 
-      <a ng-disabled="selectedStageLibraryList.length === 0 || common.isSlaveNode"
+      <a ng-disabled="common.isSlaveNode || hasSelectedLibrary(false)"
          ng-if="isAuthorized([userRoles.admin])"
          ng-click="selectedStageLibraryList.length === 0 || onUninstallSelectedLibrariesClick()"
          tooltip-placement="bottom"

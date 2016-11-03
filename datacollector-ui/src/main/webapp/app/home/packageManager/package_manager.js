@@ -200,24 +200,9 @@ angular
           1
         );
 
-        var selectedStageLibraryList = $scope.selectedStageLibraryList;
-        var libraryList = [];
-        var validationIssues = [];
-        angular.forEach($scope.stageLibraries, function(stageLibrary) {
-          if (selectedStageLibraryList.indexOf(stageLibrary.id) !== -1) {
-            if (stageLibrary.installed) {
-              validationIssues.push('Stage library - ' + stageLibrary.label + ' is already installed');
-            }
-            libraryList.push(stageLibrary);
-          }
-        });
-
-        if (validationIssues.length > 0) {
-          $rootScope.common.errors = validationIssues;
-          return;
-        }
-
-        installStageLibraries(libraryList);
+        installStageLibraries(_.filter($scope.stageLibraries, function(lib) {
+          return !lib.installed && $scope.selectedStageLibraryList.indexOf(lib.id) !== -1;
+        }));
       },
 
       /**
@@ -231,24 +216,25 @@ angular
           1
         );
 
-        var selectedStageLibraryList = $scope.selectedStageLibraryList;
-        var libraryList = [];
-        var validationIssues = [];
-        angular.forEach($scope.stageLibraries, function(stageLibrary) {
-          if (selectedStageLibraryList.indexOf(stageLibrary.id) !== -1) {
-            if (!stageLibrary.installed) {
-              validationIssues.push('Stage library - ' + stageLibrary.label + ' is already uninstalled');
-            }
-            libraryList.push(stageLibrary);
-          }
+        uninstallStageLibraries(_.filter($scope.stageLibraries, function(lib) {
+          return lib.installed && $scope.selectedStageLibraryList.indexOf(lib.id) !== -1;
+        }));
+      },
+
+      /**
+       * From the package selection, determine whether there is
+       *
+       * @toInstall[true] at least one selected package to install that is not yet installed, or
+       * @toInstall[false] at least one selected package to uninstall that is already installed
+       *
+       * @param toInstall boolean - whether to install or uninstall
+       * @returns {boolean}
+       */
+      hasSelectedLibrary: function(toInstall) {
+        return !_.any($scope.stageLibraries, function(lib) {
+          var condition = toInstall ? !lib.installed : lib.installed;
+          return condition && $scope.selectedStageLibraryList.indexOf(lib.id) !== -1;
         });
-
-        if (validationIssues.length > 0) {
-          $rootScope.common.errors = validationIssues;
-          return;
-        }
-
-        uninstallStageLibraries(libraryList);
       },
 
       /**
