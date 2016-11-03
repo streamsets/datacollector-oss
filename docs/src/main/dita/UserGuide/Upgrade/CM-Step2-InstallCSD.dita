@@ -22,6 +22,11 @@
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/CSDInstallDownload">
                 <cmd/>
             </step>
+            <step>
+                <cmd>Remove the previous StreamSets CSD file from Cloudera Manager.</cmd>
+                <info>For
+                    example:<codeblock>rm -f /opt/cloudera/csd/STREAMSETS*.jar</codeblock></info>
+            </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/CSDInstallPath">
                 <cmd/>
             </step>
