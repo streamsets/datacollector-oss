@@ -83,7 +83,7 @@ public class TestXMLFlatteningProcessor {
     }
 
     if (addNS) {
-      fields.put(baseName + "name#xmlns", Field.create("http://blah.com/blah.xml"));
+      fields.put(baseName + "name" + attrStr + "xmlns", Field.create("http://blah.com/blah.xml"));
     }
     fields.put(baseName + "name", Field.create("NAME" + id));
     fields.put(baseName + "phone(0)", Field.create("(111)111-1111" + id));

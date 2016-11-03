@@ -284,7 +284,7 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
     if (!ignoreNamespace) {
       String namespaceURI = element.getNamespaceURI();
       if (namespaceURI != null) {
-        record.set("/" + elementPrefix + "#xmlns", Field.create(namespaceURI));
+        record.set("/" + elementPrefix + attrDelimiter + "xmlns", Field.create(namespaceURI));
       }
     }
   }
