@@ -32,8 +32,8 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 
 @StageDef(
     version=1,
-    label="List Pivoter",
-    description = "Produce new records for each element of a list",
+    label="Field Pivoter",
+    description = "Produce new records for each element of a list or map field",
     icon="pivoter.png",
     upgrader = ListPivotProcessorUpgrader.class,
     onlineHelpRefUrl = "index.html#Processors/ListPivoter.html#task_dn1_k13_qw"
@@ -83,11 +83,35 @@ public class ListPivotDProcessor extends DProcessor {
 
   @ConfigDef(
       required = true,
+      group = "PIVOT",
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Save Original Field Name",
+      description = "Specifies whether or not to save the original field name of the pivoted field.",
+      displayPosition = 40
+  )
+  public boolean saveOriginalFieldName;
+
+  @ConfigDef(
+      required = false,
+      group = "PIVOT",
+      type = ConfigDef.Type.STRING,
+      defaultValue = "",
+      dependsOn = "saveOriginalFieldName",
+      triggeredByValue = "true",
+      label = "Original Field Name Path",
+      description = "Path in the new record to store the name of the field that was pivoted.",
+      displayPosition = 41
+  )
+  public String originalFieldNamePath;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "TO_ERROR",
       label = "Field Does Not Exist",
       description="Action for data that does not contain the specified fields",
-      displayPosition = 40,
+      displayPosition = 50,
       group = "PIVOT"
   )
   @ValueChooserModel(OnStagePreConditionFailureChooserValues.class)
@@ -99,6 +123,8 @@ public class ListPivotDProcessor extends DProcessor {
         listPath,
         newPath,
         copyFields,
+        saveOriginalFieldName,
+        originalFieldNamePath,
         onStagePreConditionFailure
     );
   }

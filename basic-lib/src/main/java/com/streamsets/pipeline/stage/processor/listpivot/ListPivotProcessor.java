@@ -19,33 +19,65 @@
  */
 package com.streamsets.pipeline.stage.processor.listpivot;
 
+import com.google.api.client.util.Lists;
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.config.OnStagePreConditionFailure;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class ListPivotProcessor extends SingleLaneRecordProcessor {
 
   private final boolean copyFields;
   private final String listPath;
   private final String newPath;
+  private final boolean saveOriginalFieldName;
+  private final String originalFieldNamePath;
   private final OnStagePreConditionFailure onStagePreConditionFailure;
 
   public ListPivotProcessor(
       String listPath,
       String newPath,
       boolean copyFields,
+      boolean saveOriginalFieldName,
+      String originalFieldNamePath,
       OnStagePreConditionFailure onStagePreConditionFailure
   ) {
     this.listPath = listPath;
     this.copyFields = copyFields;
-    this.newPath = (StringUtils.isNotEmpty(newPath) && copyFields) ? newPath : listPath;
+    this.saveOriginalFieldName = saveOriginalFieldName;
+    this.originalFieldNamePath = originalFieldNamePath;
+    this.newPath = (StringUtils.isNotEmpty(newPath)) ? newPath : listPath;
     this.onStagePreConditionFailure = onStagePreConditionFailure;
+  }
+
+  private class PivotEntry {
+    String name;
+    Field value;
+
+    PivotEntry(String name, Field value) {
+      this.name = name;
+      this.value = value;
+    }
+  }
+
+  @Override
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> issues = super.init();
+
+    if (!copyFields && saveOriginalFieldName) {
+      issues.add(getContext().createConfigIssue(Groups.PIVOT.name(), "copyFields", Errors.LIST_PIVOT_02));
+    }
+
+    return issues;
   }
 
   @Override
@@ -62,22 +94,42 @@ public class ListPivotProcessor extends SingleLaneRecordProcessor {
     }
 
     Field listField = record.get(listPath);
-    if (listField.getType() != Field.Type.LIST) {
+    if (!listField.getType().isOneOf(Field.Type.LIST, Field.Type.LIST_MAP, Field.Type.MAP)) {
       throw new OnRecordErrorException(Errors.LIST_PIVOT_00, listPath);
     }
 
-    List<Field> list = listField.getValueAsList();
+    List<PivotEntry> entries = Lists.newArrayList();
+    if (listField.getType() == Field.Type.LIST) {
+      List<Field> fieldList = listField.getValueAsList();
+      for (Field field : fieldList) {
+        entries.add(new PivotEntry(listPath, field));
+      }
+    } else {
+      Set<Map.Entry<String, Field>> fieldEntries = listField.getValueAsMap().entrySet();
+      for (Map.Entry<String, Field> entry : fieldEntries) {
+        entries.add(new PivotEntry(entry.getKey(), entry.getValue()));
+      }
+    }
+    pivot(entries, record, batchMaker);
+  }
+
+  private void pivot(List<PivotEntry> entries, Record record, SingleLaneBatchMaker batchMaker) {
     int i = 1;
-    for (Field field : list) {
+    for (PivotEntry fieldEntry : entries) {
       Record newRec;
       String sourceIdPostfix = i++ + "";
+      newRec = getContext().cloneRecord(record, sourceIdPostfix);
+
       if (copyFields) {
-        newRec = getContext().cloneRecord(record, sourceIdPostfix);
-        newRec.set(newPath, field);
+        newRec.set(newPath, fieldEntry.value);
       } else {
-        newRec = getContext().createRecord(record, sourceIdPostfix);
-        newRec.set(field);
+        newRec.set(fieldEntry.value);
       }
+
+      if (saveOriginalFieldName) {
+        newRec.set(originalFieldNamePath, Field.create(fieldEntry.name));
+      }
+
       batchMaker.addRecord(newRec);
     }
   }

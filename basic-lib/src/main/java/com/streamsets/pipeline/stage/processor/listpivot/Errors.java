@@ -24,8 +24,9 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
-  LIST_PIVOT_00("Field '{}' is not a LIST"),
+  LIST_PIVOT_00("Field '{}' is not a LIST, LIST_MAP, or MAP"),
   LIST_PIVOT_01("Record '{}' does not contain field '{}'"),
+  LIST_PIVOT_02("Cannot save original field name without copying all fields.")
   ;
 
   private final String msg;

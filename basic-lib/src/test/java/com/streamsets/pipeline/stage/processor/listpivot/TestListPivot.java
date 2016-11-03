@@ -23,6 +23,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.OnStagePreConditionFailure;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
@@ -39,7 +40,7 @@ public class TestListPivot {
 
   @Test
   public void testListPivot() throws StageException {
-    ListPivotProcessor processor = new ListPivotProcessor("/list_field", null, false, OnStagePreConditionFailure.CONTINUE);
+    ListPivotProcessor processor = new ListPivotProcessor("/list_field", null, false, false, null, OnStagePreConditionFailure.CONTINUE);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ListPivotDProcessor.class, processor)
         .addOutputLane("a").build();
@@ -69,7 +70,7 @@ public class TestListPivot {
 
   @Test
   public void testListPivotMap() throws StageException {
-    ListPivotProcessor processor = new ListPivotProcessor("/list_field", null, false, OnStagePreConditionFailure.CONTINUE);
+    ListPivotProcessor processor = new ListPivotProcessor("/list_field", null, false, false, null, OnStagePreConditionFailure.CONTINUE);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ListPivotDProcessor.class, processor)
         .addOutputLane("a").build();
@@ -104,7 +105,7 @@ public class TestListPivot {
 
   @Test
   public void testCopyFields() throws StageException {
-    ListPivotProcessor processor = new ListPivotProcessor("/list_field", null, true, OnStagePreConditionFailure.CONTINUE);
+    ListPivotProcessor processor = new ListPivotProcessor("/list_field", null, true, false, null, OnStagePreConditionFailure.CONTINUE);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ListPivotDProcessor.class, processor)
         .addOutputLane("a").build();
@@ -143,7 +144,7 @@ public class TestListPivot {
 
   @Test
   public void testCopyFieldsNewPath() throws StageException {
-    ListPivotProcessor processor = new ListPivotProcessor("/list_field", "/op", true, OnStagePreConditionFailure.CONTINUE);
+    ListPivotProcessor processor = new ListPivotProcessor("/list_field", "/op", true, false, null, OnStagePreConditionFailure.CONTINUE);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(ListPivotDProcessor.class, processor)
         .addOutputLane("a").build();
@@ -178,5 +179,47 @@ public class TestListPivot {
     } finally {
       runner.runDestroy();
     }
+  }
+
+  @Test
+  public void testMapPivot() throws StageException {
+    ListPivotProcessor processor = new ListPivotProcessor("/map_field", null, true, true, "/map_field_name", OnStagePreConditionFailure.CONTINUE);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(ListPivotDProcessor.class, processor)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = ImmutableMap.<String, Field>of("map_field",
+          Field.create(ImmutableMap.<String, Field>of(
+              "a", Field.create("aval"),
+              "b", Field.create("bval"))));
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(2, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertEquals(field.getValueAsMap().get("map_field").getValueAsString(), "aval");
+      Assert.assertEquals(field.getValueAsMap().get("map_field_name").getValueAsString(), "a");
+
+      field = output.getRecords().get("a").get(1).get();
+      Assert.assertTrue(field.getValueAsMap().get("map_field").getValueAsString().equals("bval"));
+      Assert.assertEquals(field.getValueAsMap().get("map_field_name").getValueAsString(), "b");
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testInvalidConfigs() throws StageException {
+    ListPivotProcessor processor = new ListPivotProcessor("/map_field", null, false, true, "/map_field_name", OnStagePreConditionFailure.CONTINUE);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(ListPivotDProcessor.class, processor)
+        .addOutputLane("a").build();
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+
+    Assert.assertTrue(!issues.isEmpty());
+    Assert.assertEquals(issues.size(), 1);
   }
 }
