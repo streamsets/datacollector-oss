@@ -481,6 +481,7 @@
           <excludes>
             <!-- Disabling all Hive tests with external tables due to HIVE-9299 -->
             <exclude>**/ColdStartIT.java</exclude>
+            <exclude>**/PartialInputIT.java</exclude>
           </excludes>
         </configuration>
       </plugin>
