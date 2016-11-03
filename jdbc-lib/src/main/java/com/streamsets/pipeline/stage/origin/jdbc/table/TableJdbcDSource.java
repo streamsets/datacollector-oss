@@ -33,7 +33,7 @@ import com.streamsets.pipeline.stage.origin.jdbc.Groups;
 @StageDef(
     version = 1,
     label = "Multi table JDBC Consumer",
-    description = "Reads data from a JDBC source.",
+    description = "Reads data from a JDBC source using table names.",
     icon = "rdbms.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
