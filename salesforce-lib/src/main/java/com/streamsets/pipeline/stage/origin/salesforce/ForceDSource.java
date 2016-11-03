@@ -31,7 +31,7 @@ import com.streamsets.pipeline.lib.salesforce.ForceSourceConfigBean;
 
 @StageDef(
     version = 1,
-    label = "Salesforce Origin",
+    label = "Salesforce",
     description = "Reads data from Salesforce",
     icon = "salesforce.png",
     execution = ExecutionMode.STANDALONE,

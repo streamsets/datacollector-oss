@@ -30,7 +30,7 @@ import com.streamsets.pipeline.lib.salesforce.ForceTargetConfigBean;
 
 @StageDef(
     version = 1,
-    label = "Salesforce Destination",
+    label = "Salesforce",
     description = "Writes data to Salesforce",
     icon = "salesforce.png",
     recordsByRef = true,
