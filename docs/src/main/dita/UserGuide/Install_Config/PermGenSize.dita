@@ -19,6 +19,9 @@
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> with Java 7,
     you can define the Java Permanent Generation size, also known as the PermGen size.</shortdesc>
   <conbody>
+    <p>
+      <note conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Java7"/>
+    </p>
     <p><indexterm>Java configuration options<indexterm>PermGen
         size</indexterm></indexterm><indexterm>PermGen
         size<indexterm>configuring</indexterm></indexterm>The PermGen size determines the amount of

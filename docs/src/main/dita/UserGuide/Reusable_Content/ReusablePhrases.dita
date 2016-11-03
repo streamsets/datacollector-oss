@@ -1936,7 +1936,7 @@ ${YY()}_${MM()}_${DD()}</codeblock>
             <note type="tip" id="Tip_Passwords">To secure sensitive information such as passwords,
                   you can use runtime resources or Hashicorp Vault secrets. For more information,
                   see <xref href="../Install_Config/RuntimeResources.dita#concept_bs4_5nm_2s"/> or
-                        <xref href="../Install_Config/Vault-Overview.dita#concept_bmq_gl1_mw"/>.<p>
+                        <xref href="../Install_Config/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note><p>
                         <draft-comment author="Loretta">Cluster mode: MapR Streaming mode and Kafka
                               (Yarn) requirements:</draft-comment>
                   </p><p>
@@ -1947,7 +1947,7 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                               <li>Set the <uicontrol>log4j.rootCategory</uicontrol> property to a
                                     severity of INFO or lower, such as DEBUG or TRACE.</li>
                         </ol>
-                  </p></note>
+                  </p>
             <p>
                   <draft-comment author="Loretta">EXECUTORS</draft-comment>
             </p>
@@ -1956,5 +1956,12 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                         Metadata Executor topics:</draft-comment>
             </p>
             <p><ph id="EX-ph-FileSystems">HDFS, MapR FS, or a local file system</ph></p>
+            <draft-comment author="alisontaylor">Note is used in all places where we mention Java 7:
+                  Permanent Generation Size and 2 topics in JavaScript Evaluator.</draft-comment>
+            <note id="Java7">Java 7 is supported but deprecated. Oracle announced the end of public updates for
+                  Java 7 in April 2015. StreamSets recommends migrating to Java 8, as Java 7 support
+                  will be removed in a future <ph conref="#concept_vhs_5tz_xp/pName-long"/>
+                  release.</note>
+
       </conbody>
 </concept>

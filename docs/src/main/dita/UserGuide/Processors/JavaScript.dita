@@ -31,8 +31,10 @@
                     the Rhino 1.7R3 JavaScript engine.</li>
                 <li>Java 8u40 and later - Supports ECMAScript 5.1. Runs on the Nashorn JavaScript
                     engine.</li>
-            </ul><note>Some Java 8 JavaScript functionality is not available in Java 7 JavaScript.
-                To ensure the JavaScript Evaluator performs as expected, use the same version of
-                Java in development and production.</note></p>
+            </ul></p>
+        <note conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Java7"/>
+        <p>Some Java 8 JavaScript functionality is not available in Java 7 JavaScript. To ensure the
+            JavaScript Evaluator performs as expected, use the same version of Java in development
+            and production.</p>
  </conbody>
 </concept>
