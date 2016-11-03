@@ -18,9 +18,10 @@
  <conbody>
   <p><indexterm>executors<indexterm>HDFS File Metadata</indexterm></indexterm><indexterm>HDFS File
                 Metadata executor<indexterm>overview</indexterm></indexterm>The HDFS File Metadata
-            executor changes file metadata for closed files in a local or HDFS directory each time
-            it receives a file closure event record. Use the HDFS File Metadata executor as part of
-            an event handling stream. </p>
+            executor changes file metadata for closed files in <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EX-ph-FileSystems"
+            /> each time it receives a file closure event record. Use the HDFS File Metadata
+            executor as part of an event stream. </p>
         <p>The HDFS File Metadata executor can change the following file metadata: <ul
                 id="ul_gym_xw3_rx">
                 <li>File name</li>
@@ -28,11 +29,11 @@
                 <li>Permissions, including the owner or group associated with the file and access
                     permissions</li>
             </ul></p>
-        <p>When you configure the HDFS File Metadata executor, you configure the expression that
-            represents the location and name of the file to process, and the file metadata changes
-            that you want to use. You can also configure the executor to generate events for another
-            event handling stream. </p>
-        <p>For more information about event handling, see <xref
+        <p>When you configure the HDFS File Metadata executor, you configure an expression that
+            represents the location and name of the file to process, and the changes you want to
+            perform. </p>
+        <p>You can also configure the executor to generate events for another event stream. For more
+            information about event handling, see <xref
                 href="../Event_Handling/EventHandling-Overview.dita#concept_cph_5h4_lx"/>.</p>
  </conbody>
 </concept>

@@ -14,17 +14,14 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_jzl_yrr_mx">
- <title>Query</title>
+ <title>Hive or Impala Query</title>
  <conbody>
-  <p><indexterm>Hive Query executor<indexterm>query</indexterm></indexterm>You can use the Hive
-            Query executor to execute any valid Hive or Impala query. In the query, you can use
-            fields or attributes available in the event record passed to the executor. The structure
-            of the event record is specific to the stage that generates the event record.  </p>
-        <p>Typically, you would pass events from the Hive Metastore destination to the Hive Query
-            executor. The Hive Metastore destination generates event records with the following
-            attributes and fields:<draft-comment author="Loretta">this should be a table or
-                something that can be conrefed from the Hive Metastore doc. </draft-comment></p>
-        <p>For information about other event records, see the documentation for the
-            record-generating stage.</p>
- </conbody>
+        <p><indexterm>Hive Query executor<indexterm>query</indexterm></indexterm>You can use the
+            Hive Query executor to execute any valid Hive or Impala query. In the query, you can use
+            fields or attributes available in the event record passed to the executor. </p>
+        <p>
+            <draft-comment author="Loretta">Jarcec: do we want to say anything else here?
+            </draft-comment>
+        </p>
+    </conbody>
 </concept>

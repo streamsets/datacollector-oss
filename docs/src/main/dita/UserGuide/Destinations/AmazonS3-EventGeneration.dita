@@ -17,9 +17,9 @@
  <title>Event Generation</title>
  <conbody>
         <p><indexterm>Amazon S3 destination<indexterm>event generation</indexterm></indexterm>The
-            Amazon S3 destination can generate events that you can use in an event handling stream.
-            When you enable event generation, Amazon S3 generates event records each time the
-            destination completes writing to an object or completes streaming a whole file. </p>
+            Amazon S3 destination can generate events that you can use in an event stream. When you
+            enable event generation, Amazon S3 generates event records each time the destination
+            completes writing to an object or completes streaming a whole file. </p>
         <p>Amazon S3 events can be used as follows:<ul>
                 <li
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-FilePerms"

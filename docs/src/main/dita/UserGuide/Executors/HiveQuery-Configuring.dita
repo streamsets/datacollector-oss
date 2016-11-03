@@ -18,7 +18,7 @@
     <taskbody>
         <context>
             <p><indexterm>Hive Query executor<indexterm>configuring</indexterm></indexterm>Configure
-                a Hive Query executor to execute a query on Hive or Thrift when the executor
+                a Hive Query executor to execute a query on Hive or Impala when the executor
                 receives an event record.</p>
         </context>
         <steps>
@@ -82,8 +82,11 @@
                                             href="HiveQuery-Query.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_rfz_thp_fs"/></xref></entry>
-                                    <entry>SQL query to execute upon receiving an event
-                                        record.</entry>
+                                    <entry>SQL query to execute on Hive or Impala upon receiving an
+                                        event record.<p>Use the default Invalidate Metadata
+                                            expression to process events from the Hive Metastore
+                                            destination when using the Hive Drift Solution with
+                                            Impala.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

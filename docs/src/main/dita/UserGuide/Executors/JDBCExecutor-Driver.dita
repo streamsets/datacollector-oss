@@ -13,14 +13,13 @@
   limitations under the License.
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_etx_rbf_nx">
- <title>Related Event-Generation Stages</title>
+<concept id="concept_y32_vt4_tx">
+ <title>Installing the JDBC Driver</title>
  <conbody>
-  <p><indexterm>Hive Query executor<indexterm>related event-generation
-                stages</indexterm></indexterm>Use the Hive Query executor in the event handling
-            branch of a pipeline. The Hive Query executor is meant to perform Hive or Thrift queries
-            when it receives an event record. </p>
-        <p>Use the Hive Query executor with the Hive Metastore destination. <draft-comment
-                author="Loretta">is this all? </draft-comment></p>
+  <p><indexterm>JDBC Query executor<indexterm>driver installation</indexterm></indexterm>Before you
+            use the JDBC Query executor, <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-JDBCdriver"
+            /></p>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/p-JDBCdriver-link"/>
  </conbody>
 </concept>

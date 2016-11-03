@@ -70,10 +70,11 @@
                                         to use the sample source data.</entry>
                                 </row>
                                 <row>
-                                    <entry>Write to Destinations</entry>
+                                    <entry>Write to Destinations and Executors</entry>
                                     <entry>By default, this property is not selected. In general,
                                         you should keep this property clear to avoid writing data to
-                                        destination systems.</entry>
+                                        destination systems or triggering tasks in destination
+                                        systems.</entry>
                                 </row>
                                 <row>
                                     <entry>Show Field Type</entry>

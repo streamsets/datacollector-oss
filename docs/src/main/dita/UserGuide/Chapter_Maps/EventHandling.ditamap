@@ -20,9 +20,10 @@
             <topicmeta><shortdesc></shortdesc></topicmeta>
             <topicref href="../Event_Handling/EventGenerationStages.dita"/>
             <topicref href="../Event_Handling/ExecutorStages.dita"/>
-            <topicref href="../Event_Handling/EventGenAndExecute.dita"/>
+            <topicref href="../Event_Handling/LogicalPairings.dita"/>
+            <topicref href="../Event_Handling/EventRecords.dita"/>
         </topicref>
-        <topicref href="../Event_Handling/EventHandlingStreams.dita"/>
+        <topicref href="../Event_Handling/EventStreams.dita"/>
         <topicref href="../Event_Handling/CaseStudy-Parquet.dita">
             <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
         <topicref href="../Event_Handling/CaseStudy-Impala.dita">
@@ -30,7 +31,7 @@
         <topicref href="../Event_Handling/CaseStudy-FileManagement.dita">
             <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
         <topicref href="../Event_Handling/CaseStudy-EventStorage.dita"/>
-        <topicref href="../Event_Handling/RulesAndGuidelines.dita">
+        <topicref href="../Event_Handling/EventHandling-Highlights.dita">
             <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
     </topicref>
 </map>

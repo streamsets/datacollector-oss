@@ -26,11 +26,15 @@
         <p
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-HM-HiveSolutionOverview1"/>
         <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-HM-Overview2"/>
+        <p>The destination can generate events for an event stream. For more information about event
+            handling, see <xref
+                href="../Event_Handling/EventHandling-Overview.dita#concept_cph_5h4_lx"/>.</p>
         <p>When necessary, you can use Kerberos to connect to MapR FS or use an HDFS user to connect
             to MapR FS. You can also use HDFS configuration files and add other HDFS configuration
             properties as needed. </p>
-        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-HM-compression"/>  <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/MapRPrereq"/>
- </conbody>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-HM-compression"/>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/MapRPrereq"/>
+    </conbody>
     <related-links>
         <link href="../Hive_Drift_Solution/HiveDrift-Overview.dita#concept_phk_bdf_2w"/>
     </related-links>

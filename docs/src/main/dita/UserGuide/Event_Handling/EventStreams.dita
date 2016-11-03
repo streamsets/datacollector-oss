@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_sjr_nrx_4x">
+ <title>Event Streams</title>
+ <conbody>
+        <p><indexterm>event streams<indexterm>examples</indexterm></indexterm>You can add event
+            handling to any pipeline where the event handling logic suits your needs. When
+            configuring the event stream, you can add additional stages as needed, but do not merge
+            the event stream with a data stream. </p>
+        <p>There are two general types of event streams that you might create: <dl>
+                <dlentry>
+                    <dt>Task execution</dt>
+                    <dd>A task execution stream routes event records from the event generating stage
+                        to an executor stage. The executor performs a task each time it receives an
+                        event record. </dd>
+                    <dd>For example, you have a pipeline that reads from Kafka and writes files to
+                        HDFS:</dd>
+                    <dd><image href="../Graphics/Event-ParquetBasicPipe.png" scale="70"
+                            id="image_b5z_25q_tx"/></dd>
+                    <dd>When Hadoop FS closes a file, you would like the file moved to a different
+                        directory and the file permissions changed to read-only. </dd>
+                    <dd>Leaving the rest of the pipeline as is, you can enable event handling in the
+                        Hadoop FS destination. connect it to the HDFS File Metadata executor, and
+                        configure the HDFS File Metadata executor to move the file and change its
+                        permissions:</dd>
+                    <dd><image href="../Graphics/Event-EventPipe.png" scale="65"
+                            id="image_c5z_25q_tx"/></dd>
+                    <dd>
+                        <note>Though you can add processors to task execution streams, alter data in
+                            event records with great care. Executors are designed to use event
+                            records in very specific ways and changing an event record can cause
+                            unexpected results. <draft-comment author="Loretta">Jarcec: keep/edit
+                                this note? Delete?</draft-comment></note>
+                    </dd>
+                </dlentry>
+            </dl></p>
+        <p>
+            <dl>
+                <dlentry>
+                    <dt>Event Storage</dt>
+                    <dd>An event storage stream routes event records from the event generating stage
+                        to a destination. The destination writes the event record to a destination
+                        system.</dd>
+                    <dd>When using event records in event storage streams, you can add processors to
+                        the event stream to enrich the event record before writing it to the
+                        destination. </dd>
+                    <dd>For example, you have a pipeline that uses the File Tail origin to process
+                        weblogs:</dd>
+                    <dd><image href="../Graphics/Event-FileTail.png" scale="60"
+                            id="image_c2y_1vq_tx"/></dd>
+                    <dd>For auditing purposes, you'd like to track the files that are being
+                        processed and write that information to a database table. </dd>
+                    <dd>Leaving the rest of the pipeline as is, you can enable event handling for
+                        the File Tail origin and simply connect it to the JDBC Producer as
+                        follows:</dd>
+                    <dd><image href="../Graphics/Event-FileTail-JDBC.png" scale="60"
+                            id="image_d2y_1vq_tx"/></dd>
+                    <dd>But you want to know when events occur. Event records store the event
+                        creation time in the sdc.event.creation_timestamp record header attribute.
+                        So you can use the Expression Evaluator with the following expression to add
+                        a new field to the record with the creation date and time:
+                        <codeblock>${record:attribute('sdc.event.creation_timestamp')}</codeblock></dd>
+                    <dd>Or, if you have multiple pipelines writing events to the same location, you
+                        add an Expression Evaluator as follows to include the pipeline name in a
+                        Pipeline field in the event record:</dd>
+                    <dd><image href="../Graphics/Event-FileTail-ExpJDBC.png" scale="55"
+                            id="image_e2y_1vq_tx"/></dd>
+                </dlentry>
+            </dl>
+        </p>
+ </conbody>
+</concept>

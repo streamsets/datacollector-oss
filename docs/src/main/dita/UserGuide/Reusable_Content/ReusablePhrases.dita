@@ -666,19 +666,18 @@
                         used by Directory and File Tail</draft-comment>
             </p>
             <p id="O-EventHandling-overview">The origin can also generate events for an event
-                  handling stream. For more information about event handling, see Event Handling on
-                  page 80. </p>
+                  stream. For more information about event handling, see  <xref
+                        href="../Event_Handling/EventHandling-Overview.dita#concept_cph_5h4_lx"/>. </p>
             <p>
                   <draft-comment author="Loretta">Event Generation topic with multiple ph and p used
                         by Directory and File Tail. </draft-comment>
             </p>
-            <p><ph id="O-ph-EventGen1">can generate events that you can use in an event handling
-                        stream. When you enable event generation, the origin generates event records
-                        each time the origin starts or completes reading a file.</ph>
+            <p><ph id="O-ph-EventGen1">can generate events that you can use in an event stream. When
+                        you enable event generation, the origin generates event records each time
+                        the origin starts or completes reading a file.</ph>
             </p>
             <p><ph id="O-ph-EventGen-FileStorage">events can be used with a destination to store
-                        file completion information for later uses, such as a processing audit. For
-                        an example, see <xref
+                        file processing information for later use. For an example, see <xref
                               href="../Event_Handling/CaseStudy-EventStorage.dita#concept_ocb_nnl_px"
                         />.</ph></p>
             <p id="O-EventGen-xref">For more information about event handling, see <xref
@@ -688,10 +687,10 @@
                   <draft-comment author="Loretta">Event Generation topic.  Hadoop FS and MapR FS use
                         ph and ul. Local FS uses ph and some bullets in the list.</draft-comment>
             </p>
-            <p><ph id="D-ph-EventGen1">can generate events that you can use in an event handling
-                        stream. When you enable event generation, the destination generates event
-                        records each time the destination closes a file or completes streaming a
-                        whole file. </ph></p>
+            <p><ph id="D-ph-EventGen1">can generate events that you can use in an event stream. When
+                        you enable event generation, the destination generates event records each
+                        time the destination closes a file or completes streaming a whole file.
+                  </ph></p>
             <p>
                   <ul id="D-ul-Event-UseCases">
                         <li id="D-li-Event-FilePerms">With the HDFS File Metadata executor to move
@@ -703,20 +702,30 @@
                                           href="../Event_Handling/CaseStudy-Parquet.dita#concept_jkm_rnz_kx"
                                     />.</p></li>
                         <li id="D-li-Event-FileStore">With a destination to store file completion
-                              information for later uses, such as a processing audit. <p>For an
-                                    example, see <xref
+                              information for later use.  <p>For an example, see <xref
                                           href="../Event_Handling/CaseStudy-EventStorage.dita#concept_ocb_nnl_px"
                                     />.</p></li>
                   </ul>
             </p>
             <p/>
             <p>
-                  <draft-comment author="Loretta">JDBC Consumer and Oracle CDC use these in the
-                        overview:</draft-comment>
+                  <draft-comment author="Loretta">JDBC Consumer,  Oracle CDC Client origin, and JDBC
+                        Query executor use these in the overview:</draft-comment>
             </p>
             <p id="JDBC-legacyInfo"><ph id="ph-JDBC-legacyInfo">To use a JDBC version older than
                         4.0, you can specify the driver class name and define a health check
                         query.</ph></p>
+            <p>
+                  <draft-comment author="Loretta">JDBC Consumer, Producer, and Query executor use
+                        the following <uicontrol>ph-JDBCdriver</uicontrol> and
+                              <uicontrol>p-JDBCdriver-link</uicontrol> in Installing the
+                        Driver</draft-comment>
+            </p>
+            <p><ph id="ph-JDBCdriver">install the JDBC driver for the database. You cannot access
+                        the database until you install the required driver. </ph></p>
+            <p id="p-JDBCdriver-link">For more information about installing drivers, see <xref
+                        href="../Install_Config/AdditionalDrivers.dita#concept_pdv_qlw_ft"/>.</p>
+            <p/>
             <p>
                   <draft-comment author="Loretta">Oracle CDC Client uses this in Initial Change and
                         Configuring</draft-comment>
@@ -1659,9 +1668,10 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                               <dt>File closure</dt>
                               <dd>The destination generates a file closure event record when it
                                     closes an output file. </dd>
-                              <dd>File closure event records have the <codeph>type</codeph> record
-                                    header attribute set to <codeph>file-closed</codeph> and include
-                                    the following fields:<table frame="all" rowsep="1" colsep="1"
+                              <dd>File closure event records have the
+                                          <codeph>sdc.event.type</codeph> record header attribute
+                                    set to <codeph>file-closed</codeph> and include the following
+                                          fields:<table frame="all" rowsep="1" colsep="1"
                                           id="table_dh2_5gc_rx">
                                           <tgroup cols="2">
                                                 <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -1693,9 +1703,9 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                               <dt>Whole file processed</dt>
                               <dd>The destination generates an event record when it completes
                                     streaming a whole file. Whole file event records have the
-                                          <codeph>type</codeph> record header attribute set to
-                                          <codeph>wholeFileProcessed</codeph> and </dd>
-                              <dd>have the following fields:<table frame="all" rowsep="1" colsep="1"
+                                          <codeph>sdc.event.type</codeph> record header attribute
+                                    set to <codeph>wholeFileProcessed</codeph> and have the
+                                    following fields:<table frame="all" rowsep="1" colsep="1"
                                           id="table_eh2_5gc_rx">
                                           <tgroup cols="2">
                                                 <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -1712,9 +1722,7 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                                                   <entry>A map of attributes about the original
                                                   whole file that was processed. The attributes
                                                   include:<ul id="ul_nbd_cmc_rx">
-                                                  <li>size - Size of the whole file. <draft-comment
-                                                  author="Loretta">in bytes? Or depends on
-                                                  origin?</draft-comment></li>
+                                                  <li>size - Size of the whole file in bytes. </li>
                                                   </ul><p>Additional attributes depend on the
                                                   information provided by the origin system.
                                                   </p></entry>
@@ -1727,7 +1735,7 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                                                   <li>path - An absolute path the processed whole
                                                   file.</li>
                                                   </ul><p>The field can also include the following
-                                                  attributes when the origin is configure to verify
+                                                  attributes when the origin is configured to verify
                                                   checksums:<ul id="ul_lx1_klc_rx">
                                                   <li>checksum </li>
                                                   <li>checksumAlgorithm</li>
@@ -1940,5 +1948,13 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                                     severity of INFO or lower, such as DEBUG or TRACE.</li>
                         </ol>
                   </p></note>
+            <p>
+                  <draft-comment author="Loretta">EXECUTORS</draft-comment>
+            </p>
+            <p>
+                  <draft-comment author="Loretta">The following is used a few places in HDFS File
+                        Metadata Executor topics:</draft-comment>
+            </p>
+            <p><ph id="EX-ph-FileSystems">HDFS, MapR FS, or a local file system</ph></p>
       </conbody>
 </concept>

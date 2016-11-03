@@ -16,12 +16,13 @@
 <concept id="concept_jkm_rnz_kx">
     <title>Case Study: Parquet Conversion on HDFS</title>
     <conbody>
-        <p><indexterm>event handling<indexterm>HDFS parquet case study</indexterm></indexterm>Say
-            you want to store data on HDFS using the columnar format, Parquet. But <ph
+        <p><indexterm>event handling case studies<indexterm>HDFS avro to
+                parquet</indexterm></indexterm>Say you want to store data on HDFS using the columnar
+            format, Parquet. But <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             doesn't have a Parquet data format. How do you do it? </p>
         <p>Event handling was created for exactly this purpose. The simple addition of the event
-            branch to the pipeline generates automatic conversion of Avro files to Parquet using a
+            stream to the pipeline generates automatic conversion of Avro files to Parquet using a
             MapReduce job. </p>
         <p>It's just a few simple steps:</p>
         <p>
@@ -44,16 +45,15 @@
                             id="image_wjn_k5m_lx" scale="65"/></p></li>
                 <li>Configure the MapReduce executor to run a job that converts the completed Avro
                     file to Parquet.<p>In the MapReduce executor, configure the MapReduce
-                        configuration details, select the Avro to Parquet job type, and then
-                        configure the details for the Avro to Parquet job. </p><p><image
+                        configuration details and select the Avro to Parquet job type. Then, on the
+                        Avro to Parquet tab, configure the details for the job. </p><p><image
                             href="../Graphics/Event-Parquet-MapReduce.png" id="image_rzm_frb_tx"
                             scale="60"/></p><p>The <uicontrol>Input Avro File</uicontrol> property
-                        default, shown here, enables the executor to run the conversion for the file
-                        name and location specified in the Hadoop FS file closure event record.
-                    </p></li>
+                        default, ${record:value('filepath')} runs the job on the file specified in
+                        the Hadoop FS file closure event record. </p></li>
             </ol>
         </p>
-        <p>With this event branch added to the pipeline, each time the Hadoop FS destination closes
+        <p>With this event stream added to the pipeline, each time the Hadoop FS destination closes
             a file, it generates an event. When the MapReduce executor receives the event, it kicks
             off a MapReduce job that converts the Avro file to Parquet. Simple!</p>
     </conbody>

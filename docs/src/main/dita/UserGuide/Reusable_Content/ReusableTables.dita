@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--ield
+<!--
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -32,6 +32,51 @@
           id="image_xwx_xrm_js"/></xref></entry>
        <entry>Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</entry>
+      </row>
+     </tbody>
+    </tgroup>
+   </table>
+  </p>
+  <p>
+   <draft-comment author="Loretta">Origin - first step rows for event handling
+    origins</draft-comment>
+  </p>
+  <p>
+   <table frame="all" rowsep="1" colsep="1" id="table_f5l_np2_px">
+    <tgroup cols="2">
+     <colspec colname="c1" colnum="1" colwidth="1*"/>
+     <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+     <thead>
+      <row>
+       <entry>General Property</entry>
+       <entry>Description</entry>
+      </row>
+     </thead>
+     <tbody>
+      <row id="O-1stStep-Name">
+       <entry>Name</entry>
+       <entry>Stage name.</entry>
+      </row>
+      <row id="O-1stStep-Desc">
+       <entry>Description</entry>
+       <entry>Optional description.</entry>
+      </row>
+      <row>
+       <entry>Produce Events </entry>
+       <entry id="O-1stStep-entry-Events">Generates event records when events occur. Use for event
+        handling. <xref href="../Event_Handling/EventHandling-Overview.dita">
+         <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_plp_tp2_px"
+        /></xref></entry>
+      </row>
+      <row id="O-1stStep-Error">
+       <entry>On Record Error <xref href="../Pipeline_Design/ErrorHandling-Stage.dita">
+         <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_g5l_np2_px"
+        /></xref></entry>
+       <entry>Error record handling for the stage: <ul id="ul_h5l_np2_px">
+         <li>Discard - Discards the record.</li>
+         <li>Send to Error - Sends the record to the pipeline for error handling.</li>
+         <li>Stop Pipeline - Stops the pipeline. </li>
+        </ul></entry>
       </row>
      </tbody>
     </tgroup>
@@ -482,6 +527,69 @@
     </tgroup>
    </table>
   </p>
+  <draft-comment author="Loretta">Event destinations and executors, 1st step. Rows
+   used.</draft-comment>
+  <p>
+   <table frame="all" rowsep="1" colsep="1" id="table_wsl_2rx_mx">
+    <tgroup cols="2">
+     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+     <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+     <thead>
+      <row>
+       <entry>General Property</entry>
+       <entry>Description</entry>
+      </row>
+     </thead>
+     <tbody>
+      <row id="D-1stStep-Name">
+       <entry>Name</entry>
+       <entry>Stage name.</entry>
+      </row>
+      <row id="D-1stStep-Desc">
+       <entry>Description</entry>
+       <entry>Optional description.</entry>
+      </row>
+      <row id="D-1stStep-Library">
+       <entry>Stage Library</entry>
+       <entry>Library version that you want to use. </entry>
+      </row>
+      <row>
+       <entry>Produce Events <xref href="../Event_Handling/EventGenerationStages.dita">
+         <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_wrq_mrx_mx"
+        /></xref></entry>
+       <entry id="D-1stStep-entry-Events">Generates event records when events occur. Use for event
+        handling. <xref href="../Event_Handling/EventHandling-Overview.dita">
+         <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_l15_ft2_px"
+        /></xref></entry>
+      </row>
+      <row id="D-1stStep-ReqFields">
+       <entry>Required Fields <xref href="../Pipeline_Design/RequiredFields.dita#concept_dnj_bkm_vq">
+         <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_xsl_2rx_mx"
+        /></xref></entry>
+       <entry>Fields that must include data to be passed into the stage. <note outputclass=""
+         type="tip">You might include fields that the stage uses.</note></entry>
+      </row>
+      <row id="D-1stStep-Precond">
+       <entry>Preconditions <xref href="../Pipeline_Design/Preconditions.dita">
+         <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_ysl_2rx_mx"
+        /></xref></entry>
+       <entry>Conditions that must evaluate to TRUE to allow a record to enter the stage for
+        processing. Click <uicontrol>Add</uicontrol> to create additional preconditions. </entry>
+      </row>
+      <row id="D-1stStep-Error">
+       <entry>On Record Error <xref href="../Pipeline_Design/ErrorHandling-Stage.dita">
+         <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_zsl_2rx_mx"
+        /></xref></entry>
+       <entry>Error record handling for the stage: <ul id="ul_atl_2rx_mx">
+         <li>Discard - Discards the record.</li>
+         <li>Send to Error - Sends the record to the pipeline for error handling.</li>
+         <li>Stop Pipeline - Stops the pipeline.</li>
+        </ul></entry>
+      </row>
+     </tbody>
+    </tgroup>
+   </table>
+  </p>
   <p>
    <draft-comment author="Loretta">Hadoop FS, MapR FS, Local FS use
      <uicontrol>D-Event-RHattributes</uicontrol> in Event Records. All others use the creation_date
@@ -500,21 +608,21 @@
      </thead>
      <tbody>
       <row>
-       <entry>type</entry>
+       <entry id="entry-eventType">sdc.event.type</entry>
        <entry>Event type. Uses one of the following types:<ul id="ul_m12_mgp_qx">
          <li>file-closed - Generated when the destination closes a file.</li>
          <li>wholeFileProcessed - Generated when the destination completes streaming a whole
           file.</li>
         </ul></entry>
       </row>
-      <row>
-       <entry>version</entry>
+      <row id="row-eventVersion">
+       <entry>sdc.event.version</entry>
        <entry>An integer that indicates the version of the event record type.</entry>
       </row>
-      <row>
-       <entry>creation_date</entry>
-       <entry id="entry-Event-creationDate">Time when the stage created the event. <draft-comment
-         author="Loretta">in milliseconds? </draft-comment></entry>
+      <row id="row-eventTimestamp">
+       <entry>sdc.event.creation_timestamp</entry>
+       <entry id="entry-Event-creationDate">Epoch timestamp when the stage created the event.
+       </entry>
       </row>
      </tbody>
     </tgroup>
@@ -558,7 +666,8 @@
   </p>
   <p>
    <draft-comment author="alisontaylor"><b>table-JDBCProps</b> - JDBC Consumer, Lookup, Producer,
-    and Tee use most rows in this table. Oracle CDC is using a couple too. </draft-comment>
+    and Tee use most rows in this table. Oracle CDC is using a couple too. JDBC Query executor also
+    uses some.</draft-comment>
    <table frame="all" rowsep="1" colsep="1" id="table_vwl_qcq_tw">
     <tgroup cols="2">
      <colspec colname="c1" colnum="1" colwidth="1.5*"/>

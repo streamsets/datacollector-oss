@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_hqg_nzh_vx">
+ <title>Impala Queries for the Hive Drift Solution</title>
+ <conbody>
+        <p><indexterm>Hive Query executor<indexterm>Impala queries for the Hive Drift
+                    Solution</indexterm></indexterm><indexterm>Hive Drift
+                    Solution<indexterm>implementing Impala Invalidate Metadata
+                queries</indexterm></indexterm>The default query, <codeph>invalidate metadata
+                ${record:attribute('/table')}</codeph>, is an Impala query that you should use when
+            implementing the Hive Drift Solution with Impala. Use the query to process event records
+            from the Hive Metastore destination.</p>
+        <p>When used with the Hive Metastore destination, the destination generates an event record
+            each time it changes a table and places the table name in the "table" record header
+            attribute. When the Hive Query executor receives the event record, it runs the
+            Invalidate Metadata query on the specified table.</p>
+        <p>When implementing the Hive Drift Solution with Impala, you should also use the Hive Query
+            executor with the Hadoop FS destination. The Hadoop FS destination writes the file path
+            to a "filepath" field in the event record. To use the default query with the Hadoop FS
+            destination, you can use an Expression Evaluator to extract the table name from the
+            filepath field as described in <xref
+                href="../Event_Handling/CaseStudy-Impala.dita#concept_szz_xwm_lx"/>. </p>
+        <p>Or, you can skip the Expression Evaluator and use a separate Hive Query executor with the
+            Hadoop FS destination with the following query:
+                <codeblock>invalidate metadata ${file:pathElement(record:value('/filepath'), -2)}.${file:removeExtension('file:fileName(record:value('/filepath')')}</codeblock><draft-comment
+                author="Loretta">check these with Jarcec.</draft-comment></p>
+ </conbody>
+</concept>

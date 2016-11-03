@@ -22,9 +22,54 @@
                 event record. </p>
         </context>
         <steps>
-            <step
-                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-D-E-EventHandling">
-                <cmd/>
+            <step>
+                <cmd>In the Properties panel, on the <wintitle>General</wintitle> tab, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_yxz_pvs_5x">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>General Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-1stStep-Name">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-1stStep-Desc">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-1stStep-Library">
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Produce Events <xref
+                                            href="MapReduce-EventGeneration.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_qqz_cxs_5x"/></xref></entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-1stStep-entry-Events"
+                                    />
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-1stStep-ReqFields">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-1stStep-Precond">
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
             <step>
                 <cmd>On the <uicontrol>MapReduce</uicontrol> tab, configure the following
@@ -142,11 +187,10 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Input File <xref href="MapReduce-AvrotoParquet.dita">
+                                    <entry>Input Avro File <xref href="MapReduce-AvrotoParquet.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 placement="inline" id="image_jqd_xz2_nx"
-                                            /></xref><draft-comment author="Loretta">Suggested Avro
-                                            File: SDC-4089</draft-comment></entry>
+                                        /></xref></entry>
                                     <entry>Expression that evaluates to the name and location of the
                                         Avro file to process. <p>By default, processes the file with
                                             the name and location specified in the "filepath" field

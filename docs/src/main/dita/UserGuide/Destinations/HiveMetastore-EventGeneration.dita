@@ -19,12 +19,13 @@
   <p><indexterm>Hive Metastore destination<indexterm>event
                 generation</indexterm></indexterm><indexterm>event generation<indexterm>Hive
                     Metastore destination</indexterm></indexterm>The Hive Metastore destination can
-            generate events that you can use in an event handling stream. When you enable event
-            generation, the destination creates event records each time it changes table structures,
-            icluding when it creates a table, adds a column, or creates a partition. <note>Updates
-                to existing tables, columns and partitions are treated as creates since the
-                destination does not change or delete existing structures. </note>Hive Metastore
-            events can be used with a destination to store information about table structure changes
-            for later uses, such as a processing audit.</p>
+            generate events that you can use in an event stream. When you enable event generation,
+            the destination creates event records each time it changes table structures, including
+            when it creates a table, adds a column, or creates a partition. <note>Updates to
+                existing tables, columns and partitions are treated as creates since the destination
+                does not change or delete existing structures. </note>Hive Metastore events can be
+            used with a destination to store information about table structure changes for later
+            use. For an example, see <xref
+                href="../Event_Handling/CaseStudy-FileManagement.dita#concept_d1q_xl4_lx"/>.</p>
  </conbody>
 </concept>

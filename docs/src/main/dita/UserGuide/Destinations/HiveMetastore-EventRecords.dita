@@ -19,7 +19,8 @@
         <p><indexterm>Hive Metastore destination<indexterm>event
                 records</indexterm></indexterm><indexterm>event records<indexterm>Hive Metastore
                     destination</indexterm></indexterm>Hive Metastore event records include the
-            following record header attributes:</p>
+            following record header attributes. Record header attributes are stored as String
+            values:</p>
         <p>
             <table frame="all" rowsep="1" colsep="1" id="table_brz_3gp_qx">
                 <tgroup cols="2">
@@ -33,7 +34,8 @@
                     </thead>
                     <tbody>
                         <row>
-                            <entry>type</entry>
+                            <entry
+                                conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-eventType"/>
                             <entry>Event type. Uses one of the following types:<ul
                                     id="ul_m12_mgp_qx">
                                     <li>new-table - Generated when the origin creates a new table. </li>
@@ -43,16 +45,13 @@
                                         partition.</li>
                                 </ul></entry>
                         </row>
-                        <row>
-                            <entry>version</entry>
-                            <entry>An integer that indicates the version of the event record.
-                            </entry>
+                        <row
+                            conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-eventVersion">
+                            <entry/>
                         </row>
-                        <row>
-                            <entry>creation_date</entry>
-                            <entry
-                                conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-Event-creationDate"
-                            />
+                        <row
+                            conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-eventTimestamp">
+                            <entry/>
                         </row>
                     </tbody>
                 </tgroup>
@@ -64,9 +63,10 @@
                     <dd>
                         <p>The destination generates a new table event record when it creates a new
                             table.</p>
-                        <p>New table event records have the <codeph>type</codeph> record header
-                            attribute set to <codeph>new-table</codeph> and include the following
-                            field: <table frame="all" rowsep="1" colsep="1" id="table_dh2_5gc_rx">
+                        <p>New table event records have the <codeph>sdc.event.type</codeph> record
+                            header attribute set to <codeph>new-table</codeph> and include the
+                            following field: <table frame="all" rowsep="1" colsep="1"
+                                id="table_dh2_5gc_rx">
                                 <tgroup cols="2">
                                     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                                     <colspec colname="c2" colnum="2" colwidth="3.5*"/>
@@ -92,9 +92,10 @@
                     <dd>
                         <p>The destination generates a new column event record when it creates a new
                             column in a table.</p>
-                        <p>New column event records have the <codeph>type</codeph> record header
-                            attribute set to <codeph>new-column</codeph> and include the following
-                            fields: <table frame="all" rowsep="1" colsep="1" id="table_jch_hcd_rx">
+                        <p>New column event records have the <codeph>sdc.event.type</codeph> record
+                            header attribute set to <codeph>new-column</codeph> and include the
+                            following fields: <table frame="all" rowsep="1" colsep="1"
+                                id="table_jch_hcd_rx">
                                 <tgroup cols="2">
                                     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                                     <colspec colname="c2" colnum="2" colwidth="3.5*"/>
@@ -113,9 +114,11 @@
                                         <row>
                                             <entry>columns</entry>
                                             <entry>A map field with the following information for
-                                                each new column:<draft-comment author="Loretta"
-                                                  >check with Jarcec on best way to write this
-                                                  up</draft-comment><codeblock>&lt;column name>, &lt;Hive data type>(&lt;precision>,[scale])</codeblock></entry>
+                                                each new
+                                                  column:<codeblock>&lt;column name>, &lt;Hive data type>(&lt;precision>,[scale])</codeblock><draft-comment
+                                                  author="Loretta">Jarcec: does this look right?
+                                                  Should I rearrange
+                                                somehow?</draft-comment></entry>
                                         </row>
                                     </tbody>
                                 </tgroup>
@@ -127,9 +130,9 @@
                     <dd>
                         <p>The destination generates a new partition event record when it creates a
                             new partition in a table.</p>
-                        <p>New partition event records have the <codeph>type</codeph> record header
-                            attribute set to <codeph>new-partition</codeph> and include the
-                            following fields: <table frame="all" rowsep="1" colsep="1"
+                        <p>New partition event records have the <codeph>sdc.event.type</codeph>
+                            record header attribute set to <codeph>new-partition</codeph> and
+                            include the following fields: <table frame="all" rowsep="1" colsep="1"
                                 id="table_syr_5td_rx">
                                 <tgroup cols="2">
                                     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -149,9 +152,9 @@
                                         <row>
                                             <entry>partitions</entry>
                                             <entry>A map field with the following information:
-                                                  <draft-comment author="Loretta">check with Jarcec
-                                                  on best way to write this
-                                                up</draft-comment><codeblock>&lt;partition name>, &lt;partition value></codeblock></entry>
+                                                  <codeblock>&lt;partition name>, &lt;partition value></codeblock><draft-comment
+                                                  author="Loretta">Jarcec: best way to display
+                                                  this?</draft-comment></entry>
                                         </row>
                                     </tbody>
                                 </tgroup>

@@ -24,9 +24,12 @@
             and the time basis. Local FS writes records to the directories based on the time basis
             as well. </p>
         <p>You can specify the amount of time that a record can be written to its associated
-            directory and what happens to late records. </p>
-        <p>You can also use record header attributes to perform record-based writes. For more
-            information, see <xref href="RecordHeaderAttributes.dita#concept_lmn_gdc_1w"/>.</p>
+            directory and what happens to late records. You can also use record header attributes to
+            perform record-based writes. For more information, see <xref
+                href="RecordHeaderAttributes.dita#concept_lmn_gdc_1w"/>.</p>
+        <p>The destination can generate events for an event stream. For more information about event
+            handling, see <xref
+                href="../Event_Handling/EventHandling-Overview.dita#concept_cph_5h4_lx"/>.</p>
         <p>You can use Gzip, Bzip2, Snappy, LZ4, and other compression formats to write output
             files. </p>
     </conbody>

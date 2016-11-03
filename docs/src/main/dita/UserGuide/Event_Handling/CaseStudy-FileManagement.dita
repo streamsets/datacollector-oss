@@ -16,25 +16,25 @@
 <concept id="concept_d1q_xl4_lx">
     <title>Case Study: Output File Management</title>
     <conbody>
-        <p><indexterm>event handling<indexterm>output file management case
-                study</indexterm></indexterm>By default, the Hadoop FS destination creates a complex
-            set of directories for output files and late record files, keeping files open for
-            writing based on stage configuration. That's great, but once the files are complete,
+        <p><indexterm>event handling case studies<indexterm>output file
+                management</indexterm></indexterm>By default, the Hadoop FS destination creates a
+            complex set of directories for output files and late record files, keeping files open
+            for writing based on stage configuration. That's great, but once the files are complete,
             you'd like the files moved to a different location. And while you're at it, it would be
             nice to set the permissions for the written files. </p>
         <p>So what do you do? </p>
-        <p>Add an event handling branch to the pipeline to manage output files when the Hadoop FS
-            destination is done writing to them. </p>
+        <p>Add an event stream to the pipeline to manage output files when the Hadoop FS destination
+            is done writing them. </p>
         <p>Here's a pipeline that reads from a database using JDBC, performs some processing, and
             writes to HDFS:</p>
         <p><image href="../Graphics/Event-Move-BasicPipe.png" id="image_y1d_zm4_lx" scale="70"/></p>
         <ol id="ol_fvh_5m4_lx">
-            <li>To add an event branch, first configure Hadoop FS to generate events:<p>Select the
-                        <uicontrol>Produce Events</uicontrol> property on the General tab. When you
-                    do that, the event output stream becomes available. With this selected, Hadoop
-                    FS generates an event each time it closes an output file. </p><p><image
-                        href="../Graphics/Event-Move-HDFS.png" id="image_n5q_5p4_lx" scale="65"
-                    /></p></li>
+            <li>To add an event stream, first configure Hadoop FS to generate events:<p>On the
+                        <wintitle>General</wintitle> tab, select the <uicontrol>Produce
+                        Events</uicontrol> property. </p><p>Now, the event output stream becomes
+                    available, and Hadoop FS generates an event record each time it closes an output
+                    file. </p><p><image href="../Graphics/Event-Move-HDFS.png" id="image_n5q_5p4_lx"
+                        scale="65"/></p></li>
             <li>Connect the Hadoop FS event output stream to a HDFS File Metadata executor.<p>Now,
                     each time the HDFS File Metadata executor receives an event, it triggers the
                     tasks that you configure it to run.</p><p><image
@@ -42,15 +42,16 @@
                         scale="75"/></p></li>
             <li>Configure the HDFS File Metadata executor to move the files to the directory that
                 you want and set the permissions for the file.<p>In the HDFS File Metadata executor,
-                    configure the HDFS configuration details on the HDFS tab, then on the Tasks tab,
-                    configure the changes that you want to make. In this case, changing the
-                    directory where written files are stored, and setting the file permissions to
-                    0440 to allow the user and group read access to the files:</p><p><image
+                    configure the HDFS configuration details on the <wintitle>HDFS</wintitle> tab.
+                    Then, on the <wintitle>Tasks</wintitle> tab, configure the changes that you want
+                    to make. </p><p>In this case, you want to move files to<filepath>
+                        /new/location</filepath>, and set the file permissions to 0440 to allow the
+                    user and group read access to the files:</p><p><image
                         href="../Graphics/Event-Move-FileMetadata-props.png" id="image_uk1_l1c_tx"
                         scale="60"/></p></li>
         </ol>
-        <p>With this event branch added to the pipeline, each time the Hadoop FS destination closes
-            a file, it generates an event. When the HDFS File Metadata executor receives the event,
-            it moves the file and sets the file permissions. No muss, no fuss.</p>
+        <p>With this event stream added to the pipeline, each time the Hadoop FS destination closes
+            a file, it generates an event record. When the HDFS File Metadata executor receives the
+            event record, it moves the file and sets the file permissions. No muss, no fuss.</p>
     </conbody>
 </concept>

@@ -23,9 +23,53 @@
                 Local FS, or MapR FS destinations.</p>
         </context>
         <steps>
-            <step
-                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-D-E-EventHandling">
-                <cmd/>
+            <step>
+                <cmd>In the Properties panel, on the <wintitle>General</wintitle> tab, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_yxz_pvs_5x">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>General Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-1stStep-Name">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-1stStep-Desc">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-1stStep-Library">
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Produce Events <xref href="HDFSFileMeta-EventGeneration.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                               /></xref></entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-1stStep-entry-Events"
+                                    />
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-1stStep-ReqFields">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-1stStep-Precond">
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
             <step>
                 <cmd>On the <uicontrol>HDFS</uicontrol> tab, configure the following
@@ -71,10 +115,10 @@
                                         <p>HDFS User </p>
                                     </entry>
                                     <entry>
-                                        <p>The HDFS user to use to connect to HDFS or MapR FS. When
-                                            using this property, make sure the destination system is
-                                            configured appropriately. For information about HDFS,
-                                            see <xref
+                                        <p>The HDFS user to use when connecting to HDFS or MapR FS.
+                                            When you use this property, make sure the destination
+                                            system is configured appropriately. For information
+                                            about HDFS, see <xref
                                                 href="../Destinations/HadoopFS-HDFSUser-dest.dita#concept_u4h_lwt_ls"
                                             />. For information about MapR FS, see <xref
                                                 href="../Destinations/MapRFS-HDFSUser.dita#concept_kls_lqc_fv"
@@ -160,10 +204,10 @@
                                                 id="image_xsl_2rx_mx"/></xref></entry>
                                     <entry>Expression that represents the full path to the file.
                                             <p>By default, the property uses
-                                            ${record:value('/file_path')}, which processes data in
-                                            the file_path field. The Hadoop FS, Local FS, and MapR
-                                            FS destinations all generate event records the file name
-                                            and path of the files that they close in a file_path
+                                            ${record:value('/filepath')}, which processes data in
+                                            the filepath field. The Hadoop FS, Local FS, and MapR FS
+                                            destinations all generate file closure event records
+                                            that include the path to closed files in a filepath
                                             field.</p></entry>
                                 </row>
                                 <row>

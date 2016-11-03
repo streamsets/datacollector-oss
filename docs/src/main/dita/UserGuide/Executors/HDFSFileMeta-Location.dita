@@ -14,13 +14,44 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_uwh_vck_rx">
- <title>Changing the File Name or Location</title>
- <conbody>
-        <p>You can use Hive File Metadata executor to change file names and locations after they
-            close. </p>
-        <p>
-            <draft-comment author="Loretta">add info, examples on how to do it with the new EL when
-                they're in.</draft-comment>
-        </p>
+    <title>Changing the File Name or Location</title>
+    <conbody>
+        <p><indexterm>HDFS File Metadata executor<indexterm>changing file names and
+                    locations</indexterm></indexterm>You can use Hive File Metadata executor to
+            change file names and locations after they close. When you specify new file names and
+            locations, you can enter constants or expressions. Use any expression that evaluates to
+            the values that you want to use. </p>
+        <p>When needed, you can use the file functions in expressions to use part of the existing
+            filepath. File functions can return any part of a path, file name, or extension. <dl>
+                <dlentry>
+                    <dt>Example for Moving Files</dt>
+                    <dd>Say you have Hadoop FS writing JSON files to the following directory
+                        structure:<codeblock>/server1/weblogs/&lt;subdir>/&lt;filename></codeblock></dd>
+                    <dd>After the files are written, you want HDFS File Metadata executor to move
+                        the files to a different server. So you configure the executor to move files
+                        to a different server while still using the rest of the path to the file:
+                        <codeblock>/newServer/${file:pathElement(record:value('/filepath'),1)}/${file:pathElement(record:value('/filepath'),2)}/</codeblock></dd>
+                    <dd>
+                        <p>This expression uses newServer as the new root element, then uses two
+                            levels of subdirectories. Do not include file names when moving files.
+                                <draft-comment author="Loretta">expression needs
+                                help.</draft-comment></p>
+                    </dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Example for Renaming Files</dt>
+                    <dd>If you wanted to add the .json suffix to the original filename, you could
+                        use the following
+                        expression:<codeblock>${file:fileName(record:value('/filepath'))}.json</codeblock></dd>
+                    <dd>This expression returns the file name from the filepath field in the event
+                        record and adds .json to the file name, e.g. &lt;filename>.json</dd>
+                    <dd>If you wanted to strip the extension from written files, you could use the
+                        following expression in the New Name field:
+                        <codeblock>${file:removeExtension(file:fileName(record:value('/fieldpath')))}</codeblock></dd>
+                    <dd>This expression returns the file name from the fieldpath event record field
+                        then strips the extension from the name, and uses the result as the new file
+                        name.</dd>
+                </dlentry>
+            </dl></p>
     </conbody>
 </concept>

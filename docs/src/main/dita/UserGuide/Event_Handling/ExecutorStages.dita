@@ -18,36 +18,46 @@
  <conbody>
         <p>
             <indexterm>event handling<indexterm>executors</indexterm></indexterm>Executors perform
-            tasks when they receive events. You can use the following executor stages for event handling:<dl>
+            tasks when they receive event records. You can use the following executor stages for
+            event handling:<dl>
                 <dlentry>
                     <dt>Hive Query executor</dt>
-                    <dd>Connects to Hive and executes a user-defined SQL query for each event. </dd>
-                    <dd>For example, you can use the Hive Query executor with the Hive Metastore
-                        destination as part of the Hive Drift Solution when you use Impala. Impala
-                        requires you to run the Invalidate Metadata command when the table structure
-                        or data changes. Instead of trying to time this action manually, you can use
-                        the Hive Query executor to submit the command automatically each time the
-                        Hive Metastore destination changes the structure of a table.</dd>
+                    <dd>Connects to HDFS and executes a user-defined Hive or Impala query for each
+                        event.</dd>
+                    <dd>Use with the Hive Metadata destination to run a Hive or Impala query after
+                        changing table structures. You can also use the executor with the Hadoop FS
+                        or MapR FS destinations to run a Hive or Impala query after closing files. </dd>
+                    <dd>For example, you might use the Hive Query executor as part of the Hive Drift
+                        Solution if you use Impala.</dd>
+                    <dd>Impala requires you to run the Invalidate Metadata command when the table
+                        structure or data changes. Instead of trying to time this action manually,
+                        you can use the Hive Query executor to submit the command automatically each
+                        time the Hive Metastore destination changes the structure of a table and
+                        each time the Hadoop FS destination closes a file. </dd>
                 </dlentry>
                 <dlentry>
-                    <dt>HDFS Metadata executor</dt>
-                    <dd>Connects to HDFS or a local file system and performs file-based tasks for
-                        each event. Can move or change permission for files. Can be used with the
-                        Hadoop FS, Local FS, and MapR FS destinations, which generate events when
-                        they close a file. </dd>
-                    <dd>
-                        <p>For example, you can use the HDFS Metadata executor with the Hadoop FS
-                            destination to move and change the permissions of files when Hadoop FS
-                            closes a file.</p>
-                    </dd>
+                    <dt>HDFS File Metadata executor</dt>
+                    <dd>Connects to HDFS, MapR FS, or a local file system and performs file-based
+                        tasks for each event. Can rename, move, and change permissions for files. </dd>
+                    <dd>Use with the Hadoop FS, Local FS, and MapR FS destinations, which generate
+                        events when they close a file. </dd>
+                    <dd>For example, you can use the HDFS File Metadata executor with the Local FS
+                        destination to move and change the permissions of files when the destination
+                        closes a file.</dd>
                 </dlentry>
                 <dlentry>
                     <dt>JDBC Query executor</dt>
                     <dd>Connects to a database using JDBC and runs the specified query. </dd>
+                    <dd>
+                        <draft-comment author="Loretta">Waiting for details &amp; use case. Will
+                            probably use with the JDBC Producer destination.</draft-comment>
+                    </dd>
                 </dlentry>
                 <dlentry>
                     <dt>MapReduce Job executor</dt>
-                    <dd>Connects to Hadoop and starts a MapReduce job for each event.</dd>
+                    <dd>Connects to HDFS or MapR FS and starts a MapReduce job for each event. </dd>
+                    <dd>Use with the Hadoop FS or MapR FS destinations to run MapReduce jobs on
+                        closed files. </dd>
                     <dd>For example, you can use the MapReduce Job executor with the Hadoop FS
                         destination to convert Avro files to Parquet when Hadoop FS closes a file.
                     </dd>

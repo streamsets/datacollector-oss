@@ -20,7 +20,7 @@
             written by the Hive Drift Solution is compatible with Impala.</p>
         <p>Impala requires using the Invalidate Metadata command to refresh the Impala metadata
             cache each time changes occur in the Hive Metastore. To automatically refresh the Impala
-            metadata cache, add an event handling branch to your pipeline. For details, see <xref
+            metadata cache, add an event stream to your pipeline. For details, see <xref
                 href="../Event_Handling/CaseStudy-Impala.dita#concept_szz_xwm_lx"/>.</p>
         <p>You can alternatively run the Impala Invalidate Metadata command manually. To be notified
             of when to run the command, add a data rule alert on the link to the Hive Metastore

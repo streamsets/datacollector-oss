@@ -19,8 +19,8 @@
         <p><indexterm>MapReduce executor<indexterm>event
                 generation</indexterm></indexterm><indexterm>event generation<indexterm>MapReduce
                     executor</indexterm></indexterm>The MapReduce executor can generate events that
-            you can use in an event handling stream. When you enable event generation, the executor
-            generates events each time it starts a MapReduce job.</p>
+            you can use in an event stream. When you enable event generation, the executor generates
+            events each time it starts a MapReduce job.</p>
         <p>MapReduce executor <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-ph-EventGen-FileStorage"
             /></p>

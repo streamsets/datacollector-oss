@@ -14,18 +14,20 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_scs_3hh_tx">
- <title>Pairing Event Generation and Executor Stages</title>
+ <title>Logical Pairings</title>
  <conbody>
-  <p>Though you can use events and executors in any way that you see fit, the following tables
-            summarize how event generating and event executing stages are designed to be used:<table
-                frame="all" rowsep="1" colsep="1" id="table_a45_zhh_tx">
+  <p><indexterm>event generating stages<indexterm>pairing with destinations and
+                    executors</indexterm></indexterm>You can use event generation stages and event
+            records in any logical way. </p>
+        <p>However, the following tables outline how you might use event generation stages with
+            destinations or executors:<table frame="all" rowsep="1" colsep="1" id="table_a45_zhh_tx">
                 <tgroup cols="2">
-                    <colspec colname="c1" colnum="1" colwidth="2.0*"/>
-                    <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+                    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                    <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                     <thead>
                         <row>
-                            <entry>Event Generation Origin</entry>
-                            <entry>Event Handling</entry>
+                            <entry>Event Generating Origin</entry>
+                            <entry>Event Record Consumer</entry>
                         </row>
                     </thead>
                     <tbody>
@@ -41,22 +43,18 @@
                 </tgroup>
             </table><table frame="all" rowsep="1" colsep="1" id="table_r5m_b3h_tx">
                 <tgroup cols="2">
-                    <colspec colname="c1" colnum="1" colwidth="2.0*"/>
-                    <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+                    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                    <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                     <thead>
                         <row>
-                            <entry>Event Generation Destination</entry>
-                            <entry>Event Handling</entry>
+                            <entry>Event Generating Destination</entry>
+                            <entry>Event Record Consumer</entry>
                         </row>
                     </thead>
                     <tbody>
                         <row>
                             <entry>Amazon S3 </entry>
-                            <entry>
-                                <ul id="ul_ewj_1lh_tx">
-                                    <li>Any destination for event storage.</li>
-                                </ul>
-                            </entry>
+                            <entry>Any destination for event storage.</entry>
                         </row>
                         <row>
                             <entry>Hadoop FS</entry>
@@ -64,7 +62,7 @@
                                 <ul id="ul_hbx_blh_tx">
                                     <li>HDFS File Metadata executor to rename, move, or change
                                         permissions for closed files.</li>
-                                    <li>MapReduce executor to run a MapReduce  job after closing a
+                                    <li>MapReduce executor to run a MapReduce job after closing a
                                         file.</li>
                                     <li>Any destination for event storage.</li>
                                 </ul>
@@ -90,10 +88,10 @@
                         <row>
                             <entry>MapR FS</entry>
                             <entry>
-                                <ul>
+                                <ul id="ul_rvh_dsq_tx">
                                     <li>HDFS File Metadata executor to rename, move, or change
                                         permissions for closed files.</li>
-                                    <li>MapReduce executor to run a MapReduce  job after closing a
+                                    <li>MapReduce executor to run a MapReduce job after closing a
                                         file.</li>
                                     <li>Any destination for event storage.</li>
                                 </ul>
@@ -103,12 +101,12 @@
                 </tgroup>
             </table><table frame="all" rowsep="1" colsep="1" id="table_sc4_4nh_tx">
                 <tgroup cols="2">
-                    <colspec colname="c1" colnum="1" colwidth="2.0*"/>
-                    <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+                    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                    <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                     <thead>
                         <row>
-                            <entry>Event Generation Executor</entry>
-                            <entry>Event Handling</entry>
+                            <entry>Event Generating Executor</entry>
+                            <entry>Event Record Consumer</entry>
                         </row>
                     </thead>
                     <tbody>

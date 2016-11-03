@@ -36,6 +36,9 @@
             location of the Hive and Hadoop configuration files and optionally specify additional
             required properties. You can also set a maximum cache size for the destination and
             determine how new tables are created and stored.</p>
+        <p>The destination can also generate events for an event stream. For more information about
+            event handling, see <xref
+                href="../Event_Handling/EventHandling-Overview.dita#concept_cph_5h4_lx"/>.</p>
         <note>When using the destination in multiple pipelines, take care to avoid concurrent or
             conflicting writes to the same tables. </note>
     </conbody>

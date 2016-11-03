@@ -16,18 +16,20 @@
 <concept id="concept_zrl_mhn_lx">
  <title>Event Generation Stages</title>
  <conbody>
-  <p><indexterm>event handling<indexterm>stages that generate events</indexterm></indexterm>You can
-            configure certain stages to generate events. Event generation can differ from stage to
-            stage, based on how the stage processes data. </p>
-        <p>The following table lists the stages that generate events and when they generate events:
-                <table frame="all" rowsep="1" colsep="1" id="table_pzz_thf_lx">
+  <p><indexterm>event handling<indexterm>event generating
+                stages</indexterm></indexterm><indexterm>event generating
+                    stages<indexterm>overview</indexterm></indexterm>You can configure certain
+            stages to generate events. Event generation can differ from stage to stage, based on how
+            the stage processes data. </p>
+        <p>The following table lists event-generating stages and describes when they generate
+            events: <table frame="all" rowsep="1" colsep="1" id="table_pzz_thf_lx">
                 <tgroup cols="2">
                     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                     <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                     <thead>
                         <row>
                             <entry>Stage</entry>
-                            <entry>Event generation occurs when the stage...</entry>
+                            <entry>Generates event records when the stage...</entry>
                         </row>
                     </thead>
                     <tbody>
