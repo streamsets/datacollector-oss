@@ -39,6 +39,11 @@ public class XMLFlatteningProcessorUpgrader implements StageUpgrader {
     switch (fromVersion) {
       case 1:
         v1ToV2(configs);
+        if(toVersion <= 2) {
+          break;
+        }
+      case 2:
+        v2ToV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -49,6 +54,10 @@ public class XMLFlatteningProcessorUpgrader implements StageUpgrader {
   private void v1ToV2(List<Config> configs) {
     configs.add(new Config("keepOriginalFields", true));
     configs.add(new Config("newFieldOverwrites", false));
+  }
+
+  private void v2ToV3(List<Config> configs) {
+    configs.add(new Config("outputField", ""));
   }
 
 }

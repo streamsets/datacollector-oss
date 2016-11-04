@@ -28,7 +28,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DProcessor;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "XML Flattener",
     description = "Flatten XML data into fields of a record",
     upgrader = XMLFlatteningProcessorUpgrader.class,
@@ -74,6 +74,19 @@ public class XMLFlatteningDProcessor extends DProcessor {
       triggeredByValue = "true"
   )
   public boolean newFieldOverwrites;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "",
+      label = "Output Field",
+      description = "Output field into which the XML will be flattened. Use empty value to write directly to root of the record.",
+      displayPosition = 35,
+      group = "XML",
+      dependsOn = "keepOriginalFields",
+      triggeredByValue = "true"
+  )
+  public String outputField;
 
   @ConfigDef(
       required = false,
@@ -132,7 +145,16 @@ public class XMLFlatteningDProcessor extends DProcessor {
 
   @Override
   protected Processor createProcessor() {
-    return new XMLFlatteningProcessor(fromField, keepOriginalFields, newFieldOverwrites,recordDelimiter,
-        fieldDelimiter, attrDelimiter, ignoreAttributes, ignoreNamespace);
+    return new XMLFlatteningProcessor(
+      fromField,
+      keepOriginalFields,
+      newFieldOverwrites,
+      outputField,
+      recordDelimiter,
+      fieldDelimiter,
+      attrDelimiter,
+      ignoreAttributes,
+      ignoreNamespace
+    );
   }
 }

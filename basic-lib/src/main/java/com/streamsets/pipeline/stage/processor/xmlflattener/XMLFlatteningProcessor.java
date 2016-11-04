@@ -30,6 +30,7 @@ import com.streamsets.pipeline.lib.util.CommonError;
 import com.streamsets.pipeline.stage.common.DataFormatErrors;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -40,6 +41,7 @@ import org.w3c.dom.Text;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -56,6 +58,7 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
   private final boolean ignoreAttrs;
   private final boolean ignoreNamespace;
   private final String fieldDelimiter;
+  private final String outputField;
   private final String attrDelimiter;
   private final boolean keepExistingFields;
   private final boolean newFieldsOverwrite;
@@ -68,6 +71,7 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
       String fieldPath,
       boolean keepExistingFields,
       boolean newFieldsOverwrite,
+      String outputField,
       String recordDelimiter,
       String fieldDelimiter,
       String attrDelimiter,
@@ -78,6 +82,7 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
     this.fieldPath = fieldPath;
     this.keepExistingFields = keepExistingFields;
     this.newFieldsOverwrite = newFieldsOverwrite;
+    this.outputField = outputField;
     this.recordDelimiter = recordDelimiter;
     this.fieldDelimiter = fieldDelimiter;
     this.attrDelimiter = attrDelimiter;
@@ -156,6 +161,7 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
             newR = getContext().createRecord(record, String.valueOf(flattenerPerRecordCount));
             newR.set(Field.create(new HashMap<String, Field>()));
           }
+          ensureOutputFieldExists(newR);
           prefix = root.getTagName();
           addAttrs(newR, root, prefix);
           results.add(newR);
@@ -223,8 +229,9 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
         // If we don't need to keep existing fields, just write
         // If we need to keep existing fields, overwrite only if the original field does not exist
         // If we need to keep existing fields, and the current record has the path, overwrite only if newFieldsOverwrite
-        if (!keepExistingFields || !record.has("/" + current.prefix) || newFieldsOverwrite) {
-          record.set("/" + current.prefix, Field.create(text));
+        if (!keepExistingFields || !record.has(getPathPrefix() + current.prefix) || newFieldsOverwrite) {
+          ensureOutputFieldExists(record);
+          record.set(getPathPrefix() + current.prefix, Field.create(text));
         }
       } else if (next.getNodeType() == Node.ELEMENT_NODE) {
         Element element = (Element) next;
@@ -247,6 +254,7 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
             newR = getContext().createRecord(originalRecord, String.valueOf(flattenerPerRecordCount));
             newR.set(Field.create(new HashMap<String, Field>()));
           }
+          ensureOutputFieldExists(newR);
           recordList.add(newR);
           addAttrs(newR, element, elementPrefix);
           processXML(newR, true, new XMLNode(element, tagName), recordList, record);
@@ -278,15 +286,33 @@ public class XMLFlatteningProcessor extends SingleLaneRecordProcessor {
         if (attrName.equals("xmlns")) { //handled separately.
           continue;
         }
-        record.set("/" + elementPrefix + attrDelimiter + attr.getNodeName(), Field.create(attr.getNodeValue()));
+        record.set(getPathPrefix() + elementPrefix + attrDelimiter + attr.getNodeName(), Field.create(attr.getNodeValue()));
       }
     }
     if (!ignoreNamespace) {
       String namespaceURI = element.getNamespaceURI();
       if (namespaceURI != null) {
-        record.set("/" + elementPrefix + attrDelimiter + "xmlns", Field.create(namespaceURI));
+        record.set(getPathPrefix() + elementPrefix + attrDelimiter + "xmlns", Field.create(namespaceURI));
       }
     }
+  }
+
+  private void ensureOutputFieldExists(Record record) {
+    if(StringUtils.isEmpty(outputField)) {
+      return;
+    }
+
+    if(!record.has("/" + outputField)) {
+      record.set("/" + outputField, Field.create(Field.Type.MAP, Collections.emptyMap()));
+    }
+  }
+
+  private String getPathPrefix() {
+    if(StringUtils.isEmpty(outputField)) {
+      return  "/";
+    }
+
+    return "/" + outputField + "/";
   }
 
   private class XMLNode {

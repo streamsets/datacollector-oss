@@ -40,4 +40,13 @@ public class TestXMLFlatteningProcessorUpgrader {
     Assert.assertEquals(false, upgraded.get(1).getValue());
   }
 
+  @Test
+  public void testV2ToV3() throws StageException {
+    XMLFlatteningProcessorUpgrader upgrader = new XMLFlatteningProcessorUpgrader();
+    List<Config> upgraded = upgrader.upgrade(null, "xml", "xmll", 2, 3, new LinkedList<Config>());
+    Assert.assertEquals(1, upgraded.size());
+    Assert.assertEquals("outputField", upgraded.get(0).getName());
+    Assert.assertEquals("", upgraded.get(0).getValue());
+  }
+
 }
