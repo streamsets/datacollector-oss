@@ -246,6 +246,12 @@
    </topicref>
    <topicref href="../Destinations/Redis-Configuring.dita"/>
   </topicref>
+  <topicref href="../Destinations/Salesforce.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Destinations/Salesforce-Configuring.dita"/>
+  </topicref>
   <topicref href="../Destinations/SDC_RPCdest.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
@@ -272,6 +278,13 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+  </topicref>
+  <topicref href="../Destinations/WaveAnalytics.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Destinations/WaveAnalytics-Dataflow.dita"/>
+   <topicref href="../Destinations/WaveAnalytics-Configuring.dita"/>
   </topicref>
  </topicref>
 </map>

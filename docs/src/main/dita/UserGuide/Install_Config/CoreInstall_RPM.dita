@@ -18,7 +18,7 @@
  <conbody>
   <p><indexterm>installation<indexterm>core RPM</indexterm></indexterm>To install the core version
             of <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-            />, you can download the RPM zip file. After you perform the core installation and
+            />, you can download the RPM package. After you perform the core installation and
             launch, you can then install individual stage libraries as needed.</p>
  </conbody>
 </concept>

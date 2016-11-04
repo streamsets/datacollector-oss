@@ -38,6 +38,7 @@
           records.</li>
         <li>RabbitMQ Consumer - Reads messages from RabbitMQ.</li>
         <li>Redis Consumer - Reads messages from Redis.</li>
+        <li>Salesforce - Reads data from Salesforce.</li>
         <li>SDC RPC - Reads data from an SDC RPC destination in an SDC RPC pipeline.</li>
         <li>SDC RPC to Kafka - Reads data from an SDC RPC destination in an SDC RPC pipeline and
           writes it to Kafka.</li>

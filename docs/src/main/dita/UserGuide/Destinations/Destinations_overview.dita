@@ -41,10 +41,12 @@
         <li>MongoDB - Writes data to MongoDB.</li>
         <li>Rabbit MQ Producer - Writes data to RabbitMQ.</li>
         <li>Redis - Writes data to Redis.</li>
+        <li>Salesforce - Writes data to Salesforce.</li>
         <li>SDC RPC - Passes data to an SDC RPC origin in an SDC RPC pipeline.</li>
         <li>Solr - Writes data to a Solr node or cluster.</li>
         <li>To Error - Passes records to the pipeline for error handling.</li>
         <li>Trash - Removes records from the pipeline.</li>
+        <li>Wave Analytics - Wrties data to Salesforce Wave Analytics.</li>
       </ul>To help create or test pipelines, you can use the following development destination:<ul
         id="ul_wvk_p3f_lx">
         <li>To Event</li>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_odf_vr3_rx">
+ <title>Salesforce</title>
+ <shortdesc>The Salesforce origin reads data from Salesforce.</shortdesc>
+ <conbody>
+  <p><indexterm>origins<indexterm>Salesforce</indexterm></indexterm><indexterm>Salesforce
+                    origin<indexterm>overview</indexterm></indexterm>When you configure the
+            Salesforce origin, you define connection information, including the Salesforce API
+            version that the origin uses to connect to Salesforce. </p>
+        <p>You can configure the origin to read data in one or both of the following ways: </p>
+        <ul id="ul_kr4_1np_tx">
+            <li>Execute a query to read existing data from Salesforce.</li>
+            <li>Subscribe to the Force.com Streaming API to receive notifications for changes to
+                Salesforce data.</li>
+        </ul>
+ </conbody>
+</concept>

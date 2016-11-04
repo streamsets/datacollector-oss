@@ -182,6 +182,18 @@
    </topicref>
    <topicref href="../Origins/Redis-Configuring.dita"/>
   </topicref>
+  <topicref href="../Origins/Salesforce.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/Salesforce-Query.dita">
+    <topicref href="../Origins/Salesforce-SOQLQuery.dita"/>
+    <topicref href="../Origins/Salesforce-QueryExample.dita"/>
+   </topicref>
+   <topicref href="../Origins/Salesforce-Subscribe.dita">
+    <topicref href="../Origins/Salesforce-SubscribeRecordFormat.dita"/>
+   </topicref>
+   <topicref href="../Origins/Salesforce-CustomFields.dita"/>
+   <topicref href="../Origins/Salesforce-Configuring.dita"/>
+  </topicref>
   <topicref href="../Origins/SDC_RPCorigin.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/RPCorigin-Configuring.dita"/>

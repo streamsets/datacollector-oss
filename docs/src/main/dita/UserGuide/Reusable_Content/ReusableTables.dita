@@ -1152,5 +1152,45 @@
       </tbody>
      </tgroup>
     </table>
+  <draft-comment author="alisontaylor">Salesforce origin and destination use all rows in this table.
+   Wave Analytics destination uses the first two rows in the table.</draft-comment>
+  <table frame="all" rowsep="1" colsep="1" id="table_fg1_cbc_tx">
+   <tgroup cols="2">
+    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+    <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+    <thead>
+     <row>
+      <entry>Salesforce Property</entry>
+      <entry>Description</entry>
+     </row>
+    </thead>
+    <tbody>
+     <row id="SalesforceUser">
+      <entry>Username</entry>
+      <entry>Salesforce username in the following email format:
+       <codeph>&lt;text>@&lt;text>.com</codeph>. </entry>
+     </row>
+     <row id="SalesforcePassword">
+      <entry>Password</entry>
+      <entry>Salesforce password. <note
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
+      /></entry>
+     </row>
+     <row id="SalesforceEndpoint">
+      <entry>Auth Endpoint</entry>
+      <entry>Salesforce SOAP API authentication endpoint. Enter one of the following values:<ul
+        id="ul_lnr_x2c_tx">
+        <li>login.salesforce.com - To connect to a Production or Developer Edition
+         organization.</li>
+        <li>test.salesforce.com - To connect to a sandbox organization.</li>
+       </ul><p>Default is login.salesforce.com.</p></entry>
+     </row>
+     <row id="SalesforceAPIVersion">
+      <entry>API Version</entry>
+      <entry>Salesforce API version to use to connect to Salesforce. <p>Default is 38.0.</p></entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
  </conbody>
 </concept>
