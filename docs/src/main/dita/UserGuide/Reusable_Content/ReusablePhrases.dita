@@ -152,8 +152,9 @@
             </p>
             <p>
                   <draft-comment author="Loretta"><uicontrol>DataFormats-ALL</uicontrol> - <b>no
-                              longer all.</b> As of 7/14, Kafka Consumer has datagram, but no one
-                        else does. Used in MapR Streams Consumer, possibly others.</draft-comment>
+                              longer all - no datagram, no wholefile</b> As of 7/14, Kafka Consumer
+                        has datagram, but no one else does. Some origins hae whole file. Used in
+                        MapR Streams Consumer, possibly others.</draft-comment>
             </p>
             <p>
                   <ul id="DataFormats-ALL">
@@ -173,8 +174,8 @@
             </p>
             <p/>
             <p>
-                  <draft-comment author="Loretta">DataFormats-Kafka - used in Kafka
-                        Consumer</draft-comment>
+                  <draft-comment author="Loretta">DataFormats-Kafka - used in Kafka Consumer – move
+                        back to Kafka Consumer? </draft-comment>
             </p>
             <p>
                   <ul id="DataFormats-Kafka">

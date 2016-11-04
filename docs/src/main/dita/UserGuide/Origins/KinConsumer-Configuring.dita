@@ -91,26 +91,6 @@
                                         </ul></entry>
                                 </row>
                                 <row>
-                                    <entry>Data Format <xref href="KinConsumer-DataFormats.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                placement="inline" id="image_bmy_h5q_ds"
-                                        /></xref></entry>
-                                    <entry>Type of data to be read. Use one of the following options:<ul>
-                                            <li>Avro</li>
-                                            <li>Binary</li>
-                                            <li>Delimited</li>
-                                            <li>JSON</li>
-                                            <li>Log</li>
-                                            <li>Protobuf</li>
-                                            <li>SDC Record <xref
-                                                  href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
-                                                  <image href="../Graphics/icon_moreInfo.png"
-                                                  scale="11" id="image_wjh_ycl_br"/></xref></li>
-                                            <li>Text</li>
-                                            <li>XML</li>
-                                        </ul></entry>
-                                </row>
-                                <row>
                                     <entry>Max Batch Size (messages)</entry>
                                     <entry>Maximum amount of messages to include in a batch. Honors
                                         values up to the <ph
@@ -202,6 +182,47 @@
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-ProxyPassword">
                                     <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Data Format</wintitle> tab, configure the following
+                    property:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_hvy_pt3_vx">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Data Format Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Data Format <xref href="KinConsumer-DataFormats.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_bmy_h5q_ds"
+                                        /></xref></entry>
+                                    <entry>Type of data to be read. Use one of the following
+                                            options:<ul id="ul_www_ncj_vx">
+                                            <li>Avro</li>
+                                            <li>Binary</li>
+                                            <li>Delimited</li>
+                                            <li>JSON</li>
+                                            <li>Log</li>
+                                            <li>Protobuf</li>
+                                            <li>SDC Record <xref
+                                                  href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
+                                                  <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="11" id="image_wjh_ycl_br"/></xref></li>
+                                            <li>Text</li>
+                                            <li>XML</li>
+                                        </ul></entry>
                                 </row>
                             </tbody>
                         </tgroup>

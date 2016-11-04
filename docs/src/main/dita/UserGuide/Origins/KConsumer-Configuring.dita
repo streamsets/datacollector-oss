@@ -40,18 +40,6 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row>
-                                    <entry>Data Format <xref href="KConsumer-DataFormats.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                placement="inline" id="image_bmy_h5q_ds"
-                                        /></xref></entry>
-                                    <entry>Type of data to be read. Use one of the following
-                                            options:<ul
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DataFormats-Kafka"
-                                            id="ul_l1j_hnf_qw">
-                                            <li/>
-                                        </ul></entry>
-                                </row>
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-KafkaBrokerURI">
                                     <entry/>
@@ -118,6 +106,38 @@
                                     <entry/>
                                 </row>
     
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Data Format</wintitle> tab, configure the following
+                    property:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_hvy_pt3_vx">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Data Format Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Data Format <xref href="KConsumer-DataFormats.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_bmy_h5q_ds"
+                                        /></xref></entry>
+                                    <entry>Type of data to be read. Use one of the following
+                                            options:<ul
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DataFormats-Kafka"
+                                            id="ul_l1j_hnf_qw">
+                                            <li/>
+                                        </ul></entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>

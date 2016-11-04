@@ -39,18 +39,6 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Data Format <xref href="MapRStreamsCons-DataFormats.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                placement="inline" id="image_bmy_h5q_ds"
-                                        /></xref></entry>
-                                    <entry>Type of data to be read. Use one of the following
-                                        options: <ul
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DataFormats-ALL"
-                                            id="ul_w5w_syl_2v">
-                                            <li/>
-                                        </ul></entry>
-                                </row>
-                                <row>
                                     <entry>Consumer Group</entry>
                                     <entry>Consumer group that the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -93,6 +81,38 @@
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
                                     <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Data Format</wintitle> tab, configure the following
+                    property:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_hvy_pt3_vx">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Data Format Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Data Format <xref href="MapRStreamsCons-DataFormats.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_bmy_h5q_ds"
+                                        /></xref></entry>
+                                    <entry>Type of data to be read. Use one of the following
+                                        options: <ul
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DataFormats-ALL"
+                                            id="ul_w5w_syl_2v">
+                                            <li/>
+                                        </ul></entry>
                                 </row>
                             </tbody>
                         </tgroup>

@@ -79,16 +79,6 @@
                                 </row>
                             </thead>
                             <tbody>
-                               
-                                <row>
-                                    <entry>Data Format <xref
-                                            href="../Origins/Directory-DataFormat.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_w4w_q3p_ht"/>
-                                        </xref></entry>
-                                    <entry
-                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entryDataFormats"/>
-                                </row>
                                 <row>
                                     <entry>Files Directory</entry>
                                     <entry>A directory local to <ph
@@ -247,6 +237,36 @@
                                     <entry>Number of minutes processed files are saved in the
                                         archive directory. Use 0 to keep archived files
                                         indefinitely.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Data Format</wintitle> tab, configure the following
+                    property:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_hvy_pt3_vx">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Data Format Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Data Format <xref
+                                            href="../Origins/Directory-DataFormat.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_w4w_q3p_ht"/>
+                                        </xref></entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entryDataFormats"
+                                    />
                                 </row>
                             </tbody>
                         </tgroup>

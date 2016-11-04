@@ -338,7 +338,7 @@
                 </cmd>
             </step>
             <step id="O-AVRO-FILE">
-                <cmd>For Avro data, on the <wintitle>Avro</wintitle> tab, optionally configure the
+                <cmd>For Avro data, on the <wintitle>Data Format</wintitle> tab, configure the
                     following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_fv4_ggf_lx">
@@ -387,7 +387,8 @@
                                             Registry:<ul id="ul_hv4_ggf_lx">
                                             <li>Subject - Look up the specified Avro schema
                                                 subject.</li>
-                                            <li>Schema ID - Look up the specified Avro schema ID. </li>
+                                            <li>Schema ID - Look up the specified Avro schema ID.
+                                            </li>
                                         </ul>Overrides any existing schema definitions associated
                                         with the data. </entry>
                                 </row>
@@ -419,8 +420,8 @@
                 </cmd>
             </step>
             <step id="O-AVRO-Mess">
-                <cmd>For Avro data, on the <wintitle>Avro</wintitle> tab, configure the following
-                    properties:</cmd>
+                <cmd>For Avro data, on the <wintitle>Data Format</wintitle> tab, configure the
+                    following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_acd_2qd_3t">
                         <tgroup cols="2">
@@ -501,8 +502,8 @@
                 </cmd>
             </step>
             <step id="O-AVRO-KAFKA">
-                <cmd>For Avro data, on the <wintitle>Avro</wintitle> tab, configure the following
-                    properties:</cmd>
+                <cmd>For Avro data, on the <wintitle>Data Format</wintitle> tab, configure the
+                    following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_acd_9qd_4t">
                         <tgroup cols="2">
@@ -586,8 +587,8 @@
                 </cmd>
             </step>
             <step id="O-Binary">
-                <cmd>For binary data, click the <wintitle>Binary</wintitle> tab and configure the
-                    following property:</cmd>
+                <cmd>For binary data, click the <wintitle>Data Format</wintitle> tab and configure
+                    the following property:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_dpx_kdm_35">
                         <tgroup cols="2">
@@ -617,7 +618,7 @@
                 </cmd>
             </step>
             <step id="O-Datagram">
-                <cmd>For datagram data, on the <wintitle>Datagram</wintitle> tab, configure the
+                <cmd>For datagram data, on the <wintitle>Data Format</wintitle> tab, configure the
                     following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_qrx_zqz_pw">
@@ -632,7 +633,8 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Data Format <xref href="../Origins/KConsumer-DataFormats.dita">
+                                    <entry>Data Format <xref
+                                            href="../Origins/KConsumer-DataFormats.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 placement="inline" id="image_bmy_h8q_ds"
                                         /></xref></entry>
@@ -683,7 +685,7 @@
                 </cmd>
             </step>
             <step id="DelimFILE">
-                <cmd>For delimited data, on the <uicontrol>Delimited</uicontrol> tab, configure the
+                <cmd>For delimited data, on the <wintitle>Data Format</wintitle> tab, configure the
                     following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_DelimitedData">
@@ -777,8 +779,8 @@
                 </cmd>
             </step>
             <step id="JSON-2props">
-                <cmd>For JSON data, on the <wintitle>JSON</wintitle> tab, configure the following
-                    properties:</cmd>
+                <cmd>For JSON data, on the <wintitle>Data Format</wintitle> tab, configure the
+                    following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_JSONdata">
                         <tgroup cols="2">
@@ -827,8 +829,8 @@
                 </cmd>
             </step>
             <step id="LogData_Log4j">
-                <cmd>For log data, on the <wintitle>Log</wintitle> tab, configure the following
-                    properties:</cmd>
+                <cmd>For log data, on the <wintitle>Data Format</wintitle> tab, configure the
+                    following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_ihc_3fs_sr">
                         <tgroup cols="2">
@@ -940,7 +942,7 @@
                 </cmd>
             </step>
             <step id="O-PROTO-Mess">
-                <cmd>For protobuf data, on the <wintitle>Protobuf</wintitle> tab, configure the
+                <cmd>For protobuf data, on the <wintitle>Data Format</wintitle> tab, configure the
                     following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_s3c_mz4_45">
@@ -995,7 +997,7 @@
                 </cmd>
             </step>
             <step id="O-PROTO-File">
-                <cmd>For protobuf data, on the <wintitle>Protobuf</wintitle> tab, configure the
+                <cmd>For protobuf data, on the <wintitle>Data Format</wintitle> tab, configure the
                     following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_f4r_4cp_45">
@@ -1047,7 +1049,8 @@
                         applicable)</draft-comment></cmd>
             </step>        
             <step id="Text_Hadoop">
-                <cmd>For text data, on the <uicontrol>Text</uicontrol> tab, configure the following properties:</cmd>
+                <cmd>For text data, on the <wintitle>Data Format</wintitle> tab, configure the
+                    following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_ney_vwc_fv">
                         <tgroup cols="2">
@@ -1069,9 +1072,9 @@
                                 </row>
                                 <row>
                                     <entry>Use Custom Delimiter <xref
-                                        href="../Pipeline_Design/TextCDelim.dita">
-                                        <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                            placement="inline" id="image_f8g_d37_xv"
+                                            href="../Pipeline_Design/TextCDelim.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_f8g_d37_xv"
                                         /></xref></entry>
                                     <entry>Uses custom delimiters to define records instead of line
                                         breaks. </entry>
@@ -1084,7 +1087,6 @@
                         </tgroup>
                     </table>
                 </info>
-                
             </step>
             <step > <cmd>
                     <draft-comment author="Loretta"><uicontrol>TEXT data</uicontrol> - Directory,
@@ -1092,7 +1094,8 @@
                 </cmd>
             </step>        
                 <step id="Text">
-                    <cmd>For text data, on the <uicontrol>Text</uicontrol> tab, configure the following properties:</cmd>
+                <cmd>For text data, on the <wintitle>Data Format</wintitle> tab, configure the
+                    following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_ngy_vcc_fv">
                         <tgroup cols="2">
@@ -1133,7 +1136,6 @@
                         </tgroup>
                     </table>
                 </info>
-               
             </step>
             <step>
                 <cmd>
@@ -1142,7 +1144,7 @@
                 </cmd>
             </step>
             <step id="O-WholeFile">
-                <cmd>For whole files on the <uicontrol>Whole File</uicontrol> tab, configure the
+                <cmd>For whole files on the <wintitle>Data Format</wintitle> tab, configure the
                     following property:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_ff1_v3h_xw">
@@ -1173,7 +1175,7 @@
                 </cmd>
             </step>
             <step id="O-WholeFile-Checksum">
-                <cmd>For whole files, on the <uicontrol>Whole File</uicontrol> tab, configure the
+                <cmd>For whole files, on the <wintitle>Data Format</wintitle> tab, configure the
                     following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_x5m_5xf_zw">
@@ -1210,40 +1212,43 @@
                     </cmd></step>
             
             <step id="XMLprops">
-                <cmd>For XML data, on the <wintitle>XML</wintitle> tab, configure the following
-                    properties:</cmd>      
-            <info>
-                <table frame="all" rowsep="1" colsep="1" id="table_pmz_mcj_45">
-                    <tgroup cols="2">
-                        <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                        <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                        <thead> <row>                         
-                            <entry>XML Property</entry>
-                            <entry>Description</entry></row>  
-                        </thead>
-       <tbody>                
-            <row>
-                <entry>Delimiter Element</entry>
-                <entry>
-                    <p>XML element that acts as a delimiter. Omit a delimiter to
-                        treat the entire XML document as one record.</p>
+                <cmd>For XML data, on the <wintitle>Data Format</wintitle> tab, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_pmz_mcj_45">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>XML Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Delimiter Element</entry>
+                                    <entry>
+                                        <p>XML element that acts as a delimiter. Omit a delimiter to
+                                            treat the entire XML document as one record.</p>
                                         <p>Use the XML element name without surrounding angle
                                             brackets ( &lt; > ) . For example, msg instead of
                                             &lt;msg>. </p>
-                </entry>
-            </row>
-            <row>
-                <entry>Max Record Length (chars)</entry>
-                <entry>
-                    <p>The maximum number of characters in a record. Longer
-                        records are diverted to the pipeline for error handling.
-                    </p>
-                </entry>         
-            </row> 
-            </tbody>
-            </tgroup>
-                </table>
-            </info></step>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Max Record Length (chars)</entry>
+                                    <entry>
+                                        <p>The maximum number of characters in a record. Longer
+                                            records are diverted to the pipeline for error handling.
+                                        </p>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
                 
                 
            <step>     
@@ -1579,25 +1584,6 @@
                                     <entry>Use Credentials</entry>
                                     <entry>Enables the use of RabbitMQ credentials.</entry>
                                 </row>
-                                <row>
-                                    <entry>Data Format</entry>
-                                    <entry>Type of data to be read. Use one of the following data
-                                            formats:<ul id="ul_epm_gg4_q5">
-                                            <li>Avro</li>
-                                            <li>Binary</li>
-                                            <li>Delimited</li>
-                                            <li>JSON</li>
-                                            <li>Log</li>
-                                            <li>Protobuf</li>
-                                            <li>SDC Record <xref
-                                                  href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
-                                                  <image href="../Graphics/icon_moreInfo.png"
-                                                  scale="11" id="image_wjh_ycl_br"/></xref></li>
-                                            <li>Text</li>
-                                            <li>XML</li>
-                                        </ul></entry>
- 
-                                </row>
                             </tbody>
                         </tgroup>
                     </table>
@@ -1869,8 +1855,9 @@
                                 </row>
                                 <row>
                                     <entry>Enable Multithreading</entry>
-                                    <entry id="entry_EnableMultithreading">On 64-bit Linux, specifies whether to use multiple receiver threads for
-                                        each port. Using multiple receiver threads can improve
+                                    <entry id="entry_EnableMultithreading">On 64-bit Linux,
+                                        specifies whether to use multiple receiver threads for each
+                                        port. Using multiple receiver threads can improve
                                         performance. <p>Because the multithreading requires native
                                             libraries, it is only available when <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -1878,11 +1865,11 @@
                                 </row>
                                 <row>
                                     <entry>Number of Receiver Threads</entry>
-                                    <entry id="entry_ReceiverThreads">Number of receiver threads to use for each port. For
-                                        example, if you configure two threads per port and configure
-                                        the origin to use three ports, the origin uses a total of
-                                        six threads.<p>Set to the expected number of CPU cores of
-                                            the <ph
+                                    <entry id="entry_ReceiverThreads">Number of receiver threads to
+                                        use for each port. For example, if you configure two threads
+                                        per port and configure the origin to use three ports, the
+                                        origin uses a total of six threads.<p>Set to the expected
+                                            number of CPU cores of the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> machine that are dedicated to the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -2336,8 +2323,8 @@
                 </cmd>
             </step>
             <step id="D-AVRO-Event">
-                <cmd>For Avro data, on the <wintitle>Avro</wintitle> tab, configure the following
-                    properties:</cmd>
+                <cmd>For Avro data, on the <wintitle>Data Format</wintitle> tab, configure the
+                    following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_o1j_7nd_9t">
                         <tgroup cols="2">
@@ -2393,7 +2380,8 @@
                                             Registry:<ul id="ul_t62_m3g_lx">
                                             <li>Subject - Look up the specified Avro schema
                                                 subject.</li>
-                                            <li>Schema ID - Look up the specified Avro schema ID. </li>
+                                            <li>Schema ID - Look up the specified Avro schema ID.
+                                            </li>
                                         </ul></entry>
                                 </row>
                                 <row>
@@ -2436,8 +2424,8 @@
                 </cmd>
             </step>
             <step id="D-AVRO-File">
-                <cmd>For Avro data, on the <wintitle>Avro</wintitle> tab, configure the following
-                    properties:</cmd>
+                <cmd>For Avro data, on the <wintitle>Data Format</wintitle> tab, configure the
+                    following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_o7j_3nd_9t">
                         <tgroup cols="2">
@@ -2494,7 +2482,8 @@
                                             Registry:<ul id="ul_t38_m6g_lx">
                                             <li>Subject - Look up the specified Avro schema
                                                 subject.</li>
-                                            <li>Schema ID - Look up the specified Avro schema ID. </li>
+                                            <li>Schema ID - Look up the specified Avro schema ID.
+                                            </li>
                                         </ul></entry>
                                 </row>
                                 <row>
@@ -2515,8 +2504,8 @@
                                 <row>
                                     <entry>Avro Compression Codec</entry>
                                     <entry>The Avro compression type to use. <p>When using Avro
-                                        compression, do not enable other compression available
-                                        in the destination. </p></entry>
+                                            compression, do not enable other compression available
+                                            in the destination. </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -2531,8 +2520,8 @@
                 </cmd>
             </step>
             <step id="D-AVRO-Mess">
-                <cmd>For Avro data, on the <wintitle>Avro</wintitle> tab, configure the following
-                    properties:</cmd>
+                <cmd>For Avro data, on the <wintitle>Data Format</wintitle> tab, configure the
+                    following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_o2j_4nd_3t">
                         <tgroup cols="2">
@@ -2588,7 +2577,8 @@
                                             Registry:<ul id="ul_t54_m2g_lx">
                                             <li>Subject - Look up the specified Avro schema
                                                 subject.</li>
-                                            <li>Schema ID - Look up the specified Avro schema ID. </li>
+                                            <li>Schema ID - Look up the specified Avro schema ID.
+                                            </li>
                                         </ul></entry>
                                 </row>
                                 <row>
@@ -2631,8 +2621,8 @@
                 </cmd>
             </step>
             <step id="D-AVRO-KAFKA">
-                <cmd>For Avro data, on the <wintitle>Avro</wintitle> tab, configure the following
-                    properties:</cmd>
+                <cmd>For Avro data, on the <wintitle>Data Format</wintitle> tab, configure the
+                    following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_o9j_2nd_7t">
                         <tgroup cols="2">
@@ -2665,9 +2655,9 @@
                                 <row>
                                     <entry>Avro Schema</entry>
                                     <entry>Avro schema definition used to write the data. <p>You can
-                                        optionally use the runtime:loadResource function to use
-                                        a schema definition stored in a runtime resource file.
-                                    </p></entry>
+                                            optionally use the runtime:loadResource function to use
+                                            a schema definition stored in a runtime resource file.
+                                        </p></entry>
                                 </row>
                                 <row>
                                     <entry>Register Schema</entry>
@@ -2675,7 +2665,7 @@
                                         Schema Registry.</entry>
                                 </row>
                                 <row>
-                                    <entry>Schema Registry URLs  </entry>
+                                    <entry>Schema Registry URLs </entry>
                                     <entry>Confluent Schema Registry URLs used to look up the schema
                                         or to register a new schema. To add a URL, click
                                             <uicontrol>Add</uicontrol>. Use the following format to
@@ -2688,7 +2678,8 @@
                                             Registry:<ul id="ul_t93_m5g_lx">
                                             <li>Subject - Look up the specified Avro schema
                                                 subject.</li>
-                                            <li>Schema ID - Look up the specified Avro schema ID. </li>
+                                            <li>Schema ID - Look up the specified Avro schema ID.
+                                            </li>
                                         </ul></entry>
                                 </row>
                                 <row>
@@ -2716,8 +2707,8 @@
                                 <row>
                                     <entry>Avro Compression Codec</entry>
                                     <entry>The Avro compression type to use. <p>When using Avro
-                                        compression, do not enable other compression available
-                                        in the destination. </p></entry>
+                                            compression, do not enable other compression available
+                                            in the destination. </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -2731,7 +2722,7 @@
                 </cmd>
             </step>
             <step id="D-Binary">
-                <cmd>For binary data, on the <wintitle>Binary</wintitle> tab, configure the
+                <cmd>For binary data, on the <wintitle>Data Format</wintitle> tab, configure the
                     following property:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_xct_mbm_gt">
@@ -2762,7 +2753,7 @@
                 </cmd>
             </step>
             <step id="DelimProps">
-                <cmd>For delimited data, on the <wintitle>Delimited</wintitle> tab, configure the
+                <cmd>For delimited data, on the <wintitle>Data Format</wintitle> tab, configure the
                     following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_wb3_2kg_br">
@@ -2840,8 +2831,8 @@
                 </cmd>
             </step>
             <step id="JSONProps">
-                <cmd>For JSON data, on the <uicontrol>JSON</uicontrol> tab, configure the following
-                    property:</cmd>
+                <cmd>For JSON data, on the <wintitle>Data Format</wintitle> tab, configure the
+                    following property:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_lgq_53c_wr">
                         <tgroup cols="2">
@@ -2879,7 +2870,7 @@
                 </cmd>
             </step>
             <step id="D-PROTO-props">
-                <cmd>For protobuf data, on the <wintitle>Protobuf</wintitle> tab, configure the
+                <cmd>For protobuf data, on the <wintitle>Data Format</wintitle> tab, configure the
                     following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_vmt_tdp_45">
@@ -2927,8 +2918,8 @@
                 </cmd>
             </step>
             <step id="TextProps">
-                <cmd>For text data, on the <uicontrol>Text</uicontrol> tab, configure the following
-                    properties:</cmd>
+                <cmd>For text data, on the <wintitle>Data Format</wintitle> tab, configure the
+                    following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_egv_3df_jr">
                         <tgroup cols="2">
@@ -2973,7 +2964,7 @@
                 </info>
             </step>
             <step id="D-WholeFile_props">
-                <cmd>For whole files, on the <wintitle>Whole File</wintitle> tab, configure the
+                <cmd>For whole files, on the <wintitle>Data Format</wintitle> tab, configure the
                     following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_amd_xml_zw">
@@ -3082,8 +3073,8 @@
                                 </row>
                                 <row id="row-DataFormat">
                                     <entry>Data Format</entry>
-                                    <entry>Format of data to be written. Use one of the following
-                                            options:<ul id="ul_vzp_dd1_s5">
+                                    <entry id="entry-HDFSdataformat">Format of data to be written.
+                                        Use one of the following options:<ul id="ul_vzp_dd1_s5">
                                             <li>Avro</li>
                                             <li>Binary</li>
                                             <li>Delimited</li>
@@ -3605,21 +3596,6 @@
                                                   href="Reusable_Topics/Kafka-EnablingSecurity.dita"
                                                 />.</p></entry>
                                     </row>
-                                    <row id="KP-DataFormats">
-                                        <entry>Data Format</entry>
-                                        <entry>Data format for messages:<ul id="ul_wlj_353_br">
-                                                <li>Avro</li>
-                                                <li>Binary</li>
-                                                <li>Delimited</li>
-                                                <li>JSON</li>
-                                                <li>Protobuf</li>
-                                                <li>SDC Record <xref
-                                                  href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
-                                                  <image href="../Graphics/icon_moreInfo.png"
-                                                  scale="10" id="image_ucp_chr_br"/></xref></li>
-                                                <li>Text</li>
-                                            </ul></entry>
-                                    </row>
                                     <row
                                         conref="ReusableTables.dita#concept_wfr_rnw_yq/D-CHARSET-other">
                                         <entry/>
@@ -3710,10 +3686,6 @@
                                             values as expected by MapR.</p><p>You can use MapR
                                             Streams properties and set of Kafka properties supported
                                             by MapR Streams. </p></entry>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/KP-DataFormats">
-                                    <entry/>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-CHARSET-other">
