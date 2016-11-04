@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
+import com.codahale.metrics.Gauge;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.BatchMaker;
@@ -57,6 +58,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Queue;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
+
 
 public class TableJdbcSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(TableJdbcSource.class);
@@ -71,6 +74,10 @@ public class TableJdbcSource extends BaseSource {
   private static final String ORDER_BY_CLAUSE = " order by %s";
   private static final String PARTITION_NAME_VALUE = "%s=%s";
 
+  static final String CURRENT_TABLE = "Current Table";
+  static final String TABLE_COUNT = "Table Count";
+  static final String TABLE_METRICS = "Table Metrics";
+
   private final HikariPoolConfigBean hikariConfigBean;
   private final CommonSourceConfigBean commonSourceConfigBean;
   private final TableJdbcConfigBean tableJdbcConfigBean;
@@ -82,6 +89,8 @@ public class TableJdbcSource extends BaseSource {
   private Connection connection = null;
   private HikariDataSource hikariDataSource;
   private long lastQueryIntervalTime;
+
+  private final ConcurrentHashMap<String, Object> gaugeMap;
 
   private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
@@ -96,6 +105,7 @@ public class TableJdbcSource extends BaseSource {
     lastQueryIntervalTime = -1;
     driverProperties.putAll(hikariConfigBean.driverProperties);
     tableQueue = new LinkedList<>();
+    gaugeMap = new ConcurrentHashMap<>();
   }
 
   private static String logErrorAndCloseConnection(Connection connection, SQLException e) {
@@ -194,6 +204,14 @@ public class TableJdbcSource extends BaseSource {
         }
         issues.add(context.createConfigIssue(Groups.JDBC.name(), TableJdbcConfigBean.TABLE_CONFIG, e.getErrorCode(), e.getParams()));
       }
+      gaugeMap.put(TABLE_COUNT, orderedTables.size());
+      gaugeMap.put(CURRENT_TABLE, "");
+      context.createGauge(TABLE_METRICS, new Gauge<Map<String, Object>>() {
+        @Override
+        public Map<String, Object> getValue() {
+          return gaugeMap;
+        }
+      });
     }
   }
 
@@ -261,6 +279,12 @@ public class TableJdbcSource extends BaseSource {
 
             batchMaker.addRecord(record);
             offsets.put(tableContext.getTableName(), partitionNameValue);
+            if (recordCount == 0) {
+              gaugeMap.put(
+                  CURRENT_TABLE,
+                  TableContextUtil.getQualifiedTableName(tableContext.getSchema(), tableContext.getTableName())
+              );
+            }
             recordCount++;
           }
         } finally {

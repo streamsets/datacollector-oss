@@ -35,6 +35,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BasicIT extends BaseTableJdbcSourceIT {
   private static final String SPORTS_STARS_INSERT_TEMPLATE = "INSERT into TEST.%s values (%s, '%s', '%s');";
@@ -288,6 +289,39 @@ public class BasicIT extends BaseTableJdbcSourceIT {
       Assert.assertEquals(5, records.size());
       checkRecords(EXPECTED_TENNIS_STARS_RECORDS.subList(10, 15), records);
 
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testMetrics() throws Exception {
+    //With a '%' regex which has to select both tables.
+    TableConfigBean tableConfigBean = new TableConfigBean();
+    tableConfigBean.tablePattern = "%";
+    tableConfigBean.schema = database;
+
+    TableJdbcSource tableJdbcSource = new TableJdbcSource(
+        TestTableJdbcSource.createHikariPoolConfigBean(JDBC_URL, USER_NAME, PASSWORD),
+        TestTableJdbcSource.createCommonSourceConfigBean(1, 1000, 1000, 1000),
+        TestTableJdbcSource.createPartitionableConfigBean(ImmutableList.of(tableConfigBean), false, -1)
+    );
+
+    SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
+        .addOutputLane("a").build();
+    runner.runInit();
+    Stage.Context context = runner.getContext();
+    try {
+      Map<String, Object> gaugeMap = (Map<String, Object>)context.getGauge(TableJdbcSource.TABLE_METRICS).getValue();
+      Integer numberOfTables = (int)gaugeMap.get(TableJdbcSource.TABLE_COUNT);
+      Assert.assertEquals(2, numberOfTables.intValue());
+
+      StageRunner.Output output = runner.runProduce("", 1000);
+      Assert.assertEquals("TEST.CRICKET_STARS", gaugeMap.get(TableJdbcSource.CURRENT_TABLE));
+
+      runner.runProduce(output.getNewOffset(), 1000);
+      Assert.assertEquals("TEST.TENNIS_STARS", gaugeMap.get(TableJdbcSource.CURRENT_TABLE));
     } finally {
       runner.runDestroy();
     }
