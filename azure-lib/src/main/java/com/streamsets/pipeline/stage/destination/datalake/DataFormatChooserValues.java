@@ -27,10 +27,10 @@ public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
 
   public DataFormatChooserValues() {
     super(
-        DataFormat.TEXT,
-        DataFormat.JSON,
-        DataFormat.AVRO,
-        DataFormat.DELIMITED
+      DataFormat.AVRO,
+      DataFormat.DELIMITED,
+      DataFormat.JSON,
+      DataFormat.TEXT
     );
   }
 }

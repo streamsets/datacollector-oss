@@ -26,13 +26,13 @@ public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
 
   public DataFormatChooserValues() {
     super(
-      DataFormat.TEXT,
-      DataFormat.JSON,
       DataFormat.AVRO,
-      DataFormat.DELIMITED,
-      DataFormat.SDC_JSON,
       DataFormat.BINARY,
+      DataFormat.DELIMITED,
+      DataFormat.JSON,
       DataFormat.PROTOBUF,
+      DataFormat.SDC_JSON,
+      DataFormat.TEXT,
       DataFormat.WHOLE_FILE
     );
   }

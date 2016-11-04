@@ -27,13 +27,13 @@ public class ProducerDataFormatChooserValues extends BaseEnumChooserValues<DataF
 
   public ProducerDataFormatChooserValues() {
     super(
-        DataFormat.SDC_JSON,
-        DataFormat.TEXT,
-        DataFormat.JSON,
-        DataFormat.DELIMITED,
-        DataFormat.AVRO,
-        DataFormat.BINARY,
-        DataFormat.PROTOBUF
+      DataFormat.AVRO,
+      DataFormat.BINARY,
+      DataFormat.DELIMITED,
+      DataFormat.JSON,
+      DataFormat.PROTOBUF,
+      DataFormat.SDC_JSON,
+      DataFormat.TEXT
     );
   }
 
