@@ -1,4 +1,14 @@
 <section class="pipeline-list-view">
+  <div class="alert alert-info"  ng-if="header.customRepoUrl">
+    <ul class="properties clearfix">
+      <li>
+        <span class="properties-label">{{'packageManager.customRepoUrl.repoUrl' | translate}}: </span>
+        <span class="properties-value">
+                <a href="{{header.customRepoUrl}}" target="_blank">{{header.customRepoUrl}}</a>
+              </span>
+      </li>
+    </ul>
+  </div>
   <div class="list-content">
     <ul class="list-group checked-list-box">
 
@@ -91,14 +101,20 @@
 
       </li>
 
-      <li class="list-group-item center-align" ng-if="filteredStageLibraries.length === 0">
+      <li class="list-group-item center-align" ng-if="filteredStageLibraries.length === 0 && !fetching">
         <span translate="packageManager.noStageLibrary"></span>
       </li>
 
-      <li class="list-group-item center-align" ng-if="limit < filteredStageLibraries.length">
+      <li class="list-group-item center-align" ng-if="limit < filteredStageLibraries.length && !fetching">
         <a class="btn btn-default"
            ng-click="onShowMoreClick($event);">{{'global.form.showMore' | translate}}</a>
       </li>
+
+
+      <div class="stage-libraries-loading">
+        <div class="pipeline-home-loading" show-loading="fetching"></div>
+      </div>
+
 
     </ul>
 

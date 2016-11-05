@@ -53,6 +53,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -78,7 +79,7 @@ public class StageLibraryResource {
   private static final String STAGE_LIB_PREFIX = "stage-lib.";
   private static final String NIGHTLY_URL = "http://nightly.streamsets.com/datacollector/";
   private static final String ARCHIVES_URL = "http://archives.streamsets.com/datacollector/";
-  private static final String STAGE_LIB_MANIFEST_PATH = "/tarball/stage-lib-manifest.properties";
+  private static final String STAGE_LIB_MANIFEST_PATH = "stage-lib-manifest.properties";
   private static final String LATEST = "latest";
   private static final String SNAPSHOT = "-SNAPSHOT";
   private static final String REPO_URL = "REPO_URL";
@@ -180,45 +181,73 @@ public class StageLibraryResource {
       authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
-  public Response getLibraries() throws IOException {
+  public Response getLibraries(
+      @QueryParam("repoUrl") String repoUrl,
+      @QueryParam("installedOnly") boolean installedOnly
+  ) throws IOException {
+    List<StageLibraryJson> installedLibraries = new ArrayList<>();
     List<StageLibraryJson> libraries = new ArrayList<>();
-    Response response = null;
-    String version = buildInfo.getVersion();
-    String url = ARCHIVES_URL + version + STAGE_LIB_MANIFEST_PATH;
-    if (version.contains(SNAPSHOT)) {
-      url = NIGHTLY_URL + LATEST + STAGE_LIB_MANIFEST_PATH;
-    }
-    try {
-      List<StageDefinition> stageDefinitions = stageLibrary.getStages();
-      Map<String, Boolean> installedLibraries = new HashMap<>();
-      for(StageDefinition stageDefinition: stageDefinitions) {
-        installedLibraries.put(stageDefinition.getLibrary(), true);
+
+    List<StageDefinition> stageDefinitions = stageLibrary.getStages();
+    Map<String, Boolean> installedLibrariesMap = new HashMap<>();
+    for(StageDefinition stageDefinition: stageDefinitions) {
+      if (!installedLibrariesMap.containsKey(stageDefinition.getLibrary())) {
+        installedLibrariesMap.put(stageDefinition.getLibrary(), true);
+        installedLibraries.add(new StageLibraryJson(
+            stageDefinition.getLibrary(),
+            stageDefinition.getLibraryLabel(),
+            true
+        ));
       }
+    }
 
-      response = ClientBuilder.newClient()
-          .target(url)
-          .request()
-          .get();
+    if (!installedOnly) {
+      if (repoUrl == null || repoUrl.isEmpty()) {
+        String version = buildInfo.getVersion();
+        repoUrl = ARCHIVES_URL + version + TARBALL_PATH;
+        if (version.contains(SNAPSHOT)) {
+          repoUrl = NIGHTLY_URL + LATEST + TARBALL_PATH;
+        }
+      } else if (!repoUrl.endsWith("/")) {
+        repoUrl = repoUrl + "/";
+      }
+      String url = repoUrl + STAGE_LIB_MANIFEST_PATH;
 
-      InputStream inputStream =  response.readEntity(InputStream.class);
-      Properties properties = new Properties();
-      properties.load(inputStream);
+      Response response = null;
+      try {
+        response = ClientBuilder.newClient()
+            .target(url)
+            .request()
+            .get();
 
-      for (final String name: properties.stringPropertyNames()) {
-        if (name.startsWith(STAGE_LIB_PREFIX)) {
-          String libraryId = name.replace(STAGE_LIB_PREFIX, "");
-          libraries.add(
-              new StageLibraryJson(libraryId, properties.getProperty(name), installedLibraries.containsKey(libraryId))
-          );
+        InputStream inputStream =  response.readEntity(InputStream.class);
+        Properties properties = new Properties();
+        properties.load(inputStream);
+
+        for (final String name: properties.stringPropertyNames()) {
+          if (name.startsWith(STAGE_LIB_PREFIX)) {
+            String libraryId = name.replace(STAGE_LIB_PREFIX, "");
+            libraries.add(new StageLibraryJson(
+                libraryId,
+                properties.getProperty(name),
+                installedLibrariesMap.containsKey(libraryId)
+            ));
+          }
+        }
+      } finally {
+        if (response != null) {
+          response.close();
         }
       }
-
-    } finally {
-      if (response != null) {
-        response.close();
-      }
+    } else {
+      libraries = installedLibraries;
     }
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(libraries).header(REPO_URL, url).build();
+
+    return Response.ok()
+        .type(MediaType.APPLICATION_JSON)
+        .entity(libraries)
+        .header(REPO_URL, repoUrl)
+        .build();
   }
 
   @POST
@@ -228,6 +257,7 @@ public class StageLibraryResource {
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
   public Response installLibraries(
+      @QueryParam("repoUrl") String repoUrl,
       List<String> libraryList
   ) throws IOException {
     String runtimeDir = runtimeInfo.getRuntimeDir();
@@ -235,12 +265,17 @@ public class StageLibraryResource {
 
     for (String libraryId : libraryList) {
       Response response = null;
-      String tarFileURL = ARCHIVES_URL + version + TARBALL_PATH + libraryId + "-" + version + TGZ_FILE_EXTENSION;
 
-      if (version.contains(SNAPSHOT)) {
-        tarFileURL = NIGHTLY_URL + LATEST + TARBALL_PATH + libraryId + "-" + version + TGZ_FILE_EXTENSION;
+      if (repoUrl == null || repoUrl.isEmpty()) {
+        repoUrl = ARCHIVES_URL + version + TARBALL_PATH;
+        if (version.contains(SNAPSHOT)) {
+          repoUrl = NIGHTLY_URL + LATEST + TARBALL_PATH;
+        }
+      } else if (!repoUrl.endsWith("/")) {
+        repoUrl = repoUrl + "/";
       }
 
+      String tarFileURL = repoUrl + libraryId + "-" + version + TGZ_FILE_EXTENSION;
       try {
         response = ClientBuilder.newClient()
             .target(tarFileURL)

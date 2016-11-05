@@ -269,8 +269,13 @@ angular.module('dataCollectorApp.common')
        *
        * @returns {*}
        */
-      getLibraries: function() {
-        var url = apiBase + '/stageLibraries/list';
+      getLibraries: function(repoUrl, installedOnly) {
+        var url = apiBase + '/stageLibraries/list?installedOnly=' + !!installedOnly;
+
+        if (repoUrl) {
+          url += '&repoUrl=' + repoUrl;
+        }
+
         return $http({
           method: 'GET',
           url: url
@@ -282,8 +287,12 @@ angular.module('dataCollectorApp.common')
        *
        * @returns {*}
        */
-      installLibraries: function(libraryList) {
+      installLibraries: function(repoUrl, libraryList) {
         var url = apiBase + '/stageLibraries/install';
+        if (repoUrl) {
+          url += '?repoUrl=' + repoUrl;
+        }
+
         return $http({
           method: 'POST',
           url: url,

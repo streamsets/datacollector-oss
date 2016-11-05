@@ -16,7 +16,7 @@
           <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
           <ng-include src="'app/home/packageManager/package_manager_list_view.tpl.html'"></ng-include>
 
-          <ul class="properties clearfix" ng-if="stageLibraries.length === filteredStageLibraries.length">
+          <ul class="properties clearfix" ng-if="stageLibraries.length === filteredStageLibraries.length && manifestURL">
             <li class="pull-right">
               <span class="properties-label">{{'packageManager.manifestURL' | translate}}: </span>
               <span class="properties-value">

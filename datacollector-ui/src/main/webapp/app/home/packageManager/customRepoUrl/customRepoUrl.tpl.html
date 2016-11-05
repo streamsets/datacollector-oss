@@ -1,0 +1,30 @@
+<div class="modal-header">
+  <h3 class="modal-title" translate="packageManager.customRepoUrl.title">Configure Custom Repo URL</h3>
+</div>
+<div class="modal-body package-manager-modal-body">
+  <div class="form-group">
+    <label class="control-label" translate="packageManager.customRepoUrl.repoUrl">Custom Repo URL</label>
+    <i class="fa fa-info-circle help-icon"
+       popover-placement="right"
+       popover-append-to-body="false"
+       popover="{{'packageManager.customRepoUrl.urlValidation' | translate}}"
+       popover-trigger="mouseenter"></i>
+    <input type="text"
+           autofocus
+           name="name"
+           autocomplete="off"
+           class="form-control"
+           title="{{'packageManager.customRepoUrl.repoUrl' | translate}}"
+           placeholder="{{'packageManager.customRepoUrl.repoUrl' | translate}}"
+           ng-model="repoUrl"
+           focus-me="true">
+  </div>
+
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" ng-click="cancel()"
+          translate="global.form.cancel">Cancel</button>
+
+  <button ng-click="save()" class="btn btn-primary"
+          translate="global.form.save">Save</button>
+</div>

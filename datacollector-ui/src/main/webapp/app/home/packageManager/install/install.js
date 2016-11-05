@@ -25,7 +25,7 @@
 angular
   .module('dataCollectorApp.home')
   .controller('InstallModalInstanceController',
-      function ($scope, $rootScope, $modalInstance, libraryList, api, pipelineConstant) {
+      function ($scope, $rootScope, $modalInstance, customRepoUrl, libraryList, api, pipelineConstant) {
     angular.extend($scope, {
       common: {
         errors: []
@@ -46,7 +46,7 @@ angular
             library = librariesToInstall[0];
 
         $scope.operationStatusMap[library.id] = 'installing';
-        api.pipelineAgent.installLibraries(_.pluck(librariesToInstall, 'id'))
+        api.pipelineAgent.installLibraries(customRepoUrl, _.pluck(librariesToInstall, 'id'))
             .success(function () {
 
               library.installed = true;

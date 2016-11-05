@@ -40,22 +40,14 @@ angular
       });
   }])
   .controller('PackageManagerController', function ($scope, $rootScope, $routeParams, $q, $modal, $location,
-                                                    pipelineService, api, configuration, pipelineConstant, Analytics,
-                                                    $route, $translate) {
+                                                    pipelineService, api, configuration, pipelineConstant, Analytics) {
     $location.search('auth_token', null);
     $location.search('auth_user', null);
-
-    if($routeParams.errors) {
-      $rootScope.common.errors = [$routeParams.errors];
-      //$location.search('errors', null);
-    } else {
-      $rootScope.common.errors = [];
-    }
+    $rootScope.common.errors = [];
 
     var pipelinesLimit = 60;
 
     angular.extend($scope, {
-      loaded: false,
       navigationItems: [
         'All Stage Libraries',
         'Installed Stage Libraries',
@@ -71,7 +63,7 @@ angular
       stageLibraries: [],
       filteredStageLibraries: [],
       header: {
-        pipelineGridView: $rootScope.$storage.pipelineListState.gridView,
+        customRepoUrl: $rootScope.$storage.customPackageManagerRepoUrl,
         sortColumn: 'label',
         sortReverse: false,
         searchInput: ''
@@ -84,6 +76,7 @@ angular
       limit: pipelinesLimit,
       manifestURL: '',
       isManagedByClouderaManager: false,
+      fetching: true,
 
       toggleLibraryPanel: function () {
         $scope.hideLibraryPanel = !$scope.hideLibraryPanel;
@@ -261,35 +254,66 @@ angular
           1
         );
         uninstallStageLibraries([stageLibrary]);
+      },
+
+      /**
+       * Callback function when on Custom Repo URL menu item click
+       */
+      onCustomRepoURLClick: function() {
+        updateCustomRepoUrl();
       }
 
     });
 
-    if (window.navigator.onLine) {
-      $q.all([
-        api.pipelineAgent.getLibraries(),
-        configuration.init()
-      ]).then(
-        function (results) {
-          $scope.loaded = true;
-          $scope.stageLibraries = results[0].data;
-          $scope.manifestURL = results[0].headers('REPO_URL');
-
-          $scope.updateStageLibraryList();
-
-          if(configuration.isAnalyticsEnabled()) {
-            Analytics.trackPage('/collector/packageManager');
-          }
-
-          $scope.isManagedByClouderaManager = configuration.isManagedByClouderaManager();
-        },
-        function (res) {
-          $scope.loaded = true;
-          $rootScope.common.errors = [res.data];
+    $q.all([
+      configuration.init()
+    ]).then(
+      function (results) {
+        if(configuration.isAnalyticsEnabled()) {
+          Analytics.trackPage('/collector/packageManager');
         }
-      );
+        $scope.isManagedByClouderaManager = configuration.isManagedByClouderaManager();
+      },
+      function (res) {
+        $rootScope.common.errors = [res.data];
+      }
+    );
+
+    var getLibraries = function(repoUrl, installedOnly) {
+      $scope.fetching = true;
+      $scope.stageLibraries = [];
+        api.pipelineAgent.getLibraries(repoUrl, installedOnly)
+        .then(
+          function (res) {
+            $scope.fetching = false;
+            $scope.stageLibraries = res.data;
+            $scope.manifestURL = res.headers('REPO_URL');
+            $scope.updateStageLibraryList();
+          },
+          function (res) {
+            $rootScope.common.errors = [res.data];
+
+            // Fetch only locally installed libraries
+            api.pipelineAgent.getLibraries(repoUrl, true)
+              .then(
+                function (res) {
+                  $scope.fetching = false;
+                  $scope.stageLibraries = res.data;
+                  $scope.updateStageLibraryList();
+                },
+                function (res) {
+                  $rootScope.common.errors = [res.data];
+                }
+              );
+          }
+        );
+    };
+
+    if (window.navigator.onLine) {
+      getLibraries($scope.header.customRepoUrl, false);
     } else {
       $rootScope.common.errors = ['Unable to connect to the Internet'];
+      getLibraries(null, true);
     }
 
     var pipelineGridViewWatchListener = $scope.$watch('header.pipelineGridView', function() {
@@ -309,6 +333,9 @@ angular
         size: '',
         backdrop: 'static',
         resolve: {
+          customRepoUrl: function () {
+            return $scope.header.customRepoUrl;
+          },
           libraryList: function () {
             return libraryList;
           }
@@ -338,6 +365,27 @@ angular
             1
           );
         });
+      }, function () {
+      });
+    };
+
+
+    var updateCustomRepoUrl= function() {
+      var modalInstance = $modal.open({
+        templateUrl: 'app/home/packageManager/customRepoUrl/customRepoUrl.tpl.html',
+        controller: 'CustomRepoUrlInstanceController',
+        size: '',
+        backdrop: 'static',
+        resolve: {
+          customRepoUrl: function () {
+            return $scope.header.customRepoUrl;
+          }
+        }
+      });
+      modalInstance.result.then(function(repoUrl) {
+        $scope.header.customRepoUrl = $rootScope.$storage.customPackageManagerRepoUrl = repoUrl;
+        console.log(repoUrl);
+        getLibraries($scope.header.customRepoUrl, false);
       }, function () {
       });
     };

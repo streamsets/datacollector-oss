@@ -709,7 +709,13 @@
     "TIMER_MEAN_RATE" : "Mean Rate"
   },
   "packageManager": {
+    "customRepoUrl": {
+      "title": "Configure Custom Repo URL",
+      "repoUrl": "Custom Repo URL",
+      "urlValidation": ""
+    },
     "header": {
+      "customRepoUrl": "Custom Repo Url",
       "install": "Install",
       "uninstall": "Uninstall"
     },
