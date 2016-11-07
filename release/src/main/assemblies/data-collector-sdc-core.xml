@@ -49,9 +49,6 @@
       <outputDirectory>/</outputDirectory>
       <includes>
         <include>streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-basic-lib/**</include>
-        <include>streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-jython_2_7-lib/**</include>
-        <include>streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-groovy_2_4-lib/**</include>
-        <include>streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-stats-lib/**</include>
       </includes>
     </fileSet>
 

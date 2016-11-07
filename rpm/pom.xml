@@ -96,28 +96,6 @@
                   </sources>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-groovy_2_4-lib</directory>
-                  <filemode>755</filemode>
-                  <username>root</username>
-                  <groupname>root</groupname>
-                  <sources>
-                    <source>
-                      <location>${sdc.distroot}/streamsets-libs/streamsets-datacollector-groovy_2_4-lib</location>
-                    </source>
-                  </sources>
-                </mapping>
-                <mapping>
-                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-jython_2_7-lib</directory>
-                  <filemode>755</filemode>
-                  <username>root</username>
-                  <groupname>root</groupname>
-                  <sources>
-                    <source>
-                      <location>${sdc.distroot}/streamsets-libs/streamsets-datacollector-jython_2_7-lib</location>
-                    </source>
-                  </sources>
-                </mapping>
-                <mapping>
                   <directory>${sdc.dir}/api-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
