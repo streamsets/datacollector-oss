@@ -87,18 +87,22 @@ import static org.apache.commons.lang.StringUtils.isEmpty;
 public class DataGeneratorFormatConfig implements DataFormatConfig{
   private static final Logger LOG = LoggerFactory.getLogger(DataGeneratorFormatConfig.class);
 
+  /* Charset Related -- Shown last */
+
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.MODEL,
     defaultValue = "UTF-8",
     label = "Charset",
-    displayPosition = 300,
+    displayPosition = 1000,
     group = "DATA_FORMAT",
     dependsOn = "dataFormat^",
     triggeredByValue = {"TEXT", "JSON", "DELIMITED"}
   )
   @ValueChooserModel(CharsetChooserValues.class)
   public String charset;
+
+  /* End Charset Related */
 
   /** For DELIMITED Content **/
 

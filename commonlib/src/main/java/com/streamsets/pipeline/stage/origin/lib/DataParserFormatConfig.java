@@ -99,12 +99,28 @@ public class DataParserFormatConfig implements DataFormatConfig {
   private LogDataFormatValidator logDataFormatValidator;
   private DataParserFactory parserFactory;
 
+  /* Compression always shown immediately after Data Format */
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      description = "Compression formats gzip, bzip2, xz, lzma, Pack200, DEFLATE and Z are supported. " +
+          "Archive formats 7z, ar, arj, cpio, dump, tar and zip are supported.",
+      defaultValue = "NONE",
+      label = "Compression Format",
+      displayPosition = 2,
+      group = "DATA_FORMAT"
+  )
+  @ValueChooserModel(CompressionChooserValues.class)
+  public Compression compression = Compression.NONE;
+
+  /* Charset Related -- Shown last */
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "UTF-8",
       label = "Charset",
-      displayPosition = 300,
+      displayPosition = 999,
       group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
       triggeredByValue = {"TEXT", "JSON", "DELIMITED", "XML", "LOG", "DATAGRAM"}
@@ -118,23 +134,12 @@ public class DataParserFormatConfig implements DataFormatConfig {
       defaultValue = "false",
       label = "Ignore Control Characters",
       description = "Use only if required as it impacts reading performance",
-      displayPosition = 310,
+      displayPosition = 1000,
       group = "DATA_FORMAT"
   )
   public boolean removeCtrlChars = false;
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      description = "Compression formats gzip, bzip2, xz, lzma, Pack200, DEFLATE and Z are supported. " +
-          "Archive formats 7z, ar, arj, cpio, dump, tar and zip are supported.",
-      defaultValue = "NONE",
-      label = "Compression Format",
-      displayPosition = 320,
-      group = "DATA_FORMAT"
-  )
-  @ValueChooserModel(CompressionChooserValues.class)
-  public Compression compression = Compression.NONE;
+  /* End Charset Related */
 
   @ConfigDef(
       required = true,
