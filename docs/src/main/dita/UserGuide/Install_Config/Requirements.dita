@@ -54,7 +54,7 @@
           </row>
           <row>
             <entry>File descriptors</entry>
-            <entry>8192</entry>
+            <entry>32768</entry>
           </row>
           <row>
             <entry>Java</entry>
