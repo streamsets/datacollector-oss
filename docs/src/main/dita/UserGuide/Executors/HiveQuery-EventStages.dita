@@ -17,10 +17,10 @@
  <title>Event Generating Stages</title>
  <conbody>
         <p><indexterm>Hive Query executor<indexterm>event generating
-            stages</indexterm></indexterm>Use the Hive Query executor in the event stream in a
-            pipeline. The Hive Query executor is designed to run a Hive or Impala query after
-            receiving an event record. You can use Hive Query executor with any event-generating
-            stage where the logic suits your needs. </p>
+            stages</indexterm></indexterm>Use the Hive Query executor in an event stream. The Hive
+            Query executor is designed to run a Hive or Impala query after receiving an event
+            record. You can use Hive Query executor with any event-generating stage where the logic
+            suits your needs. </p>
         <p>When implementing the Hive Drift Solution with Impala, use the executor to run the
             Invalidate Metadata query after the Hive Metastore destination changes table structures
             and after the Hadoop FS destination writes files to Hive. </p>

@@ -1957,6 +1957,17 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                         Metadata Executor topics:</draft-comment>
             </p>
             <p><ph id="EX-ph-FileSystems">HDFS, MapR FS, or a local file system</ph></p>
+            <p>
+                  <draft-comment author="Loretta">note and ph- <uicontrol>HiveQuery</uicontrol>-
+                        Used in Hive Query overview and Query topics. </draft-comment>
+            </p>
+            <p>
+                  <note id="note-HiveQuery"><ph id="ph-HiveQuery">The Hive Query executor waits for
+                              each query to complete before starting a query for a new event record.
+                              Depending on the speed of the pipeline and the complexity of the
+                              query, the wait for query completion can slow pipeline
+                              performance.</ph></note>
+            </p>
             <draft-comment author="alisontaylor">Note is used in all places where we mention Java 7:
                   Permanent Generation Size and 2 topics in JavaScript Evaluator.</draft-comment>
             <note id="Java7">Java 7 is supported but deprecated. Oracle announced the end of public updates for

@@ -21,12 +21,12 @@
                     Solution<indexterm>implementing Impala Invalidate Metadata
                 queries</indexterm></indexterm>The default query, <codeph>invalidate metadata
                 ${record:attribute('/table')}</codeph>, is an Impala query that you should use when
-            implementing the Hive Drift Solution with Impala. Use the query to process event records
-            from the Hive Metastore destination.</p>
-        <p>When used with the Hive Metastore destination, the destination generates an event record
-            each time it changes a table and places the table name in the "table" record header
-            attribute. When the Hive Query executor receives the event record, it runs the
-            Invalidate Metadata query on the specified table.</p>
+            implementing the Hive Drift Solution with Impala. </p>
+        <p>Use the query to process event records from the Hive Metastore destination. When used
+            with the Hive Metastore destination, the destination generates an event record each time
+            it changes a table and places the table name in the "table" record header attribute.
+            When the Hive Query executor receives the event record, it runs the Invalidate Metadata
+            query on the specified table.</p>
         <p>When implementing the Hive Drift Solution with Impala, you should also use the Hive Query
             executor with the Hadoop FS destination. The Hadoop FS destination writes the file path
             to a "filepath" field in the event record. To use the default query with the Hadoop FS
@@ -36,6 +36,6 @@
         <p>Or, you can skip the Expression Evaluator and use a separate Hive Query executor with the
             Hadoop FS destination with the following query:
                 <codeblock>invalidate metadata ${file:pathElement(record:value('/filepath'), -2)}.${file:removeExtension('file:fileName(record:value('/filepath')')}</codeblock><draft-comment
-                author="Loretta">check these with Jarcec.</draft-comment></p>
+                author="Loretta">Jarcec, please verify the expression? Thanks!</draft-comment></p>
  </conbody>
 </concept>

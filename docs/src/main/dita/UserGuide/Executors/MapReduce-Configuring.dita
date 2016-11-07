@@ -105,9 +105,7 @@
                                         <p>Additional properties to use. </p>
                                         <p>To add properties, click <uicontrol>Add</uicontrol> and
                                             define the property name and value. Use the property
-                                            names and values as expected by HDFS and
-                                                Hive.<draft-comment author="Loretta">HDFS and Hive?
-                                                MapReduce?</draft-comment></p>
+                                            names and values as expected by HDFS or MapR FS.</p>
                                     </entry>
                                 </row>
                                 <row>
@@ -149,22 +147,36 @@
                                     <entry>Name of the job to execute.</entry>
                                 </row>
                                 <row>
-                                    <entry>Job Type</entry>
-                                    <entry>Type of MapReduce job to run.</entry>
+                                    <entry>Job Type <xref href="MapReduce-Jobs.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_ogb_4rk_wx"
+                                        /></xref></entry>
+                                    <entry>Type of MapReduce job to run:<ul id="ul_llg_rrk_wx">
+                                            <li>Custom - Use a custom job creator interface and
+                                                key-value pairs to define the job. </li>
+                                            <li>Configuration Object - Use a job configuration
+                                                object and key-value pairs to define the job.</li>
+                                            <li>Convert Avro to Parquet - Use a predefined Avro to
+                                                Parquet job.</li>
+                                        </ul></entry>
                                 </row>
                                 <row>
                                     <entry>Custom JobCreator</entry>
-                                    <entry>
-                                        <draft-comment author="Loretta">Find out what to say
-                                            here.</draft-comment>
-                                    </entry>
+                                    <entry>MapReduce Job Creator interface to use. <draft-comment
+                                            author="Loretta">Jarcec: correct? Do we need to say
+                                            anything else about this? </draft-comment></entry>
+                                </row>
+                                <row>
+                                    <entry>Configuration Object Location<draft-comment
+                                            author="Loretta">This property isn't in yet - check
+                                            back.</draft-comment></entry>
+                                    <entry>Path to the configuration object to use. </entry>
                                 </row>
                                 <row>
                                     <entry>Job Configuration</entry>
-                                    <entry>
-                                        <draft-comment author="Loretta">ditto. And do we need a
-                                            section on this? </draft-comment>
-                                    </entry>
+                                    <entry>Key-value pairs of configuration properties to define the
+                                        job. Click the <uicontrol>Add</uicontrol> icon to add
+                                        additional properties. </entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -172,8 +184,8 @@
                 </info>
             </step>
             <step>
-                <cmd>When using the Avro to Parquet job, configure the following Avro to Parquet
-                    properties:</cmd>
+                <cmd>To use the Avro to Parquet job, click the <wintitle>Avro to Parquet</wintitle>
+                    tab, and configure the following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_fzs_1py_mx">
                         <tgroup cols="2">

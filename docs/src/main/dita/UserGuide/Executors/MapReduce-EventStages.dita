@@ -18,7 +18,7 @@
  <conbody>
         <p><indexterm>MapReduce executor<indexterm>event source stages</indexterm></indexterm>Use
             the MapReduce executor in the event stream of a pipeline. The MapReduce executor is
-            meant to perform post-processing MapReduce jobs for target files after they are written. </p>
+            meant to start MapReduce jobs after output files are written. </p>
         <p>Use the MapReduce executor perform post-processing for files written by the following
                 destinations:<ul id="ul_l51_mvd_nx">
                 <li>Hadoop FS destination</li>

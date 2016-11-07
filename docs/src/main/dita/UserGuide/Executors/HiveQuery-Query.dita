@@ -17,10 +17,15 @@
  <title>Hive or Impala Query</title>
  <conbody>
         <p><indexterm>Hive Query executor<indexterm>query</indexterm></indexterm>You can use the
-            Hive Query executor to execute any valid Hive or Impala query. In the query, you can use
-            fields or attributes available in the event record passed to the executor. </p>
+            Hive Query executor to execute any valid Hive or Impala query. </p>
+        <p>When possible, avoid using Hive Query executor to run long-running queries. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-HiveQuery"
+            /></p>
+        <p>In the query, you can use fields or attributes available in the event record passed to
+            the executor. For details about event records, see the documentation for the event
+            generating stage.</p>
         <p>
-            <draft-comment author="Loretta">Jarcec: do we want to say anything else here?
+            <draft-comment author="Loretta">Jarcec: do we need to say anything else here?
             </draft-comment>
         </p>
     </conbody>

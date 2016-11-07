@@ -15,11 +15,15 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_jqk_g4y_mx">
  <title>MapReduce Jobs</title>
- <shortdesc>
-        <draft-comment author="Loretta">what do we need to say here? </draft-comment>
-    </shortdesc>
  <conbody>
-  <p>The MapReduce executor can run an Avro to Parquet job or any custom MapReduce job that you want
-            to use. <draft-comment author="Loretta">really? any?</draft-comment></p>
+  <p><indexterm>MapReduce executor<indexterm>MapReduce jobs</indexterm></indexterm>The MapReduce
+            executor can run an Avro to Parquet job or any custom MapReduce job that you want to
+            use. You can use the following methods to create a custom MapReduce job:<ul
+                id="ul_jjg_sqk_wx">
+                <li>Custom JobCreator - You can specify the job creator interface to use, then
+                    define the key-value job details. </li>
+                <li>Custom configuration object - You can specify the configuration object to use,
+                    then define the key value job details. </li>
+            </ul></p>
  </conbody>
 </concept>

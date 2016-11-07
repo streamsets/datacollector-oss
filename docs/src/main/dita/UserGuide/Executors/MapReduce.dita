@@ -18,17 +18,17 @@
  <conbody>
   <p><indexterm>MapReduce
                     executor<indexterm>overview</indexterm></indexterm><indexterm>executors<indexterm>MapReduce</indexterm></indexterm>The
-            MapReduce executor triggers a MapReduce job in HDFS or MapR FS each time it receives an
-            event record. Use the MapReduce executor as part of an event stream in the pipeline.
-                <draft-comment author="Loretta">Jarcec: aay "in HDFS" or HDFS or MapR FS?
-                </draft-comment><draft-comment author="Loretta">Use the MapReduce executor to
-                process files from Hadoop </draft-comment></p>
-        <p>You can use the MapReduce executor to trigger custom jobs that you define in the stage,
-            jobs based on a specified configuration object, or a predefined job that converts Avro
-            files to Parquet. Note that MapReduce executor does not monitor jobs. </p>
+            MapReduce executor starts a MapReduce job in HDFS or MapR FS each time it receives an
+            event record. Use the MapReduce executor as part of an event stream.</p>
+        <p>You can use the MapReduce executor to start a custom job, such as a validation job that
+            compares the number records in files. You can also use MapReduce executor to start a
+            predefined job that converts Avro files to Parquet.</p>
+        <p>Note that MapReduce executor starts jobs. It does not wait for a response or monitor
+            jobs.</p>
         <p>When you configure the MapReduce executor, you specify connection information and job
-            details. When using the Avro to Parquet job, you specify details such as the output file
-            directory and optional compression codec.</p>
+            details. For a custom job, you specify a job creator interface or configuration object,
+            and the key-value pairs to use. For the Avro to Parquet job, you specify details such as
+            the output file directory and optional compression codec.</p>
         <p>You can also configure the executor to generate events for another event stream. For more
             information about event handling, see <xref
                 href="../Event_Handling/EventHandling-Overview.dita#concept_cph_5h4_lx"/>.</p>

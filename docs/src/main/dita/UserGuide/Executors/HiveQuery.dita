@@ -18,16 +18,21 @@
  <conbody>
   <p><indexterm>Hive Query
                     executor<indexterm>overview</indexterm></indexterm><indexterm>executors<indexterm>Hive
-                    Query</indexterm></indexterm>The Hive Query executor connects to HDFS and
+                    Query</indexterm></indexterm>The Hive Query executor connects to Hive and
             performs a user-defined Hive or Impala query each time it receives an event record. Use
             the Hive Query executor as part of an event stream to perform event-driven queries in
             Hive or Impala.</p>
         <p>For example, you can use Hive Query executor to perform the Invalidate Metadata query for
             Impala as part of the Hive Drift Solution. For more information, see <xref
                 href="../Event_Handling/CaseStudy-Impala.dita#concept_szz_xwm_lx"/>.</p>
+        <p>
+            <note
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/note-HiveQuery"
+            />
+        </p>
         <p>When you configure the Hive Query executor, you configure JDBC connection information to
-            Hive, optionally add additional HDFS configuration properties that you want to use, and
-            the Hive or Impala query that you want to run.</p>
+            Hive, optionally add additional HDFS configuration properties to use, and the Hive or
+            Impala query that you want to run.</p>
  </conbody>
     <related-links>
         <link href="../Hive_Drift_Solution/HiveDrift-Overview.dita#concept_phk_bdf_2w"/>
