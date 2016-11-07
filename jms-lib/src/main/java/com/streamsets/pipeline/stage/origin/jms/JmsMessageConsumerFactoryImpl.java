@@ -20,7 +20,7 @@
 package com.streamsets.pipeline.stage.origin.jms;
 
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
-import com.streamsets.pipeline.stage.origin.lib.CredentialsConfig;
+import com.streamsets.pipeline.stage.common.CredentialsConfig;
 
 import javax.jms.ConnectionFactory;
 import javax.naming.InitialContext;

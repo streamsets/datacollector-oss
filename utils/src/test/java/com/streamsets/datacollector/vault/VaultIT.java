@@ -39,6 +39,8 @@ public class VaultIT {
   private static final String VAULT_DEV_ROOT_TOKEN_ID = "root-token";
   private static final String VAULT_DEV_LISTEN_ADDRESS = "0.0.0.0:" + VAULT_PORT;
 
+  private static Vault vault;
+
   @ClassRule
   public static GenericContainer vaultContainer = new GenericContainer("cgswong/vault:" + VAULT_VERSION)
       .withExposedPorts(VAULT_PORT)
@@ -67,16 +69,16 @@ public class VaultIT {
     Configuration sdcProperties = new Configuration();
     sdcProperties.set("vault.addr", conf.getAddress());
     sdcProperties.set("vault.app.id", "foo");
-    Vault.loadRuntimeConfiguration(sdcProperties);
+    vault = new Vault(sdcProperties);
   }
 
   @Test
   public void testToken() throws Exception {
-    assertTrue(Vault.token() != null && !Vault.token().isEmpty());
+    assertTrue(vault.token() != null && !vault.token().isEmpty());
   }
 
   @Test
   public void testRead() throws Exception {
-    assertEquals("world!", Vault.read("secret/hello", "value"));
+    assertEquals("world!", vault.read("secret/hello", "value"));
   }
 }

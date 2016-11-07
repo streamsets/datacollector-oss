@@ -19,7 +19,7 @@
  */
 package com.streamsets.pipeline.lib.jdbc;
 
-import com.streamsets.datacollector.el.VaultEL;
+import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.el.TimeEL;

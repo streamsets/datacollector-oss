@@ -19,7 +19,7 @@
  */
 package com.streamsets.pipeline.stage.origin.omniture;
 
-import com.streamsets.datacollector.el.VaultEL;
+import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 
 public class HttpProxyConfigBean {

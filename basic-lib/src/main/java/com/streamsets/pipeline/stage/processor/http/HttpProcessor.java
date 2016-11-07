@@ -19,7 +19,7 @@
  */
 package com.streamsets.pipeline.stage.processor.http;
 
-import com.streamsets.datacollector.el.VaultEL;
+import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;

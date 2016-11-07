@@ -23,7 +23,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.stage.origin.lib.CredentialsConfig;
+import com.streamsets.pipeline.stage.common.CredentialsConfig;
 
 import java.util.ArrayList;
 import java.util.HashMap;

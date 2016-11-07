@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
-import com.streamsets.pipeline.stage.origin.lib.CredentialsConfig;
+import com.streamsets.pipeline.stage.common.CredentialsConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

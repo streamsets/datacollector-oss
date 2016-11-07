@@ -47,19 +47,29 @@ public class Vault {
   private static final ScheduledExecutorService EXECUTOR = Executors.newSingleThreadScheduledExecutor();
   private static final String VAULT_ADDR = "vault.addr";
 
-  private static String appId;
-  private static String userId = null;
-  private static VaultConfiguration config;
-  private static long leaseExpirationBuffer;
-  private static long authExpirationTime;
-  private static boolean initialized = false;
-  private static long renewalInterval;
+  private String appId;
+  private VaultConfiguration config;
+  private long leaseExpirationBuffer;
+  private long authExpirationTime;
+  private long renewalInterval;
 
-  private Vault() {
+  public Vault(Configuration sdcProperties) {
+    if (!sdcProperties.hasName(VAULT_ADDR) || sdcProperties.get(VAULT_ADDR, "").isEmpty()) {
+      // Vault is disabled.
+      return;
+    }
+    // Initial config that doesn't contain auth token
+    config = parseVaultConfigs(sdcProperties);
+    LOG.debug("Scheduling renewal every '{}' seconds.", renewalInterval);
+    EXECUTOR.scheduleWithFixedDelay(
+        new VaultRenewalTask(LEASES, SECRETS),
+        renewalInterval,
+        renewalInterval,
+        TimeUnit.SECONDS
+    );
   }
 
-  private static class VaultRenewalTask implements Runnable {
-    private static final Logger LOG = LoggerFactory.getLogger(VaultRenewalTask.class);
+  private class VaultRenewalTask implements Runnable {
     private final ConcurrentMap<String, Long> leases;
     private final ConcurrentMap<String, Secret> secrets;
 
@@ -156,10 +166,6 @@ public class Vault {
    * @return String representation of the user-id portion of an auth token.
    */
   static String calculateUserId() {
-    if (userId != null) {
-      return userId;
-    }
-
     try {
       InetAddress ip = InetAddress.getLocalHost();
       NetworkInterface netIf = NetworkInterface.getByInetAddress(ip);
@@ -178,7 +184,7 @@ public class Vault {
    * Returns the current auth token.
    * @return vault token
    */
-  public static String token() {
+  public String token() {
     return getConfig().getToken();
   }
 
@@ -190,7 +196,7 @@ public class Vault {
    * @param key key of the property of the secret represented by the path to return
    * @return value of the specified key for the requested secret.
    */
-  public static String read(String path, String key) {
+  public String read(String path, String key) {
     return read(path, key, 0L);
   }
 
@@ -208,11 +214,7 @@ public class Vault {
    * @param delay delay in milliseconds to wait before returning the value if it wasn't already cached.
    * @return value of the specified key for the requested secret.
    */
-  public static String read(String path, String key, long delay) {
-    if (!initialized) {
-      throw new VaultRuntimeException("Cannot call read() until Vault is initialized.");
-    }
-
+  public String read(String path, String key, long delay) {
     if (!SECRETS.containsKey(path)) {
       VaultClient vault = new VaultClient(getConfig());
       Secret secret;
@@ -244,31 +246,10 @@ public class Vault {
       }
     }
 
-    String value = SECRETS.get(path).getData().get(key).toString();
+    Object secret = SECRETS.get(path).getData().get(key);
+    String value = secret != null ? secret.toString() : "";
     LOG.trace("Retrieved value for key '{}'", key);
     return value;
-  }
-
-  /**
-   * Loads sdc.properties in order to do initialization of the Vault.
-   *
-   * @param sdcProperties Loaded SDC configuration
-   */
-  public static void loadRuntimeConfiguration(Configuration sdcProperties) {
-    if (!sdcProperties.hasName(VAULT_ADDR) || sdcProperties.get(VAULT_ADDR, "").isEmpty()) {
-      // Vault is disabled.
-      return;
-    }
-    // Initial config that doesn't contain auth token
-    config = parseVaultConfigs(sdcProperties);
-    LOG.debug("Scheduling renewal every '{}' seconds.", renewalInterval);
-    EXECUTOR.scheduleWithFixedDelay(
-        new VaultRenewalTask(LEASES, SECRETS),
-        renewalInterval,
-        renewalInterval,
-        TimeUnit.SECONDS
-    );
-    initialized = true;
   }
 
   /**
@@ -277,11 +258,11 @@ public class Vault {
    * @param leaseId a leaseId
    * @return path portion of leaseId
    */
-  private static String getPath(String leaseId) {
+  private String getPath(String leaseId) {
     return leaseId.substring(0, leaseId.lastIndexOf('/') - 1);
   }
 
-  private static VaultConfiguration getConfig() {
+  private VaultConfiguration getConfig() {
     if (authExpirationTime - System.currentTimeMillis() <= 1000) {
       VaultClient vault = new VaultClient(config);
       Secret auth;
@@ -301,7 +282,7 @@ public class Vault {
     return config;
   }
 
-  private static VaultConfiguration parseVaultConfigs(Configuration sdcProperties) {
+  private VaultConfiguration parseVaultConfigs(Configuration sdcProperties) {
     leaseExpirationBuffer = Long.parseLong(sdcProperties.get("vault.lease.expiration.buffer.sec", "120"));
     renewalInterval = Long.parseLong(sdcProperties.get("vault.lease.renewal.interval.sec", "60"));
     appId = sdcProperties.get("vault.app.id", "");

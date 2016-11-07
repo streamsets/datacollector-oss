@@ -19,7 +19,7 @@
  */
 package com.streamsets.pipeline.stage.origin.sdcipc;
 
-import com.streamsets.datacollector.el.VaultEL;
+import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
 

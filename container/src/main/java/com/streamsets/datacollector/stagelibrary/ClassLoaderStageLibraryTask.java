@@ -41,6 +41,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.ext.DataCollectorServices;
 import com.streamsets.pipeline.api.impl.LocaleInContext;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.pool2.BaseKeyedPooledObjectFactory;
@@ -77,6 +78,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private static final String CONFIG_STAGE_ALIAS_PREFIX = "stage.alias.";
 
   private static final Logger LOG = LoggerFactory.getLogger(ClassLoaderStageLibraryTask.class);
+  private static final String VAULT_SERVICE_KEY = "com.streamsets.datacollector.vault";
 
   private final RuntimeInfo runtimeInfo;
   private final Map<String,String> libraryNameAliases;
@@ -270,7 +272,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
     try {
       RuntimeEL.loadRuntimeConfiguration(runtimeInfo);
-      Vault.loadRuntimeConfiguration(configuration);
+      final Vault vault = new Vault(configuration);
+      DataCollectorServices.instance().put(VAULT_SERVICE_KEY, vault);
     } catch (IOException e) {
       throw new RuntimeException(
         Utils.format("Could not load runtime configuration, '{}'", e.toString()), e);

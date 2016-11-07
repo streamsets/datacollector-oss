@@ -20,7 +20,7 @@
 package com.streamsets.pipeline.stage.destination.sdcipc;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.streamsets.datacollector.el.VaultEL;
+import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;

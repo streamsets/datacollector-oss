@@ -23,6 +23,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.streamsets.datacollector.vault.Vault;
+import com.streamsets.datacollector.vault.VaultRuntimeException;
+import com.streamsets.datacollector.vault.api.VaultException;
+import com.streamsets.pipeline.api.ext.DataCollectorServices;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.io.File;
@@ -38,6 +41,8 @@ import java.util.Properties;
 import java.util.Set;
 
 public class Configuration {
+  private static final String VAULT_SERVICE_KEY = "com.streamsets.datacollector.vault";
+
   private static File fileRefsBaseDir;
 
   public static void setFileRefsBaseDir(File dir) {
@@ -208,12 +213,12 @@ public class Configuration {
     public String getValue() {
       String[] params = getUnresolvedValueWithoutDelimiter().replace("\"", "").replace("'", "").split(",");
       if (params.length != 2) {
-        throw new RuntimeException(getUnresolvedValue() + " does not comply with format vault(path, key)");
+        throw new VaultRuntimeException(getUnresolvedValue() + " does not comply with format vault(path, key)");
       }
+      Vault vault = DataCollectorServices.instance().get(VAULT_SERVICE_KEY);
       final String path = params[0].trim();
       final String key = params[1].trim();
-      final String result = Vault.read(path, key);
-      return result;
+      return vault.read(path, key);
     }
   }
 
