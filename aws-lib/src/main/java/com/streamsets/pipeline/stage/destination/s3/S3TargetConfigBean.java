@@ -106,6 +106,18 @@ public class S3TargetConfigBean {
   public String fileNamePrefix;
 
   @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      description = "Suffix for object names that will be uploaded on Amazon S3. e.g.'txt'",
+      label = "Object Name Suffix",
+      displayPosition = 220,
+      group = "S3",
+      dependsOn = "dataFormat",
+      triggeredByValue = {"TEXT", "JSON", "DELIMITED", "AVRO", "BINARY", "PROTOBUF", "SDC_JSON"}
+  )
+  public String fileNameSuffix;
+
+  @ConfigDef(
     required = true,
     type = ConfigDef.Type.MODEL,
     label = "Data Format",
@@ -160,6 +172,17 @@ public class S3TargetConfigBean {
               Groups.S3.getLabel(),
               S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "fileNamePrefix",
               Errors.S3_05
+          )
+      );
+    }
+
+    //File Suffix should not contain '/' or start with '.'
+    if (fileNameSuffix != null && (fileNameSuffix.startsWith(".") || fileNameSuffix.contains("/"))) {
+      issues.add(
+          context.createConfigIssue(
+              Groups.S3.getLabel(),
+              S3TargetConfigBean.S3_TARGET_CONFIG_BEAN_PREFIX + "fileNameSuffix",
+              Errors.S3_06
           )
       );
     }

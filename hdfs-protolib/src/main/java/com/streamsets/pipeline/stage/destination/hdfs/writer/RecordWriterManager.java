@@ -19,9 +19,6 @@
  */
 package com.streamsets.pipeline.stage.destination.hdfs.writer;
 
-import com.google.common.collect.ImmutableMap;
-import com.streamsets.pipeline.api.EventRecord;
-import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
@@ -38,6 +35,7 @@ import com.streamsets.pipeline.stage.destination.hdfs.Errors;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsFileType;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsTarget;
 import com.streamsets.pipeline.stage.destination.hdfs.IdleClosedException;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
@@ -54,7 +52,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -62,9 +59,11 @@ public class RecordWriterManager {
   private final static Logger LOG = LoggerFactory.getLogger(RecordWriterManager.class);
   public final static String TMP_FILE_PREFIX = "_tmp_";
 
+  private final static String DOT = ".";
   private FileSystem fs;
   private Configuration hdfsConf;
   private String uniquePrefix;
+  private String fileNameSuffix;
   private boolean dirPathTemplateInHeader;
   private String dirPathTemplate;
   private PathResolver pathResolver;
@@ -84,14 +83,34 @@ public class RecordWriterManager {
   private final FsHelper fsHelper;
   private ConcurrentLinkedQueue<Path> closedPaths;
 
-  public RecordWriterManager(FileSystem fs, Configuration hdfsConf, String uniquePrefix, boolean dirPathTemplateInHeader,
-      String dirPathTemplate, TimeZone timeZone, long cutOffSecs, long cutOffSizeBytes, long cutOffRecords,
-      HdfsFileType fileType, CompressionCodec compressionCodec, SequenceFile.CompressionType compressionType, String keyEL,
-      boolean rollIfHeader, String rollHeaderName, String fileNameEL, WholeFileExistsAction wholeFileAlreadyExistsAction,
-      String permissionEL, DataGeneratorFactory generatorFactory, Target.Context context, String config) {
+  public RecordWriterManager(
+      FileSystem fs,
+      Configuration hdfsConf,
+      String uniquePrefix,
+      String fileNameSuffix,
+      boolean dirPathTemplateInHeader,
+      String dirPathTemplate,
+      TimeZone timeZone,
+      long cutOffSecs,
+      long cutOffSizeBytes,
+      long cutOffRecords,
+      HdfsFileType fileType,
+      CompressionCodec compressionCodec,
+      SequenceFile.CompressionType compressionType,
+      String keyEL,
+      boolean rollIfHeader,
+      String rollHeaderName,
+      String fileNameEL,
+      WholeFileExistsAction wholeFileAlreadyExistsAction,
+      String permissionEL,
+      DataGeneratorFactory generatorFactory,
+      Target.Context context,
+      String config
+  ) {
     this.fs = fs;
     this.hdfsConf = hdfsConf;
     this.uniquePrefix = uniquePrefix;
+    this.fileNameSuffix = fileNameSuffix;
     this.dirPathTemplateInHeader = dirPathTemplateInHeader;
     this.dirPathTemplate = dirPathTemplate;
     this.timeZone = timeZone;
@@ -148,7 +167,17 @@ public class RecordWriterManager {
   }
 
   String getExtension() {
-    return (compressionCodec == null) ? "" : compressionCodec.getDefaultExtension();
+    StringBuilder extension = new StringBuilder();
+
+    if(fileNameSuffix != null && !fileNameSuffix.isEmpty()) {
+      extension.append(DOT);
+      extension = extension.append(fileNameSuffix);
+    }
+
+    if(compressionCodec != null) {
+      extension.append(compressionCodec.getDefaultExtension());
+    }
+    return extension.toString();
   }
 
   String getTempFileName() {

@@ -104,7 +104,8 @@ public class TestAmazonS3Target {
   public void testWriteTextData() throws Exception {
 
     String prefix = "testWriteTextData";
-    AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, false);
+    String suffix = "txt";
+    AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, false, suffix);
     TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
     targetRunner.runInit();
 
@@ -120,6 +121,13 @@ public class TestAmazonS3Target {
     //check that prefix contains 1 file
     objectListing = s3client.listObjects(BUCKET_NAME, prefix);
     Assert.assertEquals(1, objectListing.getObjectSummaries().size());
+
+    //Check the keys end with given suffix follow by "."
+    suffix = "." + suffix;
+    for(S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) {
+      Assert.assertTrue(objectSummary.getKey().endsWith(suffix));
+    }
+
     S3ObjectSummary objectSummary = objectListing.getObjectSummaries().get(0);
 
     //get contents of file and check data - should have 9 lines
@@ -134,12 +142,23 @@ public class TestAmazonS3Target {
   }
 
   @Test
+  public void testSuffixWithPathChar() throws Exception {
+    final String prefix = "testWriteTextData";
+    final String suffix = ".txt";
+    AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, false, suffix);
+    TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
+    List<Stage.ConfigIssue> issues = targetRunner.runValidateConfigs();
+    Assert.assertEquals(1, issues.size());
+  }
+
+  @Test
   public void testWriteTextDataWithPartitionPrefix() throws Exception {
 
     String prefix = "testWriteTextDataWithPartitionPrefix";
+    String suffix = "";
     //partition by the record id
     String partition = "${record:id()}";
-    AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, partition, false);
+    AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, partition, false, suffix);
     TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
     targetRunner.runInit();
 
@@ -166,7 +185,8 @@ public class TestAmazonS3Target {
   public void testWriteTextDataWithCompression() throws Exception {
 
     String prefix = "testWriteTextDataWithCompression";
-    AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, true);
+    String suffix = "";
+    AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, true, suffix);
     TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
     targetRunner.runInit();
 
@@ -201,7 +221,8 @@ public class TestAmazonS3Target {
   public void testWriteEmptyBatch() throws Exception {
 
     String prefix = "testWriteEmptyBatch";
-    AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, false);
+    String suffix = "";
+    AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, false, suffix);
     TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
     targetRunner.runInit();
 
@@ -219,11 +240,17 @@ public class TestAmazonS3Target {
     Assert.assertTrue(objectListing.getObjectSummaries().isEmpty());
 
   }
-  private AmazonS3Target createS3targetWithTextData(String commonPrefix, boolean useCompression) {
-    return createS3targetWithTextData(commonPrefix, "", useCompression);
+
+  private AmazonS3Target createS3targetWithTextData(String commonPrefix, boolean useCompression, String suffix) {
+    return createS3targetWithTextData(commonPrefix, "", useCompression, suffix);
   }
 
-  private AmazonS3Target createS3targetWithTextData(String commonPrefix, String partition, boolean useCompression) {
+  private AmazonS3Target createS3targetWithTextData(
+      String commonPrefix,
+      String partition,
+      boolean useCompression,
+      String suffix
+  ) {
 
     S3Config s3Config = new S3Config();
     s3Config.region = AWSRegions.OTHER;
@@ -247,6 +274,7 @@ public class TestAmazonS3Target {
     s3TargetConfigBean.proxyConfig = new ProxyConfig();
     s3TargetConfigBean.tmConfig = new TransferManagerConfig();
     s3TargetConfigBean.tmConfig.threadPoolSize = 3;
+    s3TargetConfigBean.fileNameSuffix = suffix;
 
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
     dataGeneratorFormatConfig.avroSchema = null;
@@ -267,7 +295,7 @@ public class TestAmazonS3Target {
   @Test
   public void testEventRecords() throws Exception {
     String prefix = "testEventRecords";
-    AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, false);
+    AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, false, "");
     TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
     targetRunner.runInit();
 
@@ -291,7 +319,8 @@ public class TestAmazonS3Target {
   @Test
   public void testEmptyPrefixForNonWholeFileFormat() throws Exception {
     String prefix = "testEventRecords";
-    AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, false);
+    String suffix = "";
+    AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, false, suffix);
     S3TargetConfigBean targetConfigBean =  (S3TargetConfigBean) Whitebox.getInternalState(amazonS3Target, "s3TargetConfigBean");
     targetConfigBean.fileNamePrefix = "";
     TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
@@ -303,7 +332,8 @@ public class TestAmazonS3Target {
   @Test
   public void testEmptyPrefixForWholeFileFormat() throws Exception {
     String prefix = "testEventRecords";
-    AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, false);
+    String suffix = "";
+    AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, false, suffix);
     S3TargetConfigBean targetConfigBean =  (S3TargetConfigBean) Whitebox.getInternalState(amazonS3Target, "s3TargetConfigBean");
     targetConfigBean.dataFormat = DataFormat.WHOLE_FILE;
     targetConfigBean.dataGeneratorFormatConfig.fileNameEL = "sample";

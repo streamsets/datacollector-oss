@@ -146,12 +146,24 @@ public class HdfsTargetConfigBean {
   public String uniquePrefix;
 
   @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Files Suffix",
+      description = "File name suffix e.g.'txt'",
+      displayPosition = 106,
+      group = "OUTPUT_FILES",
+      dependsOn = "dataFormat",
+      triggeredByValue = {"TEXT", "JSON", "DELIMITED", "AVRO", "BINARY", "PROTOBUF"}
+  )
+  public String fileNameSuffix;
+
+  @ConfigDef(
     required = true,
     type = ConfigDef.Type.BOOLEAN,
     defaultValue = "false",
     label = "Directory in Header",
     description = "The directory is defined by the '" + HdfsTarget.TARGET_DIRECTORY_HEADER + "' record header attribute instead of the Directory Template configuration property.",
-    displayPosition = 105,
+    displayPosition = 107,
     group = "OUTPUT_FILES"
   )
   public boolean dirPathTemplateInHeader;
@@ -476,6 +488,21 @@ public class HdfsTargetConfigBean {
       uniquePrefix = "";
     }
 
+    if (fileNameSuffix == null) {
+      fileNameSuffix = "";
+    } else {
+      //File Suffix should not contain '/' or start with '.'
+      if(fileNameSuffix.startsWith(".") || fileNameSuffix.contains("/")) {
+        issues.add(
+            context.createConfigIssue(
+                Groups.HADOOP_FS.name(),
+                getTargetConfigBeanPrefix() + "fileNameSuffix",
+                Errors.HADOOPFS_57
+            )
+        );
+      }
+    }
+
     dataGeneratorFormatConfig.init(
         context,
         dataFormat,
@@ -529,11 +556,30 @@ public class HdfsTargetConfigBean {
     if(hadoopFSValidated){
       try {
         // Creating RecordWriterManager for dirPathTemplate
-        RecordWriterManager mgr = new RecordWriterManager(fs, hdfsConfiguration, uniquePrefix,
-                dirPathTemplateInHeader, dirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordsLimitSecs,
-                maxFileSize * MEGA_BYTE, maxRecordsPerFile, fileType, compressionCodec, compressionType, keyEl,
-                rollIfHeader, rollHeaderName, fileNameEL, dataGeneratorFormatConfig.wholeFileExistsAction, permissionEL,
-                dataGeneratorFormatConfig.getDataGeneratorFactory(), (Target.Context) context, "dirPathTemplate");
+        RecordWriterManager mgr = new RecordWriterManager(
+            fs,
+            hdfsConfiguration,
+            uniquePrefix,
+            fileNameSuffix,
+            dirPathTemplateInHeader,
+            dirPathTemplate,
+            TimeZone.getTimeZone(timeZoneID),
+            lateRecordsLimitSecs,
+            maxFileSize * MEGA_BYTE,
+            maxRecordsPerFile,
+            fileType,
+            compressionCodec,
+            compressionType,
+            keyEl,
+            rollIfHeader,
+            rollHeaderName,
+            fileNameEL,
+            dataGeneratorFormatConfig.wholeFileExistsAction,
+            permissionEL,
+            dataGeneratorFormatConfig.getDataGeneratorFactory(),
+            (Target.Context) context,
+            "dirPathTemplate"
+        );
 
         if (idleTimeSecs > 0) {
           mgr.setIdleTimeoutSeconds(idleTimeSecs);
@@ -573,6 +619,7 @@ public class HdfsTargetConfigBean {
                   fs,
                   hdfsConfiguration,
                   uniquePrefix,
+                  fileNameSuffix,
                   false, // Late records doesn't support "template directory" to be in header
                   lateRecordsDirPathTemplate,
                   TimeZone.getTimeZone(timeZoneID),

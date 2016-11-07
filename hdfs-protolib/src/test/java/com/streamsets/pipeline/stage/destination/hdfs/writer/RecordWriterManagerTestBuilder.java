@@ -43,6 +43,7 @@ public final class RecordWriterManagerTestBuilder {
   private URI hdfsUri = new URI("file:///");
   private Configuration hdfsConf = new HdfsConfiguration();
   private String uniquePrefix = "prefix";
+  private String fileNameSuffix = "";
   private boolean dirPathTemplateInHeader = false;
   private String dirPathTemplate;
   private TimeZone timeZone = TimeZone.getTimeZone("UTC");
@@ -88,6 +89,11 @@ public final class RecordWriterManagerTestBuilder {
 
   public RecordWriterManagerTestBuilder uniquePrefix(String uniquePrefix) {
     this.uniquePrefix = uniquePrefix;
+    return this;
+  }
+
+  public RecordWriterManagerTestBuilder fileNameSuffix(String fileNameSuffix) {
+    this.fileNameSuffix = fileNameSuffix;
     return this;
   }
 
@@ -176,6 +182,7 @@ public final class RecordWriterManagerTestBuilder {
       FileSystem.get(hdfsUri, hdfsConf),
       hdfsConf,
       uniquePrefix,
+      fileNameSuffix,
       dirPathTemplateInHeader,
       dirPathTemplate,
       timeZone,

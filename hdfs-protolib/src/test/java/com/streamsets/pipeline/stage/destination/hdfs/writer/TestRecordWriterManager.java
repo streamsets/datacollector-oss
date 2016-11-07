@@ -178,25 +178,40 @@ public class TestRecordWriterManager {
 
   @Test
   public void testNoCompressionCodec() throws Exception {
-    testPath(null);
+    final String fileNameSuffix = "";
+    testPath(null, fileNameSuffix);
   }
 
   @Test
   public void testCompressionCodec() throws Exception {
-    testPath(new DefaultCodec());
+    final String fileNameSuffix = "";
+    testPath(new DefaultCodec(), fileNameSuffix);
   }
 
-  private void testPath(CompressionCodec compressionCodec) throws Exception {
+  @Test
+  public void testNameSuffix() throws Exception {
+    final String fileNameSuffix = "txt";
+    // test with and without compression codec
+    testPath(null, fileNameSuffix);
+    testPath(new DefaultCodec(), fileNameSuffix);
+  }
+
+  private void testPath(CompressionCodec compressionCodec, String fileNameSuffix) throws Exception {
     RecordWriterManager mgr = managerBuilder()
       .dirPathTemplate(getTestDir().toString() + "/${YYYY()}/${YY()}/${MM()}/${DD()}/${hh()}/${mm()}/${ss()}/${record:value('/')}")
       .fileType(HdfsFileType.TEXT)
       .compressionCodec(compressionCodec)
+      .fileNameSuffix(fileNameSuffix)
       .build();
 
-    if (compressionCodec == null) {
+    if (compressionCodec == null && fileNameSuffix.isEmpty()) {
       Assert.assertEquals("", mgr.getExtension());
-    } else {
+    } else if (compressionCodec != null && fileNameSuffix.isEmpty()) {
       Assert.assertEquals(compressionCodec.getDefaultExtension(), mgr.getExtension());
+    } else if (compressionCodec == null && !fileNameSuffix.isEmpty()) {
+      Assert.assertEquals("." + fileNameSuffix, mgr.getExtension());
+    } else {
+      Assert.assertEquals("." + fileNameSuffix + compressionCodec.getDefaultExtension(), mgr.getExtension());
     }
 
     Date date = getFixedDate();

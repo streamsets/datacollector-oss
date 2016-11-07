@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.destination.s3;
 
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.Upload;
+import com.amazonaws.util.StringUtils;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
@@ -38,6 +39,7 @@ import java.util.zip.GZIPOutputStream;
 
 final class DefaultFileHelper extends FileHelper {
   private static final String GZIP_EXTENSION = ".gz";
+  private static final String DOT = ".";
 
   private int fileCount = 0;
 
@@ -49,6 +51,12 @@ final class DefaultFileHelper extends FileHelper {
     fileCount++;
     StringBuilder fileName = new StringBuilder();
     fileName = fileName.append(keyPrefix).append(fileCount);
+
+    if (!StringUtils.isNullOrEmpty(s3TargetConfigBean.fileNameSuffix)) {
+      fileName.append(DOT);
+      fileName = fileName.append(s3TargetConfigBean.fileNameSuffix);
+    }
+
     if (s3TargetConfigBean.compress) {
       fileName = fileName.append(GZIP_EXTENSION);
     }

@@ -90,6 +90,7 @@ public enum Errors implements ErrorCode {
   HADOOPFS_54("The path {} already exists."),
   HADOOPFS_55("Invalid permission EL {} for the file"),
   HADOOPFS_56("Invalid permission value {} for the file"),
+  HADOOPFS_57("Files Suffix contains '/' or starts with '.'"),
 
   ;
 
