@@ -14,22 +14,20 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_dns_dvg_h5">
- <title>Data Collector Authentication</title>
- <shortdesc>StreamSets <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can
-        authenticate user accounts based on files or LDAP. Best practice is to use LDAP if your
+ <title>User Authentication</title>
+ <shortdesc><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        can authenticate user accounts based on LDAP or files. Best practice is to use LDAP if your
         organization has it. By default, <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses
-        file authentication.</shortdesc>
+        file-based authentication.</shortdesc>
  <conbody>
-  <p><indexterm>authentication<indexterm>Data Collector</indexterm></indexterm>When you use file
-            authentication, you can use Basic, Digest, or Form. Form is the default file
-            authentication type. </p>
-        <p>To configure file authentication, edit the authentication realm.properties file for the
-            authentication type. For example, to use Form, edit the
-                <codeph>form-realm.properties</codeph> file.</p>
-        <p>The realm.properties files are in the <ph
+  <p><indexterm>authentication<indexterm>Data Collector</indexterm></indexterm><ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            configuration directory, <codeph>$SDC_CONF</codeph>.</p>
+            provides several roles that determine the actions that users can perform. The steps you
+            use to assign roles to user accounts vary, based on whether you are using LDAP or
+            file-based authentication.</p>
+        <note>A production deployment of <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            should integrate with LDAP authentication. </note>
  </conbody>
 </concept>

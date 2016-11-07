@@ -89,10 +89,14 @@
     <shortdesc/>
    </topicmeta>
    <topicref href="../Install_Config/LDAP-Configuring.dita">
-    <topicref href="../Install_Config/LDAP-Configuring-MapR.dita"/>
+    <topicref href="../Install_Config/LDAP-Step1ConnectionInfo.dita"/>
+    <topicref href="../Install_Config/LDAP-Step2GroupsRoles.dita"/>
+    <topicref href="../Install_Config/LDAP-Step3MultipleServers.dita"/>
+    <topicref href="../Install_Config/LDAP-Step4MapR.dita"/>
    </topicref>
-   <topicref href="../Install_Config/UsersandRoles.dita">
-    <topicref href="../Install_Config/CreatingAdditionalUsers.dita"/>
+   <topicref href="../Install_Config/FileAuth-Configuring.dita">
+    <topicref href="../Install_Config/FileAuth-Step1Type.dita"/>
+    <topicref href="../Install_Config/FileAuth-Step2UsersRoles.dita"/>
    </topicref>
   </topicref>
   <topicref href="../Install_Config/DCConfig.dita" chunk="to-content">

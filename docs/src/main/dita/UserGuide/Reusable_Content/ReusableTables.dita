@@ -1192,5 +1192,46 @@
     </tbody>
    </tgroup>
   </table>
+  <draft-comment author="alisontaylor">Description of each role is conref'd in the LDAP and File
+   Authentication sections.</draft-comment>
+  <table frame="all" rowsep="1" colsep="1" id="table_x2c_kwy_9x">
+   <tgroup cols="2">
+    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+    <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+    <thead>
+     <row>
+      <entry>Role</entry>
+      <entry>Description</entry>
+     </row>
+    </thead>
+    <tbody>
+     <row>
+      <entry>admin</entry>
+      <entry id="entry_adminRole">Perform any <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+      /> task. </entry>
+     </row>
+     <row>
+      <entry>manager</entry>
+      <entry id="entry_managerRole">Manage pipelines. As a manager, users can start and stop pipelines,
+       monitor pipelines, configure and reset alerts, and review snapshots.
+       Users cannot configure pipelines or preview data.</entry>
+     </row>
+     <row>
+      <entry>creator</entry>
+      <entry id="entry_creatorRole">Configure pipelines. As a creator, users can configure pipelines and
+       alerts, preview data, and monitor the pipeline. Users cannot review
+       snapshots or reset alerts.</entry>
+     </row>
+     <row>
+      <entry>guest</entry>
+      <entry id="entry_guestRole">Read-only access. As a guest, users can view pipeline and alert
+       configuration, view general monitoring and log information. Users cannot
+       preview data or review snapshots, or configure pipelines or
+       alerts.</entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
  </conbody>
 </concept>
