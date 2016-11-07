@@ -24,21 +24,24 @@
                     <dd>
                         <codeblock>javax.net.ssl.SSLHandshakeException: Remote host closed connection during handshake</codeblock>
                     </dd>
-                    <dd>By default, <ph
+                    <dd>When you use <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> with Java 7, <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> is configured to use TLS versions 1.1 and 1.2. This error can occur when
                         you configure the HTTP Client origin or HTTP Client processor to connect to
-                        an HTTP server that is using an earlier version of TLS, such as version 1.0. </dd>
+                        an HTTP server that is using an earlier version of TLS, such as version 1.0. 
+                        <note conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Java7"/></dd>
                     <dd>You can enable <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> to connect to a system using an earlier TLS version by modifying the
-                            <codeph>Dhttps.protocols</codeph> option in the SDC_JAVA_OPTS
+                            <codeph>Dhttps.protocols</codeph> option in the SDC_JAVA7_OPTS
                         environment variable in the <codeph>sdc-env.sh</codeph> or
                             <codeph>sdcd-env.sh</codeph> file. The files are located in the
                             <codeph>$SDC_DIST/libexec</codeph> directory. For example, if the HTTP
                         server uses TLS version 1.0, modify the <codeph>Dhttps.protocols</codeph>
                         option as
-                        follows:<codeblock>export SDC_JAVA_OPTS="<uicontrol>-Dhttps.protocols=TLSv1.2,TLSv1.1,TLSv1</uicontrol> -Xmx1024m -Xms1024m -XX:PermSize=256m -XX:MaxPermSize=512m -server ${SDC_JAVA_OPTS}"</codeblock></dd>
+                        follows:<codeblock>SDC_JAVA7_OPTS=${SDC_JAVA7_OPTS:-"<uicontrol>-Dhttps.protocols=TLSv1.2,TLSv1.1,TLSv1</uicontrol> -XX:PermSize=256m -XX:MaxPermSize=512m -XX:+UseConcMarkSweepGC -XX:+UseParNewGC"}</codeblock></dd>
                 </dlentry>
             </dl>
         </p>

@@ -19,15 +19,12 @@
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> with Java 7,
     you can define the Java Permanent Generation size, also known as the PermGen size.</shortdesc>
   <conbody>
-    <p>
-      <note conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Java7"/>
-    </p>
     <p><indexterm>Java configuration options<indexterm>PermGen
         size</indexterm></indexterm><indexterm>PermGen
         size<indexterm>configuring</indexterm></indexterm>The PermGen size determines the amount of
       memory that the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> web
-      application server uses. Define the PermGen size as part of the SDC_JAVA_OPTS environment
+      application server uses. Define the PermGen size as part of the SDC_JAVA7_OPTS environment
       variable in the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       environment configuration file.</p>
@@ -36,6 +33,6 @@
         <li>MaxPermSize - Maximum size of the permanent generation space.</li>
       </ul></p>
     <p>By default, the PermGen size is defined as
-      follows:<codeblock>SDC_JAVA_OPTS="-Dhttps.protocols=TLSv1.2,TLSv1.1 -Xmx1024m  -Xms1024m <uicontrol>-XX:PermSize=256M -XX:MaxPermSize=512M</uicontrol> -server ${SDC_JAVA_OPTS}"</codeblock></p>
+      follows:<codeblock>SDC_JAVA7_OPTS=${SDC_JAVA7_OPTS:-"-Dhttps.protocols=TLSv1.2,TLSv1.1 <uicontrol>-XX:PermSize=256m -XX:MaxPermSize=512m</uicontrol> -XX:+UseConcMarkSweepGC -XX:+UseParNewGC"}</codeblock></p>
   </conbody>
 </concept>

@@ -15,18 +15,18 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_txl_qyc_ww">
  <title>TLS Protocol Versions</title>
- <shortdesc>By default, <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> is
-        configured to use TLS versions 1.1 and 1.2. To connect to a system that uses an earlier
-        version of TLS, modify the <codeph>Dhttps.protocols</codeph> option in the SDC_JAVA_OPTS
-        environment variable in the <ph
+ <shortdesc>When you use <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> with
+        Java 7, <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+        /> is configured to use TLS versions 1.1 and 1.2. To connect to a system that uses an
+        earlier version of TLS, modify the <codeph>Dhttps.protocols</codeph> option in the
+        SDC_JAVA7_OPTS environment variable in the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         environment configuration file.</shortdesc>
- <conbody>
-        <p>By default, the option is defined as
-            follows:<codeblock>SDC_JAVA_OPTS="<uicontrol>-Dhttps.protocols=TLSv1.2,TLSv1.1</uicontrol> -Xmx1024m  -Xms1024m -XX:PermSize=256M -XX:MaxPermSize=512M -server ${SDC_JAVA_OPTS}"</codeblock></p>
+ <conbody>  
+     <p>By default, the option is defined as
+            follows:<codeblock>SDC_JAVA7_OPTS=${SDC_JAVA7_OPTS:-"<uicontrol>-Dhttps.protocols=TLSv1.2,TLSv1.1</uicontrol> -XX:PermSize=256m -XX:MaxPermSize=512m -XX:+UseConcMarkSweepGC -XX:+UseParNewGC"}</codeblock></p>
         <p>To connect to an HTTP server that uses TLS version 1.0, set the option as
-            follows:<codeblock> SDC_JAVA_OPTS="<uicontrol>-Dhttps.protocols=TLSv1.2,TLSv1.1,TLSv1</uicontrol> -Xmx2048m  -Xms1048m  -XX:PermSize=256M -XX:MaxPermSize=512M -server ${SDC_JAVA_OPTS}"
-</codeblock></p>
+            follows:<codeblock>SDC_JAVA7_OPTS=${SDC_JAVA7_OPTS:-"<uicontrol>-Dhttps.protocols=TLSv1.2,TLSv1.1,TLSv1</uicontrol> -XX:PermSize=256m -XX:MaxPermSize=512m -XX:+UseConcMarkSweepGC -XX:+UseParNewGC"}</codeblock></p>
  </conbody>
 </concept>

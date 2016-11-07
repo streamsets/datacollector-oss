@@ -120,9 +120,10 @@
    <topicref href="../Install_Config/DCUserGroupServiceStart.dita"/>
    <topicref href="../Install_Config/JavaConfigOptions.dita">
     <topicref href="../Install_Config/JavaHeapSize.dita"/>
-    <topicref href="../Install_Config/PermGenSize.dita"/>
-    <topicref href="../Install_Config/JavaConfig_TLSProtocolVersions.dita"/>
     <topicref href="../Install_Config/JavaConfig_RemoteDebug.dita"/>
+    <topicref href="../Install_Config/JavaConfig_GarbageCollector.dita"/>
+    <topicref href="../Install_Config/JavaConfig_TLSProtocolVersions.dita"/>
+    <topicref href="../Install_Config/PermGenSize.dita"/>
    </topicref>
    <topicref href="../Install_Config/JavaSecurityManager.dita"/>
    <topicref href="../Install_Config/RootClassloader.dita"/>

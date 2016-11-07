@@ -28,11 +28,12 @@
             SDC_JAVA_OPTS environment variable, where <codeph>port_number</codeph> is an open port
             number on the remote machine running <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-            />:<codeblock>-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=&lt;port_number>,suspend=n</codeblock></p>
+                />:<draft-comment author="alisontaylor">verify with Jeff that this can go in the
+                main env var, and not the Java 7 or 8 specific
+            one</draft-comment><codeblock>-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=&lt;port_number>,suspend=n</codeblock></p>
         <p>For example, to debug <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> on
             a remote machine using port number 2005, define SDC_JAVA_OPTS as follows:
-            <codeblock>SDC_JAVA_OPTS="-Dhttps.protocols=TLSv1.2,TLSv1.1 -Xmx1024m  -Xms1024m -XX:PermSize=256M -XX:MaxPermSize=512M 
-<uicontrol>-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=2005,suspend=n</uicontrol> -server ${SDC_JAVA_OPTS}"</codeblock></p>
+            <codeblock>SDC_JAVA_OPTS="-Xmx1024m  -Xms1024m <uicontrol>-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=2005,suspend=n</uicontrol> -server ${SDC_JAVA_OPTS}"</codeblock></p>
     </conbody>
 </concept>
