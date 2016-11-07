@@ -119,7 +119,7 @@
               </a>
             </li>
 
-            <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])">
+            <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager]) && pipeline.valid">
               <a href="#" dropdown-toggle ng-click="exportPipelineConfig(pipeline, true, $event)">
                 <i class="glyphicon glyphicon-export"></i>
                 <span>{{'global.form.exportWithLibraryDefinitions' | translate}}</span>

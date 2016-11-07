@@ -354,6 +354,21 @@ angular
        */
       exportSelectedPipelines: function(includeDefinitions) {
         var selectedPipelineList = $scope.selectedPipelineList;
+        if (includeDefinitions) {
+          // Export for DPM supports only for valid pipelines
+          var validationIssues = [];
+          angular.forEach($scope.filteredPipelines, function(pipelineInfo) {
+            if (selectedPipelineList.indexOf(pipelineInfo.name) !== -1 && !pipelineInfo.valid) {
+              validationIssues.push('Pipeline "' + pipelineInfo.name + '" is not valid');
+            }
+          });
+
+          if (validationIssues.length > 0) {
+            $rootScope.common.errors = validationIssues;
+            return;
+          }
+          $rootScope.common.errors = [];
+        }
         api.pipelineAgent.exportSelectedPipelines(selectedPipelineList, includeDefinitions);
         $scope.unSelectAll();
       },
