@@ -24,7 +24,7 @@ import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.runner.standalone.StandaloneRunner;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.pipeline.api.impl.Utils;
-
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -157,16 +157,25 @@ public class ProductionPipelineRunnable implements Runnable {
     //Update pipeline state accordingly
     if (pipeline.wasStopped()) {
       try {
+        String offset = pipeline.getCommittedOffset();
+        String offsetStatus = "";
+        if (!StringUtils.isEmpty(offset)) {
+          offsetStatus = Utils.format("The last committed source offset is {}.", offset);
+        }
         if (this.nodeProcessShutdown) {
           LOG.info("Changing state of pipeline '{}', '{}' to '{}'", name, rev, PipelineStatus.DISCONNECTED);
-          pipeline.getStatusListener().stateChanged(PipelineStatus.DISCONNECTED, Utils.format("The pipeline was stopped "
-              + "because the node process was shutdown. " +
-              "The last committed source offset is {}.", pipeline.getCommittedOffset(), runner.getMetrics()), null);
+          pipeline.getStatusListener().stateChanged(
+              PipelineStatus.DISCONNECTED,
+              "The pipeline was stopped because the node process was shutdown. " + offsetStatus,
+              null
+          );
         } else {
           LOG.info("Changing state of pipeline '{}', '{}' to '{}'", name, rev, PipelineStatus.STOPPED);
-          pipeline.getStatusListener().stateChanged(PipelineStatus.STOPPED,
-              Utils.format("The pipeline was stopped. The last committed source offset is {}."
-                  , pipeline.getCommittedOffset()), null);
+          pipeline.getStatusListener().stateChanged(
+              PipelineStatus.STOPPED,
+              "The pipeline was stopped. " + offsetStatus,
+              null
+          );
         }
       } catch (PipelineException e) {
         LOG.error("An exception occurred while trying to transition pipeline state, {}", e.toString(), e);
