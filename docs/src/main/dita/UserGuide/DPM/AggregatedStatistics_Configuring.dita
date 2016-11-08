@@ -58,9 +58,17 @@
                                 </row>
                                 <row>
                                     <entry>Topic</entry>
-                                    <entry>Topic to use. <p>To avoid mixing statistics from
-                                            different jobs, use a unique topic name for each job.
-                                        </p></entry>
+                                    <entry>Topic to use.  To avoid mixing statistics from different
+                                        jobs, use a unique topic name for each job.<p>You can define
+                                            an expression that evaluates to the topic name. For
+                                            example, you can use the following expression to define
+                                            the topic name based on the pipeline name and
+                                            version:<codeblock>${pipeline:name()}-${pipeline:version()}</codeblock></p><p>If
+                                            you modify and then publish a new version of the
+                                            pipeline to <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                                            />, the pipeline automatically writes to a new
+                                            topic.</p></entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/KPPartStrategy">
@@ -144,9 +152,17 @@
                                 </row>
                                 <row>
                                     <entry>Stream Name</entry>
-                                    <entry>Kinesis stream name.<p>To avoid mixing statistics from
-                                            different jobs, use a unique stream name for each job.
-                                        </p></entry>
+                                    <entry>Kinesis stream name. To avoid mixing statistics from
+                                        different jobs, use a unique stream name for each job.<p>You
+                                            can define an expression that evaluates to the stream
+                                            name. For example, you can use the following expression
+                                            to define the stream name based on the pipeline name and
+                                            version:</p><codeblock>${pipeline:name()}-${pipeline:version()}</codeblock><p>If
+                                            you modify and then publish a new version of the
+                                            pipeline to <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                                            />, the pipeline automatically writes to a new
+                                            stream.</p></entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/rowKinesisPartitionStrategy">
