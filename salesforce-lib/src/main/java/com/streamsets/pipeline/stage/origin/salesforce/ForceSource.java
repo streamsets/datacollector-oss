@@ -73,7 +73,8 @@ public class ForceSource extends BaseSource {
   private static final String REPLAY_ID = "replayId";
   private static final String RECORD_ID_OFFSET_PREFIX = "recordId:";
   private static final String EVENT_ID_OFFSET_PREFIX = "eventId:";
-  private static final String START_READING_EVENTS = EVENT_ID_OFFSET_PREFIX + "-1";
+  private static final String READ_EVENTS_FROM_NOW = EVENT_ID_OFFSET_PREFIX + "-1";
+  private static final String READ_EVENTS_FROM_START = EVENT_ID_OFFSET_PREFIX + "-2";
 
   private final ForceSourceConfigBean conf;
 
@@ -250,7 +251,8 @@ public class ForceSource extends BaseSource {
 
     int batchSize = Math.min(conf.basicConfig.maxBatchSize, maxBatchSize);
 
-    if (null != lastSourceOffset && lastSourceOffset.startsWith(EVENT_ID_OFFSET_PREFIX)) {
+    if (!conf.queryExistingData ||
+        (null != lastSourceOffset && lastSourceOffset.startsWith(EVENT_ID_OFFSET_PREFIX))) {
       if (conf.subscribeToStreaming) {
         nextSourceOffset = streamingProduce(lastSourceOffset, batchSize, batchMaker);
       } else {
@@ -265,7 +267,7 @@ public class ForceSource extends BaseSource {
       }
     } else {
       // No offset, and we're not querying existing data, so switch to streaming
-      nextSourceOffset = START_READING_EVENTS;
+      nextSourceOffset = READ_EVENTS_FROM_NOW;
     }
 
     LOG.debug("nextSourceOffset: {}", nextSourceOffset);
@@ -376,7 +378,7 @@ public class ForceSource extends BaseSource {
               batch = null;
               job = null;
               // Switch to processing events
-              nextSourceOffset = START_READING_EVENTS;
+              nextSourceOffset = READ_EVENTS_FROM_NOW;
             }
             return nextSourceOffset;
           } else {
@@ -466,7 +468,7 @@ public class ForceSource extends BaseSource {
         if (queryResult.isDone()) {
           queryResult = null;
           // Switch to processing events
-          nextSourceOffset = START_READING_EVENTS;
+          nextSourceOffset = READ_EVENTS_FROM_NOW;
         } else {
           queryResult = partnerConnection.queryMore(queryResult.getQueryLocator());
           recordIndex = 0;
@@ -480,26 +482,38 @@ public class ForceSource extends BaseSource {
   }
 
   public String streamingProduce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-    String nextSourceOffset = (null == lastSourceOffset) ? START_READING_EVENTS : lastSourceOffset;
+    String nextSourceOffset;
+    if (getContext().isPreview()) {
+      nextSourceOffset = READ_EVENTS_FROM_START;
+    } else if (null == lastSourceOffset) {
+      nextSourceOffset = READ_EVENTS_FROM_NOW;
+    } else {
+      nextSourceOffset = lastSourceOffset;
+    }
 
     if (forceConsumer == null) {
-      forceConsumer = new ForceStreamConsumer(entityQueue, partnerConnection, conf.apiVersion, conf.pushTopic, lastSourceOffset);
+      forceConsumer = new ForceStreamConsumer(entityQueue, partnerConnection, conf.apiVersion, conf.pushTopic, nextSourceOffset);
 
       forceConsumer.start();
+    }
+
+    if (getContext().isPreview()) {
+      // Give waiting messages a chance to arrive
+      ThreadUtil.sleep(1000);
+    }
+
+    // We didn't receive any new data within the time allotted for this batch.
+    if (entityQueue.isEmpty()) {
+      // In preview, we already waited
+      if (! getContext().isPreview()) {
+        // Sleep for one second so we don't tie up the app.
+        ThreadUtil.sleep(1000);
+      }
 
       return nextSourceOffset;
     }
 
     List<Object> messages = new ArrayList<>(maxBatchSize);
-
-    // We didn't receive any new data within the time allotted for this batch.
-    if (entityQueue.isEmpty()) {
-      // Sleep for one second so we don't tie up the app.
-      ThreadUtil.sleep(1000);
-
-      return nextSourceOffset;
-    }
-
     entityQueue.drainTo(messages, maxBatchSize);
 
     for (Object message : messages) {

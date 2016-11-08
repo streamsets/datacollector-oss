@@ -41,6 +41,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ForceStreamConsumer {
   private static final Logger LOG = LoggerFactory.getLogger(ForceSource.class);
@@ -53,6 +54,7 @@ public class ForceStreamConsumer {
   // The long poll duration.
   private static final int CONNECTION_TIMEOUT = 20 * 1000;  // milliseconds
   private static final int READ_TIMEOUT = 120 * 1000; // milliseconds
+  private static final int SUBSCRIBE_TIMEOUT = 10 * 1000; // milliseconds
 
   private final PartnerConnection connection;
   private final String bayeuxChannel;
@@ -61,6 +63,8 @@ public class ForceStreamConsumer {
 
   private HttpClient httpClient;
   private BayeuxClient client;
+
+  private AtomicBoolean subscribed = new AtomicBoolean(false);
 
   public ForceStreamConsumer(
       BlockingQueue<Object> entityQueue,
@@ -156,7 +160,6 @@ public class ForceStreamConsumer {
       client.getChannel(Channel.META_SUBSCRIBE).addListener(new ClientSessionChannel.MessageListener() {
 
         public void onMessage(ClientSessionChannel channel, Message message) {
-
           LOG.info("[CHANNEL:META_SUBSCRIBE]: " + message);
           boolean success = message.isSuccessful();
           if (!success) {
@@ -174,6 +177,7 @@ public class ForceStreamConsumer {
               }
             }
           }
+          subscribed.set(true);
         }
       });
 
@@ -203,6 +207,11 @@ public class ForceStreamConsumer {
           }
         }
       });
+
+      long start = System.currentTimeMillis();
+      while (!subscribed.get() && System.currentTimeMillis() - start < SUBSCRIBE_TIMEOUT) {
+        Thread.sleep(1000);
+      }
     } catch (Exception e) {
       LOG.error("Exception making client", e.toString(), e);
       throw new StageException(Errors.FORCE_09, e);
