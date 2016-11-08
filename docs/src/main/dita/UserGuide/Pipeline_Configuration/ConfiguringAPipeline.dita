@@ -52,10 +52,9 @@
                                 </row>
                                 <row>
                                     <entry>Labels</entry>
-                                    <entry>Optional labels to assign to the pipeline. Enter new or
-                                        existing label names.<p>Use labels to group similar
-                                            pipelines. For example, you might want to group
-                                            pipelines by database schema or by the test or
+                                    <entry>Optional labels to assign to the pipeline. <p>Use labels
+                                            to group similar pipelines. For example, you might want
+                                            to group pipelines by database schema or by the test or
                                             production environment.</p></entry>
                                 </row>
                                 <row>
