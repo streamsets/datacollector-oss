@@ -92,10 +92,6 @@
                                             1,000 KB, Firehose does not accept any data written by
                                             the destination.</note></entry>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Charset">
-                                    <entry/>
-                                </row>
                             </tbody>
                         </tgroup>
                     </table>
@@ -156,6 +152,10 @@
                                         object is a JSON representation of a record.<note>The JSON
                                             array of objects format is not supported for the Kinesis
                                             Firehose destination. </note></entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-CHARSET-other">
+                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>

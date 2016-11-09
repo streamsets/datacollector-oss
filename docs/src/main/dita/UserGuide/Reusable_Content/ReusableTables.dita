@@ -120,13 +120,23 @@
       </row>
       <row id="MessagesCharset">
        <entry>Charset</entry>
-       <entry>Character encoding of the messages to be processed.<p>Not used for all data
-         formats.</p></entry>
+       <entry>Character encoding of the messages to be processed.</entry>
       </row>
       <row id="Charset">
        <entry>Charset</entry>
-       <entry>Character encoding of the files to be processed.<p>Not used for all data
-        formats.</p></entry>
+       <entry>Character encoding of the files to be processed.</entry>
+      </row>
+      <row id="row-CharsetData">
+       <entry>Charset</entry>
+       <entry>Character encoding of the data to be processed.</entry>
+      </row>
+      <row>
+       <entry/>
+       <entry/>
+      </row>
+      <row>
+       <entry/>
+       <entry/>
       </row>
      </tbody>
     </tgroup>
@@ -649,12 +659,11 @@
      <tbody>
       <row id="D-CHARSET-file">
        <entry>Charset</entry>
-       <entry>Character set to use when writing files. <p>Not used with all data
-        formats.</p></entry>
+       <entry>Character set to use when writing files. </entry>
       </row>
       <row id="D-CHARSET-other">
        <entry>Charset</entry>
-       <entry>Character set to use when writing data. <p>Not used with all data formats.</p></entry>
+       <entry>Character set to use when writing data. </entry>
       </row>
       <row>
        <entry/>

@@ -143,10 +143,6 @@
                                             name and value. Use the property names and values as
                                             expected by MapR FS.</p></entry>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-CHARSET-file">
-                                    <entry/>
-                                </row>
                             </tbody>
                         </tgroup>
                     </table>

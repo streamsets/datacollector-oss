@@ -127,10 +127,6 @@
                                     <entry>Application ID.</entry>
                                 </row>
                                 <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-CHARSET-other">
-                                    <entry/>
-                                </row>
-                                <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Rabbit-UseCreds">
                                     <entry/>
                                 </row>

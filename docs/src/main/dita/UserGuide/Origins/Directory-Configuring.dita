@@ -80,35 +80,33 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Files Directory</entry>
+                                    <entry>File Directory</entry>
                                     <entry>A directory local to <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> where source files are stored.</entry>
                                 </row>
                                 <row>
-                                    <entry>Allow Late Directory  <xref
-                                            href="Directory-LateDir.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                placement="inline" id="image_wkt_wk1_4v"
-                                        /></xref></entry>
-                                    <entry>
-                                        <p>Allows reading files from a directory that appears after
-                                            the pipeline starts. When enabled, the origin does not
-                                            validate the file path.</p>
-                                    </entry>
+                                    <entry>File Name Pattern</entry>
+                                    <entry>Regular expression that describes the pattern of the file
+                                        names to process.<p>You can use UNIX-style wildcards, such
+                                            as * or ?. For example, *.log.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Buffer Limit (KB) <xref
-                                        href="Directory-BufferLimit.dita#concept_zp2_fqs_5r">
+                                    <entry>Read Order <xref href="Directory-ReadOrder.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                placement="inline" id="image_mfn_hwx_5r"
+                                                placement="inline" id="image_f2g_d54_xv"
                                         /></xref></entry>
-                                    <entry>Maximum buffer size. The buffer size determines the size
-                                        of the record that can be processed. <p>Decrease when memory
-                                            on the <ph
-                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                            /> machine is limited. Increase to process larger
-                                            records when memory is available. </p></entry>
+                                    <entry>The order to use when reading files:<ul
+                                            id="ul_i3b_k54_xv">
+                                            <li>Last-Modified Timestamp - Reads files in ascending
+                                                order based on the last-modified timestamp. When
+                                                files have matching timestamps, reads files in
+                                                lexicographically ascending order based on file
+                                                names.</li>
+                                            <li>Lexicographically Ascending File Names - Reads files
+                                                in lexicographically ascending order based on file
+                                                name.</li>
+                                        </ul></entry>
                                 </row>
                                 <row>
                                     <entry>Batch Size (recs)</entry>
@@ -129,28 +127,15 @@
                                         empty batch.</entry>
                                 </row>
                                 <row>
-                                    <entry>Read Order <xref
-                                            href="Directory-ReadOrder.dita">
+                                    <entry>Allow Late Directory <xref href="Directory-LateDir.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                placement="inline" id="image_f2g_d54_xv"
+                                                placement="inline" id="image_wkt_wk1_4v"
                                         /></xref></entry>
-                                    <entry>The order to use when reading files:<ul
-                                            id="ul_i3b_k54_xv">
-                                            <li>Last-Modified Timestamp - Reads files in ascending
-                                                order based on the last-modified timestamp. When
-                                                files have matching timestamps, reads files in
-                                                lexicographically ascending order based on file
-                                                names.</li>
-                                            <li>Lexicographically Ascending File Names - Reads files
-                                                in lexicographically ascending order based on file
-                                                name.</li>
-                                        </ul></entry>
-                                </row>
-                                <row>
-                                    <entry>File Name Pattern</entry>
-                                    <entry>Regular expression that describes the pattern of the file
-                                        names to process.<p>You can use UNIX-style wildcards, such
-                                            as * or ?. For example, *.log.</p></entry>
+                                    <entry>
+                                        <p>Allows reading files from a directory that appears after
+                                            the pipeline starts. When enabled, the origin does not
+                                            validate the file path.</p>
+                                    </entry>
                                 </row>
                                 <row>
                                     <entry>First File to Process <xref
@@ -171,21 +156,18 @@
                                             directory contains more files, the pipeline fails.</p>
                                     </entry>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Charset">
-                                    <entry/>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
-                                    <entry/>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FileCompression">
-                                    <entry/>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FilePatternCompressed">
-                                    <entry/>
+                                <row>
+                                    <entry>Buffer Limit (KB) <xref
+                                            href="Directory-BufferLimit.dita#concept_zp2_fqs_5r">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_mfn_hwx_5r"
+                                        /></xref></entry>
+                                    <entry>Maximum buffer size. The buffer size determines the size
+                                        of the record that can be processed. <p>Decrease when memory
+                                            on the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> machine is limited. Increase to process larger
+                                            records when memory is available. </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -286,6 +268,9 @@
                 <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-PROTO-File">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-SDCRecord">
                 <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Text">

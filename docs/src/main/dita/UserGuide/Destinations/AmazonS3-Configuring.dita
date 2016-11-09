@@ -202,10 +202,6 @@
                                     <entry>Compresses files with gzip before writing to Amazon
                                         S3.</entry>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Charset">
-                                    <entry/>
-                                </row>
                             </tbody>
                         </tgroup>
                     </table>
@@ -374,6 +370,14 @@
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-FileExists">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-IncludeChecksum">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-ChecksumAlgo">
                                     <entry/>
                                 </row>
                             </tbody>

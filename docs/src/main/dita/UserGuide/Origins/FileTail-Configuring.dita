@@ -48,8 +48,7 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_plp_tp2_px"/></xref></entry>
                                     <entry
-                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/O-1stStep-entry-Events"
-                                    />
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/O-1stStep-entry-Events"/>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/O-1stStep-Error">
@@ -75,14 +74,6 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row>
-                                    <entry>Pattern for Multiline <xref
-                                            href="FileTail-MultipleLines.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_hxf_lnb_ks"/></xref></entry>
-                                    <entry>Regular expression that defines the pattern for the
-                                        standard line of text or log line.</entry>
-                                </row>
                                 <row>
                                     <entry>Maximum Batch Size</entry>
                                     <entry>Maximum number of lines to include in a batch. Honors
@@ -161,22 +152,6 @@
                                         the pipeline starts. When enabled, the origin does not
                                         validate the file path. </entry>
                                 </row>
-                                <row>
-                                    <entry>Charset</entry>
-                                    <entry>Character encoding of the data to be processed.</entry>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
-                                    <entry/>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FileCompression">
-                                    <entry/>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FilePatternCompressed">
-                                    <entry/>
-                                </row>
                             </tbody>
                         </tgroup>
                     </table>
@@ -253,11 +228,126 @@
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JSON-2props">
                 <cmd/>
             </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/LogData_Log4j">
-                <cmd/>
+            <step>
+                <cmd>For log data, on the <wintitle>Data Format</wintitle> tab, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_mgz_ydm_wx">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Log Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FileCompression">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FilePatternCompressed">
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Pattern for Multiline <xref
+                                            href="FileTail-MultipleLines.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_hxf_lnb_ks"/></xref></entry>
+                                    <entry>Regular expression that defines the pattern for the
+                                        standard log line.</entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-row-LogFormat">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-row-MaxLine">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-row-RetainOLine">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Charset">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                    <ul
+                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/ul-LogDetails"
+                        id="ul_hx5_k2m_wx">
+                        <li/>
+                    </ul>
+                </info>
             </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Text">
-                <cmd/>
+            <step>
+                <cmd>For text data, on the <wintitle>Data Format</wintitle> tab, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_ftf_ffm_wx">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Text Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FileCompression">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FilePatternCompressed">
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Pattern for Multiline <xref
+                                            href="FileTail-MultipleLines.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_qss_jfm_wx"/></xref></entry>
+                                    <entry>Regular expression that defines the pattern for the
+                                        standard line of text.</entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-row-MaxLineLength">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-row-UseCDelim">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-row-CustomDelim">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-row-IncludeCDelim">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Charset">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
         </steps>
     </taskbody>

@@ -333,8 +333,10 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>O-AVROFILE</uicontrol> - The
-                        following step is used by Directory S3, Hadoop FS, SFTP, other file-based
-                        origins that read avro from files.</draft-comment>
+                        following step is used by any file-based origin that reads from Avro and
+                        includes compression – Should be S3, Directory, File Tail, Kinesis Consumer
+                        origin? Origins that do not include compression conref rows from here. –
+                        Hadoop FS, </draft-comment>
                 </cmd>
             </step>
             <step id="O-AVRO-FILE">
@@ -352,7 +354,15 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FileCompression">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FilePatternCompressed">
+                                    <entry/>
+                                </row>
+                                <row id="O-row-AvroSLocation">
                                     <entry>Avro Schema Location</entry>
                                     <entry>Location of the Avro schema definition to use when
                                         processing data:<ul id="ul_gv4_ggf_lx">
@@ -366,7 +376,7 @@
                                             Confluent Schema Registry can improve
                                         performance.</p></entry>
                                 </row>
-                                <row>
+                                <row id="O-row-AvroSc">
                                     <entry>Avro Schema</entry>
                                     <entry>Avro schema definition used to process the data.
                                         Overrides any existing schema definitions associated with
@@ -374,14 +384,14 @@
                                             function to use a schema definition stored in a runtime
                                             resource file. </p></entry>
                                 </row>
-                                <row>
+                                <row id="O-row-A-SchemaRegURL">
                                     <entry>Schema Registry URLs</entry>
                                     <entry>Confluent Schema Registry URLs used to look up the
                                         schema. To add a URL, click <uicontrol>Add</uicontrol>. Use
                                         the following format to enter the
                                         URL:<codeblock>http://&lt;host name>:&lt;port number></codeblock></entry>
                                 </row>
-                                <row>
+                                <row id="O-row-A-LookupSchema">
                                     <entry>Lookup Schema By</entry>
                                     <entry>Method used to look up the schema in the Confluent Schema
                                             Registry:<ul id="ul_hv4_ggf_lx">
@@ -392,7 +402,7 @@
                                         </ul>Overrides any existing schema definitions associated
                                         with the data. </entry>
                                 </row>
-                                <row>
+                                <row id="O-row-A-SchemaSubj">
                                     <entry>Schema Subject</entry>
                                     <entry>Avro schema subject to look up in the Confluent Schema
                                             Registry.<p>If the specified subject has multiple schema
@@ -402,10 +412,14 @@
                                                 <uicontrol>Look Up Schema By</uicontrol> property to
                                             Schema ID.</p></entry>
                                 </row>
-                                <row>
+                                <row id="O-row-A-SchemaID">
                                     <entry>Schema ID</entry>
                                     <entry>Avro schema ID to look up in the Confluent Schema
                                         Registry.</entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
+                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -415,8 +429,9 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>O-AVRO-Mess</uicontrol> - The
-                        following step is used by JMS, Kafka, Kinesis - origins that read Avro data
-                        from messages.</draft-comment>
+                        following step is used by origins that read Avro data from messages and have
+                        compression. Kinesis Consumer.  Origins without compression uses rows - JMS,
+                        Kafka.</draft-comment>
                 </cmd>
             </step>
             <step id="O-AVRO-Mess">
@@ -434,7 +449,15 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FileCompression">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FilePatternCompressed">
+                                    <entry/>
+                                </row>
+                                <row id="Mess-row-AvroSchemaLoc">
                                     <entry>Avro Schema Location</entry>
                                     <entry>Location of the Avro schema definition to use when
                                         processing data:<ul id="ul_k2p_vx2_lx">
@@ -448,7 +471,7 @@
                                             Confluent Schema Registry can improve
                                         performance.</p></entry>
                                 </row>
-                                <row>
+                                <row id="Mess-row-AvroSchema">
                                     <entry>Avro Schema</entry>
                                     <entry>Avro schema definition used to process the data.
                                         Overrides any existing schema definitions associated with
@@ -456,14 +479,14 @@
                                             function to use a schema definition stored in a runtime
                                             resource file. </p></entry>
                                 </row>
-                                <row>
+                                <row id="Mess-row-SchemaReg">
                                     <entry>Schema Registry URLs</entry>
                                     <entry>Confluent Schema Registry URLs used to look up the
                                         schema. To add a URL, click <uicontrol>Add</uicontrol>. Use
                                         the following format to enter the
                                         URL:<codeblock>http://&lt;host name>:&lt;port number></codeblock></entry>
                                 </row>
-                                <row>
+                                <row id="Mess-row-LookupSchema">
                                     <entry>Lookup Schema By</entry>
                                     <entry>Method used to look up the schema in the Confluent Schema
                                             Registry:<ul id="ul_pb1_5df_lx">
@@ -475,7 +498,7 @@
                                         </ul>Overrides any existing schema definitions associated
                                         with the message. </entry>
                                 </row>
-                                <row>
+                                <row id="Mess-row-SchemaSub">
                                     <entry>Schema Subject</entry>
                                     <entry>Avro schema subject to look up in the Confluent Schema
                                             Registry.<p>If the specified subject has multiple schema
@@ -485,10 +508,14 @@
                                                 <uicontrol>Look Up Schema By</uicontrol> property to
                                             Schema ID.</p></entry>
                                 </row>
-                                <row>
+                                <row id="Mess-row-SchemaID">
                                     <entry>Schema ID</entry>
                                     <entry>Avro schema ID to look up in the Confluent Schema
                                         Registry.</entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
+                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -575,6 +602,21 @@
                                     <entry>Avro schema ID to look up in the Confluent Schema
                                         Registry.</entry>
                                 </row>
+                                <row>
+                                    <entry>Key Deserializer <xref href="../Origins/KConsumer-DataFormats.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline"
+                                        /></xref></entry>
+                                    <entry>Method used to deserialize the Kafka message key.<p>Set
+                                            to Confluent when the Avro schema ID is embedded in each
+                                            Kafka message. </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Value Deserializer</entry>
+                                    <entry>Method used to deserialize the Kafka message value.<p>Set
+                                            to Confluent when the Avro schema ID is embedded in each
+                                            Kafka message.</p></entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>
@@ -582,8 +624,9 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta"><uicontrol>O-Binary </uicontrol>. Used by Kafka
-                        and Kinesis Consumer, Redis Consumer</draft-comment>
+                    <draft-comment author="Loretta"><uicontrol>O-Binary </uicontrol>. Used by
+                        message reading origins that have compression -  Kinesis Consumer, Redis
+                        Consumer. Non-compressed origins use rows - JMS, Kafka </draft-comment>
                 </cmd>
             </step>
             <step id="O-Binary">
@@ -601,10 +644,22 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FileCompression">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FilePatternCompressed">
+                                    <entry/>
+                                </row>
+                                <row id="O-row-Bin-MaxDataSize">
                                     <entry>Max Data Size</entry>
                                     <entry>Maximum number of bytes in the message. Larger messages
                                         cannot be processed or written to error. </entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
+                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -672,6 +727,13 @@
                                             conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/ph-Authinfo"
                                             /><p>For collectd data only.</p></entry>
                                 </row>
+                                <row conref="ReusableTables.dita#concept_wfr_rnw_yq/MessagesCharset">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
+                                    <entry/>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>
@@ -679,9 +741,10 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta"><uicontrol>DELIMITED data</uicontrol> -
-                        Directory, Hadoop FS, JMS Consumer, Kafka Consumer, Kinesis Consumer, Redis
-                        Consumer - all file &amp; message origins</draft-comment>
+                    <draft-comment author="Loretta"><uicontrol>DELIMITED data</uicontrol> - Step
+                        used by Delimited origins using compression – S3, Directory, Other Delimited
+                        origins use steps. - Hadoop FS origin, JMS Consumer, Kafka
+                        Consumer</draft-comment>
                 </cmd>
             </step>
             <step id="DelimFILE">
@@ -699,7 +762,15 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FileCompression">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FilePatternCompressed">
+                                    <entry/>
+                                </row>
+                                <row id="O-row-DelimFormatType">
                                     <entry>Delimiter Format Type</entry>
                                     <entry>Delimiter format type. Use one of the following options:
                                             <ul
@@ -708,17 +779,17 @@
                                             <li/>
                                         </ul></entry>
                                 </row>
-                                <row>
+                                <row id="O-row-Del-HeaderLine">
                                     <entry>Header Line</entry>
                                     <entry>Indicates whether a file contains a header line, and
                                         whether to use the header line.</entry>
                                 </row>
-                                <row>
+                                <row id="O-row-Del-MaxRecLength">
                                     <entry>Max Record Length (chars)</entry>
                                     <entry>Maximum length of a record in characters. Longer records
                                         are not read. </entry>
                                 </row>
-                                <row>
+                                <row id="O-row-Del-DelChar">
                                     <entry>Delimiter Character</entry>
                                     <entry>Delimiter character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
@@ -730,15 +801,15 @@
                                             the delimiter.</p><p>Default is the pipe character ( |
                                             ).</p></entry>
                                 </row>
-                                <row>
+                                <row id="O-row-Del-EscChar">
                                     <entry>Escape Character</entry>
                                     <entry>Escape character for a custom file type.</entry>
                                 </row>
-                                <row>
+                                <row id="O-row-Del-QuoteChar">
                                     <entry>Quote Character</entry>
                                     <entry>Quote character for a custom file type.</entry>
                                 </row>
-                                <row>
+                                <row id="O-row-Del-RootField">
                                     <entry>Root Field Type <xref
                                             href="../Pipeline_Design/DelimitedDataRootFieldTypes.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
@@ -753,18 +824,26 @@
                                                 to maintain pipelines created before 1.1.0.</li>
                                         </ul></entry>
                                 </row>
-                                <row>
+                                <row id="O-row-Del-Lines2skip">
                                     <entry>Lines to Skip</entry>
                                     <entry>Lines to skip before reading data. </entry>
                                 </row>
-                                <row>
+                                <row id="O-row-Del-ParseNulls">
                                     <entry>Parse NULLs</entry>
                                     <entry>Replaces the specified string constant with null
                                         values.</entry>
                                 </row>
-                                <row>
+                                <row id="O-row-Del-NullConstant">
                                     <entry>NULL Constant</entry>
                                     <entry>String constant to replace with null values.</entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Charset">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
+                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -773,9 +852,9 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta"><b>JSON-2props </b> - Kafka Consumer, JMS
-                        Consumer, Hadoop FS, Kinesis all use them. HTTP Client, and probably others
-                        use the 2nd row. </draft-comment>
+                    <draft-comment author="Loretta"><b>JSON-2props </b> - Kafka Consumer, Kinesis
+                        all use them. HTTP Client, and probably others use the 2nd row. Non
+                        compression origins use rows - JMS Consumer, Kafka Consumer</draft-comment>
                 </cmd>
             </step>
             <step id="JSON-2props">
@@ -793,6 +872,14 @@
                                 </row>
                             </thead>
                             <tbody>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FileCompression">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FilePatternCompressed">
+                                    <entry/>
+                                </row>
                                 <row id="ROW-JSONContent">
                                     <entry>JSON Content</entry>
                                     <entry>Type of JSON content. Use one of the following options: <p>
@@ -807,6 +894,14 @@
                                     <entry>Maximum number of characters in a JSON object. <p>Longer
                                             objects are diverted to the pipeline for error handling.
                                         </p></entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Charset">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
+                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -843,7 +938,15 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FileCompression">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FilePatternCompressed">
+                                    <entry/>
+                                </row>
+                                <row id="O-row-LogFormat">
                                     <entry>Log Format</entry>
                                     <entry>Format of the log files. Use one of the following
                                             options:<ul id="ul-LogFormatList">
@@ -856,22 +959,30 @@
                                             <li>Log4j</li>
                                         </ul></entry>
                                 </row>
-                                <row>
+                                <row id="O-row-MaxLine">
                                     <entry>Max Line Length</entry>
                                     <entry>Maximum length of a log line. The origin truncates longer
                                         lines. </entry>
                                 </row>
-                                <row>
+                                <row id="O-row-RetainOLine">
                                     <entry>Retain Original Line</entry>
                                     <entry>Determines how to treat the original log line. Select to
                                         include the original log line as a field in the resulting
                                             record.<p>By default, the original line is
                                             discarded.</p></entry>
                                 </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Charset">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
+                                    <entry/>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>
-                    <ul id="ul_mdk_djs_sr">
+                    <ul id="ul-LogDetails">
                         <li>When you select <uicontrol>Apache Access Log Custom Format</uicontrol>,
                             use Apache log format strings to define the <uicontrol>Custom Log
                                 Format</uicontrol>.</li>
@@ -934,6 +1045,9 @@
                 </info>
             </step>
             <step>
+                <cmd/>
+            </step>
+            <step>
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>O-PROTO-Mess</uicontrol>. Step used
                         by message-reading stages except for Kafka. Kafka conrefs the first two rows
@@ -956,7 +1070,15 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row id="row-DescFile">
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FileCompression">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FilePatternCompressed">
+                                    <entry/>
+                                </row>
+                                <row id="Mess-ProtoDescFile">
                                     <entry>Protobuf Descriptor File </entry>
                                     <entry>Descriptor file (.desc) to use. The descriptor file must
                                         be in the <ph
@@ -970,7 +1092,7 @@
                                                 href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"
                                             />.</p></entry>
                                 </row>
-                                <row id="row-MessageType">
+                                <row id="Mess-MessType">
                                     <entry>Message Type</entry>
                                     <entry>The fully-qualified name for the message type to use when
                                         reading data.<p>Use the following format:
@@ -978,10 +1100,14 @@
                                             type></codeph>. </p>Use a message type defined in the
                                         descriptor file.</entry>
                                 </row>
-                                <row>
+                                <row id="Mess-DelimMessages">
                                     <entry>Delimited Messages</entry>
                                     <entry>Indicates if a message might include more than one
                                         protobuf message.</entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
+                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -1011,6 +1137,14 @@
                                 </row>
                             </thead>
                             <tbody>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FileCompression">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FilePatternCompressed">
+                                    <entry/>
+                                </row>
                                 <row>
                                     <entry>Protobuf Descriptor File </entry>
                                     <entry>Descriptor file (.desc) to use. The descriptor file must
@@ -1038,6 +1172,48 @@
                                     <entry>Indicates if a file might include more than one protobuf
                                         message.</entry>
                                 </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta"><uicontrol>O-SDCRecord</uicontrol> - Adding to
+                        origins that use it. Non-compression origins use rows.</draft-comment>
+                </cmd>
+            </step>
+            <step id="O-SDCRecord">
+                <cmd>For SDC Record data, on the <wintitle>Data Format</wintitle> tab, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_rtb_csl_wx">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>SDC Record Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FileCompression">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FilePatternCompressed">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
+                                    <entry/>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>
@@ -1045,8 +1221,8 @@
             </step>
             <step>
                 <cmd>                    <draft-comment author="alisontaylor"><uicontrol>TEXT_Hadoop data</uicontrol> -
-                        Hadoop FS and MapR FS origins (Include Custom Delimiter is not
-                        applicable)</draft-comment></cmd>
+                        Hadoop FS and MapR FS origins (Include Custom Delimiter is not applicable) –
+                        should this go in Local FS too? </draft-comment></cmd>
             </step>        
             <step id="Text_Hadoop">
                 <cmd>For text data, on the <wintitle>Data Format</wintitle> tab, configure the
@@ -1083,14 +1259,23 @@
                                     <entry>Custom Delimiter</entry>
                                     <entry>One or more characters to use to define records. </entry>
                                 </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Charset">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
+                                    <entry/>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>
                 </info>
             </step>
             <step > <cmd>
-                    <draft-comment author="Loretta"><uicontrol>TEXT data</uicontrol> - Directory,
-                        Kafka Consumer, Kinesis Consumer, JMS Consumer</draft-comment>
+                    <draft-comment author="Loretta"><uicontrol>TEXT data</uicontrol> - Amazon S3,
+                        Directory, Kafka Consumer, Kinesis Consumer, JMS Consumer. HTTP Client.  Non
+                        compression origins  using rows - JMS</draft-comment>
                 </cmd>
             </step>        
                 <step id="Text">
@@ -1108,14 +1293,22 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FileCompression">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FilePatternCompressed">
+                                    <entry/>
+                                </row>
+                                <row id="O-row-MaxLineLength">
                                     <entry>Max Line Length</entry>
                                     <entry>Maximum number of characters allowed for a line. Longer
                                         lines are truncated.<p>Adds a boolean field to the record to
                                             indicate if it was truncated. The field name is
                                             Truncated. </p></entry>
                                 </row>
-                                <row>
+                                <row id="O-row-UseCDelim">
                                     <entry>Use Custom Delimiter <xref
                                             href="../Pipeline_Design/TextCDelim.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
@@ -1124,13 +1317,21 @@
                                     <entry>Uses custom delimiters to define records instead of line
                                         breaks. </entry>
                                 </row>
-                                <row>
+                                <row id="O-row-CustomDelim">
                                     <entry>Custom Delimiter</entry>
                                     <entry>One or more characters to use to define records. </entry>
                                 </row>
-                                <row>
+                                <row id="O-row-IncludeCDelim">
                                     <entry>Include Custom Delimiter</entry>
                                     <entry>Includes delimiter characters in the record.</entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Charset">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
+                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -1207,8 +1408,9 @@
             
             <step><cmd>
                 <draft-comment author="Loretta"><uicontrol>XML data </uicontrol>- step used by
-                    message and file based origins: JMS Consumer, Kafka Consumer, Hadoop FS,
-                    Kinesis Consumer, Directory, S3, HTTP Client, maybe more.</draft-comment>
+                        message and file based origins: Kafka Consumer, Hadoop FS, Kinesis Consumer,
+                        Directory, S3, HTTP Client, maybe more. Origins without compression uses
+                        rows - JMS Consumer</draft-comment>
                     </cmd></step>
             
             <step id="XMLprops">
@@ -1226,7 +1428,15 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FileCompression">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FilePatternCompressed">
+                                    <entry/>
+                                </row>
+                                <row id="O-row-XMLDelimElement">
                                     <entry>Delimiter Element</entry>
                                     <entry>
                                         <p>XML element that acts as a delimiter. Omit a delimiter to
@@ -1236,13 +1446,21 @@
                                             &lt;msg>. </p>
                                     </entry>
                                 </row>
-                                <row>
+                                <row id="O-row-XML-MaxRecLength">
                                     <entry>Max Record Length (chars)</entry>
                                     <entry>
                                         <p>The maximum number of characters in a record. Longer
                                             records are diverted to the pipeline for error handling.
                                         </p>
                                     </entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Charset">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
+                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -1563,14 +1781,6 @@
                                         define the RabbitMQ client property name and value. <p>Use
                                             the property names and values as expected by RabbitMQ.
                                         </p></entry>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MessagesCharset">
-                                    <entry/>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
-                                    <entry/>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MaxBatchSize">
@@ -2818,6 +3028,9 @@
                                         character. <p>Default is the quotation mark character ( "
                                             ).</p></entry>
                                 </row>
+                                <row conref="ReusableTables.dita#concept_wfr_rnw_yq/D-CHARSET-other">
+                                    <entry/>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>
@@ -2856,6 +3069,9 @@
                                                 JSON objects. Each object is a JSON representation
                                                 of a record.</li>
                                         </ul></entry>
+                                </row>
+                                <row conref="ReusableTables.dita#concept_wfr_rnw_yq/D-CHARSET-other">
+                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -2913,6 +3129,39 @@
             </step>
             <step>
                 <cmd>
+                    <draft-comment author="Loretta">SDC Record - not used yet.</draft-comment>
+                </cmd>
+            </step>
+            <step>
+                <cmd>For SDC Record data, on the <wintitle>Data Format</wintitle> tab, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_fgj_mty_wx">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry/>
+                                    <entry/>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry/>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry/>
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
                     <draft-comment author="Loretta"><uicontrol>TextProps</uicontrol> - Using for
                         Hadoop FS, Kafka Producer, and Amazon S3.</draft-comment>
                 </cmd>
@@ -2950,6 +3199,9 @@
                                         the configured record separator string to create an empty
                                             line.<p>When not selected, records without the text
                                             field are discarded.</p></entry>
+                                </row>
+                                <row conref="ReusableTables.dita#concept_wfr_rnw_yq/D-CHARSET-other">
+                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -3015,14 +3267,18 @@
                                             <li>Overwrite - Overwrites the existing file.</li>
                                         </ul></entry>
                                 </row>
-                                <row>
-                                    <entry>Include Checksum in Events  <xref
+                                <row id="row-IncludeChecksum">
+                                    <entry>Include Checksum in Events <xref
                                             href="../Pipeline_Design/WholeFile-IncludingChecksumEvent.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_fyz_ywp_vx"/></xref></entry>
                                     <entry>Includes checksum information in whole file event
                                         records. <p>Use only when the destination generates event
                                             records. </p></entry>
+                                </row>
+                                <row id="row-ChecksumAlgo">
+                                    <entry>Checksum Algorithm</entry>
+                                    <entry>Algorithm to generate the checksum.</entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -3605,10 +3861,6 @@
                                                   href="Reusable_Topics/Kafka-EnablingSecurity.dita"
                                                 />.</p></entry>
                                     </row>
-                                    <row
-                                        conref="ReusableTables.dita#concept_wfr_rnw_yq/D-CHARSET-other">
-                                        <entry/>
-                                    </row>
                                     <row>
                                         <entry>Key Serializer
                                             <xref
@@ -3695,10 +3947,6 @@
                                             values as expected by MapR.</p><p>You can use MapR
                                             Streams properties and set of Kafka properties supported
                                             by MapR Streams. </p></entry>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-CHARSET-other">
-                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>
