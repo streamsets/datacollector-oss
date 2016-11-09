@@ -228,7 +228,7 @@ public class DataLakeTarget extends BaseTarget {
 
     while (batchIterator.hasNext()) {
       Record record = batchIterator.next();
-      RecordEL.setRecordInContext(timeDriverVars, record);
+      RecordEL.setRecordInContext(fileNameTemplateVars, record);
 
       if (timeDriverEval != null) {
         TimeNowEL.setTimeNowInContext(timeDriverVars, new Date());
