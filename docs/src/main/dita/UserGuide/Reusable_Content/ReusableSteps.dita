@@ -3015,6 +3015,15 @@
                                             <li>Overwrite - Overwrites the existing file.</li>
                                         </ul></entry>
                                 </row>
+                                <row>
+                                    <entry>Include Checksum in Events  <xref
+                                            href="../Pipeline_Design/WholeFile-IncludingChecksumEvent.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_fyz_ywp_vx"/></xref></entry>
+                                    <entry>Includes checksum information in whole file event
+                                        records. <p>Use only when the destination generates event
+                                            records. </p></entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>

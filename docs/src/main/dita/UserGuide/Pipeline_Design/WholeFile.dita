@@ -26,9 +26,10 @@
                 <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
             /> writes the files based on the directory and file name defined in the destination. </p>
         <p>When the origin system provides checksum metadata, you can configure the origin to verify
-            the checksum. </p>
-        <p>Most destinations allow you to define access permissions for target files. By default,
-            target files use the default permissions of the destination system.</p>
+            the checksum. Destinations that generate events can include checksum information in
+            event records.</p>
+        <p>Most destinations allow you to define access permissions for written files. By default,
+            written files use the default permissions of the destination system. </p>
         <p>
             <note>During data preview, a whole file pipeline displays a single record instead of the
                 number of records configured for the preview batch size.</note>

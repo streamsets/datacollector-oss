@@ -1194,8 +1194,11 @@ input_stream.read()</codeblock></p>
                               the data to the file and location defined in the stage. If a file of
                               the same name already exists, you can configure the destination to
                               overwrite the existing file or send the current file to error.</dd>
-                        <dd>Target files use the default permissions defined in the destination
-                              system.</dd>
+                        <dd>Written files use the default permissions defined in the destination
+                              system. </dd>
+                        <dd>You can configure the destination to generate a checksum for the written
+                              file and pass checksum information to the destination system in an
+                              event record. </dd>
                         <dd>For more information about the whole file data format, see <xref
                                     href="../Pipeline_Design/WholeFile.dita#concept_nfc_qkh_xw"
                               />.</dd>
@@ -1206,9 +1209,12 @@ input_stream.read()</codeblock></p>
                               the data to the file and location defined in the stage. If a file of
                               the same name already exists, you can configure the destination to
                               overwrite the existing file or send the current file to error.</dd>
-                        <dd>By default, target files use the default access permissions for the
+                        <dd>By default, written files use the default access permissions for the
                               destination system. You can specify an expression that defines access
                               permissions. </dd>
+                        <dd>You can configure the destination to generate a checksum for the written
+                              file and pass checksum information to the destination system in an
+                              event record. </dd>
                         <dd>For more information about the whole file data format, see <xref
                                     href="../Pipeline_Design/WholeFile.dita#concept_nfc_qkh_xw"
                               />.</dd>
@@ -1219,9 +1225,12 @@ input_stream.read()</codeblock></p>
                               the data to the file and location defined in the stage. If a file of
                               the same name already exists, you can configure the destination to
                               overwrite the existing file or send the current file to error.</dd>
-                        <dd>By default, target files use the default access permissions for the
+                        <dd>By default, written files use the default access permissions for the
                               destination system. You can specify an expression that defines access
                               permissions. </dd>
+                        <dd>You can configure the destination to generate a checksum for the written
+                              file and pass checksum information to the destination system in an
+                              event record. </dd>
                         <dd>Using this data format requires setting the <wintitle>File
                                     Type</wintitle> property to <uicontrol>Whole
                               File</uicontrol>.</dd>
@@ -1661,8 +1670,9 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   </dl>
             </p>
             <p>
-                  <draft-comment author="Loretta">Event record DL for Hadoop FS, Local FS, MapR
-                        FS</draft-comment>
+                  <draft-comment author="Loretta"><uicontrol>D-DL-EventRecords</uicontrol> - Event
+                        record DL for Hadoop FS, Local FS, MapR FS. Update Amazon S3 destination as
+                        needed! Last two rows in the last table is used by S3.</draft-comment>
             </p>
             <p id="D-DL-EventRecords">The destination can generate the following types of event records:<dl>
                         <dlentry>
@@ -1735,12 +1745,21 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                                                   include:<ul id="ul_kx1_klc_rx">
                                                   <li>path - An absolute path the processed whole
                                                   file.</li>
-                                                  </ul><p>The field can also include the following
-                                                  attributes when the origin is configured to verify
-                                                  checksums:<ul id="ul_lx1_klc_rx">
-                                                  <li>checksum </li>
-                                                  <li>checksumAlgorithm</li>
-                                                  </ul></p></entry>
+                                                  </ul></entry>
+                                                  </row>
+                                                  <row id="row-D-Event-Checksum">
+                                                  <entry>checksum</entry>
+                                                  <entry>Checksum generated for the written file.
+                                                  <p>Included only when you configure the
+                                                  destination to include checksums in the event
+                                                  record. </p></entry>
+                                                  </row>
+                                                  <row id="row-D-Event-CheckAlgo">
+                                                  <entry>checksumAlgorithm</entry>
+                                                  <entry>Algorithm used to generate the checksum.
+                                                  <p>Included only when you configure the
+                                                  destination to include checksums in the event
+                                                  record. </p></entry>
                                                   </row>
                                                 </tbody>
                                           </tgroup>

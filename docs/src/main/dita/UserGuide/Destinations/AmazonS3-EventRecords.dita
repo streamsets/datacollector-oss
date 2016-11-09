@@ -89,9 +89,8 @@
                     <dd>The destination generates an event record when it completes streaming a
                         whole file. Whole file event records have the
                             <codeph>sdc.event.type</codeph> record header attribute set to
-                            <codeph>wholeFileProcessed</codeph> and </dd>
-                    <dd>have the following fields:<table frame="all" rowsep="1" colsep="1"
-                            id="table_eh2_5gc_rx">
+                            <codeph>wholeFileProcessed</codeph> and include the following
+                            fields:<table frame="all" rowsep="1" colsep="1" id="table_eh2_5gc_rx">
                             <tgroup cols="2">
                                 <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                                 <colspec colname="c2" colnum="2" colwidth="3.5*"/>
@@ -112,21 +111,21 @@
                                     <row>
                                         <entry>targetFileInfo</entry>
                                         <entry>A map of attributes about the whole file written to
-                                            the destination. The attributes include:<ul
+                                            the destination system. The attributes include:<ul
                                                 id="ul_pcx_lkc_rx">
                                                 <li>bucket - The bucket where the whole file is
                                                   written.</li>
                                                 <li>objectKey - The object key name that was
                                                   written.</li>
-                                            </ul><p>The field can also include the following
-                                                attributes when the origin is configure to verify
-                                                  checksums:<ul id="ul_pjh_ykc_rx">
-                                                  <li>checksum </li>
-                                                  <li>checksumAlgorithm<draft-comment
-                                                  author="Loretta">Tech review: Should I add
-                                                  descriptions of these? If so, lmk what to
-                                                  say!</draft-comment></li>
-                                                </ul></p></entry>
+                                            </ul></entry>
+                                    </row>
+                                    <row
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/row-D-Event-Checksum">
+                                        <entry/>
+                                    </row>
+                                    <row
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/row-D-Event-CheckAlgo">
+                                        <entry/>
                                     </row>
                                 </tbody>
                             </tgroup>

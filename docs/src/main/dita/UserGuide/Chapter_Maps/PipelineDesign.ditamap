@@ -67,6 +67,7 @@
    <topicref href="../Pipeline_Design/WholeFile-AdditionalProcessors.dita"/>
    <topicref href="../Pipeline_Design/WholeFile-Writing.dita">
     <topicref href="../Pipeline_Design/WholeFile-AccessPermissions.dita"/>
+    <topicref href="../Pipeline_Design/WholeFile-IncludingChecksumEvent.dita"/>
    </topicref>
   </topicref>
   <topicref href="../Pipeline_Design/ControlCharacters.dita">
