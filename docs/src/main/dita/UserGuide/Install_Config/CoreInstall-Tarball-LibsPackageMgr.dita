@@ -30,10 +30,8 @@
         <p>Click the <uicontrol>Package Manager</uicontrol> icon <image
                 href="../Graphics/icon_PackageManager.png" scale="80" id="image_rt4_qsl_nx"/> to
             display the Package Manager. The Package Manager lists all available stage libraries,
-            displaying a checkbox next to each one installed in the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
-            You can filter the stage libraries by type or you can search for a stage library in the
-            list.</p>
+            displaying a check mark next to each installed library. You can filter the stage
+            libraries by type or you can search for a stage library in the list.</p>
         <p>For information about the stages installed with each stage library, see <xref
                 href="CoreInstall-LibList.dita"/>.</p>
         <p>For example, the following image displays three installed stage libraries:</p>

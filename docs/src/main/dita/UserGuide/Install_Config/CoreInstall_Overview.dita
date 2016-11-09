@@ -25,7 +25,7 @@
   <p><indexterm>installation<indexterm>core with additional libraries</indexterm></indexterm>To
             install and launch a core version of <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
-            you can download the RPM zip file or the core tarball.</p>
+            you can download the RPM package or the core tarball.</p>
         <p>The core installation includes <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
             development stages, most processors, and the origins and destinations in the basic stage

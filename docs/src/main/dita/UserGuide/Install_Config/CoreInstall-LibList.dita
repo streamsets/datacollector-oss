@@ -92,7 +92,7 @@
                                         id="ul_kkp_bqh_cw">
                                         <li/>
                                     </ul></p><p>Includes all processors <ph
-                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/BasicNotProcessor"
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/CoreNotProcessor"
                                     /></p><p>Includes the following destinations:<ul
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/BasicDestinations"
                                         id="ul_bps_cqh_cw">
@@ -327,9 +327,8 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-groovy_2_4-lib</entry>
-                            <entry>For Groovy version 2.4. Installs automatically with the core
-                                installation. <p>Includes the Groovy Evaluator
-                                processor.</p></entry>
+                            <entry>For Groovy version 2.4. <p>Includes the Groovy Evaluator
+                                    processor.</p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-hdp_2_2-lib</entry>
@@ -416,9 +415,8 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-jython_2_7-lib</entry>
-                            <entry>For Jython version 2.7. Installs automatically with the core
-                                installation. <p>Includes the Jython Evaluator
-                                processor.</p></entry>
+                            <entry>For Jython version 2.7. <p>Includes the Jython Evaluator
+                                    processor.</p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-mapr_5_0-lib</entry>
@@ -492,14 +490,16 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-stats-lib</entry>
-                            <entry>Installs automatically with the core installation.<p><ph
+                            <entry>
+                                <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"
                                     /> (<ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                                     />) requires that the statistics stage library be installed on
                                     each registered <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    />.</p></entry>
+                                    />.
+                            </entry>
                         </row>
                     </tbody>
                 </tgroup>

@@ -59,10 +59,9 @@
                   </ul>
             </p>
             <draft-comment author="Loretta">Core install includes all processors except... </draft-comment>
-            <p><ph id="CoreNotProcessor">except the HBase Lookup and Redis Lookup.</ph></p>
-            <draft-comment author="alisontaylor">Basic stage library includes all processors
-                  except...</draft-comment>
-            <p><ph id="BasicNotProcessor">except the Groovy Evaluator, Jython Evaluator, HBase Lookup, and Redis Lookup.</ph></p>
+            <p><ph id="CoreNotProcessor">except the Groovy Evaluator, Jython Evaluator, HBase
+                        Lookup, and Redis Lookup.</ph></p>
+           
             <p>
                   <draft-comment author="Loretta">List of destinations that are part of the Core
                         installation. Used in CoreInstall_Overview and CoreInstall-LibList. </draft-comment>
