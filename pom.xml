@@ -661,7 +661,17 @@
       <url>http://packages.confluent.io/maven/</url>
     </repository>
     <repository>
-      <id>elasticsearch-releases</id>
+      <id>elasticsearch-releases-old</id>
+      <url>http://maven.elasticsearch.org/releases</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>elasticsearch-releases-new</id>
       <url>https://artifacts.elastic.co/maven</url>
       <releases>
         <enabled>true</enabled>
