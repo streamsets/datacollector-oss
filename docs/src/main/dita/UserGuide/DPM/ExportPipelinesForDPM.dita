@@ -29,10 +29,11 @@
         />.</shortdesc>
     <taskbody>
         <context>
-            <p><indexterm>pipelines<indexterm>exporting for DPM</indexterm></indexterm>When you
+            <p><indexterm>pipelines<indexterm>exporting for DPM</indexterm></indexterm>You can
                 export a pipeline for use in <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                />, <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+                when the pipeline is valid. </p>
+            <p>When you export the pipeline, <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> generates a JSON file named after the pipeline, as follows:
                     <systemoutput>&lt;pipeline name>.json</systemoutput>. The generated JSON file
