@@ -286,27 +286,29 @@ public class OracleCDCSource extends BaseSource {
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
         plsqlParser parser = new plsqlParser(tokenStream);
         ParserRuleContext ruleContext;
+        int operationCode;
         switch (op) {
           case UPDATE_CODE:
             ruleContext = parser.update_statement();
-            operation = OperationType.UPDATE.getLabel();
+            operationCode = OperationType.UPDATE_CODE;
             break;
           case INSERT_CODE:
             ruleContext = parser.insert_statement();
-            operation = OperationType.INSERT.getLabel();
+            operationCode = OperationType.INSERT_CODE;
             break;
           case DELETE_CODE:
             ruleContext = parser.delete_statement();
-            operation = OperationType.DELETE.getLabel();
+            operationCode = OperationType.DELETE_CODE;
             break;
           case SELECT_FOR_UPDATE_CODE:
             ruleContext = parser.update_statement();
-            operation = OperationType.SELECT_FOR_UPDATE.getLabel();
+            operationCode = OperationType.SELECT_FOR_UPDATE_CODE;
             break;
           default:
             errorRecordHandler.onError(JDBC_43, redoSQL);
             continue;
         }
+        operation = OperationType.getLabelFromIntCode(operationCode);
         // Walk it and attach our sqlListener
         parseTreeWalker.walk(sqlListener, ruleContext);
         Map<String, String> columns = sqlListener.getColumns();
@@ -330,7 +332,7 @@ public class OracleCDCSource extends BaseSource {
         recordHeader.setAttribute(OPERATION, operation);
         recordHeader.setAttribute(TIMESTAMP_HEADER, timestamp);
         recordHeader.setAttribute(TABLE, table);
-        recordHeader.setAttribute(OperationType.SDC_OPERATION_TYPE, operation);
+        recordHeader.setAttribute(OperationType.SDC_OPERATION_TYPE, String.valueOf(operationCode));
         record.set(Field.create(fields));
         batchMaker.addRecord(record);
         nextOffset = scnSeq;

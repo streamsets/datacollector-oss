@@ -23,23 +23,42 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class TestOperationType {
+
   @Test
-  public void testGetTypeFromString() throws Exception {
-    OperationType insert = OperationType.getTypeFromString("INSERT");
-    Assert.assertEquals(OperationType.INSERT, insert);
-
-    OperationType update = OperationType.getTypeFromString("update"); // lowercase should be handled
-    Assert.assertEquals(OperationType.UPDATE, update);
-
-    OperationType delete = OperationType.getTypeFromString("delete"); // lowercase should be handled
-    Assert.assertEquals(OperationType.DELETE, delete);
-
-    try {
-      OperationType.getTypeFromString("data collector");
-      Assert.fail("Should throw exception");
-    } catch (RuntimeException ex){
-      // correct
-    }
+  public void testGetLabelFromIntCode() throws Exception {
+    Assert.assertEquals("INSERT", OperationType.getLabelFromIntCode(1));
+    Assert.assertEquals("UPDATE", OperationType.getLabelFromIntCode(3));
+    Assert.assertEquals("SELECT FOR UPDATE", OperationType.getLabelFromIntCode(5));
+    Assert.assertEquals("AFTER UPDATE", OperationType.getLabelFromIntCode(7));
+    // Invalid parameter
+    String test = OperationType.getLabelFromIntCode(13);
+    Assert.assertEquals(null, test);
   }
 
+  @Test
+  public void testGetLabelFromStringCode() throws Exception {
+    Assert.assertEquals("INSERT", OperationType.getLabelFromStringCode("1"));
+    Assert.assertEquals("UPDATE", OperationType.getLabelFromStringCode("3"));
+    Assert.assertEquals("SELECT FOR UPDATE", OperationType.getLabelFromStringCode("5"));
+    Assert.assertEquals("AFTER UPDATE", OperationType.getLabelFromStringCode("7"));
+
+    // Invalid parameter
+    try {
+      String test = OperationType.getLabelFromStringCode("abc");
+      Assert.fail();
+    } catch (NumberFormatException ex){
+      // pass
+    }
+
+    String test = OperationType.getLabelFromStringCode("100");
+    Assert.assertEquals(null, test);
+  }
+
+  @Test
+  public void testGetCodeFromLabel() throws Exception {
+    Assert.assertEquals(1, OperationType.getCodeFromLabel("INSERT"));
+    Assert.assertEquals(2, OperationType.getCodeFromLabel("DELETE"));
+    Assert.assertEquals(3, OperationType.getCodeFromLabel("UPDATE"));
+    Assert.assertEquals(4, OperationType.getCodeFromLabel("UPSERT"));
+  }
 }

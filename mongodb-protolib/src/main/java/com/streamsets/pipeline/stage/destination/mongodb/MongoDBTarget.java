@@ -44,6 +44,7 @@ import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.mongodb.Errors;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -129,9 +130,9 @@ public class MongoDBTarget extends BaseTarget {
         Document document = Document.parse(new String(baos.toByteArray()));
 
         //create a write model based on record header
-        if (!(record.getHeader().getAttributeNames().contains(OPERATION_KEY) ||
-            record.getHeader().getAttributeNames().contains(OperationType.SDC_OPERATION_TYPE)))
-        {
+        if (StringUtils.isEmpty(record.getHeader().getAttribute(OPERATION_KEY)) &&
+            StringUtils.isEmpty(record.getHeader().getAttribute(OperationType.SDC_OPERATION_TYPE))
+        ) {
           LOG.error(
               Errors.MONGODB_15.getMessage(),
               record.getHeader().getSourceId()
@@ -142,9 +143,15 @@ public class MongoDBTarget extends BaseTarget {
           );
         }
 
-        String operation = record.getHeader().getAttribute(OperationType.SDC_OPERATION_TYPE);
-        if (operation == null) {
+        String operationCode = record.getHeader().getAttribute(OperationType.SDC_OPERATION_TYPE);
+        String operation = null;
+        if (operationCode != null) {
+          operation = OperationType.getLabelFromStringCode(operationCode);
+        } else {
           operation = record.getHeader().getAttribute(OPERATION_KEY);
+        }
+        if (operation == null) {
+          throw new StageException(Errors.MONGODB_15, record.getHeader().getSourceId());
         }
         switch (operation.toUpperCase()) {
           case INSERT:
@@ -181,7 +188,7 @@ public class MongoDBTarget extends BaseTarget {
                 record.getHeader().getSourceId()
             );
         }
-      } catch (IOException | StageException e) {
+      } catch (IOException | StageException | NumberFormatException e) {
         errorRecordHandler.onError(
             new OnRecordErrorException(
                 record,

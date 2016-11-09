@@ -25,8 +25,6 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
-import com.streamsets.pipeline.lib.operation.OperationType;
-import com.streamsets.pipeline.lib.operation.OperationTypeChooserValues;
 
 import java.util.List;
 
@@ -78,8 +76,8 @@ public class KuduConfigBean {
       displayPosition = 40,
       group = "KUDU"
   )
-  @ValueChooserModel(OperationTypeChooserValues.class)
-  public OperationType defaultOperation;
+  @ValueChooserModel(KuduOperationChooserValues.class)
+  public KuduOperationType defaultOperation;
 
   // advanced tab
   @ConfigDef(
@@ -104,4 +102,16 @@ public class KuduConfigBean {
       group = "ADVANCED"
   )
   public int operationTimeout;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue= "DISCARD",
+      label = "Unsupported Operation Handling",
+      description = "Action to take when operation type is not supported",
+      displayPosition = 30,
+      group = "ADVANCED"
+  )
+  @ValueChooserModel(UnsupportedOperationActionChooserValues.class)
+  public UnsupportedOperationAction unsupportedAction;
 }

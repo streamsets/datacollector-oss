@@ -101,7 +101,7 @@ public class KuduTarget extends BaseTarget {
   private KuduClient kuduClient;
   private KuduSession kuduSession;
 
-  private OperationType defaultOperation;
+  private KuduOperationType defaultOperation;
 
   public KuduTarget(KuduConfigBean configBean) {
     this.configBean = configBean;
@@ -314,11 +314,11 @@ public class KuduTarget extends BaseTarget {
       Map<String, Record> keyToRecordMap = new HashMap<>();
       Iterator<Record> it = partitions.get(tableName).iterator();
 
-      // if table doesn't exist, send records to the error handler and continue
       KuduTable table;
       try {
         table = kuduTables.get(tableName);
       } catch (ExecutionException ex) {
+        // if table doesn't exist, send records to the error handler and continue
         while (it.hasNext()) {
           errorRecordHandler.onError(new OnRecordErrorException(it.next(), Errors.KUDU_01, tableName));
         }
@@ -331,27 +331,57 @@ public class KuduTarget extends BaseTarget {
       }
       KuduRecordConverter recordConverter = kuduRecordConverter.get();
 
-      Record record = null;
-      try {
-        while (it.hasNext()) {
-          try {
-            record = it.next();
-            Operation operation;
-            Optional<String> optOperation = Optional.fromNullable(
-                record.getHeader().getAttribute(OperationType.SDC_OPERATION_TYPE)
-            );
-            String op = optOperation.or(defaultOperation.getLabel()).toUpperCase();
-            operation = getOperation(table, op);
+      while (it.hasNext()) {
+        Record record = null;
+        try {
+          record = it.next();
+          Operation operation = null;
+          int opCode = -1;
+          String op = record.getHeader().getAttribute(OperationType.SDC_OPERATION_TYPE);
+          // Check if the operation code from header attribute is valid
+          if (op != null && !op.isEmpty()) {
+            try {
+              opCode = KuduOperationType.convertToIntCode(op);
+              operation = getOperation(table, opCode);
+            } catch (NumberFormatException | UnsupportedOperationException ex) {
+              // Operation obtained from header is not supported. Handle accordingly
+              switch (configBean.unsupportedAction) {
+                case DISCARD:
+                  LOG.debug("Discarding record with unsupported operation {}", op);
+                  break;
+                case SEND_TO_ERROR:
+                  errorRecordHandler.onError(new OnRecordErrorException(record, Errors.KUDU_13, ex.getMessage()));
+                  break;
+                case USE_DEFAULT:
+                  opCode = defaultOperation.code;
+                  operation = getOperation(table, opCode);
+                  break;
+                default: //unknown action
+                  errorRecordHandler.onError(new OnRecordErrorException(record, Errors.KUDU_14, ex.getMessage(), ex));
+              }
+            }
+          } else {
+            // No header attribute set. Use default.
+            opCode = defaultOperation.code;
+            operation = getOperation(table, opCode);
+          }
+          if (operation != null) {
             PartialRow row = operation.getRow();
-            recordConverter.convert(record, row, op);
+            recordConverter.convert(record, row, opCode);
             keyToRecordMap.put(operation.getRow().stringifyRowKey(), record);
             session.apply(operation);
-          } catch (StageException err) {
-            errorRecordHandler.onError(new OnRecordErrorException(record, err.getErrorCode(), err.getMessage()));
           }
+        } catch (StageException err) { // send to error and keep going in the batch
+          errorRecordHandler.onError(new OnRecordErrorException(record, err.getErrorCode(), err.getMessage()));
+        } catch (KuduException ex) {
+          LOG.error(Errors.KUDU_03.getMessage(), ex.toString(), ex);
+          errorRecordHandler.onError(new OnRecordErrorException(record, Errors.KUDU_03, ex.getMessage(), ex));
         }
+      }
+      // from here, executed at the end of batch
+      try {
         List<RowError> rowErrors = Collections.emptyList();
-        List<OperationResponse> responses = session.flush(); // can return null
+        List<OperationResponse> responses = session.flush();
         if (responses != null) {
           rowErrors = OperationResponse.collectErrors(responses);
         }
@@ -360,51 +390,56 @@ public class KuduTarget extends BaseTarget {
           LOG.warn(Errors.KUDU_03.getMessage(), error.toString());
         }
         for (RowError error : rowErrors) {
+          Operation operation = error.getOperation();
+          String rowKey = operation.getRow().stringifyRowKey();
+          Record errorRecord = keyToRecordMap.get(rowKey);
           if (error.getErrorStatus().isAlreadyPresent()) {
-            // duplicate row key
-            Operation operation = error.getOperation();
-            String rowKey = operation.getRow().stringifyRowKey();
-            Record errorRecord = keyToRecordMap.get(rowKey);
+            // Failed due to inserting duplicate row key
             errorRecordHandler.onError(new OnRecordErrorException(errorRecord, Errors.KUDU_08, rowKey));
+          } else if (error.getErrorStatus().isNotFound()) {
+            // Row key not found error, mostly for update and delete operations.
+            errorRecordHandler.onError(new OnRecordErrorException(errorRecord, Errors.KUDU_15, rowKey));
           } else {
+            // Failure is most likely caused by setting, network, or corrupted table.
+            // Worth throwing StageException.
             throw new StageException(Errors.KUDU_03, error.toString());
           }
         }
       } catch (KuduException ex) {
         LOG.error(Errors.KUDU_03.getMessage(), ex.toString(), ex);
-        errorRecordHandler.onError(new OnRecordErrorException(record, Errors.KUDU_03, ex.getMessage(), ex));
-      } catch (StageException ex) {
-        LOG.error(Errors.KUDU_03.getMessage(), ex.toString(), ex);
-        errorRecordHandler.onError(ex.getErrorCode(), ex.getMessage(), ex);
+        throw new StageException(Errors.KUDU_03, ex.getMessage(), ex);
       }
     }
   }
 
-  private Operation getOperation(KuduTable table, String op) throws StageException {
+  /**
+   * Return Operation based on the operation code. If the code has a number
+   * that Kudu destination doesn't support, it throws UnsupportedOperationException.
+   * @param table
+   * @param op
+   * @return
+   * @throws UnsupportedOperationException
+   */
+  protected Operation getOperation(KuduTable table, int op) throws UnsupportedOperationException {
     Operation operation = null;
-    try {
-      switch (OperationType.getTypeFromString(op)) {
-        case INSERT:
-          operation = table.newInsert();
-          break;
-        case UPSERT:
-          operation = table.newUpsert();
-          break;
-        case UPDATE:
-        case SELECT_FOR_UPDATE:
-        case AFTER_UPDATE:
-          operation = table.newUpdate();
-          break;
-        case DELETE:
-          operation = table.newDelete();
-          break;
-        default:
-          LOG.error("Operation {} not supported", op);
-          throw new StageException(Errors.KUDU_13, op);
-      }
-    } catch (UnsupportedOperationException ex){
-      // get here if op is unsupported operation
-      throw new StageException(Errors.KUDU_13, op);
+    switch (op) {
+      case OperationType.INSERT_CODE:
+        operation = table.newInsert();
+        break;
+      case OperationType.UPSERT_CODE:
+        operation = table.newUpsert();
+        break;
+      case OperationType.UPDATE_CODE:
+      case OperationType.SELECT_FOR_UPDATE_CODE:
+      case OperationType.AFTER_UPDATE_CODE:
+        operation = table.newUpdate();
+        break;
+      case OperationType.DELETE_CODE:
+        operation = table.newDelete();
+        break;
+      default:
+        LOG.error("Operation {} not supported", op);
+        throw new UnsupportedOperationException(String.format("Unsupported Opertaion: %s", op));
     }
     return operation;
   }

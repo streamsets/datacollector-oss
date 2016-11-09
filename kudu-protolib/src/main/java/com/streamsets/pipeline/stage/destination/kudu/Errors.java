@@ -37,6 +37,8 @@ public enum Errors implements ErrorCode {
   KUDU_11("Stage not initialized correctly, cannot write batch"),
   KUDU_12("Invalid table name template expression '{}': {}"),
   KUDU_13("Operation not supported: {}"),
+  KUDU_14("Unknown action for unsupported operation: {}"),
+  KUDU_15("Row key {} not found")
   ;
   private final String msg;
 

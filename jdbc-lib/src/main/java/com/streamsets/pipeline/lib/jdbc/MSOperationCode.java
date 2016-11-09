@@ -25,36 +25,36 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.api.Record;
 
-import java.sql.SQLException;
 import java.util.Map;
 
 public class MSOperationCode {
 
-  protected static final int DELETE = 1;
-  protected static final int INSERT = 2;
-  protected static final int BEFORE_UPDATE = 3;
-  protected static final int AFTER_UPDATE = 4;
+  static final int DELETE = 1;
+  static final int INSERT = 2;
+  static final int BEFORE_UPDATE = 3;
+  static final int AFTER_UPDATE = 4;
 
-  public static final String OP_FIELD = "__$operation";
+  static final String OP_FIELD = "__$operation";
 
   // Mapping of MS operation code and SDC Operation Type
-  protected static final ImmutableMap<Integer, OperationType> CRUD_MAP = ImmutableMap.<Integer, OperationType> builder()
-      .put(DELETE, OperationType.DELETE)
-      .put(INSERT, OperationType.INSERT)
-      .put(BEFORE_UPDATE, OperationType.BEFORE_UPDATE)
-      .put(AFTER_UPDATE, OperationType.AFTER_UPDATE)
+  static final ImmutableMap<Integer, Integer> CRUD_MAP = ImmutableMap.<Integer, Integer> builder()
+      .put(DELETE, OperationType.DELETE_CODE)
+      .put(INSERT, OperationType.INSERT_CODE)
+      .put(BEFORE_UPDATE, OperationType.BEFORE_UPDATE_CODE)
+      .put(AFTER_UPDATE, OperationType.AFTER_UPDATE_CODE)
       .build();
 
-  public static String getOpField(){
+  static String getOpField(){
     return String.format("/%s", OP_FIELD);
   }
 
   public static void addOperationCodeToRecordHeader(Record record) {
     Map<String, Field> map = record.get().getValueAsListMap();
     if (map.containsKey(OP_FIELD)) {
+      int op = CRUD_MAP.get(map.get(OP_FIELD).getValueAsInteger());
       record.getHeader().setAttribute(
           OperationType.SDC_OPERATION_TYPE,
-          CRUD_MAP.get(map.get(OP_FIELD).getValueAsInteger()).getLabel()
+          String.valueOf(op)
       );
     }
   }

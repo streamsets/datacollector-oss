@@ -44,12 +44,12 @@ public class KuduRecordConverter {
     this.schema = schema;
   }
 
-  public void convert(Record record, PartialRow row, String operation) throws OnRecordErrorException {
+  public void convert(Record record, PartialRow row, int operation) throws OnRecordErrorException {
     for (Map.Entry<String, String> entry : fieldsToColumns.entrySet()) {
       String fieldName = entry.getKey(); // field name in record
       String column = entry.getValue();  // column name in Kudu table
       // For delete, we only need to fill primary key column name & value in PartialRow
-      if (operation.equals("DELETE")){
+      if (operation == KuduOperationType.DELETE.code){
         for(ColumnSchema col : schema.getPrimaryKeyColumns()) {
           if (col.getName().equals(column))
             recordToRow(record, row, fieldName, column);
