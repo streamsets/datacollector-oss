@@ -104,15 +104,32 @@ public class DataParserFormatConfig implements DataFormatConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
+      label = "Compression Format",
       description = "Compression formats gzip, bzip2, xz, lzma, Pack200, DEFLATE and Z are supported. " +
           "Archive formats 7z, ar, arj, cpio, dump, tar and zip are supported.",
       defaultValue = "NONE",
-      label = "Compression Format",
+      dependsOn = "dataFormat^",
+      // Show for all except Avro, Datagram, Whole File
+      triggeredByValue = {"TEXT", "JSON", "DELIMITED", "XML", "SDC_JSON", "LOG", "BINARY", "PROTOBUF"},
       displayPosition = 2,
       group = "DATA_FORMAT"
   )
   @ValueChooserModel(CompressionChooserValues.class)
   public Compression compression = Compression.NONE;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "File Name Pattern within Compressed Directory",
+      description = "A glob or regular expression that defines the pattern of the file names within the compressed " +
+          "directory.",
+      defaultValue = "*",
+      displayPosition = 3,
+      group = "DATA_FORMAT",
+      dependsOn = "compression",
+      triggeredByValue = {"ARCHIVE", "COMPRESSED_ARCHIVE"}
+  )
+  public String filePatternInArchive = "*";
 
   /* Charset Related -- Shown last */
   @ConfigDef(
@@ -134,26 +151,14 @@ public class DataParserFormatConfig implements DataFormatConfig {
       defaultValue = "false",
       label = "Ignore Control Characters",
       description = "Use only if required as it impacts reading performance",
+      dependsOn = "dataFormat^",
+      triggeredByValue = {"TEXT", "JSON", "DELIMITED", "XML", "LOG", "DATAGRAM"},
       displayPosition = 1000,
       group = "DATA_FORMAT"
   )
   public boolean removeCtrlChars = false;
 
   /* End Charset Related */
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "File Name Pattern within Compressed Directory",
-      description = "A glob or regular expression that defines the pattern of the file names within the compressed " +
-          "directory.",
-      defaultValue = "*",
-      displayPosition = 330,
-      group = "#0",
-      dependsOn = "compression",
-      triggeredByValue = {"ARCHIVE", "COMPRESSED_ARCHIVE"}
-  )
-  public String filePatternInArchive = "*";
 
   @ConfigDef(
       required = true,

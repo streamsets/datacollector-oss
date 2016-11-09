@@ -54,7 +54,7 @@ public class FileTailConfigBean {
       description = "RegEx pattern to detect main lines for Text and Log files with multi-line elements. " +
           "Use only if required as it impacts reading performance",
       displayPosition = 15,
-      group = "FILES",
+      group = "DATA_FORMAT",
       dependsOn = "dataFormat",
       triggeredByValue = { "TEXT", "LOG" }
   )
