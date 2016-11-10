@@ -25,6 +25,10 @@ import com.sforce.soap.partner.fault.ApiFault;
 import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
 import com.sforce.ws.SessionRenewer;
+import com.streamsets.pipeline.api.Field;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 public class ForceUtils {
   public static String getExceptionCode(Throwable th) {
@@ -69,4 +73,35 @@ public class ForceUtils {
     return new BulkConnection(config);
   }
 
+  public static Field createField(Object val) {
+    if (val instanceof Boolean) {
+      return Field.create((Boolean)val);
+    } else if (val instanceof Character) {
+      return  Field.create((Character)val);
+    } else if (val instanceof Byte) {
+      return  Field.create((Byte)val);
+    } else if (val instanceof Short) {
+      return  Field.create((Short)val);
+    } else if (val instanceof Integer) {
+      return  Field.create((Integer)val);
+    } else if (val instanceof Long) {
+      return  Field.create((Long)val);
+    } else if (val instanceof Float) {
+      return  Field.create((Float)val);
+    } else if (val instanceof Double) {
+      return  Field.create((Double)val);
+    } else if (val instanceof BigDecimal) {
+      return  Field.create((BigDecimal)val);
+    } else if (val instanceof String) {
+      return  Field.create((String)val);
+    } else if (val instanceof byte[]) {
+      return  Field.create((byte[])val);
+    } else if (val instanceof Date) {
+      return  Field.createDatetime((Date)val);
+    } else if (val == null) {
+      return  Field.create(Field.Type.STRING, null);
+    } else {
+      return null;
+    }
+  }
 }

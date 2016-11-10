@@ -16,33 +16,26 @@
  */
 package com.streamsets.pipeline.stage.origin.salesforce;
 
-import com.streamsets.pipeline.stage.origin.salesforce.ForceDSource;
-import com.streamsets.pipeline.stage.origin.salesforce.ForceSource;
-import com.streamsets.testing.NetworkUtils;
-import software.sham.salesforce.MockSalesforceApiServer;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.salesforce.ForceSourceConfigBean;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.testing.NetworkUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import software.sham.salesforce.MockSalesforceApiServer;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509ExtendedTrustManager;
-import java.net.Socket;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,42 +57,6 @@ public class TestSalesforceSource {
   private int port;
   private String authEndpoint;
   private MockSalesforceApiServer mockServer;
-
-  private class TrustAllX509TrustManager extends X509ExtendedTrustManager {
-    public X509Certificate[] getAcceptedIssuers() {
-      return new X509Certificate[0];
-    }
-
-    @Override
-    public void checkClientTrusted(java.security.cert.X509Certificate[] certs,
-        String authType) {
-    }
-
-    @Override
-    public void checkServerTrusted(java.security.cert.X509Certificate[] certs,
-        String authType) {
-    }
-
-    @Override
-    public void checkClientTrusted(X509Certificate[] x509Certificates, String s, Socket socket) throws
-        CertificateException {
-    }
-
-    @Override
-    public void checkServerTrusted(X509Certificate[] x509Certificates, String s, Socket socket) throws
-        CertificateException {
-    }
-
-    @Override
-    public void checkClientTrusted(X509Certificate[] x509Certificates, String s, SSLEngine sslEngine) throws
-        CertificateException {
-    }
-
-    @Override
-    public void checkServerTrusted(X509Certificate[] x509Certificates, String s, SSLEngine sslEngine) throws
-        CertificateException {
-    }
-  }
 
   @Before
   public void setUp() throws NoSuchAlgorithmException, KeyManagementException {

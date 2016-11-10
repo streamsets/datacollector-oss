@@ -167,7 +167,6 @@ public class ForceSource extends BaseSource {
           Matcher m = pattern.matcher(conf.soqlQuery);
           if (m.matches()) {
             sobjectType = m.group(1);
-
             LOG.info("Found sobject type {}", sobjectType);
           } else {
             issues.add(getContext().createConfigIssue(Groups.FORCE.name(),
@@ -475,10 +474,10 @@ public class ForceSource extends BaseSource {
         }
 
         Object val = obj.getValue();
-        Field field = createField(val);
+        Field field = ForceUtils.createField(val);
         if (field == null) {
           throw new StageException(Errors.FORCE_04,
-              "Key: "+key+", unexpected sObjectNameTemplate for val: " + ((val == null) ? val : val.getClass().toString()));
+              "Key: "+key+", unexpected type for val: " + ((val == null) ? val : val.getClass().toString()));
         }
 
         map.put(key, field);
@@ -561,7 +560,7 @@ public class ForceSource extends BaseSource {
         //   "data": {
         //     "event": {
         //       "createdDate": "2016-09-15T06:01:40.000+0000",
-        //       "sObjectNameTemplate": "updated"
+        //       "type": "updated"
         //     },
         //     "sobject": {
         //       "AccountNumber": "3231321",
@@ -585,13 +584,12 @@ public class ForceSource extends BaseSource {
         // sobject data becomes fields
         LinkedHashMap<String, Field> map = new LinkedHashMap<>();
 
-        for (Map.Entry<String, Object> entry : sobject.entrySet()) {
-          String key = entry.getKey();
-          Object val = entry.getValue();
-          Field field = createField(val);
+        for (String key : sobject.keySet()) {
+          Object val = sobject.get(key);
+          Field field = ForceUtils.createField(val);
           if (field == null) {
             throw new StageException(Errors.FORCE_04,
-                "Key: "+key+", unexpected sObjectNameTemplate for val: " + ((val == null) ? val : val.getClass().toString()));
+                "Key: "+key+", unexpected type for val: " + ((val == null) ? val : val.getClass().toString()));
           }
           map.put(key, field);
         }
@@ -600,7 +598,7 @@ public class ForceSource extends BaseSource {
 
         // event data becomes header attributes
         // of the form salesforce.cdc.createdDate,
-        // salesforce.cdc.sObjectNameTemplate
+        // salesforce.cdc.type
         Record.Header recordHeader = rec.getHeader();
         for (Map.Entry<String, Object> entry : event.entrySet()) {
           recordHeader.setAttribute(HEADER_ATTRIBUTE_PREFIX + entry.getKey(), entry.getValue().toString());
@@ -621,38 +619,6 @@ public class ForceSource extends BaseSource {
     }
 
     return nextSourceOffset;
-  }
-
-  private Field createField(Object val) {
-    if (val instanceof Boolean) {
-      return Field.create((Boolean)val);
-    } else if (val instanceof Character) {
-      return  Field.create((Character)val);
-    } else if (val instanceof Byte) {
-      return  Field.create((Byte)val);
-    } else if (val instanceof Short) {
-      return  Field.create((Short)val);
-    } else if (val instanceof Integer) {
-      return  Field.create((Integer)val);
-    } else if (val instanceof Long) {
-      return  Field.create((Long)val);
-    } else if (val instanceof Float) {
-      return  Field.create((Float)val);
-    } else if (val instanceof Double) {
-      return  Field.create((Double)val);
-    } else if (val instanceof BigDecimal) {
-      return  Field.create((BigDecimal)val);
-    } else if (val instanceof String) {
-      return  Field.create((String)val);
-    } else if (val instanceof byte[]) {
-      return  Field.create((byte[])val);
-    } else if (val instanceof Date) {
-      return  Field.createDatetime((Date)val);
-    } else if (val == null) {
-      return  Field.create(Field.Type.STRING, null);
-    } else {
-      return null;
-    }
   }
 
   private JobInfo createJob(String sobjectType, BulkConnection connection)

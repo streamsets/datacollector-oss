@@ -80,6 +80,11 @@
       <artifactId>streamsets-datacollector-commonlib</artifactId>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-lookup-protolib</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <!-- Salesforce Dependencies -->
     <dependency>
