@@ -40,6 +40,10 @@ public enum Errors implements ErrorCode {
   FORCE_12("Invalid SObject name template expression '{}': {}"),
   FORCE_13("Error writing to Salesforce: {}"),
   FORCE_14("Failed to create delimited data generator : {}"),
+  FORCE_15("No results for query: '{}'"),
+  FORCE_16("Failed to evaluate expression: '{}'"),
+  FORCE_17("Exception executing query: '{}' - '{}'"),
+  FORCE_18("No mapping for Salesforce field '{}'"),
   ;
   private final String msg;
 
