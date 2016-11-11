@@ -70,11 +70,13 @@ public class ForceSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(ForceSource.class);
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
   private static final String HEADER_ATTRIBUTE_PREFIX = "salesforce.cdc.";
+  private static final String SOBJECT_TYPE_ATTRIBUTE = "salesforce.sobjectType";
   private static final String REPLAY_ID = "replayId";
   private static final String RECORD_ID_OFFSET_PREFIX = "recordId:";
   private static final String EVENT_ID_OFFSET_PREFIX = "eventId:";
   private static final String READ_EVENTS_FROM_NOW = EVENT_ID_OFFSET_PREFIX + "-1";
   private static final String READ_EVENTS_FROM_START = EVENT_ID_OFFSET_PREFIX + "-2";
+  private static final String SOBJECT_TYPE_FROM_QUERY = "^SELECT.*FROM\\s*(\\S*)\\b.*";
 
   private final ForceSourceConfigBean conf;
 
@@ -142,6 +144,7 @@ public class ForceSource extends BaseSource {
       issues.add(getContext().createConfigIssue(Groups.FORCE.name(), "connectorConfig", Errors.FORCE_07, conf.offsetColumn));
     }
 
+    Pattern pattern = Pattern.compile(SOBJECT_TYPE_FROM_QUERY, Pattern.DOTALL);
     if (issues.isEmpty()) {
       try {
         ConnectorConfig partnerConfig = ForceUtils.getPartnerConfig(conf, new ForceSessionRenewer());
@@ -152,18 +155,19 @@ public class ForceSource extends BaseSource {
 
         LOG.info("Successfully authenticated as {}", conf.username);
 
-        Pattern p = Pattern.compile("^SELECT.*FROM\\s*(\\S*)\\s.*", Pattern.DOTALL);
-        Matcher m = p.matcher(conf.soqlQuery);
-        if (m.matches()) {
-          sobjectType = m.group(1);
+        if (conf.queryExistingData) {
+          Matcher m = pattern.matcher(conf.soqlQuery);
+          if (m.matches()) {
+            sobjectType = m.group(1);
 
-          LOG.info("Found sobject sObjectNameTemplate {}", sobjectType);
-        } else {
-          issues.add(getContext().createConfigIssue(Groups.FORCE.name(),
-              "connectorConfig",
-              Errors.FORCE_00,
-              "Badly formed SOQL Query: " + conf.soqlQuery
-          ));
+            LOG.info("Found sobject type {}", sobjectType);
+          } else {
+            issues.add(getContext().createConfigIssue(Groups.FORCE.name(),
+                "connectorConfig",
+                Errors.FORCE_00,
+                "Badly formed SOQL Query: " + conf.soqlQuery
+            ));
+          }
         }
       } catch (ConnectionException | AsyncApiException e) {
         LOG.error("Error connecting: {}", e);
@@ -176,7 +180,7 @@ public class ForceSource extends BaseSource {
     }
 
     if (issues.isEmpty() && conf.subscribeToStreaming) {
-      String query = "SELECT Id FROM PushTopic WHERE Name = '"+conf.pushTopic+"'";
+      String query = "SELECT Id, Query FROM PushTopic WHERE Name = '"+conf.pushTopic+"'";
 
       QueryResult qr = null;
       try {
@@ -188,6 +192,22 @@ public class ForceSource extends BaseSource {
                   Groups.FORCE.name(), "connectorConfig", Errors.FORCE_00, "Can't find Push Topic '" + conf.pushTopic +"'"
               )
           );
+        }
+
+        if (null == sobjectType) {
+          String soqlQuery = (String)qr.getRecords()[0].getField("Query");
+          Matcher m = pattern.matcher(soqlQuery);
+          if (m.matches()) {
+            sobjectType = m.group(1);
+
+            LOG.info("Found sobject type {}", sobjectType);
+          } else {
+            issues.add(getContext().createConfigIssue(Groups.FORCE.name(),
+                "connectorConfig",
+                Errors.FORCE_00,
+                "Badly formed SOQL Query: " + conf.soqlQuery
+            ));
+          }
         }
       } catch (ConnectionException e) {
         issues.add(
@@ -391,6 +411,7 @@ public class ForceSource extends BaseSource {
               map.put(resultHeader.get(i), Field.create(row.get(i)));
             }
             record.set(Field.createListMap(map));
+            record.getHeader().setAttribute(SOBJECT_TYPE_ATTRIBUTE, sobjectType);
             batchMaker.addRecord(record);
             ++numRecords;
           }
@@ -460,6 +481,7 @@ public class ForceSource extends BaseSource {
       }
 
       rec.set(Field.createListMap(map));
+      rec.getHeader().setAttribute(SOBJECT_TYPE_ATTRIBUTE, sobjectType);
       batchMaker.addRecord(rec);
     }
 
@@ -572,8 +594,9 @@ public class ForceSource extends BaseSource {
         // salesforce.cdc.sObjectNameTemplate
         Record.Header recordHeader = rec.getHeader();
         for (String key : event.keySet()) {
-          recordHeader.setAttribute(HEADER_ATTRIBUTE_PREFIX +key, event.get(key).toString());
+          recordHeader.setAttribute(HEADER_ATTRIBUTE_PREFIX + key, event.get(key).toString());
         }
+        recordHeader.setAttribute(SOBJECT_TYPE_ATTRIBUTE, sobjectType);
 
         nextSourceOffset = EVENT_ID_OFFSET_PREFIX + event.get(REPLAY_ID).toString();
 

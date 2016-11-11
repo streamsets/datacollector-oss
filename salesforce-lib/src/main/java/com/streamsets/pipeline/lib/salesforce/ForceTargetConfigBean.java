@@ -45,7 +45,7 @@ public class ForceTargetConfigBean extends ForceConfigBean {
       type = ConfigDef.Type.STRING,
       elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      defaultValue = "${record:attribute('sobjectType')}",
+      defaultValue = "${record:attribute('salesforce.sobjectType')}",
       label = "SObject Type",
       description = "SObject Type - can be literal, such as 'Account', or an expression, like '${record:attribute('type')'}",
       displayPosition = 60,
