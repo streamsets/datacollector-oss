@@ -889,6 +889,14 @@ public class BeanHelper {
         return MetricElementJson.TIME_IN_CURRENT_STAGE;
       case TIME_OF_LAST_RECEIVED_RECORD:
         return MetricElementJson.TIME_OF_LAST_RECEIVED_RECORD;
+      case LAST_BATCH_INPUT_RECORDS_COUNT:
+        return MetricElementJson.LAST_BATCH_INPUT_RECORDS_COUNT;
+      case LAST_BATCH_OUTPUT_RECORDS_COUNT:
+        return MetricElementJson.LAST_BATCH_OUTPUT_RECORDS_COUNT;
+      case LAST_BATCH_ERROR_RECORDS_COUNT:
+        return MetricElementJson.LAST_BATCH_ERROR_RECORDS_COUNT;
+      case LAST_BATCH_ERROR_MESSAGES_COUNT:
+        return MetricElementJson.LAST_BATCH_ERROR_MESSAGES_COUNT;
 
       default:
         throw new IllegalArgumentException("Unrecognized metric element");
@@ -989,6 +997,14 @@ public class BeanHelper {
         return MetricElement.TIME_IN_CURRENT_STAGE;
       case TIME_OF_LAST_RECEIVED_RECORD:
         return MetricElement.TIME_OF_LAST_RECEIVED_RECORD;
+      case LAST_BATCH_INPUT_RECORDS_COUNT:
+        return MetricElement.LAST_BATCH_INPUT_RECORDS_COUNT;
+      case LAST_BATCH_OUTPUT_RECORDS_COUNT:
+        return MetricElement.LAST_BATCH_OUTPUT_RECORDS_COUNT;
+      case LAST_BATCH_ERROR_RECORDS_COUNT:
+        return MetricElement.LAST_BATCH_ERROR_RECORDS_COUNT;
+      case LAST_BATCH_ERROR_MESSAGES_COUNT:
+        return MetricElement.LAST_BATCH_ERROR_MESSAGES_COUNT;
 
       default:
         throw new IllegalArgumentException("Unrecognized metric element");

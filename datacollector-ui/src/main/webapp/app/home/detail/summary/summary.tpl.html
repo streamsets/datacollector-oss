@@ -296,6 +296,25 @@
       <div class="panel-body double-size-panel">
 
         <ul class="table-properties">
+          <li>
+            <span class="properties-label last-batch">{{'home.detailPane.summaryTab.lastBatchInputRecordsCount' | translate}}:</span>
+            <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.lastBatchInputRecordsCount}}</span>
+          </li>
+
+          <li>
+            <span class="properties-label last-batch">{{'home.detailPane.summaryTab.lastBatchOutputRecordsCount' | translate}}:</span>
+            <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.lastBatchOutputRecordsCount}}</span>
+          </li>
+
+          <li>
+            <span class="properties-label last-batch">{{'home.detailPane.summaryTab.lastBatchErrorRecordsCount' | translate}}:</span>
+            <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.lastBatchErrorRecordsCount}}</span>
+          </li>
+
+          <li>
+            <span class="properties-label last-batch">{{'home.detailPane.summaryTab.lastBatchErrorMessagesCount' | translate}}:</span>
+            <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.lastBatchErrorMessagesCount}}</span>
+          </li>
 
           <li>
             <span class="properties-label">{{'home.detailPane.summaryTab.timeOfLastReceivedRecord' | translate}}:</span>
@@ -336,9 +355,6 @@
             <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.timeInCurrentStage}} milliseconds</span>
           </li>
 
-        </ul>
-
-        <ul class="table-properties">
           <li>
             <span class="properties-value">{{'home.detailPane.summaryTab.threadLastRun' | translate}}</span>
           </li>

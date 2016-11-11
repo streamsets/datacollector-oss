@@ -232,6 +232,18 @@ public class MetricRuleEvaluatorHelper {
       case TIME_OF_LAST_RECEIVED_RECORD:
         value =  runtimeStats.getTimeOfLastReceivedRecord();
         break;
+      case LAST_BATCH_INPUT_RECORDS_COUNT:
+        value =  runtimeStats.getLastBatchInputRecordsCount();
+        break;
+      case LAST_BATCH_OUTPUT_RECORDS_COUNT:
+        value =  runtimeStats.getLastBatchOutputRecordsCount();
+        break;
+      case LAST_BATCH_ERROR_RECORDS_COUNT:
+        value =  runtimeStats.getLastBatchErrorRecordsCount();
+        break;
+      case LAST_BATCH_ERROR_MESSAGES_COUNT:
+        value =  runtimeStats.getLastBatchErrorMessagesCount();
+        break;
       default:
         throw new IllegalStateException("Unexpected metric element type " + metricElement);
     }

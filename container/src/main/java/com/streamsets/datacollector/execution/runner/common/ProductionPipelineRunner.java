@@ -48,6 +48,7 @@ import com.streamsets.datacollector.runner.FullPipeBatch;
 import com.streamsets.datacollector.runner.Observer;
 import com.streamsets.datacollector.runner.Pipe;
 import com.streamsets.datacollector.runner.PipeBatch;
+import com.streamsets.datacollector.runner.PipeContext;
 import com.streamsets.datacollector.runner.PipelineRunner;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.SourceOffsetTracker;
@@ -144,6 +145,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
   private long lastMemoryLimitNotification;
   private ThreadHealthReporter threadHealthReporter;
   private final List<List<StageOutput>> capturedBatches = new ArrayList<>();
+  private PipeContext pipeContext = null;
 
   @Inject
   public ProductionPipelineRunner(@Named("name") String pipelineName, @Named("rev") String revision,
@@ -515,6 +517,13 @@ public class ProductionPipelineRunner implements PipelineRunner {
     batchErrorRecordsCounter.inc(pipeBatch.getErrorRecords());
     batchErrorMessagesCounter.inc(pipeBatch.getErrorMessages());
 
+    if (pipeContext != null) {
+      pipeContext.getRuntimeStats().setLastBatchInputRecordsCount(pipeBatch.getInputRecords());
+      pipeContext.getRuntimeStats().setLastBatchOutputRecordsCount((pipeBatch.getOutputRecords()));
+      pipeContext.getRuntimeStats().setLastBatchErrorRecordsCount(pipeBatch.getErrorRecords());
+      pipeContext.getRuntimeStats().setLastBatchErrorMessagesCount(pipeBatch.getErrorMessages());
+    }
+
     if (isStatsAggregationEnabled()) {
       Map<String, Object> pipelineBatchMetrics = new HashMap<>();
       pipelineBatchMetrics.put(AggregatorUtil.PIPELINE_BATCH_DURATION, batchDuration);
@@ -719,6 +728,10 @@ public class ProductionPipelineRunner implements PipelineRunner {
       }
     }
     return null;
+  }
+
+  public void setPipeContext(PipeContext pipeContext) {
+    this.pipeContext = pipeContext;
   }
 
 }

@@ -33,6 +33,10 @@ public class RuntimeStats implements GaugeValue {
   private long timeInCurrentStage;
   private long timeOfLastReceivedRecord;
   private long batchStartTime;
+  private long lastBatchInputRecordsCount;
+  private long lastBatchOutputRecordsCount;
+  private long lastBatchErrorRecordsCount;
+  private long lastBatchErrorMessagesCount;
 
   public RuntimeStats() {
     //initialize to current time, otherwise it will be 0 and will trigger the pipeline idle alert as soon as the
@@ -96,6 +100,38 @@ public class RuntimeStats implements GaugeValue {
     this.batchStartTime = batchStartTime;
   }
 
+  public long getLastBatchInputRecordsCount() {
+    return lastBatchInputRecordsCount;
+  }
+
+  public void setLastBatchInputRecordsCount(long lastBatchInputRecordsCount) {
+    this.lastBatchInputRecordsCount = lastBatchInputRecordsCount;
+  }
+
+  public long getLastBatchErrorRecordsCount() {
+    return lastBatchErrorRecordsCount;
+  }
+
+  public void setLastBatchErrorRecordsCount(long lastBatchErrorRecordsCount) {
+    this.lastBatchErrorRecordsCount = lastBatchErrorRecordsCount;
+  }
+
+  public long getLastBatchOutputRecordsCount() {
+    return lastBatchOutputRecordsCount;
+  }
+
+  public void setLastBatchOutputRecordsCount(long lastBatchOutputRecordsCount) {
+    this.lastBatchOutputRecordsCount = lastBatchOutputRecordsCount;
+  }
+
+  public long getLastBatchErrorMessagesCount() {
+    return lastBatchErrorMessagesCount;
+  }
+
+  public void setLastBatchErrorMessagesCount(long lastBatchErrorMessagesCount) {
+    this.lastBatchErrorMessagesCount = lastBatchErrorMessagesCount;
+  }
+
   @Override
   public void serialize(JsonGenerator jg) throws IOException {
     jg.writeStartObject();
@@ -106,6 +142,10 @@ public class RuntimeStats implements GaugeValue {
     jg.writeObjectField("timeInCurrentStage", timeInCurrentStage);
     jg.writeObjectField("timeOfLastReceivedRecord", timeOfLastReceivedRecord);
     jg.writeObjectField("batchStartTime", batchStartTime);
+    jg.writeObjectField("lastBatchInputRecordsCount", lastBatchInputRecordsCount);
+    jg.writeObjectField("lastBatchOutputRecordsCount", lastBatchOutputRecordsCount);
+    jg.writeObjectField("lastBatchErrorRecordsCount", lastBatchErrorRecordsCount);
+    jg.writeObjectField("lastBatchErrorMessagesCount", lastBatchErrorMessagesCount);
     jg.writeEndObject();
   }
 

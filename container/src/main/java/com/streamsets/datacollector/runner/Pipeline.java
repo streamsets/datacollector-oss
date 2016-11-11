@@ -40,10 +40,7 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.ext.Sampler;
 import com.streamsets.pipeline.api.impl.Utils;
-
-import com.streamsets.pipeline.lib.sampling.RecordSampler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -166,6 +163,7 @@ public class Pipeline {
           ex.toString()));
       }
     }
+    this.runner.setPipeContext(pipeContext);
     return issues;
   }
 

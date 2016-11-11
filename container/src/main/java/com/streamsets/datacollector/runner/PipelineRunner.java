@@ -69,4 +69,6 @@ public interface PipelineRunner {
 
   void errorNotification(Pipe[] pipes, Throwable throwable);
 
-  }
+  public void setPipeContext(PipeContext pipeContext);
+
+}

@@ -32,6 +32,7 @@ import com.streamsets.datacollector.runner.Observer;
 import com.streamsets.datacollector.runner.ObserverPipe;
 import com.streamsets.datacollector.runner.Pipe;
 import com.streamsets.datacollector.runner.PipeBatch;
+import com.streamsets.datacollector.runner.PipeContext;
 import com.streamsets.datacollector.runner.PipelineRunner;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.SourceOffsetTracker;
@@ -180,6 +181,10 @@ public class PreviewPipelineRunner implements PipelineRunner {
   @Override
   public void registerListener(BatchListener batchListener) {
     // TODO Auto-generated method stub
+
+  }
+
+  public void setPipeContext(PipeContext pipeContext) {
 
   }
 }

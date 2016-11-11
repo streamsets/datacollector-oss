@@ -1084,6 +1084,10 @@ angular.module('dataCollectorApp.common')
       'metrics.CURRENT_BATCH_AGE',
       'metrics.TIME_IN_CURRENT_STAGE',
       'metrics.TIME_OF_LAST_RECEIVED_RECORD',
+      'metrics.LAST_BATCH_INPUT_RECORDS_COUNT',
+      'metrics.LAST_BATCH_OUTPUT_RECORDS_COUNT',
+      'metrics.LAST_BATCH_ERROR_RECORDS_COUNT',
+      'metrics.LAST_BATCH_ERROR_MESSAGES_COUNT',
 
       //Counter
       'metrics.COUNTER_COUNT',
@@ -1151,6 +1155,22 @@ angular.module('dataCollectorApp.common')
           {
             value: 'TIME_OF_LAST_RECEIVED_RECORD',
             label: translations['metrics.TIME_OF_LAST_RECEIVED_RECORD']
+          },
+          {
+            value: 'LAST_BATCH_INPUT_RECORDS_COUNT',
+            label: translations['metrics.LAST_BATCH_INPUT_RECORDS_COUNT']
+          },
+          {
+            value: 'LAST_BATCH_OUTPUT_RECORDS_COUNT',
+            label: translations['metrics.LAST_BATCH_OUTPUT_RECORDS_COUNT']
+          },
+          {
+            value: 'LAST_BATCH_ERROR_RECORDS_COUNT',
+            label: translations['metrics.LAST_BATCH_ERROR_RECORDS_COUNT']
+          },
+          {
+            value: 'LAST_BATCH_ERROR_MESSAGES_COUNT',
+            label: translations['metrics.LAST_BATCH_ERROR_MESSAGES_COUNT']
           }
         ],
         COUNTER: [
