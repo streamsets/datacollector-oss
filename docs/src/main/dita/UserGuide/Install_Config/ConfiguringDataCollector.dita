@@ -532,11 +532,14 @@
                             </row>
                             <row>
                                 <entry>runner.thread.pool.size</entry>
-                                <entry>Number of threads in the pool that are available to run
-                                    standalone pipelines. The default value is sufficient to run
-                                    approximately 20 standalone pipelines at the same
-                                        time.<p>Default is 20. Be sure to uncomment the property if
-                                        you change the value.</p></entry>
+                                <entry>Pre-multiplier size of the thread pool. One running pipeline
+                                    requires five threads, and pipelines share threads in the pool.
+                                    To calculate the approximate runner thread pool size, multiply
+                                    the number of running pipelines by 2.2.<p>Increasing this value
+                                        does not increase the parallelization of an individual
+                                        pipeline. </p><p>Default is 50, which is sufficient to run
+                                        approximately 22 standalone pipelines at the same
+                                    time.</p></entry>
                             </row>
                         </tbody>
                     </tgroup>

@@ -48,7 +48,7 @@
             are available.</dt>
           <dd>By default, <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can
-            run approximately 20 standalone pipelines at the same time. If you run a larger number
+            run approximately 22 standalone pipelines at the same time. If you run a larger number
             of standalone pipelines at the same time, you might receive the following
             error:<codeblock>CONTAINER_0166 - Cannot start pipeline '&lt;pipeline name>' as there are not enough threads available</codeblock></dd>
           <dd>To resolve this error, increase the value of the <b>runner.thread.pool.size</b>

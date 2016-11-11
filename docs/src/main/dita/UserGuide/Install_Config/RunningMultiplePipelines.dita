@@ -17,24 +17,29 @@
     <title>Running Multiple Concurrent Pipelines</title>
     <shortdesc>By default, <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can
-        run approximately 20 standalone pipelines concurrently. If you plan to run a larger number
+        run approximately 22 standalone pipelines concurrently. If you plan to run a larger number
         of pipelines at the same time, increase the thread pool size.</shortdesc>
     <taskbody>
         <context>
             <p><indexterm>pipelines<indexterm>running
                         multiple</indexterm></indexterm><indexterm>pipelines<indexterm>running
-                        concurrent</indexterm></indexterm>The <codeph>runner.thread.pool.size</codeph>
-                property in the <ph
+                        concurrent</indexterm></indexterm>The
+                    <codeph>runner.thread.pool.size</codeph> property in the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>, determines the
-                number of threads in the pool that are available to run standalone pipelines.</p>
+                number of threads in the pool that are available to run standalone pipelines. One
+                running pipeline requires five threads, and pipelines share threads in the pool. </p>
         </context>
         <steps>
             <step>
-                <cmd>Use a text editor to open <codeph>sdc.properties</codeph>. </cmd>
+                <cmd>Use a text editor to open <codeph>sdc.properties</codeph>.</cmd>
             </step>
             <step>
-                <cmd>Uncomment the <codeph>runner.thread.pool.size</codeph> property and increase the default
+                <cmd>Calculate the approximate runner thread pool size by multiplying the number of
+                    running pipelines by 2.2.</cmd>
+            </step>
+            <step>
+                <cmd>Set the <codeph>runner.thread.pool.size</codeph> property to your calculated
                     value.</cmd>
             </step>
             <step>
