@@ -27,13 +27,20 @@ import com.streamsets.pipeline.lib.io.OverrunReader;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 
+import static org.junit.Assert.fail;
+
 public class TestOverrunStreamingXmlParser {
+
+  @Rule
+  public ExpectedException thrown = ExpectedException.none();
 
   @Before
   public void setUp() {
@@ -93,6 +100,21 @@ public class TestOverrunStreamingXmlParser {
     Assert.assertEquals("r2", f.getValueAsMap().get("value").getValue());
 
     parser.close();
+  }
+
+  @Test
+  public void testXmlObjectWithLongContentOverrun() throws Exception {
+    thrown.expect(ObjectLengthException.class);
+
+    StreamingXmlParser parser = new OverrunStreamingXmlParser(
+        getXml("com/streamsets/pipeline/lib/xml/TestOverrunStreamingXmlParser-long-content.xml"),
+        null,
+        0,
+        4096
+    );
+
+    parser.read();
+    fail("ObjectLengthException should have occurred");
   }
 
 }

@@ -23,6 +23,7 @@ import com.google.common.base.Strings;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.impl.XMLChar;
+import com.streamsets.pipeline.lib.io.ObjectLengthException;
 import com.streamsets.pipeline.lib.xml.xpath.Constants;
 import com.streamsets.pipeline.lib.xml.xpath.MatchStatus;
 import com.streamsets.pipeline.lib.xml.xpath.XPathMatchingEventReader;
@@ -227,19 +228,20 @@ public class StreamingXmlParser {
   }
 
   @SuppressWarnings("unchecked")
-  private void addContent(Map<String, Object> contents, String name, Field field) throws XMLStreamException {
-    if (!isOverMaxObjectLength()) {
-      List<Field> list = (List<Field>) contents.get(name);
-      if (list == null) {
-        list = new ArrayList<>();
-        contents.put(name, list);
-      }
-      list.add(field);
+  private void addContent(Map<String, Object> contents, String name, Field field) throws
+      XMLStreamException,
+      ObjectLengthException {
+    throwIfOverMaxObjectLength();
+    List<Field> list = (List<Field>) contents.get(name);
+    if (list == null) {
+      list = new ArrayList<>();
+      contents.put(name, list);
     }
+    list.add(field);
   }
 
   @SuppressWarnings("unchecked")
-  Field parse(XMLEventReader reader, StartElement startE) throws XMLStreamException {
+  Field parse(XMLEventReader reader, StartElement startE) throws XMLStreamException, ObjectLengthException {
     Map<String, Field> startEMap = toField(startE);
     Map<String, Object> contents = new LinkedHashMap<>();
     boolean maybeText = true;
@@ -288,6 +290,9 @@ public class StreamingXmlParser {
       }
     }
     return Field.create(startEMap);
+  }
+
+  protected void throwIfOverMaxObjectLength() throws XMLStreamException, ObjectLengthException {
   }
 
 }

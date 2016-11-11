@@ -73,10 +73,7 @@ public class OverrunStreamingXmlParser  extends StreamingXmlParser {
     limit = getReaderPosition() + maxObjectLen;
     try {
       field = super.read();
-      if (isOverMaxObjectLength()) {
-        throw new ObjectLengthException(Utils.format("XML Object at offset '{}' exceeds max length '{}'",
-                                                        initialPosition, maxObjectLen), initialPosition);
-      }
+      throwIfOverMaxObjectLength();
       initialPosition = getReaderPosition();
     } catch (XMLStreamException ex) {
       if (ex.getNestedException() != null && ex.getNestedException() instanceof OverrunException) {
@@ -86,6 +83,20 @@ public class OverrunStreamingXmlParser  extends StreamingXmlParser {
       throw ex;
     }
     return field;
+  }
+
+  @Override
+  protected void throwIfOverMaxObjectLength() throws XMLStreamException, ObjectLengthException {
+    if (isOverMaxObjectLength()) {
+      throw new ObjectLengthException(
+          Utils.format("XML Object at offset '{}' exceeds max length '{}'; current position '{}'",
+              initialPosition,
+              maxObjectLen,
+              getReaderPosition()
+          ),
+          getReaderPosition()
+      );
+    }
   }
 
 }
