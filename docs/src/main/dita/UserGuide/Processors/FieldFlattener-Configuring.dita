@@ -19,7 +19,7 @@
         <context>
             <p><indexterm>Field Flattener
                 processor<indexterm>configuring</indexterm></indexterm>Configure a Field Flattener
-                to flatten records. </p>
+                to flatten fields. </p>
         </context>
         <steps>
             <step
@@ -46,7 +46,20 @@
                                             href="FieldFlattener-FlatRecord.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_w55_4yn_lw"/></xref></entry>
-                                    <entry>You can flatten entire records at this time.</entry>
+                                    <entry>Select whether to flatten the entire record or to flatten
+                                        specific list or map fields.</entry>
+                                </row>
+                                <row>
+                                    <entry>Fields
+                                        <xref
+                                            href="FieldFlattener-FlatField.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_w66_7yn_lw"/></xref></entry>
+                                    <entry>List or map fields to flatten. You can flatten list and
+                                        map fields that contain additional nested list or map
+                                        fields. Enter the path to the field, for example:
+                                        /contact/address. <p>Click <uicontrol>Add</uicontrol> to
+                                            specify additional fields to flatten.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Name Separator</entry>

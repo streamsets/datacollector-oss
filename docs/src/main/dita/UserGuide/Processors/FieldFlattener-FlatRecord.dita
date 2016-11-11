@@ -14,12 +14,13 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_k4x_rz1_hx">
- <title>Flattened Records</title>
+ <title>Flatten the Entire Record</title>
  <conbody>
-  <p><indexterm>Field Flattener processor<indexterm>flattening records</indexterm></indexterm>When
-            the Field Flattener flattens a record, it flattens all nested structures in the record
-            until the record is flat.</p>
-        <p>For example, say you have the following record with nested Map
+  <p><indexterm>Field Flattener processor<indexterm>flattening
+                    records</indexterm></indexterm><indexterm>records<indexterm>flattening</indexterm></indexterm>When
+            the Field Flattener flattens the entire record, it flattens all nested structures in the
+            record until the record is flat.</p>
+        <p>For example, say you have the following record with nested map
             fields:<codeblock>{
   "store": {
      "id": "10342",
@@ -32,9 +33,9 @@
      "ip": "234.56.7890"
   }
 }</codeblock></p>
-        <p>If you configure Field Flattener to use a period as the name separator, the processor
-            generates the following record:<table frame="all" rowsep="1" colsep="1"
-                id="table_erg_vhb_hx">
+        <p>If you configure Field Flattener to flatten the entire record and to use a period as the
+            name separator, the processor generates the following record:<table frame="all"
+                rowsep="1" colsep="1" id="table_erg_vhb_hx">
                 <tgroup cols="6">
                     <colspec colname="c1" colnum="1" colwidth="1.0*"/>
                     <colspec colname="c2" colnum="2" colwidth="1.0*"/>

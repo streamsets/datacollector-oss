@@ -18,13 +18,15 @@
  <conbody>
   <p><indexterm>Field Flattener
                     processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Field
-                    Flattener</indexterm></indexterm>The Field Flattener flattens records,
-            flattening List and Map fields to produce a record with no nested fields. </p>
+                    Flattener</indexterm></indexterm>The Field Flattener flattens list and map
+            fields. The processor can flatten the entire record to produce a record with no nested
+            fields. Or it can flatten specific list or map fields.</p>
         <p>Use the Field Flattener when you have nested fields that you need to flatten. For
             example, the Hive Drift Solution cannot process records with nested fields, so you can
             use the Field Flattener to flatten records before passing them to the Hive Metadata
             processor. </p>
-        <p>When you configure a Field Flattener, you configure the name separator to use for
+        <p>When you configure a Field Flattener, you configure whether to flatten the entire record
+            or specific fields in the record. You also configure the name separator to use for
             flattened field names. </p>
  </conbody>
 </concept>
