@@ -93,7 +93,7 @@ public abstract class ElasticSearchFactory {
     );
   }
 
-  public static Node node(Map<String, Object> configs) {
+  public static Node testNode(Map<String, Object> configs) {
     return factory.createTestNode(configs);
   }
 }

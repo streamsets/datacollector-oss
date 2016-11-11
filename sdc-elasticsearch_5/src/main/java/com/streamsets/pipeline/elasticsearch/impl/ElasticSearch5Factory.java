@@ -26,14 +26,13 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.node.Node;
 import org.elasticsearch.node.internal.InternalSettingsPreparer;
-import org.elasticsearch.transport.Netty3Plugin;
 import org.elasticsearch.transport.Netty4Plugin;
-import org.elasticsearch.xpack.XPackPlugin;
 import org.elasticsearch.xpack.client.PreBuiltXPackTransportClient;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -77,9 +76,7 @@ public class ElasticSearch5Factory extends ElasticSearchFactory {
       }
     }
     if (useElasticCloud) {
-      settingsBuilder = settingsBuilder
-          .put("action.bulk.compress", false) // To use Found, action.bulk.compress must be disabled
-          .put("request.headers.X-Found-Cluster", clusterName);
+      settingsBuilder = settingsBuilder.put("request.headers.X-Found-Cluster", clusterName);
     }
 
     Settings settings = settingsBuilder.build();
@@ -89,12 +86,8 @@ public class ElasticSearch5Factory extends ElasticSearchFactory {
       String[] parts = uri.split(":");
       elasticAddresses[i] = new InetSocketTransportAddress(InetAddress.getByName(parts[0]), Integer.parseInt(parts[1]));
     }
-    TransportClient client;
-    if (useSecurity) {
-      client = new PreBuiltXPackTransportClient(settings, XPackPlugin.class);
-    } else {
-      client = new PreBuiltXPackTransportClient(settings);
-    }
+    TransportClient client = new PreBuiltXPackTransportClient(settings);
+
     return client.addTransportAddresses(elasticAddresses);
   }
 
@@ -111,8 +104,8 @@ public class ElasticSearch5Factory extends ElasticSearchFactory {
     public TestNode(Settings settings) {
       super(
           InternalSettingsPreparer.prepareEnvironment(settings, null),
-          // To enable an http port in integration tests, the following plugins must be loaded.
-          Arrays.asList(Netty3Plugin.class, Netty4Plugin.class)
+          // To enable an http port in integration tests, the following plugin must be loaded.
+          (Collection)Arrays.asList(Netty4Plugin.class)
       );
     }
   }

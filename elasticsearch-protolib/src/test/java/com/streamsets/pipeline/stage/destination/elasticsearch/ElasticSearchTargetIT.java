@@ -77,7 +77,7 @@ public class ElasticSearchTargetIT {
     configs.put("path.conf", esDir.getAbsolutePath());
     configs.put("path.data", esDir.getAbsolutePath());
     configs.put("path.logs", esDir.getAbsolutePath());
-    esServer = ElasticSearchFactory.node(configs);
+    esServer = ElasticSearchFactory.testNode(configs);
     esServer.start();
   }
 
