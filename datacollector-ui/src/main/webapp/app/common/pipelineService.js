@@ -1343,19 +1343,19 @@ angular.module('dataCollectorApp.common')
             },
             {
               value: 'pipeline.batchInputRecords.counter',
-              label: 'Pipeline Batch Input Records Counter'
+              label: 'Pipeline Input Records Counter'
             },
             {
               value: 'pipeline.batchOutputRecords.counter',
-              label: 'Pipeline Batch Output Records Counter '
+              label: 'Pipeline Output Records Counter '
             },
             {
               value: 'pipeline.batchErrorRecords.counter',
-              label: 'Pipeline Batch Error Records Counter'
+              label: 'Pipeline Error Records Counter'
             },
             {
               value: 'pipeline.batchErrorMessages.counter',
-              label: 'Pipeline Batch Stage Errors Counter'
+              label: 'Pipeline Stage Errors Counter'
             }
         ],
         HISTOGRAM: [
