@@ -131,8 +131,8 @@
                 <cmd/>
             </step>
             <step>
-                <cmd>For JSON data, on the <uicontrol>JSON</uicontrol> tab, configure the following
-                    property:</cmd>
+                <cmd>For JSON data, on the <uicontrol>Data Format</uicontrol> tab, configure the
+                    following property:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_wlp_tc3_4v">
                         <tgroup cols="2">

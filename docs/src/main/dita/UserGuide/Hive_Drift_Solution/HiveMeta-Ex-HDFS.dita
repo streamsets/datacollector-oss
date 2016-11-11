@@ -30,8 +30,8 @@
             header. </p>
         <p>The Output Files tab of the destination might look something like this:</p>
         <p><image href="../Graphics/HiveMeta-Ex-HDFS.png" id="image_sbv_xrn_fw" scale="70"/></p>
-        <p>And the Avro tab looks like this:</p>
-        <p><image href="../Graphics/HiveMeta-Ex-HDFS-Avro.png" id="image_wzp_1sn_fw" scale="70"
+        <p>And the Data Format tab looks like this:</p>
+        <p><image href="../Graphics/HiveMeta-Ex-HDFS-Avro.png" id="image_wzp_1sn_fw" scale="60"
             /></p>
         <p>With this configuration, the destination uses the information in record header attributes
             to write data to HDFS. It writes each record to the directory in the targetDirectory

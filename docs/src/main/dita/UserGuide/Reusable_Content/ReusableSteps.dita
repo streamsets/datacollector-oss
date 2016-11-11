@@ -354,14 +354,6 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FileCompression">
-                                    <entry/>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FilePatternCompressed">
-                                    <entry/>
-                                </row>
                                 <row id="O-row-AvroSLocation">
                                     <entry>Avro Schema Location</entry>
                                     <entry>Location of the Avro schema definition to use when
@@ -417,10 +409,6 @@
                                     <entry>Avro schema ID to look up in the Confluent Schema
                                         Registry.</entry>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
-                                    <entry/>
-                                </row>
                             </tbody>
                         </tgroup>
                     </table>
@@ -449,14 +437,6 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FileCompression">
-                                    <entry/>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FilePatternCompressed">
-                                    <entry/>
-                                </row>
                                 <row id="Mess-row-AvroSchemaLoc">
                                     <entry>Avro Schema Location</entry>
                                     <entry>Location of the Avro schema definition to use when
@@ -512,10 +492,6 @@
                                     <entry>Schema ID</entry>
                                     <entry>Avro schema ID to look up in the Confluent Schema
                                         Registry.</entry>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
-                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -630,8 +606,8 @@
                 </cmd>
             </step>
             <step id="O-Binary">
-                <cmd>For binary data, click the <wintitle>Data Format</wintitle> tab and configure
-                    the following property:</cmd>
+                <cmd>For binary data, on the <wintitle>Data Format</wintitle> tab and configure the
+                    following property:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_dpx_kdm_35">
                         <tgroup cols="2">
@@ -656,10 +632,6 @@
                                     <entry>Max Data Size</entry>
                                     <entry>Maximum number of bytes in the message. Larger messages
                                         cannot be processed or written to error. </entry>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
-                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -1105,10 +1077,6 @@
                                     <entry>Indicates if a message might include more than one
                                         protobuf message.</entry>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
-                                    <entry/>
-                                </row>
                             </tbody>
                         </tgroup>
                     </table>
@@ -1172,10 +1140,6 @@
                                     <entry>Indicates if a file might include more than one protobuf
                                         message.</entry>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
-                                    <entry/>
-                                </row>
                             </tbody>
                         </tgroup>
                     </table>
@@ -1208,10 +1172,6 @@
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FilePatternCompressed">
-                                    <entry/>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
                                     <entry/>
                                 </row>
                             </tbody>

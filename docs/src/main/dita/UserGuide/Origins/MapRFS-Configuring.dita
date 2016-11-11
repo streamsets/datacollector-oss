@@ -210,10 +210,6 @@
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-row-A-SchemaID">
                                     <entry/>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
-                                    <entry/>
-                                </row>
                             </tbody>
                         </tgroup>
                     </table>

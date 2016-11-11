@@ -104,11 +104,6 @@
                                     <entry>Redis channel to publish the messages to. Used in publish
                                         mode only.</entry>
                                 </row>
-                                <row>
-                                    <entry>Charset</entry>
-                                    <entry>Character set to use when writing data. Used in publish
-                                        mode only.<p>Not used with all data formats.</p></entry>
-                                </row>
                             </tbody>
                         </tgroup>
                     </table>

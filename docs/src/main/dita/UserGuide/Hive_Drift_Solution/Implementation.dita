@@ -69,8 +69,10 @@
                                 Attribute</uicontrol>, and for <uicontrol>Roll Attribute
                                 Name</uicontrol>, enter “roll”.</li>
                         <li>To write records using the avroSchema header attribute, on the
-                                <wintitle>Avro</wintitle> tab, select <uicontrol>Load Schema From
-                                Header</uicontrol>.</li>
+                                <wintitle>Data Format</wintitle> tab, select the
+                                <uicontrol>Avro</uicontrol> data format, and then for the
+                                <uicontrol>Avro Schema Location</uicontrol> property, select
+                                <uicontrol>In Record Header</uicontrol>.</li>
                     </ul><p>For more information about using record header attributes, see <xref
                             href="../Destinations/RecordHeaderAttributes.dita#concept_lmn_gdc_1w"
                         />.</p></li>

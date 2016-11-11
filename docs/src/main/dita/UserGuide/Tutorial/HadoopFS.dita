@@ -73,10 +73,6 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Data Format</entry>
-                                    <entry>Delimited</entry>
-                                </row>
-                                <row>
                                     <entry>Files Prefix</entry>
                                     <entry>Defines a prefix for output file names.<p
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/FilePrefix"
@@ -105,8 +101,8 @@
                 </info>
             </step>
             <step>
-                <cmd>Click the <wintitle>Delimited</wintitle> tab and configure the following
-                    property. </cmd>
+                <cmd>Click the <wintitle>Data Format</wintitle> tab, and configure the following
+                    properties. </cmd>
                 <info>
                     <p
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/UseDefaults"/>
@@ -115,6 +111,10 @@
                             <stentry>Delimited Property</stentry>
                             <stentry>Configuration</stentry>
                         </sthead>
+                        <strow>
+                            <stentry>Data Format</stentry>
+                            <stentry>Delimited</stentry>
+                        </strow>
                         <strow>
                             <stentry>Header Line</stentry>
                             <stentry>With Header Line</stentry>

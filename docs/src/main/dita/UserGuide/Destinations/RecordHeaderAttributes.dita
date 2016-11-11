@@ -56,8 +56,10 @@
                     <dd>The avroSchema header attribute defines the Avro schema for the record. When
                         you use this header attribute, you cannot define an Avro schema to use in
                         the destination. </dd>
-                    <dd>To use the avroSchema header attribute, on the <wintitle>Avro</wintitle>
-                        tab, select <uicontrol>Load Schema from Header</uicontrol>.</dd>
+                    <dd>To use the avroSchema header attribute, on the <wintitle>Data
+                            Format</wintitle> tab, select the <uicontrol>Avro</uicontrol> data
+                        format, and then for the <uicontrol>Avro Schema Location</uicontrol>
+                        property, select <uicontrol>In Record Header</uicontrol>.</dd>
                 </dlentry>
                 <dlentry>
                     <dt>roll attribute in the Hadoop FS, Local FS, and MapR FS destinations</dt>
