@@ -420,12 +420,12 @@ public class HiveMetadataProcessor extends RecordProcessor {
       // Generate schema only if the table do not eexist or it's schema is changed.
       if (schemaDrift) {
         avroSchema = HiveMetastoreUtil.generateAvroSchema(finalStructure, qualifiedName);
-        LOG.trace("Generated new Avro schema for table {}: {}", qualifiedName, avroSchema);
+        LOG.trace("Schema Drift. Generated new Avro schema for table {}: {}", qualifiedName, avroSchema);
         handleSchemaChange(dbName, tableName, recordStructure, targetPath, avroSchema, batchMaker, qualifiedName, tableCache, schemaCache);
       } else {
         if (schemaCache == null) { // Table exists in Hive, but this is cold start so the cache is null
           avroSchema = HiveMetastoreUtil.generateAvroSchema(finalStructure, qualifiedName);
-          LOG.trace("Generated new Avro schema for table {}: {}", qualifiedName, avroSchema);
+          LOG.trace("Cold Start. Generated new Avro schema for table {}: {}", qualifiedName, avroSchema);
           updateAvroCache(schemaCache, avroSchema, qualifiedName);
         } else  // No schema change, table already exists in Hive, and we have avro schema in cache.
           avroSchema = schemaCache.getSchema();
@@ -656,6 +656,6 @@ public class HiveMetadataProcessor extends RecordProcessor {
     }
     record.getHeader().setAttribute(HDFS_HEADER_AVROSCHEMA, avroSchema);
     record.getHeader().setAttribute(HDFS_HEADER_TARGET_DIRECTORY, location);
-    LOG.info("Record {} will be stored in {} path: roll({}), avro schema: {}", record.getHeader().getSourceId(), location, roll, avroSchema);
+    LOG.trace("Record {} will be stored in {} path: roll({}), avro schema: {}", record.getHeader().getSourceId(), location, roll, avroSchema);
   }
 }
