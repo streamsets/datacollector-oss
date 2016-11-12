@@ -19,7 +19,7 @@
  */
 package com.streamsets.pipeline.stage.destination.kafka;
 
-import com.google.api.client.repackaged.com.google.common.base.Joiner;
+import com.google.common.base.Joiner;
 import com.google.common.net.HostAndPort;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;

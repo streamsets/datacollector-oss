@@ -19,7 +19,7 @@
  */
 package com.streamsets.pipeline.stage.processor.base64;
 
-import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Base64;
 import com.streamsets.pipeline.api.Record;
 import org.junit.Assert;
 

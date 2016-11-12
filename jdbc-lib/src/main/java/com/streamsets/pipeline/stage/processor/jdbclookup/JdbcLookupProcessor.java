@@ -19,7 +19,7 @@
  */
 package com.streamsets.pipeline.stage.processor.jdbclookup;
 
-import com.google.api.client.repackaged.com.google.common.base.Throwables;
+import com.google.common.base.Throwables;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
 import com.streamsets.pipeline.api.Field;
