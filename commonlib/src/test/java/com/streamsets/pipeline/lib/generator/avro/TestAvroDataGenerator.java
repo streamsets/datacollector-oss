@@ -444,6 +444,7 @@ public class TestAvroDataGenerator {
     gen.close();
   }
 
+  @Test
   public void testSchemaInHeaderDifferentSchemaInHeader() throws Exception {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     DataGenerator gen = new AvroDataOutputStreamGenerator(

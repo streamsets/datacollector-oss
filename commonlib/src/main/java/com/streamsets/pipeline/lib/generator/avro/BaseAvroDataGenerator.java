@@ -24,6 +24,8 @@ import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.lib.util.AvroTypeUtil;
 import org.apache.avro.Schema;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
 import java.io.Flushable;
@@ -35,6 +37,8 @@ import java.util.Map;
  * Base Avro data generator that provides shared logic for both message data output stream implementations.
  */
 abstract public class BaseAvroDataGenerator implements DataGenerator {
+
+  private static Logger LOG = LoggerFactory.getLogger(BaseAvroDataGenerator.class);
 
   /**
    * Header name containing JSON encoded AVRO schema
@@ -120,6 +124,12 @@ abstract public class BaseAvroDataGenerator implements DataGenerator {
       } else {
         String newAvroSchema = AvroTypeUtil.getAvroSchemaFromHeader(record, AVRO_SCHEMA_HEADER);
         if (schemaHashCode != newAvroSchema.hashCode()) {
+          LOG.error(
+              "Record {} has a different schema. Expected: {}  Actual(Initialized): {}",
+              record.getHeader().getSourceId(),
+              schema.toString(),
+              newAvroSchema
+          );
           throw new DataGeneratorException(Errors.AVRO_GENERATOR_04,
             record.getHeader().getSourceId(),
             schema.toString(),
