@@ -131,6 +131,10 @@ angular
 
     var stages = $scope.pipelineConfig.stages;
 
+    if (stages.length > 10) {
+      $scope.chartOptions.chart.showLegend = false;
+    }
+
     angular.forEach(stages, function(stage) {
       $scope.chartData.push({
         instanceName: stage.instanceName,
@@ -171,9 +175,9 @@ angular
     });
 
     var refreshTimeSeriesData = function() {
-      var query = baseQuery + '(',
-        timeRangeCondition = $scope.getTimeRangeWhereCondition(),
-        labelMap = {};
+      var query = baseQuery + '(';
+      var timeRangeCondition = $scope.getTimeRangeWhereCondition();
+      var labelMap = {};
 
       angular.forEach(stages, function(stage, index) {
         var stageTimer = 'stage.' + stage.instanceName + '.batchProcessing.timer';
