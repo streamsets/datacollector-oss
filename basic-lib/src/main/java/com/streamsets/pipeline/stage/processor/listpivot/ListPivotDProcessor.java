@@ -47,8 +47,8 @@ public class ListPivotDProcessor extends DProcessor {
       group = "PIVOT",
       type = ConfigDef.Type.MODEL,
       defaultValue = "",
-      label = "List To Pivot",
-      description = "Path to List-type field that will be exploded into multiple records.",
+      label = "Field To Pivot",
+      description = "Path to the field that will be exploded into multiple records (supported types are LIST and LIST_MAP).",
       displayPosition = 10
   )
   @FieldSelectorModel(singleValued = true)
