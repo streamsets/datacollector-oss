@@ -23,7 +23,7 @@
  */
 
 angular.module('dataCollectorApp.common')
-  .factory('api', function($rootScope, $http, $q, $cookies) {
+  .factory('api', function($rootScope, $http, $q) {
     var apiVersion = 'v1',
       apiBase = 'rest/' + apiVersion,
       api = {

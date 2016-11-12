@@ -58,7 +58,7 @@
            class="glyphicon glyphicon-check fa-12x"></i>
 
         <i ng-if="!selectedPipelineMap[pipeline.name]"
-           ng-click="selectPipeline(pipeline)"
+           ng-click="selectPipeline(pipeline, $event)"
            class="glyphicon glyphicon-unchecked fa-12x"></i>
 
         <div class="pipeline-name">

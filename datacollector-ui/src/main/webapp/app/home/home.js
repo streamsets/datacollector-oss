@@ -670,10 +670,29 @@ angular
       /**
        * On Selecting Individual Pipeline checkbox
        * @param pipeline
+       * @param $event
        */
-      selectPipeline: function(pipeline) {
+      selectPipeline: function(pipeline, $event) {
         $scope.selectedPipelineMap[pipeline.name] = true;
         $scope.selectedPipelineList.push(pipeline.name);
+        if ($event.shiftKey) {
+          var filteredPipelines = $scope.filteredPipelines;
+          var index = _.findIndex(filteredPipelines, function(p) {
+            return pipeline.name === p.name;
+          });
+          if (index != -1) {
+            while (index > 0) {
+              var prevPipeline = $scope.filteredPipelines[--index];
+              if ($scope.selectedPipelineMap[prevPipeline.name]) {
+                break;
+              }
+              $scope.selectedPipelineMap[prevPipeline.name] = true;
+              $scope.selectedPipelineList.push(prevPipeline.name);
+            }
+          }
+
+          $rootScope.common.clearTextSelection();
+        }
       },
 
       /**
