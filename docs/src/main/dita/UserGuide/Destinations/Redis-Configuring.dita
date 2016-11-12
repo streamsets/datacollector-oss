@@ -81,12 +81,35 @@
                                             only.<p>Default is String.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Data Format
-                                        <xref
-                                            href="Redis-DataFormat.dita">
+                                    <entry>Channel</entry>
+                                    <entry>Redis channel to publish the messages to. Used in publish
+                                        mode only.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>When using Publish mode, on the <wintitle>Data Format</wintitle> tab, configure
+                    the following property:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_hvy_pt3_vx">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Data Format Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Data Format <xref href="RabbitMQ-DataFormats.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_h3p_p7v_uq"/></xref></entry>
-                                    <entry>Data format for messages:<ul id="ul_wlj_353_br">
+                                                id="image_usk_thj_vx"/></xref></entry>
+                                    <entry>Data format of the data:<ul id="ul_w4m_zdp_xx">
                                             <li>Avro</li>
                                             <li>Binary</li>
                                             <li>Delimited</li>
@@ -95,14 +118,9 @@
                                             <li>SDC Record <xref
                                                   href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
                                                   <image href="../Graphics/icon_moreInfo.png"
-                                                  scale="10" id="image_ucp_chr_br"/></xref></li>
+                                                  scale="10" id="image_x4m_zdp_xx"/></xref></li>
                                             <li>Text</li>
-                                        </ul><p>Used in publish mode only.</p></entry>
-                                </row>
-                                <row>
-                                    <entry>Channel</entry>
-                                    <entry>Redis channel to publish the messages to. Used in publish
-                                        mode only.</entry>
+                                        </ul></entry>
                                 </row>
                             </tbody>
                         </tgroup>
