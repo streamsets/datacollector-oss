@@ -23,21 +23,37 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class EscapeUtil {
-  public static final Pattern pattern = Pattern.compile("\\W", Pattern.CASE_INSENSITIVE);
+  public static final Pattern pattern = Pattern.compile("\\W+?", Pattern.CASE_INSENSITIVE);
 
   private EscapeUtil() {}
 
   public static String singleQuoteEscape(String path) {
-    if(path != null) {
-      Matcher matcher = pattern.matcher(path);
-      if(matcher.find()) {
-        path = path.replace("\\", "\\\\")
-          .replace("\"", "\\\"")
-          .replace("'", "\\\\\'");
-        return "'" + path + "'";
+    if (path == null) {
+      return null;
+    }
+
+    // Skip escaping if no non-word chars are found
+    // This is likely slower than just escaping it anyway
+    // but currently left as-is for compatibility
+    Matcher matcher = pattern.matcher(path);
+    if(!matcher.find()) {
+      return path;
+    }
+
+    StringBuilder sb = new StringBuilder(path.length() * 2).append("'");
+    char[] chars = path.toCharArray();
+    for (char c : chars) {
+      if (c == '\\') {
+        sb.append("\\\\");
+      } else if (c == '"') {
+        sb.append("\\\"");
+      } else if (c == '\'') {
+        sb.append("\\\\\'");
+      } else {
+        sb.append(c);
       }
     }
-    return path;
+    return sb.append("'").toString();
   }
 
   public static String singleQuoteUnescape(String path) {

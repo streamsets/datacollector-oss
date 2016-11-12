@@ -415,10 +415,23 @@ public class RecordImpl implements Record, Cloneable {
   }
 
   private String escapeName(String name, boolean includeSingleQuotes) {
+    StringBuilder sb = new StringBuilder(name.length() * 2);
+    char[] chars = name.toCharArray();
+    for (char c : chars) {
+      if (c == '/') {
+        sb.append("//");
+      } else if (c == '[') {
+        sb.append("[[");
+      } else if (c == ']') {
+        sb.append("]]");
+      } else {
+        sb.append(c);
+      }
+    }
     if (includeSingleQuotes) {
-      return EscapeUtil.singleQuoteEscape(name.replace("/", "//").replace("[", "[[").replace("]", "]]"));
+      return EscapeUtil.singleQuoteEscape(sb.toString());
     } else {
-      return name.replace("/", "//").replace("[", "[[").replace("]", "]]");
+      return sb.toString();
     }
   }
 
@@ -461,7 +474,7 @@ public class RecordImpl implements Record, Cloneable {
     //return all *existing* fields form the list of elements
     //In the above case it is going to return only field a and field b. Field d does not exist.
     List<Field> fields = get(elements);
-    Field fieldToReplace = null;
+    Field fieldToReplace;
     int fieldPos = fields.size();
     if (elements.size() == fieldPos) {
       //The number of elements in the path is same as the number of fields => set use case
