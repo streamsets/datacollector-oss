@@ -118,7 +118,7 @@ public class ActiveRecordWriters {
       writer = writers.get(path);
     }
 
-    if(writer != null && manager.shouldRoll(record)) {
+    if(writer != null && manager.shouldRoll(writer, record)) {
       release(writer, true);
       writer = null;
     }

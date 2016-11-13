@@ -303,8 +303,9 @@ public class RecordWriterManager {
    * Return true if this record should be written into a new file regardless whether we have a file for the record
    * currently opened or not.
    */
-  public boolean shouldRoll(Record record) {
-    if(rollIfHeader && record.getHeader().getAttribute(rollHeaderName) != null) {
+  public boolean shouldRoll(RecordWriter writer, Record record) {
+    if (rollIfHeader && record.getHeader().getAttribute(rollHeaderName) != null) {
+      LOG.debug("Path[{}] - will be rolled because of roll attribute '{}' set to '{}' in the record : '{}'", writer.getPath(), rollHeaderName, record.getHeader().getAttribute(rollHeaderName), record.getHeader().getSourceId());
       return true;
     }
     return false;

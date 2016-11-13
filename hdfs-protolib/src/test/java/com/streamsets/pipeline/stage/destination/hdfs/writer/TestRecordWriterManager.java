@@ -554,6 +554,10 @@ public class TestRecordWriterManager {
 
   @Test
   public void testShouldRoll() throws Exception {
+    File testDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    Assert.assertTrue(testDir.mkdirs());
+
+
     Record negativeRecord = RecordCreator.create();
     negativeRecord.set(Field.create("a"));
 
@@ -562,12 +566,20 @@ public class TestRecordWriterManager {
     positiveRecord.set(Field.create("a"));
 
     RecordWriterManager negativeManager = managerBuilder().build();
-    Assert.assertFalse(negativeManager.shouldRoll(negativeRecord));
-    Assert.assertFalse(negativeManager.shouldRoll(positiveRecord));
+
+    RecordWriter negativeRecordWriter = negativeManager.getWriter(new Date(), new Date(), negativeRecord);
+    Assert.assertFalse(negativeManager.shouldRoll(negativeRecordWriter, negativeRecord));
+
+    RecordWriter positiveRecordWriter = negativeManager.getWriter(new Date(), new Date(), positiveRecord);
+    Assert.assertFalse(negativeManager.shouldRoll(positiveRecordWriter, positiveRecord));
 
     RecordWriterManager positiveManager = managerBuilder().rollHeaderName("roll").rollIfHeader(true).build();
-    Assert.assertFalse(positiveManager.shouldRoll(negativeRecord));
-    Assert.assertTrue(positiveManager.shouldRoll(positiveRecord));
+
+    negativeRecordWriter = positiveManager.getWriter(new Date(), new Date(), negativeRecord);
+    Assert.assertFalse(positiveManager.shouldRoll(negativeRecordWriter, negativeRecord));
+
+    positiveRecordWriter = positiveManager.getWriter(new Date(), new Date(), positiveRecord);
+    Assert.assertTrue(positiveManager.shouldRoll(positiveRecordWriter, positiveRecord));
   }
 
   private String createTempFile(RecordWriterManager mgr, Date date, String subDir) throws Exception {
