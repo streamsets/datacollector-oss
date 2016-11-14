@@ -249,6 +249,8 @@ public class TestFieldMaskProcessor {
       Assert.assertEquals(0, output.getRecords().get("a").size());
       Assert.assertEquals(1, runner.getErrorRecords().size());
       Assert.assertEquals(Errors.MASK_00.name(), runner.getErrorRecords().get(0).getHeader().getErrorCode());
+      String errorMessage = runner.getErrorRecords().get(0).getHeader().getErrorMessage();
+      Assert.assertTrue("Given error message doesn't contain expected substring: " + errorMessage , errorMessage.contains("/name, /age"));
     } finally {
       runner.runDestroy();
     }

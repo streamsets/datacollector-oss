@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.lib.util.FieldRegexUtil;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -137,7 +138,7 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
     if (nonStringFields.isEmpty()) {
       batchMaker.addRecord(record);
     } else {
-      throw new OnRecordErrorException(Errors.MASK_00, record.getHeader().getSourceId(), nonStringFields);
+      throw new OnRecordErrorException(Errors.MASK_00, StringUtils.join(nonStringFields, ", "), record.getHeader().getSourceId());
     }
   }
 
