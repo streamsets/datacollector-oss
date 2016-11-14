@@ -93,7 +93,7 @@ public class ListPivotDProcessor extends DProcessor {
   public boolean saveOriginalFieldName;
 
   @ConfigDef(
-      required = false,
+      required = true,
       group = "PIVOT",
       type = ConfigDef.Type.STRING,
       defaultValue = "",
