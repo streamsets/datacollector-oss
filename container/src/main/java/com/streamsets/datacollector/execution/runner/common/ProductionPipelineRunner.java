@@ -625,8 +625,9 @@ public class ProductionPipelineRunner implements PipelineRunner {
     List<Record> badRecords = new ArrayList<>();
     for (Map.Entry<String, List<Record>> entry : errorSink.getErrorRecords().entrySet()) {
       for (Record record : entry.getValue()) {
-        RecordImpl sourceRecord = getSourceRecord(record);
-        injectErrorInfo(sourceRecord, record);
+        //RecordImpl sourceRecord = getSourceRecord(record);
+        //injectErrorInfo(sourceRecord, record);
+        RecordImpl sourceRecord = (RecordImpl)record;
         badRecords.add(sourceRecord);
       }
     }
