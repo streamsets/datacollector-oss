@@ -14,9 +14,9 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_dn1_k13_qw">
-    <title>Configuring a List Pivoter</title>
-    <shortdesc>Configure a List Pivoter to pivot data in a list field and generate a record for each
-        item in the list.</shortdesc>
+    <title>Configuring a Field Pivoter</title>
+    <shortdesc>Configure a Field Pivoter to pivot data in a list, map, or list-map field and
+        generate a record for each item in the field.</shortdesc>
     <taskbody>
         <context/>
         <steps>
@@ -25,7 +25,7 @@
                 <cmd/>
             </step>
             <step>
-                <cmd>On the <wintitle>List Pivot</wintitle> tab, configure the following
+                <cmd>On the <wintitle>Field Pivot</wintitle> tab, configure the following
                     properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_rx1_t1y_tw">
@@ -34,14 +34,14 @@
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
-                                    <entry>List Pivoter Property</entry>
+                                    <entry>Field Pivoter Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>List to Pivot</entry>
-                                    <entry>List field to pivot.</entry>
+                                    <entry>Field to Pivot</entry>
+                                    <entry>List, map, or list-map field to pivot.</entry>
                                 </row>
                                 <row>
                                     <entry>Copy All Fields <xref
@@ -56,8 +56,20 @@
                                     <entry>Field path to write the pivoted data. If the field
                                         exists, the processor overwrites any data in the field.<p>
                                             <note>When not used, the processor writes pivoted data
-                                                to the original list field. </note>
+                                                to the original field. </note>
                                         </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Save Original Field Name</entry>
+                                    <entry>Specifies whether to save the field name of the
+                                        first-level item in the pivoted field. You can save the
+                                        original field name when you include all existing fields in
+                                        the generated records.</entry>
+                                </row>
+                                <row>
+                                    <entry>Original Field Name Path</entry>
+                                    <entry>Field path to write the field name of the first-level
+                                        item in the pivoted field.</entry>
                                 </row>
                                 <row>
                                     <entry>Field Does Not Exist</entry>

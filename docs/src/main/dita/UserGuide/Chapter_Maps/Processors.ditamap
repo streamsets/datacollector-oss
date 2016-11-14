@@ -54,6 +54,13 @@
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/FieldMerger-Configuring.dita"/>
   </topicref>
+  <topicref href="../Processors/ListPivoter.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Processors/ListPivoter-GeneratedRecords.dita"/>
+   <topicref href="../Processors/ListPivoter-Configuring.dita"/>
+  </topicref>
   <topicref href="../Processors/FieldRemover.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/FieldRemover-Configuring.dita"/>
@@ -168,11 +175,6 @@
    <topicref href="../Processors/Jython-TypeHandling.dita"/>
    <topicref href="../Processors/Jython-WholeFiles.dita"/>
    <topicref href="../Processors/Jython-Configuring.dita"/>
-  </topicref>
-  <topicref href="../Processors/ListPivoter.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
-   <topicref href="../Processors/ListPivoter-GeneratedRecords.dita"/>
-   <topicref href="../Processors/ListPivoter-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/LogParser.dita" chunk="to-content">
    <topicmeta>

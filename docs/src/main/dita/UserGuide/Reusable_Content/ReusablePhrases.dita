@@ -809,11 +809,11 @@
                         for partition data.</ph></p>
             <p>
                   <draft-comment author="Loretta"><uicontrol>P-ListPivot-AddPivoters</uicontrol> -
-                        The following phrase is used in the List Pivoter overview &amp; generated
+                        The following phrase is used in the Field Pivoter overview &amp; generated
                         records. </draft-comment>
             </p>
-            <p><ph id="P-ListPivot-AddPivoters">To pivot additional list fields or nested lists, use
-                        additional List Pivoters.</ph>
+            <p><ph id="P-ListPivot-AddPivoters">To pivot additional fields or nested structures, use
+                        additional Field Pivoters.</ph>
             </p>
             <p>
                   <draft-comment author="Loretta">Scripting processors - - Groovy and Jython use

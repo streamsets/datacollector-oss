@@ -14,18 +14,18 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ekg_313_qw">
- <title>List Pivoter</title>
+ <title>Field Pivoter</title>
  <conbody>
-        <p><indexterm>processors<indexterm>List Pivoter</indexterm></indexterm><indexterm>List
-                    Pivoter<indexterm>overview</indexterm></indexterm>The List Pivoter pivots data
-            in a list field and creates a record for each item in the list. </p>
-        <p>The List Pivoter processor pivots the data in one field. <ph
+        <p><indexterm>processors<indexterm>Field Pivoter</indexterm></indexterm><indexterm>Field
+                    Pivoter<indexterm>overview</indexterm></indexterm>The Field Pivoter pivots data
+            in a list, map, or list-map field and creates a record for each item in the field. </p>
+        <p>The Field Pivoter processor pivots the data in one field. <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/P-ListPivot-AddPivoters"
             /></p>
-  <p>When you configure the List Pivoter, you specify the list field to pivot and where to write the
-            pivoted data. By default, the processor writes the pivoted data to the original list
-            field, but you can specify another field for the data. </p>
+  <p>When you configure the Field Pivoter, you specify the list, map, or list-map field to pivot and
+            where to write the pivoted data. By default, the processor writes the pivoted data to
+            the original field, but you can specify another field for the data. </p>
         <p>You can also specify whether to include the existing fields in the resulting records and
-            configure the action to take when the list field does not exist. </p>
+            configure the action to take when the field does not exist. </p>
  </conbody>
 </concept>
