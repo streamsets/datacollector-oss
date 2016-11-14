@@ -74,6 +74,7 @@
     <shortdesc/>
    </topicmeta>
    <topicref href="../Processors/FieldConverter_Datatypes.dita"/>
+   <topicref href="../Processors/FieldTypeConverter-ChangeScale.dita"/>
    <topicref href="../Processors/FieldTypeConverter-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/GeoIP.dita" chunk="to-content"> 

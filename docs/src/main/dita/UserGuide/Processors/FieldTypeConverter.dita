@@ -17,7 +17,8 @@
  <title>Field Type Converter</title>
  <shortdesc>The Field Type Converter converts the data types of fields to compatible data types. You
     might use the Field Type Converter to convert the data types of fields before performing
-    calculations. </shortdesc>
+    calculations. You can also use the Field Type Converter to change the scale of decimal
+    data.</shortdesc>
  <conbody>
   <p><indexterm>Field Type Converter
           processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Field
@@ -46,8 +47,8 @@
       a field from Integer to Decimal is valid. Converting a field from Decimal to Integer is also
       valid, but the conversion can truncate any decimal values in the data.</p>
   <p><note outputclass="" type="tip">You can use data preview to verify the data in the fields.
-      </note>When you convert a String field to Date, Datetime, or Time or when you convert date,
-      datetime, or time data to String, you specify the date format that you want to use. You can
-      use any valid format.</p>
+      </note>When you convert string data to a Date, Datetime, or Time data type or when you convert
+      date, datetime, or time data to the String data type, you specify the date format that you
+      want to use. You can use any valid format.</p>
  </conbody>
 </concept>
