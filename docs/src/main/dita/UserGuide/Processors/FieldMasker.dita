@@ -16,8 +16,8 @@
 <concept id="concept_hjc_t4k_wq">
  <title>Field Masker</title>
  <shortdesc>The Field Masker masks string values based on the selected mask type. You can use
-  variable-length, fixed-length, or custom masks. Custom masks can reveal part of the string
-  value.</shortdesc>
+    variable-length, fixed-length, custom, or regular expression masks. Custom masks can reveal part
+    of the string value.</shortdesc>
  <conbody>
   <p><indexterm>Field Masker
      processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Field

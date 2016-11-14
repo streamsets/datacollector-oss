@@ -67,9 +67,9 @@ L92m1sN3q0jaOmE67Ws</codeblock>
     </dlentry>
     <dlentry>
      <dt>Custom</dt>
-     <dd>Replaces values with a mask based on a user-defined pattern. </dd>
-     <dd>When you define the pattern for the mask, you can use a hash mark (#) to reveal the
-      character in that location. All other characters are used as constants in the mask. </dd>
+     <dd>Replaces values with a mask based on a user-defined pattern. When you define the pattern
+      for the mask, you can use a hash mark (#) to reveal the character in that location. All other
+      characters are used as constants in the mask. </dd>
      <dd>The following example uses <codeph>###-xxx-xxxx</codeph> as the mask pattern to reveal the
       area code of a phone number while masking the rest of the number:<simpletable frame="none"
        relcolwidth="1.0* 1.0*" id="simpletable_xwn_ms3_cr">
@@ -89,6 +89,34 @@ L92m1sN3q0jaOmE67Ws</codeblock>
        </strow>
       </simpletable><note type="tip">To avoid confusing masking characters for real data, use one
        masking character instead of a mix of masking characters.</note></dd>
+     <dd>The length of a custom mask is either the original data length or the mask pattern length,
+      whichever is smaller. For example, you use <codeph>###xx</codeph> as the mask pattern to
+      reveal the three digit zip code range while masking the rest of the zip code. The mask pattern
+      length is five characters. When the Field Masker applies the mask to an original zip code with
+      ten characters, it uses the minimum length of five characters, removing the last five
+      characters of the original zip code. When the processor applies the mask to an original zip
+      code with three characters, it uses the minimum length of three characters, revealing those
+      three characters and then not masking any characters, as follows:</dd>
+     <dd>
+      <simpletable frame="none" relcolwidth="1.0* 1.0*" id="simpletable_xwn_ms5_br">
+       <strow>
+        <stentry>
+         <codeblock><uicontrol>Original Zip Code</uicontrol>
+94105
+94086-6161
+80123
+703</codeblock>
+        </stentry>
+        <stentry>
+         <codeblock><uicontrol>Custom Mask (###xx)</uicontrol>
+941xx
+940xx
+801xx
+703</codeblock>
+        </stentry>
+       </strow>
+      </simpletable>
+     </dd>
     </dlentry>
     <dlentry>
      <dt>Regular Expression</dt>
