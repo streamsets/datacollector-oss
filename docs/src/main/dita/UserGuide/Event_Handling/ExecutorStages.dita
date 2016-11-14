@@ -22,13 +22,12 @@
             event handling:<dl>
                 <dlentry>
                     <dt>Hive Query executor</dt>
-                    <dd>Connects to HDFS and executes a user-defined Hive or Impala query for each
-                        event.</dd>
+                    <dd>Executes a user-defined Hive or Impala query for each event.</dd>
                     <dd>Use with the Hive Metadata destination to run a Hive or Impala query after
                         changing table structures. You can also use the executor with the Hadoop FS
                         or MapR FS destinations to run a Hive or Impala query after closing files. </dd>
                     <dd>For example, you might use the Hive Query executor as part of the Hive Drift
-                        Solution if you use Impala.</dd>
+                        Solution if you read data with Impala.</dd>
                     <dd>Impala requires you to run the Invalidate Metadata command when the table
                         structure or data changes. Instead of trying to time this action manually,
                         you can use the Hive Query executor to submit the command automatically each

@@ -19,15 +19,15 @@
   <p><indexterm>event generating stages<indexterm>pairing with destinations and
                     executors</indexterm></indexterm>You can use event generation stages and event
             records in any logical way. </p>
-        <p>However, the following tables outline how you might use event generation stages with
-            destinations or executors:<table frame="all" rowsep="1" colsep="1" id="table_a45_zhh_tx">
+        <p>The following tables outline how you might use event generation stages with destinations
+            or executors:<table frame="all" rowsep="1" colsep="1" id="table_a45_zhh_tx">
                 <tgroup cols="2">
                     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                     <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                     <thead>
                         <row>
                             <entry>Event Generating Origin</entry>
-                            <entry>Event Record Consumer</entry>
+                            <entry>Event Consumer</entry>
                         </row>
                     </thead>
                     <tbody>
@@ -48,7 +48,7 @@
                     <thead>
                         <row>
                             <entry>Event Generating Destination</entry>
-                            <entry>Event Record Consumer</entry>
+                            <entry>Event Consumer</entry>
                         </row>
                     </thead>
                     <tbody>
@@ -106,12 +106,12 @@
                     <thead>
                         <row>
                             <entry>Event Generating Executor</entry>
-                            <entry>Event Record Consumer</entry>
+                            <entry>Event Consumer</entry>
                         </row>
                     </thead>
                     <tbody>
                         <row>
-                            <entry>Hive Query executor</entry>
+                            <entry>HDFS File Metadata executor</entry>
                             <entry>Any destination for event storage.</entry>
                         </row>
                         <row>

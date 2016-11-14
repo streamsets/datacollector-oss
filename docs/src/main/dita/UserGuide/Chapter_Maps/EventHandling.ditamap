@@ -21,9 +21,12 @@
             <topicref href="../Event_Handling/EventGenerationStages.dita"/>
             <topicref href="../Event_Handling/ExecutorStages.dita"/>
             <topicref href="../Event_Handling/LogicalPairings.dita"/>
-            <topicref href="../Event_Handling/EventRecords.dita"/>
         </topicref>
-        <topicref href="../Event_Handling/EventStreams.dita"/>
+        <topicref href="../Event_Handling/EventStreams.dita">
+            <topicref href="../Event_Handling/EventRecords.dita">
+                <topicref href="../Event_Handling/EventRecordHeaders.dita"/>
+            </topicref>
+        </topicref>
         <topicref href="../Event_Handling/CaseStudy-Parquet.dita">
             <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
         <topicref href="../Event_Handling/CaseStudy-Impala.dita">

@@ -19,7 +19,8 @@
   <p><indexterm>event handling case studies<indexterm>event storage</indexterm></indexterm>Store
             event records to preserve an audit trail of the events that occur. You can store event
             records from any event-generating stage. For this case study, say you want to keep a log
-            of the objects written to Amazon S3 by the following pipeline: </p>
+            of the objects written to Amazon S3 by the following pipeline: <draft-comment
+                author="Loretta">Change to MapR FS</draft-comment></p>
         <p><image href="../Graphics/Event-Storage.png" id="image_csj_gwl_px" scale="60"/></p>
         <p>To do this, you simply:<ol id="ol_xgc_3wl_px">
                 <li>Configure Amazon S3 to generate events.<p>On the <wintitle>General</wintitle>

@@ -19,10 +19,10 @@
   <p><indexterm>event handling<indexterm>event generating
                 stages</indexterm></indexterm><indexterm>event generating
                     stages<indexterm>overview</indexterm></indexterm>You can configure certain
-            stages to generate events. Event generation can differ from stage to stage, based on how
+            stages to generate events. Event generation differs from stage to stage, based on how
             the stage processes data. </p>
-        <p>The following table lists event-generating stages and describes when they generate
-            events: <table frame="all" rowsep="1" colsep="1" id="table_pzz_thf_lx">
+        <p>The following table lists event-generating stages and when they can generate events:
+                <table frame="all" rowsep="1" colsep="1" id="table_pzz_thf_lx">
                 <tgroup cols="2">
                     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                     <colspec colname="c2" colnum="2" colwidth="3.5*"/>
@@ -73,7 +73,8 @@
                             <entry>Hive Metastore destination</entry>
                             <entry>
                                 <ul id="ul_fgw_mt4_qx">
-                                    <li>Changes Hive table structures.</li>
+                                    <li>Generates a DDL to create new tables, partitions, or columns
+                                        in the Hive metastore.</li>
                                 </ul>
                             </entry>
                         </row>
@@ -96,10 +97,11 @@
                             </entry>
                         </row>
                         <row>
-                            <entry>Hive Query executor</entry>
+                            <entry>HDFS File Metadata executor</entry>
                             <entry>
                                 <ul id="ul_fmy_4t4_qx">
-                                    <li>Runs a Hive or Impala query.</li>
+                                    <li>Changes file metadata, such as the file name, location, or
+                                        permissions.</li>
                                 </ul>
                             </entry>
                         </row>

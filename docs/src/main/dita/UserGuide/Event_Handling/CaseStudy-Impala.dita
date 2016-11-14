@@ -27,9 +27,7 @@
             one from the Hive Metastore destination and one from the Hadoop FS destination. You can
             connect both event streams to a single Hive Query executor. The executor then runs the
             Invalidate Metadata command each time the Hive Metastore destination updates a Hive
-            table and each time Hadoop FS writes a file to a Hive table.<draft-comment
-                author="Loretta">Jarcec: Is this terminology correct? "writing a file to a Hive
-                table"?</draft-comment></p>
+            table and each time Hadoop FS writes a file to a Hive table.</p>
         <p>Here's how it works:</p>
         <p>You have the following Hive Drift Solution pipeline that reads files from a directory.The
             Hive Metadata processor evaluates the data for structural changes. It passes data to
@@ -64,22 +62,18 @@
                     required by the Hive Metadata executor, but it contains the information that we
                     need to generate the table name. So add an Expression Evaluator processor to the
                     event stream. Create a new Table field and use the following
-                        expression:<codeblock>`${file:pathElement(record:value('/filepath'), -2)}`.`${file:removeExtension('file:fileName(record:value('/filepath')')}`</codeblock><p>Thes
+                        expression:<codeblock>`(file:pathElement(record:value('/filepath'), -3))}`.`${file:pathElement(record:value('/filepath'), -2)}`</codeblock><p>Thes
                         expressions uses the path in the Filepath field of the event record and
                         performs the following calculations:<ul id="ul_umt_2sm_5x">
-                            <li>Extracts the second-to-last section of the path and uses it as the
+                            <li>Extracts the third-to-last section of the path and uses it as the
                                 database name. </li>
-                            <li>Extracts the file name from the file path, removes the extension
-                                from the file name, and uses the result as the table name.</li>
-                        </ul><draft-comment author="Loretta">Jarcec: Are the expressions correct
-                            above? Or should I go back to the one you had? I wanted to show the
-                            file:fileName function?</draft-comment></p><p>So when Hadoop FS
-                        completes a file, it writes the path of the written file in the filepath
-                        field, such as users/logs/server1weblog.txt. And the expression above
-                        properly interprets the database and table name as:
-                            logs.server1weblog.</p><p><image
-                            href="../Graphics/Event-HDS-Expression.png" id="image_pcc_3zm_5x"
-                            scale="55"/></p></li>
+                            <li>Extracts the second-to-last section of the path and uses it as the
+                                table name.</li>
+                        </ul></p><p>So when Hadoop FS completes a file, it writes the path of the
+                        written file in the filepath field, such as users/logs/server1weblog.txt.
+                        And the expression above properly interprets the database and table name as:
+                        logs.server1weblog.</p><p><image href="../Graphics/Event-HDS-Expression.png"
+                            id="image_pcc_3zm_5x" scale="55"/></p></li>
                 <li>Add the Hive Query executor and connect the Hive Metastore destination and the
                     Expression Evaluator to the executor. Then configure the Hive Query
                         executor.<p>In the Hive Query executor, on the <wintitle>Hive</wintitle>
@@ -91,12 +85,11 @@
                         is how the final pipeline should look:</p><p><image
                             href="../Graphics/Event-HDS-HiveQueryDeets.png" id="image_ccr_hpr_mx"
                             scale="70"/></p><p>With these new event streams, each time the Hive
-                        Metastore destination creates or changes a table and each time the Hadoop FS
-                        destination completes writing a file, the destinations generate event
-                        records. When the Hive Query executor receives an event record, it runs the
-                        Invalidate Metadata command so Impala can pick up the changes.
-                            <draft-comment author="Loretta">Uarcec: what's the right terminology
-                            here: pick up? work? use?</draft-comment></p></li>
+                        Metastore destination creates a table, partition or column, and each time
+                        the Hadoop FS destination completes writing a file, the destinations
+                        generate event records. When the Hive Query executor receives an event
+                        record, it runs the Invalidate Metadata command so Impala can update its
+                        cache with the new information.</p></li>
             </ol>
         </p>
     </conbody>

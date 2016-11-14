@@ -18,8 +18,8 @@
  <conbody>
         <p><indexterm>event streams<indexterm>examples</indexterm></indexterm>You can add event
             handling to any pipeline where the event handling logic suits your needs. When
-            configuring the event stream, you can add additional stages as needed, but do not merge
-            the event stream with a data stream. </p>
+            configuring the event stream, you can add additional stages as needed, but you cannot
+            merge the event stream with a data stream. </p>
         <p>There are two general types of event streams that you might create: <dl>
                 <dlentry>
                     <dt>Task execution</dt>
@@ -33,18 +33,11 @@
                     <dd>When Hadoop FS closes a file, you would like the file moved to a different
                         directory and the file permissions changed to read-only. </dd>
                     <dd>Leaving the rest of the pipeline as is, you can enable event handling in the
-                        Hadoop FS destination. connect it to the HDFS File Metadata executor, and
+                        Hadoop FS destination, connect it to the HDFS File Metadata executor, and
                         configure the HDFS File Metadata executor to move the file and change its
-                        permissions:</dd>
+                        permissions. The resulting pipeline looks like this:</dd>
                     <dd><image href="../Graphics/Event-EventPipe.png" scale="65"
                             id="image_c5z_25q_tx"/></dd>
-                    <dd>
-                        <note>Though you can add processors to task execution streams, alter data in
-                            event records with great care. Executors are designed to use event
-                            records in very specific ways and changing an event record can cause
-                            unexpected results. <draft-comment author="Loretta">Jarcec: keep/edit
-                                this note? Delete?</draft-comment></note>
-                    </dd>
                 </dlentry>
             </dl></p>
         <p>
@@ -54,9 +47,8 @@
                     <dd>An event storage stream routes event records from the event generating stage
                         to a destination. The destination writes the event record to a destination
                         system.</dd>
-                    <dd>When using event records in event storage streams, you can add processors to
-                        the event stream to enrich the event record before writing it to the
-                        destination. </dd>
+                    <dd>You can add processors to the event stream to enrich the event record before
+                        writing it to the destination. </dd>
                     <dd>For example, you have a pipeline that uses the File Tail origin to process
                         weblogs:</dd>
                     <dd><image href="../Graphics/Event-FileTail.png" scale="60"
@@ -74,8 +66,8 @@
                         a new field to the record with the creation date and time:
                         <codeblock>${record:attribute('sdc.event.creation_timestamp')}</codeblock></dd>
                     <dd>Or, if you have multiple pipelines writing events to the same location, you
-                        add an Expression Evaluator as follows to include the pipeline name in a
-                        Pipeline field in the event record:</dd>
+                        add an Expression Evaluator include the pipeline name in a Pipeline field in
+                        the event record, as follows:</dd>
                     <dd><image href="../Graphics/Event-FileTail-ExpJDBC.png" scale="55"
                             id="image_e2y_1vq_tx"/></dd>
                 </dlentry>

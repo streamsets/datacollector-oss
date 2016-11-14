@@ -13,49 +13,17 @@
   limitations under the License.
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_zft_rdq_tx">
- <title>Event Record Headers</title>
+<concept id="concept_gvh_5wm_xx">
+ <title>Event Records</title>
  <conbody>
-  <p><indexterm>event records<indexterm>header attributes</indexterm></indexterm>Event records
-            include different fields based on the stage that generates the event record, but all
-            event records include the following record header attributes. For information about the
-            fields included in each event record, see the documentation for the event generating
-            stage.</p>
-        <p>Event records include the following record header attributes:<table frame="all"
-                rowsep="1" colsep="1" id="table_bxn_dhs_5x">
-                <tgroup cols="2">
-                    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                    <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                    <thead>
-                        <row>
-                            <entry>Event Record Header Attribute</entry>
-                            <entry>Description</entry>
-                        </row>
-                    </thead>
-                    <tbody>
-                        <row>
-                            <entry
-                                conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-eventType"/>
-                            <entry>Event type. Defined by the stage that generates the event. <p>For
-                                    information about the event types available for an event
-                                    generating stage, see the stage documentation.</p></entry>
-                        </row>
-                        <row
-                            conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-eventVersion">
-                            <entry/>
-                        </row>
-                        <row
-                            conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-eventTimestamp">
-                            <entry/>
-                        </row>
-                    </tbody>
-                </tgroup>
-            </table></p>
-        <p>As with any record header attribute, you can use the Expression Evaluator and the
-            record:attribute function to include record header attribute information as part of
-            record data. Note that all record header attributes are String values.</p>
-        <p>When storing event records, you most likely want to include the time of the event in the
-            event record. For an example, see <xref
-                href="CaseStudy-EventStorage.dita#concept_ocb_nnl_px"/>.</p>
+  <p><indexterm>event records<indexterm>overview</indexterm></indexterm>Event records are records
+            created by a stage when a stage-related event occurs, like when an origin starts reading
+            a new file or a destination closes an output file. </p>
+        <p>Event records contain general event information in the record header, such as when the
+            event occurred. Event-specific details, such as the name and location of the output file
+            that was closed, are passed in a record field. </p>
+        <p><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-ERecord-Fields"
+            /></p>
  </conbody>
 </concept>

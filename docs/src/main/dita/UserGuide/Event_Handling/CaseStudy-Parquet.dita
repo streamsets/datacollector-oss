@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_jkm_rnz_kx">
-    <title>Case Study: Parquet Conversion on HDFS</title>
+    <title>Case Study: Parquet Conversion</title>
     <conbody>
         <p><indexterm>event handling case studies<indexterm>HDFS avro to
                 parquet</indexterm></indexterm>Say you want to store data on HDFS using the columnar
@@ -30,10 +30,15 @@
                 <li>Create the pipeline you want to use, writing to HDFS using the Hadoop FS
                     destination and the Avro data format.<p>Use the origin and processors that you
                         need, like any other pipeline. And then, configure Hadoop FS to write Avro
-                        data to HDFS as you normally would.</p><p><image
-                            href="../Graphics/Event-ParquetBasicPipe.png" id="image_x2b_yvm_lx"
-                            scale="75"/></p></li>
-                <li>Configure Hadoop FS to generate events.<p>Select the <uicontrol>Produce
+                        data to HDFS.</p><p>The Hadoop FS destination generates events each time it
+                        closes a file. This is perfect because we want to convert files to Parquet
+                        only after they are fully written. </p><p>
+                        <note>To avoid running unnecessary numbers of MapReduce jobs, configure the
+                            destination to create files as large as the destination system can
+                            comfortably handle.</note>
+                    </p><p><image href="../Graphics/Event-ParquetBasicPipe.png"
+                            id="image_x2b_yvm_lx" scale="75"/></p></li>
+                <li>Configure Hadoop FS to generate events. <p>Select the <uicontrol>Produce
                             Events</uicontrol> property on the General tab. When you do that, the
                         event output stream becomes available.</p><p> With this selected, Hadoop FS
                         generates an event each time it closes an output file:</p><p><image
