@@ -439,4 +439,28 @@ public class HdfsMetadataExecutorIT {
     assertAcls(inputPath, AclEntry.parseAclSpec("user:sith:rw-,group::r--", true));
   }
 
+  @Test
+  public void testIncorrectEL() throws Exception {
+    HdfsConnectionConfig conn = new HdfsConnectionConfig();
+    conn.hdfsConfDir = confDir;
+
+    HdfsActionsConfig actions = new HdfsActionsConfig();
+    actions.filePath = "${record:value('/path'"; // This is incorrect EL that won't properly evaluate
+    actions.shouldRename = true;
+    actions.newName = "${record:value('/new_name')}";
+
+    HdfsMetadataExecutor executor = new HdfsMetadataExecutor(conn, actions);
+
+    ExecutorRunner runner = new ExecutorRunner.Builder(HdfsMetadataDExecutor.class, executor)
+      .setOnRecordError(OnRecordError.TO_ERROR)
+      .build();
+    runner.runInit();
+
+    runner.runWrite(ImmutableList.of(getTestRecord()));
+
+    Assert.assertEquals(1, runner.getErrorRecords().size());
+    String errorMessage = runner.getErrorRecords().get(0).getHeader().getErrorMessage();
+    Assert.assertTrue("Missing expected substring in error message: " + errorMessage, errorMessage.contains("Error evaluating expression"));
+  }
+
 }

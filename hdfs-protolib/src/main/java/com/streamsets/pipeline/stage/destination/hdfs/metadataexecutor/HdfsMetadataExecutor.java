@@ -42,6 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.lang.reflect.UndeclaredThrowableException;
 import java.security.PrivilegedExceptionAction;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -158,7 +159,12 @@ public class HdfsMetadataExecutor extends BaseExecutor {
             return null;
           }
         });
-      } catch (Exception e) {
+      } catch (Throwable e) {
+        // Hadoop libraries will wrap any non InterruptedException, RuntimeException, Error or IOException to UndeclaredThrowableException,
+        // so we manually unwrap it here and properly propagate it to user.
+        if(e instanceof UndeclaredThrowableException) {
+          e = e.getCause();
+        }
         LOG.error("Failure when applying metadata changes to HDFS", e);
         errorRecordHandler.onError(new OnRecordErrorException(record, HdfsMetadataErrors.HDFS_METADATA_000, e.getMessage()));
       }
