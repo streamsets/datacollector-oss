@@ -720,6 +720,33 @@ public class HdfsTargetConfigBean {
       lateRecordsCounter = context.createCounter("lateRecords");
       lateRecordsMeter = context.createMeter("lateRecords");
     }
+
+    if (issues.isEmpty()) {
+      try {
+        getUGI().doAs(new PrivilegedExceptionAction<Void>() {
+          @Override
+          public Void run() throws Exception {
+            if(!dirPathTemplateInHeader) {
+              // handle already existing files, so all _temp files will roll in the instance of unknown crash
+              getCurrentWriters().getWriterManager().handleAlreadyExistingFiles();
+            }
+
+            return null;
+          }
+        });
+      } catch (Exception ex) {
+        LOG.error(Errors.HADOOPFS_59.getMessage(), ex);
+        issues.add(
+            context.createConfigIssue(
+              Groups.OUTPUT_FILES.name(),
+              getTargetConfigBeanPrefix() + "dirPathTemplate",
+              Errors.HADOOPFS_59,
+              ex.toString(),
+              ex
+            )
+        );
+      }
+    }
   }
 
   public void destroy() {

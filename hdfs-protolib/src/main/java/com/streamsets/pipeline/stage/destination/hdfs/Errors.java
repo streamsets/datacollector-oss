@@ -92,7 +92,8 @@ public enum Errors implements ErrorCode {
   HADOOPFS_55("Invalid permission EL {} for the file"),
   HADOOPFS_56("Invalid permission value {} for the file"),
   HADOOPFS_57("Files Suffix contains '/' or starts with '.'"),
-  HADOOPFS_58("Flush failed on file: '{}' due to '{}'")
+  HADOOPFS_58("Flush failed on file: '{}' due to '{}'"),
+  HADOOPFS_59("Recovery failed to rename old _tmp_ files"),
 
   ;
 

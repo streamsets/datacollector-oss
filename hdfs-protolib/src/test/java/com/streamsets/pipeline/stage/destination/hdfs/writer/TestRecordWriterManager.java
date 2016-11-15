@@ -64,8 +64,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -597,9 +599,58 @@ public class TestRecordWriterManager {
     Assert.assertTrue(positiveManager.shouldRoll(positiveRecordWriter, positiveRecord));
   }
 
+  @Test
+  public void testHandleAlreadyExistingFiles() throws Exception {
+    Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+    calendar.add(Calendar.HOUR, -2);
+    Date lastBatch = calendar.getTime();
+    ContextInfoCreator.setLastBatch(targetContext, lastBatch.getTime());
+
+    File testDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    Assert.assertTrue(testDir.mkdirs());
+
+    final String dirTemp = "/${YY()}_${MM()}_${DD()}_${hh()}/${sdc:hostname()}/${record:value('/y')}${record:value('/z')}/bar/";
+    // using 1 hour cutoff
+    RecordWriterManager mgr = managerBuilder()
+        .dirPathTemplate(testDir.getAbsolutePath() + dirTemp)
+        .uniquePrefix("sdc-c27f92a7-2162-46ef-af84-bce6db4255cf")
+        .cutOffSecs(3600)
+        .build();
+
+    Record record = RecordCreator.create();
+    Map<String, Field> map = new HashMap<>();
+    map.put("y", Field.create("y0"));
+    map.put("z", Field.create("z0"));
+    record.set(Field.create(map));
+    String f1 = createTempFile(mgr, lastBatch, record);
+
+    map.put("y", Field.create(""));
+    map.put("z", Field.create(""));
+    record.set(Field.create(map));
+    String f2 = createTempFile(mgr, lastBatch, record);
+
+    map.put("y", Field.create("y0/y1"));
+    map.put("z", Field.create("z0/z1"));
+    record.set(Field.create(map));
+    String f3 = createTempFile(mgr, lastBatch, record);
+
+
+    // the temp files under f1 will be renamed, under f2 & f3 will not be renamed
+    final int totalTempFiles = 1;
+    int ret = mgr.handleAlreadyExistingFiles();
+
+    Assert.assertEquals(totalTempFiles, ret);
+  }
+
   private String createTempFile(RecordWriterManager mgr, Date date, String subDir) throws Exception {
     String path = mgr.getDirPath(date, RecordCreator.create());
     path += "/" + subDir + "/";
+    Files.createDirectories(Paths.get(path));
+    return Files.createFile(Paths.get(path + mgr.getTempFileName())).toString();
+  }
+
+  private String createTempFile(RecordWriterManager mgr, Date date, Record record) throws Exception {
+    String path = mgr.getDirPath(date, record);
     Files.createDirectories(Paths.get(path));
     return Files.createFile(Paths.get(path + mgr.getTempFileName())).toString();
   }
