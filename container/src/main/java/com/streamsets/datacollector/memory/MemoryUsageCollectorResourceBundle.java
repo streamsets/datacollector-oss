@@ -20,6 +20,8 @@
 package com.streamsets.datacollector.memory;
 
 
+import com.carrotsearch.hppc.IntHashSet;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -27,13 +29,13 @@ public class MemoryUsageCollectorResourceBundle {
 
   private static final int INITIAL_CAPACITY = 1000;
   private final Deque stack = new ArrayDeque(INITIAL_CAPACITY);
-  private final IntOpenHashSet objectSet = new IntOpenHashSet(1000);
+  private final IntHashSet objectSet = new IntHashSet(INITIAL_CAPACITY);
 
   public Deque getStack() {
     return stack;
   }
 
-  public IntOpenHashSet getObjectSet() {
+  public IntHashSet getObjectSet() {
     return objectSet;
   }
 }

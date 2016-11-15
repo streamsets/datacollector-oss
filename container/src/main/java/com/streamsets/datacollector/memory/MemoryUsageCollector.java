@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.memory;
 
+import com.carrotsearch.hppc.IntHashSet;
 import com.streamsets.datacollector.runner.StageRuntime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +60,7 @@ public class MemoryUsageCollector {
   private final Object targetObject;
   private final ClassLoader targetClassloader;
   private final Deque<Object> stack;
-  private final IntOpenHashSet countedObjectSet;
+  private final IntHashSet countedObjectSet;
   private final boolean traverseClassLoaderClasses;
   private final MemoryUsageSnapshot memoryUsageSnapshot;
   private Collection<Class<?>> classes;
@@ -133,7 +134,7 @@ public class MemoryUsageCollector {
 
   @SuppressWarnings("unchecked")
   private MemoryUsageCollector(Instrumentation instrumentation, Object targetObject, ClassLoader targetClassloader,
-                               Deque stack, IntOpenHashSet countedObjectSet,
+                               Deque stack, IntHashSet countedObjectSet,
                                boolean traverseClassLoaderClasses) {
     this.instrumentation = instrumentation;
     this.targetObject = targetObject;
@@ -172,7 +173,7 @@ public class MemoryUsageCollector {
 
   public MemoryUsageSnapshot collect() {
     stack.clear();
-    countedObjectSet.clear();
+    countedObjectSet.release();
     long startInstances = System.currentTimeMillis();
     long memoryConsumedByInstances = getMemoryUsageIterative(targetObject, targetClassloader);
     memoryUsageSnapshot.addMemoryConsumedByInstances(memoryConsumedByInstances);
