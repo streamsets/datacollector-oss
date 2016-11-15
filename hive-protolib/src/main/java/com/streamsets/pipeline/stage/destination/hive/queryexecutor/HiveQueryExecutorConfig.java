@@ -42,7 +42,7 @@ public class HiveQueryExecutorConfig {
       description = "Query that will be executed on Hive or Impala.",
       displayPosition = 40,
       group = "QUERY",
-      defaultValue = "invalidate metadata ${record:attribute('/table')}",
+      defaultValue = "invalidate metadata ${record:value('/table')}",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       elDefs = {RecordEL.class, StringEL.class}
   )
