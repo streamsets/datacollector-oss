@@ -9,7 +9,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,80 +27,88 @@ import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.validation.Issues;
 
 public class PipelineAndValidationStatus {
-    private final String name;
-    private final String rev;
-    private final PipelineStatus pipelineStatus;
-    private final boolean isRemote;
-    private ValidationStatus validationStatus;
-    private Issues issues;
-    private String message;
-    private Collection<WorkerInfo> workerInfos;
-    private boolean isClusterMode;
+  private final String name;
+  private final String rev;
+  private final PipelineStatus pipelineStatus;
+  private final boolean isRemote;
+  private ValidationStatus validationStatus;
+  private Issues issues;
+  private String message;
+  private Collection<WorkerInfo> workerInfos;
+  private boolean isClusterMode;
+  private String offset;
 
-    public PipelineAndValidationStatus(
+  public PipelineAndValidationStatus(
       String name,
       String rev,
       boolean isRemote,
       PipelineStatus pipelineStatus,
       String message,
       Collection<WorkerInfo> workerInfos,
-      boolean isClusterMode) {
+      boolean isClusterMode,
+      String offset
+  ) {
 
-      this.name = name;
-      this.rev = rev;
-      this.isRemote = isRemote;
-      this.pipelineStatus = pipelineStatus;
-      this.message = message;
-      this.workerInfos = workerInfos;
-      this.isClusterMode = isClusterMode;
-    }
+    this.name = name;
+    this.rev = rev;
+    this.isRemote = isRemote;
+    this.pipelineStatus = pipelineStatus;
+    this.message = message;
+    this.workerInfos = workerInfos;
+    this.isClusterMode = isClusterMode;
+    this.offset = offset;
+  }
 
-    public void setValidationStatus(ValidationStatus validationStatus) {
-      this.validationStatus = validationStatus;
-    }
+  public void setValidationStatus(ValidationStatus validationStatus) {
+    this.validationStatus = validationStatus;
+  }
 
-    public void setIssues(Issues issues) {
-      this.issues = issues;
-    }
+  public void setIssues(Issues issues) {
+    this.issues = issues;
+  }
 
-    public void setMessage(String message) {
-      this.message = message;
-    }
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
-    public ValidationStatus getValidationStatus() {
-      return validationStatus;
-    }
+  public ValidationStatus getValidationStatus() {
+    return validationStatus;
+  }
 
-    public Collection<WorkerInfo> getWorkerInfos() {
-      return workerInfos;
-    }
+  public Collection<WorkerInfo> getWorkerInfos() {
+    return workerInfos;
+  }
 
-    public Issues getIssues() {
-      return issues;
-    }
+  public Issues getIssues() {
+    return issues;
+  }
 
-    public String getMessage() {
-      return message;
-    }
+  public String getMessage() {
+    return message;
+  }
 
-    public String getName() {
-      return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public String getRev() {
-      return rev;
-    }
+  public String getRev() {
+    return rev;
+  }
 
-    public PipelineStatus getPipelineStatus() {
-      return pipelineStatus;
-    }
+  public PipelineStatus getPipelineStatus() {
+    return pipelineStatus;
+  }
 
-    public boolean isRemote() {
-      return isRemote;
-    }
+  public boolean isRemote() {
+    return isRemote;
+  }
 
-    public boolean isClusterMode() {
-      return isClusterMode;
-    }
+  public boolean isClusterMode() {
+    return isClusterMode;
+  }
+
+  public String getOffset() {
+    return offset;
+  }
 }
 

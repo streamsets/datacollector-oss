@@ -31,6 +31,9 @@ import javax.inject.Inject;
 import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.event.dto.WorkerInfo;
 import com.streamsets.datacollector.execution.Runner;
+import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.runner.production.OffsetFileUtil;
+import com.streamsets.datacollector.runner.production.SourceOffset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +50,6 @@ import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.PreviewOutput;
 import com.streamsets.datacollector.execution.PreviewStatus;
 import com.streamsets.datacollector.execution.Previewer;
-import com.streamsets.datacollector.execution.manager.PipelineManagerException;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.ContainerError;
@@ -67,15 +69,17 @@ public class RemoteDataCollector implements DataCollector {
   private final List<String> validatorIdList;
   private final PipelineStateStore pipelineStateStore;
   private final RemoteStateEventListener stateEventListener;
+  private final RuntimeInfo runtimeInfo;
 
   @Inject
   public RemoteDataCollector(Manager manager, PipelineStoreTask pipelineStore, PipelineStateStore pipelineStateStore,
-                             RemoteStateEventListener stateEventListener) {
+                             RemoteStateEventListener stateEventListener, RuntimeInfo runtimeInfo) {
     this.manager = manager;
     this.pipelineStore = pipelineStore;
     this.pipelineStateStore = pipelineStateStore;
     this.validatorIdList = new ArrayList<>();
     this.stateEventListener = stateEventListener;
+    this.runtimeInfo = runtimeInfo;
   }
 
   public void init() {
@@ -122,12 +126,15 @@ public class RemoteDataCollector implements DataCollector {
   }
 
   @Override
-  public void savePipeline(String user,
-    String name,
-    String rev,
-    String description,
-    PipelineConfiguration pipelineConfiguration,
-    RuleDefinitions ruleDefinitions) throws PipelineException {
+  public void savePipeline(
+      String user,
+      String name,
+      String rev,
+      String description,
+      String offset,
+      PipelineConfiguration pipelineConfiguration,
+      RuleDefinitions ruleDefinitions
+  ) throws PipelineException {
 
     List<PipelineState> pipelineInfoList = manager.getPipelines();
     boolean pipelineExists = false;
@@ -149,6 +156,10 @@ public class RemoteDataCollector implements DataCollector {
     pipelineConfiguration.setUuid(uuid);
     pipelineStore.save(user, name, rev, description, pipelineConfiguration);
     pipelineStore.storeRules(name, rev, ruleDefinitions);
+    LOG.info("Offset for remote pipeline '{}:{}' is {}", name, rev, offset);
+    if (offset != null) {
+      OffsetFileUtil.saveOffset(runtimeInfo, name, rev, offset);
+    }
   }
 
   @Override
@@ -236,7 +247,8 @@ public class RemoteDataCollector implements DataCollector {
           latestState.getStatus(),
           latestState.getMessage(),
           workerInfos,
-          isClusterMode
+          isClusterMode,
+          getOffset(name, rev)
       ));
     }
     return pipelineAndValidationStatuses;
@@ -251,6 +263,10 @@ public class RemoteDataCollector implements DataCollector {
       workerInfos.add(workerInfo);
     }
     return workerInfos;
+  }
+
+  private String getOffset(String pipelineName, String rev) {
+    return OffsetFileUtil.getOffset(runtimeInfo, pipelineName, rev);
   }
 
   @Override
@@ -279,9 +295,16 @@ public class RemoteDataCollector implements DataCollector {
             workerInfos.add(workerInfo);
           }
         }
-        pipelineStatusMap.put(getNameAndRevString(name, rev),
-          new PipelineAndValidationStatus(name, rev, isRemote, pipelineState.getStatus(), pipelineState.getMessage(),
-              workerInfos, isClusterMode));
+        pipelineStatusMap.put(getNameAndRevString(name, rev), new PipelineAndValidationStatus(
+            name,
+            rev,
+            isRemote,
+            pipelineState.getStatus(),
+            pipelineState.getMessage(),
+            workerInfos,
+            isClusterMode,
+            isRemote ? getOffset(name, rev) : null
+        ));
       }
     }
     setValidationStatus(pipelineStatusMap);

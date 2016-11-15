@@ -42,8 +42,10 @@ import com.streamsets.datacollector.execution.manager.PipelineStateImpl;
 import com.streamsets.datacollector.execution.preview.common.PreviewOutputImpl;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
 import com.streamsets.datacollector.execution.runner.common.SampledRecord;
+import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.StageOutput;
+import com.streamsets.datacollector.runner.production.OffsetFileUtil;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineRevInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
@@ -51,28 +53,37 @@ import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.Issues;
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.mockito.Mockito;
 
 import javax.ws.rs.core.MultivaluedMap;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.junit.Assert.*;
 
 public class TestRemoteDataCollector {
 
+  @Rule
+  public TemporaryFolder tempFolder= new TemporaryFolder();
+
   private static class MockManager implements Manager {
 
-    Map<String, Previewer> map = new HashMap<String, Previewer>();
-    Map<String, PipelineState> stateMap = new HashMap<String, PipelineState>();
+    Map<String, Previewer> map = new HashMap<>();
+    Map<String, PipelineState> stateMap = new HashMap<>();
 
     @Override
     public String getName() {
@@ -676,7 +687,9 @@ public class TestRemoteDataCollector {
         boolean isRemote
     ) throws PipelineStoreException {
       // TODO Auto-generated method stub
-      return null;
+      return new PipelineConfiguration(1, 1, UUID.randomUUID(), "", Arrays.asList(new Config("", "")), null, null,
+          null,
+          null);
     }
 
     @Override
@@ -776,7 +789,8 @@ public class TestRemoteDataCollector {
       RemoteDataCollector dataCollector = new RemoteDataCollector(new MockManager(),
           new MockPipelineStoreTask(),
           new MockPipelineStateStore(),
-          new RemoteStateEventListener(new Configuration())
+          new RemoteStateEventListener(new Configuration()),
+          null
       );
       dataCollector.validateConfigs("user", "ns:name", "rev");
       dataCollector.validateConfigs("user1", "ns:name1", "rev1");
@@ -794,7 +808,8 @@ public class TestRemoteDataCollector {
       RemoteDataCollector dataCollector = new RemoteDataCollector(new MockManager(),
           new MockPipelineStoreTask(),
           new MockPipelineStateStore(),
-          new RemoteStateEventListener(new Configuration())
+          new RemoteStateEventListener(new Configuration()),
+          null
       );
       dataCollector.stopAndDelete("user", "ns:name", "rev");
       dataCollector.stopAndDelete("user", "ns:name", "rev");
@@ -813,10 +828,18 @@ public class TestRemoteDataCollector {
   @Test
   public void testGetPipelineStatus() throws Exception {
     try {
+      RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+      File testFolder = tempFolder.newFolder();
+      Mockito.when(runtimeInfo.getDataDir()).thenReturn(testFolder.getAbsolutePath());
+      OffsetFileUtil.saveOffset(runtimeInfo, "ns:name", "rev", "offset:100");
+      OffsetFileUtil.saveOffset(runtimeInfo, "ns:name1", "rev1", "offset:101");
+      OffsetFileUtil.saveOffset(runtimeInfo, "ns:name2", "rev1", "offset:102");
+
       RemoteDataCollector dataCollector = new RemoteDataCollector(new MockManager(),
           new MockPipelineStoreTask(),
           new MockPipelineStateStore(),
-          new RemoteStateEventListener(new Configuration())
+          new RemoteStateEventListener(new Configuration()),
+          runtimeInfo
       );
       dataCollector.init();
       dataCollector.validateConfigs("user", "ns:name", "rev");
@@ -857,13 +880,31 @@ public class TestRemoteDataCollector {
   }
 
   @Test
+  public void testSavePipelineOffset() throws Exception {
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    RemoteDataCollector dataCollector = new RemoteDataCollector(new MockManager(),
+        new MockPipelineStoreTask(),
+        new MockPipelineStateStore(),
+        new RemoteStateEventListener(new Configuration()),
+        runtimeInfo
+    );
+    File testFolder = tempFolder.newFolder();
+    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testFolder.getAbsolutePath());
+    dataCollector.savePipeline("user", "foo", "0", "", "offset:1000", Mockito.mock(PipelineConfiguration.class), null);
+    assertTrue("Offset File doesn't exist", OffsetFileUtil.getPipelineOffsetFile(runtimeInfo, "foo", "0").exists());
+    assertEquals("offset:1000", OffsetFileUtil.getOffset(runtimeInfo, "foo", "0"));
+  }
+
+  @Test
   public void testRemotePipelines() throws Exception {
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     RemoteStateEventListener remoteStateEventListener = Mockito.mock(RemoteStateEventListener.class);
     PipelineStoreTask pipelineStoreTask = Mockito.mock(MockPipelineStoreTask.class);
     RemoteDataCollector dataCollector = new RemoteDataCollector(new MockManager(),
         pipelineStoreTask,
         new MockPipelineStateStore(),
-        remoteStateEventListener
+        remoteStateEventListener,
+        runtimeInfo
     );
     List<PipelineState> pipelineStates = new ArrayList<>();
     pipelineStates.add(new PipelineStateImpl("user",
@@ -878,6 +919,9 @@ public class TestRemoteDataCollector {
         -1,
         -1
     ));
+    File testFolder = tempFolder.newFolder();
+    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testFolder.getAbsolutePath());
+    OffsetFileUtil.saveOffset(runtimeInfo, "name", "rev", "offset:100");
     Mockito.when(pipelineStoreTask.hasPipeline(Mockito.anyString())).thenReturn(false);
     Mockito.when(remoteStateEventListener.getPipelineStateEvents()).thenReturn(pipelineStates);
     List<PipelineAndValidationStatus> pipelineAndValidationStatuses = dataCollector.getRemotePipelinesWithChanges();
@@ -890,6 +934,7 @@ public class TestRemoteDataCollector {
     assertTrue(pipelineAndValidationStatus.getWorkerInfos().isEmpty());
     assertTrue(pipelineAndValidationStatus.isRemote());
     assertEquals("message", pipelineAndValidationStatus.getMessage());
+    assertEquals("offset:100", pipelineAndValidationStatus.getOffset());
     assertNull(pipelineAndValidationStatus.getValidationStatus());
   }
 }

@@ -399,6 +399,7 @@ public class TestRemoteEventHandler {
         String name,
         String rev,
         String description,
+        String offset,
         PipelineConfiguration pipelineConfiguration,
         RuleDefinitions ruleDefinitions
     ) throws PipelineStoreException {
@@ -439,7 +440,8 @@ public class TestRemoteEventHandler {
             PipelineStatus.RUNNING,
             "message",
             null,
-            false
+            false,
+            null
         ));
         list.add(new PipelineAndValidationStatus("name2",
             "rev2",
@@ -447,7 +449,8 @@ public class TestRemoteEventHandler {
             PipelineStatus.CONNECTING,
             "message",
             null,
-            false
+            false,
+            null
         ));
       }
       return list;
@@ -463,7 +466,8 @@ public class TestRemoteEventHandler {
             PipelineStatus.RUNNING,
             "message",
             null,
-            false
+            false,
+            null
         ));
       }
       return list;

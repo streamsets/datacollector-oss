@@ -35,6 +35,7 @@ public class PipelineStatusEventJson implements EventJson {
   private boolean isRemote;
   private Collection<WorkerInfoJson> workerInfos;
   private boolean isClusterMode;
+  private String offset;
 
   public PipelineStatusJson getPipelineStatus() {
     return pipelineStatus;
@@ -106,5 +107,13 @@ public class PipelineStatusEventJson implements EventJson {
 
   public void setClusterMode(boolean clusterMode) {
     isClusterMode = clusterMode;
+  }
+
+  public String getOffset() {
+    return offset;
+  }
+
+  public void setOffset(String offset) {
+    this.offset = offset;
   }
 }

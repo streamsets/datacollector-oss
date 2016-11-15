@@ -26,6 +26,7 @@ public class PipelineSaveEventJson extends PipelineBaseEventJson {
   private PipelineConfigAndRulesJson pipelineConfigurationAndRules;
   private String description;
   private String user;
+  private String offset;
 
   public PipelineConfigAndRulesJson getPipelineConfigurationAndRules() {
     return pipelineConfigurationAndRules;
@@ -51,6 +52,14 @@ public class PipelineSaveEventJson extends PipelineBaseEventJson {
   @Override
   public void setUser(String user) {
     this.user = user;
+  }
+
+  public String getOffset() {
+    return offset;
+  }
+
+  public void setOffset(String offset) {
+    this.offset = offset;
   }
 
 }

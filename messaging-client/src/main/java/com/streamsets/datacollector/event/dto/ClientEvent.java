@@ -22,8 +22,6 @@ package com.streamsets.datacollector.event.dto;
 
 import java.util.List;
 
-import com.streamsets.datacollector.event.dto.Event;
-
 public class ClientEvent {
   private final String eventId;
   private final List<String> destinations;

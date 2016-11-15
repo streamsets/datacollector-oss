@@ -19,18 +19,97 @@
  */
 package com.streamsets.datacollector.runner.production;
 
+import com.streamsets.datacollector.io.DataStore;
+import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.restapi.bean.BeanHelper;
+import com.streamsets.datacollector.restapi.bean.SourceOffsetJson;
 import com.streamsets.datacollector.util.PipelineDirectoryUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class OffsetFileUtil {
+  private static final Logger LOG = LoggerFactory.getLogger(ProductionSourceOffsetTracker.class);
 
   private static final String OFFSET_FILE = "offset.json";
+  private static final String DEFAULT_OFFSET = null;
 
   private OffsetFileUtil() {}
 
   public static File getPipelineOffsetFile(RuntimeInfo runtimeInfo, String pipelineName, String rev) {
     return new File(PipelineDirectoryUtil.getPipelineDir(runtimeInfo, pipelineName, rev), OFFSET_FILE);
   }
+
+  public static String saveIfEmpty(RuntimeInfo runtimeInfo, String pipelineName, String rev) {
+    File pipelineOffsetFile =  getPipelineOffsetFile(runtimeInfo, pipelineName, rev);
+    SourceOffset sourceOffset;
+    DataStore ds = new DataStore(pipelineOffsetFile);
+    try {
+      if (ds.exists()) {
+        // offset file exists, read from it
+        try (InputStream is = ds.getInputStream()) {
+          SourceOffsetJson sourceOffsetJson = ObjectMapperFactory.get().readValue(is, SourceOffsetJson.class);
+          sourceOffset = BeanHelper.unwrapSourceOffset(sourceOffsetJson);
+        }
+      } else {
+        sourceOffset = new SourceOffset(DEFAULT_OFFSET);
+        try (OutputStream os = ds.getOutputStream()) {
+          ObjectMapperFactory.get().writeValue((os), BeanHelper.wrapSourceOffset(sourceOffset));
+          ds.commit(os);
+        } finally {
+          ds.release();
+        }
+      }
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    return sourceOffset.getOffset();
+  }
+
+  public static void saveOffset(RuntimeInfo runtimeInfo, String pipelineName, String rev, String offset) {
+    LOG.debug("Saving offset {} for pipeline {}", offset, pipelineName);
+    SourceOffset sourceOffset = new SourceOffset(offset);
+    DataStore dataStore = new DataStore(OffsetFileUtil.getPipelineOffsetFile(runtimeInfo, pipelineName, rev));
+    try (OutputStream os = dataStore.getOutputStream()) {
+      ObjectMapperFactory.get().writeValue((os), BeanHelper.wrapSourceOffset(sourceOffset));
+      dataStore.commit(os);
+    } catch (IOException e) {
+      LOG.error("Failed to save offset value {}. Reason {}", sourceOffset.getOffset(), e.toString(), e);
+      throw new RuntimeException(e);
+    } finally {
+      dataStore.release();
+    }
+  }
+
+  public static void resetOffset(RuntimeInfo runtimeInfo, String pipelineName, String rev) {
+    saveOffset(runtimeInfo, pipelineName, rev, DEFAULT_OFFSET);
+  }
+
+  public static String getOffset(RuntimeInfo runtimeInfo, String pipelineName, String rev) {
+    File pipelineOffsetFile =  getPipelineOffsetFile(runtimeInfo, pipelineName, rev);
+    String offset = null;
+    if (pipelineOffsetFile.exists()) {
+      DataStore ds = new DataStore(pipelineOffsetFile);
+      try {
+        if (ds.exists()) {
+          // offset file exists, read from it
+          try (InputStream is = ds.getInputStream()) {
+            SourceOffsetJson sourceOffsetJson = ObjectMapperFactory.get().readValue(is, SourceOffsetJson.class);
+            offset = BeanHelper.unwrapSourceOffset(sourceOffsetJson).getOffset();
+          } catch (IOException e) {
+            throw new RuntimeException(e);
+          }
+        }
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    }
+    return offset;
+  }
 }
+

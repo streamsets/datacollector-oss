@@ -34,6 +34,7 @@ public class PipelineStatusEvent implements Event {
   private Collection<WorkerInfo> workerInfos;
   private boolean isRemote;
   private boolean isClusterMode;
+  private String offset;
 
   public PipelineStatusEvent() {
   }
@@ -47,7 +48,8 @@ public class PipelineStatusEvent implements Event {
       Collection<WorkerInfo> workerInfos,
       ValidationStatus validationStatus,
       String issues,
-      boolean isClusterMode
+      boolean isClusterMode,
+      String offset
   ) {
     this.name = name;
     this.rev = rev;
@@ -58,6 +60,7 @@ public class PipelineStatusEvent implements Event {
     this.isRemote = isRemote;
     this.workerInfos = workerInfos;
     this.isClusterMode = isClusterMode;
+    this.offset = offset;
   }
 
   public boolean isRemote() {
@@ -132,4 +135,13 @@ public class PipelineStatusEvent implements Event {
   public void setClusterMode(boolean clusterMode) {
     isClusterMode = clusterMode;
   }
+
+  public String getOffset() {
+    return offset;
+  }
+
+  public void setOffset(String offset) {
+    this.offset = offset;
+  }
+
 }

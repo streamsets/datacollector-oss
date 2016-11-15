@@ -43,6 +43,7 @@ public interface DataCollector {
     String name,
     String rev,
     String description,
+    String offset,
     PipelineConfiguration pipelineConfiguration,
     RuleDefinitions ruleDefinitions) throws PipelineException;
 

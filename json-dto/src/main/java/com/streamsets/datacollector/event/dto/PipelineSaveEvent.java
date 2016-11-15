@@ -19,14 +19,13 @@
  */
 package com.streamsets.datacollector.event.dto;
 
-import java.util.UUID;
-
 import com.streamsets.datacollector.config.dto.PipelineConfigAndRules;
 
 public class PipelineSaveEvent extends PipelineBaseEvent {
 
   private PipelineConfigAndRules pipelineConfigurationAndRules;
   private String description;
+  private String offset;
 
   public PipelineSaveEvent() {
   }
@@ -54,4 +53,11 @@ public class PipelineSaveEvent extends PipelineBaseEvent {
     return description;
   }
 
+  public String getOffset() {
+    return offset;
+  }
+
+  public void setOffset(String offset) {
+    this.offset = offset;
+  }
 }

@@ -297,7 +297,8 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
           pipelineAndValidationStatus.getWorkerInfos(),
           pipelineAndValidationStatus.getValidationStatus(),
           jsonToFromDto.serialize(BeanHelper.wrapIssues(pipelineAndValidationStatus.getIssues())),
-          pipelineAndValidationStatus.isClusterMode()
+          pipelineAndValidationStatus.isClusterMode(),
+          pipelineAndValidationStatus.getOffset()
       );
       return pipelineStatusEvent;
     }
@@ -401,9 +402,14 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
             RuleDefinitionsJson ruleDefinitionsJson =
               jsonToFromDto.deserialize(pipelineConfigAndRules.getPipelineRules(), new TypeReference<RuleDefinitionsJson>() {
               });
-            remoteDataCollector.savePipeline(pipelineSaveEvent.getUser(), pipelineSaveEvent.getName(),
-              pipelineSaveEvent.getRev(), pipelineSaveEvent.getDescription(),
-              BeanHelper.unwrapPipelineConfiguration(pipelineConfigJson), BeanHelper.unwrapRuleDefinitions(ruleDefinitionsJson));
+            remoteDataCollector.savePipeline(pipelineSaveEvent.getUser(),
+                pipelineSaveEvent.getName(),
+                pipelineSaveEvent.getRev(),
+                pipelineSaveEvent.getDescription(),
+                pipelineSaveEvent.getOffset(),
+                BeanHelper.unwrapPipelineConfiguration(pipelineConfigJson),
+                BeanHelper.unwrapRuleDefinitions(ruleDefinitionsJson)
+            );
             break;
           }
           case SAVE_RULES_PIPELINE: {

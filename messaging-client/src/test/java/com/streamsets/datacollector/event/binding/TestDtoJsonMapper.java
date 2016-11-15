@@ -85,13 +85,14 @@ public class TestDtoJsonMapper {
     workerInfo.setWorkerId("slaveId");
     PipelineStatusEvent pipelineStatusEvent =
       new PipelineStatusEvent("name", "rev", true, PipelineStatus.RUNNING, "message", Arrays.asList(workerInfo), null,
-          null, true);
+          null, true, "offset");
     PipelineStatusEvents pipelineStatusEvents = new PipelineStatusEvents();
     pipelineStatusEvents.setPipelineStatusEventList(Arrays.asList(pipelineStatusEvent));
     PipelineStatusEventsJson pseJson = MessagingDtoJsonMapper.INSTANCE.toPipelineStatusEventsJson(pipelineStatusEvents);
     PipelineStatusEventJson pipelineStateInfoJson = pseJson.getPipelineStatusEventList().get(0);
     assertEquals("name", pipelineStateInfoJson.getName());
     assertEquals("rev", pipelineStateInfoJson.getRev());
+    assertEquals("offset", pipelineStateInfoJson.getOffset());
     assertTrue(pipelineStateInfoJson.isClusterMode());
     WorkerInfoJson workerInfoJson = pipelineStateInfoJson.getWorkerInfos().iterator().next();
     assertEquals("workerURL", workerInfoJson.getWorkerURL());
