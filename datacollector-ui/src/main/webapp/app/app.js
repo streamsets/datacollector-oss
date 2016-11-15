@@ -19,8 +19,9 @@
  */
 
 angular.module('dataCollectorApp')
-  .config(function($routeProvider, $locationProvider, $translateProvider, tmhDynamicLocaleProvider,
-                   uiSelectConfig, $httpProvider, AnalyticsProvider) {
+  .config(function($routeProvider, $locationProvider, $translateProvider, $provide,
+                   tmhDynamicLocaleProvider, uiSelectConfig, $httpProvider, AnalyticsProvider) {
+
     $locationProvider.html5Mode({enabled: true, requireBase: false});
     $routeProvider.otherwise({
       templateUrl: 'app/home/home.tpl.html',
@@ -34,6 +35,19 @@ angular.module('dataCollectorApp')
         authorizedRoles: ['admin', 'creator', 'manager', 'guest']
       }
     });
+
+    // Default Timezone (local storage)
+    $provide.decorator('dateFilter', ['$delegate', '$rootScope', function ($delegate, $rootScope) {
+      var clientTimezone = moment.tz.zone(moment.tz.guess()).abbr(moment().month());
+      return function (date, format, timezone) {
+        return $delegate.call(
+            this,
+            date,
+            format,
+            timezone || $rootScope.$storage.timezone || clientTimezone
+        );
+      };
+    }]);
 
     // Initialize angular-translate
     $translateProvider.useStaticFilesLoader({
@@ -136,6 +150,18 @@ angular.module('dataCollectorApp')
         gridView: false,
         searchInput: ''
       }
+    });
+
+    api.pipelineAgent.getUIConfiguration().then(function (res) {
+      $rootScope.$storage.serverTimezone = res.data['ui.server.timezone'];
+
+      if (res.data['ui.debug'] === 'true') {
+        window.$rootScope = $rootScope;
+      }
+
+    }, function(err) {
+      $rootScope.$storage.serverTimezone = 'UTC';
+      console.error('Failed: api.pipelineAgent.getUIConfiguration()', err);
     });
 
     $rootScope.common = $rootScope.common || {

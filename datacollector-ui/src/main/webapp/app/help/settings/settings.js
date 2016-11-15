@@ -23,11 +23,22 @@
  */
 
 angular
-  .module('dataCollectorApp')
-  .controller('SettingsModalInstanceController', function ($scope, $modalInstance) {
-    angular.extend($scope, {
-      done: function() {
-        $modalInstance.dismiss('cancel');
-      }
-    });
+    .module('dataCollectorApp')
+    .controller('SettingsModalInstanceController', function ($scope, $rootScope, $modalInstance) {
+
+  // Default Timezone (local storage)
+  var clientTimezone = moment.tz.zone(moment.tz.guess()).abbr(moment().month()),
+      timezoneOptions = _([clientTimezone, $rootScope.$storage.serverTimezone, 'UTC']).uniq();
+
+  if (!_.contains(timezoneOptions, $rootScope.$storage.timezone)) {
+    $rootScope.$storage.timezone = clientTimezone;
+  }
+
+  angular.extend($scope, {
+    timezoneOptions: timezoneOptions,
+
+    done: function() {
+      $modalInstance.dismiss('cancel');
+    }
   });
+});

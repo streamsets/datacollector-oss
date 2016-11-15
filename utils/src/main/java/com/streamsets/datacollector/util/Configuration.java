@@ -24,7 +24,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.streamsets.datacollector.vault.Vault;
 import com.streamsets.datacollector.vault.VaultRuntimeException;
-import com.streamsets.datacollector.vault.api.VaultException;
 import com.streamsets.pipeline.api.ext.DataCollectorServices;
 import com.streamsets.pipeline.api.impl.Utils;
 
@@ -297,7 +296,6 @@ public class Configuration {
     }
     return new Configuration(subSetMap);
   }
-
 
   @JsonValue
   public Map<String, String> getValues() {

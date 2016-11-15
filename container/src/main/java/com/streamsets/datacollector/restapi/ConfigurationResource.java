@@ -35,7 +35,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import java.io.File;
 import java.util.Map;
+import java.util.TimeZone;
 
 @Path("/v1/system")
 @Api(value = "system")
@@ -57,10 +59,13 @@ public class ConfigurationResource {
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
   public Response getUIConfiguration() throws PipelineStoreException {
+    Configuration configuration = config.getSubSetConfiguration(UI_PREFIX);
+    configuration.set("ui.debug", String.valueOf(new File("/.sdc.debug").exists()));
+    configuration.set("ui.server.timezone", TimeZone.getDefault().getDisplayName(false, TimeZone.SHORT));
 
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(config.getSubSetConfiguration(UI_PREFIX)).build();
+    return Response.ok().type(MediaType.APPLICATION_JSON)
+        .entity(configuration).build();
   }
-
 
   @GET
   @Path("configuration")

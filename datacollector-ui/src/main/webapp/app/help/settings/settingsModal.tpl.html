@@ -9,6 +9,17 @@
   <div class="modal-body">
 
     <div class="form-group">
+      <label class="control-label" translate="home.header.timezone">Timezone</label>
+      <select class="form-control"
+              name="density"
+              ng-model="$storage.timezone">
+        <option ng-repeat="timezone in timezoneOptions"
+                ng-selected="$storage.timezone === timezone"
+                value="{{ timezone }}">{{ timezone }}</option>
+      </select>
+    </div>
+
+    <div class="form-group">
       <label class="control-label" translate="home.header.displayDensity">Display Density</label>
       <select class="form-control"
               name="density"
@@ -24,7 +35,6 @@
           {{'home.header.compact' | translate}}</option>
       </select>
     </div>
-
 
     <div class="form-group">
       <label class="control-label" translate="global.menu.help.useHelp">Help</label>

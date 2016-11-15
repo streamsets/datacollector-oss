@@ -252,6 +252,19 @@ angular.module('dataCollectorApp.common')
       },
 
       /**
+       * Fetches UI Configuration
+       *
+       * @returns {*}
+       */
+      getUIConfiguration: function() {
+        var url = apiBase + '/system/configuration/ui';
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+      /**
        * Fetches all configuration definitions of Pipeline and Stage Configuration.
        *
        * @returns {*}
