@@ -40,16 +40,15 @@ angular
       }
     );
   }])
-  .controller('LogsController', function ($rootScope, $scope, $interval, api, configuration, Analytics,
-                                          pipelineService, $timeout) {
+  .controller('LogsController', function ($rootScope, $scope, $interval, api, configuration, Analytics, $timeout) {
 
-    var webSocketLogURL = $rootScope.common.webSocketBaseURL + 'rest/v1/webSocket?type=log',
-        logWebSocket,
-        logWebSocketMessages = [],
-        lastMessageFiltered = false;
+    var webSocketLogURL = $rootScope.common.webSocketBaseURL + 'rest/v1/webSocket?type=log';
+    var logWebSocket;
+    var logWebSocketMessages = [];
+    var lastMessageFiltered = false;
 
     configuration.init().then(function() {
-      if(configuration.isAnalyticsEnabled()) {
+      if (configuration.isAnalyticsEnabled()) {
         Analytics.trackPage('/collector/logs');
       }
     });
@@ -69,9 +68,9 @@ angular
         api.log.getCurrentLog($scope.logEndingOffset, $scope.extraMessage, $scope.filterPipeline,
             $scope.filterSeverity).then(function(res) {
 
-          if(res.data && res.data.length > 0) {
+          if (res.data && res.data.length > 0) {
             //check if first message is extra line
-            if(!res.data[0].timeStamp && res.data[0].exception) {
+            if (!res.data[0].timeStamp && res.data[0].exception) {
               $scope.extraMessage = res.data[0].exception;
               res.data.shift();
             }
@@ -86,7 +85,7 @@ angular
       },
 
       severityFilterChanged: function(severity) {
-        if($scope.filterSeverity != severity) {
+        if ($scope.filterSeverity != severity) {
           $scope.filterSeverity = severity;
           $scope.logEndingOffset = -1;
           $scope.extraMessage = '';
@@ -97,7 +96,7 @@ angular
       },
 
       pipelineFilterChanged: function(pipeline) {
-        if($scope.filterPipeline != pipeline) {
+        if ($scope.filterPipeline != pipeline) {
           $scope.filterPipeline = pipeline;
           $scope.logEndingOffset = -1;
           $scope.extraMessage = '';
@@ -110,7 +109,7 @@ angular
 
     api.log.getCurrentLog($scope.logEndingOffset).then(function(res) {
       //check if first message is extra line
-      if(res.data && res.data.length > 0 && !res.data[0].timeStamp && res.data[0].exception) {
+      if (res.data && res.data.length > 0 && !res.data[0].timeStamp && res.data[0].exception) {
         $scope.extraMessage = res.data[0].exception;
         res.data.shift();
       }
@@ -128,17 +127,17 @@ angular
     });
 
     var intervalPromise = $interval(function() {
-      if(logWebSocketMessages && logWebSocketMessages.length) {
+      if (logWebSocketMessages && logWebSocketMessages.length) {
 
         angular.forEach(logWebSocketMessages, function(logWebSocketMessage) {
-          if(!logWebSocketMessage.exceptionMessagePart) {
+          if (!logWebSocketMessage.exceptionMessagePart) {
 
-            if($scope.filterSeverity && $scope.filterSeverity != logWebSocketMessage.severity) {
+            if ($scope.filterSeverity && $scope.filterSeverity != logWebSocketMessage.severity) {
               lastMessageFiltered = true;
               return;
             }
 
-            if($scope.filterPipeline && $scope.filterPipeline != logWebSocketMessage['s-entity']) {
+            if ($scope.filterPipeline && $scope.filterPipeline != logWebSocketMessage['s-entity']) {
               lastMessageFiltered = true;
               return;
             }
@@ -146,9 +145,9 @@ angular
             lastMessageFiltered = false;
             $scope.logMessages.push(logWebSocketMessage);
 
-          } else if(!lastMessageFiltered){
+          } else if (!lastMessageFiltered){
             var lastMessage = $scope.logMessages[$scope.logMessages.length - 1];
-            if(!lastMessage.exception) {
+            if (!lastMessage.exception) {
               lastMessage.exception = logWebSocketMessage.exceptionMessagePart;
             } else {
               lastMessage.exception += '\n' +   logWebSocketMessage.exceptionMessagePart;
@@ -165,13 +164,17 @@ angular
       $scope.logFiles = res.data;
     });
 
-    pipelineService.init().then(function() {
-      $scope.pipelines = pipelineService.getPipelines();
-    });
-
+    api.pipelineAgent.getPipelines(null, null, 0, 50, 'NAME', 'ASC', false).then(
+      function (res) {
+        $scope.pipelines = res.data;
+      },
+      function (res) {
+        $rootScope.common.errors = [res.data];
+      }
+    );
 
     $scope.$on('$destroy', function() {
-      if(angular.isDefined(intervalPromise)) {
+      if (angular.isDefined(intervalPromise)) {
         $interval.cancel(intervalPromise);
       }
 
