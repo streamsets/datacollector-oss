@@ -38,6 +38,7 @@ import static org.apache.commons.lang.StringUtils.isEmpty;
  *
  */
 public class AvroSchemaHelper {
+
   public static final byte MAGIC_BYTE = 0x0;
   public static final byte MAGIC_BYTE_SIZE = 1;
   public static final int ID_SIZE = 4;
@@ -115,12 +116,7 @@ public class AvroSchemaHelper {
    * @return parsed avro schema
    */
   public Schema loadFromString(String schema) {
-    return new Schema.Parser()
-        .setValidate(true)
-        //.setValidateDefaults(true)  -> we cannot use this api because 1.7.3 avro version does
-        //not contain this api and MAPR hive jars uses 1.7.3 (even though streamsets use avro 1.7.7) and
-        //We load the jar from mapr stage libs automatically -> this api i believe is kind of nice to have.
-        .parse(schema);
+    return AvroTypeUtil.parseSchema(schema);
   }
 
   /**

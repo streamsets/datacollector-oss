@@ -34,6 +34,8 @@ import org.apache.avro.generic.GenericFixed;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.util.Utf8;
 import org.codehaus.jackson.JsonNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -49,6 +51,8 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 public class AvroTypeUtil {
+
+  private static Logger LOG = LoggerFactory.getLogger(AvroTypeUtil.class);
 
   private static final long MILLIS_PER_DAY = TimeUnit.DAYS.toMillis(1);
   private static TimeZone localTimeZone = Calendar.getInstance().getTimeZone();
@@ -70,12 +74,19 @@ public class AvroTypeUtil {
    * Parse JSON representation of Avro schema to Avro's Schema JAVA object
    */
   public static Schema parseSchema(String schema) {
-    return new Schema.Parser()
-      .setValidate(true)
-      //.setValidateDefaults(true)  -> we cannot use this api because 1.7.3 avro version does
-        //not contain this api and MAPR hive jars uses 1.7.3 (even though streamsets use avro 1.7.7) and
-        //We load the jar from mapr stage libs automatically -> this api i believe is kind of nice to have.
-      .parse(schema);
+    Schema.Parser parser = new Schema.Parser();
+    parser.setValidate(true);
+
+    // We sadly can't use this method directly because it was added after 1.7.3 and we have to stay
+    // compatible with 1.7.3 as this version ships with mapr (and thus we end up using it). This code is
+    // however compiled against 1.7.7 and hence we don't have to do reflection here.
+    try {
+      parser.setValidateDefaults(true);
+    } catch (NoSuchMethodError e) {
+      LOG.debug("Running old Avro version that doesn't have 'setValidateDefaults' method", e);
+    }
+
+    return parser.parse(schema);
   }
 
   /**
