@@ -117,7 +117,7 @@ final class DefaultFsHelper implements FsHelper {
 
   @Override
   public OutputStream create(FileSystem fs, Path path) throws IOException {
-    return fs.create(path, false);
+    return new HflushableWrapperOutputStream(fs.create(path, false));
   }
 
   @Override

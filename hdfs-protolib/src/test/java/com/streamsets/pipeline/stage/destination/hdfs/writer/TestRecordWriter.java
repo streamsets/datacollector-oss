@@ -29,6 +29,7 @@ import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsDTarget;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.RawLocalFileSystem;
@@ -39,6 +40,9 @@ import org.apache.hadoop.io.compress.CompressionCodec;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -49,6 +53,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URI;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TestRecordWriter {
   private static Path testDir;
@@ -215,6 +220,38 @@ public class TestRecordWriter {
   @Test
   public void testSequenceFileUsingUUIDAsKey() throws Exception {
     testSequenceFile(true);
+  }
+
+  @Test
+  public void testTextFilesWriterHFlush() throws Exception {
+    FileSystem fs = getRawLocalFileSystem();
+    final AtomicBoolean hflushCalled = new AtomicBoolean(false);
+    try {
+      Path file = new Path(getTestDir(), "testTexFilesWriterHFlush.txt");
+      FSDataOutputStream fsDataOutputStream = Mockito.spy(fs.create(file, false));
+      OutputStream os = new HflushableWrapperOutputStream(fsDataOutputStream);
+
+      //Whenever hflush is called set hflushCalled to true.
+      Mockito.doAnswer(new Answer() {
+        @Override
+        public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+          hflushCalled.compareAndSet(false, true);
+          return invocationOnMock.callRealMethod();
+        }
+      }).when(fsDataOutputStream).hflush();
+
+      RecordWriter writer = new RecordWriter(file, 1000, os, new DummyDataGeneratorFactory(null), null);
+      Record record = RecordCreator.create();
+      record.set(Field.create("a"));
+      writer.write(record);
+      //hflush should be called.
+      writer.flush();
+      //hflushCalled should be true.
+      Assert.assertTrue(hflushCalled.get());
+      writer.close();
+    } finally {
+      fs.close();
+    }
   }
 
 }
