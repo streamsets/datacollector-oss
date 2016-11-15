@@ -47,7 +47,7 @@ import java.util.UUID;
 
 @GenerateResourceBundle
 @StageDef(
-  version = 4,
+  version = 5,
   label="Dev Data Generator",
   description = "Generates records with the specified field names based on the selected data type. For development only.",
   execution = ExecutionMode.STANDALONE,
@@ -84,15 +84,6 @@ public class RandomDataGeneratorSource extends BaseSource {
     description = "Attributes to be put in the generated record header"
   )
   public Map<String, String> headerAttributes;
-
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.BOOLEAN,
-    label = "Generate events",
-    description = "If set to true, this source will generate records both on data and event lane.",
-    defaultValue = "false"
-  )
-  public boolean generateEvents;
 
   @ConfigDef(required = true, type = ConfigDef.Type.NUMBER,
     defaultValue = "1000",
@@ -138,12 +129,10 @@ public class RandomDataGeneratorSource extends BaseSource {
     fillRecord(record, map);
     batchMaker.addRecord(record);
 
-    if(generateEvents) {
-      String recordSourceId = Utils.format("event:{}:{}:{}", EVENT_TYPE, EVENT_VERSION, batchOffset);
-      EventRecord event = getContext().createEventRecord(EVENT_TYPE, EVENT_VERSION, recordSourceId);
-      fillRecord(event, map);
-      getContext().toEvent(event);
-    }
+    String recordSourceId = Utils.format("event:{}:{}:{}", EVENT_TYPE, EVENT_VERSION, batchOffset);
+    EventRecord event = getContext().createEventRecord(EVENT_TYPE, EVENT_VERSION, recordSourceId);
+    fillRecord(event, map);
+    getContext().toEvent(event);
   }
 
   private void fillRecord(Record record, LinkedHashMap map) {
