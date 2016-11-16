@@ -16,7 +16,7 @@
 <concept id="concept_d3x_d2g_qv">
  <title>Meter</title>
  <shortdesc>The meter metric type provides alerts based on rates of different record types and stage
-        errors for pipeline batches or for a stage in the pipeline. </shortdesc>
+        errors for pipelines or for a stage in the pipeline. </shortdesc>
  <conbody>
         <p><indexterm>metric rules and
                     alerts<indexterm>meter</indexterm></indexterm><indexterm>meter<indexterm>metric

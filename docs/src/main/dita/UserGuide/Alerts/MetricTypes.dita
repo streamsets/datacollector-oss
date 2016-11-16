@@ -20,8 +20,8 @@
  <conbody>
   <p><indexterm>metric rules and alerts<indexterm>metric types</indexterm></indexterm>After
             selecting a metric type, you select the metric ID which specifies the metric to use. For
-            example, a metric ID can be a runtime statistics gauge or a batch input records meter.
-            You then select the metric element that defines what the metric is measuring. A metric
+            example, a metric ID can be a runtime statistics gauge or an input records meter. You
+            then select the metric element that defines what the metric is measuring. A metric
             element can be a count, rate, median, minimum, maximum, or percentage. The possible
             metric ID and metric element vary by metric type. </p>
  </conbody>
