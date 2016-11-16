@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.origin.logtail;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Optional;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
@@ -65,6 +66,7 @@ public class FileTailSourceUpgrader implements StageUpgrader {
   }
 
   private static void upgradeV3ToV4(List<Config> configs) {
+    DataFormatUpgradeHelper.ensureAvroSchemaExists(configs, joiner.join(CONF, DATA_FORMAT_CONFIG));
     DataFormatUpgradeHelper.upgradeAvroParserWithSchemaRegistrySupport(configs);
   }
 

@@ -66,6 +66,7 @@ public class KinesisTargetUpgrader extends KinesisBaseUpgrader {
   }
 
   private static void upgradeV5toV6(List<Config> configs) {
+    DataFormatUpgradeHelper.ensureAvroSchemaExists(configs, KINESIS_CONFIG_BEAN + ".dataFormatConfig");
     DataFormatUpgradeHelper.upgradeAvroGeneratorWithSchemaRegistrySupport(configs);
   }
 

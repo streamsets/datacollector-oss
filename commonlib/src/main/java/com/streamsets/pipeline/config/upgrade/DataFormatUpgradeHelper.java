@@ -117,6 +117,25 @@ public class DataFormatUpgradeHelper {
     configs.addAll(toAdd);
   }
 
+  /**
+   * There is a problem with some older stages that originally were not using our data parser library as the
+   * upgrade on those stages does not create all the properties that were introduced by the data parser library.
+   * For example File Tail origin doesn't support avro, so the upgrade procedure doesn't use create the avro
+   * specific properties. This is normally not a problem as post-upgrade SDC will create all missing properties
+   * with default values. However this particular upgrade will fail if the property avroSchema is missing.
+   *
+   * Hence for such stages, this method will ensure that the property avroSchema is properly present. The migration
+   * to data parser library happened for majority of stages in 1.2 release and hence this really affects only people
+   * upgrading from 1.1.x all the way to 2.1 or above. If the user upgraded from 1.1.x and then to any other release
+   * below 2.1 first, they would not hit this issue as the property avroSchema would be added with default value.
+   */
+  public static void ensureAvroSchemaExists(List<Config> configs, String prefix) {
+    Optional<Config> avroSchema = findByName(configs, "avroSchema");
+    if (!avroSchema.isPresent()) {
+      configs.add(new Config(PERIOD.join(prefix, "avroSchema"), null));
+    }
+  }
+
   static Optional<Config> findByName(List<Config> configs, String name) {
     for (Config config : configs) {
       if (config.getName().endsWith(name)) {

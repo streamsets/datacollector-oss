@@ -139,6 +139,7 @@ public class KafkaSourceUpgrader implements StageUpgrader {
     configs.add(new Config(joiner.join(CONF, "keyDeserializer"), Deserializer.STRING));
     configs.add(new Config(joiner.join(CONF, "valueDeserializer"), Deserializer.DEFAULT));
 
+    DataFormatUpgradeHelper.ensureAvroSchemaExists(configs, joiner.join(CONF, DATA_FORMAT_CONFIG));
     DataFormatUpgradeHelper.upgradeAvroParserWithSchemaRegistrySupport(configs);
   }
 }
