@@ -305,9 +305,6 @@ angular
               validationIssues.push('Add Label is not supported for Pipeline "' +
                   pipelineInfo.name + '" with state ' +  pipelineStatus.status );
             }
-            if (!pipelineInfo.valid) {
-              validationIssues.push('Pipeline "' + pipelineInfo.name + '" is not valid');
-            }
             selectedPipelineInfoList.push(pipelineInfo);
           }
         });
