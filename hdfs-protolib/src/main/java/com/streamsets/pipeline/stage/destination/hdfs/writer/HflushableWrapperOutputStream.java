@@ -19,18 +19,18 @@
  */
 package com.streamsets.pipeline.stage.destination.hdfs.writer;
 
+import org.apache.commons.io.output.ProxyOutputStream;
 import org.apache.hadoop.fs.FSDataOutputStream;
 
-import java.io.FilterOutputStream;
 import java.io.IOException;
 
 /**
  * A Wrapper Output stream for {@link FSDataOutputStream} which will call {@link FSDataOutputStream#hflush()} in
  * addition to {@link FSDataOutputStream#flush()} when {@link #flush()} is called
  *
- * Rest of the method calls are delegated to {@link FSDataOutputStream} by extending {@link FilterOutputStream}
+ * Rest of the method calls are delegated to {@link FSDataOutputStream} by extending {@link org.apache.commons.io.output.ProxyOutputStream}
  */
-public final class HflushableWrapperOutputStream extends FilterOutputStream {
+public final class HflushableWrapperOutputStream extends ProxyOutputStream {
   FSDataOutputStream os;
 
   HflushableWrapperOutputStream(FSDataOutputStream os) {
