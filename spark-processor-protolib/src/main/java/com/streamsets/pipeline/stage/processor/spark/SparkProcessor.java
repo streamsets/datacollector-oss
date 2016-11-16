@@ -21,10 +21,7 @@ package com.streamsets.pipeline.stage.processor.spark;
 
 import com.google.common.collect.ImmutableList;
 
-import com.streamsets.datacollector.record.HeaderImpl;
-import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.pipeline.api.Batch;
-import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
@@ -40,17 +37,14 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import scala.Cloneable;
 import scala.Tuple2;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static com.streamsets.pipeline.stage.processor.spark.Errors.SPARK_00;
 import static com.streamsets.pipeline.stage.processor.spark.Errors.SPARK_01;
