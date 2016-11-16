@@ -30,6 +30,7 @@ import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public final class TableContextUtil {
   //JDBC Result set constants
@@ -107,14 +108,17 @@ public final class TableContextUtil {
       TableConfigBean tableConfigBean
   ) throws SQLException, StageException {
     Map<String, TableContext> tableContextMap = new LinkedHashMap<>();
+    Pattern p = (StringUtils.isEmpty(tableConfigBean.tableExclusionPattern))? null : Pattern.compile(tableConfigBean.tableExclusionPattern);
     try (ResultSet rs = JdbcUtil.getTableMetadata(connection, null, tableConfigBean.schema, tableConfigBean.tablePattern)) {
       while (rs.next()) {
         String schemaName = rs.getString(TABLE_METADATA_TABLE_SCHEMA_CONSTANT);
         String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);
-        tableContextMap.put(
-            getQualifiedTableName(schemaName, tableName),
-            createTableContext(connection, schemaName, tableName, tableConfigBean)
-        );
+        if (p == null || !p.matcher(tableName).matches()) {
+          tableContextMap.put(
+              getQualifiedTableName(schemaName, tableName),
+              createTableContext(connection, schemaName, tableName, tableConfigBean)
+          );
+        }
       }
     }
     return tableContextMap;

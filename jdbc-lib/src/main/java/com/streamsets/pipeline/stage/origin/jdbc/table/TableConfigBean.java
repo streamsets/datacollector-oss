@@ -36,7 +36,7 @@ public final class TableConfigBean {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Table Name Pattern",
-      description = "Table Name Pattern",
+      description = "Table Name Pattern. Use a SQL Like Syntax",
       displayPosition = 30,
       defaultValue = "%",
       group = "JDBC"
@@ -44,11 +44,21 @@ public final class TableConfigBean {
   public String tablePattern;
 
   @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Table Exclusion Pattern",
+      description = "Table Exclusion Pattern. Use a Java Regex Syntax. Leave empty if no exclusion needed.",
+      displayPosition = 40,
+      group = "JDBC"
+  )
+  public String tableExclusionPattern;
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Override Partition Column",
       description = "Overrides the primary key as the partition column.",
-      displayPosition = 40,
+      displayPosition = 50,
       defaultValue = "false",
       group = "JDBC"
   )
@@ -59,7 +69,7 @@ public final class TableConfigBean {
       type = ConfigDef.Type.STRING,
       label = "Partition Column",
       description = "Column checked to track current offset.",
-      displayPosition = 50,
+      displayPosition = 60,
       group = "JDBC",
       dependsOn = "overridePartitionColumn",
       triggeredByValue = "true"
@@ -71,7 +81,7 @@ public final class TableConfigBean {
       type = ConfigDef.Type.STRING,
       label = "Initial Offset",
       description = "Determines an initial offset for the partition column.",
-      displayPosition = 60,
+      displayPosition = 70,
       group = "JDBC"
   )
   public String partitionStartOffset;
