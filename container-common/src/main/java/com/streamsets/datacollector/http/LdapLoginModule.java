@@ -21,6 +21,7 @@
 package com.streamsets.datacollector.http;
 
 import com.streamsets.datacollector.util.Configuration;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.jaas.callback.ObjectCallback;
 import org.eclipse.jetty.jaas.spi.AbstractLoginModule;
 import org.eclipse.jetty.jaas.spi.UserInfo;
@@ -187,6 +188,19 @@ public class LdapLoginModule extends AbstractLoginModule
    */
   private boolean _useLdaps = false;
 
+  /**
+   * Filter to do the role search.
+   */
+  private String _roleFilter;
+
+  /**
+   * username that user enteresd to login to SDC.
+   */
+  private String _username;
+
+  private static final String DN_FILTER = "{dn}";
+  private static final String USER_FILTER = "{user}";
+
   private DirContext _rootContext;
 
   /**
@@ -204,6 +218,7 @@ public class LdapLoginModule extends AbstractLoginModule
   @Override
   public UserInfo getUserInfo(String username) throws Exception
   {
+    this._username = username;
     String pwdCredential = getUserCredentials(username);
 
     if (pwdCredential == null)
@@ -338,7 +353,7 @@ public class LdapLoginModule extends AbstractLoginModule
   {
     List<String> roleList = new ArrayList<String>();
 
-    if (dirContext == null || _roleBaseDn == null || _roleMemberAttribute == null || _roleObjectClass == null)
+    if (dirContext == null || _roleBaseDn == null || _roleObjectClass == null || (_roleMemberAttribute == null && _roleFilter == null))
     {
       LOG.debug("getUserRolesByDn returns an empty list because at least one of the following is null : " +
           "[ dirContext, _roleBaseDn, _roleMemberAttribute, _roleObjectClass ]");
@@ -351,11 +366,24 @@ public class LdapLoginModule extends AbstractLoginModule
     ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
     ctls.setReturningAttributes(new String[]{_roleNameAttribute});
 
-    LOG.debug("Searching for roles with filter: (&(objectClass={})({}={})) from roleBaseDn: {}",
-        _roleObjectClass, _roleMemberAttribute, userDn, _roleBaseDn );
+    String roleFilter = null;
+    if (!StringUtils.isEmpty(_roleFilter)) {
+      // apply the filter and construct the {}={} part.
+      if (_roleFilter.contains(DN_FILTER)){
+        roleFilter = _roleFilter.replace(DN_FILTER, userDn);
+      } else if (_roleFilter.contains(USER_FILTER)){
+        roleFilter = _roleFilter.replace(USER_FILTER, _username);
+      }
+    }
+    if (roleFilter == null) {
+      // apply the default behavior(search by full DN) and construct the (_roleMemberAttribute=userDn) part
+      roleFilter = String.format("%s=%s", _roleMemberAttribute, userDn);
+    }
+    LOG.debug("Searching for roles with filter: (&(objectClass={})({}) from roleBaseDn: {}",
+        _roleObjectClass, roleFilter, _roleBaseDn);
 
-    String filter = "(&(objectClass={0})({1}={2}))";
-    Object[] filterArguments = {_roleObjectClass, _roleMemberAttribute, userDn};
+    String filter = "(&(objectClass={0})({1}))";
+    Object[] filterArguments = {_roleObjectClass, roleFilter};
     NamingEnumeration<SearchResult> results = dirContext.search(_roleBaseDn, filter, filterArguments, ctls);
 
     LOG.debug("Found user roles?: " + results.hasMoreElements());
@@ -591,6 +619,10 @@ public class LdapLoginModule extends AbstractLoginModule
     if (options.containsKey("useLdaps"))
     {
       _useLdaps = Boolean.parseBoolean((String) options.get("useLdaps"));
+    }
+    if (options.containsKey("roleFilter"))
+    {
+      _roleFilter = (String)options.get("roleFilter");
     }
 
     _userObjectClass = getOption(options, "userObjectClass", _userObjectClass);

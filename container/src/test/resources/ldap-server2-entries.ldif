@@ -17,6 +17,10 @@
 # specific language governing permissions and limitations
 # under the License.
 
+# Member of engineering org: user1
+# Member of finance org: user2, user3, user4, user5
+# Member of test(posixGroup): user6
+
 dn: ou=departments,dc=example,dc=org
 ObjectClass: organizationalunit
 ou: departments
@@ -60,6 +64,13 @@ cn: user5
 sn: user5
 userPassword: user5
 
+dn: uid=user6,ou=employees,dc=example,dc=org
+ObjectClass: inetOrgPerson
+uid: user6
+cn: user6
+sn: user6
+userPassword: user6
+
 dn: cn=engineering,ou=departments,dc=example,dc=org
 ObjectClass: groupOfNames
 cn: engineering
@@ -72,3 +83,9 @@ member: uid=user2,ou=employees,dc=example,dc=org
 member: uid=user3,ou=employees,dc=example,dc=org
 member: uid=user4,ou=employees,dc=example,dc=org
 member: uid=user5,ou=employees,dc=example,dc=org
+
+dn: cn=test,ou=departments,dc=example,dc=org
+objectClass: posixGroup
+cn: test
+gidNumber: 1001
+memberUid: user6
