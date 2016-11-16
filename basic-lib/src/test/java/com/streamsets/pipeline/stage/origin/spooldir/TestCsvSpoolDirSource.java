@@ -73,6 +73,23 @@ public class TestCsvSpoolDirSource {
     return f;
   }
 
+  private File createSomeRecordsTooLongFile() throws Exception {
+    File f = new File(createTestDir(), "test.log");
+    Writer writer = new FileWriter(f);
+    writer.write("a,b,c,d\n");
+    writer.write("e,f,g,h\n");
+    writer.write("aaa,bbb,ccc,ddd\n");
+    writer.write("i,j,k,l\n");
+    writer.write("aa1,bb1,cc1,dd1\n");
+    writer.write("aa2,bb2,cc2,dd2\n");
+    writer.write("m,n,o,p\n");
+    writer.write("q,r,s,t\n");
+    writer.write("aa3,bb3,cc3,dd3\n");
+    writer.write("aa4,bb5,cc5,dd5\n");
+    writer.close();
+    return f;
+  }
+
   private SpoolDirSource createSource(
       CsvMode mode,
       CsvHeader header,
@@ -301,6 +318,54 @@ public class TestCsvSpoolDirSource {
       runner.runDestroy();
     }
   }
+
+  @Test
+  public void testRecordOverrunOnBatchBoundary() throws Exception {
+    final File csvFile = createSomeRecordsTooLongFile();
+    runRecordOverrunOnBatchBoundaryHelper(csvFile, 3, new int[] {3, 2}, new int[] {1, 4});
+    runRecordOverrunOnBatchBoundaryHelper(csvFile, 4, new int[] {4, 1}, new int[] {3, 2});
+    runRecordOverrunOnBatchBoundaryHelper(csvFile, 5, new int[] {5, 0}, new int[] {3, 2});
+    runRecordOverrunOnBatchBoundaryHelper(csvFile, 6, new int[] {5, 0}, new int[] {5, 0});
+  }
+
+  private void runRecordOverrunOnBatchBoundaryHelper(File sourceFile, int batchSize, int[] recordCounts,
+      int[] errorCounts) throws Exception {
+
+    if (recordCounts.length != errorCounts.length) {
+      throw new IllegalArgumentException("recordCounts and errorCounts must be same length");
+    }
+
+    String offset = "0";
+    int produceNum = 0;
+    while (!"-1".equals(offset)) {
+      final int recordCount = recordCounts[produceNum];
+      final int errorCount = errorCounts[produceNum];
+
+      SpoolDirSource source = createSource(CsvMode.CUSTOM, CsvHeader.NO_HEADER, '|', '\\', '"', 8, CsvRecordType.LIST);
+      SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane")
+          .setOnRecordError(OnRecordError.TO_ERROR).build();
+      runner.runInit();
+
+      try {
+        BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
+        offset = source.produce(sourceFile, offset, batchSize, batchMaker);
+        StageRunner.Output output = SourceRunner.getOutput(batchMaker);
+        List<Record> records = output.getRecords().get("lane");
+        Assert.assertNotNull(records);
+        Assert.assertEquals(recordCount, records.size());
+        Assert.assertEquals(errorCount, runner.getErrors().size());
+      } finally {
+        runner.runDestroy();
+      }
+
+      produceNum++;
+      if (produceNum > 999) {
+        Assert.fail("while loop in runRecordOverrunOnBatchBoundaryHelper has run too many times");
+      }
+    }
+
+  }
+
 
   @Test
   public void testDelimitedCustomWithListMap() throws Exception {
