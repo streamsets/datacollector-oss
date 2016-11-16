@@ -41,18 +41,17 @@
                 the origin.</p><p>To change the starting point for a Kafka Consumer, update the
                 offset in the Kafka ZooKeeper. For details, see the Kafka documentation. The
                 remaining origin stages process transient data where resetting the origin has no
-                effect.</p><p>To reset the origin:</p></context>
+                effect.</p><p>You can reset the origin for multiple pipelines at the same time from
+                the <uicontrol>Home</uicontrol> page. Or, you can reset the origin for a single
+                pipeline from the pipeline canvas.</p><p>To reset the origin:</p></context>
         <steps id="steps_hvb_y1s_5q">
             <step>
-                <cmd>Verify that the pipeline that you want to use appears in the pipeline canvas. </cmd>
-                <info>If it does not, select the pipeline from the <wintitle>Home</wintitle>
-                    page.</info>
+                <cmd>Select multiple pipelines from the <uicontrol>Home</uicontrol> page, or view a
+                    single pipeline in the pipeline canvas.</cmd>
             </step>
             <step>
-                <cmd>To reset the origin, click the <uicontrol>More</uicontrol> icon.</cmd>
-            </step>
-            <step>
-                <cmd>Click <uicontrol>Reset Origin</uicontrol>.</cmd>
+                <cmd>Click the <uicontrol>More</uicontrol> icon, and then click <uicontrol>Reset
+                        Origin</uicontrol>.</cmd>
             </step>
             <step>
                 <cmd>In the <wintitle>Reset Origin Confirmation</wintitle> dialog box, click

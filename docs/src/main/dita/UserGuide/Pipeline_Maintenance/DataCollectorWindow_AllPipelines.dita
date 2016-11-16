@@ -49,8 +49,8 @@
          </strow>
          <strow>
              <stentry>2</stentry>
-             <stentry>Search field</stentry>
-             <stentry>Allows you to search for pipelines by name.</stentry>
+             <stentry>Filter field</stentry>
+             <stentry>Allows you to filter for pipelines by name.</stentry>
          </strow>
             <strow>
                 <stentry>3</stentry>
@@ -70,16 +70,20 @@
                 <stentry>Toggle Library Pane icon</stentry>
                 <stentry>Icon to show or hide the pipeline library.</stentry>
             </strow>
+            <strow>
+                <stentry><image href="../Graphics/icon_MonMore.png" id="image_s3s_wt1_xx"
+                    /></stentry>
+                <stentry>More icon</stentry>
+                <stentry>
+                    <p>Provides additional actions for pipelines. Use to reset origins for
+                        pipelines, add labels to pipelines, or export pipelines.</p>
+                </stentry>
+            </strow>
          <strow>
              <stentry><image href="../Graphics/icon_PrevRefresh.png" id="image_ndy_cyp_1w"
                     /></stentry>
              <stentry>Refresh icon</stentry>
              <stentry>Refreshes the pipeline list.</stentry>
-         </strow>
-         <strow>
-             <stentry><image href="../Graphics/icon_Export.png" id="image_p5d_f3x_1w"/></stentry>
-             <stentry>Export icon</stentry>
-             <stentry>Exports the selected pipelines.</stentry>
          </strow>
          <strow>
              <stentry><image href="../Graphics/icon_ConfigDelete.png" id="image_t2z_gyp_1w"
