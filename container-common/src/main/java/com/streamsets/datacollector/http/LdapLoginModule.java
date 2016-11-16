@@ -426,6 +426,16 @@ public class LdapLoginModule extends AbstractLoginModule
         return isAuthenticated();
       }
 
+      // Please see the following stackoverflow article
+      // http://security.stackexchange.com/questions/6713/ldap-security-problems
+      // Some LDAP implementation "MAY" accept empty password as a sign of anonymous connection and thus
+      // return "true" for the authentication request.
+      if((webCredential instanceof String) && ((String)webCredential).isEmpty()) {
+        LOG.info("Ignoring login request for user {} as the password is empty.", webUserName);
+        setAuthenticated(false);
+        return isAuthenticated();
+      }
+
       if (_forceBindingLogin)
       {
         return bindingLogin(webUserName, webCredential);
