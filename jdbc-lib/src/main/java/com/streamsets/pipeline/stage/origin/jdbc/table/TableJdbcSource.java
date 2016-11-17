@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.origin.jdbc.table;
 import com.codahale.metrics.Gauge;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Joiner;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -60,6 +61,8 @@ import java.util.concurrent.ExecutionException;
 
 public class TableJdbcSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(TableJdbcSource.class);
+  private static final Joiner JOINER = Joiner.on("\n");
+
   private static final String HIKARI_CONFIG_PREFIX = "hikariConfigBean.";
   private static final String CONNECTION_STRING = HIKARI_CONFIG_PREFIX + "connectionString";
 
@@ -191,6 +194,8 @@ public class TableJdbcSource extends BaseSource {
           allTableContexts.putAll(TableContextUtil.listTablesForConfig(connection, tableConfigBean));
         }
 
+        LOG.info("Selected Tables: \n {}", JOINER.join(allTableContexts.keySet()));
+
         try {
           tableOrderProvider.initialize(allTableContexts);
           if (tableOrderProvider.getNumberOfTables() == 0) {
@@ -262,9 +267,9 @@ public class TableJdbcSource extends BaseSource {
           //Max rows is set to batch size.
           statement.setMaxRows(commonSourceConfigBean.maxBatchSize);
 
+          LOG.info("Executing Query :{}", query);
           rs = statement.executeQuery(query);
           ResultSetMetaData md = rs.getMetaData();
-
           while (rs.next() && recordCount < batchSize) {
             //TODO: https://issues.streamsets.com/browse/SDC-4280 - Add Max Clob/Blob size action
             LinkedHashMap<String, Field> fields = JdbcUtil.resultSetToFields(
@@ -283,10 +288,9 @@ public class TableJdbcSource extends BaseSource {
             batchMaker.addRecord(record);
             offsets.put(tableContext.getTableName(), partitionNameValue);
             if (recordCount == 0) {
-              gaugeMap.put(
-                  CURRENT_TABLE,
-                  TableContextUtil.getQualifiedTableName(tableContext.getSchema(), tableContext.getTableName())
-              );
+              String qualifiedTableName = TableContextUtil.getQualifiedTableName(tableContext.getSchema(), tableContext.getTableName());
+              gaugeMap.put(CURRENT_TABLE, qualifiedTableName);
+              LOG.info("Generating records from table : {}", qualifiedTableName);
             }
             recordCount++;
           }

@@ -19,7 +19,10 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
+import com.google.common.base.Joiner;
 import com.streamsets.pipeline.api.StageException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.Map;
@@ -47,6 +50,9 @@ public interface TableOrderProvider {
   TableContext nextTable() throws SQLException, ExecutionException, StageException;
 
   abstract class BaseTableOrderProvider implements TableOrderProvider {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TableOrderProvider.class);
+    private static final Joiner JOINER = Joiner.on("\n");
+
     private Map<String, TableContext> tableContextMap;
     private Queue<String> tableQueue;
 
@@ -57,6 +63,7 @@ public interface TableOrderProvider {
         addTable(qualifiedTableName);
       }
       tableQueue = calculateOrGetOrder();
+      LOGGER.info("Ordering of Tables : \n {}", JOINER.join(tableQueue));
     }
 
     TableContext getTableContext(String schema, String tableName) {
