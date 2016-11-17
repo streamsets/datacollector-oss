@@ -268,4 +268,33 @@ public class TestSpoolDirSourceSubDirectories {
     }
   }
 
+  @Test
+  public void testNoMoreFilesEmptyBatch() throws Exception {
+    TSpoolDirSource source = createSource(null);
+    SourceRunner runner = new SourceRunner.Builder(TSpoolDirSource.class, source).addOutputLane("lane").build();
+    File file = new File(source.spoolDir, "dir1/file-0.log").getAbsoluteFile();
+    Assert.assertTrue(file.getParentFile().mkdirs());
+    Files.createFile(file.toPath());
+    runner.runInit();
+
+    try {
+      source.file = file;
+      source.offset = 0;
+      source.maxBatchSize = 10;
+      source.offsetIncrement = -1;
+
+      StageRunner.Output output = runner.runProduce(null, 1000);
+      Assert.assertEquals(source.createSourceOffset("dir1/file-0.log", "-1"), output.getNewOffset());
+      Assert.assertTrue(source.produceCalled);
+
+      source.produceCalled = false;
+      output = runner.runProduce(output.getNewOffset(), 1000);
+      Assert.assertEquals(source.createSourceOffset("dir1/file-0.log", "-1"), output.getNewOffset());
+      //Produce will not be called as this file-0.log will not be eligible for produce
+      Assert.assertFalse(source.produceCalled);
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
 }

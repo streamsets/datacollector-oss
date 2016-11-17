@@ -377,17 +377,17 @@ public class SpoolDirSource extends BaseSource {
       // file reported by offset tracking is NULL, means we are starting from zero
       return true;
     }
-    if (spoolerFile.getName().compareTo(offsetFile) == 0 && !MINUS_ONE.equals(offsetInFile)) {
+    if (spoolerFile.getAbsolutePath().compareTo(offsetFile) == 0 && !MINUS_ONE.equals(offsetInFile)) {
       // file reported by spooler is equal than current offset file
       // and we didn't fully process (not -1) the current file
       return true;
     }
     if (useLastModified) {
-      if (compareFiles(spoolerFile, new File(spooler.getSpoolDir(), offsetFile))) {
+      if (compareFiles(spoolerFile, new File(offsetFile))) {
         return true;
       }
     } else {
-      if (spoolerFile.getName().compareTo(offsetFile) > 0) {
+      if (spoolerFile.getAbsolutePath().compareTo(offsetFile) > 0) {
         // file reported by spooler is newer than current offset file
         return true;
       }
@@ -408,7 +408,7 @@ public class SpoolDirSource extends BaseSource {
     int batchSize = Math.min(conf.batchSize, maxBatchSize);
     // if lastSourceOffset is NULL (beginning of source) it returns NULL
     String file = getFileFromSourceOffset(lastSourceOffset);
-    String fullPath = getSpooler().getSpoolDir() + "/" + file;
+    String fullPath = (file != null) ? getSpooler().getSpoolDir() + "/" + file : null;
     // if lastSourceOffset is NULL (beginning of source) it returns 0
     String offset = getOffsetFromSourceOffset(lastSourceOffset);
     if (hasToFetchNextFileFromSpooler(fullPath, offset)) {
