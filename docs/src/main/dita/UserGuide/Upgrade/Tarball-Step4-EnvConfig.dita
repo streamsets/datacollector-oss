@@ -102,13 +102,31 @@
                 </info>
             </step>
             <step>
-                <cmd>Create the <codeph>/etc/sdc</codeph> directory and copy all files from
-                        <codeph>$SDC_DIST/etc</codeph> into this directory.</cmd>
+                <cmd>If you installed additional drivers or developed custom stages, add the
+                    STREAMSETS_LIBRARIES_EXTRA_DIR or USER_LIBRARIES_DIR environment variable to the
+                    environment configuration file, and set it to the same directory used in the
+                    previous version.</cmd>
             </step>
             <step>
-                <cmd>If you installed additional drivers or developed custom stages, add the
-                    STREAMSETS_LIBRARIES_EXTRA_DIR or USER_LIBRARIES_DIR environment variable and
-                    set it to the same directory used in the previous version.</cmd>
+                <cmd>Manually update the environment configuration file with any other customized
+                    property values that you defined in the previous version.</cmd>
+            </step>
+            <step>
+                <cmd>Use the following command to create the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> configuration directory at <codeph>/etc/sdc</codeph>: </cmd>
+                <info>
+                    <codeblock>mkdir /etc/sdc</codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd>Use the following command from the directory where you extracted the tarball to
+                    copy all files from etc into the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> configuration directory that you just created:</cmd>
+                <info>
+                    <codeblock>cp -R etc/ /etc/sdc</codeblock>
+                </info>
             </step>
             <step>
                 <cmd>To run <ph
@@ -128,10 +146,6 @@
                 <info>
                     <codeblock>chmod go-rwx /etc/sdc/form-realm.properties</codeblock>
                 </info>
-            </step>
-            <step>
-                <cmd>Manually update the environment configuration file with any other customized
-                    property values that you defined in the previous version.</cmd>
             </step>
         </steps>
     </taskbody>

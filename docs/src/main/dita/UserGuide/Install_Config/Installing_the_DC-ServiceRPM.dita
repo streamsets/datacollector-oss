@@ -15,7 +15,7 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_th5_1yj_dx">
     <title>Installing from the RPM Package</title>
-    <shortdesc> When you install from the RPM package, <ph
+    <shortdesc>When you install from the RPM package, <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses
         the default directories and the default system user and group. </shortdesc>
     <taskbody>
@@ -30,6 +30,9 @@
                 /> on multiple machines, you might want to create the system user and group before
                 installation to ensure that the user ID and group ID are consistent across the
                 machines.</note>
+            <p>Installing the full <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> as a service requires sudo privileges on the root directory. </p>
         </prereq>
         <steps>
             <step>

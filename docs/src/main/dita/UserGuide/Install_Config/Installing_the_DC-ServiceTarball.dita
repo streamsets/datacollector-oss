@@ -21,10 +21,12 @@
         service.</shortdesc>
     <taskbody>
         <context><p><indexterm>installation<indexterm>service start</indexterm></indexterm><indexterm>launch Data
-                        Collector<indexterm>service start</indexterm></indexterm> Before you
-                install, you can alternatively use the
-                    <filepath>$SDC_DIST/libexec/sdcd-env.sh</filepath> file to modify the
-                environment variables that define directories and the system user and group.</p></context>
+                        Collector<indexterm>service start</indexterm></indexterm>Before you install,
+                you can alternatively use the <filepath>$SDC_DIST/libexec/sdcd-env.sh</filepath>
+                file to modify the environment variables that define directories and the system user
+                and group.</p>
+            <p>Installing the full Data Collector as a service requires sudo privileges on the root
+                directory. </p></context>
         <steps id="steps_wnx_444_1r">
             <step>
                 <cmd>Use the following URL to download the <ph
@@ -34,22 +36,12 @@
                     />.</cmd>
             </step>
             <step>
-                <cmd>Extract the tarball to the desired location, typically<codeph>
-                        /opt/local/</codeph>.</cmd>
-            </step>
-            <step>
-                <cmd>Copy <filepath>initd/_sdcinitd_prototype</filepath> to the
-                        <filepath>/etc/init.d/</filepath> directory as sdc.</cmd>
-            </step>
-            <step>
-                <cmd>Edit the sdc file and set the <codeph>$SDC_DIST</codeph> and
-                        <codeph>$SDC_HOME</codeph> environment variables to the location where you
-                    extracted the tarball.</cmd>
-            </step>
-            <step>
-                <cmd>Use the following command to make the sdc file executable:</cmd>
+                <cmd>Use the following command to extract the tarball to the desired location,
+                    typically <codeph>/opt/local/</codeph>:</cmd>
                 <info>
-                    <codeblock>sudo chmod 755 /etc/init.d/sdc</codeblock>
+                    <codeblock>tar -xzf streamsets-datacollector-all-&lt;version>.tgz</codeblock>
+                    <p>For example, to extract version 2.2.0.0, use the following
+                        command:<codeblock>tar -xzf streamsets-datacollector-all-2.2.0.0.tgz</codeblock></p>
                 </info>
             </step>
             <step>
@@ -59,14 +51,56 @@
                     /> as a service. </info>
             </step>
             <step>
-                <cmd>Create the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> configuration directory at <codeph>/etc/sdc</codeph> and copy all files from
-                    etc into this directory.</cmd>
+                <cmd>Use the following command to create the <filepath>/etc/init.d</filepath>
+                    directory:</cmd>
+                <info>
+                    <codeblock>mkdir /etc/init.d</codeblock>
+                </info>
             </step>
             <step>
-                <cmd>Change the owner of the <codeph>/etc/sdc</codeph> directory and all files in
-                    the directory to sdc:sdc.</cmd>
+                <cmd>Use the following commands to copy
+                        <filepath>initd/_sdcinitd_prototype</filepath> to the
+                        <filepath>/etc/init.d</filepath> directory and then change ownership of the
+                    file to sdc:</cmd>
+                <info>
+                    <codeblock>cp initd/_sdcinitd_prototype  /etc/init.d/sdc
+chown sdc:sdc /etc/init.d/sdc</codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd>Edit the <codeph>/etc/init.d/sdc</codeph> file and set the
+                        <codeph>$SDC_DIST</codeph> and <codeph>$SDC_HOME</codeph> environment
+                    variables to the location where you extracted the tarball.</cmd>
+            </step>
+            <step>
+                <cmd>Use the following command to make the sdc file executable:</cmd>
+                <info>
+                    <codeblock>chmod 755 /etc/init.d/sdc</codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd>Use the following command to create the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> configuration directory at <codeph>/etc/sdc</codeph>: </cmd>
+                <info>
+                    <codeblock>mkdir /etc/sdc</codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd>Use the following command from the directory where you extracted the tarball to
+                    copy all files from etc into the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> configuration directory that you just created:</cmd>
+                <info>
+                    <codeblock>cp -R etc/ /etc/sdc</codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd>Use the following command to change the owner of the <codeph>/etc/sdc</codeph>
+                    directory and all files in the directory to sdc:sdc:</cmd>
+                <info>
+                    <codeblock>chown -R sdc:sdc /etc/sdc</codeblock>
+                </info>
             </step>
             <step>
                 <cmd>Use the following command to set owner only permission on the
@@ -77,27 +111,39 @@
                 </info>
             </step>
             <step>
-                <cmd>Create the <ph
+                <cmd>Use the following commands to create the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> log directory at <codeph>/var/log/sdc</codeph> and change the owner to
-                    sdc:sdc.</cmd>
+                    sdc:sdc:</cmd>
+                <info>
+                    <codeblock>mkdir /var/log/sdc
+chown sdc:sdc /var/log/sdc</codeblock>
+                </info>
             </step>
             <step>
-                <cmd>Create the <ph
+                <cmd>Use the following commands to create the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> data directory at <codeph>/var/lib/sdc</codeph> and change the owner to
-                    sdc:sdc.</cmd>
+                    sdc:sdc:</cmd>
+                <info>
+                    <codeblock>mkdir /var/lib/sdc
+chmod sdc:sdc /var/lib/sdc</codeblock>
+                </info>
             </step>
             <step>
-                <cmd>Create the <ph
+                <cmd>Use the following commands to create the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> resources directory at <codeph>/var/lib/sdc-resources</codeph> and change the
-                    owner to sdc:sdc.</cmd>
+                    owner to sdc:sdc:</cmd>
+                <info>
+                    <codeblock>mkdir /var/lib/sdc-resources
+chmod sdc:sdc /var/lib/sdc-resources</codeblock>
+                </info>
             </step>
             <step>
-                <cmd>To start <ph
+                <cmd>Use the following command to start <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> as a service, use the following command: </cmd>
+                    /> as a service: </cmd>
                 <info>
                     <codeblock>service sdc start  </codeblock>
                 </info>

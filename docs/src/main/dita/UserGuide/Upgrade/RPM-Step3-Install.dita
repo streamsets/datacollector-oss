@@ -15,7 +15,9 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_ofc_2zl_5v">
     <title>Step 3. Install the New Version</title>
-    <shortdesc>Install the new version of the RPM package.</shortdesc>
+    <shortdesc>Install the new version of the RPM package. Installing the full <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> as a
+        service requires sudo privileges on the root directory.</shortdesc>
     <taskbody>
         <steps>
             <step>

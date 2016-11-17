@@ -36,9 +36,13 @@
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> as a service</dt>
                 <dd>Use the following command:<pre>service sdc start  </pre></dd>
-                <dd>For CentOS, use the following command:<pre>chkconfig --add sdc</pre></dd>
-                <dd>For Ubuntu, use the following
-                    command:<pre>update-rc.d sdc defaults 97 03</pre></dd>
+                <dd>To add the <ph>Data Collector</ph> service to the system startup, use the
+                    required command for your operating system:<ul id="ul_m3d_2gr_yx">
+                        <li>For CentOS, use the following
+                            command:<codeblock>chkconfig --add sdc</codeblock></li>
+                        <li>For Ubuntu, use the following
+                            command:<codeblock>update-rc.d sdc defaults 97 03</codeblock></li>
+                    </ul></dd>
             </dlentry>
         </dl>
     </conbody>
