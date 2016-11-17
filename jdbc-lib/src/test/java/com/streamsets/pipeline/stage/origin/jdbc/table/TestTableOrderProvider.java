@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.origin.jdbc.table;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
@@ -47,6 +48,7 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -161,7 +163,7 @@ public class TestTableOrderProvider {
   }
 
   private static TableContext getTableContext(String tableName) {
-    return new TableContext(null, tableName, "prim_key", Types.INTEGER, "-1");
+    return new TableContext(null, tableName, new LinkedHashMap<>(ImmutableMap.of("prim_key", Types.INTEGER)), Collections.<String, String>emptyMap());
   }
 
   @Before

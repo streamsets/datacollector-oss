@@ -19,20 +19,23 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 public final class TableContext {
 
   private final String schema;
   private final String tableName;
-  private final String partitionColumn;
-  private final int partitionType;
-  private final String partitionStartOffset;
+  private final LinkedHashMap<String, Integer> partitionColumnToType;
+  private final Map<String, String> partitionColumnToStartOffset;
 
-  TableContext(String schema, String tableName, String partitionColumn, int partitionType, String partitionStartOffset) {
+  TableContext(String schema, String tableName, LinkedHashMap<String, Integer> partitionColumnToType, Map<String, String> partitionColumnToStartOffset) {
     this.schema = schema;
     this.tableName = tableName;
-    this.partitionColumn = partitionColumn;
-    this.partitionType = partitionType;
-    this.partitionStartOffset = partitionStartOffset;
+    this.partitionColumnToType = partitionColumnToType;
+    this.partitionColumnToStartOffset = partitionColumnToStartOffset;
+
   }
 
   public String getSchema() {
@@ -43,16 +46,25 @@ public final class TableContext {
     return tableName;
   }
 
-  public String getPartitionColumn() {
-    return partitionColumn;
+  public Collection<String> getPartitionColumns() {
+    return partitionColumnToType.keySet();
   }
 
-  public int getPartitionType() {
-    return partitionType;
+  public int getPartitionType(String partitionColumn) {
+    return partitionColumnToType.get(partitionColumn);
   }
 
-  public String getPartitionStartOffset() {
-    return partitionStartOffset;
+  public boolean isPartitionOffsetOverride() {
+    return !partitionColumnToStartOffset.isEmpty();
+  }
+
+  public Map<String, String> getPartitionColumnToStartOffset() {
+    return partitionColumnToStartOffset;
+  }
+
+  //Used to reset after the first batch we should not be using the initial offsets.
+  public void clearStartOffset() {
+    partitionColumnToStartOffset.clear();
   }
 
 }

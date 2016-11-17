@@ -20,7 +20,6 @@
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
 import com.codahale.metrics.Gauge;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.streamsets.pipeline.api.BatchMaker;
@@ -38,20 +37,17 @@ import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.Groups;
+import com.streamsets.pipeline.stage.origin.jdbc.table.util.OffsetQueryUtil;
 import com.zaxxer.hikari.HikariDataSource;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Types;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,12 +64,6 @@ public class TableJdbcSource extends BaseSource {
 
   private static final String JDBC_NAMESPACE_HEADER = "jdbc.";
 
-  private static final String TABLE_QUERY_SELECT = "select * from %s";
-  private static final String TABLE_WHERE_CLASS_WITHOUT_QUOTES = " where %s > %s";
-  private static final String TABLE_WHERE_CLASS_WITH_QUOTES = " where %s > '%s'";
-  private static final String ORDER_BY_CLAUSE = " order by %s";
-  private static final String PARTITION_NAME_VALUE = "%s=%s";
-
   static final String CURRENT_TABLE = "Current Table";
   static final String TABLE_COUNT = "Table Count";
   static final String TABLE_METRICS = "Table Metrics";
@@ -84,15 +74,12 @@ public class TableJdbcSource extends BaseSource {
   private final Properties driverProperties = new Properties();
 
   private TableOrderProvider tableOrderProvider;
-
   private ErrorRecordHandler errorRecordHandler;
   private Connection connection = null;
   private HikariDataSource hikariDataSource;
   private long lastQueryIntervalTime;
 
   private final ConcurrentHashMap<String, Object> gaugeMap;
-
-  private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
   public TableJdbcSource(
       HikariPoolConfigBean hikariConfigBean,
@@ -114,62 +101,6 @@ public class TableJdbcSource extends BaseSource {
     return formattedError;
   }
 
-  private static String serializeOffsetMap(Map<String, String> offsetMap) throws StageException {
-    try {
-      return OBJECT_MAPPER.writeValueAsString(offsetMap);
-    } catch (IOException ex) {
-      throw new StageException(JdbcErrors.JDBC_60, ex);
-    }
-  }
-
-  @SuppressWarnings("unchecked")
-  private static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws StageException {
-    Map<String, String> offsetMap;
-    if (StringUtils.isEmpty(lastSourceOffset)) {
-      offsetMap = new HashMap<>();
-    } else {
-      try {
-        offsetMap = OBJECT_MAPPER.readValue(lastSourceOffset, Map.class);
-      } catch (IOException ex) {
-        throw new StageException(JdbcErrors.JDBC_61, ex);
-      }
-    }
-    return offsetMap;
-  }
-
-  private static String buildQuery(TableContext tableContext, String lastOffset) {
-    StringBuilder queryBuilder = new StringBuilder();
-    queryBuilder.append(
-        String.format(
-            TABLE_QUERY_SELECT,
-            TableContextUtil.getQualifiedTableName(tableContext.getSchema(), tableContext.getTableName()))
-    );
-    String offset = (!StringUtils.isEmpty(tableContext.getPartitionStartOffset()))?
-        //Use the offset in the configuration
-        tableContext.getPartitionStartOffset() :
-        // if offset is available
-        // get the stored offset (which is of the form partitionName=value) and strip off 'partitionColumn=' prefix
-        // else null
-        (lastOffset != null)?
-            lastOffset.substring(tableContext.getPartitionColumn().length() + 1) : null;
-
-    if (offset != null) {
-      //For Char, Varchar, date, time and timestamp embed the value in a quote
-      String whereClassTemplate = TableContextUtil.isSqlTypeOneOf(
-          tableContext.getPartitionType(),
-          Types.CHAR,
-          Types.VARCHAR,
-          Types.DATE,
-          Types.TIME,
-          Types.TIMESTAMP
-      )? TABLE_WHERE_CLASS_WITH_QUOTES : TABLE_WHERE_CLASS_WITHOUT_QUOTES;
-      queryBuilder.append(String.format(whereClassTemplate, tableContext.getPartitionColumn(), offset));
-    }
-
-    queryBuilder.append(String.format(ORDER_BY_CLAUSE, tableContext.getPartitionColumn()));
-    return queryBuilder.toString();
-  }
-
   private boolean shouldMoveToNextTable(int recordCount, int noOfTablesVisited) {
     return recordCount == 0 && noOfTablesVisited < tableOrderProvider.getNumberOfTables();
   }
@@ -188,7 +119,6 @@ public class TableJdbcSource extends BaseSource {
         tableOrderProvider = new TableOrderProviderFactory(connection, tableJdbcConfigBean.tableOrderStrategy).create();
 
         Map<String, TableContext> allTableContexts = new LinkedHashMap<>();
-
         for (TableConfigBean tableConfigBean : tableJdbcConfigBean.tableConfigs) {
           //No duplicates even though a table matches multiple configurations, we will add it only once.
           allTableContexts.putAll(TableContextUtil.listTablesForConfig(connection, tableConfigBean));
@@ -247,7 +177,7 @@ public class TableJdbcSource extends BaseSource {
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     int batchSize = Math.min(maxBatchSize, commonSourceConfigBean.maxBatchSize);
-    Map<String, String> offsets = deserializeOffsetMap(lastSourceOffset);
+    Map<String, String> offsets = OffsetQueryUtil.deserializeOffsetMap(lastSourceOffset);
 
     long delayBeforeQuery = (commonSourceConfigBean.queryInterval * 1000) - (System.currentTimeMillis() - lastQueryIntervalTime);
     ThreadUtil.sleep((lastQueryIntervalTime < 0 || delayBeforeQuery < 0) ? 0 : delayBeforeQuery);
@@ -258,7 +188,10 @@ public class TableJdbcSource extends BaseSource {
       try {
         connection = (connection == null) ? hikariDataSource.getConnection() : this.connection;
         tableContext = tableOrderProvider.nextTable();
-        String query = buildQuery(tableContext, offsets.get(tableContext.getTableName()));
+        String query = OffsetQueryUtil.buildQuery(tableContext, offsets.get(tableContext.getTableName()));
+        //Clear the initial offset after the  query is build so we will not use the initial offset from the next
+        //time the table is used.
+        tableContext.clearStartOffset();
         ResultSet rs = null;
         try (Statement statement = connection.createStatement()) {
           if (tableJdbcConfigBean.configureFetchSize) {
@@ -278,15 +211,16 @@ public class TableJdbcSource extends BaseSource {
                 commonSourceConfigBean.maxBlobSize,
                 errorRecordHandler
             );
-            String partitionNameValue =
-                String.format(PARTITION_NAME_VALUE, tableContext.getPartitionColumn(), fields.get(tableContext.getPartitionColumn()).getValue());
-            Record record = getContext().createRecord(tableContext.getTableName() + ":" + partitionNameValue);
+
+            String offsetFormat = OffsetQueryUtil.getOffsetFormatForPartitionColumns(tableContext, fields);
+            Record record = getContext().createRecord(tableContext.getTableName() + ":" + offsetFormat);
             record.set(Field.createListMap(fields));
+
             //Set Column Headers
             JdbcUtil.setColumnSpecificHeaders(record, md, JDBC_NAMESPACE_HEADER);
 
             batchMaker.addRecord(record);
-            offsets.put(tableContext.getTableName(), partitionNameValue);
+            offsets.put(tableContext.getTableName(), offsetFormat);
             if (recordCount == 0) {
               String qualifiedTableName = TableContextUtil.getQualifiedTableName(tableContext.getSchema(), tableContext.getTableName());
               gaugeMap.put(CURRENT_TABLE, qualifiedTableName);
@@ -304,7 +238,7 @@ public class TableJdbcSource extends BaseSource {
         connection = null;
         LOG.debug("Query failed at: {}", lastQueryIntervalTime);
         //Throw Stage Errors
-        errorRecordHandler.onError(JdbcErrors.JDBC_34, buildQuery(tableContext, offsets.get(tableContext.getTableName())), formattedError);
+        errorRecordHandler.onError(JdbcErrors.JDBC_34, OffsetQueryUtil.buildQuery(tableContext, offsets.get(tableContext.getTableName())), formattedError);
       } catch (ExecutionException e) {
         LOG.debug("Failure happened when fetching nextTable", e);
         errorRecordHandler.onError(JdbcErrors.JDBC_67, e);
@@ -314,7 +248,7 @@ public class TableJdbcSource extends BaseSource {
       }
       noOfTablesVisited++;
     } while(shouldMoveToNextTable(recordCount, noOfTablesVisited)); //If the current table has no records and if we haven't cycled through all tables.
-    return serializeOffsetMap(offsets);
+    return OffsetQueryUtil.serializeOffsetMap(offsets);
   }
 
   @Override

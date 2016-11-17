@@ -19,6 +19,8 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
@@ -27,9 +29,11 @@ import org.apache.commons.lang3.StringUtils;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public final class TableContextUtil {
@@ -39,6 +43,9 @@ public final class TableContextUtil {
   private static final String TABLE_METADATA_TABLE_NAME_CONSTANT = "TABLE_NAME";
   private static final String COLUMN_METADATA_COLUMN_NAME = "COLUMN_NAME";
   private static final String COLUMN_METADATA_COLUMN_TYPE = "DATA_TYPE";
+
+  private static final Joiner COMMA_JOINER = Joiner.on(",");
+
 
   private TableContextUtil() {}
 
@@ -70,28 +77,46 @@ public final class TableContextUtil {
       String tableName,
       TableConfigBean tableConfigBean
   ) throws SQLException, StageException {
-    String partitionColumn;
+    LinkedHashMap<String, Integer> partitionColumnToType = new LinkedHashMap<>();
     //Even though we are using this only find partition column's type, we could cache it if need arises.
     Map<String, Integer> columnNameToType = getColumnNameType(connection, tableName);
-    if (tableConfigBean.overridePartitionColumn) {
-      partitionColumn = tableConfigBean.partitionColumn;
-      if (!columnNameToType.containsKey(partitionColumn)) {
-        throw new StageException(JdbcErrors.JDBC_63, tableName, partitionColumn);
+
+    Map<String, String> partitionColumnToStartOffset = new HashMap<>();
+    if (tableConfigBean.overridePartitionColumns) {
+      for (String overridenPartitionColumn : tableConfigBean.partitionColumns) {
+        if (!columnNameToType.containsKey(overridenPartitionColumn)) {
+          throw new StageException(JdbcErrors.JDBC_63, tableName, overridenPartitionColumn);
+        }
+        partitionColumnToType.put(overridenPartitionColumn, columnNameToType.get(overridenPartitionColumn));
       }
     } else {
       List<String> primaryKeys = JdbcUtil.getPrimaryKeys(connection, tableName);
-      if (primaryKeys.size() != 1) {
-        throw  (primaryKeys.isEmpty())?
-            new StageException(JdbcErrors.JDBC_62, tableName) : new StageException(JdbcErrors.JDBC_64, tableName);
+      if (primaryKeys.isEmpty()) {
+        throw new StageException(JdbcErrors.JDBC_62, tableName);
       }
-      partitionColumn = primaryKeys.get(0);
+      for (String primaryKey : primaryKeys) {
+        partitionColumnToType.put(primaryKey, columnNameToType.get(primaryKey));
+      }
+    }
+
+    //Initial offset should exist for all partition columns or none at all.
+    if (!tableConfigBean.offsetColumnToInitialOffsetValue.isEmpty()) {
+      Set<String> missingColumns = Sets.difference(partitionColumnToType.keySet(), tableConfigBean.offsetColumnToInitialOffsetValue.keySet());
+      Set<String> extraColumns = Sets.difference(tableConfigBean.offsetColumnToInitialOffsetValue.keySet(), partitionColumnToType.keySet());
+
+      if (!missingColumns.isEmpty() || !extraColumns.isEmpty()) {
+        throw new StageException(JdbcErrors.JDBC_64, COMMA_JOINER.join(missingColumns), COMMA_JOINER.join(extraColumns));
+      }
+
+      for (Map.Entry<String, String> partitionColumnInitialOffsetEntry : tableConfigBean.offsetColumnToInitialOffsetValue.entrySet()) {
+        partitionColumnToStartOffset.put(partitionColumnInitialOffsetEntry.getKey(), partitionColumnInitialOffsetEntry.getValue());
+      }
     }
     return new TableContext(
         schemaName,
         tableName,
-        partitionColumn,
-        columnNameToType.get(partitionColumn),
-        tableConfigBean.partitionStartOffset
+        partitionColumnToType,
+        partitionColumnToStartOffset
     );
   }
 
@@ -127,7 +152,7 @@ public final class TableContextUtil {
   /**
    * Determines whether the actualSqlType is one of the sqlTypes list
    * @param actualSqlType the actual sql type
-   * @param sqlTypes arbitary list of sql types
+   * @param sqlTypes arbitrary list of sql types
    * @return true if actual Sql Type is one of the sql Types else false.
    */
   public static boolean isSqlTypeOneOf(int actualSqlType, int... sqlTypes) {

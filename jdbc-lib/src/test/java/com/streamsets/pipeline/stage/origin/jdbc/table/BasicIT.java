@@ -33,15 +33,23 @@ import org.junit.Test;
 
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
 
 public class BasicIT extends BaseTableJdbcSourceIT {
-  private static final String SPORTS_STARS_INSERT_TEMPLATE = "INSERT into TEST.%s values (%s, '%s', '%s');";
+  private static final String STARS_INSERT_TEMPLATE = "INSERT into TEST.%s values (%s, '%s', '%s');";
+  private static final String TRANSACTION_INSERT_TEMPLATE = "INSERT into TEST.%s values (%s, %s, '%s');";
+
+  private static final Random RANDOM = new Random();
 
   private static List<Record> EXPECTED_CRICKET_STARS_RECORDS;
   private static List<Record> EXPECTED_TENNIS_STARS_RECORDS;
+  private static List<Record> EXPECTED_TRANSACTION_RECORDS;
 
   private static Record createSportsStarsRecords(int pid, String first_name, String last_name) {
     Record record = RecordCreator.create();
@@ -51,6 +59,23 @@ public class BasicIT extends BaseTableJdbcSourceIT {
     fields.put("last_name", Field.create(last_name));
     record.set(Field.createListMap(fields));
     return record;
+  }
+
+  private static List<Record> createTransactionRecords(int noOfRecords) {
+    List<Record> records = new ArrayList<>();
+    long currentTime = (System.currentTimeMillis() / 1000) * 1000;
+    for (int i =0; i < noOfRecords; i++) {
+      Record record = RecordCreator.create();
+      LinkedHashMap<String, Field> fields = new LinkedHashMap<>();
+      fields.put("random_int", Field.create(RANDOM.nextInt(100)));
+      fields.put("t_date", Field.create(Field.Type.LONG, currentTime));
+      fields.put("random_string", Field.create(UUID.randomUUID().toString()));
+      record.set(Field.createListMap(fields));
+      records.add(record);
+      //making sure time is at least off by a second.
+      currentTime = currentTime + 1000;
+    }
+    return records;
   }
 
   @BeforeClass
@@ -86,6 +111,8 @@ public class BasicIT extends BaseTableJdbcSourceIT {
         createSportsStarsRecords(15, "Jo-Wilfried", "Tsonga")
     );
 
+    EXPECTED_TRANSACTION_RECORDS = createTransactionRecords(20);
+
     try (Statement statement = connection.createStatement()) {
       statement.addBatch("CREATE SCHEMA IF NOT EXISTS TEST;");
 
@@ -98,7 +125,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
       for (Record record : EXPECTED_CRICKET_STARS_RECORDS) {
         statement.addBatch(
             String.format(
-                SPORTS_STARS_INSERT_TEMPLATE,
+                STARS_INSERT_TEMPLATE,
                 "CRICKET_STARS",
                 record.get("/p_id").getValueAsInteger(),
                 record.get("/first_name").getValueAsString(),
@@ -116,11 +143,29 @@ public class BasicIT extends BaseTableJdbcSourceIT {
       for (Record record : EXPECTED_TENNIS_STARS_RECORDS) {
         statement.addBatch(
             String.format(
-                SPORTS_STARS_INSERT_TEMPLATE,
+                STARS_INSERT_TEMPLATE,
                 "TENNIS_STARS",
                 record.get("/p_id").getValueAsInteger(),
                 record.get("/first_name").getValueAsString(),
                 record.get("/last_name").getValueAsString()
+            )
+        );
+      }
+
+      //TRANSACTION
+      statement.addBatch(
+          "CREATE TABLE IF NOT EXISTS TEST.TRANSACTION " +
+              "(random_int INT NOT NULL , t_date LONG, random_string VARCHAR(255));"
+      );
+
+      for (Record record : EXPECTED_TRANSACTION_RECORDS) {
+        statement.addBatch(
+            String.format(
+                TRANSACTION_INSERT_TEMPLATE,
+                "TRANSACTION",
+                record.get("/random_int").getValueAsInteger(),
+                record.get("/t_date").getValueAsLong(),
+                record.get("/random_string").getValueAsString()
             )
         );
       }
@@ -249,9 +294,9 @@ public class BasicIT extends BaseTableJdbcSourceIT {
 
   @Test
   public void testMultipleTablesMultipleBatches() throws Exception {
-    //With a '%' regex which has to select both tables.
+    //With a '%_STARS' regex which has to select both tables.
     TableConfigBean tableConfigBean = new TableConfigBean();
-    tableConfigBean.tablePattern = "%";
+    tableConfigBean.tablePattern = "%_STARS";
     tableConfigBean.schema = database;
 
     TableJdbcSource tableJdbcSource = new TableJdbcSource(
@@ -299,7 +344,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
   public void testMetrics() throws Exception {
     //With a '%' regex which has to select both tables.
     TableConfigBean tableConfigBean = new TableConfigBean();
-    tableConfigBean.tablePattern = "%";
+    tableConfigBean.tablePattern = "%_STARS";
     tableConfigBean.schema = database;
 
     TableJdbcSource tableJdbcSource = new TableJdbcSource(
@@ -322,6 +367,45 @@ public class BasicIT extends BaseTableJdbcSourceIT {
 
       runner.runProduce(output.getNewOffset(), 1000);
       Assert.assertEquals("TEST.TENNIS_STARS", gaugeMap.get(TableJdbcSource.CURRENT_TABLE));
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testOverridePartitionColumn() throws Exception {
+    TableConfigBean tableConfigBean = new TableConfigBean();
+    tableConfigBean.tablePattern = "TRANSACTION";
+    tableConfigBean.schema = database;
+    tableConfigBean.overridePartitionColumns = true;
+    tableConfigBean.partitionColumns = new ArrayList<>();
+    tableConfigBean.partitionColumns.add("T_DATE");
+
+    TableJdbcSource tableJdbcSource = new TableJdbcSource(
+        TestTableJdbcSource.createHikariPoolConfigBean(JDBC_URL, USER_NAME, PASSWORD),
+        TestTableJdbcSource.createCommonSourceConfigBean(1, 1000, 1000, 1000),
+        TestTableJdbcSource.createTableJdbcConfigBean(ImmutableList.of(tableConfigBean), false, -1, TableOrderStrategy.NONE)
+    );
+
+    SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
+        .addOutputLane("a").build();
+    runner.runInit();
+    try {
+      StageRunner.Output output = runner.runProduce("", 5);
+      List<Record> records = output.getRecords().get("a");
+      Assert.assertEquals(5, records.size());
+      checkRecords(EXPECTED_TRANSACTION_RECORDS.subList(0, 5), records);
+
+      output = runner.runProduce(output.getNewOffset(), 5);
+      records = output.getRecords().get("a");
+      Assert.assertEquals(5, records.size());
+      checkRecords(EXPECTED_TRANSACTION_RECORDS.subList(5, 10), records);
+
+      output = runner.runProduce(output.getNewOffset(), 10);
+      records = output.getRecords().get("a");
+      Assert.assertEquals(10, records.size());
+      checkRecords(EXPECTED_TRANSACTION_RECORDS.subList(10, 20), records);
+
     } finally {
       runner.runDestroy();
     }

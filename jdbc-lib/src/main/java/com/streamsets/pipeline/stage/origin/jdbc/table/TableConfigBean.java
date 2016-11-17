@@ -20,6 +20,12 @@
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ListBeanModel;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public final class TableConfigBean {
   @ConfigDef(
@@ -56,34 +62,34 @@ public final class TableConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Override Partition Column",
+      label = "Override Partition Columns",
       description = "Overrides the primary key as the partition column.",
       displayPosition = 50,
       defaultValue = "false",
       group = "JDBC"
   )
-  public boolean overridePartitionColumn;
+  public boolean overridePartitionColumns;
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
-      label = "Partition Column",
-      description = "Column checked to track current offset.",
-      displayPosition = 60,
+      type = ConfigDef.Type.LIST,
+      label = "Partition Columns",
+      displayPosition  = 60,
       group = "JDBC",
-      dependsOn = "overridePartitionColumn",
+      dependsOn = "overridePartitionColumns",
       triggeredByValue = "true"
   )
-  public String partitionColumn;
+  @ListBeanModel
+  public List<String> partitionColumns = new ArrayList<>();
 
   @ConfigDef(
       required = false,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.MAP,
       label = "Initial Offset",
-      description = "Determines an initial offset for the partition column.",
+      description = "Configure Initial Offset for each Offset Column.",
       displayPosition = 70,
       group = "JDBC"
   )
-  public String partitionStartOffset;
+  public Map<String, String> offsetColumnToInitialOffsetValue = new LinkedHashMap<>();
 
 }
