@@ -185,14 +185,7 @@ public class SparkProcessor extends SingleLaneProcessor {
     try {
       if (results != null) {
         for (Record out : results.collect()) {
-          // Kryo loads the RecordImpl class during deserialization in a Spark's classloader.
-          // So directly using the deserialized RecordImpl gives a ClassCastException (RecordImpl -> RecordImpl).
-          // So create a new record and set its root field to be the deserialized one's root field.
-          Record r = getContext().createRecord(out);
-          // Same as above for the field, make sure we create a new one with the value copied over
-          r.set(out.get());
-          r.getHeader().setAllAttributes(out.getHeader().getAllAttributes());
-          singleLaneBatchMaker.addRecord(r);
+          singleLaneBatchMaker.addRecord(clone(out));
         }
       }
     } catch (Exception ex) {
@@ -204,15 +197,28 @@ public class SparkProcessor extends SingleLaneProcessor {
     try {
       if (errors != null) {
         for (Tuple2<Record, String> error : errors.collect()) {
-          Record r = getContext().createRecord(error._1());
-          r.set(error._1().get());
-          errorRecordHandler.onError(new OnRecordErrorException(r, SPARK_04, error._2()));
+          errorRecordHandler.onError(new OnRecordErrorException(clone(error._1()), SPARK_04, error._2()));
         }
       }
     } catch (Exception ex) {
       LOG.error("Spark job failed", ex);
       throw new StageException(SPARK_07, ex.getMessage());
     }
+  }
+
+  /**
+   * Kryo loads the RecordImpl in Spark's classloader. So this one clones it to this stage's classloader.
+   * @param record
+   * @return
+   */
+  private Record clone(Record record) {
+    // Kryo loads the RecordImpl class during deserialization in a Spark's classloader.
+    // So directly using the deserialized RecordImpl gives a ClassCastException (RecordImpl -> RecordImpl).
+    // So create a new record and set its root field to be the deserialized one's root field.
+    Record r = getContext().createRecord(record);
+    r.set(record.get());
+    r.getHeader().setAllAttributes(record.getHeader().getAllAttributes());
+    return r;
   }
 
   @Override

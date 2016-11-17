@@ -35,6 +35,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import static com.streamsets.pipeline.stage.processor.spark.Errors.SPARK_00;
@@ -83,6 +84,7 @@ public class TestSparkProcessor {
       for (int i = 0; i < 100; i++) {
         Assert.assertEquals(i + increment, output.get(i).get(NoErrorTransformer.MAPPED).getValueAsInteger());
         Assert.assertEquals(INSERTED_CONSTANT, output.get(i).get(NoErrorTransformer.CONSTANT).getValueAsString());
+        Assert.assertEquals(records.get(i).getHeader(), output.get(i).getHeader());
       }
 
     } catch(Exception ex) {
@@ -120,6 +122,7 @@ public class TestSparkProcessor {
 
       for (int i = 0; i < 100; i++) {
         Assert.assertEquals(records.get(i).get(), errors.get(i).get());
+        verifyHeaders(records.get(i).getHeader(), errors.get(i).getHeader());
       }
 
     } finally {
@@ -156,17 +159,32 @@ public class TestSparkProcessor {
 
       for (int i = 0; i < 50; i++) {
         Assert.assertEquals(records.get(i).get(), results.get(i).get());
+        Assert.assertEquals(records.get(i).getHeader(), results.get(i).getHeader());
       }
 
       List<Record> errors = runner.getErrorRecords();
 
       for (int i = 50; i < 100; i++) {
         Assert.assertEquals(records.get(i).get(), errors.get(i - 50).get());
+        verifyHeaders(records.get(i).getHeader(), errors.get(i - 50).getHeader());
       }
 
     } finally {
       runner.runDestroy();
     }
+  }
+
+  private void verifyHeaders(Record.Header input, Record.Header output) {
+    for (String inputAttr : input.getAttributeNames()) {
+      Assert.assertEquals(input.getAttribute(inputAttr), output.getAttribute(inputAttr));
+    }
+    Assert.assertEquals(input.getSourceId(), output.getSourceId());
+    Assert.assertEquals(input.getStageCreator(), output.getStageCreator());
+    Assert.assertEquals(input.getStagesPath(), output.getStagesPath());
+    Assert.assertEquals(input.getTrackingId(), output.getTrackingId());
+    Assert.assertEquals(input.getRaw(), output.getRaw());
+    Assert.assertEquals(input.getRawMimeType(), output.getRawMimeType());
+    Assert.assertEquals(input.getPreviousTrackingId(), output.getPreviousTrackingId());
   }
 
   @Test
