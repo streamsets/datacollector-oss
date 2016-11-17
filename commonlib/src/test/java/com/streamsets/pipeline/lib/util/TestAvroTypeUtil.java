@@ -1278,4 +1278,53 @@ public class TestAvroTypeUtil {
     }
   }
 
+  @Test
+  public void testDefaultsFromSchemaWithTwoArrays() throws Exception {
+    // The only important aspect of this schema is that it have two independent arrays. Names and other structures
+    // are not important for this test.
+    String schema = "{\n" +
+        "  \"type\" : \"record\",\n" +
+        "  \"name\" : \"master_record\",\n" +
+        "  \"fields\" : [ {\n" +
+        "    \"name\" : \"array1\",\n" +
+        "    \"type\" : [ \"null\", {\n" +
+        "      \"type\" : \"array\",\n" +
+        "      \"items\" : {\n" +
+        "        \"type\" : \"record\",\n" +
+        "        \"name\" : \"array1_record\",\n" +
+        "        \"fields\" : [ {\n" +
+        "          \"name\" : \"field1\",\n" +
+        "          \"type\" : \"string\",\n" +
+        "          \"default\" : \"a\"\n" +
+        "        } ]\n" +
+        "      }\n" +
+        "    } ],\n" +
+        "    \"default\" : null\n" +
+        "  }, {\n" +
+        "    \"name\" : \"array2\",\n" +
+        "    \"type\" : [ \"null\", {\n" +
+        "      \"type\" : \"array\",\n" +
+        "      \"items\" : {\n" +
+        "        \"type\" : \"record\",\n" +
+        "        \"name\" : \"array2_record\",\n" +
+        "        \"fields\" : [ {\n" +
+        "          \"name\" : \"field2\",\n" +
+        "          \"type\" : \"string\",\n" +
+        "          \"default\" : \"b\"\n" +
+        "        } ]\n" +
+        "      }\n" +
+        "    } ],\n" +
+        "    \"default\" : null\n" +
+        "  } ]\n" +
+        "}\n";
+
+    Schema avroSchema = new Schema.Parser().parse(schema);
+    Map<String, Object> defaults = AvroTypeUtil.getDefaultValuesFromSchema(avroSchema, new HashSet<String>());
+    Assert.assertEquals(4, defaults.size());
+    Assert.assertTrue(defaults.containsKey("master_record.array1"));
+    Assert.assertTrue(defaults.containsKey("master_record.array2"));
+    Assert.assertTrue(defaults.containsKey("array2_record.field2"));
+    Assert.assertTrue(defaults.containsKey("array1_record.field1"));
+  }
+
 }

@@ -401,7 +401,7 @@ public class AvroTypeUtil {
                 throw new DataGeneratorException(
                   Errors.AVRO_GENERATOR_00,
                   record.getHeader().getSourceId(),
-                  schema.getFullName() + "." + f.name()
+                  key
                 );
             }
             Object v = defaultValueMap.get(key);
@@ -546,7 +546,13 @@ public class AvroTypeUtil {
     if (processedSchemaSet.contains(schema.getName()) || isPrimitive(schema.getType())) {
       return Maps.newHashMap();
     }
-    processedSchemaSet.add(schema.getName());
+
+    // The method "schema.getName()" returns "array" for array type which is a problem, because we're using the name
+    // as a way to skip processing already processed definitions. As a result without skipping arrays, we would never
+    // process more then one array per schema.
+    if(schema.getType() != Schema.Type.ARRAY) {
+      processedSchemaSet.add(schema.getName());
+    }
 
     Map<String, Object> defValMap = new HashMap<>();
     switch(schema.getType()) {
@@ -604,6 +610,15 @@ public class AvroTypeUtil {
         }
         break;
     }
+
+    // If trace is enabled, we'll dump the whole map to the log to troubleshoot when the default values are incorrectly calculated
+    if(LOG.isTraceEnabled()) {
+      LOG.trace("Default map for schema: {}", schema.toString());
+      for(Map.Entry<String, Object> entry : defValMap.entrySet()) {
+        LOG.trace("  Entry {} = {}", entry.getKey(), entry.getValue());
+      }
+    }
+
     return defValMap;
   }
 
