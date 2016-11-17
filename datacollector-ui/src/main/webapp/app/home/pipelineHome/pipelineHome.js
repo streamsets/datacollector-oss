@@ -1619,6 +1619,12 @@ angular
 
     //Event Handling
 
+    $scope.$watch('activeConfigStatus.status', function (newValue) {
+      if (newValue === 'FINISHED') {
+        $rootScope.common.infoList = [{message:'Pipeline Job has been finished'}];
+      }
+    });
+
     $scope.$watch('pipelineConfig', function (newValue, oldValue) {
       if (newValue === undefined) {
         return;
