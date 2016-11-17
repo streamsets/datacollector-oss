@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.Label;
 @GenerateResourceBundle
 public enum Groups implements Label {
   DATALAKE("Data Lake"),
+  OUTPUT("Output Files"),
   DATA_FORMAT("Data Format"),
   ;
 

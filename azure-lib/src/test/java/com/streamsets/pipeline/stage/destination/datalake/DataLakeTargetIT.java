@@ -67,6 +67,12 @@ public class DataLakeTargetIT {
 
   @Test
   public void testEmptyRecord() throws Exception {
+    webServer.enqueueFileInfoSuccessResponse()
+        .enqueueTokenSuccess()
+        .enqueueClientSuccessResponse()
+        .enqueueFileInfoSuccessResponse()
+        .enqueueFileInfoSuccessResponse();
+
     DataLakeTarget target = new DataLakeTargetBuilder()
         .accountFQDN(accountFQDN)
         .authTokenEndpoint(authTokenEndpoint)
@@ -91,7 +97,6 @@ public class DataLakeTargetIT {
 
   @Test
   public void testWrite() throws Exception {
-
     webServer.enqueueFileInfoSuccessResponse()
         .enqueueTokenSuccess()
         .enqueueClientSuccessResponse()
@@ -101,6 +106,7 @@ public class DataLakeTargetIT {
     DataLakeTarget target = new DataLakeTargetBuilder()
         .accountFQDN(accountFQDN)
         .authTokenEndpoint(authTokenEndpoint)
+        .filesPrefix("sdc-${sdc:id()}")
         .build();
 
     TargetRunner targetRunner = new TargetRunner.Builder(DataLakeDTarget.class, mockTarget(target))
@@ -116,6 +122,9 @@ public class DataLakeTargetIT {
     } finally {
       targetRunner.runDestroy();
     }
+
+    Record record = records.get(0);
+    record.getHeader().getSourceId();
 
     Assert.assertEquals(0, targetRunner.getErrors().size());
     Assert.assertEquals(0, targetRunner.getErrorRecords().size());
@@ -146,7 +155,7 @@ public class DataLakeTargetIT {
         .build();
 
     TargetRunner targetRunner = new TargetRunner.Builder(DataLakeDTarget.class, mockTarget(target))
-        .setOnRecordError(OnRecordError.TO_ERROR)
+        .setOnRecordError(OnRecordError.DISCARD)
         .build();
 
     targetRunner.runInit();
@@ -162,6 +171,16 @@ public class DataLakeTargetIT {
 
     Assert.assertEquals(1, targetRunner.getErrorRecords().size());
     Assert.assertEquals(Errors.ADLS_03.getCode(), targetRunner.getErrorRecords().get(0).getHeader().getErrorCode());
+  }
+
+  @Test
+  public void testUniquePrefix() throws Exception {
+    DataLakeTarget target = new DataLakeTargetBuilder()
+        .accountFQDN("localhost:9000")
+        .authTokenEndpoint("localhost:9000")
+        .filesPrefix("sdc-${sdc:id()}")
+        .build();
+
   }
 
   private List<Record> createStringRecords(int size) {

@@ -44,7 +44,7 @@ public class DataLakeConfigBean {
       required = true,
       type = ConfigDef.Type.STRING,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      defaultValue = "Hash Key",
+      defaultValue = "",
       label = "Client ID",
       description = "Azure Client ID.",
       displayPosition = 10,
@@ -80,25 +80,24 @@ public class DataLakeConfigBean {
       required = true,
       type = ConfigDef.Type.STRING,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      defaultValue = "Hash Key",
+      defaultValue = "",
       label = "Client Key",
       description = "Azure Client Key.",
-      displayPosition = 30,
+      displayPosition = 40,
       group = "#0"
   )
   public String clientKey;
 
   @ConfigDef(
-      required = true,
+      required = false,
       type = ConfigDef.Type.STRING,
-      elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
-      evaluation = ConfigDef.Evaluation.EXPLICIT,
-      defaultValue = "",
-      label = "Files Name",
-      displayPosition = 40,
-      group = "#0"
+      elDefs = SdcEL.class,
+      defaultValue = "sdc-${sdc:id()}",
+      label = "Files Prefix",
+      displayPosition = 100,
+      group = "OUTPUT"
   )
-  public String fileNameTemplate;
+  public String uniquePrefix;
 
   @ConfigDef(
       required = true,
@@ -107,9 +106,8 @@ public class DataLakeConfigBean {
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       defaultValue = "/tmp/out/${YYYY()}-${MM()}-${DD()}-${hh()}",
       label = "Directory Template",
-      //description = "Azure Client Key.",
-      displayPosition = 50,
-      group = "#0"
+      displayPosition = 110,
+      group = "OUTPUT"
   )
   public String dirPathTemplate;
 
@@ -119,8 +117,8 @@ public class DataLakeConfigBean {
       defaultValue = "UTC",
       label = "Data Time Zone",
       description = "Time zone to use to resolve the date time of a time-based partition prefix",
-      displayPosition = 60,
-      group = "#0"
+      displayPosition = 120,
+      group = "OUTPUT"
   )
   @ValueChooserModel(TimeZoneChooserValues.class)
   public String timeZoneID;
@@ -131,9 +129,9 @@ public class DataLakeConfigBean {
       defaultValue = "${time:now()}",
       label = "Time Basis",
       description = "Time basis to use for a record. Enter an expression that evaluates to a datetime. To use the " +
-          "processing time, enter ${time:now()}. To use field values, use '${record:value(\"<filepath>\")}'.",
-      displayPosition = 70,
-      group = "#0",
+          "processing time, enter ${time:now()}. To use field values, use '${record:value(\"<field path>\")}'.",
+      displayPosition = 130,
+      group = "OUTPUT",
       elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
   )
@@ -145,7 +143,7 @@ public class DataLakeConfigBean {
       defaultValue = "JSON",
       label = "Data Format",
       description = "Data format to use when writing records to Azure Data Lake Store",
-      displayPosition = 100,
+      displayPosition = 200,
       group = "DATA_FORMAT"
   )
   @ValueChooserModel(DataFormatChooserValues.class)

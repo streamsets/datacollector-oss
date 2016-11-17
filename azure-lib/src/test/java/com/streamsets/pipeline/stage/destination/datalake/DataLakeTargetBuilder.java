@@ -31,7 +31,7 @@ public class DataLakeTargetBuilder {
     final String dummyKey = "dummy";
     conf.clientKey = dummyKey;
     conf.dirPathTemplate = "/tmp/out/";
-    conf.fileNameTemplate = "test";
+    conf.uniquePrefix = "test";
     conf.timeDriver = "${time:now()}";
     conf.dataFormat = DataFormat.TEXT;
     conf.dataFormatConfig.textFieldPath = "/";
@@ -45,6 +45,11 @@ public class DataLakeTargetBuilder {
 
   public DataLakeTargetBuilder authTokenEndpoint(String authTokenEndpoint) {
     conf.authTokenEndpoint = authTokenEndpoint;
+    return this;
+  }
+
+  public DataLakeTargetBuilder filesPrefix(String uniquePrefix) {
+    conf.uniquePrefix = uniquePrefix;
     return this;
   }
 
