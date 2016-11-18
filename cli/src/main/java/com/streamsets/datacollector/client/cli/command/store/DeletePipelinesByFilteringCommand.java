@@ -23,13 +23,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.streamsets.datacollector.client.api.StoreApi;
 import com.streamsets.datacollector.client.cli.command.BaseCommand;
-import com.streamsets.datacollector.client.model.Order;
-import com.streamsets.datacollector.client.model.PipelineOrderByFields;
 import io.airlift.airline.Command;
 import io.airlift.airline.Option;
 
-@Command(name = "list", description = "List all available pipelines info")
-public class ListPipelinesCommand extends BaseCommand {
+@Command(name = "deleteByFiltering", description = "Deletes filtered Pipelines")
+public class DeletePipelinesByFilteringCommand extends BaseCommand {
 
   @Option(
       name = {"--filterText"},
@@ -45,59 +43,14 @@ public class ListPipelinesCommand extends BaseCommand {
   )
   public String label;
 
-  @Option(
-      name = {"--offset"},
-      description = "offset",
-      required = false
-  )
-  public int offset = 0;
-
-  @Option(
-      name = {"--length"},
-      description = "length",
-      required = false
-  )
-  public int length = -1;
-
-  @Option(
-      name = {"--orderBy"},
-      description = "Order the results by column. Supported values - NAME/LAST_MODIFIED/CREATED/STATUS",
-      required = false
-  )
-  public String orderBy = "NAME";
-
-  @Option(
-      name = {"--order"},
-      description = "Sort order. Supported values - ASC/DESC",
-      required = false
-  )
-  public String order = "ASC";
-
-  @Option(
-      name = {"--includeStatus"},
-      description = "includeStatus",
-      required = false
-  )
-  public boolean includeStatus;
-
   @Override
   public void run() {
     try {
       StoreApi storeApi = new StoreApi(getApiClient());
       ObjectMapper mapper = new ObjectMapper();
       mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
-
-      System.out.println(mapper.writeValueAsString(
-          storeApi.getPipelines(
-              filterText,
-              label,
-              offset,
-              length,
-              PipelineOrderByFields.valueOf(orderBy),
-              Order.valueOf(order),
-              includeStatus
-          )
-      ));
+      System.out.println("Deleted below pipelines:");
+      System.out.println(mapper.writeValueAsString(storeApi.deletePipelinesByFiltering(filterText, label)));
     } catch (Exception ex) {
       if(printStackTrace) {
         ex.printStackTrace();

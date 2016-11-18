@@ -433,6 +433,57 @@ public class PipelineStoreResource {
     return Response.ok().build();
   }
 
+  @Path("/pipelines/deleteByFiltering")
+  @POST
+  @ApiOperation(value = "Deletes filtered Pipelines", response = PipelineInfoJson.class,
+      responseContainer = "List", authorizations = @Authorization(value = "basic"))
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({
+      AuthzRole.CREATOR,
+      AuthzRole.ADMIN,
+      AuthzRole.CREATOR_REMOTE,
+      AuthzRole.ADMIN_REMOTE
+  })
+  public Response deletePipelinesByFiltering(
+      @QueryParam("filterText") @DefaultValue("") String filterText,
+      @QueryParam("label") String label,
+      @Context SecurityContext context
+  ) throws PipelineException {
+    RestAPIUtils.injectPipelineInMDC("*");
+
+    List<PipelineInfo> pipelineInfoList = store.getPipelines();
+    List<String> deletePipelineNames = new ArrayList<>();
+
+    for(PipelineInfo pipelineInfo: pipelineInfoList) {
+      if (filterText != null && !pipelineInfo.getName().toLowerCase().contains(filterText.toLowerCase())) {
+        continue;
+      }
+
+      if (label != null) {
+        Map<String, Object> metadata = pipelineInfo.getMetadata();
+        if (metadata != null && metadata.containsKey("labels")) {
+          List<String> labels = (List<String>) metadata.get("labels");
+          if (!labels.contains(label)) {
+            continue;
+          }
+        } else {
+          continue;
+        }
+      }
+
+      if (store.isRemotePipeline(pipelineInfo.getName(), "0") && !context.isUserInRole(AuthzRole.ADMIN) &&
+          !context.isUserInRole(AuthzRole.ADMIN_REMOTE)) {
+        continue;
+      }
+
+      store.delete(pipelineInfo.getName());
+      store.deleteRules(pipelineInfo.getName());
+      deletePipelineNames.add(pipelineInfo.getName());
+    }
+
+    return Response.ok().entity(deletePipelineNames).build();
+  }
+
   @Path("/pipeline/{pipelineName}")
   @GET
   @ApiOperation(value = "Find Pipeline Configuration by name and revision", response = PipelineConfigurationJson.class,

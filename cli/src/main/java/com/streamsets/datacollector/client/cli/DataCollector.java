@@ -45,6 +45,7 @@ import com.streamsets.datacollector.client.cli.command.preview.StopPreviewComman
 import com.streamsets.datacollector.client.cli.command.preview.ValidatePipelineCommand;
 import com.streamsets.datacollector.client.cli.command.store.CreatePipelineCommand;
 import com.streamsets.datacollector.client.cli.command.store.DeletePipelineCommand;
+import com.streamsets.datacollector.client.cli.command.store.DeletePipelinesByFilteringCommand;
 import com.streamsets.datacollector.client.cli.command.store.ExportPipelineCommand;
 import com.streamsets.datacollector.client.cli.command.store.GetPipelineConfigCommand;
 import com.streamsets.datacollector.client.cli.command.store.GetPipelineRulesCommand;
@@ -96,7 +97,8 @@ public class DataCollector {
             GetPipelineRulesCommand.class,
             DeletePipelineCommand.class,
             UpdatePipelineConfigCommand.class,
-            UpdatePipelineRulesCommand.class
+            UpdatePipelineRulesCommand.class,
+            DeletePipelinesByFilteringCommand.class
         );
 
     builder.withGroup("manager")

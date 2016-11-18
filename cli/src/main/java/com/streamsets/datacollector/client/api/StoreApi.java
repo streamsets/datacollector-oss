@@ -25,9 +25,11 @@ import com.streamsets.datacollector.client.Configuration;
 import com.streamsets.datacollector.client.Pair;
 import com.streamsets.datacollector.client.TypeRef;
 
+import com.streamsets.datacollector.client.model.Order;
 import com.streamsets.datacollector.client.model.PipelineConfigurationJson;
 import com.streamsets.datacollector.client.model.PipelineEnvelopeJson;
 import com.streamsets.datacollector.client.model.PipelineInfoJson;
+import com.streamsets.datacollector.client.model.PipelineOrderByFields;
 import com.streamsets.datacollector.client.model.RuleDefinitionsJson;
 
 import java.util.ArrayList;
@@ -360,7 +362,15 @@ public class StoreApi {
    *
    * @return List<PipelineInfoJson>
    */
-  public List<PipelineInfoJson> getPipelines () throws ApiException {
+  public List<PipelineInfoJson> getPipelines (
+      String filterText,
+      String label,
+      int offset,
+      int len,
+      PipelineOrderByFields orderBy,
+      Order order,
+      boolean includeStatus
+  ) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
@@ -371,6 +381,13 @@ public class StoreApi {
     List<Pair> queryParams = new ArrayList<Pair>();
     Map<String, String> headerParams = new HashMap<String, String>();
     Map<String, Object> formParams = new HashMap<String, Object>();
+
+    queryParams.addAll(apiClient.parameterToPairs("", "filterText", filterText));
+    queryParams.addAll(apiClient.parameterToPairs("", "label", label));
+    queryParams.addAll(apiClient.parameterToPairs("", "offset", offset));
+    queryParams.addAll(apiClient.parameterToPairs("", "len", len));
+    queryParams.addAll(apiClient.parameterToPairs("", "orderBy", orderBy));
+    queryParams.addAll(apiClient.parameterToPairs("", "order", order));
 
     final String[] accepts = {
         "application/json"
@@ -504,4 +521,40 @@ public class StoreApi {
         contentType, authNames, returnType);
   }
 
+
+  /**
+   * Deletes filtered Pipelines
+   *
+   * @return List<String>
+   */
+  public List<String> deletePipelinesByFiltering (String filterText, String label) throws ApiException {
+    Object postBody = null;
+    byte[] postBinaryBody = null;
+
+    // create path and map variables
+    String path = "/v1/pipelines/deleteByFiltering".replaceAll("\\{format\\}","json");
+
+    // query params
+    List<Pair> queryParams = new ArrayList<Pair>();
+    Map<String, String> headerParams = new HashMap<String, String>();
+    Map<String, Object> formParams = new HashMap<String, Object>();
+
+    queryParams.addAll(apiClient.parameterToPairs("", "filterText", filterText));
+    queryParams.addAll(apiClient.parameterToPairs("", "label", label));
+
+    final String[] accepts = {
+        "application/json"
+    };
+    final String accept = apiClient.selectHeaderAccept(accepts);
+
+    final String[] contentTypes = {
+
+    };
+    final String contentType = apiClient.selectHeaderContentType(contentTypes);
+
+    String[] authNames = new String[] { "basic" };
+    TypeRef returnType = new TypeRef<List<String>>() {};
+    return apiClient.invokeAPI(path, "POST", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, returnType);
+  }
 }
