@@ -37,6 +37,6 @@ public class CachePipelineStateStoreModule {
 
   @Provides @Singleton
   public PipelineStateStore providePipelineStateStore(RuntimeInfo runtimeInfo, Configuration configuration) {
-    return new CachePipelineStateStore(new FilePipelineStateStore(runtimeInfo, configuration));
+    return new CachePipelineStateStore(new FilePipelineStateStore(runtimeInfo, configuration), configuration);
   }
 }

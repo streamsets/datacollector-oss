@@ -126,7 +126,7 @@ public class TestClusterRunner {
     runtimeInfo = new StandaloneRuntimeInfo("dummy", null, Arrays.asList(emptyCL), tempDir);
     clusterProvider = new MockClusterProvider();
     conf = new Configuration();
-    pipelineStateStore = new CachePipelineStateStore(new FilePipelineStateStore(runtimeInfo, conf));
+    pipelineStateStore = new CachePipelineStateStore(new FilePipelineStateStore(runtimeInfo, conf), conf);
     attributes = new HashMap<>();
     stageLibraryTask = MockStages.createStageLibrary(emptyCL);
     pipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, stageLibraryTask, pipelineStateStore, new LockCache<String>());

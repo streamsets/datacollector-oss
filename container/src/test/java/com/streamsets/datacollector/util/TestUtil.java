@@ -392,7 +392,7 @@ public class TestUtil {
     @Provides @Singleton
     public PipelineStateStore providePipelineStore(RuntimeInfo info, Configuration conf) {
       PipelineStateStore pipelineStateStore = new FilePipelineStateStore(info, conf);
-      CachePipelineStateStore cachePipelineStateStore = new CachePipelineStateStore(pipelineStateStore);
+      CachePipelineStateStore cachePipelineStateStore = new CachePipelineStateStore(pipelineStateStore, conf);
       cachePipelineStateStore.init();
       return cachePipelineStateStore;
     }

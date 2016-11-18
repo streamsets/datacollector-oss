@@ -738,6 +738,20 @@
           "default": "sdc@localhost"
         },
         {
+          "name": "store.pipeline.state.cache.maximum.size",
+          "label": "Pipeline State Cache Maximum size",
+          "description": "Specifies the maximum number of pipeline state entries the cache may contain",
+          "type": "long",
+          "default": 100
+        },
+        {
+          "name": "store.pipeline.state.cache.expire.after.access",
+          "label": "Pipeline State Cache Expire Time",
+          "description": "Specifies that each pipeline state entry should be automatically removed from the cache once a fixed duration has elapsed after the entry's creation, the most recent replacement of its value, or its last access. In minutes",
+          "type": "long",
+          "default": 10
+        },
+        {
           "name": "vault.addr",
           "type": "string",
           "label": "Vault Address",
@@ -888,7 +902,7 @@
           "type": "string_array",
           "label": "DPM labels",
           "description": "Labels that will be reported to DPM.",
-          "default": ["label1", "label2"],
+          "default": ["all"],
           "required": "false"
         },
         {

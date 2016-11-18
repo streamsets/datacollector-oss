@@ -26,6 +26,7 @@ import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.store.PipelineStoreException;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.pipeline.api.ExecutionMode;
 
@@ -37,20 +38,32 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class CachePipelineStateStore implements PipelineStateStore {
+  private static final String PIPELINE_STATE_CACHE_MAXIMUM_SIZE = "store.pipeline.state.cache.maximum.size";
+  private static final int PIPELINE_STATE_CACHE_MAXIMUM_SIZE_DEFAULT = 100;
+  private static final String PIPELINE_STATE_CACHE_EXPIRE_AFTER_ACCESS =
+      "store.pipeline.state.cache.expire.after.access";
+  private static final int PIPELINE_STATE_CACHE_EXPIRE_AFTER_ACCESS_DEFAULT = 10;
+
+
+  private final Configuration configuration;
   private LoadingCache<String, PipelineState> pipelineStateCache;
   private final PipelineStateStore pipelineStateStore;
   private static final String NAME_AND_REV_SEPARATOR = "::";
 
   @Inject
-  public CachePipelineStateStore(PipelineStateStore pipelineStateStore) {
+  public CachePipelineStateStore(PipelineStateStore pipelineStateStore, Configuration conf) {
    this.pipelineStateStore = pipelineStateStore;
+    this.configuration = conf;
   }
 
   @Override
   public void init() {
     pipelineStateCache = CacheBuilder.newBuilder().
-      maximumSize(100).
-      expireAfterAccess(10, TimeUnit.MINUTES).
+      maximumSize(configuration.get(PIPELINE_STATE_CACHE_MAXIMUM_SIZE, PIPELINE_STATE_CACHE_MAXIMUM_SIZE_DEFAULT)).
+      expireAfterAccess(
+          configuration.get(PIPELINE_STATE_CACHE_EXPIRE_AFTER_ACCESS, PIPELINE_STATE_CACHE_EXPIRE_AFTER_ACCESS_DEFAULT),
+          TimeUnit.MINUTES
+      ).
       build(new CacheLoader<String, PipelineState>() {
       @Override
       public PipelineState load(String nameAndRev) throws Exception {
@@ -84,9 +97,10 @@ public class CachePipelineStateStore implements PipelineStateStore {
 
   @Override
   public PipelineState saveState(String user, String name, String rev, PipelineStatus status, String message,
-      Map<String, Object> attributes, ExecutionMode executionMode, String metrics, int retryAttempt, long nextRetryTimeStamp) throws PipelineStoreException {
-    PipelineState pipelineState = pipelineStateStore.saveState(user, name, rev, status, message, attributes,
-                                                               executionMode, metrics, retryAttempt, nextRetryTimeStamp);
+      Map<String, Object> attributes, ExecutionMode executionMode, String metrics, int retryAttempt,
+                                 long nextRetryTimeStamp) throws PipelineStoreException {
+    PipelineState pipelineState = pipelineStateStore.saveState(
+        user, name, rev, status, message, attributes, executionMode, metrics, retryAttempt, nextRetryTimeStamp);
     pipelineStateCache.put(getNameAndRevString(name, rev), pipelineState);
     return pipelineState;
   }

@@ -26,8 +26,6 @@ import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.PipelineStatus;
-import com.streamsets.datacollector.execution.store.CachePipelineStateStore;
-import com.streamsets.datacollector.execution.store.FilePipelineStateStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.SlaveRuntimeInfo;
@@ -41,11 +39,9 @@ import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.LockCacheModule;
 import com.streamsets.datacollector.util.TestUtil;
 import com.streamsets.pipeline.api.ExecutionMode;
-
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -55,7 +51,6 @@ import org.junit.Test;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -73,8 +68,8 @@ public class TestPipelineStateStore {
   static class MockFilePipelineStateStore extends CachePipelineStateStore {
 
     @Inject
-    public MockFilePipelineStateStore(PipelineStateStore pipelineStateStore) {
-      super(pipelineStateStore);
+    public MockFilePipelineStateStore(PipelineStateStore pipelineStateStore, Configuration configuration) {
+      super(pipelineStateStore, configuration);
     }
 
     static boolean INVALIDATE_CACHE = false;
@@ -117,7 +112,7 @@ public class TestPipelineStateStore {
 
     @Provides @Singleton
     public PipelineStateStore providePipelineStateStore(SlaveRuntimeInfo runtimeInfo, Configuration configuration) {
-      return new MockFilePipelineStateStore(new FilePipelineStateStore(runtimeInfo, configuration));
+      return new MockFilePipelineStateStore(new FilePipelineStateStore(runtimeInfo, configuration), configuration);
     }
 
     @Provides
