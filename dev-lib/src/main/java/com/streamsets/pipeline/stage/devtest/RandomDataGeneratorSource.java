@@ -93,6 +93,16 @@ public class RandomDataGeneratorSource extends BaseSource {
     max = Integer.MAX_VALUE)
   public int delay;
 
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.NUMBER,
+    defaultValue = "1000",
+    label = "Batch size",
+    description = "Number of records that will be generated for single batch.",
+    min = 1,
+    max = Integer.MAX_VALUE)
+  public int batchSize;
+
   /**
    * Counter for LONG_SEQUENCE type
    */
@@ -110,9 +120,11 @@ public class RandomDataGeneratorSource extends BaseSource {
       ThreadUtil.sleep(delay);
     }
 
-    for(int i =0; i < maxBatchSize; i++) {
+    int records = Math.min(batchSize, maxBatchSize);
+    for(int i =0; i < records; i++) {
       createRecord(i, batchMaker);
     }
+
     return "random";
   }
 

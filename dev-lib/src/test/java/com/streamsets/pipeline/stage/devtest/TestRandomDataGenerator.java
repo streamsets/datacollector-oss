@@ -60,6 +60,7 @@ public class TestRandomDataGenerator {
       .addConfiguration("dataGenConfigs", Arrays.asList(stringData, dateData, doubleData, longData, intData))
       .addConfiguration("rootFieldType", RandomDataGeneratorSource.RootType.MAP)
       .addConfiguration("delay", 0)
+      .addConfiguration("batchSize", 1000)
       .addOutputLane("a")
       .build();
     runner.runInit();
@@ -77,7 +78,6 @@ public class TestRandomDataGenerator {
     }
   }
 
-
   @Test
   public void testLongSequence() throws StageException {
     RandomDataGeneratorSource.DataGeneratorConfig seq = new RandomDataGeneratorSource.DataGeneratorConfig();
@@ -88,6 +88,7 @@ public class TestRandomDataGenerator {
       .addConfiguration("dataGenConfigs", Arrays.asList(seq))
       .addConfiguration("rootFieldType", RandomDataGeneratorSource.RootType.MAP)
       .addConfiguration("delay", 0)
+      .addConfiguration("batchSize", 1000)
       .addOutputLane("a")
       .build();
     runner.runInit();
@@ -116,6 +117,7 @@ public class TestRandomDataGenerator {
       .addConfiguration("dataGenConfigs", Arrays.asList(seq))
       .addConfiguration("rootFieldType", RandomDataGeneratorSource.RootType.MAP)
       .addConfiguration("delay", 0)
+      .addConfiguration("batchSize", 1000)
       .addOutputLane("a")
       .build();
     runner.runInit();
@@ -133,4 +135,28 @@ public class TestRandomDataGenerator {
       runner.runDestroy();
     }
   }
+
+  @Test
+  public void testBatchSize() throws StageException {
+    RandomDataGeneratorSource.DataGeneratorConfig seq = new RandomDataGeneratorSource.DataGeneratorConfig();
+    seq.field = "id";
+    seq.type = RandomDataGeneratorSource.Type.LONG_SEQUENCE;
+
+    SourceRunner runner = new SourceRunner.Builder(RandomDataGeneratorSource.class)
+      .addConfiguration("dataGenConfigs", Arrays.asList(seq))
+      .addConfiguration("rootFieldType", RandomDataGeneratorSource.RootType.MAP)
+      .addConfiguration("delay", 0)
+      .addConfiguration("batchSize", 1)
+      .addOutputLane("a")
+      .build();
+    runner.runInit();
+    try {
+      StageRunner.Output output = runner.runProduce(null, 1000);
+      List<Record> records = output.getRecords().get("a");
+      Assert.assertEquals(1, records.size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
 }
