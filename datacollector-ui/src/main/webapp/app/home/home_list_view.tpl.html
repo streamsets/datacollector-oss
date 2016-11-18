@@ -62,6 +62,8 @@
            class="glyphicon glyphicon-unchecked fa-12x"></i>
 
         <div class="pipeline-name">
+          <span class="system-pipeline-label"
+                ng-if="isSystemPipeline(pipeline)">system</span>
           <a ng-click="openPipeline(pipeline)" ><span>{{pipeline.name}}</span></a>
           <span class="version-text"
                 ng-if="pipeline.metadata && pipeline.metadata['dpm.pipeline.version']"> (v{{pipeline.metadata['dpm.pipeline.version']}})</span>

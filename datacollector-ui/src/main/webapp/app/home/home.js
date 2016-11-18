@@ -740,7 +740,21 @@ angular
       onShowMoreClick: function($event) {
         $event.preventDefault();
         $scope.updateFilteredPipelines($scope.currentOffset);
+      },
+
+      /**
+       * Returns true if pipeline is DPM controlled system pipeline
+       * @param pipelineInfo
+       */
+      isSystemPipeline: function(pipelineInfo) {
+        var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
+        return (
+          pipelineStatus && pipelineStatus.name === pipelineInfo.name &&
+          pipelineInfo.name.indexOf('System Pipeline for Job') === 0 &&
+          pipelineStatus.attributes && pipelineStatus.attributes.IS_REMOTE_PIPELINE
+        );
       }
+
     });
 
     $q.all([
