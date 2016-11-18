@@ -70,7 +70,7 @@ public class MysqlSourceConfig {
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "999",
-      label = "ServerId",
+      label = "Server ID",
       description = "ServerId used by binlog client. Must be unique among all replication slaves " +
           "(origin acts as a replication slave itself).",
       displayPosition = 50,
@@ -82,7 +82,7 @@ public class MysqlSourceConfig {
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "1000",
-      label = "Max batch size",
+      label = "Max Batch Size (records)",
       description = "Maximum number of records in a batch.",
       displayPosition = 60,
       group = "ADVANCED"
@@ -94,7 +94,7 @@ public class MysqlSourceConfig {
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "1000",
-      label = "Max wait timeout (ms)",
+      label = "Batch Wait Time (ms)",
       description = "Maximum timeout millis to wait for batch records before returning " +
           "incomplete or empty batch.",
       displayPosition = 50,
@@ -106,7 +106,7 @@ public class MysqlSourceConfig {
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "5000",
-      label = "Connect timeout (ms)",
+      label = "Connect Timeout (ms)",
       description = "MySql connection timeout millis.",
       displayPosition = 60,
       group = "ADVANCED"
@@ -118,7 +118,7 @@ public class MysqlSourceConfig {
       type = Type.BOOLEAN,
       defaultValue = "false",
       label = "Use SSL",
-      description = "Flat to use or not SSL for MySql connection. This is used only for ",
+      description = "Whether to use SSL for the MySQL connection",
       displayPosition = 65,
       group = "ADVANCED"
   )
@@ -128,7 +128,7 @@ public class MysqlSourceConfig {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
-      label = "Start from beginning",
+      label = "Start From Beginning",
       description = "On first origin start read events from beginning of binlog. " +
           "When 'false' - start from current binlog position. " +
           "In case when GTID-enabled this records all server executed gtids as applied.",
@@ -155,7 +155,7 @@ public class MysqlSourceConfig {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
-      label = "Include tables",
+      label = "Include Tables",
       description = "Comma-delimited list of database and table names to include. " +
           "Database and table names support wildcards - special character '%' match any number of any chars. " +
           "DB and table name are delimited by dot. Example - 'db%sales.sales_%_dep,db2.orders'. " +
@@ -168,7 +168,7 @@ public class MysqlSourceConfig {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
-      label = "Ignore tables",
+      label = "Ignore Tables",
       description = "Comma-delimited list of database and table names to ignore. " +
           "Database and table names support wildcards - special character '%' match any number of any chars. " +
           "DB and table name are delimited by dot. Example - 'db%sales.sales_%_dep,db2.orders'. " +
