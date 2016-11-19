@@ -117,6 +117,8 @@ public class TestJdbcTarget {
       statement.execute("DROP TABLE IF EXISTS TEST.TABLE_ONE;");
       statement.execute("DROP TABLE IF EXISTS TEST.TABLE_TWO;");
       statement.execute("DROP TABLE IF EXISTS TEST.TABLE_THREE;");
+      statement.execute("DROP TABLE IF EXISTS TEST.DATETIMES;");
+
     }
 
     // Last open connection terminates H2
