@@ -409,7 +409,10 @@ angular
           api.pipelineAgent.startPipeline(pipelineInfo.name, 0).
           then(
             function (res) {
-              $rootScope.common.pipelineStatusMap[pipelineInfo.name] = res.data;
+              var currentStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
+              if (!currentStatus || (res.data && currentStatus.timeStamp < res.data.timeStamp)) {
+                $rootScope.common.pipelineStatusMap[pipelineInfo.name] = res.data;
+              }
             },
             function (res) {
               $rootScope.common.errors = [res.data];
@@ -460,8 +463,11 @@ angular
         $rootScope.common.errors = [];
 
         api.pipelineAgent.startPipelines(selectedPipelineList).success(function(res) {
-          angular.forEach(res.successEntities, function(pipelineInfo) {
-            $rootScope.common.pipelineStatusMap[pipelineInfo.name] = pipelineInfo.status;
+          angular.forEach(res.successEntities, function(pipelineState) {
+            var currentStatus = $rootScope.common.pipelineStatusMap[pipelineState.name];
+            if (!currentStatus || currentStatus.timeStamp < pipelineState.timeStamp) {
+              $rootScope.common.pipelineStatusMap[pipelineState.name] = pipelineState;
+            }
           });
 
           $rootScope.common.errors = res.errorMessages;
@@ -503,7 +509,10 @@ angular
         });
 
         modalInstance.result.then(function(status) {
-          $rootScope.common.pipelineStatusMap[pipelineInfo.name] = status;
+          var currentStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
+          if (!currentStatus || (status && currentStatus.timeStamp < status.timeStamp)) {
+            $rootScope.common.pipelineStatusMap[pipelineInfo.name] = status;
+          }
 
           var alerts = $rootScope.common.alertsMap[pipelineInfo.name];
 
@@ -564,11 +573,14 @@ angular
         });
 
         modalInstance.result.then(function(res) {
-          angular.forEach(res.successEntities, function(pipelineInfo) {
-            $rootScope.common.pipelineStatusMap[pipelineInfo.name] = pipelineInfo.status;
-            var alerts = $rootScope.common.alertsMap[pipelineInfo.name];
+          angular.forEach(res.successEntities, function(pipelineState) {
+            var currentStatus = $rootScope.common.pipelineStatusMap[pipelineState.name];
+            if (!currentStatus || currentStatus.timeStamp < pipelineState.timeStamp) {
+              $rootScope.common.pipelineStatusMap[pipelineState.name] = pipelineState;
+            }
+            var alerts = $rootScope.common.alertsMap[pipelineState.name];
             if (alerts) {
-              delete $rootScope.common.alertsMap[pipelineInfo.name];
+              delete $rootScope.common.alertsMap[pipelineState.name];
               $rootScope.common.alertsTotalCount -= alerts.length;
             }
           });

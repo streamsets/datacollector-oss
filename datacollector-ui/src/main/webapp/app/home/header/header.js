@@ -150,7 +150,11 @@ angular
             function (res) {
               $scope.clearTabSelectionCache();
               $scope.selectPipelineConfig();
-              $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.name] = res.data;
+
+              var currentStatus = $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.name];
+              if (!currentStatus || (res.data && currentStatus.timeStamp < res.data.timeStamp)) {
+                $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.name] = res.data;
+              }
 
               $timeout(function() {
                 $scope.refreshGraph();
@@ -198,7 +202,12 @@ angular
         modalInstance.result.then(function(status) {
           $scope.clearTabSelectionCache();
           $scope.selectPipelineConfig();
-          $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.name] = status;
+
+          var currentStatus = $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.name];
+          if (!currentStatus || (status && currentStatus.timeStamp < status.timeStamp)) {
+            $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.name] = status;
+          }
+
           var alerts = $rootScope.common.alertsMap[$scope.activeConfigInfo.name];
 
           if (alerts) {
