@@ -31,6 +31,8 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
+import com.streamsets.pipeline.lib.parser.shaded.com.google.code.regexp.Matcher;
+import com.streamsets.pipeline.lib.parser.shaded.com.google.code.regexp.Pattern;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.ChangeTypeValues;
@@ -113,6 +115,8 @@ public class OracleCDCSource extends BaseSource {
   private static final String NLS_TIMESTAMP_FORMAT =
       "ALTER SESSION SET NLS_TIMESTAMP_FORMAT = 'YYYY-MM-DD HH24:MI:SS.FF'";
   private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+  private static final Pattern TO_DATE_PATTERN = Pattern.compile("TO_DATE\\('(.*)',.*");
+  private static final Pattern TO_TIMESTAMP_PATTERN =  Pattern.compile("TO_TIMESTAMP\\('(.*)'");
   public static final String OFFSET_DELIM = "::";
 
   private final OracleCDCConfigBean configBean;
@@ -520,7 +524,6 @@ public class OracleCDCSource extends BaseSource {
         + " OPTIONS => DBMS_LOGMNR." + configBean.dictionary.name()
         + "          + DBMS_LOGMNR.CONTINUOUS_MINE"
         + "          + DBMS_LOGMNR.COMMITTED_DATA_ONLY"
-        + "          + DBMS_LOGMNR.PRINT_PRETTY_SQL"
         + "          + DBMS_LOGMNR.NO_ROWID_IN_STMT"
         + "          + DBMS_LOGMNR.NO_SQL_DELIMITER"
         + ddlTracking
@@ -689,6 +692,7 @@ public class OracleCDCSource extends BaseSource {
 
   @Override
   public void destroy() {
+
     // Close all statements
     closeStatements(dateStatement, endLogMnr, startLogMnr, produceSelectChanges, getLatestSCN, getOldestSCN);
 
@@ -702,7 +706,7 @@ public class OracleCDCSource extends BaseSource {
     }
 
     // And finally the hiraki data source
-    if(dataSource != null) {
+    if (dataSource != null) {
       dataSource.close();
     }
   }
@@ -771,13 +775,6 @@ public class OracleCDCSource extends BaseSource {
       case Types.TINYINT:
         field = Field.create(Field.Type.SHORT, columnValue);
         break;
-      /*
-       * Weird behavior seen:
-       * If the field is date/time/timestamp the fieldtype returns 93 (timestamp), so we need to check the string
-       * representation also.
-       * Date/Time/Timestamp.valueOf methods don't always work either - so need to use the SQL TO_DATE method. It is
-       * expensive, but no other option :(
-       */
       case Types.DATE:
       case Types.TIME:
       case Types.TIMESTAMP:
@@ -822,10 +819,18 @@ public class OracleCDCSource extends BaseSource {
 
   private Field getDateTimeField(Field.Type type, Object value) throws ParseException {
     if (type == Field.Type.DATE) {
-      return Field.create(type, getDate((String) value));
+      return Field.create(type, getDate(matchDateTimeString(TO_DATE_PATTERN.matcher((String) value))));
     } else {
-      return Field.create(type, Timestamp.valueOf((String) value));
+      String ts = matchDateTimeString(TO_TIMESTAMP_PATTERN.matcher((String) value));
+      return Field.create(type, ts != null ? Timestamp.valueOf(ts) : null);
     }
+  }
+
+  private String matchDateTimeString(Matcher m) {
+    if (!m.find()) {
+      return null;
+    }
+    return m.group(1);
   }
 
   private Date getDate(String s) throws ParseException {

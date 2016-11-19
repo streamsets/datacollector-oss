@@ -32,10 +32,15 @@ import org.junit.runners.Parameterized;
 import plsql.plsqlLexer;
 import plsql.plsqlParser;
 
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_43;
 
@@ -43,65 +48,55 @@ import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_43;
 public class TestSQLListener {
 
   @Parameterized.Parameters
-  public static Collection<Object[]> data() {
+  public static Collection<Object[]> data() throws Exception {
 
     return Arrays.asList(new Object[][]
         {
             {
-                "update \"HR\".\"EMPLOYEES\" " +
-                    "  set " +
-                    "    \"SALARY\" = 17595.97 " +
-                    "  where " +
-                    "    \"EMPLOYEE_ID\" = 201 and " +
-                    "    \"FIRST_NAME\" = 'Michael' and " +
-                    "    \"LAST_NAME\" = 'Hartstein' and " +
-                    "    \"EMAIL\" = 'MHARTSTE' and " +
-                    "    \"PHONE_NUMBER\" = '515.123.5555' and " +
-                    "    \"HIRE_DATE\" = '17-FEB-96' and " +
-                    "    \"JOB_ID\" = 'MK_MAN' and " +
-                    "    \"SALARY\" = 16591.67 and " +
-                    "    \"COMMISSION_PCT\" IS NULL and " +
-                    "    \"MANAGER_ID\" = 100 and " +
-                    "    \"DEPARTMENT_ID\" = 20 ",
-                ImmutableMap.builder().put("SALARY", "17595.97")
-                    .put("EMPLOYEE_ID", "201")
-                    .put("FIRST_NAME", "Michael")
-                    .put("LAST_NAME", "Hartstein")
-                    .put("EMAIL", "MHARTSTE")
-                    .put("PHONE_NUMBER", "515.123.5555")
-                    .put("HIRE_DATE", "17-FEB-96")
-                    .put("JOB_ID", "MK_MAN")
-                    .put("MANAGER_ID", "100")
-                    .put("DEPARTMENT_ID", "20")
+                "insert into \"SYS\".\"MANYCOLS\"(\"ID\",\"NAME\",\"HIREDATE\",\"SALARY\",\"LASTLOGIN\") " +
+                    "values ('1','sdc', TO_DATE('21-11-2016 11:34:09', 'DD-MM-YYYY HH24:MI:SS')," +
+                    "'1332.332',TO_TIMESTAMP('2016-11-21 11:34:09.982753'))"
+                ,
+                ImmutableMap.builder().put("ID", "1")
+                    .put("NAME", "sdc")
+                    .put("HIREDATE", "TO_DATE('21-11-2016 11:34:09','DD-MM-YYYY HH24:MI:SS')")
+                    .put("SALARY", "1332.332")
+                    .put("LASTLOGIN", "TO_TIMESTAMP('2016-11-21 11:34:09.982753')")
                     .build()
             },
             {
-                "insert into \"HR\".\"COUNTRIES\" " +
-                    " values " +
-                    "    \"COUNTRY_ID\" = 'bt', " +
-                    "    \"COUNTRY_NAME\" = 'bottle', " +
-                    "    \"REGION_ID\" IS NULL",
-                ImmutableMap.builder().put("COUNTRY_ID", "bt")
-                    .put("COUNTRY_NAME", "bottle")
+                "insert into \"SYS\".\"MANYCOLS\"(\"ID\",\"NAME\",\"HIREDATE\",\"SALARY\",\"LASTLOGIN\") " +
+                    "values ('10','stream',TO_DATE('19-11-2016 11:35:16', 'DD-MM-YYYY HH24:MI:SS'),'10000.1',NULL)",
+                ImmutableMap.builder()
+                    .put("ID", "10")
+                    .put("NAME", "stream")
+                    .put("HIREDATE", "TO_DATE('19-11-2016 11:35:16','DD-MM-YYYY HH24:MI:SS')")
+                    .put("SALARY", "10000.1")
+                    .put("LASTLOGIN", "NULL")
                     .build()
             },
             {
-                "insert into \"HR\".\"PEOPLE\" " +
-                    " values " +
-                    "    \"ID\" = 100, " +
-                    "    \"NAME\" = 'spock' ",
-                ImmutableMap.builder().put("ID", "100")
-                    .put("NAME", "spock")
+                " update \"SYS\".\"MANYCOLS\" set \"SALARY\" = '1998.483' " +
+                    "where \"ID\" = '1' and \"NAME\" = 'sdc' and" +
+                    " \"HIREDATE\" = TO_DATE('21-11-2016 11:34:09', 'DD-MM-YYYY HH24:MI:SS') and " +
+                    "\"SALARY\" = '1332.322' and \"LASTLOGIN\" = TO_TIMESTAMP('2016-11-21 11:34:09.982753')",
+                ImmutableMap.builder()
+                    .put("ID", "1")
+                    .put("SALARY", "1998.483")
+                    .put("NAME", "sdc")
+                    .put("HIREDATE", "TO_DATE('21-11-2016 11:34:09','DD-MM-YYYY HH24:MI:SS')")
+                    .put("LASTLOGIN", "TO_TIMESTAMP('2016-11-21 11:34:09.982753')")
                     .build()
             },
             {
-                "delete from \"HR\".\"COUNTRIES\" " +
-                    " where " +
-                    "    \"COUNTRY_ID\" = 'bt' and " +
-                    "    \"COUNTRY_NAME\" = 'bottle' and " +
-                    "    \"REGION_ID\" IS NULL ",
-                ImmutableMap.builder().put("COUNTRY_ID", "bt")
-                    .put("COUNTRY_NAME", "bottle")
+              "delete from \"SYS\".\"MANYCOLS\" where \"ID\" = '10' and \"NAME\" = 'stream' and " +
+                  "\"HIREDATE\" = TO_DATE('19-11-2016 11:35:16', 'DD-MM-YYYY HH24:MI:SS') and " +
+                  "\"SALARY\" = '10000.1' and \"LASTLOGIN\" IS NULL\n",
+                ImmutableMap.builder()
+                    .put("ID", "10")
+                    .put("NAME", "stream")
+                    .put("HIREDATE", "TO_DATE('19-11-2016 11:35:16','DD-MM-YYYY HH24:MI:SS')")
+                    .put("SALARY", "10000.1")
                     .build()
             }
         }

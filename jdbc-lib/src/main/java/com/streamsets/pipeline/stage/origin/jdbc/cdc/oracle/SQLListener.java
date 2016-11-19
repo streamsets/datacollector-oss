@@ -24,11 +24,11 @@ import plsql.plsqlBaseListener;
 import plsql.plsqlParser;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
- * Listener for use with {@linkplain org.antlr.v4.runtime.tree.ParseTreeWalker}. This listener handles the format
- * returned by LogMiner when PRINT_PRETTY_SQL is enabled.
+ * Listener for use with {@linkplain org.antlr.v4.runtime.tree.ParseTreeWalker}.
  */
 public class SQLListener extends plsqlBaseListener {
 
@@ -37,22 +37,25 @@ public class SQLListener extends plsqlBaseListener {
   private boolean caseSensitive = false;
   private String table;
 
-  private static final String IS_NULL = "ISNULL";
-  private static final String NULL = "NULL";
-  @Override
-  public void enterInsert_statement(plsqlParser.Insert_statementContext ctx) {
-    insideStatement = true;
-  }
-
-  @Override
-  public void exitInsert_statement(plsqlParser.Insert_statementContext ctx) {
-    insideStatement = false;
-  }
+  private List<plsqlParser.Column_nameContext> columnNames;
 
   @Override
   public void enterUpdate_set_clause(plsqlParser.Update_set_clauseContext ctx) {
     for(plsqlParser.Column_based_update_set_clauseContext x : ctx.column_based_update_set_clause()) {
-      columns.put(formatColumnName(x.column_name(0).getText().trim()), format(x.expression().getText().trim()));
+      columns.put(formatName(x.column_name(0).getText().trim()), formatValue(x.expression().getText().trim()));
+    }
+  }
+
+  @Override
+  public void enterInsert_into_clause(plsqlParser.Insert_into_clauseContext ctx) {
+    this.columnNames = ctx.column_name();
+  }
+
+  @Override
+  public void enterValues_clause(plsqlParser.Values_clauseContext ctx) {
+    List<plsqlParser.ExpressionContext> expressions = ctx.expression_list().expression();
+    for (int i = 0; i < expressions.size(); i++) {
+      columns.put(formatName(columnNames.get(i).getText().trim()), formatValue(expressions.get(i).getText().trim()));
     }
   }
 
@@ -76,20 +79,31 @@ public class SQLListener extends plsqlBaseListener {
       if (columnValues.length > 1) {
         column = columnValues[0].trim();
         value = columnValues[1].trim();
-        String key = formatColumnName(column);
+        String key = formatName(column);
         if (!columns.containsKey(key)) {
-          columns.put(key, format(value));
+          columns.put(key, formatValue(value));
         }
       }
     }
   }
 
-  public String formatColumnName(String columnName) {
+  /**
+   * Format column names based on whether they are case-sensitive
+   */
+  private String formatName(String columnName) {
     String returnValue = format(columnName);
     if (caseSensitive) {
       return returnValue;
     }
     return returnValue.toUpperCase();
+  }
+
+  /**
+   * Unescapes strings and returns them.
+   */
+  private String formatValue(String value) {
+    String returnValue = format(value);
+    return returnValue.replaceAll("''", "'");
   }
 
   @VisibleForTesting
@@ -111,6 +125,7 @@ public class SQLListener extends plsqlBaseListener {
    */
   public void reset(){
     columns.clear();
+    columnNames = null;
     table = null;
     insideStatement = false;
   }
