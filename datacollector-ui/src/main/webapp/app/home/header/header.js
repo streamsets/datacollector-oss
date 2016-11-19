@@ -347,12 +347,15 @@ angular
         pipelineService.publishPipelineCommand(pipelineInfo, $event)
           .then(
             function(metadata) {
-              $rootScope.common.successList.push({
-                message: 'Successfully Published Pipeline to DPM Pipeline Repository: ' +
-                authService.getRemoteBaseUrl() + ' New Pipeline Commit Version - ' + metadata['dpm.pipeline.version']
-              });
               $scope.clearUndoRedoArchive();
               $route.reload();
+
+              $timeout(function() {
+                $rootScope.common.successList.push({
+                  message: 'Successfully Published Pipeline to DPM Pipeline Repository: ' +
+                  authService.getRemoteBaseUrl() + ' New Pipeline Commit Version - ' + metadata['dpm.pipeline.version']
+                });
+              });
             });
       },
 

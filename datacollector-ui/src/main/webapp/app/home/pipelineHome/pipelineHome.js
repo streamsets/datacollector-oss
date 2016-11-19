@@ -43,32 +43,32 @@ angular
                                           $modal, $localStorage, pipelineService, pipelineConstant,
                                           visibilityBroadcaster, $translate, contextHelpService, $location, authService,
                                           userRoles, Analytics) {
-    var routeParamPipelineName = $routeParams.pipelineName,
-      configTimeout,
-      configDirty = false,
-      configSaveInProgress = false,
-      rulesTimeout,
-      rulesDirty = false,
-      rulesSaveInProgress = false,
-      ignoreUpdate = false,
-      pipelineMetricsTimer,
-      edges = [],
-      destroyed = false,
-      pageHidden = false,
-      isWebSocketSupported,
-      webSocketMetricsURL = $rootScope.common.webSocketBaseURL + 'rest/v1/webSocket?type=metrics&pipelineName=' +
-        routeParamPipelineName,
-      metricsWebSocket,
-      undoLimit = 10,
-      archive = [],
-      currArchivePos = null,
-      archiveOp = false,
-      reloadingNew = false,
-      retryCountDownTimer,
-      infoNameWatchListener,
-      pipelineStatusWatchListener,
-      metricsWatchListener,
-      errorsWatchListener;
+    var routeParamPipelineName = $routeParams.pipelineName;
+    var configTimeout;
+    var configDirty = false;
+    var configSaveInProgress = false;
+    var rulesTimeout;
+    var rulesDirty = false;
+    var rulesSaveInProgress = false;
+    var ignoreUpdate = false;
+    var pipelineMetricsTimer;
+    var edges = [];
+    var destroyed = false;
+    var pageHidden = false;
+    var isWebSocketSupported;
+    var webSocketMetricsURL = $rootScope.common.webSocketBaseURL + 'rest/v1/webSocket?type=metrics&pipelineName=' +
+      routeParamPipelineName;
+    var metricsWebSocket;
+    var undoLimit = 10;
+    var archive = [];
+    var currArchivePos = null;
+    var archiveOp = false;
+    var reloadingNew = false;
+    var retryCountDownTimer;
+    var infoNameWatchListener;
+    var pipelineStatusWatchListener;
+    var metricsWatchListener;
+    var errorsWatchListener;
 
     //Remove search parameter if any, search parameter causing canvas arrow issue
     $location.search({});
@@ -1641,7 +1641,7 @@ angular
               (badRecordHandlingConfig.value).split('::') : undefined,
             errorStageInst = newValue.errorStage;
 
-        if((badRecordHandlingConfigArr && badRecordHandlingConfigArr.length === 3) &&
+        if ((badRecordHandlingConfigArr && badRecordHandlingConfigArr.length === 3) &&
             (!errorStageInst || errorStageInst.library !== badRecordHandlingConfigArr[0] ||
             errorStageInst.stageName !== badRecordHandlingConfigArr[1] ||
             errorStageInst.stageVersion !== badRecordHandlingConfigArr[2])) {
@@ -1676,7 +1676,7 @@ angular
             (statsAggregatorStageConfig.value).split('::') : undefined,
           statsAggregatorStageInst = newValue.statsAggregatorStage;
 
-        if((statsAggregatorStageConfigArr && statsAggregatorStageConfigArr.length === 3) &&
+        if ((statsAggregatorStageConfigArr && statsAggregatorStageConfigArr.length === 3) &&
           (!statsAggregatorStageInst || statsAggregatorStageInst.library !== statsAggregatorStageConfigArr[0] ||
           statsAggregatorStageInst.stageName !== statsAggregatorStageConfigArr[1] ||
           statsAggregatorStageInst.stageVersion !== statsAggregatorStageConfigArr[2])) {
