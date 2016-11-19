@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -26,7 +26,7 @@ import com.streamsets.datacollector.client.cli.command.BaseCommand;
 import io.airlift.airline.Command;
 import io.airlift.airline.Option;
 
-@Command(name = "deleteByFiltering", description = "Deletes filtered Pipelines")
+@Command(name = "delete-by-filtering", description = "Deletes filtered Pipelines")
 public class DeletePipelinesByFilteringCommand extends BaseCommand {
 
   @Option(
