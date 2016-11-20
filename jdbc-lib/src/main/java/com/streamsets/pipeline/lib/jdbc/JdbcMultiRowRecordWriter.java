@@ -263,6 +263,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
         Joiner.on(", ").join(columns.keySet()),
         valuePlaceholders
     );
+    LOG.debug("Generated multi-row insert query: {}", query);
 
     if (generatedColumnMappings != null) {
       String[] generatedColumns = new String[generatedColumnMappings.size()];

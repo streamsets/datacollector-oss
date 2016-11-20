@@ -20,6 +20,8 @@
 package com.streamsets.pipeline.lib.jdbc;
 
 import com.google.common.base.Joiner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -31,6 +33,8 @@ import java.util.Map;
 import java.util.SortedMap;
 
 class PreparedStatementMap {
+  private static final Logger LOG = LoggerFactory.getLogger(PreparedStatementMap.class);
+
   private final Connection connection;
   private final String tableName;
   private final Map<SortedMap<String, String>, PreparedStatement> cache = new HashMap<>();
@@ -53,6 +57,7 @@ class PreparedStatementMap {
           Joiner.on(", ").join(columns.keySet()),
           Joiner.on(", ").join(columns.values())
       );
+      LOG.debug("Generated insert query: {}", query);
 
       PreparedStatement statement;
       if (generatedColumnMappings != null) {
