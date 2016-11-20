@@ -31,6 +31,7 @@ import kafka.common.ErrorMapping;
 import kafka.javaapi.TopicMetadata;
 import kafka.javaapi.TopicMetadataRequest;
 import kafka.javaapi.consumer.SimpleConsumer;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -224,12 +225,7 @@ public class KafkaValidationUtil08 extends BaseKafkaValidationUtil implements Sd
   }
 
   private static String getKafkaBrokers(List<HostAndPort> kafkaBrokers) {
-    StringBuilder sb = new StringBuilder();
-    for(HostAndPort k : kafkaBrokers) {
-      sb.append(k.toString()).append(", ");
-    }
-    sb.setLength(sb.length()-2);
-    return sb.toString();
+    return StringUtils.join(kafkaBrokers, ",");
   }
 
   private static List<HostAndPort> getKafkaBrokers(String brokerList) {
