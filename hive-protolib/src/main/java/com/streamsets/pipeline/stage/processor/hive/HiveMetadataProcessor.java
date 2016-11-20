@@ -200,8 +200,10 @@ public class HiveMetadataProcessor extends RecordProcessor {
     }
 
     if (!externalTable) {
-      internalWarehouseDir = hiveConfigBean.getHiveConfigValue(WAREHOUSE_DIR_PROPERTY);
-      validateTemplate(internalWarehouseDir, "Hive Warehouse directory", Errors.HIVE_METADATA_05, issues);
+      if(issues.size() == 0) { // The config bean might not be properly initialized when there are validation errors
+        internalWarehouseDir = hiveConfigBean.getHiveConfigValue(WAREHOUSE_DIR_PROPERTY);
+        validateTemplate(internalWarehouseDir, "Hive Warehouse directory", Errors.HIVE_METADATA_05, issues);
+      }
     } else {
       validateTemplate(tablePathTemplate, "Table Path Template", Errors.HIVE_METADATA_06, issues);
       if (partitioned)
