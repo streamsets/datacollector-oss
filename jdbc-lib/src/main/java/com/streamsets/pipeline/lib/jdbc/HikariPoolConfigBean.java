@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.lib.jdbc;
 
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
@@ -214,6 +215,18 @@ public class HikariPoolConfigBean {
       group = "ADVANCED"
   )
   public boolean readOnly = true;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Transaction isolation",
+      description = "Transaction isolation that should be used for all database connections.",
+      defaultValue = "DEFAULT",
+      displayPosition = 70,
+      group = "ADVANCED"
+  )
+  @ValueChooserModel(TransactionIsolationLevelChooserValues.class)
+  public TransactionIsolationLevel transactionIsolation = TransactionIsolationLevel.DEFAULT;
 
 
   private static final String HIKARI_CONFIG_PREFIX = "hikariConfigBean.";

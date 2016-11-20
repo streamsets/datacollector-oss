@@ -37,6 +37,7 @@ import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.destination.jdbc.Groups;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -508,6 +509,42 @@ public class JdbcUtil {
     return fields;
   }
 
+  private static HikariConfig createDataSourceConfig(
+    HikariPoolConfigBean hikariConfigBean,
+    Properties driverProperties,
+    boolean autoCommit,
+    boolean readOnly
+  ) {
+    HikariConfig config = new HikariConfig();
+
+    config.setJdbcUrl(hikariConfigBean.connectionString);
+    config.setUsername(hikariConfigBean.username);
+    config.setPassword(hikariConfigBean.password);
+    config.setAutoCommit(autoCommit);
+    config.setReadOnly(readOnly);
+    config.setMaximumPoolSize(hikariConfigBean.maximumPoolSize);
+    config.setMinimumIdle(hikariConfigBean.minIdle);
+    config.setConnectionTimeout(hikariConfigBean.connectionTimeout * MILLISECONDS);
+    config.setIdleTimeout(hikariConfigBean.idleTimeout * MILLISECONDS);
+    config.setMaxLifetime(hikariConfigBean.maxLifetime * MILLISECONDS);
+
+    if (!StringUtils.isEmpty(hikariConfigBean.driverClassName)) {
+      config.setDriverClassName(hikariConfigBean.driverClassName);
+    }
+
+    if (!StringUtils.isEmpty(hikariConfigBean.connectionTestQuery)) {
+      config.setConnectionTestQuery(hikariConfigBean.connectionTestQuery);
+    }
+
+    if(hikariConfigBean.transactionIsolation != TransactionIsolationLevel.DEFAULT) {
+      config.setTransactionIsolation(hikariConfigBean.transactionIsolation.name());
+    }
+
+    config.setDataSourceProperties(driverProperties);
+
+    return config;
+  }
+
   public static HikariDataSource createDataSourceForWrite(
       HikariPoolConfigBean hikariConfigBean,
       Properties driverProperties,
@@ -516,31 +553,12 @@ public class JdbcUtil {
       List<JdbcFieldColumnParamMapping> customMappings,
       Stage.Context context
   ) throws SQLException {
-    HikariConfig config = new HikariConfig();
-
-    config.setJdbcUrl(hikariConfigBean.connectionString);
-    config.setUsername(hikariConfigBean.username);
-    config.setPassword(hikariConfigBean.password);
-    config.setAutoCommit(false);
-    config.setReadOnly(false);
-    config.setMaximumPoolSize(hikariConfigBean.maximumPoolSize);
-    config.setMinimumIdle(hikariConfigBean.minIdle);
-    config.setConnectionTimeout(hikariConfigBean.connectionTimeout * MILLISECONDS);
-    config.setIdleTimeout(hikariConfigBean.idleTimeout * MILLISECONDS);
-    config.setMaxLifetime(hikariConfigBean.maxLifetime * MILLISECONDS);
-
-    if (hikariConfigBean.driverClassName != null && !hikariConfigBean.driverClassName.isEmpty()) {
-      config.setDriverClassName(hikariConfigBean.driverClassName);
-    }
-
-    if (hikariConfigBean.connectionTestQuery != null && !hikariConfigBean.connectionTestQuery.isEmpty()) {
-      config.setConnectionTestQuery(hikariConfigBean.connectionTestQuery);
-    }
-
-    // User configurable JDBC driver properties
-    config.setDataSourceProperties(driverProperties);
-
-    HikariDataSource dataSource = new HikariDataSource(config);
+    HikariDataSource dataSource = new HikariDataSource(createDataSourceConfig(
+      hikariConfigBean,
+      driverProperties,
+      false,
+      false
+    ));
 
     // Test connectivity
     Connection connection = dataSource.getConnection();
@@ -577,27 +595,14 @@ public class JdbcUtil {
       HikariPoolConfigBean hikariConfigBean,
       Properties driverProperties
   ) throws StageException {
-    HikariConfig config = new HikariConfig();
-    config.setJdbcUrl(hikariConfigBean.connectionString);
-    config.setUsername(hikariConfigBean.username);
-    config.setPassword(hikariConfigBean.password);
-    config.setReadOnly(hikariConfigBean.readOnly);
-    config.setMaximumPoolSize(hikariConfigBean.maximumPoolSize);
-    config.setMinimumIdle(hikariConfigBean.minIdle);
-    config.setConnectionTimeout(hikariConfigBean.connectionTimeout * MILLISECONDS);
-    config.setIdleTimeout(hikariConfigBean.idleTimeout * MILLISECONDS);
-    config.setMaxLifetime(hikariConfigBean.maxLifetime * MILLISECONDS);
-
-    if (!hikariConfigBean.connectionTestQuery.isEmpty()) {
-      config.setConnectionTestQuery(hikariConfigBean.connectionTestQuery);
-    }
-
-    // User configurable JDBC driver properties
-    config.setDataSourceProperties(driverProperties);
-
     HikariDataSource dataSource;
     try {
-      dataSource = new HikariDataSource(config);
+      dataSource = new HikariDataSource(createDataSourceConfig(
+        hikariConfigBean,
+        driverProperties,
+        true,
+        hikariConfigBean.readOnly
+      ));
     } catch (RuntimeException e) {
       LOG.error(JdbcErrors.JDBC_06.getMessage(), e);
       throw new StageException(JdbcErrors.JDBC_06, e.getCause().toString());
