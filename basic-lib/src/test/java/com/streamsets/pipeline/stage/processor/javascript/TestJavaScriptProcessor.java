@@ -328,6 +328,17 @@ public class TestJavaScriptProcessor {
   }
 
   @Test
+  public void testEventCreation() throws Exception {
+    Processor processor = new JavaScriptProcessor(
+        ProcessingMode.RECORD,
+        "event = sdcFunctions.createEvent(\"not important\", 1)\n" +
+            "event.value = {\"a\": 1, \"b\" :2, \"c\": 3}\n" +
+            "sdcFunctions.toEvent(event)"
+    );
+    ScriptingProcessorTestUtil.verifyEventCreation(JavaScriptDProcessor.class, processor);
+  }
+
+  @Test
   public void testTypedNullPassThrough() throws Exception {
     Processor processor = new JavaScriptProcessor(
         ProcessingMode.BATCH,

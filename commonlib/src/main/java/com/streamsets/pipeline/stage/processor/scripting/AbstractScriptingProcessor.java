@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.processor.scripting;
 
 import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
@@ -74,6 +75,20 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
      */
     public ScriptRecord createRecord(String recordSourceId) {
       return getScriptObjectFactory().createScriptRecord(getContext().createRecord(recordSourceId));
+    }
+
+    public ScriptRecord createEvent(String type, int version) {
+      String recordSourceId = Utils.format("event:{}:{}:{}", type, version, System.currentTimeMillis());
+      return getScriptObjectFactory().createScriptRecord(getContext().createEventRecord(type, version, recordSourceId));
+    }
+
+    public void toEvent(ScriptRecord event) throws StageException {
+      if(!(event.record instanceof EventRecord)) {
+        log.error("Can't send normal record to event stream: {}", event.record);
+        throw new StageException(Errors.SCRIPTING_07, event.record.getHeader().getSourceId());
+      }
+
+      getContext().toEvent((EventRecord)getScriptObjectFactory().getRecord(event));
     }
 
     public Object createMap(boolean listMap) {

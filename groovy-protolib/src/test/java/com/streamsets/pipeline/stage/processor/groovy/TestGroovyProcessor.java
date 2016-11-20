@@ -207,6 +207,17 @@ public class TestGroovyProcessor {
   }
 
   @Test
+  public void testEventCreation() throws Exception {
+    Processor processor = new GroovyProcessor(
+        ProcessingMode.RECORD,
+        "event = sdcFunctions.createEvent(\"not important\", 1)\n" +
+            "event.value = [\"a\": 1, \"b\" :2, \"c\": 3]\n" +
+            "sdcFunctions.toEvent(event)"
+    );
+    ScriptingProcessorTestUtil.verifyEventCreation(GroovyDProcessor.class, processor);
+  }
+
+  @Test
   public void testListMapOrder() throws Exception {
     final String script = Resources.toString(Resources.getResource("ListMapOrderScript.groovy"), Charsets.UTF_8);
     Processor processor = new GroovyProcessor(ProcessingMode.RECORD, script);

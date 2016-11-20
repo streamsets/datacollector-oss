@@ -36,6 +36,7 @@ import static com.streamsets.pipeline.api.ConfigDef.Evaluation.EXPLICIT;
     label = "Groovy Evaluator",
     description = "Processes records using Groovy",
     icon="groovy.png",
+    producesEvents = true,
     onlineHelpRefUrl = "index.html#Processors/Groovy.html#task_asl_bpt_gv"
 )
 @ConfigGroups(Groups.class)
@@ -84,6 +85,11 @@ public class GroovyDProcessor extends DProcessor {
           " *                          Pass a recordId to uniquely identify the record and include enough information to track down the record source. \n" +
           " *   sdcFunctions.createMap(boolean listMap): Create a map for use as a field in a record. \n" +
           " *                          Pass true to this function to create a list map (ordered map)\n" +
+          " *\n" +
+          " *   sdcFunctions.createEvent(String type, int version): Creates a new event.\n" +
+          " *                          Create new empty event with standard headers.\n" +
+          " *   sdcFunctions.toEvent(Record): Send event to event stream\n" +
+          " *                          Only events created with sdcFunctions.createEvent are supported.\n" +
           " *\n" +
           " * Available Record Header Variables:\n" +
           " *   record.attributes: a map of record header attributes.\n" +

@@ -493,6 +493,32 @@ public class ScriptingProcessorTestUtil {
     }
   }
 
+  public static <C extends Processor> void verifyEventCreation(Class<C> clazz, Processor processor) throws StageException {
+    ProcessorRunner runner = new ProcessorRunner.Builder(clazz, processor)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+    try {
+      Record record = RecordCreator.create();
+      record.set(Field.create(Collections.<String, Field>emptyMap()));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+
+      List<Record> events = runner.getEventRecords();
+      Assert.assertNotNull(events);
+      Assert.assertEquals(1, events.size());
+
+      Record event = events.get(0);
+      Assert.assertNotNull(event);
+      Assert.assertTrue(event.has("/a"));
+      Assert.assertEquals(1, event.get("/a").getValueAsInteger());
+      Assert.assertTrue(event.has("/b"));
+      Assert.assertEquals(2, event.get("/b").getValueAsInteger());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
   public static <C extends Processor> void verifyListMapOrder(Class<C> clazz, Processor processor)
       throws StageException {
     ProcessorRunner runner = new ProcessorRunner.Builder(clazz, processor)

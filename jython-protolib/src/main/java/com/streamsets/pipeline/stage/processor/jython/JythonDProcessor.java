@@ -35,6 +35,7 @@ import com.streamsets.pipeline.stage.processor.scripting.ProcessingModeChooserVa
     description = "Processes records using Jython",
     icon = "jython.png",
     upgrader = JythonProcessorUpgrader.class,
+    producesEvents = true,
     onlineHelpRefUrl = "index.html#Processors/Jython.html#task_fty_jwx_nr"
 )
 @ConfigGroups(Groups.class)
@@ -83,6 +84,11 @@ public class JythonDProcessor extends DProcessor {
       "#                            Pass a recordId to uniquely identify the record and include enough information to track down the record source. \n" +
       "#  sdcFunctions.createMap(boolean listMap): Create a map for use as a field in a record.\n" +
       "#                            Pass True to this function to create a list map (ordered map)\n" +
+      "#\n" +
+      "#  sdcFunctions.createEvent(String type, int version): Creates a new event.\n" +
+      "#                            Create new empty event with standard headers.\n" +
+      "#  sdcFunctions.toEvent(Record): Send event to event stream\n" +
+      "#                            Only events created with sdcFunctions.createEvent are supported.\n" +
       "#\n" +
       "# Available Record Header Variables:\n" +
       "#\n" +

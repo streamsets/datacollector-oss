@@ -23,7 +23,6 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.impl.Utils;
 
 import javax.script.ScriptEngine;
 import java.io.IOException;
