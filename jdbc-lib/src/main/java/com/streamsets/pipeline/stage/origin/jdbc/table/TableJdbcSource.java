@@ -48,10 +48,13 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 
@@ -72,14 +75,15 @@ public class TableJdbcSource extends BaseSource {
   private final CommonSourceConfigBean commonSourceConfigBean;
   private final TableJdbcConfigBean tableJdbcConfigBean;
   private final Properties driverProperties = new Properties();
+  private final ConcurrentHashMap<String, Object> gaugeMap;
 
   private TableOrderProvider tableOrderProvider;
   private ErrorRecordHandler errorRecordHandler;
+  private TableJdbcELEvalContext tableJdbcELEvalContext;
+  private Calendar calendar;
   private Connection connection = null;
   private HikariDataSource hikariDataSource;
   private long lastQueryIntervalTime;
-
-  private final ConcurrentHashMap<String, Object> gaugeMap;
 
   public TableJdbcSource(
       HikariPoolConfigBean hikariConfigBean,
@@ -160,6 +164,12 @@ public class TableJdbcSource extends BaseSource {
     }
   }
 
+  private void initTableEvalContextForProduce(TableContext tableContext) {
+    tableJdbcELEvalContext.setCalendar(calendar);
+    tableJdbcELEvalContext.setTime(calendar.getTime());
+    tableJdbcELEvalContext.setTableContext(tableContext);
+  }
+
   @Override
   protected List<Stage.ConfigIssue> init() {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
@@ -170,6 +180,8 @@ public class TableJdbcSource extends BaseSource {
     issues = tableJdbcConfigBean.validateConfigs(context, issues, commonSourceConfigBean);
     if (issues.isEmpty()) {
       checkConnectionAndBootstrap(context, issues);
+      tableJdbcELEvalContext = new TableJdbcELEvalContext(getContext(), getContext().createELVars());
+      calendar = Calendar.getInstance(TimeZone.getTimeZone(tableJdbcConfigBean.timeZoneID));
     }
     return issues;
   }
@@ -183,12 +195,16 @@ public class TableJdbcSource extends BaseSource {
     ThreadUtil.sleep((lastQueryIntervalTime < 0 || delayBeforeQuery < 0) ? 0 : delayBeforeQuery);
 
     int recordCount = 0, noOfTablesVisited = 0;
-    TableContext tableContext = null;
     do {
+      String query = null;
       try {
         connection = (connection == null) ? hikariDataSource.getConnection() : this.connection;
-        tableContext = tableOrderProvider.nextTable();
-        String query = OffsetQueryUtil.buildQuery(tableContext, offsets.get(tableContext.getTableName()));
+        TableContext tableContext = tableOrderProvider.nextTable();
+
+        initTableEvalContextForProduce(tableContext);
+
+        query = OffsetQueryUtil.buildQuery(tableContext, offsets.get(tableContext.getTableName()), tableJdbcELEvalContext);
+
         //Clear the initial offset after the  query is build so we will not use the initial offset from the next
         //time the table is used.
         tableContext.clearStartOffset();
@@ -204,7 +220,6 @@ public class TableJdbcSource extends BaseSource {
           rs = statement.executeQuery(query);
           ResultSetMetaData md = rs.getMetaData();
           while (rs.next() && recordCount < batchSize) {
-            //TODO: https://issues.streamsets.com/browse/SDC-4280 - Add Max Clob/Blob size action
             LinkedHashMap<String, Field> fields = JdbcUtil.resultSetToFields(
                 rs,
                 commonSourceConfigBean.maxClobSize,
@@ -238,7 +253,7 @@ public class TableJdbcSource extends BaseSource {
         connection = null;
         LOG.debug("Query failed at: {}", lastQueryIntervalTime);
         //Throw Stage Errors
-        errorRecordHandler.onError(JdbcErrors.JDBC_34, OffsetQueryUtil.buildQuery(tableContext, offsets.get(tableContext.getTableName())), formattedError);
+        errorRecordHandler.onError(JdbcErrors.JDBC_34, query, formattedError);
       } catch (ExecutionException e) {
         LOG.debug("Failure happened when fetching nextTable", e);
         errorRecordHandler.onError(JdbcErrors.JDBC_67, e);

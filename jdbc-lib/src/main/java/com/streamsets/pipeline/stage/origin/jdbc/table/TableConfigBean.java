@@ -21,6 +21,8 @@ package com.streamsets.pipeline.stage.origin.jdbc.table;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ListBeanModel;
+import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -92,4 +94,14 @@ public final class TableConfigBean {
   )
   public Map<String, String> offsetColumnToInitialOffsetValue = new LinkedHashMap<>();
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Extra Offset Column Conditions",
+      description = "Extra Conditions need to be applied for the offset column when a query is issued.",
+      displayPosition = 80,
+      elDefs = {OffsetColumnEL.class, TimeEL.class, TimeNowEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT
+  )
+  public String extraOffsetColumnConditions;
 }

@@ -51,6 +51,7 @@ public class TestTableJdbcSource {
     tableJdbcConfigBean.configureFetchSize = configureFetchSize;
     tableJdbcConfigBean.fetchSize = fetchSize;
     tableJdbcConfigBean.tableOrderStrategy = tableOrderStrategy;
+    tableJdbcConfigBean.timeZoneID = "UTC";
     return tableJdbcConfigBean;
   }
 

@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.config.TimeZoneChooserValues;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.Groups;
@@ -44,11 +45,23 @@ public class TableJdbcConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
+      defaultValue = "UTC",
+      label = "Data Time Zone",
+      description = "Time zone to use to resolve time based expressions",
+      displayPosition = 70,
+      group = "JDBC"
+  )
+  @ValueChooserModel(TimeZoneChooserValues.class)
+  public String timeZoneID;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
       defaultValue = "NONE",
       label = "Table Order Strategy",
       description = "Determines the strategy for table ordering",
-      displayPosition = 70,
-      group = "JDBC"
+      displayPosition = 180,
+      group = "ADVANCED"
   )
   @ValueChooserModel(TableOrderStrategyChooserValues.class)
   public TableOrderStrategy tableOrderStrategy;
@@ -59,7 +72,7 @@ public class TableJdbcConfigBean {
       defaultValue = "false",
       label = "Configure Fetch Size",
       description = "Determines whether to configure fetch size for the JDBC Statement",
-      displayPosition = 80,
+      displayPosition = 190,
       group = "ADVANCED"
   )
   public boolean configureFetchSize;
@@ -70,7 +83,7 @@ public class TableJdbcConfigBean {
       defaultValue = "-1",
       label = "Fetch Size",
       description = "Fetch Size for the JDBC Statement. Should not be 0 and Should be less than or equal to batch size.",
-      displayPosition = 90,
+      displayPosition = 200,
       group = "ADVANCED",
       dependsOn = "configureFetchSize",
       triggeredByValue = "true"

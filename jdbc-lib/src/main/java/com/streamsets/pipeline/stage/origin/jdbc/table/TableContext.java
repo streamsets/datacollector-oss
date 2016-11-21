@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.origin.jdbc.table;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public final class TableContext {
@@ -29,13 +30,20 @@ public final class TableContext {
   private final String tableName;
   private final LinkedHashMap<String, Integer> partitionColumnToType;
   private final Map<String, String> partitionColumnToStartOffset;
+  private final String extraOffsetColumnConditions;
 
-  TableContext(String schema, String tableName, LinkedHashMap<String, Integer> partitionColumnToType, Map<String, String> partitionColumnToStartOffset) {
+  TableContext(
+      String schema,
+      String tableName,
+      LinkedHashMap<String, Integer> partitionColumnToType,
+      Map<String, String> partitionColumnToStartOffset,
+      String extraOffsetColumnConditions
+  ) {
     this.schema = schema;
     this.tableName = tableName;
     this.partitionColumnToType = partitionColumnToType;
     this.partitionColumnToStartOffset = partitionColumnToStartOffset;
-
+    this.extraOffsetColumnConditions = extraOffsetColumnConditions;
   }
 
   public String getSchema() {
@@ -67,4 +75,7 @@ public final class TableContext {
     partitionColumnToStartOffset.clear();
   }
 
+  public String getExtraOffsetColumnConditions() {
+    return extraOffsetColumnConditions;
+  }
 }

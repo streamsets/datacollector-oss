@@ -19,6 +19,8 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import org.apache.commons.codec.binary.Hex;
@@ -26,12 +28,16 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +46,16 @@ public abstract class BaseTableJdbcSourceIT {
   protected static final String PASSWORD = "sa";
   protected static final String database = "TEST";
   protected static final String JDBC_URL = "jdbc:h2:mem:" + database;
+
+  private static final Logger LOG = LoggerFactory.getLogger(BaseTableJdbcSourceIT.class);
+
+
+  protected static final String CREATE_STATEMENT_TEMPLATE = "CREATE TABLE IF NOT EXISTS %s.%s ( %s )";
+  protected static final String INSERT_STATEMENT_TEMPLATE = "INSERT INTO %s.%s values ( %s )";
+  protected static final String DROP_STATEMENT_TEMPLATE = "DROP TABLE IF EXISTS %s.%s";
+
+  protected static final Joiner COMMA_SPACE_JOINER = Joiner.on(", ");
+
   protected static Connection connection;
 
   @BeforeClass
@@ -60,15 +76,63 @@ public abstract class BaseTableJdbcSourceIT {
       case BYTE:
         return String.valueOf(field.getValueAsInteger());
       case TIME:
-        return DateFormatUtils.format(field.getValueAsDate(), "HH:mm:ss");
+        return DateFormatUtils.format(field.getValueAsDate(), "HH:mm:ss.SSS");
       case DATE:
         return DateFormatUtils.format(field.getValueAsDate(), "yyyy-MM-dd");
       case DATETIME:
-        return DateFormatUtils.format(field.getValueAsDate(), "yyyy-MM-dd HH:mm:ss");
+        return DateFormatUtils.format(field.getValueAsDate(), "yyyy-MM-dd HH:mm:ss.SSS");
       default:
         return String.valueOf(field.getValue());
     }
   }
+
+
+  protected static String getCreateStatement(
+      String schemaName,
+      String tableName,
+      Map<String, String> offsetFields,
+      Map<String, String> otherFields
+  ) {
+    List<String> fieldFormats = new ArrayList<>();
+    for (Map.Entry<String, String> offsetFieldEntry : offsetFields.entrySet()) {
+      fieldFormats.add(offsetFieldEntry.getKey() + " " + offsetFieldEntry.getValue());
+    }
+
+    for (Map.Entry<String, String> otherFieldEntry : otherFields.entrySet()) {
+      fieldFormats.add(otherFieldEntry.getKey() + " " + otherFieldEntry.getValue());
+    }
+
+    if (!offsetFields.isEmpty()) {
+      fieldFormats.add("PRIMARY KEY(" + COMMA_SPACE_JOINER.join(offsetFields.keySet()) + ")");
+    }
+
+    String createQuery = String.format(CREATE_STATEMENT_TEMPLATE, schemaName, tableName, COMMA_SPACE_JOINER.join(fieldFormats));
+    LOG.info("Created Query : " + createQuery);
+
+    return createQuery;
+  }
+
+  protected static String getInsertStatement(String schemaName, String tableName, Collection<Field> fields) {
+    List<String> fieldFormats = new ArrayList<>();
+    for (Field field : fields) {
+      String fieldFormat =
+          (
+              field.getType().isOneOf(
+                  Field.Type.DATE,
+                  Field.Type.TIME,
+                  Field.Type.DATETIME,
+                  Field.Type.CHAR,
+                  Field.Type.STRING
+              )
+          )? "'"+ getStringRepOfFieldValueForInsert(field) +"'" : getStringRepOfFieldValueForInsert(field);
+
+      fieldFormats.add(fieldFormat);
+    }
+    String insertQuery = String.format(INSERT_STATEMENT_TEMPLATE, schemaName, tableName, COMMA_SPACE_JOINER.join(fieldFormats));
+    LOG.info("Created Query : " + insertQuery);
+    return insertQuery;
+  }
+
 
   protected static void insertRows(String insertTemplate, List<Record> records) throws SQLException {
     try (Statement st = connection.createStatement()) {

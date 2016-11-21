@@ -116,7 +116,8 @@ public final class TableContextUtil {
         schemaName,
         tableName,
         partitionColumnToType,
-        partitionColumnToStartOffset
+        partitionColumnToStartOffset,
+        tableConfigBean.extraOffsetColumnConditions
     );
   }
 
