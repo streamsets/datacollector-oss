@@ -26,7 +26,6 @@ import com.streamsets.datacollector.vault.Vault;
 import com.streamsets.datacollector.vault.VaultRuntimeException;
 import com.streamsets.pipeline.api.ext.DataCollectorServices;
 import com.streamsets.pipeline.api.impl.Utils;
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -75,7 +74,7 @@ public class Configuration {
       return unresolvedValue;
     }
 
-    protected String getUnresolvedValueWithoutDelimiter() {
+    public String getUnresolvedValueWithoutDelimiter() {
       String unquoted = unresolvedValue.replace("\"", "").replace("'", "");
       if (isValueMyRef(getPrefix(), getSuffix(), unresolvedValue)) {
         return unquoted.substring(getPrefix().length(), unquoted.length() - getSuffix().length());
@@ -151,6 +150,10 @@ public class Configuration {
       return DELIMITER;
     }
 
+    public boolean isAbsolute() {
+      return Paths.get(getUnresolvedValueWithoutDelimiter()).isAbsolute();
+    }
+
     @Override
     public String getValue() {
       StringBuilder sb = new StringBuilder();
@@ -204,7 +207,7 @@ public class Configuration {
     }
 
     @Override
-    protected String getUnresolvedValueWithoutDelimiter() {
+    public String getUnresolvedValueWithoutDelimiter() {
       return getUnresolvedValue().substring(PREFIX.length(), getUnresolvedValue().length() - SUFFIX.length());
     }
 

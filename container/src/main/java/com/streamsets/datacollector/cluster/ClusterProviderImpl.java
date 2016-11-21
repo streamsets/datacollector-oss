@@ -46,10 +46,12 @@ import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.stagelibrary.StageLibraryUtils;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.PipelineConfigurationUtil;
 import com.streamsets.datacollector.util.PipelineDirectoryUtil;
 import com.streamsets.datacollector.util.SystemProcessFactory;
 import com.streamsets.datacollector.validation.Issue;
+import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.PipelineUtils;
@@ -70,12 +72,15 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -97,6 +102,7 @@ public class ClusterProviderImpl implements ClusterProvider {
   static final Pattern YARN_APPLICATION_ID_REGEX = Pattern.compile("\\s(application_[0-9]+_[0-9]+)(\\s|$)");
   static final Pattern MESOS_DRIVER_ID_REGEX = Pattern.compile("\\s(driver-[0-9]+-[0-9]+)(\\s|$)");
   static final Pattern NO_VALID_CREDENTIALS = Pattern.compile("(No valid credentials provided.*)");
+  static final String CLUSTER_DPM_APP_TOKEN = "cluster-application-token.txt";
   public static final String CLUSTER_TYPE = "CLUSTER_TYPE";
   public static final String CLUSTER_TYPE_MESOS = "mesos";
   public static final String CLUSTER_TYPE_MAPREDUCE = "mr";
@@ -256,6 +262,7 @@ public class ClusterProviderImpl implements ClusterProvider {
 
   private void rewriteProperties(
       File sdcPropertiesFile,
+      File etcStagingDir,
       Map<String, String> sourceConfigs,
       Map<String, String> sourceInfo,
       String clusterToken,
@@ -267,6 +274,7 @@ public class ClusterProviderImpl implements ClusterProvider {
     try {
       sdcInStream = new FileInputStream(sdcPropertiesFile);
       sdcProperties.load(sdcInStream);
+      copyDpmTokenIfRequired(sdcProperties, etcStagingDir);
       sdcProperties.setProperty(RuntimeModule.PIPELINE_EXECUTION_MODE_KEY, ExecutionMode.SLAVE.name());
       sdcProperties.setProperty(WebServerTask.REALM_FILE_PERMISSION_CHECK, "false");
       sdcProperties.remove(RuntimeModule.DATA_COLLECTOR_BASE_HTTP_URL);
@@ -720,7 +728,8 @@ public class ClusterProviderImpl implements ClusterProvider {
           throw new IllegalStateException("HDFS/S3 Checkpoint configuration directory is required");
         }
       }
-      rewriteProperties(sdcPropertiesFile, sourceConfigs, sourceInfo, clusterToken, Optional.fromNullable(mesosURL));
+      rewriteProperties(sdcPropertiesFile, etcDir, sourceConfigs, sourceInfo, clusterToken, Optional.fromNullable
+          (mesosURL));
       TarFileCreator.createTarGz(etcDir, etcTarGz);
     } catch (RuntimeException ex) {
       String msg = errorString("serializing etc directory: {}", ex);
@@ -871,6 +880,63 @@ public class ClusterProviderImpl implements ClusterProvider {
       }
     } finally {
       process.cleanup();
+    }
+  }
+
+  @VisibleForTesting
+  void copyDpmTokenIfRequired(Properties sdcProps, File etcStagingDir) throws IOException {
+    String configFiles = sdcProps.getProperty(Configuration.CONFIG_INCLUDES);
+    if (configFiles != null) {
+      for (String include : Splitter.on(",").trimResults().omitEmptyStrings().split(configFiles)) {
+        File file = new File(etcStagingDir, include);
+        try (Reader reader = new FileReader(file)) {
+          Properties includesDpmProps = new Properties();
+          includesDpmProps.load(reader);
+          if (copyDpmTokenIfEnabled(includesDpmProps, etcStagingDir, include)) {
+            break;
+          }
+        }
+      }
+    } else { //config.includes won't be there for parcels installation, all configs in sdc.properties
+      copyDpmTokenIfEnabled(sdcProps, etcStagingDir, null);
+    }
+  }
+
+  private boolean copyDpmTokenIfEnabled(Properties props, File etcStagingDir, String include) throws IOException {
+    Object isDPMEnabled = props.get(RemoteSSOService.DPM_ENABLED);
+    if (isDPMEnabled != null) {
+      if (Boolean.parseBoolean(((String) isDPMEnabled).trim())) {
+        copyDpmTokenIfAbsolute(props, etcStagingDir);
+        if (include != null) {
+          try (OutputStream outputStream = new FileOutputStream(new File(etcStagingDir, include))) {
+            props.store(outputStream, null);
+          }
+        }
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private void copyDpmTokenIfAbsolute(Properties includesDpmProps, File etcStagingDir) throws IOException {
+    String dpmTokenFile = includesDpmProps.getProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG);
+    Configuration.setFileRefsBaseDir(etcStagingDir);
+    Configuration.FileRef fileRef = new Configuration.FileRef(dpmTokenFile);
+    String tokenFile = fileRef.getUnresolvedValueWithoutDelimiter();
+    if (Paths.get(tokenFile).isAbsolute()) {
+      LOG.info("Copying application token from absolute location {} to etc's staging dir: {}",
+          tokenFile,
+          etcStagingDir
+      );
+      try (InputStream inStream = new FileInputStream((tokenFile))) {
+        try (OutputStream out = new FileOutputStream(new File(etcStagingDir, CLUSTER_DPM_APP_TOKEN))) {
+          IOUtils.copy(inStream, out);
+        }
+      }
+      // set the property
+      includesDpmProps.setProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG,
+          fileRef.getDelimiter() + CLUSTER_DPM_APP_TOKEN + fileRef.getDelimiter()
+      );
     }
   }
 

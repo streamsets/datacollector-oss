@@ -32,6 +32,8 @@ import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreTask;
+import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 
@@ -39,13 +41,21 @@ import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.mockito.Mockito;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,6 +68,8 @@ import java.util.regex.Pattern;
 
 public class TestClusterProviderImpl {
 
+  @Rule
+  public TemporaryFolder tempFolder= new TemporaryFolder();
   private File tempDir;
   private File providerTemp;
   private File etcDir;
@@ -420,6 +432,92 @@ public class TestClusterProviderImpl {
             "<masked>/bootstrap-lib/cluster/streamsets-datacollector-cluster-bootstrap-1.7.0.0-SNAPSHOT.jar"},
         MockSystemProcess.args.toArray()
     );
+  }
+
+  @Test
+  public void testCopyDpmToken() throws Exception {
+    Properties sdcProperties = new Properties();
+    sdcProperties.put(Configuration.CONFIG_INCLUDES, "dpm-test.properties");
+    File etcDir = tempFolder.newFolder();
+    Properties dpmProperties = new Properties();
+    dpmProperties.setProperty("foo", "fooVal");
+    dpmProperties.setProperty(RemoteSSOService.DPM_ENABLED, "true");
+    File appTokenFile = tempFolder.newFile();
+    try (PrintWriter out = new PrintWriter(appTokenFile)) {
+      out.println("app-token-dummy-text");
+    }
+    // dpm enabled and app token is absolute
+    Configuration.setFileRefsBaseDir(etcDir);
+    Configuration.FileRef fileRef = new Configuration.FileRef(appTokenFile.getAbsolutePath());
+    dpmProperties.setProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, fileRef.getDelimiter() +
+        fileRef.getUnresolvedValue() + fileRef.getDelimiter());
+    try (OutputStream out = new FileOutputStream(new File(etcDir, "dpm-test.properties"))) {
+      dpmProperties.store(out, null);
+    }
+    sparkProvider.copyDpmTokenIfRequired(sdcProperties, etcDir);
+    try (InputStream in = new FileInputStream(new File(etcDir, "dpm-test.properties"))) {
+      Properties gotProperties = new Properties();
+      gotProperties.load(in);
+      Assert.assertEquals("fooVal", gotProperties.getProperty("foo"));
+      Assert.assertEquals("true", gotProperties.getProperty(RemoteSSOService.DPM_ENABLED));
+      Assert.assertEquals(fileRef.getDelimiter() + ClusterProviderImpl.CLUSTER_DPM_APP_TOKEN + fileRef.getDelimiter(),
+          gotProperties.getProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG)
+      );
+      List<String> gotLines = Files.readAllLines(new File(etcDir, ClusterProviderImpl.CLUSTER_DPM_APP_TOKEN).toPath(),
+          Charset.defaultCharset()
+      );
+      Assert.assertEquals(1, gotLines.size());
+      Assert.assertEquals("app-token-dummy-text", gotLines.get(0));
+    }
+    // dpm not enabled
+    etcDir = tempFolder.newFolder();
+    dpmProperties = new Properties();
+    dpmProperties.setProperty("foo", "fooNewVal");
+    dpmProperties.setProperty(RemoteSSOService.DPM_ENABLED, "false");
+    try (OutputStream out = new FileOutputStream(new File(etcDir, "dpm-test.properties"))) {
+      dpmProperties.store(out, null);
+    }
+    sparkProvider.copyDpmTokenIfRequired(sdcProperties, etcDir);
+    try (InputStream in = new FileInputStream(new File(etcDir, "dpm-test.properties"))) {
+      Properties gotProperties = new Properties();
+      gotProperties.load(in);
+      Assert.assertEquals("fooNewVal", gotProperties.getProperty("foo"));
+      Assert.assertEquals("false", gotProperties.getProperty(RemoteSSOService.DPM_ENABLED));
+    }
+    // dpm enabled but token relative
+    etcDir = tempFolder.newFolder();
+    dpmProperties = new Properties();
+    dpmProperties.setProperty("foo", "fooDpmEnabledTokenRelative");
+    dpmProperties.setProperty(RemoteSSOService.DPM_ENABLED, "true");
+    dpmProperties.setProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, fileRef.getDelimiter() +
+        "relative_path_to_token.txt" + fileRef.getDelimiter());
+    try (OutputStream out = new FileOutputStream(new File(etcDir, "dpm-test.properties"))) {
+      dpmProperties.store(out, null);
+    }
+    sparkProvider.copyDpmTokenIfRequired(sdcProperties, etcDir);
+    try (InputStream in = new FileInputStream(new File(etcDir, "dpm-test.properties"))) {
+      Properties gotProperties = new Properties();
+      gotProperties.load(in);
+      Assert.assertEquals("fooDpmEnabledTokenRelative", gotProperties.getProperty("foo"));
+      Assert.assertEquals("true", gotProperties.getProperty(RemoteSSOService.DPM_ENABLED));
+      Assert.assertEquals(fileRef.getDelimiter() +
+              "relative_path_to_token.txt" + fileRef.getDelimiter(),
+          gotProperties.getProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG)
+      );
+    }
+    // all configs in sdc.properties (similar to parcels)
+    sdcProperties.remove(Configuration.CONFIG_INCLUDES);
+    sdcProperties.setProperty(RemoteSSOService.DPM_ENABLED, "true");
+    fileRef = new Configuration.FileRef(appTokenFile.getAbsolutePath());
+    sdcProperties.setProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, fileRef.getDelimiter() +
+        fileRef.getUnresolvedValue() + fileRef.getDelimiter());
+    sparkProvider.copyDpmTokenIfRequired(sdcProperties, etcDir);
+    Assert.assertEquals("true", sdcProperties.getProperty(RemoteSSOService.DPM_ENABLED));
+    Assert.assertEquals(
+        fileRef.getDelimiter() +
+            ClusterProviderImpl.CLUSTER_DPM_APP_TOKEN + fileRef.getDelimiter(),
+        sdcProperties.getProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG));
+
   }
 
 
