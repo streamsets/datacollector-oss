@@ -519,7 +519,7 @@ public class PipelineStoreResource {
       envelope.put("pipelineRules", BeanHelper.wrapRuleDefinitions(ruleDefinitions));
 
       return Response.ok().
-        header("Content-Disposition", "attachment; filename=" + name + ".json").
+        header("Content-Disposition", "attachment; filename=\"" + name + ".json\"").
         type(MediaType.APPLICATION_JSON).entity(envelope).build();
     } else
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(data).build();
@@ -751,7 +751,7 @@ public class PipelineStoreResource {
 
     if (attachment) {
       return Response.ok().
-          header("Content-Disposition", "attachment; filename=" + name + ".json").
+          header("Content-Disposition", "attachment; filename=\"" + name + ".json\"").
           type(MediaType.APPLICATION_JSON).entity(pipelineEnvelope).build();
     } else {
       return Response.ok().
