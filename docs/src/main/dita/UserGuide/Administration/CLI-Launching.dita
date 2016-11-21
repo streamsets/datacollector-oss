@@ -14,15 +14,14 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_kpw_mdt_qt">
-  <title>Using the Command Line Interface</title>
+  <title>Using the Cli Command</title>
   <conbody>
-    <p><indexterm>command line interface<indexterm>using</indexterm></indexterm>Call the <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> command
-      line interface from the following location:</p>
+    <p><indexterm>command line interface<indexterm>cli command</indexterm></indexterm>Call the
+        <codeph>cli</codeph> command from the following location:</p>
     <p>
       <codeblock>$SDC_DIST/bin/</codeblock>
     </p>
-    <p>Use the following command as the base for all CLI
+    <p>Use the following command as the base for all <codeph>cli</codeph>
       commands:<codeblock>$SDC_DIST/bin/streamsets cli \
 (-U &lt;sdcURL> | --url &lt;sdcURL>) \
 [(-a &lt;sdcAuthType> | --auth-type &lt;sdcAuthType>)] \

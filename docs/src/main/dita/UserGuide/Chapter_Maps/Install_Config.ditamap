@@ -166,5 +166,10 @@
     <shortdesc/>
    </topicmeta>
    </topicref>
+  <topicref href="../Install_Config/CreateAnotherDC.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
  </topicref>
 </map>

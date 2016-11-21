@@ -14,14 +14,13 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_zrc_qch_xw">
- <title>Java Configuration Options for the Command Line</title>
+ <title>Java Configuration Options for the Cli Command</title>
  <shortdesc>Use the SDC_CLI_JAVA_OPTS environment variable to modify Java configuration options for
-        the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        command line interface.</shortdesc>
+        the <codeph>cli</codeph> command.</shortdesc>
  <conbody>
   <p><indexterm>SDC_CLI_JAVA_OPTS<indexterm>Java environment variable</indexterm></indexterm>For
-            example, to set the <codeph>-Djavax.net.ssl.trustStore</codeph> option for the command
-            line when using <ph
+            example, to set the <codeph>-Djavax.net.ssl.trustStore</codeph> option for the
+                <codeph>cli</codeph> command when using <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             with HTTPS, run the following command:</p>
         <codeblock>export SDC_CLI_JAVA_OPTS="-Djavax.net.ssl.trustStore=&lt;path to truststore file> ${SDC_CLI_JAVA_OPTS}"</codeblock>
