@@ -138,7 +138,6 @@ public class OracleCDCSource extends BaseSource {
   private PreparedStatement getOldestSCN;
   private PreparedStatement getLatestSCN;
   private CallableStatement startLogMnr;
-  private CallableStatement endLogMnr;
   private PreparedStatement dateStatement;
   private PreparedStatement tsStatement;
   private PreparedStatement numericFormat;
@@ -240,14 +239,6 @@ public class OracleCDCSource extends BaseSource {
       LOG.error("Error while attempting to produce records", ex);
       errorRecordHandler.onError(JDBC_44, Throwables.getStackTraceAsString(ex));
     } finally {
-      try {
-        if (startedLogMiner) {
-          endLogMnr.execute();
-          startedLogMiner = false;
-        }
-      } catch (SQLException ex) {
-        LOG.warn("Error while stopping LogMiner", ex);
-      }
       if (dateChanges != null) {
         try {
           dateChanges.close();
@@ -572,7 +563,6 @@ public class OracleCDCSource extends BaseSource {
     produceSelectChanges = getSelectChangesStatement();
     startLogMnr = connection.prepareCall(logMinerProcedure);
     LOG.debug("Redo select query = " + produceSelectChanges.toString());
-    endLogMnr = connection.prepareCall("BEGIN DBMS_LOGMNR.END_LOGMNR; END;");
   }
 
   private PreparedStatement getSelectChangesStatement() throws SQLException {
@@ -693,8 +683,17 @@ public class OracleCDCSource extends BaseSource {
   @Override
   public void destroy() {
 
+    if (startedLogMiner) {
+      try (CallableStatement endLogMnr = connection.prepareCall("BEGIN DBMS_LOGMNR.END_LOGMNR; END;")) {
+        endLogMnr.execute();
+        startedLogMiner = false;
+      } catch (SQLException ex) {
+        LOG.warn("Error while stopping LogMiner", ex);
+      }
+    }
+
     // Close all statements
-    closeStatements(dateStatement, endLogMnr, startLogMnr, produceSelectChanges, getLatestSCN, getOldestSCN);
+    closeStatements(dateStatement, startLogMnr, produceSelectChanges, getLatestSCN, getOldestSCN);
 
     // Connection if it exists
     try {
