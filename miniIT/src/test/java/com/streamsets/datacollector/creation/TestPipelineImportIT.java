@@ -21,6 +21,7 @@
 package com.streamsets.datacollector.creation;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.common.io.Resources;
@@ -76,6 +77,14 @@ public class TestPipelineImportIT {
               failedReason.append(",\n");
             }
             failedReason.append(issue.getMessage());
+            if (!Strings.isNullOrEmpty(issue.getConfigGroup())) {
+              failedReason.append(", configGroup: ");
+              failedReason.append(issue.getConfigGroup());
+            }
+            if (!Strings.isNullOrEmpty(issue.getConfigName())) {
+              failedReason.append(", configName: ");
+              failedReason.append(issue.getConfigName());
+            }
             thisFailed = true;
           }
           if (thisFailed) {
