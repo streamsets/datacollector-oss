@@ -32,7 +32,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
     version = 1,
     label = "Google Cloud Bigtable",
     description = "Writes data to Google Cloud Bigtable",
-    //    icon = "bigtable.png",
+    icon = "bigtable.png",
     privateClassLoader = true,
     onlineHelpRefUrl = "index.html#Destinations/Bigtable.html#task_op4_zmq_tx"
 )
