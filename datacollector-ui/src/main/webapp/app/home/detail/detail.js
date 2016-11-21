@@ -381,6 +381,9 @@ angular
           size: '',
           backdrop: 'static',
           resolve: {
+            customRepoUrl: function () {
+              return $rootScope.$storage.customPackageManagerRepoUrl;
+            },
             libraryList: function () {
               return [{
                 id: $scope.detailPaneConfig.library,

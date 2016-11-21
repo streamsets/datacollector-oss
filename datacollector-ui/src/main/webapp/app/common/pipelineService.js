@@ -144,6 +144,17 @@ angular.module('dataCollectorApp.common')
     };
 
     /**
+     * Returns true if DPM Statistics library installed otherwise false
+     */
+    this.isDPMStatisticsLibraryInstalled = function() {
+      var statsLibraryDefn = _.find(self.stageDefinitions, function (stage) {
+        return stage.library === 'streamsets-datacollector-stats-lib';
+      });
+
+      return statsLibraryDefn !== undefined;
+    };
+
+    /**
      * Returns Pipeline Config Definition.
      *
      * @returns {*|pipelineConfigDefinition|$scope.pipelineConfigDefinition}

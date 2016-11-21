@@ -24,7 +24,9 @@
 
 angular
   .module('dataCollectorApp')
-  .controller('EnableDPMModalInstanceController', function ($scope, $modalInstance, api, authService, configuration) {
+  .controller('EnableDPMModalInstanceController', function (
+    $rootScope, $scope, $modalInstance, $modalStack, $modal, api, authService, configuration, pipelineService
+  ) {
     angular.extend($scope, {
       common: {
         errors: []
@@ -39,6 +41,7 @@ angular
       isEnableInProgress: false,
       dpmEnabled: false,
       isRestartInProgress: false,
+      isStatsLibraryInstalled: true,
 
       onEnableDPMSubmit: function() {
         $scope.common.errors = [];
@@ -62,6 +65,30 @@ angular
 
       cancel: function() {
         $modalInstance.dismiss('cancel');
+      },
+
+      /**
+       * Callback function on clicking install Statistics library link
+       */
+      onInstallStatisticsLibraryClick: function() {
+        $modalStack.dismissAll();
+        $modal.open({
+          templateUrl: 'app/home/packageManager/install/install.tpl.html',
+          controller: 'InstallModalInstanceController',
+          size: '',
+          backdrop: 'static',
+          resolve: {
+            customRepoUrl: function () {
+              return $rootScope.$storage.customPackageManagerRepoUrl;
+            },
+            libraryList: function () {
+              return [{
+                id: 'streamsets-datacollector-stats-lib',
+                label: 'Statistics'
+              }];
+            }
+          }
+        });
       }
     });
 
@@ -69,5 +96,7 @@ angular
     if (currentDPMLabels && currentDPMLabels.length) {
       $scope.dpmInfoModel.labels = currentDPMLabels;
     }
+
+    $scope.isStatsLibraryInstalled = pipelineService.isDPMStatisticsLibraryInstalled();
 
   });
