@@ -97,12 +97,15 @@ public class CompressionDataParser extends AbstractDataParser {
         }
       }
       if (!eof) {
+        String offsetBeforeRead = compressionInput.getStreamPosition(getOffset());
         record = parser.parse();
         if (record == null) {
           // closing the parser will close the underlying stream. Do not close.
           parser = null;
           // for subsequent entries offset always starts at ZERO
           offset = ZERO;
+        } else {
+          compressionInput.wrapRecordHeaders(record.getHeader(), offsetBeforeRead);
         }
       }
     }
@@ -142,6 +145,8 @@ public class CompressionDataParser extends AbstractDataParser {
     public String getStreamPosition(String offset) throws IOException;
 
     public String wrapRecordId(String recordId);
+
+    public void wrapRecordHeaders(Record.Header header, String offset);
 
     public void close() throws IOException;
   }
@@ -209,6 +214,11 @@ public class CompressionDataParser extends AbstractDataParser {
       }
 
       @Override
+      public void wrapRecordHeaders(Record.Header header, String offset) {
+        //NO OP
+      }
+
+      @Override
       public void close() {
         // NO-OP
       }
@@ -229,7 +239,7 @@ public class CompressionDataParser extends AbstractDataParser {
       public CompressorInput(InputStream inputStream) throws IOException {
         try {
           this.inputStream = new CompressorStreamFactory(DECOMPRESS_UNTIL_EOF).createCompressorInputStream(
-            new BufferedInputStream(inputStream));
+              new BufferedInputStream(inputStream));
         } catch (CompressorException e) {
           throw new IOException(e);
         }
@@ -258,6 +268,11 @@ public class CompressionDataParser extends AbstractDataParser {
       }
 
       @Override
+      public void wrapRecordHeaders(Record.Header header, String offset) {
+        //NO OP
+      }
+
+      @Override
       public void close() throws IOException {
         if(inputStream != null) {
           inputStream.close();
@@ -270,6 +285,10 @@ public class CompressionDataParser extends AbstractDataParser {
 
       public static final String FILE_NAME = "fileName";
       public static final String FILE_OFFSET = "fileOffset";
+
+      public static final String FILE_PATH_INSIDE_ARCHIVE = "filePathInsideArchive";
+      public static final String FILE_NAME_INSIDE_ARCHIVE = "fileNameInsideArchive";
+      public static final String FILE_OFFSET_INSIDER_ARCHIVE = "fileOffsetInsideArchive";
 
       private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
@@ -314,7 +333,7 @@ public class CompressionDataParser extends AbstractDataParser {
           Map<String, Object> archiveInputOffset = OBJECT_MAPPER.readValue(wrappedOffset, Map.class);
           try {
             archiveInputStream = new ArchiveStreamFactory().createArchiveInputStream(
-              new BufferedInputStream(compressionInput.getNextInputStream()));
+                new BufferedInputStream(compressionInput.getNextInputStream()));
           } catch (ArchiveException e) {
             throw new IOException(e);
           }
@@ -351,6 +370,19 @@ public class CompressionDataParser extends AbstractDataParser {
           return recordId + PATH_SEPARATOR + currentEntry.getName();
         }
         return recordId;
+      }
+
+      @Override
+      public void wrapRecordHeaders(Record.Header header, String offset) {
+        if (currentEntry != null) {
+          String fullPathToFile = currentEntry.getName();
+          int lastPathIndex = fullPathToFile.lastIndexOf("/");
+          String fileName = fullPathToFile.substring(lastPathIndex + 1);
+          String filePath = (lastPathIndex != -1)? fullPathToFile.substring(0, lastPathIndex) : "";
+          header.setAttribute(FILE_PATH_INSIDE_ARCHIVE, filePath);
+          header.setAttribute(FILE_NAME_INSIDE_ARCHIVE, fileName);
+          header.setAttribute(FILE_OFFSET_INSIDER_ARCHIVE, offset);
+        }
       }
 
       @Override

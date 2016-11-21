@@ -20,7 +20,9 @@
 package com.streamsets.pipeline.lib.parser;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.Compression;
+import com.streamsets.pipeline.sdk.RecordCreator;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveOutputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
@@ -75,8 +77,8 @@ public class TestCompressionInputBuilder {
 
     //create compression input
     CompressionDataParser.CompressionInputBuilder compressionInputBuilder =
-      new CompressionDataParser.CompressionInputBuilder(Compression.COMPRESSED_FILE, null,
-        new ByteArrayInputStream(bOut.toByteArray()), "0");
+        new CompressionDataParser.CompressionInputBuilder(Compression.COMPRESSED_FILE, null,
+            new ByteArrayInputStream(bOut.toByteArray()), "0");
     CompressionDataParser.CompressionInput input = compressionInputBuilder.build();
 
     //verify
@@ -154,7 +156,7 @@ public class TestCompressionInputBuilder {
     //create compression input
     FileInputStream fileInputStream = new FileInputStream(new File(dir, "myArchive"));
     CompressionDataParser.CompressionInputBuilder compressionInputBuilder =
-      new CompressionDataParser.CompressionInputBuilder(Compression.ARCHIVE, "*.txt", fileInputStream, "0");
+        new CompressionDataParser.CompressionInputBuilder(Compression.ARCHIVE, "*.txt", fileInputStream, "0");
     CompressionDataParser.CompressionInput input = compressionInputBuilder.build();
 
     // before reading
@@ -169,7 +171,6 @@ public class TestCompressionInputBuilder {
     Assert.assertEquals("0", archiveInputOffset.get("fileOffset"));
 
     Assert.assertEquals("0", input.getStreamPosition(wrappedOffset));
-
     // read and check wrapped offset
     BufferedReader reader = new BufferedReader(
         new InputStreamReader(input.getNextInputStream()));
@@ -179,10 +180,34 @@ public class TestCompressionInputBuilder {
     Assert.assertNotNull(archiveInputOffset);
     Assert.assertEquals("file-0.txt", archiveInputOffset.get("fileName"));
     Assert.assertEquals("4567", archiveInputOffset.get("fileOffset"));
+    checkHeader(input, "file-0.txt", input.getStreamPosition(wrappedOffset));
 
     String recordIdPattern = "myFile/file-0.txt";
     Assert.assertEquals(recordIdPattern, input.wrapRecordId("myFile"));
 
+  }
+
+  void checkHeader(CompressionDataParser.CompressionInput input, String fileName, String offset) throws Exception {
+    Record record =  RecordCreator.create();
+    Record.Header header = record.getHeader();
+    input.wrapRecordHeaders(header, offset);
+    Assert.assertNotNull(
+        record.getHeader().getAttribute(CompressionDataParser.CompressionInputBuilder.ArchiveInput.FILE_PATH_INSIDE_ARCHIVE)
+    );
+    Assert.assertNotNull(
+        record.getHeader().getAttribute(CompressionDataParser.CompressionInputBuilder.ArchiveInput.FILE_NAME_INSIDE_ARCHIVE)
+    );
+    Assert.assertEquals(
+        record.getHeader().getAttribute(CompressionDataParser.CompressionInputBuilder.ArchiveInput.FILE_NAME_INSIDE_ARCHIVE),
+        fileName
+    );
+    Assert.assertNotNull(
+        record.getHeader().getAttribute(CompressionDataParser.CompressionInputBuilder.ArchiveInput.FILE_OFFSET_INSIDER_ARCHIVE)
+    );
+    Assert.assertEquals(
+        record.getHeader().getAttribute(CompressionDataParser.CompressionInputBuilder.ArchiveInput.FILE_OFFSET_INSIDER_ARCHIVE),
+        offset
+    );
   }
 
 }
