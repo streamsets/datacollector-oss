@@ -160,6 +160,34 @@ public class TestStringEL {
 
     Assert.assertEquals("The StreamSets", eval.eval(variables,
       "${str:truncate(\"The StreamSets Inc\", 14)}", String.class));
+
+    Assert.assertEquals("abc", eval.eval(variables,
+        "${str:truncate(\"abcd\", 3)}", String.class));
+
+    // endIndex is 0. it should return empty string
+    Assert.assertEquals("", eval.eval(variables,
+        "${str:truncate(\"abcd\", 0)}", String.class));
+
+    // if original string is empty, it should return empty
+    Assert.assertEquals("", eval.eval(variables,
+        "${str:truncate(\"\", 3)}", String.class));
+
+    // string is shorter than endIndex. It should return the original string without truncate
+    Assert.assertEquals("abcd", eval.eval(variables,
+        "${str:truncate(\"abcd\", 10)}", String.class));
+
+    Assert.assertEquals("", eval.eval(variables,
+        "${str:truncate(null, 10)}", String.class));
+
+    Assert.assertEquals("", eval.eval(variables,
+        "${str:truncate(\"\", 0)}", String.class));
+
+    try {
+      eval.eval(variables, "${str:truncate(\"abcd\", -4)}", String.class);
+      Assert.fail("Should throw ELEvalException for negative endIndex");
+    } catch (ELEvalException e) {
+      //pass
+    }
   }
 
   @Test

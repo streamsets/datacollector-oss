@@ -23,6 +23,8 @@ import com.streamsets.pipeline.api.ElFunction;
 import com.streamsets.pipeline.api.ElParam;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -30,6 +32,7 @@ import java.util.regex.Pattern;
 
 public class StringEL {
   public static final String MEMOIZED = "memoized";
+  private static final Logger LOG = LoggerFactory.getLogger(StringEL.class);
 
   private StringEL() {
   }
@@ -116,6 +119,16 @@ public class StringEL {
   public static String truncate(
     @ElParam("string") String string,
     @ElParam("endIndex") int endIndex) {
+    if (string == null){
+      return "";
+    }
+    if (endIndex < 0) {
+      throw new IllegalArgumentException(String.format("Unable to truncate '%s' at index %s", string, endIndex));
+    }
+    if (endIndex > string.length()){
+      LOG.warn("Attempted to truncate '{}' at index {}. Returning '{}'", string, endIndex, string);
+      return string;
+    }
     return string.substring(0, endIndex);
   }
 
