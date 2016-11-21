@@ -22,7 +22,6 @@ package com.streamsets.pipeline.lib.xml;
 import com.google.common.base.Strings;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.api.impl.XMLChar;
 import com.streamsets.pipeline.lib.io.ObjectLengthException;
 import com.streamsets.pipeline.lib.xml.xpath.Constants;
 import com.streamsets.pipeline.lib.xml.xpath.MatchStatus;
@@ -54,6 +53,7 @@ public class StreamingXmlParser {
   private final Reader reader;
   private final XPathMatchingEventReader xmlEventReader;
   private String recordElement;
+  private String xpathPrefix;
   private boolean closed;
 
   // reads a full XML document as a single Field
@@ -84,21 +84,25 @@ public class StreamingXmlParser {
       throws IOException, XMLStreamException {
     this.reader = reader;
     if (Strings.isNullOrEmpty(recordElement)) {
-      recordElement = Constants.ROOT_ELEMENT_PATH;
+      this.recordElement = Constants.ROOT_ELEMENT_PATH;
+    } else {
+      this.recordElement = recordElement;
     }
-    this.recordElement = recordElement;
+    this.xpathPrefix = "";
     XMLInputFactory factory = XMLInputFactory.newFactory();
     factory.setProperty("javax.xml.stream.isCoalescing", true);
-    this.xmlEventReader = new XPathMatchingEventReader(factory.createXMLEventReader(reader), recordElement, namespaces);
+    this.xmlEventReader = new XPathMatchingEventReader(factory.createXMLEventReader(reader), this.recordElement, namespaces);
     while (hasNext(xmlEventReader) && !peek(xmlEventReader).isEndDocument() && !peek(xmlEventReader).isStartElement()) {
       read(xmlEventReader);
     }
     if (recordElement == null || recordElement.isEmpty()) {
       StartElement startE = (StartElement) peek(xmlEventReader);
       this.recordElement = startE.getName().getLocalPart();
+      this.xpathPrefix += "/" + this.recordElement;
     } else {
       //consuming root
-      read(xmlEventReader);
+      StartElement startE = (StartElement) read(xmlEventReader);
+      this.xpathPrefix += "/" + startE.getName().getLocalPart() + "/" + this.recordElement;
     }
     if (initialPosition > 0) {
       //fastforward to initial position
@@ -156,6 +160,10 @@ public class StreamingXmlParser {
 
   public long getReaderPosition() throws XMLStreamException {
     return (hasNext(xmlEventReader)) ? peek(xmlEventReader).getLocation().getCharacterOffset() : -1;
+  }
+
+  public String getXpathPrefix() {
+    return xpathPrefix;
   }
 
   private boolean isStartOfRecord(XMLEvent event, int depth) {
