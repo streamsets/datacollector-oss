@@ -54,7 +54,7 @@ public class SparkProcessorConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Spark Transformer class",
+      label = "Spark Transformer Class",
       description = "Class that implements SparkTransformer API.",
       group = "SPARK",
       displayPosition = 30
@@ -64,7 +64,7 @@ public class SparkProcessorConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.LIST,
-      label = "Init method arguments",
+      label = "Init Method Arguments",
       description = "Arguments to pass to the init method of the Transformer. " +
           "Use to make external connections or to read configuration or pre-existing data from external systems.",
       elDefs = VaultEL.class,

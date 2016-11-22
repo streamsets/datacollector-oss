@@ -29,11 +29,11 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 
 @StageDef(
     version = 1,
-    label = "Spark Processor",
+    label = "Spark Evaluator",
     description = "Process Records in Spark",
     icon = "spark-logo-hd.png",
     execution = ExecutionMode.STANDALONE,
-    onlineHelpRefUrl = "",
+    onlineHelpRefUrl = "index.html#Processors/Spark.html#task_g1p_gqn_zx",
     privateClassLoader = true
 )
 @GenerateResourceBundle
