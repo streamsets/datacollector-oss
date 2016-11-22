@@ -30,17 +30,17 @@ import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.Groups;
 
-@StageDef(
-    version = 1,
-    label = "Multi table JDBC Consumer",
-    description = "Reads data from a JDBC source using table names.",
-    icon = "rdbms.png",
-    execution = ExecutionMode.STANDALONE,
-    recordsByRef = true,
-    resetOffset = true,
-    //TODO
-    onlineHelpRefUrl = "index.html#Origins"
-)
+//@StageDef(
+//    version = 1,
+//    label = "Multi table JDBC Consumer",
+//    description = "Reads data from a JDBC source using table names.",
+//    icon = "rdbms.png",
+//    execution = ExecutionMode.STANDALONE,
+//    recordsByRef = true,
+//    resetOffset = true,
+//    //TODO
+//    onlineHelpRefUrl = "index.html#Origins"
+//)
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
 public final class TableJdbcDSource extends DSource {
