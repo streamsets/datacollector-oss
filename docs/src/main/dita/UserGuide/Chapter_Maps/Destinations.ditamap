@@ -50,6 +50,20 @@
    <topicref href="../Destinations/Cassandra-DataTypes.dita"/>
    <topicref href="../Destinations/Cassandra-Configuring.dita"/>
   </topicref>
+  <topicref href="../Destinations/DataLakeStore.dita" chunk="to-content"> 
+   <topicmeta>
+   <shortdesc/>
+  </topicmeta>
+   <topicref href="../Destinations/DataLakeStore-Prerequisites.dita">
+    <topicref href="../Destinations/DataLakeStore-Pre-Step1.dita"/>
+    <topicref href="../Destinations/DataLakeStore-Pre-Step2.dita"/>
+    <topicref href="../Destinations/DataLakeStore-Pre-Step3.dita"/>
+   </topicref>
+   <topicref href="../Destinations/DataLakeStore-DirTemplates.dita"/>
+   <topicref href="../Destinations/DataLakeStore-TimeBasis.dita"/>
+   <topicref href="../Destinations/DataLakeStore-DataFormats.dita"/>
+   <topicref href="../Destinations/DataLakeStore-Configuring.dita"/>
+  </topicref>
   <topicref href="../Destinations/Elasticsearch.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

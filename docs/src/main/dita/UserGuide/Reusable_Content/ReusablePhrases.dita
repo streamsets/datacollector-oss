@@ -1420,7 +1420,7 @@ input_stream.read()</codeblock></p>
             <p id="DirectoryTemplate_DL">You can use the following elements in a directory template:<dl>
                         <dlentry>
                               <dt>Constants</dt>
-                              <dd>You can use any constant, such as "output" or "lateRecords."</dd>
+                              <dd>You can use any constant, such as "output".</dd>
                         </dlentry>
                         <dlentry>
                               <dt>Datetime Variables</dt>

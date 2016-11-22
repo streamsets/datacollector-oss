@@ -22,6 +22,7 @@
       types of destinations in a pipeline: <ul id="ul_mxz_jxm_jq">
         <li>Amazon S3 - Writes data to Amazon S3. </li>
         <li>Cassandra - Writes data to a Cassandra cluster.</li>
+        <li>Data Lake Store - Writes data to the Azure Data Lake Store.</li>
         <li>Elasticsearch - Writes data to an Elasticsearch cluster.</li>
         <li>Flume - Writes data to a Flume source.</li>
         <li>Hadoop FS - Writes data to the Hadoop Distributed File System (HDFS).</li>

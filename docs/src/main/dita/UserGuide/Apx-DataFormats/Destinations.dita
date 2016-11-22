@@ -68,6 +68,21 @@
                                                   Applicable * * *</entry>
                                                   <entry/>
                                                 </row>
+            <row>
+              <entry>Data Lake Store</entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_esg_j4k_1y"
+                /></entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_dvz_j4k_1y"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_sbb_k4k_1y"
+                /></entry>
+              <entry/>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_ltc_k4k_1y"
+                /></entry>
+              <entry/>
+            </row>
                                                 <row>
                                                   <entry>Elasticsearch</entry>
                                                   <entry namest="c2" nameend="c9">* * * Not

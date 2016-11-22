@@ -2332,7 +2332,7 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta" id="1stStageLib-ReqField-ErrorH"
+                    <draft-comment author="Loretta"
                             ><uicontrol>1stStep-StageLib-ReqField-EHandling</uicontrol> - Use this
                         step for destinations with stage library, req fields, and error handling. –
                         Some rows are used by Hive Metastore. Also using these for executors that
@@ -3257,7 +3257,8 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>FS-OutputFiles</uicontrol> - Hadoop
-                        FS, Local FS and MapR FS conref rows/partial rows in the table </draft-comment>
+                        FS, Local FS and MapR FS conref rows/partial rows in the table. Data Lake
+                        Store also steals rows and entries from here. </draft-comment>
                 </cmd>
             </step>
             <step id="FS-OutputFiles">

@@ -85,6 +85,11 @@
                                     </ul></p></entry>
                         </row>
                         <row>
+                            <entry>streamsets-datacollector-azure-lib</entry>
+                            <entry>For Microsoft Azure Data Lake Store.<p>Includes the Data Lake
+                                    Store destination.</p></entry>
+                        </row>
+                        <row>
                             <entry>streamsets-datacollector-basic-lib</entry>
                             <entry>Installs automatically with the core installation.<p>Includes the
                                     following origins:<ul
