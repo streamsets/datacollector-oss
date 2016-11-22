@@ -65,6 +65,7 @@ public class SparkProcessor extends SingleLaneProcessor {
   private transient JavaSparkContext jsc; // NOSONAR
 
   private ErrorRecordHandler errorRecordHandler = null;
+  private boolean transformerInited = false;
 
   public SparkProcessor(SparkProcessorConfigBean configBean) {
     this.configBean = configBean;
@@ -167,6 +168,8 @@ public class SparkProcessor extends SingleLaneProcessor {
       } catch (Exception ex) {
         issues.add(getContext().createConfigIssue(SPARK.name(), TRANSFORMER_CLASS, SPARK_05, configBean.transformerClass));
       }
+      // Even if init failed, we should call destroy to ensure that the transformer cleans up after itself.
+      transformerInited = true;
     }
   }
 
@@ -223,6 +226,13 @@ public class SparkProcessor extends SingleLaneProcessor {
 
   @Override
   public void destroy() {
+    if (transformer != null && transformerInited) {
+      try {
+        transformer.destroy();
+      } catch (Exception ex) {
+        LOG.warn("Transformer threw exception during destroy", ex);
+      }
+    }
     if (jsc != null) {
       jsc.stop();
     }
