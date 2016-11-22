@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_yjr_q1m_zx">
+ <title>Prerequisites</title>
+ <conbody>
+  <p>Before you run a pipeline that includes MapReduce executor, you must enable MapReduce executor
+            to submit a job. <draft-comment author="Loretta">Do I need to say YARN? Seems like
+                unnecessary detail if this works for you, Jarcec?</draft-comment></p>
+        <p>You can enable MapReduce executor to submit a job in several different ways. Perform
+                <u>one</u> of the following tasks to enable the executor to submit jobs: <dl>
+                <dlentry>
+                    <dt>Configure the Hadoop Minimum User ID property, min.user.id</dt>
+                    <dd>The min.user.id property is set to 1000 by default. To allow job
+                            submission:<ol id="ol_wpb_bcm_zx">
+                            <li>Verify the user ID being used by the <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                /> user, typically named "sdc".</li>
+                            <li>Configure the min.user.id property to equal to or lower than the <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                /> user ID.</li>
+                        </ol></dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Configure the Hadoop Allowed System Users property,
+                        allowed.system.users</dt>
+                    <dd>The allowed.system.users property lists allowed user names. To allow job
+                        submission, add the <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> user name, typically "sdc", to the list of allowed users.</dd>
+                </dlentry>
+                <dlentry>
+                    <dt>In the MapReduce executor stage, configure the MapReduce User property</dt>
+                    <dd>The MapReduce User property allows you to enter a user name for the stage to
+                        use when submitting jobs. Enter a user with an ID that is higher than the
+                        min.user.id property, or with a user name that is listed in the
+                        allowed.system.users property. </dd>
+                </dlentry>
+            </dl></p>
+ </conbody>
+</concept>
