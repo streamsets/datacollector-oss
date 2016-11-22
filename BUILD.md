@@ -30,7 +30,7 @@ To build the Data Collector you will need the following software :
 
 Prerequisites for Data Collector :
 
-If you're building master branch, then you need to install API module to your maven cache first before compiling Data Collector. Released versions
+If you're building master branch, then you need to install API and Plugin API modules to your maven cache first before compiling Data Collector. Released versions
 are published to public maven repositories and for them this step can be skipped. While Data Collector runs on Java 7, Java 8 is required for
 running integration tests.
 
@@ -38,7 +38,11 @@ running integration tests.
 
 `git clone http://github.com/streamsets/datacollector-api`
 
-- And install it to maven cache
+and
+
+`git clone http://github.com/streamsets/datacollector-plugin-api`
+
+- And install each of these to maven cache
 
 `mvn clean install -DskipTests`
 
