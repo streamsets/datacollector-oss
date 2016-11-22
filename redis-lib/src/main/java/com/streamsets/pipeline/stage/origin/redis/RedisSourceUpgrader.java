@@ -20,11 +20,11 @@
 
 package com.streamsets.pipeline.stage.origin.redis;
 
-import com.google.common.base.Joiner;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +42,11 @@ public class RedisSourceUpgrader implements StageUpgrader {
     switch (fromVersion) {
       case 1:
         upgradeV1toV2(configs);
+        if(toVersion == 2) {
+          break;
+        }
+      case 2:
+        upgradeV2toV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -70,5 +75,9 @@ public class RedisSourceUpgrader implements StageUpgrader {
 
     configs.addAll(configsToAdd);
     configs.removeAll(configsToRemove);
+  }
+
+  private void upgradeV2toV3(List<Config> configs) {
+    DataFormatUpgradeHelper.upgradeAvroParserWithSchemaRegistrySupport(configs);
   }
 }
