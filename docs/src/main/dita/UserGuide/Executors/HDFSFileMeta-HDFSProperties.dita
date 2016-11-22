@@ -19,7 +19,7 @@
   <p><indexterm>HDFS File Metadata executor<indexterm>using or adding HDFS
                 properties</indexterm></indexterm><indexterm>HDFS properties<indexterm>HDFS File
                     Metadata executor</indexterm></indexterm>You can configure the HDFS File
-            Metadata executor to use individual HDFS properties or HDFS configuration files:<dl>
+            Metadata executor to use HDFS configuration files and individual HDFS properties:<dl>
                 <dlentry>
                     <dt>HDFS configuration files</dt>
                     <dd>You can use the following HDFS configuration files with the HDFS File
@@ -42,9 +42,9 @@
                 </dlentry>
                 <dlentry>
                     <dt>Individual properties</dt>
-                    <dd>You can configure individual HDFS properties in the destination. To add an
-                        HDFS property, you specify the exact property name and the value. The HDFS
-                        File Metadata executor does not validate the property names or
+                    <dd>You can configure individual HDFS properties in the executor. To add an HDFS
+                        property, you specify the exact property name and the value. The HDFS File
+                        Metadata executor does not validate the property names or
                             values.<note>Individual properties override properties defined in the
                             HDFS configuration file. </note></dd>
                 </dlentry>

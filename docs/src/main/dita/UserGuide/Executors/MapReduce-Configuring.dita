@@ -94,10 +94,12 @@
                                             following configuration files:<ul id="ul_bhl_zfy_mx">
                                                 <li>core-site.xml</li>
                                                 <li>yarn-site.xml</li>
-                                                <li>mapreduce-site.xml<note>Properties in the
-                                                  configuration files are overridden by individual
-                                                  properties defined in this stage.</note></li>
-                                            </ul></p></entry>
+                                                <li>mapreduce-site.xml</li>
+                                            </ul></p><p>
+                                            <note>Properties in the configuration files are
+                                                overridden by individual properties defined in this
+                                                stage.</note>
+                                        </p></entry>
                                 </row>
                                 <row>
                                     <entry>MapReduce Configuration</entry>
@@ -109,14 +111,27 @@
                                     </entry>
                                 </row>
                                 <row>
+                                    <entry>MapReduce User <xref href="MapReduce-User.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_xqm_fjm_zx"
+                                        /></xref></entry>
+                                    <entry>
+                                        <p>The MapReduce user to use to connect to the external
+                                            system. When using this property, make sure the external
+                                            system is configured appropriately. </p>
+                                        <p>By default, the pipeline uses the Data Collector user.
+                                        </p>
+                                    </entry>
+                                </row>
+                                <row>
                                     <entry>Kerberos Authentication <xref
                                             href="MapReduce-Kerberos.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 placement="inline" id="image_a5x_jzn_vs"
                                         /></xref></entry>
-                                    <entry>Uses Kerberos credentials to connect to HDFS. <p>When
-                                            selected, uses the Kerberos principal and keytab defined
-                                            in the <ph
+                                    <entry>Uses Kerberos credentials to connect to the extpernal
+                                        system. <p>When selected, uses the Kerberos principal and
+                                            keytab defined in the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> configuration file,
                                                 <codeph>$SDC_CONF/sdc.properties</codeph>.
@@ -144,7 +159,9 @@
                             <tbody>
                                 <row>
                                     <entry>Job Name</entry>
-                                    <entry>Name of the job to execute.</entry>
+                                    <entry>Display name for the MapReduce job. <p>This name displays
+                                            in Hadoop web applications and other reporting tools
+                                            that list MapReduce jobs.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Job Type <xref href="MapReduce-Jobs.dita">
@@ -153,30 +170,23 @@
                                         /></xref></entry>
                                     <entry>Type of MapReduce job to run:<ul id="ul_llg_rrk_wx">
                                             <li>Custom - Use a custom job creator interface and
-                                                key-value pairs to define the job. </li>
-                                            <li>Configuration Object - Use a job configuration
-                                                object and key-value pairs to define the job.</li>
-                                            <li>Convert Avro to Parquet - Use a predefined Avro to
-                                                Parquet job.</li>
+                                                key-value pairs to define the job.</li>
+                                            <li>Configuration Object - Enter key-value pairs to
+                                                define the job.</li>
+                                            <li>Convert Avro to Parquet - Use a predefined job to
+                                                convert Avro files to Parquet.</li>
                                         </ul></entry>
                                 </row>
                                 <row>
                                     <entry>Custom JobCreator</entry>
-                                    <entry>MapReduce Job Creator interface to use. <draft-comment
-                                            author="Loretta">Jarcec: correct? Do we need to say
-                                            anything else about this? </draft-comment></entry>
-                                </row>
-                                <row>
-                                    <entry>Configuration Object Location<draft-comment
-                                            author="Loretta">This property isn't in yet - check
-                                            back.</draft-comment></entry>
-                                    <entry>Path to the configuration object to use. </entry>
+                                    <entry>MapReduce Job Creator interface to use for custom jobs. </entry>
                                 </row>
                                 <row>
                                     <entry>Job Configuration</entry>
                                     <entry>Key-value pairs of configuration properties to define the
-                                        job. Click the <uicontrol>Add</uicontrol> icon to add
-                                        additional properties. </entry>
+                                        job. You can use expressions in keys and values. <p>Click
+                                            the <uicontrol>Add</uicontrol> icon to add additional
+                                            properties. </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -205,8 +215,8 @@
                                         /></xref></entry>
                                     <entry>Expression that evaluates to the name and location of the
                                         Avro file to process. <p>By default, processes the file with
-                                            the name and location specified in the "filepath" field
-                                            of the event record.</p></entry>
+                                            the name and location specified in the filepath field of
+                                            the event record.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Keep Input File</entry>

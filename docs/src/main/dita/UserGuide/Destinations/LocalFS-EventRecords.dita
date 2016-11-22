@@ -19,7 +19,8 @@
         <p><indexterm>Local FS destination<indexterm>event
                 records</indexterm></indexterm><indexterm>event records<indexterm>Local FS
                     destination</indexterm></indexterm>Local FS event records include the following
-            record header attributes. Record header attributes are stored as String values:</p>
+            event-related record header attributes. Record header attributes are stored as String
+            values:</p>
         <p>
             <table
                 conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-Event-RHattributes"

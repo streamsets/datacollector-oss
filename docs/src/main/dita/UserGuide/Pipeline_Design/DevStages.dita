@@ -14,69 +14,76 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_czx_ktn_ht">
- <title>Development Stages</title>
- <conbody>
-  <p><indexterm>pipeline design<indexterm>development
-     stages</indexterm></indexterm><indexterm>origins<indexterm>development
-    origins</indexterm></indexterm><indexterm>processors<indexterm>development
-     processors</indexterm></indexterm><indexterm>Dev Data Generator
-     origin<indexterm>description</indexterm></indexterm><indexterm>Dev Random Source
-     origin<indexterm>description</indexterm></indexterm><indexterm>Dev Raw Data Source
-     origin<indexterm>description</indexterm></indexterm><indexterm>Dev Random Error
-     processor<indexterm>description</indexterm></indexterm><indexterm>Dev Record Creator
-     processor<indexterm>description</indexterm></indexterm>The <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> provides
-   several development stages that you can use to help develop or test pipelines. <note>Do not use
-    development stages in production pipelines. </note></p>
-  <p>You can use the following development stages when developing or testing pipelines:<dl>
-    <dlentry>
-     <dt>Dev Data Generator origin</dt>
-     <dd>Generates records with the configured number of fields with the selected data types. You
-            can use a Map or List-Map root field type. </dd>
-          <dd>The origin can also generate events for testing event handling functionality. It
-            passes data and events thorugh the same output port, so best practice is to generate
-            data or events, not both. To generate both, use an additional Dev Data
-              Generator.<draft-comment author="Loretta">Correct?</draft-comment></dd>
-     <dd>The On Record Error property has no effect in this stage.</dd>
-    </dlentry>
-    <dlentry>
-     <dt>Dev Random Source origin</dt>
-     <dd>Generates records with the configured number of Long fields. You can define a delay between
-      batches and a maximum number of records to generate.</dd>
-     <dd>The On Record Error property has no effect in this stage.</dd>
-    </dlentry>
-    <dlentry>
-     <dt>Dev Raw Data Source origin</dt>
-     <dd>Generates records based on user-supplied data. You can enter raw data, select the data
+  <title>Development Stages</title>
+  <conbody>
+    <p><indexterm>pipeline design<indexterm>development
+          stages</indexterm></indexterm><indexterm>origins<indexterm>development
+        origins</indexterm></indexterm><indexterm>processors<indexterm>development
+          processors</indexterm></indexterm><indexterm>Dev Data Generator
+          origin<indexterm>description</indexterm></indexterm><indexterm>Dev Random Source
+          origin<indexterm>description</indexterm></indexterm><indexterm>Dev Raw Data Source
+          origin<indexterm>description</indexterm></indexterm><indexterm>Dev Random Error
+          processor<indexterm>description</indexterm></indexterm><indexterm>Dev Record Creator
+          processor<indexterm>description</indexterm></indexterm>The <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> provides
+      several development stages that you can use to help develop or test pipelines. <note>Do not
+        use development stages in production pipelines. </note></p>
+    <p>You can use the following development stages when developing or testing pipelines:<dl>
+        <dlentry>
+          <dt>Dev Data Generator origin</dt>
+          <dd>Generates records with the configured number of fields with the selected data types.
+            You can use a Map or List-Map root field type. </dd>
+          <dd>The origin can also generate events to test event handling functionality. To generate
+            event records, select the <uicontrol>Produce Events</uicontrol> property. </dd>
+          <dd>When generating events, the origin uses the configured fields as the body of the event
+            record and adds event record header attributes. For more information about event
+            handling and event record header attributes, see <xref
+              href="../Event_Handling/EventHandling-Overview.dita#concept_cph_5h4_lx"/>.</dd>
+          <dd>The On Record Error property has no effect in this stage.</dd>
+        </dlentry>
+        <dlentry>
+          <dt>Dev Random Source origin</dt>
+          <dd>Generates records with the configured number of Long fields. You can define a delay
+            between batches and a maximum number of records to generate.</dd>
+          <dd>The On Record Error property has no effect in this stage.</dd>
+        </dlentry>
+        <dlentry>
+          <dt>Dev Raw Data Source origin</dt>
+          <dd>Generates records based on user-supplied data. You can enter raw data, select the data
             format of the data, and then configure any format-related configuration options. </dd>
-     <dd>For example, you can enter a set of log data, select the log data format, and then define
-      the log format and other log properties for the data. </dd>
+          <dd>For example, you can enter a set of log data, select the log data format, and then
+            define the log format and other log properties for the data. </dd>
           <dd>In data preview, this stage displays the raw source data as well as the data generated
             by the stage. </dd>
-    </dlentry>
+        </dlentry>
         <dlentry>
           <dt>Dev Identity processor</dt>
           <dd>Passes all records through to the next stage. Use as a placeholder in the pipeline.
             You can define required fields and preconditions, and configure stage error handling.
           </dd>
         </dlentry>
-    <dlentry>
-     <dt>Dev Random Error processor</dt>
-     <dd>Generates error records so you can test pipeline error handling. You can configure the
-      stage to discard records, define required fields and preconditions, and configure stage error
-      handling. </dd>
-    </dlentry>
-    <dlentry>
-     <dt>Dev Record Creator processor</dt>
-     <dd>Generates two records for each record that enters the stage. You can define required fields
-      and preconditions, and configure stage error handling. </dd>
-    </dlentry>
+        <dlentry>
+          <dt>Dev Random Error processor</dt>
+          <dd>Generates error records so you can test pipeline error handling. You can configure the
+            stage to discard records, define required fields and preconditions, and configure stage
+            error handling. </dd>
+        </dlentry>
+        <dlentry>
+          <dt>Dev Record Creator processor</dt>
+          <dd>Generates two records for each record that enters the stage. You can define required
+            fields and preconditions, and configure stage error handling. </dd>
+        </dlentry>
         <dlentry>
           <dt>To Event destination</dt>
-          <dd>Generates events for testing event handling functionality. Use the Generate Event
-            property to generate events.<draft-comment author="Loretta">more on how/when they are
-              generated?</draft-comment></dd>
+          <dd>Generates events for testing event handling functionality. To generate events, select
+            the <uicontrol>Produce Events</uicontrol>  property. </dd>
+          <dd>The destination generates an event record for each incoming record. It uses the
+            incoming record as the body of an event record and adds event record header attributes.
+            Note that any record header attributes in the incoming record might be lost or
+            replaced.</dd>
+          <dd>For more information about event handling and event record header attributes, see
+              <xref href="../Event_Handling/EventHandling-Overview.dita#concept_cph_5h4_lx"/>.</dd>
         </dlentry>
-   </dl></p>
- </conbody>
+      </dl></p>
+  </conbody>
 </concept>

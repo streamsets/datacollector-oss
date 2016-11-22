@@ -14,24 +14,22 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ggb_d1l_rx">
- <title>Event Generating Stages</title>
+ <title>Related Event Generating Stages</title>
  <conbody>
   <p><indexterm>HDFS File Metadata executor<indexterm>event generating
                 stages</indexterm></indexterm>Use the HDFS File Metadata executor in the event
             stream in a pipeline. The HDFS File Metadata executor is designed to update file
             metadata for output files written to <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EX-ph-FileSystems"
-            />. </p>
-        <p>Use the HDFS File Metadata executor change output file metadata for files written by the
+            /> by default. You can also use the executor to update file metadata for whole files
+            written to <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EX-ph-FileSystems"
+            />.</p>
+        <p>Use the HDFS File Metadata executor to change file metadata for files written by the
             following stages:<ul id="ul_tt4_41l_rx">
                 <li>Hadoop FS destination</li>
                 <li>Local FS destination</li>
                 <li>MapR FS destination</li>
             </ul></p>
-        <p>HDFS File Metadata does not process events generated when destinations complete streaming
-            whole files. For information on setting permissions for completed whole files, see <xref
-                href="../Pipeline_Design/WholeFile-AccessPermissions.dita#concept_ttm_ywv_1x"
-                />.<draft-comment author="Loretta">Jarcec: True? or is there some way to move/rename
-                files?</draft-comment></p>
  </conbody>
 </concept>

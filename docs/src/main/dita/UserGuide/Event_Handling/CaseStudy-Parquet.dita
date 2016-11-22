@@ -27,8 +27,7 @@
         <p>It's just a few simple steps:</p>
         <p>
             <ol id="ol_oh1_4gm_lx">
-                <li>Create the pipeline you want to use, writing to HDFS using the Hadoop FS
-                    destination and the Avro data format.<p>Use the origin and processors that you
+                <li>Create the pipeline you want to use.<p>Use the origin and processors that you
                         need, like any other pipeline. And then, configure Hadoop FS to write Avro
                         data to HDFS.</p><p>The Hadoop FS destination generates events each time it
                         closes a file. This is perfect because we want to convert files to Parquet
@@ -38,12 +37,13 @@
                             comfortably handle.</note>
                     </p><p><image href="../Graphics/Event-ParquetBasicPipe.png"
                             id="image_x2b_yvm_lx" scale="75"/></p></li>
-                <li>Configure Hadoop FS to generate events. <p>Select the <uicontrol>Produce
-                            Events</uicontrol> property on the General tab. When you do that, the
-                        event output stream becomes available.</p><p> With this selected, Hadoop FS
-                        generates an event each time it closes an output file:</p><p><image
-                            href="../Graphics/Event-ParquetHDFS.png" id="image_ibh_mvm_lx"
-                            scale="75"/></p></li>
+                <li>Configure Hadoop FS to generate events. <p>On the <wintitle>General</wintitle>
+                        tab of the destination, select the <uicontrol>Produce Events</uicontrol>
+                        property.</p><p>With this property selected, the event output stream becomes
+                        available and Hadoop FS generates an event record each time it closes an
+                        output file. The event record includes the file path for the closed file.
+                            </p><p><image href="../Graphics/Event-ParquetHDFS.png"
+                            id="image_ibh_mvm_lx" scale="75"/></p></li>
                 <li>Connect the Hadoop FS event output stream to a MapReduce executor. <p>Now, each
                         time the MapReduce executor receives an event, it triggers the jobs that you
                         configure it to run.</p><p><image href="../Graphics/Event-ParquetPipe.png"
@@ -54,8 +54,8 @@
                         Avro to Parquet tab, configure the details for the job. </p><p><image
                             href="../Graphics/Event-Parquet-MapReduce.png" id="image_rzm_frb_tx"
                             scale="60"/></p><p>The <uicontrol>Input Avro File</uicontrol> property
-                        default, ${record:value('filepath')} runs the job on the file specified in
-                        the Hadoop FS file closure event record. </p></li>
+                        default, <codeph>${record:value('/filepath')}</codeph>, runs the job on the
+                        file specified in the Hadoop FS file closure event record. </p></li>
             </ol>
         </p>
         <p>With this event stream added to the pipeline, each time the Hadoop FS destination closes

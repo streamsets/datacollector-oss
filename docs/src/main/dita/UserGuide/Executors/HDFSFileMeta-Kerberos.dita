@@ -20,8 +20,8 @@
                 authentication</indexterm></indexterm><indexterm>Kerberos
                     authentication<indexterm>using for HDFS File Metadata
                 executor</indexterm></indexterm>You can use Kerberos authentication to connect to
-            the destination system. When you use Kerberos authentication, the Data Collector uses
-            the Kerberos principal and keytab to connect to the destination system. </p>
+            the external system. When you use Kerberos authentication, the Data Collector uses the
+            Kerberos principal and keytab to connect. </p>
         <p>The Kerberos principal and keytab are defined in the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>. To use Kerberos

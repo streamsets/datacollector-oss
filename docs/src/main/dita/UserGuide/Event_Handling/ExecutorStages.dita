@@ -24,8 +24,8 @@
                     <dt>Hive Query executor</dt>
                     <dd>Executes a user-defined Hive or Impala query for each event.</dd>
                     <dd>Use with the Hive Metadata destination to run a Hive or Impala query after
-                        changing table structures. You can also use the executor with the Hadoop FS
-                        or MapR FS destinations to run a Hive or Impala query after closing files. </dd>
+                        Hive metastore updates. You can also use the executor with the Hadoop FS or
+                        MapR FS destinations to run a Hive or Impala query after closing files. </dd>
                     <dd>For example, you might use the Hive Query executor as part of the Hive Drift
                         Solution if you read data with Impala.</dd>
                     <dd>Impala requires you to run the Invalidate Metadata command when the table
@@ -46,20 +46,16 @@
                 </dlentry>
                 <dlentry>
                     <dt>JDBC Query executor</dt>
-                    <dd>Connects to a database using JDBC and runs the specified query. </dd>
-                    <dd>
-                        <draft-comment author="Loretta">Waiting for details &amp; use case. Will
-                            probably use with the JDBC Producer destination.</draft-comment>
-                    </dd>
+                    <dd>Connects to a database using JDBC and runs the specified SQL query. </dd>
+                    <dd>Use to run a SQL query on a database after an event occurs.</dd>
                 </dlentry>
                 <dlentry>
-                    <dt>MapReduce Job executor</dt>
+                    <dt>MapReduce executor</dt>
                     <dd>Connects to HDFS or MapR FS and starts a MapReduce job for each event. </dd>
                     <dd>Use with the Hadoop FS or MapR FS destinations to run MapReduce jobs on
                         closed files. </dd>
-                    <dd>For example, you can use the MapReduce Job executor with the Hadoop FS
-                        destination to convert Avro files to Parquet when Hadoop FS closes a file.
-                    </dd>
+                    <dd>For example, you can use the MapReduce executor with the Hadoop FS
+                        destination to convert Avro files to Parquet when Hadoop FS closes a file. </dd>
                 </dlentry>
             </dl></p>
  </conbody>

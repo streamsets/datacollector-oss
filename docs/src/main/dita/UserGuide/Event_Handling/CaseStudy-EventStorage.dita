@@ -19,22 +19,22 @@
   <p><indexterm>event handling case studies<indexterm>event storage</indexterm></indexterm>Store
             event records to preserve an audit trail of the events that occur. You can store event
             records from any event-generating stage. For this case study, say you want to keep a log
-            of the objects written to Amazon S3 by the following pipeline: <draft-comment
-                author="Loretta">Change to MapR FS</draft-comment></p>
+            of the files written to HDFS by the following pipeline: </p>
         <p><image href="../Graphics/Event-Storage.png" id="image_csj_gwl_px" scale="60"/></p>
         <p>To do this, you simply:<ol id="ol_xgc_3wl_px">
-                <li>Configure Amazon S3 to generate events.<p>On the <wintitle>General</wintitle>
-                        tab, select the <uicontrol>Produce Events</uicontrol> property </p><p>Now
-                        the event output stream becomes available and the destination generates an
-                        event each time it completes writing to an object:</p><p><image
-                            href="../Graphics/Event-Storage-S3.png" id="image_zyg_cxl_px" scale="60"
-                        /></p></li>
+                <li>Configure the Hadoop FS destination to generate events.<p>On the
+                            <wintitle>General</wintitle> tab, select the <uicontrol>Produce
+                            Events</uicontrol> property </p><p>Now the event output stream becomes
+                        available, and the destination generates an event each time it closes a
+                        file. For this destination, each event record includes fields for the file
+                        name, file path, and size of the closed file. </p><p><image
+                            href="../Graphics/Event-Storage-HDFS.png" id="image_qbc_1hj_yx"
+                            scale="60"/></p></li>
                 <li>You can write the event records to any destination, but let's assume you want to
-                    write them to Amazon S3 as well: <p><image
-                            href="../Graphics/Event-Storage-S3-S3.png" id="image_orv_fyl_px"
-                            scale="55"/></p><p>You could be done right there, but you want to
-                        include the time of the event in the record, so you know exactly when the
-                        Amazon S3 destination stopped writing to an object. </p></li>
+                    write them to HDFS as well:<p><image href="../Graphics/Event-Storage-HDFS-2.png"
+                            id="image_orv_fyl_px" scale="55"/></p><p>You could be done right there,
+                        but you want to include the time of the event in the record, so you know
+                        exactly when the Hadoop FS destination closed a file. </p></li>
                 <li> All event records include the event creation time in the
                     sdc.event.creation_timestamp record header attribute, so you can add an
                     Expression Evaluator to the pipeline and use the following expression to include
@@ -42,17 +42,12 @@
                         record:<codeblock>${record:attribute('sdc.event.creation_timestamp')}</codeblock><p>The
                         resulting pipeline looks like this: </p><p><image
                             href="../Graphics/Event-Storage-EEval.png" id="image_sqc_3bq_tx"
-                            scale="65"/></p><p>Note that event creation time is expressed as an
+                            scale="60"/></p><p>Note that event creation time is expressed as an
                         epoch or Unix timestamp, such as 1477698601031. And record header attributes
                         provide data as strings.</p><p>
-                        <note type="tip">When writing to database or other destinations that
-                            recognize non-string data types, you can use the Field Type Converter to
-                            convert the string timestamp to Long to enable downstream processing.
-                                <p>To convert the string timestamp to a human-readable datetime, use
-                                a set of Field Type Converters: One to convert the string to Long
-                                and one to convert the Long to the datetime format of your choice.
-                                When writing to a file system, you might add an additional Field
-                                Type Converter to convert the datetime back to a string.</p></note>
+                        <note type="tip">You can use the time functions, time:extractLongFromDate
+                            and time:extractStringFromDate, to convert the timestamp to the long or
+                            string data types, respectively.</note>
                     </p></li>
             </ol></p>
  </conbody>

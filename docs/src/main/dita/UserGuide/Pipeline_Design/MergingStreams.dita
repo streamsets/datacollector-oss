@@ -33,7 +33,7 @@
    prevent the generation of duplicate data.</note>
   <p>Note that that you cannot merge event streams with data streams. Event records must stream from
    the event-generating stage to destinations or executors without merging with data streams. For
-   more information about event streams and event handling, see <xref
+   more information about event handling and event streams, see <xref
     href="../Event_Handling/EventHandling-Overview.dita#concept_cph_5h4_lx"/>.</p>
  </conbody>
 </concept>

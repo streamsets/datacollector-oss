@@ -17,10 +17,12 @@
  <title>Logical Pairings</title>
  <conbody>
   <p><indexterm>event generating stages<indexterm>pairing with destinations and
-                    executors</indexterm></indexterm>You can use event generation stages and event
-            records in any logical way. </p>
-        <p>The following tables outline how you might use event generation stages with destinations
-            or executors:<table frame="all" rowsep="1" colsep="1" id="table_a45_zhh_tx">
+                    executors</indexterm></indexterm>Some origins and destinations can generate
+            events, and executors and destinations can consume events. You can use event generating
+            stages and event records in any logical way. </p>
+        <p>The following tables outline some logical pairings of event generating stages with
+            executors and destinations:<table frame="all" rowsep="1" colsep="1"
+                id="table_a45_zhh_tx">
                 <tgroup cols="2">
                     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                     <colspec colname="c2" colnum="2" colwidth="3.5*"/>
@@ -62,6 +64,9 @@
                                 <ul id="ul_hbx_blh_tx">
                                     <li>HDFS File Metadata executor to rename, move, or change
                                         permissions for closed files.</li>
+                                    <li>Hive Query executor to run a Hive or Impala query after
+                                        closing a file. <p>Particularly useful when using the Hive
+                                            Drift Solution with Impala. </p></li>
                                     <li>MapReduce executor to run a MapReduce job after closing a
                                         file.</li>
                                     <li>Any destination for event storage.</li>
@@ -73,7 +78,8 @@
                             <entry>
                                 <ul id="ul_kkj_dlh_tx">
                                     <li>Hive Query executor to run a Hive or Impala query after
-                                        changing table structures.</li>
+                                        changing table structures. <p>Particularly useful when using
+                                            the Hive Drift Solution with Impala. </p></li>
                                 </ul>
                             </entry>
                         </row>

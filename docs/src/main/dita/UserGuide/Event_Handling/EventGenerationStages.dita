@@ -73,8 +73,7 @@
                             <entry>Hive Metastore destination</entry>
                             <entry>
                                 <ul id="ul_fgw_mt4_qx">
-                                    <li>Generates a DDL to create new tables, partitions, or columns
-                                        in the Hive metastore.</li>
+                                    <li>Updates the Hive metastore.</li>
                                 </ul>
                             </entry>
                         </row>

@@ -14,56 +14,50 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_szz_xwm_lx">
-    <title>Case Study: Impala Metadata Updates for the HDS</title>
+    <title>Case Study: Impala Metadata Updates for HDS</title>
     <conbody>
         <p><indexterm>event handling case studies<indexterm>Impala-Hive Drift
                 Solution</indexterm></indexterm>You love the <xref
                 href="../Hive_Drift_Solution/HiveDrift-Overview.dita#concept_phk_bdf_2w">Hive Drift
-                Solution</xref> because it automatically updates the Hive Metastore when table
-            structures change. But if you've been using it with Impala, you've been trying to time
-            the Invalidate Metadata command after each table change and file write.</p>
+                Solution</xref> (HDS) because it automatically updates the Hive metastore when
+            needed. But if you've been using it with Impala, you've been trying to time the
+            Invalidate Metadata command after each metadata change and file write.</p>
         <p>Instead of running the command manually, you can add event handling to your Hive Drift
-            Solution pipeline to execute the command automatically. Just set up two event streams:
-            one from the Hive Metastore destination and one from the Hadoop FS destination. You can
-            connect both event streams to a single Hive Query executor. The executor then runs the
-            Invalidate Metadata command each time the Hive Metastore destination updates a Hive
-            table and each time Hadoop FS writes a file to a Hive table.</p>
+            Solution pipeline to execute the command automatically. </p>
+        <p>Enable both the Hive Metastore destination and the Hadoop FS destination to generate
+            events. You can connect both event streams to a single Hive Query executor. The executor
+            then runs the Invalidate Metadata command each time the Hive Metastore destination
+            changes the Hive metastore and each time Hadoop FS writes a file to a Hive table.</p>
         <p>Here's how it works:</p>
-        <p>You have the following Hive Drift Solution pipeline that reads files from a directory.The
-            Hive Metadata processor evaluates the data for structural changes. It passes data to
-            Hadoop FS and metadata records to the Hive Metastore destination when table structures
-            change. Hive Metastore creates and updates tables in Hive based on the metadata records
-            it receives:</p>
+        <p>The following Hive Drift Solution pipeline reads files from a directory. The Hive
+            Metadata processor evaluates the data for structural changes. It passes data to Hadoop
+            FS and metadata records to the Hive Metastore destination. Hive Metastore creates and
+            updates tables in Hive based on the metadata records it receives:</p>
         <p><image href="../Graphics/Event-HDS-BasicPipe.png" id="image_lz5_414_lx" scale="75"/></p>
         <p>
             <ol id="ol_mtf_tzn_lx">
-                <li>To generate an event each time the Hive Metastore destination creates or changes
-                    a table, configure the Hive Metastore destination to generate events.<p>On the
+                <li>Configure the Hive Metastore destination to generate events.<p>On the
                             <wintitle>General</wintitle> tab, select the <uicontrol>Produce
                             Events</uicontrol> property.</p><p>Now, the event output stream becomes
-                        available, and Hive Metastore generates an event record every time it
-                        creates or changes a table.</p><p><image
+                        available, and Hive Metastore destination generates an event record every
+                        time it updates the Hive metastore. The event record contains the name of
+                        the table that was created or updated.</p><p><image
                             href="../Graphics/Event-HDS-HMetastore.png" id="image_cht_bc4_lx"
-                            scale="75"/></p></li>
-                <li>Connect the Hive Metastore event output stream to a Hive Query executor.<p>Now,
-                        each time the Hive Query executor receives an event, it triggers the query
-                        that you configure it to run. </p><p><image
-                            href="../Graphics/Event-HDS-HiveQuery.png" id="image_vjz_pd4_lx"
                             scale="75"/></p></li>
                 <li>We also need to add an event stream to the Hadoop FS destination so we can run
                     the Invalidate Metadata command each time the destination writes a file to Hive.
                     So in the Hadoop FS destination, on the <wintitle>General</wintitle> tab, select
-                        <uicontrol>Generate Events</uicontrol>.<p>With this property selected the
+                        <uicontrol>Produce Events</uicontrol>.<p>With this property selected the
                         event output stream becomes available, and Hadoop FS generates an event
                         record every time it closes a file:</p><p><image
                             href="../Graphics/Event-HDS-HDFS.png" id="image_c35_qns_5x" scale="60"
                         /></p></li>
-                <li>The event record generated by the destination does not include the table name
-                    required by the Hive Metadata executor, but it contains the information that we
-                    need to generate the table name. So add an Expression Evaluator processor to the
-                    event stream. Create a new Table field and use the following
-                        expression:<codeblock>`(file:pathElement(record:value('/filepath'), -3))}`.`${file:pathElement(record:value('/filepath'), -2)}`</codeblock><p>Thes
-                        expressions uses the path in the Filepath field of the event record and
+                <li>The event record generated by the Hadoop FS destination does not include the
+                    table name required by the Hive Query executor, but it contains the table name
+                    in the file path. So add an Expression Evaluator processor to the event stream.
+                    Create a new Table field and use the following
+                        expression:<codeblock conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/code-HiveDrift-DB.table"/><p>This
+                        expression uses the path in the Filepath field of the event record and
                         performs the following calculations:<ul id="ul_umt_2sm_5x">
                             <li>Extracts the third-to-last section of the path and uses it as the
                                 database name. </li>
@@ -80,16 +74,16 @@
                         tab, configure the Hive configuration details. Then, on the
                             <wintitle>Query</wintitle> tab, verify the query to use. By default, the
                         executor uses the following
-                        query:<codeblock>invalidate metadata ${record:attribute('/table')}</codeblock></p><p>This
-                        is the query that we want, so we don't need to change a a thing. </p><p>This
-                        is how the final pipeline should look:</p><p><image
+                        query:<codeblock>invalidate metadata ${record:value('/table')}</codeblock></p><p>This
+                        is the query that we want, so we don't need to change a thing. </p><p>Here's
+                        how the final pipeline looks:</p><p><image
                             href="../Graphics/Event-HDS-HiveQueryDeets.png" id="image_ccr_hpr_mx"
                             scale="70"/></p><p>With these new event streams, each time the Hive
                         Metastore destination creates a table, partition or column, and each time
                         the Hadoop FS destination completes writing a file, the destinations
                         generate event records. When the Hive Query executor receives an event
                         record, it runs the Invalidate Metadata command so Impala can update its
-                        cache with the new information.</p></li>
+                        cache with the new information. Done!</p></li>
             </ol>
         </p>
     </conbody>

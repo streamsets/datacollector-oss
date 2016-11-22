@@ -30,11 +30,12 @@
         <p><image href="../Graphics/Event-Move-BasicPipe.png" id="image_y1d_zm4_lx" scale="70"/></p>
         <ol id="ol_fvh_5m4_lx">
             <li>To add an event stream, first configure Hadoop FS to generate events:<p>On the
-                        <wintitle>General</wintitle> tab, select the <uicontrol>Produce
-                        Events</uicontrol> property. </p><p>Now, the event output stream becomes
-                    available, and Hadoop FS generates an event record each time it closes an output
-                    file. </p><p><image href="../Graphics/Event-Move-HDFS.png" id="image_n5q_5p4_lx"
-                        scale="65"/></p></li>
+                        <wintitle>General</wintitle> tab of the Hadoop FS destination, select the
+                        <uicontrol>Produce Events</uicontrol> property. </p><p>Now, the event output
+                    stream becomes available, and Hadoop FS generates an event record each time it
+                    closes an output file. The Hadoop FS event record includes fields for the file
+                    name, path, and size.</p><p><image href="../Graphics/Event-Move-HDFS.png"
+                        id="image_n5q_5p4_lx" scale="65"/></p></li>
             <li>Connect the Hadoop FS event output stream to a HDFS File Metadata executor.<p>Now,
                     each time the HDFS File Metadata executor receives an event, it triggers the
                     tasks that you configure it to run.</p><p><image
@@ -44,9 +45,9 @@
                 you want and set the permissions for the file.<p>In the HDFS File Metadata executor,
                     configure the HDFS configuration details on the <wintitle>HDFS</wintitle> tab.
                     Then, on the <wintitle>Tasks</wintitle> tab, configure the changes that you want
-                    to make. </p><p>In this case, you want to move files to<filepath>
-                        /new/location</filepath>, and set the file permissions to 0440 to allow the
-                    user and group read access to the files:</p><p><image
+                    to make. </p><p>In this case, you want to move files to
+                        <filepath>/new/location</filepath>, and set the file permissions to 0440 to
+                    allow the user and group read access to the files:</p><p><image
                         href="../Graphics/Event-Move-FileMetadata-props.png" id="image_uk1_l1c_tx"
                         scale="60"/></p></li>
         </ol>

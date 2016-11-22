@@ -21,12 +21,6 @@
             return information about a filename or path. For example, you might use a file function
             to remove a file extension from a filepath or to return part of the path.</p>
         <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/FunctionArgument"/>
-        <p>
-            <note>File functions expect an absolute path to a file, such as /log/weblog.txt. </note>
-            <draft-comment author="Loretta">asked
-                    Jarcec.<p>`${file:removeExtension(file:pathElement(record:value('/filepath'),
-                    3))}`.`${file:pathElement(record:value('/filepath'), 4)}` </p></draft-comment>
-        </p>
         <p>The expression language provides the following file functions:<dl>
                 <dlentry>
                     <dt>file:fileExtension(&lt;filepath>)</dt>
@@ -55,10 +49,10 @@
                             <li>filepath - An absolute path to a file.</li>
                             <li>integer - The section of a path to return. Can return parts starting
                                 from the left or right side of the path:<ul id="ul_rz3_gwm_5x">
-                                    <li>Use 0 and positive integers to return a section of a path
-                                        starting from the left side of the path.</li>
-                                    <li>Use negative integers to return a section of a path counting
-                                        from the right side of the path. </li>
+                                    <li>To return a section of a path, counting from the left side
+                                        of the path, use 0 and positive integers and start with 0. </li>
+                                    <li>To return a section of a path, counting from the right side
+                                        of the path, use negative integers and start with -1.</li>
                                 </ul></li>
                         </ul></dd>
                     <dd>Return type: String.</dd>

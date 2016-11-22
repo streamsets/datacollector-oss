@@ -26,8 +26,9 @@
                 id="ul_gym_xw3_rx">
                 <li>File name</li>
                 <li>File location</li>
-                <li>Permissions, including the owner or group associated with the file and access
-                    permissions</li>
+                <li>File owner and group</li>
+                <li>File permissions</li>
+                <li>ACL permissions</li>
             </ul></p>
         <p>When you configure the HDFS File Metadata executor, you configure an expression that
             represents the location and name of the file to process, and the changes you want to

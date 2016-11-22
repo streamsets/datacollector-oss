@@ -21,14 +21,15 @@
             MapReduce executor starts a MapReduce job in HDFS or MapR FS each time it receives an
             event record. Use the MapReduce executor as part of an event stream.</p>
         <p>You can use the MapReduce executor to start a custom job, such as a validation job that
-            compares the number records in files. You can also use MapReduce executor to start a
-            predefined job that converts Avro files to Parquet.</p>
-        <p>Note that MapReduce executor starts jobs. It does not wait for a response or monitor
-            jobs.</p>
+            compares the number of records in files. You can also use the MapReduce executor to
+            start a predefined job that converts Avro files to Parquet.</p>
+        <p>Note that the MapReduce executor starts jobs in an external system. It does not monitor
+            jobs or wait for the job to complete. The executor becomes available for additional
+            processing as soon as it successfully submits the job. </p>
         <p>When you configure the MapReduce executor, you specify connection information and job
-            details. For a custom job, you specify a job creator interface or configuration object,
-            and the key-value pairs to use. For the Avro to Parquet job, you specify details such as
-            the output file directory and optional compression codec.</p>
+            details. For the Avro to Parquet job, you specify details such as the output file
+            directory and optional compression codec. For other types of jobs, you enter the
+            key-value pairs to use. </p>
         <p>You can also configure the executor to generate events for another event stream. For more
             information about event handling, see <xref
                 href="../Event_Handling/EventHandling-Overview.dita#concept_cph_5h4_lx"/>.</p>

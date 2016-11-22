@@ -18,12 +18,12 @@
  <conbody>
   <p><indexterm>Hive Query
                     executor<indexterm>overview</indexterm></indexterm><indexterm>executors<indexterm>Hive
-                    Query</indexterm></indexterm>The Hive Query executor connects to Hive and
-            performs a user-defined Hive or Impala query each time it receives an event record. Use
-            the Hive Query executor as part of an event stream to perform event-driven queries in
-            Hive or Impala.</p>
-        <p>For example, you can use Hive Query executor to perform the Invalidate Metadata query for
-            Impala as part of the Hive Drift Solution. For more information, see <xref
+                    Query</indexterm></indexterm>The Hive Query executor connects to Hive or Impala
+            and performs a user-defined Hive or Impala query each time it receives an event record.
+            Use the Hive Query executor as part of an event stream to perform event-driven queries
+            in Hive or Impala.</p>
+        <p>For example, you can use the Hive Query executor to perform the Invalidate Metadata query
+            for Impala as part of the Hive Drift Solution. For more information, see <xref
                 href="../Event_Handling/CaseStudy-Impala.dita#concept_szz_xwm_lx"/>.</p>
         <p>
             <note

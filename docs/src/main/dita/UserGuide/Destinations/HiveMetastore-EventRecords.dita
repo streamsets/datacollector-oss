@@ -19,8 +19,8 @@
         <p><indexterm>Hive Metastore destination<indexterm>event
                 records</indexterm></indexterm><indexterm>event records<indexterm>Hive Metastore
                     destination</indexterm></indexterm>Hive Metastore event records include the
-            following record header attributes. Record header attributes are stored as String
-            values:</p>
+            following event-related record header attributes. Record header attributes are stored as
+            String values:</p>
         <p>
             <table frame="all" rowsep="1" colsep="1" id="table_brz_3gp_qx">
                 <tgroup cols="2">
@@ -38,10 +38,11 @@
                                 conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-eventType"/>
                             <entry>Event type. Uses one of the following types:<ul
                                     id="ul_m12_mgp_qx">
-                                    <li>new-table - Generated when the origin creates a new table. </li>
-                                    <li>new-columns - Generated when the origin creates a new
-                                        column. </li>
-                                    <li>new partition - Generated when the origin creates a new
+                                    <li>new-table - Generated when the destination creates a new
+                                        table. </li>
+                                    <li>new-columns - Generated when the destination creates new
+                                        columns. </li>
+                                    <li>new partition - Generated when the destination creates a new
                                         partition.</li>
                                 </ul></entry>
                         </row>
@@ -80,7 +81,8 @@
                                         <row>
                                             <entry>table</entry>
                                             <entry>Fully qualified table name using the following
-                                                format: <codeph>&lt;db>.&lt;table></codeph>.</entry>
+                                                format:
+                                                <codeph>'&lt;DB>'.'&lt;table>'</codeph>.</entry>
                                         </row>
                                     </tbody>
                                 </tgroup>
@@ -90,8 +92,8 @@
                 <dlentry>
                     <dt>New column </dt>
                     <dd>
-                        <p>The destination generates a new column event record when it creates a new
-                            column in a table.</p>
+                        <p>The destination generates a new column event record when it creates new
+                            columns in a table.</p>
                         <p>New column event records have the <codeph>sdc.event.type</codeph> record
                             header attribute set to <codeph>new-column</codeph> and include the
                             following fields: <table frame="all" rowsep="1" colsep="1"
@@ -113,12 +115,11 @@
                                         </row>
                                         <row>
                                             <entry>columns</entry>
-                                            <entry>A map field with the following information for
-                                                each new
-                                                  column:<codeblock>&lt;column name>, &lt;Hive data type>(&lt;precision>,[scale])</codeblock><draft-comment
-                                                  author="Loretta">Jarcec: does this look right?
-                                                  Should I rearrange
-                                                somehow?</draft-comment></entry>
+                                            <entry>A list-map field with the following information
+                                                for each new column:<ul id="ul_q3z_s5g_zx">
+                                                  <li>Column name</li>
+                                                  <li>Hive data type, precision and scale</li>
+                                                </ul></entry>
                                         </row>
                                     </tbody>
                                 </tgroup>
@@ -151,10 +152,11 @@
                                         </row>
                                         <row>
                                             <entry>partitions</entry>
-                                            <entry>A map field with the following information:
-                                                  <codeblock>&lt;partition name>, &lt;partition value></codeblock><draft-comment
-                                                  author="Loretta">Jarcec: best way to display
-                                                  this?</draft-comment></entry>
+                                            <entry>A list-map field with the following information:
+                                                  <ul id="ul_brd_w5g_zx">
+                                                  <li>Parition name</li>
+                                                  <li>Partition value</li>
+                                                </ul></entry>
                                         </row>
                                     </tbody>
                                 </tgroup>

@@ -408,10 +408,11 @@
                             <entry>streamsets-datacollector-jdbc-lib</entry>
                             <entry>Includes:<ul id="ul_apd_qbj_jx">
                                     <li>JDBC Consumer origin</li>
-                                    <li>JDBC Lookup processor</li>
-                                    <li>JDBC Producer destination</li>
-                                    <li>JDBC Tee processor</li>
                                     <li>Oracle CDC Client origin</li>
+                                    <li>JDBC Lookup processor</li>
+                                    <li>JDBC Tee processor</li>
+                                    <li>JDBC Producer destination</li>
+                                    <li>JDBC Query executor</li>
                                 </ul></entry>
                         </row>
                         <row>

@@ -25,7 +25,13 @@
       from the Directory origin passes to both branches of the pipeline for different types of
       processing. But you might optionally configure required fields for the Field Splitter or Value
       Replacer to discard any records that are not needed.</p>
-    <p><image href="../Graphics/ReplicatingStreams.png" id="image_m3h_hnm_2r"/></p>
+    <p><image href="../Graphics/ReplicatingStreams.png" id="image_m3h_hnm_2r" scale="80"/></p>
     <p>To route data based on more complex conditions, use a Stream Selector.</p>
+        <p>Some stages generate events that pass to event streams. Event streams originate from an
+            event-generating stage, such as an origin or destination, and pass from the stage
+            through an event stream output, as follows:</p>
+        <p><image href="../Graphics/BranchEventStream.png" id="image_m1m_trz_yx" scale="60"/></p>
+        <p>For more information about event handling and event streams, see <xref
+                href="../Event_Handling/EventHandling-Overview.dita#concept_cph_5h4_lx"/>.</p>
  </conbody>
 </concept>

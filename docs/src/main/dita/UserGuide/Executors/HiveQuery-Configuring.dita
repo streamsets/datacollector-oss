@@ -86,8 +86,8 @@
                                         event record.<p>Use the default Invalidate Metadata
                                             expression to process events from the Hive Metastore
                                             destination when using the Hive Drift Solution with
-                                            Impala. You might also use the default expression with
-                                            Hadoop FS, but you need to configure the pipeline
+                                            Impala. </p><p>You might also use the default expression
+                                            with Hadoop FS, but you need to configure the pipeline
                                             accordingly. For more information, see <xref
                                                 href="HiveQuery-ImpalaHDS.dita#concept_hqg_nzh_vx"
                                             />.</p></entry>

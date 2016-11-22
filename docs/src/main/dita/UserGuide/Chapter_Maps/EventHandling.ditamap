@@ -23,9 +23,11 @@
             <topicref href="../Event_Handling/LogicalPairings.dita"/>
         </topicref>
         <topicref href="../Event_Handling/EventStreams.dita">
-            <topicref href="../Event_Handling/EventRecords.dita">
-                <topicref href="../Event_Handling/EventRecordHeaders.dita"/>
-            </topicref>
+            <topicref href="../Event_Handling/Streams-TaskExecution.dita"/>
+            <topicref href="../Event_Handling/Streams-EventStorage.dita"/>
+        </topicref>
+        <topicref href="../Event_Handling/EventRecords.dita">
+            <topicref href="../Event_Handling/EventRecordHeaders.dita"/>
         </topicref>
         <topicref href="../Event_Handling/CaseStudy-Parquet.dita">
             <topicmeta><shortdesc></shortdesc></topicmeta></topicref>

@@ -20,9 +20,9 @@
                 authentication</indexterm></indexterm><indexterm>Kerberos
                     authentication<indexterm>using with the MapReduce
                 executor</indexterm></indexterm>You can use Kerberos authentication to connect to
-            HDFS. When you use Kerberos authentication, <ph
+            Hadoop services such as HDFS or YARN. When you use Kerberos authentication, <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            uses the Kerberos principal and keytab to connect to HDFS. </p>
+            uses the Kerberos principal and keytab to authenticate. </p>
         <p>The Kerberos principal and keytab are defined in the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>. To use Kerberos

@@ -16,19 +16,19 @@
 <concept id="concept_zft_rdq_tx">
  <title>Event Record Header Attributes</title>
  <conbody>
-        <p><indexterm>event records<indexterm>header attributes</indexterm></indexterm>Event records
-            include record header attributes for information such as the event type and when the
-            event occurred.</p>
+        <p><indexterm>event records<indexterm>header attributes</indexterm></indexterm>In addition
+            to the standard record header attributes, most event records include record header
+            attributes for event information such as the event type and when the event occurred. </p>
         <p>As with any record header attribute, you can use the Expression Evaluator and the
             record:attribute function to include record header attribute information as a field in
             the record. Note that all record header attributes are String values.</p>
         <p>When storing event records, you most likely want to include the time of the event in the
-            event record. For an example, see <xref
-                href="CaseStudy-EventStorage.dita#concept_ocb_nnl_px"/>.</p>
-        <note><ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-ERecord-Fields"
-            /></note>
-        <p>All event records include the following record header attributes:<table frame="all"
+            event record, using the following expression in an Expression
+            Evaluator:<codeblock>${record:attribute('sdc.event.creation_timestamp')}</codeblock></p>
+        <p>For more information, see <xref href="CaseStudy-EventStorage.dita#concept_ocb_nnl_px"
+            />.</p>
+        <p>Most events include the following event record header attributes. The exception, File
+            Tail, writes all of the event information to record fields. <table frame="all"
                 rowsep="1" colsep="1" id="table_bxn_dhs_5x">
                 <tgroup cols="2">
                     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -58,5 +58,8 @@
                     </tbody>
                 </tgroup>
             </table></p>
+        <p><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-ERecord-Fields"
+            /></p>
     </conbody>
 </concept>

@@ -98,7 +98,8 @@
                                                 </li>
                                                 <li>To access files in a local directory,
                                                   enter:<codeblock>file:///</codeblock></li>
-                                                <li>To connect to MapR: <ul id="ul_pxj_pgs_rx">
+                                                <li>To access files in MapR FS: <ul
+                                                  id="ul_pxj_pgs_rx">
                                                   <li>To connect to a specific MapR cluster, enter
                                                   <codeblock>maprfs:///mapr/&lt;cluster name></codeblock>For
                                                   example:
@@ -116,7 +117,7 @@
                                     </entry>
                                     <entry>
                                         <p>The HDFS user to use when connecting to HDFS or MapR FS.
-                                            When you use this property, make sure the destination
+                                            When you use this property, make sure the external
                                             system is configured appropriately. For information
                                             about HDFS, see <xref
                                                 href="../Destinations/HadoopFS-HDFSUser-dest.dita#concept_u4h_lwt_ls"
@@ -124,7 +125,7 @@
                                                 href="../Destinations/MapRFS-HDFSUser.dita#concept_kls_lqc_fv"
                                             />.</p>
                                         <p>By default, the pipeline uses the Data Collector user to
-                                            connect to the destination system. </p>
+                                            connect. </p>
                                     </entry>
                                 </row>
                                 <row>
@@ -135,7 +136,7 @@
                                                   id="image_kqm_3fj_fv"/></xref></p>
                                     </entry>
                                     <entry>
-                                        <p>Uses Kerberos credentials to connect to the destination
+                                        <p>Uses Kerberos credentials to connect to the external
                                             system. </p>
                                         <p>When selected, uses the Kerberos principal and keytab
                                             defined in the Data Collector configuration file,
@@ -173,8 +174,7 @@
                                         <p>Additional HDFS properties to use. </p>
                                         <p>To add properties, click <uicontrol>Add</uicontrol> and
                                             define the property name and value. Use the property
-                                            names and values as expected by the destination system.
-                                        </p>
+                                            names and values as expected by the external system. </p>
                                     </entry>
                                 </row>
                             </tbody>
@@ -244,18 +244,18 @@
                                     <entry>Set Permissions <xref href="HDFSFileMeta-Permissions.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_ajs_lqk_rx"/></xref></entry>
-                                    <entry>Select to set access permissions in an octal or symbolic
+                                    <entry>Select to set file permissions in an octal or symbolic
                                         format.</entry>
                                 </row>
                                 <row>
                                     <entry>New Permissions</entry>
-                                    <entry>Access permissions in octal or symbolic format.</entry>
+                                    <entry>File permissions in octal or symbolic format.</entry>
                                 </row>
                                 <row>
                                     <entry>Set ACLs <xref href="HDFSFileMeta-Permissions.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_yf1_mqk_rx"/></xref></entry>
-                                    <entry>Select to define ACL permissions. </entry>
+                                    <entry>Select to define access control list (ACL) permissions. </entry>
                                 </row>
                                 <row>
                                     <entry>New ACLs</entry>
