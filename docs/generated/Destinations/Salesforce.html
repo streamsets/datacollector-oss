@@ -1,0 +1,265 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The Salesforce destination writes data to Salesforce objects. When you configure the Salesforce destination, you define connection information, including the Salesforce API version and API type that ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Salesforce"></meta><meta name="abstract" content="The Salesforce destination writes data to Salesforce objects."></meta><meta name="description" content="The Salesforce destination writes data to Salesforce objects."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_rlb_rt3_rx"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Salesforce</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+--></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Destinations/Destinations-title.html" title="Destinations">Destinations</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_rlb_rt3_rx">
+ <h1 class="title topictitle1">Salesforce</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Salesforce destination writes data to Salesforce objects.</p>
+
+  <p class="p">When
+            you configure the Salesforce destination, you define connection information, including
+            the Salesforce API version and API type that the destination uses to connect to
+            Salesforce. </p>
+
+        <p class="p">You specify the Salesforce object to write to by entering the object name or by defining
+            an expression that evaluates to the object name. You also map incoming fields in the
+            record to existing fields in the Salesforce object.</p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic task nested1" id="task_ncv_153_rx">
+    <h2 class="title topictitle2">Configuring a Salesforce Destination</h2>
+
+    <div class="body taskbody">
+        <div class="section context">Configure a Salesforce
+            destination to write data to Salesforce.</div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ncv_153_rx__d6014e3975" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d91175e83">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d91175e86">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d91175e83 ">Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d91175e86 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d91175e83 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d91175e86 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d91175e83 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_ncv_153_rx__d6014e4021" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d91175e86 ">Fields that must include data to be passed into the
+                                        stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
+                                            fields that the stage uses.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d91175e83 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_ncv_153_rx__d6014e4035" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d91175e86 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d91175e83 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_ncv_153_rx__d6014e4050" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d91175e86 ">Error record handling for the stage: <ul class="ul" id="task_ncv_153_rx__d6014e4054">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Salesforce</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ncv_153_rx__table_fg1_cbc_tx" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d91175e205">Salesforce Property</th>
+
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d91175e208">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d91175e205 ">Username</td>
+
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d91175e208 ">Salesforce username in the following email format:
+       <samp class="ph codeph">&lt;text&gt;@&lt;text&gt;.com</samp>. </td>
+
+     </tr>
+
+                                <tr class="row">
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d91175e205 ">Password</td>
+
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d91175e208 ">Salesforce password. <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
+                  and passwords, you can use runtime resources or Hashicorp Vault secrets. For more
+                  information, see <a class="xref" href="../Install_Config/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Install_Config/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
+</td>
+
+     </tr>
+
+                                <tr class="row">
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d91175e205 ">Auth Endpoint</td>
+
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d91175e208 ">Salesforce SOAP API authentication endpoint. Enter one of the following values:<ul class="ul" id="task_ncv_153_rx__d5877e2291">
+        <li class="li">login.salesforce.com - To connect to a Production or Developer Edition
+         organization.</li>
+
+        <li class="li">test.salesforce.com - To connect to a sandbox organization.</li>
+
+       </ul>
+<p class="p">Default is login.salesforce.com.</p>
+</td>
+
+     </tr>
+
+                                <tr class="row">
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d91175e205 ">API Version</td>
+
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d91175e208 ">Salesforce API version to use to connect to Salesforce. <p class="p">Default is 38.0.</p>
+</td>
+
+     </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d91175e205 ">Use Bulk API</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d91175e208 ">Determines whether the stage uses the Salesforce Bulk API
+                                        or SOAP API to write to Salesforce. Select to use the Bulk
+                                        API. Clear to use the SOAP API.<p class="p">The Bulk API is optimized
+                                            to process large sets of data. The SOAP API supports
+                                            more complex queries, but is less practical when
+                                            processing large sets of data. For more information
+                                            about when to use the Bulk or SOAP API, see the
+                                            Salesforce Developer documentation. </p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d91175e205 ">SObject Type</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d91175e208 ">Salesforce object to write to.  <p class="p">Enter the name of an
+                                            object, such as Account. Or define an expression that
+                                            evaluates to the object name.</p>
+<div class="p">For example, you can
+                                            use an Expression Evaluator to add a header attribute to
+                                            the record named "sobjectType" that defines the
+                                            Salesforce object to write to. Then you can enter the
+                                            following expression for this
+                                            property:<pre class="pre codeblock">${record:attribute('sobjectType')}</pre>
+</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d91175e205 ">Field Mapping</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d91175e208 ">Map fields in the record to existing fields in the
+                                        Salesforce object. Enter the following:<ul class="ul" id="task_ncv_153_rx__ul_zgb_wlw_tw">
+                                            <li class="li">SDC Field - Name of the field in the record. Precede
+                                                each field name with a slash as follows:
+                                                /FieldName.</li>
+
+                                            <li class="li">Salesforce Field - API name of the existing field in
+                                                the Salesforce object. Enter a field name or enter
+                                                an expression that defines the field. </li>
+
+                                        </ul>
+<p class="p">Use the <span class="ph uicontrol">Add</span> icon to create
+                                            additional field mappings.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div><div class="footer"><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

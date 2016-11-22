@@ -42,8 +42,8 @@
 
     <p class="p">You can view the number of error records in these statistics. However, you might want to be
       notified when the number of error records reaches a certain threshold. You can enable the
-      default rule for the Pipeline Batch Error Records Counter metric to send an alert when the
-      pipeline encounters more than 100 error records. When you enable the metric rule and the alert
+      default rule for the Pipeline Error Records Counter metric to send an alert when the pipeline
+      encounters more than 100 error records. When you enable the metric rule and the alert
       triggers, the alert displays in the <span class="ph">Data
                   Collector</span> console as
       follows: </p>
@@ -82,7 +82,7 @@
         <p class="p">Data
             Collector provides the following default metric rules:</p>
 
-        <img class="image" id="concept_aq1_5lf_qv__image_gjs_zlf_qv" src="../Graphics/MetricDefaultRules.png" height="198" width="502"></img>
+        <img class="image" id="concept_aq1_5lf_qv__image_gjs_zlf_qv" src="../Graphics/MetricDefaultRules.png" height="208" width="478"></img>
     </div>
 
 </div>
@@ -95,8 +95,8 @@
 
   <p class="p">After
             selecting a metric type, you select the metric ID which specifies the metric to use. For
-            example, a metric ID can be a runtime statistics gauge or a batch input records meter.
-            You then select the metric element that defines what the metric is measuring. A metric
+            example, a metric ID can be a runtime statistics gauge or an input records meter. You
+            then select the metric element that defines what the metric is measuring. A metric
             element can be a count, rate, median, minimum, maximum, or percentage. The possible
             metric ID and metric element vary by metric type. </p>
 
@@ -106,17 +106,22 @@
  <h3 class="title topictitle3">Gauge</h3>
 
  
- <div class="body conbody"><p class="shortdesc">The gauge metric type provides alerts based on the age of the current batch, the amount
-        of time a stage takes to process a batch, or the time that <span class="ph">Data
+ <div class="body conbody"><p class="shortdesc">The gauge metric type provides alerts based on the number of input, output, or error
+        records for the last processed batch. It also provides alerts on the age of the current
+        batch, the amount of time a stage takes to process a batch, or the time that <span class="ph">Data
                   Collector</span> last
         received a record from the origin.</p>
 
         <p class="p">The gauge metric type provides alerts
             about some of the Runtime Statistics displayed in Monitor mode:</p>
 
-        <img class="image" id="concept_ky2_g4f_qv__image_r5z_hpf_qv" src="../Graphics/MetricGauge.png" height="280" width="242"></img>
+        <img class="image" id="concept_ky2_g4f_qv__image_r5z_hpf_qv" src="../Graphics/MetricGauge.png" height="324" width="231"></img>
         <div class="p">The gauge metric type includes a single metric ID, Runtime Statistics Gauge. You can
             configure the alert to trigger on the following metric elements:<ul class="ul" id="concept_ky2_g4f_qv__ul_d1h_kqf_qv">
+                <li class="li">Last Batch Input, Output, or Error Records Counts</li>
+
+                <li class="li">Last Batch Error Messages Count</li>
+
                 <li class="li">Current Batch Age</li>
 
                 <li class="li">Time in Current Stage</li>
@@ -136,22 +141,30 @@
  <h3 class="title topictitle3">Counter</h3>
 
  
- <div class="body conbody"><p class="shortdesc">The counter metric type provides alerts based on the memory usage or on the number of
-        input, output, or error records for the pipeline or for a stage in the pipeline.</p>
+ <div class="body conbody"><p class="shortdesc">The counter metric type provides alerts based on the number of input, output, or error
+        records for the pipeline or for a stage in the pipeline.</p>
 
-        <p class="p">In addition to pipeline and record
-            counts, the counter metric type provides alerts about the Stage Heap Memory Usage
-            statistics displayed in Monitor mode for the pipeline or the Heap Memory Usage
+        <p class="p">If you enable the
+                <span class="ph uicontrol">monitor.memory</span> property in the <span class="ph">Data
+                  Collector</span>
+            configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>, the counter metric type
+            also provides alerts about the Stage Heap Memory Usage and the Heap Memory Usage
             statistics displayed in Monitor mode for the pipeline or for a stage:</p>
 
-        <img class="image" id="concept_ov2_vvf_qv__image_zqq_np3_fw" src="../Graphics/MetricCounter.png" height="325" width="569"></img>
-        <div class="p">The counter metric type includes the following metric IDs:<ul class="ul" id="concept_ov2_vvf_qv__ul_lqs_4wf_qv">
-                <li class="li">Amount of memory being consumed by the pipeline or by a stage.</li>
+     <p class="p"><img class="image" id="concept_ov2_vvf_qv__image_zqq_np3_fw" src="../Graphics/MetricCounter.png" height="325" width="569"></img></p>
 
+        <div class="p"><div class="note important"><span class="importanttitle">Important:</span> Memory monitoring is disabled by default. Enable memory monitoring
+                only when you are testing real-world load usage in the test or production
+                environment. When finished testing, disable memory monitoring. </div>
+The counter
+            metric type includes the following metric IDs:<ul class="ul" id="concept_ov2_vvf_qv__ul_lqs_4wf_qv">
                 <li class="li">Pipeline batch count.</li>
 
                 <li class="li">Number of input records, output records, error records, or stage errors for the
                     pipeline or for a stage in the pipeline.</li>
+
+                <li class="li">Amount of memory being consumed by the pipeline or by a stage - only when memory
+                    monitoring is enabled.</li>
 
             </ul>
 </div>
@@ -159,9 +172,8 @@
         <p class="p">For any of the selected metric IDs, you can configure the alert to trigger on the count
             metric element.</p>
 
-        <p class="p">For example, you can configure a counter metric rule that triggers an alert when a stage
-            uses 65% of the Java heap size allocated to <span class="ph">Data
-                  Collector</span>.</p>
+        <p class="p">For example, you can configure a counter metric rule that triggers an alert when a
+            pipeline encounters more than 1,000 error records.</p>
 
     </div>
 
@@ -194,7 +206,7 @@
 
  
  <div class="body conbody"><p class="shortdesc">The meter metric type provides alerts based on rates of different record types and stage
-        errors for pipeline batches or for a stage in the pipeline. </p>
+        errors for pipelines or for a stage in the pipeline. </p>
 
         <p class="p">The meter metric type can provide alerts
             about the number of batches processed by the pipeline. The meter metric type can also
@@ -265,7 +277,7 @@
 
                 <dd class="dd">Returns the value of the current metric selected in the metric rule. Use in
                     conditions for any type of metric rule.<div class="p">For example, the default rule for the
-                        Pipeline Batch Error Records Counter metric includes the following
+                        Pipeline Error Records Counter metric includes the following
                         condition:<pre class="pre codeblock">${value() &gt; 100}</pre>
 </div>
 <p class="p">The alert is
@@ -336,9 +348,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d5462e473">Metric Rule Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d5530e488">Metric Rule Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d5462e476">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d5530e491">Description</th>
 
                                 </tr>
 
@@ -346,9 +358,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d5462e473 ">Alert Text</td>
+                                    <td class="entry" valign="top" width="30%" headers="d5530e488 ">Alert Text</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d5462e476 ">Text to display when the alert is triggered. <p class="p">Enter
+                                    <td class="entry" valign="top" width="70%" headers="d5530e491 ">Text to display when the alert is triggered. <p class="p">Enter
                                             text that explains the reason for the alert. For
                                             example, "Over 1000 pipeline error records."</p>
 </td>
@@ -356,11 +368,11 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d5462e473 ">Metric Type <a class="xref" href="MetricAlerts.html#concept_y4d_tcw_1r" title="You can use different metric types when you create a metric rule. The metric type determines which statistic triggers the alert.">
+                                    <td class="entry" valign="top" width="30%" headers="d5530e488 ">Metric Type <a class="xref" href="MetricAlerts.html#concept_y4d_tcw_1r" title="You can use different metric types when you create a metric rule. The metric type determines which statistic triggers the alert.">
                                             <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d5462e476 ">Type of metric information the alert is based on:<ul class="ul" id="task_hcf_11k_br__ul_fwn_zbk_br">
+                                    <td class="entry" valign="top" width="70%" headers="d5530e491 ">Type of metric information the alert is based on:<ul class="ul" id="task_hcf_11k_br__ul_fwn_zbk_br">
                                             <li class="li">Gauge</li>
 
                                             <li class="li">Counter</li>
@@ -377,36 +389,36 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d5462e473 ">Metric ID</td>
+                                    <td class="entry" valign="top" width="30%" headers="d5530e488 ">Metric ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d5462e476 ">Metric to use. Provides a list of available metrics based
+                                    <td class="entry" valign="top" width="70%" headers="d5530e491 ">Metric to use. Provides a list of available metrics based
                                         on the metric type. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d5462e473 ">Metric Element</td>
+                                    <td class="entry" valign="top" width="30%" headers="d5530e488 ">Metric Element</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d5462e476 ">Metric element to use. Provides a list of available
+                                    <td class="entry" valign="top" width="70%" headers="d5530e491 ">Metric element to use. Provides a list of available
                                         elements based on the metric ID.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d5462e473 ">Condition
+                                    <td class="entry" valign="top" width="30%" headers="d5530e488 ">Condition
                                         <a class="xref" href="MetricAlerts.html#concept_qyv_1tf_qv" title="When you configure a metric rule, you configure the condition that defines the threshold at which the metric rule triggers an alert. Use the expression language to configure the condition.">
                                             <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d5462e476 ">Condition to trigger the alert. Use the expression
+                                    <td class="entry" valign="top" width="70%" headers="d5530e491 ">Condition to trigger the alert. Use the expression
                                         language to configure the condition. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d5462e473 ">Send Email</td>
+                                    <td class="entry" valign="top" width="30%" headers="d5530e488 ">Send Email</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d5462e476 ">Sends an email when the alert is triggered. <p class="p">To send an
+                                    <td class="entry" valign="top" width="70%" headers="d5530e491 ">Sends an email when the alert is triggered. <p class="p">To send an
                                             email, add email addresses for alerts and configure the
                                             Data Collector email properties. For more information,
                                             see <a class="xref" href="EmailforAlerts-Configuring.html#task_f3v_1hw_1r" title="You can define the email addresses to receive metric and data alerts. When an alert triggers an email, the Data Collector sends an email to every address in the list.">Configuring Email for Alerts</a>.</p>

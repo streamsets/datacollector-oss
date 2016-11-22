@@ -259,9 +259,9 @@
                                 </row>
                                 <row>
                                     <entry>New ACLs</entry>
-                                    <entry>Define ACL permissions for the owner, group, and other.
-                                        You can optionally define other user and group permissions.
-                                        For details, see <xref
+                                    <entry>Define ACLs for the owner, group, and other. You can
+                                        optionally define other user and group permissions. For
+                                        details, see <xref
                                             href="HDFSFileMeta-Permissions.dita#concept_zr1_5ck_rx"
                                         />.</entry>
                                 </row>

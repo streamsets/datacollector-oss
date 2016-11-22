@@ -52,6 +52,9 @@
             required properties. You can also set a maximum cache size for the destination and
             determine how new tables are created and stored.</p>
 
+        <p class="p">The destination can also generate events for an event stream. For more information about
+            event handling, see <a class="xref" href="../Event_Handling/EventHandling-Overview.html#concept_cph_5h4_lx">Event Handling</a>.</p>
+
         <div class="note note"><span class="notetitle">Note:</span> When using the destination in multiple pipelines, take care to avoid concurrent or
             conflicting writes to the same tables. </div>
 
@@ -119,7 +122,7 @@
         </div>
 
         <div class="p">
-            <div class="note note"><span class="notetitle">Note:</span> <span class="ph" id="concept_f23_cqy_dw__d5617e1146">The destination can
+            <div class="note note"><span class="notetitle">Note:</span> <span class="ph" id="concept_f23_cqy_dw__d5805e1289">The destination can
                         create tables and partitions. It can add columns to tables and ignore
                         existing columns. It does not drop existing columns from tables.</span></div>
 
@@ -197,6 +200,255 @@
  <p class="shortdesc">You can configure the maximum size of the cache. When the cache reaches the specified
         limit, it uses the LRU eviction policy, which removes the least recently used data to allow
         for new entries to be written to the cache. </p>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_drg_lwc_rx">
+ <h2 class="title topictitle2">Event Generation</h2>
+
+ <div class="body conbody">
+  <div class="p">The Hive Metastore destination can
+            generate events that you can use in an event stream. When you enable event generation,
+            the destination creates event records each time it updates the Hive metastore, including
+            when it creates a table, adds columns, or creates a partition. <div class="note note"><span class="notetitle">Note:</span> Updates to existing
+                tables, columns and partitions are treated as creates since the destination does not
+                change or delete existing structures. </div>
+Hive Metastore events can be used as
+            follows: <ul class="ul" id="concept_drg_lwc_rx__ul_ohl_4pg_zx">
+                <li class="li">With the Hive Query executor to run a Hive or Impala query after updating the
+                    Hive metastore.<p class="p">For an example, see <a class="xref" href="../Event_Handling/CaseStudy-Impala.html#concept_szz_xwm_lx">Case Study: Impala Metadata Updates for HDS</a>.</p>
+</li>
+
+                <li class="li">With a destination to store event information.
+                                    <p class="p">For an example, see <a class="xref" href="../Event_Handling/CaseStudy-EventStorage.html#concept_ocb_nnl_px">Case Study: Event Storage</a>.</p>
+</li>
+
+            </ul>
+</div>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_x4p_fyc_rx">
+    <h3 class="title topictitle3">Event Records</h3>
+
+    <div class="body conbody">
+        <p class="p">Hive Metastore event records include the
+            following event-related record header attributes. Record header attributes are stored as
+            String values:</p>
+
+        <div class="p">
+            
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_x4p_fyc_rx__table_brz_3gp_qx" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr class="row">
+                            <th class="entry" valign="top" width="30%" id="d55940e349">Record Header Attribute</th>
+
+                            <th class="entry" valign="top" width="70%" id="d55940e352">Description</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr class="row">
+                            <td class="entry" valign="top" width="30%" headers="d55940e349 ">sdc.event.type</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d55940e352 ">Event type. Uses one of the following types:<ul class="ul" id="concept_x4p_fyc_rx__ul_m12_mgp_qx">
+                                    <li class="li">new-table - Generated when the destination creates a new
+                                        table. </li>
+
+                                    <li class="li">new-columns - Generated when the destination creates new
+                                        columns. </li>
+
+                                    <li class="li">new partition - Generated when the destination creates a new
+                                        partition.</li>
+
+                                </ul>
+</td>
+
+                        </tr>
+
+                        <tr class="row">
+       <td class="entry" valign="top" width="30%" headers="d55940e349 ">sdc.event.version</td>
+
+       <td class="entry" valign="top" width="70%" headers="d55940e352 ">An integer that indicates the version of the event record type.</td>
+
+      </tr>
+
+                        <tr class="row">
+       <td class="entry" valign="top" width="30%" headers="d55940e349 ">sdc.event.creation_timestamp</td>
+
+       <td class="entry" id="concept_x4p_fyc_rx__d5877e1203" valign="top" width="70%" headers="d55940e352 ">Epoch timestamp when the stage created the event.
+       </td>
+
+      </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+
+        </div>
+
+        <div class="p">Hive Metastore can generate the following types of event records: <dl class="dl">
+                
+                    <dt class="dt dlterm">New table</dt>
+
+                    <dd class="dd">
+                        <p class="p">The destination generates a new table event record when it creates a new
+                            table.</p>
+
+                        <div class="p">New table event records have the <samp class="ph codeph">sdc.event.type</samp> record
+                            header attribute set to <samp class="ph codeph">new-table</samp> and include the
+                            following field: 
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_x4p_fyc_rx__table_dh2_5gc_rx" class="table" frame="border" border="1" rules="all">
+                                    
+                                    
+                                    <thead class="thead" align="left">
+                                        <tr class="row">
+                                            <th class="entry" valign="top" width="30%" id="d55940e435">Field</th>
+
+                                            <th class="entry" valign="top" width="70%" id="d55940e438">Description</th>
+
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody class="tbody">
+                                        <tr class="row">
+                                            <td class="entry" valign="top" width="30%" headers="d55940e435 ">table</td>
+
+                                            <td class="entry" valign="top" width="70%" headers="d55940e438 ">Fully qualified table name using the following
+                                                format:
+                                                <samp class="ph codeph">'&lt;DB&gt;'.'&lt;table&gt;'</samp>.</td>
+
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+</div>
+</div>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">New column </dt>
+
+                    <dd class="dd">
+                        <p class="p">The destination generates a new column event record when it creates new
+                            columns in a table.</p>
+
+                        <div class="p">New column event records have the <samp class="ph codeph">sdc.event.type</samp> record
+                            header attribute set to <samp class="ph codeph">new-column</samp> and include the
+                            following fields: 
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_x4p_fyc_rx__table_jch_hcd_rx" class="table" frame="border" border="1" rules="all">
+                                    
+                                    
+                                    <thead class="thead" align="left">
+                                        <tr class="row">
+                                            <th class="entry" valign="top" width="30%" id="d55940e492">Field</th>
+
+                                            <th class="entry" valign="top" width="70%" id="d55940e495">Description</th>
+
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody class="tbody">
+                                        <tr class="row">
+                                            <td class="entry" valign="top" width="30%" headers="d55940e492 ">table</td>
+
+                                            <td class="entry" valign="top" width="70%" headers="d55940e495 ">Fully qualified table name using the following
+                                                format: <samp class="ph codeph">&lt;db&gt;.&lt;table&gt;</samp>.</td>
+
+                                        </tr>
+
+                                        <tr class="row">
+                                            <td class="entry" valign="top" width="30%" headers="d55940e492 ">columns</td>
+
+                                            <td class="entry" valign="top" width="70%" headers="d55940e495 ">A list-map field with the following information
+                                                for each new column:<ul class="ul" id="concept_x4p_fyc_rx__ul_q3z_s5g_zx">
+                                                  <li class="li">Column name</li>
+
+                                                  <li class="li">Hive data type, precision and scale</li>
+
+                                                </ul>
+</td>
+
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+</div>
+</div>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">New partition </dt>
+
+                    <dd class="dd">
+                        <p class="p">The destination generates a new partition event record when it creates a
+                            new partition in a table.</p>
+
+                        <div class="p">New partition event records have the <samp class="ph codeph">sdc.event.type</samp>
+                            record header attribute set to <samp class="ph codeph">new-partition</samp> and
+                            include the following fields: 
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_x4p_fyc_rx__table_syr_5td_rx" class="table" frame="border" border="1" rules="all">
+                                    
+                                    
+                                    <thead class="thead" align="left">
+                                        <tr class="row">
+                                            <th class="entry" valign="top" width="30%" id="d55940e566">Field</th>
+
+                                            <th class="entry" valign="top" width="70%" id="d55940e569">Description</th>
+
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody class="tbody">
+                                        <tr class="row">
+                                            <td class="entry" valign="top" width="30%" headers="d55940e566 ">table</td>
+
+                                            <td class="entry" valign="top" width="70%" headers="d55940e569 ">Fully qualified table name using the following
+                                                format: <samp class="ph codeph">&lt;db&gt;.&lt;table&gt;</samp>.</td>
+
+                                        </tr>
+
+                                        <tr class="row">
+                                            <td class="entry" valign="top" width="30%" headers="d55940e566 ">partitions</td>
+
+                                            <td class="entry" valign="top" width="70%" headers="d55940e569 ">A list-map field with the following information:
+                                                  <ul class="ul" id="concept_x4p_fyc_rx__ul_brd_w5g_zx">
+                                                  <li class="li">Partition name</li>
+
+                                                  <li class="li">Partition value</li>
+
+                                                </ul>
+</td>
+
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+</div>
+</div>
+
+                    </dd>
+
+                
+            </dl>
+</div>
+
+    </div>
 
 </div>
 </div>
@@ -288,9 +540,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d49517e406">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d55940e757">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d49517e409">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d55940e760">Description</th>
 
                                 </tr>
 
@@ -298,47 +550,57 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d49517e406 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d55940e757 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d49517e409 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d49517e406 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d49517e409 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d55940e760 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d49517e406 ">Stage Library</td>
+                                    <td class="entry" valign="top" width="30%" headers="d55940e757 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d49517e409 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d55940e760 ">Optional description.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d49517e406 ">Required Fields</td>
+                                    <td class="entry" valign="top" width="30%" headers="d55940e757 ">Stage Library</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d49517e409 ">Since the destination processes only metadata records,
+                                    <td class="entry" valign="top" width="70%" headers="d55940e760 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d55940e757 ">Produce Events <a class="xref" href="HiveMetastore.html#concept_drg_lwc_rx">
+                                            <img class="image" id="task_a4n_1ft_zv__image_xsl_2rx_mx" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d55940e760 ">Generates event records when events occur. Use for event
+        handling. <a class="xref" href="../Event_Handling/EventHandling-Overview.html#concept_cph_5h4_lx">
+         <img class="image" id="task_a4n_1ft_zv__d5877e1076" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d55940e757 ">Required Fields</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d55940e760 ">Since the destination processes only metadata records,
                                         this property is not relevant.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d49517e406 ">Preconditions</td>
+                                    <td class="entry" valign="top" width="30%" headers="d55940e757 ">Preconditions</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d49517e409 ">Since the destination processes only metadata records,
+                                    <td class="entry" valign="top" width="70%" headers="d55940e760 ">Since the destination processes only metadata records,
                                         this property is not relevant.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d49517e406 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_a4n_1ft_zv__d5688e3984" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d55940e757 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_a4n_1ft_zv__d6014e4179" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d49517e409 ">Error record handling for the stage: <ul class="ul" id="task_a4n_1ft_zv__d5688e3988">
+                                    <td class="entry" valign="top" width="70%" headers="d55940e760 ">Error record handling for the stage: <ul class="ul" id="task_a4n_1ft_zv__d6014e4183">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -367,9 +629,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d49517e519">Hive Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d55940e887">Hive Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d49517e522">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d55940e890">Description</th>
 
                                 </tr>
 
@@ -377,32 +639,32 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d49517e519 ">JDBC URL</td>
+       <td class="entry" valign="top" width="30%" headers="d55940e887 ">JDBC URL</td>
 
-       <td class="entry" valign="top" width="70%" headers="d49517e522 ">JDBC URL for Hive. You can use the default, or replace the expression for the database
+       <td class="entry" valign="top" width="70%" headers="d55940e890 ">JDBC URL for Hive. You can use the default, or replace the expression for the database
         name with a specific database name when appropriate.</td>
 
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d49517e519 ">JDBC Driver Name</td>
+       <td class="entry" valign="top" width="30%" headers="d55940e887 ">JDBC Driver Name</td>
 
-       <td class="entry" valign="top" width="70%" headers="d49517e522 ">The fully-qualified JDBC driver name.</td>
+       <td class="entry" valign="top" width="70%" headers="d55940e890 ">The fully-qualified JDBC driver name.</td>
 
       </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d49517e519 ">Data Format</td>
+                                    <td class="entry" valign="top" width="30%" headers="d55940e887 ">Data Format</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d49517e522 ">The destination processes only Avro schemas at this
+                                    <td class="entry" valign="top" width="70%" headers="d55940e890 ">The destination processes only Avro schemas at this
                                         time.</td>
 
                                 </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d49517e519 ">Hadoop Configuration Directory</td>
+       <td class="entry" valign="top" width="30%" headers="d55940e887 ">Hadoop Configuration Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d49517e522 ">
+       <td class="entry" valign="top" width="70%" headers="d55940e890 ">
         <p class="p">Absolute path to the directory containing the Hive and Hadoop configuration files. For a
          Cloudera Manager installation, enter hive-conf. </p>
 
@@ -417,16 +679,16 @@
 </div>
 
         <div class="note note"><span class="notetitle">Note:</span> Properties in the configuration files are overridden by individual properties defined
-         in this processor. </div>
+         in this stage. </div>
 
        </td>
 
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d49517e519 ">Additional Hadoop Configuration</td>
+       <td class="entry" valign="top" width="30%" headers="d55940e887 ">Additional Hadoop Configuration</td>
 
-       <td class="entry" valign="top" width="70%" headers="d49517e522 ">
+       <td class="entry" valign="top" width="70%" headers="d55940e890 ">
         <p class="p">Additional properties to use. </p>
 
         <p class="p">To add properties, click <span class="ph uicontrol">Add</span> and define the property name and
@@ -453,9 +715,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d49517e630">Advanced Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d55940e998">Advanced Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d49517e633">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d55940e1001">Description</th>
 
                                 </tr>
 
@@ -463,19 +725,19 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d49517e630 ">Stored as Avro <a class="xref" href="HiveMetastore.html#concept_wyr_5jv_hw">
+                                    <td class="entry" valign="top" width="30%" headers="d55940e998 ">Stored as Avro <a class="xref" href="HiveMetastore.html#concept_wyr_5jv_hw">
                                             <img class="image" id="task_a4n_1ft_zv__image_lqj_pyn_lw" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d49517e633 ">Uses the Stored As Avro clause in the SQL commands that
+                                    <td class="entry" valign="top" width="70%" headers="d55940e1001 ">Uses the Stored As Avro clause in the SQL commands that
                                         generate Hive tables. When selected, the Avro schema URL is
                                         not included in the query.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d49517e630 ">Schema Folder Location</td>
+                                    <td class="entry" valign="top" width="30%" headers="d55940e998 ">Schema Folder Location</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d49517e633 ">Location to store the Avro schemas when Stored as Avro is
+                                    <td class="entry" valign="top" width="70%" headers="d55940e1001 ">Location to store the Avro schemas when Stored as Avro is
                                         not selected. <p class="p">Use a leading slash ( / ) to specify a
                                             fully-qualified path. Omit the slash to specify a path
                                             relative to the table directory. </p>
@@ -487,18 +749,18 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d49517e630 ">HDFS User</td>
+                                    <td class="entry" valign="top" width="30%" headers="d55940e998 ">HDFS User</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d49517e633 ">Optional HDFS user for the destination to use when
+                                    <td class="entry" valign="top" width="70%" headers="d55940e1001 ">Optional HDFS user for the destination to use when
                                         generating schemas.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d49517e630 ">Max Cache Size (entries) <a class="xref" href="HiveMetastore.html#concept_f4y_spy_dw" title="The Hive Metastore destination queries Hive for information and caches the results. When possible, it uses the cache to avoid unnecessary Hive queries.">
+                                    <td class="entry" valign="top" width="30%" headers="d55940e998 ">Max Cache Size (entries) <a class="xref" href="HiveMetastore.html#concept_f4y_spy_dw" title="The Hive Metastore destination queries Hive for information and caches the results. When possible, it uses the cache to avoid unnecessary Hive queries.">
                                             <img class="image" id="task_a4n_1ft_zv__image_mfn_hwx_5r" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d49517e633 ">Maximum number of entries in the cache. <p class="p">When the cache
+                                    <td class="entry" valign="top" width="70%" headers="d55940e1001 ">Maximum number of entries in the cache. <p class="p">When the cache
          reaches the maximum size, the oldest cached entries are evicted to allow for new
          data.</p>
 <p class="p">Default is -1, an unlimited cache size.</p>

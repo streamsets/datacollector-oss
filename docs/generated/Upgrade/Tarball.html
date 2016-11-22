@@ -42,7 +42,7 @@
                 of <samp class="ph codeph">$SDC_DIST</samp>, the base <span class="ph">Data
                   Collector</span> runtime directory.</li>
 
-            <li class="li">Shut down the previous version.</li>
+            <li class="li">Stop all pipelines and then shut down the previous version.</li>
 
             <li class="li">Install the new version.</li>
 
@@ -137,7 +137,7 @@
     </div>
 
     <div class="related-links"><div class="relinfo"><strong>Related information</strong><br xmlns="http://www.w3.org/1999/xhtml" />
-<div class="related_link"><a class="navheader_parent_path" href="../Install_Config/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.By default, Data Collector is configured to use TLS versions 1.1 and 1.2. To connect to a system that uses an earlier version of TLS, modify the Dhttps.protocols option in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file.You can enable remote debugging to debug a Data Collector instance running on a remote machine. To enable remote debugging, define debugging options in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to jar files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Install_Config/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. To enable remote debugging, define debugging options in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file.You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.When you use Data Collector with Java 7, Data Collector is configured to use TLS versions 1.1 and 1.2. To connect to a system that uses an earlier version of TLS, modify the Dhttps.protocols option in the SDC_JAVA7_OPTS environment variable in the Data Collector environment configuration file.When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to jar files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
 </div>
 </div>
 </div>
@@ -145,26 +145,29 @@
     <h2 class="title topictitle2">Step 2. Shut Down the Previous Version</h2>
 
     
-    <div class="body taskbody"><p class="shortdesc">Shut down the previous version of <span class="ph">Data
+    <div class="body taskbody"><p class="shortdesc">Stop all pipelines and then shut down the previous version of <span class="ph">Data
                   Collector</span>.</p>
 
-        <div class="section context">
-            <p class="p">To use the command line for shutdown when <span class="ph">Data
-                  Collector</span> is started as a service, use the following command:</p>
-
-            <pre class="pre codeblock">service sdc stop</pre>
-
-            <p class="p">To use the <span class="ph">Data
-                  Collector</span> console for shutdown:</p>
-
-        </div>
-
-        <ol class="ol steps"><li class="li step">
-                <span class="ph cmd">Click <span class="ph uicontrol">Administration </span> &gt; <span class="ph uicontrol">Shut
-                        Down.</span></span>
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">From the <span class="ph uicontrol">Home</span> page, select all running pipelines in the
+                    list and then click the <span class="ph uicontrol">Stop</span> icon.</span>
+                <div class="itemgroup info">When the confirmation dialog appears, click <span class="ph uicontrol">Yes</span>.</div>
             </li>
-<li class="li step">
-                <span class="ph cmd">When a confirmation dialog box appears, click <span class="ph uicontrol">Yes</span>.</span>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use one of the following methods to shut down <span class="ph">Data
+                  Collector</span>:</span>
+                <ul class="ul choices" id="task_uzq_gwl_5v__choices_hwp_k2c_rx">
+                    <li class="li choice">To use the command line for shutdown when <span class="ph">Data
+                  Collector</span> is started as a service, use the following
+                        command:<pre class="pre codeblock">service sdc stop</pre>
+</li>
+
+                    <li class="li choice">To use the <span class="ph">Data
+                  Collector</span> console for shutdown, click <span class="ph menucascade"><span class="ph uicontrol">Administration</span> &gt; <span class="ph uicontrol"> Shut Down</span></span>. When the confirmation dialog box appears, click
+                            <span class="ph uicontrol">Yes</span>.</li>
+
+                </ul>
+
             </li>
 </ol>
 
@@ -198,7 +201,7 @@
                     <pre class="pre codeblock">export SDC_DIST=&lt;extraction directory&gt;</pre>
 
                     <div class="p">For
-                        example:<pre class="pre codeblock">export SDC_DIST=/sdc/streamsets-datacollector-2.0.0.0</pre>
+                        example:<pre class="pre codeblock">export SDC_DIST=/sdc/streamsets-datacollector-2.2.0.0</pre>
 </div>
 
                 </div>
@@ -212,7 +215,9 @@
     <h3 class="title topictitle3">Installing from the Tarball (Service Start)</h3>
 
     
-    <div class="body taskbody"><p class="shortdesc">Install the new version of the tarball.</p>
+    <div class="body taskbody"><p class="shortdesc">Install the new version of the tarball. Installing the full <span class="ph">Data
+                  Collector</span> as a
+        service requires sudo privileges on the root directory. </p>
 
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">Use the following URL to download the full or core <span class="ph">Data
@@ -222,22 +227,29 @@
                 <span class="ph cmd">Extract the tarball to a different directory than the previous version.</span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Create a backup of the <samp class="ph codeph">/etc/init.d/_sdcinitd_prototype</samp> file
-                    that was used in the previous version.</span>
+                <span class="ph cmd">Create a backup of the <samp class="ph codeph">/etc/init.d/sdc</samp> file that was used in
+                    the previous version.</span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Copy the new version of the <span class="ph filepath">initd/_sdcinitd_prototype</span> file
-                    to the <span class="ph filepath">/etc/init.d/</span> directory as sdc.</span>
+                <span class="ph cmd">Use the following commands from the directory where you extracted the tarball
+                    to copy the <span class="ph filepath">initd/_sdcinitd_prototype</span> file to the
+                        <span class="ph filepath">/etc/init.d</span> directory and then change ownership of the
+                    file to sdc:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">cp initd/_sdcinitd_prototype  /etc/init.d/sdc
+chown sdc:sdc /etc/init.d/sdc</pre>
+
+                </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Edit the sdc file and set the <samp class="ph codeph">$SDC_DIST</samp> and
-                        <samp class="ph codeph">$SDC_HOME</samp> environment variables to the location where you
-                    extracted the tarball.</span>
+                <span class="ph cmd">Edit the <samp class="ph codeph">/etc/init.d/sdc</samp> file and set the
+                        <samp class="ph codeph">$SDC_DIST</samp> and <samp class="ph codeph">$SDC_HOME</samp> environment
+                    variables to the location where you extracted the tarball.</span>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Use the following command to make the sdc file executable:</span>
                 <div class="itemgroup info">
-                    <pre class="pre codeblock">sudo chmod 755 /etc/init.d/sdc</pre>
+                    <pre class="pre codeblock">chmod 755 /etc/init.d/sdc</pre>
 
                 </div>
             </li>
@@ -275,9 +287,9 @@
                   Collector</span>, rename the directory defined by the <samp class="ph codeph">$SDC_CONF</samp> environment
                     variable.</span>
                 <div class="itemgroup info">
-                    <p class="p">For example, if you are upgrading version 1.5.0.0 and if
+                    <p class="p">For example, if you are upgrading version 2.0.0.0 and if
                             <samp class="ph codeph">$SDC_CONF</samp> is defined as <samp class="ph codeph">/etc/sdc</samp>,
-                        rename the directory to <samp class="ph codeph">/etc/sdc1500</samp>.</p>
+                        rename the directory to <samp class="ph codeph">/etc/sdc2000</samp>.</p>
 
                 </div>
             </li>
@@ -306,9 +318,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d218125e605">Environment Variable</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d251388e644">Environment Variable</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d218125e608">Value</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d251388e647">Value</th>
 
                                 </tr>
 
@@ -316,34 +328,34 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d218125e605 ">SDC_CONF</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d251388e644 ">SDC_CONF</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d218125e608 ">New location outside of the base <span class="ph">Data
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d251388e647 ">New location outside of the base <span class="ph">Data
                   Collector</span> runtime directory and unique from the previous renamed
                                         directory. For example, if you renamed the previous
-                                        configuration directory to <samp class="ph codeph">/etc/sdc1500</samp>,
+                                        configuration directory to <samp class="ph codeph">/etc/sdc2000</samp>,
                                         use the value <samp class="ph codeph">/etc/sdc</samp>.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d218125e605 ">SDC_DATA</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d251388e644 ">SDC_DATA</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d218125e608 ">Same directory that the previous version used.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d218125e605 ">SDC_LOG</td>
-
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d218125e608 ">Same directory that the previous version used.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d251388e647 ">Same directory that the previous version used.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d218125e605 ">SDC_RESOURCES</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d251388e644 ">SDC_LOG</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d218125e608 ">Same directory that the previous version used.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d251388e647 ">Same directory that the previous version used.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d251388e644 ">SDC_RESOURCES</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d251388e647 ">Same directory that the previous version used.</td>
 
                                 </tr>
 
@@ -355,13 +367,31 @@
                 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Create the <samp class="ph codeph">/etc/sdc</samp> directory and copy all files from
-                        <samp class="ph codeph">$SDC_DIST/etc</samp> into this directory.</span>
+                <span class="ph cmd">If you installed additional drivers or developed custom stages, add the
+                    STREAMSETS_LIBRARIES_EXTRA_DIR or USER_LIBRARIES_DIR environment variable to the
+                    environment configuration file, and set it to the same directory used in the
+                    previous version.</span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">If you installed additional drivers or developed custom stages, add the
-                    STREAMSETS_LIBRARIES_EXTRA_DIR or USER_LIBRARIES_DIR environment variable and
-                    set it to the same directory used in the previous version.</span>
+                <span class="ph cmd">Manually update the environment configuration file with any other customized
+                    property values that you defined in the previous version.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the following command to create the <span class="ph">Data
+                  Collector</span> configuration directory at <samp class="ph codeph">/etc/sdc</samp>: </span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">mkdir /etc/sdc</pre>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the following command from the directory where you extracted the tarball to
+                    copy all files from etc into the <span class="ph">Data
+                  Collector</span> configuration directory that you just created:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">cp -R etc/ /etc/sdc</pre>
+
+                </div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">To run <span class="ph">Data
@@ -380,16 +410,12 @@
 
                 </div>
             </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">Manually update the environment configuration file with any other customized
-                    property values that you defined in the previous version.</span>
-            </li>
 </ol>
 
     </div>
 
     <div class="related-links"><div class="relinfo"><strong>Related information</strong><br xmlns="http://www.w3.org/1999/xhtml" />
-<div class="related_link"><a class="navheader_parent_path" href="../Install_Config/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.By default, Data Collector is configured to use TLS versions 1.1 and 1.2. To connect to a system that uses an earlier version of TLS, modify the Dhttps.protocols option in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file.You can enable remote debugging to debug a Data Collector instance running on a remote machine. To enable remote debugging, define debugging options in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to jar files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Install_Config/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. To enable remote debugging, define debugging options in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file.You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.When you use Data Collector with Java 7, Data Collector is configured to use TLS versions 1.1 and 1.2. To connect to a system that uses an earlier version of TLS, modify the Dhttps.protocols option in the SDC_JAVA7_OPTS environment variable in the Data Collector environment configuration file.When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to jar files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
 </div>
 </div>
 </div>
@@ -409,10 +435,10 @@
         <p class="p">Compare the previous and new versions of the configuration files, and update the new
             files as needed with the same customized property values.</p>
 
-  <p class="p">For example, compare the files in the <samp class="ph codeph">/etc/sdc1500</samp> directory with the files in
+  <p class="p">For example, compare the files in the <samp class="ph codeph">/etc/sdc2000</samp> directory with the files in
             the <samp class="ph codeph">/etc/sdc</samp> directory. Update the new files in the
                 <samp class="ph codeph">/etc/sdc</samp> directory with any customizations made in the previous
-            files in the <samp class="ph codeph">/etc/sdc1500</samp> directory.</p>
+            files in the <samp class="ph codeph">/etc/sdc2000</samp> directory.</p>
 
  </div>
 
@@ -461,11 +487,17 @@
                 <dd class="dd">Use the following command:<pre class="pre">service sdc start  </pre>
 </dd>
 
-                <dd class="dd">For CentOS, use the following command:<pre class="pre">chkconfig --add sdc</pre>
-</dd>
+                <dd class="dd">To add the <span class="ph">Data Collector</span> service to the system startup, use the
+                    required command for your operating system:<ul class="ul" id="concept_uct_wfr_5v__ul_m3d_2gr_yx">
+                        <li class="li">For CentOS, use the following
+                            command:<pre class="pre codeblock">chkconfig --add sdc</pre>
+</li>
 
-                <dd class="dd">For Ubuntu, use the following
-                    command:<pre class="pre">update-rc.d sdc defaults 97 03</pre>
+                        <li class="li">For Ubuntu, use the following
+                            command:<pre class="pre codeblock">update-rc.d sdc defaults 97 03</pre>
+</li>
+
+                    </ul>
 </dd>
 
             

@@ -48,9 +48,9 @@
   <p class="p">After the offset commit, the origin stage creates a new batch. </p>
 
   <p class="p">Note that this describes general pipeline behavior. Behavior can differ based on the specific
-   pipeline configuration. For example, for the Kafka Consumer, the Kafka Zookeeper tracks and
-   provides the offset. And for origin systems that do not store data, such as Omniture and HTTP
-   Client, offsets are not noted because they aren't relevant. </p>
+      pipeline configuration. For example, for the Kafka Consumer, the offset is stored in Kafka or
+      ZooKeeper. And for origin systems that do not store data, such as Omniture and HTTP Client,
+      offsets are not stored because they aren't relevant. </p>
 
  </div>
 

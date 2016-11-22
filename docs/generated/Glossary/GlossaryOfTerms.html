@@ -96,19 +96,45 @@
           handles data when the pipeline stops unexpectedly.</dd>
 
       
-   
-    <dt class="dt dlterm">destination</dt>
+      
+        <dt class="dt dlterm">destination</dt>
 
-    <dd class="dd">A stage type used in a pipeline to represent where the <span class="ph">Data
+        <dd class="dd">A stage type used in a pipeline to represent where the <span class="ph">Data
                   Collector</span> writes
-     processed data.</dd>
+          processed data.</dd>
 
-   
+      
       
         <dt class="dt dlterm">development stages, dev stages</dt>
 
         <dd class="dd">Stages such as the Dev Data Generator origin and the Dev Random Error processor that
           enable pipeline development and testing. Not meant for use in production pipelines.</dd>
+
+      
+      
+        <dt class="dt dlterm">event handling</dt>
+
+        <dd class="dd">
+          <p class="p">Event handling enables the pipeline to trigger tasks in external systems based on
+            actions that occur in the pipeline, such as running a MapReduce job after the pipeline
+            writes a file to HDFS. You can also use event handling to store event information, such
+            as when an origin starts or completes reading a file. </p>
+
+        </dd>
+
+      
+      
+        <dt class="dt dlterm">event record</dt>
+
+        <dd class="dd">A record created by an event-generating stage when a stage-related event occurs, like
+          when an origin starts reading a new file or a destination closes an output file. </dd>
+
+      
+      
+        <dt class="dt dlterm">executor</dt>
+
+        <dd class="dd">A stage type used to perform tasks in external systems upon receiving an event
+          record.</dd>
 
       
       
@@ -123,10 +149,10 @@
         <dt class="dt dlterm">field path</dt>
 
         <dd class="dd">The path to a field in a record. Use to reference a field.</dd>
- 
+
       
-          
-       <dt class="dt dlterm">implicit validation</dt>
+      
+        <dt class="dt dlterm">implicit validation</dt>
 
         <dd class="dd">Lists missing or incomplete configuration. Occurs by default as the Data Collector
           console saves your changes.</dd>
@@ -144,19 +170,19 @@
         <dd class="dd">Monitoring or email alerts based on stage or pipeline metrics. </dd>
 
       
-   
-    <dt class="dt dlterm">origin</dt>
+      
+        <dt class="dt dlterm">origin</dt>
 
-    <dd class="dd">A stage type used in a pipeline to represent the source of data in a pipeline.</dd>
+        <dd class="dd">A stage type used in a pipeline to represent the source of data in a pipeline.</dd>
 
-   
-   
-    <dt class="dt dlterm">pipeline</dt>
+      
+      
+        <dt class="dt dlterm">pipeline</dt>
 
-    <dd class="dd">A representation of a stream of data that is processed by the <span class="ph">Data
+        <dd class="dd">A representation of a stream of data that is processed by the <span class="ph">Data
                   Collector</span>.</dd>
 
-   
+      
       
         <dt class="dt dlterm">pipeline constant</dt>
 
@@ -236,7 +262,7 @@
         <dd class="dd">A pipeline configured to run in the default standalone execution mode.</dd>
 
       
-  </dl>
+    </dl>
 
  </div>
 

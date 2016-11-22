@@ -34,7 +34,7 @@
         <p>If the steps below are no longer accurate, you might try the following article or check
             for updated Azure Data Lake Store documentation: <xref
                 href="https://docs.microsoft.com/en-us/azure/data-lake-store/data-lake-store-authenticate-using-active-directory"
-                format="html"/>.</p>
+                format="html" scope="external"/>.</p>
         <p>After you complete all of the prerequisite tasks, you can configure the Azure Data Store
             destination. </p>
  </conbody>

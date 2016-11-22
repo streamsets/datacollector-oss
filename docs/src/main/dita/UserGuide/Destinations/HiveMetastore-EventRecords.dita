@@ -154,7 +154,7 @@
                                             <entry>partitions</entry>
                                             <entry>A list-map field with the following information:
                                                   <ul id="ul_brd_w5g_zx">
-                                                  <li>Parition name</li>
+                                                  <li>Partition name</li>
                                                   <li>Partition value</li>
                                                 </ul></entry>
                                         </row>

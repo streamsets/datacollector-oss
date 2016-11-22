@@ -41,9 +41,17 @@
       processing. But you might optionally configure required fields for the Field Splitter or Value
       Replacer to discard any records that are not needed.</p>
 
-    <p class="p"><img class="image" id="concept_ub2_zdl_br__image_m3h_hnm_2r" src="../Graphics/ReplicatingStreams.png"></img></p>
+    <p class="p"><img class="image" id="concept_ub2_zdl_br__image_m3h_hnm_2r" src="../Graphics/ReplicatingStreams.png" height="155" width="635"></img></p>
 
     <p class="p">To route data based on more complex conditions, use a Stream Selector.</p>
+
+        <p class="p">Some stages generate events that pass to event streams. Event streams originate from an
+            event-generating stage, such as an origin or destination, and pass from the stage
+            through an event stream output, as follows:</p>
+
+        <p class="p"><img class="image" id="concept_ub2_zdl_br__image_m1m_trz_yx" src="../Graphics/BranchEventStream.png" height="165" width="525"></img></p>
+
+        <p class="p">For more information about event handling and event streams, see <a class="xref" href="../Event_Handling/EventHandling-Overview.html#concept_cph_5h4_lx">Event Handling</a>.</p>
 
  </div>
 
@@ -66,9 +74,13 @@
    Expression Evaluator for further processing, but in no particular order and with no record
    merging.</p>
 
-  <div class="note note"><span class="notetitle">Note:</span> Pipeline validation does not prevent duplicate data. To avoid writing duplicate data to
-   destinations, configure the pipeline logic to remove duplicate data or to prevent the generation
-   of duplicate data.</div>
+  <div class="note important"><span class="importanttitle">Important:</span> Pipeline validation does not prevent duplicate data. To avoid writing
+   duplicate data to destinations, configure the pipeline logic to remove duplicate data or to
+   prevent the generation of duplicate data.</div>
+
+  <p class="p">Note that you cannot merge event streams with data streams. Event records must stream from
+   the event-generating stage to destinations or executors without merging with data streams. For
+   more information about event handling and event streams, see <a class="xref" href="../Event_Handling/EventHandling-Overview.html#concept_cph_5h4_lx">Event Handling</a>.</p>
 
  </div>
 

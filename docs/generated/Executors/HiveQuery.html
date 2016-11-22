@@ -1,0 +1,349 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The Hive Query executor connects to Hive or Impala and performs a user-defined Hive or Impala query each time it receives an event record. Use the Hive Query executor as part of an event stream to ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Hive Query Executor"></meta><meta name="DC.Relation" scheme="URI" content="../Executors/Executors-title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Hive_Drift_Solution/HiveDrift-Overview.html#concept_phk_bdf_2w"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_kjw_llk_fx"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Hive Query Executor</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+--></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Executors/Executors-title.html" title="Executors">Executors</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Executors/Executors-title.html" title="Executors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Executors</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_kjw_llk_fx">
+ <h1 class="title topictitle1">Hive Query Executor</h1>
+
+ <div class="body conbody">
+  <p class="p">The Hive Query executor connects to Hive or Impala
+            and performs a user-defined Hive or Impala query each time it receives an event record.
+            Use the Hive Query executor as part of an event stream to perform event-driven queries
+            in Hive or Impala.</p>
+
+        <p class="p">For example, you can use the Hive Query executor to perform the Invalidate Metadata query
+            for Impala as part of the Hive Drift Solution. For more information, see <a class="xref" href="../Event_Handling/CaseStudy-Impala.html#concept_szz_xwm_lx">Case Study: Impala Metadata Updates for HDS</a>.</p>
+
+        <div class="p">
+            <div class="note note"><span class="notetitle">Note:</span> <span class="ph" id="concept_kjw_llk_fx__d14346e3118">The Hive Query executor waits for
+                              each query to complete before starting a query for a new event record.
+                              Depending on the speed of the pipeline and the complexity of the
+                              query, the wait for query completion can slow pipeline
+                              performance.</span></div>
+
+        </div>
+
+        <p class="p">When you configure the Hive Query executor, you configure JDBC connection information to
+            Hive, optionally add additional HDFS configuration properties to use, and the Hive or
+            Impala query that you want to run.</p>
+
+ </div>
+
+    <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br xmlns="http://www.w3.org/1999/xhtml" />
+<div class="related_link"><a class="navheader_parent_path" href="../Hive_Drift_Solution/HiveDrift-Overview.html#concept_phk_bdf_2w" title="Hive Drift Solution: Ingesting Drifting Data into Hive">Hive Drift Solution: Ingesting Drifting Data into Hive</a></div>
+</div>
+</div>
+<div class="topic concept nested1" id="concept_zld_35h_vx">
+ <h2 class="title topictitle2">Related Event Generating Stages</h2>
+
+ <div class="body conbody">
+        <p class="p">Use the Hive Query executor in an event stream. The Hive
+            Query executor is designed to run a Hive or Impala query after receiving an event
+            record. You can use the Hive Query executor with any event-generating stage where the
+            logic suits your needs. </p>
+
+        <p class="p">When implementing the Hive Drift Solution with Impala, use the executor to run the
+            Invalidate Metadata query after the Hive Metastore destination changes table structures
+            and after the Hadoop FS destination writes files to Hive. </p>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_jzl_yrr_mx">
+ <h2 class="title topictitle2">Hive or Impala Query</h2>
+
+ <div class="body conbody">
+        <p class="p">You can use the
+            Hive Query executor to execute any valid Hive or Impala query. </p>
+
+        <p class="p">When possible, avoid using Hive Query executor to run long-running queries. <span class="ph">The Hive Query executor waits for
+                              each query to complete before starting a query for a new event record.
+                              Depending on the speed of the pipeline and the complexity of the
+                              query, the wait for query completion can slow pipeline
+                              performance.</span></p>
+
+        <p class="p">In the query, you can use fields or attributes available in the event record passed to
+            the executor. For details about event records, see the documentation for the event
+            generating stage.</p>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_hqg_nzh_vx">
+ <h2 class="title topictitle2">Impala Queries for the Hive Drift Solution</h2>
+
+ <div class="body conbody">
+        <p class="p">The default query, <samp class="ph codeph">invalidate metadata
+                ${record:attribute('/table')}</samp>, is an Impala query that you can use when
+            implementing the Hive Drift Solution with Impala. </p>
+
+        <p class="p">Use the query to process event records from the Hive Metastore destination. When used
+            with the Hive Metastore destination, the destination generates an event record each time
+            it changes a table and places the table name in the "table" record header attribute.
+            When the Hive Query executor receives the event record, it runs the Invalidate Metadata
+            query on the specified table.</p>
+
+        <p class="p">When implementing the Hive Drift Solution with Impala, you can also use the Hive Query
+            executor with the Hadoop FS destination. The Hadoop FS destination writes the file path
+            to a "filepath" field in the event record. To use the default query with the Hadoop FS
+            destination, you can use an Expression Evaluator to extract the table name from the
+            filepath field as described in <a class="xref" href="../Event_Handling/CaseStudy-Impala.html#concept_szz_xwm_lx">Case Study: Impala Metadata Updates for HDS</a>. </p>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_mgm_4lk_fx">
+    <h2 class="title topictitle2">Configuring a Hive Query Executor</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Configure
+                a Hive Query executor to execute a query on Hive or Impala when the executor
+                receives an event record.</p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mgm_4lk_fx__d14502e4094" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d99112e185">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d99112e188">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr id="task_mgm_4lk_fx__d14502e4116" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d99112e185 ">Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d99112e188 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr id="task_mgm_4lk_fx__d14502e4125" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d99112e185 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d99112e188 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr id="task_mgm_4lk_fx__d14502e4134" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d99112e185 ">Stage Library</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d99112e188 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d99112e185 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_mgm_4lk_fx__d14502e4149" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d99112e188 ">Fields that must include data to be passed into the
+                                        stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
+                                            fields that the stage uses.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d99112e185 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_mgm_4lk_fx__d14502e4163" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d99112e188 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. </td>
+
+                                </tr>
+
+                                <tr id="task_mgm_4lk_fx__d14502e4173" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d99112e185 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_mgm_4lk_fx__d14502e4179" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d99112e188 ">Error record handling for the stage: <ul class="ul" id="task_mgm_4lk_fx__d14502e4183">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Hive</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mgm_4lk_fx__table_olb_4sx_mx" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d99112e317">Hive Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d99112e320">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+       <td class="entry" valign="top" width="30%" headers="d99112e317 ">JDBC URL</td>
+
+       <td class="entry" valign="top" width="70%" headers="d99112e320 ">JDBC URL for Hive. You can use the default, or replace the expression for the database
+        name with a specific database name when appropriate.</td>
+
+      </tr>
+
+                                <tr class="row">
+       <td class="entry" valign="top" width="30%" headers="d99112e317 ">JDBC Driver Name</td>
+
+       <td class="entry" valign="top" width="70%" headers="d99112e320 ">The fully-qualified JDBC driver name.</td>
+
+      </tr>
+
+                                <tr class="row">
+       <td class="entry" valign="top" width="30%" headers="d99112e317 ">Hadoop Configuration Directory</td>
+
+       <td class="entry" valign="top" width="70%" headers="d99112e320 ">
+        <p class="p">Absolute path to the directory containing the Hive and Hadoop configuration files. For a
+         Cloudera Manager installation, enter hive-conf. </p>
+
+        <div class="p">The stage uses the following configuration files: <ul class="ul" id="task_mgm_4lk_fx__ul_tqf_lms_dw">
+                  <li class="li">core-site.xml</li>
+
+                  <li class="li">hdfs-site.xml</li>
+
+                  <li class="li">hive-site.xml</li>
+
+            </ul>
+</div>
+
+        <div class="note note"><span class="notetitle">Note:</span> Properties in the configuration files are overridden by individual properties defined
+         in this stage. </div>
+
+       </td>
+
+      </tr>
+
+                                <tr class="row">
+       <td class="entry" valign="top" width="30%" headers="d99112e317 ">Additional Hadoop Configuration</td>
+
+       <td class="entry" valign="top" width="70%" headers="d99112e320 ">
+        <p class="p">Additional properties to use. </p>
+
+        <p class="p">To add properties, click <span class="ph uicontrol">Add</span> and define the property name and
+         value. Use the property names and values as expected by HDFS and Hive.</p>
+
+       </td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Query</span> tab, configure the following
+                    property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mgm_4lk_fx__table_ywf_ztx_mx" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d99112e419">Query Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d99112e422">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d99112e419 ">SQL Query <a class="xref" href="HiveQuery.html#concept_jzl_yrr_mx">
+                                            <img class="image" id="task_mgm_4lk_fx__image_rfz_thp_fs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d99112e422 ">SQL query to execute on Hive or Impala upon receiving an
+                                        event record.<p class="p">Use the default Invalidate Metadata
+                                            expression to process events from the Hive Metastore
+                                            destination when using the Hive Drift Solution with
+                                            Impala. </p>
+<p class="p">You might also use the default expression
+                                            with Hadoop FS, but you need to configure the pipeline
+                                            accordingly. For more information, see <a class="xref" href="HiveQuery.html#concept_hqg_nzh_vx">Impala Queries for the Hive Drift Solution</a>.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Executors/Executors-title.html" title="Executors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Executors</span></a></span>  </div><div class="footer"><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

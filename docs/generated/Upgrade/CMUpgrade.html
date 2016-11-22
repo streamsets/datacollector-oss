@@ -38,6 +38,9 @@
 To upgrade <span class="ph">Data
                   Collector</span>
             through Cloudera Manager, perform the following steps:<ol class="ol" id="concept_c45_chv_xv__ol_dqy_jhv_xv">
+                <li class="li">Stop all pipelines in <span class="ph">Data
+                  Collector</span>.</li>
+
                 <li class="li">Install the new StreamSets custom service descriptor (CSD).</li>
 
                 <li class="li">(Optional.) Manually install the parcel and checksum files. Typically only
@@ -55,8 +58,30 @@ To upgrade <span class="ph">Data
  </div>
 
 <div class="related-links"></div>
+<div class="topic task nested1" id="task_q3b_zfc_rx">
+    <h2 class="title topictitle2">Step 1. Stop All Pipelines</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">In <span class="ph">Data
+                  Collector</span>, stop
+        all running pipelines.</p>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">From the <span class="ph uicontrol">Home</span> page, select all running pipelines in the
+                    list and then click the <span class="ph uicontrol">Stop</span> icon.</span>
+                <div class="itemgroup info">The <span class="ph uicontrol">Stop Pipeline Confirmation</span> dialog box
+                    appears.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click <span class="ph uicontrol">Yes</span> to stop the pipelines.</span>
+            </li>
+</ol>
+
+    </div>
+
+</div>
 <div class="topic task nested1" id="task_rrx_m3v_xv">
-    <h2 class="title topictitle2">Step 1. Install the StreamSets Custom Service Descriptor</h2>
+    <h2 class="title topictitle2">Step 2. Install the StreamSets Custom Service Descriptor</h2>
 
     
     <div class="body taskbody"><p class="shortdesc">Install the new StreamSets custom service descriptor file (CSD), and then restart
@@ -64,6 +89,12 @@ To upgrade <span class="ph">Data
 
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">Use the following URL to download the CSD from the StreamSets website: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Remove the previous StreamSets CSD file from Cloudera Manager.</span>
+                <div class="itemgroup info">For
+                    example:<pre class="pre codeblock">rm -f /opt/cloudera/csd/STREAMSETS*.jar</pre>
+</div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Copy the <span class="ph">Data
@@ -101,7 +132,7 @@ For CentOS 7:
 
 </div>
 <div class="topic task nested1" id="task_cgv_2jv_xv">
-    <h2 class="title topictitle2">Step 2. Manually Install the Parcel and Checksum Files (Optional)</h2>
+    <h2 class="title topictitle2">Step 3. Manually Install the Parcel and Checksum Files (Optional)</h2>
 
     
     <div class="body taskbody"><p class="shortdesc">You can manually install the StreamSets parcel and related checksum files. Manually
@@ -134,7 +165,7 @@ For CentOS 7:
 
 </div>
 <div class="topic task nested1" id="task_mdr_phr_5v">
-    <h2 class="title topictitle2">Step 3. Distribute and Activate the New StreamSets Parcel</h2>
+    <h2 class="title topictitle2">Step 4. Distribute and Activate the New StreamSets Parcel</h2>
 
     
     <div class="body taskbody"><p class="shortdesc">After you add the StreamSets repository to Cloudera Manager, you can download and

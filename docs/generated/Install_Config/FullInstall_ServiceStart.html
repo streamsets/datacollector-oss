@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="To install the full Data Collector as a service, you can download the Data Collector RPM zip file or the Data Collector tarball from the StreamSets website. Installing the full Data Collector as a ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Full Installation and Launch (Service Start)"></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_e45_3dr_bx"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Full Installation and Launch (Service Start)</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="To install the full Data Collector as a service, you can download the Data Collector RPM package or the Data Collector tarball from the StreamSets website. When you install from the RPM package, Data ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Full Installation and Launch (Service Start)"></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_e45_3dr_bx"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Full Installation and Launch (Service Start)</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -27,9 +27,8 @@
 
  <div class="body conbody">
   <p class="p">To install the full
-            Data Collector as a service, you can download the Data Collector RPM zip file or the
-            Data Collector tarball from the StreamSets website. Installing the full Data Collector
-            as a service requires sudo privileges on the root directory.</p>
+            Data Collector as a service, you can download the Data Collector RPM package or the Data
+            Collector tarball from the StreamSets website. </p>
 
  </div>
 
@@ -38,7 +37,7 @@
     <h2 class="title topictitle2">Installing from the RPM Package</h2>
 
     
-    <div class="body taskbody"><p class="shortdesc"> When you install from the RPM package, <span class="ph">Data
+    <div class="body taskbody"><p class="shortdesc">When you install from the RPM package, <span class="ph">Data
                   Collector</span> uses
         the default directories and the default system user and group. </p>
 
@@ -54,20 +53,22 @@
                 installation to ensure that the user ID and group ID are consistent across the
                 machines.</div>
 
+            <p class="p">Installing the full <span class="ph">Data
+                  Collector</span> as a service requires sudo privileges on the root directory. </p>
+
         </div>
 
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">Use the following URL to download the <span class="ph">Data
-                  Collector</span> RPM zip file from the StreamSets website: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>.</span>
+                  Collector</span> RPM package from the StreamSets website: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>.</span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Use the following command to extract the zip file to the desired
-                    location:</span>
+                <span class="ph cmd">Use the following command to extract the file to the desired location:</span>
                 <div class="itemgroup info">
-                    <pre class="pre codeblock">unzip streamsets-datacollector-&lt;version&gt;-all-rpms.zip</pre>
+                    <pre class="pre codeblock">tar -xzf streamsets-datacollector-&lt;version&gt;-all-rpms.tgz</pre>
 
-                    <div class="p">For example, to extract version 2.0.0.0, use the following
-                        command:<pre class="pre codeblock">unzip streamsets-datacollector-2.0.0.0-all-rpms.zip</pre>
+                    <div class="p">For example, to extract version 2.2.0.0, use the following
+                        command:<pre class="pre codeblock">tar -xzf streamsets-datacollector-2.2.0.0-all-rpms.tgz</pre>
 </div>
 
                 </div>
@@ -110,10 +111,13 @@
                   Collector</span> as a
         service.</p>
 
-        <div class="section context"><p class="p"> Before you
-                install, you can alternatively use the
-                    <span class="ph filepath">$SDC_DIST/libexec/sdcd-env.sh</span> file to modify the
-                environment variables that define directories and the system user and group.</p>
+        <div class="section context"><p class="p">Before you install,
+                you can alternatively use the <span class="ph filepath">$SDC_DIST/libexec/sdcd-env.sh</span>
+                file to modify the environment variables that define directories and the system user
+                and group.</p>
+
+            <p class="p">Installing the full Data Collector as a service requires sudo privileges on the root
+                directory. </p>
 </div>
 
         <ol class="ol steps" id="task_pnf_344_1r__steps_wnx_444_1r"><li class="li step stepexpand">
@@ -121,22 +125,14 @@
                   Collector</span> tarball from the StreamSets website: <a class="xref" href="https://streamsets.com/opensource" target="_blank">https://streamsets.com/opensource</a>.</span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Extract the tarball to the desired location, typically<samp class="ph codeph">
-                        /opt/local/</samp>.</span>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">Copy <span class="ph filepath">initd/_sdcinitd_prototype</span> to the
-                        <span class="ph filepath">/etc/init.d/</span> directory as sdc.</span>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">Edit the sdc file and set the <samp class="ph codeph">$SDC_DIST</samp> and
-                        <samp class="ph codeph">$SDC_HOME</samp> environment variables to the location where you
-                    extracted the tarball.</span>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">Use the following command to make the sdc file executable:</span>
+                <span class="ph cmd">Use the following command to extract the tarball to the desired location,
+                    typically <samp class="ph codeph">/opt/local/</samp>:</span>
                 <div class="itemgroup info">
-                    <pre class="pre codeblock">sudo chmod 755 /etc/init.d/sdc</pre>
+                    <pre class="pre codeblock">tar -xzf streamsets-datacollector-all-&lt;version&gt;.tgz</pre>
+
+                    <div class="p">For example, to extract version 2.2.0.0, use the following
+                        command:<pre class="pre codeblock">tar -xzf streamsets-datacollector-all-2.2.0.0.tgz</pre>
+</div>
 
                 </div>
             </li>
@@ -146,13 +142,60 @@
                   Collector</span> as a service. </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Create the <span class="ph">Data
-                  Collector</span> configuration directory at <samp class="ph codeph">/etc/sdc</samp> and copy all files from
-                    etc into this directory.</span>
+                <span class="ph cmd">Use the following command to create the <span class="ph filepath">/etc/init.d</span>
+                    directory:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">mkdir /etc/init.d</pre>
+
+                </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Change the owner of the <samp class="ph codeph">/etc/sdc</samp> directory and all files in
-                    the directory to sdc:sdc.</span>
+                <span class="ph cmd">Use the following commands to copy
+                        <span class="ph filepath">initd/_sdcinitd_prototype</span> to the
+                        <span class="ph filepath">/etc/init.d</span> directory and then change ownership of the
+                    file to sdc:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">cp initd/_sdcinitd_prototype  /etc/init.d/sdc
+chown sdc:sdc /etc/init.d/sdc</pre>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Edit the <samp class="ph codeph">/etc/init.d/sdc</samp> file and set the
+                        <samp class="ph codeph">$SDC_DIST</samp> and <samp class="ph codeph">$SDC_HOME</samp> environment
+                    variables to the location where you extracted the tarball.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the following command to make the sdc file executable:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">chmod 755 /etc/init.d/sdc</pre>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the following command to create the <span class="ph">Data
+                  Collector</span> configuration directory at <samp class="ph codeph">/etc/sdc</samp>: </span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">mkdir /etc/sdc</pre>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the following command from the directory where you extracted the tarball to
+                    copy all files from etc into the <span class="ph">Data
+                  Collector</span> configuration directory that you just created:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">cp -R etc/ /etc/sdc</pre>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the following command to change the owner of the <samp class="ph codeph">/etc/sdc</samp>
+                    directory and all files in the directory to sdc:sdc:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">chown -R sdc:sdc /etc/sdc</pre>
+
+                </div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Use the following command to set owner only permission on the
@@ -164,23 +207,38 @@
                 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Create the <span class="ph">Data
+                <span class="ph cmd">Use the following commands to create the <span class="ph">Data
                   Collector</span> log directory at <samp class="ph codeph">/var/log/sdc</samp> and change the owner to
-                    sdc:sdc.</span>
+                    sdc:sdc:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">mkdir /var/log/sdc
+chown sdc:sdc /var/log/sdc</pre>
+
+                </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Create the <span class="ph">Data
+                <span class="ph cmd">Use the following commands to create the <span class="ph">Data
                   Collector</span> data directory at <samp class="ph codeph">/var/lib/sdc</samp> and change the owner to
-                    sdc:sdc.</span>
+                    sdc:sdc:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">mkdir /var/lib/sdc
+chmod sdc:sdc /var/lib/sdc</pre>
+
+                </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Create the <span class="ph">Data
+                <span class="ph cmd">Use the following commands to create the <span class="ph">Data
                   Collector</span> resources directory at <samp class="ph codeph">/var/lib/sdc-resources</samp> and change the
-                    owner to sdc:sdc.</span>
+                    owner to sdc:sdc:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">mkdir /var/lib/sdc-resources
+chmod sdc:sdc /var/lib/sdc-resources</pre>
+
+                </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">To start <span class="ph">Data
-                  Collector</span> as a service, use the following command: </span>
+                <span class="ph cmd">Use the following command to start <span class="ph">Data
+                  Collector</span> as a service: </span>
                 <div class="itemgroup info">
                     <pre class="pre codeblock">service sdc start  </pre>
 

@@ -62,8 +62,8 @@
                             <entry>Hadoop FS</entry>
                             <entry>
                                 <ul id="ul_hbx_blh_tx">
-                                    <li>HDFS File Metadata executor to rename, move, or change
-                                        permissions for closed files.</li>
+                                    <li>HDFS File Metadata executor to change file metadata for
+                                        closed files.</li>
                                     <li>Hive Query executor to run a Hive or Impala query after
                                         closing a file. <p>Particularly useful when using the Hive
                                             Drift Solution with Impala. </p></li>
@@ -80,6 +80,7 @@
                                     <li>Hive Query executor to run a Hive or Impala query after
                                         changing table structures. <p>Particularly useful when using
                                             the Hive Drift Solution with Impala. </p></li>
+                                    <li>Any destination for event storage.</li>
                                 </ul>
                             </entry>
                         </row>
@@ -87,6 +88,8 @@
                             <entry>Local FS</entry>
                             <entry>
                                 <ul id="ul_p3l_glh_tx">
+                                    <li>HDFS File Metadata executor to change file metadata for
+                                        closed files.</li>
                                     <li>Any destination for event storage.</li>
                                 </ul>
                             </entry>
@@ -95,8 +98,8 @@
                             <entry>MapR FS</entry>
                             <entry>
                                 <ul id="ul_rvh_dsq_tx">
-                                    <li>HDFS File Metadata executor to rename, move, or change
-                                        permissions for closed files.</li>
+                                    <li>HDFS File Metadata executor to change file metadata for
+                                        closed files.</li>
                                     <li>MapReduce executor to run a MapReduce job after closing a
                                         file.</li>
                                     <li>Any destination for event storage.</li>

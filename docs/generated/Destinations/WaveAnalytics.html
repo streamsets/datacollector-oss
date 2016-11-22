@@ -1,0 +1,293 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The Wave Analytics destination writes data to Salesforce Wave Analytics. The destination connects to Wave Analytics to create a dataset with external data. When you configure the Wave Analytics ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Wave Analytics"></meta><meta name="abstract" content="The Wave Analytics destination writes data to Salesforce Wave Analytics. The destination connects to Wave Analytics to create a dataset with external data."></meta><meta name="description" content="The Wave Analytics destination writes data to Salesforce Wave Analytics. The destination connects to Wave Analytics to create a dataset with external data."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_hlx_r53_rx"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Wave Analytics</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+--></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Destinations/Destinations-title.html" title="Destinations">Destinations</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_hlx_r53_rx">
+ <h1 class="title topictitle1">Wave Analytics</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Wave Analytics destination writes data to Salesforce Wave Analytics. The destination
+        connects to Wave Analytics to create a dataset with external data.</p>
+
+  <p class="p">When you configure the Wave Analytics
+            destination, you define connection information and specify the <em class="ph i">edgemart alias</em> or
+            name of the dataset to create.</p>
+
+        <p class="p">The destination typically creates multiple datasets for the edgemart alias, based on the
+            dataset wait time that you configure for the destination. After no data has arrived for
+            the specified wait time, the destination closes and uploads the dataset to Wave
+            Analytics. When new data arrives, the destination creates a new dataset. Each dataset is
+            named with the edgemart alias name and appended with the timestamp of when the dataset
+            is uploaded. </p>
+
+        <p class="p">You can optionally configure the destination to use a Wave Analytics dataflow to combine
+            multiple datasets together. You can also specify the metadata of the external data in a
+            JSON format.</p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_d4h_2lj_tx">
+ <h2 class="title topictitle2">Dataflow</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Wave Analytics destination typically creates multiple datasets, based on the
+        configured dataset wait time. You can optionally configure the destination to use a Wave
+        Analytics dataflow to combine multiple datasets together. </p>
+
+        <p class="p">A Wave Analytics dataflow includes
+            instructions and transformations to combine datasets. Create the dataflow in Wave
+            Analytics. Then when you configure the Wave Analytics destination, specify the name of
+            the existing dataflow. The dataflow should not contain any content, as the Wave
+            destination overwrites any existing content.</p>
+
+        <p class="p">By default, a dataflow runs every 24 hours. However, you can configure the dataflow to
+            run each time the destination closes and uploads a dataset to Wave Analytics. In Wave
+            Analytics, you can run a dataflow a maximum of 24 times in a 24 hour period. So if you
+            choose to run the dataflow after each dataset upload, make sure that the configured
+            dataset wait time is more than an hour. </p>
+
+        <p class="p">For more information about creating dataflows, see the Salesforce Wave Analytics
+            documentation.</p>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_mdt_dv3_rx">
+    <h2 class="title topictitle2">Configuring a Wave Analytics Destination</h2>
+
+    <div class="body taskbody">
+        <div class="section context">Configure a Wave
+            Analytics destination to write data to Salesforce Wave Analytics.</div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mdt_dv3_rx__d6014e3975" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d93085e132">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d93085e135">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d93085e132 ">Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d93085e135 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d93085e132 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d93085e135 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d93085e132 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_mdt_dv3_rx__d6014e4021" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d93085e135 ">Fields that must include data to be passed into the
+                                        stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
+                                            fields that the stage uses.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d93085e132 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_mdt_dv3_rx__d6014e4035" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d93085e135 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d93085e132 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_mdt_dv3_rx__d6014e4050" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d93085e135 ">Error record handling for the stage: <ul class="ul" id="task_mdt_dv3_rx__d6014e4054">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Wave</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mdt_dv3_rx__table_qyk_lmj_tx" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d93085e254">Wave Property</th>
+
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d93085e257">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d93085e254 ">Username</td>
+
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d93085e257 ">Salesforce username in the following email format:
+       <samp class="ph codeph">&lt;text&gt;@&lt;text&gt;.com</samp>. </td>
+
+     </tr>
+
+                                <tr class="row">
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d93085e254 ">Password</td>
+
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d93085e257 ">Salesforce password. <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
+                  and passwords, you can use runtime resources or Hashicorp Vault secrets. For more
+                  information, see <a class="xref" href="../Install_Config/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Install_Config/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
+</td>
+
+     </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d93085e254 ">Edgemart Alias</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d93085e257 ">Dataset name. The alias must be unique across an
+                                        organization.  <p class="p">Each dataset is named with the edgemart
+                                            alias and appended with the timestamp of when the
+                                            dataset is uploaded. If you use a dataflow to combine
+                                            multiple datasets, the destination uses the edgemart
+                                            alias as the name of the aggregated dataset.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d93085e254 ">Dataset Wait Time (secs)</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d93085e257 ">Maximum time in seconds to wait for new data to arrive.
+                                        After no data has arrived in this amount of time, the
+                                        destination closes and uploads the dataset to Wave
+                                        Analytics. When new data arrives, the destination creates a
+                                        new dataset.<p class="p"> The dataset wait time must be at least as
+                                            long as the Batch Wait Time for the origin in the
+                                            pipeline.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d93085e254 ">Use Dataflow
+                                        <a class="xref" href="WaveAnalytics.html#concept_d4h_2lj_tx" title="The Wave Analytics destination typically creates multiple datasets, based on the configured dataset wait time. You can optionally configure the destination to use a Wave Analytics dataflow to combine multiple datasets together.">
+                                            <img class="image" id="task_mdt_dv3_rx__image_wjh_ycl_br" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d93085e257 ">Determines whether to use a Wave Analytics dataflow to
+                                        combine multiple datasets together. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d93085e254 ">Dataflow Name</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d93085e257 ">Name of the existing dataflow. <p class="p">You must create the
+                                            dataflow in Wave Analytics. </p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d93085e254 ">Run Dataflow After Upload</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d93085e257 ">Determines whether the destination runs the dataflow each
+                                        time that it uploads a dataset to Wave Analytics.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d93085e254 ">Metadata JSON</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d93085e257 ">Metadata in JSON format that describes the schema of the
+                                            dataset.<p class="p">Enter metadata so that Wave Analytics can
+                                            correctly interpret the datatype of the data. If you do
+                                            not enter metadata, then Wave Analytics treats every
+                                            field as text. </p>
+<p class="p">For more information about how
+                                            Wave Analytics handles JSON metadata for uploaded
+                                            external data, see the Salesforce Wave Analytics
+                                            developer documentation.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div><div class="footer"><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

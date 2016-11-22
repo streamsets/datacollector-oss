@@ -55,7 +55,7 @@
    <appContext helpID="task_opg_yrm_25"
                path="Install_Config/CMInstall-Overview.html#task_opg_yrm_25"/>
    <appContext helpID="task_opg_yrm_25"
-               path="Install_Config/CMInstall-Overview.html#unique_1671307929"/>
+               path="Install_Config/CMInstall-Overview.html#unique_1141478924"/>
    <appContext helpID="task_u1v_nkt_25"
                path="Install_Config/CMInstall-Overview.html#task_u1v_nkt_25"/>
    <appContext helpID="task_zn4_qrn_25"
@@ -80,10 +80,18 @@
                path="Install_Config/Authentication.html#concept_dns_dvg_h5"/>
    <appContext helpID="concept_x2j_5ts_g5"
                path="Install_Config/Authentication.html#concept_x2j_5ts_g5"/>
+   <appContext helpID="task_tjw_3ss_5x"
+               path="Install_Config/Authentication.html#task_tjw_3ss_5x"/>
+   <appContext helpID="concept_x3x_lts_5x"
+               path="Install_Config/Authentication.html#concept_x3x_lts_5x"/>
+   <appContext helpID="concept_o4n_gvs_5x"
+               path="Install_Config/Authentication.html#concept_o4n_gvs_5x"/>
    <appContext helpID="concept_fyr_dkv_1x"
                path="Install_Config/Authentication.html#concept_fyr_dkv_1x"/>
-   <appContext helpID="concept_dt2_cpb_kr"
-               path="Install_Config/Authentication.html#concept_dt2_cpb_kr"/>
+   <appContext helpID="concept_wgy_rxt_5x"
+               path="Install_Config/Authentication.html#concept_wgy_rxt_5x"/>
+   <appContext helpID="task_wh3_tdv_5x"
+               path="Install_Config/Authentication.html#task_wh3_tdv_5x"/>
    <appContext helpID="task_nsz_lp4_1r"
                path="Install_Config/Authentication.html#task_nsz_lp4_1r"/>
    <appContext helpID="concept_pq5_xjq_kr"
@@ -120,12 +128,14 @@
                path="Install_Config/DCEnvironmentConfig.html#concept_vrx_4fg_qr"/>
    <appContext helpID="concept_mdc_shg_qr"
                path="Install_Config/DCEnvironmentConfig.html#concept_mdc_shg_qr"/>
-   <appContext helpID="concept_kxf_y2m_sr"
-               path="Install_Config/DCEnvironmentConfig.html#concept_kxf_y2m_sr"/>
-   <appContext helpID="concept_txl_qyc_ww"
-               path="Install_Config/DCEnvironmentConfig.html#concept_txl_qyc_ww"/>
    <appContext helpID="concept_wk1_pyw_4x"
                path="Install_Config/DCEnvironmentConfig.html#concept_wk1_pyw_4x"/>
+   <appContext helpID="concept_kqh_lj3_vx"
+               path="Install_Config/DCEnvironmentConfig.html#concept_kqh_lj3_vx"/>
+   <appContext helpID="concept_txl_qyc_ww"
+               path="Install_Config/DCEnvironmentConfig.html#concept_txl_qyc_ww"/>
+   <appContext helpID="concept_kxf_y2m_sr"
+               path="Install_Config/DCEnvironmentConfig.html#concept_kxf_y2m_sr"/>
    <appContext helpID="concept_tm4_pbg_ht"
                path="Install_Config/DCEnvironmentConfig.html#concept_tm4_pbg_ht"/>
    <appContext helpID="concept_hcb_4ks_3v"
@@ -156,6 +166,10 @@
                path="Install_Config/JMXMetrics-EnableExternalTools.html#concept_oz2_lkt_nv"/>
    <appContext helpID="concept_llw_2st_nv"
                path="Install_Config/JMXMetrics-EnableExternalTools.html#concept_llw_2st_nv"/>
+   <appContext helpID="concept_yrv_ck2_px"
+               path="Install_Config/LogLevel.html#concept_yrv_ck2_px"/>
+   <appContext helpID="concept_p2w_x3z_yx"
+               path="Install_Config/CreateAnotherDC.html#concept_p2w_x3z_yx"/>
    <appContext helpID="concept_ejk_f1f_5v" path="Upgrade/Upgrade_title.html"/>
    <appContext helpID="concept_a2n_3fk_5v"
                path="Upgrade/Upgrade.html#concept_a2n_3fk_5v"/>
@@ -184,11 +198,14 @@
    <appContext helpID="concept_n35_s55_xv" path="Upgrade/RPM.html#concept_n35_s55_xv"/>
    <appContext helpID="concept_c45_chv_xv"
                path="Upgrade/CMUpgrade.html#concept_c45_chv_xv"/>
+   <appContext helpID="task_q3b_zfc_rx" path="Upgrade/CMUpgrade.html#task_q3b_zfc_rx"/>
    <appContext helpID="task_rrx_m3v_xv" path="Upgrade/CMUpgrade.html#task_rrx_m3v_xv"/>
    <appContext helpID="task_cgv_2jv_xv" path="Upgrade/CMUpgrade.html#task_cgv_2jv_xv"/>
    <appContext helpID="task_mdr_phr_5v" path="Upgrade/CMUpgrade.html#task_mdr_phr_5v"/>
    <appContext helpID="concept_zll_vn5_zw"
                path="Upgrade/PostUpgrade.html#concept_zll_vn5_zw"/>
+   <appContext helpID="concept_epj_gqd_rx"
+               path="Upgrade/PostUpgrade.html#concept_epj_gqd_rx"/>
    <appContext helpID="concept_yyv_v45_zw"
                path="Upgrade/PostUpgrade.html#concept_yyv_v45_zw"/>
    <appContext helpID="concept_qsw_cjy_bt"
@@ -240,10 +257,39 @@
                path="Pipeline_Design/WholeFile.html#concept_a2s_4jw_1x"/>
    <appContext helpID="concept_ttm_ywv_1x"
                path="Pipeline_Design/WholeFile.html#concept_ttm_ywv_1x"/>
+   <appContext helpID="concept_ojv_sr4_vx"
+               path="Pipeline_Design/WholeFile.html#concept_ojv_sr4_vx"/>
    <appContext helpID="concept_hfs_dkm_js"
                path="Pipeline_Design/ControlCharacters.html"/>
    <appContext helpID="concept_czx_ktn_ht"
                path="Pipeline_Design/DevStages.html#concept_czx_ktn_ht"/>
+   <appContext helpID="concept_xxd_f5r_kx"
+               path="Event_Handling/EventHandling-Title.html"/>
+   <appContext helpID="concept_cph_5h4_lx"
+               path="Event_Handling/EventHandling-Overview.html#concept_cph_5h4_lx"/>
+   <appContext helpID="concept_zrl_mhn_lx"
+               path="Event_Handling/EventHandling-Overview.html#concept_zrl_mhn_lx"/>
+   <appContext helpID="concept_rxg_shn_lx"
+               path="Event_Handling/EventHandling-Overview.html#concept_rxg_shn_lx"/>
+   <appContext helpID="concept_scs_3hh_tx"
+               path="Event_Handling/EventHandling-Overview.html#concept_scs_3hh_tx"/>
+   <appContext helpID="concept_sjr_nrx_4x" path="Event_Handling/EventStreams.html"/>
+   <appContext helpID="concept_ivh_xy2_zx"
+               path="Event_Handling/Streams-TaskExecution.html"/>
+   <appContext helpID="concept_bfd_31f_zx"
+               path="Event_Handling/Streams-EventStorage.html"/>
+   <appContext helpID="concept_gvh_5wm_xx" path="Event_Handling/EventRecords.html"/>
+   <appContext helpID="concept_zft_rdq_tx"
+               path="Event_Handling/EventRecordHeaders.html"/>
+   <appContext helpID="concept_jkm_rnz_kx"
+               path="Event_Handling/CaseStudy-Parquet.html"/>
+   <appContext helpID="concept_szz_xwm_lx" path="Event_Handling/CaseStudy-Impala.html"/>
+   <appContext helpID="concept_d1q_xl4_lx"
+               path="Event_Handling/CaseStudy-FileManagement.html"/>
+   <appContext helpID="concept_ocb_nnl_px"
+               path="Event_Handling/CaseStudy-EventStorage.html"/>
+   <appContext helpID="concept_azz_tq4_lx"
+               path="Event_Handling/EventHandling-Highlights.html"/>
    <appContext helpID="concept_qn1_wn4_kq"
                path="Pipeline_Configuration/PipelineConfiguration_title.html"/>
    <appContext helpID="concept_izr_f2p_rq"
@@ -300,6 +346,8 @@
                path="Origins/AmazonS3.html#concept_ltv_r3l_5q"/>
    <appContext helpID="concept_zp2_fqs_5r"
                path="Origins/AmazonS3.html#concept_zp2_fqs_5r"/>
+   <appContext helpID="concept_ctg_xh4_sx"
+               path="Origins/AmazonS3.html#concept_ctg_xh4_sx"/>
    <appContext helpID="concept_gz5_dqw_yq"
                path="Origins/AmazonS3.html#concept_gz5_dqw_yq"/>
    <appContext helpID="task_gfj_ssv_yq" path="Origins/AmazonS3.html#task_gfj_ssv_yq"/>
@@ -311,6 +359,10 @@
                path="Origins/Directory.html#concept_ltv_r3l_5q"/>
    <appContext helpID="concept_p52_xj1_4v"
                path="Origins/Directory.html#concept_p52_xj1_4v"/>
+   <appContext helpID="concept_ttg_vgn_qx"
+               path="Origins/Directory.html#concept_ttg_vgn_qx"/>
+   <appContext helpID="concept_z2k_b3n_qx"
+               path="Origins/Directory.html#concept_z2k_b3n_qx"/>
    <appContext helpID="concept_zp2_fqs_5r"
                path="Origins/Directory.html#concept_zp2_fqs_5r"/>
    <appContext helpID="concept_gz5_dqw_yq"
@@ -334,6 +386,10 @@
                path="Origins/FileTail.html#concept_mzk_w4v_js"/>
    <appContext helpID="concept_e53_gr4_1s"
                path="Origins/FileTail.html#concept_e53_gr4_1s"/>
+   <appContext helpID="concept_gwn_c32_px"
+               path="Origins/FileTail.html#concept_gwn_c32_px"/>
+   <appContext helpID="concept_hwr_yn2_px"
+               path="Origins/FileTail.html#concept_hwr_yn2_px"/>
    <appContext helpID="concept_pm4_b3q_5r"
                path="Origins/FileTail.html#concept_pm4_b3q_5r"/>
    <appContext helpID="concept_tr1_spd_sr"
@@ -401,6 +457,8 @@
                path="Origins/KConsumer.html#concept_msz_wnr_5q"/>
    <appContext helpID="concept_zlc_ppn_js"
                path="Origins/KConsumer.html#concept_zlc_ppn_js"/>
+   <appContext helpID="concept_hdc_fvn_sx"
+               path="Origins/KConsumer.html#concept_hdc_fvn_sx"/>
    <appContext helpID="concept_xgs_nlc_wr"
                path="Origins/KConsumer.html#concept_xgs_nlc_wr"/>
    <appContext helpID="concept_tr1_spd_sr"
@@ -493,6 +551,21 @@
    <appContext helpID="concept_tr1_spd_sr"
                path="Origins/Redis.html#concept_tr1_spd_sr"/>
    <appContext helpID="task_dtz_npv_jw" path="Origins/Redis.html#task_dtz_npv_jw"/>
+   <appContext helpID="concept_odf_vr3_rx"
+               path="Origins/Salesforce.html#concept_odf_vr3_rx"/>
+   <appContext helpID="concept_djn_x4c_tx"
+               path="Origins/Salesforce.html#concept_djn_x4c_tx"/>
+   <appContext helpID="concept_vdt_dxc_tx"
+               path="Origins/Salesforce.html#concept_vdt_dxc_tx"/>
+   <appContext helpID="concept_n5z_hgh_tx"
+               path="Origins/Salesforce.html#concept_n5z_hgh_tx"/>
+   <appContext helpID="concept_nnd_y4c_tx"
+               path="Origins/Salesforce.html#concept_nnd_y4c_tx"/>
+   <appContext helpID="concept_ec1_qlq_tx"
+               path="Origins/Salesforce.html#concept_ec1_qlq_tx"/>
+   <appContext helpID="concept_m13_xrc_tx"
+               path="Origins/Salesforce.html#concept_m13_xrc_tx"/>
+   <appContext helpID="task_h1n_bs3_rx" path="Origins/Salesforce.html#task_h1n_bs3_rx"/>
    <appContext helpID="concept_agb_5c1_ct"
                path="Origins/SDC_RPCorigin.html#concept_agb_5c1_ct"/>
    <appContext helpID="task_lxh_1w2_ct"
@@ -561,6 +634,8 @@
                path="Processors/FieldFlattener.html#concept_njn_3kk_fx"/>
    <appContext helpID="concept_k4x_rz1_hx"
                path="Processors/FieldFlattener.html#concept_k4x_rz1_hx"/>
+   <appContext helpID="concept_vpx_zc1_xx"
+               path="Processors/FieldFlattener.html#concept_vpx_zc1_xx"/>
    <appContext helpID="task_xdv_kkk_fx"
                path="Processors/FieldFlattener.html#task_xdv_kkk_fx"/>
    <appContext helpID="concept_ivv_c3k_wq"
@@ -581,6 +656,12 @@
                path="Processors/FieldMerger.html#concept_pgm_tsl_gt"/>
    <appContext helpID="task_ghx_5vl_gt"
                path="Processors/FieldMerger.html#task_ghx_5vl_gt"/>
+   <appContext helpID="concept_ekg_313_qw"
+               path="Processors/ListPivoter.html#concept_ekg_313_qw"/>
+   <appContext helpID="concept_efn_wgw_tw"
+               path="Processors/ListPivoter.html#concept_efn_wgw_tw"/>
+   <appContext helpID="task_dn1_k13_qw"
+               path="Processors/ListPivoter.html#task_dn1_k13_qw"/>
    <appContext helpID="concept_jdd_blr_wq"
                path="Processors/FieldRemover.html#concept_jdd_blr_wq"/>
    <appContext helpID="task_c1j_btr_wq"
@@ -605,6 +686,8 @@
                path="Processors/FieldTypeConverter.html#concept_is3_zkp_wq"/>
    <appContext helpID="concept_ixz_s5q_wq"
                path="Processors/FieldTypeConverter.html#concept_ixz_s5q_wq"/>
+   <appContext helpID="concept_sym_c4g_xx"
+               path="Processors/FieldTypeConverter.html#concept_sym_c4g_xx"/>
    <appContext helpID="task_g23_2tq_wq"
                path="Processors/FieldTypeConverter.html#task_g23_2tq_wq"/>
    <appContext helpID="concept_fch_fc3_ms"
@@ -728,12 +811,6 @@
    <appContext helpID="concept_jrt_s5y_mx"
                path="Processors/Jython.html#concept_jrt_s5y_mx"/>
    <appContext helpID="task_fty_jwx_nr" path="Processors/Jython.html#task_fty_jwx_nr"/>
-   <appContext helpID="concept_ekg_313_qw"
-               path="Processors/ListPivoter.html#concept_ekg_313_qw"/>
-   <appContext helpID="concept_efn_wgw_tw"
-               path="Processors/ListPivoter.html#concept_efn_wgw_tw"/>
-   <appContext helpID="task_dn1_k13_qw"
-               path="Processors/ListPivoter.html#task_dn1_k13_qw"/>
    <appContext helpID="concept_ulm_qdq_fs"
                path="Processors/LogParser.html#concept_ulm_qdq_fs"/>
    <appContext helpID="concept_tr1_spd_sr"
@@ -803,10 +880,16 @@
                path="Destinations/AmazonS3.html#concept_qw5_gtq_yv"/>
    <appContext helpID="concept_qtb_njg_vw"
                path="Destinations/AmazonS3.html#concept_qtb_njg_vw"/>
+   <appContext helpID="concept_aqq_tt2_px"
+               path="Destinations/AmazonS3.html#concept_aqq_tt2_px"/>
+   <appContext helpID="concept_nly_sw2_px"
+               path="Destinations/AmazonS3.html#concept_nly_sw2_px"/>
    <appContext helpID="concept_k2z_ncx_rt"
                path="Destinations/AmazonS3.html#concept_k2z_ncx_rt"/>
    <appContext helpID="concept_adm_kn1_mw"
                path="Destinations/AmazonS3.html#concept_adm_kn1_mw"/>
+   <appContext helpID="concept_k2z_ncx_rt"
+               path="Destinations/AmazonS3.html#unique_632465890"/>
    <appContext helpID="task_pxb_j3r_rt"
                path="Destinations/AmazonS3.html#task_pxb_j3r_rt"/>
    <appContext helpID="concept_hfy_mfd_sr"
@@ -815,6 +898,24 @@
                path="Destinations/Cassandra.html#concept_bdg_bt3_ms"/>
    <appContext helpID="task_t1d_z3l_sr"
                path="Destinations/Cassandra.html#task_t1d_z3l_sr"/>
+   <appContext helpID="concept_jzm_kf4_zx"
+               path="Destinations/DataLakeStore.html#concept_jzm_kf4_zx"/>
+   <appContext helpID="concept_tsr_ml4_zx"
+               path="Destinations/DataLakeStore.html#concept_tsr_ml4_zx"/>
+   <appContext helpID="concept_j2m_jdh_1y"
+               path="Destinations/DataLakeStore.html#concept_j2m_jdh_1y"/>
+   <appContext helpID="concept_xv4_b2h_1y"
+               path="Destinations/DataLakeStore.html#concept_xv4_b2h_1y"/>
+   <appContext helpID="concept_dgz_yfh_1y"
+               path="Destinations/DataLakeStore.html#concept_dgz_yfh_1y"/>
+   <appContext helpID="concept_gr4_qww_zx"
+               path="Destinations/DataLakeStore.html#concept_gr4_qww_zx"/>
+   <appContext helpID="concept_ff4_cxw_zx"
+               path="Destinations/DataLakeStore.html#concept_ff4_cxw_zx"/>
+   <appContext helpID="concept_wsz_qj4_zx"
+               path="Destinations/DataLakeStore.html#concept_wsz_qj4_zx"/>
+   <appContext helpID="task_jfl_nf4_zx"
+               path="Destinations/DataLakeStore.html#task_jfl_nf4_zx"/>
    <appContext helpID="concept_u5t_vpv_4r"
                path="Destinations/Elasticsearch.html#concept_u5t_vpv_4r"/>
    <appContext helpID="concept_dd3_vhk_r5"
@@ -842,6 +943,10 @@
                path="Destinations/HadoopFS-destination.html#concept_lww_3b3_kr"/>
    <appContext helpID="concept_n42_z2f_sw"
                path="Destinations/HadoopFS-destination.html#concept_n42_z2f_sw"/>
+   <appContext helpID="concept_bvb_rxj_px"
+               path="Destinations/HadoopFS-destination.html#concept_bvb_rxj_px"/>
+   <appContext helpID="concept_dmx_1ln_qx"
+               path="Destinations/HadoopFS-destination.html#concept_dmx_1ln_qx"/>
    <appContext helpID="concept_xy5_4tm_vs"
                path="Destinations/HadoopFS-destination.html#concept_xy5_4tm_vs"/>
    <appContext helpID="concept_u4h_lwt_ls"
@@ -873,6 +978,10 @@
                path="Destinations/HiveMetastore.html#concept_f4y_spy_dw"/>
    <appContext helpID="concept_ovn_kdt_dw"
                path="Destinations/HiveMetastore.html#concept_ovn_kdt_dw"/>
+   <appContext helpID="concept_drg_lwc_rx"
+               path="Destinations/HiveMetastore.html#concept_drg_lwc_rx"/>
+   <appContext helpID="concept_x4p_fyc_rx"
+               path="Destinations/HiveMetastore.html#concept_x4p_fyc_rx"/>
    <appContext helpID="concept_wsq_dgd_3w"
                path="Destinations/HiveMetastore.html#concept_wsq_dgd_3w"/>
    <appContext helpID="concept_smb_rdz_dw"
@@ -947,6 +1056,10 @@
                path="Destinations/LocalFS.html#concept_xgm_g4d_br"/>
    <appContext helpID="concept_gp5_wcp_vv"
                path="Destinations/LocalFS.html#concept_gp5_wcp_vv"/>
+   <appContext helpID="concept_in1_fcm_px"
+               path="Destinations/LocalFS.html#concept_in1_fcm_px"/>
+   <appContext helpID="concept_tyc_scc_rx"
+               path="Destinations/LocalFS.html#concept_tyc_scc_rx"/>
    <appContext helpID="concept_lww_3b3_kr"
                path="Destinations/LocalFS.html#concept_lww_3b3_kr"/>
    <appContext helpID="task_e33_3v5_1r"
@@ -975,6 +1088,10 @@
                path="Destinations/MapRFS.html#concept_xby_tdj_fv"/>
    <appContext helpID="concept_opt_fdp_vv"
                path="Destinations/MapRFS.html#concept_opt_fdp_vv"/>
+   <appContext helpID="concept_bqd_3qb_rx"
+               path="Destinations/MapRFS.html#concept_bqd_3qb_rx"/>
+   <appContext helpID="concept_z15_qcc_rx"
+               path="Destinations/MapRFS.html#concept_z15_qcc_rx"/>
    <appContext helpID="concept_yr4_tqc_fv"
                path="Destinations/MapRFS.html#concept_yr4_tqc_fv"/>
    <appContext helpID="concept_ch4_zpc_fv"
@@ -1020,6 +1137,10 @@
    <appContext helpID="concept_xl3_3ql_3w"
                path="Destinations/Redis.html#concept_xl3_3ql_3w"/>
    <appContext helpID="task_mzk_lw2_gw" path="Destinations/Redis.html#task_mzk_lw2_gw"/>
+   <appContext helpID="concept_rlb_rt3_rx"
+               path="Destinations/Salesforce.html#concept_rlb_rt3_rx"/>
+   <appContext helpID="task_ncv_153_rx"
+               path="Destinations/Salesforce.html#task_ncv_153_rx"/>
    <appContext helpID="concept_lfk_hx2_ct"
                path="Destinations/SDC_RPCdest.html#concept_lfk_hx2_ct"/>
    <appContext helpID="concept_icz_wzw_dt"
@@ -1040,6 +1161,71 @@
    <appContext helpID="concept_ryn_v3z_lr" path="Destinations/ToError.html"/>
    <appContext helpID="concept_htf_ydj_wq"
                path="Destinations/Trash.html#concept_htf_ydj_wq"/>
+   <appContext helpID="concept_hlx_r53_rx"
+               path="Destinations/WaveAnalytics.html#concept_hlx_r53_rx"/>
+   <appContext helpID="concept_d4h_2lj_tx"
+               path="Destinations/WaveAnalytics.html#concept_d4h_2lj_tx"/>
+   <appContext helpID="task_mdt_dv3_rx"
+               path="Destinations/WaveAnalytics.html#task_mdt_dv3_rx"/>
+   <appContext helpID="concept_umc_1lk_fx" path="Executors/Executors-title.html"/>
+   <appContext helpID="concept_stt_2lk_fx"
+               path="Executors/Executors-overview.html#concept_stt_2lk_fx"/>
+   <appContext helpID="concept_wgj_slk_fx"
+               path="Executors/HDFSFileMeta.html#concept_wgj_slk_fx"/>
+   <appContext helpID="concept_ggb_d1l_rx"
+               path="Executors/HDFSFileMeta.html#concept_ggb_d1l_rx"/>
+   <appContext helpID="concept_fmb_rbj_rx"
+               path="Executors/HDFSFileMeta.html#concept_fmb_rbj_rx"/>
+   <appContext helpID="concept_uwh_vck_rx"
+               path="Executors/HDFSFileMeta.html#concept_uwh_vck_rx"/>
+   <appContext helpID="concept_zr1_5ck_rx"
+               path="Executors/HDFSFileMeta.html#concept_zr1_5ck_rx"/>
+   <appContext helpID="concept_vhl_mfj_rx"
+               path="Executors/HDFSFileMeta.html#concept_vhl_mfj_rx"/>
+   <appContext helpID="concept_omr_3tk_rx"
+               path="Executors/HDFSFileMeta.html#concept_omr_3tk_rx"/>
+   <appContext helpID="concept_wjp_3hs_rx"
+               path="Executors/HDFSFileMeta.html#concept_wjp_3hs_rx"/>
+   <appContext helpID="concept_egg_c3s_rx"
+               path="Executors/HDFSFileMeta.html#concept_egg_c3s_rx"/>
+   <appContext helpID="task_m3v_5lk_fx"
+               path="Executors/HDFSFileMeta.html#task_m3v_5lk_fx"/>
+   <appContext helpID="concept_kjw_llk_fx"
+               path="Executors/HiveQuery.html#concept_kjw_llk_fx"/>
+   <appContext helpID="concept_zld_35h_vx"
+               path="Executors/HiveQuery.html#concept_zld_35h_vx"/>
+   <appContext helpID="concept_jzl_yrr_mx"
+               path="Executors/HiveQuery.html#concept_jzl_yrr_mx"/>
+   <appContext helpID="concept_hqg_nzh_vx"
+               path="Executors/HiveQuery.html#concept_hqg_nzh_vx"/>
+   <appContext helpID="task_mgm_4lk_fx"
+               path="Executors/HiveQuery.html#task_mgm_4lk_fx"/>
+   <appContext helpID="concept_j3r_gcv_sx"
+               path="Executors/JDBCQuery.html#concept_j3r_gcv_sx"/>
+   <appContext helpID="concept_y32_vt4_tx"
+               path="Executors/JDBCQuery.html#concept_y32_vt4_tx"/>
+   <appContext helpID="task_ym2_3cv_sx"
+               path="Executors/JDBCQuery.html#task_ym2_3cv_sx"/>
+   <appContext helpID="concept_bj2_zlk_fx"
+               path="Executors/MapReduce.html#concept_bj2_zlk_fx"/>
+   <appContext helpID="concept_yjr_q1m_zx"
+               path="Executors/MapReduce.html#concept_yjr_q1m_zx"/>
+   <appContext helpID="concept_akp_p3m_zx"
+               path="Executors/MapReduce.html#concept_akp_p3m_zx"/>
+   <appContext helpID="concept_gdt_v5d_nx"
+               path="Executors/MapReduce.html#concept_gdt_v5d_nx"/>
+   <appContext helpID="concept_jqk_g4y_mx"
+               path="Executors/MapReduce.html#concept_jqk_g4y_mx"/>
+   <appContext helpID="concept_cnx_hqy_mx"
+               path="Executors/MapReduce.html#concept_cnx_hqy_mx"/>
+   <appContext helpID="concept_e1s_sm5_sx"
+               path="Executors/MapReduce.html#concept_e1s_sm5_sx"/>
+   <appContext helpID="concept_vjr_cn5_sx"
+               path="Executors/MapReduce.html#concept_vjr_cn5_sx"/>
+   <appContext helpID="concept_kry_p3y_mx"
+               path="Executors/MapReduce.html#concept_kry_p3y_mx"/>
+   <appContext helpID="task_olh_bmk_fx"
+               path="Executors/MapReduce.html#task_olh_bmk_fx"/>
    <appContext helpID="concept_ugp_kwf_xw" path="DPM/DPM_title.html"/>
    <appContext helpID="concept_l45_qwf_xw" path="DPM/DPM.html#concept_l45_qwf_xw"/>
    <appContext helpID="concept_knb_cjq_dx" path="DPM/DPM.html#concept_knb_cjq_dx"/>
@@ -1053,6 +1239,8 @@
                path="DPM/OrgUserAccount.html#concept_lry_34g_xw"/>
    <appContext helpID="concept_kc4_xyf_xw"
                path="DPM/RegisterSDCwithDPM.html#concept_kc4_xyf_xw"/>
+   <appContext helpID="concept_w11_n1q_rx"
+               path="DPM/RegisterSDCwithDPM.html#concept_w11_n1q_rx"/>
    <appContext helpID="task_a4y_v1g_xw"
                path="DPM/RegisterSDCwithDPM.html#task_a4y_v1g_xw"/>
    <appContext helpID="concept_js4_2z1_cx"
@@ -1254,6 +1442,8 @@
                path="Pipeline_Maintenance/StoppingPipelines.html"/>
    <appContext helpID="task_fdf_hrr_5q"
                path="Pipeline_Maintenance/ImportingPipelines.html"/>
+   <appContext helpID="concept_obz_cml_wx"
+               path="Pipeline_Maintenance/AddingLabelsPipelines.html"/>
    <appContext helpID="task_dtz_4tr_5q"
                path="Pipeline_Maintenance/ExportingPipelines.html"/>
    <appContext helpID="task_nhf_bvr_5q"
@@ -1354,7 +1544,7 @@
    <appContext helpID="concept_a3w_z3m_js"
                path="Troubleshooting/Destinations.html#concept_a3w_z3m_js"/>
    <appContext helpID="concept_a3w_z3m_js"
-               path="Troubleshooting/Destinations.html#unique_441439980"/>
+               path="Troubleshooting/Destinations.html#unique_964995492"/>
    <appContext helpID="concept_rp1_ghd_zs"
                path="Troubleshooting/Destinations.html#concept_rp1_ghd_zs"/>
    <appContext helpID="concept_mth_cjm_js"
@@ -1392,8 +1582,12 @@
                path="Expression_Language/Functions.html#concept_ylk_v44_jw"/>
    <appContext helpID="concept_hpn_xfk_p5"
                path="Expression_Language/Functions.html#concept_hpn_xfk_p5"/>
+   <appContext helpID="concept_kxj_nyl_5x"
+               path="Expression_Language/Functions.html#concept_kxj_nyl_5x"/>
    <appContext helpID="concept_m2m_s1f_lw"
                path="Expression_Language/Functions.html#concept_m2m_s1f_lw"/>
+   <appContext helpID="concept_dvg_nqn_wx"
+               path="Expression_Language/Functions.html#concept_dvg_nqn_wx"/>
    <appContext helpID="concept_ahp_f4v_1r"
                path="Expression_Language/Functions.html#concept_ahp_f4v_1r"/>
    <appContext helpID="concept_qkr_trf_sw"

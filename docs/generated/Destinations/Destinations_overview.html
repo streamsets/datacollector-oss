@@ -35,6 +35,8 @@
 
         <li class="li">Cassandra - Writes data to a Cassandra cluster.</li>
 
+        <li class="li">Data Lake Store - Writes data to the Azure Data Lake Store.</li>
+
         <li class="li">Elasticsearch - Writes data to an Elasticsearch cluster.</li>
 
         <li class="li">Flume - Writes data to a Flume source.</li>
@@ -73,6 +75,8 @@
 
         <li class="li">Redis - Writes data to Redis.</li>
 
+        <li class="li">Salesforce - Writes data to Salesforce.</li>
+
         <li class="li">SDC RPC - Passes data to an SDC RPC origin in an SDC RPC pipeline.</li>
 
         <li class="li">Solr - Writes data to a Solr node or cluster.</li>
@@ -81,8 +85,16 @@
 
         <li class="li">Trash - Removes records from the pipeline.</li>
 
+        <li class="li">Wave Analytics - Writes data to Salesforce Wave Analytics.</li>
+
+      </ul>
+To help create or test pipelines, you can use the following development destination:<ul class="ul" id="concept_hpr_twm_jq__ul_wvk_p3f_lx">
+        <li class="li">To Event</li>
+
       </ul>
 </div>
+
+    <p class="p">For more information, see <a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Development Stages</a>.</p>
 
  </div>
 
@@ -134,8 +146,10 @@
                         you use this header attribute, you cannot define an Avro schema to use in
                         the destination. </dd>
 
-                    <dd class="dd">To use the avroSchema header attribute, on the <span class="keyword wintitle">Avro</span>
-                        tab, select <span class="ph uicontrol">Load Schema from Header</span>.</dd>
+                    <dd class="dd">To use the avroSchema header attribute, on the <span class="keyword wintitle">Data
+                            Format</span> tab, select the <span class="ph uicontrol">Avro</span> data
+                        format, and then for the <span class="ph uicontrol">Avro Schema Location</span>
+                        property, select <span class="ph uicontrol">In Record Header</span>.</dd>
 
                 
                 

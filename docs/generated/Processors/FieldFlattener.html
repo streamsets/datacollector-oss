@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Field Flattener flattens records, flattening List and Map fields to produce a record with no nested fields. Use the Field Flattener when you have nested fields that you need to flatten. For ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Field Flattener"></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_njn_3kk_fx"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Field Flattener</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Field Flattener flattens list and map fields. The processor can flatten the entire record to produce a record with no nested fields. Or it can flatten specific list or map fields. Use the Field ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Field Flattener"></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_njn_3kk_fx"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Field Flattener</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -26,29 +26,31 @@
  <h1 class="title topictitle1">Field Flattener</h1>
 
  <div class="body conbody">
-  <p class="p">The Field Flattener flattens records,
-            flattening List and Map fields to produce a record with no nested fields. </p>
+  <p class="p">The Field Flattener flattens list and map
+            fields. The processor can flatten the entire record to produce a record with no nested
+            fields. Or it can flatten specific list or map fields.</p>
 
         <p class="p">Use the Field Flattener when you have nested fields that you need to flatten. For
             example, the Hive Drift Solution cannot process records with nested fields, so you can
             use the Field Flattener to flatten records before passing them to the Hive Metadata
             processor. </p>
 
-        <p class="p">When you configure a Field Flattener, you configure the name separator to use for
+        <p class="p">When you configure a Field Flattener, you configure whether to flatten the entire record
+            or specific fields in the record. You also configure the name separator to use for
             flattened field names. </p>
 
  </div>
 
 <div class="related-links"></div>
 <div class="topic concept nested1" id="concept_k4x_rz1_hx">
- <h2 class="title topictitle2">Flattened Records</h2>
+ <h2 class="title topictitle2">Flatten the Entire Record</h2>
 
  <div class="body conbody">
   <p class="p">When
-            the Field Flattener flattens a record, it flattens all nested structures in the record
-            until the record is flat.</p>
+            the Field Flattener flattens the entire record, it flattens all nested structures in the
+            record until the record is flat.</p>
 
-        <div class="p">For example, say you have the following record with nested Map
+        <div class="p">For example, say you have the following record with nested map
             fields:<pre class="pre codeblock">{
   "store": {
      "id": "10342",
@@ -63,8 +65,8 @@
 }</pre>
 </div>
 
-        <div class="p">If you configure Field Flattener to use a period as the name separator, the processor
-            generates the following record:
+        <div class="p">If you configure Field Flattener to flatten the entire record and to use a period as the
+            name separator, the processor generates the following record:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_k4x_rz1_hx__table_erg_vhb_hx" class="table" frame="border" border="1" rules="all">
                     
                     
@@ -74,17 +76,17 @@
                     
                     <thead class="thead" align="left">
                         <tr class="row">
-                            <th class="entry" valign="top" width="16.666666666666664%" id="d178459e86">store.id</th>
+                            <th class="entry" valign="top" width="16.666666666666664%" id="d210291e90">store.id</th>
 
-                            <th class="entry" valign="top" width="16.666666666666664%" id="d178459e89">store.location.street</th>
+                            <th class="entry" valign="top" width="16.666666666666664%" id="d210291e93">store.location.street</th>
 
-                            <th class="entry" valign="top" width="16.666666666666664%" id="d178459e92">store.location.city</th>
+                            <th class="entry" valign="top" width="16.666666666666664%" id="d210291e96">store.location.city</th>
 
-                            <th class="entry" valign="top" width="16.666666666666664%" id="d178459e95">store.location.state</th>
+                            <th class="entry" valign="top" width="16.666666666666664%" id="d210291e99">store.location.state</th>
 
-                            <th class="entry" valign="top" width="16.666666666666664%" id="d178459e98">store.location.zipcode</th>
+                            <th class="entry" valign="top" width="16.666666666666664%" id="d210291e102">store.location.zipcode</th>
 
-                            <th class="entry" valign="top" width="16.666666666666664%" id="d178459e102">store.ip</th>
+                            <th class="entry" valign="top" width="16.666666666666664%" id="d210291e106">store.ip</th>
 
                         </tr>
 
@@ -92,17 +94,17 @@
 
                     <tbody class="tbody">
                         <tr class="row">
-                            <td class="entry" valign="top" width="16.666666666666664%" headers="d178459e86 ">10342</td>
+                            <td class="entry" valign="top" width="16.666666666666664%" headers="d210291e90 ">10342</td>
 
-                            <td class="entry" valign="top" width="16.666666666666664%" headers="d178459e89 ">34 2nd St</td>
+                            <td class="entry" valign="top" width="16.666666666666664%" headers="d210291e93 ">34 2nd St</td>
 
-                            <td class="entry" valign="top" width="16.666666666666664%" headers="d178459e92 ">Wilma</td>
+                            <td class="entry" valign="top" width="16.666666666666664%" headers="d210291e96 ">Wilma</td>
 
-                            <td class="entry" valign="top" width="16.666666666666664%" headers="d178459e95 ">OH</td>
+                            <td class="entry" valign="top" width="16.666666666666664%" headers="d210291e99 ">OH</td>
 
-                            <td class="entry" valign="top" width="16.666666666666664%" headers="d178459e98 ">33333</td>
+                            <td class="entry" valign="top" width="16.666666666666664%" headers="d210291e102 ">33333</td>
 
-                            <td class="entry" valign="top" width="16.666666666666664%" headers="d178459e102 ">234.56.7890</td>
+                            <td class="entry" valign="top" width="16.666666666666664%" headers="d210291e106 ">234.56.7890</td>
 
                         </tr>
 
@@ -115,13 +117,68 @@
  </div>
 
 </div>
+<div class="topic concept nested1" id="concept_vpx_zc1_xx">
+ <h2 class="title topictitle2">Flatten Specific Fields</h2>
+
+ <div class="body conbody">
+  <p class="p">The
+            Field Flattener can flatten specific list and map fields that contain additional nested
+            list or map fields. When the processor flattens a list or map field, it flattens all
+            nested structures in the field until the field is flat.</p>
+
+        <p class="p">For example, say you have the following record with nested map fields:</p>
+
+        <pre class="pre codeblock">{
+  "contact": {
+     "name": "Jane Smith",
+     "id": "557",
+     "address": {
+       "home": {
+         "street": "101 3rd St",
+         "city": "Huntsville",
+         "state": "NC",
+         "zipcode": "27023"
+          },
+       "work": {
+         "street": "15 Main St",
+         "city": "Jonestown",
+         "state": "NC",
+         "zipcode": "27011"
+       }
+      }
+  }
+}</pre>
+
+        <p class="p">If you configure Field Flattener to flatten the /contact/address map field and to use a
+            period as the name separator, the processor generates the following record:</p>
+
+        <pre class="pre codeblock">{
+  "contact": {
+     "name": "Jane Smith",
+     "id": "10342",
+     "address": {
+         "home.street": "34 2nd St",
+         "home.city": "Wilma",
+         "home.state": "OH",
+         "home.zipcode": "33333",
+         "work.street": "15 Main St",
+         "work.city": "Jonestown",
+         "work.state": "OH",
+         "work.zipcode": "55555"
+      }
+  }
+}</pre>
+
+ </div>
+
+</div>
 <div class="topic task nested1" id="task_xdv_kkk_fx">
     <h2 class="title topictitle2">Configuring a Field Flattener</h2>
 
     <div class="body taskbody">
         <div class="section context">
             <p class="p">Configure a Field Flattener
-                to flatten records. </p>
+                to flatten fields. </p>
 
         </div>
 
@@ -130,14 +187,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xdv_kkk_fx__d26750e3559" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xdv_kkk_fx__d33546e3754" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d178459e180">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d210291e218">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d178459e183">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d210291e221">Description</th>
 
                                 </tr>
 
@@ -145,24 +202,24 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d178459e180 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d210291e218 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d178459e183 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d178459e180 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d178459e183 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d210291e221 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d178459e180 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_xdv_kkk_fx__d26750e3605" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d210291e218 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d178459e183 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d210291e221 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d210291e218 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_xdv_kkk_fx__d33546e3800" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d210291e221 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -170,10 +227,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d178459e180 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_xdv_kkk_fx__d26750e3619" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d210291e218 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_xdv_kkk_fx__d33546e3814" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d178459e183 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d210291e221 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -181,10 +238,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d178459e180 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_xdv_kkk_fx__d26750e3634" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d210291e218 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_xdv_kkk_fx__d33546e3829" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d178459e183 ">Error record handling for the stage: <ul class="ul" id="task_xdv_kkk_fx__d26750e3638">
+                                    <td class="entry" valign="top" width="70%" headers="d210291e221 ">Error record handling for the stage: <ul class="ul" id="task_xdv_kkk_fx__d33546e3833">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -215,9 +272,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d178459e302">Field Flattener Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d210291e340">Field Flattener Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d178459e305">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d210291e343">Description</th>
 
                                 </tr>
 
@@ -225,17 +282,32 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d178459e302 ">Flatten <a class="xref" href="FieldFlattener.html#concept_k4x_rz1_hx">
+                                    <td class="entry" valign="top" width="30%" headers="d210291e340 ">Flatten <a class="xref" href="FieldFlattener.html#concept_k4x_rz1_hx">
                                             <img class="image" id="task_xdv_kkk_fx__image_w55_4yn_lw" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d178459e305 ">You can flatten entire records at this time.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d210291e343 ">Select whether to flatten the entire record or to flatten
+                                        specific list or map fields.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d178459e302 ">Name Separator</td>
+                                    <td class="entry" valign="top" width="30%" headers="d210291e340 ">Fields
+                                        <a class="xref" href="FieldFlattener.html#concept_vpx_zc1_xx">
+                                            <img class="image" id="task_xdv_kkk_fx__image_w66_7yn_lw" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d178459e305 ">One or more characters to use between nested field names
+                                    <td class="entry" valign="top" width="70%" headers="d210291e343 ">List or map fields to flatten. You can flatten list and
+                                        map fields that contain additional nested list or map
+                                        fields. Enter the path to the field, for example:
+                                        /contact/address. <p class="p">Click <span class="ph uicontrol">Add</span> to
+                                            specify additional fields to flatten.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d210291e340 ">Name Separator</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d210291e343 ">One or more characters to use between nested field names
                                         to create a flattened field name. <p class="p">For example, if you use
                                             the underscore character, a location field nested in a
                                             store field is flattened as follows: store_location.

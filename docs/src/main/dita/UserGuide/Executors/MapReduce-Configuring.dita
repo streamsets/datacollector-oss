@@ -129,7 +129,7 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 placement="inline" id="image_a5x_jzn_vs"
                                         /></xref></entry>
-                                    <entry>Uses Kerberos credentials to connect to the extpernal
+                                    <entry>Uses Kerberos credentials to connect to the external
                                         system. <p>When selected, uses the Kerberos principal and
                                             keytab defined in the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -230,7 +230,7 @@
                                 </row>
                                 <row>
                                     <entry>Compression Codec</entry>
-                                    <entry>Conpression codec to use. If you do not enter a
+                                    <entry>Compression codec to use. If you do not enter a
                                         compression code, the executor uses the default compression
                                         codec for Parquet.</entry>
                                 </row>

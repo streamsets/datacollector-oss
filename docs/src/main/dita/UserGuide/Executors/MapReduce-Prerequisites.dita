@@ -17,8 +17,7 @@
  <title>Prerequisites</title>
  <conbody>
   <p>Before you run a pipeline that includes MapReduce executor, you must enable MapReduce executor
-            to submit a job. <draft-comment author="Loretta">Do I need to say YARN? Seems like
-                unnecessary detail if this works for you, Jarcec?</draft-comment></p>
+            to submit a job. </p>
         <p>You can enable MapReduce executor to submit a job in several different ways. Perform
                 <u>one</u> of the following tasks to enable the executor to submit jobs: <dl>
                 <dlentry>

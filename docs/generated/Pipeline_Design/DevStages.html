@@ -23,48 +23,54 @@
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Pipeline_Design/PipelineDesign_title.html" title="Pipeline Concepts and Design">Pipeline Concepts and Design</a></td><td><div class="navheader">
 <span class="navparent"><a class="link" href="../Pipeline_Design/PipelineDesign_title.html" title="Pipeline Concepts and Design"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Concepts and Design</span></a></span>  </div></td></tr></tbody></table>
 <div class="nested0" id="concept_czx_ktn_ht">
- <h1 class="title topictitle1">Development Stages</h1>
+  <h1 class="title topictitle1">Development Stages</h1>
 
- <div class="body conbody">
-  <div class="p">The <span class="ph">Data
+  <div class="body conbody">
+    <div class="p">The <span class="ph">Data
                   Collector</span> provides
-   several development stages that you can use to help develop or test pipelines. <div class="note note"><span class="notetitle">Note:</span> Do not use
-    development stages in production pipelines. </div>
+      several development stages that you can use to help develop or test pipelines. <div class="note note"><span class="notetitle">Note:</span> Do not
+        use development stages in production pipelines. </div>
 </div>
 
-  <div class="p">You can use the following development stages when developing or testing pipelines:<dl class="dl">
-    
-     <dt class="dt dlterm">Dev Data Generator origin</dt>
+    <div class="p">You can use the following development stages when developing or testing pipelines:<dl class="dl">
+        
+          <dt class="dt dlterm">Dev Data Generator origin</dt>
 
-     <dd class="dd">Generates records with the configured number of fields with the selected data types.</dd>
+          <dd class="dd">Generates records with the configured number of fields with the selected data types.
+            You can use a Map or List-Map root field type. </dd>
 
-     <dd class="dd">You can use a Map or List-Map root field type. </dd>
+          <dd class="dd">The origin can also generate events to test event handling functionality. To generate
+            event records, select the <span class="ph uicontrol">Produce Events</span> property. </dd>
 
-     <dd class="dd">The On Record Error property has no effect in this stage.</dd>
+          <dd class="dd">When generating events, the origin uses the configured fields as the body of the event
+            record and adds event record header attributes. For more information about event
+            handling and event record header attributes, see <a class="xref" href="../Event_Handling/EventHandling-Overview.html#concept_cph_5h4_lx">Event Handling</a>.</dd>
 
-    
-    
-     <dt class="dt dlterm">Dev Random Source origin</dt>
+          <dd class="dd">The On Record Error property has no effect in this stage.</dd>
 
-     <dd class="dd">Generates records with the configured number of Long fields. You can define a delay between
-      batches and a maximum number of records to generate.</dd>
+        
+        
+          <dt class="dt dlterm">Dev Random Source origin</dt>
 
-     <dd class="dd">The On Record Error property has no effect in this stage.</dd>
+          <dd class="dd">Generates records with the configured number of Long fields. You can define a delay
+            between batches and a maximum number of records to generate.</dd>
 
-    
-    
-     <dt class="dt dlterm">Dev Raw Data Source origin</dt>
+          <dd class="dd">The On Record Error property has no effect in this stage.</dd>
 
-     <dd class="dd">Generates records based on user-supplied data. You can enter raw data, select the data
+        
+        
+          <dt class="dt dlterm">Dev Raw Data Source origin</dt>
+
+          <dd class="dd">Generates records based on user-supplied data. You can enter raw data, select the data
             format of the data, and then configure any format-related configuration options. </dd>
 
-     <dd class="dd">For example, you can enter a set of log data, select the log data format, and then define
-      the log format and other log properties for the data. </dd>
+          <dd class="dd">For example, you can enter a set of log data, select the log data format, and then
+            define the log format and other log properties for the data. </dd>
 
           <dd class="dd">In data preview, this stage displays the raw source data as well as the data generated
             by the stage. </dd>
 
-    
+        
         
           <dt class="dt dlterm">Dev Identity processor</dt>
 
@@ -73,25 +79,40 @@
           </dd>
 
         
-    
-     <dt class="dt dlterm">Dev Random Error processor</dt>
+        
+          <dt class="dt dlterm">Dev Random Error processor</dt>
 
-     <dd class="dd">Generates error records so you can test pipeline error handling. You can configure the
-      stage to discard records, define required fields and preconditions, and configure stage error
-      handling. </dd>
+          <dd class="dd">Generates error records so you can test pipeline error handling. You can configure the
+            stage to discard records, define required fields and preconditions, and configure stage
+            error handling. </dd>
 
-    
-    
-     <dt class="dt dlterm">Dev Record Creator processor</dt>
+        
+        
+          <dt class="dt dlterm">Dev Record Creator processor</dt>
 
-     <dd class="dd">Generates two records for each record that enters the stage. You can define required fields
-      and preconditions, and configure stage error handling. </dd>
+          <dd class="dd">Generates two records for each record that enters the stage. You can define required
+            fields and preconditions, and configure stage error handling. </dd>
 
-    
-   </dl>
+        
+        
+          <dt class="dt dlterm">To Event destination</dt>
+
+          <dd class="dd">Generates events for testing event handling functionality. To generate events, select
+            the <span class="ph uicontrol">Produce Events</span>  property. </dd>
+
+          <dd class="dd">The destination generates an event record for each incoming record. It uses the
+            incoming record as the body of an event record and adds event record header attributes.
+            Note that any record header attributes in the incoming record might be lost or
+            replaced.</dd>
+
+          <dd class="dd">For more information about event handling and event record header attributes, see
+              <a class="xref" href="../Event_Handling/EventHandling-Overview.html#concept_cph_5h4_lx">Event Handling</a>.</dd>
+
+        
+      </dl>
 </div>
 
- </div>
+  </div>
 
 <div class="related-links"></div>
 </div>

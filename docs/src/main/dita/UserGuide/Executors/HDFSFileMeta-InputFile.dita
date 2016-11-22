@@ -24,7 +24,7 @@
         <p>Use this expression to update output files closed by the Hadoop FS, Local FS, and MapR FS
             destinations. The file closure event records include a filepath field that contains the
             location and name of the closed output files.</p>
-        <p>To update whole files that the the Hadoop FS, Local FS, and MapR FS destinations have
+        <p>To update whole files that the Hadoop FS, Local FS, and MapR FS destinations have
             completed streaming, use the following
             expression:<codeblock>${record:value('/targetFileInfo/path')}</codeblock></p>
         <p>The whole file processed event records include a /targetFileInfo/path field that contains

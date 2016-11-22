@@ -14,15 +14,15 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_zr1_5ck_rx">
- <title>Defining the File Owner, Group, and Permissions</title>
+ <title>Defining the Owner, Group, Permissions, and ACLs</title>
  <conbody>
-  <p><indexterm>HDFS File Metadata executor<indexterm>setting file
-                permissions</indexterm></indexterm>You can use HDFS File Metadata executor to change
-            the file owner, group, file permissions and access control list (ACL) permissions for
-            closed files. <note type="important">When the executor changes permissions, it removes
-                existing permissions and implements the requested permissions. The executor does not
-                add permissions to the existing permissions, so be sure to configure permissions
-                exactly how you want them.</note></p>
+  <p><indexterm>HDFS File Metadata executor<indexterm>defining the owner, group, permissions, and
+                    ACLs</indexterm></indexterm>You can use HDFS File Metadata executor to change
+            the file owner, group, file permissions, and the access control list (ACL) for closed
+            files. <note type="important">When the executor changes permissions, it removes existing
+                permissions and implements the requested permissions. The executor does not add
+                permissions to the existing permissions, so be sure to configure permissions exactly
+                how you want them.</note></p>
         <p>You can set permissions using any combination of the following methods: <dl>
                 <dlentry>
                     <dt>Define a new owner and group</dt>
@@ -45,17 +45,17 @@
                 </dlentry>
             </dl><dl>
                 <dlentry>
-                    <dt>Set ACL permissions </dt>
-                    <dd>You set ACL permissions for files. When you define ACL permissions, note
-                        that HDFS expects permissions defined for the user, group, and other. You
-                        can alternatively add permissions for additional users or groups. </dd>
-                    <dd>Use the following format to defile ACL
-                        permissions:<codeblock>user::&lt;permissions>,group::&lt;permissions>,other::&lt;permissions>\
+                    <dt>Define ACLs </dt>
+                    <dd>You can define the ACLs for files. When you define ACLs, note that HDFS
+                        expects permissions defined for the user, group, and other. You can
+                        alternatively add permissions for additional users or groups. </dd>
+                    <dd>Use the following format to define
+                        ACLs:<codeblock>user::&lt;permissions>,group::&lt;permissions>,other::&lt;permissions>\
 [,&lt;user | group>:&lt;user or group name:&lt;permissions>]</codeblock></dd>
                     <dd>Define permissions using the symbolic format, with r, w, x or - representing
                         the permission type. </dd>
-                    <dd>For example, the following ACL permissions allow read access for the user
-                        and group only:<codeblock>user::r--,group::r--,other::–-</codeblock></dd>
+                    <dd>For example, the following ACLs allow read access for the user and group
+                        only:<codeblock>user::r--,group::r--,other::–-</codeblock></dd>
                     <dd>If you wanted to allow read access to the operations group in addition to
                         the group associated with the file, you would enter the following
                         permissions:<codeblock>user::r--,group::r--,other::–-,group:operations:r--</codeblock></dd>

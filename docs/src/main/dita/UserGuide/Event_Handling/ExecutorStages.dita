@@ -37,9 +37,10 @@
                 <dlentry>
                     <dt>HDFS File Metadata executor</dt>
                     <dd>Connects to HDFS, MapR FS, or a local file system and performs file-based
-                        tasks for each event. Can rename, move, and change permissions for files. </dd>
+                        tasks for each event. Can rename, move, and define the owner, group,
+                        permissions and ACLs for files. </dd>
                     <dd>Use with the Hadoop FS, Local FS, and MapR FS destinations, which generate
-                        events when they close a file. </dd>
+                        events when they close an output file or finish streaming a whole file.</dd>
                     <dd>For example, you can use the HDFS File Metadata executor with the Local FS
                         destination to move and change the permissions of files when the destination
                         closes a file.</dd>

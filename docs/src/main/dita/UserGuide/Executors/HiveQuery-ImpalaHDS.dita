@@ -33,10 +33,5 @@
             destination, you can use an Expression Evaluator to extract the table name from the
             filepath field as described in <xref
                 href="../Event_Handling/CaseStudy-Impala.dita#concept_szz_xwm_lx"/>. </p>
-        <p>Or, you can skip the Expression Evaluator and use a second Hive Query executor with the
-            Hadoop FS destination with the following query:
-                <codeblock>invalidate metadata <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-code-HiveDrift-DB.table"/></codeblock><draft-comment
-                author="Loretta">Jarcec, does it work this way? If not, I'll take the proper
-                expression to use? :)</draft-comment></p>
  </conbody>
 </concept>

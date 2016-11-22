@@ -24,9 +24,5 @@
         <p>In the query, you can use fields or attributes available in the event record passed to
             the executor. For details about event records, see the documentation for the event
             generating stage.</p>
-        <p>
-            <draft-comment author="Loretta">Jarcec: do we need to say anything else here?
-            </draft-comment>
-        </p>
     </conbody>
 </concept>
