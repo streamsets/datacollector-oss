@@ -272,4 +272,38 @@ public class TestSparkProcessor {
     }
   }
 
+
+  @Test
+  public void testMethodCalls() throws Exception {
+    final OnRecordError onRecordError = OnRecordError.TO_ERROR;
+
+    SparkProcessorConfigBean configBean = getConfigBean();
+    configBean.transformerClass = MethodCallCountingTransformer.class.getCanonicalName();
+
+    SparkProcessor processor = new SparkProcessor(configBean);
+
+    Random random = new Random();
+    List<Record> records = new ArrayList<>(100);
+    for (int i = 0; i < 100; i++) {
+      Record r = RecordCreator.create();
+      records.add(r);
+      r.set(Field.create(new HashMap<String, Field>()));
+      r.set(OnlyErrorTransformer.ERROR_PATH, Field.create(String.valueOf(random.nextLong())));
+    }
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(DProcessorClass, processor)
+        .addOutputLane(LANE).setOnRecordError(onRecordError).build();
+
+    runner.runInit();
+
+    for (int i = 0; i < 10; i++) {
+      runner.runProcess(records);
+    }
+
+    runner.runDestroy();
+
+    Assert.assertEquals(MethodCallCountingTransformer.initCallCount, 1);
+    Assert.assertEquals(MethodCallCountingTransformer.transformCallCount, 10);
+    Assert.assertEquals(MethodCallCountingTransformer.destroyCallCount, 1);
+  }
 }
