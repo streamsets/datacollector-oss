@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -40,6 +41,8 @@ public class UDPToKafkaUpgrader implements StageUpgrader {
     switch (fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+      case 2:
+        upgradeV2ToV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -50,4 +53,30 @@ public class UDPToKafkaUpgrader implements StageUpgrader {
   private static void upgradeV1ToV2(List<Config> configs) {
     configs.add(new Config("udpConfigs.enableEpoll", false));
   }
+
+  // Version 3 is renaming configs that should have been renamed in version 2, but sadly we've made the release
+  private static void upgradeV2ToV3(List<Config> configs) {
+    List<Config> configsToRemove = new ArrayList<>();
+    List<Config> configsToAdd = new ArrayList<>();
+
+    for (Config config : configs) {
+      if (config.getName().startsWith("kafkaConfigBean.kafkaConfig")) {
+        configsToRemove.add(config);
+        configsToAdd.add(new Config(
+            config.getName().replace("kafkaConfigBean.kafkaConfig", "kafkaTargetConfig"),
+            config.getValue()
+        ));
+      } else if (config.getName().startsWith("kafkaConfigBean.dataGeneratorFormatConfig")) {
+        configsToRemove.add(config);
+        configsToAdd.add(new Config(
+          config.getName().replace("kafkaConfigBean.dataGeneratorFormatConfig", "kafkaTargetConfig.dataGeneratorFormatConfig"),
+          config.getValue()
+        ));
+      }
+    }
+
+    configs.removeAll(configsToRemove);
+    configs.addAll(configsToAdd);
+  }
+
 }
