@@ -44,17 +44,19 @@
                         an application my organization is developing</uicontrol>. </li>
                 <li>On the <wintitle>Tell us about your application</wintitle> page, perform the
                     following steps:<ol id="ul_orv_hq5_zx">
-                        <li>Enter "sdc" as the application name.</li>
+                        <li>Enter an application name, such as "sdc".</li>
                         <li>Verify that the <uicontrol>Web Application and/or Web API</uicontrol>
                             option is selected. </li>
                         <li>To continue to the next page, click the <uicontrol>Next</uicontrol>
                             arrow.</li>
                     </ol></li>
-                <li>In the <wintitle>App properties</wintitle> page, set the <uicontrol>Sign-On
-                        URL</uicontrol> and <uicontrol>App ID URI</uicontrol> properties to:
-                        <uicontrol>http://streamsets.com</uicontrol>. Then, click the
-                        <uicontrol>Complete</uicontrol> check mark icon. <p>A Welcome screen
-                        appears. </p></li>
+                <li>In the <wintitle>App properties</wintitle> page, set <uicontrol>Sign-On
+                        URL</uicontrol> to a URL that describes the application, and set
+                        <uicontrol>App ID URI</uicontrol> to a URLs that identifies the application.
+                        <p>Use any URL, such as <uicontrol>http://streamsets.com</uicontrol>.
+                    </p></li>
+                <li>Click the <uicontrol>Complete</uicontrol> check mark icon. <p>Active Directory
+                        creates the wizard and displays a welcome screen. </p></li>
             </ol>
         </p>
  </conbody>

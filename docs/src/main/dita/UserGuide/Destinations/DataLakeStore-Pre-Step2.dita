@@ -43,8 +43,10 @@
                                     >https://manage.windowsazure.com</xref>. In the navigation
                                 panel, select <uicontrol>Active Directory</uicontrol>. </p><p>Select
                                 the account to use, then <uicontrol>Applications</uicontrol>. Then,
-                                select the <uicontrol>sdc</uicontrol> web application. </p><p>The
-                                    <wintitle>Properties</wintitle> page appears.</p></li>
+                                select the <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                /> web application. </p><p>The <wintitle>Properties</wintitle> page
+                                appears.</p></li>
                         <li id="ClientID">Scroll down the page and note the <uicontrol>Client
                                 ID</uicontrol>:<p><image href="../Graphics/DLStore-ADClientID.png"
                                     id="image_tqh_y1v_zx" scale="60"/></p><p>
