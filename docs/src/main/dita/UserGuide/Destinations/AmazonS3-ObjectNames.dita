@@ -24,5 +24,6 @@
         <p>You configure the object name prefix. The UTC timestamp is the time when the object is
             created, to the millisecond. The counter is used when multiple objects are created in
             the same millisecond. </p>
+        <p>You can optionally configure an object name suffix for most data formats. </p>
  </conbody>
 </concept>

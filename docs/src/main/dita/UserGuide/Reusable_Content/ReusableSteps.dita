@@ -3319,10 +3319,25 @@
                                     <entry>Prefix to use for output files. Use when writing to a
                                         directory that receives files from other sources.<p>Uses the
                                             prefix sdc-${sdc:id()} by default. The prefix evaluates
-                                            to sdc-&lt;Data Collector ID>. </p><p>The Data Collector
-                                            ID is stored in the following file:
-                                                <filepath>$SDC_DATA/sdc.id</filepath>. For more information about environment variables, see <xref
-                                                    href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"/>.</p></entry>
+                                            to sdc-&lt;<ph
+                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> ID>. </p><p>The <ph
+                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> ID is stored in the following file:
+                                                <filepath>$SDC_DATA/sdc.id</filepath>. For more
+                                            information about environment variables, see <xref
+                                                href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"
+                                            />.</p></entry>
+                                </row>
+                                <row id="row-FileSuffix">
+                                    <entry>File Suffix</entry>
+                                    <entry>Suffix to use for output files, such as txt or json. When
+                                        used, the destination adds a period and the configured
+                                        suffix as follows: &lt;filename>.&lt;suffix>.<p>You can
+                                            include periods within the suffix, but do not start the
+                                            suffix with a period. Forward slashes are not
+                                            allowed.</p><p>Not available for the whole file data
+                                            format. </p></entry>
                                 </row>
                                 <row id="row-DirectoryinHeader">
                                     <entry>Directory in Header <xref
