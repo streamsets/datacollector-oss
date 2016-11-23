@@ -45,7 +45,6 @@
     <chapter href="Chapter_Maps/Install_Config.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/Upgrade.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/PipelineDesign.ditamap" format="ditamap"/>
-    <chapter href="Chapter_Maps/EventHandling.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/PipelineConfiguration.ditamap" format="ditamap"
         processing-role="normal"/>
     <chapter href="Chapter_Maps/Origins.ditamap" format="ditamap"/>
@@ -53,6 +52,7 @@
     <chapter href="Chapter_Maps/Destinations.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/Executors.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/DPM.ditamap" format="ditamap"/>
+    <chapter href="Chapter_Maps/EventHandling.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/HiveDriftSolution.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/RPCPipelines.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/ClusterMode.ditamap" format="ditamap"/>

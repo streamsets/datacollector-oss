@@ -22,7 +22,7 @@
             stages and event records in any logical way. </p>
         <p>The following tables outline some logical pairings of event generating stages with
             executors and destinations:<table frame="all" rowsep="1" colsep="1"
-                id="table_a45_zhh_tx">
+                id="table_pwj_d4p_1y">
                 <tgroup cols="2">
                     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                     <colspec colname="c2" colnum="2" colwidth="3.5*"/>
@@ -35,11 +35,19 @@
                     <tbody>
                         <row>
                             <entry>Directory</entry>
-                            <entry>Any destination for event storage.</entry>
+                            <entry>
+                                <ul id="ul_wvy_h4p_1y">
+                                    <li>Any destination for event storage.</li>
+                                </ul>
+                            </entry>
                         </row>
                         <row>
                             <entry>File Tail</entry>
-                            <entry>Any destination for event storage.</entry>
+                            <entry>
+                                <ul id="ul_hgh_34p_1y">
+                                    <li>Any destination for event storage.</li>
+                                </ul>
+                            </entry>
                         </row>
                     </tbody>
                 </tgroup>
@@ -56,7 +64,11 @@
                     <tbody>
                         <row>
                             <entry>Amazon S3 </entry>
-                            <entry>Any destination for event storage.</entry>
+                            <entry>
+                                <ul id="ul_tyv_24p_1y">
+                                    <li>Any destination for event storage.</li>
+                                </ul>
+                            </entry>
                         </row>
                         <row>
                             <entry>Hadoop FS</entry>
