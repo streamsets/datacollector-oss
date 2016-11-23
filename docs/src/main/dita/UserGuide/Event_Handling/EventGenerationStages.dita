@@ -70,6 +70,30 @@
                             </entry>
                         </row>
                         <row>
+                            <entry>Groovy Evaluator processor</entry>
+                            <entry>
+                                <ul id="ul_cj5_tnp_1y">
+                                    <li>Runs a script that generates events.</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>JavaScript Evaluator processor</entry>
+                            <entry>
+                                <ul id="ul_qtz_vnp_1y">
+                                    <li>Runs a script that generates events.</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>Jython Evaluator processor</entry>
+                            <entry>
+                                <ul id="ul_ujt_wnp_1y">
+                                    <li>Runs a script that generates events.</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
                             <entry>Hive Metastore destination</entry>
                             <entry>
                                 <ul id="ul_fgw_mt4_qx">
