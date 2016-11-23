@@ -58,8 +58,9 @@ public class S3TargetSSEConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
-      label = "AWS KMS Key ID",
-      description = "ID of the AWS KMS master encryption key that was used for the object",
+      label = "AWS KMS Key ARN",
+      description = "AWS KMS master encryption key that was used for the object. " +
+          "The KMS key you specify in the policy must use the \"arn:aws:kms:region:acct-id:key/key-id\" format.",
       defaultValue = "",
       displayPosition = 30,
       elDefs = VaultEL.class,
