@@ -64,7 +64,7 @@ public class RandomDataGeneratorSourceUpgrader implements StageUpgrader {
   private void upgradeV4ToV5(List<Config> configs) {
     Config deleteConfig = null;
     for(Config config : configs) {
-      if(config.getName() == "generateEvents") {
+      if(config.getName().equals("generateEvents")) {
         deleteConfig = config;
       }
     }
