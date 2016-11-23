@@ -14,12 +14,12 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_dgz_yfh_1y">
- <title>Step 3. Grant Write Permission</title>
+ <title>Step 3. Grant Execute Permission</title>
  <conbody>
   <p><indexterm>Data Lake Store destination<indexterm>prereq: register Data
                 Collector</indexterm></indexterm><indexterm>prerequisites<indexterm>Data Lake Store
                     destination</indexterm></indexterm>To allow the Data Lake Store destination to
-            write to Azure Data Lake Store, grant write permission to the <ph
+            write to Azure Data Lake Store, grant execute permission to the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             web application for the folders that you want to use. When using directory templates in
             the destination, be sure to include all subfolders. </p>
@@ -48,14 +48,16 @@
                 <li>In the <wintitle>Assign Permissions</wintitle> panel, select <uicontrol>Select
                         User or Group</uicontrol>.</li>
                 <li>In the <wintitle>Select User or Group</wintitle> panel, scroll and select the
-                        <uicontrol>sdc</uicontrol> web application that you created, and click
-                        <uicontrol>Select</uicontrol>.<p><image
+                        <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> web application that you created, and click
+                            <uicontrol>Select</uicontrol>.<p><image
                             href="../Graphics/DLStore-UserGroup.png" id="image_ndh_jhk_1y"
                             scale="55"/></p></li>
                 <li>In the <wintitle>Select Permissions</wintitle> panel, configure the following
                         properties:<ul id="ul_ucv_xhk_1y">
                         <li>For <uicontrol>Permissions</uicontrol>, select
-                                <uicontrol>Write</uicontrol> to allow <ph
+                                <uicontrol>Execute</uicontrol> to allow <ph
                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                             /> to write to the folder.</li>
                         <li>For <uicontrol>Add to</uicontrol>, select <uicontrol>This folder and all

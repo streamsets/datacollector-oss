@@ -44,17 +44,20 @@
                             <tbody>
                                 <row>
                                     <entry>Client ID</entry>
-                                    <entry>Azure Client ID. <p>The Client ID for the SDC web
-                                            application created in Active Directory. </p><p>For help
-                                            locating this information in Azure, see <xref
+                                    <entry>Azure Client ID. <p>The Client ID for the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> web application created in Active Directory.
+                                            </p><p>For help locating this information in Azure, see
+                                                <xref
                                                 href="DataLakeStore-Pre-Step2.dita#concept_xv4_b2h_1y/ClientID"
                                                 >Step 2. Retrieve Details from
                                         Azure</xref>.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Auth Token Endpoint</entry>
-                                    <entry>Azure OAuth 2.0 token endpoint URL for the SDC web
-                                            application.<p>For help locating this information in
+                                    <entry>Azure OAuth 2.0 token endpoint URL for the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> web application.<p>For help locating this information in
                                             Azure, see <xref
                                                 href="DataLakeStore-Pre-Step2.dita#concept_xv4_b2h_1y/AuthToken"
                                                 >Step 2. Retrieve Details from
@@ -70,9 +73,10 @@
                                 </row>
                                 <row>
                                     <entry>Client Key</entry>
-                                    <entry>The Client Key of the SDC web application created in
-                                        Active Directory. <p>For help locating this information in
-                                            Azure, see <xref
+                                    <entry>The Client Key of the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> web application created in Active Directory. <p>For help
+                                            locating this information in Azure, see <xref
                                                 href="DataLakeStore-Pre-Step2.dita#concept_xv4_b2h_1y/ClientKey"
                                                 >Step 2. Retrieve Details from
                                         Azure</xref>.</p></entry>
