@@ -145,6 +145,7 @@ public class PipelineConfigurationValidator {
     canPreview &= validateCommitTriggerStage(pipelineConfiguration);
 
     upgradeBadRecordsHandlingStage(pipelineConfiguration);
+    upgradeStatsAggregatorStage(pipelineConfiguration);
 
     if (LOG.isTraceEnabled() && issues.hasIssues()) {
       for (Issue issue : issues.getPipelineIssues()) {
@@ -1308,15 +1309,29 @@ public class PipelineConfigurationValidator {
 
   private void upgradeBadRecordsHandlingStage(PipelineConfiguration pipelineConfiguration) {
     // If there are upgrades on Error Record Stage Lib, upgrade "badRecordsHandling" config value
-    final String label = "badRecordsHandling";
-    Config config = pipelineConfiguration.getConfiguration(label);
-    StageConfiguration errorStageConfig = pipelineConfiguration.getErrorStage();
-    final String errorStageName = errorStageConfig == null ? "" : errorStageConfig.getLibrary() + "::"
-        + errorStageConfig.getStageName() + "::" + errorStageConfig.getStageVersion();
+    upgradeSpecialStage(pipelineConfiguration, "badRecordsHandling", pipelineConfiguration.getErrorStage());
+  }
 
-    if (!(config == null || config.getValue() == null|| config.getValue().equals(errorStageName))) {
+  private void upgradeStatsAggregatorStage(PipelineConfiguration pipelineConfiguration) {
+    // If there are upgrades on Stats Aggregator Stage Lib, upgrade "badRecordsHandling" config value
+    upgradeSpecialStage(
+        pipelineConfiguration,
+        "statsAggregatorStage",
+        pipelineConfiguration.getStatsAggregatorStage()
+    );
+  }
+
+  private void upgradeSpecialStage(
+      PipelineConfiguration pipelineConfiguration,
+      String label,
+      StageConfiguration stageConfig
+  ) {
+    Config config = pipelineConfiguration.getConfiguration(label);
+    final String stageName = stageConfig == null ? "" :
+        stageConfig.getLibrary() + "::" + stageConfig.getStageName() + "::" + stageConfig.getStageVersion();
+    if (!(config == null || config.getValue() == null|| config.getValue().equals(stageName))) {
       pipelineConfiguration.getConfiguration().remove(config);
-      pipelineConfiguration.getConfiguration().add(new Config(label, errorStageName));
+      pipelineConfiguration.getConfiguration().add(new Config(label, stageName));
     }
   }
 }
