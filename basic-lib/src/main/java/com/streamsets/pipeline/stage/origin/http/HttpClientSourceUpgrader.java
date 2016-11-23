@@ -108,6 +108,7 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
   }
 
   private static void upgradeV8ToV9(List<Config> configs) {
+    DataFormatUpgradeHelper.ensureAvroSchemaExists(configs, joiner.join(CONF, DATA_FORMAT_CONFIG));
     DataFormatUpgradeHelper.upgradeAvroParserWithSchemaRegistrySupport(configs);
   }
 
