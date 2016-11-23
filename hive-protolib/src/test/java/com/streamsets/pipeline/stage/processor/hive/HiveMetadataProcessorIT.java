@@ -189,7 +189,7 @@ public class HiveMetadataProcessorIT extends BaseHiveIT {
     Assert.assertEquals(2, output.getRecords().get("hive").size());
     Assert.assertEquals(1, output.getRecords().get("hdfs").size());
 
-    Calendar cal = Calendar.getInstance();
+    Calendar cal = Calendar.getInstance(timezone);
     cal.setTime(new Date(System.currentTimeMillis()));
     String year = String.valueOf(cal.get(Calendar.YEAR));
     String month = String.valueOf(Utils.intToPaddedString(cal.get(Calendar.MONTH) + 1, 2));
