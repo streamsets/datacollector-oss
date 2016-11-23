@@ -374,7 +374,7 @@ angular
       /**
        * Callback function on clicking install missing library link
        */
-      onInstallMissingLibraryClick: function() {
+      onInstallMissingLibraryClick: function(libraryId) {
         var modalInstance = $modal.open({
           templateUrl: 'app/home/packageManager/install/install.tpl.html',
           controller: 'InstallModalInstanceController',
@@ -386,8 +386,8 @@ angular
             },
             libraryList: function () {
               return [{
-                id: $scope.detailPaneConfig.library,
-                label: $scope.detailPaneConfig.library
+                id: libraryId,
+                label: libraryId
               }];
             }
           }

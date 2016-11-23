@@ -62,6 +62,21 @@
                         src="'app/home/detail/configuration/groupConfiguration.tpl.html'"></ng-include>
           </div>
         </form>
+
+        <div class="row" ng-if="!errorStageConfigDefn">
+          <div class="col-md-12" >
+            <div class="alert alert-danger" role="alert">
+              <i class="fa fa-exclamation-triangle"></i>
+              <span translate="home.detailPane.noStageDefinitionFound" translate-values="{stageName: detailPaneConfig.stageName, library: detailPaneConfig.library}"></span>
+            </div>
+          </div>
+
+          <div class="col-md-12 col-md-offset-1" >
+            <button class="btn btn-primary" ng-click="onInstallMissingLibraryClick(detailPaneConfig.library)">Install Missing Stage Library</button>
+          </div>
+
+        </div>
+
       </div>
     </tab>
 
@@ -87,6 +102,21 @@
                         src="'app/home/detail/configuration/groupConfiguration.tpl.html'"></ng-include>
           </div>
         </form>
+
+        <div class="row" ng-if="!statsAggregatorStageConfigDefn">
+          <div class="col-md-12" >
+            <div class="alert alert-danger" role="alert">
+              <i class="fa fa-exclamation-triangle"></i>
+              <span translate="home.detailPane.noStageDefinitionFound" translate-values="{stageName: detailPaneConfig.stageName, library: detailPaneConfig.library}"></span>
+            </div>
+          </div>
+
+          <div class="col-md-12 col-md-offset-1" >
+            <button class="btn btn-primary" ng-click="onInstallMissingLibraryClick(detailPaneConfig.library)">Install Missing Stage Library</button>
+          </div>
+
+        </div>
+
       </div>
     </tab>
 
