@@ -49,16 +49,12 @@ public class PreviewPipeline {
 
   public PreviewPipelineOutput run(List<StageOutput> stageOutputsToOverride)
       throws StageException, PipelineRuntimeException{
-    try {
-      List<Issue> initIssues = pipeline.init();
-      if (initIssues.isEmpty()) {
-        pipeline.run(stageOutputsToOverride);
-      } else {
-        issues.addAll(initIssues);
-        throw new PipelineRuntimeException(issues);
-      }
-    } finally {
-      pipeline.destroy();
+    List<Issue> initIssues = pipeline.init();
+    if (initIssues.isEmpty()) {
+      pipeline.run(stageOutputsToOverride);
+    } else {
+      issues.addAll(initIssues);
+      throw new PipelineRuntimeException(issues);
     }
     return new PreviewPipelineOutput(issues, pipeline.getRunner());
   }

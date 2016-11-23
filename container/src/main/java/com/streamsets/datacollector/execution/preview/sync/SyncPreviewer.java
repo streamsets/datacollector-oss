@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.execution.preview.sync;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RawSourceDefinition;
@@ -205,7 +206,7 @@ public class SyncPreviewer implements Previewer {
       throw new PipelineException(PreviewError.PREVIEW_0003, e.toString(), e);
     } finally {
       PipelineEL.unsetConstantsInContext();
-      if(previewPipeline != null) {
+      if (previewPipeline != null) {
         previewPipeline.destroy();
         previewPipeline = null;
       }
@@ -264,7 +265,8 @@ public class SyncPreviewer implements Previewer {
     return null;
   }
 
-  private PreviewPipeline buildPreviewPipeline(int batches, int batchSize, String endStageInstanceName,
+  @VisibleForTesting
+  PreviewPipeline buildPreviewPipeline(int batches, int batchSize, String endStageInstanceName,
                                                boolean skipTargets)
     throws PipelineStoreException, StageException, PipelineRuntimeException {
 

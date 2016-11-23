@@ -17,10 +17,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.execution.preview;
+package com.streamsets.datacollector.execution.preview.async;
 
 import com.streamsets.datacollector.execution.PreviewStatus;
 import com.streamsets.datacollector.execution.Previewer;
+import com.streamsets.datacollector.execution.preview.TestPreviewer;
 import com.streamsets.datacollector.execution.preview.async.AsyncPreviewer;
 import com.streamsets.datacollector.execution.preview.sync.SyncPreviewer;
 import com.streamsets.datacollector.runner.MockStages;
@@ -120,4 +121,5 @@ public class TestAsyncPreviewer extends TestPreviewer {
 
     await().until(desiredPreviewStatus(previewer, PreviewStatus.TIMED_OUT));
   }
+
 }

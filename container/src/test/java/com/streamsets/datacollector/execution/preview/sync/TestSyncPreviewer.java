@@ -1,0 +1,71 @@
+/**
+ * Copyright 2015 StreamSets Inc.
+ *
+ * Licensed under the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.streamsets.datacollector.execution.preview.sync;
+
+import com.streamsets.datacollector.execution.Previewer;
+import com.streamsets.datacollector.execution.preview.TestPreviewer;
+import com.streamsets.datacollector.execution.preview.sync.SyncPreviewer;
+import com.streamsets.datacollector.runner.Pipeline;
+import com.streamsets.datacollector.runner.preview.PreviewPipeline;
+import com.streamsets.datacollector.runner.preview.PreviewPipelineRunner;
+import com.streamsets.datacollector.validation.Issue;
+import com.streamsets.datacollector.validation.Issues;
+import org.junit.Test;
+import org.mockito.Mockito;
+
+import java.util.Arrays;
+import java.util.Collections;
+
+public class TestSyncPreviewer extends TestPreviewer {
+
+  protected Previewer createPreviewer() {
+    return new SyncPreviewer(ID, NAME, REV, previewerListener, objectGraph);
+  }
+
+  @Test
+  public void testDestroyNotCalledTwice() throws Exception {
+    SyncPreviewer previewer = (SyncPreviewer)createPreviewer();
+    SyncPreviewer spyPreviewer = Mockito.spy(previewer);
+    Pipeline pipeline = Mockito.mock(Pipeline.class);
+    Mockito.doReturn(Collections.emptyList()).when(pipeline).init();
+    Mockito.doNothing().when(pipeline).run(Mockito.anyList());
+    Mockito.doNothing().when(pipeline).destroy();
+    PreviewPipelineRunner previewPipelineRunner = Mockito.mock(PreviewPipelineRunner.class);
+    Mockito.doReturn(null).when(previewPipelineRunner).getMetrics();
+    Mockito.doReturn(null).when(previewPipelineRunner).getBatchesOutput();
+    Mockito.doReturn(null).when(previewPipelineRunner).getSourceOffset();
+    Mockito.doReturn(null).when(previewPipelineRunner).getNewSourceOffset();
+    Mockito.doReturn(previewPipelineRunner).when(pipeline).getRunner();
+    PreviewPipeline previewPipeline = new PreviewPipeline("","", pipeline, new Issues());
+    Mockito.doReturn(previewPipeline).when(spyPreviewer).buildPreviewPipeline(Mockito.anyInt(), Mockito.anyInt(),
+        Mockito.anyString(), Mockito.anyBoolean());
+    spyPreviewer.start(1, 1, true, "", null, -1);
+    Mockito.verify(pipeline, Mockito.times(1)).destroy();
+    // Check if preview returns non empty issue list
+    Mockito.doReturn(Arrays.asList(Mockito.mock(Issue.class))).when(pipeline).init();
+    try {
+      spyPreviewer.start(1, 1, true, "", null, -1);
+    } catch (Exception e) {
+      // expected as issues is non empty
+    }
+    // check that destroy is still called, total times its called should be 2
+    Mockito.verify(pipeline, Mockito.times(2)).destroy();
+  }
+}
