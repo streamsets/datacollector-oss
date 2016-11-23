@@ -41,6 +41,7 @@ import static org.junit.Assert.assertNotNull;
 /**
  * To verify that the Hive query is indeed executed properly, we're creating tables and validating their proper structure.
  */
+@SuppressWarnings("unchecked")
 public class HiveQueryExecutorIT extends BaseHiveIT {
 
   @Before
@@ -64,8 +65,8 @@ public class HiveQueryExecutorIT extends BaseHiveIT {
     runner.runDestroy();
 
     assertTableStructure("default.copy",
-      new ImmutablePair("copy.id", Types.INTEGER),
-      new ImmutablePair("copy.name", Types.VARCHAR)
+      ImmutablePair.of("copy.id", Types.INTEGER),
+      ImmutablePair.of("copy.name", Types.VARCHAR)
     );
   }
 
@@ -88,8 +89,8 @@ public class HiveQueryExecutorIT extends BaseHiveIT {
     runner.runDestroy();
 
     assertTableStructure("default.el",
-      new ImmutablePair("el.id", Types.INTEGER),
-      new ImmutablePair("el.name", Types.VARCHAR)
+      ImmutablePair.of("el.id", Types.INTEGER),
+      ImmutablePair.of("el.name", Types.VARCHAR)
     );
   }
 

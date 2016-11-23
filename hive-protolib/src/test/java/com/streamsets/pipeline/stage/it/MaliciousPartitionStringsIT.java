@@ -91,14 +91,16 @@ public class MaliciousPartitionStringsIT extends BaseHiveMetadataPropagationIT {
     });
   }
 
-  private String partitionValue;
-  private Result expected;
+  private final String partitionValue;
+  private final Result expected;
+
   public MaliciousPartitionStringsIT(String partitionValue, Result expected) {
     this.partitionValue = partitionValue;
     this.expected = expected;
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testType() throws  Exception {
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
       .partitions(new PartitionConfigBuilder()
@@ -136,8 +138,8 @@ public class MaliciousPartitionStringsIT extends BaseHiveMetadataPropagationIT {
         @Override
         public void validateResultSet(ResultSet rs) throws Exception {
           assertResultSetStructure(rs,
-              new ImmutablePair("tbl.col", Types.VARCHAR),
-              new ImmutablePair("tbl.part", Types.VARCHAR)
+              ImmutablePair.of("tbl.col", Types.VARCHAR),
+              ImmutablePair.of("tbl.part", Types.VARCHAR)
           );
 
           Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());

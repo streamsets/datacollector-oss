@@ -46,6 +46,7 @@ import java.util.List;
 public class PartialInputIT extends  BaseHiveMetadataPropagationIT {
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testPartialInput() throws Exception {
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
       .partitions(Collections.<PartitionConfig>emptyList())
@@ -142,10 +143,10 @@ public class PartialInputIT extends  BaseHiveMetadataPropagationIT {
 
     // End state should be with three columns
     assertTableStructure("default.tbl",
-      new ImmutablePair("tbl.index", Types.INTEGER),
-      new ImmutablePair("tbl.id", Types.VARCHAR),
-      new ImmutablePair("tbl.name", Types.VARCHAR),
-      new ImmutablePair("tbl.value", Types.VARCHAR)
+      ImmutablePair.of("tbl.index", Types.INTEGER),
+      ImmutablePair.of("tbl.id", Types.VARCHAR),
+      ImmutablePair.of("tbl.name", Types.VARCHAR),
+      ImmutablePair.of("tbl.value", Types.VARCHAR)
     );
 
     assertQueryResult("select * from tbl order by index", new QueryValidator() {

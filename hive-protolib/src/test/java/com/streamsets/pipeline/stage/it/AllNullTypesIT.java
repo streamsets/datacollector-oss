@@ -75,9 +75,10 @@ public class AllNullTypesIT extends BaseHiveMetadataPropagationIT {
     });
   }
 
-  private Field field;
-  private boolean supported;
-  private int hiveType;
+  private final Field field;
+  private final boolean supported;
+  private final int hiveType;
+
   public AllNullTypesIT(Field field, boolean supported, int hiveType) {
     this.field = field;
     this.supported = supported;
@@ -85,6 +86,7 @@ public class AllNullTypesIT extends BaseHiveMetadataPropagationIT {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testType() throws  Exception {
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
         .build();
@@ -117,8 +119,8 @@ public class AllNullTypesIT extends BaseHiveMetadataPropagationIT {
       @Override
       public void validateResultSet(ResultSet rs) throws Exception {
         assertResultSetStructure(rs,
-            new ImmutablePair("tbl.col", hiveType),
-            new ImmutablePair("tbl.dt", Types.VARCHAR)
+            ImmutablePair.of("tbl.col", hiveType),
+            ImmutablePair.of("tbl.dt", Types.VARCHAR)
         );
 
         Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());

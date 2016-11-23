@@ -44,6 +44,7 @@ import java.util.Map;
  */
 public class MultiplexingIT extends BaseHiveMetadataPropagationIT {
   @Test
+  @SuppressWarnings("unchecked")
   public void testMultiplexing() throws Exception {
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
       .table("${record:attribute('table')}")
@@ -109,10 +110,10 @@ public class MultiplexingIT extends BaseHiveMetadataPropagationIT {
       @Override
       public void validateResultSet(ResultSet rs) throws Exception {
         assertResultSetStructure(rs,
-          new ImmutablePair("towns.id", Types.INTEGER),
-          new ImmutablePair("towns.name", Types.VARCHAR),
-          new ImmutablePair("towns.country", Types.VARCHAR),
-          new ImmutablePair("towns.year", Types.VARCHAR)
+          ImmutablePair.of("towns.id", Types.INTEGER),
+          ImmutablePair.of("towns.name", Types.VARCHAR),
+          ImmutablePair.of("towns.country", Types.VARCHAR),
+          ImmutablePair.of("towns.year", Types.VARCHAR)
         );
 
         Assert.assertTrue("Unexpected number of rows", rs.next());
@@ -134,11 +135,11 @@ public class MultiplexingIT extends BaseHiveMetadataPropagationIT {
       @Override
       public void validateResultSet(ResultSet rs) throws Exception {
         assertResultSetStructure(rs,
-          new ImmutablePair("invoice.id", Types.INTEGER),
-          new ImmutablePair("invoice.customer", Types.VARCHAR),
-          new ImmutablePair("invoice.value", Types.INTEGER),
-          new ImmutablePair("invoice.country", Types.VARCHAR),
-          new ImmutablePair("invoice.year", Types.VARCHAR)
+          ImmutablePair.of("invoice.id", Types.INTEGER),
+          ImmutablePair.of("invoice.customer", Types.VARCHAR),
+          ImmutablePair.of("invoice.value", Types.INTEGER),
+          ImmutablePair.of("invoice.country", Types.VARCHAR),
+          ImmutablePair.of("invoice.year", Types.VARCHAR)
         );
 
         Assert.assertTrue("Unexpected number of rows", rs.next());

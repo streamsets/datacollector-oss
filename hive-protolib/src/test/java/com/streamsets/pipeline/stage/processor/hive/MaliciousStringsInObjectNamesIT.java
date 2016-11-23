@@ -64,7 +64,8 @@ public class MaliciousStringsInObjectNamesIT extends BaseHiveIT {
     );
   }
 
-  String keyword;
+  private final String keyword;
+
   public MaliciousStringsInObjectNamesIT(String str) {
     this.keyword = str;
   }

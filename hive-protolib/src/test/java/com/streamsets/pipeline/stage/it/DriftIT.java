@@ -48,6 +48,7 @@ import java.util.Map;
 /**
  * Validates what happens on each drift type (columns added, removed, changed).
  */
+@SuppressWarnings("unchecked")
 public class DriftIT extends  BaseHiveMetadataPropagationIT {
 
   @Before
@@ -94,9 +95,9 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
       @Override
       public void validateResultSet(ResultSet rs) throws Exception {
         assertResultSetStructure(rs,
-            new ImmutablePair("tbl.id", Types.INTEGER),
-            new ImmutablePair("tbl.new_column", Types.VARCHAR),
-            new ImmutablePair("tbl.dt", Types.VARCHAR)
+            ImmutablePair.of("tbl.id", Types.INTEGER),
+            ImmutablePair.of("tbl.new_column", Types.VARCHAR),
+            ImmutablePair.of("tbl.dt", Types.VARCHAR)
         );
 
         Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());
@@ -142,9 +143,9 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
     processRecords(processor, hiveTarget, records);
 
     assertTableStructure("default.reorder",
-      new ImmutablePair("reorder.first", Types.INTEGER),
-      new ImmutablePair("reorder.second", Types.INTEGER),
-      new ImmutablePair("reorder.third", Types.INTEGER)
+      ImmutablePair.of("reorder.first", Types.INTEGER),
+      ImmutablePair.of("reorder.second", Types.INTEGER),
+      ImmutablePair.of("reorder.third", Types.INTEGER)
     );
   }
 
@@ -177,10 +178,10 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
       @Override
       public void validateResultSet(ResultSet rs) throws Exception {
         assertResultSetStructure(rs,
-            new ImmutablePair("tbl.id", Types.INTEGER),
-            new ImmutablePair("tbl.old_column", Types.VARCHAR),
-            new ImmutablePair("tbl.new_column", Types.VARCHAR),
-            new ImmutablePair("tbl.dt", Types.VARCHAR)
+            ImmutablePair.of("tbl.id", Types.INTEGER),
+            ImmutablePair.of("tbl.old_column", Types.VARCHAR),
+            ImmutablePair.of("tbl.new_column", Types.VARCHAR),
+            ImmutablePair.of("tbl.dt", Types.VARCHAR)
         );
 
         Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());
@@ -230,10 +231,10 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
       @Override
       public void validateResultSet(ResultSet rs) throws Exception {
         assertResultSetStructure(rs,
-            new ImmutablePair("multiple.id", Types.INTEGER),
-            new ImmutablePair("multiple.value", Types.VARCHAR),
-            new ImmutablePair("multiple.new_column", Types.VARCHAR),
-            new ImmutablePair("multiple.dt", Types.VARCHAR)
+            ImmutablePair.of("multiple.id", Types.INTEGER),
+            ImmutablePair.of("multiple.value", Types.VARCHAR),
+            ImmutablePair.of("multiple.new_column", Types.VARCHAR),
+            ImmutablePair.of("multiple.dt", Types.VARCHAR)
         );
 
         Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());
@@ -279,9 +280,9 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
       @Override
       public void validateResultSet(ResultSet rs) throws Exception {
         assertResultSetStructure(rs,
-            new ImmutablePair("tbl.id", Types.INTEGER),
-            new ImmutablePair("tbl.removed", Types.VARCHAR),
-            new ImmutablePair("tbl.dt", Types.VARCHAR)
+            ImmutablePair.of("tbl.id", Types.INTEGER),
+            ImmutablePair.of("tbl.removed", Types.VARCHAR),
+            ImmutablePair.of("tbl.dt", Types.VARCHAR)
         );
 
         Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());
@@ -374,8 +375,8 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
       @Override
       public void validateResultSet(ResultSet rs) throws Exception {
         assertResultSetStructure(rs,
-            new ImmutablePair("tbl.id", Types.INTEGER),
-            new ImmutablePair("tbl.dt", Types.VARCHAR)
+            ImmutablePair.of("tbl.id", Types.INTEGER),
+            ImmutablePair.of("tbl.dt", Types.VARCHAR)
         );
 
         Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());
@@ -408,8 +409,8 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
       @Override
       public void validateResultSet(ResultSet rs) throws Exception {
         assertResultSetStructure(rs,
-            new ImmutablePair("tbl_no_partition.city", Types.VARCHAR),
-            new ImmutablePair("tbl_no_partition.state", Types.VARCHAR)
+            ImmutablePair.of("tbl_no_partition.city", Types.VARCHAR),
+            ImmutablePair.of("tbl_no_partition.state", Types.VARCHAR)
         );
 
         Assert.assertTrue("Table tbl_no_partition doesn't contain any rows", rs.next());
@@ -445,8 +446,8 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
       @Override
       public void validateResultSet(ResultSet rs) throws Exception {
         assertResultSetStructure(rs,
-            new ImmutablePair("ext_table.id", Types.INTEGER),
-            new ImmutablePair("ext_table.value", Types.VARCHAR)
+            ImmutablePair.of("ext_table.id", Types.INTEGER),
+            ImmutablePair.of("ext_table.value", Types.VARCHAR)
         );
         Assert.assertTrue("Table ext_table doesn't contain any rows", rs.next());
         Assert.assertEquals(123, rs.getInt(1));
@@ -484,7 +485,7 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
       public void validateResultSet(ResultSet rs) throws Exception {
         // Table structure should not be altered
         assertResultSetStructure(rs,
-            new ImmutablePair("tbl_no_partition.city", Types.VARCHAR)
+            ImmutablePair.of("tbl_no_partition.city", Types.VARCHAR)
         );
         // Alter Table query failed, so no data should be added to the table
         Assert.assertFalse("Table tbl_no_partition should not contain rows", rs.next());
@@ -524,9 +525,9 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
         // Table structure should not be altered
         assertResultSetStructure(
             rs,
-            new ImmutablePair("tbl_partition.city", Types.VARCHAR),
-            new ImmutablePair("tbl_partition.dt1", Types.VARCHAR),
-            new ImmutablePair("tbl_partition.dt2", Types.VARCHAR)
+            ImmutablePair.of("tbl_partition.city", Types.VARCHAR),
+            ImmutablePair.of("tbl_partition.dt1", Types.VARCHAR),
+            ImmutablePair.of("tbl_partition.dt2", Types.VARCHAR)
         );
         // Alter Table query failed, so no data should be added to the table
         Assert.assertFalse("Table tbl_partition should not contain rows", rs.next());

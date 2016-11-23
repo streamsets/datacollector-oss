@@ -91,10 +91,11 @@ public class AllSdcTypesIT extends BaseHiveMetadataPropagationIT {
     });
   }
 
-  private Field field;
-  private boolean supported;
-  private int hiveType;
-  private Object hiveValue;
+  private final Field field;
+  private final boolean supported;
+  private final int hiveType;
+  private final Object hiveValue;
+
   public AllSdcTypesIT(Field field, boolean supported, int hiveType, Object hiveValue) {
     this.field = field;
     this.supported = supported;
@@ -103,6 +104,7 @@ public class AllSdcTypesIT extends BaseHiveMetadataPropagationIT {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testType() throws  Exception {
     DecimalDefaultsConfig decimalDefaultsConfig = new DecimalDefaultsConfig();
     decimalDefaultsConfig.scaleExpression =
@@ -142,8 +144,8 @@ public class AllSdcTypesIT extends BaseHiveMetadataPropagationIT {
       @Override
       public void validateResultSet(ResultSet rs) throws Exception {
         assertResultSetStructure(rs,
-            new ImmutablePair("tbl.col", hiveType),
-            new ImmutablePair("tbl.dt", Types.VARCHAR)
+            ImmutablePair.of("tbl.col", hiveType),
+            ImmutablePair.of("tbl.dt", Types.VARCHAR)
         );
 
         Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());

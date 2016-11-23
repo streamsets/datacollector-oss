@@ -65,25 +65,26 @@ public class AllPartitionTypesIT extends BaseHiveMetadataPropagationIT {
   @Parameterized.Parameters(name = "type({0})")
   public static Collection<Object[]> data() throws Exception {
     return Arrays.asList(new Object[][]{
-      // Supported types
-      {Field.create(Field.Type.INTEGER, 1), partition(HiveType.INT), true, Types.INTEGER, 1},
-      {Field.create(Field.Type.LONG, 1), partition(HiveType.BIGINT), true, Types.BIGINT, 1L},
-      {Field.create(Field.Type.STRING, "value"), partition(HiveType.STRING), true, Types.VARCHAR, "value"},
-      // Unsupported types
-      {Field.create(Field.Type.BOOLEAN, true), partition(HiveType.BOOLEAN), false, 0, null},
-      {Field.create(Field.Type.DATE, new Date()), partition(HiveType.DATE), false, 0, null},
-      {Field.create(Field.Type.FLOAT, 1.2), partition(HiveType.FLOAT), false, 0, null},
-      {Field.create(Field.Type.DOUBLE, 1.2), partition(HiveType.DOUBLE), false, 0, null},
-      {Field.create(Field.Type.BYTE_ARRAY, new byte[] {0x00}), partition(HiveType.BINARY), false, 0, null},
-      // Decimal fails with java.lang.ArrayIndexOutOfBoundsException
+        // Supported types
+        {Field.create(Field.Type.INTEGER, 1), partition(HiveType.INT), true, Types.INTEGER, 1},
+        {Field.create(Field.Type.LONG, 1), partition(HiveType.BIGINT), true, Types.BIGINT, 1L},
+        {Field.create(Field.Type.STRING, "value"), partition(HiveType.STRING), true, Types.VARCHAR, "value"},
+        // Unsupported types
+        {Field.create(Field.Type.BOOLEAN, true), partition(HiveType.BOOLEAN), false, 0, null},
+        {Field.create(Field.Type.DATE, new Date()), partition(HiveType.DATE), false, 0, null},
+        {Field.create(Field.Type.FLOAT, 1.2), partition(HiveType.FLOAT), false, 0, null},
+        {Field.create(Field.Type.DOUBLE, 1.2), partition(HiveType.DOUBLE), false, 0, null},
+        {Field.create(Field.Type.BYTE_ARRAY, new byte[] {0x00}), partition(HiveType.BINARY), false, 0, null},
+        // Decimal fails with java.lang.ArrayIndexOutOfBoundsException
 //      {Field.create(Field.Type.DECIMAL, BigDecimal.valueOf(1.5)), partition(HiveType.DECIMAL), false, 0, null},
     });
   }
-  Field field;
-  List<PartitionConfig> partition;
-  boolean supported;
-  int hiveType;
-  Object hiveValue;
+  private final Field field;
+  private final List<PartitionConfig> partition;
+  private final boolean supported;
+  private final int hiveType;
+  private final Object hiveValue;
+
   public AllPartitionTypesIT(Field field, List<PartitionConfig> partition, boolean supported, int hiveType, Object hiveValue) {
     this.field = field;
     this.partition = partition;
@@ -93,12 +94,13 @@ public class AllPartitionTypesIT extends BaseHiveMetadataPropagationIT {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testPartitionType() throws  Exception {
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
-      .partitions(partition)
-      .build();
+        .partitions(partition)
+        .build();
     final HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
-      .build();
+        .build();
 
     Map<String, Field> map = new LinkedHashMap<>();
     map.put("col", field);
@@ -128,9 +130,10 @@ public class AllPartitionTypesIT extends BaseHiveMetadataPropagationIT {
     assertQueryResult("select * from tbl", new QueryValidator() {
       @Override
       public void validateResultSet(ResultSet rs) throws Exception {
-        assertResultSetStructure(rs,
-          new ImmutablePair("tbl.col", hiveType),
-          new ImmutablePair("tbl.part", hiveType)
+        assertResultSetStructure(
+            rs,
+            ImmutablePair.of("tbl.col", hiveType),
+            ImmutablePair.of("tbl.part", hiveType)
         );
 
         Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());

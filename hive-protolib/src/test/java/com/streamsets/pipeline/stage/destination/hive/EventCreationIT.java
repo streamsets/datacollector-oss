@@ -41,6 +41,7 @@ import java.util.List;
 
 public class EventCreationIT extends BaseHiveIT {
 
+  @SuppressWarnings("unchecked")
   public List<Record> runNewTableRecord() throws Exception {
     HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder().build();
 
@@ -73,9 +74,9 @@ public class EventCreationIT extends BaseHiveIT {
     runner.runWrite(ImmutableList.of(record));
 
     assertTableStructure("default.tbl",
-      new ImmutablePair("tbl.name", Types.VARCHAR),
-      new ImmutablePair("tbl.surname", Types.VARCHAR),
-      new ImmutablePair("tbl.dt", Types.VARCHAR)
+      ImmutablePair.of("tbl.name", Types.VARCHAR),
+      ImmutablePair.of("tbl.surname", Types.VARCHAR),
+      ImmutablePair.of("tbl.dt", Types.VARCHAR)
     );
 
     try {

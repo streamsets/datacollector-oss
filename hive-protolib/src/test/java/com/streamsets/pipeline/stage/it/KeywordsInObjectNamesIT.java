@@ -50,6 +50,7 @@ import java.util.Map;
  * This tests tries various keywords and reserved words in database, table and column names
  */
 @RunWith(Parameterized.class)
+@SuppressWarnings("unchecked")
 public class KeywordsInObjectNamesIT extends BaseHiveMetadataPropagationIT {
 
   private static Logger LOG = LoggerFactory.getLogger(ColdStartIT.class);
@@ -70,7 +71,7 @@ public class KeywordsInObjectNamesIT extends BaseHiveMetadataPropagationIT {
     );
   }
 
-  String keyword;
+  private final String keyword;
   public KeywordsInObjectNamesIT(String str) {
     this.keyword = str;
   }
@@ -104,8 +105,8 @@ public class KeywordsInObjectNamesIT extends BaseHiveMetadataPropagationIT {
       @Override
       public void validateResultSet(ResultSet rs) throws Exception {
         assertResultSetStructure(rs,
-            new ImmutablePair(Utils.format("{}.{}", keyword, keyword), Types.VARCHAR),
-            new ImmutablePair(Utils.format("{}.dt", keyword), Types.VARCHAR)
+            ImmutablePair.of(Utils.format("{}.{}", keyword, keyword), Types.VARCHAR),
+            ImmutablePair.of(Utils.format("{}.dt", keyword), Types.VARCHAR)
         );
 
         Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());
@@ -144,8 +145,8 @@ public class KeywordsInObjectNamesIT extends BaseHiveMetadataPropagationIT {
       @Override
       public void validateResultSet(ResultSet rs) throws Exception {
         assertResultSetStructure(rs,
-            new ImmutablePair("tbl.col", Types.VARCHAR),
-            new ImmutablePair(Utils.format("tbl.{}", keyword), Types.VARCHAR)
+            ImmutablePair.of("tbl.col", Types.VARCHAR),
+            ImmutablePair.of(Utils.format("tbl.{}", keyword), Types.VARCHAR)
         );
 
         Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());

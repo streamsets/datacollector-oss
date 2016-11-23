@@ -47,6 +47,7 @@ import java.util.Map;
 public class DecimalTypeIT extends BaseHiveMetadataPropagationIT {
 
   @Test
+  @SuppressWarnings("unchecked")
   public void correctCases() throws Exception {
     executeUpdate("CREATE TABLE `tbl` (id int, dec decimal(4, 2)) PARTITIONED BY (dt string) STORED AS AVRO");
 
@@ -99,9 +100,9 @@ public class DecimalTypeIT extends BaseHiveMetadataPropagationIT {
       @Override
       public void validateResultSet(ResultSet rs) throws Exception {
         assertResultSetStructure(rs,
-            new ImmutablePair("tbl.id", Types.INTEGER),
-            new ImmutablePair("tbl.dec", Types.DECIMAL),
-            new ImmutablePair("tbl.dt", Types.VARCHAR)
+            ImmutablePair.of("tbl.id", Types.INTEGER),
+            ImmutablePair.of("tbl.dec", Types.DECIMAL),
+            ImmutablePair.of("tbl.dt", Types.VARCHAR)
         );
 
         Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());
@@ -186,6 +187,7 @@ public class DecimalTypeIT extends BaseHiveMetadataPropagationIT {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void zeroScale() throws Exception {
     executeUpdate("CREATE TABLE `tbl` (id int, dec decimal(2, 0)) PARTITIONED BY (dt string) STORED AS AVRO");
 
@@ -210,9 +212,9 @@ public class DecimalTypeIT extends BaseHiveMetadataPropagationIT {
       @Override
       public void validateResultSet(ResultSet rs) throws Exception {
         assertResultSetStructure(rs,
-            new ImmutablePair("tbl.id", Types.INTEGER),
-            new ImmutablePair("tbl.dec", Types.DECIMAL),
-            new ImmutablePair("tbl.dt", Types.VARCHAR)
+            ImmutablePair.of("tbl.id", Types.INTEGER),
+            ImmutablePair.of("tbl.dec", Types.DECIMAL),
+            ImmutablePair.of("tbl.dt", Types.VARCHAR)
         );
 
         Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());

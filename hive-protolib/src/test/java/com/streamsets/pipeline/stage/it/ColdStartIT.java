@@ -64,10 +64,11 @@ public class ColdStartIT extends BaseHiveMetadataPropagationIT {
     );
   }
 
+  private final boolean storedAsAvro;
+  private final boolean external;
+  private final boolean partitioned;
+
   private String database;
-  private boolean storedAsAvro;
-  private boolean external;
-  private boolean partitioned;
 
   public ColdStartIT(String database, boolean storedAsAvro, boolean external, boolean partitioned) {
     this.database = database;
@@ -77,6 +78,7 @@ public class ColdStartIT extends BaseHiveMetadataPropagationIT {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testColdStart() throws  Exception {
     LOG.info(Utils.format(
         "Starting cold start with database({}), storedAsAvro({}), external({}), and partitioned({})",
@@ -120,12 +122,12 @@ public class ColdStartIT extends BaseHiveMetadataPropagationIT {
 
         if (partitioned) {
           assertResultSetStructure(rs,
-              new ImmutablePair("tbl.name", Types.VARCHAR),
-              new ImmutablePair("tbl.dt", Types.VARCHAR)
+              ImmutablePair.of("tbl.name", Types.VARCHAR),
+              ImmutablePair.of("tbl.dt", Types.VARCHAR)
           );
         } else {
           assertResultSetStructure(rs,
-              new ImmutablePair("tbl.name", Types.VARCHAR)
+              ImmutablePair.of("tbl.name", Types.VARCHAR)
           );
         }
 

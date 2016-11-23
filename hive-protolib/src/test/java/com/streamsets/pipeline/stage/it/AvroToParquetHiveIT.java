@@ -94,12 +94,13 @@ public class AvroToParquetHiveIT extends BaseHiveIT {
     });
   }
 
-  private String avroType;
-  private Object avroValue;
-  private Object jdbcValue;
-  private String hiveType;
-  private int jdbcType;
-  private String ensureHiveVersion;
+  private final String avroType;
+  private final Object avroValue;
+  private final Object jdbcValue;
+  private final String hiveType;
+  private final int jdbcType;
+  private final String ensureHiveVersion;
+
   public AvroToParquetHiveIT(String avroType, Object avroValue, Object jdbcValue, String hiveType, int jdbcType, String ensureHiveVersion) {
     this.avroType = avroType;
     this.avroValue = avroValue;
@@ -110,6 +111,7 @@ public class AvroToParquetHiveIT extends BaseHiveIT {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testAvroToParquetToHive() throws Exception {
     // This will be string like "1.1.0"
     String hiveVersionString = HiveVersionInfo.getShortVersion();
@@ -177,7 +179,7 @@ public class AvroToParquetHiveIT extends BaseHiveIT {
       @Override
       public void validateResultSet(ResultSet rs) throws Exception {
         assertResultSetStructure(rs,
-          new ImmutablePair("tbl.value", jdbcType)
+          ImmutablePair.of("tbl.value", jdbcType)
         );
 
         Assert.assertTrue("Table tbl doesn't contain any rows", rs.next());

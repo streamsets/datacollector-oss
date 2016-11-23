@@ -59,6 +59,7 @@ public class HiveMetastoreTargetIT extends BaseHiveIT {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testCreateNonExistingTable() throws Exception {
     HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder().build();
 
@@ -91,8 +92,8 @@ public class HiveMetastoreTargetIT extends BaseHiveIT {
     runner.runDestroy();
 
     assertTableStructure("default.tbl",
-        new ImmutablePair("tbl.name", Types.VARCHAR),
-        new ImmutablePair("tbl.dt", Types.VARCHAR)
+        ImmutablePair.of("tbl.name", Types.VARCHAR),
+        ImmutablePair.of("tbl.dt", Types.VARCHAR)
     );
   }
 
