@@ -173,6 +173,16 @@
                                             the whole file data format. </p></entry>
                                 </row>
                                 <row>
+                                    <entry>Object Name Suffix</entry>
+                                    <entry>Suffix to use for object names, such as txt or json. When
+                                        used, the destination adds a period and the configured
+                                        suffix as follows: &lt;filename>.&lt;suffix>.<p>You can
+                                            include periods within the suffix, but do not start the
+                                            suffix with a period. Forward slashes are not
+                                            allowed.</p><p>Not available for the whole file data
+                                            format. </p></entry>
+                                </row>
+                                <row>
                                     <entry>Data Format <xref
                                             href="../Destinations/AmazonS3-DataFormat.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"

@@ -180,6 +180,10 @@
                                     <entry/>
                                 </row>
                                 <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-FileSuffix">
+                                    <entry/>
+                                </row>
+                                <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-DirectoryinHeader">
                                     <entry/>
                                 </row>

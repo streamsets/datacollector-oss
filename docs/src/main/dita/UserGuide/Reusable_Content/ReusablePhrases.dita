@@ -1379,10 +1379,10 @@ input_stream.read()</codeblock></p>
                   write records to the specified directory, use the defined Avro schema, and roll
                   files based on record header attributes. For more information, see <xref
                         href="../Destinations/RecordHeaderAttributes.dita#concept_lmn_gdc_1w"/>.</p>
-            <p id="D-HM-Overview2">You can define a file prefix, the data time zone, and properties
-                  that define when the destination closes a file. You can specify the amount of time
-                  that a record can be written to its associated directory and what happens to late
-                  records.</p>
+            <p id="D-HM-Overview2">You can define a file prefix and suffix, the data time zone, and
+                  properties that define when the destination closes a file. You can specify the
+                  amount of time that a record can be written to its associated directory and what
+                  happens to late records.</p>
             <p id="D-HM-compression">You can use Gzip, Bzip2, Snappy, LZ4, and other compression
                   formats to write output files. </p>
             <p>
