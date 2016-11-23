@@ -70,7 +70,6 @@
     <hk2-api.version>2.4.0-b34</hk2-api.version>
     <httpclient.version>4.5.2</httpclient.version>
     <icegreen.version>1.4.0</icegreen.version>
-    <jackson.version>2.4.3</jackson.version>
     <javassist.version>3.19.0-GA</javassist.version>
     <javax.inject.version>1</javax.inject.version>
     <javax.mail.version>1.4.7</javax.mail.version>
