@@ -514,7 +514,7 @@
         <module>cassandra_3-lib</module>
         <module>cdh_5_9-cluster-cdh_kafka_2_0-lib</module>
         <module>cdh_5_9-lib</module>
-        <module>cdh_kafka_1_3-lib</module>
+        <module>cdh_kafka_2_0-lib</module>
         <module>elasticsearch_5_0-lib</module>
         <module>groovy_2_4-lib</module>
         <module>hdp_2_5-lib</module>
