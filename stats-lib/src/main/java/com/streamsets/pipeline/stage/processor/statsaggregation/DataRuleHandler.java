@@ -82,7 +82,7 @@ public class DataRuleHandler {
     this.evaluatedRecordCounterMap = new HashMap<>();
     this.stageToOutputLanesMap = new HashMap<>();
     for (StageConfigurationJson s : pipelineConfigurationJson.getStages()) {
-      stageToOutputLanesMap.put(s.getInstanceName(), s.getOutputLanes());
+      stageToOutputLanesMap.put(s.getInstanceName(), s.getOutputAndEventLanes());
     }
     this.rulesEvaluator = new RulesEvaluator(pipelineName, revision, pipelineUrl, context);
     this.alertTextsToRetain = alertTextsToRetain;

@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -98,5 +99,17 @@ public class StageConfigurationJson {
   @JsonIgnore
   public com.streamsets.datacollector.config.StageConfiguration getStageConfiguration() {
     return stageConfiguration;
+  }
+
+  @JsonIgnore
+  public List<String> getOutputAndEventLanes() {
+    List<String> outputAndEventLanes = new LinkedList<>();
+    if (getOutputLanes() != null) {
+      outputAndEventLanes.addAll(getOutputLanes());
+    }
+    if (getEventLanes() != null) {
+      outputAndEventLanes.addAll(getEventLanes());
+    }
+    return outputAndEventLanes;
   }
 }
