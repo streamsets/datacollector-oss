@@ -130,12 +130,12 @@ angular
     });
 
     var refreshData = function() {
-      var stageInstance = $scope.detailPaneConfig,
-        pipelineMetrics = $rootScope.common.pipelineMetrics,
-        valueList = [],
-        inputRecordsMeter = $scope.summaryMeters.inputRecords,
-        outputRecordsMeter = $scope.summaryMeters.outputRecords,
-        errorRecordsMeter = $scope.summaryMeters.errorRecords;
+      var stageInstance = $scope.detailPaneConfig;
+      var pipelineMetrics = $rootScope.common.pipelineMetrics;
+      var valueList = [];
+      var inputRecordsMeter = $scope.summaryMeters.inputRecords;
+      var outputRecordsMeter = $scope.summaryMeters.outputRecords;
+      var errorRecordsMeter = $scope.summaryMeters.errorRecords;
 
       if(!inputRecordsMeter || !outputRecordsMeter || !errorRecordsMeter) {
         return;
