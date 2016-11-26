@@ -185,9 +185,9 @@ public final class FileRefUtil {
     } else if (metadataObject instanceof Map) {
       boolean isListMap = (metadataObject instanceof LinkedHashMap);
       Map<String, Field> fieldMap = isListMap? new LinkedHashMap<String, Field>() : new HashMap<String, Field>();
-      Map map = (Map)metadataObject;
-      for (Object key : map.keySet()) {
-        fieldMap.put(key.toString(), createFieldForMetadata(map.get(key)));
+      Map<Object, Object> map = (Map)metadataObject;
+      for (Map.Entry<Object, Object> entry : map.entrySet()) {
+        fieldMap.put(entry.getKey().toString(), createFieldForMetadata(entry.getValue()));
       }
       return isListMap? Field.create(Field.Type.LIST_MAP, fieldMap) : Field.create(fieldMap);
     } else {

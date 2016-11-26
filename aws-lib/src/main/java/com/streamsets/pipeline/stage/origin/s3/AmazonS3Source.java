@@ -225,9 +225,9 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
     if(s3ConfigBean.enableMetaData) {
       // if metadata is enabled, set the metadata to the header
       Map<String, Object> metaData = AmazonS3Util.getMetaData(object);
-      for(String key : metaData.keySet()) {
-        String value = metaData.get(key) == null ? "" : metaData.get(key).toString();
-        record.getHeader().setAttribute(key, value);
+      for(Map.Entry<String, Object> entry : metaData.entrySet()) {
+        String value = entry.getValue() == null ? "" : entry.getValue().toString();
+        record.getHeader().setAttribute(entry.getKey(), value);
       }
       // set file name to the header
       record.getHeader().setAttribute("Name", object.getKey());

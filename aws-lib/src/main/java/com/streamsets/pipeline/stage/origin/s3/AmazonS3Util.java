@@ -242,9 +242,9 @@ public class AmazonS3Util {
     // put user metadata
     Map<String, String> userMetaMap = s3Object.getObjectMetadata().getUserMetadata();
     if(userMetaMap != null) {
-      for (String key : userMetaMap.keySet()) {
-        if (userMetaMap.get(key) != null) {
-          metaDataMap.put(key, userMetaMap.get(key));
+      for (Map.Entry<String, String> entry : userMetaMap.entrySet()) {
+        if (entry.getValue() != null) {
+          metaDataMap.put(entry.getKey(), entry.getValue());
         }
       }
     }

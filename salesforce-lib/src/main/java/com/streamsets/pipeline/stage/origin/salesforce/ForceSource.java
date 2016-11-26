@@ -577,8 +577,9 @@ public class ForceSource extends BaseSource {
         // sobject data becomes fields
         LinkedHashMap<String, Field> map = new LinkedHashMap<>();
 
-        for (String key : sobject.keySet()) {
-          Object val = sobject.get(key);
+        for (Map.Entry<String, Object> entry : sobject.entrySet()) {
+          String key = entry.getKey();
+          Object val = entry.getValue();
           Field field = createField(val);
           if (field == null) {
             throw new StageException(Errors.FORCE_04,
@@ -593,8 +594,8 @@ public class ForceSource extends BaseSource {
         // of the form salesforce.cdc.createdDate,
         // salesforce.cdc.sObjectNameTemplate
         Record.Header recordHeader = rec.getHeader();
-        for (String key : event.keySet()) {
-          recordHeader.setAttribute(HEADER_ATTRIBUTE_PREFIX + key, event.get(key).toString());
+        for (Map.Entry<String, Object> entry : event.entrySet()) {
+          recordHeader.setAttribute(HEADER_ATTRIBUTE_PREFIX + entry.getKey(), entry.getValue().toString());
         }
         recordHeader.setAttribute(SOBJECT_TYPE_ATTRIBUTE, sobjectType);
 

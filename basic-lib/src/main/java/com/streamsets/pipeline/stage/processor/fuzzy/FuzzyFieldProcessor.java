@@ -115,8 +115,8 @@ public class FuzzyFieldProcessor extends SingleLaneRecordProcessor {
       }
 
       if (preserveUnmatchedFields) {
-        for (String originalFieldName : originalFieldNames) {
-          newFields.put(originalFieldName, rootFieldMap.get(originalFieldName));
+        for (Map.Entry<String, Field> entry : rootFieldMap.entrySet()) {
+          newFields.put(entry.getKey(), entry.getValue());
         }
       }
 
