@@ -24,8 +24,8 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('RecordPercentagePieChartController', function($scope) {
-    var colorArray = ['#5cb85c', '#FF3333'];
+  .controller('RecordPercentagePieChartController', function($rootScope, $scope) {
+    var colorArray = ['#5cb85c', '#FF3333', '#ff9f4a'];
 
     angular.extend($scope, {
       allDataZero: false,
@@ -39,6 +39,8 @@ angular
                 return 'Good Records';
               case 'errorRecords':
                 return 'Error Records';
+              case 'eventRecords':
+                return 'Event Records';
             }
           },
           y: function(d){
@@ -75,32 +77,46 @@ angular
         {
           key: "errorRecords",
           value: 0
+        },
+        {
+          key: "eventRecords",
+          value: 0
         }
       ]
     });
 
     var refreshChartData = function() {
+      var stageInstance = $scope.detailPaneConfig;
+      var pipelineMetrics = $rootScope.common.pipelineMetrics;
       $scope.allDataZero = true;
-      if($scope.summaryMeters.outputRecords && $scope.summaryMeters.errorRecords) {
+      if ($scope.summaryMeters.outputRecords && $scope.summaryMeters.errorRecords) {
         angular.forEach($scope.pieChartData, function(chartData) {
-          if(chartData.key === 'goodRecords') {
+          if (chartData.key === 'goodRecords') {
             chartData.value = $scope.summaryMeters.outputRecords.count;
-          } else if(chartData.key === 'errorRecords') {
+          } else if (chartData.key === 'errorRecords') {
             chartData.value = $scope.summaryMeters.errorRecords.count;
+          } else if (chartData.key === 'eventRecords') {
+            if (stageInstance.eventLanes && stageInstance.eventLanes.length) {
+              var eventLaneMeter = pipelineMetrics.meters['stage.' + stageInstance.instanceName + ':' +
+              stageInstance.eventLanes[0] + '.outputRecords.meter'];
+              if (eventLaneMeter) {
+                chartData.value = eventLaneMeter.count;
+              }
+            } else {
+              chartData.value = 0;
+            }
           }
 
-          if(chartData.value > 0) {
+          if (chartData.value > 0) {
             $scope.allDataZero = false;
           }
         });
       }
     };
 
-
     $scope.$on('summaryDataUpdated', function() {
       refreshChartData();
     });
 
     refreshChartData();
-
   });

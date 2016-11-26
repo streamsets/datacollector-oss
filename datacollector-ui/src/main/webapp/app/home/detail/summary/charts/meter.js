@@ -25,16 +25,15 @@
 angular
   .module('dataCollectorApp.home')
   .controller('MeterBarChartController', function($scope, $rootScope, pipelineConstant, $filter, $translate, api) {
-    var color = $scope.recordsColor,
-      baseQuery = "select m1_rate,metric from meters where (pipeline='" + $scope.pipelineConfig.info.name + "') and ",
-      yAxisLabel = '( records / sec )';
+    var color = $scope.recordsColor;
+    var yAxisLabel = '( records / sec )';
 
     $translate('home.detailPane.recordsPerSecond').then(function(translation) {
       yAxisLabel = translation;
     });
 
     var getColor = function(d) {
-      if(color[d.key]) {
+      if (color[d.key]) {
         return color[d.key];
       } else {
         return color.Output;
@@ -114,7 +113,7 @@ angular
 
       getColor: function() {
         return function(d) {
-          if(color[d.key]) {
+          if (color[d.key]) {
             return color[d.key];
           } else {
             return color.Output;
@@ -153,79 +152,95 @@ angular
     });
 
     var updatedLatestData = function() {
-      if(!$scope.summaryMeters.inputRecords || !$scope.summaryMeters.outputRecords ||
+      if (!$scope.summaryMeters.inputRecords || !$scope.summaryMeters.outputRecords ||
         !$scope.summaryMeters.errorRecords) {
         return;
       }
 
-      var stageInstance = $scope.detailPaneConfig,
-        pipelineMetrics = $rootScope.common.pipelineMetrics,
-        meterChartData = {};
+      var stageInstance = $scope.detailPaneConfig;
+      var pipelineMetrics = $rootScope.common.pipelineMetrics;
+      var meterChartData = {};
 
       meterChartData['Input'] = [
-        ["1m" , $scope.summaryMeters.inputRecords.m1_rate ],
-        ["5m" , $scope.summaryMeters.inputRecords.m5_rate ],
-        ["15m" , $scope.summaryMeters.inputRecords.m15_rate ],
-        ["30m" , $scope.summaryMeters.inputRecords.m30_rate ],
-        ["1h" , $scope.summaryMeters.inputRecords.h1_rate ],
-        ["6h" , $scope.summaryMeters.inputRecords.h6_rate ],
-        ["12h" , $scope.summaryMeters.inputRecords.h12_rate ],
-        ["1d" , $scope.summaryMeters.inputRecords.h24_rate ],
-        ["Mean" , $scope.summaryMeters.inputRecords.mean_rate ]
+        ['1m' , $scope.summaryMeters.inputRecords.m1_rate ],
+        ['5m' , $scope.summaryMeters.inputRecords.m5_rate ],
+        ['15m' , $scope.summaryMeters.inputRecords.m15_rate ],
+        ['30m' , $scope.summaryMeters.inputRecords.m30_rate ],
+        ['1h' , $scope.summaryMeters.inputRecords.h1_rate ],
+        ['6h' , $scope.summaryMeters.inputRecords.h6_rate ],
+        ['12h' , $scope.summaryMeters.inputRecords.h12_rate ],
+        ['1d' , $scope.summaryMeters.inputRecords.h24_rate ],
+        ['Mean' , $scope.summaryMeters.inputRecords.mean_rate ]
       ];
 
       meterChartData['Output'] = [
-        ["1m" , $scope.summaryMeters.outputRecords.m1_rate ],
-        ["5m" , $scope.summaryMeters.outputRecords.m5_rate ],
-        ["15m" , $scope.summaryMeters.outputRecords.m15_rate ],
-        ["30m" , $scope.summaryMeters.outputRecords.m30_rate ],
-        ["1h" , $scope.summaryMeters.outputRecords.h1_rate ],
-        ["6h" , $scope.summaryMeters.outputRecords.h6_rate ],
-        ["12h" , $scope.summaryMeters.outputRecords.h12_rate ],
-        ["1d" , $scope.summaryMeters.outputRecords.h24_rate ],
-        ["Mean" , $scope.summaryMeters.outputRecords.mean_rate ]
+        ['1m' , $scope.summaryMeters.outputRecords.m1_rate ],
+        ['5m' , $scope.summaryMeters.outputRecords.m5_rate ],
+        ['15m' , $scope.summaryMeters.outputRecords.m15_rate ],
+        ['30m' , $scope.summaryMeters.outputRecords.m30_rate ],
+        ['1h' , $scope.summaryMeters.outputRecords.h1_rate ],
+        ['6h' , $scope.summaryMeters.outputRecords.h6_rate ],
+        ['12h' , $scope.summaryMeters.outputRecords.h12_rate ],
+        ['1d' , $scope.summaryMeters.outputRecords.h24_rate ],
+        ['Mean' , $scope.summaryMeters.outputRecords.mean_rate ]
       ];
 
       meterChartData['Error'] = [
-        ["1m" , $scope.summaryMeters.errorRecords.m1_rate ],
-        ["5m" , $scope.summaryMeters.errorRecords.m5_rate ],
-        ["15m" , $scope.summaryMeters.errorRecords.m15_rate ],
-        ["30m" , $scope.summaryMeters.errorRecords.m30_rate ],
-        ["1h" , $scope.summaryMeters.errorRecords.h1_rate ],
-        ["6h" , $scope.summaryMeters.errorRecords.h6_rate ],
-        ["12h" , $scope.summaryMeters.errorRecords.h12_rate ],
-        ["1d" , $scope.summaryMeters.errorRecords.h24_rate ],
-        ["Mean" , $scope.summaryMeters.errorRecords.mean_rate ]
+        ['1m' , $scope.summaryMeters.errorRecords.m1_rate ],
+        ['5m' , $scope.summaryMeters.errorRecords.m5_rate ],
+        ['15m' , $scope.summaryMeters.errorRecords.m15_rate ],
+        ['30m' , $scope.summaryMeters.errorRecords.m30_rate ],
+        ['1h' , $scope.summaryMeters.errorRecords.h1_rate ],
+        ['6h' , $scope.summaryMeters.errorRecords.h6_rate ],
+        ['12h' , $scope.summaryMeters.errorRecords.h12_rate ],
+        ['1d' , $scope.summaryMeters.errorRecords.h24_rate ],
+        ['Mean' , $scope.summaryMeters.errorRecords.mean_rate ]
       ];
 
 
 
-      if($scope.stageSelected && stageInstance.uiInfo.stageType === pipelineConstant.PROCESSOR_STAGE_TYPE &&
+      if ($scope.stageSelected && stageInstance.uiInfo.stageType === pipelineConstant.PROCESSOR_STAGE_TYPE &&
         stageInstance.outputLanes.length > 1) {
 
         //Lane Selector
         angular.forEach(stageInstance.outputLanes, function(outputLane, index) {
           var laneMeter = pipelineMetrics.meters['stage.' + stageInstance.instanceName + ':' + outputLane + '.outputRecords.meter'];
-          if(laneMeter) {
-            meterChartData["Output " + (index + 1)]  =  [
-              ["1m" , laneMeter.m1_rate ],
-              ["5m" , laneMeter.m5_rate ],
-              ["15m" , laneMeter.m15_rate ],
-              ["30m" , laneMeter.m30_rate ],
-              ["1h" , laneMeter.h1_rate ],
-              ["6h" , laneMeter.h6_rate ],
-              ["12h" , laneMeter.h12_rate ],
-              ["1d" , laneMeter.h24_rate ],
-              ["Mean" , laneMeter.mean_rate ]
+          if (laneMeter) {
+            meterChartData['Output ' + (index + 1)]  =  [
+              ['1m' , laneMeter.m1_rate ],
+              ['5m' , laneMeter.m5_rate ],
+              ['15m' , laneMeter.m15_rate ],
+              ['30m' , laneMeter.m30_rate ],
+              ['1h' , laneMeter.h1_rate ],
+              ['6h' , laneMeter.h6_rate ],
+              ['12h' , laneMeter.h12_rate ],
+              ['1d' , laneMeter.h24_rate ],
+              ['Mean' , laneMeter.mean_rate ]
             ];
           }
         });
       }
 
-      var chartData = $scope.chartData;
+      if (stageInstance.eventLanes && stageInstance.eventLanes.length) {
+        var eventLaneMeter = pipelineMetrics.meters['stage.' + stageInstance.instanceName + ':' + stageInstance.eventLanes[0] + '.outputRecords.meter'];
+        if (eventLaneMeter) {
+          meterChartData['Event']  =  [
+            ['1m' , eventLaneMeter.m1_rate ],
+            ['5m' , eventLaneMeter.m5_rate ],
+            ['15m' , eventLaneMeter.m15_rate ],
+            ['30m' , eventLaneMeter.m30_rate ],
+            ['1h' , eventLaneMeter.h1_rate ],
+            ['6h' , eventLaneMeter.h6_rate ],
+            ['12h' , eventLaneMeter.h12_rate ],
+            ['1d' , eventLaneMeter.h24_rate ],
+            ['Mean' , eventLaneMeter.mean_rate ]
+          ];
+        }
+      }
 
+      var chartData = $scope.chartData;
       angular.forEach(chartData, function(cData) {
-        if(meterChartData[cData.key]) {
+        if (meterChartData[cData.key]) {
           cData.values = meterChartData[cData.key];
         }
       });
@@ -234,22 +249,26 @@ angular
     var refreshChartDataOnSelectionChange = function() {
       var stageInstance = $scope.detailPaneConfig,
         input = {
-          key: "Input",
+          key: 'Input',
           values: []
         },
         output = {
-          key: "Output",
+          key: 'Output',
           values: []
         },
         bad = {
-          key: "Error",
+          key: 'Error',
+          values: []
+        },
+        event = {
+          key: 'Event',
           values: []
         },
         chartData = $scope.chartData;
 
       chartData.splice(0, chartData.length);
 
-      if($scope.stageSelected) {
+      if ($scope.stageSelected) {
         switch(stageInstance.uiInfo.stageType) {
           case pipelineConstant.SOURCE_STAGE_TYPE:
             chartData.push(output);
@@ -258,13 +277,13 @@ angular
           case pipelineConstant.PROCESSOR_STAGE_TYPE:
             chartData.push(input);
 
-            if(stageInstance.outputLanes.length < 2) {
+            if (stageInstance.outputLanes.length < 2) {
               chartData.push(output);
             } else {
               //Lane Selector
               angular.forEach(stageInstance.outputLanes, function(outputLane, index) {
                 chartData.push({
-                  key: "Output " + (index + 1),
+                  key: 'Output ' + (index + 1),
                   values: []
                 });
               });
@@ -281,6 +300,11 @@ angular
             chartData.push(bad);
             break;
         }
+
+        if (stageInstance.eventLanes && stageInstance.eventLanes.length) {
+          chartData.push(event);
+        }
+
       } else {
         chartData.push(input);
         chartData.push(output);
@@ -290,112 +314,22 @@ angular
       updatedLatestData();
     };
 
-
-    var refreshTimeSeriesData = function() {
-      var stageInstance = $scope.detailPaneConfig,
-        query = baseQuery,
-        timeRangeCondition = $scope.getTimeRangeWhereCondition(),
-        labelMap = {
-          'pipeline.batchInputRecords.meter': 'Input',
-          'pipeline.batchOutputRecords.meter': 'Output',
-          'pipeline.batchErrorRecords.meter': 'Error'
-        };
-
-
-      if($scope.stageSelected) {
-        var stageInputMeter = 'stage.' + stageInstance.instanceName + '.inputRecords.meter',
-          stageOutputMeter = 'stage.' + stageInstance.instanceName + '.outputRecords.meter',
-          stageErrorMeter = 'stage.' + stageInstance.instanceName + '.errorRecords.meter';
-
-
-        labelMap[stageInputMeter] = 'Input';
-        labelMap[stageOutputMeter] = 'Output';
-        labelMap[stageErrorMeter] = 'Error';
-
-
-        switch(stageInstance.uiInfo.stageType) {
-          case pipelineConstant.SOURCE_STAGE_TYPE:
-            query += "(metric = '" + stageOutputMeter + "' or metric = '" + stageErrorMeter + "')";
-            break;
-
-          case pipelineConstant.PROCESSOR_STAGE_TYPE:
-            query += "(metric = '" + stageInputMeter + "'";
-
-            if(stageInstance.outputLanes.length < 2) {
-              query += " or metric = '" + stageOutputMeter + "'";
-            } else {
-              //Lane Selector
-              angular.forEach(stageInstance.outputLanes, function(outputLane, index) {
-                var outputLaneMeter = 'stage.' + stageInstance.instanceName + ':' + outputLane + '.outputRecords.meter';
-                query += " or metric = '" + outputLaneMeter + "'";
-
-                labelMap[outputLaneMeter] = 'Output' + (index + 1);
-              });
-            }
-
-            query += " or metric = '" + stageErrorMeter + "')";
-            break;
-
-          case pipelineConstant.EXECUTOR_STAGE_TYPE:
-            query += "(metric = '" + stageInputMeter + "' or metric = '" + stageErrorMeter + "')";
-            break;
-
-          case pipelineConstant.TARGET_STAGE_TYPE:
-            query += "(metric = '" + stageInputMeter + "' or metric = '" + stageErrorMeter + "')";
-            break;
-        }
-
-      } else {
-        query += "(metric = 'pipeline.batchInputRecords.meter' or metric ='pipeline.batchOutputRecords.meter' or metric = 'pipeline.batchErrorRecords.meter')";
-      }
-
-      query += ' and ' + timeRangeCondition;
-
-      api.timeSeries.getTimeSeriesData(query).then(
-        function(res) {
-          if(res && res.data) {
-            var chartData = $scope.timeSeriesChartData;
-            chartData.splice(0, chartData.length);
-            angular.forEach(res.data.results[0].series, function(d, index) {
-              chartData.push({
-                key: labelMap[d.tags.metric],
-                columns: d.columns,
-                values: d.values,
-                area: (labelMap[d.tags.metric] === 'Output') ? true : false
-              });
-            });
-          }
-        },
-        function(res) {
-          $rootScope.common.errors = [res.data];
-        }
-      );
-    };
-
     $scope.$on('summaryDataUpdated', function() {
       updatedLatestData();
     });
 
     $scope.$watch('timeRange', function() {
-      if($scope.timeRange !== 'latest') {
+      if ($scope.timeRange !== 'latest') {
         refreshTimeSeriesData();
       }
     });
 
     $scope.$on('onSelectionChange', function(event, options) {
-      if($scope.isPipelineRunning && options.type !== pipelineConstant.LINK) {
-        if($scope.timeRange === 'latest') {
-          refreshChartDataOnSelectionChange();
-        } else if($scope.timeRange !== 'latest') {
-          refreshTimeSeriesData();
-        }
+      if ($scope.isPipelineRunning && options.type !== pipelineConstant.LINK) {
+        refreshChartDataOnSelectionChange();
       }
     });
 
-    if($scope.timeRange !== 'latest') {
-      refreshTimeSeriesData();
-    } else {
-      refreshChartDataOnSelectionChange();
-    }
+    refreshChartDataOnSelectionChange();
 
   });
