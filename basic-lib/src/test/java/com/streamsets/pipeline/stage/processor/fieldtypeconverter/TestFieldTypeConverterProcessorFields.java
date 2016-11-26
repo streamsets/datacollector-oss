@@ -1680,13 +1680,12 @@ public class TestFieldTypeConverterProcessorFields {
       Assert.assertEquals(1, output.getRecords().get("a").size());
       Map<String, Field> fieldMap = output.getRecords().get("a").get(0).get().getValueAsMap();
 
-      for (String field : fieldMap.keySet()) {
-        Assert.assertEquals(Field.Type.DECIMAL, fieldMap.get(field).getType());
-        Object expectedValue = bigDecimalMap.get("/" + field);
-        Assert.assertEquals(
-            convertValueToBigDecimalWithoutScale(expectedValue),
-            fieldMap.get(field).getValueAsDecimal()
-        );
+      for (Map.Entry<String, Field> entry : fieldMap.entrySet()) {
+        String fieldName = entry.getKey();
+        Field field = entry.getValue();
+        Assert.assertEquals(Field.Type.DECIMAL, field.getType());
+        Object expectedValue = bigDecimalMap.get("/" + fieldName);
+        Assert.assertEquals(convertValueToBigDecimalWithoutScale(expectedValue), field.getValueAsDecimal());
       }
     } finally {
       runner.runDestroy();

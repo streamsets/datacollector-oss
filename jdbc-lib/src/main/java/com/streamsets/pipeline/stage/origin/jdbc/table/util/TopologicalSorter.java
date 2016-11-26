@@ -91,9 +91,9 @@ public final class TopologicalSorter<V> {
 
   private Set<V> nextVerticesForProcessing(Map<V, Integer> inEdgesCount) {
     Set<V> currentVertices = new HashSet<>();
-    for (V vertex : inEdgesCount.keySet()) {
-      if (inEdgesCount.get(vertex) == 0) {
-        currentVertices.add(vertex);
+    for (Map.Entry<V, Integer> entry : inEdgesCount.entrySet()) {
+      if (entry.getValue() == 0) {
+        currentVertices.add(entry.getKey());
       }
     }
     return currentVertices;

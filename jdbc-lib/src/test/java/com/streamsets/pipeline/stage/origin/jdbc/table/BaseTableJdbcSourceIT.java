@@ -97,9 +97,10 @@ public abstract class BaseTableJdbcSourceIT {
         Map<String, Field> expectedFieldMap = expectedField.getValueAsMap();
         Map<String, Field> actualFieldMap = actualField.getValueAsMap();
         Assert.assertEquals(errorString, expectedFieldMap.keySet().size(), actualFieldMap.keySet().size());
-        for (String key : actualFieldMap.keySet()) {
-          Assert.assertNotNull(errorString, expectedFieldMap.get(key.toLowerCase()));
-          checkField(fieldPath + "/" + key.toLowerCase(), expectedFieldMap.get(key.toLowerCase()), actualFieldMap.get(key));
+        for (Map.Entry<String, Field> entry : actualFieldMap.entrySet()) {
+          String actualFieldName = entry.getKey().toLowerCase();
+          Assert.assertNotNull(errorString, expectedFieldMap.get(actualFieldName));
+          checkField(fieldPath + "/" + actualFieldName, expectedFieldMap.get(actualFieldName), entry.getValue());
         }
         break;
       case LIST:

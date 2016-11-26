@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RedisTarget extends BaseTarget {
   private ErrorRecordHandler errorRecordHandler;
@@ -313,10 +314,11 @@ public class RedisTarget extends BaseTarget {
       throws StageException {
     if(value != null && value.getType() == Field.Type.MAP) {
       LinkedHashMap<String, Field> values = value.getValueAsListMap();
-      for(String field : values.keySet()) {
-        if(field != null) {
-          String val = values.get(field).getValueAsString();
-          pipeline.hset(key, field, val);
+      for(Map.Entry<String, Field> entry : values.entrySet()) {
+        String fieldName = entry.getKey();
+        if(fieldName != null) {
+          String val = entry.getValue().getValueAsString();
+          pipeline.hset(key, fieldName, val);
           tempRecords.add(new ErrorRecord(record, "Hash", key, val));
         }
       }

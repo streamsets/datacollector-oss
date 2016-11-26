@@ -175,8 +175,8 @@ public class ScriptObjectFactory {
   }
 
   protected void updateRecordHeader(Map<String, String> header, Record record) {
-    for (String key : header.keySet()) {
-      record.getHeader().setAttribute(key, header.get(key));
+    for (Map.Entry<String, String> entry: header.entrySet()) {
+      record.getHeader().setAttribute(entry.getKey(), entry.getValue());
     }
   }
 

@@ -288,8 +288,9 @@ public class TestFieldHasherProcessor {
       Assert.assertEquals("Expected fields does not match: ", expectedVal.size(), result.size());
 
       Set<String> resultFieldPaths = new HashSet<String>();
-      for (String fieldKey : result.keySet()) {
-        Field outputField = result.get(fieldKey);
+      for (Map.Entry<String, Field> entry : result.entrySet()) {
+        String fieldKey = entry.getKey();
+        Field outputField = entry.getValue();
         Field expectedField  = expectedVal.get(fieldKey);
         Assert.assertEquals("Expected Type not present for field:" + fieldKey, expectedField.getType(), outputField.getType());
         Assert.assertEquals("Expected Value not present for field: " + fieldKey, expectedField.getValue(), outputField.getValue());

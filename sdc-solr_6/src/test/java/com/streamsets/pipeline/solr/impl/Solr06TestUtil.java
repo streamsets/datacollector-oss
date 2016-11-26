@@ -44,8 +44,8 @@ public class Solr06TestUtil implements SdcSolrTestUtil {
   @SuppressWarnings("unchecked")
   public List<Map<String,Object>> query(Map<String, String> q) throws Exception {
     SolrQuery parameters = new SolrQuery();
-    for(String key : q.keySet()) {
-      parameters.set(key, q.get(key));
+    for(Map.Entry<String, String> entry : q.entrySet()) {
+      parameters.set(entry.getKey(), entry.getValue());
     }
     QueryResponse response = solrServer.query(parameters);
 

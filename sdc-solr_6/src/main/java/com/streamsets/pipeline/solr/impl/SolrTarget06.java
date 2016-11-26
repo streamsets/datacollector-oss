@@ -121,8 +121,8 @@ public class SolrTarget06 implements SdcSolrTarget {
 
   private SolrInputDocument createDocument(Map<String, Object> fieldMap) {
     SolrInputDocument document = new SolrInputDocument();
-    for (String key : fieldMap.keySet()) {
-      document.addField(key, fieldMap.get(key));
+    for (Map.Entry<String, Object> entry : fieldMap.entrySet()) {
+      document.addField(entry.getKey(), entry.getValue());
     }
     return document;
   }

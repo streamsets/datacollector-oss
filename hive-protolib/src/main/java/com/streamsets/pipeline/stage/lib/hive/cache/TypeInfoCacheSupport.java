@@ -70,8 +70,9 @@ public class TypeInfoCacheSupport
     @Override
     public LinkedHashMap<String, HiveTypeInfo> getDiff(LinkedHashMap<String, HiveTypeInfo> newState) throws StageException{
       LinkedHashMap<String, HiveTypeInfo> columnDiff = new LinkedHashMap<>();
-      for (String columnName : newState.keySet()) {
-        HiveTypeInfo columnTypeInfo = newState.get(columnName);
+      for (Map.Entry<String, HiveTypeInfo> entry : newState.entrySet()) {
+        String columnName = entry.getKey();
+        HiveTypeInfo columnTypeInfo = entry.getValue();
         if (!state.containsKey(columnName)) {
           columnDiff.put(columnName, columnTypeInfo);
         } else if (!state.get(columnName).equals(columnTypeInfo)) {
