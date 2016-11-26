@@ -231,7 +231,7 @@ public class AggregatedMetricsFetcher {
       histogramJsonMap.put(metricsKey + MetricAggregationConstants.STAGE_ERRORS + MetricsConfigurator.HISTOGRAM_M5_SUFFIX, null);
 
       // create counter and meter for output lanes
-      for (String lane : s.getOutputLanes()) {
+      for (String lane : s.getOutputAndEventLanes()) {
         meterJsonMap.put(metricsKey + ":" + lane + MetricAggregationConstants.OUTPUT_RECORDS + MetricsConfigurator.METER_SUFFIX, null);
         countersJsonMap.put(metricsKey + ":" + lane + MetricAggregationConstants.OUTPUT_RECORDS + MetricsConfigurator.COUNTER_SUFFIX, null);
       }

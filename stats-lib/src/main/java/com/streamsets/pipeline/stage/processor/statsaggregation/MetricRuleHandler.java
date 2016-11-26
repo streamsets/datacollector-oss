@@ -538,10 +538,10 @@ public class MetricRuleHandler {
         )
       );
 
-      // create counter and meter for output lanes
+      // create counter and meter for output & event lanes
       Map<String, Meter> outputLaneToMeterMap = new HashMap<>();
       Map<String, Counter> outputLaneToCounterMap = new HashMap<>();
-      for (String lane : s.getOutputLanes()) {
+      for (String lane : s.getOutputAndEventLanes()) {
         outputLaneToMeterMap.put(
           lane,
           MetricsHelper.createAndInitMeter(
