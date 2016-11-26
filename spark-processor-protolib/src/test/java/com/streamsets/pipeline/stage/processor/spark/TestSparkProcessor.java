@@ -182,7 +182,7 @@ public class TestSparkProcessor {
     Assert.assertEquals(input.getStageCreator(), output.getStageCreator());
     Assert.assertEquals(input.getStagesPath(), output.getStagesPath());
     Assert.assertEquals(input.getTrackingId(), output.getTrackingId());
-    Assert.assertEquals(input.getRaw(), output.getRaw());
+    Assert.assertArrayEquals(input.getRaw(), output.getRaw());
     Assert.assertEquals(input.getRawMimeType(), output.getRawMimeType());
     Assert.assertEquals(input.getPreviousTrackingId(), output.getPreviousTrackingId());
   }

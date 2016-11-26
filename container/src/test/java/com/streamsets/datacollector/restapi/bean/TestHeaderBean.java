@@ -49,7 +49,7 @@ public class TestHeaderBean {
     Assert.assertEquals(header.getErrorTimestamp(), headerJsonBean.getErrorTimestamp());
     Assert.assertEquals(header.getErrorStackTrace(), headerJsonBean.getErrorStackTrace());
     Assert.assertEquals(header.getPreviousTrackingId(), headerJsonBean.getPreviousTrackingId());
-    Assert.assertEquals(header.getRaw(), headerJsonBean.getRaw());
+    Assert.assertArrayEquals(header.getRaw(), headerJsonBean.getRaw());
     Assert.assertEquals(header.getRawMimeType(), headerJsonBean.getRawMimeType());
     Assert.assertEquals(header.getValues(), headerJsonBean.getValues());
     Assert.assertEquals(header.getSourceId(), headerJsonBean.getSourceId());
@@ -76,7 +76,7 @@ public class TestHeaderBean {
     Assert.assertEquals(header.getErrorTimestamp(), headerJsonBean.getErrorTimestamp());
     Assert.assertEquals(header.getErrorStackTrace(), headerJsonBean.getErrorStackTrace());
     Assert.assertEquals(header.getPreviousTrackingId(), headerJsonBean.getPreviousTrackingId());
-    Assert.assertEquals(header.getRaw(), headerJsonBean.getRaw());
+    Assert.assertArrayEquals(header.getRaw(), headerJsonBean.getRaw());
     Assert.assertEquals(header.getRawMimeType(), headerJsonBean.getRawMimeType());
     Assert.assertEquals(header.getValues(), headerJsonBean.getValues());
     Assert.assertEquals(header.getSourceId(), headerJsonBean.getSourceId());
@@ -94,7 +94,7 @@ public class TestHeaderBean {
     Assert.assertEquals(header.getErrorTimestamp(), headerJsonBean.getHeader().getErrorTimestamp());
     Assert.assertEquals(header.getErrorStackTrace(), headerJsonBean.getHeader().getErrorStackTrace());
     Assert.assertEquals(header.getPreviousTrackingId(), headerJsonBean.getHeader().getPreviousTrackingId());
-    Assert.assertEquals(header.getRaw(), headerJsonBean.getHeader().getRaw());
+    Assert.assertArrayEquals(header.getRaw(), headerJsonBean.getHeader().getRaw());
     Assert.assertEquals(header.getRawMimeType(), headerJsonBean.getHeader().getRawMimeType());
     Assert.assertEquals(header.getSourceRecord(), headerJsonBean.getHeader().getSourceRecord());
     Assert.assertEquals(header.getValues(), headerJsonBean.getHeader().getValues());

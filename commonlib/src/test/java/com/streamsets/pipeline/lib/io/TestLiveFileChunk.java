@@ -44,7 +44,7 @@ public class TestLiveFileChunk {
     Assert.assertEquals(2, chunk.getLines().size());
     Assert.assertEquals("Hola\n", chunk.getLines().get(0).getText());
     Assert.assertEquals(1, chunk.getLines().get(0).getFileOffset());
-    Assert.assertEquals(chunk.getBuffer(), chunk.getLines().get(0).getBuffer());
+    Assert.assertArrayEquals(chunk.getBuffer(), chunk.getLines().get(0).getBuffer());
     Assert.assertEquals(0, chunk.getLines().get(0).getOffset());
     Assert.assertEquals(5, chunk.getLines().get(0).getLength());
     Assert.assertEquals("Hell", chunk.getLines().get(1).getText());
