@@ -34,6 +34,7 @@ import com.github.shyiko.mysql.binlog.GtidSet;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.pipeline.lib.operation.OperationType;
 import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
@@ -74,6 +75,10 @@ public class MysqlGtidOnSourceIT extends AbstractMysqlSource {
 
     assertThat(records.get(0).get("/GTID").getValueAsString(), is(serverGtid));
     assertThat(records.get(0).get("/SeqNo"), is(create(1L)));
+    assertThat(
+        records.get(0).getHeader().getAttribute(OperationType.SDC_OPERATION_TYPE),
+        is(String.valueOf(OperationType.INSERT_CODE))
+    );
     String offset = records.get(0).get("/Offset").getValueAsString();
     GtidSourceOffset go = GtidSourceOffset.parse(offset);
     assertThat(go.incompleteTransactionsContain(serverGtid, 1), is(true));
@@ -81,6 +86,10 @@ public class MysqlGtidOnSourceIT extends AbstractMysqlSource {
 
     assertThat(records.get(1).get("/GTID").getValueAsString(), is(serverGtid));
     assertThat(records.get(1).get("/SeqNo"), is(create(2L)));
+    assertThat(
+        records.get(1).getHeader().getAttribute(OperationType.SDC_OPERATION_TYPE),
+        is(String.valueOf(OperationType.INSERT_CODE))
+    );
     offset = records.get(1).get("/Offset").getValueAsString();
     go = GtidSourceOffset.parse(offset);
     assertThat(go.incompleteTransactionsContain(serverGtid, 1), is(true));
@@ -208,5 +217,45 @@ public class MysqlGtidOnSourceIT extends AbstractMysqlSource {
         fail("Value before start offset found");
       }
     }
+  }
+
+  @Test
+  public void testMultipleOperations() throws Exception {
+    MysqlSourceConfig config = createConfig("root");
+    MysqlSource source = createMysqlSource(config);
+    SourceRunner runner = new SourceRunner.Builder(MysqlDSource.class, source)
+        .addOutputLane(LANE)
+        .build();
+    runner.runInit();
+
+    StageRunner.Output output = runner.runProduce(null, MAX_BATCH_SIZE);
+    List<Record> records = new ArrayList<>(output.getRecords().get(LANE));
+    assertThat(records, is(Matchers.<Record>empty()));
+
+    // add one more
+    execute(ds, Arrays.asList(
+        "INSERT INTO foo (bar) VALUES (2)",
+        "UPDATE foo set bar = 3 where bar = 2",
+        "DELETE from foo where bar = 3")
+    );
+    output = runner.runProduce(null, MAX_BATCH_SIZE);
+    records = new ArrayList<>(output.getRecords().get(LANE));
+    assertThat(records, hasSize(3));
+
+    assertThat(records.get(0).get("/Type").getValueAsString(), is("INSERT"));
+    assertThat(
+        records.get(0).getHeader().getAttribute(OperationType.SDC_OPERATION_TYPE),
+        is(String.valueOf(OperationType.INSERT_CODE))
+    );
+    assertThat(records.get(1).get("/Type").getValueAsString(), is("UPDATE"));
+    assertThat(
+        records.get(1).getHeader().getAttribute(OperationType.SDC_OPERATION_TYPE),
+        is(String.valueOf(OperationType.UPDATE_CODE))
+    );
+    assertThat(records.get(2).get("/Type").getValueAsString(), is("DELETE"));
+    assertThat(
+        records.get(2).getHeader().getAttribute(OperationType.SDC_OPERATION_TYPE),
+        is(String.valueOf(OperationType.DELETE_CODE))
+    );
   }
 }
