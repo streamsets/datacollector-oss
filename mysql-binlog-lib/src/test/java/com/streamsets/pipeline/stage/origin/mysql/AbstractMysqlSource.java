@@ -96,7 +96,7 @@ public abstract class AbstractMysqlSource {
   @Test
   public void shouldFailWhenUCannotConnect() throws Exception {
     MysqlSourceConfig config = createConfig("root");
-    config.port = 1;
+    config.port = "1";
     MysqlSource source = createMysqlSource(config);
     SourceRunner runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
@@ -585,9 +585,9 @@ public abstract class AbstractMysqlSource {
     Matcher matcher = Pattern.compile("jdbc:mysql://localhost:(\\d+)/test")
         .matcher(mysql.getJdbcUrl());
     matcher.find();
-    config.port = Integer.valueOf(matcher.group(1));
+    config.port = matcher.group(1);
     config.hostname = "localhost";
-    config.serverId = SERVER_ID;
+    config.serverId = String.valueOf(SERVER_ID);
     config.maxWaitTime = 1000;
     config.maxBatchSize = 1000;
     config.connectTimeout = 5000;
