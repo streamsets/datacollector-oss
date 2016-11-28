@@ -40,6 +40,22 @@ public class TestFileEL {
   }
 
   @Test
+  public void testParentPath() throws Exception {
+    ELEvaluator eval = new ELEvaluator("testParentPath", FileEL.class);
+    ELVariables variables = new ELVariables();
+    // Normal file
+    Assert.assertEquals("/absolute/path", eval.eval(variables, "${file:parentPath(\"/absolute/path/file\")}", String.class));
+    // With extension
+    Assert.assertEquals("/absolute/path", eval.eval(variables, "${file:parentPath(\"/absolute/path/file.txt\")}", String.class));
+    // Relative path
+    Assert.assertEquals("relative/path", eval.eval(variables, "${file:parentPath(\"relative/path/file.txt\")}", String.class));
+    // Just file name and nothing else
+    Assert.assertEquals("", eval.eval(variables, "${file:parentPath(\"file.txt\")}", String.class));
+    // Recursive call
+    Assert.assertEquals("/absolute", eval.eval(variables, "${file:parentPath(file:parentPath(\"/absolute/path/file\"))}", String.class));
+  }
+
+  @Test
   public void testFileExtension() throws Exception {
     ELEvaluator eval = new ELEvaluator("testFileExtension", FileEL.class);
     ELVariables variables = new ELVariables();
