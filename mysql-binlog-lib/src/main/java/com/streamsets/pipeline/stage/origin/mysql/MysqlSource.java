@@ -62,6 +62,9 @@ public abstract class MysqlSource extends BaseSource {
 
   private Filter eventFilter;
 
+  private int port;
+  private long serverId;
+
   private final BlockingQueue<ServerException> serverErrors = new LinkedBlockingQueue<>();
 
   private final RecordConverter recordConverter = new RecordConverter(new RecordFactory() {
@@ -77,11 +80,24 @@ public abstract class MysqlSource extends BaseSource {
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
 
+    // Validate the port number
+    try {
+      port = Integer.valueOf(getConfig().port);
+    } catch (NumberFormatException e) {
+      throw new NumberFormatException("Port number must be numeric");
+    }
+    // ServerId can be empty. Validate if provided.
+    try {
+      if (getConfig().serverId != null && !getConfig().serverId.isEmpty())
+        serverId = Integer.valueOf(getConfig().serverId);
+    } catch (NumberFormatException e) {
+      throw new NumberFormatException("Server ID must be numeric");
+    }
     // check if binlog client connection is possible
     // we don't reuse this client later on, it is used just to check that client can connect, it
     // is immediately closed after connection.
     BinaryLogClient tmpClient = createBinaryLogClient();
-    tmpClient.setServerId(getConfig().serverId);
+    tmpClient.setServerId(serverId);
     try {
       tmpClient.setKeepAlive(false);
       tmpClient.connect(getConfig().connectTimeout);
@@ -105,7 +121,7 @@ public abstract class MysqlSource extends BaseSource {
     } catch (IllegalArgumentException e) {
       LOG.error("Error creating include tables filter: {}", e.getMessage(), e);
       issues.add(getContext().createConfigIssue(
-          Groups.MYSQL.name(), "Include tables", Errors.MYSQL_008, e.getMessage(), e
+          Groups.ADVANCED.name(), "includeTables", Errors.MYSQL_008, e.getMessage(), e
       ));
     }
 
@@ -115,7 +131,7 @@ public abstract class MysqlSource extends BaseSource {
     } catch (IllegalArgumentException e) {
       LOG.error("Error creating ignore tables filter: {}", e.getMessage(), e);
       issues.add(getContext().createConfigIssue(
-          Groups.MYSQL.name(), "Ignore tables", Errors.MYSQL_007, e.getMessage(), e
+          Groups.ADVANCED.name(), "ignoreTables", Errors.MYSQL_007, e.getMessage(), e
       ));
     }
 
@@ -125,7 +141,7 @@ public abstract class MysqlSource extends BaseSource {
 
     // connect to mysql
     HikariConfig hikariConfig = new HikariConfig();
-    hikariConfig.setJdbcUrl(String.format("jdbc:mysql://%s:%d", getConfig().hostname, getConfig().port));
+    hikariConfig.setJdbcUrl(String.format("jdbc:mysql://%s:%d", getConfig().hostname, port));
     hikariConfig.setUsername(getConfig().username);
     hikariConfig.setPassword(getConfig().password);
     hikariConfig.setReadOnly(true);
@@ -147,7 +163,7 @@ public abstract class MysqlSource extends BaseSource {
   private BinaryLogClient createBinaryLogClient() {
     BinaryLogClient binLogClient = new BinaryLogClient(
         getConfig().hostname,
-        getConfig().port,
+        port,
         getConfig().username,
         getConfig().password
     );

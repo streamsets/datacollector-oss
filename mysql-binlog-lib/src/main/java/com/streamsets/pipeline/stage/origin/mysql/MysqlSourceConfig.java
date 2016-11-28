@@ -37,14 +37,14 @@ public class MysqlSourceConfig {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.NUMBER,
+      type = ConfigDef.Type.STRING,
       defaultValue = "3306",
       label = "Port",
       description = "MySql server port",
       displayPosition = 20,
       group = "MYSQL"
   )
-  public int port;
+  public String port;
 
   @ConfigDef(
       required = true,
@@ -67,8 +67,8 @@ public class MysqlSourceConfig {
   public String password;
 
   @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.NUMBER,
+      required = false,
+      type = ConfigDef.Type.STRING,
       defaultValue = "999",
       label = "Server ID",
       description = "ServerId used by binlog client. Must be unique among all replication slaves " +
@@ -76,7 +76,7 @@ public class MysqlSourceConfig {
       displayPosition = 50,
       group = "MYSQL"
   )
-  public int serverId;
+  public String serverId;
 
   @ConfigDef(
       required = true,
