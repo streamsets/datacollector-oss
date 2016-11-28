@@ -253,8 +253,10 @@
                                         </ul><p>Default is SSE-S3.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>AWS KMS Key ID</entry>
-                                    <entry>ID of the AWS KMS master encryption key to use. <p>Used
+                                    <entry>AWS KMS Key ARN</entry>
+                                    <entry>Amazon resource name (ARN) of the AWS KMS master
+                                        encryption key. Use the following
+                                            format:<codeblock>&lt;arn>:&lt;aws>:&lt;kms>:&lt;region>:&lt;acct ID>:&lt;key>/&lt;key ID></codeblock><p>Used
                                             for SSE-KMS encryption only.</p></entry>
                                 </row>
                                 <row>
