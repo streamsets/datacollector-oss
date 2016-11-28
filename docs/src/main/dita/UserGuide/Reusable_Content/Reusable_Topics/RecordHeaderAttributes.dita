@@ -28,10 +28,7 @@
             record header. The Hadoop FS, MapR FS, and Local FS destinations can use record header
             attributes to determine the directory to write to and when to roll a file. </p>
         <p>To use a record header attribute, configure the destination to use the header attribute
-            and ensure that the records include the header attribute.</p>
-        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-GenAttributes"
-            />
-        </p>
+            and ensure that the records include the header attribute. </p>
         <p>You can use the following record header attributes in destinations:
             <dl>
                 <dlentry>

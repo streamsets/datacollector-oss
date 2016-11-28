@@ -1024,6 +1024,15 @@ web-0011.log</codeblock></dd>
                                                 that creates a map for use as a field in a record.
                                                 Pass true to create a list-map field, or false to
                                                 create a map field.</li>
+                                          <li><codeph>createEvent(String type, int version)</codeph>
+                                                - Method that creates a new event record with the
+                                                specified event type and version. Be sure to enable
+                                                event generation in the stage before implementing
+                                                event methods. </li>
+                                          <li><codeph>toEvent(Record)</codeph> - Method that sends
+                                                an event record to the Event output stream.  Be sure
+                                                to enable event generation in the stage before
+                                                implementing event methods. </li>
                                     </ul>
                               </dd>
                         </dlentry>

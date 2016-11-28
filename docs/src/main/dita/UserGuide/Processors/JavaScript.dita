@@ -36,5 +36,7 @@
         <p>Some Java 8 JavaScript functionality is not available in Java 7 JavaScript. To ensure the
             JavaScript Evaluator performs as expected, use the same version of Java in development
             and production.</p>
+        <p>The JavaScript Evaluator provides extensive sample code that you can use to develop your
+            script. </p>
  </conbody>
 </concept>

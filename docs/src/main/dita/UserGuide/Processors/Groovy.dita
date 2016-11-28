@@ -15,16 +15,16 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ldh_sct_gv">
  <title>Groovy Evaluator</title>
- <shortdesc>The Groovy Evaluator processes data based on Groovy code. Use the Groovy Evaluator
-    processor to use Groovy code to perform custom processing. The Groovy Evaluator supports Groovy
-    version 2.4.</shortdesc>
  <conbody>  <p><indexterm>Groovy Evaluator
-     processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Groovy
-     Evaluator</indexterm></indexterm>The Groovy Evaluator can process data one record at a time or
-   one batch at a time. </p>
+          processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Groovy
+          Evaluator</indexterm></indexterm>The Groovy Evaluator processes data based on Groovy code.
+      Use the Groovy Evaluator processor to use Groovy code to perform custom processing. The Groovy
+      Evaluator supports Groovy version 2.4.</p>
+    <p>The Groovy Evaluator can process data one record at a time or one batch at a time. </p>
   <p>When you use a Groovy Evaluator in a pipeline, the <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> passes a batch
    of data to the processor and converts the data to a scripting-friendly data structure for
    processing.</p>
+    <p>The processor provides extensive sample code that you can use to develop your script. </p>
  </conbody>
 </concept>
