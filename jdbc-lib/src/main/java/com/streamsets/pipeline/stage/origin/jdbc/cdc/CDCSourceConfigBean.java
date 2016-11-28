@@ -40,7 +40,7 @@ public class CDCSourceConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Database",
+      label = "Schema Name",
       displayPosition = 10,
       group = "CDC"
   )
