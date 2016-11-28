@@ -130,8 +130,9 @@ public class PipelineConfigurationValidator {
     validated = true;
     LOG.trace("Pipeline '{}' starting validation", name);
     canPreview = resolveLibraryAliases();
-    canPreview &= upgradePipeline();
-    canPreview &= addMissingConfigs();
+    // We want to run addMissingConfigs only if upgradePipeline was a success to not perform any side-effects when the
+    // upgrade is not successful.
+    canPreview &= upgradePipeline() && addMissingConfigs();
     canPreview &= sortStages();
     canPreview &= checkIfPipelineIsEmpty();
     canPreview &= loadAndValidatePipelineConfig();
@@ -646,7 +647,9 @@ public class PipelineConfigurationValidator {
 
   private boolean isNullOrEmpty(ConfigDefinition confDef, Config config) {
     boolean isNullOrEmptyString = false;
-    if (config.getValue() == null) {
+    if(config == null) {
+      isNullOrEmptyString = true;
+    } else if (config.getValue() == null) {
       isNullOrEmptyString = true;
     } else if (confDef.getType() == ConfigDef.Type.STRING) {
       if (((String) config.getValue()).isEmpty()) {
