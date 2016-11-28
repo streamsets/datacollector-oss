@@ -33,8 +33,9 @@
                 <dlentry>
                     <dt>AWS KMS-Managed Encryption Keys (SSE-KMS)</dt>
                     <dd>When you use server-side encryption with AWS Key Management Service (KMS),
-                        you specify the ID of the AWS KMS master encryption key to use. You can also
-                        specify key-value pairs to use for the encryption context. </dd>
+                        you specify the Amazon resource name (ARN) of the AWS KMS master encryption
+                        key that you want to use. You can also specify key-value pairs to use for
+                        the encryption context. </dd>
                 </dlentry>
                 <dlentry>
                     <dt>Customer-Provided Encryption Keys (SSE-C)</dt>
