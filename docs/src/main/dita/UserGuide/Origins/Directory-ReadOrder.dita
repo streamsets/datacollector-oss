@@ -24,15 +24,22 @@
             <dl>
                 <dlentry>
                     <dt>Last Modified Timestamp</dt>
-                    <dd>Directory can read files in ascending order based on the last modified
-                        timestamp. Assuming Directory reads from a secondary location - not the
-                        directory where the files are created and written - the last-modified
-                        timestamp is usually when the file is moved to the directory to be
-                        processed. </dd>
+                    <dd><draft-comment author="Loretta">This DLentry copied &amp; modified for
+                            SFTP/FTP Client > Read Order. Update accordingly.</draft-comment>The
+                        Directory origin can read files in ascending order based on the last
+                        modified timestamp. When the origin reads from a secondary location - not
+                        the directory where the files are created and written - the last-modified
+                        timestamp should be when the file is moved to the directory to be processed. </dd>
+                    <dd>
+                        <note type="tip">Avoid moving files using commands that preserve the
+                            existing timestamp, such as <codeph>cp -p</codeph>. Preserving the
+                            existing timestamp can be problematic in some cases, such as moving
+                            files across time zones.</note>
+                    </dd>
                     <dd>When ordering based on timestamp, any files with the same timestamp are read
                         in lexicographically ascending order based on the file names.</dd>
                     <dd>For example, when reading files with the <codeph>log*.json</codeph> file
-                        name pattern, Directory reads the following files in the following
+                        name pattern, the origin reads the following files in the following
                         order:</dd>
                     <dd>
                         <simpletable frame="none" relcolwidth="1.0* 1.0*"
@@ -82,9 +89,9 @@
                 </dlentry>
                 <dlentry>
                     <dt>Lexicographically Ascending File Names</dt>
-                    <dd>Directory can read files in lexicographically ascending order based on file
-                        names. Note that lexicographically ascending order reads the numbers 1
-                        through 11 as follows:</dd>
+                    <dd>The Directory origin can read files in lexicographically ascending order
+                        based on file names. Note that lexicographically ascending order reads the
+                        numbers 1 through 11 as follows:</dd>
                     <dd>
                         <codeblock>1, 10, 11, 2, 3, 4... 9</codeblock>
                     </dd>

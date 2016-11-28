@@ -213,6 +213,7 @@
   </topicref>
   <topicref href="../Origins/SFTP.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/SFTP-ReadOrder.dita"/>
    <topicref href="../Origins/SFTP-Credentials.dita"/>
    <topicref href="../Origins/SFTPClient-DataFormats.dita"/>
    <topicref href="../Origins/SFTP-Configuring.dita"/>
