@@ -49,6 +49,20 @@ public class FileEL {
 
   @ElFunction(
       prefix = "file",
+      name = "parentPath",
+      description = "Returns parent path to given file or directory. Returns path without separator (e.g. result will not end with slash)."
+  )
+  public static String parentPath (
+    @ElParam("filePath") String filePath
+  ) {
+    if(isEmpty(filePath)) {
+      return null;
+    }
+    return FilenameUtils.getFullPathNoEndSeparator(filePath);
+  }
+
+  @ElFunction(
+      prefix = "file",
       name = "fileExtension",
       description = "Returns file extension from given path (e.g. 'txt' from /path/file.txt)."
   )
