@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_oxj_vbh_cy">
+ <title>Scripting Processor Content</title>
+ <conbody>
+  <p>
+            <draft-comment author="Loretta">Event generation topic conrefs. </draft-comment>
+        </p>
+        <p>You can use the &lt;&lt;processor name>> <ph id="Event-ph-1st">to generate event records
+                for an event stream. Enable event generation when you want the processor to generate
+                an event record based on scripting logic. </ph></p>
+        <p id="Event-p-2nd">As with any event record, you can pass events downstream to a
+            destination for event storage or to any executor that can be configured to use the
+            event. For more information about events and event handling, see <xref
+                href="../../Event_Handling/EventHandling-Overview.dita#concept_cph_5h4_lx"/>.</p>
+        <p id="Event-pSteps-3rd">To generate events:<ol id="ol_jp5_mch_cy">
+                <li>On the <wintitle>General</wintitle> tab, select the <uicontrol>Produce
+                        Events</uicontrol> property.<p>This enables the event output stream for use.
+                    </p></li>
+                <li>In the script, include both of the following scripting objects:<ul
+                        id="ul_kp5_mch_cy">
+                        <li> sdcFunctions.createEvent(String type, int version) - Creates an event
+                            record with the specified event type and version number. You can create
+                            a new event type or use an existing event type. Existing event types are
+                            documented in other event-generating stages. <p>The event record
+                                contains no record fields. Generate record fields as
+                            needed.</p></li>
+                        <li> sdcFunctions.toEvent(Record) - Use to pass events to the event output
+                            stream. </li>
+                    </ul></li>
+            </ol></p>
+        <p>
+            <draft-comment author="Loretta">Working with Record Header Attribute
+                conrefs</draft-comment>
+        </p>
+        <p/>
+        <p>You can use the &lt;&lt;processor name>> <ph id="RHA-ph-1st">processor to read and update
+                or create record header attributes.</ph></p>
+        <p id="RHA-p-2nd">Use a map when creating or updating a header attribute. If a header
+            attribute exists, the processor updates the value, if it does not exist, the processor
+            creates the attribute and sets it to the specified value. </p>
+        <p id="RHA-p-3rd">All records include a set of read-only record header attributes that
+            stages can update as they process the records. Error records also have their own set of
+            read-only header attributes.</p>
+        <p id="RHA-p-4th">Some stages generate custom record header attributes that are meant to be
+            used in particular ways. For example, the Oracle CDC Client origin specifies the
+            operation type for a record in a record header attribute. And event-generating stages
+            create a set of event header attributes for event records.</p>
+        <p id="RHA-p-5th">The processor provides the following record header variables to work with
+            header attributes:<ul id="ul_df4_g1x_1y">
+                <li><codeph>record.&lt;header name></codeph> - Use to return the value of a
+                    read-only header attribute.</li>
+                <li><codeph>record.attributes</codeph> - Use to return a map of custom record header
+                    attributes, or to create or update a specific record header attribute.</li>
+            </ul></p>
+        <note type="tip" id="RHA-p-Tip">Use data preview to view the record header attributes
+            included in a record.</note>
+        <p>
+            <draft-comment author="Loretta">Viewing Record Header Attributes – conref p's. Add
+                indexing locally.</draft-comment>
+        </p>
+
+            <p><ph id="VRHA-1st-ph">You can use data preview to view the record header attributes
+                associated with a record at any given point in the pipeline. </ph></p>
+            <p id="VRHA-2ndp">For example, the following image shows a record generated by the
+            Directory origin in data preview. </p>
+            <p id="VRHA-3rdp-image"><image href="../../Graphics/HeaderAttribute-Preview.png"
+                scale="50" id="image_vsr_3gh_cy"/></p>
+            <p id="VRHA-4thp">The "Record Header" list displays the set of read-only attributes in
+            the record at this point of the pipeline. You can use the <codeph>record.&lt;header
+                name></codeph> variable to return values for these attributes. </p>
+            <p id="VRHA-5thp">The header attributes under "values" are header attributes created by
+            the Directory origin. You can use the <codeph>record.attributes</codeph> variable to
+            return or modify these attributes. When you use the <codeph>record.attributes</codeph>
+            variable to create a header attribute, it displays in this location during data
+            preview.</p>
+ </conbody>
+</concept>
