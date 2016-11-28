@@ -38,6 +38,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.stage.origin.mysql.schema.Column;
 import com.streamsets.pipeline.stage.origin.mysql.schema.ColumnValue;
 import com.streamsets.pipeline.stage.origin.mysql.schema.Table;
+import com.streamsets.pipeline.lib.operation.OperationType;
 
 public class RecordConverter {
   static final String TYPE_FIELD = "Type";
@@ -104,7 +105,10 @@ public class RecordConverter {
       Record record = recordFactory.create(offset.format());
       Map<String, Field> fields = createHeader(table, eventHeader, offset);
       fields.put(TYPE_FIELD, create("UPDATE"));
-
+      record.getHeader().setAttribute(
+          OperationType.SDC_OPERATION_TYPE,
+          String.valueOf(OperationType.UPDATE_CODE)
+      );
       List<ColumnValue> columnValuesOld = zipColumnsValues(
           eventData.getIncludedColumnsBeforeUpdate(),
           table,
@@ -136,7 +140,10 @@ public class RecordConverter {
       Record record = recordFactory.create(offset.format());
       Map<String, Field> fields = createHeader(table, eventHeader, offset);
       fields.put(TYPE_FIELD, create("INSERT"));
-
+      record.getHeader().setAttribute(
+          OperationType.SDC_OPERATION_TYPE,
+          String.valueOf(OperationType.INSERT_CODE)
+      );
       List<ColumnValue> columnValues = zipColumnsValues(
           eventData.getIncludedColumns(),
           table,
@@ -160,7 +167,10 @@ public class RecordConverter {
       Record record = recordFactory.create(offset.format());
       Map<String, Field> fields = createHeader(table, eventHeader, offset);
       fields.put(TYPE_FIELD, create("DELETE"));
-
+      record.getHeader().setAttribute(
+          OperationType.SDC_OPERATION_TYPE,
+          String.valueOf(OperationType.DELETE_CODE)
+      );
       List<ColumnValue> columnValues = zipColumnsValues(eventData.getIncludedColumns(), table, row);
       Map<String, Field> data = toMap(columnValues);
       fields.put(OLD_DATA_FIELD, create(data));

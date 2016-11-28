@@ -582,11 +582,11 @@ public abstract class AbstractMysqlSource {
     MysqlSourceConfig config = new MysqlSourceConfig();
     config.username = username;
     config.password = mysql.getPassword();
-    Matcher matcher = Pattern.compile("jdbc:mysql://localhost:(\\d+)/test")
+    Matcher matcher = Pattern.compile("jdbc:mysql://(.*):(\\d+)/test")
         .matcher(mysql.getJdbcUrl());
     matcher.find();
-    config.port = matcher.group(1);
-    config.hostname = "localhost";
+    config.port = matcher.group(2);
+    config.hostname = matcher.group(1);
     config.serverId = String.valueOf(SERVER_ID);
     config.maxWaitTime = 1000;
     config.maxBatchSize = 1000;
