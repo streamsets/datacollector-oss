@@ -114,6 +114,7 @@
     <module>root-lib</module>
 
     <module>commonlib</module>
+    <module>httpcommonlib</module>
 
     <module>lookup-protolib</module>
 
