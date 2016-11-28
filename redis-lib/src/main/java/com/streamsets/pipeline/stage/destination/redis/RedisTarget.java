@@ -312,15 +312,13 @@ public class RedisTarget extends BaseTarget {
 
   private void doUpsertHash(Record record, List<ErrorRecord> tempRecords, Pipeline pipeline, String key, Field value)
       throws StageException {
-    if(value != null && value.getType() == Field.Type.MAP) {
-      LinkedHashMap<String, Field> values = value.getValueAsListMap();
+    if(value != null && value.getType().isOneOf(Field.Type.MAP, Field.Type.LIST_MAP)) {
+      Map<String, Field> values = value.getValueAsMap();
       for(Map.Entry<String, Field> entry : values.entrySet()) {
         String fieldName = entry.getKey();
-        if(fieldName != null) {
-          String val = entry.getValue().getValueAsString();
-          pipeline.hset(key, fieldName, val);
-          tempRecords.add(new ErrorRecord(record, "Hash", key, val));
-        }
+        String val = entry.getValue().getValueAsString();
+        pipeline.hset(key, fieldName, val);
+        tempRecords.add(new ErrorRecord(record, "Hash", key, val));
       }
     } else {
       LOG.error(Errors.REDIS_04.getMessage(), value.getType(), "value should be Map");
