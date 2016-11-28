@@ -29,8 +29,8 @@ import java.net.URI;
 import java.util.Set;
 
 final class RemoteSourceFileRef extends AbstractFileRef{
-  final RemoteFile remoteFile;
-  final URI remoteUri;
+  private final RemoteFile remoteFile;
+  private final URI remoteUri;
 
   private RemoteSourceFileRef(
       RemoteFile remoteFile,
@@ -54,7 +54,7 @@ final class RemoteSourceFileRef extends AbstractFileRef{
 
   @Override
   public String toString() {
-    return "Remote: " + RemoteDownloadSource.getFileName(remoteUri.toString(), remoteFile);
+    return "Remote: URI='" + remoteUri + "', File ='" + remoteFile.filename + "'";
   }
 
   @Override
