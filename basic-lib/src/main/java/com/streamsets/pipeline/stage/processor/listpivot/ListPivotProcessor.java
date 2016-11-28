@@ -77,6 +77,10 @@ public class ListPivotProcessor extends SingleLaneRecordProcessor {
       issues.add(getContext().createConfigIssue(Groups.PIVOT.name(), "copyFields", Errors.LIST_PIVOT_02));
     }
 
+    if(!StringUtils.isEmpty(newPath) && newPath.equals(originalFieldNamePath)) {
+      issues.add(getContext().createConfigIssue(Groups.PIVOT.name(), "originalFieldNamePath", Errors.LIST_PIVOT_03));
+    }
+
     return issues;
   }
 

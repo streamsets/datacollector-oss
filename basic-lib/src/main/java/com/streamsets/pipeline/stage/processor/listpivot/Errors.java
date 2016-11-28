@@ -26,7 +26,8 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 public enum Errors implements ErrorCode {
   LIST_PIVOT_00("Field '{}' is not a LIST, LIST_MAP, or MAP"),
   LIST_PIVOT_01("Record '{}' does not contain field '{}'"),
-  LIST_PIVOT_02("Cannot save original field name without copying all fields.")
+  LIST_PIVOT_02("Cannot save original field name without copying all fields."),
+  LIST_PIVOT_03("Pivoted Items Path and Original Field Name Path can't contain the same value"),
   ;
 
   private final String msg;

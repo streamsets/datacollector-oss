@@ -219,7 +219,20 @@ public class TestListPivot {
         .addOutputLane("a").build();
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
 
-    Assert.assertTrue(!issues.isEmpty());
-    Assert.assertEquals(issues.size(), 1);
+    Assert.assertFalse(issues.isEmpty());
+    Assert.assertEquals(1, issues.size());
+  }
+
+  @Test
+  public void testPivotedItemsPathAndOriginalFieldNamePathSameValue() throws StageException {
+    ListPivotProcessor processor = new ListPivotProcessor("/map_field", "/same", true, true, "/same", OnStagePreConditionFailure.CONTINUE);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(ListPivotDProcessor.class, processor)
+        .addOutputLane("a").build();
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+
+    Assert.assertFalse(issues.isEmpty());
+    Assert.assertEquals(1, issues.size());
+    Assert.assertTrue(issues.get(0).toString().contains("LIST_PIVOT_03"));
   }
 }
