@@ -87,7 +87,6 @@ public class RemoteDownloadSource extends BaseSource {
   static final String CONTENT_ENCODING = "contentEncoding";
 
 
-
   private final RemoteDownloadConfigBean conf;
   private final File knownHostsFile;
   private final File errorArchive;
@@ -303,7 +302,7 @@ public class RemoteDownloadSource extends BaseSource {
             metadata.put(CONTENT_TYPE, next.remoteObject.getContent().getContentInfo().getContentType());
             metadata.put(CONTENT_ENCODING, next.remoteObject.getContent().getContentInfo().getContentEncoding());
 
-            metadata.put(HeaderAttributeConstants.FILE, getFileName(remoteURI.toString(), next));
+            metadata.put(HeaderAttributeConstants.FILE, next.filename);
             metadata.put(HeaderAttributeConstants.FILE_NAME, FilenameUtils.getName(next.filename));
             metadata.put(REMOTE_URI, remoteURI.toString());
 
@@ -343,31 +342,14 @@ public class RemoteDownloadSource extends BaseSource {
     return offset;
   }
 
-  static String getFileName(String remoteUri, RemoteFile remoteFile) {
-    String filename = remoteUri;
-    if (remoteUri.charAt(remoteUri.length() - 1) == '/') {
-      if (remoteFile.filename.charAt(0) == '/') {
-        filename += remoteFile.filename.substring(1);
-      } else {
-        filename += remoteFile.filename;
-      }
-    } else {
-      if (remoteFile.filename.charAt(0) == '/') {
-        filename += remoteFile.filename;
-      } else {
-        filename += "/" + remoteFile.filename;
-      }
-    }
-    return filename;
-  }
-
   private String addRecordsToBatch(int maxBatchSize, BatchMaker batchMaker, RemoteFile remoteFile) throws IOException, StageException {
     String offset = NOTHING_READ;
     for (int i = 0; i < maxBatchSize; i++) {
       try {
         Record record = parser.parse();
         if (record != null) {
-          record.getHeader().setAttribute(HeaderAttributeConstants.FILE, getFileName(remoteURI.toString(), remoteFile));
+          record.getHeader().setAttribute(REMOTE_URI, remoteURI.toString());
+          record.getHeader().setAttribute(HeaderAttributeConstants.FILE, remoteFile.filename);
           record.getHeader().setAttribute(HeaderAttributeConstants.FILE_NAME, FilenameUtils.getName(remoteFile.filename));
           record.getHeader().setAttribute(HeaderAttributeConstants.OFFSET, offset == null ? "0" : offset);
           batchMaker.addRecord(record);

@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.origin.remote;
 
 import com.github.fommil.ssh.SshRsaCrypto;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
@@ -356,6 +357,7 @@ public class TestRemoteDownloadSource {
     runner.runInit();
     runner.runDestroy();
   }
+
   @Test
   public void testNoErrorOrdering() throws Exception {
     path = "remote-download-source/parseSameTimestamp";
@@ -871,7 +873,7 @@ public class TestRemoteDownloadSource {
   public void testWholeFile() throws Exception {
     path = testFolder.getRoot().getAbsolutePath() + "/remote-download-source/testWholeFile";
 
-    Path filePath =  Paths.get(path + "/testWholeFile.txt");
+    Path filePath = Paths.get(path + "/testWholeFile.txt");
 
     Assert.assertTrue(new File(path).mkdirs());
 
@@ -923,10 +925,10 @@ public class TestRemoteDownloadSource {
       Assert.assertTrue(record.has(FileRefUtil.FILE_INFO_FIELD_PATH + "/" + HeaderAttributeConstants.FILE));
 
       Assert.assertEquals("testWholeFile.txt", record.getHeader().getAttribute(HeaderAttributeConstants.FILE_NAME));
-      Assert.assertEquals("sftp://localhost:" + String.valueOf(port) + "/testWholeFile.txt", record.getHeader().getAttribute(HeaderAttributeConstants.FILE));
+      Assert.assertEquals("/testWholeFile.txt", record.getHeader().getAttribute(HeaderAttributeConstants.FILE));
 
       Assert.assertEquals("testWholeFile.txt", record.get(FileRefUtil.FILE_INFO_FIELD_PATH + "/" + HeaderAttributeConstants.FILE_NAME).getValueAsString());
-      Assert.assertEquals("sftp://localhost:" + String.valueOf(port) + "/testWholeFile.txt", record.get(FileRefUtil.FILE_INFO_FIELD_PATH + "/" + HeaderAttributeConstants.FILE).getValueAsString());
+      Assert.assertEquals("/testWholeFile.txt", record.get(FileRefUtil.FILE_INFO_FIELD_PATH + "/" + HeaderAttributeConstants.FILE).getValueAsString());
       Assert.assertEquals("sftp://localhost:" + String.valueOf(port) + "/", record.get(FileRefUtil.FILE_INFO_FIELD_PATH + "/" + RemoteDownloadSource.REMOTE_URI).getValueAsString());
 
       InputStream is1 = new FileInputStream(filePath.toFile());
@@ -949,7 +951,7 @@ public class TestRemoteDownloadSource {
 
     Assert.assertTrue(new File(path).mkdirs());
 
-    Path filePath =  Paths.get(path + "/testWholeFileMultipleInputStreams.txt");
+    Path filePath = Paths.get(path + "/testWholeFileMultipleInputStreams.txt");
 
     java.nio.file.Files.write(
         Paths.get(path + "/testWholeFileMultipleInputStreams.txt"),
@@ -978,7 +980,7 @@ public class TestRemoteDownloadSource {
         .build();
     try {
       runner.runInit();
-      
+
       StageRunner.Output op = runner.runProduce("null", 1000);
 
       List<Record> actual = op.getRecords().get("lane");
@@ -1005,7 +1007,75 @@ public class TestRemoteDownloadSource {
     } finally {
       runner.runDestroy();
     }
+  }
 
+  @Test
+  public void testHeaderAttributes() throws Exception {
+    path = testFolder.getRoot().getAbsolutePath() + "/remote-download-source/testHeaderAttributes";
+    List<String> foldersToCreate = ImmutableList.of("/folder1/folder11", "/folder2/folder22", "/folder3/folder33", "/folder4/folder44");
+    List<String> filePaths = new ArrayList<>();
+
+    long currrentMillis = System.currentTimeMillis() - (foldersToCreate.size() * 1000);
+    for (String folder : foldersToCreate) {
+
+      String fullFolderPath = path + folder ;
+      Assert.assertTrue(new File(fullFolderPath).mkdirs());
+
+      String fileFullPath = fullFolderPath + "/" + folder.substring(1).replaceAll("/", "_") + "testHeaderAttributes.txt";
+
+      //creating file name as _ instead of / in folder
+      //for ex: folder1/folder11 will have the file name folder1_folder11_testHeaderAttributes.txt
+      java.nio.file.Files.write(
+          Paths.get(fileFullPath),
+          "This is sample text".getBytes(),
+          StandardOpenOption.CREATE_NEW
+      );
+
+      Assert.assertTrue(Paths.get(fileFullPath).toFile().setLastModified(currrentMillis));
+      currrentMillis = currrentMillis + 1000;
+      //Strip local file path
+      filePaths.add(fileFullPath.substring(path.length()));
+    }
+
+    setupSSHD(path, true);
+
+    RemoteDownloadSource origin =
+        new RemoteDownloadSource(getBean(
+            "sftp://localhost:" + String.valueOf(port) + "/",
+            true,
+            "testuser",
+            "pass",
+            null,
+            null,
+            null,
+            true,
+            DataFormat.TEXT,
+            null,
+            //Process subdirectories
+            true,
+            "*"
+        ));
+    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+    try {
+      runner.runInit();
+      String offset = "";
+      for (int i = 0; i < filePaths.size(); i++) {
+        StageRunner.Output op = runner.runProduce(offset, 1000);
+        List<Record> records = op.getRecords().get("lane");
+        Assert.assertEquals(1, records.size());
+        Record.Header header = records.get(0).getHeader();
+        String fileFullPath = filePaths.get(i);
+        Assert.assertEquals(fileFullPath, header.getAttribute(HeaderAttributeConstants.FILE));
+        String fileName = fileFullPath.substring(fileFullPath.lastIndexOf("/") + 1);
+        Assert.assertEquals(fileName, header.getAttribute(HeaderAttributeConstants.FILE_NAME));
+        Assert.assertNotNull(header.getAttribute(RemoteDownloadSource.REMOTE_URI));
+        offset = op.getNewOffset();
+      }
+    } finally {
+      runner.runDestroy();
+    }
   }
 
   @Test
