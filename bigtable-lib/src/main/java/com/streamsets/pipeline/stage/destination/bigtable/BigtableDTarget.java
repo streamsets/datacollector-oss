@@ -30,7 +30,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 @GenerateResourceBundle
 @StageDef(
     version = 1,
-    label = "Google Cloud Bigtable",
+    label = "Google Bigtable",
     description = "Writes data to Google Cloud Bigtable",
     icon = "bigtable.png",
     privateClassLoader = true,
