@@ -33,7 +33,7 @@ public enum Errors implements ErrorCode {
   BIGTABLE_08("Incorrect datatype '{}' for time stamp.  Must be long."),
   BIGTABLE_09("No field names or invalid field name specified for row key '{}'"),
   BIGTABLE_10("Row key field '{}' was not found in record"),
-  BIGTABLE_11("Single column row key selected - but no field name is specified."),
+  BIGTABLE_11("Single column row key selected - invalid field path '{}' specified."),
   BIGTABLE_12("Cannot convert type: '{}' to '{}'"),
   BIGTABLE_13("Conversion not defined for '{}'"),
   BIGTABLE_14("Timestamp field does not exist: '{}'"),
@@ -42,7 +42,7 @@ public enum Errors implements ErrorCode {
   BIGTABLE_18("Create table '{}' failed: '{}'"),
   BIGTABLE_19("Getting connection to table '{}' failed: '{}'"),
   BIGTABLE_20("Failure inserting into table: '{}'"),
-  BIGTABLE_21("Invalid data type conversion from '{}' to '{}' - '{}'"),
+  BIGTABLE_21("Invalid data type conversion from '{}' to '{}'"),
   BIGTABLE_22("Table '{}' does not exist."),
   ;
 

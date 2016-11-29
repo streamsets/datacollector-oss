@@ -253,7 +253,7 @@ public class BigtableTarget extends BaseTarget {
     } else {
       //single column row key.
       if (conf.singleColumnRowKey == null) {
-        issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(), CONFIG, Errors.BIGTABLE_11));
+        issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(), CONFIG, Errors.BIGTABLE_11, ""));
       }
     }
   }
@@ -360,6 +360,11 @@ public class BigtableTarget extends BaseTarget {
     // simple case - single field row key.
     if (!conf.createCompositeRowKey) {
       Field f = rec.get(conf.singleColumnRowKey);
+      if(f == null) {
+        errorRecordHandler.onError(new OnRecordErrorException(rec, Errors.BIGTABLE_11, conf.singleColumnRowKey));
+        return new byte [0];
+      }
+
       if (f.getType() == Field.Type.STRING) {
         return f.getValueAsString().getBytes();
       } else {
@@ -379,6 +384,11 @@ public class BigtableTarget extends BaseTarget {
       rowKeySize = 0;
       for (BigtableRowKeyMapping component : conf.rowKeyColumnMapping) {
         Field field = rec.get(component.rowKeyComponent);
+        if(field == null) {
+          errorRecordHandler.onError(new OnRecordErrorException(rec, Errors.BIGTABLE_10, component.rowKeyComponent));
+          return new byte [0];
+        }
+
         if (field.getType() == Field.Type.STRING) {
           rowKeySize += component.columnWidth;
         } else {
@@ -393,8 +403,8 @@ public class BigtableTarget extends BaseTarget {
     for (BigtableRowKeyMapping component : conf.rowKeyColumnMapping) {
       Field field = rec.get(component.rowKeyComponent);
       if (field == null || "".equals(field.getValueAsString())) {
-        errorRecordHandler.onError(new OnRecordErrorException(Errors.BIGTABLE_10, component.rowKeyComponent));
-        return new byte [0];   //probably better than returning null
+        errorRecordHandler.onError(new OnRecordErrorException(rec, Errors.BIGTABLE_10, component.rowKeyComponent));
+        return new byte [0];
 
       } else {
         byte[] ba;
@@ -425,7 +435,8 @@ public class BigtableTarget extends BaseTarget {
       }
 
     } catch (Exception ex) {
-      throw new StageException(Errors.BIGTABLE_21, field.getType(), map.storageType, ex.toString());
+      LOG.error(Errors.BIGTABLE_21.getMessage(), field.getType(), map.storageType, ex);
+      throw new StageException(Errors.BIGTABLE_21, field.getType(), map.storageType, ex);
     }
   }
 
@@ -461,7 +472,8 @@ public class BigtableTarget extends BaseTarget {
         try {
           timeStamp = rec.get(conf.timeStampField).getValueAsLong();
         } catch (NullPointerException | IllegalArgumentException ex) {
-          errorRecordHandler.onError(new OnRecordErrorException(Errors.BIGTABLE_14, conf.timeStampField));
+          errorRecordHandler.onError(new OnRecordErrorException(rec, Errors.BIGTABLE_14, conf.timeStampField, ex));
+          continue;  // next record, please.
         }
       }
 
@@ -480,7 +492,7 @@ public class BigtableTarget extends BaseTarget {
 
         } else {
           if(!conf.ignoreMissingFields) {
-            errorRecordHandler.onError(new OnRecordErrorException(Errors.BIGTABLE_10, f.source));
+            errorRecordHandler.onError(new OnRecordErrorException(rec, Errors.BIGTABLE_10, f.source));
           }
         }
       }
