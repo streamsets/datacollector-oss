@@ -310,9 +310,9 @@
       </row>
       <row id="Origin-FilePatternCompressed">
        <entry>File Name Pattern within Compressed Directory</entry>
-       <entry>Regular expression that describes the pattern of the file names to process within the
-        compressed directory. You can use UNIX-style wildcards, such as an asterisk or question
-        mark. For example, *.tar.<p>Default is *, which processes all files.</p></entry>
+       <entry>File name pattern that represents the files to process within the compressed
+        directory. You can use UNIX-style wildcards, such as an asterisk or question mark. For
+        example, *.json.<p>Default is *, which processes all files.</p></entry>
       </row>
       <row id="S3DataFormat">
        <entry>Data Format <xref href="../Origins/AmazonS3-DataFormat.dita">

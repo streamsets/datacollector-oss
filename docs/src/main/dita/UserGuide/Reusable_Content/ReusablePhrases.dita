@@ -269,7 +269,7 @@
                   <dl>
                         <dlentry id="OriginDF-AVROfiles">
                               <dt>Avro</dt>
-                              <dd>Generates a record for every record. </dd>
+                              <dd>Generates a record for every Avro record.</dd>
                               <dd>You can use one of the following methods to specify the location
                                     of the Avro schema definition:<ul id="ul_ykg_g5z_kx">
                                           <li><uicontrol>Message/Data Includes Schema</uicontrol> -
@@ -297,13 +297,13 @@
             </p>
             <p>
                   <draft-comment author="Loretta">AVRO-HadoopFS - used by Hadoop FS origin - Not
-                        adding the avro-compression-codec </draft-comment>
+                        adding the non-avro-compression-codec  compression info</draft-comment>
             </p>
             <p>
                   <dl>
                         <dlentry id="AVRO-HadoopFS">
                               <dt>Avro</dt>
-                              <dd>Generates a record for every record. </dd>
+                              <dd>Generates a record for every Avro record. </dd>
                               <dd>You can use one of the following methods to specify the location
                                     of the Avro schema definition:<ul id="ul_v5j_gvz_kx">
                                           <li><uicontrol>Message/Data Includes Schema</uicontrol> -
