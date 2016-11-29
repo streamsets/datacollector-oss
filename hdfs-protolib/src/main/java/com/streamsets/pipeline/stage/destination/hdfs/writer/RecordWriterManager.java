@@ -35,7 +35,6 @@ import com.streamsets.pipeline.stage.destination.hdfs.Errors;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsFileType;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsTarget;
 import com.streamsets.pipeline.stage.destination.hdfs.IdleClosedException;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
@@ -81,7 +80,7 @@ public class RecordWriterManager {
   private final boolean rollIfHeader;
   private final String rollHeaderName;
   private final FsHelper fsHelper;
-  private ConcurrentLinkedQueue<Path> closedPaths;
+  private final ConcurrentLinkedQueue<Path> closedPaths;
 
   public RecordWriterManager(
       FileSystem fs,
@@ -125,9 +124,9 @@ public class RecordWriterManager {
     this.context = context;
     this.rollIfHeader = rollIfHeader;
     this.rollHeaderName = rollHeaderName;
+    closedPaths = new ConcurrentLinkedQueue<>();
     pathResolver = new PathResolver(context, config, dirPathTemplate, timeZone);
     fsHelper = getFsHelper(context, fileNameEL, wholeFileAlreadyExistsAction, permissionEL);
-    this.closedPaths = new ConcurrentLinkedQueue<>();
   }
 
   public boolean validateDirTemplate(
@@ -196,12 +195,7 @@ public class RecordWriterManager {
    * This method should be called every time we finish writing into a file and consider it "done".
    */
   Path renameToFinalName(FileSystem fs, Path tempPath) throws IOException, StageException {
-    Path finalPath = fsHelper.renameAndGetPath(fs, tempPath);
-
-    // Store closed path so that we can generate event for it later
-    closedPaths.add(finalPath);
-
-    return finalPath;
+    return fsHelper.renameAndGetPath(fs, tempPath);
   }
 
   private void produceCloseFileEvent(FileSystem fs, Path finalPath) throws IOException {
@@ -423,7 +417,7 @@ public class RecordWriterManager {
       );
     } else {
       //Other Data Formats
-      return new DefaultFsHelper(context, uniquePrefix, this);
+      return new DefaultFsHelper(context, uniquePrefix, closedPaths, this);
     }
   }
 

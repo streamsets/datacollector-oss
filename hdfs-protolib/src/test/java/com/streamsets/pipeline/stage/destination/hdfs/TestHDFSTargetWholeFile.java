@@ -422,25 +422,25 @@ public class TestHDFSTargetWholeFile {
       runner.runWrite(Collections.singletonList(record));
       Assert.assertEquals(0, runner.getErrorRecords().size());
 
-      //One whole file event, one file close event.
-      Assert.assertEquals(2, runner.getEventRecords().size());
+      //One whole file event
+      Assert.assertEquals(1, runner.getEventRecords().size());
 
       Iterator<Record> eventRecordIterator = runner.getEventRecords().iterator();
+
       while (eventRecordIterator.hasNext()) {
         Record eventRecord = eventRecordIterator.next();
 
         String type = eventRecord.getHeader().getAttribute("sdc.event.type");
+        Assert.assertEquals(FileRefUtil.WHOLE_FILE_WRITE_FINISH_EVENT, type);
 
-        if (type.equals(FileRefUtil.WHOLE_FILE_WRITE_FINISH_EVENT)) {
-          Assert.assertTrue(eventRecord.has(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO_PATH));
-          Assert.assertTrue(eventRecord.has(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH));
+        Assert.assertTrue(eventRecord.has(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO_PATH));
+        Assert.assertTrue(eventRecord.has(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH));
 
-          Assert.assertEquals(record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getValueAsMap().keySet(), eventRecord.get(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO_PATH).getValueAsMap().keySet());
+        Assert.assertEquals(record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getValueAsMap().keySet(), eventRecord.get(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO_PATH).getValueAsMap().keySet());
 
-          Assert.assertTrue(eventRecord.has(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH + "/path"));
+        Assert.assertTrue(eventRecord.has(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH + "/path"));
 
-          Assert.assertEquals(getTestDir()+ "/sdc-"+ filePath.getFileName(), eventRecord.get(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH + "/path").getValueAsString());
-        }
+        Assert.assertEquals(getTestDir()+ "/sdc-"+ filePath.getFileName(), eventRecord.get(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH + "/path").getValueAsString());
       }
 
     } finally {

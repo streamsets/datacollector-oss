@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Date;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -50,16 +51,19 @@ final class DefaultFsHelper implements FsHelper {
   private final Stage.Context context;
   private final String uniquePrefix;
   private final RecordWriterManager recordWriterManager;
+  private final ConcurrentLinkedQueue<Path> closedPaths;
 
 
   DefaultFsHelper(Stage.Context context,
                   String uniquePrefix,
+                  ConcurrentLinkedQueue<Path> closedPaths,
                   RecordWriterManager recordWriterManager
   ) {
     this.recordWriterManager = recordWriterManager;
     this.context = context;
     this.uniquePrefix = uniquePrefix;
     tempFilePath = new Path(recordWriterManager.getTempFileName());
+    this.closedPaths = closedPaths;
     dirPathCache = CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.MINUTES).build(
         new CacheLoader<String, Path>() {
           @Override
@@ -112,6 +116,8 @@ final class DefaultFsHelper implements FsHelper {
     if (!fs.rename(tempPath, finalPath)) {
       throw new IOException(Utils.format("Could not rename '{}' to '{}'", tempPath, finalPath));
     }
+    // Store closed path so that we can generate event for it later
+    closedPaths.add(finalPath);
     return finalPath;
   }
 
