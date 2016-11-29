@@ -19,10 +19,7 @@
  */
 package com.streamsets.pipeline.stage.destination.hdfs.metadataexecutor;
 
-import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Batch;
-import com.streamsets.pipeline.api.EventRecord;
-import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseExecutor;
@@ -30,7 +27,6 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
@@ -68,19 +64,42 @@ public class HdfsMetadataExecutor extends BaseExecutor {
     List<ConfigIssue> issues = super.init();
     hdfsConnection.init(getContext(), "connection", issues);
     actions.init(getContext(), "actions", issues);
+
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
-    this.evals = new HashMap<>();
+
+    evals = new HashMap<>();
+    validateEL("filePath", actions.filePath, issues);
+    if(actions.shouldMoveFile) {
+      validateEL("newLocation", actions.newLocation, issues);
+    }
+    if(actions.shouldRename) {
+      validateEL("newName", actions.newName, issues);
+    }
+    if(actions.shouldChangeOwnership) {
+      validateEL("newOwner", actions.newOwner, issues);
+      validateEL("newGroup", actions.newGroup, issues);
+    }
+    if(actions.shouldSetPermissions) {
+      validateEL("newPermissions", actions.newPermissions, issues);
+    }
+    if(actions.shouldSetAcls) {
+      validateEL("newAcls", actions.newAcls, issues);
+    }
+
     return issues;
   }
 
-  private String evaluate(ELVars variables, String name, String expression) throws ELEvalException {
-    ELEval eval = evals.get(name);
-    if(eval == null) {
-      eval = getContext().createELEval(name);
-      evals.put(name, eval);
+  private void validateEL(String configName, String el, List<ConfigIssue> issues) {
+     try {
+      evals.put(configName, getContext().createELEval(configName));
+      getContext().parseEL(el);
+    } catch (ELEvalException e) {
+      issues.add(getContext().createConfigIssue(Groups.TASKS.name(), configName, HdfsMetadataErrors.HDFS_METADATA_007, e.getMessage()));
     }
+  }
 
-    return eval.eval(variables, expression, String.class);
+  private String evaluate(ELVars variables, String name, String expression) throws ELEvalException {
+    return evals.get(name).eval(variables, expression, String.class);
   }
 
   @Override

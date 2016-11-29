@@ -24,6 +24,7 @@ import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.ExecutorRunner;
 import org.apache.commons.io.IOUtils;
@@ -57,6 +58,10 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class HdfsMetadataExecutorIT {
 
@@ -158,7 +163,7 @@ public class HdfsMetadataExecutorIT {
     Assert.assertEquals(1, statuses.length);
 
     FileStatus status = statuses[0];
-    Assert.assertNotNull(status);
+    assertNotNull(status);
     Assert.assertEquals(user, status.getOwner());
     Assert.assertEquals(group, status.getGroup());
   }
@@ -174,7 +179,7 @@ public class HdfsMetadataExecutorIT {
     Assert.assertEquals(1, statuses.length);
 
     FileStatus status = statuses[0];
-    Assert.assertNotNull(status);
+    assertNotNull(status);
     Assert.assertEquals(new FsPermission(perms), status.getPermission());
   }
 
@@ -182,21 +187,21 @@ public class HdfsMetadataExecutorIT {
    * Assert proper event for the changed file.
    */
   private void assertEvent(List<Record> events, Path expectedPath) {
-    Assert.assertNotNull(events);
+    assertNotNull(events);
     Assert.assertEquals(1, events.size());
 
     Record event = events.get(0);
-    Assert.assertNotNull(event);
-    Assert.assertNotNull(event.get());
+    assertNotNull(event);
+    assertNotNull(event.get());
     Assert.assertEquals(Field.Type.MAP, event.get().getType());
 
     Field path = event.get("/filepath");
-    Assert.assertNotNull(path);
+    assertNotNull(path);
     Assert.assertEquals(Field.Type.STRING, path.getType());
     Assert.assertEquals(expectedPath.toString(), path.getValueAsString());
 
     Field name = event.get("/filename");
-    Assert.assertNotNull(name);
+    assertNotNull(name);
     Assert.assertEquals(Field.Type.STRING, name.getType());
     Assert.assertEquals(expectedPath.getName(), name.getValueAsString());
   }
@@ -454,13 +459,11 @@ public class HdfsMetadataExecutorIT {
     ExecutorRunner runner = new ExecutorRunner.Builder(HdfsMetadataDExecutor.class, executor)
       .setOnRecordError(OnRecordError.TO_ERROR)
       .build();
-    runner.runInit();
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
 
-    runner.runWrite(ImmutableList.of(getTestRecord()));
-
-    Assert.assertEquals(1, runner.getErrorRecords().size());
-    String errorMessage = runner.getErrorRecords().get(0).getHeader().getErrorMessage();
-    Assert.assertTrue("Missing expected substring in error message: " + errorMessage, errorMessage.contains("Error evaluating expression"));
+    assertNotNull(issues);
+    assertEquals(1, issues.size());
+    assertTrue(issues.get(0).toString().contains("Invalid EL expression:"));
   }
 
 }
