@@ -48,6 +48,25 @@
                             </thead>
                             <tbody>
                                 <row>
+                                    <entry>Timezone</entry>
+                                    <entry>Display time zone. Used to display dates and times in the
+                                            <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> console, such as datetime data in data preview or
+                                        snapshot data. <p>You can choose between the following
+                                                options:<ul id="ul_oxv_nq4_cy">
+                                                <li>UTC</li>
+                                                <li>The browser time zone, which usually uses the
+                                                  operating system time zone.</li>
+                                                <li>When the <ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                                  /> runs on a different machine, the operating
+                                                  system time zone of the <ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                                  /> machine. </li>
+                                            </ul></p></entry>
+                                </row>
+                                <row>
                                     <entry>Display Density</entry>
                                     <entry>Defines the density of the information that displays in
                                         the panel.</entry>
