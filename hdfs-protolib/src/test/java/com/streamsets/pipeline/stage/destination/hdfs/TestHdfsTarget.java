@@ -31,6 +31,7 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.destination.hdfs.util.HdfsTargetUtil;
@@ -56,6 +57,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -125,6 +127,18 @@ public class TestHdfsTarget {
     runner.runDestroy();
 
     Assert.assertEquals(4, runner.getEventRecords().size());
+    Iterator<Record> eventRecordIterator = runner.getEventRecords().iterator();
+
+    while (eventRecordIterator.hasNext()) {
+      Record eventRecord = eventRecordIterator.next();
+
+      String type = eventRecord.getHeader().getAttribute("sdc.event.type");
+      Assert.assertEquals("file-closed", type);
+
+      Assert.assertTrue(eventRecord.has("/filepath"));
+      Assert.assertTrue(eventRecord.has("/filename"));
+      Assert.assertTrue(eventRecord.has("/length"));
+    }
   }
 
   @Test
