@@ -38,11 +38,11 @@ public class TestRandomDataGeneratorUpgrader {
       "com_streamsets_pipeline_stage_devtest_RandomDataGeneratorSource",
       "com_streamsets_pipeline_stage_devtest_RandomDataGeneratorSource1432763273869",
       1,
-      3,
+      5,
       configs
     );
 
-    Assert.assertEquals(2, configs.size());
+    Assert.assertEquals(3, configs.size());
     Assert.assertEquals("rootFieldType", configs.get(0).getName());
     Assert.assertEquals("MAP", configs.get(0).getValue());
     Assert.assertEquals("headerAttributes", configs.get(1).getName());

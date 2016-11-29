@@ -36,10 +36,8 @@ public class RandomDataGeneratorSourceUpgrader implements StageUpgrader {
         upgradeV1ToV2(configs);
       case 2:
         upgradeV2ToV3(configs);
-        break;
       case 3:
         upgradeV3ToV4(configs);
-        break;
       case 4:
         upgradeV4ToV5(configs);
         break;
