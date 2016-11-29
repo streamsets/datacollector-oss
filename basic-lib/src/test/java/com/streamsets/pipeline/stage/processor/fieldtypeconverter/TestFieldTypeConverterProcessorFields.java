@@ -979,6 +979,51 @@ public class TestFieldTypeConverterProcessorFields {
   }
 
   @Test
+  public void testLongToDateTimeString() throws Exception {
+    FieldTypeConverterConfig dtConfig =
+        new FieldTypeConverterConfig();
+    dtConfig.fields = ImmutableList.of("/dateString");
+    dtConfig.targetType = Field.Type.STRING;
+    dtConfig.dataLocale = "en";
+    dtConfig.treatInputFieldAsDate = true;
+    dtConfig.dateFormat = DateFormat.OTHER;
+    dtConfig.otherDateFormat = "yyyy-MM-dd";
+
+    FieldTypeConverterConfig stringConfig =
+        new FieldTypeConverterConfig();
+    stringConfig.fields = ImmutableList.of("/LongString");
+    stringConfig.targetType = Field.Type.STRING;
+    stringConfig.treatInputFieldAsDate = false;
+    stringConfig.dataLocale = "en";
+    stringConfig.dateFormat = DateFormat.OTHER;
+    stringConfig.otherDateFormat = "yyyy-MM-dd HH:mm:ss";
+
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
+        .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(stringConfig, dtConfig))
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("LongString", Field.create(1431763314761l));
+      map.put("dateString", Field.create(1431763314761l));
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Map<String, Field> result = field.getValueAsMap();
+      Assert.assertEquals("1431763314761", result.get("LongString").getValueAsString());
+      Assert.assertEquals("2015-05-16", result.get("dateString").getValueAsString());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
   public void testDateTimeToLong() throws Exception {
     FieldTypeConverterConfig dtConfig =
         new FieldTypeConverterConfig();

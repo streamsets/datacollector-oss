@@ -50,6 +50,18 @@ public class BaseConverterConfig {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Treat Input Field as Date",
+      description = "Select to convert input Long to DateTime before converting to a String",
+      displayPosition = 20,
+      dependsOn = "targetType",
+      triggeredByValue = "STRING"
+  )
+  public boolean treatInputFieldAsDate;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "en,US",
       label = "Data Locale",

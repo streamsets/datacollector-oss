@@ -141,6 +141,21 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
       }
     }
 
+    if (converterConfig.targetType.isOneOf(Field.Type.STRING)
+        && converterConfig.treatInputFieldAsDate && field.getType() == Field.Type.LONG) {
+      if (field.getValue() == null) {
+        LOG.warn(
+            "Field {} in record has null value. Converting the type of field to '{}' with null value.",
+            matchingField, converterConfig.targetType);
+        return Field.create(converterConfig.targetType, null);
+      } else {
+        String dateMask = converterConfig.getDateMask();
+        java.text.DateFormat dateFormat = new SimpleDateFormat(dateMask, Locale.ENGLISH);
+        return Field.create(converterConfig.targetType,
+            dateFormat.format(field.getValueAsDatetime()));
+      }
+    }
+
     if (field.getType().isOneOf(Field.Type.DATETIME, Field.Type.DATE, Field.Type.TIME) && converterConfig.targetType.isOneOf(Field.Type.LONG, Field.Type.STRING)) {
       if (field.getValue() == null) {
         LOG.warn("Field {} in record has null value. Converting the type of field to '{}' with null value.", matchingField, converterConfig.targetType);
