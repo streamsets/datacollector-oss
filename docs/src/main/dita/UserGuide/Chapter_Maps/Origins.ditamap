@@ -36,6 +36,9 @@
   <topicref href="../Origins/Directory.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/Directory-ReadOrder.dita"/>
+   <topicref href="../Origins/Directory-Subdirectories.dita">
+    <topicref href="../Origins/Directory-SubdirArchiving.dita"/>
+   </topicref>
    <topicref href="../Origins/Directory-FirstFile.dita"/>
    <topicref href="../Origins/Directory-LateDir.dita"/>
    <topicref href="../Origins/Directory-EventGeneration.dita">

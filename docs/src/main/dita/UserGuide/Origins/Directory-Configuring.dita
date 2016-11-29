@@ -87,9 +87,9 @@
                                 </row>
                                 <row>
                                     <entry>File Name Pattern</entry>
-                                    <entry>Regular expression that describes the pattern of the file
-                                        names to process.<p>You can use UNIX-style wildcards, such
-                                            as * or ?. For example, *.log.</p></entry>
+                                    <entry>Pattern of the file names to process.<p>You can use
+                                            UNIX-style wildcards in the file name pattern, such as *
+                                            or ?. For example, *.log.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Read Order <xref href="Directory-ReadOrder.dita">
@@ -107,6 +107,20 @@
                                                 in lexicographically ascending order based on file
                                                 name.</li>
                                         </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Process Subdirectories <xref
+                                            href="Directory-Subdirectories.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_n4r_2l3_cy"
+                                        /></xref></entry>
+                                    <entry>Reads files in any subdirectory of the specified file
+                                        directory. Reads files in ascending order based on the
+                                        last-modified timestamp, regardless of the location within
+                                        the file directory. <p>Uses the subdirectory for any
+                                            configured post-processing directories.</p><p>Available
+                                            only when using the Last Modified Timestamp read order.
+                                        </p></entry>
                                 </row>
                                 <row>
                                     <entry>Batch Size (recs)</entry>
