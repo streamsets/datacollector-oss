@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.processor.spark;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 
 import com.streamsets.pipeline.api.Batch;
@@ -137,9 +138,16 @@ public class SparkProcessor extends SingleLaneProcessor {
     } catch (Exception ex) {
       LOG.error("Error while creating transformer", ex);
       issues.add(
-          getContext().createConfigIssue(SPARK.name(), TRANSFORMER_CLASS, SPARK_02, configBean.transformerClass));
+          getContext().createConfigIssue(SPARK.name(), TRANSFORMER_CLASS, SPARK_02, configBean.transformerClass, getExceptionString(ex)));
     }
     return null;
+  }
+
+  @VisibleForTesting
+  static String getExceptionString(Exception ex) {
+    return ex.getMessage() == null ?
+        ex.getClass().getCanonicalName() :
+        ex.getClass().getCanonicalName() + " : " + ex.getMessage();
   }
 
   @SuppressWarnings("unchecked")
@@ -166,7 +174,8 @@ public class SparkProcessor extends SingleLaneProcessor {
         transformer.init(jsc,
             configBean.preprocessMethodArgs == null ? new ArrayList<String>() : configBean.preprocessMethodArgs);
       } catch (Exception ex) {
-        issues.add(getContext().createConfigIssue(SPARK.name(), TRANSFORMER_CLASS, SPARK_05, configBean.transformerClass));
+        LOG.error("Error while initializing transformer class", ex);
+        issues.add(getContext().createConfigIssue(SPARK.name(), TRANSFORMER_CLASS, SPARK_05, configBean.transformerClass, getExceptionString(ex)));
       }
       // Even if init failed, we should call destroy to ensure that the transformer cleans up after itself.
       transformerInited = true;
