@@ -40,6 +40,7 @@ import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.common.FakeS3;
+import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import com.streamsets.pipeline.stage.common.TestUtil;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
 import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
@@ -600,7 +601,9 @@ public class TestAmazonS3Source {
         }
         Assert.assertEquals(objectSummary.getKey(), header.getAttribute("Name"));
         Assert.assertTrue(record.has(FileRefUtil.FILE_INFO_FIELD_PATH + "/size"));
+        Assert.assertTrue(record.has(FileRefUtil.FILE_INFO_FIELD_PATH + "/filename"));
         Assert.assertEquals(objectSummary.getSize(), record.get(FileRefUtil.FILE_INFO_FIELD_PATH + "/size").getValueAsLong());
+        Assert.assertEquals(objectSummary.getKey(), record.get(FileRefUtil.FILE_INFO_FIELD_PATH + "/" + HeaderAttributeConstants.FILE_NAME).getValueAsString());
       }
     } finally {
       runner.runDestroy();
