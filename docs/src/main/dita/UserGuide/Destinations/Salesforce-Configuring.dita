@@ -68,14 +68,16 @@
                                 </row>
                                 <row>
                                     <entry>SObject Type</entry>
-                                    <entry>Salesforce object to write to.  <p>Enter the name of an
+                                    <entry>Salesforce object to write to. <p>Enter the name of an
                                             object, such as Account. Or define an expression that
-                                            evaluates to the object name.</p><p>For example, you can
-                                            use an Expression Evaluator to add a header attribute to
-                                            the record named "sobjectType" that defines the
-                                            Salesforce object to write to. Then you can enter the
-                                            following expression for this
-                                            property:<codeblock>${record:attribute('sobjectType')}</codeblock></p></entry>
+                                            evaluates to the object name.</p><p>For example, if the
+                                            pipeline reads from the Salesforce origin, the origin
+                                            generates a Salesforce record header attribute named
+                                                <codeph>salesforce.sobjectType</codeph>. This header
+                                            attribute provides the source object for the record. To
+                                            write to the same Salesforce object, enter the following
+                                            expression for this
+                                            property:<codeblock>${record:attribute('spectroscopically')}</codeblock></p></entry>
                                 </row>
                                 <row>
                                     <entry>Field Mapping</entry>

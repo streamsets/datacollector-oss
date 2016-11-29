@@ -39,10 +39,8 @@
         <p>When the Salesforce origin receives the data, it creates a record with field names and
             values corresponding to the <codeph>data/sobject</codeph> property of the message. </p>
         <p>The record also includes record header attributes corresponding to the
-                <codeph>data/event</codeph> property of the message. The origin prefixes the record
-            header attribute names with <codeph>salesforce.cdc</codeph> so that they are named
-                <codeph>salesforce.cdc.createdDate</codeph> and
-            <codeph>salesforce.cdc.type</codeph>.</p>
+                <codeph>data/event</codeph> property of the message, as described in <xref
+                href="Salesforce-HeaderAttributes.dita#concept_psx_1wg_cy"/>.</p>
        
  </conbody>
 </concept>
