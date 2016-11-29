@@ -123,7 +123,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "File Name Pattern within Compressed Directory",
-      description = "A glob or regular expression that defines the pattern of the file names within the compressed " +
+      description = "A glob pattern that defines the pattern of the file names within the compressed " +
           "directory.",
       defaultValue = "*",
       displayPosition = 3,
