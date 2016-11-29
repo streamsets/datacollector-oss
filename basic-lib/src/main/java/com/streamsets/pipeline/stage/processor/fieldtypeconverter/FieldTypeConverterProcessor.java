@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.DecimalScaleRoundingStrategy;
 import com.streamsets.pipeline.lib.util.FieldRegexUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -128,12 +129,13 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
           if (converterConfig.targetType.isOneOf(Field.Type.DATE, Field.Type.DATETIME, Field.Type.TIME)) {
             dateMask = converterConfig.getDateMask();
           }
-          return convertStringToTargetType(field, converterConfig.targetType, converterConfig.getLocale(), dateMask);
+          return convertStringToTargetType(field, converterConfig.targetType, converterConfig.getLocale(), dateMask, converterConfig.scale, converterConfig.decimalScaleRoundingStrategy);
         } catch (ParseException | IllegalArgumentException e) {
-          throw new OnRecordErrorException(Errors.CONVERTER_02,
+          throw new OnRecordErrorException(Errors.CONVERTER_00,
               matchingField,
               field.getValueAsString(),
-              converterConfig.targetType.name()
+              converterConfig.targetType.name(),
+              e
           );
         }
       }
@@ -160,13 +162,23 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
       }
     }
 
-    if (converterConfig.targetType == Field.Type.DECIMAL && field.getType().isOneOf(Field.Type.BYTE, Field.Type.SHORT, Field.Type.INTEGER, Field.Type.FLOAT, Field.Type.LONG, Field.Type.DOUBLE, Field.Type.DECIMAL)) {
+    if (converterConfig.targetType == Field.Type.DECIMAL &&
+        field.getType().isOneOf(
+            Field.Type.BYTE,
+            Field.Type.SHORT,
+            Field.Type.INTEGER,
+            Field.Type.FLOAT,
+            Field.Type.LONG,
+            Field.Type.DOUBLE,
+            Field.Type.DECIMAL
+        )) {
       try {
         Field changedField = Field.create(converterConfig.targetType, field.getValue());
-        BigDecimal newValue = changedField.getValueAsDecimal();
-        if (converterConfig.scale != -1) {
-         newValue = newValue.setScale(converterConfig.scale, converterConfig.decimalScaleRoundingStrategy.getRoundingStrategy());
-        }
+        BigDecimal newValue = adjustScaleIfNeededForDecimalConversion(
+            changedField.getValueAsDecimal(),
+            converterConfig.scale,
+            converterConfig.decimalScaleRoundingStrategy
+        );
         return Field.create(newValue);
       } catch (Exception e) {
         throw new OnRecordErrorException(Errors.CONVERTER_00, matchingField, field.getType(), field.getValue(), converterConfig.targetType, e);
@@ -187,7 +199,18 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
     }
   }
 
-  private Field convertStringToTargetType(Field field, Field.Type targetType, Locale dataLocale, String dateMask)
+  private BigDecimal adjustScaleIfNeededForDecimalConversion(BigDecimal value, int scale, DecimalScaleRoundingStrategy roundingStrategy) {
+    return (scale != -1)? value.setScale(scale, roundingStrategy.getRoundingStrategy()) : value;
+  }
+
+  private Field convertStringToTargetType(
+      Field field,
+      Field.Type targetType,
+      Locale dataLocale,
+      String dateMask,
+      int scale,
+      DecimalScaleRoundingStrategy decimalScaleRoundingStrategy
+  )
     throws ParseException {
     String stringValue = field.getValueAsString();
     switch(targetType) {
@@ -210,7 +233,8 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
         return Field.createTime(timeFormat.parse(stringValue));
       case DECIMAL:
         Number decimal = NumberFormat.getInstance(dataLocale).parse(stringValue);
-        return Field.create(new BigDecimal(decimal.toString()));
+        BigDecimal bigDecimal = adjustScaleIfNeededForDecimalConversion(new BigDecimal(decimal.toString()), scale, decimalScaleRoundingStrategy);
+        return Field.create(bigDecimal);
       case DOUBLE:
         return Field.create(NumberFormat.getInstance(dataLocale).parse(stringValue).doubleValue());
       case FLOAT:
