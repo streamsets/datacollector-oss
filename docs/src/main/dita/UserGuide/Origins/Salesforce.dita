@@ -27,5 +27,7 @@
             <li>Subscribe to the Force.com Streaming API to receive notifications for changes to
                 Salesforce data.</li>
         </ul>
+        <p>The origin creates Salesforce header attributes to provide information about the source
+            data in record headers.</p>
  </conbody>
 </concept>
