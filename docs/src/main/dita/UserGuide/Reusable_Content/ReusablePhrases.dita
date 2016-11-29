@@ -60,7 +60,7 @@
             </p>
             <draft-comment author="Loretta">Core install includes all processors except... </draft-comment>
             <p><ph id="CoreNotProcessor">except the Groovy Evaluator, Jython Evaluator, HBase
-                        Lookup, and Redis Lookup.</ph></p>
+                        Lookup, Redis Lookup, and Spark Evaluator.</ph></p>
            
             <p>
                   <draft-comment author="Loretta">List of destinations that are part of the Core

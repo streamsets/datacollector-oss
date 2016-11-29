@@ -50,6 +50,7 @@
         <li>Log Parser - Parses log data in a field based on the specified log format.</li>
         <li>Record Deduplicator - Removes duplicate records.</li>
         <li>Redis Lookup - Performs key-value lookups in Redis.</li>
+        <li>Spark Evaluator - Processes data based on a custom Spark application.</li>
         <li>Static Lookup - Performs key-value lookups in local memory.</li>
         <li>Stream Selector - Routes data to different streams based on conditions.</li>
         <li>Value Replacer - Replaces existing nulls or specified values with constants or nulls. </li>

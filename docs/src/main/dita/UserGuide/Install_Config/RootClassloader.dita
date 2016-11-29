@@ -17,14 +17,13 @@
  <title>Root Classloader</title>
     <shortdesc>You can edit the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        environment configuration file to configure the path to jar files to be added to the <ph
+        environment configuration file to configure the path to JAR files to be added to the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> root
         classloader.</shortdesc>
  <conbody>
-     <p>The SDC_ROOT_CLASSPATH environment variable defines the path to jar files
-            to be added to the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            root classloader. Use the variable for components that must be in the root classloader,
-            such as Snappy. Default is <codeph>$SDC_DIST/root-lib/'*'</codeph>.</p>
+     <p>The SDC_ROOT_CLASSPATH environment variable defines the path to JAR files to be added to the
+                <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+            /> root classloader. Use the variable for components that must be in the root
+            classloader, such as Snappy. Default is <codeph>$SDC_DIST/root-lib/'*'</codeph>.</p>
  </conbody>
 </concept>
