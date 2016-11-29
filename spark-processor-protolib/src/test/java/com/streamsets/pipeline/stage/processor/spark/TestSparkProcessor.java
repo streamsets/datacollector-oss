@@ -247,7 +247,7 @@ public class TestSparkProcessor {
       Assert.fail();
     } catch (StageException ex) {
       Assert.assertTrue(ex.getMessage().contains(SPARK_02.name()));
-      Assert.assertTrue(ex.getMessage().contains(Utils.format(SPARK_02.getMessage(), configBean.transformerClass)));
+      Assert.assertTrue(ex.getMessage().contains(Utils.format(SPARK_02.getMessage(), configBean.transformerClass, "java.lang.IllegalStateException")));
     }
   }
 
@@ -268,7 +268,7 @@ public class TestSparkProcessor {
       Assert.fail();
     } catch (StageException ex) {
       Assert.assertTrue(ex.getMessage().contains(SPARK_05.name()));
-      Assert.assertTrue(ex.getMessage().contains(Utils.format(SPARK_05.getMessage(), configBean.transformerClass)));
+      Assert.assertTrue(ex.getMessage().contains(Utils.format(SPARK_05.getMessage(), configBean.transformerClass, "java.lang.IllegalStateException : Error")));
     }
   }
 
@@ -305,5 +305,21 @@ public class TestSparkProcessor {
     Assert.assertEquals(MethodCallCountingTransformer.initCallCount, 1);
     Assert.assertEquals(MethodCallCountingTransformer.transformCallCount, 10);
     Assert.assertEquals(MethodCallCountingTransformer.destroyCallCount, 1);
+  }
+
+  @Test
+  public void testExceptionStrings() {
+
+    Assert.assertEquals("java.lang.RuntimeException : Shire",
+        SparkProcessor.getExceptionString(new RuntimeException("Shire")));
+
+    Assert.assertEquals("java.lang.RuntimeException : Baggins",
+        SparkProcessor.getExceptionString(new RuntimeException("Baggins")));
+
+    Assert.assertEquals("java.lang.NumberFormatException : Mordor",
+        SparkProcessor.getExceptionString(new NumberFormatException("Mordor")));
+
+    Assert.assertEquals("java.lang.IllegalStateException",
+        SparkProcessor.getExceptionString(new IllegalStateException()));
   }
 }

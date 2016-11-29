@@ -31,7 +31,7 @@ public class InitThrowingSparkTransformer extends SparkTransformer {
 
   @Override
   public void init(JavaSparkContext jsc, List<String> params) {
-    throw new IllegalStateException();
+    throw new IllegalStateException("Error");
   }
 
   @Override
