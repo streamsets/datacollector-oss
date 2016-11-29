@@ -53,7 +53,7 @@ public class JdbcTargetUpgrader extends JdbcBaseUpgrader{
 
   private void upgradeV4toV5(List<Config> configs) {
     // added new max parameters feature - set to default
-    configs.add(new Config("maxPrepStmtParameters", "-1"));
+    configs.add(new Config("maxPrepStmtParameters", -1));
   }
 
   @SuppressWarnings("unchecked")
