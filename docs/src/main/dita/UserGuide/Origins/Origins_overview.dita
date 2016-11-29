@@ -33,6 +33,7 @@
         <li>MapR FS - Reads files from MapR FS.</li>
         <li>MapR Streams Consumer - Reads messages from MapR Streams.</li>
         <li>MongoDB - Reads documents from MongoDB.</li>
+        <li>MySQL Binary Log - Reads MySQL binary logs to generate change data capture records. </li>
         <li>Omniture - Reads web usage reports from the Omniture reporting API.</li>
         <li>Oracle CDC Client - Reads LogMiner redo logs to generate change data capture
           records.</li>

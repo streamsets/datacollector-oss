@@ -152,6 +152,10 @@
    <topicref href="../Origins/MongoDB-EnableSSL.dita"/>
    <topicref href="../Origins/MongoDB-Configuring.dita"/>
   </topicref>
+  <topicref href="../Origins/MySQLBinaryLog.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/MySQLBinaryLog-Configuring.dita"/>
+  </topicref>
   <topicref href="../Origins/Omniture.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/Omniture-Configuring.dita"/>
