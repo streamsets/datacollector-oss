@@ -53,7 +53,10 @@
               <tr>
                 <th class="col-md-4">
                   <div class="pull-left">
-                    <span translate="global.form.sampleRecords">Sample Records</span>
+                    <span>
+                      <span translate="global.form.sampleRecords">Sample Records</span>
+                      (<a href="#" ng-click="downloadSamplingRecords($event)">{{samplingRecordsSizeInBytes | friendlyFileSize}}</a>)
+                    </span>
                     <i class="fa fa-refresh pointer icon-button"
                        ng-click="refreshSamplingRecords()"
                        tooltip-placement="right"

@@ -168,6 +168,12 @@ angular
       showRecordsLoading: false,
       samplingRecords: [],
 
+      downloadSamplingRecords: function($event) {
+        var data = JSON.stringify($scope.samplingRecords);
+        var uri = 'data:application/octet-stream;charset=utf-16le,' + encodeURI(data);
+        angular.element($event.target).attr('href', uri);
+      },
+
       refreshSamplingRecords: function() {
         updateSamplingRecords();
       },
@@ -200,6 +206,7 @@ angular
           $scope.showRecordsLoading = false;
           if(res && res.length) {
             $scope.samplingRecords = res;
+            $scope.samplingRecordsSizeInBytes = (new TextEncoder('utf-16le').encode(JSON.stringify(res))).length;
           } else {
             $scope.samplingRecords = [];
           }
@@ -213,4 +220,3 @@ angular
     updateSamplingRecords();
 
   });
-
