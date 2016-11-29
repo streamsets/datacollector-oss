@@ -1577,46 +1577,6 @@
     "outputLanes" : [ ],
     "eventLanes" : [ ]
   }, {
-    "instanceName" : "com_streamsets_pipeline_stage_destination_kudu_KuduDTarget_01",
-    "library" : "streamsets-datacollector-apache-kudu-0_7-lib",
-    "stageName" : "com_streamsets_pipeline_stage_destination_kudu_KuduDTarget",
-    "stageVersion" : "2",
-    "configuration" : [ {
-      "name" : "kuduMaster",
-      "value" : "1000"
-    }, {
-      "name" : "tableNameTemplate",
-      "value" : "${record:attribute('tableName')}"
-    }, {
-      "name" : "fieldMappingConfigs",
-      "value" : [ { } ]
-    }, {
-      "name" : "consistencyMode",
-      "value" : "CLIENT_PROPAGATED"
-    }, {
-      "name" : "operationTimeout",
-      "value" : 10000
-    }, {
-      "name" : "stageOnRecordError",
-      "value" : "TO_ERROR"
-    }, {
-      "name" : "stageRequiredFields",
-      "value" : [ ]
-    }, {
-      "name" : "stageRecordPreconditions",
-      "value" : [ ]
-    } ],
-    "uiInfo" : {
-      "description" : "",
-      "label" : "Kudu 1",
-      "xPos" : 599,
-      "yPos" : 318,
-      "stageType" : "TARGET"
-    },
-    "inputLanes" : [ "com_streamsets_pipeline_stage_origin_s3_AmazonS3DSource_01OutputLane14743013068480" ],
-    "outputLanes" : [ ],
-    "eventLanes" : [ ]
-  }, {
     "instanceName" : "com_streamsets_pipeline_stage_destination_localfilesystem_LocalFileSystemDTarget_01",
     "library" : "streamsets-datacollector-basic-lib",
     "stageName" : "com_streamsets_pipeline_stage_destination_localfilesystem_LocalFileSystemDTarget",
