@@ -37,6 +37,7 @@ import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.RecoverableDataParserException;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -276,6 +277,8 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
     metadata.put(OBJECT_KEY, s3ObjectSummary.getKey());
     metadata.put(OWNER, s3ObjectSummary.getOwner());
     metadata.put(SIZE, s3ObjectSummary.getSize());
+    metadata.put(HeaderAttributeConstants.FILE_NAME, s3ObjectSummary.getKey());
+
     if (metadata.containsKey(CONTENT_LENGTH)) {
       metadata.remove(CONTENT_LENGTH);
     }
