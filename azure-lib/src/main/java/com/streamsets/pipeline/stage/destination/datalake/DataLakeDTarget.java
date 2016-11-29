@@ -30,7 +30,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 
 @StageDef(
     version = 1,
-    label = "Data Lake Store",
+    label = "Azure Data Lake Store",
     description = "Writes data to Azure Data Lake Store",
     icon = "data-lake-store.png",
     execution = ExecutionMode.STANDALONE,
