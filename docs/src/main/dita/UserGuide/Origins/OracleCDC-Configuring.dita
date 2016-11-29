@@ -43,8 +43,8 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Database</entry>
-                                    <entry>Database to use.</entry>
+                                    <entry>Schema Name</entry>
+                                    <entry>Name of the schema to use.</entry>
                                 </row>
                                 <row>
                                     <entry>Tables</entry>
@@ -52,8 +52,8 @@
                                 </row>
                                 <row>
                                     <entry>Case-Sensitive Names</entry>
-                                    <entry>Enables case-sensitive database, table, and column names.
-                                        Use when the database, tables, or columns were created with
+                                    <entry>Enables case-sensitive schema, table, and column names.
+                                        Use when the schema, tables, or columns were created with
                                         quotation marks surrounding the names.<p>By default, the
                                             origin uses all caps for the names. </p></entry>
                                 </row>
@@ -137,9 +137,9 @@
                                 </row>
                                 <row>
                                     <entry>PDB</entry>
-                                    <entry>Name of the pluggable database that contains the database
-                                        you want to use. Use only when the database was created in a
-                                        pluggable database. <p>Required for databases created in
+                                    <entry>Name of the pluggable database that contains the schema
+                                        you want to use. Use only when the schema was created in a
+                                        pluggable database. <p>Required for schemas created in
                                             pluggable databases. </p></entry>
                                 </row>
                                 <row
