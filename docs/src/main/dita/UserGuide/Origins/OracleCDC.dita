@@ -34,9 +34,9 @@
                 the database.</note>
         </p>
         <p>When you configure Oracle CDC Client, you configure change data capture details, such as
-            the database and tables to read from, how to read the initial change, the dictionary
+            the schema and tables to read from, how to read the initial change, the dictionary
             source location, and the operations to include. </p>
-        <p>You also specify JDBC connection information and user credentials. If the database was
+        <p>You also specify JDBC connection information and user credentials. If the schema was
             created in a pluggable database, state the pluggable database name. You can configure
             custom properties that the driver requires.</p>
         <p>
