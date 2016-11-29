@@ -20,6 +20,7 @@
 
 package com.streamsets.pipeline.stage.destination.datalake;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Multimap;
 import com.microsoft.azure.datalake.store.ADLStoreClient;
 import com.microsoft.azure.datalake.store.IfExists;
@@ -169,7 +170,7 @@ public class DataLakeTarget extends BaseTarget {
     for (String key : partitions.keySet()) {
       Iterator<Record> iterator = partitions.get(key).iterator();
       // for uniqueness of the file name
-      filePath = key + conf.uniquePrefix + "-" + UUID.randomUUID();
+      filePath = getFilePath(key, conf.uniquePrefix);
 
       try {
         if (!client.checkExists(filePath)) {
@@ -210,5 +211,10 @@ public class DataLakeTarget extends BaseTarget {
         }
       }
     }
+  }
+
+  @VisibleForTesting
+  String getFilePath(String directoryPath, String uniquePrefix) {
+    return directoryPath + "/" + uniquePrefix + "-" + UUID.randomUUID();
   }
 }

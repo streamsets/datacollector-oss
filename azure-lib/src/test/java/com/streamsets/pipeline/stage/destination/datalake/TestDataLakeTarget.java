@@ -21,7 +21,9 @@
 package com.streamsets.pipeline.stage.destination.datalake;
 
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.sdk.TargetRunner;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.List;
@@ -43,5 +45,15 @@ public class TestDataLakeTarget {
 
     assertEquals(1, issues.size());
 
+  }
+
+  @Test
+  public void testTargetDirectory() throws Exception {
+    final String directoryPath = "/tmp/out/2016-11-29";
+    final String prefix = "sdc-id";
+
+    DataLakeTarget target = new DataLakeTarget(new DataLakeConfigBean());
+    final String filePath = target.getFilePath(directoryPath, prefix);
+    Assert.assertTrue(filePath.startsWith(directoryPath + "/" + prefix));
   }
 }
