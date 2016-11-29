@@ -149,10 +149,11 @@
                                 <ul id="ul_xqj_ghh_cw">
                                     <li>Hadoop FS origin for cluster mode pipelines </li>
                                     <li>HBase Lookup processor</li>
+                                    <li>Hive Metadata processor</li>
+                                    <li>Spark Evaluator processor</li>
                                     <li>Flume destination </li>
                                     <li>Hadoop FS destination </li>
                                     <li>HBase destination </li>
-                                    <li>Hive Metadata processor</li>
                                     <li>Hive Metastore destination</li>
                                     <li>Hive Streaming destination</li>
                                     <li>Solr destination</li>
@@ -168,6 +169,7 @@
                                     <li>Hadoop FS origin for cluster mode pipelines </li>
                                     <li>HBase Lookup processor</li>
                                     <li>Hive Metadata processor</li>
+                                    <li>Spark Evaluator processor</li>
                                     <li>Flume destination </li>
                                     <li>Hadoop FS destination </li>
                                     <li>HBase destination </li>
@@ -186,6 +188,7 @@
                                     <li>Hadoop FS origin for cluster mode pipelines </li>
                                     <li>HBase Lookup processor</li>
                                     <li>Hive Metadata processor</li>
+                                    <li>Spark Evaluator processor</li>
                                     <li>Flume destination </li>
                                     <li>Hadoop FS destination </li>
                                     <li>HBase destination </li>
@@ -204,6 +207,7 @@
                                     <li>Hadoop FS origin for cluster mode pipelines </li>
                                     <li>HBase Lookup processor</li>
                                     <li>Hive Metadata processor</li>
+                                    <li>Spark Evaluator processor</li>
                                     <li>Flume destination </li>
                                     <li>Hadoop FS destination </li>
                                     <li>HBase destination </li>

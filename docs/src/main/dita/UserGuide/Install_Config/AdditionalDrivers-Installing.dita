@@ -19,7 +19,9 @@
         <context><indexterm>additional
                     drivers<indexterm>installing</indexterm></indexterm><indexterm>stages<indexterm>installing
                     additional drivers</indexterm></indexterm>To install additional drivers for a
-            stage, perform the following steps: <ol id="ol_f3s_hrw_ft">
+            stage, perform the following steps: <draft-comment author="alisontaylor">steps in Spark
+                Evaluator processor > Storing the Application Jar in an External Directory are
+                similar, make the same changes there</draft-comment><ol id="ol_f3s_hrw_ft">
                 <li>Create a local directory external to the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> installation directory for the drivers. Use an external directory to enable
@@ -28,7 +30,7 @@
                     /> upgrades.<p>For example, if you installed <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> in the following directory: <codeblock>/opt/sdc/</codeblock></p><p>you
-                        might create the driver directory at:
+                        might create the external directory at:
                         <codeblock>/opt/sdc-extras</codeblock></p></li>
                 <li>Create subdirectories for each set of additional drivers based on the stage
                     library name as follows: <p>
@@ -43,27 +45,27 @@
                     /> environment configuration file, <codeph>sdc-env.sh</codeph> or
                         <codeph>sdcd-env.sh</codeph> located in the
                         <codeph>$SDC_DIST/libexec</codeph> directory, add the
-                    STREAMSETS_LIBRARIES_EXTRA_DIR environment variable and point it to the driver
+                    STREAMSETS_LIBRARIES_EXTRA_DIR environment variable and point it to the external
                     directory, as
-                        follows:<codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR="&lt;driver directory>"</codeblock><p>For
+                        follows:<codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR="&lt;external directory>"</codeblock><p>For
                         example:
                     </p><codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR="/opt/sdc-extras/"</codeblock></li>
                 <li>When using the Java Security Manager, which is enabled by default, update the
                         <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> security policy to include the driver directory as follows:<ul
+                    /> security policy to include the external directory as follows:<ul
                         id="ul_gpf_2dg_ht">
                         <li>In the <ph
                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                            /> configuration directory, edit the security
-                            policy:<codeblock>$SDC_CONF/sdc-security.policy</codeblock></li>
+                            /> configuration directory, open the security policy file,
+                                <codeph>$SDC_CONF/sdc-security.policy</codeph>.</li>
                         <li>Add the following lines to the file:
-                            <codeblock>// user-defined additional driver directory
-grant codebase "file://&lt;driver directory>-" {
+                            <codeblock>// user-defined external directory
+grant codebase "file://&lt;external directory>-" {
   permission java.security.AllPermission;
 };</codeblock></li>
                     </ul><p>For example:
-                        <codeblock>// user-defined additional driver directory
+                        <codeblock>// user-defined external directory
 grant codebase "file:///opt/sdc-extras/-" {
   permission java.security.AllPermission;
 };</codeblock></p></li>
