@@ -85,7 +85,7 @@ import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
 public class SdcIpcToKafkaDSource extends DSourceOffsetCommitter {
 
   @ConfigDefBean
-  public RpcConfigs configs;
+  public SdcIpcConfigs configs;
 
   @ConfigDefBean()
   public KafkaTargetConfig conf;

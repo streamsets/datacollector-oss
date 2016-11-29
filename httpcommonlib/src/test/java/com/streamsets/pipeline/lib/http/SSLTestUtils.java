@@ -91,8 +91,6 @@ public class SSLTestUtils {
 
   public static String getHostname() throws Exception {
     return InetAddress.getLocalHost().getHostName();
-//    Process p = Runtime.getRuntime().exec("hostname");
-//    p.waitFor();
-//    return new String(IOUtils.toByteArray(p.getInputStream()));
   }
+
 }

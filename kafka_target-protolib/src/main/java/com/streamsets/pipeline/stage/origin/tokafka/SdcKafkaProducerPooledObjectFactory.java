@@ -17,8 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.streamsets.pipeline.stage.kafkautils;
+package com.streamsets.pipeline.stage.origin.tokafka;
 
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.kafka.api.PartitionStrategy;
@@ -55,10 +54,14 @@ public class SdcKafkaProducerPooledObjectFactory extends BasePooledObjectFactory
     return new DefaultPooledObject<>(producer);
   }
 
+  SdcKafkaProducer createInternal() {
+    return SdcKafkaProducerFactory.create(settings).create();
+  }
+
   @Override
   public SdcKafkaProducer create() throws Exception {
     LOG.debug("Creating Kafka producer");
-    SdcKafkaProducer producer = SdcKafkaProducerFactory.create(settings).create();
+    SdcKafkaProducer producer = createInternal();
     producer.init();
     LOG.debug("Creating Kafka producer '{}'", producer);
     return producer;

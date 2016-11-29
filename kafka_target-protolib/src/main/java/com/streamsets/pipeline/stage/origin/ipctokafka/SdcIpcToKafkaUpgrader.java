@@ -35,6 +35,8 @@ public class SdcIpcToKafkaUpgrader implements StageUpgrader {
     switch(fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+      case 2:
+        upgradeV2ToV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -65,4 +67,20 @@ public class SdcIpcToKafkaUpgrader implements StageUpgrader {
 
     // TODO complete in subsequent patch
   }
+
+  private void upgradeV2ToV3(List<Config> configs) {
+    List<Config> newConfigs = new ArrayList<>();
+
+    for (Config config : configs) {
+      if (config.getName().equals("configs.maxRpcRequestSize")) {
+        int sizeMB = (int) config.getValue();
+        newConfigs.add(new Config(config.getName(), sizeMB * 1000));
+      } else {
+        newConfigs.add(config);
+      }
+    }
+    configs.clear();
+    configs.addAll(newConfigs);
+  }
+
 }

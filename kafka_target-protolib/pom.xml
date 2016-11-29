@@ -56,6 +56,12 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-httpcommonlib</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-kafka-common</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>

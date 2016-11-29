@@ -24,8 +24,8 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum Groups implements Label {
-  RPC("RPC"),
   KAFKA("Kafka"),
+  RPC("RPC"),
   DATA_FORMAT("Data Format"),
   ;
 

@@ -24,8 +24,8 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum Groups implements Label {
-  UDP("UDP"),
   KAFKA("Kafka"),
+  UDP("UDP"),
   ADVANCED("Advanced"),
   DATA_FORMAT("Data Format"),
   ;

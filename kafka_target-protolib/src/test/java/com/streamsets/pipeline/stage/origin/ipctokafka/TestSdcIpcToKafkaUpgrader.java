@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 StreamSets Inc.
+ * Copyright 2015 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,36 +19,23 @@
  */
 package com.streamsets.pipeline.stage.origin.ipctokafka;
 
-import com.streamsets.pipeline.api.ErrorCode;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Config;
+import org.junit.Assert;
+import org.junit.Test;
 
-@GenerateResourceBundle
-public enum Errors implements ErrorCode {
-  IPC_KAKFA_ORIG_00("Port out of range"),
-  IPC_KAKFA_ORIG_01("Port not available: {}"),
+import java.util.ArrayList;
+import java.util.List;
 
-  IPC_KAKFA_ORIG_07("File does not exist"),
-  IPC_KAKFA_ORIG_08("Path is not a file"),
-  IPC_KAKFA_ORIG_09("File is not readable by the Data Collector"),
-  IPC_KAKFA_ORIG_10("Could not load key store: {}"),
-  IPC_KAKFA_ORIG_11("Configuration value is empty"),
+public class TestSdcIpcToKafkaUpgrader {
 
-  IPC_KAKFA_ORIG_20("Could not start IPC to Kafka server: {}"),
-  ;
-
-  private final String msg;
-  Errors(String msg) {
-    this.msg = msg;
-  }
-
-  @Override
-  public String getCode() {
-    return name();
-  }
-
-  @Override
-  public String getMessage() {
-    return msg;
+  @Test
+  public void testV2toV3() throws Exception {
+    List<Config> configs = new ArrayList<>();
+    configs.add(new Config("configs.maxRpcRequestSize", 10));
+    new SdcIpcToKafkaUpgrader().upgrade("l", "s", "i", 2, 3, configs);
+    Assert.assertEquals(1, configs.size());
+    Assert.assertEquals("configs.maxRpcRequestSize", configs.get(0).getName());
+    Assert.assertEquals(10 * 1000, configs.get(0).getValue());
   }
 
 }

@@ -27,10 +27,12 @@ import com.streamsets.pipeline.api.ext.RecordReader;
 import com.streamsets.pipeline.api.ext.RecordWriter;
 import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtil;
 import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtilFactory;
+import com.streamsets.pipeline.lib.http.HttpConstants;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
+import com.streamsets.pipeline.stage.origin.tokafka.ToKafkaSource;
 import com.streamsets.testing.NetworkUtils;
 import com.streamsets.testing.SingleForkNoReuseTest;
 import kafka.consumer.ConsumerIterator;
@@ -43,37 +45,18 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509TrustManager;
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.KeyPair;
-import java.security.KeyStore;
-import java.security.cert.Certificate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 @Category(SingleForkNoReuseTest.class)
 public class TestSdcIpcToKafka {
+  // copy of com.streamsets.pipeline.stage.destination.sdcipc.Constants
+  private static final String APPLICATION_BINARY = "application/binary";
+  private static final String X_SDC_JSON1_FRAGMENTABLE_HEADER = "X-SDC-JSON1-FRAGMENTABLE";
 
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams1;
 
@@ -111,82 +94,65 @@ public class TestSdcIpcToKafka {
 
   @Test
   public void testWrite() throws Exception {
-    // setup TLS
-    String hostname = SSLTestUtils.getHostname();
-    File testDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
-    File keyStore = new File(testDir, "keystore.jks");
-    Assert.assertTrue(testDir.mkdirs());
-    final File trustStore = new File(testDir, "truststore.jks");
-    KeyPair keyPair = SSLTestUtils.generateKeyPair();
-    Certificate cert = SSLTestUtils.generateCertificate("CN=" + hostname, keyPair, 30);
-    SSLTestUtils.createKeyStore(keyStore.toString(), "keystore", "web", keyPair.getPrivate(), cert);
-    SSLTestUtils.createTrustStore(trustStore.toString(), "truststore", "web", cert);
-
     // Configure stage
-    final RpcConfigs configs = new RpcConfigs();
+    final SdcIpcConfigs configs = new SdcIpcConfigs();
     configs.appId = "test";
     configs.maxConcurrentRequests = 10;
     configs.maxRpcRequestSize = 10000;
-    configs.sslEnabled = true;
-    configs.keyStoreFile = keyStore.toString();
-    configs.keyStorePassword = "keystore";
+    configs.sslEnabled = false;
     configs.port = randomPort;
 
     KafkaTargetConfig kafkaConfigBean = new KafkaTargetConfig();
     kafkaConfigBean.topic = TOPIC1;
     kafkaConfigBean.metadataBrokerList = sdcKafkaTestUtil.getMetadataBrokerURI();
 
-    final SdcIpcToKafkaSource source = new SdcIpcToKafkaSource(configs, kafkaConfigBean, 1000);
+    final ToKafkaSource source = new SdcIpcToKafkaSource(configs, kafkaConfigBean, 1000);
 
     // create source runner
     final SourceRunner sourceRunner = new SourceRunner.Builder(SdcIpcToKafkaDSource.class, source)
       .addOutputLane("lane")
       .build();
 
-    ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-
     // init
     try {
       sourceRunner.runInit();
-      //valid init
-      Future<Boolean> future = executor.submit(new Callable<Boolean>() {
-        @Override
-        public Boolean call() throws Exception {
-          HttpURLConnection conn = getConnection(Constants.IPC_PATH, configs.appId, sourceRunner.getContext(),
-            SSLTestUtils.getHostname() + ":" + configs.port, true,
-            trustStore.toString(), "truststore");
-          conn.setRequestMethod("GET");
-          conn.setDefaultUseCaches(false);
-          conn.setDoOutput(false);
-          return conn.getResponseCode() == HttpURLConnection.HTTP_OK &&
-            Constants.X_SDC_PING_VALUE.equals(conn.getHeaderField(Constants.X_SDC_PING_HEADER));
-        }
-      });
-      Assert.assertTrue(future.get(5, TimeUnit.SECONDS));
 
-      // send request
+      //ping
+      URL url = new URL("http://localhost:" + randomPort + SdcIpcToKafkaSource.IPC_PATH);
+      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+      conn.setRequestProperty(HttpConstants.X_SDC_APPLICATION_ID_HEADER, "test");
+      conn.setRequestMethod("GET");
+      conn.setDefaultUseCaches(false);
+      conn.setDoOutput(false);
+      Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
+      Assert.assertEquals(HttpConstants.X_SDC_PING_VALUE, conn.getHeaderField(HttpConstants.X_SDC_PING_HEADER));
+
+      // send data
+      url = new URL("http://localhost:" + randomPort + SdcIpcToKafkaSource.IPC_PATH);
+      conn = (HttpURLConnection) url.openConnection();
+      conn.setRequestProperty(HttpConstants.X_SDC_APPLICATION_ID_HEADER, "test");
+      conn.setRequestMethod("POST");
+      conn.setDefaultUseCaches(false);
+      conn.setDoOutput(true);
+      conn.setRequestProperty("Content-Type", APPLICATION_BINARY);
+      conn.setRequestProperty(X_SDC_JSON1_FRAGMENTABLE_HEADER, "true");
+      conn.setRequestProperty(HttpConstants.X_SDC_COMPRESSION_HEADER, HttpConstants.SNAPPY_COMPRESSION);
+      OutputStream os = conn.getOutputStream();
+      os = new SnappyFramedOutputStream(os);
+      ContextExtensions ext = (ContextExtensions) sourceRunner.getContext();
+      RecordWriter writer = ext.createRecordWriter(os);
       final List<Record> records = new ArrayList<>();
-      future = executor.submit(new Callable<Boolean>() {
-        @Override
-        public Boolean call() throws Exception {
-          Record r1 = RecordCreator.create();
-          r1.set(Field.create(true));
-          Record r2 = RecordCreator.create();
-          r2.set(Field.create(false));
-          records.add(r1);
-          records.add(r2);
-          return sendRecords(
-            configs.appId,
-            sourceRunner.getContext(),
-            SSLTestUtils.getHostname() + ":" + configs.port,
-            true,
-            trustStore.toString(),
-            "truststore",
-            true,
-            records
-          );
-        }
-      });
+      Record r1 = RecordCreator.create();
+      r1.set(Field.create(true));
+      Record r2 = RecordCreator.create();
+      r2.set(Field.create(false));
+      records.add(r1);
+      records.add(r2);
+      for (Record record : records) {
+        writer.write(record);
+      }
+      writer.close();
+      Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
 
       // run produce
       StageRunner.Output output = sourceRunner.runProduce(null, 10);
@@ -194,8 +160,6 @@ public class TestSdcIpcToKafka {
       Assert.assertEquals(0, output.getRecords().get("lane").size());
       Assert.assertTrue(sourceRunner.getErrorRecords().isEmpty());
       Assert.assertTrue(sourceRunner.getErrors().isEmpty());
-
-      Assert.assertTrue(future.get(30, TimeUnit.SECONDS));
 
       // check if kafka has received a message
       List<byte[]> messages = new ArrayList<>();
@@ -235,105 +199,4 @@ public class TestSdcIpcToKafka {
     }
   }
 
-  private boolean sendRecords(String appId, Stage.Context context, String hostPort, boolean ssl, String trustStoreFile,
-                              String trustStorePassword, boolean compressed,  List<Record> records)
-    throws Exception {
-    try {
-      ContextExtensions ext = (ContextExtensions) context;
-      HttpURLConnection conn = getConnection(Constants.IPC_PATH, appId, context, hostPort, ssl, trustStoreFile,
-        trustStorePassword);
-      conn.setRequestMethod("POST");
-      conn.setRequestProperty(Constants.CONTENT_TYPE_HEADER, Constants.APPLICATION_BINARY);//X_SDC_JSON1_FRAGMENTABLE_HEADER
-      conn.setRequestProperty(Constants.X_SDC_JSON1_FRAGMENTABLE_HEADER, "true");
-      if (compressed) {
-        conn.setRequestProperty(Constants.X_SDC_COMPRESSION_HEADER, Constants.SNAPPY_COMPRESSION);
-      }
-      conn.setDefaultUseCaches(false);
-      conn.setDoOutput(true);
-      conn.setDoInput(true);
-      OutputStream os = conn.getOutputStream();
-      if (compressed) {
-        os = new SnappyFramedOutputStream(os);
-      }
-      RecordWriter writer = ext.createRecordWriter(os);
-      for (Record record : records) {
-        writer.write(record);
-      }
-      writer.close();
-      return conn.getResponseCode() == HttpURLConnection.HTTP_OK;
-    } catch (Exception ex) {
-      System.out.println(ex);
-      throw ex;
-    }
-  }
-
-  static final HostnameVerifier ACCEPT_ALL_HOSTNAME_VERIFIER = new HostnameVerifier() {
-    @Override
-    public boolean verify(String s, SSLSession sslSession) {
-      return true;
-    }
-  };
-
-  private HttpURLConnection getConnection(
-      String path,
-      String appId,
-      Stage.Context context,
-      String hostPort,
-      boolean ssl,
-      String trustStoreFile,
-      String trustStorePassword
-  ) throws Exception {
-
-    boolean hostVerification = false;
-
-    String scheme = (ssl) ? "https://" : "http://";
-    URL url = new URL(scheme + hostPort.trim()  + path);
-    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-    conn.setConnectTimeout(1000);
-    conn.setReadTimeout(60000);
-    if (ssl) {
-      HttpsURLConnection sslConn = (HttpsURLConnection) conn;
-      sslConn.setSSLSocketFactory(createSSLSocketFactory(context, trustStoreFile, trustStorePassword));
-      if (!hostVerification) {
-        sslConn.setHostnameVerifier(ACCEPT_ALL_HOSTNAME_VERIFIER);
-      }
-    }
-    conn.setRequestProperty(Constants.X_SDC_APPLICATION_ID_HEADER, appId);
-    return conn;
-  }
-
-  private SSLSocketFactory createSSLSocketFactory(
-      Stage.Context context,
-      String trustStoreFile,
-      String trustStorePassword
-  ) throws Exception {
-    SSLSocketFactory sslSocketFactory;
-    if (trustStoreFile.isEmpty()) {
-      sslSocketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
-    } else {
-      KeyStore keystore = KeyStore.getInstance("jks");
-      try (InputStream is = new FileInputStream(new File(context.getResourcesDirectory(), trustStoreFile))) {
-        keystore.load(is, trustStorePassword.toCharArray());
-      }
-
-      KeyManagerFactory keyMgrFactory = KeyManagerFactory.getInstance(Constants.SSL_CERTIFICATE);
-      keyMgrFactory.init(keystore, trustStorePassword.toCharArray());
-      KeyManager[] keyManagers = keyMgrFactory.getKeyManagers();
-
-      TrustManager[] trustManagers = new TrustManager[1];
-      TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(Constants.SSL_CERTIFICATE);
-      trustManagerFactory.init(keystore);
-      for (TrustManager trustManager1 : trustManagerFactory.getTrustManagers()) {
-        if (trustManager1 instanceof X509TrustManager) {
-          trustManagers[0] = trustManager1;
-          break;
-        }
-      }
-      SSLContext sslContext = SSLContext.getInstance("TLS");
-      sslContext.init(keyManagers, trustManagers, null);
-      sslContext.getDefaultSSLParameters().setProtocols(Constants.SSL_ENABLED_PROTOCOLS);
-      sslSocketFactory = sslContext.getSocketFactory();
-    }
-    return sslSocketFactory;
-  }
 }

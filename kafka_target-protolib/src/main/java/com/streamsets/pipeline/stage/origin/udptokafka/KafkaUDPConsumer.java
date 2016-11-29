@@ -34,7 +34,7 @@ import com.streamsets.pipeline.lib.udp.UDPConsumer;
 import com.streamsets.pipeline.lib.udp.UDPMessage;
 import com.streamsets.pipeline.lib.udp.UDPMessageSerializer;
 import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
-import com.streamsets.pipeline.stage.kafkautils.SdcKafkaProducerPooledObjectFactory;
+import com.streamsets.pipeline.stage.origin.tokafka.SdcKafkaProducerPooledObjectFactory;
 import com.streamsets.pipeline.stage.origin.lib.UDPDataFormat;
 import io.netty.channel.socket.DatagramPacket;
 import org.apache.commons.pool2.impl.GenericObjectPool;
