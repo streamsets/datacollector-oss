@@ -53,6 +53,8 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
   private static final String OBJECT_KEY = "objectKey";
   private static final String OWNER = "owner";
   private static final String SIZE = "size";
+  private static final String CONTENT_LENGTH = "Content-Length";
+
 
   private ErrorRecordHandler errorRecordHandler;
   private DataParser parser;
@@ -75,7 +77,7 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
 
   @Override
   protected String produce(S3ObjectSummary s3Object, String offset, int maxBatchSize, BatchMaker batchMaker)
-    throws StageException, BadSpoolObjectException {
+      throws StageException, BadSpoolObjectException {
     try {
       if (parser == null) {
         String recordId = s3ConfigBean.s3Config.bucket + s3ConfigBean.s3Config.delimiter + s3Object.getKey();
@@ -195,7 +197,7 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
             throw new StageException(Errors.S3_SPOOLDIR_03, s3Object.getKey(), exOffset, ex.toString(), ex);
           default:
             throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
-              getContext().getOnErrorRecord(), ex));
+                getContext().getOnErrorRecord(), ex));
         }
       }
     } finally {
@@ -226,8 +228,13 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
       // if metadata is enabled, set the metadata to the header
       Map<String, Object> metaData = AmazonS3Util.getMetaData(object);
       for(Map.Entry<String, Object> entry : metaData.entrySet()) {
-        String value = entry.getValue() == null ? "" : entry.getValue().toString();
-        record.getHeader().setAttribute(entry.getKey(), value);
+        //Content-Length is partial for whole file format, so not populating it here
+        //Users can always look at /record/fileInfo/size to get the real size.
+        boolean shouldAddThisMetadata = !(s3ConfigBean.dataFormat == DataFormat.WHOLE_FILE && entry.getKey().equals(CONTENT_LENGTH));
+        if (shouldAddThisMetadata) {
+          String value = entry.getValue() == null ? "" : entry.getValue().toString();
+          record.getHeader().setAttribute(entry.getKey(), value);
+        }
       }
       // set file name to the header
       record.getHeader().setAttribute("Name", object.getKey());
@@ -238,43 +245,43 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
   //as the record is just the metadata along with file ref.
   private void handleWholeFileDataFormat(S3ObjectSummary s3ObjectSummary, String recordId) throws DataParserException, IOException {
     S3Object partialS3ObjectForMetadata = null;
-    try {
-      //partialObject with fetchSize 1 byte.
-      //This is mostly used for extracting metadata and such.
-      partialS3ObjectForMetadata = AmazonS3Util.getObjectRange(
-          s3ConfigBean.s3Config.getS3Client(),
-          s3ConfigBean.s3Config.bucket,
-          s3ObjectSummary.getKey(),
-          1,
-          s3ConfigBean.sseConfig.useCustomerSSEKey,
-          s3ConfigBean.sseConfig.customerKey,
-          s3ConfigBean.sseConfig.customerKeyMd5
-      );
-      S3FileRef.Builder s3FileRefBuilder = new S3FileRef.Builder()
-          .s3Client(s3ConfigBean.s3Config.getS3Client())
-          .s3ObjectSummary(s3ObjectSummary)
-          .useSSE(s3ConfigBean.sseConfig.useCustomerSSEKey)
-          .customerKey(s3ConfigBean.sseConfig.customerKey)
-          .customerKeyMd5(s3ConfigBean.sseConfig.customerKeyMd5)
-          .bufferSize(s3ConfigBean.dataFormatConfig.wholeFileMaxObjectLen)
-          .createMetrics(true)
-          .totalSizeInBytes(s3ObjectSummary.getSize());
-      if (s3ConfigBean.dataFormatConfig.verifyChecksum) {
-        s3FileRefBuilder.verifyChecksum(true)
-            .checksumAlgorithm(HashingUtil.HashType.MD5)
-            //128 bit hex encoded md5 checksum.
-            .checksum(partialS3ObjectForMetadata.getObjectMetadata().getETag());
-      }
-      Map<String, Object> metadata = AmazonS3Util.getMetaData(partialS3ObjectForMetadata);
-      metadata.put(BUCKET, s3ObjectSummary.getBucketName());
-      metadata.put(OBJECT_KEY, s3ObjectSummary.getKey());
-      metadata.put(OWNER, s3ObjectSummary.getOwner());
-      metadata.put(SIZE, s3ObjectSummary.getSize());
-      parser = s3ConfigBean.dataFormatConfig.getParserFactory().getParser(recordId, metadata, s3FileRefBuilder.build());
-    } finally {
-      if (partialS3ObjectForMetadata != null) {
-        partialS3ObjectForMetadata.close();
-      }
+    //partialObject with fetchSize 1 byte.
+    //This is mostly used for extracting metadata and such.
+    partialS3ObjectForMetadata = AmazonS3Util.getObjectRange(
+        s3ConfigBean.s3Config.getS3Client(),
+        s3ConfigBean.s3Config.bucket,
+        s3ObjectSummary.getKey(),
+        1,
+        s3ConfigBean.sseConfig.useCustomerSSEKey,
+        s3ConfigBean.sseConfig.customerKey,
+        s3ConfigBean.sseConfig.customerKeyMd5
+    );
+    S3FileRef.Builder s3FileRefBuilder = new S3FileRef.Builder()
+        .s3Client(s3ConfigBean.s3Config.getS3Client())
+        .s3ObjectSummary(s3ObjectSummary)
+        .useSSE(s3ConfigBean.sseConfig.useCustomerSSEKey)
+        .customerKey(s3ConfigBean.sseConfig.customerKey)
+        .customerKeyMd5(s3ConfigBean.sseConfig.customerKeyMd5)
+        .bufferSize(s3ConfigBean.dataFormatConfig.wholeFileMaxObjectLen)
+        .createMetrics(true)
+        .totalSizeInBytes(s3ObjectSummary.getSize());
+    if (s3ConfigBean.dataFormatConfig.verifyChecksum) {
+      s3FileRefBuilder.verifyChecksum(true)
+          .checksumAlgorithm(HashingUtil.HashType.MD5)
+          //128 bit hex encoded md5 checksum.
+          .checksum(partialS3ObjectForMetadata.getObjectMetadata().getETag());
     }
+    Map<String, Object> metadata = AmazonS3Util.getMetaData(partialS3ObjectForMetadata);
+    metadata.put(BUCKET, s3ObjectSummary.getBucketName());
+    metadata.put(OBJECT_KEY, s3ObjectSummary.getKey());
+    metadata.put(OWNER, s3ObjectSummary.getOwner());
+    metadata.put(SIZE, s3ObjectSummary.getSize());
+    if (metadata.containsKey(CONTENT_LENGTH)) {
+      metadata.remove(CONTENT_LENGTH);
+    }
+    parser = s3ConfigBean.dataFormatConfig.getParserFactory().getParser(recordId, metadata, s3FileRefBuilder.build());
+    //Object is assigned so that setHeaders() function can use this to get metadata
+    //information about the object
+    object = partialS3ObjectForMetadata;
   }
 }
