@@ -31,7 +31,7 @@ import com.streamsets.pipeline.config.OnStagePreConditionFailureChooserValues;
 import com.streamsets.pipeline.configurablestage.DProcessor;
 
 @StageDef(
-    version=1,
+    version=2,
     label="Field Pivoter",
     description = "Produce new records for each element of a list or map field",
     icon="pivoter.png",
@@ -85,7 +85,7 @@ public class ListPivotDProcessor extends DProcessor {
       required = true,
       group = "PIVOT",
       type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "true",
+      defaultValue = "false",
       label = "Save Original Field Name",
       description = "Specifies whether or not to save the original field name of the pivoted field.",
       displayPosition = 40
