@@ -278,6 +278,8 @@ public class TestFieldTypeConverterProcessorFields {
         "/skilled", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.DECIMAL;
     fieldTypeConverterConfig.dataLocale = "en";
+    fieldTypeConverterConfig.scale = -1;
+    fieldTypeConverterConfig.decimalScaleRoundingStrategy = DecimalScaleRoundingStrategy.ROUND_UNNECESSARY;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
         .addConfiguration("convertBy", ConvertBy.BY_FIELD)
@@ -327,6 +329,8 @@ public class TestFieldTypeConverterProcessorFields {
         "/skilled", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.DECIMAL;
     fieldTypeConverterConfig.dataLocale = "de";
+    fieldTypeConverterConfig.scale = -1;
+    fieldTypeConverterConfig.decimalScaleRoundingStrategy = DecimalScaleRoundingStrategy.ROUND_UNNECESSARY;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
         .addConfiguration("convertBy", ConvertBy.BY_FIELD)
@@ -426,6 +430,8 @@ public class TestFieldTypeConverterProcessorFields {
         "/skilled", "/null");
     fieldTypeConverterConfig.targetType = Field.Type.DECIMAL;
     fieldTypeConverterConfig.dataLocale = "de";
+    fieldTypeConverterConfig.scale = -1;
+    fieldTypeConverterConfig.decimalScaleRoundingStrategy = DecimalScaleRoundingStrategy.ROUND_UNNECESSARY;
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
         .addConfiguration("convertBy", ConvertBy.BY_FIELD)
@@ -1626,10 +1632,12 @@ public class TestFieldTypeConverterProcessorFields {
             .put("/decimal1", BigDecimal.ZERO)
             .put("/decimal2", BigDecimal.ONE)
             .put("/decimal3", BigDecimal.TEN)
+            .put("/string1", new BigDecimal("123.456").setScale(3, BigDecimal.ROUND_UNNECESSARY))
             .build();
 
     FieldTypeConverterConfig converter = new FieldTypeConverterConfig();
     converter.fields = new ArrayList<>(bigDecimalMap.keySet());
+    converter.dataLocale = "UTF-8";
     converter.targetType = Field.Type.DECIMAL;
     converter.scale = -1;
     converter.decimalScaleRoundingStrategy = DecimalScaleRoundingStrategy.ROUND_UP;
@@ -1662,6 +1670,9 @@ public class TestFieldTypeConverterProcessorFields {
       map.put("decimal1", Field.create(Field.Type.DOUBLE, bigDecimalMap.get("/decimal1")));
       map.put("decimal2", Field.create(Field.Type.DOUBLE, bigDecimalMap.get("/decimal2")));
       map.put("decimal3", Field.create(Field.Type.DOUBLE, bigDecimalMap.get("/decimal3")));
+
+      map.put("string1", Field.create(Field.Type.STRING, "123.456"));
+
 
       Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
@@ -1746,6 +1757,13 @@ public class TestFieldTypeConverterProcessorFields {
     converter10.scale = 1;
     converter10.decimalScaleRoundingStrategy = DecimalScaleRoundingStrategy.ROUND_CEILING;
 
+    FieldTypeConverterConfig converter11 = new FieldTypeConverterConfig();
+    converter11.fields = ImmutableList.of("/string1", "/string2");
+    converter11.targetType = Field.Type.DECIMAL;
+    converter11.scale = 6;
+    converter11.dataLocale = "UTF-8";
+    converter11.decimalScaleRoundingStrategy = DecimalScaleRoundingStrategy.ROUND_UP;
+
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
         .addConfiguration("convertBy", ConvertBy.BY_FIELD)
         .addConfiguration(
@@ -1760,7 +1778,8 @@ public class TestFieldTypeConverterProcessorFields {
                 converter7,
                 converter8,
                 converter9,
-                converter10
+                converter10,
+                converter11
             )
         )
         .addOutputLane("a").build();
@@ -1801,6 +1820,10 @@ public class TestFieldTypeConverterProcessorFields {
       fieldMap.put("double1", Field.create(Field.Type.DOUBLE, 1234567.98765));
       //double - round ceiling
       fieldMap.put("double2", Field.create(Field.Type.DOUBLE, 1234567.98765));
+
+      //string - round up
+      fieldMap.put("string1", Field.create(Field.Type.STRING, "12345.6789115"));
+      fieldMap.put("string2", Field.create(Field.Type.STRING, "-12345.6789115"));
 
 
       Record record = RecordCreator.create();
@@ -1843,6 +1866,10 @@ public class TestFieldTypeConverterProcessorFields {
       Assert.assertEquals(new BigDecimal("1.00000"), outputRecord.get("/int").getValueAsDecimal());
       Assert.assertEquals(new BigDecimal("1234567.9876500000"), outputRecord.get("/double1").getValueAsDecimal());
       Assert.assertEquals(new BigDecimal("1234568.0"), outputRecord.get("/double2").getValueAsDecimal());
+
+      //string round up
+      Assert.assertEquals(new BigDecimal("12345.678912"), outputRecord.get("/string1").getValueAsDecimal());
+      Assert.assertEquals(new BigDecimal("-12345.678912"), outputRecord.get("/string2").getValueAsDecimal());
     } finally {
       runner.runDestroy();
     }
