@@ -27,20 +27,17 @@ import com.streamsets.datacollector.el.ElFunctionDefinition;
 import com.streamsets.datacollector.runner.StageDefinitionBuilder;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ExecutionMode;
-import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.LocaleInContext;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 
 public class TestStageDefinitionLocalization {
 

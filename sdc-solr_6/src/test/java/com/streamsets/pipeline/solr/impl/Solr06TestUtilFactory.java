@@ -22,7 +22,6 @@ package com.streamsets.pipeline.solr.impl;
 
 import com.streamsets.pipeline.solr.api.SdcSolrTestUtil;
 import com.streamsets.pipeline.solr.api.SdcSolrTestUtilFactory;
-import org.apache.solr.client.solrj.embedded.JettySolrRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

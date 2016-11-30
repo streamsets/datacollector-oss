@@ -24,7 +24,6 @@ import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.EventListener;
 import java.util.Queue;
 
 public class BaseWebSocket extends WebSocketAdapter {

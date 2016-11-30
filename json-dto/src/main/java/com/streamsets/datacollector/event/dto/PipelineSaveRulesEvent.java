@@ -19,8 +19,6 @@
  */
 package com.streamsets.datacollector.event.dto;
 
-import java.util.UUID;
-
 public class PipelineSaveRulesEvent extends PipelineBaseEvent {
 
   private String ruleDefinitions;

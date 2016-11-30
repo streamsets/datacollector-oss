@@ -20,10 +20,7 @@
 package com.streamsets.pipeline.stage.destination.hive;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Batch;
-import com.streamsets.pipeline.api.EventRecord;
-import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
@@ -50,10 +47,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class HiveMetastoreTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(HiveMetastoreTarget.class.getCanonicalName());

@@ -23,14 +23,12 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ChecksumAlgorithm;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.WholeFileExistsAction;
-import com.streamsets.pipeline.lib.hashing.HashingUtil;
 import com.streamsets.pipeline.stage.destination.hdfs.CompressionMode;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsFileType;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsSequenceFileCompressionType;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsTarget;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsTargetConfigBean;
 import com.streamsets.pipeline.stage.destination.hdfs.LateRecordsAction;
-import com.streamsets.pipeline.stage.destination.hdfs.writer.RecordWriterManagerTestBuilder;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 
 import java.util.HashMap;

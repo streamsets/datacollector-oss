@@ -19,7 +19,6 @@
  */
 package com.streamsets.pipeline.stage.processor.spark;
 
-import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.spark.api.SparkTransformer;
 import com.streamsets.pipeline.spark.api.TransformResult;

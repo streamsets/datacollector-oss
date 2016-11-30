@@ -19,9 +19,7 @@
  */
 package com.streamsets.datacollector.definition;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.streamsets.datacollector.definition.ELDefinitionExtractor;
 import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
 import com.streamsets.pipeline.api.ElConstant;

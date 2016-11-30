@@ -25,7 +25,6 @@ import kafka.admin.AdminUtils;
 import kafka.admin.RackAwareMode;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.ProducerConfig;
-import kafka.server.BrokerState;
 import kafka.server.KafkaConfig;
 import kafka.server.KafkaServer;
 import kafka.server.RunningAsBroker;

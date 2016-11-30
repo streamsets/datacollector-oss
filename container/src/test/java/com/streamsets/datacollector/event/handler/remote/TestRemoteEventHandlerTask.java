@@ -25,7 +25,6 @@ import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.DisconnectedSSOManager;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
-import org.apache.http.util.Asserts;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;

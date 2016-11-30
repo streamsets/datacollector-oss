@@ -21,7 +21,6 @@ package com.streamsets.pipeline.stage.origin.jms;
 
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
-import com.streamsets.pipeline.config.DataFormat;
 
 @GenerateResourceBundle
 public enum JmsGroups implements Label {

@@ -23,7 +23,6 @@ import com.google.common.collect.ImmutableMap;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Assert;
 import org.junit.Test;
@@ -32,17 +31,9 @@ import org.junit.runners.Parameterized;
 import plsql.plsqlLexer;
 import plsql.plsqlParser;
 
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
-import java.util.TreeSet;
-
-import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_43;
 
 @RunWith(Parameterized.class)
 public class TestSQLListener {

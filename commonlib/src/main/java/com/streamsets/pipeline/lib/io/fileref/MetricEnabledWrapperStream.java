@@ -20,7 +20,6 @@
 package com.streamsets.pipeline.lib.io.fileref;
 
 import com.codahale.metrics.Counter;
-import com.codahale.metrics.Gauge;
 import com.codahale.metrics.Meter;
 import com.streamsets.pipeline.api.Stage;
 

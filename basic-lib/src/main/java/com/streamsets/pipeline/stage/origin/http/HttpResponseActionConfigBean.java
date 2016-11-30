@@ -19,9 +19,6 @@
  */
 package com.streamsets.pipeline.stage.origin.http;
 
-import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ValueChooserModel;
-
 public abstract class HttpResponseActionConfigBean {
 
   public static final int DUMMY_STATUS = -1;

@@ -20,12 +20,10 @@
 package com.streamsets.pipeline.stage.processor.listpivot;
 
 import com.google.api.client.util.Lists;
-import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.config.OnStagePreConditionFailure;
 import org.apache.commons.lang3.StringUtils;

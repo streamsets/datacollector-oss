@@ -31,7 +31,6 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 /**
  * It finds files matching the specified glob path pattern. Except for '**' all glob wildcards are supported at

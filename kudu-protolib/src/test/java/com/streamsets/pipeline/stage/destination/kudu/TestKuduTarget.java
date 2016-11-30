@@ -32,7 +32,6 @@ import org.apache.kudu.ColumnSchema;
 import org.apache.kudu.Schema;
 import org.apache.kudu.Type;
 import org.apache.kudu.client.*;
-import org.apache.kudu.client.Operation;
 import org.junit.runner.RunWith;
 import org.junit.Before;
 import org.junit.Test;

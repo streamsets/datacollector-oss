@@ -30,7 +30,6 @@ import com.streamsets.pipeline.stage.lib.hive.Errors;
 import com.streamsets.pipeline.stage.processor.hive.HiveMetadataProcessor;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;

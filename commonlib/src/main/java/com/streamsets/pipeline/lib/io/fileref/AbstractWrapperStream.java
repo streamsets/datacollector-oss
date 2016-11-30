@@ -21,7 +21,6 @@ package com.streamsets.pipeline.lib.io.fileref;
 
 import com.streamsets.pipeline.api.impl.Utils;
 
-import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;

@@ -23,7 +23,6 @@ package com.streamsets.pipeline.stage.lib.hive.cache;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
 import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
-import org.apache.hadoop.security.UserGroupInformation;
 
 
 public class AvroSchemaInfoCacheSupport implements HMSCacheSupport<AvroSchemaInfoCacheSupport.AvroSchemaInfo,

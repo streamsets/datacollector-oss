@@ -20,9 +20,7 @@
 package com.streamsets.pipeline.stage.processor.fieldhasher;
 
 import com.streamsets.pipeline.api.ConfigDefBean;
-import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ConfigDef.Type;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Processor;
@@ -31,8 +29,6 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.OnStagePreConditionFailure;
 import com.streamsets.pipeline.config.OnStagePreConditionFailureChooserValues;
 import com.streamsets.pipeline.configurablestage.DProcessor;
-
-import java.util.List;
 
 @StageDef(
     version=2,

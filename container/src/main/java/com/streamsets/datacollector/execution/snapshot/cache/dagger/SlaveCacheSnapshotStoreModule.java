@@ -22,7 +22,6 @@ package com.streamsets.datacollector.execution.snapshot.cache.dagger;
 import com.streamsets.datacollector.execution.SnapshotStore;
 import com.streamsets.datacollector.execution.snapshot.cache.CacheSnapshotStore;
 import com.streamsets.datacollector.execution.snapshot.file.FileSnapshotStore;
-import com.streamsets.datacollector.execution.snapshot.file.dagger.FileSnapshotStoreModule;
 import com.streamsets.datacollector.execution.snapshot.file.dagger.SlaveFileSnapshotStoreModule;
 import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.LockCacheModule;

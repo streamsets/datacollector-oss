@@ -19,7 +19,6 @@
  */
 package com.streamsets.pipeline.lib.parser.delimited;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.CsvHeader;

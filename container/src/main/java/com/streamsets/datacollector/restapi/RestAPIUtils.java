@@ -19,8 +19,6 @@
  */
 package com.streamsets.datacollector.restapi;
 
-import com.streamsets.datacollector.util.ContainerError;
-import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.pipeline.lib.log.LogConstants;
 
 import org.slf4j.MDC;

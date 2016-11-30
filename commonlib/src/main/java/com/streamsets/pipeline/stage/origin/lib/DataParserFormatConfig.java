@@ -25,7 +25,6 @@ import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
-import com.streamsets.pipeline.api.impl.XMLChar;
 import com.streamsets.pipeline.common.DataFormatConstants;
 import com.streamsets.pipeline.config.AvroSchemaLookupMode;
 import com.streamsets.pipeline.config.CharsetChooserValues;

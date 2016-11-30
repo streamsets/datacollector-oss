@@ -28,7 +28,6 @@ import com.streamsets.datacollector.execution.SnapshotStore;
 import com.streamsets.datacollector.execution.manager.slave.SlavePipelineManager;
 import com.streamsets.datacollector.execution.runner.common.Constants;
 import com.streamsets.datacollector.execution.runner.provider.SlaveRunnerProviderImpl;
-import com.streamsets.datacollector.execution.runner.standalone.StandaloneRunner;
 import com.streamsets.datacollector.execution.store.FilePipelineStateStore;
 import com.streamsets.datacollector.execution.store.SlavePipelineStateStore;
 import com.streamsets.datacollector.main.RuntimeInfo;

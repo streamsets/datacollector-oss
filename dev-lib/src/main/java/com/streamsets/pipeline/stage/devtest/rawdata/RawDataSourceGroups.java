@@ -21,7 +21,6 @@ package com.streamsets.pipeline.stage.devtest.rawdata;
 
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
-import com.streamsets.pipeline.config.DataFormat;
 
 @GenerateResourceBundle
 public enum RawDataSourceGroups implements Label {

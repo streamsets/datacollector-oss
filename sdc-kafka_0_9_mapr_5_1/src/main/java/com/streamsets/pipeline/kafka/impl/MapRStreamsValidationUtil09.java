@@ -22,7 +22,6 @@ package com.streamsets.pipeline.kafka.impl;
 import com.google.common.net.HostAndPort;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtil;
 import com.streamsets.pipeline.lib.kafka.BaseKafkaValidationUtil;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;

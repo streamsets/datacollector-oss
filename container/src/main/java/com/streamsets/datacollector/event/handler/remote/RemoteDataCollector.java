@@ -33,7 +33,6 @@ import com.streamsets.datacollector.event.dto.WorkerInfo;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.production.OffsetFileUtil;
-import com.streamsets.datacollector.runner.production.SourceOffset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

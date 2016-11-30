@@ -35,7 +35,6 @@ import com.streamsets.pipeline.stage.HiveMetadataProcessorBuilder;
 import com.streamsets.pipeline.stage.PartitionConfigBuilder;
 import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
-import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import org.junit.Assert;
 import org.junit.Test;
 

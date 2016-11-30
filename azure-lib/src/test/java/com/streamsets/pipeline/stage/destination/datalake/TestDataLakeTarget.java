@@ -21,7 +21,6 @@
 package com.streamsets.pipeline.stage.destination.datalake;
 
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import org.junit.Assert;
 import org.junit.Test;

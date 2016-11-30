@@ -21,10 +21,7 @@ package com.streamsets.datacollector.main;
 
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.datacollector.cluster.ClusterModeConstants;
-import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
 import com.streamsets.datacollector.execution.runner.common.Constants;
-import com.streamsets.datacollector.main.RuntimeInfo;
-import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.util.Configuration;
 
 import com.streamsets.lib.security.http.RemoteSSOService;

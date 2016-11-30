@@ -34,7 +34,6 @@ import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.DataParserFormat;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
-import com.streamsets.pipeline.stage.origin.spooldir.*;
 
 import java.io.IOException;
 import java.util.HashMap;

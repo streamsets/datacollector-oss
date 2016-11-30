@@ -20,8 +20,6 @@
 package com.streamsets.pipeline.stage.lib.hive.cache;
 
 import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
-import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
 import com.streamsets.pipeline.api.StageException;
@@ -29,7 +27,6 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
 import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
 
-import java.sql.Connection;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;

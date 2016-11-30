@@ -23,7 +23,6 @@ import com.google.common.collect.ImmutableBiMap;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
-import com.streamsets.lib.security.http.RemoteSSOService;
 
 import javax.inject.Inject;
 import java.util.Map;

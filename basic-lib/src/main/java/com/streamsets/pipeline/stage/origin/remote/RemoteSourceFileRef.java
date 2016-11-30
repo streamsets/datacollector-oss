@@ -26,7 +26,6 @@ import com.streamsets.pipeline.lib.io.fileref.AbstractFileRef;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.Set;
 
 final class RemoteSourceFileRef extends AbstractFileRef{
   private final RemoteFile remoteFile;

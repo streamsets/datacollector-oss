@@ -20,7 +20,6 @@
 package com.streamsets.datacollector.runner;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Maps;
 import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.DeliveryGuarantee;

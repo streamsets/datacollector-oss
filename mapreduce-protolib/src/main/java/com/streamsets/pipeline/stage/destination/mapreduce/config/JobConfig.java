@@ -28,9 +28,7 @@ import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.stage.destination.mapreduce.Groups;
 import com.streamsets.pipeline.stage.destination.mapreduce.MapReduceErrors;
 import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroparquet.AvroParquetConfig;
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.util.ReflectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;

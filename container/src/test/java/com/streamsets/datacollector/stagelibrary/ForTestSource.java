@@ -25,7 +25,6 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 
-import java.io.IOException;
 import java.util.List;
 
 @StageDef(version = 1, label = "", onlineHelpRefUrl = "")

@@ -26,7 +26,6 @@ import com.streamsets.pipeline.lib.http.AbstractHttpStageTest;
 import com.streamsets.pipeline.lib.http.HttpMethod;
 import com.streamsets.pipeline.lib.http.JerseyClientUtil;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
-import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;

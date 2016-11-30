@@ -28,23 +28,11 @@ import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.ExecutorRunner;
 import com.streamsets.pipeline.stage.destination.mapreduce.MapReduceDExecutor;
 import com.streamsets.pipeline.stage.destination.mapreduce.MapReduceExecutor;
-import com.streamsets.pipeline.stage.destination.mapreduce.config.JobConfig;
-import com.streamsets.pipeline.stage.destination.mapreduce.config.JobType;
-import com.streamsets.pipeline.stage.destination.mapreduce.config.MapReduceConfig;
-import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.SimpleJobCreator;
 import org.apache.commons.io.FileUtils;
-import org.apache.hadoop.conf.Configuration;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TestName;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.util.Map;
-import java.util.UUID;
 
 public class MapReduceExecutorIT extends BaseMapReduceIT {
 

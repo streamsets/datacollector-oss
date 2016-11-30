@@ -19,7 +19,6 @@
  */
 package com.streamsets.pipeline.lib.xml;
 
-import com.google.common.collect.Maps;
 import com.streamsets.pipeline.api.Field;
 import org.junit.Assert;
 import org.junit.Test;

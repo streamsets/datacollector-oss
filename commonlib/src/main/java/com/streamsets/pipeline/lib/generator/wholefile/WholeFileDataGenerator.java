@@ -22,13 +22,10 @@ package com.streamsets.pipeline.lib.generator.wholefile;
 import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ChecksumAlgorithm;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.lib.generator.StreamCloseEventHandler;
-import com.streamsets.pipeline.lib.hashing.HashingUtil;
-import com.streamsets.pipeline.lib.io.fileref.FileRefStreamCloseEventHandler;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import org.apache.commons.io.IOUtils;
 
@@ -39,8 +36,6 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
-import java.util.HashMap;
-import java.util.Map;
 
 final class WholeFileDataGenerator implements DataGenerator {
   private final Stage.Context context;

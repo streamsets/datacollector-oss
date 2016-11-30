@@ -20,7 +20,6 @@
 package com.streamsets.pipeline.config;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
-import com.streamsets.pipeline.lib.hashing.HashingUtil;
 
 public class ChecksumAlgorithmChooserValues extends BaseEnumChooserValues<ChecksumAlgorithm> {
 

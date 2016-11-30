@@ -24,7 +24,6 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
-import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.LinkedHashMap;
 import java.util.List;

@@ -20,7 +20,6 @@
 package com.streamsets.pipeline.stage.processor.xmlflattener;
 
 import com.streamsets.pipeline.api.Label;
-import com.streamsets.pipeline.config.DataFormat;
 
 public enum Groups implements Label {
   XML("Flatten");

@@ -20,7 +20,6 @@
 package com.streamsets.pipeline.stage.origin.logtail;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Optional;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;

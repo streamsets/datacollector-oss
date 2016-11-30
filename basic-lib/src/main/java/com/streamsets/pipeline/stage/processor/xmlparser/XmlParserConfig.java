@@ -23,7 +23,6 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
-import com.streamsets.pipeline.api.impl.XMLChar;
 import com.streamsets.pipeline.config.CharsetChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
@@ -32,8 +31,6 @@ import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
 import com.streamsets.pipeline.lib.xml.xpath.Constants;
 import com.streamsets.pipeline.lib.xml.xpath.XPathValidatorUtil;
 import com.streamsets.pipeline.stage.common.DataFormatErrors;
-import com.streamsets.pipeline.stage.common.DataFormatGroups;
-import com.streamsets.pipeline.stage.origin.lib.ParserErrors;
 import org.apache.commons.lang.StringUtils;
 
 import java.nio.charset.Charset;

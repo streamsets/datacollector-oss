@@ -55,7 +55,6 @@ import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

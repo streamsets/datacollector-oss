@@ -22,7 +22,6 @@ package com.streamsets.pipeline.stage.origin.jdbc;
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 

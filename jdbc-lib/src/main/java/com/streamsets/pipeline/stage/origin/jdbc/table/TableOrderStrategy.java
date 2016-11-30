@@ -21,10 +21,6 @@ package com.streamsets.pipeline.stage.origin.jdbc.table;
 
 import com.streamsets.pipeline.api.Label;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.TreeMap;
-
 public enum TableOrderStrategy implements Label {
   NONE("None"),
   ALPHABETICAL("Alphabetical"),

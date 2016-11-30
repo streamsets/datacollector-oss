@@ -33,7 +33,6 @@ import org.apache.parquet.schema.PrimitiveType;
 import org.apache.parquet.schema.PrimitiveType.PrimitiveTypeName;
 import org.apache.parquet.schema.Type;
 import org.apache.parquet.schema.Types;
-import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.NullNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

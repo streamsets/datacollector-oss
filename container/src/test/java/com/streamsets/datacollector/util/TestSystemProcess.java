@@ -22,19 +22,16 @@ package com.streamsets.datacollector.util;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 import com.google.common.io.Files;
-import com.streamsets.datacollector.util.SystemProcessImpl;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

@@ -21,7 +21,6 @@ package com.streamsets.datacollector.store.impl;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -40,8 +39,6 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
-import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
-import com.streamsets.datacollector.store.impl.SlavePipelineStoreTask;
 import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.PipelineDirectoryUtil;
 

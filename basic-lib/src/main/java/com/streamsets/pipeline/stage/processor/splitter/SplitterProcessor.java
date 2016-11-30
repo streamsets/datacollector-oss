@@ -28,7 +28,6 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.config.OnStagePreConditionFailure;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class SplitterProcessor extends SingleLaneRecordProcessor {

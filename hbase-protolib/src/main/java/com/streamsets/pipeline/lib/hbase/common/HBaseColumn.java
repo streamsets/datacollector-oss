@@ -19,8 +19,6 @@
  */
 package com.streamsets.pipeline.lib.hbase.common;
 
-import org.apache.hadoop.hbase.util.Bytes;
-
 import java.util.Arrays;
 
 public class HBaseColumn{

@@ -35,7 +35,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import static com.streamsets.pipeline.stage.processor.spark.Errors.SPARK_00;

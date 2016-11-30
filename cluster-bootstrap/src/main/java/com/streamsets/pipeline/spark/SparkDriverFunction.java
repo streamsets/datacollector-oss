@@ -21,7 +21,6 @@ package com.streamsets.pipeline.spark;
 
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.function.Function;
-import org.apache.spark.api.java.function.VoidFunction;
 
 import java.io.Serializable;
 

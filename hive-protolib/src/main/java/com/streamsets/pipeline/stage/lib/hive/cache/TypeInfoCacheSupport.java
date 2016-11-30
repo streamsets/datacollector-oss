@@ -25,7 +25,6 @@ import com.streamsets.pipeline.stage.lib.hive.HiveQueryExecutor;
 import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedException;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.hadoop.security.UserGroupInformation;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;

@@ -19,16 +19,11 @@
  */
 package com.streamsets.datacollector.runner;
 
-import com.google.common.collect.ImmutableList;
-import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.util.ContainerError;
-import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.Issues;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.List;
 
 public class TestPipelineRuntimeException {
 

@@ -33,7 +33,6 @@ import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 
 import java.util.List;
-import java.util.Date;
 
 
 public class DataLakeConfigBean {

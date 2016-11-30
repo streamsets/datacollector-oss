@@ -27,7 +27,6 @@ import com.streamsets.datacollector.config.MetricType;
 import com.streamsets.datacollector.config.MetricsRuleDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
-import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.ThresholdType;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -50,7 +49,6 @@ import org.mockito.Mockito;
 
 import javax.inject.Singleton;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

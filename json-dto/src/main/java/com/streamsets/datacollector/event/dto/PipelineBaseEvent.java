@@ -19,8 +19,6 @@
  */
 package com.streamsets.datacollector.event.dto;
 
-import java.util.UUID;
-
 // Events for all commands requiring Pipeline name, rev and user
 public class PipelineBaseEvent implements Event {
 

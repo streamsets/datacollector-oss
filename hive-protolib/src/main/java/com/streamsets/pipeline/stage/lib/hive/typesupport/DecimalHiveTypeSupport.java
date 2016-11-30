@@ -25,7 +25,6 @@ import com.streamsets.pipeline.stage.lib.hive.Errors;
 import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
 import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedException;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 

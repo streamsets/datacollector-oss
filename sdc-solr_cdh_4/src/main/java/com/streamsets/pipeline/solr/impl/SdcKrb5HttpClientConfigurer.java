@@ -27,20 +27,10 @@ import org.apache.solr.common.params.SolrParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.security.auth.Subject;
-import javax.security.auth.kerberos.KerberosPrincipal;
-import javax.security.auth.kerberos.KerberosTicket;
 import javax.security.auth.login.AppConfigurationEntry;
 import javax.security.auth.login.Configuration;
-import java.security.AccessController;
 import java.security.Principal;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Locale;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 public class SdcKrb5HttpClientConfigurer extends HttpClientConfigurer {
   // Change for SDC-2962

@@ -19,9 +19,7 @@
  */
 package com.streamsets.pipeline.lib.io.fileref;
 
-import com.codahale.metrics.Gauge;
 import com.streamsets.pipeline.api.FileRef;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.hashing.HashingUtil;
 import org.junit.Assert;
 
@@ -32,7 +30,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Random;
 

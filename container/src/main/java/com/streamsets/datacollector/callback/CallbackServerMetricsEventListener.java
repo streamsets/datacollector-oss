@@ -21,12 +21,6 @@ package com.streamsets.datacollector.callback;
 
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsEventListener;
-import com.streamsets.datacollector.restapi.bean.BeanHelper;
-import com.streamsets.datacollector.util.AuthzRole;
-
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Response;
-import java.util.Map;
 
 public final class CallbackServerMetricsEventListener extends CallbackServerEventListener implements MetricsEventListener {
 

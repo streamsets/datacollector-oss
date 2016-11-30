@@ -19,10 +19,11 @@
  */
 package com.streamsets.pipeline.stage.processor.hive;
 
-import com.streamsets.pipeline.api.*;
-import com.streamsets.pipeline.api.el.ELEval;
-import com.streamsets.pipeline.api.el.ELEvalException;
-import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.Processor;
+import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.TimeZoneChooserValues;
 import com.streamsets.pipeline.configurablestage.DProcessor;
 import com.streamsets.pipeline.api.ListBeanModel;
@@ -32,9 +33,7 @@ import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.stage.lib.hive.HiveConfigBean;
 import com.streamsets.pipeline.stage.lib.hive.Groups;
-import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
 
-import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
