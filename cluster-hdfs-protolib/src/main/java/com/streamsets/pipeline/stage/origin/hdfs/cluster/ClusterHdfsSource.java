@@ -225,7 +225,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
                     getContext().createConfigIssue(
                         Groups.HADOOP_FS.name(),
                         CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsDirLocations",
-                        Errors.HADOOPFS_16,
+                        Errors.HADOOPFS_17,
                         hdfsDirLocation
                     )
                 );
@@ -291,14 +291,14 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
             entry.getValue() == null ? null : entry.getValue());
       }
     } catch (IOException | InterruptedException ex) {
-      String msg = "Error opening " + path + ": " + ex;
-      LOG.info(msg, ex);
+      LOG.warn(Utils.format(Errors.HADOOPFS_16.getMessage(), path, ex), ex);
       issues.add(
           getContext().createConfigIssue(
               Groups.HADOOP_FS.name(),
               CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsDirLocations",
               Errors.HADOOPFS_16,
-              fileStatus.getPath()
+              path,
+              ex.toString()
           )
       );
     }
