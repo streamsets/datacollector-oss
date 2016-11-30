@@ -19,12 +19,15 @@
  */
 package com.streamsets.pipeline.stage.origin.sdcipc;
 
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.stage.destination.sdcipc.Constants;
+import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
+import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -36,6 +39,17 @@ import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.DispatcherType;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -94,15 +108,41 @@ public class IpcServer {
 
     servlet = new IpcServlet(context, configs, queue);
     ServletContextHandler contextHandler = new ServletContextHandler();
+    contextHandler.addFilter(DisableTraceFilter.class, "/*", EnumSet.allOf(DispatcherType.class));
     contextHandler.addServlet(new ServletHolder(new PingServlet()), Constants.PING_PATH);
     contextHandler.addServlet(new ServletHolder(servlet), Constants.IPC_PATH);
     contextHandler.setContextPath("/");
     server.setHandler(contextHandler);
+
     server.start();
 
     LOG.info("Running, port '{}', TLS '{}'", configs.port, configs.sslEnabled);
 
     httpServer = server;
+  }
+
+  public static class DisableTraceFilter implements Filter {
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+      // Empty
+    }
+
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+      HttpServletRequest httpRequest = (HttpServletRequest)request;
+      HttpServletResponse httpResponse = (HttpServletResponse) response;
+      if("TRACE".equals(httpRequest.getMethod())) {
+        httpResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+      } else {
+        filterChain.doFilter(request, response);
+      }
+    }
+
+    @Override
+    public void destroy() {
+      // Empty
+    }
   }
 
   public void stop() {

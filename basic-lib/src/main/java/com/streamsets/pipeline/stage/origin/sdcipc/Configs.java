@@ -22,6 +22,8 @@ package com.streamsets.pipeline.stage.origin.sdcipc;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,6 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Configs {
+  private static final Logger LOG = LoggerFactory.getLogger(Configs.class);
+
   private static final String CONFIG_PREFIX = "config.";
   private static final String PORT = CONFIG_PREFIX + "port";
   private static final String KEY_STORE_FILE = CONFIG_PREFIX + "keyStoreFile";
@@ -139,6 +143,7 @@ public class Configs {
     } else {
       try (ServerSocket ss = new ServerSocket(port)){
       } catch (Exception ex) {
+        LOG.debug("Can't bind to port, reporting as validation error. ", ex);
         issues.add(context.createConfigIssue(Groups.RPC.name(), PORT, Errors.IPC_ORIG_01, ex.toString()));
 
       }
