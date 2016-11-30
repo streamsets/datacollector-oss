@@ -37,7 +37,7 @@ public class RedisTargetConfig {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "URI",
-      description = "Use format redis://[:password@]host[:port][/[database]]",
+      description = "Use format redis://[:password@]host:port[/[database]]",
       displayPosition = 10,
       group = "REDIS"
   )

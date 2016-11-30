@@ -35,7 +35,7 @@ public class RedisOriginConfigBean {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "URI",
-      description = "Use format redis://[:password@]host[:port][/[database]]",
+      description = "Use format redis://[:password@]host:port[/[database]]",
       group = "REDIS",
       displayPosition = 10
   )
