@@ -69,16 +69,20 @@
                                 </row>
                                 <row>
                                     <entry>bindDn</entry>
-                                    <entry>Root distinguished name (DN) for the connection. </entry>
+                                    <entry>Root distinguished name (DN) used to query the directory
+                                        server. This user must have privileges to search the
+                                        directory. </entry>
                                 </row>
                                 <row>
                                     <entry>bindPassword</entry>
-                                    <entry>Password for the connection. For additional security,
-                                        save the password in the
+                                    <entry>Password for the root distinguished name. For additional
+                                        security, save the password in the
                                             <codeph>$SDC_CONF/ldap-bind-password.txt</codeph> file
-                                        without additional characters, spaces, or line breaks.
-                                            <p>Default is @ldap-bind-password.txt@, which points to
-                                            the <codeph>ldap-bind-password.txt</codeph> file for the
+                                        without additional characters, spaces, or line breaks. As a
+                                        best practice, the file should have owner-only
+                                            permissions.<p>Default is @ldap-bind-password.txt@,
+                                            which points to the
+                                                <codeph>ldap-bind-password.txt</codeph> file for the
                                             password.</p></entry>
                                 </row>
                                 <row>
@@ -141,11 +145,22 @@
                                 <row>
                                     <entry>roleMemberAttribute</entry>
                                     <entry>Name of the role attribute for user names. Default is
-                                        uniqueMember. </entry>
+                                        Member. </entry>
                                 </row>
                                 <row>
                                     <entry>roleObjectClass</entry>
-                                    <entry>Role object class. Default is groupOfUniqueNames.</entry>
+                                    <entry>Role object class. Default is groupOfNames.</entry>
+                                </row>
+                                <row>
+                                    <entry>roleFilter</entry>
+                                    <entry>Specifies whether LDAP group members are determined by DN
+                                        or uid. Enter one of the following values:<ul
+                                            id="ul_rtd_4fp_cy">
+                                            <li><codeph>"member={dn}"</codeph> - Use when LDAP
+                                                groups list members by full DN. </li>
+                                            <li><codeph>"memberUid={user}"</codeph> - Use when LDAP
+                                                groups list members by uid.</li>
+                                        </ul><p>Default is DN.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -177,7 +192,8 @@
   roleBaseDn="ou=groups,dc=example,dc=net"
   roleNameAttribute="cn"
   roleMemberAttribute="member"
-  roleObjectClass="groupOfNames";
+  roleObjectClass="groupOfNames"
+  roleFilter="member={dn}";
 }; </codeblock>
             <p>When an LDAP user logs into <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -207,11 +223,9 @@
                         /> continues with the next authentication step.</p></li>
                 <li>Checks which LDAP group the user account belongs to by sending the following
                     query to the LDAP
-                        server:<codeblock>ldapsearch -LLL -H ldap://&lt;hostname>:&lt;port> -x -D &lt;bindDn> -w &lt;bindPassword> -b &lt;roleBaseDn> (&amp;(objectClass=&lt;roleObjectClass>)(&lt;roleMemberAttribute>=&lt;user dn>)</codeblock><p>where
-                            <codeph>&lt;user dn></codeph> is
-                            <codeph>"&lt;userRdnAttribute>=username,
-                        &lt;userBaseDn>"</codeph>.</p><p>For example, using the sample
-                            <codeph>ldap-login.conf</codeph> file configured above, <ph
+                        server:<codeblock>ldapsearch -LLL -H ldap://&lt;hostname>:&lt;port> -x -D &lt;bindDn> -w &lt;bindPassword> -b &lt;roleBaseDn> (&amp;(objectClass=&lt;roleObjectClass>)(member={dn})</codeblock><p>For
+                        example, using the sample <codeph>ldap-login.conf</codeph> file configured
+                        above, <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> sends the following query to the LDAP
                         server:</p><codeblock>ldapsearch -LLL -H ldap://server1:636 -x -D "cn=admin,dc=example,dc=net" -w password -b "ou=groups,dc=example,dc=net" (&amp;(objectClass=groupOfNames)(member="cn=jdoe, ou=users,dc=example,dc=net")</codeblock><p>The

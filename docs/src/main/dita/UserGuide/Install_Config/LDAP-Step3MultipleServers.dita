@@ -93,7 +93,8 @@
   roleBaseDn="ou=Groups,dc=example,dc=org"
   roleNameAttribute="cn"
   roleMemberAttribute="member"
-  roleObjectClass="groupOfNames";
+  roleObjectClass="groupOfNames"
+  roleFilter="member={dn}";
 
 
   com.streamsets.datacollector.http.LdapLoginModule required
@@ -114,7 +115,8 @@
   roleBaseDn="ou=Groups,dc=example,dc=org"
   roleNameAttribute="cn"
   roleMemberAttribute="member"
-  roleObjectClass="groupOfNames";
+  roleObjectClass="groupOfNames"
+  roleFilter="member={dn}";
 };</codeblock>
  </conbody>
 </concept>
