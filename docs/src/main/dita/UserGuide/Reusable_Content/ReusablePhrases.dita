@@ -74,11 +74,6 @@
                         <li>Trash</li>
                   </ul>
             </p>
-            <p>
-                  <draft-comment author="Loretta">Executor in the Core installation. Used in
-                        CoreInstall_Overview and CoreInstall-LibList. </draft-comment>
-            </p>
-            <p id="CoreExecutor">The core installation also includes the HDFS Metadata executor.</p>
             <p/>
             <p>
                   <draft-comment author="Loretta">KafkaSecure - used in KConsumer &amp; Producer

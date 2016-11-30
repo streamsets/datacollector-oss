@@ -102,9 +102,7 @@
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/BasicDestinations"
                                         id="ul_bps_cqh_cw">
                                         <li/>
-                                    </ul></p><p
-                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/CoreExecutor"
-                                /></entry>
+                                    </ul></p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-cassandra_3-lib</entry>
@@ -221,6 +219,28 @@
                             </entry>
                         </row>
                         <row>
+                            <entry>streamsets-datacollector-cdh_5_9-lib</entry>
+                            <entry>
+                                <p>For the Cloudera CDH version 5.9 distribution of Hadoop. </p>
+                                <p>Includes:</p>
+                                <ul id="ul_djf_bkv_cy">
+                                    <li>Hadoop FS origin for cluster mode pipelines </li>
+                                    <li>HBase Lookup processor</li>
+                                    <li>Hive Metadata processor</li>
+                                    <li>Spark Evaluator processor</li>
+                                    <li>Flume destination </li>
+                                    <li>Hadoop FS destination </li>
+                                    <li>HBase destination </li>
+                                    <li>Hive Metastore destination</li>
+                                    <li>Hive Streaming destination</li>
+                                    <li>Solr destination</li>
+                                    <li>HDFS Metadata executor</li>
+                                    <li>Hive Query executor</li>
+                                    <li>MapReduce executor</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
                             <entry>streamsets-datacollector-cdh_5_4-cluster-cdh_kafka_1_2-lib</entry>
                             <entry>
                                 <p>For the Cloudera version 5.4 distribution of Apache Kafka
@@ -255,6 +275,14 @@
                             <entry>streamsets-datacollector-cdh_5_8-cluster-cdh_kafka_2_0-lib</entry>
                             <entry>
                                 <p>For the Cloudera version 5.8 distribution of Apache Kafka 2.0. </p>
+                                <p>Includes the Kafka Consumer origin for cluster mode
+                                    pipelines.</p>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>streamsets-datacollector-cdh_5_9-cluster-cdh_kafka_2_0-lib</entry>
+                            <entry>
+                                <p>For the Cloudera version 5.9 distribution of Apache Kafka 2.0. </p>
                                 <p>Includes the Kafka Consumer origin for cluster mode
                                     pipelines.</p>
                             </entry>
@@ -335,6 +363,11 @@
                                     destination.</p></entry>
                         </row>
                         <row>
+                            <entry>streamsets-datacollector-elasticsearch_5_0-lib</entry>
+                            <entry>For Elasticsearch 5.0.x.<p>Includes the Elasticsearch
+                                    destination.</p></entry>
+                        </row>
+                        <row>
                             <entry>streamsets-datacollector-groovy_2_4-lib</entry>
                             <entry>For Groovy version 2.4. <p>Includes the Groovy Evaluator
                                     processor.</p></entry>
@@ -383,6 +416,30 @@
                             <entry>streamsets-datacollector-hdp_2_4-lib </entry>
                             <entry>For the Hortonworks version 2.4 distribution of Apache Hadoop.
                                         <p>Includes:<ul id="ul_uh3_lhh_cw">
+                                        <li>
+                                            <p>Hadoop FS origin for cluster mode pipelines</p>
+                                        </li>
+                                        <li>Kafka Consumer origin for standalone and cluster mode
+                                            pipelines</li>
+                                        <li>SDC RPC to Kafka origin</li>
+                                        <li>UDP to Kafka origin</li>
+                                        <li>HBase Lookup processor</li>
+                                        <li>Hive Metadata processor</li>
+                                        <li>Flume destination </li>
+                                        <li>Hadoop FS destination </li>
+                                        <li>HBase destination </li>
+                                        <li>Hive Metastore destination</li>
+                                        <li>Hive Streaming destination</li>
+                                        <li>Kafka Producer destination</li>
+                                        <li>HDFS Metadata executor</li>
+                                        <li>Hive Query executor</li>
+                                        <li>MapReduce executor</li>
+                                    </ul></p></entry>
+                        </row>
+                        <row>
+                            <entry>streamsets-datacollector-hdp_2_5-lib </entry>
+                            <entry>For the Hortonworks version 2.5 distribution of Apache Hadoop.
+                                        <p>Includes:<ul id="ul_jcc_kjv_cy">
                                         <li>
                                             <p>Hadoop FS origin for cluster mode pipelines</p>
                                         </li>
