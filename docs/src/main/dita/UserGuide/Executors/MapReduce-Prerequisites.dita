@@ -22,7 +22,7 @@
                 <u>one</u> of the following tasks to enable the executor to submit jobs: <dl>
                 <dlentry>
                     <dt>Configure the Hadoop Minimum User ID property, min.user.id</dt>
-                    <dd>The min.user.id property is set to 1000 by default. To allow job
+                    <dd>In Hadoop, the min.user.id property is set to 1000 by default. To allow job
                             submission:<ol id="ol_wpb_bcm_zx">
                             <li>Verify the user ID being used by the <ph
                                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -35,17 +35,17 @@
                 <dlentry>
                     <dt>Configure the Hadoop Allowed System Users property,
                         allowed.system.users</dt>
-                    <dd>The allowed.system.users property lists allowed user names. To allow job
-                        submission, add the <ph
+                    <dd>In Hadoop, the allowed.system.users property lists allowed user names. To
+                        allow job submission, add the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> user name, typically "sdc", to the list of allowed users.</dd>
                 </dlentry>
                 <dlentry>
                     <dt>In the MapReduce executor stage, configure the MapReduce User property</dt>
-                    <dd>The MapReduce User property allows you to enter a user name for the stage to
-                        use when submitting jobs. Enter a user with an ID that is higher than the
-                        min.user.id property, or with a user name that is listed in the
-                        allowed.system.users property. </dd>
+                    <dd>In the MapReduce executor, the MapReduce User property allows you to enter a
+                        user name for the stage to use when submitting jobs. Enter a user with an ID
+                        that is higher than the min.user.id property, or with a user name that is
+                        listed in the allowed.system.users property. </dd>
                 </dlentry>
             </dl></p>
  </conbody>

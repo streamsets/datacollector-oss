@@ -40,7 +40,8 @@
                     </tbody>
                 </tgroup>
             </table></p>
-        <p>The steps that you complete to configure a cluster pipeline to read from MapR depend on
-            the cluster execution mode.</p>
+        <note>When you add a partition to the MapR topic, restart the pipeline to enable <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
+            generate a new worker to read from the new partition. </note>
  </conbody>
 </concept>

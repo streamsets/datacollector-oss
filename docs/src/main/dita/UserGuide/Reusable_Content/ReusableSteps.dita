@@ -4414,6 +4414,9 @@ grant codebase "file:///opt/sdc-extras/-" {
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> to enable the changes.</cmd>
             </step>
+            <step>
+                <cmd> </cmd>
+            </step>
         </steps>
     </taskbody>
 </task>
