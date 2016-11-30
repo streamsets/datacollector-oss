@@ -46,9 +46,8 @@
         </topicref>
         <topicref href="../Executors/MapReduce.dita" chunk="to-content">
             <topicmeta><shortdesc></shortdesc></topicmeta>
-            <topicref href="../Executors/MapReduce-Prerequisites.dita">
-                <topicref href="../Executors/MapReduce-User.dita"/>
-            </topicref>
+            <topicref href="../Executors/MapReduce-Prerequisites.dita"/>
+            <topicref href="../Executors/MapReduce-User.dita"/>
             <topicref href="../Executors/MapReduce-EventStages.dita"/>
             <topicref href="../Executors/MapReduce-Jobs.dita">
                 <topicref href="../Executors/MapReduce-AvrotoParquet.dita"/>

@@ -20,7 +20,6 @@
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Cluster_Mode/ClusterPipelines-ExecutionMode.dita"/>
    <topicref href="../Cluster_Mode/HTTPProtocols.dita"/>
-   <topicref href="../Cluster_Mode/KerberosAuthentication.dita"/>
    <topicref href="../Cluster_Mode/CheckpointStorage.dita">
     <topicref href="../Cluster_Mode/Checkpoint-Mesos.dita"/>
    </topicref>
@@ -35,7 +34,9 @@
     </topicmeta>
    </topicref></topicref>
   <topicref href="../Cluster_Mode/KafkaRequirements.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Cluster_Mode/Kafka-YARNStreamMode.dita"/>
+   <topicref href="../Cluster_Mode/Kafka-MesosStreamMode.dita"/></topicref>
   <topicref href="../Cluster_Mode/MapRRequirements.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Cluster_Mode/MapR-BatchMode.dita"/>

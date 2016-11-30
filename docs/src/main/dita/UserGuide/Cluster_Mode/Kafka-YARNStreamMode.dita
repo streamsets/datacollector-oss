@@ -3,33 +3,45 @@
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-
+  
       http://www.apache.org/licenses/LICENSE-2.0
-
+      
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
-<task id="task_akz_w5b_ws">
-    <title>HDFS Requirements</title>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="task_hhk_bfv_cy">
+    <title>Configuring Cluster YARN Streaming for Kafka</title>
     <taskbody>
         <context>
-            <p><indexterm>cluster mode<indexterm>configuration for
-                HDFS</indexterm></indexterm>Cluster mode pipelines that read from HDFS require the
-                Cloudera distribution of Hadoop (CDH) or Hortonworks Data Platform (HDP).</p>
-            <p>Complete the following steps to configure a cluster mode pipeline to read from HDFS: </p>
+            <p><indexterm>cluster mode<indexterm>configuration for Kafka on
+                    YARN</indexterm></indexterm><indexterm>cluster YARN streaming
+                        mode<indexterm>configuration requirements</indexterm></indexterm>Complete
+                the following steps to configure a cluster pipeline to read from a Kafka cluster on
+                YARN:</p>
         </context>
-        <steps id="steps_ldn_rhw_cy">
+        <steps>
             <step>
-                <cmd>Verify the installation of HDFS and YARN.</cmd>
+                <cmd>Verify the installation of Kafka, Spark Streaming, and YARN as the cluster
+                    manager.</cmd>
             </step>
             <step>
-                <cmd>Install <ph
+                <cmd>Install the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> on a YARN gateway node.</cmd>
+                    /> on a Spark and YARN gateway node.</cmd>
+            </step>
+            <step>
+                <cmd>If necessary, specify the location of the spark-submit script.</cmd>
+                <info>The <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> assumes that the spark-submit script, used to submit job requests to Spark
+                    Streaming, is located in the following directory:
+                    <codeblock>/usr/bin/spark-submit</codeblock>If the script is not in this
+                    directory, use the SPARK_SUBMIT_YARN_COMMAND environment variable to define the
+                    location of the script.</info>
             </step>
             <step>
                 <cmd>To enable <ph
@@ -45,12 +57,18 @@
                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                             /> user name, typically "sdc", to the allowed.system.users
                             property.</li>
-                        <li>After you create the pipeline, specify a Hadoop FS user in the Hadoop FS
-                            origin. <p>For the Hadoop FS User property, enter a user with an ID that
-                                is higher than the min.user.id property, or with a user name that is
-                                listed in the allowed.system.users property. </p></li>
                     </ul>
                 </info>
+            </step>
+            <step>
+                <cmd>On YARN, verify that the Spark logging level is set to a severity of INFO or
+                    lower.</cmd>
+                <info>YARN sets the Spark logging level to INFO by default. To change the logging
+                        level:<ol
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ol-Clust-Stream-loglevel"
+                        id="ol_tzg_ggl_px">
+                        <li/>
+                    </ol></info>
             </step>
             <step>
                 <cmd>If YARN is configured to use Kerberos authentication, configure <ph
@@ -71,28 +89,23 @@
             </step>
             <step>
                 <cmd>In the pipeline properties, on the <wintitle>General</wintitle> tab, set the
-                        <uicontrol>Execution Mode</uicontrol> property to <uicontrol>Cluster
-                        Batch</uicontrol>.</cmd>
+                        <uicontrol>Execution Mode</uicontrol> property to <uicontrol>Cluster YARN
+                        Streaming</uicontrol>.</cmd>
             </step>
             <step>
-                <cmd>On the <uicontrol>Cluster</uicontrol> tab, enter the required properties to
-                    read from HDFS. </cmd>
+                <cmd>On the <uicontrol>Cluster</uicontrol> tab, enter the required properties for
+                    YARN.</cmd>
             </step>
             <step>
-                <cmd>In the pipeline, use the Hadoop FS origin for cluster mode.</cmd>
-                <info>On the <wintitle>General</wintitle> tab of the origin, select the appropriate
-                    CDH or HDP stage library for cluster mode.</info>
-            </step>
-            <step>
-                <cmd>If YARN is configured to use Kerberos authentication, in the origin, enable the
-                        <uicontrol>Kerberos Authentication</uicontrol> property on the
-                        <wintitle>Hadoop FS</wintitle> tab. </cmd>
+                <cmd>In the pipeline, use a Kafka Consumer origin.</cmd>
+                <info>If necessary, select a cluster mode stage library on the
+                        <wintitle>General</wintitle> tab of the origin. </info>
             </step>
         </steps>
     </taskbody>
     <related-links>
         <link href="../Pipeline_Configuration/ConfiguringAPipeline.dita#task_xlv_jdw_kq"
             type="topic"/>
-        <link href="../Origins/HadoopFS-origin.dita#concept_lw2_tnm_vs" type="topic"/>
+        <link href="../Origins/KConsumer.dita#concept_msz_wnr_5q" type="topic"/>
     </related-links>
 </task>
