@@ -58,16 +58,17 @@ import java.util.Map;
 @DenyAll
 public class LogResource {
   public static final String X_SDC_LOG_PREVIOUS_OFFSET_HEADER = "X-SDC-LOG-PREVIOUS-OFFSET";
+  private static final String EXCEPTION = "exception";
   private final String logFile;
   private final Grok logFileGrok;
 
   @Inject
-  public LogResource(RuntimeInfo runtimeInfo) throws RuntimeException {
+  public LogResource(RuntimeInfo runtimeInfo) {
     try {
       logFile = LogUtils.getLogFile(runtimeInfo);
       logFileGrok = LogUtils.getLogGrok(runtimeInfo);
     } catch (Exception ex) {
-      throw new RuntimeException(ex);
+      throw new IllegalStateException("Can't load logging infrastructure", ex);
     }
   }
 
@@ -83,12 +84,13 @@ public class LogResource {
       AuthzRole.CREATOR_REMOTE,
       AuthzRole.MANAGER_REMOTE
   })
-  public Response currentLog(@QueryParam("endingOffset") @DefaultValue("-1") long offset,
+  public Response currentLog(@QueryParam("endingOffset") @DefaultValue("-1") long startOffset,
                              @QueryParam("extraMessage") String extraMessage,
                              @QueryParam("pipeline") String pipeline,
                              @QueryParam("severity") String severity) throws IOException {
 
     List<Map<String, String>> logData = new ArrayList<>();
+    long offset = startOffset;
 
     LogStreamer streamer = new LogStreamer(logFile, offset, 50 * 1024);
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -103,18 +105,19 @@ public class LogResource {
 
     fetchLogData(bufferedReader, logData, pipeline, severity);
 
+    offset = streamer.getNewEndingOffset();
+    streamer.close();
 
     if((severity != null || pipeline != null) && logData.size() < 50) {
       //For filtering try to fetch more log data until it we get at least 50 lines of log data or it reaches top
-      offset = streamer.getNewEndingOffset();
       while (offset != 0 && logData.size() < 50) {
         streamer = new LogStreamer(logFile, offset, 50 * 1024);
         outputStream = new ByteArrayOutputStream();
         streamer.stream(outputStream);
 
         //merge last message if it is part of new messages
-        if(logData.size() > 0 && logData.get(0).get("timestamp") == null && logData.get(0).get("exception") != null) {
-          outputStream.write(logData.get(0).get("exception").getBytes(StandardCharsets.UTF_8));
+        if (!logData.isEmpty() && logData.get(0).get("timestamp") == null && logData.get(0).get(EXCEPTION) != null) {
+          outputStream.write(logData.get(0).get(EXCEPTION).getBytes(StandardCharsets.UTF_8));
           logData.remove(0);
         }
 
@@ -129,11 +132,15 @@ public class LogResource {
         logData = tempLogData;
 
         offset = streamer.getNewEndingOffset();
+        streamer.close();
       }
     }
 
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(logData).
-        header(X_SDC_LOG_PREVIOUS_OFFSET_HEADER, streamer.getNewEndingOffset()).build();
+    return Response.ok()
+      .type(MediaType.APPLICATION_JSON)
+      .entity(logData)
+      .header(X_SDC_LOG_PREVIOUS_OFFSET_HEADER, offset)
+      .build();
   }
 
   private File[] getLogFiles() throws IOException {
@@ -165,10 +172,10 @@ public class LogResource {
   public Response listLogFiles() throws IOException {
     File[] logFiles = getLogFiles();
     List<Map> list = new ArrayList<>();
-    for (File logFile : logFiles) {
+    for (File file : logFiles) {
       Map map = new HashMap();
-      map.put("file", logFile.getName());
-      map.put("lastModified", logFile.lastModified());
+      map.put("file", file.getName());
+      map.put("lastModified", file.lastModified());
       list.add(map);
     }
     return Response.ok(list).build();
@@ -190,15 +197,15 @@ public class LogResource {
   public Response getLogFile(@PathParam("logName") String logName,
                              @QueryParam("attachment") @DefaultValue("false") Boolean attachment) throws IOException {
     Response response;
-    File logFile = null;
+    File newLogFile = null;
     for (File file : getLogFiles()) {
       if (file.getName().equals(logName)) {
-        logFile = file;
+        newLogFile = file;
         break;
       }
     }
-    if (logFile != null) {
-      FileInputStream logStream = new FileInputStream(logFile);
+    if (newLogFile != null) {
+      FileInputStream logStream = new FileInputStream(newLogFile);
       if(attachment) {
         return Response.ok().
             header("Content-Disposition", "attachment; filename=" + logName).entity(logStream).build();
@@ -231,13 +238,13 @@ public class LogResource {
         lastMessageFiltered = false;
         logData.add(namedGroupToValuesMap);
       } else if(!lastMessageFiltered) {
-        if(logData.size() > 0) {
+        if(!logData.isEmpty()) {
           Map<String, String> lastLogData = logData.get(logData.size() - 1);
 
-          if(lastLogData.containsKey("exception")) {
-            lastLogData.put("exception", lastLogData.get("exception") + "\n" + thisLine);
+          if(lastLogData.containsKey(EXCEPTION)) {
+            lastLogData.put(EXCEPTION, lastLogData.get(EXCEPTION) + "\n" + thisLine);
           } else {
-            lastLogData.put("exception", thisLine);
+            lastLogData.put(EXCEPTION, thisLine);
           }
         } else {
           //First incomplete line
