@@ -408,6 +408,43 @@ public class ClusterHDFSSourceIT {
     return iterator.next();
   }
 
+  @Test(timeout = 30000)
+  public void testDontReadAllFilesInPreview() throws Exception {
+    String dirLocation = dir.toUri().getPath() + "/dummy";
+    Path filePath = new Path(dirLocation + "/sample.txt");
+    int i = 0;
+    String text = "";
+    while (i < 100) {
+      text += i + "\n";
+      i++;
+    }
+    // 2 files with 100 lines
+    writeTextToFileAndGetFileStatus(filePath, text);
+    writeTextToFileAndGetFileStatus(new Path(dirLocation + "/sample2.txt"), text);
+
+    ClusterHdfsConfigBean conf = new ClusterHdfsConfigBean();
+    conf.hdfsUri = miniDFS.getURI().toString();
+    conf.hdfsDirLocations = Collections.singletonList(dirLocation);
+    conf.hdfsConfigs = new HashMap<>();
+    conf.hdfsKerberos = false;
+    conf.hdfsConfDir = hadoopConfDir;
+    conf.recursive = false;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.TEXT;
+    conf.dataFormatConfig.textMaxLineLen = 1024;
+
+    ClusterHdfsSource source = Mockito.spy(createSource(conf));
+    SourceRunner sourceRunner = new SourceRunner.Builder(
+        ClusterHdfsDSource.class,
+        source
+    ).setPreview(true).addOutputLane("lane").setExecutionMode(ExecutionMode.CLUSTER_BATCH).setResourcesDir
+        (resourcesDir).build();
+
+    sourceRunner.runInit();
+    // readInPreview should be called only once even if there are 2 files with 100 lines each
+    Mockito.verify(source, Mockito.times(1)).readInPreview(Mockito.any(FileStatus.class), Mockito.any(List.class));
+  }
+
 
   @Test(timeout = 30000)
   public void testProduceCustomDelimiterByPreview() throws Exception {

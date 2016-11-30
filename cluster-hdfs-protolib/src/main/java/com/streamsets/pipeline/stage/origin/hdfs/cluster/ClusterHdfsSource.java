@@ -229,34 +229,10 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
                         hdfsDirLocation
                     )
                 );
-              } else if (getContext().isPreview() && previewBuffer.size() < PREVIEW_SIZE) {
+              } else if (getContext().isPreview()) {
                 for (FileStatus fileStatus : files) {
-                  if (fileStatus.isFile()) {
-                    String path = fileStatus.getPath().toString();
-                    try {
-                      List<Map.Entry> buffer;
-                      if (conf.dataFormat == DataFormat.AVRO) {
-                        buffer = previewAvroBatch(fileStatus, PREVIEW_SIZE);
-                      } else {
-                        buffer = previewTextBatch(fileStatus, PREVIEW_SIZE);
-                      }
-                      for (int i = 0; i < buffer.size() && previewBuffer.size() < PREVIEW_SIZE; i++) {
-                        Map.Entry entry = buffer.get(i);
-                        previewBuffer.put(String.valueOf(entry.getKey()),
-                          entry.getValue() == null ? null : entry.getValue());
-                      }
-                    } catch (IOException | InterruptedException ex) {
-                      String msg = "Error opening " + path + ": " + ex;
-                      LOG.info(msg, ex);
-                      issues.add(
-                          getContext().createConfigIssue(
-                              Groups.HADOOP_FS.name(),
-                              CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsDirLocations",
-                              Errors.HADOOPFS_16,
-                              fileStatus.getPath()
-                          )
-                      );
-                    }
+                  if (previewBuffer.size() < PREVIEW_SIZE && fileStatus.isFile()) {
+                    readInPreview(fileStatus, issues);
                   }
                 }
               }
@@ -300,8 +276,38 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   }
 
   @VisibleForTesting
+  void readInPreview(FileStatus fileStatus, List<ConfigIssue> issues) {
+    String path = fileStatus.getPath().toString();
+    try {
+      List<Map.Entry> buffer;
+      if (conf.dataFormat == DataFormat.AVRO) {
+        buffer = previewAvroBatch(fileStatus, PREVIEW_SIZE);
+      } else {
+        buffer = previewTextBatch(fileStatus, PREVIEW_SIZE);
+      }
+      for (int i = 0; i < buffer.size() && previewBuffer.size() < PREVIEW_SIZE; i++) {
+        Map.Entry entry = buffer.get(i);
+        previewBuffer.put(String.valueOf(entry.getKey()),
+            entry.getValue() == null ? null : entry.getValue());
+      }
+    } catch (IOException | InterruptedException ex) {
+      String msg = "Error opening " + path + ": " + ex;
+      LOG.info(msg, ex);
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.HADOOP_FS.name(),
+              CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsDirLocations",
+              Errors.HADOOPFS_16,
+              fileStatus.getPath()
+          )
+      );
+    }
+  }
+
+  @VisibleForTesting
   List<Map.Entry> previewTextBatch(FileStatus fileStatus, int batchSize)
     throws IOException, InterruptedException {
+    int previewCount = previewBuffer.size();
     TextInputFormat textInputFormat = new TextInputFormat();
     long fileLength = fileStatus.getLen();
     List<Map.Entry> batch = new ArrayList<>();
@@ -321,32 +327,42 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     recordReader.initialize(fileSplit, taskAttemptContext);
     boolean hasNext = recordReader.nextKeyValue();
 
-    while (hasNext && batch.size() < batchSize) {
+    while (hasNext && batch.size() < batchSize && previewCount < batchSize) {
       batch.add(new Pair(filePath.toUri().getPath() + "::" + recordReader.getCurrentKey(),
         String.valueOf(recordReader.getCurrentValue())));
       hasNext = recordReader.nextKeyValue(); // not like iterator.hasNext, actually advances
+      previewCount++;
     }
     return batch;
   }
 
   private List<Map.Entry> previewAvroBatch(FileStatus fileStatus, int batchSize) throws IOException, InterruptedException {
+    int previewCount = previewBuffer.size();
     Path filePath = fileStatus.getPath();
     SeekableInput input = new FsInput(filePath, hadoopConf);
     DatumReader<GenericRecord> reader = new GenericDatumReader<>();
-    FileReader<GenericRecord> fileReader = DataFileReader.openReader(input, reader);
     List<Map.Entry> batch = new ArrayList<>();
-    int count = 0;
-    while (fileReader.hasNext() && batch.size() < batchSize) {
-      GenericRecord datum = fileReader.next();
-      ByteArrayOutputStream out = new ByteArrayOutputStream();
-      DataFileWriter<GenericRecord> dataFileWriter =
-        new DataFileWriter<GenericRecord>(new GenericDatumWriter<GenericRecord>(datum.getSchema()));
-      dataFileWriter.create(datum.getSchema(), out);
-      dataFileWriter.append(datum);
-      dataFileWriter.close();
-      out.close();
-      batch.add(new Pair(filePath.toUri().getPath() + "::" + count, out.toByteArray()));
-      count++;
+    FileReader<GenericRecord> fileReader = DataFileReader.openReader(input, reader);
+    try {
+      int count = 0;
+      while (fileReader.hasNext() && batch.size() < batchSize && previewCount < batchSize) {
+        GenericRecord datum = fileReader.next();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        DataFileWriter<GenericRecord> dataFileWriter = new DataFileWriter<>(new GenericDatumWriter<GenericRecord>
+            (datum.getSchema()));
+        try {
+          dataFileWriter.create(datum.getSchema(), out);
+          dataFileWriter.append(datum);
+        } finally {
+          dataFileWriter.close();
+          out.close();
+        }
+        batch.add(new Pair(filePath.toUri().getPath() + "::" + count, out.toByteArray()));
+        count++;
+        previewCount++;
+      }
+    } finally {
+      fileReader.close();
     }
     return batch;
   }
