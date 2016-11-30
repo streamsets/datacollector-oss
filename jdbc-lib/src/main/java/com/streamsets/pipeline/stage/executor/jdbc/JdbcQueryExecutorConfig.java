@@ -70,7 +70,7 @@ public class JdbcQueryExecutorConfig {
         issues.add(
           context.createConfigIssue(
             Groups.JDBC.name(),
-            "query",
+            "config.query",
             QueryExecErrors.QUERY_EXECUTOR_002,
             e.getMessage()
           )
