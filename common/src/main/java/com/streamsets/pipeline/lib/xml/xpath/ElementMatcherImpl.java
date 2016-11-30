@@ -87,8 +87,8 @@ class ElementMatcherImpl implements ElementMatcher {
   public boolean checkStartElement(StartElement startElement) {
     if (wildcardElement || isQualifiedMatch(startElement.getName())) {
       numElementsSeen++;
-      if (byIndex && numElementsSeen == index) {
-        return true;
+      if (byIndex) {
+        return numElementsSeen == index;
       } else if (byAttribute) {
         final Iterator<?> attrIter = startElement.getAttributes();
         while (attrIter.hasNext()) {

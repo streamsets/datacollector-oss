@@ -158,6 +158,26 @@ public class TestStreamingXmlParser {
   }
 
   @Test
+  public void testPositionPredicate() throws Exception {
+    StreamingXmlParser parser = new StreamingXmlParser(
+        getXml("com/streamsets/pipeline/lib/xml/TestStreamingXmlParser-complex-records.xml"),
+        "root[1]/toplevel[3]/blargh[@theone='yes']/record[5]"
+    );
+
+    Field f = parser.read();
+    Assert.assertNotNull(f);
+    final Map<String, Field> values = f.getValueAsMap();
+    Assert.assertFalse(values.isEmpty());
+    Assert.assertEquals("a", values.get("name").getValueAsList().get(0).getValueAsMap().get("value")
+        .getValueAsString());
+
+    f = parser.read();
+    Assert.assertNull(f);
+
+    parser.close();
+  }
+
+  @Test
   public void testXPathWithNamespaces() throws Exception {
     Map<String, String> namespaces = new HashMap<>();
     namespaces.put("myns", "x");
