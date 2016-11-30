@@ -79,6 +79,20 @@
    <topicref href="../Destinations/Flume-DataFormats.dita"/>
    <topicref href="../Destinations/Flume-Configuring.dita"/>
   </topicref>
+  <topicref href="../Destinations/Bigtable.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Destinations/Bigtable-Prereqs.dita">
+    <topicref href="../Destinations/Bigtable-InstallLibraries.dita"/>
+    <topicref href="../Destinations/Bigtable-CredentialsEnvVar.dita"/>
+   </topicref>
+   <topicref href="../Destinations/Bigtable-RowKey.dita"/>
+   <topicref href="../Destinations/Bigtable-Datatypes.dita"/>
+   <topicref href="../Destinations/Bigtable-ColumnFamily.dita"/>
+   <topicref href="../Destinations/Bigtable-TimeBasis.dita"/>
+   <topicref href="../Destinations/Bigtable-Configuring.dita"/>
+  </topicref>
   <topicref href="../Destinations/HadoopFS-destination.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

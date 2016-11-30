@@ -25,6 +25,7 @@
         <li>Data Lake Store - Writes data to the Azure Data Lake Store.</li>
         <li>Elasticsearch - Writes data to an Elasticsearch cluster.</li>
         <li>Flume - Writes data to a Flume source.</li>
+        <li>Google Bigtable - Writes data to Google Cloud Bigtable.</li>
         <li>Hadoop FS - Writes data to the Hadoop Distributed File System (HDFS).</li>
         <li>HBase - Writes data to an HBase cluster.</li>
         <li>Hive Metastore - Creates and updates Hive tables as needed.</li>

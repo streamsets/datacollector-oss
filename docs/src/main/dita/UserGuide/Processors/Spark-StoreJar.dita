@@ -22,8 +22,6 @@
         install those libraries in the same location as well. </shortdesc>
     <taskbody>
         <context>
-            <draft-comment author="alisontaylor">steps in Installing Additional Drivers are similar,
-                make the same changes there</draft-comment>
             <note type="tip">To include all dependent libraries used in your custom Spark
                 application, you can use the Apache Maven Dependency Plugin. For more information
                 about the Dependency Plugin, see <xref
@@ -59,52 +57,17 @@
                 <cmd>Copy the Spark application JAR file and any dependent libraries to the
                     subdirectory.</cmd>
             </step>
-            <step>
-                <cmd>In the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> environment configuration file, <codeph>sdc-env.sh</codeph> or
-                        <codeph>sdcd-env.sh</codeph> located in the
-                        <codeph>$SDC_DIST/libexec</codeph> directory, add the
-                    STREAMSETS_LIBRARIES_EXTRA_DIR environment variable and point it to the external
-                    directory, as follows:</cmd>
-                <info>
-                    <codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR="&lt;external directory>"</codeblock>
-                    <p>For
-                        example:<codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR="/opt/sdc-extras/"</codeblock></p>
-                </info>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/InstallDrivers_EnvConfig_step">
+                <cmd/>
             </step>
-            <step>
-                <cmd>When using the Java Security Manager, which is enabled by default, update the
-                        <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> security policy to include the external directory as follows:</cmd>
-                <substeps id="substeps_qhd_bb2_1y">
-                    <substep>
-                        <cmd>In the <ph
-                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                            /> configuration directory, open the security policy file,
-                                <codeph>$SDC_CONF/sdc-security.policy</codeph>.</cmd>
-                    </substep>
-                    <substep>
-                        <cmd>Add the following lines to the file:</cmd>
-                        <info>
-                            <codeblock>// user-defined external directory
-grant codebase "file://&lt;external directory>-" {
-  permission java.security.AllPermission;
-};</codeblock>
-                            <p>For
-                                example:<codeblock>// user-defined external directory
-grant codebase "file:///opt/sdc-extras/-" {
-  permission java.security.AllPermission;
-};</codeblock></p>
-                        </info>
-                    </substep>
-                </substeps>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/InstallDrivers_Security_step">
+                <cmd/>
             </step>
-            <step>
-                <cmd>Restart <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    />.</cmd>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/InstallDrivers_Restart_step">
+                <cmd/>
             </step>
         </steps>
     </taskbody>

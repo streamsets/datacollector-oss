@@ -19,61 +19,51 @@
         <context><indexterm>additional
                     drivers<indexterm>installing</indexterm></indexterm><indexterm>stages<indexterm>installing
                     additional drivers</indexterm></indexterm>To install additional drivers for a
-            stage, perform the following steps: <draft-comment author="alisontaylor">steps in Spark
-                Evaluator processor > Storing the Application Jar in an External Directory are
-                similar, make the same changes there</draft-comment><ol id="ol_f3s_hrw_ft">
-                <li>Create a local directory external to the <ph
+            stage, perform the following steps: </context>
+        <steps id="steps_zxl_bkr_cy">
+            <step>
+                <cmd>Create a local directory external to the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> installation directory for the drivers. Use an external directory to enable
                     use of the drivers after <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> upgrades.<p>For example, if you installed <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> in the following directory: <codeblock>/opt/sdc/</codeblock></p><p>you
-                        might create the external directory at:
-                        <codeblock>/opt/sdc-extras</codeblock></p></li>
-                <li>Create subdirectories for each set of additional drivers based on the stage
-                    library name as follows: <p>
+                    /> upgrades.</cmd>
+                <info>For example, if you installed <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> in the following directory: <codeblock>/opt/sdc/</codeblock><p>you might
+                        create the external directory at:
+                    <codeblock>/opt/sdc-extras</codeblock></p></info>
+            </step>
+            <step>
+                <cmd>Create subdirectories for each set of additional drivers based on the stage
+                    library name as follows: </cmd>
+                <info>
+                    <p>
                         <codeblock>/opt/sdc-extras/&lt;stage library name>/lib/</codeblock>
-                    </p><p>For example, to install drivers for JDBC, create the following
-                        subdirectory:<codeblock>/opt/sdc-extras/streamsets-datacollector-jdbc-lib/lib/</codeblock></p><p>To
-                        also install drivers for JMS, create the following subdirectory:
-                        <codeblock>/opt/sdc-extras/streamsets-datacollector-jms-lib/lib/</codeblock></p></li>
-                <li>Copy the drivers to the appropriate subdirectories.</li>
-                <li>In the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> environment configuration file, <codeph>sdc-env.sh</codeph> or
-                        <codeph>sdcd-env.sh</codeph> located in the
-                        <codeph>$SDC_DIST/libexec</codeph> directory, add the
-                    STREAMSETS_LIBRARIES_EXTRA_DIR environment variable and point it to the external
-                    directory, as
-                        follows:<codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR="&lt;external directory>"</codeblock><p>For
-                        example:
-                    </p><codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR="/opt/sdc-extras/"</codeblock></li>
-                <li>When using the Java Security Manager, which is enabled by default, update the
-                        <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> security policy to include the external directory as follows:<ul
-                        id="ul_gpf_2dg_ht">
-                        <li>In the <ph
-                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                            /> configuration directory, open the security policy file,
-                                <codeph>$SDC_CONF/sdc-security.policy</codeph>.</li>
-                        <li>Add the following lines to the file:
-                            <codeblock>// user-defined external directory
-grant codebase "file://&lt;external directory>-" {
-  permission java.security.AllPermission;
-};</codeblock></li>
-                    </ul><p>For example:
-                        <codeblock>// user-defined external directory
-grant codebase "file:///opt/sdc-extras/-" {
-  permission java.security.AllPermission;
-};</codeblock></p></li>
-                <li>Restart <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    />.</li>
-            </ol><p>The drivers in the directory become available to their respective
-            stages.</p></context>
+                    </p>
+                    <p>For example, to install drivers for JDBC, create the following
+                        subdirectory:<codeblock>/opt/sdc-extras/streamsets-datacollector-jdbc-lib/lib/</codeblock></p>
+                    <p>To also install drivers for JMS, create the following subdirectory:
+                        <codeblock>/opt/sdc-extras/streamsets-datacollector-jms-lib/lib/</codeblock></p>
+                </info>
+            </step>
+            <step>
+                <cmd>Copy the drivers to the appropriate subdirectories.</cmd>
+            </step>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/InstallDrivers_EnvConfig_step">
+                <cmd/>
+            </step>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/InstallDrivers_Security_step">
+                <cmd/>
+            </step>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/InstallDrivers_Restart_step">
+                <cmd/>
+            </step>
+        </steps>
+        <result>The drivers in the directory become available to their respective stages. </result>
     </taskbody>
     <related-links>
         <link href="DCEnvironmentConfig.dita#concept_rng_qym_qr" type="topic"/>

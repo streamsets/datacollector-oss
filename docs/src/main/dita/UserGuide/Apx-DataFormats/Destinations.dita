@@ -107,6 +107,10 @@
                                                   scale="30" id="image_cfv_1xc_kv"/></entry>
                                                   <entry/>
                                                 </row>
+                                          <row><entry>Google Cloud Bigtable</entry>
+                                          <entry namest="c2" nameend="c9">* * * Not
+                                            Applicable * * *</entry>
+                                            <entry/></row>
                                                 <row>
                                                   <entry>Hadoop FS</entry>
                                                   <entry><image href="../Graphics/CheckIcon.png"
@@ -315,7 +319,13 @@
                                                   scale="30" id="image_hf2_csl_3w"/></entry>
                                                   <entry/>
                                                 </row>
-                                                <row>
+                                          <row>
+                                            <entry>Salesforce</entry>
+                                            <entry namest="c2" nameend="c9">* * * Not
+                                              Applicable * * *</entry>
+                                            <entry/>
+                                          </row>
+                                          <row>
                                                   <entry>SDC RPC</entry>
                                                   <entry/>
                                                   <entry/>
@@ -345,6 +355,12 @@
                                                   Applicable * * *</entry>
                                                   <entry/>
                                                 </row>
+                                          <row>
+                                            <entry>Wave Analytics</entry>
+                                            <entry namest="c2" nameend="c9">* * * Not
+                                              Applicable * * *</entry>
+                                            <entry/>
+                                          </row>
                                         </tbody>
                                 </tgroup>
             </table>

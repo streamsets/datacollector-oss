@@ -105,6 +105,11 @@
                                     </ul></p></entry>
                         </row>
                         <row>
+                            <entry>streamsets-datacollector-bigtable-lib</entry>
+                            <entry>For Google Cloud Bigtable.<p>Includes the Google Bigtable
+                                    destination.</p></entry>
+                        </row>
+                        <row>
                             <entry>streamsets-datacollector-cassandra_3-lib</entry>
                             <entry>For Cassandra 1.2, 2.x, and 3.x. <p>Includes the Cassandra
                                     destination.</p></entry>
