@@ -224,7 +224,7 @@
       </td>
     </tr>
 
-    <tr ng-switch-when="TARGET"
+    <tr ng-if="detailPaneConfig.uiInfo.stageType === pipelineConstant.TARGET_STAGE_TYPE || detailPaneConfig.uiInfo.stageType === pipelineConstant.EXECUTOR_STAGE_TYPE"
         ng-repeat="inputRecord in stagePreviewData.input | limitTo: recordPagination.inputRecords">
       <td>
         <record-tree
@@ -263,9 +263,7 @@
       </td>
     </tr>
 
-
-
-    <tr ng-if="detailPaneConfig.uiInfo.stageType === 'TARGET' || detailPaneConfig.uiInfo.stageType === 'PROCESSOR'"
+    <tr ng-if="detailPaneConfig.uiInfo.stageType === pipelineConstant.TARGET_STAGE_TYPE || detailPaneConfig.uiInfo.stageType === pipelineConstant.EXECUTOR_STAGE_TYPE || detailPaneConfig.uiInfo.stageType === pipelineConstant.PROCESSOR_STAGE_TYPE"
         ng-repeat="record in stagePreviewData.eventRecords | limitTo: recordPagination.eventRecords">
       <td>
       </td>
