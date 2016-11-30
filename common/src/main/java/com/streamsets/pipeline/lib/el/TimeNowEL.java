@@ -90,6 +90,10 @@ public class TimeNowEL {
       name = "extractStringFromDate",
       description = "Format a date into a string, based on an output format specification")
   public static String millisecondsToStringDate(@ElParam("datetime") Date in, @ElParam("string") String outputFormat) {
+    if(in == null || outputFormat == null || outputFormat.isEmpty()) {
+      return "";
+    }
+
     SimpleDateFormat formatter = new SimpleDateFormat(outputFormat);
     return formatter.format(in);
   }
@@ -99,6 +103,10 @@ public class TimeNowEL {
       description = "Format a date into a long, based on an output format specification")
   public static long milliSecondsToLongDate(@ElParam("datetime") Date in, @ElParam("string") String outputFormat)
       throws NumberFormatException {
+    if(in == null || outputFormat == null || outputFormat.isEmpty()) {
+      return 0;
+    }
+
     SimpleDateFormat formatter = new SimpleDateFormat(outputFormat);
     String str = formatter.format(in);
 
