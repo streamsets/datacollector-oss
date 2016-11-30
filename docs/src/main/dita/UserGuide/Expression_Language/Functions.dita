@@ -162,8 +162,8 @@
        <entry><xref href="TimeFunctions.dita#concept_qkr_trf_sw">Time functions</xref></entry>
        <entry>
         <ul id="ul_vrl_4rf_sw">
-         <li>time:extractLongFromDate(&lt;datetime>, &lt;string>)</li>
-         <li>time:extractStringFromDate(&lt;datetime>, &lt;string>)</li>
+         <li>time:extractLongFromDate(&lt;Date object>, &lt;string>)</li>
+         <li>time:extractStringFromDate(&lt;Date object>, &lt;string>)</li>
          <li>time:millisecondsToDateTime(&lt;long>)</li>
          <li>time.now()</li>
          <li>time.trimDate(&lt;datetime>)</li>

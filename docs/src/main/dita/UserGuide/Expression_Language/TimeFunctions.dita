@@ -27,18 +27,18 @@
         <p>The expression language provides the following time functions:</p>
         <dl>
             <dlentry>
-                <dt>time:extractLongFromDate(&lt;datetime>, &lt;string>)</dt>
-                <dd>Extracts a long value from a datetime value, based on the specified date
+                <dt>time:extractLongFromDate(&lt;Date object>, &lt;string>)</dt>
+                <dd>Extracts a long value from a Date object, based on the specified date
                     format.</dd>
                 <dd>Uses the following arguments:<ul id="ul_wcq_nhr_wx">
-                        <li>datetime - Datetime value to extract the long value from.</li>
-                        <li>string - String that specifies the format of the datetime data to be
+                        <li>Date object - Date object to extract the long value from.</li>
+                        <li>string - String that specifies the format of the Date data to be
                             extracted. For information about creating a date format, see <xref
                                 href="https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html"
                                 format="html" scope="external"/>.</li>
                     </ul></dd>
                 <dd> For example, the following expression returns the month as a long value from
-                    the datetime value stored in the Timestamp
+                    the Date object stored in the Timestamp
                     field:<codeblock>${time:extractLongFromDate(record:value('/Timestamp')), "MM")}</codeblock></dd>
                 <dd>Return type: Long.</dd>
                 <dd>
@@ -49,33 +49,33 @@
                 </dd>
             </dlentry>
             <dlentry>
-                <dt>time:extractStringFromDate(&lt;datetime>, &lt;string>)</dt>
-                <dd>Extracts a string value from a datetime value, based on the specified date
+                <dt>time:extractStringFromDate(&lt;Date object>, &lt;string>)</dt>
+                <dd>Extracts a string value from a Date object based on the specified date
                     format.</dd>
                 <dd>Uses the following arguments:</dd>
                 <dd>
                     <ul>
-                        <li>datetime - Datetime value to extract the string value from.</li>
-                        <li>string - String that specifies the format of the datetime data to be
+                        <li>Date object - Date object to extract the string value from.</li>
+                        <li>string - String that specifies the format of the Date data to be
                             extracted. For information about creating a date format, see <xref
                                 href="https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html"
                                 format="html" scope="external"/>.</li>
                     </ul>
                 </dd>
                 <dd> For example, the following expression returns the month as a string value from
-                    the datetime value stored in the Timestamp
+                    the Date object stored in the Timestamp
                     field:<codeblock>${time:extractStringFromDate(record:value('/Timestamp')), "MMM")}</codeblock></dd>
                 <dd>Return type: String.</dd>
             </dlentry>
             <dlentry>
                 <dt>time:millisecondsToDateTime(&lt;long>)</dt>
-                <dd>Converts an epoch or UNIX time in milliseconds to a java.util.Date object. </dd>
+                <dd>Converts an epoch or UNIX time in milliseconds to a Date object. </dd>
                 <dd>If the epoch or UNIX time is in seconds, multiply the value by 1000 to produce a
                     value in the milliseconds range. For example, the following expression
                     multiplies the epoch time in seconds stored in the epochTime field and then
-                    converts the value to a datetime
-                    value:<codeblock>${millisecondsToDateTime(record:value("/epochTime")* 1000)}</codeblock></dd>
-                <dd>Return type: Datetime.</dd>
+                    converts the value to a Date
+                    object:<codeblock>${millisecondsToDateTime(record:value("/epochTime")* 1000)}</codeblock></dd>
+                <dd>Return type: Date object.</dd>
             </dlentry>
             <dlentry>
                 <dt>time:now()</dt>
