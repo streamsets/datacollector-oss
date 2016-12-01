@@ -1045,8 +1045,8 @@
       <entry>URI</entry>
       <entry>URI of the Redis server. Use the following
         format:<codeblock>redis://&lt;host name>:&lt;port number>/&lt;database></codeblock><p>You
-        can omit the port number or database if the server uses the default port number or default
-        database.</p><p>You can optionally include your password to log in to the Redis server. For
+        can omit the database if the server uses the default database.</p><p>You can optionally
+        include your password to log in to the Redis server. For
         example:<codeblock>redis://:&lt;password>@&lt;host name>:&lt;port number>/&lt;database></codeblock></p></entry>
      </row>
     </tbody>
