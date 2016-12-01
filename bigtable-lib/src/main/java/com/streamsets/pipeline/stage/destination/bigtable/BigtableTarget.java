@@ -100,7 +100,7 @@ public class BigtableTarget extends BaseTarget {
     }
   }
 
-  private void verify1Part(BigtableFieldMapping fld, String qual, List<ConfigIssue> issues) {
+  private void verify1Part(String qual, List<ConfigIssue> issues) {
     // qualifier only...
     if (conf.columnFamily.isEmpty()) {
       issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(), null, Errors.BIGTABLE_06, qual));
@@ -124,7 +124,7 @@ public class BigtableTarget extends BaseTarget {
         verifyBothParts(f, parts[0], parts[1], issues);
 
       } else if (parts.length == 1) {
-        verify1Part(f, parts[0], issues);
+        verify1Part(parts[0], issues);
 
       } else {
         issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(), null, Errors.BIGTABLE_16, f.column));
@@ -251,7 +251,7 @@ public class BigtableTarget extends BaseTarget {
         }
       }
     } else {
-      //single column row key.
+      // single column row key.
       if (conf.singleColumnRowKey == null) {
         issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(), CONFIG, Errors.BIGTABLE_11, ""));
       }
@@ -321,23 +321,14 @@ public class BigtableTarget extends BaseTarget {
             createColumnFamily(admin, family, issues);
           } else {
             LOG.info(Errors.BIGTABLE_04.getMessage(), family);
-            issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(),
-                null,
-                Errors.BIGTABLE_04,
-                family
-            ));
+            issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(), null, Errors.BIGTABLE_04, family));
           }
         }
       } catch (IOException ex) {
         LOG.info(Errors.BIGTABLE_05.getMessage(), conf.tableName, ex.toString(), ex);
-        issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(),
-            null,
-            Errors.BIGTABLE_05,
-            ex.toString()
-        ));
+        issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(), null, Errors.BIGTABLE_05, ex.toString()));
       }
     }
-
     return issues;
   }
 
@@ -435,8 +426,12 @@ public class BigtableTarget extends BaseTarget {
       }
 
     } catch (Exception ex) {
-      LOG.error(Errors.BIGTABLE_21.getMessage(), field.getType(), map.storageType, ex);
-      throw new StageException(Errors.BIGTABLE_21, field.getType(), map.storageType, ex);
+      throw new OnRecordErrorException(rec,
+          Errors.BIGTABLE_21,
+          map.source,
+          field.getType(),
+          map.storageType,
+          ex);
     }
   }
 
@@ -447,13 +442,6 @@ public class BigtableTarget extends BaseTarget {
 
     if (conf.timeBasis == TimeBasis.BATCH_START) {
       timeStamp = System.currentTimeMillis();
-
-    } else if (timeStamp == 0 && conf.timeBasis == TimeBasis.FROM_RECORD && batch.getRecords().hasNext()) {
-      Field.Type type = batch.getRecords().next().get(conf.timeStampField).getType();
-      if (type != Field.Type.LONG) {
-        LOG.error(Errors.BIGTABLE_08.getMessage(), type);
-        throw new StageException(Errors.BIGTABLE_08, type);
-      }
     }
 
     List<Put> theList = new ArrayList<>();
@@ -463,27 +451,51 @@ public class BigtableTarget extends BaseTarget {
 
       byte[] rowKey = buildRowKey(rec);
       if (rowKey.length == 0) {
-        continue;   //next record.
+        continue;   // next record.
       }
 
       if(conf.timeBasis == TimeBasis.SYSTEM_TIME) {
         timeStamp = System.currentTimeMillis();
+
       } else if(conf.timeBasis == TimeBasis.FROM_RECORD) {
-        try {
-          timeStamp = rec.get(conf.timeStampField).getValueAsLong();
-        } catch (NullPointerException | IllegalArgumentException ex) {
-          errorRecordHandler.onError(new OnRecordErrorException(rec, Errors.BIGTABLE_14, conf.timeStampField, ex));
-          continue;  // next record, please.
+        Field f = rec.get(conf.timeStampField);
+        if(f != null) {
+          if(f.getType() == Field.Type.LONG) {
+              timeStamp = f.getValueAsLong();
+
+          } else {  // the field's data type is wrong.
+            errorRecordHandler.onError(new OnRecordErrorException(rec, Errors.BIGTABLE_08,
+                f.getType().name(),
+                conf.timeStampField
+            ));
+            continue;
+
+          }
+
+        } else {  // the field does not exist.
+            errorRecordHandler.onError(new OnRecordErrorException(rec,
+                Errors.BIGTABLE_14,
+                conf.timeStampField
+            ));
+          continue;  // next record.
+
         }
       }
 
       Put put = new Put(rowKey, timeStamp);
 
-      // process the input/output mapping:
       for (BigtableFieldMapping f : conf.fieldColumnMapping) {
         Field field = rec.get(f.source); // is there a field with this name in the record...
         if (field != null) {
-          byte[] value = convertValue(f, field, rec);
+
+          byte [] value;
+          try {
+            value = convertValue(f, field, rec);
+          } catch(OnRecordErrorException ex) {
+            errorRecordHandler.onError(ex);
+            continue;
+          }
+
           theList.add(put.addColumn(destinationNames.get(f.column).columnFamily,
               destinationNames.get(f.column).qualifier,
               timeStamp,

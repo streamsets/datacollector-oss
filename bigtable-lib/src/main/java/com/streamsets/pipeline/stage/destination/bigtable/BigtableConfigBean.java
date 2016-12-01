@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.destination.bigtable;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
 
@@ -85,7 +86,7 @@ public class BigtableConfigBean {
 
  @ConfigDef(
      required = true,
-     type = ConfigDef.Type.STRING,
+     type = ConfigDef.Type.MODEL,
      defaultValue = "",
      label = "Row Key",
      description = "Specify field which is a single column row key",
@@ -94,6 +95,7 @@ public class BigtableConfigBean {
      triggeredByValue = "false",
      group = "BIGTABLE"
  )
+ @FieldSelectorModel(singleValued = true)
  public String singleColumnRowKey;
 
  @ConfigDef(
@@ -173,7 +175,7 @@ public class BigtableConfigBean {
  public TimeBasis timeBasis = TimeBasis.SYSTEM_TIME;
 
  @ConfigDef(required = false,
-     type = ConfigDef.Type.STRING,
+     type = ConfigDef.Type.MODEL,
      label = "Time Stamp Field Name",
      description = "Field name that contains the record's time stamp value",
      displayPosition = 95,
@@ -181,6 +183,7 @@ public class BigtableConfigBean {
      triggeredByValue = "FROM_RECORD",
      group = "BIGTABLE"
  )
+ @FieldSelectorModel(singleValued = true)
  public String timeStampField;
 
  @ConfigDef(required = false,
