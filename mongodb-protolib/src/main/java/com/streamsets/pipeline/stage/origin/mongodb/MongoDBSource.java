@@ -41,6 +41,7 @@ import com.streamsets.pipeline.stage.common.mongodb.Errors;
 import com.streamsets.pipeline.stage.common.mongodb.Groups;
 import com.streamsets.pipeline.stage.common.mongodb.MongoDBConfig;
 import org.apache.commons.io.IOUtils;
+import org.bson.BsonTimestamp;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
@@ -49,7 +50,10 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -148,14 +152,7 @@ public class MongoDBSource extends BaseSource {
 
         try {
           for (Map.Entry<String, Object> entry : entrySet) {
-            Field value;
-            if (entry.getValue() instanceof ObjectId) {
-              String objectId = entry.getValue().toString();
-              value = JsonUtil.jsonToField(objectId);
-            } else {
-              value = JsonUtil.jsonToField(entry.getValue());
-            }
-            fields.put(entry.getKey(), value);
+            fields.put(entry.getKey(), jsonToField(entry.getValue()));
           }
         } catch (IOException e) {
           errorRecordHandler.onError(Errors.MONGODB_10, e.toString(), e);
@@ -237,5 +234,35 @@ public class MongoDBSource extends BaseSource {
         ));
       }
     }
+  }
+
+  private Field jsonToField(Object object) throws IOException {
+    if (object instanceof ObjectId) {
+      String objectId = object.toString();
+      return JsonUtil.jsonToField(objectId);
+    } else if (object instanceof BsonTimestamp) {
+      int time = ((BsonTimestamp) object).getTime();
+      Date date = new Date(time * 1000L);
+      Map<String, Object> jsonMap = new LinkedHashMap<>();
+      jsonMap.put("timestamp", date);
+      jsonMap.put("ordinal", ((BsonTimestamp) object).getInc());
+      return JsonUtil.jsonToField(jsonMap);
+    } else if (object instanceof List) {
+      List jsonList = (List) object;
+      List<Field> list = new ArrayList<>(jsonList.size());
+      for (Object element : jsonList) {
+        list.add(jsonToField(element));
+      }
+      return Field.create(list);
+    } else if (object instanceof Map) {
+      Map<String, Object> jsonMap = (Map<String, Object>) object;
+      Map<String, Field> map = new LinkedHashMap<>();
+      for (Map.Entry<String, Object> entry : jsonMap.entrySet()) {
+        map.put(entry.getKey(), jsonToField(entry.getValue()));
+      }
+      return Field.create(map);
+    }
+
+    return JsonUtil.jsonToField(object);
   }
 }

@@ -30,6 +30,7 @@ import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.common.mongodb.AuthenticationType;
 import com.streamsets.pipeline.stage.common.mongodb.MongoDBConfig;
+import org.bson.BsonTimestamp;
 import org.bson.Document;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -40,7 +41,10 @@ import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.GenericContainer;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -52,12 +56,14 @@ public class MongoDBSourceIT {
   private static final String CAPPED_COLLECTION = "capped";
   private static final String COLLECTION = "uncapped";
   private static final String UUID_COLLECTION = "uuid";
+  private static final String BSON_COLLECTION = "bson";
   private static final int TEST_COLLECTION_SIZE = 4;
   private static final int ONE_MB = 1000 * 1000;
 
   private static final List<Document> documents = new ArrayList<>(TEST_COLLECTION_SIZE);
   private static final UUID uuidValue = UUID.randomUUID();
   private static final int MONGO_PORT = 27017;
+  private static int timestamp;
 
   @ClassRule
   public static GenericContainer mongoContainer = new GenericContainer("mongo:3.0").withExposedPorts(MONGO_PORT);
@@ -78,6 +84,7 @@ public class MongoDBSourceIT {
     db.createCollection(CAPPED_COLLECTION, new CreateCollectionOptions().capped(true).sizeInBytes(ONE_MB));
     db.createCollection(COLLECTION);
     db.createCollection(UUID_COLLECTION);
+    db.createCollection(BSON_COLLECTION);
 
     MongoCollection<Document> capped = db.getCollection(CAPPED_COLLECTION);
     MongoCollection<Document> uncapped = db.getCollection(COLLECTION);
@@ -87,27 +94,31 @@ public class MongoDBSourceIT {
     MongoCollection<Document> uuid = db.getCollection(UUID_COLLECTION);
     uuid.insertOne(new Document("value", uuidValue));
 
+    MongoCollection<Document> bson = db.getCollection(BSON_COLLECTION);
+
+    Date now = new Date();
+    timestamp = (int)(now.getTime()/1000);
+
+    bson.insertOne(new Document("value", new BsonTimestamp(timestamp, 0)));
+
+    Map<String, Object> mapDocument = new HashMap<>();
+    mapDocument.put("timestamp", new BsonTimestamp(timestamp, 1));
+    bson.insertOne(new Document("valueMap", mapDocument));
+
+    List<Object> listDocument = new ArrayList<>();
+    listDocument.add(new BsonTimestamp(timestamp, 2));
+    bson.insertOne(new Document("valueList", listDocument));
+
     mongo.close();
   }
 
   @Test
   public void testInvalidInitialOffset() throws StageException {
-    MongoSourceConfigBean configBean = new MongoSourceConfigBean();
-    configBean.mongoConfig = new MongoDBConfig();
-    configBean.mongoConfig.connectionString = "mongodb://" + mongoContainerIp + ":"  + mongoContainerMappedPort;
-    configBean.mongoConfig.database = DATABASE_NAME;
-    configBean.mongoConfig.collection = CAPPED_COLLECTION;
-    configBean.mongoConfig.authenticationType = AuthenticationType.NONE;
-    configBean.mongoConfig.username = null;
-    configBean.mongoConfig.password = null;
-    configBean.isCapped = true;
-    configBean.offsetField = "_id";
-    configBean.initialOffset = "0";
-    configBean.batchSize = 100;
-    configBean.maxBatchWaitTime = 1;
-    configBean.readPreference = ReadPreferenceLabel.NEAREST;
-
-    MongoDBSource origin = new MongoDBSource(configBean);
+    MongoDBSource origin = new MongoDBSourceBuilder()
+        .connectionString("mongodb://" + mongoContainerIp + ":"  + mongoContainerMappedPort)
+        .database(DATABASE_NAME)
+        .collection(CAPPED_COLLECTION)
+        .build();
 
     SourceRunner runner = new SourceRunner.Builder(MongoDBSource.class, origin)
         .addOutputLane("lane")
@@ -121,22 +132,12 @@ public class MongoDBSourceIT {
 
   @Test
   public void testInvalidHostname() throws StageException {
-    MongoSourceConfigBean configBean = new MongoSourceConfigBean();
-    configBean.mongoConfig = new MongoDBConfig();
-    configBean.mongoConfig.connectionString = "mongodb://localhostsdfsd:" + mongoContainerMappedPort;
-    configBean.mongoConfig.database = DATABASE_NAME;
-    configBean.mongoConfig.collection = CAPPED_COLLECTION;
-    configBean.mongoConfig.authenticationType = AuthenticationType.NONE;
-    configBean.mongoConfig.username = null;
-    configBean.mongoConfig.password = null;
-    configBean.isCapped = true;
-    configBean.offsetField = "_id";
-    configBean.initialOffset = "2015-06-01 00:00:00";
-    configBean.batchSize = 100;
-    configBean.maxBatchWaitTime = 1;
-    configBean.readPreference = ReadPreferenceLabel.NEAREST;
-
-    MongoDBSource origin = new MongoDBSource(configBean);
+    MongoDBSource origin = new MongoDBSourceBuilder()
+        .connectionString("mongodb://localhostsdfsd:" + mongoContainerMappedPort)
+        .database(DATABASE_NAME)
+        .collection(CAPPED_COLLECTION)
+        .initialOffset("2015-06-01 00:00:00")
+        .build();
 
     SourceRunner runner = new SourceRunner.Builder(MongoDBSource.class, origin)
         .addOutputLane("lane")
@@ -149,22 +150,12 @@ public class MongoDBSourceIT {
 
   @Test
   public void testInvalidHostPort() throws StageException {
-    MongoSourceConfigBean configBean = new MongoSourceConfigBean();
-    configBean.mongoConfig = new MongoDBConfig();
-    configBean.mongoConfig.connectionString = "mongodb://" + mongoContainerIp;
-    configBean.mongoConfig.database = DATABASE_NAME;
-    configBean.mongoConfig.collection = CAPPED_COLLECTION;
-    configBean.mongoConfig.authenticationType = AuthenticationType.NONE;
-    configBean.mongoConfig.username = null;
-    configBean.mongoConfig.password = null;
-    configBean.isCapped = true;
-    configBean.offsetField = "_id";
-    configBean.initialOffset = "2015-06-01 00:00:00";
-    configBean.batchSize = 100;
-    configBean.maxBatchWaitTime = 1;
-    configBean.readPreference = ReadPreferenceLabel.NEAREST;
-
-    MongoDBSource origin = new MongoDBSource(configBean);
+    MongoDBSource origin = new MongoDBSourceBuilder()
+        .connectionString("mongodb://" + mongoContainerIp)
+        .database(DATABASE_NAME)
+        .collection(CAPPED_COLLECTION)
+        .initialOffset("2015-06-01 00:00:00")
+        .build();
 
     SourceRunner runner = new SourceRunner.Builder(MongoDBSource.class, origin)
         .addOutputLane("lane")
@@ -192,7 +183,12 @@ public class MongoDBSourceIT {
     configBean.maxBatchWaitTime = 1;
     configBean.readPreference = ReadPreferenceLabel.NEAREST;
 
-    MongoDBSource origin = new MongoDBSource(configBean);
+    MongoDBSource origin = new MongoDBSourceBuilder()
+        .connectionString("mongodb://" + mongoContainerIp + ":abcd")
+        .database(DATABASE_NAME)
+        .collection(CAPPED_COLLECTION)
+        .initialOffset("2015-06-01 00:00:00")
+        .build();
 
     SourceRunner runner = new SourceRunner.Builder(MongoDBSource.class, origin)
         .addOutputLane("lane")
@@ -220,7 +216,12 @@ public class MongoDBSourceIT {
     configBean.maxBatchWaitTime = 1;
     configBean.readPreference = ReadPreferenceLabel.NEAREST;
 
-    MongoDBSource origin = new MongoDBSource(configBean);
+    MongoDBSource origin = new MongoDBSourceBuilder()
+        .connectionString("mongodb://" + mongoContainerIp + ":"  + mongoContainerMappedPort)
+        .database(DATABASE_NAME)
+        .collection(CAPPED_COLLECTION)
+        .initialOffset("2015-06-01 00:00:00")
+        .build();
 
     SourceRunner runner = new SourceRunner.Builder(MongoDBSource.class, origin)
         .addOutputLane("lane")
@@ -278,7 +279,13 @@ public class MongoDBSourceIT {
     configBean.maxBatchWaitTime = 1;
     configBean.readPreference = ReadPreferenceLabel.NEAREST;
 
-    MongoDBSource origin = new MongoDBSource(configBean);
+    MongoDBSource origin = new MongoDBSourceBuilder()
+        .connectionString("mongodb://" + mongoContainerIp + ":"  + mongoContainerMappedPort)
+        .database(DATABASE_NAME)
+        .collection(COLLECTION)
+        .isCapped(false)
+        .initialOffset("2015-06-01 00:00:00")
+        .build();
 
     SourceRunner runner = new SourceRunner.Builder(MongoDBSource.class, origin)
         .addOutputLane("lane")
@@ -338,7 +345,13 @@ public class MongoDBSourceIT {
     configBean.maxBatchWaitTime = 1;
     configBean.readPreference = ReadPreferenceLabel.NEAREST;
 
-    MongoDBSource origin = new MongoDBSource(configBean);
+    MongoDBSource origin = new MongoDBSourceBuilder()
+        .connectionString("mongodb://" + mongoContainerIp + ":"  + mongoContainerMappedPort)
+        .database(DATABASE_NAME)
+        .collection(UUID_COLLECTION)
+        .isCapped(false)
+        .initialOffset("2015-06-01 00:00:00")
+        .build();
 
     SourceRunner runner = new SourceRunner.Builder(MongoDBSource.class, origin)
         .addOutputLane("lane")
@@ -354,6 +367,50 @@ public class MongoDBSourceIT {
     assertEquals(1, parsedRecords.size());
     // UUID is converted to a string.
     assertEquals(uuidValue.toString(), parsedRecords.get(0).get("/value").getValueAsString());
+  }
+
+  @Test
+  public void testReadBsonTimestampType() throws Exception {
+    MongoSourceConfigBean configBean = new MongoSourceConfigBean();
+    configBean.mongoConfig = new MongoDBConfig();
+    configBean.mongoConfig.connectionString = "mongodb://" + mongoContainerIp + ":"  + mongoContainerMappedPort;
+    configBean.mongoConfig.database = DATABASE_NAME;
+    configBean.mongoConfig.collection = BSON_COLLECTION;
+    configBean.mongoConfig.authenticationType = AuthenticationType.NONE;
+    configBean.mongoConfig.username = null;
+    configBean.mongoConfig.password = null;
+    configBean.isCapped = false;
+    configBean.offsetField = "_id";
+    configBean.initialOffset = "2015-06-01 00:00:00";
+    configBean.batchSize = 100;
+    configBean.maxBatchWaitTime = 100;
+    configBean.readPreference = ReadPreferenceLabel.NEAREST;
+
+    MongoDBSource origin = new MongoDBSourceBuilder()
+        .connectionString("mongodb://" + mongoContainerIp + ":"  + mongoContainerMappedPort)
+        .database(DATABASE_NAME)
+        .collection(BSON_COLLECTION)
+        .isCapped(false)
+        .initialOffset("2015-06-01 00:00:00")
+        .maxBatchWaitTime(100)
+        .build();
+
+    SourceRunner runner = new SourceRunner.Builder(MongoDBSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    assertEquals(0, issues.size());
+
+    runner.runInit();
+
+    final int maxBatchSize = 10;
+    StageRunner.Output output = runner.runProduce(null, maxBatchSize);
+    List<Record> parsedRecords = output.getRecords().get("lane");
+    assertEquals(3, parsedRecords.size());
+    // BSON timestamp is converted into SDC map
+    assertEquals(timestamp*1000L, parsedRecords.get(0).get("/value").getValueAsMap().get("timestamp").getValueAsDate().getTime());
+    assertEquals(0, parsedRecords.get(0).get("/value").getValueAsMap().get("ordinal").getValueAsInteger());
   }
 
   private void insertNewDocs(String collectionName) {
