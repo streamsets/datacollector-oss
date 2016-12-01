@@ -24,8 +24,8 @@
                 an event record based on scripting logic. </ph></p>
         <p id="Event-p-2nd">As with any event record, you can pass events downstream to a
             destination for event storage or to any executor that can be configured to use the
-            event. For more information about events and event handling, see <xref
-                href="../../Event_Handling/EventHandling-Overview.dita#concept_cph_5h4_lx"/>.</p>
+            event. For more information about events and the event framework, see <xref
+                href="../../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"/>.</p>
         <p id="Event-pSteps-3rd">To generate events:<ol id="ol_jp5_mch_cy">
                 <li>On the <wintitle>General</wintitle> tab, select the <uicontrol>Produce
                         Events</uicontrol> property.<p>This enables the event output stream for use.

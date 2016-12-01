@@ -759,8 +759,8 @@ web-0011.log</codeblock></dd>
                         used by Directory and File Tail</draft-comment>
             </p>
             <p id="O-EventHandling-overview">The origin can also generate events for an event
-                  stream. For more information about event handling, see  <xref
-                        href="../Event_Handling/EventHandling-Overview.dita#concept_cph_5h4_lx"/>. </p>
+                  stream. For more information about the event framework, see <xref
+                        href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"/>. </p>
             <p>
                   <draft-comment author="Loretta">Event Generation topic with multiple ph and p used
                         by Directory and File Tail. </draft-comment>
@@ -773,8 +773,8 @@ web-0011.log</codeblock></dd>
                         file processing information for later use. For an example, see <xref
                               href="../Event_Handling/CaseStudy-EventStorage.dita#concept_ocb_nnl_px"
                         />.</ph></p>
-            <p id="O-EventGen-xref">For more information about event handling, see <xref
-                        href="../Event_Handling/EventHandling-Overview.dita#concept_cph_5h4_lx"
+            <p id="O-EventGen-xref">For more information about the event framework, see <xref
+                        href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"
                   />.</p>
             <p>
                   <draft-comment author="Loretta">Event Generation topic.  Hadoop FS and MapR FS use

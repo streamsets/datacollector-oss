@@ -17,7 +17,8 @@
  <title>Logical Pairings</title>
  <conbody>
   <p><indexterm>event generating stages<indexterm>pairing with destinations and
-                    executors</indexterm></indexterm>Some origins and destinations can generate
+                    executors</indexterm></indexterm><indexterm>event framework<indexterm>logical
+                    pairings</indexterm></indexterm>Some origins and destinations can generate
             events, and executors and destinations can consume events. You can use event generating
             stages and event records in any logical way. </p>
         <p>The following tables outline some logical pairings of event generating stages with

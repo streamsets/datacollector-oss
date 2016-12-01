@@ -30,7 +30,8 @@
                 <li>MURMUR3_128</li>
             </ul></p>
         <p>For details about event generation and event records for a specific destination, see the
-            destination documentation. For generation information about event handling, see <xref
-                href="../Event_Handling/EventHandling-Overview.dita#concept_cph_5h4_lx"/>.</p>
+            destination documentation. For generation information about the event framework, see
+                <xref href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"
+            />.</p>
  </conbody>
 </concept>

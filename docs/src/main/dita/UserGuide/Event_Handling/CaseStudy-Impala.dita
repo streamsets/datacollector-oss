@@ -16,13 +16,13 @@
 <concept id="concept_szz_xwm_lx">
     <title>Case Study: Impala Metadata Updates for HDS</title>
     <conbody>
-        <p><indexterm>event handling case studies<indexterm>Impala-Hive Drift
+        <p><indexterm>event framework case studies<indexterm>Impala-Hive Drift
                 Solution</indexterm></indexterm>You love the <xref
                 href="../Hive_Drift_Solution/HiveDrift-Overview.dita#concept_phk_bdf_2w">Hive Drift
                 Solution</xref> (HDS) because it automatically updates the Hive metastore when
             needed. But if you've been using it with Impala, you've been trying to time the
             Invalidate Metadata command after each metadata change and file write.</p>
-        <p>Instead of running the command manually, you can add event handling to your Hive Drift
+        <p>Instead of running the command manually, you use the event framework in your Hive Drift
             Solution pipeline to execute the command automatically. </p>
         <p>Enable both the Hive Metastore destination and the Hadoop FS destination to generate
             events. You can connect both event streams to a single Hive Query executor. The executor

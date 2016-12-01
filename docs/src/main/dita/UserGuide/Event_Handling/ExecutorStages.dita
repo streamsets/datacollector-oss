@@ -17,7 +17,7 @@
  <title>Executors</title>
  <conbody>
         <p>
-            <indexterm>event handling<indexterm>executors</indexterm></indexterm>Executors perform
+            <indexterm>event framework<indexterm>executors</indexterm></indexterm>Executors perform
             tasks when they receive event records. You can use the following executor stages for
             event handling:<dl>
                 <dlentry>
@@ -56,7 +56,8 @@
                     <dd>Use with the Hadoop FS or MapR FS destinations to run MapReduce jobs on
                         closed files. </dd>
                     <dd>For example, you can use the MapReduce executor with the Hadoop FS
-                        destination to convert Avro files to Parquet when Hadoop FS closes a file. </dd>
+                        destination to convert Avro files to Parquet when Hadoop FS closes a file.
+                    </dd>
                 </dlentry>
             </dl></p>
  </conbody>

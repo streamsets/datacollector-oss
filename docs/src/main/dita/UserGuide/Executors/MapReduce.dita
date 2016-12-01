@@ -31,7 +31,7 @@
             directory and optional compression codec. For other types of jobs, you enter the
             key-value pairs to use. </p>
         <p>You can also configure the executor to generate events for another event stream. For more
-            information about event handling, see <xref
-                href="../Event_Handling/EventHandling-Overview.dita#concept_cph_5h4_lx"/>.</p>
+            information about the event framework, see <xref
+                href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"/>.</p>
  </conbody>
 </concept>

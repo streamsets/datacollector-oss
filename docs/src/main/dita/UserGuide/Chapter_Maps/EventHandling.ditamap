@@ -14,9 +14,9 @@
 -->
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
 <map>
- <title>Event Handling</title>
-    <topicref href="../Event_Handling/EventHandling-Title.dita">
-        <topicref href="../Event_Handling/EventHandling-Overview.dita" chunk="to-content">
+ <title>Event Framework</title>
+    <topicref href="../Event_Handling/EventFramework-Title.dita">
+        <topicref href="../Event_Handling/EventFramework-Overview.dita" chunk="to-content">
             <topicmeta><shortdesc></shortdesc></topicmeta>
             <topicref href="../Event_Handling/EventGenerationStages.dita"/>
             <topicref href="../Event_Handling/ExecutorStages.dita"/>
@@ -43,7 +43,7 @@
             <topicref href="../Event_Handling/DataPreview.dita"/>
             <topicref href="../Event_Handling/MonitorMode.dita"/>
         </topicref>
-        <topicref href="../Event_Handling/EventHandling-Highlights.dita" chunk="to-content">
+        <topicref href="../Event_Handling/EventFramework-Summary.dita" chunk="to-content">
             <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
     </topicref>
 </map>

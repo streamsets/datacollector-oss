@@ -14,12 +14,12 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_azz_tq4_lx">
- <title>Event Handling Summary</title>
+ <title>Event Framework Summary</title>
  <conbody>
-        <p><indexterm>event handling<indexterm>summary</indexterm></indexterm>To summarize the main
-            points of event handling: <ol id="ol_fz4_ygh_tx">
-                <li>You can add event handling to any pipeline that includes a stage that generates
-                    events. </li>
+        <p><indexterm>event framework<indexterm>summary</indexterm></indexterm>To summarize the key
+            points of the event framework: <ol id="ol_fz4_ygh_tx">
+                <li>You can use the event framework to any pipeline that includes a stage that
+                    generates events. </li>
                 <li>The event-generating stage generates events at logical moments related to stage
                     processing, such as the closing of a file.</li>
                 <li>When generating an event, the stage creates an <term>event record</term> that
@@ -47,7 +47,7 @@
                 <li>In data preview, when reviewing snapshots of data, and in Monitor mode, event
                     records display as event records in the record-generating stage. Afterwards they
                     are treated like any standard record. </li>
-            </ol> For examples of how you might use event handling, see the case studies earlier in
-            this chapter. </p>
+            </ol> For examples of how you might use the event framework, see the case studies
+            earlier in this chapter. </p>
  </conbody>
 </concept>
