@@ -16,10 +16,10 @@
 <concept id="concept_gr4_qww_zx">
  <title>Directory Templates</title>
  <conbody>
-  <p><indexterm>Data Lake Store destination<indexterm>directory
-                templates</indexterm></indexterm><indexterm>directory templates<indexterm>Data Lake
-                    Store destination</indexterm></indexterm>By default, the Data Lake Store
-            destination uses directory templates to create output directories. The destination
+  <p><indexterm>Azure Data Lake Store destination<indexterm>directory
+                templates</indexterm></indexterm><indexterm>directory templates<indexterm>Azure Data
+                    Lake Store destination</indexterm></indexterm>By default, the Azure Data Lake
+            Store destination uses directory templates to create output directories. The destination
             writes records to the directories based on the configured time basis. </p>
         <p
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DirectoryTemplate_Intro"/>

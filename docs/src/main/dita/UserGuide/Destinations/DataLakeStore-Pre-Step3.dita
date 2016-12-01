@@ -16,20 +16,20 @@
 <concept id="concept_dgz_yfh_1y">
  <title>Step 3. Grant Execute Permission</title>
  <conbody>
-  <p><indexterm>Data Lake Store destination<indexterm>prereq: register Data
-                Collector</indexterm></indexterm><indexterm>prerequisites<indexterm>Data Lake Store
-                    destination</indexterm></indexterm>To allow the Data Lake Store destination to
-            write to Azure Data Lake Store, grant execute permission to the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            web application for the folders that you want to use. When using directory templates in
-            the destination, be sure to include all subfolders. </p>
+  <p><indexterm>Azure Data Lake Store destination<indexterm>prereq: register Data
+                    Collector</indexterm></indexterm><indexterm>prerequisites<indexterm>Azure Data
+                    Lake Store destination</indexterm></indexterm>To allow the Azure Data Lake Store
+            destination to write to Microsoft Azure Data Lake Store, grant execute permission to the
+                <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+            /> web application for the folders that you want to use. When using directory templates
+            in the destination, be sure to include all subfolders. </p>
         <p>
             <ol id="ol_nxg_pvb_1y">
-                <li>If continuing directly from retrieving details from Data Lake Store, in the
-                    navigation panel, click <uicontrol>Data Explorer</uicontrol>. <p>Otherwise, log
-                        in to the new Azure portal: <xref href="https://portal.azure.com/"
-                            format="html" scope="external">https://portal.azure.com/</xref>. From
-                        the <uicontrol>All Resources</uicontrol> list, select the Data Lake Store
+                <li>If continuing directly from retrieving details from Azure, in the navigation
+                    panel, click <uicontrol>Data Explorer</uicontrol>. <p>Otherwise, log in to the
+                        new Azure portal: <xref href="https://portal.azure.com/" format="html"
+                            scope="external">https://portal.azure.com/</xref>. From the
+                            <uicontrol>All Resources</uicontrol> list, select the Data Lake Store
                         resource to use, then click <uicontrol>Data
                             Explorer</uicontrol>.</p><p><image
                             href="../Graphics/DLStore-DataExplorer.png" id="image_rct_gvj_1y"
@@ -72,7 +72,7 @@
                             scale="55"/></p></li>
             </ol>
         </p>
-        <p>Now that all prerequisite tasks are complete, you can configure the Data Lake Store
+        <p>Now that all prerequisite tasks are complete, you can configure the Azure Data Lake Store
             destination.</p>
  </conbody>
 </concept>

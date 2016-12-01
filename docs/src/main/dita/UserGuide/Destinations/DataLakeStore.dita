@@ -14,16 +14,17 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_jzm_kf4_zx">
- <title>Data Lake Store</title>
+ <title>Azure Data Lake Store</title>
  <conbody>
-  <p><indexterm>Data Lake Store
-                    destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Data
-                    Lake Store</indexterm></indexterm>The Data Lake Store destination writes data to
-            the Microsoft Azure Data Lake Store. Use the Data Lake Store destination in standalone
-            pipelines only at this time.</p>
+  <p><indexterm>Azure Data Lake Store
+                    destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Azure
+                    Data Lake Store</indexterm></indexterm>The Azure Data Lake Store destination
+            writes data to the Microsoft Azure Data Lake Store. Use the Azure Data Lake Store
+            destination in standalone pipelines only at this time.</p>
         <p>Before you use the destination, you must perform some prerequisite tasks.</p>
-        <p>When you configure the Data Lake Store destination, you specify connection information
-            such as the Client ID and fully qualified domain name (FQDN) for the account. You also
-            enter a directory template to use for output files and an optional file prefix. </p>
+        <p>When you configure the Azure Data Lake Store destination, you specify connection
+            information such as the Client ID and fully qualified domain name (FQDN) for the
+            account. You also enter a directory template to use for output files and an optional
+            file prefix. </p>
  </conbody>
 </concept>

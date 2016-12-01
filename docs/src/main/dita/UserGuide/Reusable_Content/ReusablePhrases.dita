@@ -2057,6 +2057,7 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                         <li>JDBC Lookup processor</li>
                         <li>JDBC Tee processor</li>
                         <li>JDBC Producer destination</li>
+                        <li>JDBC Query executor</li>
                   </ul></p>
             <p id="AdditionalDrivers_example">For example, to use the JDBC Consumer or JDBC Producer with Oracle, install the Oracle JDBC
                   drivers.</p>

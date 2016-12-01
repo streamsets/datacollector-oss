@@ -16,11 +16,11 @@
 <concept id="concept_wsz_qj4_zx">
  <title>Data Formats</title>
  <conbody>
-  <p><indexterm>Data Lake Store destination<indexterm>data
-                formats</indexterm></indexterm><indexterm>data formats<indexterm>Data Lake Store
-                    destination</indexterm></indexterm>Data Lake Store writes data to Azure Data
-            Lake Store based on the data format that you select. You can use the following data
-            formats: <dl>
+  <p><indexterm>Azure Data Lake Store destination<indexterm>data
+                formats</indexterm></indexterm><indexterm>data formats<indexterm>Azure Data Lake
+                    Store destination</indexterm></indexterm>The Azure Data Lake Store destination
+            writes data to Microsoft Azure Data Lake Store based on the data format that you select.
+            You can use the following data formats: <dl>
                 <dlentry
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DEST-DF-AvroFILE">
                     <dt/>

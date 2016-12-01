@@ -51,6 +51,8 @@
     <p>In cluster pipelines, you can use the following origins:<ul id="ul_unr_xhb_ws">
         <li>Hadoop FS - Reads data from the Hadoop Distributed File System (HDFS). </li>
         <li>Kafka Consumer - Reads messages from Kafka. Use the cluster version of the origin.</li>
+        <li>MapR FS - Reads data from MapR FS.</li>
+        <li>MapR Streams Consumer - Reads messages from MapR Streams.</li>
       </ul></p>
     <p>To help create or test pipelines, you can use the following development origins:<ul
         id="ul_nr2_c1p_qv">

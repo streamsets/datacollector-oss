@@ -25,11 +25,11 @@
         <p>After leaving the event-generating stage, the record displays like any other record. </p>
         <p>For example, the Directory origin below generates an event record as it starts reading a
             file for data preview:</p>
-        <p><image href="../Graphics/Event-DataPreview.png" id="image_jcz_5qq_cy" scale="55"/></p>
+        <p><image href="../Graphics/Event-DataPreview.png" id="image_jcz_5qq_cy" scale="60"/></p>
         <p>When you select the Local FS destination where the event record is written, you see that
             the same event record no longer displays the event record label. It is treated like any
             other record: </p>
-        <p><image href="../Graphics/Event-DataPreview-Dest.png" id="image_wlx_4sq_cy" scale="50"
+        <p><image href="../Graphics/Event-DataPreview-Dest.png" id="image_wlx_4sq_cy" scale="60"
             /></p>
  </conbody>
 </concept>

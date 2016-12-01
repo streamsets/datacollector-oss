@@ -19,7 +19,7 @@
         <topicref href="../Executors/Executors-overview.dita" chunk="to-content">
             <topicmeta><shortdesc></shortdesc></topicmeta>
         </topicref>
-        <topicref href="../Executors/HDFSFileMeta.dita" chunk="to-content">
+        <topicref href="../Executors/HDFSMetadata.dita" chunk="to-content">
             <topicmeta><shortdesc></shortdesc></topicmeta>
             <topicref href="../Executors/HDFSFileMeta-EventStages.dita"/>
             <topicref href="../Executors/HDFSFileMeta-InputFile.dita"/>

@@ -23,12 +23,12 @@
             other record.</p>
         <p>For example, when you run and monitor the pipeline featured above, the Directory origin
             information displays event records in its statistics:</p>
-        <p><image href="../Graphics/Event-Monitor-Origin.png" id="image_s1s_g5q_cy" scale="60"/></p>
+        <p><image href="../Graphics/Event-Monitor-Origin.png" id="image_s1s_g5q_cy" scale="65"/></p>
         <p>Notice, in the Record Throughput chart, that you can hover over graphics to get the exact
             number of records that they represent.</p>
         <p>And when you select the Local FS destination where the event record is written, Monitor
             mode displays statistics for the records written to the destination. At this point, the
             event records are treated like any other record:</p>
-        <p><image href="../Graphics/Event-Monitor-Dest.png" id="image_op2_v5q_cy" scale="60"/></p>
+        <p><image href="../Graphics/Event-Monitor-Dest.png" id="image_op2_v5q_cy" scale="65"/></p>
  </conbody>
 </concept>

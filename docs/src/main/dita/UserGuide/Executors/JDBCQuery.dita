@@ -19,8 +19,8 @@
   <p><indexterm>JDBC Query
                     executor<indexterm>overview</indexterm></indexterm><indexterm>executors<indexterm>JDBC
                     Query</indexterm></indexterm>The JDBC Query executor connects through JDBC to a
-            database and performs a user-defined query each time it receives an event record. Use
-            the JDBC Query executor as part of an event stream in the pipeline. </p>
+            database and performs a user-defined SQL query each time it receives an event record.
+            Use the JDBC Query executor as part of an event stream in the pipeline. </p>
         <p>When you configure the JDBC Query executor, you specify JDBC connection properties and
             the query you want to use. You can configure custom properties that your driver requires
             and advanced connection properties. </p>
