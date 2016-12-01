@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="You love the Hive Drift Solution (HDS) because it automatically updates the Hive metastore when needed. But if you've been using it with Impala, you've been trying to time the Invalidate Metadata ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Case Study: Impala Metadata Updates for HDS"></meta><meta name="DC.Relation" scheme="URI" content="../Event_Handling/EventHandling-Title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_szz_xwm_lx"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Case Study: Impala Metadata Updates for HDS</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="You love the Hive Drift Solution (HDS) because it automatically updates the Hive metastore when needed. But if you've been using it with Impala, you've been trying to time the Invalidate Metadata ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Case Study: Impala Metadata Updates for HDS"></meta><meta name="DC.Relation" scheme="URI" content="../Event_Handling/EventFramework-Title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_szz_xwm_lx"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Case Study: Impala Metadata Updates for HDS</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -20,8 +20,8 @@
   limitations under the License.
 --></head>
 <body onload="highlightSearchTerm()" class="frmBody">
-<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Event_Handling/EventHandling-Title.html" title="Event Handling">Event Handling</a></td><td><div class="navheader">
-<span class="navparent"><a class="link" href="../Event_Handling/EventHandling-Title.html" title="Event Handling"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Event Handling</span></a></span>  </div></td></tr></tbody></table>
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Event_Handling/EventFramework-Title.html" title="Event Framework">Event Framework</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Event_Handling/EventFramework-Title.html" title="Event Framework"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Event Framework</span></a></span>  </div></td></tr></tbody></table>
 <div class="nested0" id="concept_szz_xwm_lx">
     <h1 class="title topictitle1">Case Study: Impala Metadata Updates for HDS</h1>
 
@@ -31,7 +31,7 @@
             needed. But if you've been using it with Impala, you've been trying to time the
             Invalidate Metadata command after each metadata change and file write.</p>
 
-        <p class="p">Instead of running the command manually, you can add event handling to your Hive Drift
+        <p class="p">Instead of running the command manually, you use the event framework in your Hive Drift
             Solution pipeline to execute the command automatically. </p>
 
         <p class="p">Enable both the Hive Metastore destination and the Hadoop FS destination to generate
@@ -122,7 +122,7 @@
 <div class="related-links"></div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Event_Handling/EventHandling-Title.html" title="Event Handling"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Event Handling</span></a></span>  </div><div class="footer"><!-- SDC google analytics --><script>
+<span class="navparent"><a class="link" href="../Event_Handling/EventFramework-Title.html" title="Event Framework"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Event Framework</span></a></span>  </div><div class="footer"><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

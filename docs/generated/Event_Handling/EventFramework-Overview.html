@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="Event handling enables the pipeline to trigger tasks in external systems based on actions that occur in the pipeline, such as running a MapReduce job after the pipeline writes a file to HDFS. You can ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Event Handling"></meta><meta name="DC.Relation" scheme="URI" content="../Event_Handling/EventHandling-Title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_cph_5h4_lx"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Event Handling</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The event framework enables the pipeline to trigger tasks in external systems based on actions that occur in the pipeline, such as running a MapReduce job after the pipeline writes a file to HDFS. You ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Event Framework"></meta><meta name="DC.Relation" scheme="URI" content="../Event_Handling/EventFramework-Title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_cph_5h4_lx"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Event Framework</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -20,19 +20,19 @@
   limitations under the License.
 --></head>
 <body onload="highlightSearchTerm()" class="frmBody">
-<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Event_Handling/EventHandling-Title.html" title="Event Handling">Event Handling</a></td><td><div class="navheader">
-<span class="navparent"><a class="link" href="../Event_Handling/EventHandling-Title.html" title="Event Handling"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Event Handling</span></a></span>  </div></td></tr></tbody></table>
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Event_Handling/EventFramework-Title.html" title="Event Framework">Event Framework</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Event_Handling/EventFramework-Title.html" title="Event Framework"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Event Framework</span></a></span>  </div></td></tr></tbody></table>
 <div class="nested0" id="concept_cph_5h4_lx">
-    <h1 class="title topictitle1">Event Handling</h1>
+    <h1 class="title topictitle1">Event Framework</h1>
 
     <div class="body conbody">
-        <p class="p"><dfn class="term">Event
-                handling</dfn> enables the pipeline to trigger tasks in external systems based on
+        <p class="p">The <dfn class="term">event
+                framework</dfn> enables the pipeline to trigger tasks in external systems based on
             actions that occur in the pipeline, such as running a MapReduce job after the pipeline
             writes a file to HDFS. </p>
 
-        <p class="p">You can also use event handling to store event information, such as when an origin starts
-            or completes reading a file. </p>
+        <p class="p">You can also use the event framework to store event information, such as when an origin
+            starts or completes reading a file. </p>
 
         <p class="p">Event handling begins with enabling event generation for a stage in the pipeline, then
             configuring the rest of the event stream to do your bidding. You can add an event stream
@@ -103,9 +103,9 @@
                     
                     <thead class="thead" align="left">
                         <tr class="row">
-                            <th class="entry" valign="top" width="30%" id="d98722e127">Stage</th>
+                            <th class="entry" valign="top" width="30%" id="d98587e128">Stage</th>
 
-                            <th class="entry" valign="top" width="70%" id="d98722e130">Generates event records when the stage...</th>
+                            <th class="entry" valign="top" width="70%" id="d98587e131">Generates event records when the stage...</th>
 
                         </tr>
 
@@ -113,9 +113,9 @@
 
                     <tbody class="tbody">
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d98722e127 ">Directory origin</td>
+                            <td class="entry" valign="top" width="30%" headers="d98587e128 ">Directory origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d98722e130 ">
+                            <td class="entry" valign="top" width="70%" headers="d98587e131 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_opf_5ck_px">
                                     <li class="li">Starts processing a file.</li>
 
@@ -128,9 +128,9 @@
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d98722e127 ">File Tail origin</td>
+                            <td class="entry" valign="top" width="30%" headers="d98587e128 ">File Tail origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d98722e130 ">
+                            <td class="entry" valign="top" width="70%" headers="d98587e131 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_as2_12n_qx">
                                     <li class="li">Starts processing a file.</li>
 
@@ -143,9 +143,9 @@
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d98722e127 ">Amazon S3 destination</td>
+                            <td class="entry" valign="top" width="30%" headers="d98587e128 ">Amazon S3 destination</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d98722e130 ">
+                            <td class="entry" valign="top" width="70%" headers="d98587e131 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_lb3_zck_px">
                                     <li class="li">Completes writing to an object.</li>
 
@@ -158,9 +158,9 @@
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d98722e127 ">Hadoop FS destination</td>
+                            <td class="entry" valign="top" width="30%" headers="d98587e128 ">Hadoop FS destination</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d98722e130 ">
+                            <td class="entry" valign="top" width="70%" headers="d98587e131 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_x5c_cdk_px">
                                     <li class="li">Closes a file.</li>
 
@@ -173,9 +173,9 @@
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d98722e127 ">Groovy Evaluator processor</td>
+                            <td class="entry" valign="top" width="30%" headers="d98587e128 ">Groovy Evaluator processor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d98722e130 ">
+                            <td class="entry" valign="top" width="70%" headers="d98587e131 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_cj5_tnp_1y">
                                     <li class="li">Runs a script that generates events.</li>
 
@@ -186,9 +186,9 @@
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d98722e127 ">JavaScript Evaluator processor</td>
+                            <td class="entry" valign="top" width="30%" headers="d98587e128 ">JavaScript Evaluator processor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d98722e130 ">
+                            <td class="entry" valign="top" width="70%" headers="d98587e131 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_qtz_vnp_1y">
                                     <li class="li">Runs a script that generates events.</li>
 
@@ -199,9 +199,9 @@
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d98722e127 ">Jython Evaluator processor</td>
+                            <td class="entry" valign="top" width="30%" headers="d98587e128 ">Jython Evaluator processor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d98722e130 ">
+                            <td class="entry" valign="top" width="70%" headers="d98587e131 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_ujt_wnp_1y">
                                     <li class="li">Runs a script that generates events.</li>
 
@@ -212,9 +212,9 @@
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d98722e127 ">Hive Metastore destination</td>
+                            <td class="entry" valign="top" width="30%" headers="d98587e128 ">Hive Metastore destination</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d98722e130 ">
+                            <td class="entry" valign="top" width="70%" headers="d98587e131 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_fgw_mt4_qx">
                                     <li class="li">Updates the Hive metastore.</li>
 
@@ -225,9 +225,9 @@
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d98722e127 ">Local FS destination</td>
+                            <td class="entry" valign="top" width="30%" headers="d98587e128 ">Local FS destination</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d98722e130 ">
+                            <td class="entry" valign="top" width="70%" headers="d98587e131 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_flq_ddk_px">
                                     <li class="li">Closes a file.</li>
 
@@ -240,9 +240,9 @@
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d98722e127 ">MapR FS destination</td>
+                            <td class="entry" valign="top" width="30%" headers="d98587e128 ">MapR FS destination</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d98722e130 ">
+                            <td class="entry" valign="top" width="70%" headers="d98587e131 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_m11_gdk_px">
                                     <li class="li">Closes a file.</li>
 
@@ -255,9 +255,9 @@
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d98722e127 ">HDFS File Metadata executor</td>
+                            <td class="entry" valign="top" width="30%" headers="d98587e128 ">HDFS File Metadata executor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d98722e130 ">
+                            <td class="entry" valign="top" width="70%" headers="d98587e131 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_fmy_4t4_qx">
                                     <li class="li">Changes file metadata, such as the file name, location, or
                                         permissions.</li>
@@ -269,9 +269,9 @@
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d98722e127 ">MapReduce executor</td>
+                            <td class="entry" valign="top" width="30%" headers="d98587e128 ">MapReduce executor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d98722e130 ">
+                            <td class="entry" valign="top" width="70%" headers="d98587e131 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_fy2_qt4_qx">
                                     <li class="li">Starts a MapReduce job.</li>
 
@@ -349,7 +349,8 @@
                         closed files. </dd>
 
                     <dd class="dd">For example, you can use the MapReduce executor with the Hadoop FS
-                        destination to convert Avro files to Parquet when Hadoop FS closes a file. </dd>
+                        destination to convert Avro files to Parquet when Hadoop FS closes a file.
+                    </dd>
 
                 
             </dl>
@@ -373,9 +374,9 @@
                     
                     <thead class="thead" align="left">
                         <tr class="row">
-                            <th class="entry" valign="top" width="30%" id="d98722e454">Event Generating Origin</th>
+                            <th class="entry" valign="top" width="30%" id="d98587e459">Event Generating Origin</th>
 
-                            <th class="entry" valign="top" width="70%" id="d98722e457">Event Consumer</th>
+                            <th class="entry" valign="top" width="70%" id="d98587e462">Event Consumer</th>
 
                         </tr>
 
@@ -383,9 +384,9 @@
 
                     <tbody class="tbody">
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d98722e454 ">Directory</td>
+                            <td class="entry" valign="top" width="30%" headers="d98587e459 ">Directory</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d98722e457 ">
+                            <td class="entry" valign="top" width="70%" headers="d98587e462 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_wvy_h4p_1y">
                                     <li class="li">Any destination for event storage.</li>
 
@@ -396,9 +397,9 @@
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d98722e454 ">File Tail</td>
+                            <td class="entry" valign="top" width="30%" headers="d98587e459 ">File Tail</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d98722e457 ">
+                            <td class="entry" valign="top" width="70%" headers="d98587e462 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_hgh_34p_1y">
                                     <li class="li">Any destination for event storage.</li>
 
@@ -418,9 +419,9 @@
                     
                     <thead class="thead" align="left">
                         <tr class="row">
-                            <th class="entry" valign="top" width="30%" id="d98722e508">Event Generating Destination</th>
+                            <th class="entry" valign="top" width="30%" id="d98587e513">Event Generating Destination</th>
 
-                            <th class="entry" valign="top" width="70%" id="d98722e511">Event Consumer</th>
+                            <th class="entry" valign="top" width="70%" id="d98587e516">Event Consumer</th>
 
                         </tr>
 
@@ -428,9 +429,9 @@
 
                     <tbody class="tbody">
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d98722e508 ">Amazon S3 </td>
+                            <td class="entry" valign="top" width="30%" headers="d98587e513 ">Amazon S3 </td>
 
-                            <td class="entry" valign="top" width="70%" headers="d98722e511 ">
+                            <td class="entry" valign="top" width="70%" headers="d98587e516 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_tyv_24p_1y">
                                     <li class="li">Any destination for event storage.</li>
 
@@ -441,9 +442,9 @@
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d98722e508 ">Hadoop FS</td>
+                            <td class="entry" valign="top" width="30%" headers="d98587e513 ">Hadoop FS</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d98722e511 ">
+                            <td class="entry" valign="top" width="70%" headers="d98587e516 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_hbx_blh_tx">
                                     <li class="li">HDFS File Metadata executor to change file metadata for
                                         closed files.</li>
@@ -465,9 +466,9 @@
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d98722e508 ">Hive Metastore </td>
+                            <td class="entry" valign="top" width="30%" headers="d98587e513 ">Hive Metastore </td>
 
-                            <td class="entry" valign="top" width="70%" headers="d98722e511 ">
+                            <td class="entry" valign="top" width="70%" headers="d98587e516 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_kkj_dlh_tx">
                                     <li class="li">Hive Query executor to run a Hive or Impala query after
                                         changing table structures. <p class="p">Particularly useful when using
@@ -483,9 +484,9 @@
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d98722e508 ">Local FS</td>
+                            <td class="entry" valign="top" width="30%" headers="d98587e513 ">Local FS</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d98722e511 ">
+                            <td class="entry" valign="top" width="70%" headers="d98587e516 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_p3l_glh_tx">
                                     <li class="li">HDFS File Metadata executor to change file metadata for
                                         closed files.</li>
@@ -499,9 +500,9 @@
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d98722e508 ">MapR FS</td>
+                            <td class="entry" valign="top" width="30%" headers="d98587e513 ">MapR FS</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d98722e511 ">
+                            <td class="entry" valign="top" width="70%" headers="d98587e516 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_rvh_dsq_tx">
                                     <li class="li">HDFS File Metadata executor to change file metadata for
                                         closed files.</li>
@@ -527,9 +528,9 @@
                     
                     <thead class="thead" align="left">
                         <tr class="row">
-                            <th class="entry" valign="top" width="30%" id="d98722e632">Event Generating Executor</th>
+                            <th class="entry" valign="top" width="30%" id="d98587e637">Event Generating Executor</th>
 
-                            <th class="entry" valign="top" width="70%" id="d98722e635">Event Consumer</th>
+                            <th class="entry" valign="top" width="70%" id="d98587e640">Event Consumer</th>
 
                         </tr>
 
@@ -537,16 +538,16 @@
 
                     <tbody class="tbody">
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d98722e632 ">HDFS File Metadata executor</td>
+                            <td class="entry" valign="top" width="30%" headers="d98587e637 ">HDFS File Metadata executor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d98722e635 ">Any destination for event storage.</td>
+                            <td class="entry" valign="top" width="70%" headers="d98587e640 ">Any destination for event storage.</td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d98722e632 ">MapReduce executor</td>
+                            <td class="entry" valign="top" width="30%" headers="d98587e637 ">MapReduce executor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d98722e635 ">Any destination for event storage.</td>
+                            <td class="entry" valign="top" width="70%" headers="d98587e640 ">Any destination for event storage.</td>
 
                         </tr>
 
@@ -561,7 +562,7 @@
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Event_Handling/EventHandling-Title.html" title="Event Handling"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Event Handling</span></a></span>  </div><div class="footer"><!-- SDC google analytics --><script>
+<span class="navparent"><a class="link" href="../Event_Handling/EventFramework-Title.html" title="Event Framework"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Event Framework</span></a></span>  </div><div class="footer"><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

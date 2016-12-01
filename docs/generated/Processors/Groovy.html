@@ -308,7 +308,7 @@ for (record in records) {
 
         <p class="p">As with any event record, you can pass events downstream to a
             destination for event storage or to any executor that can be configured to use the
-            event. For more information about events and event handling, see <a class="xref" href="../Event_Handling/EventHandling-Overview.html#concept_cph_5h4_lx">Event Handling</a>.</p>
+            event. For more information about events and the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Overview.html#concept_cph_5h4_lx">Event Framework</a>.</p>
 
         <div class="p">To generate events:<ol class="ol" id="concept_qcz_ssq_1y__d35064e31">
                 <li class="li">On the <span class="keyword wintitle">General</span> tab, select the <span class="ph uicontrol">Produce
@@ -503,9 +503,9 @@ grant codebase "file:///groovy/script" {
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d225431e689">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d225441e689">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d225431e692">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d225441e692">Description</th>
 
                                 </tr>
 
@@ -513,34 +513,34 @@ grant codebase "file:///groovy/script" {
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d225431e689 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d225441e689 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d225431e692 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d225431e689 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d225431e692 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d225441e692 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d225431e689 ">Produce Events <a class="xref" href="Groovy.html#concept_qcz_ssq_1y">
+                                    <td class="entry" valign="top" width="30%" headers="d225441e689 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d225441e692 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d225441e689 ">Produce Events <a class="xref" href="Groovy.html#concept_qcz_ssq_1y">
                                             <img class="image" id="task_asl_bpt_gv__image_fnz_31h_cy" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d225431e692 ">Generates event records when
-                                        events occur. Use for event handling. <a class="xref" href="../Event_Handling/EventHandling-Overview.html#concept_cph_5h4_lx">
+                                    <td class="entry" valign="top" width="70%" headers="d225441e692 ">Generates event records when
+                                        events occur. Use for event handling. <a class="xref" href="../Event_Handling/EventFramework-Overview.html#concept_cph_5h4_lx">
                                             <img class="image" id="task_asl_bpt_gv__d34465e4045" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d225431e689 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                    <td class="entry" valign="top" width="30%" headers="d225441e689 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
                                             <img class="image" id="task_asl_bpt_gv__d34465e4054" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d225431e692 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d225441e692 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -548,10 +548,10 @@ grant codebase "file:///groovy/script" {
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d225431e689 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                    <td class="entry" valign="top" width="30%" headers="d225441e689 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
                                             <img class="image" id="task_asl_bpt_gv__d34465e4068" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d225431e692 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d225441e692 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -559,10 +559,10 @@ grant codebase "file:///groovy/script" {
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d225431e689 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                    <td class="entry" valign="top" width="30%" headers="d225441e689 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
                                             <img class="image" id="task_asl_bpt_gv__d34465e4084" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d225431e692 ">Error record handling for the stage: <ul class="ul" id="task_asl_bpt_gv__d34465e4088">
+                                    <td class="entry" valign="top" width="70%" headers="d225441e692 ">Error record handling for the stage: <ul class="ul" id="task_asl_bpt_gv__d34465e4088">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -593,9 +593,9 @@ grant codebase "file:///groovy/script" {
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d225431e829">Groovy Evaluator Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d225441e829">Groovy Evaluator Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d225431e832">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d225441e832">Description</th>
 
                                 </tr>
 
@@ -603,9 +603,9 @@ grant codebase "file:///groovy/script" {
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d225431e829 ">Record Processing Mode</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d225441e829 ">Record Processing Mode</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d225431e832 ">Determines how the Groovy Evaluator processes data: <ul class="ul" id="task_asl_bpt_gv__ul_vqy_kqt_gv">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d225441e832 ">Determines how the Groovy Evaluator processes data: <ul class="ul" id="task_asl_bpt_gv__ul_vqy_kqt_gv">
                                             <li class="li">Record by Record - Processes records individually.
                                                 Performs error handling.</li>
 
@@ -619,9 +619,9 @@ grant codebase "file:///groovy/script" {
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d225431e829 ">Script</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d225441e829 ">Script</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d225431e832 ">Groovy code to use in the processor.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d225441e832 ">Groovy code to use in the processor.</td>
 
                                 </tr>
 
