@@ -560,33 +560,34 @@ public class JdbcUtil {
       false
     ));
 
-    // Test connectivity
-    Connection connection = dataSource.getConnection();
-
     // Can only validate schema if the user specified a single table.
     if (!tableNameTemplate.contains(EL_PREFIX)) {
-      ResultSet res = JdbcUtil.getTableMetadata(connection, tableNameTemplate);
-      if (!res.next()) {
-        issues.add(context.createConfigIssue(Groups.JDBC.name(), TABLE_NAME, JdbcErrors.JDBC_16, tableNameTemplate));
-      } else {
-        ResultSet columns = JdbcUtil.getColumnMetadata(connection, tableNameTemplate);
-        Set<String> columnNames = new HashSet<>();
-        while (columns.next()) {
-          columnNames.add(columns.getString(4));
-        }
-        for (JdbcFieldColumnParamMapping customMapping : customMappings) {
-          if (!columnNames.contains(customMapping.columnName)) {
-            issues.add(context.createConfigIssue(Groups.JDBC.name(),
-                CUSTOM_MAPPINGS,
-                JdbcErrors.JDBC_07,
-                customMapping.field,
-                customMapping.columnName
-            ));
+      try (
+        Connection connection = dataSource.getConnection();
+        ResultSet res = JdbcUtil.getTableMetadata(connection, tableNameTemplate);
+      ) {
+        if (!res.next()) {
+          issues.add(context.createConfigIssue(Groups.JDBC.name(), TABLE_NAME, JdbcErrors.JDBC_16, tableNameTemplate));
+        } else {
+          try(ResultSet columns = JdbcUtil.getColumnMetadata(connection, tableNameTemplate)) {
+            Set<String> columnNames = new HashSet<>();
+            while (columns.next()) {
+              columnNames.add(columns.getString(4));
+            }
+            for (JdbcFieldColumnParamMapping customMapping : customMappings) {
+              if (!columnNames.contains(customMapping.columnName)) {
+                issues.add(context.createConfigIssue(Groups.JDBC.name(),
+                  CUSTOM_MAPPINGS,
+                  JdbcErrors.JDBC_07,
+                  customMapping.field,
+                  customMapping.columnName
+                ));
+              }
+            }
           }
         }
       }
     }
-    connection.close();
 
     return dataSource;
   }

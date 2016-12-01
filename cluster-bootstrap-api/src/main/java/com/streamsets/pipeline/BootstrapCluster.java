@@ -377,35 +377,28 @@ public class BootstrapCluster {
   }
 
   private static void extractFromJar(File sourceFile, File destDir) throws IOException {
-    JarFile jar = new JarFile(sourceFile);
-    Enumeration enumEntries = jar.entries();
-    while (enumEntries.hasMoreElements()) {
-      JarEntry jarEntry = (JarEntry) enumEntries.nextElement();
-      java.io.File destFile = new java.io.File(destDir, jarEntry.getName());
-      File parentDestFile = destFile.getParentFile();
-      // if parent file does not exist, create the chain of dirs for this file
-      if (!parentDestFile.isDirectory() && !parentDestFile.mkdirs()) {
-        throw new IllegalStateException("Cannot create parent directories for file: " + destFile.getAbsolutePath());
-      }
-      if (jarEntry.isDirectory()) {
-        continue;
-      }
-      InputStream is = null;
-      FileOutputStream fos = null;
-      try {
-        is = jar.getInputStream(jarEntry); // get the input stream
-        fos = new java.io.FileOutputStream(destFile);
-        byte[] buffer = new byte[8092];
-        int bytesRead;
-        while ((bytesRead = is.read(buffer)) != -1) { // write contents of 'is' to 'fos'
-          fos.write(buffer, 0, bytesRead);
+    try(JarFile jar = new JarFile(sourceFile)) {
+      Enumeration enumEntries = jar.entries();
+      while (enumEntries.hasMoreElements()) {
+        JarEntry jarEntry = (JarEntry) enumEntries.nextElement();
+        java.io.File destFile = new java.io.File(destDir, jarEntry.getName());
+        File parentDestFile = destFile.getParentFile();
+        // if parent file does not exist, create the chain of dirs for this file
+        if (!parentDestFile.isDirectory() && !parentDestFile.mkdirs()) {
+          throw new IllegalStateException("Cannot create parent directories for file: " + destFile.getAbsolutePath());
         }
-      } finally {
-        if (fos != null) {
-          fos.close();
+        if (jarEntry.isDirectory()) {
+          continue;
         }
-        if (is != null) {
-          is.close();
+        try(
+          InputStream is = jar.getInputStream(jarEntry);
+          FileOutputStream fos = new java.io.FileOutputStream(destFile);
+        ){
+          byte[] buffer = new byte[8092];
+          int bytesRead;
+          while ((bytesRead = is.read(buffer)) != -1) { // write contents of 'is' to 'fos'
+            fos.write(buffer, 0, bytesRead);
+          }
         }
       }
     }

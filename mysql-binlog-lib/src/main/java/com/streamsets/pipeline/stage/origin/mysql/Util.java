@@ -38,8 +38,10 @@ public class Util {
    */
   public static String getGlobalVariable(DataSource dataSource, String variable) throws SQLException {
     try (Connection conn = dataSource.getConnection()) {
-      try (Statement stmt = conn.createStatement()) {
+      try (
+        Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(String.format("show global variables like '%s'", variable));
+      ) {
         if (rs.next()) {
           return rs.getString(2);
         } else {

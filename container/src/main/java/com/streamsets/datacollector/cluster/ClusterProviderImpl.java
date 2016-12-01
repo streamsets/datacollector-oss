@@ -672,21 +672,20 @@ public class ClusterProviderImpl implements ClusterProvider {
     }
     try {
       etcDir = createDirectoryClone(etcDir, "etc", stagingDir);
-      InputStream clusterLog4jProperties;
       if (executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
-        clusterLog4jProperties = Utils.checkNotNull(
-            getClass().getResourceAsStream("/cluster-spark-log4j.properties"),
-            "Cluster Log4J Properties"
-        );
-        File log4jProperty = new File(etcDir, runtimeInfo.getLog4jPropertiesFileName());
-        if (!log4jProperty.isFile()) {
-          throw new IllegalStateException(
+        try (
+        InputStream clusterLog4jProperties = Utils.checkNotNull(getClass().getResourceAsStream("/cluster-spark-log4j.properties"), "Cluster Log4J Properties")
+        ) {
+          File log4jProperty = new File(etcDir, runtimeInfo.getLog4jPropertiesFileName());
+          if (!log4jProperty.isFile()) {
+            throw new IllegalStateException(
               Utils.format("Log4j config file doesn't exist: '{}'", log4jProperty.getAbsolutePath())
-          );
-        }
-        LOG.info("Copying log4j properties for mesos cluster mode");
-        FileUtils.copyInputStreamToFile(clusterLog4jProperties,
+            );
+          }
+          LOG.info("Copying log4j properties for mesos cluster mode");
+          FileUtils.copyInputStreamToFile(clusterLog4jProperties,
             log4jProperty);
+        }
       }
       PipelineInfo pipelineInfo = Utils.checkNotNull(pipelineConfiguration.getInfo(), "Pipeline Info");
       String pipelineName = pipelineInfo.getName();
