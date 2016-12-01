@@ -35,7 +35,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
     icon = "data-lake-store.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
-    onlineHelpRefUrl = "index.html#Destinations/DataLake.html#task_jfl_nf4_zx"
+    onlineHelpRefUrl = "index.html#Destinations/DataLakeStore.html#task_jfl_nf4_zx"
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
