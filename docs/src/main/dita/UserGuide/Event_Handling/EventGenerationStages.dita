@@ -16,7 +16,7 @@
 <concept id="concept_zrl_mhn_lx">
  <title>Event Generation Stages</title>
  <conbody>
-  <p><indexterm>event handling<indexterm>event generating
+  <p><indexterm>event framework<indexterm>event generating
                 stages</indexterm></indexterm><indexterm>event generating
                     stages<indexterm>overview</indexterm></indexterm>You can configure certain
             stages to generate events. Event generation differs from stage to stage, based on how

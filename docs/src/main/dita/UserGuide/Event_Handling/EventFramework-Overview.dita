@@ -14,14 +14,14 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_cph_5h4_lx">
-    <title>Event Handling</title>
+    <title>Event Framework</title>
     <conbody>
-        <p><indexterm>event handling<indexterm>overview</indexterm></indexterm><term>Event
-                handling</term> enables the pipeline to trigger tasks in external systems based on
+        <p><indexterm>event framework<indexterm>overview</indexterm></indexterm>The <term>event
+                framework</term> enables the pipeline to trigger tasks in external systems based on
             actions that occur in the pipeline, such as running a MapReduce job after the pipeline
             writes a file to HDFS. </p>
-        <p>You can also use event handling to store event information, such as when an origin starts
-            or completes reading a file. </p>
+        <p>You can also use the event framework to store event information, such as when an origin
+            starts or completes reading a file. </p>
         <p>Event handling begins with enabling event generation for a stage in the pipeline, then
             configuring the rest of the event stream to do your bidding. You can add an event stream
             to any pipeline that includes an event-generating stage. </p>

@@ -16,12 +16,12 @@
 <concept id="concept_jkm_rnz_kx">
     <title>Case Study: Parquet Conversion</title>
     <conbody>
-        <p><indexterm>event handling case studies<indexterm>HDFS avro to
+        <p><indexterm>event framework case studies<indexterm>HDFS avro to
                 parquet</indexterm></indexterm>Say you want to store data on HDFS using the columnar
             format, Parquet. But <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             doesn't have a Parquet data format. How do you do it? </p>
-        <p>Event handling was created for exactly this purpose. The simple addition of the event
+        <p>The event framework was created for exactly this purpose. The simple addition of an event
             stream to the pipeline generates automatic conversion of Avro files to Parquet using a
             MapReduce job. </p>
         <p>It's just a few simple steps:</p>

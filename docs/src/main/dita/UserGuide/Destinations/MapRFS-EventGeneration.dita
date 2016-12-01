@@ -26,7 +26,7 @@
                 id="ul_sww_spb_rx">
                 <li/>
             </ul></p>
-        <p>For an overview on event handling, see <xref
-                href="../Event_Handling/EventHandling-Overview.dita#concept_cph_5h4_lx"/>.</p>
+        <p>For an overview on the event framework, see <xref
+                href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"/>.</p>
  </conbody>
 </concept>

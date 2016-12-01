@@ -17,7 +17,7 @@
  <title>Event Generation</title>
  <conbody>
         <p><indexterm>Hadoop FS destination<indexterm>event
-                generation</indexterm></indexterm><indexterm>event handling<indexterm>Hadoop FS
+                generation</indexterm></indexterm><indexterm>event framework<indexterm>Hadoop FS
                     destination event generation</indexterm></indexterm>The Hadoop FS destination
                 <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-ph-EventGen1"
@@ -27,7 +27,7 @@
                 id="ul_sww_spb_rx">
                 <li/>
             </ul></p>
-        <p>For an overview on event handling, see <xref
-                href="../Event_Handling/EventHandling-Overview.dita#concept_cph_5h4_lx"/>.</p>
+        <p>For an overview of the event framework, see <xref
+                href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"/>.</p>
  </conbody>
 </concept>

@@ -32,7 +32,7 @@
             with gzip when writing to Amazon S3.</p>
         <p>The destination creates an object for each batch of data written to Amazon S3. </p>
         <p>The Amazon S3 destination can generate events for an event stream. For more information
-            about event handling, see <xref
-                href="../Event_Handling/EventHandling-Overview.dita#concept_cph_5h4_lx"/>.</p>
+            about the event framework, see <xref
+                href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"/>.</p>
  </conbody>
 </concept>

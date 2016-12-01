@@ -16,8 +16,8 @@
 <concept id="concept_sjr_nrx_4x">
  <title>Event Streams</title>
  <conbody>
-        <p><indexterm>event streams<indexterm>description</indexterm></indexterm>You can add event
-            handling to any pipeline where the event handling logic suits your needs. When
+        <p><indexterm>event streams<indexterm>description</indexterm></indexterm>You can use the
+            event framework in any pipeline where the event handling logic suits your needs. When
             configuring the event stream, you can add additional stages as needed, but you cannot
             merge the event stream with a data stream. </p>
         <p>There are two general types of event streams that you might create: <ul

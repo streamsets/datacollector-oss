@@ -17,7 +17,7 @@
  <title>Event Generation</title>
  <conbody>
         <p><indexterm>File Tail origin<indexterm>event
-                generation</indexterm></indexterm><indexterm>event handling<indexterm>File Tail
+                generation</indexterm></indexterm><indexterm>the event framework<indexterm>File Tail
                     event generation</indexterm></indexterm>The File Tail origin <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-ph-EventGen1"
             /></p>

@@ -2310,7 +2310,7 @@
                                     <entry>Produce Events</entry>
                                     <entry id="P-entry-1stS-Events">Generates event records when
                                         events occur. Use for event handling. <xref
-                                            href="../Event_Handling/EventHandling-Overview.dita">
+                                            href="../Event_Handling/EventFramework-Overview.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_plp_tp2_px"/></xref></entry>
                                 </row>
@@ -2591,7 +2591,7 @@
                                                 id="image_wrq_mrx_mx"/></xref></entry>
                                     <entry>Generates event records when events occur. Use for event
                                         handling. <xref
-                                            href="../Event_Handling/EventHandling-Overview.dita">
+                                            href="../Event_Handling/EventFramework-Overview.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_l15_ft2_px"/></xref></entry>
                                 </row>

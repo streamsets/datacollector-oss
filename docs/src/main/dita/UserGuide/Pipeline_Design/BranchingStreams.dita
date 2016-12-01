@@ -31,7 +31,7 @@
             event-generating stage, such as an origin or destination, and pass from the stage
             through an event stream output, as follows:</p>
         <p><image href="../Graphics/BranchEventStream.png" id="image_m1m_trz_yx" scale="60"/></p>
-        <p>For more information about event handling and event streams, see <xref
-                href="../Event_Handling/EventHandling-Overview.dita#concept_cph_5h4_lx"/>.</p>
+        <p>For more information about the event framework and event streams, see <xref
+                href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"/>.</p>
  </conbody>
 </concept>

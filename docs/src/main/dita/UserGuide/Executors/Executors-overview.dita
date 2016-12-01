@@ -21,8 +21,8 @@
             events. Use executor stages as part of an event stream to perform event-driven,
             pipeline-related tasks, such as moving a fully-written file when a destination closes
             it.</p>
-        <p>For more information about event handling, see <xref
-                href="../Event_Handling/EventHandling-Overview.dita#concept_cph_5h4_lx"/>.</p>
+        <p>For more information about the event framework, see <xref
+                href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"/>.</p>
         <p>You can use the following executors in a pipeline:<ul id="ul_htl_4dr_mx">
                 <li>HDFS File Metadata - Changes file metadata upon receiving an event record.</li>
                 <li>Hive Query - Runs a user-defined Hive or Impala query upon receiving an event

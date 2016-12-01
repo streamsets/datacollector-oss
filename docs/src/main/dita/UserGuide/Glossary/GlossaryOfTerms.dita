@@ -78,12 +78,12 @@
           enable pipeline development and testing. Not meant for use in production pipelines.</dd>
       </dlentry>
       <dlentry>
-        <dt>event handling</dt>
+        <dt>event framework</dt>
         <dd>
-          <p>Event handling enables the pipeline to trigger tasks in external systems based on
+          <p>The event framework enables the pipeline to trigger tasks in external systems based on
             actions that occur in the pipeline, such as running a MapReduce job after the pipeline
-            writes a file to HDFS. You can also use event handling to store event information, such
-            as when an origin starts or completes reading a file. </p>
+            writes a file to HDFS. You can also use the event framework to store event information,
+            such as when an origin starts or completes reading a file. </p>
         </dd>
       </dlentry>
       <dlentry>
