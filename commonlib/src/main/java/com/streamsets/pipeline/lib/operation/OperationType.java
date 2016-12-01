@@ -33,6 +33,7 @@ public class OperationType {
   public static final int SELECT_FOR_UPDATE_CODE = 5;
   public static final int BEFORE_UPDATE_CODE = 6;
   public static final int AFTER_UPDATE_CODE = 7;
+  public static final int UNSUPPORTED_CODE = 8;
 
   private static final Map<Integer, String> CODE_LABEL = new ImmutableMap.Builder<Integer, String>()
       .put(INSERT_CODE, "INSERT")
@@ -42,6 +43,7 @@ public class OperationType {
       .put(SELECT_FOR_UPDATE_CODE, "SELECT FOR UPDATE")
       .put(BEFORE_UPDATE_CODE, "BEFORE UPDATE")
       .put(AFTER_UPDATE_CODE, "AFTER UPDATE")
+      .put(UNSUPPORTED_CODE, "UNSUPPORTED")
       .build();
 
   private static final ImmutableMap<String, Integer> LABEL_CODE = new ImmutableMap.Builder<String, Integer>()
@@ -52,6 +54,7 @@ public class OperationType {
       .put("SELECT FOR UPDATE", SELECT_FOR_UPDATE_CODE)
       .put("BEFORE UPDATE", BEFORE_UPDATE_CODE)
       .put("AFTER UPDATE", AFTER_UPDATE_CODE)
+      .put("UNSUPPORTED", UNSUPPORTED_CODE)
       .build();
 
 

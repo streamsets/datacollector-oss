@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.origin.salesforce;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableMap;
 import com.sforce.async.AsyncApiException;
 import com.sforce.async.BatchInfo;
 import com.sforce.async.BatchStateEnum;
@@ -36,6 +37,7 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.salesforce.ForceSourceConfigBean;
 import com.streamsets.pipeline.lib.salesforce.ForceUtils;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
@@ -78,6 +80,12 @@ public class ForceSource extends BaseSource {
   private static final String READ_EVENTS_FROM_START = EVENT_ID_OFFSET_PREFIX + "-2";
   private static final String SOBJECT_TYPE_FROM_QUERY = "^SELECT.*FROM\\s*(\\S*)\\b.*";
 
+  private static final Map<String, Integer> SFDC_TO_SDC_OPERATION = new ImmutableMap.Builder<String, Integer>()
+      .put("created", OperationType.INSERT_CODE)
+      .put("updated", OperationType.UPDATE_CODE)
+      .put("deleted", OperationType.DELETE_CODE)
+      .put("undeleted", OperationType.UNSUPPORTED_CODE)
+      .build();
   private final ForceSourceConfigBean conf;
 
   private PartnerConnection partnerConnection;
@@ -596,6 +604,10 @@ public class ForceSource extends BaseSource {
         Record.Header recordHeader = rec.getHeader();
         for (Map.Entry<String, Object> entry : event.entrySet()) {
           recordHeader.setAttribute(HEADER_ATTRIBUTE_PREFIX + entry.getKey(), entry.getValue().toString());
+          if ("type".equals(entry.getKey())) {
+            int operationCode = SFDC_TO_SDC_OPERATION.get(entry.getValue().toString());
+            recordHeader.setAttribute(OperationType.SDC_OPERATION_TYPE, String.valueOf(operationCode));
+          }
         }
         recordHeader.setAttribute(SOBJECT_TYPE_ATTRIBUTE, sobjectType);
 
