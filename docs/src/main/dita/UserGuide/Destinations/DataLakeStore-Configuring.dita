@@ -14,14 +14,15 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_jfl_nf4_zx">
-    <title>Configuring a Data Lake Store</title>
+    <title>Configuring an Azure Data Lake Store Destination</title>
     <taskbody>
         <context>
-            <p><indexterm>Data Lake Store
-                destination<indexterm>configuring</indexterm></indexterm>Configure a Data Lake Store
-                destination to write data to Azure Data Lake Store. Be sure to complete the
-                necessary <xref href="DataLakeStore-Prerequisites.dita#concept_tsr_ml4_zx"
-                    >prerequisites</xref> before you configure the destination.</p>
+            <p><indexterm>Azure Data Lake Store
+                    destination<indexterm>configuring</indexterm></indexterm>Configure an Azure Data
+                Lake Store destination to write data to Microsoft Azure Data Lake Store. Be sure to
+                complete the necessary <xref
+                    href="DataLakeStore-Prerequisites.dita#concept_tsr_ml4_zx">prerequisites</xref>
+                before you configure the destination.</p>
         </context>
         <steps id="steps_qlj_xrw_zx">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-NoStageLib">

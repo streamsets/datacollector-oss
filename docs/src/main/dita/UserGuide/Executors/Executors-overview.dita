@@ -27,7 +27,7 @@
                 <li>HDFS File Metadata - Changes file metadata upon receiving an event record.</li>
                 <li>Hive Query - Runs a user-defined Hive or Impala query upon receiving an event
                     record. </li>
-                <li>JDBC Query - Runs a user-defined query upon receiving an event record.</li>
+                <li>JDBC Query - Runs a user-defined SQL query upon receiving an event record.</li>
                 <li>MapReduce - Starts the specified MapReduce job upon receiving an event record. </li>
             </ul></p>
  </conbody>

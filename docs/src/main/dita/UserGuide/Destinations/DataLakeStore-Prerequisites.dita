@@ -16,10 +16,10 @@
 <concept id="concept_tsr_ml4_zx">
  <title>Prerequisites</title>
  <conbody>
-  <p><indexterm>Data Lake Store
-                    destination<indexterm>prerequisites</indexterm></indexterm><indexterm>prerequisites<indexterm>Data
-                    Lake Store destination</indexterm></indexterm>Complete the following
-            prerequisites before you configure the Data Lake Store destination:<ol
+  <p><indexterm>Azure Data Lake Store
+                    destination<indexterm>prerequisites</indexterm></indexterm><indexterm>prerequisites<indexterm>Azure
+                    Data Lake Store destination</indexterm></indexterm>Complete the following
+            prerequisites before you configure the Azure Data Lake Store destination:<ol
                 id="ol_uk4_vgh_1y">
                 <li>In Active Directory, create a <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -29,13 +29,13 @@
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> web application.</li>
             </ol></p>
-        <p>At the time of writing, Azure Data Lake Store is still in Beta, so the information here
-            is subject to change. </p>
+        <p>At the time of writing, Microsoft Azure Data Lake Store is still in Beta, so the
+            information here is subject to change. </p>
         <p>If the steps below are no longer accurate, you might try the following article or check
-            for updates to the Azure Data Lake Store documentation: <xref
+            for updates to the Microsoft Azure Data Lake Store documentation: <xref
                 href="https://docs.microsoft.com/en-us/azure/data-lake-store/data-lake-store-authenticate-using-active-directory"
                 format="html" scope="external"/>.</p>
-        <p>After you complete all of the prerequisite tasks, you can configure the Azure Data Store
-            destination. </p>
+        <p>After you complete all of the prerequisite tasks, you can configure the Azure Data Lake
+            Store destination. </p>
  </conbody>
 </concept>

@@ -86,8 +86,8 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-azure-lib</entry>
-                            <entry>For Microsoft Azure Data Lake Store.<p>Includes the Data Lake
-                                    Store destination.</p></entry>
+                            <entry>For Microsoft Azure Data Lake Store.<p>Includes the Azure Data
+                                    Lake Store destination.</p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-basic-lib</entry>
@@ -126,6 +126,8 @@
                                     <li>Hadoop FS destination </li>
                                     <li>HBase destination </li>
                                     <li>Solr destination</li>
+                                    <li>HDFS File Metadata executor</li>
+                                    <li>MapReduce executor</li>
                                 </ul>
                             </entry>
                         </row>
@@ -141,6 +143,8 @@
                                     <li>Hadoop FS destination </li>
                                     <li>HBase destination </li>
                                     <li>Solr destination</li>
+                                    <li>HDFS File Metadata executor</li>
+                                    <li>MapReduce executor</li>
                                 </ul>
                             </entry>
                         </row>
@@ -160,6 +164,9 @@
                                     <li>Hive Metastore destination</li>
                                     <li>Hive Streaming destination</li>
                                     <li>Solr destination</li>
+                                    <li>HDFS File Metadata executor</li>
+                                    <li>Hive Query executor</li>
+                                    <li>MapReduce executor</li>
                                 </ul>
                             </entry>
                         </row>
@@ -179,6 +186,9 @@
                                     <li>Hive Metastore destination</li>
                                     <li>Hive Streaming destination</li>
                                     <li>Solr destination</li>
+                                    <li>HDFS File Metadata executor</li>
+                                    <li>Hive Query executor</li>
+                                    <li>MapReduce executor</li>
                                 </ul>
                             </entry>
                         </row>
@@ -198,6 +208,9 @@
                                     <li>Hive Metastore destination</li>
                                     <li>Hive Streaming destination</li>
                                     <li>Solr destination</li>
+                                    <li>HDFS File Metadata executor</li>
+                                    <li>Hive Query executor</li>
+                                    <li>MapReduce executor</li>
                                 </ul>
                             </entry>
                         </row>
@@ -395,6 +408,9 @@
                                         <li>Hive Metastore destination</li>
                                         <li>Hive Streaming destination</li>
                                         <li>Kafka Producer destination</li>
+                                        <li>HDFS File Metadata executor</li>
+                                        <li>Hive Query executor</li>
+                                        <li>MapReduce executor</li>
                                     </ul></p></entry>
                         </row>
                         <row>
@@ -415,6 +431,9 @@
                                         <li>Hive Metastore destination</li>
                                         <li>Hive Streaming destination</li>
                                         <li>Kafka Producer destination</li>
+                                        <li>HDFS File Metadata executor</li>
+                                        <li>Hive Query executor</li>
+                                        <li>MapReduce executor</li>
                                     </ul></p></entry>
                         </row>
                         <row>
@@ -472,18 +491,22 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-jdbc-lib</entry>
-                            <entry>Includes:<ul id="ul_apd_qbj_jx">
-                                    <li>JDBC Consumer origin</li>
-                                    <li>Oracle CDC Client origin</li>
-                                    <li>JDBC Lookup processor</li>
-                                    <li>JDBC Tee processor</li>
-                                    <li>JDBC Producer destination</li>
-                                    <li>JDBC Query executor</li>
-                                </ul></entry>
+                            <entry>
+                                <p>For JDBC access to databases.</p>
+                                <p>Includes:<ul id="ul_apd_qbj_jx">
+                                        <li>JDBC Consumer origin</li>
+                                        <li>Oracle CDC Client origin</li>
+                                        <li>JDBC Lookup processor</li>
+                                        <li>JDBC Tee processor</li>
+                                        <li>JDBC Producer destination</li>
+                                        <li>JDBC Query executor</li>
+                                    </ul></p>
+                            </entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-jms-lib </entry>
-                            <entry>Includes the JMS Consumer origin.</entry>
+                            <entry>For Java Messaging Services (JMS).<p>Includes the JMS Consumer
+                                    origin.</p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-jython_2_7-lib</entry>
@@ -541,8 +564,13 @@
                                     destination.</p></entry>
                         </row>
                         <row>
+                            <entry>streamsets-datacollector-mysql-binlog-lib</entry>
+                            <entry>For MySQL binary logs.<p>Includes the MySQL Binary Log
+                                    origin.</p></entry>
+                        </row>
+                        <row>
                             <entry>streamsets-datacollector-omniture-lib </entry>
-                            <entry>Includes the Omniture origin.</entry>
+                            <entry>For Omniture.<p>Includes the Omniture origin.</p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-rabbitmq-lib </entry>
@@ -551,14 +579,22 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-redis-lib</entry>
-                            <entry>For Redis versions 2.8 and 3.0.<p>Includes the Redis Consumer
-                                    origin, Redis Lookup processor, and Redis
-                                destination.</p></entry>
+                            <entry>For Redis versions 2.8 and 3.0.<p>Includes:<ul id="ul_oyy_2kx_cy">
+                                        <li>Redis Consumer origin</li>
+                                        <li>Redis Lookup processor</li>
+                                        <li>Redis destination</li>
+                                    </ul></p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-salesforce-lib</entry>
-                            <entry>Includes the Salesforce origin, Salesforce destination, and Wave
-                                Analytics destination.</entry>
+                            <entry>
+                                <p>For Salesforce. </p>
+                                <p>Includes:<ul id="ul_sbt_gkx_cy">
+                                        <li>Salesforce origin</li>
+                                        <li>Salesforce destination</li>
+                                        <li>Wave Analytics destination</li>
+                                    </ul></p>
+                            </entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-stats-lib</entry>

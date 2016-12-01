@@ -16,11 +16,11 @@
 <concept id="concept_xv4_b2h_1y">
  <title>Step 2. Retrieve Information from Azure </title>
  <conbody>
-  <p><indexterm>Data Lake Store destination<indexterm>prereq: retrieve information from
-                    Azure</indexterm></indexterm><indexterm>prerequisites<indexterm>Data Lake Store
-                    destination</indexterm></indexterm>Retrieve information from Azure to help you
-            configure the Data Lake Store destination. When you configure the destination, you need
-            the following information:<ul id="ul_pqn_42h_1y">
+  <p><indexterm>Azure Data Lake Store destination<indexterm>prereq: retrieve information from
+                    Azure</indexterm></indexterm><indexterm>prerequisites<indexterm>Azure Data Lake
+                    Store destination</indexterm></indexterm>Retrieve information from Azure to help
+            you configure the Azure Data Lake Store destination. When you configure the destination,
+            you need the following information:<ul id="ul_pqn_42h_1y">
                 <li>Client ID</li>
                 <li>Client Key</li>
                 <li>Auth Token Endpoint</li>
@@ -50,7 +50,7 @@
                         <li id="ClientID">Scroll down the page and note the <uicontrol>Client
                                 ID</uicontrol>:<p><image href="../Graphics/DLStore-ADClientID.png"
                                     id="image_tqh_y1v_zx" scale="60"/></p><p>
-                                <note type="important">When you configure the Data Lake Store
+                                <note type="important">When you configure the Azure Data Lake Store
                                     destination, use this number for the <uicontrol>Client
                                         ID</uicontrol> property.</note>
                             </p></li>
@@ -64,8 +64,8 @@
                                 changes and generates a key. Copy the key value. </p><p><image
                                     href="../Graphics/DLStore-Key.png" scale="65"
                                     id="image_f2n_ctb_1y"/></p><note type="important">When you
-                                configure the Data Lake Store destination, use this key for the
-                                    <uicontrol>Client Key</uicontrol> property.</note></li>
+                                configure the Azure Data Lake Store destination, use this key for
+                                the <uicontrol>Client Key</uicontrol> property.</note></li>
                         <li>At the bottom of the <wintitle>Properties</wintitle> page, click the
                                 <uicontrol>View Endpoints</uicontrol> icon. <p><image
                                     href="../Graphics/DLStore-ViewEndpoints.png"
@@ -74,8 +74,8 @@
                             and copy the <uicontrol>OAuth 2.0 Token Endpoint</uicontrol> URL.
                                     <p><image href="../Graphics/DLStore-OAuth.png"
                                     id="image_mld_hcw_zx" scale="65"/></p><note type="important"
-                                >When you configure the Data Lake Store destination, use this URL
-                                for the <uicontrol>Auth Token Endpoint</uicontrol> property.
+                                >When you configure the Azure Data Lake Store destination, use this
+                                URL for the <uicontrol>Auth Token Endpoint</uicontrol> property.
                             </note></li>
                         <li>Click the <uicontrol>Check</uicontrol> icon to close the window.</li>
                     </ol>
@@ -93,8 +93,9 @@
                         <li id="AccountFDQN">In the <wintitle>Essentials</wintitle> page, note the
                                     URL:<p><image href="../Graphics/DLStore-URL.png"
                                     id="image_vxz_gfw_zx" scale="60"/></p><note type="important"
-                                >When you configure the Data Lake Store destination, use this URL
-                                for the <uicontrol>Account FQDN</uicontrol> property. </note></li>
+                                >When you configure the Azure Data Lake Store destination, use this
+                                URL for the <uicontrol>Account FQDN</uicontrol> property.
+                            </note></li>
                     </ol>
                 </dd>
             </dlentry>

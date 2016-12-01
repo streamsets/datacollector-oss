@@ -62,14 +62,8 @@
                                                   <entry><image href="../Graphics/CheckIcon.png"
                                                   scale="30" id="image_jgp_hvh_xw"/></entry>
                                                 </row>
-                                                <row>
-                                                  <entry>Cassandra</entry>
-                                                  <entry namest="c2" nameend="c9">* * * Not
-                                                  Applicable * * *</entry>
-                                                  <entry/>
-                                                </row>
             <row>
-              <entry>Data Lake Store</entry>
+              <entry>Azure Data Lake Store</entry>
               <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_esg_j4k_1y"
                 /></entry>
               <entry/>
@@ -83,6 +77,12 @@
                 /></entry>
               <entry/>
             </row>
+                                                <row>
+                                                  <entry>Cassandra</entry>
+                                                  <entry namest="c2" nameend="c9">* * * Not
+                                                  Applicable * * *</entry>
+                                                  <entry/>
+                                                </row>
                                                 <row>
                                                   <entry>Elasticsearch</entry>
                                                   <entry namest="c2" nameend="c9">* * * Not
@@ -107,7 +107,7 @@
                                                   scale="30" id="image_cfv_1xc_kv"/></entry>
                                                   <entry/>
                                                 </row>
-                                          <row><entry>Google Cloud Bigtable</entry>
+                                          <row><entry>Google Bigtable</entry>
                                           <entry namest="c2" nameend="c9">* * * Not
                                             Applicable * * *</entry>
                                             <entry/></row>

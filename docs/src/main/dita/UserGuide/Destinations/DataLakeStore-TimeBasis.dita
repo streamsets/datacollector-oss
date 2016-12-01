@@ -16,8 +16,8 @@
 <concept id="concept_ff4_cxw_zx">
  <title>Time Basis</title>
  <conbody>
-        <p><indexterm>Data Lake Store destination<indexterm>time
-                basis</indexterm></indexterm><indexterm>time basis<indexterm>Data Lake Store
+        <p><indexterm>Azure Data Lake Store destination<indexterm>time
+                basis</indexterm></indexterm><indexterm>time basis<indexterm>Azure Data Lake Store
                     destination</indexterm></indexterm>When using directory templates, the time
             basis helps determine when directories are created. It also determines the directory
             that the destination uses when writing a record, and whether a record is late.</p>
