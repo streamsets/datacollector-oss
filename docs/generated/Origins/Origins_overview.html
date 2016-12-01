@@ -56,6 +56,8 @@
 
         <li class="li">MongoDB - Reads documents from MongoDB.</li>
 
+        <li class="li">MySQL Binary Log - Reads MySQL binary logs to generate change data capture records. </li>
+
         <li class="li">Omniture - Reads web usage reports from the Omniture reporting API.</li>
 
         <li class="li">Oracle CDC Client - Reads LogMiner redo logs to generate change data capture
@@ -86,6 +88,10 @@
         <li class="li">Hadoop FS - Reads data from the Hadoop Distributed File System (HDFS). </li>
 
         <li class="li">Kafka Consumer - Reads messages from Kafka. Use the cluster version of the origin.</li>
+
+        <li class="li">MapR FS - Reads data from MapR FS.</li>
+
+        <li class="li">MapR Streams Consumer - Reads messages from MapR Streams.</li>
 
       </ul>
 </div>
@@ -148,9 +154,9 @@
           
           <thead class="thead" align="left">
             <tr class="row">
-              <th class="entry" valign="top" width="30%" id="d176177e212">Compression Format</th>
+              <th class="entry" valign="top" width="30%" id="d182183e221">Compression Format</th>
 
-              <th class="entry" valign="top" width="70%" id="d176177e215">Description</th>
+              <th class="entry" valign="top" width="70%" id="d182183e224">Description</th>
 
             </tr>
 
@@ -158,16 +164,16 @@
 
           <tbody class="tbody">
             <tr class="row">
-              <td class="entry" valign="top" width="30%" headers="d176177e212 ">Uncompressed</td>
+              <td class="entry" valign="top" width="30%" headers="d182183e221 ">Uncompressed</td>
 
-              <td class="entry" valign="top" width="70%" headers="d176177e215 ">Processes uncompressed files of the configured data format.</td>
+              <td class="entry" valign="top" width="70%" headers="d182183e224 ">Processes uncompressed files of the configured data format.</td>
 
             </tr>
 
             <tr class="row">
-              <td class="entry" valign="top" width="30%" headers="d176177e212 ">Compressed</td>
+              <td class="entry" valign="top" width="30%" headers="d182183e221 ">Compressed</td>
 
-              <td class="entry" valign="top" width="70%" headers="d176177e215 ">Processes files compressed by the following compression formats: <ul class="ul" id="concept_uxr_g52_qs__ul_ctx_3ss_b5">
+              <td class="entry" valign="top" width="70%" headers="d182183e224 ">Processes files compressed by the following compression formats: <ul class="ul" id="concept_uxr_g52_qs__ul_ctx_3ss_b5">
                   <li class="li">gzip</li>
 
                   <li class="li">bgzip2</li>
@@ -188,9 +194,9 @@
             </tr>
 
             <tr class="row">
-              <td class="entry" valign="top" width="30%" headers="d176177e212 ">Archive</td>
+              <td class="entry" valign="top" width="30%" headers="d182183e221 ">Archive</td>
 
-              <td class="entry" valign="top" width="70%" headers="d176177e215 ">Processes files archived by the following archive formats: <ul class="ul" id="concept_uxr_g52_qs__ul_l1q_gsm_c5">
+              <td class="entry" valign="top" width="70%" headers="d182183e224 ">Processes files archived by the following archive formats: <ul class="ul" id="concept_uxr_g52_qs__ul_l1q_gsm_c5">
                   <li class="li">7z</li>
 
                   <li class="li">ar</li>
@@ -211,9 +217,9 @@
             </tr>
 
             <tr class="row">
-              <td class="entry" valign="top" width="30%" headers="d176177e212 ">Compressed Archive</td>
+              <td class="entry" valign="top" width="30%" headers="d182183e221 ">Compressed Archive</td>
 
-              <td class="entry" valign="top" width="70%" headers="d176177e215 ">Processes files in compressed archives created by supported compression and
+              <td class="entry" valign="top" width="70%" headers="d182183e224 ">Processes files in compressed archives created by supported compression and
                 archive formats.</td>
 
             </tr>
@@ -245,9 +251,9 @@
                     
                     <thead class="thead" align="left">
                         <tr class="row">
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d176177e368">Origins</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d182183e377">Origins</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d176177e371">Record Header Attributes</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d182183e380">Record Header Attributes</th>
 
                         </tr>
 
@@ -255,9 +261,9 @@
 
                     <tbody class="tbody">
                         <tr class="row">
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d176177e368 ">Directory and File Tail</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d182183e377 ">Directory and File Tail</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d176177e371 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d182183e380 ">
                                 <ul class="ul" id="concept_ljn_2h3_yv__ul_ebj_1l3_yv">
                                     <li class="li">filename - Provides the file name.</li>
 
@@ -272,9 +278,9 @@
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d176177e368 ">Kafka Consumer</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d182183e377 ">Kafka Consumer</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d176177e371 ">
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d182183e380 ">
                                 <ul class="ul" id="concept_ljn_2h3_yv__ul_i4q_2qv_jw">
                                     <li class="li">offset - Provides the offset in bytes.</li>
 
@@ -349,9 +355,9 @@ ${record:attribute('topic')}</pre>
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d176177e518">Kafka Raw Preview Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d182183e527">Kafka Raw Preview Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d176177e521">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d182183e530">Description</th>
 
                                 </tr>
 
@@ -359,38 +365,38 @@ ${record:attribute('topic')}</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d176177e518 ">Topic</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d182183e527 ">Topic</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d176177e521 ">Kafka topic to read.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d176177e518 ">Partition</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d176177e521 ">Partition to read.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d182183e530 ">Kafka topic to read.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d176177e518 ">Broker Host</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d182183e527 ">Partition</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d176177e521 ">Broker host name. Use any broker associated with the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d182183e530 ">Partition to read.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d182183e527 ">Broker Host</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d182183e530 ">Broker host name. Use any broker associated with the
                                         partition.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d176177e518 ">Broker Port</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d182183e527 ">Broker Port</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d176177e521 ">Broker port number.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d182183e530 ">Broker port number.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d176177e518 ">Max Wait Time (secs)</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d182183e527 ">Max Wait Time (secs)</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d176177e521 ">Maximum amount of time the preview waits to receive data
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d182183e530 ">Maximum amount of time the preview waits to receive data
                                         from Kafka.</td>
 
                                 </tr>

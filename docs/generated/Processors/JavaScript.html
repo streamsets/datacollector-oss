@@ -57,6 +57,9 @@
             JavaScript Evaluator performs as expected, use the same version of Java in development
             and production.</p>
 
+        <p class="p">The JavaScript Evaluator provides extensive sample code that you can use to develop your
+            script. </p>
+
  </div>
 
 <div class="related-links"></div>
@@ -149,7 +152,7 @@
                                     pairs. You can use the state object to cache data such as
                                     lookups or counters.</dd>
 
-                              <dd class="dd">The state object functions much like an instance variable: <ul class="ul" id="concept_mqn_5vk_sr__d33608e1387">
+                              <dd class="dd">The state object functions much like an instance variable: <ul class="ul" id="concept_mqn_5vk_sr__d34527e1516">
                                           <li class="li">You need to populate the object - it has no default
                                                 value.</li>
 
@@ -212,7 +215,7 @@ The
                                     Includes the following methods: </dd>
 
                               <dd class="dd">
-                                    <ul class="ul" id="concept_mqn_5vk_sr__d33608e1469">
+                                    <ul class="ul" id="concept_mqn_5vk_sr__d34527e1598">
                                           <li class="li"><samp class="ph codeph">getFieldNull(Record, 'field path')</samp> -
                                                 Method that checks if a field is assigned a constant
                                                 such as NULL_INTEGER or NULL_STRING.</li>
@@ -227,6 +230,17 @@ The
                                                 that creates a map for use as a field in a record.
                                                 Pass true to create a list-map field, or false to
                                                 create a map field.</li>
+
+                                          <li class="li"><samp class="ph codeph">createEvent(String type, int version)</samp>
+                                                - Method that creates a new event record with the
+                                                specified event type and version. Be sure to enable
+                                                event generation in the stage before implementing
+                                                event methods. </li>
+
+                                          <li class="li"><samp class="ph codeph">toEvent(Record)</samp> - Method that sends
+                                                an event record to the Event output stream.  Be sure
+                                                to enable event generation in the stage before
+                                                implementing event methods. </li>
 
                                     </ul>
 
@@ -340,6 +354,108 @@ for(var i = 0; i &lt; records.length; i++) {
  </div>
 
 </div>
+<div class="topic concept nested1" id="concept_mkv_wgh_cy">
+ <h2 class="title topictitle2">Event Generation</h2>
+
+ <div class="body conbody">
+  <p class="p">You can use the JavaScript Evaluator <span class="ph">to generate event records
+                for an event stream. Enable event generation when you want the processor to generate
+                an event record based on scripting logic. </span></p>
+
+     <p class="p">As with any event record, you can pass events downstream to a
+            destination for event storage or to any executor that can be configured to use the
+            event. For more information about events and event handling, see <a class="xref" href="../Event_Handling/EventHandling-Overview.html#concept_cph_5h4_lx">Event Handling</a>.</p>
+
+     <div class="p">To generate events:<ol class="ol" id="concept_mkv_wgh_cy__d35064e31">
+                <li class="li">On the <span class="keyword wintitle">General</span> tab, select the <span class="ph uicontrol">Produce
+                        Events</span> property.<p class="p">This enables the event output stream for use.
+                    </p>
+</li>
+
+                <li class="li">In the script, include both of the following scripting objects:<ul class="ul" id="concept_mkv_wgh_cy__d35064e46">
+                        <li class="li"> sdcFunctions.createEvent(String type, int version) - Creates an event
+                            record with the specified event type and version number. You can create
+                            a new event type or use an existing event type. Existing event types are
+                            documented in other event-generating stages. <p class="p">The event record
+                                contains no record fields. Generate record fields as
+                            needed.</p>
+</li>
+
+                        <li class="li"> sdcFunctions.toEvent(Record) - Use to pass events to the event output
+                            stream. </li>
+
+                    </ul>
+</li>
+
+            </ol>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_sh1_khh_cy">
+ <h2 class="title topictitle2">Working with Record Header Attributes</h2>
+
+ <div class="body conbody">
+     <p class="p">You can use the
+            JavaScript Evaluator <span class="ph">processor to read and update
+                or create record header attributes.</span></p>
+
+     <p class="p">Use a map when creating or updating a header attribute. If a header
+            attribute exists, the processor updates the value, if it does not exist, the processor
+            creates the attribute and sets it to the specified value. </p>
+
+     <p class="p">All records include a set of read-only record header attributes that
+            stages can update as they process the records. Error records also have their own set of
+            read-only header attributes.</p>
+
+     <p class="p">Some stages generate custom record header attributes that are meant to be
+            used in particular ways. For example, the Oracle CDC Client origin specifies the
+            operation type for a record in a record header attribute. And event-generating stages
+            create a set of event header attributes for event records.</p>
+
+     <div class="p">The processor provides the following record header variables to work with
+            header attributes:<ul class="ul" id="concept_sh1_khh_cy__d35064e83">
+                <li class="li"><samp class="ph codeph">record.&lt;header name&gt;</samp> - Use to return the value of a
+                    read-only header attribute.</li>
+
+                <li class="li"><samp class="ph codeph">record.attributes</samp> - Use to return a map of custom record header
+                    attributes, or to create or update a specific record header attribute.</li>
+
+            </ul>
+</div>
+
+     <div class="note tip"><span class="tiptitle">Tip:</span> Use data preview to view the record header attributes
+            included in a record.</div>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_zvs_whh_cy">
+ <h3 class="title topictitle3">Viewing Record Header Attributes</h3>
+
+ <div class="body conbody">
+     <p class="p"><span class="ph">You can use data preview to view the record header attributes
+                associated with a record at any given point in the pipeline. </span></p>
+
+     <p class="p">For example, the following image shows a record generated by the
+            Directory origin in data preview. </p>
+
+     <p class="p"><img class="image" id="concept_zvs_whh_cy__d35064e114" src="../Reusable_Content/Reusable_Topics/../../Graphics/HeaderAttribute-Preview.png" height="241" width="335"></img></p>
+
+     <p class="p">The "Record Header" list displays the set of read-only attributes in
+            the record at this point of the pipeline. You can use the <samp class="ph codeph">record.&lt;header
+                name&gt;</samp> variable to return values for these attributes. </p>
+
+     <p class="p">The header attributes under "values" are header attributes created by
+            the Directory origin. You can use the <samp class="ph codeph">record.attributes</samp> variable to
+            return or modify these attributes. When you use the <samp class="ph codeph">record.attributes</samp>
+            variable to create a header attribute, it displays in this location during data
+            preview.</p>
+
+ </div>
+
+</div>
+</div>
 <div class="topic concept nested1" id="concept_bfr_h5y_mx">
  <h2 class="title topictitle2">Accessing Whole File Format Records</h2>
 
@@ -384,14 +500,14 @@ input_stream.read()</pre>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzc_1by_nr__d33546e3754" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mzc_1by_nr__table_vvw_s1h_cy" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d230292e498">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d236972e669">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d230292e501">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d236972e672">Description</th>
 
                                 </tr>
 
@@ -399,24 +515,34 @@ input_stream.read()</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d230292e498 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d236972e669 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d230292e501 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d230292e498 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d230292e501 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d236972e672 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d230292e498 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_mzc_1by_nr__d33546e3800" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d236972e669 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d230292e501 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d236972e672 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d236972e669 ">Produce Events <a class="xref" href="JavaScript.html#concept_mkv_wgh_cy">
+                                            <img class="image" id="task_mzc_1by_nr__image_fnz_31h_cy" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d236972e672 ">Generates event records when
+                                        events occur. Use for event handling. <a class="xref" href="../Event_Handling/EventHandling-Overview.html#concept_cph_5h4_lx">
+                                            <img class="image" id="task_mzc_1by_nr__d34465e4045" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d236972e669 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_mzc_1by_nr__d34465e4054" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d236972e672 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -424,10 +550,10 @@ input_stream.read()</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d230292e498 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_mzc_1by_nr__d33546e3814" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d236972e669 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_mzc_1by_nr__d34465e4068" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d230292e501 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d236972e672 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -435,10 +561,10 @@ input_stream.read()</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d230292e498 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_mzc_1by_nr__d33546e3829" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d236972e669 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_mzc_1by_nr__d34465e4084" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d230292e501 ">Error record handling for the stage: <ul class="ul" id="task_mzc_1by_nr__d33546e3833">
+                                    <td class="entry" valign="top" width="70%" headers="d236972e672 ">Error record handling for the stage: <ul class="ul" id="task_mzc_1by_nr__d34465e4088">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -469,9 +595,9 @@ input_stream.read()</pre>
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d230292e620">JavaScript Evaluator Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d236972e809">JavaScript Evaluator Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d230292e623">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d236972e812">Description</th>
 
                                 </tr>
 
@@ -479,9 +605,9 @@ input_stream.read()</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d230292e620 ">Record Processing Mode</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d236972e809 ">Record Processing Mode</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d230292e623 ">Determines how the JavaScript Evaluator processes
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d236972e812 ">Determines how the JavaScript Evaluator processes
                                             data:<ul class="ul" id="task_mzc_1by_nr__ul_tzg_vzx_nr">
                                             <li class="li">Record by Record - Processes records individually.
                                                 Performs error handling.</li>
@@ -496,9 +622,9 @@ input_stream.read()</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d230292e620 ">Script</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d236972e809 ">Script</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d230292e623 ">JavaScript code to use in the processor.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d236972e812 ">JavaScript code to use in the processor.</td>
 
                                 </tr>
 

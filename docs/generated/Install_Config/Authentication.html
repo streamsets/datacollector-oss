@@ -99,9 +99,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d111508e161">LDAP Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d115598e161">LDAP Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d111508e164">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d115598e164">Description</th>
 
                                 </tr>
 
@@ -109,74 +109,78 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d111508e161 ">debug</td>
+                                    <td class="entry" valign="top" width="30%" headers="d115598e161 ">debug</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d111508e164 ">Enables LDAP debugging. Default is false.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d111508e161 ">useLdaps</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d111508e164 ">Enables using LDAP over SSL. Default is false. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d115598e164 ">Enables LDAP debugging. Default is false.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d111508e161 ">contextFactory</td>
+                                    <td class="entry" valign="top" width="30%" headers="d115598e161 ">useLdaps</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d111508e164 ">LDAP initial context factory. Default is
+                                    <td class="entry" valign="top" width="70%" headers="d115598e164 ">Enables using LDAP over SSL. Default is false. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d115598e161 ">contextFactory</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d115598e164 ">LDAP initial context factory. Default is
                                         com.sun.jndi.ldap.LdapCtxFactory.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d111508e161 ">hostname</td>
+                                    <td class="entry" valign="top" width="30%" headers="d115598e161 ">hostname</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d111508e164 ">LDAP server host name.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d115598e164 ">LDAP server host name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d111508e161 ">port</td>
+                                    <td class="entry" valign="top" width="30%" headers="d115598e161 ">port</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d111508e164 ">LDAP server port. Typically 389 for LDAP and 636 for
+                                    <td class="entry" valign="top" width="70%" headers="d115598e164 ">LDAP server port. Typically 389 for LDAP and 636 for
                                         LDAPS.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d111508e161 ">bindDn</td>
+                                    <td class="entry" valign="top" width="30%" headers="d115598e161 ">bindDn</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d111508e164 ">Root distinguished name (DN) for the connection. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d115598e164 ">Root distinguished name (DN) used to query the directory
+                                        server. This user must have privileges to search the
+                                        directory. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d111508e161 ">bindPassword</td>
+                                    <td class="entry" valign="top" width="30%" headers="d115598e161 ">bindPassword</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d111508e164 ">Password for the connection. For additional security,
-                                        save the password in the
+                                    <td class="entry" valign="top" width="70%" headers="d115598e164 ">Password for the root distinguished name. For additional
+                                        security, save the password in the
                                             <samp class="ph codeph">$SDC_CONF/ldap-bind-password.txt</samp> file
-                                        without additional characters, spaces, or line breaks.
-                                            <p class="p">Default is @ldap-bind-password.txt@, which points to
-                                            the <samp class="ph codeph">ldap-bind-password.txt</samp> file for the
+                                        without additional characters, spaces, or line breaks. As a
+                                        best practice, the file should have owner-only
+                                            permissions.<p class="p">Default is @ldap-bind-password.txt@,
+                                            which points to the
+                                                <samp class="ph codeph">ldap-bind-password.txt</samp> file for the
                                             password.</p>
 </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d111508e161 ">authenticationMethod</td>
+                                    <td class="entry" valign="top" width="30%" headers="d115598e161 ">authenticationMethod</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d111508e164 ">Authentication method. Default is simple. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d115598e164 ">Authentication method. Default is simple. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d111508e161 ">forceBindingLogin</td>
+                                    <td class="entry" valign="top" width="30%" headers="d115598e161 ">forceBindingLogin</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d111508e164 ">Determines if binding login checks are performed. Use one
+                                    <td class="entry" valign="top" width="70%" headers="d115598e164 ">Determines if binding login checks are performed. Use one
                                         of the following options:<ul class="ul" id="task_tjw_3ss_5x__ul_dpb_z2z_s5">
                                             <li class="li">false - <span class="ph">Data
                   Collector</span> performs the authentication based on information
@@ -205,69 +209,86 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d111508e161 ">userBaseDn</td>
+                                    <td class="entry" valign="top" width="30%" headers="d115598e161 ">userBaseDn</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d111508e164 ">Base DN under which user accounts are located. </td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d111508e161 ">userRdnAttribute</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d111508e164 ">Name of the username attribute. Default is uid.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d115598e164 ">Base DN under which user accounts are located. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d111508e161 ">userIdAttribute</td>
+                                    <td class="entry" valign="top" width="30%" headers="d115598e161 ">userRdnAttribute</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d111508e164 ">Name of the user ID attribute. Default is uid.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d115598e164 ">Name of the username attribute. Default is uid.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d111508e161 ">userPasswordAttribute</td>
+                                    <td class="entry" valign="top" width="30%" headers="d115598e161 ">userIdAttribute</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d111508e164 ">Name of the attribute where the user password is stored.
+                                    <td class="entry" valign="top" width="70%" headers="d115598e164 ">Name of the user ID attribute. Default is uid.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d115598e161 ">userPasswordAttribute</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d115598e164 ">Name of the attribute where the user password is stored.
                                         Default is userPassword.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d111508e161 ">userObjectClass</td>
+                                    <td class="entry" valign="top" width="30%" headers="d115598e161 ">userObjectClass</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d111508e164 ">Name of the user object class. Default is
+                                    <td class="entry" valign="top" width="70%" headers="d115598e164 ">Name of the user object class. Default is
                                         inetOrgPerson.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d111508e161 ">roleBaseDn</td>
+                                    <td class="entry" valign="top" width="30%" headers="d115598e161 ">roleBaseDn</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d111508e164 ">Base DN to search for role membership. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d115598e164 ">Base DN to search for role membership. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d111508e161 ">roleNameAttribute</td>
+                                    <td class="entry" valign="top" width="30%" headers="d115598e161 ">roleNameAttribute</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d111508e164 ">Name of the attribute for role names. Default is
+                                    <td class="entry" valign="top" width="70%" headers="d115598e164 ">Name of the attribute for role names. Default is
                                         roleName.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d111508e161 ">roleMemberAttribute</td>
+                                    <td class="entry" valign="top" width="30%" headers="d115598e161 ">roleMemberAttribute</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d111508e164 ">Name of the role attribute for user names. Default is
-                                        uniqueMember. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d115598e164 ">Name of the role attribute for user names. Default is
+                                        Member. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d111508e161 ">roleObjectClass</td>
+                                    <td class="entry" valign="top" width="30%" headers="d115598e161 ">roleObjectClass</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d111508e164 ">Role object class. Default is groupOfUniqueNames.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d115598e164 ">Role object class. Default is groupOfNames.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d115598e161 ">roleFilter</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d115598e164 ">Specifies whether LDAP group members are determined by DN
+                                        or uid. Enter one of the following values:<ul class="ul" id="task_tjw_3ss_5x__ul_rtd_4fp_cy">
+                                            <li class="li"><samp class="ph codeph">"member={dn}"</samp> - Use when LDAP
+                                                groups list members by full DN. </li>
+
+                                            <li class="li"><samp class="ph codeph">"memberUid={user}"</samp> - Use when LDAP
+                                                groups list members by uid.</li>
+
+                                        </ul>
+<p class="p">Default is DN.</p>
+</td>
 
                                 </tr>
 
@@ -305,7 +326,8 @@
   roleBaseDn="ou=groups,dc=example,dc=net"
   roleNameAttribute="cn"
   roleMemberAttribute="member"
-  roleObjectClass="groupOfNames";
+  roleObjectClass="groupOfNames"
+  roleFilter="member={dn}";
 }; </pre>
 
             <p class="p">When an LDAP user logs into <span class="ph">Data
@@ -335,13 +357,10 @@
 
                 <li class="li">Checks which LDAP group the user account belongs to by sending the following
                     query to the LDAP
-                        server:<pre class="pre codeblock">ldapsearch -LLL -H ldap://&lt;hostname&gt;:&lt;port&gt; -x -D &lt;bindDn&gt; -w &lt;bindPassword&gt; -b &lt;roleBaseDn&gt; (&amp;(objectClass=&lt;roleObjectClass&gt;)(&lt;roleMemberAttribute&gt;=&lt;user dn&gt;)</pre>
-<p class="p">where
-                            <samp class="ph codeph">&lt;user dn&gt;</samp> is
-                            <samp class="ph codeph">"&lt;userRdnAttribute&gt;=username,
-                        &lt;userBaseDn&gt;"</samp>.</p>
-<p class="p">For example, using the sample
-                            <samp class="ph codeph">ldap-login.conf</samp> file configured above, <span class="ph">Data
+                        server:<pre class="pre codeblock">ldapsearch -LLL -H ldap://&lt;hostname&gt;:&lt;port&gt; -x -D &lt;bindDn&gt; -w &lt;bindPassword&gt; -b &lt;roleBaseDn&gt; (&amp;(objectClass=&lt;roleObjectClass&gt;)(member={dn})</pre>
+<p class="p">For
+                        example, using the sample <samp class="ph codeph">ldap-login.conf</samp> file configured
+                        above, <span class="ph">Data
                   Collector</span> sends the following query to the LDAP
                         server:</p>
 <pre class="pre codeblock">ldapsearch -LLL -H ldap://server1:636 -x -D "cn=admin,dc=example,dc=net" -w password -b "ou=groups,dc=example,dc=net" (&amp;(objectClass=groupOfNames)(member="cn=jdoe, ou=users,dc=example,dc=net")</pre>
@@ -389,9 +408,9 @@
                 
                 <thead class="thead" align="left">
                     <tr class="row">
-                        <th class="entry" valign="top" width="12.5%" id="d111508e539">Role</th>
+                        <th class="entry" valign="top" width="12.5%" id="d115598e554">Role</th>
 
-                        <th class="entry" valign="top" width="87.5%" id="d111508e542">Description</th>
+                        <th class="entry" valign="top" width="87.5%" id="d115598e557">Description</th>
 
                     </tr>
 
@@ -399,35 +418,35 @@
 
                 <tbody class="tbody">
                     <tr class="row">
-                        <td class="entry" valign="top" width="12.5%" headers="d111508e539 ">admin</td>
+                        <td class="entry" valign="top" width="12.5%" headers="d115598e554 ">admin</td>
 
-                        <td class="entry" valign="top" width="87.5%" headers="d111508e542 ">Perform any <span class="ph">Data
+                        <td class="entry" valign="top" width="87.5%" headers="d115598e557 ">Perform any <span class="ph">Data
                   Collector</span> task. </td>
 
                     </tr>
 
                     <tr class="row">
-                        <td class="entry" valign="top" width="12.5%" headers="d111508e539 ">manager</td>
+                        <td class="entry" valign="top" width="12.5%" headers="d115598e554 ">manager</td>
 
-                        <td class="entry" valign="top" width="87.5%" headers="d111508e542 ">Manage pipelines. As a manager, users can start and stop pipelines,
+                        <td class="entry" valign="top" width="87.5%" headers="d115598e557 ">Manage pipelines. As a manager, users can start and stop pipelines,
        monitor pipelines, configure and reset alerts, and review snapshots.
        Users cannot configure pipelines or preview data.</td>
 
                     </tr>
 
                     <tr class="row">
-                        <td class="entry" valign="top" width="12.5%" headers="d111508e539 ">creator</td>
+                        <td class="entry" valign="top" width="12.5%" headers="d115598e554 ">creator</td>
 
-                        <td class="entry" valign="top" width="87.5%" headers="d111508e542 ">Configure pipelines. As a creator, users can configure pipelines and
+                        <td class="entry" valign="top" width="87.5%" headers="d115598e557 ">Configure pipelines. As a creator, users can configure pipelines and
        alerts, preview data, and monitor the pipeline. Users cannot review
        snapshots or reset alerts.</td>
 
                     </tr>
 
                     <tr class="row">
-                        <td class="entry" valign="top" width="12.5%" headers="d111508e539 ">guest</td>
+                        <td class="entry" valign="top" width="12.5%" headers="d115598e554 ">guest</td>
 
-                        <td class="entry" valign="top" width="87.5%" headers="d111508e542 ">Read-only access. As a guest, users can view pipeline and alert
+                        <td class="entry" valign="top" width="87.5%" headers="d115598e557 ">Read-only access. As a guest, users can view pipeline and alert
        configuration, view general monitoring and log information. Users cannot
        preview data or review snapshots, or configure pipelines or
        alerts.</td>
@@ -553,7 +572,8 @@
   roleBaseDn="ou=Groups,dc=example,dc=org"
   roleNameAttribute="cn"
   roleMemberAttribute="member"
-  roleObjectClass="groupOfNames";
+  roleObjectClass="groupOfNames"
+  roleFilter="member={dn}";
 
 
   com.streamsets.datacollector.http.LdapLoginModule required
@@ -574,7 +594,8 @@
   roleBaseDn="ou=Groups,dc=example,dc=org"
   roleNameAttribute="cn"
   roleMemberAttribute="member"
-  roleObjectClass="groupOfNames";
+  roleObjectClass="groupOfNames"
+  roleFilter="member={dn}";
 };</pre>
 
  </div>
@@ -705,11 +726,11 @@
                     
                     <thead class="thead" align="left">
                         <tr class="row">
-                            <th class="entry" valign="top" width="14.285714285714285%" id="d111508e981">Role</th>
+                            <th class="entry" valign="top" width="14.285714285714285%" id="d115598e996">Role</th>
 
-                            <th class="entry" valign="top" width="57.14285714285714%" id="d111508e984">Description</th>
+                            <th class="entry" valign="top" width="57.14285714285714%" id="d115598e999">Description</th>
 
-                            <th class="entry" valign="top" width="28.57142857142857%" id="d111508e987">Default User Login</th>
+                            <th class="entry" valign="top" width="28.57142857142857%" id="d115598e1002">Default User Login</th>
 
                         </tr>
 
@@ -717,49 +738,49 @@
 
                     <tbody class="tbody">
                         <tr class="row">
-                            <td class="entry" valign="top" width="14.285714285714285%" headers="d111508e981 ">admin</td>
+                            <td class="entry" valign="top" width="14.285714285714285%" headers="d115598e996 ">admin</td>
 
-                            <td class="entry" valign="top" width="57.14285714285714%" headers="d111508e984 ">Perform any <span class="ph">Data
+                            <td class="entry" valign="top" width="57.14285714285714%" headers="d115598e999 ">Perform any <span class="ph">Data
                   Collector</span> task. </td>
 
-                            <td class="entry" valign="top" width="28.57142857142857%" headers="d111508e987 ">Default login is <samp class="ph codeph">admin</samp> /
+                            <td class="entry" valign="top" width="28.57142857142857%" headers="d115598e1002 ">Default login is <samp class="ph codeph">admin</samp> /
                                 <samp class="ph codeph">admin</samp>.</td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="14.285714285714285%" headers="d111508e981 ">manager</td>
+                            <td class="entry" valign="top" width="14.285714285714285%" headers="d115598e996 ">manager</td>
 
-                            <td class="entry" valign="top" width="57.14285714285714%" headers="d111508e984 ">Manage pipelines. As a manager, users can start and stop pipelines,
+                            <td class="entry" valign="top" width="57.14285714285714%" headers="d115598e999 ">Manage pipelines. As a manager, users can start and stop pipelines,
        monitor pipelines, configure and reset alerts, and review snapshots.
        Users cannot configure pipelines or preview data.</td>
 
-                            <td class="entry" valign="top" width="28.57142857142857%" headers="d111508e987 ">Default login is <samp class="ph codeph">manager</samp> /
+                            <td class="entry" valign="top" width="28.57142857142857%" headers="d115598e1002 ">Default login is <samp class="ph codeph">manager</samp> /
                                     <samp class="ph codeph">manager</samp>.</td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="14.285714285714285%" headers="d111508e981 ">creator</td>
+                            <td class="entry" valign="top" width="14.285714285714285%" headers="d115598e996 ">creator</td>
 
-                            <td class="entry" valign="top" width="57.14285714285714%" headers="d111508e984 ">Configure pipelines. As a creator, users can configure pipelines and
+                            <td class="entry" valign="top" width="57.14285714285714%" headers="d115598e999 ">Configure pipelines. As a creator, users can configure pipelines and
        alerts, preview data, and monitor the pipeline. Users cannot review
        snapshots or reset alerts.</td>
 
-                            <td class="entry" valign="top" width="28.57142857142857%" headers="d111508e987 ">Default login is <samp class="ph codeph">creator</samp> /
+                            <td class="entry" valign="top" width="28.57142857142857%" headers="d115598e1002 ">Default login is <samp class="ph codeph">creator</samp> /
                                     <samp class="ph codeph">creator</samp>.</td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="14.285714285714285%" headers="d111508e981 ">guest</td>
+                            <td class="entry" valign="top" width="14.285714285714285%" headers="d115598e996 ">guest</td>
 
-                            <td class="entry" valign="top" width="57.14285714285714%" headers="d111508e984 ">Read-only access. As a guest, users can view pipeline and alert
+                            <td class="entry" valign="top" width="57.14285714285714%" headers="d115598e999 ">Read-only access. As a guest, users can view pipeline and alert
        configuration, view general monitoring and log information. Users cannot
        preview data or review snapshots, or configure pipelines or
        alerts.</td>
 
-                            <td class="entry" valign="top" width="28.57142857142857%" headers="d111508e987 ">Default login is <samp class="ph codeph">guest</samp> /
+                            <td class="entry" valign="top" width="28.57142857142857%" headers="d115598e1002 ">Default login is <samp class="ph codeph">guest</samp> /
                                 <samp class="ph codeph">guest</samp>.</td>
 
                         </tr>

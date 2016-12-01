@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Data Lake Store destination writes data to the Microsoft Azure Data Lake Store. Use the Data Lake Store destination in standalone pipelines only at this time. Before you use the destination, you ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Data Lake Store"></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_jzm_kf4_zx"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Data Lake Store</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Azure Data Lake Store destination writes data to the Microsoft Azure Data Lake Store. Use the Azure Data Lake Store destination in standalone pipelines only at this time. Before you use the ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Azure Data Lake Store"></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_jzm_kf4_zx"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Azure Data Lake Store</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -23,18 +23,19 @@
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Destinations/Destinations-title.html" title="Destinations">Destinations</a></td><td><div class="navheader">
 <span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div></td></tr></tbody></table>
 <div class="nested0" id="concept_jzm_kf4_zx">
- <h1 class="title topictitle1">Data Lake Store</h1>
+ <h1 class="title topictitle1">Azure Data Lake Store</h1>
 
  <div class="body conbody">
-  <p class="p">The Data Lake Store destination writes data to
-            the Microsoft Azure Data Lake Store. Use the Data Lake Store destination in standalone
-            pipelines only at this time.</p>
+  <p class="p">The Azure Data Lake Store destination
+            writes data to the Microsoft Azure Data Lake Store. Use the Azure Data Lake Store
+            destination in standalone pipelines only at this time.</p>
 
         <p class="p">Before you use the destination, you must perform some prerequisite tasks.</p>
 
-        <p class="p">When you configure the Data Lake Store destination, you specify connection information
-            such as the Client ID and fully qualified domain name (FQDN) for the account. You also
-            enter a directory template to use for output files and an optional file prefix. </p>
+        <p class="p">When you configure the Azure Data Lake Store destination, you specify connection
+            information such as the Client ID and fully qualified domain name (FQDN) for the
+            account. You also enter a directory template to use for output files and an optional
+            file prefix. </p>
 
  </div>
 
@@ -44,26 +45,26 @@
 
  <div class="body conbody">
   <div class="p">Complete the following
-            prerequisites before you configure the Data Lake Store destination:<ol class="ol" id="concept_tsr_ml4_zx__ol_uk4_vgh_1y">
+            prerequisites before you configure the Azure Data Lake Store destination:<ol class="ol" id="concept_tsr_ml4_zx__ol_uk4_vgh_1y">
                 <li class="li">In Active Directory, create a <span class="ph">Data
                   Collector</span> web application.</li>
 
                 <li class="li">Retrieve information from Azure to configure the destination.</li>
 
-                <li class="li">Grant write permission to the <span class="ph">Data
+                <li class="li">Grant execute permission to the <span class="ph">Data
                   Collector</span> web application.</li>
 
             </ol>
 </div>
 
-        <p class="p">At the time of writing, Azure Data Lake Store is still in Beta, so the information here
-            is subject to change. </p>
+        <p class="p">At the time of writing, Microsoft Azure Data Lake Store is still in Beta, so the
+            information here is subject to change. </p>
 
         <p class="p">If the steps below are no longer accurate, you might try the following article or check
-            for updated Azure Data Lake Store documentation: <a class="xref" href="https://docs.microsoft.com/en-us/azure/data-lake-store/data-lake-store-authenticate-using-active-directory" target="_blank">https://docs.microsoft.com/en-us/azure/data-lake-store/data-lake-store-authenticate-using-active-directory</a>.</p>
+            for updates to the Microsoft Azure Data Lake Store documentation: <a class="xref" href="https://docs.microsoft.com/en-us/azure/data-lake-store/data-lake-store-authenticate-using-active-directory" target="_blank">https://docs.microsoft.com/en-us/azure/data-lake-store/data-lake-store-authenticate-using-active-directory</a>.</p>
 
-        <p class="p">After you complete all of the prerequisite tasks, you can configure the Azure Data Store
-            destination. </p>
+        <p class="p">After you complete all of the prerequisite tasks, you can configure the Azure Data Lake
+            Store destination. </p>
 
  </div>
 
@@ -75,7 +76,7 @@
  <div class="body conbody">
   <p class="p">To allow <span class="ph">Data
                   Collector</span> to
-            write to Azure Data Lake Store, add a <span class="ph">Data
+            write to Microsoft Azure Data Lake Store, add a <span class="ph">Data
                   Collector</span>
             web application to Azure Active Directory. </p>
 
@@ -99,7 +100,7 @@
 
                 <li class="li">On the <span class="keyword wintitle">Tell us about your application</span> page, perform the
                     following steps:<ol class="ol" type="a" id="concept_j2m_jdh_1y__ul_orv_hq5_zx">
-                        <li class="li">Enter "sdc" as the application name.</li>
+                        <li class="li">Enter an application name, such as "sdc".</li>
 
                         <li class="li">Verify that the <span class="ph uicontrol">Web Application and/or Web API</span>
                             option is selected. </li>
@@ -110,11 +111,15 @@
                     </ol>
 </li>
 
-                <li class="li">In the <span class="keyword wintitle">App properties</span> page, set the <span class="ph uicontrol">Sign-On
-                        URL</span> and <span class="ph uicontrol">App ID URI</span> properties to:
-                        <span class="ph uicontrol">http://streamsets.com</span>. Then, click the
-                        <span class="ph uicontrol">Complete</span> check mark icon. <p class="p">A Welcome screen
-                        appears. </p>
+                <li class="li">In the <span class="keyword wintitle">App properties</span> page, set <span class="ph uicontrol">Sign-On
+                        URL</span> to a URL that describes the application, and set
+                        <span class="ph uicontrol">App ID URI</span> to a URLs that identifies the application.
+                        <p class="p">Use any URL, such as <span class="ph uicontrol">http://streamsets.com</span>.
+                    </p>
+</li>
+
+                <li class="li">Click the <span class="ph uicontrol">Complete</span> check mark icon. <p class="p">Active Directory
+                        creates the wizard and displays a welcome screen. </p>
 </li>
 
             </ol>
@@ -128,9 +133,9 @@
  <h3 class="title topictitle3">Step 2. Retrieve Information from Azure </h3>
 
  <div class="body conbody">
-  <div class="p">Retrieve information from Azure to help you
-            configure the Data Lake Store destination. When you configure the destination, you need
-            the following information:<ul class="ul" id="concept_xv4_b2h_1y__ul_pqn_42h_1y">
+  <div class="p">Retrieve information from Azure to help
+            you configure the Azure Data Lake Store destination. When you configure the destination,
+            you need the following information:<ul class="ul" id="concept_xv4_b2h_1y__ul_pqn_42h_1y">
                 <li class="li">Client ID</li>
 
                 <li class="li">Client Key</li>
@@ -159,15 +164,16 @@
                                 panel, select <span class="ph uicontrol">Active Directory</span>. </p>
 <p class="p">Select
                                 the account to use, then <span class="ph uicontrol">Applications</span>. Then,
-                                select the <span class="ph uicontrol">sdc</span> web application. </p>
-<p class="p">The
-                                    <span class="keyword wintitle">Properties</span> page appears.</p>
+                                select the <span class="ph">Data
+                  Collector</span> web application. </p>
+<p class="p">The <span class="keyword wintitle">Properties</span> page
+                                appears.</p>
 </li>
 
                         <li class="li" id="concept_xv4_b2h_1y__ClientID">Scroll down the page and note the <span class="ph uicontrol">Client
                                 ID</span>:<p class="p"><img class="image" id="concept_xv4_b2h_1y__image_tqh_y1v_zx" src="../Graphics/DLStore-ADClientID.png" height="174" width="465"></img></p>
 <div class="p">
-                                <div class="note important"><span class="importanttitle">Important:</span> When you configure the Data Lake Store
+                                <div class="note important"><span class="importanttitle">Important:</span> When you configure the Azure Data Lake Store
                                     destination, use this number for the <span class="ph uicontrol">Client
                                         ID</span> property.</div>
 
@@ -184,8 +190,8 @@
                                 changes and generates a key. Copy the key value. </p>
 <p class="p"><img class="image" id="concept_xv4_b2h_1y__image_f2n_ctb_1y" src="../Graphics/DLStore-Key.png" height="170" width="562"></img></p>
 <div class="note important"><span class="importanttitle">Important:</span> When you
-                                configure the Data Lake Store destination, use this key for the
-                                    <span class="ph uicontrol">Client Key</span> property.</div>
+                                configure the Azure Data Lake Store destination, use this key for
+                                the <span class="ph uicontrol">Client Key</span> property.</div>
 </li>
 
                         <li class="li">At the bottom of the <span class="keyword wintitle">Properties</span> page, click the
@@ -195,8 +201,8 @@
                         <li class="li" id="concept_xv4_b2h_1y__AuthToken">In the <span class="keyword wintitle">App Endpoints</span> window, locate
                             and copy the <span class="ph uicontrol">OAuth 2.0 Token Endpoint</span> URL.
                                     <p class="p"><img class="image" id="concept_xv4_b2h_1y__image_mld_hcw_zx" src="../Graphics/DLStore-OAuth.png" height="432" width="354"></img></p>
-<div class="note important"><span class="importanttitle">Important:</span> When you configure the Data Lake Store destination, use this URL
-                                for the <span class="ph uicontrol">Auth Token Endpoint</span> property.
+<div class="note important"><span class="importanttitle">Important:</span> When you configure the Azure Data Lake Store destination, use this
+                                URL for the <span class="ph uicontrol">Auth Token Endpoint</span> property.
                             </div>
 </li>
 
@@ -219,8 +225,9 @@
 
                         <li class="li" id="concept_xv4_b2h_1y__AccountFDQN">In the <span class="keyword wintitle">Essentials</span> page, note the
                                     URL:<p class="p"><img class="image" id="concept_xv4_b2h_1y__image_vxz_gfw_zx" src="../Graphics/DLStore-URL.png" height="321" width="637"></img></p>
-<div class="note important"><span class="importanttitle">Important:</span> When you configure the Data Lake Store destination, use this URL
-                                for the <span class="ph uicontrol">Account FQDN</span> property. </div>
+<div class="note important"><span class="importanttitle">Important:</span> When you configure the Azure Data Lake Store destination, use this
+                                URL for the <span class="ph uicontrol">Account FQDN</span> property.
+                            </div>
 </li>
 
                     </ol>
@@ -234,21 +241,21 @@
 
 </div>
 <div class="topic concept nested2" id="concept_dgz_yfh_1y">
- <h3 class="title topictitle3">Step 3. Grant Write Permission</h3>
+ <h3 class="title topictitle3">Step 3. Grant Execute Permission</h3>
 
  <div class="body conbody">
-  <p class="p">To allow the Data Lake Store destination to
-            write to Azure Data Lake Store, grant write permission to the <span class="ph">Data
-                  Collector</span>
-            web application for the folders that you want to use. When using directory templates in
-            the destination, be sure to include all subfolders. </p>
+  <p class="p">To allow the Azure Data Lake Store
+            destination to write to Microsoft Azure Data Lake Store, grant execute permission to the
+                <span class="ph">Data
+                  Collector</span> web application for the folders that you want to use. When using directory templates
+            in the destination, be sure to include all subfolders. </p>
 
         <div class="p">
             <ol class="ol" id="concept_dgz_yfh_1y__ol_nxg_pvb_1y">
-                <li class="li">If continuing directly from retrieving details from Data Lake Store, in the
-                    navigation panel, click <span class="ph uicontrol">Data Explorer</span>. <p class="p">Otherwise, log
-                        in to the new Azure portal: <a class="xref" href="https://portal.azure.com/" target="_blank">https://portal.azure.com/</a>. From
-                        the <span class="ph uicontrol">All Resources</span> list, select the Data Lake Store
+                <li class="li">If continuing directly from retrieving details from Azure, in the navigation
+                    panel, click <span class="ph uicontrol">Data Explorer</span>. <p class="p">Otherwise, log in to the
+                        new Azure portal: <a class="xref" href="https://portal.azure.com/" target="_blank">https://portal.azure.com/</a>. From the
+                            <span class="ph uicontrol">All Resources</span> list, select the Data Lake Store
                         resource to use, then click <span class="ph uicontrol">Data
                             Explorer</span>.</p>
 <p class="p"><img class="image" id="concept_dgz_yfh_1y__image_rct_gvj_1y" src="../Graphics/DLStore-DataExplorer.png" height="180" width="585"></img></p>
@@ -271,14 +278,15 @@
                         User or Group</span>.</li>
 
                 <li class="li">In the <span class="keyword wintitle">Select User or Group</span> panel, scroll and select the
-                        <span class="ph uicontrol">sdc</span> web application that you created, and click
-                        <span class="ph uicontrol">Select</span>.<p class="p"><img class="image" id="concept_dgz_yfh_1y__image_ndh_jhk_1y" src="../Graphics/DLStore-UserGroup.png" height="375" width="218"></img></p>
+                        <span class="ph">Data
+                  Collector</span> web application that you created, and click
+                            <span class="ph uicontrol">Select</span>.<p class="p"><img class="image" id="concept_dgz_yfh_1y__image_ndh_jhk_1y" src="../Graphics/DLStore-UserGroup.png" height="375" width="218"></img></p>
 </li>
 
                 <li class="li">In the <span class="keyword wintitle">Select Permissions</span> panel, configure the following
                         properties:<ul class="ul" id="concept_dgz_yfh_1y__ul_ucv_xhk_1y">
                         <li class="li">For <span class="ph uicontrol">Permissions</span>, select
-                                <span class="ph uicontrol">Write</span> to allow <span class="ph">Data
+                                <span class="ph uicontrol">Execute</span> to allow <span class="ph">Data
                   Collector</span> to write to the folder.</li>
 
                         <li class="li">For <span class="ph uicontrol">Add to</span>, select <span class="ph uicontrol">This folder and all
@@ -299,7 +307,7 @@
 
         </div>
 
-        <p class="p">Now that all prerequisite tasks are complete, you can configure the Data Lake Store
+        <p class="p">Now that all prerequisite tasks are complete, you can configure the Azure Data Lake Store
             destination.</p>
 
  </div>
@@ -310,8 +318,8 @@
  <h2 class="title topictitle2">Directory Templates</h2>
 
  <div class="body conbody">
-  <p class="p">By default, the Data Lake Store
-            destination uses directory templates to create output directories. The destination
+  <p class="p">By default, the Azure Data Lake
+            Store destination uses directory templates to create output directories. The destination
             writes records to the directories based on the configured time basis. </p>
 
         <p class="p">When you define a directory template, you can use a mix
@@ -463,9 +471,9 @@ ${YY()}_${MM()}_${DD()}</pre>
  <h2 class="title topictitle2">Data Formats</h2>
 
  <div class="body conbody">
-  <div class="p">Data Lake Store writes data to Azure Data
-            Lake Store based on the data format that you select. You can use the following data
-            formats: <dl class="dl">
+  <div class="p">The Azure Data Lake Store destination
+            writes data to Microsoft Azure Data Lake Store based on the data format that you select.
+            You can use the following data formats: <dl class="dl">
                 
                               <dt class="dt dlterm">Avro</dt>
 
@@ -474,7 +482,7 @@ ${YY()}_${MM()}_${DD()}</pre>
                                     Avro schema definition:</dd>
 
                               <dd class="dd">
-                                    <ul class="ul" id="concept_wsz_qj4_zx__d5805e1597">
+                                    <ul class="ul" id="concept_wsz_qj4_zx__d6117e1736">
                                           <li class="li"><span class="ph uicontrol">In Pipeline Configuration</span> - Use
                                                 the schema that you provide in the stage
                                                 configuration.</li>
@@ -518,7 +526,7 @@ ${YY()}_${MM()}_${DD()}</pre>
                               <dt class="dt dlterm">JSON</dt>
 
                               <dd class="dd">The destination writes records as JSON data. You can use one of
-                                    the following formats:<ul class="ul" id="concept_wsz_qj4_zx__d5805e1749">
+                                    the following formats:<ul class="ul" id="concept_wsz_qj4_zx__d6117e1888">
                                           <li class="li">Array - Each file includes a single array. In the
                                                 array, each element is a JSON representation of each
                                                 record.</li>
@@ -555,13 +563,14 @@ ${YY()}_${MM()}_${DD()}</pre>
 
 </div>
 <div class="topic task nested1" id="task_jfl_nf4_zx">
-    <h2 class="title topictitle2">Configuring a Data Lake Store</h2>
+    <h2 class="title topictitle2">Configuring an Azure Data Lake Store Destination</h2>
 
     <div class="body taskbody">
         <div class="section context">
-            <p class="p">Configure a Data Lake Store
-                destination to write data to Azure Data Lake Store. Be sure to complete the
-                necessary <a class="xref" href="DataLakeStore.html#concept_tsr_ml4_zx">prerequisites</a> before you configure the destination.</p>
+            <p class="p">Configure an Azure Data
+                Lake Store destination to write data to Microsoft Azure Data Lake Store. Be sure to
+                complete the necessary <a class="xref" href="DataLakeStore.html#concept_tsr_ml4_zx">prerequisites</a>
+                before you configure the destination.</p>
 
         </div>
 
@@ -570,14 +579,14 @@ ${YY()}_${MM()}_${DD()}</pre>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d6014e3975" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d6327e4231" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d39409e925">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d42818e929">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d39409e928">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d42818e932">Description</th>
 
                                 </tr>
 
@@ -585,24 +594,24 @@ ${YY()}_${MM()}_${DD()}</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e925 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d42818e929 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e928 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e925 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d39409e928 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d42818e932 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e925 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_jfl_nf4_zx__d6014e4021" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d42818e929 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e928 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d42818e932 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d42818e929 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_jfl_nf4_zx__d6327e4277" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d42818e932 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -610,10 +619,10 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e925 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_jfl_nf4_zx__d6014e4035" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d42818e929 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_jfl_nf4_zx__d6327e4291" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e928 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d42818e932 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -621,10 +630,10 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e925 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_jfl_nf4_zx__d6014e4050" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d42818e929 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_jfl_nf4_zx__d6327e4306" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e928 ">Error record handling for the stage: <ul class="ul" id="task_jfl_nf4_zx__d6014e4054">
+                                    <td class="entry" valign="top" width="70%" headers="d42818e932 ">Error record handling for the stage: <ul class="ul" id="task_jfl_nf4_zx__d6327e4310">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -654,9 +663,9 @@ ${YY()}_${MM()}_${DD()}</pre>
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d39409e1047">Data Lake Store Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d42818e1051">Data Lake Store Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d39409e1050">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d42818e1054">Description</th>
 
                                 </tr>
 
@@ -664,22 +673,23 @@ ${YY()}_${MM()}_${DD()}</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e1047 ">Client ID</td>
+                                    <td class="entry" valign="top" width="30%" headers="d42818e1051 ">Client ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e1050 ">Azure Client ID. <p class="p">The Client ID for the SDC web
-                                            application created in Active Directory. </p>
-<p class="p">For help
-                                            locating this information in Azure, see <a class="xref" href="DataLakeStore.html#concept_xv4_b2h_1y__ClientID">Step 2. Retrieve Details from
+                                    <td class="entry" valign="top" width="70%" headers="d42818e1054 ">Azure Client ID. <p class="p">The Client ID for the <span class="ph">Data
+                  Collector</span> web application created in Active Directory.
+                                            </p>
+<p class="p">For help locating this information in Azure, see
+                                                <a class="xref" href="DataLakeStore.html#concept_xv4_b2h_1y__ClientID">Step 2. Retrieve Details from
                                         Azure</a>.</p>
 </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e1047 ">Auth Token Endpoint</td>
+                                    <td class="entry" valign="top" width="30%" headers="d42818e1051 ">Auth Token Endpoint</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e1050 ">Azure OAuth 2.0 token endpoint URL for the SDC web
-                                            application.<p class="p">For help locating this information in
+                                    <td class="entry" valign="top" width="70%" headers="d42818e1054 ">Azure OAuth 2.0 token endpoint URL for the <span class="ph">Data
+                  Collector</span> web application.<p class="p">For help locating this information in
                                             Azure, see <a class="xref" href="DataLakeStore.html#concept_xv4_b2h_1y__AuthToken">Step 2. Retrieve Details from
                                         Azure</a>.</p>
 </td>
@@ -687,9 +697,9 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e1047 ">Account FQDN</td>
+                                    <td class="entry" valign="top" width="30%" headers="d42818e1051 ">Account FQDN</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e1050 ">The URL of the Data Lake Store.<p class="p">For help locating this
+                                    <td class="entry" valign="top" width="70%" headers="d42818e1054 ">The URL of the Data Lake Store.<p class="p">For help locating this
                                             information in Azure, see <a class="xref" href="DataLakeStore.html#concept_xv4_b2h_1y__AccountFDQN">Step 2. Retrieve Details from
                                         Azure</a>.</p>
 </td>
@@ -697,35 +707,37 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e1047 ">Client Key</td>
+                                    <td class="entry" valign="top" width="30%" headers="d42818e1051 ">Client Key</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e1050 ">The Client Key of the SDC web application created in
-                                        Active Directory. <p class="p">For help locating this information in
-                                            Azure, see <a class="xref" href="DataLakeStore.html#concept_xv4_b2h_1y__ClientKey">Step 2. Retrieve Details from
+                                    <td class="entry" valign="top" width="70%" headers="d42818e1054 ">The Client Key of the <span class="ph">Data
+                  Collector</span> web application created in Active Directory. <p class="p">For help
+                                            locating this information in Azure, see <a class="xref" href="DataLakeStore.html#concept_xv4_b2h_1y__ClientKey">Step 2. Retrieve Details from
                                         Azure</a>.</p>
 </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e1047 ">File Prefix</td>
+                                    <td class="entry" valign="top" width="30%" headers="d42818e1051 ">File Prefix</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e1050 ">Prefix to use for output files. Use when writing to a
+                                    <td class="entry" valign="top" width="70%" headers="d42818e1054 ">Prefix to use for output files. Use when writing to a
                                         directory that receives files from other sources.<p class="p">Uses the
                                             prefix sdc-${sdc:id()} by default. The prefix evaluates
-                                            to sdc-&lt;Data Collector ID&gt;. </p>
-<p class="p">The Data Collector
-                                            ID is stored in the following file:
-                                                <span class="ph filepath">$SDC_DATA/sdc.id</span>. For more information about environment variables, see <a class="xref" href="../Install_Config/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. To enable remote debugging, define debugging options in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file.You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.When you use Data Collector with Java 7, Data Collector is configured to use TLS versions 1.1 and 1.2. To connect to a system that uses an earlier version of TLS, modify the Dhttps.protocols option in the SDC_JAVA7_OPTS environment variable in the Data Collector environment configuration file.When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to jar files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>.</p>
+                                            to sdc-&lt;<span class="ph">Data
+                  Collector</span> ID&gt;. </p>
+<p class="p">The <span class="ph">Data
+                  Collector</span> ID is stored in the following file:
+                                                <span class="ph filepath">$SDC_DATA/sdc.id</span>. For more
+                                            information about environment variables, see <a class="xref" href="../Install_Config/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. To enable remote debugging, define debugging options in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file.You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.When you use Data Collector with Java 7, Data Collector is configured to use TLS versions 1.1 and 1.2. To connect to a system that uses an earlier version of TLS, modify the Dhttps.protocols option in the SDC_JAVA7_OPTS environment variable in the Data Collector environment configuration file.When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>.</p>
 </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e1047 ">Directory Template <a class="xref" href="DataLakeStore.html#concept_gr4_qww_zx">
+                                    <td class="entry" valign="top" width="30%" headers="d42818e1051 ">Directory Template <a class="xref" href="DataLakeStore.html#concept_gr4_qww_zx">
                                             <img class="image" id="task_jfl_nf4_zx__image_dpb_pyn_lw" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e1050 ">Template for creating output directories. You can use
+                                    <td class="entry" valign="top" width="70%" headers="d42818e1054 ">Template for creating output directories. You can use
                                         constants, field values, and datetime variables. <p class="p">Output
                                             directories are created based on the smallest datetime
                                             variable in the template.</p>
@@ -733,21 +745,21 @@ ${YY()}_${MM()}_${DD()}</pre>
 
                                 </tr>
 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e1047 ">Data Time Zone</td>
+                                    <td class="entry" valign="top" width="30%" headers="d42818e1051 ">Data Time Zone</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e1050 ">Time zone for the destination system. Used to resolve
+                                    <td class="entry" valign="top" width="70%" headers="d42818e1054 ">Time zone for the destination system. Used to resolve
                                         datetimes in the directory template and evaluate where
                                         records are written.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e1047 ">Time Basis <a class="xref" href="DataLakeStore.html#concept_ff4_cxw_zx">
+                                    <td class="entry" valign="top" width="30%" headers="d42818e1051 ">Time Basis <a class="xref" href="DataLakeStore.html#concept_ff4_cxw_zx">
                                             <img class="image" id="task_jfl_nf4_zx__image_jwd_mxw_zx" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e1050 ">Time basis to use for creating output directories and
+                                    <td class="entry" valign="top" width="70%" headers="d42818e1054 ">Time basis to use for creating output directories and
                                         writing records to the directories. Use one of the following
-                                            expressions:<ul class="ul" id="task_jfl_nf4_zx__d6014e5834">
+                                            expressions:<ul class="ul" id="task_jfl_nf4_zx__d6327e6107">
                                             <li class="li">${time:now()} - Uses the processing time as the time
                                                 basis. </li>
 
@@ -777,9 +789,9 @@ ${YY()}_${MM()}_${DD()}</pre>
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d39409e1261">Data Format Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d42818e1280">Data Format Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d39409e1264">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d42818e1283">Description</th>
 
                                 </tr>
 
@@ -787,11 +799,11 @@ ${YY()}_${MM()}_${DD()}</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e1261 ">Data Format <a class="xref" href="DataLakeStore.html#concept_wsz_qj4_zx">
+                                    <td class="entry" valign="top" width="30%" headers="d42818e1280 ">Data Format <a class="xref" href="DataLakeStore.html#concept_wsz_qj4_zx">
                                             <img class="image" id="task_jfl_nf4_zx__image_ohs_4fj_vx" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e1264 ">Format of data to be written. Use one of the following
+                                    <td class="entry" valign="top" width="70%" headers="d42818e1283 ">Format of data to be written. Use one of the following
                                             options:<ul class="ul" id="task_jfl_nf4_zx__ul_ffs_xxw_zx">
                                             <li class="li">Avro</li>
 
@@ -819,14 +831,14 @@ ${YY()}_${MM()}_${DD()}</pre>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d6014e4534" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d6327e4789" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d39409e1326">Avro Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d42818e1345">Avro Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d39409e1329">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d42818e1348">Description</th>
 
                                 </tr>
 
@@ -834,10 +846,10 @@ ${YY()}_${MM()}_${DD()}</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e1326 ">Avro Schema Location</td>
+                                    <td class="entry" valign="top" width="30%" headers="d42818e1345 ">Avro Schema Location</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e1329 ">Location of the Avro schema definition to use when
-                                        writing data:<ul class="ul" id="task_jfl_nf4_zx__d6014e4563">
+                                    <td class="entry" valign="top" width="70%" headers="d42818e1348 ">Location of the Avro schema definition to use when
+                                        writing data:<ul class="ul" id="task_jfl_nf4_zx__d6327e4818">
                                             <li class="li">In Pipeline Configuration - Use the schema that you
                                                 provide in the stage configuration. </li>
 
@@ -845,7 +857,7 @@ ${YY()}_${MM()}_${DD()}</pre>
                                                 record header attribute. Use only when the
                                                 avroSchema attribute is defined for all records.
                                                   <a class="xref" href="Destinations_overview.html#concept_lmn_gdc_1w">
-                                                  <img class="image" id="task_jfl_nf4_zx__d6014e4572" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></li>
+                                                  <img class="image" id="task_jfl_nf4_zx__d6327e4827" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></li>
 
                                             <li class="li">Confluent Schema Registry - Retrieve the schema from
                                                 the Confluent Schema Registry. </li>
@@ -858,9 +870,9 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e1326 ">Avro Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d42818e1345 ">Avro Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e1329 ">Avro schema definition used to write the data. <p class="p">You can
+                                    <td class="entry" valign="top" width="70%" headers="d42818e1348 ">Avro schema definition used to write the data. <p class="p">You can
                                             optionally use the runtime:loadResource function to use
                                             a schema definition stored in a runtime resource file.
                                         </p>
@@ -869,17 +881,17 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e1326 ">Register Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d42818e1345 ">Register Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e1329 ">Select to register a new Avro schema with the Confluent
+                                    <td class="entry" valign="top" width="70%" headers="d42818e1348 ">Select to register a new Avro schema with the Confluent
                                         Schema Registry.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e1326 ">Schema Registry URLs</td>
+                                    <td class="entry" valign="top" width="30%" headers="d42818e1345 ">Schema Registry URLs</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e1329 ">Confluent Schema Registry URLs used to look up the schema
+                                    <td class="entry" valign="top" width="70%" headers="d42818e1348 ">Confluent Schema Registry URLs used to look up the schema
                                         or to register a new schema. To add a URL, click
                                             <span class="ph uicontrol">Add</span>. Use the following format to
                                         enter the
@@ -889,10 +901,10 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e1326 ">Look Up Schema By</td>
+                                    <td class="entry" valign="top" width="30%" headers="d42818e1345 ">Look Up Schema By</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e1329 ">Method used to look up the schema in the Confluent Schema
-                                            Registry:<ul class="ul" id="task_jfl_nf4_zx__d6014e4622">
+                                    <td class="entry" valign="top" width="70%" headers="d42818e1348 ">Method used to look up the schema in the Confluent Schema
+                                            Registry:<ul class="ul" id="task_jfl_nf4_zx__d6327e4877">
                                             <li class="li">Subject - Look up the specified Avro schema
                                                 subject.</li>
 
@@ -905,9 +917,9 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e1326 ">Schema Subject</td>
+                                    <td class="entry" valign="top" width="30%" headers="d42818e1345 ">Schema Subject</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e1329 ">Avro schema subject to look up or to register in the
+                                    <td class="entry" valign="top" width="70%" headers="d42818e1348 ">Avro schema subject to look up or to register in the
                                         Confluent Schema Registry.<p class="p">If the specified subject to
                                             look up has multiple schema versions, the origin uses
                                             the latest schema version for that subject. To use an
@@ -919,17 +931,17 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e1326 ">Schema ID</td>
+                                    <td class="entry" valign="top" width="30%" headers="d42818e1345 ">Schema ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e1329 ">Avro schema ID to look up in the Confluent Schema
+                                    <td class="entry" valign="top" width="70%" headers="d42818e1348 ">Avro schema ID to look up in the Confluent Schema
                                         Registry.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e1326 ">Avro Compression Codec</td>
+                                    <td class="entry" valign="top" width="30%" headers="d42818e1345 ">Avro Compression Codec</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e1329 ">The Avro compression type to use. <p class="p">When using Avro
+                                    <td class="entry" valign="top" width="70%" headers="d42818e1348 ">The Avro compression type to use. <p class="p">When using Avro
                                             compression, do not enable other compression available
                                             in the destination. </p>
 </td>
@@ -948,14 +960,14 @@ ${YY()}_${MM()}_${DD()}</pre>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d6014e5087" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d6327e5343" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d39409e1475">Delimited Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d42818e1494">Delimited Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d39409e1478">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d42818e1497">Description</th>
 
                                 </tr>
 
@@ -963,9 +975,9 @@ ${YY()}_${MM()}_${DD()}</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e1475 ">Delimiter Format</td>
+                                    <td class="entry" valign="top" width="30%" headers="d42818e1494 ">Delimiter Format</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e1478 ">Format for delimited data:<ul class="ul" id="task_jfl_nf4_zx__ul_k3j_vvf_jr">
+                                    <td class="entry" valign="top" width="70%" headers="d42818e1497 ">Format for delimited data:<ul class="ul" id="task_jfl_nf4_zx__ul_k3j_vvf_jr">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
 
@@ -989,16 +1001,16 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e1475 ">Header Line</td>
+                                    <td class="entry" valign="top" width="30%" headers="d42818e1494 ">Header Line</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e1478 ">Indicates whether to create a header line.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d42818e1497 ">Indicates whether to create a header line.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e1475 ">Replace New Line Characters</td>
+                                    <td class="entry" valign="top" width="30%" headers="d42818e1494 ">Replace New Line Characters</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e1478 ">Replaces new line characters with the configured
+                                    <td class="entry" valign="top" width="70%" headers="d42818e1497 ">Replaces new line characters with the configured
                                             string.<p class="p">Recommended when writing data as a single line
                                             of text.</p>
 </td>
@@ -1006,9 +1018,9 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e1475 ">New Line Character Replacement</td>
+                                    <td class="entry" valign="top" width="30%" headers="d42818e1494 ">New Line Character Replacement</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e1478 ">String to replace each new line character. For example,
+                                    <td class="entry" valign="top" width="70%" headers="d42818e1497 ">String to replace each new line character. For example,
                                         enter a space to replace each new line character with a
                                         space. <p class="p">Leave empty to remove the new line
                                         characters.</p>
@@ -1017,9 +1029,9 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e1475 ">Delimiter Character</td>
+                                    <td class="entry" valign="top" width="30%" headers="d42818e1494 ">Delimiter Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e1478 ">Delimiter character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="70%" headers="d42818e1497 ">Delimiter character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">You can enter a Unicode control character
                                             using the format \u<em class="ph i">NNNN</em>, where ​<em class="ph i">N</em> is a
@@ -1034,9 +1046,9 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e1475 ">Escape Character </td>
+                                    <td class="entry" valign="top" width="30%" headers="d42818e1494 ">Escape Character </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e1478 ">Escape character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="70%" headers="d42818e1497 ">Escape character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the backslash character ( \
                                         ).</p>
@@ -1045,9 +1057,9 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e1475 ">Quote Character</td>
+                                    <td class="entry" valign="top" width="30%" headers="d42818e1494 ">Quote Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e1478 ">Quote character for a custom delimiter format. Select one
+                                    <td class="entry" valign="top" width="70%" headers="d42818e1497 ">Quote character for a custom delimiter format. Select one
                                         of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the quotation mark character ( "
                                             ).</p>
@@ -1056,9 +1068,9 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d39409e1475 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d42818e1494 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d39409e1478 ">Character set to use when writing data. </td>
+       <td class="entry" valign="top" width="70%" headers="d42818e1497 ">Character set to use when writing data. </td>
 
       </tr>
 
@@ -1074,14 +1086,14 @@ ${YY()}_${MM()}_${DD()}</pre>
                     following property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d6014e5226" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d6327e5482" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d39409e1637">JSON Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d42818e1656">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d39409e1640">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d42818e1659">Description</th>
 
                                 </tr>
 
@@ -1089,9 +1101,9 @@ ${YY()}_${MM()}_${DD()}</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e1637 ">JSON Content</td>
+                                    <td class="entry" valign="top" width="30%" headers="d42818e1656 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e1640 ">Determines how JSON data is written:<ul class="ul" id="task_jfl_nf4_zx__d6014e5255">
+                                    <td class="entry" valign="top" width="70%" headers="d42818e1659 ">Determines how JSON data is written:<ul class="ul" id="task_jfl_nf4_zx__d6327e5511">
                                             <li class="li">JSON Array of Objects - Each file includes a single
                                                 array. In the array, each element is a JSON
                                                 representation of each record.</li>
@@ -1106,9 +1118,9 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d39409e1637 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d42818e1656 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d39409e1640 ">Character set to use when writing data. </td>
+       <td class="entry" valign="top" width="70%" headers="d42818e1659 ">Character set to use when writing data. </td>
 
       </tr>
 
@@ -1124,14 +1136,14 @@ ${YY()}_${MM()}_${DD()}</pre>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d6014e5440" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jfl_nf4_zx__d6327e5696" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d39409e1700">Text Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d42818e1719">Text Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d39409e1703">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d42818e1722">Description</th>
 
                                 </tr>
 
@@ -1139,17 +1151,17 @@ ${YY()}_${MM()}_${DD()}</pre>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e1700 ">Text Field Path</td>
+                                    <td class="entry" valign="top" width="30%" headers="d42818e1719 ">Text Field Path</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e1703 ">Field that contains the text data to be written. All data
+                                    <td class="entry" valign="top" width="70%" headers="d42818e1722 ">Field that contains the text data to be written. All data
                                         must be incorporated into the specified field. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e1700 ">Record Separator</td>
+                                    <td class="entry" valign="top" width="30%" headers="d42818e1719 ">Record Separator</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e1703 ">Characters to use to separate records. Use any valid Java
+                                    <td class="entry" valign="top" width="70%" headers="d42818e1722 ">Characters to use to separate records. Use any valid Java
                                         string literal. For example, when writing to Windows, you
                                         might use \r\n to separate records. <p class="p">By default, the
                                             destination uses \n.</p>
@@ -1158,9 +1170,9 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d39409e1700 ">Insert Record Separator if No Text</td>
+                                    <td class="entry" valign="top" width="30%" headers="d42818e1719 ">Insert Record Separator if No Text</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d39409e1703 ">When a record does not include the text field, inserts
+                                    <td class="entry" valign="top" width="70%" headers="d42818e1722 ">When a record does not include the text field, inserts
                                         the configured record separator string to create an empty
                                             line.<p class="p">When not selected, records without the text
                                             field are discarded.</p>
@@ -1169,9 +1181,9 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d39409e1700 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d42818e1719 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d39409e1703 ">Character set to use when writing data. </td>
+       <td class="entry" valign="top" width="70%" headers="d42818e1722 ">Character set to use when writing data. </td>
 
       </tr>
 

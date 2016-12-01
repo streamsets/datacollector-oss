@@ -34,9 +34,9 @@
                     
                     <thead class="thead" align="left">
                         <tr class="row">
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d23871e33">Component</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d24625e33">Component</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d23871e36">Minimum Requirement</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d24625e36">Minimum Requirement</th>
 
                         </tr>
 
@@ -44,16 +44,16 @@
 
                     <tbody class="tbody">
                         <tr class="row">
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d23871e33 ">Spark Streaming (for cluster streaming mode)</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d24625e33 ">Spark Streaming (for cluster streaming mode)</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d23871e36 ">Spark version 1.5.2 through 1.6</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d24625e36 ">Spark version 1.5.2 through 1.6</td>
 
                         </tr>
 
                         <tr class="row">
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d23871e33 ">MapR</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d24625e33 ">MapR</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d23871e36 ">MapR version 5.1 or 5.2</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d24625e36 ">MapR version 5.1 or 5.2</td>
 
                         </tr>
 
@@ -63,8 +63,9 @@
 </div>
 </div>
 
-        <p class="p">The steps that you complete to configure a cluster pipeline to read from MapR depend on
-            the cluster execution mode.</p>
+        <div class="note note"><span class="notetitle">Note:</span> When you add a partition to the MapR topic, restart the pipeline to enable <span class="ph">Data
+                  Collector</span> to
+            generate a new worker to read from the new partition. </div>
 
  </div>
 
@@ -72,9 +73,12 @@
 <div class="topic task nested1" id="task_n2l_z45_lx">
     <h2 class="title topictitle2">Configuring Cluster Batch Mode for MapR</h2>
 
-    
-    <div class="body taskbody"><p class="shortdesc">Complete the following steps to configure a cluster pipeline to read from MapR in
-        cluster batch mode.</p>
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Complete the following steps to configure a cluster
+                pipeline to read from MapR in cluster batch mode.</p>
+
+        </div>
 
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">Verify the installation of MapR and YARN.</span>
@@ -82,6 +86,42 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">Install the <span class="ph">Data
                   Collector</span> on a YARN gateway node.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To enable <span class="ph">Data
+                  Collector</span> to submit YARN jobs, perform one of the following tasks:</span>
+                <div class="itemgroup info">
+                    <ul class="ul" id="task_n2l_z45_lx__ul_qf3_r1j_cy">
+                        <li class="li">On YARN, set the min.user.id to a value equal to or lower than the user
+                            ID associated with the <span class="ph">Data
+                  Collector</span> user ID, typically named "sdc".</li>
+
+                        <li class="li">On YARN, add the <span class="ph">Data
+                  Collector</span> user name, typically "sdc", to the allowed.system.users
+                            property.</li>
+
+                        <li class="li">After you create the pipeline, specify a Hadoop FS user in the MapR FS
+                            origin. <p class="p">For the Hadoop FS User property, enter a user with an ID that
+                                is higher than the min.user.id property, or with a user name that is
+                                listed in the allowed.system.users property. </p>
+</li>
+
+                    </ul>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">If YARN is configured to use Kerberos authentication, configure <span class="ph">Data
+                  Collector</span> to use Kerberos authentication. </span>
+                <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data
+                  Collector</span>, you enable <span class="ph">Data
+                  Collector</span> to use Kerberos and define the principal and keytab. <p class="p">When Kerberos is
+                        enabled for <span class="ph">Data
+                  Collector</span>, <span class="ph">Data
+                  Collector</span> automatically uses the Kerberos principal and keytab to connect to any
+                        YARN cluster that uses Kerberos. </p>
+<p class="p">For more information, see <a class="xref" href="../Install_Config/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Enabling Kerberos Authentication</a>.</p>
+</div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">In the pipeline properties, on the <span class="keyword wintitle">General</span> tab, set the
@@ -124,8 +164,8 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">If necessary, specify the location of the spark-submit script. </span>
                 <div class="itemgroup info"><span class="ph">Data
-                  Collector</span> assumes that the spark-submit script used to submit job requests to Spark
-                    Streaming is located in the following directory:
+                  Collector</span> assumes that the spark-submit script, used to submit job requests to Spark
+                    Streaming, is located in the following directory:
                     <pre class="pre codeblock">/usr/bin/spark-submit</pre>
 If the script is not in this
                     directory, use the SPARK_SUBMIT_YARN_COMMAND environment variable to define the
@@ -135,6 +175,23 @@ If the script is not in this
                         script:<pre class="pre codeblock">export SPARK_SUBMIT_YARN_COMMAND=/opt/mapr/spark/spark-1.6.1/bin/spark-submit</pre>
 </div>
 </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To enable <span class="ph">Data
+                  Collector</span> to submit YARN jobs, perform one of the following tasks:</span>
+                <div class="itemgroup info">
+                    <ul class="ul" id="task_i3h_q3w_hx__ul_tzs_zbj_cy">
+                        <li class="li">On YARN, set the min.user.id to a value equal to or lower than the user
+                            ID associated with the <span class="ph">Data
+                  Collector</span> user ID, typically named "sdc".</li>
+
+                        <li class="li">On YARN, add the <span class="ph">Data
+                  Collector</span> user name, typically "sdc", to the allowed.system.users
+                            property.</li>
+
+                    </ul>
+
+                </div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">If necessary, set the Spark logging level to a severity of INFO or lower.</span>
@@ -157,6 +214,19 @@ If the script is not in this
 </div>
             </li>
 <li class="li step stepexpand">
+                <span class="ph cmd">If YARN is configured to use Kerberos authentication, configure <span class="ph">Data
+                  Collector</span> to use Kerberos authentication. </span>
+                <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data
+                  Collector</span>, you enable <span class="ph">Data
+                  Collector</span> to use Kerberos and define the principal and keytab. <p class="p">When Kerberos is
+                        enabled for <span class="ph">Data
+                  Collector</span>, <span class="ph">Data
+                  Collector</span> automatically uses the Kerberos principal and keytab to connect to any
+                        YARN cluster that uses Kerberos. </p>
+<p class="p">For more information, see <a class="xref" href="../Install_Config/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Enabling Kerberos Authentication</a>.</p>
+</div>
+            </li>
+<li class="li step stepexpand">
                 <span class="ph cmd">In the pipeline properties, on the <span class="keyword wintitle">General</span> tab, set the
                         <span class="ph uicontrol">Execution Mode</span> property to <span class="ph uicontrol">Cluster YARN
                         Streaming</span>.</span>
@@ -168,10 +238,7 @@ If the script is not in this
 <li class="li step stepexpand">
                 <span class="ph cmd">In the pipeline, use the MapR Streams Consumer origin for cluster mode. </span>
                 <div class="itemgroup info">If necessary, select a cluster mode stage library on the
-                        <span class="keyword wintitle">General</span> tab of the origin. <div class="note note"><span class="notetitle">Note:</span> When you add a
-                        partition to the MapR topic, restart the pipeline to enable <span class="ph">Data
-                  Collector</span> to generate a new worker to read from the new partition. </div>
-</div>
+                        <span class="keyword wintitle">General</span> tab of the origin. </div>
             </li>
 </ol>
 
