@@ -42,6 +42,9 @@
 
         </ul>
 
+        <p class="p">The origin creates Salesforce header attributes to provide information about the source
+            data in record headers.</p>
+
  </div>
 
 <div class="related-links"></div>
@@ -222,10 +225,7 @@
             values corresponding to the <samp class="ph codeph">data/sobject</samp> property of the message. </p>
 
         <p class="p">The record also includes record header attributes corresponding to the
-                <samp class="ph codeph">data/event</samp> property of the message. The origin prefixes the record
-            header attribute names with <samp class="ph codeph">salesforce.cdc</samp> so that they are named
-                <samp class="ph codeph">salesforce.cdc.createdDate</samp> and
-            <samp class="ph codeph">salesforce.cdc.type</samp>.</p>
+                <samp class="ph codeph">data/event</samp> property of the message, as described in <a class="xref" href="Salesforce.html#concept_psx_1wg_cy" title="The Salesforce origin generates Salesforce header attributes that provide additional information about each record, such as the source objects for the record. The origin receives these details from Salesforce.">Salesforce Header Attributes</a>.</p>
 
        
  </div>
@@ -255,6 +255,76 @@
  </div>
 
 </div>
+<div class="topic concept nested1" id="concept_psx_1wg_cy">
+ <h2 class="title topictitle2">Salesforce Header Attributes</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Salesforce origin generates Salesforce header attributes that provide additional
+        information about each record, such as the source objects for the record. The origin
+        receives these details from Salesforce.</p>
+
+        <p class="p">You can use the
+            record:attribute or record:attributeOrDefault functions to access the information in the
+            attribute. </p>
+
+        <p class="p">The Salesforce origin can provide the following Salesforce header attributes:</p>
+
+        <div class="p">
+            
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_psx_1wg_cy__table_w4g_kqh_cy" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr class="row">
+                            <th class="entry" valign="top" width="30%" id="d198776e352">Salesforce Header Attribute</th>
+
+                            <th class="entry" valign="top" width="70%" id="d198776e355">Description</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr class="row">
+                            <td class="entry" valign="top" width="30%" headers="d198776e352 ">salesforce.sobjectType</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d198776e355 ">Provides the Salesforce source object for the record.
+                                    <p class="p">Generated when the origin executes a query or subscribes to
+                                    notifications.</p>
+</td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="30%" headers="d198776e352 ">salesforce.cdc.createdDate</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d198776e355 ">Provides the date that the Salesforce PushTopic encountered the
+                                change event.<p class="p">Generated when the origin subscribes to
+                                    notifications.</p>
+</td>
+
+                        </tr>
+
+                        <tr class="row">
+                            <td class="entry" valign="top" width="30%" headers="d198776e352 ">salesforce.cdc.type</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d198776e355 ">Provides the type of change that the Salesforce PushTopic
+                                encountered - created, updated, deleted, or undeleted.<p class="p">Generated
+                                    when the origin subscribes to notifications.</p>
+</td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+
+        </div>
+
+    </div>
+
+</div>
 <div class="topic task nested1" id="task_h1n_bs3_rx">
     <h2 class="title topictitle2">Configuring a Salesforce Origin</h2>
 
@@ -270,14 +340,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_h1n_bs3_rx__d20946e331" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_h1n_bs3_rx__d21804e331" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d192575e354">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d198776e444">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d192575e357">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d198776e447">Description</th>
 
                                 </tr>
 
@@ -285,24 +355,24 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d192575e354 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d198776e444 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d192575e357 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d192575e354 ">Description</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d192575e357 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d198776e447 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d192575e354 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_h1n_bs3_rx__d20946e377" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d198776e444 ">Description</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d192575e357 ">Error record handling for the stage: <ul class="ul" id="task_h1n_bs3_rx__d20946e381">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d198776e447 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d198776e444 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_h1n_bs3_rx__d21804e377" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d198776e447 ">Error record handling for the stage: <ul class="ul" id="task_h1n_bs3_rx__d21804e381">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -332,9 +402,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d192575e439">Salesforce Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d198776e529">Salesforce Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d192575e442">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d198776e532">Description</th>
 
                                 </tr>
 
@@ -342,17 +412,17 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d192575e439 ">Username</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d198776e529 ">Username</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d192575e442 ">Salesforce username in the following email format:
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d198776e532 ">Salesforce username in the following email format:
        <samp class="ph codeph">&lt;text&gt;@&lt;text&gt;.com</samp>. </td>
 
      </tr>
 
                                 <tr class="row">
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d192575e439 ">Password</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d198776e529 ">Password</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d192575e442 ">Salesforce password. <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d198776e532 ">Salesforce password. <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
                   and passwords, you can use runtime resources or Hashicorp Vault secrets. For more
                   information, see <a class="xref" href="../Install_Config/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Install_Config/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
 </td>
@@ -360,9 +430,9 @@
      </tr>
 
                                 <tr class="row">
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d192575e439 ">Auth Endpoint</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d198776e529 ">Auth Endpoint</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d192575e442 ">Salesforce SOAP API authentication endpoint. Enter one of the following values:<ul class="ul" id="task_h1n_bs3_rx__d20959e2291">
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d198776e532 ">Salesforce SOAP API authentication endpoint. Enter one of the following values:<ul class="ul" id="task_h1n_bs3_rx__d21817e2291">
         <li class="li">login.salesforce.com - To connect to a Production or Developer Edition
          organization.</li>
 
@@ -375,34 +445,34 @@
      </tr>
 
                                 <tr class="row">
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d192575e439 ">API Version</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d198776e529 ">API Version</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d192575e442 ">Salesforce API version to use to connect to Salesforce. <p class="p">Default is 38.0.</p>
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d198776e532 ">Salesforce API version to use to connect to Salesforce. <p class="p">Default is 38.0.</p>
 </td>
 
      </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d192575e439 ">Query Existing Data</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d198776e529 ">Query Existing Data</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d192575e442 ">Determines whether to execute a query to read existing
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d198776e532 ">Determines whether to execute a query to read existing
                                         data from Salesforce.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d192575e439 ">Subscribe to Notifications</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d198776e529 ">Subscribe to Notifications</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d192575e442 ">Determines whether to subscribe to the Force.com
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d198776e532 ">Determines whether to subscribe to the Force.com
                                         Streaming API to receive notifications for changes to
                                         Salesforce data.</td>
 
                                 </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="33.33333333333333%" headers="d192575e439 ">Max Batch Size (records)</td>
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d198776e529 ">Max Batch Size (records)</td>
 
-       <td class="entry" valign="top" width="66.66666666666666%" headers="d192575e442 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data
+       <td class="entry" valign="top" width="66.66666666666666%" headers="d198776e532 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data
                   Collector</span> maximum
         batch size. <p class="p">Default is 1000. The <span class="ph">Data
                   Collector</span> default
@@ -412,10 +482,10 @@
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="33.33333333333333%" headers="d192575e439 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
-         <img class="image" id="task_h1n_bs3_rx__d20959e199" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d198776e529 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
+         <img class="image" id="task_h1n_bs3_rx__d21817e199" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-       <td class="entry" valign="top" width="66.66666666666666%" headers="d192575e442 ">Number of milliseconds to wait before sending a partial or empty batch. </td>
+       <td class="entry" valign="top" width="66.66666666666666%" headers="d198776e532 ">Number of milliseconds to wait before sending a partial or empty batch. </td>
 
       </tr>
 
@@ -436,10 +506,10 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d192575e603">Query Property <a class="xref" href="Salesforce.html#concept_djn_x4c_tx" title="The Salesforce origin can execute a query to read existing data from Salesforce. Use the Salesforce Object Query Language (SOQL) to write the query.">
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d198776e693">Query Property <a class="xref" href="Salesforce.html#concept_djn_x4c_tx" title="The Salesforce origin can execute a query to read existing data from Salesforce. Use the Salesforce Object Query Language (SOQL) to write the query.">
                                             <img class="image" id="task_h1n_bs3_rx__image_wjh_ycl_br" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d192575e613">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d198776e703">Description</th>
 
                                 </tr>
 
@@ -447,36 +517,36 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d192575e603 ">Use Bulk API</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d198776e693 ">Use Bulk API</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d192575e613 ">Determines whether the stage uses the Salesforce Bulk API
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d198776e703 ">Determines whether the stage uses the Salesforce Bulk API
                                         or SOAP API to write to Salesforce. Select to use the Bulk
                                         API. Clear to use the SOAP API.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d192575e603 ">SOQL Query <a class="xref" href="Salesforce.html#concept_vdt_dxc_tx" title="When you configure the Salesforce origin to query existing data, you define the SOQL query that the origin uses to return data from Salesforce. The Salesforce origin requires a WHERE and ORDER BY clause in the query.">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d198776e693 ">SOQL Query <a class="xref" href="Salesforce.html#concept_vdt_dxc_tx" title="When you configure the Salesforce origin to query existing data, you define the SOQL query that the origin uses to return data from Salesforce. The Salesforce origin requires a WHERE and ORDER BY clause in the query.">
                                             <img class="image" id="task_h1n_bs3_rx__image_wch_xcl_zr" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d192575e613 ">SOQL query to use when reading existing data from
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d198776e703 ">SOQL query to use when reading existing data from
                                         Salesforce.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d192575e603 ">Initial Offset</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d198776e693 ">Initial Offset</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d192575e613 ">Offset value to use when the pipeline starts.<p class="p">Default
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d198776e703 ">Offset value to use when the pipeline starts.<p class="p">Default
                                             is <samp class="ph codeph">000000000000000</samp>.</p>
 </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d192575e603 ">Offset Field </td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d198776e693 ">Offset Field </td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d192575e613 ">Field to use for the offset value.<p class="p">Default is the
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d198776e703 ">Field to use for the offset value.<p class="p">Default is the
                                                 <samp class="ph codeph">Id</samp> field.</p>
 </td>
 
@@ -499,9 +569,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d192575e700">Subscribe Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d198776e790">Subscribe Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d192575e703">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d198776e793">Description</th>
 
                                 </tr>
 
@@ -509,11 +579,11 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d192575e700 ">Push Topic
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d198776e790 ">Push Topic
                                         <a class="xref" href="Salesforce.html#concept_nnd_y4c_tx" title="The Salesforce origin can subscribe to the Force.com Streaming API to receive notifications for changes to Salesforce data.">
                                             <img class="image" id="task_h1n_bs3_rx__image_sch_nol_br" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d192575e703 ">Name of the existing Salesforce PushTopic to subscribe
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d198776e793 ">Name of the existing Salesforce PushTopic to subscribe
                                         to.</td>
 
                                 </tr>

@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The JDBC Query executor connects through JDBC to a database and performs a user-defined query each time it receives an event record. Use the JDBC Query executor as part of an event stream in the ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="JDBC Query Executor"></meta><meta name="DC.Relation" scheme="URI" content="../Executors/Executors-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_j3r_gcv_sx"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>JDBC Query Executor</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The JDBC Query executor connects through JDBC to a database and performs a user-defined SQL query each time it receives an event record. Use the JDBC Query executor as part of an event stream in the ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="JDBC Query Executor"></meta><meta name="DC.Relation" scheme="URI" content="../Executors/Executors-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_j3r_gcv_sx"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>JDBC Query Executor</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -27,8 +27,8 @@
 
  <div class="body conbody">
   <p class="p">The JDBC Query executor connects through JDBC to a
-            database and performs a user-defined query each time it receives an event record. Use
-            the JDBC Query executor as part of an event stream in the pipeline. </p>
+            database and performs a user-defined SQL query each time it receives an event record.
+            Use the JDBC Query executor as part of an event stream in the pipeline. </p>
 
         <p class="p">When you configure the JDBC Query executor, you specify JDBC connection properties and
             the query you want to use. You can configure custom properties that your driver requires
@@ -69,14 +69,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ym2_3cv_sx__d14502e3975" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ym2_3cv_sx__d15320e4231" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d99999e113">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d103912e113">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d99999e116">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d103912e116">Description</th>
 
                                 </tr>
 
@@ -84,24 +84,24 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d99999e113 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d103912e113 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d99999e116 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d99999e113 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d99999e116 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d103912e116 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d99999e113 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_ym2_3cv_sx__d14502e4021" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d103912e113 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d99999e116 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d103912e116 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d103912e113 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_ym2_3cv_sx__d15320e4277" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d103912e116 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -109,10 +109,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d99999e113 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_ym2_3cv_sx__d14502e4035" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d103912e113 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_ym2_3cv_sx__d15320e4291" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d99999e116 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d103912e116 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -120,10 +120,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d99999e113 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_ym2_3cv_sx__d14502e4050" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d103912e113 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_ym2_3cv_sx__d15320e4306" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d99999e116 ">Error record handling for the stage: <ul class="ul" id="task_ym2_3cv_sx__d14502e4054">
+                                    <td class="entry" valign="top" width="70%" headers="d103912e116 ">Error record handling for the stage: <ul class="ul" id="task_ym2_3cv_sx__d15320e4310">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -152,9 +152,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d99999e235">JDBC Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d103912e235">JDBC Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d99999e238">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d103912e238">Description</th>
 
                                 </tr>
 
@@ -162,9 +162,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d99999e235 ">JDBC Connection String</td>
+       <td class="entry" valign="top" width="30%" headers="d103912e235 ">JDBC Connection String</td>
 
-       <td class="entry" valign="top" width="70%" headers="d99999e238 ">Connection string to use to connect to the database.<p class="p">Some databases, such as
+       <td class="entry" valign="top" width="70%" headers="d103912e238 ">Connection string to use to connect to the database.<p class="p">Some databases, such as
          Postgres, require the schema in the connection string. Use the connection string format
          required by the database.</p>
 </td>
@@ -172,25 +172,25 @@
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d99999e235 ">Use Credentials</td>
+       <td class="entry" valign="top" width="30%" headers="d103912e235 ">Use Credentials</td>
 
-       <td class="entry" valign="top" width="70%" headers="d99999e238 ">Enables entering credentials on the Credentials tab. Use when you do not include
+       <td class="entry" valign="top" width="70%" headers="d103912e238 ">Enables entering credentials on the Credentials tab. Use when you do not include
         credentials in the JDBC connection string.</td>
 
       </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d99999e235 ">SQL Query</td>
+                                    <td class="entry" valign="top" width="30%" headers="d103912e235 ">SQL Query</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d99999e238 ">Query to perform each time the executor receives an event
+                                    <td class="entry" valign="top" width="70%" headers="d103912e238 ">Query to perform each time the executor receives an event
                                         record.  </td>
 
                                 </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d99999e235 ">Additional JDBC Configuration Properties</td>
+       <td class="entry" valign="top" width="30%" headers="d103912e235 ">Additional JDBC Configuration Properties</td>
 
-       <td class="entry" valign="top" width="70%" headers="d99999e238 ">Additional JDBC configuration properties to use. To add properties, click
+       <td class="entry" valign="top" width="70%" headers="d103912e238 ">Additional JDBC configuration properties to use. To add properties, click
          <span class="ph uicontrol">Add</span> and define the JDBC property name and value. <p class="p">Use the property
          names and values as expected by JDBC. </p>
 </td>
@@ -210,14 +210,14 @@
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ym2_3cv_sx__d14502e2739" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ym2_3cv_sx__d15320e2739" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d99999e315">Credentials Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d103912e315">Credentials Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d99999e318">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d103912e318">Description</th>
 
                                 </tr>
 
@@ -225,16 +225,16 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d99999e315 ">Username</td>
+                                    <td class="entry" valign="top" width="30%" headers="d103912e315 ">Username</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d99999e318 ">User name for the JDBC connection.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d103912e318 ">User name for the JDBC connection.</td>
 
                                 </tr>
 
-                                <tr id="task_ym2_3cv_sx__d14502e2770" class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d99999e315 ">Password</td>
+                                <tr id="task_ym2_3cv_sx__d15320e2770" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d103912e315 ">Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d99999e318 ">Password for the JDBC account.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
+                                    <td class="entry" valign="top" width="70%" headers="d103912e318 ">Password for the JDBC account.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
                   and passwords, you can use runtime resources or Hashicorp Vault secrets. For more
                   information, see <a class="xref" href="../Install_Config/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Install_Config/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
 </td>
@@ -254,13 +254,13 @@
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ym2_3cv_sx__d14502e2795" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ym2_3cv_sx__d15320e2795" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d99999e394">Legacy Driver Property</th>
-                                                               <th class="entry" valign="top" width="70%" id="d99999e397">Description</th>
+                                    <th class="entry" valign="top" width="30%" id="d103912e394">Legacy Driver Property</th>
+                                                               <th class="entry" valign="top" width="70%" id="d103912e397">Description</th>
 
                                 </tr>
 
@@ -268,17 +268,17 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d99999e394 ">JDBC Class Driver Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d103912e394 ">JDBC Class Driver Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d99999e397 ">Class name for the JDBC driver. Required for JDBC
+                                    <td class="entry" valign="top" width="70%" headers="d103912e397 ">Class name for the JDBC driver. Required for JDBC
                                         versions older than version 4.0.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d99999e394 ">Connection Health Test Query</td>
+                                    <td class="entry" valign="top" width="30%" headers="d103912e394 ">Connection Health Test Query</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d99999e397 ">Optional query to test the health of a connection.
+                                    <td class="entry" valign="top" width="70%" headers="d103912e397 ">Optional query to test the health of a connection.
                                         Recommended only when the JDBC version is older than 4.0.
                                     </td>
 
@@ -301,9 +301,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d99999e449">Advanced Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d103912e449">Advanced Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d99999e452">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d103912e452">Description</th>
 
                                 </tr>
 
@@ -311,27 +311,27 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d99999e449 ">Maximum Pool Size </td>
+       <td class="entry" valign="top" width="30%" headers="d103912e449 ">Maximum Pool Size </td>
 
-       <td class="entry" valign="top" width="70%" headers="d99999e452 ">The maximum number of connections to create. <p class="p">Default is 1. The recommended value is
+       <td class="entry" valign="top" width="70%" headers="d103912e452 ">The maximum number of connections to create. <p class="p">Default is 1. The recommended value is
          1.</p>
 </td>
 
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d99999e449 ">Minimum Idle Connections</td>
+       <td class="entry" valign="top" width="30%" headers="d103912e449 ">Minimum Idle Connections</td>
 
-       <td class="entry" valign="top" width="70%" headers="d99999e452 ">The minimum number of connections to create and maintain. To define a fixed connection
+       <td class="entry" valign="top" width="70%" headers="d103912e452 ">The minimum number of connections to create and maintain. To define a fixed connection
         pool, set to the same value as Maximum Pool Size. <p class="p">Default is 1. </p>
 </td>
 
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d99999e449 ">Connection Timeout</td>
+       <td class="entry" valign="top" width="30%" headers="d103912e449 ">Connection Timeout</td>
 
-       <td class="entry" valign="top" width="70%" headers="d99999e452 ">Maximum time to wait for a connection. Use a time constant in an expression to define
+       <td class="entry" valign="top" width="70%" headers="d103912e452 ">Maximum time to wait for a connection. Use a time constant in an expression to define
         the time increment. <div class="p">Default is 30 seconds, defined as follows:
          <pre class="pre codeblock">${30 * SECONDS}</pre>
 </div>
@@ -340,9 +340,9 @@
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d99999e449 ">Idle Timeout</td>
+       <td class="entry" valign="top" width="30%" headers="d103912e449 ">Idle Timeout</td>
 
-       <td class="entry" valign="top" width="70%" headers="d99999e452 ">Maximum time to allow a connection to idle. Use a time constant in an expression to
+       <td class="entry" valign="top" width="70%" headers="d103912e452 ">Maximum time to allow a connection to idle. Use a time constant in an expression to
         define the time increment. <p class="p">Use 0 to avoid removing any idle connections.</p>
 <div class="p">Default is
          30 minutes, defined as follows: <pre class="pre codeblock">${30 * MINUTES}</pre>
@@ -352,9 +352,9 @@
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d99999e449 ">Max Connection Lifetime</td>
+       <td class="entry" valign="top" width="30%" headers="d103912e449 ">Max Connection Lifetime</td>
 
-       <td class="entry" valign="top" width="70%" headers="d99999e452 ">Maximum lifetime for a connection. Use a time constant in an expression to define the
+       <td class="entry" valign="top" width="70%" headers="d103912e452 ">Maximum lifetime for a connection. Use a time constant in an expression to define the
         time increment. <p class="p">Use 0 to avoid removing any idle connections.</p>
 <div class="p">Default is 30
          seconds, defined as follows: <pre class="pre codeblock">${30 * SECONDS}</pre>
@@ -364,9 +364,9 @@
       </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d99999e449 ">Enforce Read-only Connection</td>
+       <td class="entry" valign="top" width="30%" headers="d103912e449 ">Enforce Read-only Connection</td>
 
-       <td class="entry" valign="top" width="70%" headers="d99999e452 ">Creates read-only connections to avoid any type of write. <p class="p">Selected by default.
+       <td class="entry" valign="top" width="70%" headers="d103912e452 ">Creates read-only connections to avoid any type of write. <p class="p">Selected by default.
          Clearing this property is not recommended. </p>
 </td>
 

@@ -31,14 +31,72 @@
   <p class="p">When
             you configure the Kudu destination, you specify the connection information for one or
             more Kudu masters, define the table to use, and optionally define field mappings. By
-            default, the destination writes field data to columns with matching names. You can
-            configure the destination to perform upserts. </p>
+            default, the destination writes field data to columns with matching names. </p>
+
+        <p class="p">You configure the destination to perform one of the following write operations: insert,
+            update, delete, or upsert.</p>
 
         <p class="p">You can also configure the external consistency mode and the operation timeout to use. </p>
 
  </div>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_dvg_vvj_wx">
+ <h2 class="title topictitle2">Define the Operation</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">To write to Kudu, you configure the destination to perform one of the following write
+        operations: insert, update, delete, or upsert. You define the default operation for the
+        destination. You can also define the operation in a record header attribute.</p>
+
+  <p class="p">You define the
+            write operation in the following ways:</p>
+
+        <dl class="dl">
+            
+                <dt class="dt dlterm">Default operation in the Kudu destination properties</dt>
+
+                <dd class="dd">You must define a default write operation in the Kudu destination properties.
+                    The destination uses the default operation if the sdc.operation.type record
+                    header attribute is not set or contains a value that is not supported. If the
+                    write operation is defined in both the record header attribute and the Kudu
+                    destination properties, the value set in the record header attribute takes
+                    precedence.</dd>
+
+            
+            
+            <dt class="dt dlterm">Record header attribute</dt>
+
+                <dd class="dd">You can define the write operation in the sdc.operation.type record header
+                    attribute. The Kudu destination reads the value of the sdc.operation.type record
+                    header attribute to determine the operation to perform. </dd>
+
+                <dd class="dd">Define the record header attribute using the Expression Evaluator or a scripting
+                    processor. Set the attribute to one of the following numeric values:<ul class="ul" id="concept_dvg_vvj_wx__ul_smy_qf3_1y">
+                        <li class="li">1 - inserts records</li>
+
+                        <li class="li">2 - deletes records</li>
+
+                        <li class="li">3 - updates records</li>
+
+                        <li class="li">4 - upserts records </li>
+
+                    </ul>
+</dd>
+
+                <dd class="dd">In the Advanced tab for the Kudu destination, you can configure how the
+                    destination handles records that have an unsupported value for the
+                    sdc.operation.type record header attribute. Unsupported values include
+                    non-numeric values, negative numeric values, or zero. You can configure the
+                    destination to discard the record, send the record to error, or use the default
+                    operation. </dd>
+
+            
+        </dl>
+
+ </div>
+
+</div>
 <div class="topic task nested1" id="task_c4x_tmh_4v">
     <h2 class="title topictitle2">Configuring a Kudu Destination</h2>
 
@@ -54,46 +112,46 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_c4x_tmh_4v__d6014e4094" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_c4x_tmh_4v__d6327e4349" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d67765e90">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d71263e155">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d67765e93">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d71263e158">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr id="task_c4x_tmh_4v__d6014e4116" class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d67765e90 ">Name</td>
+                                <tr id="task_c4x_tmh_4v__d6327e4371" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d71263e155 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d67765e93 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr id="task_c4x_tmh_4v__d6014e4125" class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d67765e90 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d67765e93 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d71263e158 ">Stage name.</td>
 
                                 </tr>
 
-                                <tr id="task_c4x_tmh_4v__d6014e4134" class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d67765e90 ">Stage Library</td>
+                                <tr id="task_c4x_tmh_4v__d6327e4380" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d71263e155 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d67765e93 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d71263e158 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr id="task_c4x_tmh_4v__d6327e4389" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d71263e155 ">Stage Library</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d71263e158 ">Library version that you want to use. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d67765e90 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_c4x_tmh_4v__d6014e4149" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d71263e155 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_c4x_tmh_4v__d6327e4404" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d67765e93 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d71263e158 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -101,21 +159,21 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d67765e90 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_c4x_tmh_4v__d6014e4163" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d71263e155 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_c4x_tmh_4v__d6327e4418" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d67765e93 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d71263e158 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
 
                                 </tr>
 
-                                <tr id="task_c4x_tmh_4v__d6014e4173" class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d67765e90 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_c4x_tmh_4v__d6014e4179" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                <tr id="task_c4x_tmh_4v__d6327e4428" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d71263e155 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_c4x_tmh_4v__d6327e4434" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d67765e93 ">Error record handling for the stage: <ul class="ul" id="task_c4x_tmh_4v__d6014e4183">
+                                    <td class="entry" valign="top" width="70%" headers="d71263e158 ">Error record handling for the stage: <ul class="ul" id="task_c4x_tmh_4v__d6327e4438">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -144,9 +202,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d67765e222">Kudu Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d71263e287">Kudu Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d67765e225">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d71263e290">Description</th>
 
                                 </tr>
 
@@ -154,9 +212,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d67765e222 ">Kudu Masters</td>
+                                    <td class="entry" valign="top" width="30%" headers="d71263e287 ">Kudu Masters</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d67765e225 ">Comma-separated list of connection information for the
+                                    <td class="entry" valign="top" width="70%" headers="d71263e290 ">Comma-separated list of connection information for the
                                         Kudu masters to use. Use the following format:
                                         <pre class="pre codeblock">&lt;host&gt;:&lt;port&gt;</pre>
 </td>
@@ -164,9 +222,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d67765e222 ">Table Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d71263e287 ">Table Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d67765e225 ">Table to write to. Enter one of the following: <div class="p">
+                                    <td class="entry" valign="top" width="70%" headers="d71263e290 ">Table to write to. Enter one of the following: <div class="p">
                                             <ul class="ul" id="task_c4x_tmh_4v__ul_ncv_cm4_1w">
                                                 <li class="li">Name of an existing Kudu table. If the table
                                                   doesn't exist, the pipeline fails to start.</li>
@@ -188,18 +246,22 @@ If
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d67765e222 ">Field to Column Mapping</td>
+                                    <td class="entry" valign="top" width="30%" headers="d71263e287 ">Field to Column Mapping</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d67765e225 ">Use to define specific mappings between record fields and
+                                    <td class="entry" valign="top" width="70%" headers="d71263e290 ">Use to define specific mappings between record fields and
                                         Kudu columns. By default, the destination writes field data
                                         to columns with matching names.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d67765e222 ">Enable Upsert</td>
+                                    <td class="entry" valign="top" width="30%" headers="d71263e287 ">Default Operation 
+                                        <a class="xref" href="Kudu.html#concept_dvg_vvj_wx" title="To write to Kudu, you configure the destination to perform one of the following write operations: insert, update, delete, or upsert. You define the default operation for the destination. You can also define the operation in a record header attribute.">
+                                            <img class="image" id="task_c4x_tmh_4v__image_m6p_rfp_vv" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d67765e225 ">Enables upserts to the Kudu cluster. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d71263e290 ">Default write operation to perform if the
+                                        sdc.operation.type record header attribute is not set or
+                                        contains a value that is not supported. </td>
 
                                 </tr>
 
@@ -220,9 +282,9 @@ If
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d67765e311">Advanced Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d71263e383">Advanced Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d67765e314">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d71263e386">Description</th>
 
                                 </tr>
 
@@ -230,9 +292,9 @@ If
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d67765e311 ">External Consistency</td>
+                                    <td class="entry" valign="top" width="30%" headers="d71263e383 ">External Consistency</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d67765e314 ">External consistency mode used to write to Kudu:<ul class="ul" id="task_c4x_tmh_4v__ul_hrm_wsh_4v">
+                                    <td class="entry" valign="top" width="70%" headers="d71263e386 ">External consistency mode used to write to Kudu:<ul class="ul" id="task_c4x_tmh_4v__ul_hrm_wsh_4v">
                                             <li class="li">Client Propagated - Ensures that writes from a
                                                 single client are automatically externally
                                                 consistent. </li>
@@ -250,10 +312,31 @@ If
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d67765e311 ">Operation Timeout (ms)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d71263e383 ">Operation Timeout (ms)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d67765e314 ">Number of milliseconds the destination waits to allow an
+                                    <td class="entry" valign="top" width="70%" headers="d71263e386 ">Number of milliseconds the destination waits to allow an
                                         operation to complete.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d71263e383 ">Unsupported Operation Handling
+                                        <a class="xref" href="Kudu.html#concept_dvg_vvj_wx" title="To write to Kudu, you configure the destination to perform one of the following write operations: insert, update, delete, or upsert. You define the default operation for the destination. You can also define the operation in a record header attribute.">
+                                            <img class="image" id="task_c4x_tmh_4v__image_m9p_rfp_ov" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d71263e386 ">Action to take when the operation type defined in the
+                                        sdc.operation.type record header attribute is not
+                                            supported:<ul class="ul" id="task_c4x_tmh_4v__ul_sgk_pg3_1y">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Use Default Operation - Writes the record to the
+                                                destination system using the default operation.</li>
+
+                                        </ul>
+</td>
 
                                 </tr>
 
