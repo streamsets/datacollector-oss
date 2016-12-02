@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.DataFormat;
@@ -32,6 +33,7 @@ import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -403,6 +405,97 @@ public class TestSpoolDirSource {
       records = runner.getErrorRecords();
       Assert.assertEquals(1, records.size());
 
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testMultipleFilesSameTimeStamp() throws Exception {
+    File f = new File("target", UUID.randomUUID().toString());
+    f.mkdir();
+
+    SpoolDirConfigBean conf = new SpoolDirConfigBean();
+    conf.dataFormat = DataFormat.DELIMITED;
+    conf.useLastModified = FileOrdering.TIMESTAMP;
+    conf.spoolDir = f.getAbsolutePath();
+    conf.batchSize = 10;
+    conf.overrunLimit = 100;
+    conf.poolingTimeoutSecs = 1;
+    conf.filePattern = "*";
+    conf.maxSpoolFiles = 10;
+    conf.dataFormatConfig.compression = Compression.NONE;
+    conf.dataFormatConfig.filePatternInArchive = "*";
+    conf.dataFormatConfig.csvHeader = CsvHeader.WITH_HEADER;
+    conf.errorArchiveDir = null;
+    conf.postProcessing = PostProcessingOptions.NONE;
+    conf.retentionTimeMins = 10;
+    conf.allowLateDirectory = false;
+    conf.dataFormatConfig.textMaxLineLen = 10;
+    conf.dataFormatConfig.onParseError = OnParseError.ERROR;
+    conf.dataFormatConfig.maxStackTraceLines = 0;
+    long timestamp = System.currentTimeMillis() - 100000;
+
+    for (int i = 0; i < 8; i++) {
+      File current = new File(conf.spoolDir, Utils.format("file-{}.log", i));
+      try(FileOutputStream outputStream = new FileOutputStream(current)) {
+        IOUtils.writeLines(ImmutableList.of("A,B", Utils.format("a-{},b-{}", i, i), "a,b"), "\n", outputStream);
+      }
+      Assert.assertTrue(current.setLastModified(timestamp));
+    }
+
+    File current = new File(conf.spoolDir,"a.log");
+    try(FileOutputStream outputStream = new FileOutputStream(current)) {
+      IOUtils.writeLines(ImmutableList.of("A,B", "Gollum,Sauron", "Aragorn,Boromir"), "\n", outputStream);
+    }
+    Assert.assertTrue(current.setLastModified(System.currentTimeMillis()));
+
+    SpoolDirSource source = new SpoolDirSource(conf);
+    SourceRunner runner = new SourceRunner.Builder(SpoolDirSource.class, source)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+    String lastOffset = null;
+    try {
+      for (int i = 0; i < 8; i++) {
+        StageRunner.Output output = runner.runProduce(lastOffset, 10);
+        lastOffset = output.getNewOffset();
+        List<Record> records = output.getRecords().get("lane");
+        Assert.assertNotNull(records);
+        Assert.assertTrue(!records.isEmpty());
+        Assert.assertEquals(2, records.size());
+
+        Assert.assertEquals(Utils.format("file-{}.log", i), records.get(0).getHeader().getAttribute(HeaderAttributeConstants.FILE_NAME));
+        Assert.assertEquals("a-" + i, records.get(0).get("/A").getValueAsString());
+        Assert.assertEquals("b-" + i, records.get(0).get("/B").getValueAsString());
+
+        Assert.assertEquals("a", records.get(1).get("/A").getValueAsString());
+        Assert.assertEquals("b", records.get(1).get("/B").getValueAsString());
+
+        // And error record
+        records = runner.getErrorRecords();
+        Assert.assertEquals(0, records.size());
+      }
+      StageRunner.Output output = runner.runProduce(lastOffset, 10);
+      lastOffset = output.getNewOffset();
+      List<Record> records = output.getRecords().get("lane");
+      Assert.assertNotNull(records);
+      Assert.assertTrue(!records.isEmpty());
+      Assert.assertEquals(2, records.size());
+
+      Assert.assertEquals("a.log", records.get(0).getHeader().getAttribute(HeaderAttributeConstants.FILE_NAME));
+      Assert.assertEquals("Gollum", records.get(0).get("/A").getValueAsString());
+      Assert.assertEquals("Sauron", records.get(0).get("/B").getValueAsString());
+
+      Assert.assertEquals("Aragorn", records.get(1).get("/A").getValueAsString());
+      Assert.assertEquals("Boromir", records.get(1).get("/B").getValueAsString());
+
+      // And error record
+      records = runner.getErrorRecords();
+      Assert.assertEquals(0, records.size());
+
+      Assert.assertTrue(runner.runProduce(lastOffset, 10).getRecords().get("lane").isEmpty());
     } finally {
       runner.runDestroy();
     }
