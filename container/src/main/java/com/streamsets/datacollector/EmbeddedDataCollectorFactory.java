@@ -20,12 +20,12 @@
 
 package com.streamsets.datacollector;
 
+import com.streamsets.pipeline.api.ProtoSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.streamsets.datacollector.runner.BatchListener;
 import com.streamsets.datacollector.runner.Pipeline;
-import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.impl.Utils;
 
 
@@ -34,7 +34,7 @@ public class EmbeddedDataCollectorFactory {
 
   private EmbeddedDataCollectorFactory() {}
 
-  public static Source startPipeline(final Runnable postBatchRunnable) throws Exception {
+  public static ProtoSource startPipeline(final Runnable postBatchRunnable) throws Exception {
     EmbeddedDataCollector embeddedDataCollector = new EmbeddedDataCollector();
     embeddedDataCollector.init();
     embeddedDataCollector.startPipeline();

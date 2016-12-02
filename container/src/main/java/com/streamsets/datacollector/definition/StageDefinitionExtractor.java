@@ -30,6 +30,7 @@ import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.creation.StageConfigBean;
 import com.streamsets.pipeline.api.OffsetCommitTrigger;
+import com.streamsets.pipeline.api.ProtoSource;
 import com.streamsets.pipeline.api.StatsAggregatorStage;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ErrorStage;
@@ -37,7 +38,6 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Executor;
 import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Processor;
-import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageUpgrader;
@@ -335,7 +335,7 @@ public abstract class StageDefinitionExtractor {
 
   private StageType extractStageType(Class<? extends Stage> klass) {
     StageType type;
-    if (Source.class.isAssignableFrom(klass)) {
+    if (ProtoSource.class.isAssignableFrom(klass)) {
       type = StageType.SOURCE;
     } else if (Processor.class.isAssignableFrom(klass)) {
       type = StageType.PROCESSOR;

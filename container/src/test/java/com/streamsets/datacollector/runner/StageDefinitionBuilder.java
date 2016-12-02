@@ -28,7 +28,7 @@ import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Processor;
-import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.api.ProtoSource;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.Target;
@@ -188,7 +188,7 @@ public class StageDefinitionBuilder {
   }
 
   private static StageType autoDetectStageType(Class klass) {
-    if(Source.class.isAssignableFrom(klass)) {
+    if(ProtoSource.class.isAssignableFrom(klass)) {
       return StageType.SOURCE;
     }
     if(Processor.class.isAssignableFrom(klass)) {

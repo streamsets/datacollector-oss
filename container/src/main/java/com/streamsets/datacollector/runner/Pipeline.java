@@ -37,7 +37,7 @@ import com.streamsets.datacollector.validation.IssueCreator;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
-import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.api.ProtoSource;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -109,10 +109,10 @@ public class Pipeline {
     return shouldStopOnStageError;
   }
 
-  public Source getSource() {
+  public ProtoSource getSource() {
     for (Pipe pipe : pipes) {
-      if (pipe.getStage().getStage() instanceof Source) {
-        return (Source)pipe.getStage().getStage();
+      if (pipe.getStage().getStage() instanceof ProtoSource) {
+        return (ProtoSource)pipe.getStage().getStage();
       }
     }
     throw new NullPointerException("Cannot find pipeline source");

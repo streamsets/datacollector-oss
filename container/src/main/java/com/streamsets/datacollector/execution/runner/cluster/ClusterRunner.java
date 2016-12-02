@@ -72,8 +72,8 @@ import com.streamsets.datacollector.validation.ValidationError;
 import com.streamsets.dc.execution.manager.standalone.ResourceManager;
 import com.streamsets.dc.execution.manager.standalone.ThreadUsage;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.ProtoSource;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ClusterSource;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
@@ -637,7 +637,7 @@ public class ClusterRunner extends AbstractRunner {
     } finally {
       pipeline.destroy();
     }
-    Source source = p.getPipeline().getSource();
+    ProtoSource source = p.getPipeline().getSource();
     ClusterSource clusterSource;
     if (source instanceof ClusterSource) {
       clusterSource = (ClusterSource)source;
