@@ -21,16 +21,18 @@
 angular.module('commonUI.codemirrorDirectives')
   .directive('codemirrorEl', function($parse, $timeout) {
     'use strict';
+    var fnDefMapping = {};
+
     return {
       restrict: 'A',
       priority: 2, // higher than ui-codemirror which is 1.
       compile: function compile() {
         var cmPos = CodeMirror.Pos,
-          cmpPos = CodeMirror.cmpPos,
-          cls = "CodeMirror-EL-",
-          cachedArgHints = null,
-          activeArgHints = null,
-          activeAutoComplete = false;
+            cmpPos = CodeMirror.cmpPos,
+            cls = "CodeMirror-EL-",
+            cachedArgHints = null,
+            activeArgHints = null,
+            activeAutoComplete = false;
 
         if (angular.isUndefined(window.CodeMirror)) {
           throw new Error('codemirror-el needs CodeMirror to work.');
@@ -38,8 +40,8 @@ angular.module('commonUI.codemirrorDirectives')
 
         return function postLink(scope, iElement, iAttrs) {
           var fieldPaths = [],
-            dFieldPaths = [],
-            fieldPathsType = [];
+              dFieldPaths = [],
+              fieldPathsType = [];
 
           // Register our custom Codemirror hint plugin.
           window.CodeMirror.registerHelper('hint', 'dictionaryHint', function(editor, options, c) {
@@ -107,9 +109,11 @@ angular.module('commonUI.codemirrorDirectives')
                 }
               });
 
+              fnDefMapping = {};
 
               angular.forEach(dictionary.elFunctionDefinitions, function(elFunctionDefn) {
                 if(!curWord || elFunctionDefn.name.match(regex)) {
+                  fnDefMapping[elFunctionDefn.name] = elFunctionDefn.description;
                   completions.push({
                     text: elFunctionDefn.name + (elFunctionDefn.elFunctionArgumentDefinition.length ? '()' : '()'),
                     displayText: elFunctionDefn.name,
@@ -219,12 +223,29 @@ angular.module('commonUI.codemirrorDirectives')
             cm.on('change', function(instance, change) {
               if (change.origin !== 'complete' && change.origin !== 'setValue') {
                 instance.showHint({ hint: window.CodeMirror.hint.dictionaryHint, completeSingle: false });
+
+                angular.element('.CodeMirror-hints > .CodeMirror-EL-completion').on('mouseover', function(e) {
+                  angular.element('.CodeMirror-hint-active').removeClass('CodeMirror-hint-active');
+                  angular.element('.CodeMirror-EL-tooltip').remove();
+                  var hint = angular.element(e.target).addClass('CodeMirror-hint-active');
+                  var tip = makeTooltip(e.target.parentNode.getBoundingClientRect().right + window.pageXOffset,
+                      e.target.getBoundingClientRect().top + window.pageYOffset,
+                      fnDefMapping[hint.text()]);
+                  tip.className += " " + cls + "hint-doc";
+                });
               }
               $timeout(function() {});
             });
 
-            cm.on('keyHandled', function(instance, name, event) {
-              if(name === 'Ctrl-Space') {
+            cm.on('keydown', function(instance, e) {
+              if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                angular.element('.CodeMirror-hint-active').removeClass('CodeMirror-hint-active');
+                angular.element('.CodeMirror-EL-tooltip').remove();
+              }
+            });
+
+            cm.on('keyHandled', function(instance, name, e) {
+              if (name === 'Ctrl-Space') {
                 instance.showHint({
                   hint: window.CodeMirror.hint.dictionaryHint,
                   completeSingle: false,
@@ -237,7 +258,7 @@ angular.module('commonUI.codemirrorDirectives')
               updateArgHints(cm);
             });
 
-            cm.on("blur", function(){
+            cm.on("blur", function() {
               closeArgHints();
             });
 
