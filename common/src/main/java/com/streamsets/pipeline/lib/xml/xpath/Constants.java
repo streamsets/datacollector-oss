@@ -21,7 +21,8 @@
 package com.streamsets.pipeline.lib.xml.xpath;
 
 public abstract class Constants {
-  public static final String PATH_SEPARATOR="/";
+  public static final char PATH_SEPARATOR_CHAR = '/';
+  public static final String PATH_SEPARATOR=String.valueOf(PATH_SEPARATOR_CHAR);
   public static final String WILDCARD="*";
   public static final String ROOT_ELEMENT_PATH = Constants.WILDCARD+"[1]";
   public static final char NAMESPACE_PREFIX_SEPARATOR = ':';
@@ -34,4 +35,11 @@ public abstract class Constants {
   public static final String XPATH_NAMESPACE_CONTEXT_DESCRIPTION = "Namespace context to use if the delimiter" +
       " is an XPath expression.  This should map namespace prefixes to URIs.  Any namespace prefix that is used" +
       " in the record separator expression must be defined here.";
+
+  public static final String ERROR_EMPTY_EXPRESSION = "expression cannot be empty";
+  public static final String ERROR_INVALID_ELEMENT_NAME_PREFIX = "invalid element name: ";
+  public static final String ERROR_XPATH_MUST_START_WITH_SEP = "XPath expression must start with ";
+  public static final String ERROR_DESCENDENT_OR_SELF_NOT_SUPPORTED = "descendent-or-self (//) is not allowed";
+  public static final String ERROR_INVALID_PREDICATE_PREFIX = "invalid predicate: ";
+  public static final String ERROR_INVALID_ATTRIBUTE_PREFIX = "attribute name is not valid: ";
 }

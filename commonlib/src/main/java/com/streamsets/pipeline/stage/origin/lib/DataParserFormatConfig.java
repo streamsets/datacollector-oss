@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.origin.lib;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ListBeanModel;
@@ -1025,15 +1026,19 @@ public class DataParserFormatConfig implements DataFormatConfig {
       );
       valid = false;
     }
-    if (xmlRecordElement != null && !xmlRecordElement.isEmpty() && !XPathValidatorUtil.isValidXPath(xmlRecordElement)) {
-      issues.add(
-          context.createConfigIssue(DataFormatGroups.DATA_FORMAT.name(),
-              configPrefix + "xmlRecordElement",
-              DataFormatErrors.DATA_FORMAT_03,
-              xmlRecordElement
-          )
-      );
-      valid = false;
+    if (xmlRecordElement != null && !xmlRecordElement.isEmpty()) {
+      String invalidXPathError = XPathValidatorUtil.getXPathValidationError(xmlRecordElement);
+      if (!Strings.isNullOrEmpty(invalidXPathError)) {
+        issues.add(
+            context.createConfigIssue(DataFormatGroups.DATA_FORMAT.name(),
+                configPrefix + "xmlRecordElement",
+                DataFormatErrors.DATA_FORMAT_03,
+                xmlRecordElement,
+                invalidXPathError
+            )
+        );
+        valid = false;
+      }
     }
     return valid;
   }

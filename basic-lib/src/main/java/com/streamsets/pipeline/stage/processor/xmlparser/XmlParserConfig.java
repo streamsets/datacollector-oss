@@ -119,12 +119,14 @@ public class XmlParserConfig {
       issues.add(context.createConfigIssue("XML", "charset", DataFormatErrors.DATA_FORMAT_05, charset));
       valid = false;
     }
-    if (xmlRecordElement != null && !xmlRecordElement.isEmpty()) {
-      if (!XPathValidatorUtil.isValidXPath(xmlRecordElement)) {
+    if (StringUtils.isNotBlank(xmlRecordElement)) {
+      String invalidXPathError = XPathValidatorUtil.getXPathValidationError(xmlRecordElement);
+      if (StringUtils.isNotBlank(invalidXPathError)) {
         issues.add(context.createConfigIssue(Groups.XML.name(),
             "xmlRecordElement",
             DataFormatErrors.DATA_FORMAT_03,
-            xmlRecordElement
+            xmlRecordElement,
+            invalidXPathError
         ));
         valid = false;
       } else {

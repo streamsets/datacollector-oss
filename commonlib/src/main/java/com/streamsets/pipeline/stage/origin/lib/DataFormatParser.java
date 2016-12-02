@@ -131,26 +131,28 @@ public class DataFormatParser {
         if (dataFormatConfig.xmlMaxObjectLen < 1) {
           issues.add(
               context.createConfigIssue(
-                  DataFormat.XML.name(),
+                  DataFormatGroups.DATA_FORMAT.name(),
                   DATA_FORMAT_CONFIG_PREFIX + "maxXmlObjectLen",
                   ParserErrors.PARSER_04
               )
           );
         }
-        if (dataFormatConfig.xmlRecordElement != null && !dataFormatConfig.xmlRecordElement.isEmpty()) {
-          if (!XPathValidatorUtil.isValidXPath(dataFormatConfig.xmlRecordElement)) {
+        if (StringUtils.isNotBlank(dataFormatConfig.xmlRecordElement)) {
+          String invalidXPathError = XPathValidatorUtil.getXPathValidationError(dataFormatConfig.xmlRecordElement);
+          if (StringUtils.isNotBlank(invalidXPathError)) {
             issues.add(context.createConfigIssue(
-                DataFormat.XML.name(),
+                DataFormatGroups.DATA_FORMAT.name(),
                 DATA_FORMAT_CONFIG_PREFIX + "xmlRecordElement",
                 ParserErrors.PARSER_02,
-                dataFormatConfig.xmlRecordElement
+                dataFormatConfig.xmlRecordElement,
+                invalidXPathError
             ));
           } else {
             final Set<String> nsPrefixes = XPathValidatorUtil.getNamespacePrefixes(dataFormatConfig.xmlRecordElement);
             nsPrefixes.removeAll(dataFormatConfig.xPathNamespaceContext.keySet());
             if (!nsPrefixes.isEmpty()) {
               issues.add(context.createConfigIssue(
-                  DataFormat.XML.name(),
+                  DataFormatGroups.DATA_FORMAT.name(),
                   DATA_FORMAT_CONFIG_PREFIX + "xPathNamespaceContext",
                   ParserErrors.PARSER_09,
                   StringUtils.join(nsPrefixes, ", ")

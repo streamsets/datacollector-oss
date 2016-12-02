@@ -27,7 +27,7 @@ import com.streamsets.pipeline.config.AvroSchemaLookupMode;
 public enum DataFormatErrors implements ErrorCode {
   // Configuration errors
   DATA_FORMAT_01("Max data object length cannot be less than 1"),
-  DATA_FORMAT_03("Invalid XML element name or XPath expression '{}'"),
+  DATA_FORMAT_03("Invalid XML element name or XPath expression '{}': {}"),
   DATA_FORMAT_04("Unsupported data format '{}'"),
   DATA_FORMAT_05("Unsupported charset '{}'"),
   DATA_FORMAT_06("Cannot create the parser factory: {}"),

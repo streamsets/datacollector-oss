@@ -31,32 +31,52 @@ public abstract class XPathValidatorUtil {
   private static final String VALID_PREDICATE = "\\[(?:(?:[0-9]+)|(?:@([^=]+)='[^']*'))\\]";
   private static final java.util.regex.Pattern VALID_PREDICATE_PATTERN = Pattern.compile(VALID_PREDICATE);
 
-  public static boolean isValidXPath(String expression) {
+  public static String getXPathValidationError(String expression) {
+    if (Strings.isNullOrEmpty(expression)) {
+      return Constants.ERROR_EMPTY_EXPRESSION;
+    } else if (expression.charAt(0) != Constants.PATH_SEPARATOR_CHAR) {
+      if (expression.indexOf(Constants.PATH_SEPARATOR_CHAR) < 0) {
+        // "legacy" expression
+        if (XMLChar.isValidName(expression)) {
+          return null;
+        } else {
+          return Constants.ERROR_INVALID_ELEMENT_NAME_PREFIX + expression;
+        }
+      } else {
+        // expression that does not start with separator but is otherwise an XPath - not allowed
+        return Constants.ERROR_XPATH_MUST_START_WITH_SEP + Constants.PATH_SEPARATOR_CHAR;
+      }
+    }
+
+    boolean firstEmptyStringSeen = false;
     for (String str : expression.split(Constants.PATH_SEPARATOR)) {
       if (Strings.isNullOrEmpty(str)) {
+        if (firstEmptyStringSeen) {
+          return Constants.ERROR_DESCENDENT_OR_SELF_NOT_SUPPORTED;
+        }
+        firstEmptyStringSeen = true;
         continue;
       }
       final int predicateStartInd = str.indexOf('[');
       String elementName = str;
       if (predicateStartInd > 0) {
-
         elementName = str.substring(0, predicateStartInd);
         final String predicate = str.substring(predicateStartInd);
         final Matcher matcher = VALID_PREDICATE_PATTERN.matcher(predicate);
         if (!matcher.matches()) {
-          return false;
+          return Constants.ERROR_INVALID_PREDICATE_PREFIX + predicate;
         } else {
           final String attributeName = matcher.group(1);
           if (!Strings.isNullOrEmpty(attributeName) && !XMLChar.isValidName(attributeName)) {
-            return false;
+            return Constants.ERROR_INVALID_ATTRIBUTE_PREFIX + attributeName;
           }
         }
       }
       if (!Constants.WILDCARD.equals(elementName) && !XMLChar.isValidName(elementName)) {
-        return false;
+        return Constants.ERROR_INVALID_ELEMENT_NAME_PREFIX + elementName;
       }
     }
-    return true;
+    return null;
   }
 
   public static Set<String> getNamespacePrefixes(String expression) {
