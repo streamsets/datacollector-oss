@@ -19,37 +19,13 @@
  */
 package com.streamsets.pipeline.stage.processor.spark;
 
-import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.lib.el.VaultEL;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@GenerateResourceBundle
 public class SparkProcessorConfigBean {
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.NUMBER,
-      defaultValue = "4",
-      min = 1,
-      label = "Parallelism",
-      description = "Number of partitions to create per batch of records",
-      group = "SPARK",
-      displayPosition = 10
-  )
-  public int threadCount;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "SDC Spark App",
-      label = "Application Name",
-      group = "SPARK",
-      displayPosition = 20
-  )
-  public String appName;
 
   @ConfigDef(
       required = true,

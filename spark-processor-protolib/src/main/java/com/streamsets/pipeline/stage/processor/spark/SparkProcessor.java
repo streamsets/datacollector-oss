@@ -32,6 +32,7 @@ import com.streamsets.pipeline.spark.api.SparkTransformer;
 import com.streamsets.pipeline.spark.api.TransformResult;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.processor.spark.util.RecordCloner;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
@@ -61,14 +62,14 @@ public class SparkProcessor extends SingleLaneProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(SparkProcessor.class);
   public static final String TRANSFORMER_CLASS = "sparkProcessorConfigBean.transformerClass";
 
-  private final SparkProcessorConfigBean configBean;
+  private final StandaloneSparkProcessorConfigBean configBean;
   private transient SparkTransformer transformer; // NOSONAR
   private transient JavaSparkContext jsc; // NOSONAR
 
   private ErrorRecordHandler errorRecordHandler = null;
   private boolean transformerInited = false;
 
-  public SparkProcessor(SparkProcessorConfigBean configBean) {
+  public SparkProcessor(StandaloneSparkProcessorConfigBean configBean) {
     this.configBean = configBean;
   }
 
@@ -76,13 +77,13 @@ public class SparkProcessor extends SingleLaneProcessor {
   public List<ConfigIssue> init() {
     // We keep moving forward and adding more issues, so we can return as many validation issues in one shot
     List<ConfigIssue> issues = super.init();
-    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
-    final Class<? extends SparkTransformer> transformerClazz = getTransformerClass(issues);
-    transformer = createTransformer(issues, transformerClazz);
     final File[] jars = getJarFiles(issues);
     if (issues.isEmpty()) {
       jsc = startSparkContext(jars);
     }
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
+    final Class<? extends SparkTransformer> transformerClazz = getTransformerClass(issues);
+    transformer = createTransformer(issues, transformerClazz);
     initTransformer(issues);
     if (!issues.isEmpty() && jsc != null) {
       jsc.stop();
@@ -218,19 +219,12 @@ public class SparkProcessor extends SingleLaneProcessor {
     }
   }
 
-  /**
-   * Kryo loads the RecordImpl in Spark's classloader. So this one clones it to this stage's classloader.
-   * @param record
-   * @return
-   */
-  private Record clone(Record record) {
+  @VisibleForTesting
+  Record clone(Record record) {
     // Kryo loads the RecordImpl class during deserialization in a Spark's classloader.
     // So directly using the deserialized RecordImpl gives a ClassCastException (RecordImpl -> RecordImpl).
     // So create a new record and set its root field to be the deserialized one's root field.
-    Record r = getContext().createRecord(record);
-    r.set(record.get());
-    r.getHeader().setAllAttributes(record.getHeader().getAllAttributes());
-    return r;
+    return RecordCloner.clone(record, getContext());
   }
 
   @Override

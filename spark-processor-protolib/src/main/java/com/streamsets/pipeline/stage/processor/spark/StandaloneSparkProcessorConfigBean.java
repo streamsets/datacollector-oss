@@ -19,31 +19,35 @@
  */
 package com.streamsets.pipeline.stage.processor.spark;
 
-import com.streamsets.pipeline.api.ConfigDefBean;
-import com.streamsets.pipeline.api.ConfigGroups;
-import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Processor;
-import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.configurablestage.DProcessor;
 
-@StageDef(
-    version = 1,
-    label = "Spark Evaluator",
-    description = "Process Records in Spark",
-    icon = "spark-logo-hd.png",
-    execution = ExecutionMode.STANDALONE,
-    onlineHelpRefUrl = "index.html#Processors/Spark.html#task_g1p_gqn_zx",
-    privateClassLoader = true
-)
+// Inheritance instead of composition because we already released a version with the these
+// config defs. So to avoid having an upgrader change these, we will just inherit which should
+// not require an upgrader.
 @GenerateResourceBundle
-@ConfigGroups(Groups.class)
-public class StandaloneSparkDProcessor extends DProcessor {
+public class StandaloneSparkProcessorConfigBean extends SparkProcessorConfigBean {
 
-  @ConfigDefBean
-  public StandaloneSparkProcessorConfigBean sparkProcessorConfigBean = new StandaloneSparkProcessorConfigBean();
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "4",
+      min = 1,
+      label = "Parallelism",
+      description = "Number of partitions to create per batch of records",
+      group = "SPARK",
+      displayPosition = 10
+  )
+  public int threadCount;
 
-  protected Processor createProcessor() {
-    return new SparkProcessor(sparkProcessorConfigBean);
-  }
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "SDC Spark App",
+      label = "Application Name",
+      group = "SPARK",
+      displayPosition = 20
+  )
+  public String appName;
+
 }

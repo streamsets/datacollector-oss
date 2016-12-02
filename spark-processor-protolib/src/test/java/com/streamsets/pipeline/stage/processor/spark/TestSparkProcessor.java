@@ -49,8 +49,8 @@ public class TestSparkProcessor {
   private static final String INCREMENT = "1000";
   private final Class<? extends DProcessor> DProcessorClass = StandaloneSparkDProcessor.class;
 
-  private SparkProcessorConfigBean getConfigBean() {
-    SparkProcessorConfigBean configBean = new SparkProcessorConfigBean();
+  private StandaloneSparkProcessorConfigBean getConfigBean() {
+    StandaloneSparkProcessorConfigBean configBean = new StandaloneSparkProcessorConfigBean();
     configBean.preprocessMethodArgs = ImmutableList.of(INCREMENT, INSERTED_CONSTANT);
     configBean.appName = "Test App";
     configBean.threadCount = 1;
@@ -97,7 +97,7 @@ public class TestSparkProcessor {
   public void testError() throws Exception {
     final OnRecordError onRecordError = OnRecordError.TO_ERROR;
 
-    SparkProcessorConfigBean configBean = getConfigBean();
+    StandaloneSparkProcessorConfigBean configBean = getConfigBean();
     configBean.transformerClass = OnlyErrorTransformer.class.getCanonicalName();
 
     SparkProcessor processor = new SparkProcessor(configBean);
@@ -133,7 +133,7 @@ public class TestSparkProcessor {
   public void testSuccessError() throws Exception {
     final OnRecordError onRecordError = OnRecordError.TO_ERROR;
 
-    SparkProcessorConfigBean configBean = getConfigBean();
+    StandaloneSparkProcessorConfigBean configBean = getConfigBean();
     configBean.transformerClass = HalfHalfTransformer.class.getCanonicalName();
 
     SparkProcessor processor = new SparkProcessor(configBean);
@@ -190,7 +190,7 @@ public class TestSparkProcessor {
   public void testNonExistentTransformer() throws Exception {
     final OnRecordError onRecordError = OnRecordError.TO_ERROR;
 
-    SparkProcessorConfigBean configBean = getConfigBean();
+    StandaloneSparkProcessorConfigBean configBean = getConfigBean();
     configBean.transformerClass = "Non-Existent Class";
 
     SparkProcessor processor = new SparkProcessor(configBean);
@@ -212,7 +212,7 @@ public class TestSparkProcessor {
   public void testInvalidTransformer() throws Exception {
     final OnRecordError onRecordError = OnRecordError.TO_ERROR;
 
-    SparkProcessorConfigBean configBean = getConfigBean();
+    StandaloneSparkProcessorConfigBean configBean = getConfigBean();
     configBean.transformerClass = ClassNotImplementingSparkTransformer.class.getCanonicalName();
 
     SparkProcessor processor = new SparkProcessor(configBean);
@@ -233,7 +233,7 @@ public class TestSparkProcessor {
   public void testTransformerInstantiationFail() throws Exception {
     final OnRecordError onRecordError = OnRecordError.TO_ERROR;
 
-    SparkProcessorConfigBean configBean = getConfigBean();
+    StandaloneSparkProcessorConfigBean configBean = getConfigBean();
     configBean.transformerClass = ConstructorThrowingSparkTransformer.class.getCanonicalName();
 
     SparkProcessor processor = new SparkProcessor(configBean);
@@ -254,7 +254,7 @@ public class TestSparkProcessor {
   public void testTransformerInitializationFail() throws Exception {
     final OnRecordError onRecordError = OnRecordError.TO_ERROR;
 
-    SparkProcessorConfigBean configBean = getConfigBean();
+    StandaloneSparkProcessorConfigBean configBean = getConfigBean();
     configBean.transformerClass = InitThrowingSparkTransformer.class.getCanonicalName();
 
     SparkProcessor processor = new SparkProcessor(configBean);
@@ -276,7 +276,7 @@ public class TestSparkProcessor {
   public void testMethodCalls() throws Exception {
     final OnRecordError onRecordError = OnRecordError.TO_ERROR;
 
-    SparkProcessorConfigBean configBean = getConfigBean();
+    StandaloneSparkProcessorConfigBean configBean = getConfigBean();
     configBean.transformerClass = MethodCallCountingTransformer.class.getCanonicalName();
 
     SparkProcessor processor = new SparkProcessor(configBean);
