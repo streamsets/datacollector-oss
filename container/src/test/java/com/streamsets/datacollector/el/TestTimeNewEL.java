@@ -89,6 +89,17 @@ public class TestTimeNewEL {
   }
 
   @Test
+  public void testDateTimeToMilliSeconds() throws Exception {
+    Record.Header header = Mockito.mock(Record.Header.class);
+    Record record = Mockito.mock(Record.class);
+    Mockito.when(record.getHeader()).thenReturn(header);
+    Long val = System.currentTimeMillis();
+    Mockito.when(record.get(Mockito.eq("/date"))).thenReturn(Field.create(Field.Type.DATETIME, new Date(val)));
+    RecordEL.setRecordInContext(variables, record);
+    Assert.assertEquals(val, eval.eval(variables, "${time:dateTimeToMilliseconds(record:value('/date'))}", Long.class));
+  }
+
+  @Test
   public void testExtractStringFromDate() throws Exception {
 
     Record.Header header = Mockito.mock(Record.Header.class);

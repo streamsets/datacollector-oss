@@ -87,6 +87,16 @@ public class TimeNowEL {
   }
 
   @ElFunction(prefix = TIME_CONTEXT_VAR,
+      name = "dateTimeToMilliseconds",
+      description = "Convert DateTime to epoch in milliseconds")
+  public static long dateTimeToMilliseconds(@ElParam("datetime") Date in) {
+    if (in == null) {
+      return 0;
+    }
+    return in.getTime();
+  }
+
+  @ElFunction(prefix = TIME_CONTEXT_VAR,
       name = "extractStringFromDate",
       description = "Format a date into a string, based on an output format specification")
   public static String millisecondsToStringDate(@ElParam("datetime") Date in, @ElParam("string") String outputFormat) {
@@ -113,5 +123,4 @@ public class TimeNowEL {
     String value = str.replaceAll("[^0-9]","");
     return Long.parseLong(value);
   }
-
 }
