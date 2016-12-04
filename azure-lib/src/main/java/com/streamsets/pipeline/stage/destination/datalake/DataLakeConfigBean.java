@@ -138,6 +138,17 @@ public class DataLakeConfigBean {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Validate Directory Permissions",
+      description = "When checked, ADLS destination will create test file in configured target directory to verify access privileges.",
+      displayPosition = 140,
+      group = "OUTPUT"
+  )
+  public boolean checkPermission;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "JSON",
       label = "Data Format",
@@ -159,6 +170,5 @@ public class DataLakeConfigBean {
         ADLS_DATA_FORMAT_CONFIG_PREFIX,
         issues
     );
-
   }
 }

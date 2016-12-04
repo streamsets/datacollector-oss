@@ -45,14 +45,4 @@ public class TestDataLakeTarget {
     assertEquals(1, issues.size());
 
   }
-
-  @Test
-  public void testTargetDirectory() throws Exception {
-    final String directoryPath = "/tmp/out/2016-11-29";
-    final String prefix = "sdc-id";
-
-    DataLakeTarget target = new DataLakeTarget(new DataLakeConfigBean());
-    final String filePath = target.getFilePath(directoryPath, prefix);
-    Assert.assertTrue(filePath.startsWith(directoryPath + "/" + prefix));
-  }
 }

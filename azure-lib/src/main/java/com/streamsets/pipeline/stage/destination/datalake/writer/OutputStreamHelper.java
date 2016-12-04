@@ -18,34 +18,19 @@
  * limitations under the License.
  */
 
-package com.streamsets.pipeline.stage.destination.datalake;
+package com.streamsets.pipeline.stage.destination.datalake.writer;
 
-import com.streamsets.pipeline.api.ErrorCode;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.microsoft.azure.datalake.store.ADLFileOutputStream;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.el.ELEvalException;
 
-@GenerateResourceBundle
-public enum Errors implements ErrorCode {
-  ADLS_00("Invalid directory template expression: '{}'"),
-  ADLS_01("Invalid time basis expression: '{}'"),
-  ADLS_02("Failed to connect to Azure Data Lake Store: '{}'"),
-  ADLS_03("Failed to write to Azure Data Lake Store: '{}'"),
-  ADLS_04("Failed to close stream: '{}'"),
-  ADLS_05("The path '{}' already exists."),
-  ;
-  private final String msg;
+import java.io.IOException;
+import java.util.Date;
 
-  Errors(String msg) {
-    this.msg = msg;
-  }
-
-  @Override
-  public String getCode() {
-    return name();
-  }
-
-  @Override
-  public String getMessage() {
-    return msg;
-  }
-
+interface OutputStreamHelper {
+  ADLFileOutputStream getStream(String filePath)
+      throws StageException, IOException;
+  String getFilePath(String dirPath, Record record, Date recordTime) throws ELEvalException;
+  void clearStatus();
 }

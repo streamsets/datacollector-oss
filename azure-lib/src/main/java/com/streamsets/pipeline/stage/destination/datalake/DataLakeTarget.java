@@ -20,10 +20,8 @@
 
 package com.streamsets.pipeline.stage.destination.datalake;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Multimap;
+import com.microsoft.azure.datalake.store.ADLException;
 import com.microsoft.azure.datalake.store.ADLStoreClient;
-import com.microsoft.azure.datalake.store.IfExists;
 import com.microsoft.azure.datalake.store.oauth2.AzureADAuthenticator;
 import com.microsoft.azure.datalake.store.oauth2.AzureADToken;
 import com.streamsets.pipeline.api.Batch;
@@ -32,19 +30,20 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.ELUtils;
+import com.streamsets.pipeline.lib.el.FakeRecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
-import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.destination.datalake.writer.RecordWriter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -56,14 +55,13 @@ public class DataLakeTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(DataLakeTarget.class);
   private final DataLakeConfigBean conf;
   private static final String EL_PREFIX = "${";
-  private ByteArrayOutputStream baos;
   private ADLStoreClient client;
   private ELEval dirPathTemplateEval;
   private ELVars dirPathTemplateVars;
   private ELEval timeDriverEval;
   private ELVars timeDriverVars;
   private Calendar calendar;
-  private String filePath;
+  private RecordWriter writer;
 
   private ErrorRecordHandler errorRecordHandler;
 
@@ -77,7 +75,6 @@ public class DataLakeTarget extends BaseTarget {
 
     conf.init(getContext(), issues);
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
-    baos = new ByteArrayOutputStream();
 
     dirPathTemplateEval = getContext().createELEval("dirPathTemplate");
     dirPathTemplateVars = getContext().createELVars();
@@ -125,14 +122,43 @@ public class DataLakeTarget extends BaseTarget {
       // connect to ADLS
       try {
         client = createClient(conf.authTokenEndpoint, conf.clientId, conf.clientKey, conf.accountFQDN);
-      } catch (IOException ex) {
+
+        if (conf.checkPermission) {
+          validatePermission();
+        }
+      } catch (ELEvalException ex0) {
+        issues.add(getContext().createConfigIssue(
+            Groups.DATALAKE.name(),
+            DataLakeConfigBean.ADLS_CONFIG_BEAN_PREFIX + "dirPathTemplate",
+            Errors.ADLS_00,
+            ex0.toString()
+        ));
+      } catch (IOException ex1) {
+        String errorMessage = ex1.toString();
+        if (ex1 instanceof ADLException) {
+          errorMessage = ((ADLException) ex1).remoteExceptionMessage;
+        }
         issues.add(getContext().createConfigIssue(
             Groups.DATALAKE.name(),
             DataLakeConfigBean.ADLS_CONFIG_BEAN_PREFIX + "clientId",
             Errors.ADLS_02,
-            ex.toString()
+            errorMessage
         ));
       }
+    }
+
+    if (issues.isEmpty()) {
+      writer = new RecordWriter(
+          client,
+          conf.dataFormat,
+          conf.dataFormatConfig,
+          conf.uniquePrefix,
+          conf.dataFormatConfig.fileNameEL,
+          dirPathTemplateEval,
+          dirPathTemplateVars,
+          conf.timeZoneID,
+          conf.dataFormatConfig.wholeFileExistsAction
+      );
     }
 
     return issues;
@@ -148,73 +174,74 @@ public class DataLakeTarget extends BaseTarget {
   @Override
   public void destroy() {
     super.destroy();
+    try {
+      if(writer != null) {
+        writer.close();
+      }
+    } catch (IOException ex) {
+      LOG.error(Errors.ADLS_04.getMessage(), ex.toString(), ex);
+    }
   }
 
   @Override
   public void write(Batch batch) throws StageException {
-    Multimap<String, Record> partitions = ELUtils.partitionBatchByExpression(
-        dirPathTemplateEval,
-        dirPathTemplateVars,
-        conf.dirPathTemplate,
-        timeDriverEval,
-        timeDriverVars,
-        conf.timeDriver,
-        calendar,
-        batch
-    );
-
-    OutputStream stream = null;
     Record record = null;
-    DataGenerator generator = null;
+    Iterator<Record> recordIterator = batch.getRecords();
 
-    for (String key : partitions.keySet()) {
-      Iterator<Record> iterator = partitions.get(key).iterator();
-      // for uniqueness of the file name
-      filePath = getFilePath(key, conf.uniquePrefix);
-
-      try {
-        if (!client.checkExists(filePath)) {
-          stream = client.createFile(filePath, IfExists.FAIL);
-        } else {
-          stream = client.getAppendStream(filePath);
-        }
-
-        while (iterator.hasNext()) {
-          record = iterator.next();
-          baos.reset();
-          generator = conf.dataFormatConfig.getDataGeneratorFactory().getGenerator(baos);
-          generator.write(record);
-          generator.close();
-          stream.write(baos.toByteArray());
-        }
-      } catch (IOException ex) {
-        if(record == null) {
-          // possible permission error to the directory or connection issues, then throw stage exception
-          LOG.error(Errors.ADLS_02.getMessage(), ex.toString(), ex);
-          throw new StageException(Errors.ADLS_02, ex, ex);
-        } else {
-          LOG.error(Errors.ADLS_03.getMessage(), ex.toString(), ex);
-          errorRecordHandler.onError(new OnRecordErrorException(record, Errors.ADLS_03, ex.toString(), ex));
-        }
-      } finally {
+    try {
+      while (recordIterator.hasNext()) {
+        record = recordIterator.next();
         try {
-          if (generator != null) {
-            generator.close();
+          Date recordTime = writer.getRecordTime(timeDriverEval, timeDriverVars, conf.timeDriver, record);
+          String filePath = writer.getFilePath(
+              conf.dirPathTemplate,
+              record,
+              recordTime
+          );
+          writer.write(filePath, record);
+        } catch (ELEvalException ex0) {
+          LOG.error(Errors.ADLS_00.getMessage(), ex0.toString(), ex0);
+          errorRecordHandler.onError(new OnRecordErrorException(
+              record,
+              Errors.ADLS_00,
+              ex0.toString(),
+              ex0
+          ));
+        } catch (IOException ex1) {
+          String errorMessage = ex1.toString();
+          if (ex1 instanceof ADLException) {
+            errorMessage = ((ADLException) ex1).remoteExceptionMessage;
           }
-
-          if (stream != null) {
-            stream.close();
+          if (record == null) {
+            // possible permission error to the directory or connection issues, then throw stage exception
+            LOG.error(Errors.ADLS_02.getMessage(), errorMessage, ex1);
+            throw new StageException(Errors.ADLS_02, errorMessage, ex1);
+          } else {
+            LOG.error(Errors.ADLS_03.getMessage(), errorMessage, ex1);
+            errorRecordHandler.onError(new OnRecordErrorException(record, Errors.ADLS_03, errorMessage, ex1));
           }
-        } catch (IOException ex2) {
-          //no-op
-          LOG.error("fail to close stream or generator: {}. reason: {}", ex2.toString(), ex2);
         }
+      }
+    } finally {
+      try {
+        writer.close();
+      } catch (IOException ex) {
+        //no-op
+        LOG.error(Errors.ADLS_04.getMessage(), ex.toString(), ex);
       }
     }
   }
 
-  @VisibleForTesting
-  String getFilePath(String directoryPath, String uniquePrefix) {
-    return directoryPath + "/" + uniquePrefix + "-" + UUID.randomUUID();
+  private void validatePermission() throws ELEvalException, IOException {
+    ELVars vars = getContext().createELVars();
+    ELEval elEval = getContext().createELEval("dirPathTemplate", FakeRecordEL.class);
+    TimeEL.setCalendarInContext(vars, calendar);
+    String dirPath = elEval.eval(vars, conf.dirPathTemplate, String.class);
+    String filePath = dirPath + "/" + UUID.randomUUID();
+
+    if(client.checkExists(filePath)) {
+      client.createFile(filePath, null, "rwx", true);
+      client.delete(filePath);
+    }
   }
 }
