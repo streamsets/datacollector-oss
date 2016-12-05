@@ -30,6 +30,7 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.parser.shaded.com.google.code.regexp.Pattern;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
 import org.apache.hadoop.hbase.TableName;
@@ -57,6 +58,8 @@ public class BigtableTarget extends BaseTarget {
   private static final String GOOGLE_CREDENTIALS = "GOOGLE_APPLICATION_CREDENTIALS";
   private static final String REGEX = "[_a-zA-Z0-9][-_.a-zA-Z0-9]*";
   private static final String CONFIG = "CONFIG";
+  private static final String COLUMN_FAMILY = "Column Family";
+  private static final String FIELD_PATH = "Field Path";
   private static final Pattern fieldNameRegex = Pattern.compile(REGEX);
 
   private BigtableConfigBean conf;
@@ -90,26 +93,26 @@ public class BigtableTarget extends BaseTarget {
 
       } else {
         if (conf.columnFamily.isEmpty()) {
-          issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(), null, Errors.BIGTABLE_06, fld.column));
+          issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(), COLUMN_FAMILY, Errors.BIGTABLE_06, fld.column));
         } else {
           destinationNames.put(fld.column, new ColumnAndQualifier(conf.columnFamily, qual));
         }
       }
     } else {
-      issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(), null, Errors.BIGTABLE_16, qual));
+      issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(), COLUMN_FAMILY, Errors.BIGTABLE_16, qual));
     }
   }
 
   private void verify1Part(String qual, List<ConfigIssue> issues) {
     // qualifier only...
     if (conf.columnFamily.isEmpty()) {
-      issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(), null, Errors.BIGTABLE_06, qual));
+      issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(), FIELD_PATH, Errors.BIGTABLE_06, qual));
     } else {
       if (fieldNameRegex.matcher(qual).matches()) {
         destinationNames.put(qual, new ColumnAndQualifier(conf.columnFamily, qual));
 
       } else {
-        issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(), null, Errors.BIGTABLE_16, qual));
+        issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(), FIELD_PATH, Errors.BIGTABLE_16, qual));
       }
     }
 
@@ -118,6 +121,11 @@ public class BigtableTarget extends BaseTarget {
   private void verifyColumnFamilyAndQualifiers(List<ConfigIssue> issues) {
 
     // pre-process and verify destination column mappings.
+    if (conf.fieldColumnMapping.isEmpty()) {
+      issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(), FIELD_PATH, Errors.BIGTABLE_24));
+      return;
+    }
+
     for (BigtableFieldMapping f : conf.fieldColumnMapping) {
       String[] parts = f.column.split(":");
       if (parts.length == 2) {
@@ -127,7 +135,7 @@ public class BigtableTarget extends BaseTarget {
         verify1Part(parts[0], issues);
 
       } else {
-        issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(), null, Errors.BIGTABLE_16, f.column));
+        issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(), FIELD_PATH, Errors.BIGTABLE_16, f.column));
       }
     }
 
@@ -244,7 +252,7 @@ public class BigtableTarget extends BaseTarget {
       for (BigtableRowKeyMapping rowKeyMap : conf.rowKeyColumnMapping) {
         if ("".equals(rowKeyMap.rowKeyComponent)) {
           issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(),
-              CONFIG,
+              "Row Key",
               Errors.BIGTABLE_09,
               rowKeyMap.rowKeyComponent
           ));
@@ -253,7 +261,7 @@ public class BigtableTarget extends BaseTarget {
     } else {
       // single column row key.
       if (conf.singleColumnRowKey == null) {
-        issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(), CONFIG, Errors.BIGTABLE_11, ""));
+        issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(), "Row Key", Errors.BIGTABLE_11, ""));
       }
     }
   }
@@ -275,7 +283,7 @@ public class BigtableTarget extends BaseTarget {
 
 
     if(conf.timeBasis == TimeBasis.FROM_RECORD && "".equals(conf.timeStampField)) {
-        issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(), null, Errors.BIGTABLE_03));
+        issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(), "Time Basis", Errors.BIGTABLE_03));
     }
 
     if (!issues.isEmpty()) {
@@ -301,7 +309,7 @@ public class BigtableTarget extends BaseTarget {
     } catch (IOException ex) {
       LOG.info(Errors.BIGTABLE_17.getMessage(), ex.toString(), ex);
       issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(),
-          null,
+          "Table Name",
           Errors.BIGTABLE_17,
           ex.toString()
       ));
@@ -321,12 +329,12 @@ public class BigtableTarget extends BaseTarget {
             createColumnFamily(admin, family, issues);
           } else {
             LOG.info(Errors.BIGTABLE_04.getMessage(), family);
-            issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(), null, Errors.BIGTABLE_04, family));
+            issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(), COLUMN_FAMILY, Errors.BIGTABLE_04, family));
           }
         }
       } catch (IOException ex) {
         LOG.info(Errors.BIGTABLE_05.getMessage(), conf.tableName, ex.toString(), ex);
-        issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(), null, Errors.BIGTABLE_05, ex.toString()));
+        issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(), COLUMN_FAMILY, Errors.BIGTABLE_05, ex.toString()));
       }
     }
     return issues;
@@ -338,7 +346,7 @@ public class BigtableTarget extends BaseTarget {
     } catch (Exception ex) {
       LOG.info(Errors.BIGTABLE_17.getMessage(), ex.toString(), ex);
       issues.add(getContext().createConfigIssue(Groups.BIGTABLE.name(),
-          null,
+          COLUMN_FAMILY,
           Errors.BIGTABLE_17,
           ex.toString()
       ));
@@ -482,31 +490,60 @@ public class BigtableTarget extends BaseTarget {
         }
       }
 
+      /* SDC-4628.  if "Ignore Missing Data Values" is enabled, we need to determine
+      if any columns will be inserted for this record.
+
+      if no data from any column will be inserted, this record probably should to go
+      the On Record Error dest, since there will be no trace of this Row Key in
+      Bigtable - at least one field has to be inserted so there is a record of
+      this Row Key.
+       */
+      Map<String, Byte[]> values = new HashMap<>();
+
+      int nullFields = 0;
+      int cantConvert = 0;
+      for (BigtableFieldMapping f : conf.fieldColumnMapping) {
+        Field tempField = rec.get(f.source);
+        if (tempField == null) {
+          nullFields++;
+
+        } else {
+          // field exists - check if it's convertible.
+          try {
+            values.put(f.source, ArrayUtils.toObject(convertValue(f, tempField, rec)));
+          } catch (OnRecordErrorException ex) {
+            cantConvert++;
+          }
+        }
+      }
+
+      // any conversion failures go to record error.
+      if (cantConvert > 0) {
+        errorRecordHandler.onError(new OnRecordErrorException(rec, Errors.BIGTABLE_23));
+        continue;
+      }
+
+      if (!conf.ignoreMissingFields) {
+        if (nullFields > 0) {   // missing fields, not ignoring them - record goes to error.
+          errorRecordHandler.onError(new OnRecordErrorException(rec, Errors.BIGTABLE_23));
+          continue;
+        }
+      } else {
+        // null field count matches field path count.  all columns are null.
+        if (nullFields == conf.fieldColumnMapping.size()) {
+          errorRecordHandler.onError(new OnRecordErrorException(rec, Errors.BIGTABLE_23));
+          continue;   // next record.
+        }
+      }
+
       Put put = new Put(rowKey, timeStamp);
 
       for (BigtableFieldMapping f : conf.fieldColumnMapping) {
-        Field field = rec.get(f.source); // is there a field with this name in the record...
-        if (field != null) {
-
-          byte [] value;
-          try {
-            value = convertValue(f, field, rec);
-          } catch(OnRecordErrorException ex) {
-            errorRecordHandler.onError(ex);
-            continue;
-          }
-
-          theList.add(put.addColumn(destinationNames.get(f.column).columnFamily,
-              destinationNames.get(f.column).qualifier,
-              timeStamp,
-              value
-          ));
-
-        } else {
-          if(!conf.ignoreMissingFields) {
-            errorRecordHandler.onError(new OnRecordErrorException(rec, Errors.BIGTABLE_10, f.source));
-          }
-        }
+        theList.add(put.addColumn(destinationNames.get(f.column).columnFamily,
+            destinationNames.get(f.column).qualifier,
+            timeStamp,
+            ArrayUtils.toPrimitive(values.get(f.source))
+        ));
       }
 
       counter++;

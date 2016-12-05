@@ -33,7 +33,7 @@ public enum Errors implements ErrorCode {
   BIGTABLE_08("Incorrect datatype '{}' for time stamp field '{}'.  Time stamps must be long."),
   BIGTABLE_09("No field names or invalid field name specified for row key '{}'"),
   BIGTABLE_10("Row key field '{}' was not found in record"),
-  BIGTABLE_11("Single column row key selected - invalid field path '{}' specified."),
+  BIGTABLE_11("Single column row key selected - field path '{}' not found in record."),
   BIGTABLE_12("Cannot convert type: '{}' to '{}'"),
   BIGTABLE_13("Conversion not defined for '{}'"),
   BIGTABLE_14("Time stamp field does not exist: '{}'"),
@@ -45,6 +45,8 @@ public enum Errors implements ErrorCode {
   BIGTABLE_20("Failure inserting into table: '{}'"),
   BIGTABLE_21("Invalid conversion for field '{}' from '{}' to '{}'"),
   BIGTABLE_22("Table '{}' does not exist."),
+  BIGTABLE_23("There are no fields in this record to insert into Bigtable "),
+  BIGTABLE_24("No field paths are specified to insert into Bigtable"),
   ;
 
   private final String msg;
