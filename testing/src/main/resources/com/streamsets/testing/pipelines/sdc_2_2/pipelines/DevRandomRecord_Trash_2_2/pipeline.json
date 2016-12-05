@@ -1,0 +1,216 @@
+{
+  "schemaVersion" : 2,
+  "version" : 5,
+  "uuid" : "38ba283b-b4fc-4214-9304-cddf5dccea19",
+  "description" : "",
+  "configuration" : [ {
+    "name" : "executionMode",
+    "value" : "STANDALONE"
+  }, {
+    "name" : "deliveryGuarantee",
+    "value" : "AT_LEAST_ONCE"
+  }, {
+    "name" : "shouldRetry",
+    "value" : true
+  }, {
+    "name" : "retryAttempts",
+    "value" : -1
+  }, {
+    "name" : "memoryLimit",
+    "value" : "${jvm:maxMemoryMB() * 0.65}"
+  }, {
+    "name" : "memoryLimitExceeded",
+    "value" : "STOP_PIPELINE"
+  }, {
+    "name" : "notifyOnStates",
+    "value" : [ "RUN_ERROR", "STOPPED", "FINISHED" ]
+  }, {
+    "name" : "emailIDs",
+    "value" : [ ]
+  }, {
+    "name" : "constants",
+    "value" : [ ]
+  }, {
+    "name" : "badRecordsHandling",
+    "value" : "streamsets-datacollector-elasticsearch_1_5-lib::com_streamsets_pipeline_stage_destination_elasticsearch_ToErrorElasticSearchDTarget::3"
+  }, {
+    "name" : "clusterSlaveMemory",
+    "value" : 1024
+  }, {
+    "name" : "clusterSlaveJavaOpts",
+    "value" : "-XX:PermSize=128M -XX:MaxPermSize=256M -Dhttps.protocols=TLSv1.2,TLSv1.1 -Dlog4j.debug"
+  }, {
+    "name" : "clusterLauncherEnv",
+    "value" : [ ]
+  }, {
+    "name" : "mesosDispatcherURL",
+    "value" : null
+  }, {
+    "name" : "hdfsS3ConfDir",
+    "value" : null
+  }, {
+    "name" : "rateLimit",
+    "value" : 0
+  }, {
+    "name" : "statsAggregatorStage",
+    "value" : ""
+  } ],
+  "uiInfo" : {
+    "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
+      "batchSize" : 10,
+      "timeout" : 10000,
+      "writeToDestinations" : false,
+      "showHeader" : false,
+      "showFieldType" : true,
+      "rememberMe" : false
+    }
+  },
+  "stages" : [ {
+    "instanceName" : "DevRandomRecordSource_01",
+    "library" : "streamsets-datacollector-dev-lib",
+    "stageName" : "com_streamsets_pipeline_stage_devtest_RandomSource",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "fields",
+      "value" : "a,b,c"
+    }, {
+      "name" : "delay",
+      "value" : 1000
+    }, {
+      "name" : "maxRecordsToGenerate",
+      "value" : 922337203685
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Dev Random Record Source 1",
+      "xPos" : 60,
+      "yPos" : 50,
+      "stageType" : "SOURCE"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ "DevRandomRecordSource_01OutputLane14807042729130" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "Trash_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Trash 1",
+      "xPos" : 280,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ "DevRandomRecordSource_01OutputLane14807042729130" ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  } ],
+  "errorStage" : {
+    "instanceName" : "WritetoElasticsearch_ErrorStage",
+    "library" : "streamsets-datacollector-elasticsearch_1_5-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_elasticsearch_ToErrorElasticSearchDTarget",
+    "stageVersion" : "3",
+    "configuration" : [ {
+      "name" : "elasticSearchConfigBean.shieldConfigBean.shieldUser",
+      "value" : "username:password"
+    }, {
+      "name" : "elasticSearchConfigBean.shieldConfigBean.shieldTransportSsl",
+      "value" : true
+    }, {
+      "name" : "elasticSearchConfigBean.shieldConfigBean.sslKeystorePath",
+      "value" : null
+    }, {
+      "name" : "elasticSearchConfigBean.shieldConfigBean.sslKeystorePassword",
+      "value" : null
+    }, {
+      "name" : "elasticSearchConfigBean.shieldConfigBean.sslTruststorePath",
+      "value" : null
+    }, {
+      "name" : "elasticSearchConfigBean.shieldConfigBean.sslTruststorePassword",
+      "value" : null
+    }, {
+      "name" : "elasticSearchConfigBean.clusterName",
+      "value" : "elasticsearch"
+    }, {
+      "name" : "elasticSearchConfigBean.uris",
+      "value" : [ "hostname:port" ]
+    }, {
+      "name" : "elasticSearchConfigBean.httpUri",
+      "value" : "hostname:port"
+    }, {
+      "name" : "elasticSearchConfigBean.useShield",
+      "value" : false
+    }, {
+      "name" : "elasticSearchConfigBean.useElasticCloud",
+      "value" : false
+    }, {
+      "name" : "elasticSearchConfigBean.clientSniff",
+      "value" : false
+    }, {
+      "name" : "elasticSearchConfigBean.configs",
+      "value" : [ ]
+    }, {
+      "name" : "elasticSearchConfigBean.timeDriver",
+      "value" : "${time:now()}"
+    }, {
+      "name" : "elasticSearchConfigBean.timeZoneID",
+      "value" : "UTC"
+    }, {
+      "name" : "elasticSearchConfigBean.indexTemplate",
+      "value" : "abc"
+    }, {
+      "name" : "elasticSearchConfigBean.typeTemplate",
+      "value" : "xyz"
+    }, {
+      "name" : "elasticSearchConfigBean.docIdTemplate",
+      "value" : null
+    }, {
+      "name" : "elasticSearchConfigBean.charset",
+      "value" : "UTF-8"
+    }, {
+      "name" : "elasticSearchConfigBean.upsert",
+      "value" : false
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Error Records - Write to Elasticsearch",
+      "xPos" : 500,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  },
+  "info" : {
+    "name" : "DevRandomRecord_Trash_2_2",
+    "description" : "",
+    "created" : 1480704270174,
+    "lastModified" : 1480704295367,
+    "creator" : "admin",
+    "lastModifier" : "admin",
+    "lastRev" : "0",
+    "uuid" : "5a2e3cce-9ac1-4494-815b-b0bd04bce79d",
+    "valid" : false,
+    "metadata" : {
+      "labels" : [ ]
+    }
+  },
+  "metadata" : {
+    "labels" : [ ]
+  },
+  "statsAggregatorStage" : null,
+  "previewable" : true,
+  "issues" : {
+    "pipelineIssues" : [ ],
+    "stageIssues" : { },
+    "issueCount" : 0
+  },
+  "valid" : true
+}

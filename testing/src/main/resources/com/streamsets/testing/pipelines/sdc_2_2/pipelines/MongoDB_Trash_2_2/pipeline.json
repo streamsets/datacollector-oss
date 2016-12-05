@@ -1,0 +1,357 @@
+{
+  "schemaVersion" : 2,
+  "version" : 5,
+  "uuid" : "0f5e4b31-0182-4de9-87e9-200e7a208ab2",
+  "description" : "",
+  "configuration" : [ {
+    "name" : "executionMode",
+    "value" : "STANDALONE"
+  }, {
+    "name" : "deliveryGuarantee",
+    "value" : "AT_LEAST_ONCE"
+  }, {
+    "name" : "shouldRetry",
+    "value" : true
+  }, {
+    "name" : "retryAttempts",
+    "value" : -1
+  }, {
+    "name" : "memoryLimit",
+    "value" : "${jvm:maxMemoryMB() * 0.65}"
+  }, {
+    "name" : "memoryLimitExceeded",
+    "value" : "STOP_PIPELINE"
+  }, {
+    "name" : "notifyOnStates",
+    "value" : [ "RUN_ERROR", "STOPPED", "FINISHED" ]
+  }, {
+    "name" : "emailIDs",
+    "value" : [ ]
+  }, {
+    "name" : "constants",
+    "value" : [ ]
+  }, {
+    "name" : "badRecordsHandling",
+    "value" : "streamsets-datacollector-apache-kafka_0_9-lib::com_streamsets_pipeline_stage_destination_kafka_ToErrorKafkaDTarget::3"
+  }, {
+    "name" : "clusterSlaveMemory",
+    "value" : 1024
+  }, {
+    "name" : "clusterSlaveJavaOpts",
+    "value" : "-XX:PermSize=128M -XX:MaxPermSize=256M -Dhttps.protocols=TLSv1.2,TLSv1.1 -Dlog4j.debug"
+  }, {
+    "name" : "clusterLauncherEnv",
+    "value" : [ ]
+  }, {
+    "name" : "mesosDispatcherURL",
+    "value" : null
+  }, {
+    "name" : "hdfsS3ConfDir",
+    "value" : null
+  }, {
+    "name" : "rateLimit",
+    "value" : 0
+  }, {
+    "name" : "statsAggregatorStage",
+    "value" : ""
+  } ],
+  "uiInfo" : {
+    "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
+      "batchSize" : 10,
+      "timeout" : 10000,
+      "writeToDestinations" : false,
+      "showHeader" : false,
+      "showFieldType" : true,
+      "rememberMe" : false
+    }
+  },
+  "stages" : [ {
+    "instanceName" : "MongoDB_01",
+    "library" : "streamsets-datacollector-mongodb_3-lib",
+    "stageName" : "com_streamsets_pipeline_stage_origin_mongodb_MongoDBDSource",
+    "stageVersion" : "2",
+    "configuration" : [ {
+      "name" : "configBean.mongoConfig.connectionString",
+      "value" : "abc"
+    }, {
+      "name" : "configBean.mongoConfig.database",
+      "value" : "xyz"
+    }, {
+      "name" : "configBean.mongoConfig.collection",
+      "value" : "aabbcc"
+    }, {
+      "name" : "configBean.mongoConfig.authenticationType",
+      "value" : "NONE"
+    }, {
+      "name" : "configBean.mongoConfig.username",
+      "value" : null
+    }, {
+      "name" : "configBean.mongoConfig.password",
+      "value" : null
+    }, {
+      "name" : "configBean.mongoConfig.connectionsPerHost",
+      "value" : 100
+    }, {
+      "name" : "configBean.mongoConfig.minConnectionsPerHost",
+      "value" : 0
+    }, {
+      "name" : "configBean.mongoConfig.connectTimeout",
+      "value" : 10000
+    }, {
+      "name" : "configBean.mongoConfig.maxConnectionIdleTime",
+      "value" : 0
+    }, {
+      "name" : "configBean.mongoConfig.maxConnectionLifeTime",
+      "value" : 0
+    }, {
+      "name" : "configBean.mongoConfig.maxWaitTime",
+      "value" : 120000
+    }, {
+      "name" : "configBean.mongoConfig.serverSelectionTimeout",
+      "value" : 30000
+    }, {
+      "name" : "configBean.mongoConfig.threadsAllowedToBlockForConnectionMultiplier",
+      "value" : 5
+    }, {
+      "name" : "configBean.mongoConfig.heartbeatFrequency",
+      "value" : 10000
+    }, {
+      "name" : "configBean.mongoConfig.minHeartbeatFrequency",
+      "value" : 500
+    }, {
+      "name" : "configBean.mongoConfig.heartbeatConnectTimeout",
+      "value" : 20000
+    }, {
+      "name" : "configBean.mongoConfig.heartbeatSocketTimeout",
+      "value" : 20000
+    }, {
+      "name" : "configBean.mongoConfig.localThreshold",
+      "value" : 15
+    }, {
+      "name" : "configBean.mongoConfig.requiredReplicaSetName",
+      "value" : null
+    }, {
+      "name" : "configBean.mongoConfig.cursorFinalizerEnabled",
+      "value" : true
+    }, {
+      "name" : "configBean.mongoConfig.socketKeepAlive",
+      "value" : false
+    }, {
+      "name" : "configBean.mongoConfig.socketTimeout",
+      "value" : 0
+    }, {
+      "name" : "configBean.mongoConfig.sslEnabled",
+      "value" : false
+    }, {
+      "name" : "configBean.mongoConfig.sslInvalidHostNameAllowed",
+      "value" : false
+    }, {
+      "name" : "configBean.isCapped",
+      "value" : true
+    }, {
+      "name" : "configBean.initialOffset",
+      "value" : "2015-01-01 00:00:00"
+    }, {
+      "name" : "configBean.offsetField",
+      "value" : "_id"
+    }, {
+      "name" : "configBean.batchSize",
+      "value" : 1000
+    }, {
+      "name" : "configBean.maxBatchWaitTime",
+      "value" : "${5 * SECONDS}"
+    }, {
+      "name" : "configBean.readPreference",
+      "value" : "SECONDARY_PREFERRED"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "MongoDB 1",
+      "xPos" : 60,
+      "yPos" : 50,
+      "stageType" : "SOURCE"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ "MongoDB_01OutputLane14807050444180" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "Trash_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Trash 1",
+      "xPos" : 280,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ "MongoDB_01OutputLane14807050444180" ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  } ],
+  "errorStage" : {
+    "instanceName" : "WritetoKafka_ErrorStage",
+    "library" : "streamsets-datacollector-apache-kafka_0_9-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_kafka_ToErrorKafkaDTarget",
+    "stageVersion" : "3",
+    "configuration" : [ {
+      "name" : "conf.dataGeneratorFormatConfig.charset",
+      "value" : "UTF-8"
+    }, {
+      "name" : "conf.dataGeneratorFormatConfig.csvFileFormat",
+      "value" : "CSV"
+    }, {
+      "name" : "conf.dataGeneratorFormatConfig.csvHeader",
+      "value" : "NO_HEADER"
+    }, {
+      "name" : "conf.dataGeneratorFormatConfig.csvReplaceNewLines",
+      "value" : true
+    }, {
+      "name" : "conf.dataGeneratorFormatConfig.csvReplaceNewLinesString",
+      "value" : " "
+    }, {
+      "name" : "conf.dataGeneratorFormatConfig.csvCustomDelimiter",
+      "value" : "|"
+    }, {
+      "name" : "conf.dataGeneratorFormatConfig.csvCustomEscape",
+      "value" : "\\"
+    }, {
+      "name" : "conf.dataGeneratorFormatConfig.csvCustomQuote",
+      "value" : "\""
+    }, {
+      "name" : "conf.dataGeneratorFormatConfig.jsonMode",
+      "value" : "MULTIPLE_OBJECTS"
+    }, {
+      "name" : "conf.dataGeneratorFormatConfig.textFieldPath",
+      "value" : "/"
+    }, {
+      "name" : "conf.dataGeneratorFormatConfig.textRecordSeparator",
+      "value" : "\\n"
+    }, {
+      "name" : "conf.dataGeneratorFormatConfig.textEmptyLineIfNull",
+      "value" : false
+    }, {
+      "name" : "conf.dataGeneratorFormatConfig.avroSchemaSource",
+      "value" : null
+    }, {
+      "name" : "conf.dataGeneratorFormatConfig.avroSchema",
+      "value" : null
+    }, {
+      "name" : "conf.dataGeneratorFormatConfig.registerSchema",
+      "value" : false
+    }, {
+      "name" : "conf.dataGeneratorFormatConfig.schemaRegistryUrlsForRegistration",
+      "value" : [ ]
+    }, {
+      "name" : "conf.dataGeneratorFormatConfig.schemaRegistryUrls",
+      "value" : [ ]
+    }, {
+      "name" : "conf.dataGeneratorFormatConfig.schemaLookupMode",
+      "value" : "SUBJECT"
+    }, {
+      "name" : "conf.dataGeneratorFormatConfig.subject",
+      "value" : null
+    }, {
+      "name" : "conf.dataGeneratorFormatConfig.subjectToRegister",
+      "value" : null
+    }, {
+      "name" : "conf.dataGeneratorFormatConfig.schemaId",
+      "value" : null
+    }, {
+      "name" : "conf.dataGeneratorFormatConfig.includeSchema",
+      "value" : true
+    }, {
+      "name" : "conf.dataGeneratorFormatConfig.avroCompression",
+      "value" : "NULL"
+    }, {
+      "name" : "conf.dataGeneratorFormatConfig.binaryFieldPath",
+      "value" : "/"
+    }, {
+      "name" : "conf.dataGeneratorFormatConfig.protoDescriptorFile",
+      "value" : null
+    }, {
+      "name" : "conf.dataGeneratorFormatConfig.messageType",
+      "value" : null
+    }, {
+      "name" : "conf.dataGeneratorFormatConfig.fileNameEL",
+      "value" : "${record:value('/fileInfo/filename')}"
+    }, {
+      "name" : "conf.dataGeneratorFormatConfig.wholeFileExistsAction",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "conf.dataGeneratorFormatConfig.includeChecksumInTheEvents",
+      "value" : false
+    }, {
+      "name" : "conf.dataGeneratorFormatConfig.checksumAlgorithm",
+      "value" : "MD5"
+    }, {
+      "name" : "conf.metadataBrokerList",
+      "value" : "localhost:9092"
+    }, {
+      "name" : "conf.runtimeTopicResolution",
+      "value" : false
+    }, {
+      "name" : "conf.topicExpression",
+      "value" : "${record:value('/topic')}"
+    }, {
+      "name" : "conf.topicWhiteList",
+      "value" : "*"
+    }, {
+      "name" : "conf.topic",
+      "value" : "topicName"
+    }, {
+      "name" : "conf.partitionStrategy",
+      "value" : "ROUND_ROBIN"
+    }, {
+      "name" : "conf.partition",
+      "value" : "${0}"
+    }, {
+      "name" : "conf.singleMessagePerBatch",
+      "value" : false
+    }, {
+      "name" : "conf.kafkaProducerConfigs",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Error Records - Write to Kafka",
+      "xPos" : 500,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  },
+  "info" : {
+    "name" : "MongoDB_Trash_2_2",
+    "description" : "",
+    "created" : 1480705040319,
+    "lastModified" : 1480705066152,
+    "creator" : "admin",
+    "lastModifier" : "admin",
+    "lastRev" : "0",
+    "uuid" : "af64b7ec-1e15-4d72-b3c2-cc697e99eac5",
+    "valid" : false,
+    "metadata" : {
+      "labels" : [ ]
+    }
+  },
+  "metadata" : {
+    "labels" : [ ]
+  },
+  "statsAggregatorStage" : null,
+  "previewable" : true,
+  "issues" : {
+    "pipelineIssues" : [ ],
+    "stageIssues" : { },
+    "issueCount" : 0
+  },
+  "valid" : true
+}

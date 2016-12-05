@@ -1,0 +1,186 @@
+{
+  "schemaVersion" : 2,
+  "version" : 5,
+  "uuid" : "f5831fb9-2e79-4109-8d7d-343bde0554a0",
+  "description" : "",
+  "configuration" : [ {
+    "name" : "executionMode",
+    "value" : "STANDALONE"
+  }, {
+    "name" : "deliveryGuarantee",
+    "value" : "AT_LEAST_ONCE"
+  }, {
+    "name" : "shouldRetry",
+    "value" : true
+  }, {
+    "name" : "retryAttempts",
+    "value" : -1
+  }, {
+    "name" : "memoryLimit",
+    "value" : "${jvm:maxMemoryMB() * 0.65}"
+  }, {
+    "name" : "memoryLimitExceeded",
+    "value" : "STOP_PIPELINE"
+  }, {
+    "name" : "notifyOnStates",
+    "value" : [ "RUN_ERROR", "STOPPED", "FINISHED" ]
+  }, {
+    "name" : "emailIDs",
+    "value" : [ ]
+  }, {
+    "name" : "constants",
+    "value" : [ ]
+  }, {
+    "name" : "badRecordsHandling",
+    "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget::1"
+  }, {
+    "name" : "clusterSlaveMemory",
+    "value" : 1024
+  }, {
+    "name" : "clusterSlaveJavaOpts",
+    "value" : "-XX:PermSize=128M -XX:MaxPermSize=256M -Dhttps.protocols=TLSv1.2,TLSv1.1 -Dlog4j.debug"
+  }, {
+    "name" : "clusterLauncherEnv",
+    "value" : [ ]
+  }, {
+    "name" : "mesosDispatcherURL",
+    "value" : null
+  }, {
+    "name" : "hdfsS3ConfDir",
+    "value" : null
+  }, {
+    "name" : "rateLimit",
+    "value" : 0
+  }, {
+    "name" : "statsAggregatorStage",
+    "value" : ""
+  } ],
+  "uiInfo" : {
+    "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
+      "batchSize" : 10,
+      "timeout" : 10000,
+      "writeToDestinations" : false,
+      "showHeader" : false,
+      "showFieldType" : true,
+      "rememberMe" : false
+    }
+  },
+  "stages" : [ {
+    "instanceName" : "Salesforce_01",
+    "library" : "streamsets-datacollector-salesforce-lib",
+    "stageName" : "com_streamsets_pipeline_stage_origin_salesforce_ForceDSource",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "forceConfig.queryExistingData",
+      "value" : true
+    }, {
+      "name" : "forceConfig.useBulkAPI",
+      "value" : true
+    }, {
+      "name" : "forceConfig.soqlQuery",
+      "value" : "abc"
+    }, {
+      "name" : "forceConfig.initialOffset",
+      "value" : "000000000000000"
+    }, {
+      "name" : "forceConfig.offsetColumn",
+      "value" : "Id"
+    }, {
+      "name" : "forceConfig.subscribeToStreaming",
+      "value" : true
+    }, {
+      "name" : "forceConfig.pushTopic",
+      "value" : "abc"
+    }, {
+      "name" : "forceConfig.basicConfig.maxBatchSize",
+      "value" : 1000
+    }, {
+      "name" : "forceConfig.basicConfig.maxWaitTime",
+      "value" : 2000
+    }, {
+      "name" : "forceConfig.username",
+      "value" : "abc"
+    }, {
+      "name" : "forceConfig.password",
+      "value" : "xyz"
+    }, {
+      "name" : "forceConfig.authEndpoint",
+      "value" : "login.salesforce.com"
+    }, {
+      "name" : "forceConfig.apiVersion",
+      "value" : "38.0"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Salesforce 1",
+      "xPos" : 60,
+      "yPos" : 50,
+      "stageType" : "SOURCE"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ "Salesforce_01OutputLane14807056439770" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "Trash_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Trash 1",
+      "xPos" : 280,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ "Salesforce_01OutputLane14807056439770" ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  } ],
+  "errorStage" : {
+    "instanceName" : "Discard_ErrorStage",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Error Records - Discard",
+      "xPos" : 500,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  },
+  "info" : {
+    "name" : "Salesforce_Trash_2_2",
+    "description" : "",
+    "created" : 1480705640016,
+    "lastModified" : 1480705669101,
+    "creator" : "admin",
+    "lastModifier" : "admin",
+    "lastRev" : "0",
+    "uuid" : "809bce98-e9d3-4e6a-bbc8-ab96e46cf51d",
+    "valid" : false,
+    "metadata" : {
+      "labels" : [ ]
+    }
+  },
+  "metadata" : {
+    "labels" : [ ]
+  },
+  "statsAggregatorStage" : null,
+  "previewable" : true,
+  "issues" : {
+    "pipelineIssues" : [ ],
+    "stageIssues" : { },
+    "issueCount" : 0
+  },
+  "valid" : true
+}

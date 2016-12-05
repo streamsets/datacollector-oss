@@ -1,0 +1,186 @@
+{
+  "schemaVersion" : 2,
+  "version" : 5,
+  "uuid" : "1df255a2-7783-48ea-a02e-b7d5296541b8",
+  "description" : "",
+  "configuration" : [ {
+    "name" : "executionMode",
+    "value" : "STANDALONE"
+  }, {
+    "name" : "deliveryGuarantee",
+    "value" : "AT_LEAST_ONCE"
+  }, {
+    "name" : "shouldRetry",
+    "value" : true
+  }, {
+    "name" : "retryAttempts",
+    "value" : -1
+  }, {
+    "name" : "memoryLimit",
+    "value" : "${jvm:maxMemoryMB() * 0.65}"
+  }, {
+    "name" : "memoryLimitExceeded",
+    "value" : "STOP_PIPELINE"
+  }, {
+    "name" : "notifyOnStates",
+    "value" : [ "RUN_ERROR", "STOPPED", "FINISHED" ]
+  }, {
+    "name" : "emailIDs",
+    "value" : [ ]
+  }, {
+    "name" : "constants",
+    "value" : [ ]
+  }, {
+    "name" : "badRecordsHandling",
+    "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget::1"
+  }, {
+    "name" : "clusterSlaveMemory",
+    "value" : 1024
+  }, {
+    "name" : "clusterSlaveJavaOpts",
+    "value" : "-XX:PermSize=128M -XX:MaxPermSize=256M -Dhttps.protocols=TLSv1.2,TLSv1.1 -Dlog4j.debug"
+  }, {
+    "name" : "clusterLauncherEnv",
+    "value" : [ ]
+  }, {
+    "name" : "mesosDispatcherURL",
+    "value" : null
+  }, {
+    "name" : "hdfsS3ConfDir",
+    "value" : null
+  }, {
+    "name" : "rateLimit",
+    "value" : 0
+  }, {
+    "name" : "statsAggregatorStage",
+    "value" : ""
+  } ],
+  "uiInfo" : {
+    "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
+      "batchSize" : 10,
+      "timeout" : 10000,
+      "writeToDestinations" : false,
+      "showHeader" : false,
+      "showFieldType" : true,
+      "rememberMe" : false
+    }
+  },
+  "stages" : [ {
+    "instanceName" : "Omniture_01",
+    "library" : "streamsets-datacollector-omniture-lib",
+    "stageName" : "com_streamsets_pipeline_stage_origin_omniture_OmnitureDSource",
+    "stageVersion" : "2",
+    "configuration" : [ {
+      "name" : "proxySettings.proxyUri",
+      "value" : null
+    }, {
+      "name" : "proxySettings.username",
+      "value" : null
+    }, {
+      "name" : "proxySettings.password",
+      "value" : null
+    }, {
+      "name" : "resourceUrl",
+      "value" : "https://api2.omniture.com/admin/1.4/rest/"
+    }, {
+      "name" : "reportDescription",
+      "value" : "abc"
+    }, {
+      "name" : "requestTimeoutMillis",
+      "value" : 3000
+    }, {
+      "name" : "httpMode",
+      "value" : "POLLING"
+    }, {
+      "name" : "pollingInterval",
+      "value" : 5000
+    }, {
+      "name" : "batchSize",
+      "value" : 1
+    }, {
+      "name" : "maxBatchWaitTime",
+      "value" : 5000
+    }, {
+      "name" : "username",
+      "value" : "abc"
+    }, {
+      "name" : "sharedSecret",
+      "value" : "xyz"
+    }, {
+      "name" : "useProxy",
+      "value" : false
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Omniture 1",
+      "xPos" : 60,
+      "yPos" : 50,
+      "stageType" : "SOURCE"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ "Omniture_01OutputLane14807051551460" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "Trash_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Trash 1",
+      "xPos" : 280,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ "Omniture_01OutputLane14807051551460" ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  } ],
+  "errorStage" : {
+    "instanceName" : "Discard_ErrorStage",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Error Records - Discard",
+      "xPos" : 60,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  },
+  "info" : {
+    "name" : "Omniture_Trash_2_2",
+    "description" : "",
+    "created" : 1480705145860,
+    "lastModified" : 1480705170072,
+    "creator" : "admin",
+    "lastModifier" : "admin",
+    "lastRev" : "0",
+    "uuid" : "25a22bef-dea4-45aa-8581-b8e11847becf",
+    "valid" : false,
+    "metadata" : {
+      "labels" : [ ]
+    }
+  },
+  "metadata" : {
+    "labels" : [ ]
+  },
+  "statsAggregatorStage" : null,
+  "previewable" : true,
+  "issues" : {
+    "pipelineIssues" : [ ],
+    "stageIssues" : { },
+    "issueCount" : 0
+  },
+  "valid" : true
+}

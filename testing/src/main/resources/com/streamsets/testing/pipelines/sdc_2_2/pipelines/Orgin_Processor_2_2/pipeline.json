@@ -1,0 +1,2070 @@
+{
+  "schemaVersion" : 2,
+  "version" : 5,
+  "uuid" : "a5663cce-10c2-4122-9e32-c32fa0aef660",
+  "description" : "",
+  "configuration" : [ {
+    "name" : "executionMode",
+    "value" : "STANDALONE"
+  }, {
+    "name" : "deliveryGuarantee",
+    "value" : "AT_LEAST_ONCE"
+  }, {
+    "name" : "shouldRetry",
+    "value" : true
+  }, {
+    "name" : "retryAttempts",
+    "value" : -1
+  }, {
+    "name" : "memoryLimit",
+    "value" : "${jvm:maxMemoryMB() * 0.65}"
+  }, {
+    "name" : "memoryLimitExceeded",
+    "value" : "STOP_PIPELINE"
+  }, {
+    "name" : "notifyOnStates",
+    "value" : [ "RUN_ERROR", "STOPPED", "FINISHED" ]
+  }, {
+    "name" : "emailIDs",
+    "value" : [ ]
+  }, {
+    "name" : "constants",
+    "value" : [ ]
+  }, {
+    "name" : "badRecordsHandling",
+    "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget::1"
+  }, {
+    "name" : "clusterSlaveMemory",
+    "value" : 1024
+  }, {
+    "name" : "clusterSlaveJavaOpts",
+    "value" : "-XX:PermSize=128M -XX:MaxPermSize=256M -Dhttps.protocols=TLSv1.2,TLSv1.1 -Dlog4j.debug"
+  }, {
+    "name" : "clusterLauncherEnv",
+    "value" : [ ]
+  }, {
+    "name" : "mesosDispatcherURL",
+    "value" : null
+  }, {
+    "name" : "hdfsS3ConfDir",
+    "value" : null
+  }, {
+    "name" : "rateLimit",
+    "value" : 0
+  }, {
+    "name" : "statsAggregatorStage",
+    "value" : ""
+  } ],
+  "uiInfo" : {
+    "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
+      "batchSize" : 10,
+      "timeout" : 10000,
+      "writeToDestinations" : false,
+      "showHeader" : false,
+      "showFieldType" : true,
+      "rememberMe" : false
+    }
+  },
+  "stages" : [ {
+    "instanceName" : "AmazonS3_01",
+    "library" : "streamsets-datacollector-aws-lib",
+    "stageName" : "com_streamsets_pipeline_stage_origin_s3_AmazonS3DSource",
+    "stageVersion" : "9",
+    "configuration" : [ {
+      "name" : "s3ConfigBean.basicConfig.maxBatchSize",
+      "value" : 1000
+    }, {
+      "name" : "s3ConfigBean.basicConfig.maxWaitTime",
+      "value" : 2000
+    }, {
+      "name" : "s3ConfigBean.sseConfig.useCustomerSSEKey",
+      "value" : false
+    }, {
+      "name" : "s3ConfigBean.sseConfig.customerKey",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.sseConfig.customerKeyMd5",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.proxyConfig.useProxy",
+      "value" : false
+    }, {
+      "name" : "s3ConfigBean.proxyConfig.proxyHost",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.proxyConfig.proxyPort",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.proxyConfig.proxyUser",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.proxyConfig.proxyPassword",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.dataFormat",
+      "value" : "JSON"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.compression",
+      "value" : "NONE"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.filePatternInArchive",
+      "value" : "*"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.charset",
+      "value" : "UTF-8"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.removeCtrlChars",
+      "value" : false
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.textMaxLineLen",
+      "value" : 1024
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.useCustomDelimiter",
+      "value" : false
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.customDelimiter",
+      "value" : "\\r\\n"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.includeCustomDelimiterInTheText",
+      "value" : false
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.jsonContent",
+      "value" : "MULTIPLE_OBJECTS"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.jsonMaxObjectLen",
+      "value" : 4096
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.csvFileFormat",
+      "value" : "CSV"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.csvHeader",
+      "value" : "NO_HEADER"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.csvMaxObjectLen",
+      "value" : 1024
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.csvCustomDelimiter",
+      "value" : "|"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.csvCustomEscape",
+      "value" : "\\"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.csvCustomQuote",
+      "value" : "\""
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.csvRecordType",
+      "value" : "LIST_MAP"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.csvSkipStartLines",
+      "value" : 0
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.parseNull",
+      "value" : false
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.nullConstant",
+      "value" : "\\\\N"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.xmlRecordElement",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.xPathNamespaceContext",
+      "value" : [ ]
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.xmlMaxObjectLen",
+      "value" : 4096
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.logMode",
+      "value" : "COMMON_LOG_FORMAT"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.logMaxObjectLen",
+      "value" : 1024
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.retainOriginalLine",
+      "value" : false
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.customLogFormat",
+      "value" : "%h %l %u %t \"%r\" %>s %b"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.regex",
+      "value" : "^(\\S+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\d+)"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.fieldPathsToGroupName",
+      "value" : [ {
+        "fieldPath" : "/",
+        "group" : 1
+      } ]
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.grokPatternDefinition",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.grokPattern",
+      "value" : "%{COMMONAPACHELOG}"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.onParseError",
+      "value" : "ERROR"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.maxStackTraceLines",
+      "value" : 50
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.enableLog4jCustomLogFormat",
+      "value" : false
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.log4jCustomLogFormat",
+      "value" : "%r [%t] %-5p %c %x - %m%n"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.avroSchemaSource",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.avroSchema",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.schemaRegistryUrls",
+      "value" : [ ]
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.schemaLookupMode",
+      "value" : "SUBJECT"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.subject",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.schemaId",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.protoDescriptorFile",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.messageType",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.isDelimited",
+      "value" : true
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.binaryMaxObjectLen",
+      "value" : 1024
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.datagramMode",
+      "value" : "SYSLOG"
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.typesDbPath",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.convertTime",
+      "value" : false
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.excludeInterval",
+      "value" : true
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.authFilePath",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.wholeFileMaxObjectLen",
+      "value" : 8192
+    }, {
+      "name" : "s3ConfigBean.dataFormatConfig.verifyChecksum",
+      "value" : false
+    }, {
+      "name" : "s3ConfigBean.errorConfig.errorHandlingOption",
+      "value" : "NONE"
+    }, {
+      "name" : "s3ConfigBean.errorConfig.archivingOption",
+      "value" : "MOVE_TO_PREFIX"
+    }, {
+      "name" : "s3ConfigBean.errorConfig.errorPrefix",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.errorConfig.errorBucket",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.postProcessingConfig.postProcessing",
+      "value" : "NONE"
+    }, {
+      "name" : "s3ConfigBean.postProcessingConfig.archivingOption",
+      "value" : "MOVE_TO_PREFIX"
+    }, {
+      "name" : "s3ConfigBean.postProcessingConfig.postProcessPrefix",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.postProcessingConfig.postProcessBucket",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.s3FileConfig.prefixPattern",
+      "value" : "aabbcc"
+    }, {
+      "name" : "s3ConfigBean.s3FileConfig.objectOrdering",
+      "value" : "LEXICOGRAPHICAL"
+    }, {
+      "name" : "s3ConfigBean.s3FileConfig.overrunLimit",
+      "value" : 128
+    }, {
+      "name" : "s3ConfigBean.s3Config.awsConfig.awsAccessKeyId",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.s3Config.region",
+      "value" : "US_WEST_2"
+    }, {
+      "name" : "s3ConfigBean.s3Config.endpoint",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.s3Config.bucket",
+      "value" : "abc"
+    }, {
+      "name" : "s3ConfigBean.s3Config.commonPrefix",
+      "value" : null
+    }, {
+      "name" : "s3ConfigBean.s3Config.delimiter",
+      "value" : "/"
+    }, {
+      "name" : "s3ConfigBean.enableMetaData",
+      "value" : false
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Amazon S3 1",
+      "xPos" : -158.33333587646484,
+      "yPos" : 200.83332061767578,
+      "stageType" : "SOURCE"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "Base64FieldDecoder_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_base64_Base64DecodingDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "originFieldPath",
+      "value" : "abc"
+    }, {
+      "name" : "resultFieldPath",
+      "value" : "xyz"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Base64 Field Decoder 1",
+      "xPos" : 241.66666412353516,
+      "yPos" : 50,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "Base64FieldDecoder_01OutputLane14807080148630" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "Base64FieldEncoder_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_base64_Base64EncodingDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "originFieldPath",
+      "value" : "abc"
+    }, {
+      "name" : "resultFieldPath",
+      "value" : "xyz"
+    }, {
+      "name" : "urlSafe",
+      "value" : false
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Base64 Field Encoder 1",
+      "xPos" : 421.66666412353516,
+      "yPos" : 55,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "Base64FieldEncoder_01OutputLane14807080161810" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "DevRandomError_01",
+    "library" : "streamsets-datacollector-dev-lib",
+    "stageName" : "com_streamsets_pipeline_stage_devtest_RandomErrorProcessor",
+    "stageVersion" : "2",
+    "configuration" : [ {
+      "name" : "discardSomeRecords",
+      "value" : false
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Dev Random Error 1",
+      "xPos" : 608.3333511352539,
+      "yPos" : 59.99999237060547,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "DevRandomError_01OutputLane14807080178550" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "DevRecordCreator_01",
+    "library" : "streamsets-datacollector-dev-lib",
+    "stageName" : "com_streamsets_pipeline_stage_devtest_RecordCreatorProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Dev Record Creator 1",
+      "xPos" : 788.3333511352539,
+      "yPos" : 60,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "DevRecordCreator_01OutputLane14807080185440" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "ExpressionEvaluator_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor",
+    "stageVersion" : "2",
+    "configuration" : [ {
+      "name" : "expressionProcessorConfigs",
+      "value" : [ {
+        "fieldToSet" : "/",
+        "expression" : "${record:value('/')}"
+      } ]
+    }, {
+      "name" : "headerAttributeConfigs",
+      "value" : [ { } ]
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Expression Evaluator 1",
+      "xPos" : 984.9999160766602,
+      "yPos" : 61.666664123535156,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "ExpressionEvaluator_01OutputLane14807080191340" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "FieldFlattener_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_fieldflattener_FieldFlattenerDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "config.flattenType",
+      "value" : "ENTIRE_RECORD"
+    }, {
+      "name" : "config.fields",
+      "value" : [ ]
+    }, {
+      "name" : "config.nameSeparator",
+      "value" : "."
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Field Flattener 1",
+      "xPos" : 1171.6666641235352,
+      "yPos" : 63.33332824707031,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "FieldFlattener_01OutputLane14807080200370" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "FieldHasher_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_fieldhasher_FieldHasherDProcessor",
+    "stageVersion" : "2",
+    "configuration" : [ {
+      "name" : "hasherConfig.recordHasherConfig.hashEntireRecord",
+      "value" : false
+    }, {
+      "name" : "hasherConfig.recordHasherConfig.includeRecordHeaderForHashing",
+      "value" : false
+    }, {
+      "name" : "hasherConfig.recordHasherConfig.hashType",
+      "value" : "MD5"
+    }, {
+      "name" : "hasherConfig.recordHasherConfig.targetField",
+      "value" : null
+    }, {
+      "name" : "hasherConfig.recordHasherConfig.headerAttribute",
+      "value" : null
+    }, {
+      "name" : "hasherConfig.inPlaceFieldHasherConfigs",
+      "value" : [ {
+        "sourceFieldsToHash" : [ ],
+        "hashType" : "MD5"
+      } ]
+    }, {
+      "name" : "hasherConfig.targetFieldHasherConfigs",
+      "value" : [ {
+        "sourceFieldsToHash" : [ ],
+        "hashType" : "MD5"
+      } ]
+    }, {
+      "name" : "onStagePreConditionFailure",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Field Hasher 1",
+      "xPos" : 243.33341217041016,
+      "yPos" : 175,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "FieldHasher_01OutputLane14807080207170" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "FieldMasker_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_fieldmask_FieldMaskDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "fieldMaskConfigs",
+      "value" : [ {
+        "fields" : [ ],
+        "maskType" : "VARIABLE_LENGTH",
+        "regex" : "(.*)",
+        "groupsToShow" : "1"
+      } ]
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Field Masker 1",
+      "xPos" : 425.0000686645508,
+      "yPos" : 176.66666412353516,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "FieldMasker_01OutputLane14807080523940" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "FieldMerger_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_fieldmerger_FieldMergerDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "mergeMapping",
+      "value" : [ { } ]
+    }, {
+      "name" : "onStagePreConditionFailure",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "overwriteExisting",
+      "value" : false
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Field Merger 1",
+      "xPos" : 610.0000686645508,
+      "yPos" : 179.99999237060547,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "FieldMerger_01OutputLane14807080584320" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "FieldPivoter_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_listpivot_ListPivotDProcessor",
+    "stageVersion" : "2",
+    "configuration" : [ {
+      "name" : "listPath",
+      "value" : "abc"
+    }, {
+      "name" : "copyFields",
+      "value" : true
+    }, {
+      "name" : "newPath",
+      "value" : null
+    }, {
+      "name" : "saveOriginalFieldName",
+      "value" : false
+    }, {
+      "name" : "originalFieldNamePath",
+      "value" : null
+    }, {
+      "name" : "onStagePreConditionFailure",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Field Pivoter 1",
+      "xPos" : 793.333381652832,
+      "yPos" : 185,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "FieldPivoter_01OutputLane14807080652940" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "FieldRemover_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "filterOperation",
+      "value" : "REMOVE"
+    }, {
+      "name" : "fields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Field Remover 1",
+      "xPos" : 985.0000076293945,
+      "yPos" : 188.33332061767578,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "FieldRemover_01OutputLane14807080757040" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "FieldRenamer_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_fieldrenamer_FieldRenamerDProcessor",
+    "stageVersion" : "2",
+    "configuration" : [ {
+      "name" : "renameMapping",
+      "value" : [ { } ]
+    }, {
+      "name" : "errorHandler.nonExistingFromFieldHandling",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "errorHandler.existingToFieldHandling",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "errorHandler.multipleFromFieldsMatching",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Field Renamer 1",
+      "xPos" : 1178.3332595825195,
+      "yPos" : 188.33332061767578,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "FieldRenamer_01OutputLane14807080800250" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "FieldSplitter_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_splitter_SplitterDProcessor",
+    "stageVersion" : "2",
+    "configuration" : [ {
+      "name" : "fieldPath",
+      "value" : "abc"
+    }, {
+      "name" : "separator",
+      "value" : "xyz"
+    }, {
+      "name" : "fieldPathsForSplits",
+      "value" : [ "/fieldSplit1", "/fieldSplit2" ]
+    }, {
+      "name" : "onStagePreConditionFailure",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "tooManySplitsAction",
+      "value" : "TO_LAST_FIELD"
+    }, {
+      "name" : "remainingSplitsPath",
+      "value" : null
+    }, {
+      "name" : "originalFieldAction",
+      "value" : "REMOVE"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Field Splitter 1",
+      "xPos" : 243.33325958251953,
+      "yPos" : 310.00000762939453,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "FieldSplitter_01OutputLane14807080878900" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "FieldTypeConverter_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_fieldtypeconverter_FieldTypeConverterDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "convertBy",
+      "value" : "BY_FIELD"
+    }, {
+      "name" : "fieldTypeConverterConfigs",
+      "value" : [ {
+        "fields" : [ ],
+        "targetType" : "INTEGER",
+        "dataLocale" : "en,US",
+        "scale" : -1,
+        "decimalScaleRoundingStrategy" : "ROUND_UNNECESSARY",
+        "dateFormat" : "YYYY_MM_DD",
+        "encoding" : "UTF-8"
+      } ]
+    }, {
+      "name" : "wholeTypeConverterConfigs",
+      "value" : [ {
+        "sourceType" : "INTEGER",
+        "targetType" : "INTEGER",
+        "dataLocale" : "en,US",
+        "scale" : -1,
+        "decimalScaleRoundingStrategy" : "ROUND_UNNECESSARY",
+        "dateFormat" : "YYYY_MM_DD",
+        "encoding" : "UTF-8"
+      } ]
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Field Type Converter 1",
+      "xPos" : 424.9999465942383,
+      "yPos" : 314.99998474121094,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "FieldTypeConverter_01OutputLane14807080978310" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "GeoIP_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_geolocation_GeolocationDProcessor",
+    "stageVersion" : "4",
+    "configuration" : [ {
+      "name" : "dbConfigs",
+      "value" : [ { } ]
+    }, {
+      "name" : "fieldTypeConverterConfigs",
+      "value" : [ {
+        "targetType" : "COUNTRY_NAME"
+      } ]
+    }, {
+      "name" : "missingAddressAction",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Geo IP 1",
+      "xPos" : 599.9999465942383,
+      "yPos" : 316.6666717529297,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "GeoIP_01OutputLane14807081054150" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "GroovyEvaluator_01",
+    "library" : "streamsets-datacollector-groovy_2_4-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_groovy_GroovyDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "processingMode",
+      "value" : "BATCH"
+    }, {
+      "name" : "script",
+      "value" : "/*\n * Available constants: \n *   They are to assign a type to a field with a value null.\n *   NULL_BOOLEAN, NULL_CHAR, NULL_BYTE, NULL_SHORT, NULL_INTEGER, NULL_LONG\n *   NULL_FLOATNULL_DOUBLE, NULL_DATE, NULL_DATETIME, NULL_TIME, NULL_DECIMAL\n *   NULL_BYTE_ARRAY, NULL_STRING, NULL_LIST, NULL_MAP\n *\n * Available objects:\n *   records: A collection of Records to process. Depending on the processing mode\n *            it may have 1 record or all the records in the batch (default).\n *\n *   state: A Map<String, Object> that is preserved between invocations of this script.\n *          Useful for caching bits of data, e.g. counters.\n *\n *   log.<level>(msg, obj...): Use instead of println to send log messages to the log4j log\n *                             instead of stdout.\n *                             loglevel is any log4j level: e.g. info, warn, error, trace.\n *   output.write(Record): Writes a record to the processor output.\n *\n *   error.write(Record): Writes a record to the error pipeline.\n *\n *   sdcFunctions.getFieldNull(Record, 'field path'): Receive a constant defined above \n *                          to check if the field is typed field with value null\n *\n *   sdcFunctions.createRecord(String recordId): Creates a new record.\n *                          Pass a recordId to uniquely identify the record and include enough information to track down the record source. \n *   sdcFunctions.createMap(boolean listMap): Create a map for use as a field in a record. \n *                          Pass true to this function to create a list map (ordered map)\n *\n *   sdcFunctions.createEvent(String type, int version): Creates a new event.\n *                          Create new empty event with standard headers.\n *   sdcFunctions.toEvent(Record): Send event to event stream\n *                          Only events created with sdcFunctions.createEvent are supported.\n *\n * Available Record Header Variables:\n *   record.attributes: a map of record header attributes.\n *\n *   record.<header name>: get the value of 'header name'.\n */ \n\n // Sample Groovy code\nfor (record in records) {\n  try {\n    // Change record root field value to a String value.\n    // record.value = \"Hello\"\n    \n    // Change record root field value to a map value and create an entry\n    // record.value = [firstName:'John', lastName:'Doe', age:25]\n    \n    // Access a map entry\n    // record.value['fullName'] = record.value['firstName'] + ' ' + record.value['lastName']\n    \n    // Create a list entry\n    // record.value['myList'] = [1, 2, 3, 4]\n    \n    // Modify an existing list entry\n    // record.value['myList'][0] = 5\n    \n    // Assign a integer type to a field and value null\n    // record.value['null_int'] = NULL_INTEGER \n    \n    // Check if the field is NULL_INTEGER. If so, assign a value \n    // if(sdcFunctions.getFieldNull(record, '/null_int') == NULL_INTEGER)\n    //    record.value['null_int'] = 123\n    \n    // Create a new record with map field \n    // newRecord = sdcFunctions.createRecord(record.sourceId + ':newRecordId')\n    // newRecord.value = ['field1':'val1', 'field2' : 'val2']\n    // newMap = sdcFunctions.createMap(true)\n    // newMap['field'] = 'val' \n    // newRecord.value['field2'] =  newMap\n    // output.write(newRecord)\n    \n    //Applies if the source uses WHOLE_FILE as data format\n    //input_stream = record.value['fileRef'].getInputStream();\n    //try {\n      //input_stream.read(); //Process the input stream\n    //} finally {\n      //input_stream.close();\n    //}\n    \n    // Modify a record header attribute entry\n    //record.attributes['name'] = record.attributes['first_name'] + ' ' + record.attributes['last_name']\n    \n    // Get a record header with field names ex. get sourceId and errorCode\n    //String sourceId = record.sourceId\n    //String errorCode = ''\n    //if(record.errorCode) {\n    //    errorCode = record.errorCode\n    //}\n    \n    // Write a record to the processor output\n    output.write(record)\n  } catch (e) {\n    // Write a record to the error pipeline\n    log.error(e.toString(), e)\n    error.write(record, e.toString())\n  }\n}"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Groovy Evaluator 1",
+      "xPos" : 791.6665725708008,
+      "yPos" : 316.66666412353516,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "GroovyEvaluator_01OutputLane14807081113990" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "HBaseLookup_01",
+    "library" : "streamsets-datacollector-cdh_5_2-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_hbase_HBaseLookupDProcessor",
+    "stageVersion" : "3",
+    "configuration" : [ {
+      "name" : "conf.hBaseConnectionConfig.zookeeperQuorum",
+      "value" : "abc"
+    }, {
+      "name" : "conf.hBaseConnectionConfig.clientPort",
+      "value" : 2181
+    }, {
+      "name" : "conf.hBaseConnectionConfig.zookeeperParentZNode",
+      "value" : "/hbase"
+    }, {
+      "name" : "conf.hBaseConnectionConfig.tableName",
+      "value" : "abc"
+    }, {
+      "name" : "conf.hBaseConnectionConfig.kerberosAuth",
+      "value" : false
+    }, {
+      "name" : "conf.hBaseConnectionConfig.hbaseUser",
+      "value" : null
+    }, {
+      "name" : "conf.hBaseConnectionConfig.hbaseConfDir",
+      "value" : null
+    }, {
+      "name" : "conf.hBaseConnectionConfig.hbaseConfigs",
+      "value" : [ ]
+    }, {
+      "name" : "conf.mode",
+      "value" : "BATCH"
+    }, {
+      "name" : "conf.lookups",
+      "value" : [ { } ]
+    }, {
+      "name" : "conf.cache.enabled",
+      "value" : false
+    }, {
+      "name" : "conf.cache.maxSize",
+      "value" : -1
+    }, {
+      "name" : "conf.cache.evictionPolicyType",
+      "value" : null
+    }, {
+      "name" : "conf.cache.expirationTime",
+      "value" : 1
+    }, {
+      "name" : "conf.cache.timeUnit",
+      "value" : "SECONDS"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "HBase Lookup 1",
+      "xPos" : 981.6665725708008,
+      "yPos" : 316.6666717529297,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "HBaseLookup_01OutputLane14807081166070" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "HiveMetadata_01",
+    "library" : "streamsets-datacollector-cdh_5_4-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_hive_HiveMetadataDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "hiveConfigBean.hiveJDBCUrl",
+      "value" : "jdbc:hive2://<host>:<port>/default"
+    }, {
+      "name" : "hiveConfigBean.hiveJDBCDriver",
+      "value" : "org.apache.hive.jdbc.HiveDriver"
+    }, {
+      "name" : "hiveConfigBean.confDir",
+      "value" : "/etc/hive/conf"
+    }, {
+      "name" : "hiveConfigBean.additionalConfigProperties",
+      "value" : [ ]
+    }, {
+      "name" : "hiveConfigBean.maxCacheSize",
+      "value" : -1
+    }, {
+      "name" : "dbNameEL",
+      "value" : "${record:attribute('database')}"
+    }, {
+      "name" : "tableNameEL",
+      "value" : "${record:attribute('table_name')}"
+    }, {
+      "name" : "partitionList",
+      "value" : [ {
+        "name" : "dt",
+        "valueType" : "STRING",
+        "valueEL" : "${record:attribute('dt')}"
+      } ]
+    }, {
+      "name" : "externalTable",
+      "value" : false
+    }, {
+      "name" : "tablePathTemplate",
+      "value" : "/user/hive/warehouse/${record:attribute('database')}.db/${record:attribute('table_name')}"
+    }, {
+      "name" : "partitionPathTemplate",
+      "value" : "dt=${record:attribute('dt')}"
+    }, {
+      "name" : "timeDriver",
+      "value" : "${time:now()}"
+    }, {
+      "name" : "timeZoneID",
+      "value" : "UTC"
+    }, {
+      "name" : "decimalDefaultsConfig.scaleExpression",
+      "value" : "${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.scale'))}"
+    }, {
+      "name" : "decimalDefaultsConfig.precisionExpression",
+      "value" : "${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.precision'))}"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "outputStreamLabels" : [ "Data", "Metadata" ],
+      "yPos" : 316.66666412353516,
+      "stageType" : "PROCESSOR",
+      "description" : "",
+      "label" : "Hive Metadata 1",
+      "xPos" : 1171.6665725708008
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "HiveMetadata_01OutputLane14807081408430", "HiveMetadata_01OutputLane14807081408431" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "HTTPClient_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_http_HttpDProcessor",
+    "stageVersion" : "5",
+    "configuration" : [ {
+      "name" : "conf.dataFormatConfig.filePatternInArchive",
+      "value" : "*"
+    }, {
+      "name" : "conf.dataFormatConfig.charset",
+      "value" : "UTF-8"
+    }, {
+      "name" : "conf.dataFormatConfig.removeCtrlChars",
+      "value" : false
+    }, {
+      "name" : "conf.dataFormatConfig.textMaxLineLen",
+      "value" : 1024
+    }, {
+      "name" : "conf.dataFormatConfig.useCustomDelimiter",
+      "value" : false
+    }, {
+      "name" : "conf.dataFormatConfig.customDelimiter",
+      "value" : "\\r\\n"
+    }, {
+      "name" : "conf.dataFormatConfig.includeCustomDelimiterInTheText",
+      "value" : false
+    }, {
+      "name" : "conf.dataFormatConfig.jsonMaxObjectLen",
+      "value" : 4096
+    }, {
+      "name" : "conf.dataFormatConfig.csvFileFormat",
+      "value" : "CSV"
+    }, {
+      "name" : "conf.dataFormatConfig.csvHeader",
+      "value" : "NO_HEADER"
+    }, {
+      "name" : "conf.dataFormatConfig.csvMaxObjectLen",
+      "value" : 1024
+    }, {
+      "name" : "conf.dataFormatConfig.csvCustomDelimiter",
+      "value" : "|"
+    }, {
+      "name" : "conf.dataFormatConfig.csvCustomEscape",
+      "value" : "\\"
+    }, {
+      "name" : "conf.dataFormatConfig.csvCustomQuote",
+      "value" : "\""
+    }, {
+      "name" : "conf.dataFormatConfig.csvRecordType",
+      "value" : "LIST_MAP"
+    }, {
+      "name" : "conf.dataFormatConfig.csvSkipStartLines",
+      "value" : 0
+    }, {
+      "name" : "conf.dataFormatConfig.parseNull",
+      "value" : false
+    }, {
+      "name" : "conf.dataFormatConfig.nullConstant",
+      "value" : "\\\\N"
+    }, {
+      "name" : "conf.dataFormatConfig.xmlRecordElement",
+      "value" : null
+    }, {
+      "name" : "conf.dataFormatConfig.xPathNamespaceContext",
+      "value" : [ ]
+    }, {
+      "name" : "conf.dataFormatConfig.xmlMaxObjectLen",
+      "value" : 4096
+    }, {
+      "name" : "conf.dataFormatConfig.logMode",
+      "value" : "COMMON_LOG_FORMAT"
+    }, {
+      "name" : "conf.dataFormatConfig.logMaxObjectLen",
+      "value" : 1024
+    }, {
+      "name" : "conf.dataFormatConfig.retainOriginalLine",
+      "value" : false
+    }, {
+      "name" : "conf.dataFormatConfig.customLogFormat",
+      "value" : "%h %l %u %t \"%r\" %>s %b"
+    }, {
+      "name" : "conf.dataFormatConfig.regex",
+      "value" : "^(\\S+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\d+)"
+    }, {
+      "name" : "conf.dataFormatConfig.fieldPathsToGroupName",
+      "value" : [ {
+        "fieldPath" : "/",
+        "group" : 1
+      } ]
+    }, {
+      "name" : "conf.dataFormatConfig.grokPatternDefinition",
+      "value" : null
+    }, {
+      "name" : "conf.dataFormatConfig.grokPattern",
+      "value" : "%{COMMONAPACHELOG}"
+    }, {
+      "name" : "conf.dataFormatConfig.onParseError",
+      "value" : "ERROR"
+    }, {
+      "name" : "conf.dataFormatConfig.maxStackTraceLines",
+      "value" : 50
+    }, {
+      "name" : "conf.dataFormatConfig.enableLog4jCustomLogFormat",
+      "value" : false
+    }, {
+      "name" : "conf.dataFormatConfig.log4jCustomLogFormat",
+      "value" : "%r [%t] %-5p %c %x - %m%n"
+    }, {
+      "name" : "conf.dataFormatConfig.avroSchemaSource",
+      "value" : null
+    }, {
+      "name" : "conf.dataFormatConfig.avroSchema",
+      "value" : null
+    }, {
+      "name" : "conf.dataFormatConfig.schemaRegistryUrls",
+      "value" : [ ]
+    }, {
+      "name" : "conf.dataFormatConfig.schemaLookupMode",
+      "value" : "SUBJECT"
+    }, {
+      "name" : "conf.dataFormatConfig.subject",
+      "value" : null
+    }, {
+      "name" : "conf.dataFormatConfig.schemaId",
+      "value" : null
+    }, {
+      "name" : "conf.dataFormatConfig.protoDescriptorFile",
+      "value" : null
+    }, {
+      "name" : "conf.dataFormatConfig.messageType",
+      "value" : null
+    }, {
+      "name" : "conf.dataFormatConfig.isDelimited",
+      "value" : true
+    }, {
+      "name" : "conf.dataFormatConfig.binaryMaxObjectLen",
+      "value" : 1024
+    }, {
+      "name" : "conf.dataFormatConfig.datagramMode",
+      "value" : "SYSLOG"
+    }, {
+      "name" : "conf.dataFormatConfig.typesDbPath",
+      "value" : null
+    }, {
+      "name" : "conf.dataFormatConfig.convertTime",
+      "value" : false
+    }, {
+      "name" : "conf.dataFormatConfig.excludeInterval",
+      "value" : true
+    }, {
+      "name" : "conf.dataFormatConfig.authFilePath",
+      "value" : null
+    }, {
+      "name" : "conf.dataFormatConfig.wholeFileMaxObjectLen",
+      "value" : 8192
+    }, {
+      "name" : "conf.dataFormatConfig.verifyChecksum",
+      "value" : false
+    }, {
+      "name" : "conf.outputField",
+      "value" : "abc"
+    }, {
+      "name" : "conf.headerOutputLocation",
+      "value" : "HEADER"
+    }, {
+      "name" : "conf.headerAttributePrefix",
+      "value" : null
+    }, {
+      "name" : "conf.headerOutputField",
+      "value" : null
+    }, {
+      "name" : "conf.dataFormat",
+      "value" : "JSON"
+    }, {
+      "name" : "conf.resourceUrl",
+      "value" : "xyz"
+    }, {
+      "name" : "conf.headers",
+      "value" : [ ]
+    }, {
+      "name" : "conf.httpMethod",
+      "value" : "GET"
+    }, {
+      "name" : "conf.methodExpression",
+      "value" : null
+    }, {
+      "name" : "conf.requestBody",
+      "value" : null
+    }, {
+      "name" : "conf.client.transferEncoding",
+      "value" : "CHUNKED"
+    }, {
+      "name" : "conf.client.connectTimeoutMillis",
+      "value" : 0
+    }, {
+      "name" : "conf.client.readTimeoutMillis",
+      "value" : 0
+    }, {
+      "name" : "conf.client.numThreads",
+      "value" : 1
+    }, {
+      "name" : "conf.client.authType",
+      "value" : "NONE"
+    }, {
+      "name" : "conf.client.oauth.consumerKey",
+      "value" : null
+    }, {
+      "name" : "conf.client.oauth.consumerSecret",
+      "value" : null
+    }, {
+      "name" : "conf.client.oauth.token",
+      "value" : null
+    }, {
+      "name" : "conf.client.oauth.tokenSecret",
+      "value" : null
+    }, {
+      "name" : "conf.client.basicAuth.username",
+      "value" : null
+    }, {
+      "name" : "conf.client.basicAuth.password",
+      "value" : null
+    }, {
+      "name" : "conf.client.useProxy",
+      "value" : false
+    }, {
+      "name" : "conf.client.proxy.uri",
+      "value" : null
+    }, {
+      "name" : "conf.client.proxy.username",
+      "value" : null
+    }, {
+      "name" : "conf.client.proxy.password",
+      "value" : null
+    }, {
+      "name" : "conf.client.sslConfig.trustStorePath",
+      "value" : null
+    }, {
+      "name" : "conf.client.sslConfig.trustStorePassword",
+      "value" : null
+    }, {
+      "name" : "conf.client.sslConfig.keyStorePath",
+      "value" : null
+    }, {
+      "name" : "conf.client.sslConfig.keyStorePassword",
+      "value" : null
+    }, {
+      "name" : "conf.maxRequestCompletionSecs",
+      "value" : 60
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "HTTP Client 1",
+      "xPos" : 248.33333333333337,
+      "yPos" : -74.99999936421713,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "HTTPClient_01OutputLane14807081518750" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "JavaScriptEvaluator_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_javascript_JavaScriptDProcessor",
+    "stageVersion" : "2",
+    "configuration" : [ {
+      "name" : "processingMode",
+      "value" : "BATCH"
+    }, {
+      "name" : "script",
+      "value" : "/**\n * Available constants: \n *   They are to assign a type to a field with a value null.\n *   NULL_BOOLEAN, NULL_CHAR, NULL_BYTE, NULL_SHORT, NULL_INTEGER, NULL_LONG\n *   NULL_FLOATNULL_DOUBLE, NULL_DATE, NULL_DATETIME, NULL_TIME, NULL_DECIMAL\n *   NULL_BYTE_ARRAY, NULL_STRING, NULL_LIST, NULL_MAP\n *\n * Available Objects:\n * \n *  records: an array of records to process, depending on the JavaScript processor\n *           processing mode it may have 1 record or all the records in the batch.\n *\n *  state: a dict that is preserved between invocations of this script. \n *        Useful for caching bits of data e.g. counters.\n *\n *  log.<loglevel>(msg, obj...): use instead of print to send log messages to the log4j log instead of stdout.\n *                               loglevel is any log4j level: e.g. info, error, warn, trace.\n *\n *  output.write(record): writes a record to processor output\n *\n *  error.write(record, message): sends a record to error\n *\n *  sdcFunctions.getFieldNull(Record, 'field path'): Receive a constant defined above\n *                            to check if the field is typed field with value null\n *  sdcFunctions.createRecord(String recordId): Creates a new record.\n *                            Pass a recordId to uniquely identify the record and include enough information to track down the record source. \n *  sdcFunctions.createMap(boolean listMap): Create a map for use as a field in a record.\n *                            Pass true to this function to create a list map (ordered map)\n *\n *  sdcFunctions.createEvent(String type, int version): Creates a new event.\n *                            Create new empty event with standard headers.\n *  sdcFunctions.toEvent(Record): Send event to event stream\n *                            Only events created with sdcFunctions.createEvent are supported.\n *\n * Available Record Header Variables:n *\n *  record.attributes: a map of record header attributes.\n *\n *  record.<header name>: get the value of 'header name'.\n */\n\n// Sample JavaScript code\nfor(var i = 0; i < records.length; i++) {\n  try {\n    // Change record root field value to a STRING value\n    //records[i].value = 'Hello ' + i;\n\n\n    // Change record root field value to a MAP value and create an entry\n    //records[i].value = { V : 'Hello' };\n\n    // Access a MAP entry\n    //records[i].value.X = records[i].value['V'] + ' World';\n\n    // Modify a MAP entry\n    //records[i].value.V = 5;\n\n    // Create an ARRAY entry\n    //records[i].value.A = ['Element 1', 'Element 2'];\n\n    // Access a Array entry\n    //records[i].value.B = records[i].value['A'][0];\n\n    // Modify an existing ARRAY entry\n    //records[i].value.A[0] = 100;\n\n    // Assign a integer type to a field and value null\n    // records[i].value.null_int = NULL_INTEGER \n\n    // Check if the field is NULL_INTEGER. If so, assign a value \n    // if(sdcFunctions.getFieldNull(records[i], '/null_int') == NULL_INTEGER)\n    //    records[i].value.null_int = 123\n\n    // Create a new record with map field \n    // var newRecord = sdcFunctions.createRecord(records[i].sourceId + ':newRecordId');\n    // newRecord.value = {'field1' : 'val1', 'field2' : 'val2'};\n    // output.write(newRecord);\n    // Create a new map and add it to the original record\n    // var newMap = sdcFunctions.createMap(true);\n    // newMap['key'] = 'value';\n    // records[i].value['b'] = newMap;\n\n    //Applies if the source uses WHOLE_FILE as data format\n    //var input_stream = record.value['fileRef'].getInputStream();\n    //try {\n      //input_stream.read(); //Process the input stream\n    //} finally{\n      //input_stream.close()\n    //}\n\n    // Modify a header attribute entry\n    // records[i].attributes['name'] = records[i].attributes['first_name'] + ' ' + records[i].attributes['last_name']    //\n\n    // Get a record header with field names ex. get sourceId and errorCode\n    // var sourceId = records[i].sourceId\n    // var errorCode = ''\n    // if(records[i].errorCode) {\n    //     errorCode = records[i].errorCode\n    // }\n\n    // Write record to processor output\n    output.write(records[i]);\n  } catch (e) {\n    // Send record to error\n    error.write(records[i], e);\n  }\n}\n"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "JavaScript Evaluator 1",
+      "xPos" : 418.3333638509115,
+      "yPos" : -68.3333306312561,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "JavaScriptEvaluator_01OutputLane14807081575590" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "JDBCLookup_01",
+    "library" : "streamsets-datacollector-jdbc-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_jdbclookup_JdbcLookupDProcessor",
+    "stageVersion" : "2",
+    "configuration" : [ {
+      "name" : "query",
+      "value" : "abc"
+    }, {
+      "name" : "columnMappings",
+      "value" : [ { } ]
+    }, {
+      "name" : "maxClobSize",
+      "value" : 1000
+    }, {
+      "name" : "maxBlobSize",
+      "value" : 1000
+    }, {
+      "name" : "hikariConfigBean.connectionString",
+      "value" : "abc"
+    }, {
+      "name" : "hikariConfigBean.useCredentials",
+      "value" : true
+    }, {
+      "name" : "hikariConfigBean.username",
+      "value" : "abc"
+    }, {
+      "name" : "hikariConfigBean.password",
+      "value" : "xyz"
+    }, {
+      "name" : "hikariConfigBean.driverProperties",
+      "value" : [ ]
+    }, {
+      "name" : "hikariConfigBean.driverClassName",
+      "value" : null
+    }, {
+      "name" : "hikariConfigBean.connectionTestQuery",
+      "value" : null
+    }, {
+      "name" : "hikariConfigBean.maximumPoolSize",
+      "value" : 1
+    }, {
+      "name" : "hikariConfigBean.minIdle",
+      "value" : 1
+    }, {
+      "name" : "hikariConfigBean.connectionTimeout",
+      "value" : "${30 * SECONDS}"
+    }, {
+      "name" : "hikariConfigBean.idleTimeout",
+      "value" : "${10 * MINUTES}"
+    }, {
+      "name" : "hikariConfigBean.maxLifetime",
+      "value" : "${30 * MINUTES}"
+    }, {
+      "name" : "hikariConfigBean.readOnly",
+      "value" : true
+    }, {
+      "name" : "hikariConfigBean.transactionIsolation",
+      "value" : "DEFAULT"
+    }, {
+      "name" : "cacheConfig.enabled",
+      "value" : false
+    }, {
+      "name" : "cacheConfig.maxSize",
+      "value" : -1
+    }, {
+      "name" : "cacheConfig.evictionPolicyType",
+      "value" : null
+    }, {
+      "name" : "cacheConfig.expirationTime",
+      "value" : 1
+    }, {
+      "name" : "cacheConfig.timeUnit",
+      "value" : "SECONDS"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "JDBC Lookup 1",
+      "xPos" : 599.999989827474,
+      "yPos" : -71.66666412353516,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "JDBCLookup_01OutputLane14807081639530" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "JDBCTee_01",
+    "library" : "streamsets-datacollector-jdbc-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_jdbctee_JdbcTeeDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "tableNameTemplate",
+      "value" : "${record:attribute('tableName')}"
+    }, {
+      "name" : "customMappings",
+      "value" : [ {
+        "paramValue" : "?"
+      } ]
+    }, {
+      "name" : "generatedColumnMappings",
+      "value" : [ { } ]
+    }, {
+      "name" : "changeLogFormat",
+      "value" : "NONE"
+    }, {
+      "name" : "rollbackOnError",
+      "value" : false
+    }, {
+      "name" : "useMultiRowInsert",
+      "value" : true
+    }, {
+      "name" : "maxPrepStmtParameters",
+      "value" : -1
+    }, {
+      "name" : "hikariConfigBean.connectionString",
+      "value" : "abc"
+    }, {
+      "name" : "hikariConfigBean.useCredentials",
+      "value" : true
+    }, {
+      "name" : "hikariConfigBean.username",
+      "value" : "abc"
+    }, {
+      "name" : "hikariConfigBean.password",
+      "value" : "xyz"
+    }, {
+      "name" : "hikariConfigBean.driverProperties",
+      "value" : [ ]
+    }, {
+      "name" : "hikariConfigBean.driverClassName",
+      "value" : null
+    }, {
+      "name" : "hikariConfigBean.connectionTestQuery",
+      "value" : null
+    }, {
+      "name" : "hikariConfigBean.maximumPoolSize",
+      "value" : 1
+    }, {
+      "name" : "hikariConfigBean.minIdle",
+      "value" : 1
+    }, {
+      "name" : "hikariConfigBean.connectionTimeout",
+      "value" : "${30 * SECONDS}"
+    }, {
+      "name" : "hikariConfigBean.idleTimeout",
+      "value" : "${10 * MINUTES}"
+    }, {
+      "name" : "hikariConfigBean.maxLifetime",
+      "value" : "${30 * MINUTES}"
+    }, {
+      "name" : "hikariConfigBean.transactionIsolation",
+      "value" : "DEFAULT"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "JDBC Tee 1",
+      "xPos" : 776.6666768391927,
+      "yPos" : -63.33332538604736,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "JDBCTee_01OutputLane14807081657020" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "JSONParser_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_jsonparser_JsonParserDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "fieldPathToParse",
+      "value" : "abc"
+    }, {
+      "name" : "removeCtrlChars",
+      "value" : false
+    }, {
+      "name" : "parsedFieldPath",
+      "value" : "xyz"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "JSON Parser 1",
+      "xPos" : 961.6666768391927,
+      "yPos" : -59.99999237060547,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "JSONParser_01OutputLane14807081831750" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "JythonEvaluator_01",
+    "library" : "streamsets-datacollector-jython_2_7-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_jython_JythonDProcessor",
+    "stageVersion" : "2",
+    "configuration" : [ {
+      "name" : "processingMode",
+      "value" : "BATCH"
+    }, {
+      "name" : "script",
+      "value" : "#\n# Available constants: \n#   They are to assign a type to a field with a value null.\n#   NULL_BOOLEAN, NULL_CHAR, NULL_BYTE, NULL_SHORT, NULL_INTEGER, NULL_LONG\n#   NULL_FLOATNULL_DOUBLE, NULL_DATE, NULL_DATETIME, NULL_TIME, NULL_DECIMAL\n#   NULL_BYTE_ARRAY, NULL_STRING, NULL_LIST, NULL_MAP\n# \n# Available Objects:\n# \n#  records: an array of records to process, depending on Jython processor\n#           processing mode it may have 1 record or all the records in the batch.\n#\n#  state: a dict that is preserved between invocations of this script. \n#         Useful for caching bits of data e.g. counters.\n#\n#  log.<loglevel>(msg, obj...): use instead of print to send log messages to the log4j log instead of stdout.\n#                               loglevel is any log4j level: e.g. info, error, warn, trace.\n#\n#  output.write(record): writes a record to processor output\n#\n#  error.write(record, message): sends a record to error\n#\n#  sdcFunctions.getFieldNull(Record, 'field path'): Receive a constant defined above \n#                                  to check if the field is typed field with value null\n#  sdcFunctions.createRecord(String recordId): Creates a new record.\n#                            Pass a recordId to uniquely identify the record and include enough information to track down the record source. \n#  sdcFunctions.createMap(boolean listMap): Create a map for use as a field in a record.\n#                            Pass True to this function to create a list map (ordered map)\n#\n#  sdcFunctions.createEvent(String type, int version): Creates a new event.\n#                            Create new empty event with standard headers.\n#  sdcFunctions.toEvent(Record): Send event to event stream\n#                            Only events created with sdcFunctions.createEvent are supported.\n#\n# Available Record Header Variables:\n#\n#  record.attributes: a map of record header attributes.\n#\n#  record.<header name>: get the value of 'header name'.\n#\n# Add additional module search paths:\n#import sys\n#sys.path.append('/some/other/dir/to/search')\n\n# Sample Jython code\nfor record in records:\n  try:\n    # Change record root field value to a STRING value\n    #record.value = 'Hello '\n\n\n    # Change record root field value to a MAP value and create an entry\n    #record.value = { 'V' : 'Hello'}\n\n    # Access a MAP entry\n    #record.value['X'] = record.value['V'] + ' World'\n\n    # Modify a MAP entry\n    #record.value['V'] = 5\n\n    # Create an ARRAY entry\n    #record.value['A'] = [ 'Element 1', 'Element 2' ]\n\n    # Access an ARRAY entry\n    #record.value['B'] = record.value['A'][0]\n\n    # Modify an existing ARRAY entry\n    #record.value['A'][0] = 100\n\n    # Assign a integer type to a field and value null\n    # record.value['null_int'] = NULL_INTEGER \n\n    # Check if the field is NULL_INTEGER(Both '==' and 'is' work). If so, assign a value \n    # if sdcFunctions.getFieldNull(record, '/null_int') == NULL_INTEGER:\n    #    record.value['null_int'] = 123\n\n    # Create a new record with map field \n    # newRecord = sdcFunctions.createRecord(record.sourceId + ':newRecordId')\n    # newRecord.value = {'field1' : 'val1', 'field2' : 'val2'}\n    # output.write(newRecord)\n\n    # Applies if the source uses WHOLE_FILE as data format\n    # input_stream = record.value['fileRef'].getInputStream()\n    # try:\n    #   input_stream.read() #Process the input stream\n    # finally:  \n    #   input_stream.close()\n\n    # Modify a record header attribute entry\n    #record.attributes['name'] = record.attributes['first_name'] + ' ' + record.attributes['last_name']\n\n    # Get a record header with field names ex. get sourceId and errorCode\n    #sourceId = record.sourceId\n    #errorCode = ''\n    #if record.errorCode:\n    #   errorCode = record.errorCode\n\n    # Write record to processor output\n    output.write(record)\n\n  except Exception as e:\n    # Send record to error\n    error.write(record, str(e))\n"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Jython Evaluator 1",
+      "xPos" : 1163.3334248860679,
+      "yPos" : -56.66666126251221,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "JythonEvaluator_01OutputLane14807081957700" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "LogParser_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_logparser_LogParserDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "fieldPathToParse",
+      "value" : "/text"
+    }, {
+      "name" : "removeCtrlChars",
+      "value" : false
+    }, {
+      "name" : "parsedFieldPath",
+      "value" : "/"
+    }, {
+      "name" : "logMode",
+      "value" : "COMMON_LOG_FORMAT"
+    }, {
+      "name" : "customLogFormat",
+      "value" : "%h %l %u %t \"%r\" %>s %b"
+    }, {
+      "name" : "regex",
+      "value" : "^(\\S+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\d+)"
+    }, {
+      "name" : "fieldPathsToGroupName",
+      "value" : [ {
+        "fieldPath" : "/",
+        "group" : 1
+      } ]
+    }, {
+      "name" : "grokPatternDefinition",
+      "value" : null
+    }, {
+      "name" : "grokPattern",
+      "value" : "%{COMMONAPACHELOG}"
+    }, {
+      "name" : "enableLog4jCustomLogFormat",
+      "value" : false
+    }, {
+      "name" : "log4jCustomLogFormat",
+      "value" : "%r [%t] %-5p %c %x - %m%n"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Log Parser 1",
+      "xPos" : 230.99988810221362,
+      "yPos" : 461.99998346964514,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "LogParser_01OutputLane14807082234230" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "RecordDeduplicator_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_dedup_DeDupDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "recordCountWindow",
+      "value" : 1000000
+    }, {
+      "name" : "timeWindowSecs",
+      "value" : 0
+    }, {
+      "name" : "compareFields",
+      "value" : "ALL_FIELDS"
+    }, {
+      "name" : "fieldsToCompare",
+      "value" : [ ]
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "outputStreamLabels" : [ "Unique Records", "Duplicate Records" ],
+      "yPos" : 460,
+      "stageType" : "PROCESSOR",
+      "description" : "",
+      "label" : "Record Deduplicator 1",
+      "xPos" : 424.9998881022136
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "RecordDeduplicator_01OutputLane14807082494760", "RecordDeduplicator_01OutputLane14807082494761" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "RedisLookupProcessor_01",
+    "library" : "streamsets-datacollector-redis-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_kv_redis_RedisLookupDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "conf.uri",
+      "value" : "abc"
+    }, {
+      "name" : "conf.connectionTimeout",
+      "value" : 60
+    }, {
+      "name" : "conf.mode",
+      "value" : "BATCH"
+    }, {
+      "name" : "conf.lookups",
+      "value" : [ {
+        "dataType" : "STRING"
+      } ]
+    }, {
+      "name" : "conf.cache.enabled",
+      "value" : false
+    }, {
+      "name" : "conf.cache.maxSize",
+      "value" : -1
+    }, {
+      "name" : "conf.cache.evictionPolicyType",
+      "value" : null
+    }, {
+      "name" : "conf.cache.expirationTime",
+      "value" : 1
+    }, {
+      "name" : "conf.cache.timeUnit",
+      "value" : "SECONDS"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Redis Lookup Processor 1",
+      "xPos" : 611.9998881022136,
+      "yPos" : 453,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640", "RecordDeduplicator_01OutputLane14807082494761" ],
+    "outputLanes" : [ "RedisLookupProcessor_01OutputLane14807082640220" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "SparkEvaluator_01",
+    "library" : "streamsets-datacollector-cdh_5_4-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_spark_StandaloneSparkDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "sparkProcessorConfigBean.threadCount",
+      "value" : 4
+    }, {
+      "name" : "sparkProcessorConfigBean.appName",
+      "value" : "SDC Spark App"
+    }, {
+      "name" : "sparkProcessorConfigBean.transformerClass",
+      "value" : "abc"
+    }, {
+      "name" : "sparkProcessorConfigBean.preprocessMethodArgs",
+      "value" : [ ]
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Spark Evaluator 1",
+      "xPos" : 789.9998881022136,
+      "yPos" : 456,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "SparkEvaluator_01OutputLane14807082897190" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "StaticLookup_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_kv_local_LocalLookupDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "conf.values",
+      "value" : [ ]
+    }, {
+      "name" : "conf.mode",
+      "value" : "BATCH"
+    }, {
+      "name" : "conf.lookups",
+      "value" : [ { } ]
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Static Lookup 1",
+      "xPos" : 972.9998881022136,
+      "yPos" : 457,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "StaticLookup_01OutputLane14807083026970" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "StreamSelector_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_selector_SelectorDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "lanePredicates",
+      "value" : [ {
+        "outputLane" : "StreamSelector_01OutputLane1480708309673",
+        "predicate" : "default"
+      } ]
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Stream Selector 1",
+      "xPos" : 1164.9998881022136,
+      "yPos" : 456,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "StreamSelector_01OutputLane1480708309673" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "ValueReplacer_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_fieldvaluereplacer_FieldValueReplacerDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "fieldsToNull",
+      "value" : [ ]
+    }, {
+      "name" : "fieldsToReplaceIfNull",
+      "value" : [ {
+        "fields" : [ ]
+      } ]
+    }, {
+      "name" : "onStagePreConditionFailure",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "fieldsToConditionallyReplace",
+      "value" : [ {
+        "fieldNames" : [ ],
+        "operator" : "LESS_THAN"
+      } ]
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Value Replacer 1",
+      "xPos" : 1354.9998881022136,
+      "yPos" : 188,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "ValueReplacer_01OutputLane14807083184870" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "XMLFlattener_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_xmlflattener_XMLFlatteningDProcessor",
+    "stageVersion" : "3",
+    "configuration" : [ {
+      "name" : "fromField",
+      "value" : "abc"
+    }, {
+      "name" : "keepOriginalFields",
+      "value" : true
+    }, {
+      "name" : "newFieldOverwrites",
+      "value" : false
+    }, {
+      "name" : "outputField",
+      "value" : null
+    }, {
+      "name" : "recordDelimiter",
+      "value" : null
+    }, {
+      "name" : "fieldDelimiter",
+      "value" : "."
+    }, {
+      "name" : "attrDelimiter",
+      "value" : "#"
+    }, {
+      "name" : "ignoreAttributes",
+      "value" : false
+    }, {
+      "name" : "ignoreNamespace",
+      "value" : false
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "XML Flattener 1",
+      "xPos" : 1352.9998881022136,
+      "yPos" : 322,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "XMLFlattener_01OutputLane14807083223950" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "XMLParser_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_xmlparser_XmlParserDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "configs.fieldPathToParse",
+      "value" : "abc"
+    }, {
+      "name" : "configs.charset",
+      "value" : "UTF-8"
+    }, {
+      "name" : "configs.removeCtrlChars",
+      "value" : false
+    }, {
+      "name" : "configs.xmlRecordElement",
+      "value" : null
+    }, {
+      "name" : "configs.xPathNamespaceContext",
+      "value" : [ ]
+    }, {
+      "name" : "configs.parsedFieldPath",
+      "value" : "xyz"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "XML Parser 1",
+      "xPos" : 1360.9998881022136,
+      "yPos" : 68,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "AmazonS3_01OutputLane14807079733640" ],
+    "outputLanes" : [ "XMLParser_01OutputLane14807083357830" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "Trash_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Trash 1",
+      "xPos" : 1881.9997660319011,
+      "yPos" : 139,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ "XMLParser_01OutputLane14807083357830", "ValueReplacer_01OutputLane14807083184870", "XMLFlattener_01OutputLane14807083223950", "JythonEvaluator_01OutputLane14807081957700", "FieldFlattener_01OutputLane14807080200370", "FieldRenamer_01OutputLane14807080800250", "HiveMetadata_01OutputLane14807081408430", "StreamSelector_01OutputLane1480708309673", "StaticLookup_01OutputLane14807083026970", "HBaseLookup_01OutputLane14807081166070", "FieldRemover_01OutputLane14807080757040", "ExpressionEvaluator_01OutputLane14807080191340", "JSONParser_01OutputLane14807081831750", "JDBCTee_01OutputLane14807081657020", "DevRecordCreator_01OutputLane14807080185440", "FieldPivoter_01OutputLane14807080652940", "GroovyEvaluator_01OutputLane14807081113990", "SparkEvaluator_01OutputLane14807082897190", "RedisLookupProcessor_01OutputLane14807082640220", "GeoIP_01OutputLane14807081054150", "FieldMerger_01OutputLane14807080584320", "DevRandomError_01OutputLane14807080178550", "JDBCLookup_01OutputLane14807081639530", "JavaScriptEvaluator_01OutputLane14807081575590", "Base64FieldEncoder_01OutputLane14807080161810", "FieldMasker_01OutputLane14807080523940", "FieldTypeConverter_01OutputLane14807080978310", "RecordDeduplicator_01OutputLane14807082494760", "HTTPClient_01OutputLane14807081518750", "Base64FieldDecoder_01OutputLane14807080148630", "FieldHasher_01OutputLane14807080207170", "FieldSplitter_01OutputLane14807080878900", "LogParser_01OutputLane14807082234230" ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "Trash_02",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Trash 2",
+      "xPos" : 1869.999860127767,
+      "yPos" : 278.75,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ "HiveMetadata_01OutputLane14807081408431" ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  } ],
+  "errorStage" : {
+    "instanceName" : "Discard_ErrorStage",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Error Records - Discard",
+      "xPos" : 241.66666412353516,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  },
+  "info" : {
+    "name" : "Orgin_Processor_2_2",
+    "description" : "",
+    "created" : 1480707969590,
+    "lastModified" : 1480708833859,
+    "creator" : "admin",
+    "lastModifier" : "admin",
+    "lastRev" : "0",
+    "uuid" : "a77e4fcf-3e07-4031-b2db-5afc4b716779",
+    "valid" : false,
+    "metadata" : {
+      "labels" : [ ]
+    }
+  },
+  "metadata" : {
+    "labels" : [ ]
+  },
+  "statsAggregatorStage" : null,
+  "previewable" : true,
+  "issues" : {
+    "pipelineIssues" : [ ],
+    "stageIssues" : { },
+    "issueCount" : 0
+  },
+  "valid" : true
+}

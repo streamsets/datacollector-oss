@@ -1,0 +1,204 @@
+{
+  "schemaVersion" : 2,
+  "version" : 5,
+  "uuid" : "f66ff340-0f01-4d86-8621-c52038c46c86",
+  "description" : "",
+  "configuration" : [ {
+    "name" : "executionMode",
+    "value" : "STANDALONE"
+  }, {
+    "name" : "deliveryGuarantee",
+    "value" : "AT_LEAST_ONCE"
+  }, {
+    "name" : "shouldRetry",
+    "value" : true
+  }, {
+    "name" : "retryAttempts",
+    "value" : -1
+  }, {
+    "name" : "memoryLimit",
+    "value" : "${jvm:maxMemoryMB() * 0.65}"
+  }, {
+    "name" : "memoryLimitExceeded",
+    "value" : "STOP_PIPELINE"
+  }, {
+    "name" : "notifyOnStates",
+    "value" : [ "RUN_ERROR", "STOPPED", "FINISHED" ]
+  }, {
+    "name" : "emailIDs",
+    "value" : [ ]
+  }, {
+    "name" : "constants",
+    "value" : [ ]
+  }, {
+    "name" : "badRecordsHandling",
+    "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_recordstolocalfilesystem_ToErrorLocalFSDTarget::1"
+  }, {
+    "name" : "clusterSlaveMemory",
+    "value" : 1024
+  }, {
+    "name" : "clusterSlaveJavaOpts",
+    "value" : "-XX:PermSize=128M -XX:MaxPermSize=256M -Dhttps.protocols=TLSv1.2,TLSv1.1 -Dlog4j.debug"
+  }, {
+    "name" : "clusterLauncherEnv",
+    "value" : [ ]
+  }, {
+    "name" : "mesosDispatcherURL",
+    "value" : null
+  }, {
+    "name" : "hdfsS3ConfDir",
+    "value" : null
+  }, {
+    "name" : "rateLimit",
+    "value" : 0
+  }, {
+    "name" : "statsAggregatorStage",
+    "value" : ""
+  } ],
+  "uiInfo" : {
+    "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
+      "batchSize" : 10,
+      "timeout" : 10000,
+      "writeToDestinations" : false,
+      "showHeader" : false,
+      "showFieldType" : true,
+      "rememberMe" : false
+    }
+  },
+  "stages" : [ {
+    "instanceName" : "SDCRPCtoKafka_01",
+    "library" : "streamsets-datacollector-apache-kafka_0_10-lib",
+    "stageName" : "com_streamsets_pipeline_stage_origin_ipctokafka_SdcIpcToKafkaDSource",
+    "stageVersion" : "2",
+    "configuration" : [ {
+      "name" : "configs.port",
+      "value" : 20000
+    }, {
+      "name" : "configs.maxConcurrentRequests",
+      "value" : 10
+    }, {
+      "name" : "configs.appId",
+      "value" : "abc"
+    }, {
+      "name" : "configs.maxRpcRequestSize",
+      "value" : 100
+    }, {
+      "name" : "configs.sslEnabled",
+      "value" : false
+    }, {
+      "name" : "configs.keyStoreFile",
+      "value" : null
+    }, {
+      "name" : "configs.keyStorePassword",
+      "value" : null
+    }, {
+      "name" : "conf.dataGeneratorFormatConfig.charset",
+      "value" : "UTF-8"
+    }, {
+      "name" : "conf.metadataBrokerList",
+      "value" : "localhost:9092"
+    }, {
+      "name" : "conf.topic",
+      "value" : "topicName"
+    }, {
+      "name" : "conf.keySerializer",
+      "value" : "STRING"
+    }, {
+      "name" : "conf.valueSerializer",
+      "value" : "DEFAULT"
+    }, {
+      "name" : "conf.kafkaProducerConfigs",
+      "value" : [ ]
+    }, {
+      "name" : "kafkaMaxMessageSize",
+      "value" : 900
+    }, {
+      "name" : "topic",
+      "value" : "topicName"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "SDC RPC to Kafka 1",
+      "xPos" : 60,
+      "yPos" : 50,
+      "stageType" : "SOURCE"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ "SDCRPCtoKafka_01OutputLane14807064884080" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "Trash_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Trash 1",
+      "xPos" : 280,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ "SDCRPCtoKafka_01OutputLane14807064884080" ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  } ],
+  "errorStage" : {
+    "instanceName" : "WritetoFile_ErrorStage",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_recordstolocalfilesystem_ToErrorLocalFSDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "directory",
+      "value" : "abc"
+    }, {
+      "name" : "uniquePrefix",
+      "value" : "sdc-${sdc:id()}"
+    }, {
+      "name" : "rotationIntervalSecs",
+      "value" : "${1 * HOURS}"
+    }, {
+      "name" : "maxFileSizeMbs",
+      "value" : 512
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Error Records - Write to File",
+      "xPos" : 500,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  },
+  "info" : {
+    "name" : "SDC_RPC_Kafka_Trash_2_2",
+    "description" : "",
+    "created" : 1480706485871,
+    "lastModified" : 1480706511367,
+    "creator" : "admin",
+    "lastModifier" : "admin",
+    "lastRev" : "0",
+    "uuid" : "82494eb0-c823-4df9-a3ee-6bb8ef9c27a3",
+    "valid" : false,
+    "metadata" : {
+      "labels" : [ ]
+    }
+  },
+  "metadata" : {
+    "labels" : [ ]
+  },
+  "statsAggregatorStage" : null,
+  "previewable" : true,
+  "issues" : {
+    "pipelineIssues" : [ ],
+    "stageIssues" : { },
+    "issueCount" : 0
+  },
+  "valid" : true
+}

@@ -1,0 +1,786 @@
+{
+  "schemaVersion" : 2,
+  "version" : 5,
+  "uuid" : "4c3cc43f-914d-4043-866c-9d41931e80d3",
+  "description" : "",
+  "configuration" : [ {
+    "name" : "executionMode",
+    "value" : "STANDALONE"
+  }, {
+    "name" : "deliveryGuarantee",
+    "value" : "AT_LEAST_ONCE"
+  }, {
+    "name" : "shouldRetry",
+    "value" : true
+  }, {
+    "name" : "retryAttempts",
+    "value" : -1
+  }, {
+    "name" : "memoryLimit",
+    "value" : "${jvm:maxMemoryMB() * 0.65}"
+  }, {
+    "name" : "memoryLimitExceeded",
+    "value" : "STOP_PIPELINE"
+  }, {
+    "name" : "notifyOnStates",
+    "value" : [ "RUN_ERROR", "STOPPED", "FINISHED" ]
+  }, {
+    "name" : "emailIDs",
+    "value" : [ ]
+  }, {
+    "name" : "constants",
+    "value" : [ ]
+  }, {
+    "name" : "badRecordsHandling",
+    "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget::1"
+  }, {
+    "name" : "clusterSlaveMemory",
+    "value" : 1024
+  }, {
+    "name" : "clusterSlaveJavaOpts",
+    "value" : "-XX:PermSize=128M -XX:MaxPermSize=256M -Dhttps.protocols=TLSv1.2,TLSv1.1 -Dlog4j.debug"
+  }, {
+    "name" : "clusterLauncherEnv",
+    "value" : [ ]
+  }, {
+    "name" : "mesosDispatcherURL",
+    "value" : null
+  }, {
+    "name" : "hdfsS3ConfDir",
+    "value" : null
+  }, {
+    "name" : "rateLimit",
+    "value" : 0
+  }, {
+    "name" : "statsAggregatorStage",
+    "value" : ""
+  } ],
+  "uiInfo" : {
+    "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
+      "batchSize" : 10,
+      "timeout" : 10000,
+      "writeToDestinations" : false,
+      "showHeader" : false,
+      "showFieldType" : true,
+      "rememberMe" : false
+    }
+  },
+  "stages" : [ {
+    "instanceName" : "Directory_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_origin_spooldir_SpoolDirDSource",
+    "stageVersion" : "8",
+    "configuration" : [ {
+      "name" : "conf.dataFormatConfig.compression",
+      "value" : "NONE"
+    }, {
+      "name" : "conf.dataFormatConfig.filePatternInArchive",
+      "value" : "*"
+    }, {
+      "name" : "conf.dataFormatConfig.charset",
+      "value" : "UTF-8"
+    }, {
+      "name" : "conf.dataFormatConfig.removeCtrlChars",
+      "value" : false
+    }, {
+      "name" : "conf.dataFormatConfig.textMaxLineLen",
+      "value" : 1024
+    }, {
+      "name" : "conf.dataFormatConfig.useCustomDelimiter",
+      "value" : false
+    }, {
+      "name" : "conf.dataFormatConfig.customDelimiter",
+      "value" : "\\r\\n"
+    }, {
+      "name" : "conf.dataFormatConfig.includeCustomDelimiterInTheText",
+      "value" : false
+    }, {
+      "name" : "conf.dataFormatConfig.jsonContent",
+      "value" : "MULTIPLE_OBJECTS"
+    }, {
+      "name" : "conf.dataFormatConfig.jsonMaxObjectLen",
+      "value" : 4096
+    }, {
+      "name" : "conf.dataFormatConfig.csvFileFormat",
+      "value" : "CSV"
+    }, {
+      "name" : "conf.dataFormatConfig.csvHeader",
+      "value" : "NO_HEADER"
+    }, {
+      "name" : "conf.dataFormatConfig.csvMaxObjectLen",
+      "value" : 1024
+    }, {
+      "name" : "conf.dataFormatConfig.csvCustomDelimiter",
+      "value" : "|"
+    }, {
+      "name" : "conf.dataFormatConfig.csvCustomEscape",
+      "value" : "\\"
+    }, {
+      "name" : "conf.dataFormatConfig.csvCustomQuote",
+      "value" : "\""
+    }, {
+      "name" : "conf.dataFormatConfig.csvRecordType",
+      "value" : "LIST_MAP"
+    }, {
+      "name" : "conf.dataFormatConfig.csvSkipStartLines",
+      "value" : 0
+    }, {
+      "name" : "conf.dataFormatConfig.parseNull",
+      "value" : false
+    }, {
+      "name" : "conf.dataFormatConfig.nullConstant",
+      "value" : "\\\\N"
+    }, {
+      "name" : "conf.dataFormatConfig.xmlRecordElement",
+      "value" : null
+    }, {
+      "name" : "conf.dataFormatConfig.xPathNamespaceContext",
+      "value" : [ ]
+    }, {
+      "name" : "conf.dataFormatConfig.xmlMaxObjectLen",
+      "value" : 4096
+    }, {
+      "name" : "conf.dataFormatConfig.logMode",
+      "value" : "COMMON_LOG_FORMAT"
+    }, {
+      "name" : "conf.dataFormatConfig.logMaxObjectLen",
+      "value" : 1024
+    }, {
+      "name" : "conf.dataFormatConfig.retainOriginalLine",
+      "value" : false
+    }, {
+      "name" : "conf.dataFormatConfig.customLogFormat",
+      "value" : "%h %l %u %t \"%r\" %>s %b"
+    }, {
+      "name" : "conf.dataFormatConfig.regex",
+      "value" : "^(\\S+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\d+)"
+    }, {
+      "name" : "conf.dataFormatConfig.fieldPathsToGroupName",
+      "value" : [ {
+        "fieldPath" : "/",
+        "group" : 1
+      } ]
+    }, {
+      "name" : "conf.dataFormatConfig.grokPatternDefinition",
+      "value" : null
+    }, {
+      "name" : "conf.dataFormatConfig.grokPattern",
+      "value" : "%{COMMONAPACHELOG}"
+    }, {
+      "name" : "conf.dataFormatConfig.onParseError",
+      "value" : "ERROR"
+    }, {
+      "name" : "conf.dataFormatConfig.maxStackTraceLines",
+      "value" : 50
+    }, {
+      "name" : "conf.dataFormatConfig.enableLog4jCustomLogFormat",
+      "value" : false
+    }, {
+      "name" : "conf.dataFormatConfig.log4jCustomLogFormat",
+      "value" : "%r [%t] %-5p %c %x - %m%n"
+    }, {
+      "name" : "conf.dataFormatConfig.avroSchema",
+      "value" : null
+    }, {
+      "name" : "conf.dataFormatConfig.schemaRegistryUrls",
+      "value" : [ ]
+    }, {
+      "name" : "conf.dataFormatConfig.schemaLookupMode",
+      "value" : "SUBJECT"
+    }, {
+      "name" : "conf.dataFormatConfig.subject",
+      "value" : null
+    }, {
+      "name" : "conf.dataFormatConfig.schemaId",
+      "value" : null
+    }, {
+      "name" : "conf.dataFormatConfig.protoDescriptorFile",
+      "value" : null
+    }, {
+      "name" : "conf.dataFormatConfig.messageType",
+      "value" : null
+    }, {
+      "name" : "conf.dataFormatConfig.isDelimited",
+      "value" : true
+    }, {
+      "name" : "conf.dataFormatConfig.binaryMaxObjectLen",
+      "value" : 1024
+    }, {
+      "name" : "conf.dataFormatConfig.datagramMode",
+      "value" : "SYSLOG"
+    }, {
+      "name" : "conf.dataFormatConfig.typesDbPath",
+      "value" : null
+    }, {
+      "name" : "conf.dataFormatConfig.convertTime",
+      "value" : false
+    }, {
+      "name" : "conf.dataFormatConfig.excludeInterval",
+      "value" : true
+    }, {
+      "name" : "conf.dataFormatConfig.authFilePath",
+      "value" : null
+    }, {
+      "name" : "conf.dataFormatConfig.wholeFileMaxObjectLen",
+      "value" : 8192
+    }, {
+      "name" : "conf.dataFormat",
+      "value" : "AVRO"
+    }, {
+      "name" : "conf.spoolDir",
+      "value" : "d"
+    }, {
+      "name" : "conf.filePattern",
+      "value" : "f"
+    }, {
+      "name" : "conf.useLastModified",
+      "value" : "LEXICOGRAPHICAL"
+    }, {
+      "name" : "conf.processSubdirectories",
+      "value" : false
+    }, {
+      "name" : "conf.allowLateDirectory",
+      "value" : false
+    }, {
+      "name" : "conf.overrunLimit",
+      "value" : 128
+    }, {
+      "name" : "conf.batchSize",
+      "value" : 1000
+    }, {
+      "name" : "conf.poolingTimeoutSecs",
+      "value" : 600
+    }, {
+      "name" : "conf.maxSpoolFiles",
+      "value" : 1000
+    }, {
+      "name" : "conf.initialFileToProcess",
+      "value" : null
+    }, {
+      "name" : "conf.errorArchiveDir",
+      "value" : null
+    }, {
+      "name" : "conf.postProcessing",
+      "value" : "NONE"
+    }, {
+      "name" : "conf.archiveDir",
+      "value" : null
+    }, {
+      "name" : "conf.retentionTimeMins",
+      "value" : 0
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    } ],
+    "uiInfo" : {
+      "yPos" : 46,
+      "stageType" : "SOURCE",
+      "rawSource" : {
+        "configuration" : [ {
+          "name" : "fileName"
+        } ]
+      },
+      "description" : "",
+      "label" : "Directory 1",
+      "xPos" : 60
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ "Directory_01OutputLane14809156168980" ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "HadoopFS_01",
+    "library" : "streamsets-datacollector-cdh_5_9-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_hdfs_HdfsDTarget",
+    "stageVersion" : "4",
+    "configuration" : [ {
+      "name" : "hdfsTargetConfigBean.hdfsUri",
+      "value" : null
+    }, {
+      "name" : "hdfsTargetConfigBean.hdfsUser",
+      "value" : null
+    }, {
+      "name" : "hdfsTargetConfigBean.hdfsKerberos",
+      "value" : false
+    }, {
+      "name" : "hdfsTargetConfigBean.hdfsConfDir",
+      "value" : null
+    }, {
+      "name" : "hdfsTargetConfigBean.hdfsConfigs",
+      "value" : [ ]
+    }, {
+      "name" : "hdfsTargetConfigBean.uniquePrefix",
+      "value" : "sdc-${sdc:id()}"
+    }, {
+      "name" : "hdfsTargetConfigBean.fileNameSuffix",
+      "value" : null
+    }, {
+      "name" : "hdfsTargetConfigBean.dirPathTemplateInHeader",
+      "value" : false
+    }, {
+      "name" : "hdfsTargetConfigBean.dirPathTemplate",
+      "value" : "/tmp/out/${YYYY()}-${MM()}-${DD()}-${hh()}"
+    }, {
+      "name" : "hdfsTargetConfigBean.timeZoneID",
+      "value" : "UTC"
+    }, {
+      "name" : "hdfsTargetConfigBean.timeDriver",
+      "value" : "${time:now()}"
+    }, {
+      "name" : "hdfsTargetConfigBean.maxRecordsPerFile",
+      "value" : 0
+    }, {
+      "name" : "hdfsTargetConfigBean.maxFileSize",
+      "value" : 0
+    }, {
+      "name" : "hdfsTargetConfigBean.idleTimeout",
+      "value" : "${1 * HOURS}"
+    }, {
+      "name" : "hdfsTargetConfigBean.compression",
+      "value" : "NONE"
+    }, {
+      "name" : "hdfsTargetConfigBean.otherCompression",
+      "value" : null
+    }, {
+      "name" : "hdfsTargetConfigBean.fileType",
+      "value" : "TEXT"
+    }, {
+      "name" : "hdfsTargetConfigBean.keyEl",
+      "value" : "${uuid()}"
+    }, {
+      "name" : "hdfsTargetConfigBean.seqFileCompressionType",
+      "value" : "BLOCK"
+    }, {
+      "name" : "hdfsTargetConfigBean.lateRecordsLimit",
+      "value" : "${1 * HOURS}"
+    }, {
+      "name" : "hdfsTargetConfigBean.rollIfHeader",
+      "value" : false
+    }, {
+      "name" : "hdfsTargetConfigBean.rollHeaderName",
+      "value" : "roll"
+    }, {
+      "name" : "hdfsTargetConfigBean.lateRecordsAction",
+      "value" : "SEND_TO_ERROR"
+    }, {
+      "name" : "hdfsTargetConfigBean.lateRecordsDirPathTemplate",
+      "value" : "/tmp/late/${YYYY()}-${MM()}-${DD()}"
+    }, {
+      "name" : "hdfsTargetConfigBean.dataFormat",
+      "value" : "TEXT"
+    }, {
+      "name" : "hdfsTargetConfigBean.hdfsPermissionCheck",
+      "value" : true
+    }, {
+      "name" : "hdfsTargetConfigBean.permissionEL",
+      "value" : null
+    }, {
+      "name" : "hdfsTargetConfigBean.dataGeneratorFormatConfig.charset",
+      "value" : "UTF-8"
+    }, {
+      "name" : "hdfsTargetConfigBean.dataGeneratorFormatConfig.csvFileFormat",
+      "value" : "CSV"
+    }, {
+      "name" : "hdfsTargetConfigBean.dataGeneratorFormatConfig.csvHeader",
+      "value" : "NO_HEADER"
+    }, {
+      "name" : "hdfsTargetConfigBean.dataGeneratorFormatConfig.csvReplaceNewLines",
+      "value" : true
+    }, {
+      "name" : "hdfsTargetConfigBean.dataGeneratorFormatConfig.csvReplaceNewLinesString",
+      "value" : " "
+    }, {
+      "name" : "hdfsTargetConfigBean.dataGeneratorFormatConfig.csvCustomDelimiter",
+      "value" : "|"
+    }, {
+      "name" : "hdfsTargetConfigBean.dataGeneratorFormatConfig.csvCustomEscape",
+      "value" : "\\"
+    }, {
+      "name" : "hdfsTargetConfigBean.dataGeneratorFormatConfig.csvCustomQuote",
+      "value" : "\""
+    }, {
+      "name" : "hdfsTargetConfigBean.dataGeneratorFormatConfig.jsonMode",
+      "value" : "MULTIPLE_OBJECTS"
+    }, {
+      "name" : "hdfsTargetConfigBean.dataGeneratorFormatConfig.textFieldPath",
+      "value" : "/"
+    }, {
+      "name" : "hdfsTargetConfigBean.dataGeneratorFormatConfig.textRecordSeparator",
+      "value" : "\\n"
+    }, {
+      "name" : "hdfsTargetConfigBean.dataGeneratorFormatConfig.textEmptyLineIfNull",
+      "value" : false
+    }, {
+      "name" : "hdfsTargetConfigBean.dataGeneratorFormatConfig.avroSchemaSource",
+      "value" : null
+    }, {
+      "name" : "hdfsTargetConfigBean.dataGeneratorFormatConfig.avroSchema",
+      "value" : null
+    }, {
+      "name" : "hdfsTargetConfigBean.dataGeneratorFormatConfig.registerSchema",
+      "value" : false
+    }, {
+      "name" : "hdfsTargetConfigBean.dataGeneratorFormatConfig.schemaRegistryUrlsForRegistration",
+      "value" : [ ]
+    }, {
+      "name" : "hdfsTargetConfigBean.dataGeneratorFormatConfig.schemaRegistryUrls",
+      "value" : [ ]
+    }, {
+      "name" : "hdfsTargetConfigBean.dataGeneratorFormatConfig.schemaLookupMode",
+      "value" : "SUBJECT"
+    }, {
+      "name" : "hdfsTargetConfigBean.dataGeneratorFormatConfig.subject",
+      "value" : null
+    }, {
+      "name" : "hdfsTargetConfigBean.dataGeneratorFormatConfig.subjectToRegister",
+      "value" : null
+    }, {
+      "name" : "hdfsTargetConfigBean.dataGeneratorFormatConfig.schemaId",
+      "value" : null
+    }, {
+      "name" : "hdfsTargetConfigBean.dataGeneratorFormatConfig.avroCompression",
+      "value" : "NULL"
+    }, {
+      "name" : "hdfsTargetConfigBean.dataGeneratorFormatConfig.binaryFieldPath",
+      "value" : "/"
+    }, {
+      "name" : "hdfsTargetConfigBean.dataGeneratorFormatConfig.protoDescriptorFile",
+      "value" : null
+    }, {
+      "name" : "hdfsTargetConfigBean.dataGeneratorFormatConfig.messageType",
+      "value" : null
+    }, {
+      "name" : "hdfsTargetConfigBean.dataGeneratorFormatConfig.fileNameEL",
+      "value" : "${record:value('/fileInfo/filename')}"
+    }, {
+      "name" : "hdfsTargetConfigBean.dataGeneratorFormatConfig.wholeFileExistsAction",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "hdfsTargetConfigBean.dataGeneratorFormatConfig.includeChecksumInTheEvents",
+      "value" : false
+    }, {
+      "name" : "hdfsTargetConfigBean.dataGeneratorFormatConfig.checksumAlgorithm",
+      "value" : "MD5"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Hadoop FS 1",
+      "xPos" : 291.25,
+      "yPos" : -76.5,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ "Directory_01OutputLane14809156168980" ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ "HadoopFS_01_EventLane" ]
+  }, {
+    "instanceName" : "HDFSFileMetadata_01",
+    "library" : "streamsets-datacollector-cdh_5_2-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_hdfs_metadataexecutor_HdfsMetadataDExecutor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "connection.hdfsUri",
+      "value" : null
+    }, {
+      "name" : "connection.hdfsUser",
+      "value" : null
+    }, {
+      "name" : "connection.hdfsKerberos",
+      "value" : false
+    }, {
+      "name" : "connection.hdfsConfDir",
+      "value" : null
+    }, {
+      "name" : "connection.hdfsConfigs",
+      "value" : [ ]
+    }, {
+      "name" : "actions.filePath",
+      "value" : "${record:value('/filepath')}"
+    }, {
+      "name" : "actions.shouldMoveFile",
+      "value" : false
+    }, {
+      "name" : "actions.newLocation",
+      "value" : "/new/location/"
+    }, {
+      "name" : "actions.shouldRename",
+      "value" : false
+    }, {
+      "name" : "actions.newName",
+      "value" : "differentName.txt"
+    }, {
+      "name" : "actions.shouldChangeOwnership",
+      "value" : false
+    }, {
+      "name" : "actions.newOwner",
+      "value" : "new_owner"
+    }, {
+      "name" : "actions.newGroup",
+      "value" : "new_group"
+    }, {
+      "name" : "actions.shouldSetPermissions",
+      "value" : false
+    }, {
+      "name" : "actions.newPermissions",
+      "value" : "700"
+    }, {
+      "name" : "actions.shouldSetAcls",
+      "value" : false
+    }, {
+      "name" : "actions.newAcls",
+      "value" : "user::rwx,user:foo:rw-,group::r--,other::---"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "HDFS File Metadata 1",
+      "xPos" : 458.75,
+      "yPos" : 10,
+      "stageType" : "EXECUTOR"
+    },
+    "inputLanes" : [ "HadoopFS_01_EventLane" ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "HiveQuery_01",
+    "library" : "streamsets-datacollector-cdh_5_4-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_hive_queryexecutor_HiveQueryDExecutor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "config.hiveConfigBean.hiveJDBCUrl",
+      "value" : "jdbc:hive2://<host>:<port>/default"
+    }, {
+      "name" : "config.hiveConfigBean.hiveJDBCDriver",
+      "value" : "org.apache.hive.jdbc.HiveDriver"
+    }, {
+      "name" : "config.hiveConfigBean.confDir",
+      "value" : "/etc/hive/conf"
+    }, {
+      "name" : "config.hiveConfigBean.additionalConfigProperties",
+      "value" : [ ]
+    }, {
+      "name" : "config.query",
+      "value" : "invalidate metadata ${record:value('/table')}"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Hive Query 1",
+      "xPos" : 635,
+      "yPos" : 85,
+      "stageType" : "EXECUTOR"
+    },
+    "inputLanes" : [ "HadoopFS_01_EventLane" ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "MapReduce_01",
+    "library" : "streamsets-datacollector-cdh_5_2-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_mapreduce_MapReduceDExecutor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "mapReduceConfig.mapReduceConfDir",
+      "value" : "/etc/hadoop/conf/"
+    }, {
+      "name" : "mapReduceConfig.mapreduceConfigs",
+      "value" : [ ]
+    }, {
+      "name" : "mapReduceConfig.mapreduceUser",
+      "value" : null
+    }, {
+      "name" : "mapReduceConfig.kerberos",
+      "value" : false
+    }, {
+      "name" : "jobConfig.jobName",
+      "value" : "SDC MapReduceJob"
+    }, {
+      "name" : "jobConfig.jobType",
+      "value" : "CUSTOM"
+    }, {
+      "name" : "jobConfig.customJobCreator",
+      "value" : "1222"
+    }, {
+      "name" : "jobConfig.jobConfigs",
+      "value" : [ ]
+    }, {
+      "name" : "jobConfig.avroParquetConfig.inputFile",
+      "value" : "${record:value('/filepath')}"
+    }, {
+      "name" : "jobConfig.avroParquetConfig.outputDirectory",
+      "value" : null
+    }, {
+      "name" : "jobConfig.avroParquetConfig.keepInputFile",
+      "value" : false
+    }, {
+      "name" : "jobConfig.avroParquetConfig.compressionCodec",
+      "value" : null
+    }, {
+      "name" : "jobConfig.avroParquetConfig.rowGroupSize",
+      "value" : -1
+    }, {
+      "name" : "jobConfig.avroParquetConfig.pageSize",
+      "value" : -1
+    }, {
+      "name" : "jobConfig.avroParquetConfig.dictionaryPageSize",
+      "value" : -1
+    }, {
+      "name" : "jobConfig.avroParquetConfig.maxPaddingSize",
+      "value" : -1
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "MapReduce 1",
+      "xPos" : 813.75,
+      "yPos" : 23.75,
+      "stageType" : "EXECUTOR"
+    },
+    "inputLanes" : [ "HadoopFS_01_EventLane" ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  }, {
+    "instanceName" : "JDBCQuery_01",
+    "library" : "streamsets-datacollector-jdbc-lib",
+    "stageName" : "com_streamsets_pipeline_stage_executor_jdbc_JdbcQueryDExecutor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "config.hikariConfigBean.connectionString",
+      "value" : "abc"
+    }, {
+      "name" : "config.hikariConfigBean.useCredentials",
+      "value" : true
+    }, {
+      "name" : "config.hikariConfigBean.username",
+      "value" : "abc"
+    }, {
+      "name" : "config.hikariConfigBean.password",
+      "value" : "xyz"
+    }, {
+      "name" : "config.hikariConfigBean.driverProperties",
+      "value" : [ ]
+    }, {
+      "name" : "config.hikariConfigBean.driverClassName",
+      "value" : null
+    }, {
+      "name" : "config.hikariConfigBean.connectionTestQuery",
+      "value" : null
+    }, {
+      "name" : "config.hikariConfigBean.maximumPoolSize",
+      "value" : 1
+    }, {
+      "name" : "config.hikariConfigBean.minIdle",
+      "value" : 1
+    }, {
+      "name" : "config.hikariConfigBean.connectionTimeout",
+      "value" : "${30 * SECONDS}"
+    }, {
+      "name" : "config.hikariConfigBean.idleTimeout",
+      "value" : "${10 * MINUTES}"
+    }, {
+      "name" : "config.hikariConfigBean.maxLifetime",
+      "value" : "${30 * MINUTES}"
+    }, {
+      "name" : "config.hikariConfigBean.readOnly",
+      "value" : true
+    }, {
+      "name" : "config.hikariConfigBean.transactionIsolation",
+      "value" : "DEFAULT"
+    }, {
+      "name" : "config.query",
+      "value" : "xyz"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "JDBC Query 1",
+      "xPos" : 1010,
+      "yPos" : 75,
+      "stageType" : "EXECUTOR"
+    },
+    "inputLanes" : [ "HadoopFS_01_EventLane" ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  } ],
+  "errorStage" : {
+    "instanceName" : "Discard_ErrorStage",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Error Records - Discard",
+      "xPos" : 500,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ]
+  },
+  "info" : {
+    "name" : "Event_executor",
+    "description" : "",
+    "created" : 1480915530101,
+    "lastModified" : 1480916101494,
+    "creator" : "admin",
+    "lastModifier" : "admin",
+    "lastRev" : "0",
+    "uuid" : "ee00d6be-c07b-4c65-a411-058b0092898b",
+    "valid" : false,
+    "metadata" : {
+      "labels" : [ ]
+    }
+  },
+  "metadata" : {
+    "labels" : [ ]
+  },
+  "statsAggregatorStage" : null,
+  "issues" : {
+    "pipelineIssues" : [ ],
+    "stageIssues" : { },
+    "issueCount" : 0
+  },
+  "valid" : true,
+  "previewable" : true
+}
