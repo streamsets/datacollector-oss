@@ -16,9 +16,9 @@
 <concept id="concept_epj_gqd_rx">
  <title>Update Kudu Pipelines</title>
  <shortdesc><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        version 2.2.0.0 provides support for Apache Kudu version 1.0.x and deprecates earlier Kudu
-        versions. To upgrade pipelines that contain a Kudu destination, upgrade your Kudu cluster
-        and then add a stage alias for the deprecated Kudu version to the <ph
+        version 2.2.0.0 provides support for Apache Kudu version 1.0.x and no longer supports
+        earlier Kudu versions. To upgrade pipelines that contain a Kudu destination, upgrade your
+        Kudu cluster and then add a stage alias for the earlier Kudu version to the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>. </shortdesc>
  <conbody>
@@ -33,10 +33,10 @@
                         Kudu documentation.</p></li>
                 <li>Open the <codeph>$SDC_CONF/sdc.properties</codeph> file and locate the following
                     comment:<codeblock># Stage aliases for mapping to keep backward compatibility on pipelines when stages move libraries</codeblock></li>
-                <li>Below the comment, add a stage alias for the deprecated Kudu version as
+                <li>Below the comment, add a stage alias for the earlier Kudu version as
                         follows:<codeblock>stage.alias.streamsets-datacollector-apache-kudu-&lt;version>-lib, com_streamsets_pipeline_stage_destination_kudu_KuduDTarget = streamsets-datacollector-apache-kudu_1_0-lib, com_streamsets_pipeline_stage_destination_kudu_KuduDTarget</codeblock><p>Where
-                        &lt;version> is the deprecated Kudu version: 0_7, 0_8, or 0_9. For example,
-                        if you previously used Kudu version 0.9, add the following stage
+                        &lt;version> is the earlier Kudu version: 0_7, 0_8, or 0_9. For example, if
+                        you previously used Kudu version 0.9, add the following stage
                         alias:<codeblock>stage.alias.streamsets-datacollector-apache-kudu-0_9-lib, com_streamsets_pipeline_stage_destination_kudu_KuduDTarget = streamsets-datacollector-apache-kudu_1_0-lib, com_streamsets_pipeline_stage_destination_kudu_KuduDTarget</codeblock></p></li>
                 <li>Restart <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"

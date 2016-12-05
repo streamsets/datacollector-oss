@@ -37,7 +37,7 @@
             reading the entire set of existing data again. If the pipeline stops before it finishes
             reading all data, the Salesforce origin saves the last read offset value. When the
             pipeline starts again, the origin uses the last read offset value to continue processing
-            from where it stopped. </p>
+            from where it stopped. You can reset the origin to process all requested objects. </p>
         <p>When the origin is configured to subscribe to notifications, the pipeline runs
             continuously so that it can receive changed events. If you configure the origin to both
             query existing data and to subscribe to notifications, the origin first subscribes for
