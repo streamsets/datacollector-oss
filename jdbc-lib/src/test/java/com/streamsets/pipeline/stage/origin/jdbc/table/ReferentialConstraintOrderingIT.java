@@ -254,7 +254,7 @@ public class ReferentialConstraintOrderingIT extends BaseTableJdbcSourceIT {
     TableJdbcSource tableJdbcSource = new TableJdbcSource(
         TestTableJdbcSource.createHikariPoolConfigBean(JDBC_URL, USER_NAME, PASSWORD),
         TestTableJdbcSource.createCommonSourceConfigBean(1, 1000, 1000, 1000),
-        TestTableJdbcSource.createTableJdbcConfigBean(ImmutableList.of(tableConfigBean), false, -1, TableOrderStrategy.REFERENTIAL_CONSTRAINTS)
+        TestTableJdbcSource.createTableJdbcConfigBean(ImmutableList.of(tableConfigBean), false, -1, TableOrderStrategy.REFERENTIAL_CONSTRAINTS, BatchTableStrategy.SWITCH_TABLES)
     );
     SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
         .addOutputLane("a").build();

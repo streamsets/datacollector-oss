@@ -282,7 +282,7 @@ public class AllTypesIT extends BaseTableJdbcSourceIT {
     TableJdbcSource partitionableJdbcSource = new TableJdbcSource(
         TestTableJdbcSource.createHikariPoolConfigBean(JDBC_URL, USER_NAME, PASSWORD),
         TestTableJdbcSource.createCommonSourceConfigBean(1, 1000, 1000, 1000),
-        TestTableJdbcSource.createTableJdbcConfigBean(ImmutableList.of(tableConfigBean), false, -1, TableOrderStrategy.NONE)
+        TestTableJdbcSource.createTableJdbcConfigBean(ImmutableList.of(tableConfigBean), false, -1, TableOrderStrategy.NONE, BatchTableStrategy.SWITCH_TABLES)
     );
     SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, partitionableJdbcSource)
         .addOutputLane("a").build();

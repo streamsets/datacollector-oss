@@ -57,6 +57,18 @@ public class TableJdbcConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
+      defaultValue = "SWITCH_TABLES",
+      label = "Per Batch Strategy",
+      description = "Determines the strategy for each batch to generate records from.",
+      displayPosition = 180,
+      group = "JDBC"
+  )
+  @ValueChooserModel(BatchTableStrategyChooserValues.class)
+  public BatchTableStrategy batchTableStrategy;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
       defaultValue = "NONE",
       label = "Table Order Strategy",
       description = "Determines the strategy for table ordering",

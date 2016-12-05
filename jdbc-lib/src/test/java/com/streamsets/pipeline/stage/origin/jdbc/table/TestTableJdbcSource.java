@@ -45,13 +45,20 @@ public class TestTableJdbcSource {
     return new CommonSourceConfigBean(queryInterval, maxBatchSize, maxClobSize, maxBlobSize);
   }
 
-  static TableJdbcConfigBean createTableJdbcConfigBean(List<TableConfigBean> tableConfigs, boolean configureFetchSize, int fetchSize, TableOrderStrategy tableOrderStrategy) {
+  static TableJdbcConfigBean createTableJdbcConfigBean(
+      List<TableConfigBean> tableConfigs,
+      boolean configureFetchSize,
+      int fetchSize,
+      TableOrderStrategy tableOrderStrategy,
+      BatchTableStrategy batchTableStrategy
+  ) {
     TableJdbcConfigBean tableJdbcConfigBean = new TableJdbcConfigBean();
     tableJdbcConfigBean.tableConfigs = tableConfigs;
     tableJdbcConfigBean.configureFetchSize = configureFetchSize;
     tableJdbcConfigBean.fetchSize = fetchSize;
     tableJdbcConfigBean.tableOrderStrategy = tableOrderStrategy;
     tableJdbcConfigBean.timeZoneID = "UTC";
+    tableJdbcConfigBean.batchTableStrategy = batchTableStrategy;
     return tableJdbcConfigBean;
   }
 
@@ -73,7 +80,7 @@ public class TestTableJdbcSource {
     TableJdbcSource tableJdbcSource = new TableJdbcSource(
         createHikariPoolConfigBean("jdbc:h2:mem:database", "sa", "test"),
         createCommonSourceConfigBean(1000, 1000, 1000, 1000),
-        createTableJdbcConfigBean(Collections.<TableConfigBean>emptyList(), false, -1, TableOrderStrategy.NONE)
+        createTableJdbcConfigBean(Collections.<TableConfigBean>emptyList(), false, -1, TableOrderStrategy.NONE, BatchTableStrategy.SWITCH_TABLES)
     );
 
     testWrongConfiguration(tableJdbcSource, true);
@@ -87,7 +94,7 @@ public class TestTableJdbcSource {
     TableJdbcSource tableJdbcSource = new TableJdbcSource(
         createHikariPoolConfigBean("jdbc:h2:mem:database", "sa", "test"),
         createCommonSourceConfigBean(1000, 1000, 1000, 1000),
-        createTableJdbcConfigBean(ImmutableList.of(tableConfigBean), true, 2000, TableOrderStrategy.NONE)
+        createTableJdbcConfigBean(ImmutableList.of(tableConfigBean), true, 2000, TableOrderStrategy.NONE, BatchTableStrategy.SWITCH_TABLES)
     );
     testWrongConfiguration(tableJdbcSource, true);
   }
@@ -99,7 +106,7 @@ public class TestTableJdbcSource {
     TableJdbcSource tableJdbcSource = new TableJdbcSource(
         createHikariPoolConfigBean("jdbc:db://localhost:1000", "sa", "test"),
         createCommonSourceConfigBean(1000, 1000, 1000, 1000),
-        createTableJdbcConfigBean(ImmutableList.of(tableConfigBean), false, 1, TableOrderStrategy.NONE)
+        createTableJdbcConfigBean(ImmutableList.of(tableConfigBean), false, 1, TableOrderStrategy.NONE, BatchTableStrategy.SWITCH_TABLES)
     );
     testWrongConfiguration(tableJdbcSource, false);
   }

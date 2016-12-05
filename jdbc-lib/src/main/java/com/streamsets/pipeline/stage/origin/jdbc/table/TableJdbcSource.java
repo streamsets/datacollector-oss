@@ -49,7 +49,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +59,7 @@ import java.util.concurrent.ExecutionException;
 
 public class TableJdbcSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(TableJdbcSource.class);
-  private static final Joiner JOINER = Joiner.on("\n");
+  private static final Joiner NEW_LINE_JOINER = Joiner.on("\n");
 
   private static final String HIKARI_CONFIG_PREFIX = "hikariConfigBean.";
   private static final String CONNECTION_STRING = HIKARI_CONFIG_PREFIX + "connectionString";
@@ -77,13 +76,18 @@ public class TableJdbcSource extends BaseSource {
   private final Properties driverProperties = new Properties();
   private final ConcurrentHashMap<String, Object> gaugeMap;
 
-  private TableOrderProvider tableOrderProvider;
   private ErrorRecordHandler errorRecordHandler;
+  private TableOrderProvider tableOrderProvider;
   private TableJdbcELEvalContext tableJdbcELEvalContext;
+  private TableContext tableContext;
   private Calendar calendar;
-  private Connection connection = null;
-  private HikariDataSource hikariDataSource;
   private long lastQueryIntervalTime;
+
+  private HikariDataSource hikariDataSource;
+  private Connection connection = null;
+  private String query = null;
+  private Statement st = null;
+  private ResultSet rs = null;
 
   public TableJdbcSource(
       HikariPoolConfigBean hikariConfigBean,
@@ -98,15 +102,31 @@ public class TableJdbcSource extends BaseSource {
     gaugeMap = new ConcurrentHashMap<>();
   }
 
-  private static String logErrorAndCloseConnection(Connection connection, SQLException e) {
+  private static String logError(SQLException e) {
     String formattedError = JdbcUtil.formatSqlException(e);
     LOG.debug(formattedError, e);
-    JdbcUtil.closeQuietly(connection);
     return formattedError;
   }
 
   private boolean shouldMoveToNextTable(int recordCount, int noOfTablesVisited) {
     return recordCount == 0 && noOfTablesVisited < tableOrderProvider.getNumberOfTables();
+  }
+
+  private void initGauge(Source.Context context) {
+    gaugeMap.put(TABLE_COUNT, tableOrderProvider.getNumberOfTables());
+    gaugeMap.put(CURRENT_TABLE, "");
+    context.createGauge(TABLE_METRICS, new Gauge<Map<String, Object>>() {
+      @Override
+      public Map<String, Object> getValue() {
+        return gaugeMap;
+      }
+    });
+  }
+
+  private void updateGauge() {
+    String qualifiedTableName = TableContextUtil.getQualifiedTableName(tableContext.getSchema(), tableContext.getTableName());
+    gaugeMap.put(CURRENT_TABLE, qualifiedTableName);
+    LOG.info("Generating records from table : {}", qualifiedTableName);
   }
 
   @VisibleForTesting
@@ -128,7 +148,7 @@ public class TableJdbcSource extends BaseSource {
           allTableContexts.putAll(TableContextUtil.listTablesForConfig(connection, tableConfigBean));
         }
 
-        LOG.info("Selected Tables: \n {}", JOINER.join(allTableContexts.keySet()));
+        LOG.info("Selected Tables: \n {}", NEW_LINE_JOINER.join(allTableContexts.keySet()));
 
         try {
           tableOrderProvider.initialize(allTableContexts);
@@ -140,10 +160,8 @@ public class TableJdbcSource extends BaseSource {
           throw new StageException(JdbcErrors.JDBC_67, e);
         }
       } catch (SQLException e) {
-        if (connection != null) {
-          logErrorAndCloseConnection(connection, e);
-          connection = null;
-        }
+        logError(e);
+        closeConnection();
         issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, e.toString()));
       } catch (StageException e) {
         if (connection != null) {
@@ -153,21 +171,48 @@ public class TableJdbcSource extends BaseSource {
         }
         issues.add(context.createConfigIssue(Groups.JDBC.name(), TableJdbcConfigBean.TABLE_CONFIG, e.getErrorCode(), e.getParams()));
       }
-      gaugeMap.put(TABLE_COUNT, tableOrderProvider.getNumberOfTables());
-      gaugeMap.put(CURRENT_TABLE, "");
-      context.createGauge(TABLE_METRICS, new Gauge<Map<String, Object>>() {
-        @Override
-        public Map<String, Object> getValue() {
-          return gaugeMap;
-        }
-      });
+      initGauge(context);
     }
   }
+
 
   private void initTableEvalContextForProduce(TableContext tableContext) {
     tableJdbcELEvalContext.setCalendar(calendar);
     tableJdbcELEvalContext.setTime(calendar.getTime());
     tableJdbcELEvalContext.setTableContext(tableContext);
+  }
+
+  private void reinitializeContext(Map<String, String> offsets) throws SQLException, ExecutionException, StageException {
+    //We just read what we need from the last table, time to get the next table.
+    tableContext = tableOrderProvider.nextTable();
+
+    initTableEvalContextForProduce(tableContext);
+
+    query = OffsetQueryUtil.buildQuery(tableContext, offsets.get(tableContext.getTableName()), tableJdbcELEvalContext);
+
+    //Clear the initial offset after the  query is build so we will not use the initial offset from the next
+    //time the table is used.
+    tableContext.clearStartOffset();
+
+    st = connection.createStatement();
+
+    if (tableJdbcConfigBean.configureFetchSize) {
+      st.setFetchSize(tableJdbcConfigBean.fetchSize);
+    }
+    if (tableJdbcConfigBean.batchTableStrategy == BatchTableStrategy.SWITCH_TABLES) {
+      //Max rows is set to batch size only when we switch tables for each batch.
+      st.setMaxRows(commonSourceConfigBean.maxBatchSize);
+    }
+
+    LOG.info("Executing Query :{}", query);
+
+    rs = st.executeQuery(query);
+  }
+
+  private boolean shouldCloseRs() throws SQLException {
+    //We close the current result set when we have to switch tables
+    //or if the cursor is after the last row we could read from the result set.
+    return (tableJdbcConfigBean.batchTableStrategy == BatchTableStrategy.SWITCH_TABLES || rs.isClosed() || rs.isAfterLast());
   }
 
   @Override
@@ -196,30 +241,18 @@ public class TableJdbcSource extends BaseSource {
 
     int recordCount = 0, noOfTablesVisited = 0;
     do {
-      String query = null;
       try {
         connection = (connection == null) ? hikariDataSource.getConnection() : this.connection;
-        TableContext tableContext = tableOrderProvider.nextTable();
 
-        initTableEvalContextForProduce(tableContext);
+        //Meaning we will have to switch tables, execute a new query and get records.
+        if (rs == null) {
+          reinitializeContext(offsets);
+        }
 
-        query = OffsetQueryUtil.buildQuery(tableContext, offsets.get(tableContext.getTableName()), tableJdbcELEvalContext);
+        ResultSetMetaData md = rs.getMetaData();
 
-        //Clear the initial offset after the  query is build so we will not use the initial offset from the next
-        //time the table is used.
-        tableContext.clearStartOffset();
-        ResultSet rs = null;
-        try (Statement statement = connection.createStatement()) {
-          if (tableJdbcConfigBean.configureFetchSize) {
-            statement.setFetchSize(tableJdbcConfigBean.fetchSize);
-          }
-          //Max rows is set to batch size.
-          statement.setMaxRows(commonSourceConfigBean.maxBatchSize);
-
-          LOG.info("Executing Query :{}", query);
-          rs = statement.executeQuery(query);
-          ResultSetMetaData md = rs.getMetaData();
-          while (rs.next() && recordCount < batchSize) {
+        try {
+          while (recordCount < batchSize && rs.next()) {
             LinkedHashMap<String, Field> fields = JdbcUtil.resultSetToFields(
                 rs,
                 commonSourceConfigBean.maxClobSize,
@@ -235,22 +268,28 @@ public class TableJdbcSource extends BaseSource {
             JdbcUtil.setColumnSpecificHeaders(record, md, JDBC_NAMESPACE_HEADER);
 
             batchMaker.addRecord(record);
+
             offsets.put(tableContext.getTableName(), offsetFormat);
+
             if (recordCount == 0) {
-              String qualifiedTableName = TableContextUtil.getQualifiedTableName(tableContext.getSchema(), tableContext.getTableName());
-              gaugeMap.put(CURRENT_TABLE, qualifiedTableName);
-              LOG.info("Generating records from table : {}", qualifiedTableName);
+              updateGauge();
             }
             recordCount++;
           }
         } finally {
-          if (rs != null) {
+          //Make sure we close the result set only when there are no more rows in the result set
+          //This will happen if Batch Strategy is SWITCH_TABLES
+          //or We use PROCESS_ALL_ROWS and there are no more rows to process in the current table.
+          if (shouldCloseRs()) {
             JdbcUtil.closeQuietly(rs);
+            JdbcUtil.closeQuietly(st);
+            rs = null;
+            st = null;
           }
         }
       } catch (SQLException e) {
-        String formattedError = logErrorAndCloseConnection(connection, e);
-        connection = null;
+        String formattedError = logError(e);
+        closeConnection();
         LOG.debug("Query failed at: {}", lastQueryIntervalTime);
         //Throw Stage Errors
         errorRecordHandler.onError(JdbcErrors.JDBC_34, query, formattedError);
@@ -268,11 +307,17 @@ public class TableJdbcSource extends BaseSource {
 
   @Override
   public void destroy() {
-    if (connection != null) {
-      JdbcUtil.closeQuietly(connection);
-    }
-    if (hikariDataSource != null) {
-      JdbcUtil.closeQuietly(hikariDataSource);
-    }
+    closeConnection();
+    JdbcUtil.closeQuietly(hikariDataSource);
+  }
+
+  private void closeConnection() {
+    JdbcUtil.closeQuietly(rs);
+    JdbcUtil.closeQuietly(st);
+    JdbcUtil.closeQuietly(connection);
+    st = null;
+    rs = null;
+    connection = null;
+    query = null;
   }
 }

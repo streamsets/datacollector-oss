@@ -51,7 +51,7 @@ public interface TableOrderProvider {
 
   abstract class BaseTableOrderProvider implements TableOrderProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(TableOrderProvider.class);
-    private static final Joiner JOINER = Joiner.on("\n");
+    private static final Joiner NEW_LINE_JOINER = Joiner.on("\n");
 
     private Map<String, TableContext> tableContextMap;
     private Queue<String> tableQueue;
@@ -63,7 +63,7 @@ public interface TableOrderProvider {
         addTable(qualifiedTableName);
       }
       tableQueue = calculateOrGetOrder();
-      LOGGER.info("Ordering of Tables : \n {}", JOINER.join(tableQueue));
+      LOGGER.info("Ordering of Tables : \n {}", NEW_LINE_JOINER.join(tableQueue));
     }
 
     TableContext getTableContext(String schema, String tableName) {
