@@ -27,12 +27,15 @@ import com.streamsets.pipeline.lib.parser.shaded.org.aicer.grok.util.Grok;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
+import org.apache.commons.io.IOUtils;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -44,9 +47,12 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,9 +67,11 @@ public class LogResource {
   private static final String EXCEPTION = "exception";
   private final String logFile;
   private final Grok logFileGrok;
+  private final RuntimeInfo runtimeInfo;
 
   @Inject
   public LogResource(RuntimeInfo runtimeInfo) {
+    this.runtimeInfo = runtimeInfo;
     try {
       logFile = LogUtils.getLogFile(runtimeInfo);
       logFileGrok = LogUtils.getLogGrok(runtimeInfo);
@@ -254,6 +262,50 @@ public class LogResource {
         }
       }
     }
+  }
+
+  @GET
+  @Path("/log/config")
+  @Produces(MediaType.TEXT_PLAIN)
+  @RolesAllowed({
+      AuthzRole.ADMIN,
+      AuthzRole.CREATOR,
+      AuthzRole.MANAGER,
+      AuthzRole.ADMIN_REMOTE,
+      AuthzRole.CREATOR_REMOTE,
+      AuthzRole.MANAGER_REMOTE
+  })
+  public Response getLogConfig(
+      @QueryParam("default") @DefaultValue("false") boolean defaultConfig
+  ) throws IOException {
+    String fileName = runtimeInfo.getLog4jPropertiesFileName();
+    if (defaultConfig) {
+      fileName += "-default";
+    }
+    File file = new File(runtimeInfo.getConfigDir(), fileName);
+    return Response.ok(new FileInputStream(file)).build();
+  }
+
+  @POST
+  @Path("/log/config")
+  @Consumes(MediaType.TEXT_PLAIN)
+  @RolesAllowed({
+      AuthzRole.ADMIN,
+      AuthzRole.CREATOR,
+      AuthzRole.MANAGER,
+      AuthzRole.ADMIN_REMOTE,
+      AuthzRole.CREATOR_REMOTE,
+      AuthzRole.MANAGER_REMOTE
+  })
+  public Response setLogConfig(
+      InputStream payload
+  ) throws IOException {
+    File file = new File(runtimeInfo.getConfigDir(), runtimeInfo.getLog4jPropertiesFileName());
+    try (OutputStream os = new FileOutputStream(file)) {
+      IOUtils.copy(payload, os);
+      payload.close();
+    }
+    return Response.ok().build();
   }
 
 }

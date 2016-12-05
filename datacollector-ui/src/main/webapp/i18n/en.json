@@ -119,6 +119,7 @@
       "redo": "Redo",
       "refresh": "Refresh",
       "required": "Required",
+      "reset": "Reset",
       "restart": "Restart Data Collector",
       "revertChanges": "Revert Data Changes",
       "sampleRecords": "Sample Records",
@@ -653,6 +654,9 @@
     "emptyMessage": "Loading Logs...",
     "loadPreviousLog": "Load Previous Logs",
     "loadingLog": "Loading Log...",
+    "logConfig": {
+      "headerLabel": "Log Config"
+    },
     "refreshLog": "Refresh Log",
     "title": "Logs"
   },

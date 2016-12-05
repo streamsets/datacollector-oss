@@ -260,9 +260,16 @@ public class TestRestApiAuthorization {
     list.add(new RestApi("/rest/v1/stageLibraries/install", Method.POST, AuthzRole.ADMIN));
     list.add(new RestApi("/rest/v1/stageLibraries/uninstall", Method.POST, AuthzRole.ADMIN));
 
-    list.add(new RestApi("/rest/v1/system/logs", Method.GET, AuthzRole.ADMIN, AuthzRole.CREATOR, AuthzRole.MANAGER));
-    list.add(new RestApi("/rest/v1/system/logs/files", Method.GET, AuthzRole.ADMIN, AuthzRole.CREATOR, AuthzRole.MANAGER));
-    list.add(new RestApi("/rest/v1/system/logs/files/foo", Method.GET, AuthzRole.ADMIN, AuthzRole.CREATOR, AuthzRole.MANAGER));
+    list.add(new RestApi("/rest/v1/system/logs", Method.GET,
+        AuthzRole.ADMIN, AuthzRole.CREATOR, AuthzRole.MANAGER));
+    list.add(new RestApi("/rest/v1/system/logs/files", Method.GET,
+        AuthzRole.ADMIN, AuthzRole.CREATOR, AuthzRole.MANAGER));
+    list.add(new RestApi("/rest/v1/system/logs/files/foo", Method.GET,
+        AuthzRole.ADMIN, AuthzRole.CREATOR, AuthzRole.MANAGER));
+    list.add(new RestApi("/rest/v1/system/log/config", Method.GET,
+        AuthzRole.ADMIN, AuthzRole.CREATOR, AuthzRole.MANAGER));
+    list.add(new RestApi("/rest/v1/system/log/config", Method.POST,
+        AuthzRole.ADMIN, AuthzRole.CREATOR, AuthzRole.MANAGER));
 
     return list;
   }

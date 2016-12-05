@@ -1,0 +1,38 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="cancel()">
+    <span aria-hidden="true">&times;</span>
+    <span class="sr-only">Close</span>
+  </button>
+  <h3 class="modal-title" translate="logs.logConfig.headerLabel">Log Config</h3>
+</div>
+<div class="log-config-modal-body">
+  <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+
+  <div show-loading="showLoading"></div>
+
+  <div class="form-group" ng-hide="showLoading">
+    <div ui-codemirror
+         class="codemirror-editor"
+         ng-model="logConfig"
+         ui-refresh="refreshCodemirror"
+         ui-codemirror-opts="getCodeMirrorOptions({
+              mode: {
+                name: 'properties'
+              },
+              lineNumbers: true
+            })"
+         field-paths="fieldPaths">
+    </div>
+
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="reset" class="btn btn-default pull-left"
+          ng-click="reset()" translate="global.form.reset">Reset</button>
+
+  <button type="reset" class="btn btn-default"
+          ng-click="cancel()" translate="global.form.cancel">Cancel</button>
+
+  <button ng-click="save()"
+          class="btn btn-primary" translate="global.form.save">Save</button>
+</div>

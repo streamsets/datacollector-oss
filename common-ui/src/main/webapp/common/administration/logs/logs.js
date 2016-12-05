@@ -40,7 +40,8 @@ angular
       }
     );
   }])
-  .controller('LogsController', function ($rootScope, $scope, $interval, api, configuration, Analytics, $timeout) {
+  .controller('LogsController', function ($rootScope, $scope, $interval, api, configuration, Analytics,
+                                          $timeout, $modal) {
 
     var webSocketLogURL = $rootScope.common.webSocketBaseURL + 'rest/v1/webSocket?type=log';
     var logWebSocket;
@@ -104,7 +105,17 @@ angular
           lastMessageFiltered = false;
           $scope.loadPreviousLog();
         }
+      },
+
+      onLogConfigClick: function() {
+        $modal.open({
+          templateUrl: 'common/administration/logs/logConfig/logConfig.tpl.html',
+          controller: 'LogConfigModalInstanceController',
+          backdrop: 'static',
+          size: 'lg'
+        });
       }
+
     });
 
     api.log.getCurrentLog($scope.logEndingOffset).then(function(res) {

@@ -21,6 +21,16 @@
   </formats>
   <includeBaseDirectory>true</includeBaseDirectory>
 
+  <files>
+    <file>
+      <source>${basedir}/src/main/etc/sdc-log4j.properties</source>
+      <outputDirectory>etc</outputDirectory>
+      <destName>sdc-log4j.properties-default</destName>
+      <filtered>true</filtered>
+      <fileMode>0444</fileMode>
+    </file>
+  </files>
+
   <fileSets>
 
     <!-- bin -->

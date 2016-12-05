@@ -36,19 +36,22 @@ angular.module('dataCollectorApp.common')
        * Fetch current log
        *
        * @param endingOffset
+       * @param extraMessage
+       * @param filterPipeline
+       * @param filterSeverity
        */
       getCurrentLog: function(endingOffset, extraMessage, filterPipeline, filterSeverity) {
         var url = apiBase + '/system/logs?endingOffset=' +  (endingOffset ? endingOffset : '-1');
 
-        if(extraMessage) {
+        if (extraMessage) {
           url += '&extraMessage=' + extraMessage;
         }
 
-        if(filterPipeline) {
+        if (filterPipeline) {
           url += '&pipeline=' + filterPipeline;
          }
 
-        if(filterSeverity) {
+        if (filterSeverity) {
           url += '&severity=' + filterSeverity;
         }
 
@@ -68,6 +71,36 @@ angular.module('dataCollectorApp.common')
         return $http({
           method: 'GET',
           url: url
+        });
+      },
+
+      /**
+       * Get Log Config
+       * @param def
+       * @returns {*}
+       */
+      getLogConfig: function(def) {
+        var url = apiBase + '/system/log/config?default=' + def;
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+      /**
+       * Update Log Config
+       * @param logConfig
+       * @returns {*}
+       */
+      updateLogConfig: function(logConfig) {
+        var url = apiBase + '/system/log/config';
+        return $http({
+          method: 'POST',
+          url: url,
+          data: logConfig,
+          headers:  {
+            'Content-Type': 'text/plain'
+          }
         });
       }
     };
@@ -417,7 +450,7 @@ angular.module('dataCollectorApp.common')
       getPipelineConfig: function(name) {
         var url;
 
-        if(!name) {
+        if (!name) {
           name = 'xyz';
         }
 
@@ -437,7 +470,7 @@ angular.module('dataCollectorApp.common')
       getPipelineConfigInfo: function(name) {
         var url;
 
-        if(!name) {
+        if (!name) {
           name = 'xyz';
         }
 
@@ -458,7 +491,7 @@ angular.module('dataCollectorApp.common')
       savePipelineConfig: function(name, config) {
         var url;
 
-        if(!name) {
+        if (!name) {
           name = 'xyz';
         }
 
@@ -633,18 +666,18 @@ angular.module('dataCollectorApp.common')
       createPreview: function(name, sourceOffset, batchSize, rev, skipTargets, stageOutputList, endStage, timeout) {
         var url;
 
-        if(!batchSize) {
+        if (!batchSize) {
           batchSize = 10;
         }
 
-        if(!timeout || timeout <=0) {
+        if (!timeout || timeout <=0) {
           timeout = 10000;
         }
 
         url = apiBase + '/pipeline/' + name + '/preview?batchSize=' + batchSize + '&rev=' + rev +
             '&skipTargets=' + skipTargets + '&timeout=' + timeout;
 
-        if(endStage) {
+        if (endStage) {
           url += '&endStage=' + endStage;
         }
 
@@ -965,7 +998,7 @@ angular.module('dataCollectorApp.common')
         var url = apiBase + '/pipeline/' + name + '/rawSourcePreview?rev=' + rev;
 
         angular.forEach(configurations, function(config) {
-          if(config.name && config.value !== undefined) {
+          if (config.name && config.value !== undefined) {
             url+= '&' + config.name + '=' + config.value;
           }
         });
