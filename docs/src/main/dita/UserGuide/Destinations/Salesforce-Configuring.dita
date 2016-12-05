@@ -51,9 +51,14 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/SalesforceEndpoint">
                                     <entry/>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/SalesforceAPIVersion">
-                                    <entry/>
+                                <row>
+                                    <entry>API Version
+                                        <xref href="Salesforce-APIVersionDestination.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_weh_nch_er" placement="inline"
+                                            /></xref></entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/SalesforceAPIVersion"/>
                                 </row>
                                 <row>
                                     <entry>Use Bulk API</entry>

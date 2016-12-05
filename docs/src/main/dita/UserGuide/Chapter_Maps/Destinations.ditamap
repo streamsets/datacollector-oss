@@ -279,6 +279,7 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Destinations/Salesforce-APIVersionDestination.dita"/>
    <topicref href="../Destinations/Salesforce-Configuring.dita"/>
   </topicref>
   <topicref href="../Destinations/SDC_RPCdest.dita" chunk="to-content">

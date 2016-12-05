@@ -52,9 +52,15 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/SalesforceEndpoint">
                                     <entry/>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/SalesforceAPIVersion">
-                                    <entry/>
+                                <row>
+                                    <entry>API Version
+                                        <xref href="Salesforce-APIVersion.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_wgh_xch_er" placement="inline"
+                                            /></xref></entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/SalesforceAPIVersion"/>
+                                    
                                 </row>
                                 <row>
                                     <entry>Query Existing Data</entry>

@@ -1161,8 +1161,9 @@
       </tbody>
      </tgroup>
     </table>
-  <draft-comment author="alisontaylor">Salesforce origin and destination use all rows in this table.
-   Wave Analytics destination uses the first two rows in the table.</draft-comment>
+  <draft-comment author="alisontaylor">Salesforce origin and destination use the first three rows in
+   this table, and use the description of the last row. Wave Analytics destination uses the first
+   two rows in the table.</draft-comment>
   <table frame="all" rowsep="1" colsep="1" id="table_fg1_cbc_tx">
    <tgroup cols="2">
     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -1194,9 +1195,11 @@
         <li>test.salesforce.com - To connect to a sandbox organization.</li>
        </ul><p>Default is login.salesforce.com.</p></entry>
      </row>
-     <row id="SalesforceAPIVersion">
+     <row>
       <entry>API Version</entry>
-      <entry>Salesforce API version to use to connect to Salesforce. <p>Default is 38.0.</p></entry>
+      <entry id="SalesforceAPIVersion">Salesforce API version to use to connect to Salesforce.
+        <p>Default is 36.0. If you change the version, you also must download the relevant JAR files
+        from Salesforce Web Services Connector (WSC).</p></entry>
      </row>
     </tbody>
    </tgroup>

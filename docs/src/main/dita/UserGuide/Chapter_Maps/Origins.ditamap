@@ -200,6 +200,7 @@
    </topicref>
    <topicref href="../Origins/Salesforce-CustomFields.dita"/>
    <topicref href="../Origins/Salesforce-HeaderAttributes.dita"/>
+   <topicref href="../Origins/Salesforce-APIVersion.dita"/>
    <topicref href="../Origins/Salesforce-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/SDC_RPCorigin.dita" chunk="to-content">

@@ -24,4 +24,5 @@
     <topicref href="../Reusable_Content/Reusable_Topics/Kafka-EnablingSSLandKerb.dita"/>
     <topicref href="../Reusable_Content/Reusable_Topics/KafkaWrites-AdditionalKProperties.dita"/>
     <topicref href="../Reusable_Content/Reusable_Topics/ScriptingProcessorContent.dita"/>
+    <topicref href="../Reusable_Content/Reusable_Topics/Salesforce-APIVersion.dita"/>
 </map>
