@@ -34,8 +34,9 @@ public class StatusWebSocket extends BaseWebSocket implements StateEventListener
   }
 
   @Override
-  public void onStateChange(PipelineState fromState, PipelineState toState, String toStateJson,
-                            ThreadUsage threadUsage) {
+  public void onStateChange(
+      PipelineState fromState, PipelineState toState, String toStateJson, ThreadUsage threadUsage, String offset
+  ) {
     notification(toStateJson);
   }
 }

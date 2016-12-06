@@ -33,6 +33,7 @@ import com.streamsets.datacollector.event.dto.WorkerInfo;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.production.OffsetFileUtil;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -223,9 +224,12 @@ public class RemoteDataCollector implements DataCollector {
   }
 
   // Returns info about remote pipelines that have changed since the last sending of events
+  @Override
   public List<PipelineAndValidationStatus> getRemotePipelinesWithChanges() throws PipelineException {
     List<PipelineAndValidationStatus> pipelineAndValidationStatuses = new ArrayList<>();
-    for (PipelineState pipelineState : stateEventListener.getPipelineStateEvents()) {
+    for (Pair<PipelineState, String> pipelineStateAndOffset: stateEventListener.getPipelineStateEvents()) {
+      PipelineState pipelineState = pipelineStateAndOffset.getLeft();
+      String offset = pipelineStateAndOffset.getRight();
       String name = pipelineState.getName();
       String rev = pipelineState.getRev();
       PipelineState latestState;
@@ -247,7 +251,7 @@ public class RemoteDataCollector implements DataCollector {
           latestState.getMessage(),
           workerInfos,
           isClusterMode,
-          getOffset(name, rev)
+          offset
       ));
     }
     return pipelineAndValidationStatuses;
@@ -311,9 +315,12 @@ public class RemoteDataCollector implements DataCollector {
   }
 
   private void setValidationStatus(Map<String, PipelineAndValidationStatus> pipelineStatusMap) {
-    List<String> idsToRemove = new ArrayList<String>();
+    List<String> idsToRemove = new ArrayList<>();
     for (String previewerId : validatorIdList) {
       Previewer previewer = manager.getPreviewer(previewerId);
+      if (previewer == null) {
+        continue;
+      }
       ValidationStatus validationStatus = null;
       Issues issues = null;
       String message = null;

@@ -20,6 +20,7 @@
 
 package com.streamsets.datacollector.execution.runner;
 
+import com.codahale.metrics.MetricRegistry;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.streamsets.datacollector.execution.Manager;
@@ -36,6 +37,8 @@ import com.streamsets.datacollector.execution.runner.common.AsyncRunner;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
+import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
+import com.streamsets.datacollector.runner.production.OffsetFileUtil;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.TestUtil;
@@ -55,6 +58,7 @@ import org.junit.Test;
 import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
@@ -81,6 +85,9 @@ public class TestStandaloneRunner {
     System.setProperty(DATA_DIR_KEY, dataDir.getAbsolutePath());
     TestUtil.captureStagesForProductionRun();
     TestUtil.EMPTY_OFFSET = false;
+    RuntimeInfo info = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
+        Arrays.asList(getClass().getClassLoader()));
+    OffsetFileUtil.saveOffset(info, TestUtil.MY_PIPELINE, "0", "dummy");
     ObjectGraph objectGraph = ObjectGraph.create(new TestUtil.TestPipelineManagerModule());
     pipelineStateStore = objectGraph.get(PipelineStateStore.class);
     pipelineManager = new StandaloneAndClusterPipelineManager(objectGraph);

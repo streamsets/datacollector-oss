@@ -26,7 +26,8 @@ import java.util.EventListener;
 
 public interface StateEventListener extends EventListener {
 
-  void onStateChange(PipelineState fromState, PipelineState toState, String toStateJson, ThreadUsage threadUsage)
-    throws PipelineException;
+  void onStateChange(
+      PipelineState fromState, PipelineState toState, String toStateJson, ThreadUsage threadUsage, String offset
+  ) throws PipelineException;
 
 }

@@ -72,8 +72,9 @@ public class EmailNotifier implements StateEventListener {
   }
 
   @Override
-  public void onStateChange(PipelineState fromState, PipelineState toState, String toStateJson,
-                            ThreadUsage threadUsage) throws PipelineRuntimeException {
+  public void onStateChange(
+      PipelineState fromState, PipelineState toState, String toStateJson, ThreadUsage threadUsage, String offset
+  ) throws PipelineRuntimeException {
     //should not be active in slave mode
     if(toState.getExecutionMode() != ExecutionMode.SLAVE && name.equals(toState.getName())) {
       if (pipelineStates != null && pipelineStates.contains(toState.getStatus().name())) {

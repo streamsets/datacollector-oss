@@ -58,6 +58,8 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -921,9 +923,10 @@ public class TestRemoteDataCollector {
     ));
     File testFolder = tempFolder.newFolder();
     Mockito.when(runtimeInfo.getDataDir()).thenReturn(testFolder.getAbsolutePath());
-    OffsetFileUtil.saveOffset(runtimeInfo, "name", "rev", "offset:100");
     Mockito.when(pipelineStoreTask.hasPipeline(Mockito.anyString())).thenReturn(false);
-    Mockito.when(remoteStateEventListener.getPipelineStateEvents()).thenReturn(pipelineStates);
+    Mockito.when(remoteStateEventListener.getPipelineStateEvents()).thenReturn(Arrays.<Pair<PipelineState,
+        String>>asList(
+        new ImmutablePair<>(pipelineStates.get(0), "offset:1000")));
     List<PipelineAndValidationStatus> pipelineAndValidationStatuses = dataCollector.getRemotePipelinesWithChanges();
     assertEquals(1, pipelineAndValidationStatuses.size());
     PipelineAndValidationStatus pipelineAndValidationStatus = pipelineAndValidationStatuses.get(0);
@@ -934,7 +937,7 @@ public class TestRemoteDataCollector {
     assertTrue(pipelineAndValidationStatus.getWorkerInfos().isEmpty());
     assertTrue(pipelineAndValidationStatus.isRemote());
     assertEquals("message", pipelineAndValidationStatus.getMessage());
-    assertEquals("offset:100", pipelineAndValidationStatus.getOffset());
+    assertEquals("offset:1000", pipelineAndValidationStatus.getOffset());
     assertNull(pipelineAndValidationStatus.getValidationStatus());
   }
 }
