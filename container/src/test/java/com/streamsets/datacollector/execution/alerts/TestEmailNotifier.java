@@ -88,7 +88,7 @@ public class TestEmailNotifier {
       System.currentTimeMillis(), new HashMap<String, Object>(), ExecutionMode.STANDALONE, "", 0, 0);
     PipelineState runErrorState = new PipelineStateImpl("x", "x", "0", PipelineStatus.RUN_ERROR, "Run Error",
       System.currentTimeMillis(), new HashMap<String, Object>(), ExecutionMode.STANDALONE, "", 0, 0);
-    emailNotifier.onStateChange(runningState, runErrorState, "", null);
+    emailNotifier.onStateChange(runningState, runErrorState, "", null, null);
 
     String headers = GreenMailUtil.getHeaders(server.getReceivedMessages()[0]);
     Assert.assertTrue(headers != null);
@@ -108,7 +108,7 @@ public class TestEmailNotifier {
       System.currentTimeMillis(), new HashMap<String, Object>(), ExecutionMode.STANDALONE, "", 0, 0);
     PipelineState startErrorState = new PipelineStateImpl("x", "x", "0", PipelineStatus.START_ERROR, "Start Error",
       System.currentTimeMillis(), new HashMap<String, Object>(), ExecutionMode.STANDALONE, "", 0, 0);
-    emailNotifier.onStateChange(startingState, startErrorState, "", null);
+    emailNotifier.onStateChange(startingState, startErrorState, "", null, null);
 
     String headers = GreenMailUtil.getHeaders(server.getReceivedMessages()[0]);
     Assert.assertTrue(headers != null);
@@ -128,7 +128,7 @@ public class TestEmailNotifier {
       System.currentTimeMillis(), new HashMap<String, Object>(), ExecutionMode.STANDALONE, "", 0, 0);
     PipelineState finishedState = new PipelineStateImpl("x", "x", "0", PipelineStatus.FINISHED, "Finished",
       System.currentTimeMillis(), new HashMap<String, Object>(), ExecutionMode.STANDALONE, "", 0, 0);
-    emailNotifier.onStateChange(runningState, finishedState, "", null);
+    emailNotifier.onStateChange(runningState, finishedState, "", null, null);
 
     String headers = GreenMailUtil.getHeaders(server.getReceivedMessages()[0]);
     Assert.assertTrue(headers != null);
@@ -148,7 +148,7 @@ public class TestEmailNotifier {
       System.currentTimeMillis(), new HashMap<String, Object>(), ExecutionMode.STANDALONE, "", 0, 0);
     PipelineState stoppedState = new PipelineStateImpl("x", "x", "0", PipelineStatus.STOPPED, "Stopped",
       System.currentTimeMillis(), new HashMap<String, Object>(), ExecutionMode.STANDALONE, "", 0, 0);
-    emailNotifier.onStateChange(stoppingState, stoppedState, "", null);
+    emailNotifier.onStateChange(stoppingState, stoppedState, "", null, null);
 
     String headers = GreenMailUtil.getHeaders(server.getReceivedMessages()[0]);
     Assert.assertTrue(headers != null);
@@ -168,7 +168,7 @@ public class TestEmailNotifier {
       System.currentTimeMillis(), new HashMap<String, Object>(), ExecutionMode.STANDALONE, "", 0, 0);
     PipelineState disconnectedState = new PipelineStateImpl("x", "x", "0", PipelineStatus.DISCONNECTED, "Disconnected",
       System.currentTimeMillis(), new HashMap<String, Object>(), ExecutionMode.STANDALONE, "", 0, 0);
-    emailNotifier.onStateChange(disconnectingState, disconnectedState, "", null);
+    emailNotifier.onStateChange(disconnectingState, disconnectedState, "", null, null);
 
     String headers = GreenMailUtil.getHeaders(server.getReceivedMessages()[0]);
     Assert.assertTrue(headers != null);
@@ -188,7 +188,7 @@ public class TestEmailNotifier {
       System.currentTimeMillis(), new HashMap<String, Object>(), ExecutionMode.STANDALONE, "", 0, 0);
     PipelineState connectingState = new PipelineStateImpl("x", "x", "0", PipelineStatus.CONNECTING, "Connecting",
       System.currentTimeMillis(), new HashMap<String, Object>(), ExecutionMode.STANDALONE, "", 0, 0);
-    emailNotifier.onStateChange(disconnectedState, connectingState, "", null);
+    emailNotifier.onStateChange(disconnectedState, connectingState, "", null, null);
 
     String headers = GreenMailUtil.getHeaders(server.getReceivedMessages()[0]);
     Assert.assertTrue(headers != null);
@@ -209,7 +209,7 @@ public class TestEmailNotifier {
       System.currentTimeMillis(), new HashMap<String, Object>(), ExecutionMode.STANDALONE, "", 0, 0);
     PipelineState runErrorState = new PipelineStateImpl("x", "x", "0", PipelineStatus.RUN_ERROR, "Run Error",
       System.currentTimeMillis(), new HashMap<String, Object>(), ExecutionMode.STANDALONE, "", 0, 0);
-    emailNotifier.onStateChange(runningState, runErrorState, "", null);
+    emailNotifier.onStateChange(runningState, runErrorState, "", null, null);
 
     Assert.assertTrue(server.getReceivedMessages().length == 0);
 

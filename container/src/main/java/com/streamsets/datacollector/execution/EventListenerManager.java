@@ -121,7 +121,9 @@ public class EventListenerManager {
     }
   }
 
-  public void broadcastStateChange(PipelineState fromState, PipelineState toState, ThreadUsage threadUsage) {
+  public void broadcastStateChange(
+      PipelineState fromState, PipelineState toState, ThreadUsage threadUsage, String offset
+  ) {
     if(stateEventListenerList.size() > 0) {
       List<StateEventListener> stateEventListenerListCopy;
       synchronized (stateEventListenerList) {
@@ -134,7 +136,7 @@ public class EventListenerManager {
 
         for(StateEventListener stateEventListener : stateEventListenerListCopy) {
           try {
-            stateEventListener.onStateChange(fromState, toState, toStateJson, threadUsage);
+            stateEventListener.onStateChange(fromState, toState, toStateJson, threadUsage, offset);
           } catch(Exception ex) {
             LOG.warn("Error while broadcasting Pipeline State, {}", ex.toString(), ex);
           }

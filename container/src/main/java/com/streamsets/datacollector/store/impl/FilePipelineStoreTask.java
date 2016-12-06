@@ -27,6 +27,7 @@ import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.StateEventListener;
 import com.streamsets.datacollector.execution.manager.PipelineStateImpl;
+import com.streamsets.datacollector.runner.production.OffsetFileUtil;
 import com.streamsets.datacollector.util.LogUtil;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.PipelineUtils;
@@ -227,6 +228,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         if (pipelineStatus.isActive()) {
           throw new PipelineStoreException(ContainerError.CONTAINER_0208, pipelineStatus);
         }
+        String offset = OffsetFileUtil.getOffset(runtimeInfo, name, REV);
         if (!cleanUp(name)) {
           throw new PipelineStoreException(ContainerError.CONTAINER_0203, name);
         }
@@ -245,7 +247,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         );
         try {
           if (stateEventListener != null) {
-            stateEventListener.onStateChange(currentState, latestState, "", null);
+            stateEventListener.onStateChange(currentState, latestState, "", null, offset);
           }
         } catch (Exception e) {
           LOG.warn("Cannot set delete event for pipeline");

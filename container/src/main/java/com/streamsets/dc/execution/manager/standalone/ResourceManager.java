@@ -50,7 +50,9 @@ public class ResourceManager implements StateEventListener {
 
   @Override
   public void
-    onStateChange(PipelineState fromState, PipelineState toState, String toStateJson, ThreadUsage threadUsage) {
+    onStateChange(
+      PipelineState fromState, PipelineState toState, String toStateJson, ThreadUsage threadUsage, String offset
+  ) {
     if ((fromState.getStatus().isActive() && !toState.getStatus().isActive())
       || toState.getStatus() == PipelineStatus.RETRY) {
       synchronized (this) {

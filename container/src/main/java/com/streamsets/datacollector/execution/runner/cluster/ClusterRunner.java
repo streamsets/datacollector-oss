@@ -58,6 +58,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.IssuesJson;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
+import com.streamsets.datacollector.runner.production.OffsetFileUtil;
 import com.streamsets.datacollector.security.SecurityConfiguration;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreException;
@@ -576,7 +577,12 @@ public class ClusterRunner extends AbstractRunner {
       }
       // This should be out of sync block
       if (eventListenerManager != null) {
-        eventListenerManager.broadcastStateChange(fromState, pipelineState, ThreadUsage.CLUSTER);
+        eventListenerManager.broadcastStateChange(
+            fromState,
+            pipelineState,
+            ThreadUsage.CLUSTER,
+            OffsetFileUtil.getOffset(runtimeInfo, name, rev)
+        );
       }
     }
   }
