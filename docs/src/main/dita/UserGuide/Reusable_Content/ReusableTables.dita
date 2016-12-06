@@ -790,6 +790,17 @@
        <entry>Creates read-only connections to avoid any type of write. <p>Selected by default.
          Clearing this property is not recommended. </p></entry>
       </row>
+      <row id="row-TransactionIsolation">
+       <entry>Transaction Isolation</entry>
+       <entry>Transaction isolation level used to connect to the database. <p>Default is the
+        default transaction isolation level set for the database. You can override the database
+        default by setting the level to any of the following:</p><ul id="ul_arc_mdf_2y">
+         <li>Read committed </li>
+         <li>Read uncommitted </li>
+         <li>Repeatable read</li>
+         <li>Serializable</li>
+        </ul></entry>
+      </row>
      </tbody>
     </tgroup>
    </table>
