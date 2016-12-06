@@ -709,11 +709,54 @@ public class TestJdbcTarget {
 
     connection = DriverManager.getConnection(h2ConnectionString, username, password);
     try (Statement statement = connection.createStatement()) {
-      ResultSet rs = statement.executeQuery("SELECT * FROM TEST.DATETIMES");
+      ResultSet rs = statement.executeQuery("SELECT * FROM TEST.DATETIMES WHERE P_ID = 1");
       assertTrue(rs.next());
       assertEquals(new SimpleDateFormat("HH:mm:ss").format(d), rs.getTime(2).toString());
       assertEquals(new SimpleDateFormat("YYY-MM-dd").format(d), rs.getDate(3).toString());
       assertEquals(d, rs.getTimestamp(4));
+      assertFalse(rs.next());
+    }
+  }
+
+  @Test
+  public void testDateTimeTypesWillNulls() throws Exception {
+    List<JdbcFieldColumnParamMapping> fieldMappings = ImmutableList.of(
+        new JdbcFieldColumnParamMapping("[0]", "P_ID"),
+        new JdbcFieldColumnParamMapping("[1]", "T"),
+        new JdbcFieldColumnParamMapping("[2]", "D"),
+        new JdbcFieldColumnParamMapping("[3]", "DT")
+    );
+
+    Target target = new JdbcTarget(
+        "TEST.DATETIMES",
+        fieldMappings,
+        false,
+        false,
+        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
+        ChangeLogFormat.NONE,
+        createConfigBean(h2ConnectionString, username, password)
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
+
+    Record record1 = RecordCreator.create();
+    List<Field> fields1 = new ArrayList<>();
+    fields1.add(Field.create(2));
+    fields1.add(Field.createTime(null));
+    fields1.add(Field.createDate(null));
+    fields1.add(Field.createDatetime(null));
+    record1.set(Field.create(fields1));
+
+    List<Record> records = ImmutableList.of(record1);
+    targetRunner.runInit();
+    targetRunner.runWrite(records);
+
+    connection = DriverManager.getConnection(h2ConnectionString, username, password);
+    try (Statement statement = connection.createStatement()) {
+      ResultSet rs = statement.executeQuery("SELECT * FROM TEST.DATETIMES WHERE P_ID = 2");
+      assertTrue(rs.next());
+      assertEquals(null, rs.getTime(2));
+      assertEquals(null, rs.getDate(3));
+      assertEquals(null, rs.getTimestamp(4));
       assertFalse(rs.next());
     }
   }
