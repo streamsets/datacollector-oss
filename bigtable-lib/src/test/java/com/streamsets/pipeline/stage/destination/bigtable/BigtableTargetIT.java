@@ -40,6 +40,7 @@ import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.slf4j.Logger;
@@ -54,6 +55,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 @Category(SingleForkNoReuseTest.class)
+@Ignore
 public class BigtableTargetIT {
   private static final Logger LOG = LoggerFactory.getLogger(BigtableTargetIT.class);
 
