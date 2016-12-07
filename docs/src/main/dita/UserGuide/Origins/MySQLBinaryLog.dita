@@ -16,33 +16,31 @@
 <concept id="concept_kqg_1yh_xx">
  <title>MySQL Binary Log</title>
  <shortdesc>The MySQL Binary Log origin processes change data capture (CDC) information provided by
-        MySQL binary logs. The origin produces records with a map of fields of CDC information. </shortdesc>
+        MySQL server in binary logs. The origin produces records with a map of fields of CDC
+        information. </shortdesc>
  <conbody>
   <p><indexterm>origins<indexterm>MySQL Binary Log</indexterm></indexterm><indexterm>MySQL Binary
-                Log origin<indexterm>overview</indexterm></indexterm>The origin produces one record
-            for each change noted in the binary logs. Note that if a transaction recorded in the
-            binary logs is rolled back in the MySQL database, MySQL retains the original transaction
-            in the log and then also records the rolled back transaction. As a result, the MySQL
-            Binary Log origin processes the changes recorded in the original transaction and in the
-            rolled back transaction. <draft-comment author="alisontaylor">verify this
-                statement</draft-comment></p>
-        <p>When needed, you can use a separate pipeline with the JDBC Consumer origin to read
-            existing data from a MySQL database before you start a pipeline with the MySQL Binary
-            Log origin.<draft-comment author="alisontaylor">more needed on:<p>-GTID
-                    info</p><p>-include/ignore tables</p><p>-readme info</p><p>-example with
-                    screenshots, like Oracle CDC Client</p><p>-generated records and header
-                    attributes - Hari to get to me</p></draft-comment></p>
-        <p>The origin can process binary logs from MySQL servers that have Global Transaction
+                Log origin<indexterm>overview</indexterm></indexterm>The MySQL Binary Log origin
+            acts as a MySQL replication slave. MySQL replication allows you to maintain multiple
+            copies of MySQL data by copying the data from a master to a slave server. The origin
+            uses the replication process to capture changes from the MySQL master database and then
+            pass the changed data to a <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            pipeline. </p>
+        <p>The origin can process binary logs from a MySQL server that has Global Transaction
             Identifier (GTID) enabled or disabled. A GTID is a unique transaction ID assigned to
-            every transaction that happens in the MySQL database. If you change the GTID mode on the
-            database server after you have run a pipeline with the MySQL Binary Log origin, you must
-            reset the origin. Otherwise, the origin cannot correctly read the offset.</p>
+            every transaction that happens in the MySQL server database.</p>
+        <p>MySQL Binary Log processes only change capture data. The origin creates records for
+            insert, update, and delete operations. The origin produces one record for each change
+            noted in the binary logs. When needed, you can use a JDBC Consumer in a separate
+            pipeline to read existing data from the MySQL database before you start a pipeline with
+            a MySQL Binary Log origin.</p>
         <p>When you configure MySQL Binary Log, you configure the database server from which to read
             the log files. You can configure the origin to read the binary log files from the
             beginning, or you can specify an offset to determine where the origin starts reading
             data. </p>
-        <p>You specify the credentials to use to connect to the MySQL server, and can also configure
-            the origin to use SSL to connect to the server. If you do not want to process CDC
+        <p>You specify the credentials to use to connect to MySQL server, and can also configure the
+            origin to use SSL to connect to the server. If you do not want to process CDC
             information from all tables in the database, you can specify the tables that the origin
             includes or ignores when it reads the binary log files.</p>
  </conbody>

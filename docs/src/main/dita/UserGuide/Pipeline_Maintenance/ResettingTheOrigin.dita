@@ -30,6 +30,7 @@
                 <li>File Tail</li>
                 <li>JDBC Consumer</li>
                 <li>MongoDB</li>
+                <li>MySQL Binary Log</li>
                 <li>Salesforce</li>
                 <li>SFTP/FTP Client</li>
             </ul><p>For these origins, when you stop the pipeline, the <ph

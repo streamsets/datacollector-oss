@@ -36,14 +36,19 @@
                 <dd>You can define the write operation in the sdc.operation.type record header
                     attribute. The Kudu destination reads the value of the sdc.operation.type record
                     header attribute to determine the operation to perform. </dd>
-                <dd>Define the record header attribute using the Expression Evaluator or a scripting
-                    processor. Set the attribute to one of the following numeric values:<ul
+                <dd>The attribute can contain one of the following numeric values:<ul
                         id="ul_smy_qf3_1y">
                         <li>1 - inserts records</li>
                         <li>2 - deletes records</li>
                         <li>3 - updates records</li>
                         <li>4 - upserts records </li>
                     </ul></dd>
+                <dd>If your pipeline includes the MySQL Binary Log origin, the Kudu destination
+                    simply reads the operation type from the sdc.operation.type record header
+                    attribute that the origin generates. The MySQL Binary Log origin processes
+                    change data capture information from MySQL server binary logs. If your pipeline
+                    includes another origin, use the Expression Evaluator or a scripting processor
+                    to define the record header attribute.</dd>
                 <dd>In the Advanced tab for the Kudu destination, you can configure how the
                     destination handles records that have an unsupported value for the
                     sdc.operation.type record header attribute. Unsupported values include

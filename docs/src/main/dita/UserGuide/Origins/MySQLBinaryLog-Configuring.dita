@@ -15,10 +15,13 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_qbt_kyh_xx">
     <title>Configuring a MySQL Binary Log Origin</title>
-    <shortdesc>Configure a MySQL Binary Log origin to process change data capture (CDC) information
-        provided by MySQL binary logs.</shortdesc>
     <taskbody>
-        <context/>
+        <context>
+            <p><indexterm>MySQL Binary Log
+                origin<indexterm>configuring</indexterm></indexterm>Configure a MySQL Binary Log
+                origin to process change data capture (CDC) information provided by MySQL binary
+                logs.</p>
+        </context>
         <steps>
             <step
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStepErrorHandling">
@@ -41,35 +44,39 @@
                             <tbody>
                                 <row>
                                     <entry>Hostname</entry>
-                                    <entry>MySQL Server hostname.</entry>
+                                    <entry>MySQL server hostname.</entry>
                                 </row>
                                 <row>
                                     <entry>Port</entry>
-                                    <entry>MySQL Server port. </entry>
+                                    <entry>MySQL server port. </entry>
                                 </row>
                                 <row>
                                     <entry>Server ID</entry>
-                                    <entry>Server ID used by the binary log client.<draft-comment
-                                            author="alisontaylor">question to Hari: what is the
-                                            binary log client? is it the
-                                        origin?</draft-comment></entry>
+                                    <entry>Replication server ID that the origin uses to connect to
+                                        the master MySQL server. Must be unique from the server ID
+                                        of the replication master and of all the other replication
+                                            slaves.<p>When the MySQL server database is enabled for
+                                            GTID, the server ID is optional. </p></entry>
                                 </row>
                                 <row>
-                                    <entry>Start from Beginning</entry>
+                                    <entry>Start from Beginning
+                                        <xref href="MySQLBinaryLog-Offset.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_k2w_rsd_3t"/></xref></entry>
                                     <entry>Specifies whether to start reading events from the
                                         beginning of the binary log. When not selected, the origin
-                                        begins reading events from the current binary log
-                                            position.<draft-comment author="alisontaylor">what is
-                                            the "current position"?</draft-comment></entry>
+                                        begins reading events from the last saved offset.</entry>
                                 </row>
                                 <row>
-                                    <entry>Initial Offset</entry>
-                                    <entry>Read events starting at this offset in the binary log.<p>
-                                            <draft-comment author="alisontaylor">need a separate
-                                                topic on initial offset, with a dl list of the 2
-                                                ways to set, based on GTID enabled or not, and
-                                                examples for each.</draft-comment>
-                                        </p></entry>
+                                    <entry>Initial Offset
+                                        <xref href="MongoDB-OffsetField.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_k8w_rsd_6t"/></xref></entry>
+                                    <entry>Read events starting at this offset in the binary
+                                            log.<p>If you configure an initial offset value and
+                                            configure the origin to start from the beginning, then
+                                            the origin starts reading from the initial
+                                        offset.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -138,19 +145,21 @@
                                 <row>
                                     <entry>Use SSL</entry>
                                     <entry>Specifies whether to use SSL to connect to the MySQL
-                                            server.<draft-comment author="alisontaylor">do you
-                                            define ssl options in SDC_JAVA_OPTS env var?
-                                        </draft-comment></entry>
+                                        server.</entry>
                                 </row>
                                 <row>
-                                    <entry>Include Tables</entry>
+                                    <entry>Include Tables
+                                        <xref href="MySQLBinaryLog-Tables.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_k5w_rsd_1t"/></xref></entry>
                                     <entry>List of tables to include when reading change events in
-                                        the binary log file. <draft-comment author="alisontaylor"
-                                            >need a separate topic on the tables to
-                                            include/ignore</draft-comment></entry>
+                                        the binary log file. </entry>
                                 </row>
                                 <row>
-                                    <entry>Ignore Tables</entry>
+                                    <entry>Ignore Tables
+                                        <xref href="MySQLBinaryLog-Tables.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_h2w_rsd_0t"/></xref></entry>
                                     <entry>List of tables to ignore when reading change events in
                                         the binary log file.</entry>
                                 </row>
