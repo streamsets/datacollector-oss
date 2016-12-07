@@ -19,7 +19,7 @@
     <topicref href="../Upgrade/Tarball-ServiceStart.dita"/>
    </topicref>
    <topicref href="../Upgrade/Tarball-Step4-EnvConfig.dita"/>
-   <topicref href="../Upgrade/Tarball-Step5-ConfigFiles.dita"/>
+   <topicref href="../Upgrade/Tarball-Step5-UpdateConfigFiles.dita"/>
    <topicref href="../Upgrade/Tarball-Step6-AdditionalLibraries.dita"/>
    <topicref href="../Upgrade/Tarball-Step7-Start.dita"/>
   </topicref>

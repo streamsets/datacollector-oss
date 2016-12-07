@@ -19,10 +19,7 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         version can include new properties and configuration files required for <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
-        start or function properly. The configuration files are stored in the
-            <codeph>$SDC_CONF</codeph> directory, including the <codeph>sdc.properties</codeph> file
-        and the related realm properties files, keystore files, LDAP files, and the logj4 properties
-        file.</shortdesc>
+        start or function properly. </shortdesc>
     <taskbody>
         <context>
             <p>When you install the new RPM package, the configuration files are written to the same
@@ -43,16 +40,28 @@
         <steps>
             <step>
                 <cmd>In the working <codeph>$SDC_CONF</codeph> directory, <codeph>/etc/sdc</codeph>
-                    by default, rename all previous configuration files with the following
-                    extension: <codeph>.old</codeph>.</cmd>
+                    by default, rename all previous configuration files except for the
+                        <codeph>application-token.txt</codeph> file with the following extension:
+                        <codeph>.old</codeph>.</cmd>
+                <info>The previous version of the <codeph>application-token.txt</codeph> file
+                    includes the authentication token that this <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> instance requires to issue authenticated requests to <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                    />. As a result, we'll need <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> to use the previous version of the file.</info>
             </step>
             <step>
-                <cmd>Remove the following extension from all new configuration files:
-                        <codeph>.rpmnew</codeph>.</cmd>
+                <cmd>Remove the following extension from all new configuration files except for the
+                        <codeph>application-token.txt</codeph> file: <codeph>.rpmnew</codeph>.</cmd>
             </step>
-            <step>
-                <cmd>Compare the previous and new versions of the configuration files, and update
-                    the new files as needed with the same customized property values.</cmd>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/MainConfigFile">
+                <cmd/>
+            </step>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/RemainingConfigFiles">
+                <cmd/>
             </step>
         </steps>
     </taskbody>
