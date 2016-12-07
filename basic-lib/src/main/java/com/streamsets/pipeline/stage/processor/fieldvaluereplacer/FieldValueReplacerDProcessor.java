@@ -23,7 +23,6 @@ import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDef.Type;
 import com.streamsets.pipeline.api.ConfigGroups;
-import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageDef;
@@ -35,11 +34,12 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 import java.util.List;
 
 @StageDef(
-    version=1,
+    version=3,
     label="Value Replacer",
     description = "Replaces null values with a constant and replaces values with NULL",
     icon="replacer.png",
-    onlineHelpRefUrl = "index.html#Processors/ValueReplacer.html#task_ihq_ymf_zq"
+    onlineHelpRefUrl = "index.html#Processors/ValueReplacer.html#task_ihq_ymf_zq",
+    upgrader = FieldValueReplacerUpgrader.class
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
@@ -50,12 +50,12 @@ public class FieldValueReplacerDProcessor extends DProcessor {
       type = Type.MODEL,
       defaultValue="",
       label = "Fields to Null",
-      description="Replaces existing values with null values",
+      description="Conditionally Replaces existing values with null values",
       displayPosition = 10,
       group = "REPLACE"
   )
-  @FieldSelectorModel
-  public List<String> fieldsToNull;
+  @ListBeanModel
+  public List<NullReplacerConditionalConfig> nullReplacerConditionalConfigs;
 
   @ConfigDef(
       required = false,
@@ -96,9 +96,10 @@ public class FieldValueReplacerDProcessor extends DProcessor {
   @Override
   protected Processor createProcessor() {
     return new FieldValueReplacerProcessor(
-        fieldsToNull,
+        nullReplacerConditionalConfigs,
         fieldsToReplaceIfNull,
         fieldsToConditionallyReplace,
-        onStagePreConditionFailure);
+        onStagePreConditionFailure
+    );
   }
 }
