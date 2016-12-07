@@ -128,9 +128,10 @@ public class FilePipelineStateStore implements PipelineStateStore {
     register(name, rev);
     LOG.debug("Changing state of pipeline '{}','{}','{}' to '{}' in execution mode: '{}';" + "status msg is '{}'",
       name, rev, user, status, executionMode, message);
-    if (getPipelineStateFile(name, rev).exists()) {
-      if (attributes == null) {
-        attributes = getState(name, rev).getAttributes();
+    if (attributes == null && getPipelineStateFile(name, rev).exists()) {
+      attributes = getState(name, rev).getAttributes();
+      if (attributes.containsKey("issues")) {
+        attributes.remove("issues");
       }
     }
     PipelineState pipelineState =
