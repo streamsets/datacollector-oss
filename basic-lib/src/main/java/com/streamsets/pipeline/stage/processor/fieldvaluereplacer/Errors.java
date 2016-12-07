@@ -30,6 +30,7 @@ public enum Errors implements ErrorCode {
   VALUE_REPLACER_03("Cannot convert String value to type {} in field {}"),
   VALUE_REPLACER_04("Literal value required for < = > operands"),
   VALUE_REPLACER_05("Replacement value required"),
+  VALUE_REPLACER_06("Error in evaluating condition {}. Reason : {}"),
   ;
 
   private final String msg;

@@ -25,50 +25,69 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.OnStagePreConditionFailure;
+import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.util.FieldRegexUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
 public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
-  private final List<String> fieldsToNull;
+  private static final Logger LOG = LoggerFactory.getLogger(FieldValueReplacerProcessor.class);
+  private final List<NullReplacerConditionalConfig> nullReplacerConditionalConfigs;
   private final List<FieldValueReplacerConfig> fieldsToReplaceIfNull;
   private final OnStagePreConditionFailure onStagePreConditionFailure;
   private final List<FieldValueConditionalReplacerConfig> fieldsToConditionallyReplace;
+  private ELEval nullConditionELEval;
+  private ELVars nullConditionELVars;
 
-  public FieldValueReplacerProcessor(List<String> fieldsToNull,
+  public FieldValueReplacerProcessor(
+      List<NullReplacerConditionalConfig> nullReplacerConditionalConfigs,
       List<FieldValueReplacerConfig> fieldsToReplaceIfNull,
       List<FieldValueConditionalReplacerConfig> fieldsToConditionallyReplace,
       OnStagePreConditionFailure onStagePreConditionFailure) {
-    this.fieldsToNull = fieldsToNull;
+    this.nullReplacerConditionalConfigs = nullReplacerConditionalConfigs;
     this.fieldsToReplaceIfNull = fieldsToReplaceIfNull;
     this.fieldsToConditionallyReplace = fieldsToConditionallyReplace;
     this.onStagePreConditionFailure = onStagePreConditionFailure;
   }
 
   @Override
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> configIssues = super.init();
+    if (configIssues.isEmpty()) {
+      nullConditionELEval = getContext().createELEval("condition");
+      nullConditionELVars = getContext().createELVars();
+    }
+    return configIssues;
+  }
+
+  @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
     Set<String> fieldPaths = record.getEscapedFieldPaths();
     Set<String> fieldsThatDoNotExist = new HashSet<>();
-    if(fieldsToNull != null && !fieldsToNull.isEmpty()) {
-      for (String fieldToNull : fieldsToNull) {
-        for(String matchingField : FieldRegexUtil.getMatchingFieldPaths(fieldToNull, fieldPaths)) {
-          if (record.has(matchingField)) {
-            Field field = record.get(matchingField);
-            record.set(matchingField, Field.create(field, null));
-          } else {
-            fieldsThatDoNotExist.add(matchingField);
-          }
-        }
+
+    RecordEL.setRecordInContext(nullConditionELVars, record);
+
+    if(nullReplacerConditionalConfigs != null && !nullReplacerConditionalConfigs.isEmpty()) {
+      for (String fieldToNull : getFieldsToNull(nullReplacerConditionalConfigs, fieldsThatDoNotExist, fieldPaths, record)) {
+        Field field = record.get(fieldToNull);
+        record.set(fieldToNull, Field.create(field.getType(), null));
       }
     }
 
@@ -110,8 +129,8 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
               // always need a valid "replacementValue"
               if ((fieldValueConditionalReplacerConfig.replacementValue == null) ||
                   fieldValueConditionalReplacerConfig.replacementValue
-                  .trim()
-                  .equals("") || fieldValueConditionalReplacerConfig.replacementValue.isEmpty()) {
+                      .trim()
+                      .equals("") || fieldValueConditionalReplacerConfig.replacementValue.isEmpty()) {
                 throw new IllegalArgumentException(Utils.format(Errors.VALUE_REPLACER_05.getMessage()));
               }
 
@@ -166,10 +185,51 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
     }
 
     if(onStagePreConditionFailure == OnStagePreConditionFailure.TO_ERROR && !fieldsThatDoNotExist.isEmpty()) {
-     throw new OnRecordErrorException(Errors.VALUE_REPLACER_01, record.getHeader().getSourceId(),
-       Joiner.on(", ").join(fieldsThatDoNotExist));
+      throw new OnRecordErrorException(Errors.VALUE_REPLACER_01, record.getHeader().getSourceId(),
+          Joiner.on(", ").join(fieldsThatDoNotExist));
     }
     batchMaker.addRecord(record);
+  }
+
+  //This function simply evaluates the condition in each nullReplacerConditionalConfig and gather all fields that
+  //should be replaced by null.
+  private List<String> getFieldsToNull(List<NullReplacerConditionalConfig> nullReplacerConditionalConfigs, Set<String> fieldsThatDoNotExist, Set<String> fieldPaths, Record record) throws OnRecordErrorException {
+    //Gather in this all fields to null
+    List<String> fieldsToNull = new ArrayList<>();
+
+    for (NullReplacerConditionalConfig nullReplacerConditionalConfig : nullReplacerConditionalConfigs) {
+      List<String> fieldNamesToNull = nullReplacerConditionalConfig.fieldsToNull;
+      //Gather fieldsPathsToNull for this nullReplacerConditionalConfig
+      List<String> fieldPathsToNull = new ArrayList<>();
+      //Gather existing paths for each nullReplacerConditionalConfig
+      //And if field does not exist gather them in fieldsThatDoNotExist
+      for (String fieldNameToNull : fieldNamesToNull) {
+        for (String matchingField : FieldRegexUtil.getMatchingFieldPaths(fieldNameToNull, fieldPaths)) {
+          if (record.has(matchingField)) {
+            fieldPathsToNull.add(matchingField);
+          } else {
+            fieldsThatDoNotExist.add(matchingField);
+          }
+        }
+      }
+      //Now evaluate the condition in nullReplacerConditionalConfig
+      //If it empty or condition evaluates to true, add all the gathered fields in fieldsPathsToNull
+      // for this nullReplacerConditionalConfig to fieldsToNull
+      try {
+        boolean evaluatedCondition = true;
+        //If it is empty we assume it is true.
+        if (!StringUtils.isEmpty(nullReplacerConditionalConfig.condition)) {
+          evaluatedCondition = nullConditionELEval.eval(nullConditionELVars, nullReplacerConditionalConfig.condition, Boolean.class);
+        }
+        if (evaluatedCondition) {
+          fieldsToNull.addAll(fieldPathsToNull);
+        }
+      } catch (ELEvalException e) {
+        LOG.error("Error evaluating condition: " + nullReplacerConditionalConfig.condition, e);
+        throw new OnRecordErrorException(record, Errors.VALUE_REPLACER_06, nullReplacerConditionalConfig.condition, e.toString());
+      }
+    }
+    return fieldsToNull;
   }
 
   private int compareIt(Field field, String stringValue, String matchingField) {
