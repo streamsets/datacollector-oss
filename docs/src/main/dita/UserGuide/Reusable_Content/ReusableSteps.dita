@@ -4415,7 +4415,32 @@ grant codebase "file:///opt/sdc-extras/-" {
                     /> to enable the changes.</cmd>
             </step>
             <step>
-                <cmd> </cmd>
+                <cmd>
+                    <draft-comment author="alisontaylor">The following two steps are reused in the
+                        Tarball and RPM upgrade section - Update the Configuration
+                        Files</draft-comment>
+                </cmd>
+            </step>
+            <step id="MainConfigFile">
+                <cmd>Compare the previous and new versions of the <codeph>sdc.properties</codeph>
+                    file, and update the new file as needed with the same customized property
+                    values.</cmd>
+            </step>
+            <step id="RemainingConfigFiles">
+                <cmd>Compare the previous and new versions of the remaining files, and update the
+                    new files as needed with the same customized property values:</cmd>
+                <info>
+                    <ul>
+                        <li>The appropriate realm.properties file, based on the authentication type
+                            that you use.</li>
+                        <li><codeph>email-password.txt</codeph></li>
+                        <li>keystore files</li>
+                        <li>LDAP files</li>
+                        <li>log4j properties file</li>
+                        <li>security policy file</li>
+                        <li>Vault properties file</li>
+                    </ul>
+                </info>
             </step>
         </steps>
     </taskbody>
