@@ -32,8 +32,9 @@ public interface StreamSetsSupportProvider {
    * @param headline Headline for the ticket
    * @param comment Initial comment describing the problem
    * @param supportBundle Optional bytes that should be uploaded to the support portal as support bundle
+   * @return Internal id of the new ticket
    */
-  public void createNewSupportTicket(String username, String password, String headline, String comment, byte[] supportBundle);
+  public String createNewSupportTicket(String username, String password, String headline, String comment, byte[] supportBundle);
 
 
   /**
@@ -46,4 +47,12 @@ public interface StreamSetsSupportProvider {
    * @param supportBundle Optional bytes that should be uploaded to the support portal as support bundle
    */
   public void commentOnExistingSupportTicket(String username, String password, String ticketId, String comment, byte[] supportBundle);
+
+  /**
+   * Generate an URL for given support ticket. User can follow the URL to see a page with the ticket details.
+   *
+   * @param ticketId Support ticket id.
+   * @return Publicly accessible url (https://..)
+   */
+  public String getPublicUrlForSupportTicket(String ticketId);
 }

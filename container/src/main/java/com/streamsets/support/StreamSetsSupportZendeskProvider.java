@@ -52,7 +52,7 @@ public class StreamSetsSupportZendeskProvider implements StreamSetsSupportProvid
   }
 
   @Override
-  public void createNewSupportTicket(String username, String password, String headline, String commentText, byte[] supportBundle) {
+  public String createNewSupportTicket(String username, String password, String headline, String commentText, byte[] supportBundle) {
     Zendesk zd = buildZendeskClient(username, password);
 
     Comment comment;
@@ -69,7 +69,8 @@ public class StreamSetsSupportZendeskProvider implements StreamSetsSupportProvid
       comment
     );
 
-    zd.createTicket(ticket);
+    Ticket createdTicket = zd.createTicket(ticket);
+    return String.valueOf(createdTicket.getId());
   }
 
   @Override
@@ -85,6 +86,11 @@ public class StreamSetsSupportZendeskProvider implements StreamSetsSupportProvid
     }
 
     zd.createComment(Integer.parseInt(ticketId), comment);
+  }
+
+  @Override
+  public String getPublicUrlForSupportTicket(String ticketId) {
+    return "https://streamsets.zendesk.com/agent/tickets/" + ticketId;
   }
 
 }
