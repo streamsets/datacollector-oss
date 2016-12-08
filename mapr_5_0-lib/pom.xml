@@ -61,9 +61,17 @@
           <groupId>io.dropwizard.metrics</groupId>
           <artifactId>metrics-core</artifactId>
         </exclusion>
+          <exclusion>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+          </exclusion>
       </exclusions>
     </dependency>
 
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+    </dependency>
     <!-- Protolibs -->
     <dependency>
       <groupId>com.streamsets</groupId>
@@ -87,6 +95,12 @@
       <version>${avro.version}</version>
       <scope>compile</scope>
       <classifier>hadoop2</classifier>
+      <exclusions>
+          <exclusion>
+            <groupId>org.mortbay.jetty</groupId>
+            <artifactId>servlet-api</artifactId>
+          </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
