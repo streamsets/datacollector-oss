@@ -44,6 +44,11 @@ public class StreamSetsSupportZendeskProvider implements StreamSetsSupportProvid
   private static final String BUNDLE_MIME = "application/zip";
 
   /**
+   * Id of support's default assignee group
+   */
+  private static long DEFAULT_GROUP_ASSIGNEE = 24417398L;
+
+  /**
    * Custom field constants
    */
   private static long CUSTOM_FIELD_PRIORITY = 31854147L;
@@ -101,6 +106,8 @@ public class StreamSetsSupportZendeskProvider implements StreamSetsSupportProvid
       new CustomFieldValue(CUSTOM_FIELD_PRIORITY, priority.apiValue()),
       new CustomFieldValue(CUSTOM_FIELD_VERSION, zendeskVersion)
     ));
+
+    ticket.setGroupId(DEFAULT_GROUP_ASSIGNEE);
 
     Ticket createdTicket = zd.createTicket(ticket);
     return String.valueOf(createdTicket.getId());
