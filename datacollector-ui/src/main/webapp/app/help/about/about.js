@@ -28,21 +28,23 @@ angular
     angular.extend($scope, {
       buildInfo: {},
       cancel: function() {
+        $scope.success = {};
+        $scope.zendeskSuccess = false;
         $modalInstance.dismiss('cancel');
       },
       send: function() {
-        console.log("about.js > send()")
         var userInfo = {};
         userInfo.zendeskUsername = $scope.username;
         userInfo.zendeskToken = $scope.password;
-        userInfo.priority = $scope.title;
-        userInfo.headline = $scope.comment;
-        userInfo.commentText  = $scope.priority;
+        userInfo.priority = $scope.priority;
+        userInfo.headline = $scope.headline;
+        userInfo.commentText  = $scope.commentText;
 
         api.support.uploadZendesk(userInfo).
         success(function(res) {
           if(res && res.length) {
             $scope.success = res;
+            $scope.zendeskSuccess = true;
           } else {
             $scope.success = [];
           }
