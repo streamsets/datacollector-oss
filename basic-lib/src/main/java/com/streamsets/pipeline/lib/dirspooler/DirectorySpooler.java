@@ -648,6 +648,5 @@ public class DirectorySpooler {
       }
       LOG.debug("Finished archived files purging, deleted '{}' files", purged);
     }
-
   }
 }
