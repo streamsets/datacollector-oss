@@ -218,7 +218,6 @@ public class LdapLoginModule extends AbstractLoginModule
   @Override
   public UserInfo getUserInfo(String username) throws Exception
   {
-    this._username = username;
     String pwdCredential = getUserCredentials(username);
 
     if (pwdCredential == null)
@@ -463,7 +462,7 @@ public class LdapLoginModule extends AbstractLoginModule
         setAuthenticated(false);
         return isAuthenticated();
       }
-
+      this._username = webUserName;
       if (_forceBindingLogin)
       {
         return bindingLogin(webUserName, webCredential);

@@ -95,12 +95,12 @@ public class LdapAuthenticationIT extends LdapAuthenticationBaseIT  {
   }
 
   /**
-   * Test using search filter. If roleSearchFilter is provided and has {1}, then
-   * we apply the filter by replacing {1} with UID.
+   * Test using search filter. If roleSearchFilter is provided and has {user}, then
+   * we apply the filter by replacing {user} with UID.
    * @throws Exception
    */
   @Test
-  public void testRoleFilterMemberUid() throws Exception {
+  public void testRoleFilterMemberUidForceBindingFalse() throws Exception {
     String memberUidFilter = "ldap {\n" + // information for server 1
         "  com.streamsets.datacollector.http.LdapLoginModule required\n" +
         "  debug=\"false\"\n" +
@@ -128,8 +128,42 @@ public class LdapAuthenticationIT extends LdapAuthenticationBaseIT  {
   }
 
   /**
-   * Test using search filter. If roleSearchFilter is provided and has {0}, then
-   * we apply the filter by replacing {0} with user's full DN.
+   * Test using search filter. If roleSearchFilter is provided and has {user}, then
+   * we apply the filter by replacing {user} with UID.
+   * @throws Exception
+   */
+  @Test
+  public void testRoleFilterMemberUidForceBindingTrue() throws Exception {
+    String memberUidFilter = "ldap {\n" + // information for server 1
+        "  com.streamsets.datacollector.http.LdapLoginModule required\n" +
+        "  debug=\"false\"\n" +
+        "  useLdaps=\"false\"\n" +
+        "  contextFactory=\"com.sun.jndi.ldap.LdapCtxFactory\"\n" +
+        "  hostname=\"" + server.getContainerIpAddress()+ "\"\n" +
+        "  port=\"" + server.getMappedPort(LDAP_PORT) + "\"\n" +
+        "  bindDn=\"" + BIND_DN + "\"\n" +
+        "  bindPassword=\"" + BIND_PWD + "\"\n" +
+        "  authenticationMethod=\"simple\"\n" +
+        "  forceBindingLogin=\"true\"\n" +
+        "  userBaseDn=\"ou=employees,dc=example,dc=org\"\n" +
+        "  userRdnAttribute=\"uid\"\n" +
+        "  userIdAttribute=\"uid\"\n" +
+        "  userPasswordAttribute=\"userPassword\"\n" +
+        "  userObjectClass=\"inetOrgPerson\"\n" +
+        "  roleBaseDn=\"ou=departments,dc=example,dc=org\"\n" +
+        "  roleNameAttribute=\"cn\"\n" +
+        "  roleMemberAttribute=\"memberUid\"\n" +
+        "  roleObjectClass=\"posixGroup\"\n" +
+        "  roleFilter=\"memberUid={user}\";\n" +
+        "};";
+
+    assertAuthenticationSuccess(memberUidFilter, "user6", "user6");
+  }
+
+
+  /**
+   * Test using search filter. If roleSearchFilter is provided and has {dn}, then
+   * we apply the filter by replacing {dn} with user's full DN.
    * @throws Exception
    */
   @Test
@@ -160,8 +194,8 @@ public class LdapAuthenticationIT extends LdapAuthenticationBaseIT  {
   }
 
   /**
-   * Test using search filter. If roleSearchFilter is provided and has {0}, then
-   * we apply the filter by replacing {0} with user's full DN.
+   * Test using search filter. If roleSearchFilter is provided and has {dn}, then
+   * we apply the filter by replacing {dn} with user's full DN.
    * @throws Exception
    */
   @Test
@@ -194,8 +228,8 @@ public class LdapAuthenticationIT extends LdapAuthenticationBaseIT  {
 
 
   /**
-   * Test using search filter. If roleSearchFilter is provided and has {0}, then
-   * we apply the filter by replacing {0} with user's full DN.
+   * Test using search filter. If roleSearchFilter is provided and has {dn}, then
+   * we apply the filter by replacing {dn} with user's full DN.
    * @throws Exception
    */
   @Test
