@@ -40,11 +40,17 @@ public class StreamSetsSupportZendeskProvider implements StreamSetsSupportProvid
    */
   private static final String BUNDLE_MIME = "application/zip";
 
-  private Zendesk buildZendeskClient(String username, String password) {
-    return new Zendesk.Builder(ZENDESK_URL)
-      .setUsername(username)
-      .setToken(password)
-      .build();
+  private Zendesk buildZendeskClient(SupportCredentials credentials) {
+    Zendesk.Builder builder = new Zendesk.Builder(ZENDESK_URL)
+      .setUsername(credentials.getUsername());
+
+    if(credentials.isUseToken()) {
+      builder.setToken(credentials.getPasswordOrToken());
+    } else {
+      builder.setPassword(credentials.getPasswordOrToken());
+    }
+
+    return builder.build();
   }
 
   private Attachment.Upload upload(Zendesk zd, byte[] supportBundle) {
@@ -52,8 +58,8 @@ public class StreamSetsSupportZendeskProvider implements StreamSetsSupportProvid
   }
 
   @Override
-  public String createNewSupportTicket(String username, String password, String headline, String commentText, byte[] supportBundle) {
-    Zendesk zd = buildZendeskClient(username, password);
+  public String createNewSupportTicket(SupportCredentials credentials, String headline, String commentText, byte[] supportBundle) {
+    Zendesk zd = buildZendeskClient(credentials);
 
     Comment comment;
     if(supportBundle != null) {
@@ -74,8 +80,8 @@ public class StreamSetsSupportZendeskProvider implements StreamSetsSupportProvid
   }
 
   @Override
-  public void commentOnExistingSupportTicket(String username, String password, String ticketId, String commentText, byte[] supportBundle) {
-    Zendesk zd = buildZendeskClient(username, password);
+  public void commentOnExistingSupportTicket(SupportCredentials credentials, String ticketId, String commentText, byte[] supportBundle) {
+    Zendesk zd = buildZendeskClient(credentials);
 
     Comment comment;
     if(supportBundle != null) {

@@ -27,26 +27,24 @@ public interface StreamSetsSupportProvider {
   /**
    * Create new support ticket with StreamSets support.
    *
-   * @param username Username to authenticate against StreamSets support system.
-   * @param password Password to authenticate against StreamSets support system.
+   * @param credentials Credentials for StreamSets support portal
    * @param headline Headline for the ticket
    * @param comment Initial comment describing the problem
    * @param supportBundle Optional bytes that should be uploaded to the support portal as support bundle
    * @return Internal id of the new ticket
    */
-  public String createNewSupportTicket(String username, String password, String headline, String comment, byte[] supportBundle);
+  public String createNewSupportTicket(SupportCredentials credentials, String headline, String comment, byte[] supportBundle);
 
 
   /**
    * Add a comment to existing support ticket.
    *
-   * @param username Username to authenticate against StreamSets support system.
-   * @param password Password to authenticate against StreamSets support system.
+   * @param credentials Credentials for StreamSets support portal
    * @param ticketId Id of the ticket in StreamSets suppport system.
    * @param comment Initial comment describing the problem
    * @param supportBundle Optional bytes that should be uploaded to the support portal as support bundle
    */
-  public void commentOnExistingSupportTicket(String username, String password, String ticketId, String comment, byte[] supportBundle);
+  public void commentOnExistingSupportTicket(SupportCredentials credentials, String ticketId, String comment, byte[] supportBundle);
 
   /**
    * Generate an URL for given support ticket. User can follow the URL to see a page with the ticket details.
