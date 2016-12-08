@@ -1317,5 +1317,57 @@ angular.module('dataCollectorApp.common')
 
     };
 
+    api.support = {
+      /**
+       * Upload zip file to Zendesk
+       *
+       * @returns {*}
+       */
+      uploadZendesk: function(userInfo) {
+        var url = apiBase + '/system/support/submitBundleToZendesk';
+        return $http({
+          method: 'POST',
+          url: url,
+          data: userInfo,
+          headers:  {
+            'Content-Type': 'application/json; charset=utf-8'
+          }
+        });
+      },
+      downloadZip: function() {
+        var url = apiBase + '/system/support/downloadSupportBundleZip';
+        return $http({
+          method: 'GET',
+          url: url,
+          responseType: 'arraybuffer'
+        }).success(function (data, status, headers) {
+          headers = headers();
+
+          var filename = headers['x-filename'];
+          var contentType = headers['content-type'];
+
+          var linkElement = document.createElement('a');
+          try {
+              var blob = new Blob([data], { type: contentType });
+              var url = window.URL.createObjectURL(blob);
+
+              linkElement.setAttribute('href', url);
+              linkElement.setAttribute("download", filename);
+
+              var clickEvent = new MouseEvent("click", {
+                  "view": window,
+                  "bubbles": true,
+                  "cancelable": false
+              });
+              linkElement.dispatchEvent(clickEvent);
+          } catch (ex) {
+              console.log(ex);
+          }
+        }).error(function (data) {
+          console.log(data);
+        });
+      }
+    };
+
     return api;
   });

@@ -298,6 +298,19 @@ angular.module('dataCollectorApp')
         },
 
         /**
+         * Launch Zendesk credential login and send logs to the chosen ticket
+         *
+         */
+        launchZendeskContent: function() {
+          $modal.open({
+            templateUrl: 'zendeskModalContent.html',
+            controller: 'AboutModalInstanceController',
+            size: '',
+            backdrop: true
+          });
+        },
+
+        /**
          * Open the About Modal Dialog
          */
         showAbout: function() {

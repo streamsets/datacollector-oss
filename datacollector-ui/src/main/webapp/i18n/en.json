@@ -25,6 +25,7 @@
       "help": {
         "about": "About",
         "chatOnSlack": "Chat on Slack",
+        "support": "Send to Zendesk",
         "joinUserGroup": "Join our User Group",
         "main": "Help",
         "helpContents": "Help Contents",
@@ -127,6 +128,7 @@
       "save": "Save",
       "schemaVersion": "Schema Version",
       "settings": "Settings",
+      "send": "Send",
       "showMore": "Show More...",
       "source": "Origin",
       "stage": "Stage",
@@ -671,6 +673,14 @@
     "productName": "StreamSets Data Collector",
     "title": "About",
     "version": "Version:"
+  },
+  "support": {
+    "title": "Support Zendesk",
+    "username": "User Name",
+    "password": "Password",
+    "title": "Title",
+    "comment": "Comment",
+    "priority": "Priority"
   },
   "metrics": {
     "CURRENT_BATCH_AGE": "Current Batch Age",

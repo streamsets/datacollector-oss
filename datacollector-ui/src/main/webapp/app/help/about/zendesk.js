@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -24,20 +24,18 @@
 
 angular
   .module('dataCollectorApp')
-  .controller('AboutModalInstanceController', function ($scope, $modalInstance, api) {
+  .controller('ZenDeskModalInstanceController', function ($scope, $modalInstance, api) {
     angular.extend($scope, {
-      buildInfo: {},
       cancel: function() {
         $modalInstance.dismiss('cancel');
       },
       send: function() {
-        console.log("about.js > send()")
         var userInfo = {};
         userInfo.zendeskUsername = $scope.username;
-        userInfo.zendeskToken = $scope.password;
-        userInfo.priority = $scope.title;
-        userInfo.headline = $scope.comment;
-        userInfo.commentText  = $scope.priority;
+        userInfo.zendeskPassword = $scope.password;
+        userInfo.priority = $scope.priority;
+        userInfo.headline = $scope.headline;
+        userInfo.commentText  = $scope.commentText;
 
         api.support.uploadZendesk(userInfo).
         success(function(res) {
@@ -53,12 +51,4 @@ angular
 
       }
     });
-
-    api.admin.getBuildInfo()
-      .success(function(res) {
-        $scope.buildInfo = res;
-      })
-      .error(function(data) {
-        $scope.issues = [data];
-      });
   });

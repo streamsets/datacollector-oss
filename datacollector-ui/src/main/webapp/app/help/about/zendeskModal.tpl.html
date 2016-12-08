@@ -1,0 +1,36 @@
+<script type="text/ng-template" id="zendeskModalContent.html">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title" translate="support.title"></h3>
+  </div>
+  <div class="modal-body">
+
+    <div>
+      <label translate="support.username">UserName:</label>
+      <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-not-empty" name="name" ng-model="username" />
+      <label translate="support.password">Password:</label>
+      <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-not-empty" name="password" ng-model="password" />
+      <label translate="support.priority">Priority:</label>
+      <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-not-empty" name="priority" ng-model="priority" />
+      <label translate="support.title">Title:</label>
+      <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-not-empty" name="title" ng-model="headline" />
+      <label translate="support.comment">Comment:</label>
+      <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-not-empty" name="comment" ng-model="commentText" />
+    </div>
+
+    <br>
+
+    <div>
+      <span ng-bind-html="'about.copyrightText' | translate"></span>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="reset" class="btn btn-primary" ng-click="send()" translate="global.form.send">
+      Close
+    </button>
+  </div>
+</script>

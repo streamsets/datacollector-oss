@@ -344,6 +344,13 @@
               </a>
             </li>
 
+            <li>
+              <a href="javascript:;" ng-click="common.launchZendeskContent()">
+                <span class="fa fa-slack"></span>
+                <span translate="global.menu.help.support">Send to Zendesk</span>
+              </a>
+            </li>
+
             <li role="presentation" class="divider"></li>
 
             <li>
@@ -362,6 +369,7 @@
 </div>
 
 <ng-include src="'app/help/about/aboutModal.tpl.html'"></ng-include>
+<ng-include src="'app/help/about/zendeskModal.tpl.html'"></ng-include>
 
 <div ng-view ng-if="!notAuthorized">
 </div>
