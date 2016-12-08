@@ -20,13 +20,16 @@
 
 package com.streamsets.datacollector.restapi;
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
+import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.support.StreamSetsSupportZendeskProvider;
 import com.streamsets.support.SupportCredentials;
 import com.streamsets.support.TicketPriority;
+import com.sun.management.UnixOperatingSystemMXBean;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -40,7 +43,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
@@ -48,6 +50,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.lang.management.MemoryUsage;
+import java.lang.management.OperatingSystemMXBean;
+import java.lang.management.RuntimeMXBean;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -147,13 +154,96 @@ public class SupportBundleResource extends BaseSDCRuntimeResource {
 
   private void createSupportBundleZip(OutputStream output) throws IOException {
     ZipOutputStream zos = new ZipOutputStream(output);
-
-    for (final File logFile : determineAndGetAllLogFiles()) {
-      zos.putNextEntry(new ZipEntry(logFile.getName()));
-      FileUtils.copyFile(logFile, zos);
-      zos.closeEntry();
-    }
+    addLogsToBundle(zos);
+    addRuntimeInfoToBundle(zos);
     zos.close();
   }
 
+  private void addLogsToBundle(ZipOutputStream zos) throws IOException {
+    for (final File logFile : determineAndGetAllLogFiles()) {
+      zos.putNextEntry(new ZipEntry("logs/"+logFile.getName()));
+      FileUtils.copyFile(logFile, zos);
+      zos.closeEntry();
+    }
+  }
+
+  private void addRuntimeInfoToBundle(ZipOutputStream zos) throws IOException {
+
+    final StringBuilder data = new StringBuilder();
+
+    final MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
+    if (memoryMXBean != null) {
+      final MemoryUsage heapUsage = memoryMXBean.getHeapMemoryUsage();
+      if (heapUsage != null) {
+        data.append("heap usage:\n");
+        data.append(heapUsage.toString());
+        data.append("\n\n");
+      }
+
+      final MemoryUsage nonHeapUsage = memoryMXBean.getNonHeapMemoryUsage();
+      if (nonHeapUsage != null) {
+        data.append("non-heap usage:\n");
+        data.append(nonHeapUsage.toString());
+        data.append("\n\n");
+      }
+
+      data.append("object count pending finalization: ");
+      data.append(memoryMXBean.getObjectPendingFinalizationCount());
+      data.append("\n\n");
+    }
+
+    final OperatingSystemMXBean os = ManagementFactory.getOperatingSystemMXBean();
+    if(os != null && os instanceof UnixOperatingSystemMXBean) {
+      if (os instanceof UnixOperatingSystemMXBean) {
+        data.append("number open file descriptors: ");
+        data.append(((UnixOperatingSystemMXBean) os).getOpenFileDescriptorCount());
+        data.append("\n\n");
+      }
+    }
+
+    final RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
+    if (runtimeMXBean != null) {
+      data.append("classpath:\n");
+      data.append(runtimeMXBean.getClassPath());
+      data.append("\n\n");
+      data.append("boot classpath:\n");
+      data.append(runtimeMXBean.getBootClassPath());
+      data.append("\n\n");
+      data.append("name:\n");
+      data.append(runtimeMXBean.getName());
+      data.append("\n\n");
+      data.append("VM name:\n");
+      data.append(runtimeMXBean.getVmName());
+      data.append("\n\n");
+      data.append("VM version:\n");
+      data.append(runtimeMXBean.getVmVersion());
+      data.append("\n\n");
+      data.append("input arguments:\n");
+      if (runtimeMXBean.getInputArguments() != null) {
+        for (final String inputArg : runtimeMXBean.getInputArguments()) {
+          data.append(inputArg);
+          data.append(" ");
+        }
+      }
+      data.append("\n\n");
+      data.append("system properties:\n");
+      if (runtimeMXBean.getSystemProperties() != null) {
+        for (Map.Entry<String, String> sysProp : runtimeMXBean.getSystemProperties().entrySet()) {
+          data.append(sysProp.getKey());
+          data.append("=");
+          data.append(sysProp.getValue());
+          data.append("\n");
+        }
+      }
+      data.append("\n\n");
+      data.append("\n\n");
+    }
+
+    zos.putNextEntry(new ZipEntry("runtime_info.txt"));
+
+    ObjectMapperFactory.get().writeValueAsString(data).getBytes(Charsets.UTF_8);
+
+    zos.write(data.toString().getBytes());
+    zos.closeEntry();
+  }
 }
