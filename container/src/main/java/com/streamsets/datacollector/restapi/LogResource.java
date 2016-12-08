@@ -21,6 +21,7 @@ package com.streamsets.datacollector.restapi;
 
 import com.streamsets.datacollector.log.LogStreamer;
 import com.streamsets.datacollector.log.LogUtils;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.pipeline.lib.parser.shaded.org.aicer.grok.util.Grok;
@@ -48,7 +49,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -62,7 +62,7 @@ import java.util.Map;
 @Path("/v1/system")
 @Api(value = "system")
 @DenyAll
-public class LogResource {
+public class LogResource extends BaseSDCRuntimeResource {
   public static final String X_SDC_LOG_PREVIOUS_OFFSET_HEADER = "X-SDC-LOG-PREVIOUS-OFFSET";
   private static final String EXCEPTION = "exception";
   private final String logFile;
@@ -70,7 +70,8 @@ public class LogResource {
   private final RuntimeInfo runtimeInfo;
 
   @Inject
-  public LogResource(RuntimeInfo runtimeInfo) {
+  public LogResource(BuildInfo buildInfo, RuntimeInfo runtimeInfo) {
+    super(buildInfo, runtimeInfo);
     this.runtimeInfo = runtimeInfo;
     try {
       logFile = LogUtils.getLogFile(runtimeInfo);
@@ -152,15 +153,7 @@ public class LogResource {
   }
 
   private File[] getLogFiles() throws IOException {
-    File log = new File(logFile);
-    File logDir = log.getParentFile();
-    final String logName = log.getName();
-    return logDir.listFiles(new FilenameFilter() {
-      @Override
-      public boolean accept(File dir, String name) {
-        return name.startsWith(logName);
-      }
-    });
+    return getAllLogFilesInDirectory(logFile);
   }
 
   @GET
