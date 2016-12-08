@@ -33,12 +33,12 @@ public class StreamSetsSupportZendeskProvider implements StreamSetsSupportProvid
   /**
    * Name of the bundle as it will be displayed in Zendesk UI.
    */
-  private static final String BUNDLE_NAME = "supportBundle.tar.gz";
+  private static final String BUNDLE_NAME = "supportBundle.zip";
 
   /**
    * Mime type associated with the bundle.
    */
-  private static final String BUNDLE_MIME = "application/gzip";
+  private static final String BUNDLE_MIME = "application/zip";
 
   private Zendesk buildZendeskClient(String username, String password) {
     return new Zendesk.Builder(ZENDESK_URL)
