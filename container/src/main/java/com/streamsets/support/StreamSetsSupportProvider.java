@@ -28,12 +28,13 @@ public interface StreamSetsSupportProvider {
    * Create new support ticket with StreamSets support.
    *
    * @param credentials Credentials for StreamSets support portal
+   * @param priority Priority of the ticket to be created
    * @param headline Headline for the ticket
    * @param comment Initial comment describing the problem
    * @param supportBundle Optional bytes that should be uploaded to the support portal as support bundle
    * @return Internal id of the new ticket
    */
-  public String createNewSupportTicket(SupportCredentials credentials, String headline, String comment, byte[] supportBundle);
+  public String createNewSupportTicket(SupportCredentials credentials, TicketPriority priority, String headline, String comment, byte[] supportBundle);
 
 
   /**

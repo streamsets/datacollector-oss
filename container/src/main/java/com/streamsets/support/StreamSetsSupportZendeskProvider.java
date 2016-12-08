@@ -19,9 +19,11 @@
  */
 package com.streamsets.support;
 
+import com.google.common.collect.ImmutableList;
 import org.zendesk.client.v2.Zendesk;
 import org.zendesk.client.v2.model.Attachment;
 import org.zendesk.client.v2.model.Comment;
+import org.zendesk.client.v2.model.CustomFieldValue;
 import org.zendesk.client.v2.model.Ticket;
 
 public class StreamSetsSupportZendeskProvider implements StreamSetsSupportProvider {
@@ -39,6 +41,11 @@ public class StreamSetsSupportZendeskProvider implements StreamSetsSupportProvid
    * Mime type associated with the bundle.
    */
   private static final String BUNDLE_MIME = "application/zip";
+
+  /**
+   * Internal zendesk id for our "priority" field.
+   */
+  private static long CUSTOM_FIELD_PRIORITY = 31854147L;
 
   private Zendesk buildZendeskClient(SupportCredentials credentials) {
     Zendesk.Builder builder = new Zendesk.Builder(ZENDESK_URL)
@@ -58,7 +65,7 @@ public class StreamSetsSupportZendeskProvider implements StreamSetsSupportProvid
   }
 
   @Override
-  public String createNewSupportTicket(SupportCredentials credentials, String headline, String commentText, byte[] supportBundle) {
+  public String createNewSupportTicket(SupportCredentials credentials, TicketPriority priority, String headline, String commentText, byte[] supportBundle) {
     Zendesk zd = buildZendeskClient(credentials);
 
     Comment comment;
@@ -74,6 +81,10 @@ public class StreamSetsSupportZendeskProvider implements StreamSetsSupportProvid
       headline,
       comment
     );
+
+    ticket.setCustomFields(ImmutableList.of(
+      new CustomFieldValue(CUSTOM_FIELD_PRIORITY, priority.apiValue())
+    ));
 
     Ticket createdTicket = zd.createTicket(ticket);
     return String.valueOf(createdTicket.getId());
