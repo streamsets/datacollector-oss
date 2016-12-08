@@ -67,9 +67,12 @@ public class SupportBundleResource extends BaseSDCRuntimeResource {
 
   private final StreamSetsSupportZendeskProvider zendeskProvider = new StreamSetsSupportZendeskProvider();
 
+  private final RuntimeInfo runtimeInfo;
+
   @Inject
   public SupportBundleResource(BuildInfo buildInfo, RuntimeInfo runtimeInfo) {
     super(buildInfo, runtimeInfo);
+    this.runtimeInfo = runtimeInfo;
     zendeskProvider.setBuildInfo(buildInfo);
   }
 
@@ -156,6 +159,7 @@ public class SupportBundleResource extends BaseSDCRuntimeResource {
     ZipOutputStream zos = new ZipOutputStream(output);
     addLogsToBundle(zos);
     addRuntimeInfoToBundle(zos);
+    addDataDirToBundle(zos);
     zos.close();
   }
 
@@ -245,5 +249,23 @@ public class SupportBundleResource extends BaseSDCRuntimeResource {
 
     zos.write(data.toString().getBytes());
     zos.closeEntry();
+  }
+
+  private void addDataDirToBundle(ZipOutputStream zos) throws IOException {
+    final File dataDir = new File(runtimeInfo.getDataDir());
+    addAllFilesToZip(dataDir, "data", zos);
+  }
+
+  private void addAllFilesToZip(File directory, String dirPathInZip, ZipOutputStream out) throws IOException {
+    for (final File dataFile : directory.listFiles()) {
+      final String newPath = dirPathInZip+"/"+dataFile.getName();
+      if (dataFile.isDirectory()) {
+        addAllFilesToZip(dataFile, newPath, out);
+      } else {
+        out.putNextEntry(new ZipEntry(newPath));
+        FileUtils.copyFile(dataFile, out);
+        out.closeEntry();
+      }
+    }
   }
 }
