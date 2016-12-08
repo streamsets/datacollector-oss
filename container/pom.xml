@@ -423,6 +423,11 @@
       <version>0.7.2</version>
     </dependency>
 
+		<dependency>
+      <groupId>com.cloudbees.thirdparty</groupId>
+      <artifactId>zendesk-java-client</artifactId>
+    </dependency>
+
   </dependencies>
 
   <build>

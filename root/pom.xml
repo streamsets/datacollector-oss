@@ -87,6 +87,7 @@
     <selma.version>0.13</selma.version>
     <servlet.version>3.1.0</servlet.version>
     <swagger.version>1.5.3</swagger.version>
+    <zendesk.version>0.5.2</zendesk.version>
   </properties>
 
   <dependencyManagement>
@@ -795,6 +796,13 @@
         <artifactId>selma</artifactId>
         <version>${selma.version}</version>
       </dependency>
+
+      <dependency>
+        <groupId>com.cloudbees.thirdparty</groupId>
+        <artifactId>zendesk-java-client</artifactId>
+        <version>${zendesk.version}</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
