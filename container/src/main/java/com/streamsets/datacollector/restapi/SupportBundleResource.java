@@ -20,9 +20,13 @@
 
 package com.streamsets.datacollector.restapi;
 
+import com.google.common.base.Strings;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.AuthzRole;
+import com.streamsets.support.StreamSetsSupportZendeskProvider;
+import com.streamsets.support.SupportCredentials;
+import com.streamsets.support.TicketPriority;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -31,16 +35,21 @@ import org.apache.commons.io.FileUtils;
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -48,6 +57,8 @@ import java.util.zip.ZipOutputStream;
 @Api(value = "system")
 @DenyAll
 public class SupportBundleResource extends BaseSDCRuntimeResource {
+
+  private final StreamSetsSupportZendeskProvider zendeskProvider = new StreamSetsSupportZendeskProvider();
 
   @Inject
   public SupportBundleResource(BuildInfo buildInfo, RuntimeInfo runtimeInfo) {
@@ -57,7 +68,7 @@ public class SupportBundleResource extends BaseSDCRuntimeResource {
   @GET
   @Path("/support/createBundleZip")
   @ApiOperation(
-      value = "Returns Support Bundle Zip File Log File Content",
+      value = "Downloads support bundle zip file to client",
       authorizations = @Authorization(value = "basic"),
       produces = "application/zip"
   )
@@ -73,15 +84,8 @@ public class SupportBundleResource extends BaseSDCRuntimeResource {
   public Response downloadSupportBundleZip() throws IOException {
     final StreamingOutput output = new StreamingOutput() {
       @Override
-      public void write(OutputStream output) throws IOException, WebApplicationException {
-        ZipOutputStream zos = new ZipOutputStream(output);
-
-        for (final File logFile : determineAndGetAllLogFiles()) {
-          zos.putNextEntry(new ZipEntry(logFile.getName()));
-          FileUtils.copyFile(logFile, zos);
-          zos.closeEntry();
-        }
-        zos.close();
+      public void write(OutputStream output) throws IOException {
+        createSupportBundleZip(output);
       }
     };
 
@@ -90,6 +94,64 @@ public class SupportBundleResource extends BaseSDCRuntimeResource {
         .type("application/zip")
         .header("Content-Disposition", "attachment; filename=\"support_bundle.zip\"")
         .build();
+  }
+
+  @POST
+  @Path("/support/submitBundleToZendesk")
+  @ApiOperation(
+      value = "Submits support bundle to Zendesk along with other specified parameters to create ticket",
+      authorizations = @Authorization(value = "basic"),
+      response = Map.class
+  )
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({
+      AuthzRole.ADMIN,
+      AuthzRole.CREATOR,
+      AuthzRole.MANAGER,
+      AuthzRole.ADMIN_REMOTE,
+      AuthzRole.CREATOR_REMOTE,
+      AuthzRole.MANAGER_REMOTE
+  })
+  public Response submitSupportBundleToZendesk(Map<String, String> params) throws IOException {
+    final String username = params.get("zendeskUsername");
+    final String password = params.get("zendeskPassword");
+    final String token = params.get("zendeskToken");
+    final String headline = params.get("headline");
+    final String commentText = params.get("commentText");
+    final TicketPriority priority = TicketPriority.valueOf(params.get("priority"));
+
+    final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    createSupportBundleZip(bos);
+
+    SupportCredentials credentials;
+    if (!Strings.isNullOrEmpty(token)) {
+      credentials = new SupportCredentials(username, token, true);
+    } else {
+      credentials = new SupportCredentials(username, password);
+    }
+
+    final String ticketId =
+        zendeskProvider.createNewSupportTicket(credentials, priority, headline, commentText, bos.toByteArray());
+
+    final Map<String, String> responseMap = new HashMap<>();
+    responseMap.put("ticketId", ticketId);
+
+    return Response
+        .ok(responseMap)
+        .type(MediaType.APPLICATION_JSON)
+        .build();
+  }
+
+  private void createSupportBundleZip(OutputStream output) throws IOException {
+    ZipOutputStream zos = new ZipOutputStream(output);
+
+    for (final File logFile : determineAndGetAllLogFiles()) {
+      zos.putNextEntry(new ZipEntry(logFile.getName()));
+      FileUtils.copyFile(logFile, zos);
+      zos.closeEntry();
+    }
+    zos.close();
   }
 
 }
