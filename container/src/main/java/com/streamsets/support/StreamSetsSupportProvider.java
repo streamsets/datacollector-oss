@@ -19,10 +19,19 @@
  */
 package com.streamsets.support;
 
+import com.streamsets.datacollector.main.BuildInfo;
+
 /**
  * Interface exposing API that enables users and customers to create or update support tickets at StreamSets.
  */
 public interface StreamSetsSupportProvider {
+
+  /**
+   * Register build info for this DataCollector.
+   *
+   * @param buildInfo Build info instance.
+   */
+  public void setBuildInfo(BuildInfo buildInfo);
 
   /**
    * Create new support ticket with StreamSets support.

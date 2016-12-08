@@ -63,6 +63,7 @@ public class SupportBundleResource extends BaseSDCRuntimeResource {
   @Inject
   public SupportBundleResource(BuildInfo buildInfo, RuntimeInfo runtimeInfo) {
     super(buildInfo, runtimeInfo);
+    zendeskProvider.setBuildInfo(buildInfo);
   }
 
   @GET
