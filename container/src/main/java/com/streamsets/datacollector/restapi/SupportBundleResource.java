@@ -137,6 +137,7 @@ public class SupportBundleResource extends BaseSDCRuntimeResource {
 
     final Map<String, String> responseMap = new HashMap<>();
     responseMap.put("ticketId", ticketId);
+    responseMap.put("ticketUrl", zendeskProvider.getPublicUrlForSupportTicket(ticketId));
 
     return Response
         .ok(responseMap)
