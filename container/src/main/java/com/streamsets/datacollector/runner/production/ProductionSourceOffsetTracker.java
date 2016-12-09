@@ -37,6 +37,7 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
   private final String pipelineName;
   private final String rev;
   private final RuntimeInfo runtimeInfo;
+  int commitCounter = 0;
 
   @Inject
   public ProductionSourceOffsetTracker( @Named("name") String pipelineName,  @Named("rev") String rev, RuntimeInfo runtimeInfo) {
@@ -88,6 +89,6 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
 
   @Override
   public long getLastBatchTime() {
-    return OffsetFileUtil.getPipelineOffsetFile(runtimeInfo, pipelineName, rev).lastModified();
+    return OffsetFileUtil.getLastModified(pipelineName);
   }
 }

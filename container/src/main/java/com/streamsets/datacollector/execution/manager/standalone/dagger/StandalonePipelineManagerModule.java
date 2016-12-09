@@ -9,7 +9,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,17 +24,21 @@ import com.streamsets.datacollector.execution.manager.standalone.StandaloneAndCl
 import com.streamsets.datacollector.execution.preview.common.dagger.PreviewerProviderModule;
 import com.streamsets.datacollector.execution.runner.provider.dagger.StandaloneAndClusterRunnerProviderModule;
 import com.streamsets.datacollector.execution.snapshot.cache.dagger.CacheSnapshotStoreModule;
-import com.streamsets.datacollector.execution.store.CachePipelineStateStoreModule;
-import com.streamsets.datacollector.store.CachePipelineStoreModule;
-
+import com.streamsets.datacollector.execution.store.ZooKeeperPipelineStateStoreModule;
+import com.streamsets.datacollector.store.ZooKeeperPipelineStoreModule;
 import dagger.Module;
 
 /**
  * Provides a singleton instance of Manager.
  */
-@Module(library = true, injects = {StandaloneAndClusterPipelineManager.class},
-  includes = {CachePipelineStateStoreModule.class, CachePipelineStoreModule.class, ExecutorModule.class,
-    PreviewerProviderModule.class, StandaloneAndClusterRunnerProviderModule.class, CacheSnapshotStoreModule.class})
+@Module(library = true, injects = {StandaloneAndClusterPipelineManager.class}, includes = {
+    ZooKeeperPipelineStateStoreModule.class,
+    ZooKeeperPipelineStoreModule.class,
+    ExecutorModule.class,
+    PreviewerProviderModule.class,
+    StandaloneAndClusterRunnerProviderModule.class,
+    CacheSnapshotStoreModule.class
+})
 public class StandalonePipelineManagerModule {
 
 }

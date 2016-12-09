@@ -19,19 +19,24 @@
  */
 package com.streamsets.datacollector.runner.production;
 
-import com.streamsets.datacollector.io.DataStore;
+import com.google.api.client.util.Charsets;
+import com.streamsets.datacollector.execution.store.CuratorFrameworkConnector;
+import com.streamsets.datacollector.execution.store.FatalZKStoreException;
+import com.streamsets.datacollector.execution.store.NotPrimaryException;
+import com.streamsets.datacollector.execution.store.ZKStoreException;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.SourceOffsetJson;
 import com.streamsets.datacollector.util.PipelineDirectoryUtil;
+import com.streamsets.pipeline.api.ext.DataCollectorServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 public class OffsetFileUtil {
   private static final Logger LOG = LoggerFactory.getLogger(ProductionSourceOffsetTracker.class);
@@ -46,43 +51,60 @@ public class OffsetFileUtil {
   }
 
   public static String saveIfEmpty(RuntimeInfo runtimeInfo, String pipelineName, String rev) {
-    File pipelineOffsetFile =  getPipelineOffsetFile(runtimeInfo, pipelineName, rev);
-    SourceOffset sourceOffset;
-    DataStore ds = new DataStore(pipelineOffsetFile);
+//    File pipelineOffsetFile =  getPipelineOffsetFile(runtimeInfo, pipelineName, rev);
+//    SourceOffset sourceOffset;
+//    DataStore ds = new DataStore(pipelineOffsetFile);
+//    try {
+//      if (ds.exists()) {
+//        // offset file exists, read from it
+//        try (InputStream is = ds.getInputStream()) {
+//          SourceOffsetJson sourceOffsetJson = ObjectMapperFactory.get().readValue(is, SourceOffsetJson.class);
+//          sourceOffset = BeanHelper.unwrapSourceOffset(sourceOffsetJson);
+//        }
+//      } else {
+//        sourceOffset = new SourceOffset(DEFAULT_OFFSET);
+//        try (OutputStream os = ds.getOutputStream()) {
+//          ObjectMapperFactory.get().writeValue((os), BeanHelper.wrapSourceOffset(sourceOffset));
+//          ds.commit(os);
+//        } finally {
+//          ds.release();
+//        }
+//      }
+//    } catch (IOException e) {
+//      throw new RuntimeException(e);
+//    }
+    CuratorFrameworkConnector curator = DataCollectorServices.instance().get(CuratorFrameworkConnector.SERVICE_NAME);
     try {
-      if (ds.exists()) {
-        // offset file exists, read from it
-        try (InputStream is = ds.getInputStream()) {
-          SourceOffsetJson sourceOffsetJson = ObjectMapperFactory.get().readValue(is, SourceOffsetJson.class);
-          sourceOffset = BeanHelper.unwrapSourceOffset(sourceOffsetJson);
-        }
+      String offset = curator.getOffset(pipelineName);
+      if (offset != null) {
+        SourceOffsetJson json = ObjectMapperFactory.get().readValue(new ByteArrayInputStream(offset.getBytes(Charsets.UTF_8)), SourceOffsetJson.class);
+        return BeanHelper.unwrapSourceOffset(json).getOffset();
       } else {
-        sourceOffset = new SourceOffset(DEFAULT_OFFSET);
-        try (OutputStream os = ds.getOutputStream()) {
-          ObjectMapperFactory.get().writeValue((os), BeanHelper.wrapSourceOffset(sourceOffset));
-          ds.commit(os);
-        } finally {
-          ds.release();
-        }
+        SourceOffset sourceOffset = new SourceOffset(DEFAULT_OFFSET);
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        ObjectMapperFactory.get().writeValue(os, BeanHelper.wrapSourceOffset(sourceOffset));
+        curator.commitOffset(pipelineName, new String(os.toByteArray(), Charsets.UTF_8));
+        return sourceOffset.getOffset();
       }
-    } catch (IOException e) {
-      throw new RuntimeException(e);
+    } catch (Exception ex){
+      throw new RuntimeException(ex);
+
     }
-    return sourceOffset.getOffset();
   }
 
   public static void saveOffset(RuntimeInfo runtimeInfo, String pipelineName, String rev, String offset) {
     LOG.debug("Saving offset {} for pipeline {}", offset, pipelineName);
     SourceOffset sourceOffset = new SourceOffset(offset);
-    DataStore dataStore = new DataStore(OffsetFileUtil.getPipelineOffsetFile(runtimeInfo, pipelineName, rev));
-    try (OutputStream os = dataStore.getOutputStream()) {
+    CuratorFrameworkConnector curator = DataCollectorServices.instance().get(CuratorFrameworkConnector.SERVICE_NAME);
+    try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
       ObjectMapperFactory.get().writeValue((os), BeanHelper.wrapSourceOffset(sourceOffset));
-      dataStore.commit(os);
+      curator.commitOffset(pipelineName, new String(os.toByteArray(), Charsets.UTF_8));
     } catch (IOException e) {
       LOG.error("Failed to save offset value {}. Reason {}", sourceOffset.getOffset(), e.toString(), e);
       throw new RuntimeException(e);
-    } finally {
-      dataStore.release();
+    } catch (NotPrimaryException ex) {
+      LOG.error("Not primary, cannot save FO", ex);
+      throw new RuntimeException(ex);
     }
   }
 
@@ -91,25 +113,38 @@ public class OffsetFileUtil {
   }
 
   public static String getOffset(RuntimeInfo runtimeInfo, String pipelineName, String rev) {
-    File pipelineOffsetFile =  getPipelineOffsetFile(runtimeInfo, pipelineName, rev);
-    String offset = null;
-    if (pipelineOffsetFile.exists()) {
-      DataStore ds = new DataStore(pipelineOffsetFile);
-      try {
-        if (ds.exists()) {
-          // offset file exists, read from it
-          try (InputStream is = ds.getInputStream()) {
-            SourceOffsetJson sourceOffsetJson = ObjectMapperFactory.get().readValue(is, SourceOffsetJson.class);
-            offset = BeanHelper.unwrapSourceOffset(sourceOffsetJson).getOffset();
-          } catch (IOException e) {
-            throw new RuntimeException(e);
-          }
-        }
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+//    File pipelineOffsetFile =  getPipelineOffsetFile(runtimeInfo, pipelineName, rev);
+//    String offset = null;
+//    if (pipelineOffsetFile.exists()) {
+//      DataStore ds = new DataStore(pipelineOffsetFile);
+//      try {
+//        if (ds.exists()) {
+//          // offset file exists, read from it
+//          try (InputStream is = ds.getInputStream()) {
+//            SourceOffsetJson sourceOffsetJson = ObjectMapperFactory.get().readValue(is, SourceOffsetJson.class);
+//            offset = BeanHelper.unwrapSourceOffset(sourceOffsetJson).getOffset();
+//          } catch (IOException e) {
+//            throw new RuntimeException(e);
+//          }
+//        }
+//      } catch (IOException e) {
+//        throw new RuntimeException(e);
+//      }
+//    }
+    CuratorFrameworkConnector curator = DataCollectorServices.instance().get(CuratorFrameworkConnector.SERVICE_NAME);
+    try {
+      ByteArrayInputStream is = new ByteArrayInputStream(curator.getOffset(pipelineName).getBytes(Charsets.UTF_8));
+      SourceOffsetJson json = ObjectMapperFactory.get().readValue(is, SourceOffsetJson.class);
+      return BeanHelper.unwrapSourceOffset(json).getOffset();
+    } catch (ZKStoreException | IOException ex) {
+      LOG.error("Error while reading offset", ex);
+      throw new FatalZKStoreException(ex);
     }
-    return offset;
+  }
+
+  public static long getLastModified(String pipelineName) {
+    CuratorFrameworkConnector curator = DataCollectorServices.instance().get(CuratorFrameworkConnector.SERVICE_NAME);
+    return curator.getLastBatchTime(pipelineName);
   }
 }
 

@@ -33,6 +33,7 @@
 
   <properties>
     <commons-compress.version>1.10</commons-compress.version>
+    <curator.version>2.11.1</curator.version>
   </properties>
 
   <dependencies>
@@ -390,6 +391,18 @@
       <artifactId>jersey-media-multipart</artifactId>
       <version>${jersey.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.glassfish.jersey.core</groupId>
+      <artifactId>jersey-client</artifactId>
+      <version>${jersey.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.jersey.connectors</groupId>
+      <artifactId>jersey-grizzly-connector</artifactId>
+      <version>${jersey.version}</version>
+      <scope>compile</scope>
+    </dependency>
     <!-- End Jersey artifacts -->
     <dependency>
       <groupId>org.apache.commons</groupId>
@@ -422,7 +435,23 @@
       <artifactId>hppc</artifactId>
       <version>0.7.2</version>
     </dependency>
-
+    <!-- Curator HA Hackathon Deps -->
+    <dependency>
+      <groupId>org.apache.curator</groupId>
+      <artifactId>curator-client</artifactId>
+      <version>${curator.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.curator</groupId>
+      <artifactId>curator-framework</artifactId>
+      <version>${curator.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.curator</groupId>
+      <artifactId>curator-recipes</artifactId>
+      <version>${curator.version}</version>
+    </dependency>
+    <!-- End -->
   </dependencies>
 
   <build>

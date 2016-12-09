@@ -35,6 +35,7 @@ import com.streamsets.datacollector.config.StatsTargetChooserValues;
 import com.streamsets.datacollector.definition.StageDefinitionExtractor;
 import com.streamsets.datacollector.definition.StageLibraryDefinitionExtractor;
 import com.streamsets.datacollector.el.RuntimeEL;
+import com.streamsets.datacollector.execution.store.CuratorFrameworkConnector;
 import com.streamsets.datacollector.vault.Vault;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -273,6 +274,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     try {
       RuntimeEL.loadRuntimeConfiguration(runtimeInfo);
       final Vault vault = new Vault(configuration);
+
       DataCollectorServices.instance().put(VAULT_SERVICE_KEY, vault);
     } catch (IOException e) {
       throw new RuntimeException(
