@@ -22,6 +22,13 @@
     </div>
 
     <br>
+    <div ng-if="zendeskSuccess">
+      <label>Zendesk Ticket: {{success.ticketId}} is created</label><br/>
+      <label>{{success.ticketUrl}}</label>
+    </div>
+    <div ng-if="zendeskFail">
+      <label>Zendesk Ticket is failed</label>
+    </div>
 
     <div>
       <span ng-bind-html="'about.copyrightText' | translate"></span>

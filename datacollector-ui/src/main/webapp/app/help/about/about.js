@@ -30,6 +30,7 @@ angular
       cancel: function() {
         $scope.success = {};
         $scope.zendeskSuccess = false;
+        $scope.zendeskFail = false;
         $modalInstance.dismiss('cancel');
       },
       send: function() {
@@ -42,15 +43,11 @@ angular
 
         api.support.uploadZendesk(userInfo).
         success(function(res) {
-          if(res && res.length) {
-            $scope.success = res;
-            $scope.zendeskSuccess = true;
-          } else {
-            $scope.success = [];
-          }
+          $scope.success = res;
+          $scope.zendeskSuccess = true;
         }).
         error(function(data) {
-          $scope.success = false;
+          $scope.zendeskFail = true;
         });
 
       }

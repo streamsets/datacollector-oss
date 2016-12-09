@@ -1332,7 +1332,7 @@ angular.module('dataCollectorApp.common')
           headers:  {
             'Content-Type': 'application/json; charset=utf-8'
           }
-        });
+        })
       },
       downloadZip: function() {
         var url = apiBase + '/system/support/downloadSupportBundleZip';
