@@ -127,7 +127,7 @@ chown sdc:sdc /var/log/sdc</codeblock>
                     sdc:sdc:</cmd>
                 <info>
                     <codeblock>mkdir /var/lib/sdc
-chmod sdc:sdc /var/lib/sdc</codeblock>
+chown sdc:sdc /var/lib/sdc</codeblock>
                 </info>
             </step>
             <step>
@@ -137,7 +137,7 @@ chmod sdc:sdc /var/lib/sdc</codeblock>
                     owner to sdc:sdc:</cmd>
                 <info>
                     <codeblock>mkdir /var/lib/sdc-resources
-chmod sdc:sdc /var/lib/sdc-resources</codeblock>
+chown sdc:sdc /var/lib/sdc-resources</codeblock>
                 </info>
             </step>
             <step>
