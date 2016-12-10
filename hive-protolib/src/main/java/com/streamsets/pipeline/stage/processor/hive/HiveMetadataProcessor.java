@@ -240,7 +240,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
                 )
             )
             .maxCacheSize(hiveConfigBean.maxCacheSize)
-            .build(new HiveQueryExecutor(hiveConfigBean.getHiveConnection()));
+            .build(new HiveQueryExecutor(hiveConfigBean));
       } catch (StageException e) {
         issues.add(getContext().createConfigIssue(
             Groups.HIVE.name(),
