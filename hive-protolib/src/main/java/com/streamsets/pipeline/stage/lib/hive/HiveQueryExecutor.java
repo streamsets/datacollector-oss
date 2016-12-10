@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.lib.hive;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.lib.hive.cache.PartitionInfoCacheSupport;
@@ -76,10 +77,10 @@ public final class HiveQueryExecutor {
   private static final String DETAILED_PARTITION_INFORMATION = "# Detailed Partition Information";
   private static final String SERDE_LIBRARY_IN_RESULT_SET = "SerDe Library:";
   private static final String STORAGE_INFORMATION = "# Storage Information";
-  private final Connection con;
+  private final HiveConfigBean hiveConfigBean;
 
-  public HiveQueryExecutor(Connection con) {
-    this.con = con;
+  public HiveQueryExecutor(HiveConfigBean hiveConfigBean) {
+    this.hiveConfigBean = hiveConfigBean;
   }
 
   private static void buildNameTypeFormatWithElements(
@@ -286,7 +287,8 @@ public final class HiveQueryExecutor {
     return String.format(DESC, qualifiedTableName);
   }
 
-  private static String buildShowTableQuery(String qualifiedTableName) {
+  @VisibleForTesting
+  public static String buildShowTableQuery(String qualifiedTableName) {
     String[] dbTable = qualifiedTableName.split("\\.");
     String db = dbTable[0];
     // The table name will be used inside string constant rather then as object name and hence we need to de-escape it
@@ -299,7 +301,7 @@ public final class HiveQueryExecutor {
     String sql = buildShowTableQuery(qualifiedTableName);
     LOG.debug("Executing SQL: {}", sql);
     try (
-        Statement statement = con.createStatement();
+        Statement statement = hiveConfigBean.getHiveConnection().createStatement();
         ResultSet rs = statement.executeQuery(sql)
     ){
       return rs.next();
@@ -327,7 +329,7 @@ public final class HiveQueryExecutor {
         : buildCreateTableQueryOld(qualifiedTableName, tableLocation, columnTypeMap, partitionTypeMap, schemaLocation, isInternal);
 
     LOG.debug("Executing SQL: {}", sql);
-    try (Statement statement = con.createStatement()){
+    try (Statement statement = hiveConfigBean.getHiveConnection().createStatement()){
       statement.execute(sql);
     } catch (Exception e) {
       LOG.error("SQL Exception happened when creating table: {}", e);
@@ -341,7 +343,7 @@ public final class HiveQueryExecutor {
   ) throws StageException {
     String sql = buildAddColumnsQuery(qualifiedTableName, columnTypeMap);
     LOG.debug("Executing SQL: {}", sql);
-    try (Statement statement = con.createStatement()){
+    try (Statement statement = hiveConfigBean.getHiveConnection().createStatement()){
       statement.execute(sql);
     } catch (Exception e) {
       LOG.error("SQL Exception happened when adding columns: {}", e);
@@ -357,7 +359,7 @@ public final class HiveQueryExecutor {
   ) throws StageException {
     String sql = buildPartitionAdditionQuery(qualifiedTableName, partitionNameValueMap, partitionTypeMap, partitionPath);
     LOG.debug("Executing SQL: {}", sql);
-    try ( Statement statement = con.createStatement()){
+    try ( Statement statement = hiveConfigBean.getHiveConnection().createStatement()){
       statement.execute(sql);
     } catch (Exception e) {
       LOG.error("SQL Exception happened when adding partition: {}", e);
@@ -377,7 +379,7 @@ public final class HiveQueryExecutor {
   ) throws StageException {
     String sql = buildSetTablePropertiesQuery(qualifiedTableName, partitionPath);
     LOG.debug("Executing SQL: {}", sql);
-    try (Statement statement = con.createStatement()){
+    try (Statement statement = hiveConfigBean.getHiveConnection().createStatement()){
       statement.execute(sql);
     } catch (Exception e) {
       LOG.error("SQL Exception happened when adding partition: {}", e);
@@ -396,7 +398,7 @@ public final class HiveQueryExecutor {
     Set<PartitionInfoCacheSupport.PartitionValues> partitionValuesSet = new HashSet<>();
     LOG.debug("Executing SQL: {}", sql);
     try (
-        Statement statement = con.createStatement();
+        Statement statement = hiveConfigBean.getHiveConnection().createStatement();
         ResultSet rs = statement.executeQuery(sql)
     ){
       while(rs.next()) {
@@ -458,7 +460,7 @@ public final class HiveQueryExecutor {
     String sql = buildDescTableQuery(qualifiedTableName);
     LOG.debug("Executing SQL: {}", sql);
     try (
-        Statement statement = con.createStatement();
+        Statement statement = hiveConfigBean.getHiveConnection().createStatement();
         ResultSet rs = statement.executeQuery(sql)
     ){
       LinkedHashMap<String, HiveTypeInfo> columnTypeInfo  = extractTypeInfo(rs);
@@ -483,7 +485,7 @@ public final class HiveQueryExecutor {
     String sql = String.format(DESC_FORMATTED, qualifiedTableName);
     LOG.debug("Executing SQL: {}", sql);
     try (
-        Statement statement = con.createStatement();
+        Statement statement = hiveConfigBean.getHiveConnection().createStatement();
         ResultSet rs = statement.executeQuery(sql)
     ){
       String serdeLibrary = null;
@@ -523,7 +525,7 @@ public final class HiveQueryExecutor {
     LOG.debug("Executing SQL: {}", sql);
     String location = null;
     try (
-        Statement statement = con.createStatement();
+        Statement statement = hiveConfigBean.getHiveConnection().createStatement();
         ResultSet rs = statement.executeQuery(sql)
     ){
       boolean isDetailedPartitionInformationRowSeen = false;
@@ -567,7 +569,7 @@ public final class HiveQueryExecutor {
     LOG.debug("Executing SQL: {}", sql);
     boolean isExternal = false, useAsAvro = true;
     try (
-        Statement statement = con.createStatement();
+        Statement statement = hiveConfigBean.getHiveConnection().createStatement();
         ResultSet rs = statement.executeQuery(sql)
     ){
       while (rs.next()) {

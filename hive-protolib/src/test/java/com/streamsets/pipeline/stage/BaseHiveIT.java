@@ -65,6 +65,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static org.junit.Assert.fail;
+
 /**
  * Base Hive Integration Test class that starts HDFS, HMS and HiveServer2.
  */
@@ -96,11 +98,6 @@ public abstract class BaseHiveIT {
   private static final String WAREHOUSE_DIR = "/user/hive/warehouse";
   private static final String EXTERNAL_DIR = "/user/hive/external";
 
-  //TODO: SDC-2988, expose this better.
-  private static HiveQueryExecutor hiveQueryExecutor;
-  public HiveQueryExecutor getHiveQueryExecutor() {
-    return hiveQueryExecutor;
-  }
   private static boolean isHiveInitialized = false;
 
   /**
@@ -167,7 +164,6 @@ public abstract class BaseHiveIT {
     // JDBC Connection to Hive
     Class.forName(HIVE_JDBC_DRIVER);
     hiveConnection = HiveMetastoreUtil.getHiveConnection(getHiveJdbcUrl(), HadoopSecurityUtil.getLoginUser(conf));
-    hiveQueryExecutor = new HiveQueryExecutor(hiveConnection);
 
     // And finally we're initialized
     isHiveInitialized = true;
@@ -304,7 +300,17 @@ public abstract class BaseHiveIT {
    * Validate that table of given name exists in HMS
    */
   public static void assertTableExists(String name) throws Exception {
-    Assert.assertTrue(Utils.format("Table {} doesn't exists.", name), hiveQueryExecutor.executeShowTableQuery(name));
+    String sql = HiveQueryExecutor.buildShowTableQuery(name);
+    LOG.debug("Executing SQL: {}", sql);
+    try (
+        Statement statement = hiveConnection.createStatement();
+        ResultSet rs = statement.executeQuery(sql)
+    ){
+      Assert.assertTrue("Table " + name + " doesn't exists.", rs.next());
+    } catch (Exception e) {
+      LOG.error("Can't verify existence of table", e);
+      fail("Can't verify existence of table " + name);
+    }
   }
 
   public static abstract class QueryValidator {
