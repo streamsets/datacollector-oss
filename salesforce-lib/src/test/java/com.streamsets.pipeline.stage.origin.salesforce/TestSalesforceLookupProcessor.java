@@ -98,8 +98,6 @@ public class TestSalesforceLookupProcessor {
     conf.password = password;
     conf.authEndpoint = authEndpoint;
     conf.apiVersion = apiVersion;
-    conf.basicConfig.maxBatchSize = maxBatchSize;
-    conf.basicConfig.maxWaitTime = maxWaitTime;
 
     conf.useCompression = false;
     conf.showTrace = true;

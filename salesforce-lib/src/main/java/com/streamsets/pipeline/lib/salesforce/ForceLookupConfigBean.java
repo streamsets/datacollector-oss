@@ -38,7 +38,7 @@ public class ForceLookupConfigBean extends ForceConfigBean {
       defaultValue = "",
       label = "SOQL Query",
       description =
-          "SELECT <offset field>, <more fields>, ... FROM <object name> WHERE <column> <operator> <expression>",
+          "SELECT <field>, ... FROM <object name> WHERE <field> <operator> <expression>",
       elDefs = {StringEL.class, RecordEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 50,
@@ -49,9 +49,9 @@ public class ForceLookupConfigBean extends ForceConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      label = "Column Mappings",
+      label = "Field Mappings",
       defaultValue = "",
-      description = "Mappings from column names to field names",
+      description = "Mappings from Salesforce field names to SDC field names",
       displayPosition = 60,
       group = "FORCE"
   )
@@ -60,7 +60,4 @@ public class ForceLookupConfigBean extends ForceConfigBean {
 
   @ConfigDefBean(groups = "FORCE")
   public CacheConfig cacheConfig = new CacheConfig();
-
-  @ConfigDefBean(groups = "FORCE")
-  public BasicConfig basicConfig = new BasicConfig();
 }
