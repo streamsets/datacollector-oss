@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.cluster;
 
+import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.DataRuleDefinition;
 import com.streamsets.datacollector.config.DriftRuleDefinition;
 import com.streamsets.datacollector.config.MetricsRuleDefinition;
@@ -147,7 +148,7 @@ public class TestClusterProviderImpl {
         null,
         configs,
         null,
-        new ArrayList<StageConfiguration>(),
+        ImmutableList.of(MockStages.createSource("s", ImmutableList.of("S"))),
         MockStages.getErrorStageConfig(),
         MockStages.getStatsAggregatorStageConfig()
     );

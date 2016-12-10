@@ -22,6 +22,7 @@ package com.streamsets.datacollector.creation;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.stagelibrary.ClassLoaderReleaser;
+import com.streamsets.pipeline.api.ProtoSource;
 import com.streamsets.pipeline.api.Stage;
 
 public class StageBean {
@@ -58,5 +59,9 @@ public class StageBean {
 
   public void releaseClassLoader() {
     classLoaderReleaser.releaseStageClassLoader(stage.getClass().getClassLoader());
+  }
+
+  public boolean isSource() {
+    return stage instanceof ProtoSource;
   }
 }

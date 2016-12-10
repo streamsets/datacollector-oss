@@ -31,6 +31,7 @@ import com.streamsets.datacollector.runner.preview.StageConfigurationBuilder;
 import com.streamsets.datacollector.stagelibrary.ClassLoaderReleaser;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.validation.Issue;
+import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.StatsAggregatorStage;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.ListBeanModel;
@@ -44,6 +45,8 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.api.base.BasePushSource;
+import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import org.junit.Assert;
 import org.junit.Test;
@@ -215,7 +218,7 @@ public class TestPipelineBeanCreator {
   }
 
   @StageDef(version = 1, label = "L", onlineHelpRefUrl = "")
-  public static class MyTarget extends BaseTarget {
+  public static class MySource extends BaseSource {
 
     @ConfigDef(
         label = "L",
@@ -302,10 +305,40 @@ public class TestPipelineBeanCreator {
     public E enumSNoDefaultAlAll;
 
     @Override
-    public void write(Batch batch) throws StageException {
+    public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+      return null;
+    }
+  }
+
+  @StageDef(version = 1, label = "L", onlineHelpRefUrl = "")
+  public static class MyPushSource extends BasePushSource {
+
+    @Override
+    public int getNumberOfThreads() {
+      return 2;
+    }
+
+    @Override
+    public void produce(int maxBatchSize) throws StageException {
 
     }
   }
+
+  @StageDef(version = 1, label = "L", onlineHelpRefUrl = "")
+  public static class MyTarget extends BaseTarget {
+    @ConfigDef(
+        label = "L",
+        type = ConfigDef.Type.LIST,
+        defaultValue = "[\"1\"]",
+        required = true
+    )
+    public List<String> list;
+
+    @Override
+    public void write(Batch batch) throws StageException {
+    }
+  }
+
 
   @StageDef(version = 1, label = "L", onlineHelpRefUrl = "")
   @ErrorStage
@@ -321,7 +354,7 @@ public class TestPipelineBeanCreator {
   public void testToList() throws NoSuchFieldException {
     StageLibraryDefinition libraryDef = Mockito.mock(StageLibraryDefinition.class);
     Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
-    StageDefinition stageDef = StageDefinitionExtractor.get().extract(libraryDef, MyTarget.class, "");
+    StageDefinition stageDef = StageDefinitionExtractor.get().extract(libraryDef, MySource.class, "");
     ConfigDefinition configDef = stageDef.getConfigDefinition("list");
     Map<String, Object> constants = ImmutableMap.<String, Object>of("a", "A");
     List<Issue> issues = new ArrayList<>();
@@ -375,7 +408,7 @@ public class TestPipelineBeanCreator {
   public void testToMap() {
     StageLibraryDefinition libraryDef = Mockito.mock(StageLibraryDefinition.class);
     Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
-    StageDefinition stageDef = StageDefinitionExtractor.get().extract(libraryDef, MyTarget.class, "");
+    StageDefinition stageDef = StageDefinitionExtractor.get().extract(libraryDef, MySource.class, "");
     ConfigDefinition configDef = stageDef.getConfigDefinition("map");
     Map<String, Object> constants = ImmutableMap.<String, Object>of("a", 1);
     List<Issue> issues = new ArrayList<>();
@@ -432,7 +465,7 @@ public class TestPipelineBeanCreator {
   public void testCreateAndInjectStageUsingDefaults() {
     StageLibraryDefinition libraryDef = Mockito.mock(StageLibraryDefinition.class);
     Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
-    StageDefinition stageDef = StageDefinitionExtractor.get().extract(libraryDef, MyTarget.class, "");
+    StageDefinition stageDef = StageDefinitionExtractor.get().extract(libraryDef, MySource.class, "");
 
     StageConfiguration stageConf = new StageConfigurationBuilder("i", "n").build();
 
@@ -443,7 +476,7 @@ public class TestPipelineBeanCreator {
                                                            constants, issues);
 
     Assert.assertNotNull(bean);
-    MyTarget stage = (MyTarget) bean.getStage();
+    MySource stage = (MySource) bean.getStage();
     Assert.assertEquals(ImmutableList.of("1"), stage.list);
     Assert.assertEquals(ImmutableList.of("2"), stage.listExplicit);
     Assert.assertEquals(ImmutableMap.of("a", "1"), stage.map);
@@ -459,7 +492,7 @@ public class TestPipelineBeanCreator {
   public void testCreateAndInjectStageUsingMixOfDefaultsAndConfig() {
     StageLibraryDefinition libraryDef = Mockito.mock(StageLibraryDefinition.class);
     Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
-    StageDefinition stageDef = StageDefinitionExtractor.get().extract(libraryDef, MyTarget.class, "");
+    StageDefinition stageDef = StageDefinitionExtractor.get().extract(libraryDef, MySource.class, "");
 
     StageConfiguration stageConf = new StageConfigurationBuilder("i", "n")
       .withConfig(
@@ -483,7 +516,7 @@ public class TestPipelineBeanCreator {
                                                            constants, issues);
 
     Assert.assertNotNull(bean);
-    MyTarget stage = (MyTarget) bean.getStage();
+    MySource stage = (MySource) bean.getStage();
     Assert.assertEquals(ImmutableList.of("X"), stage.list);
     Assert.assertEquals(ImmutableList.of("2"), stage.listExplicit);
     Assert.assertEquals(ImmutableMap.of("a", "AA"), stage.map);
@@ -503,12 +536,15 @@ public class TestPipelineBeanCreator {
   public void testCreatePipelineBean() {
     StageLibraryDefinition libraryDef = Mockito.mock(StageLibraryDefinition.class);
     Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
-    StageDefinition stageDef = StageDefinitionExtractor.get().extract(libraryDef, MyTarget.class, "");
+    StageDefinition sourceDef = StageDefinitionExtractor.get().extract(libraryDef, MySource.class, "");
+    StageDefinition targetDef = StageDefinitionExtractor.get().extract(libraryDef, MyTarget.class, "");
     StageDefinition errorStageDef = StageDefinitionExtractor.get().extract(libraryDef, ErrorMyTarget.class, "");
     StageDefinition aggStageDef = StageDefinitionExtractor.get().extract(libraryDef, AggregatingMyTarget.class, "");
     StageLibraryTask library = Mockito.mock(StageLibraryTask.class);
     Mockito.when(library.getStage(Mockito.eq("default"), Mockito.eq("s"), Mockito.eq(false)))
-           .thenReturn(stageDef);
+           .thenReturn(sourceDef);
+    Mockito.when(library.getStage(Mockito.eq("default"), Mockito.eq("t"), Mockito.eq(false)))
+           .thenReturn(targetDef);
     Mockito.when(library.getStage(Mockito.eq("default"), Mockito.eq("e"), Mockito.eq(false)))
            .thenReturn(errorStageDef);
     Mockito.when(library.getStage(Mockito.eq("default"), Mockito.eq("a"), Mockito.eq(false)))
@@ -520,8 +556,11 @@ public class TestPipelineBeanCreator {
         new Config("memoryLimit", 1000)
     );
 
-    StageConfiguration stageConf = new StageConfigurationBuilder("si", "s")
+    StageConfiguration sourceConf = new StageConfigurationBuilder("si", "s")
       .withConfig(new Config("list", ImmutableList.of("S")))
+      .build();
+    StageConfiguration targetConf = new StageConfigurationBuilder("si", "t")
+      .withConfig(new Config("list", ImmutableList.of("T")))
       .build();
     StageConfiguration errorStageConf = new StageConfigurationBuilder("ei", "e")
       .withConfig(new Config("list", ImmutableList.of("E")))
@@ -536,7 +575,7 @@ public class TestPipelineBeanCreator {
         "D",
         pipelineConfigs,
         Collections.EMPTY_MAP,
-        ImmutableList.of(stageConf),
+        ImmutableList.of(sourceConf, targetConf),
         errorStageConf,
         aggStageConf
     );
@@ -549,10 +588,17 @@ public class TestPipelineBeanCreator {
     // pipeline configs
     Assert.assertEquals(ExecutionMode.CLUSTER_BATCH, bean.getConfig().executionMode);
 
-    // stages
-    Assert.assertEquals(1, bean.getStages().size());
-    MyTarget stage = (MyTarget) bean.getStages().get(0).getStage();
-    Assert.assertEquals(ImmutableList.of("S"), stage.list);
+    // Origin
+    Assert.assertNotNull(bean.getOrigin());
+    MySource source = (MySource) bean.getOrigin().getStage();
+    Assert.assertEquals(ImmutableList.of("S"), source.list);
+
+    // Target
+    Assert.assertEquals(1, bean.getPipelineStageBeans().size());
+    PipelineStageBeans stages = bean.getPipelineStageBeans().get(0);
+    Assert.assertEquals(1, stages.getStages().size());
+    MyTarget target = (MyTarget)stages.getStages().get(0).getStage();
+    Assert.assertEquals(ImmutableList.of("T"), target.list);
 
     // Aggregating stage
     AggregatingMyTarget aggregatingStage = (AggregatingMyTarget) bean.getStatsAggregatorStage().getStage();
@@ -561,7 +607,77 @@ public class TestPipelineBeanCreator {
     // error stage
     ErrorMyTarget errorStage = (ErrorMyTarget) bean.getErrorStage().getStage();
     Assert.assertEquals(ImmutableList.of("E"), errorStage.list);
+  }
 
+  @Test
+  public void testPipelineWithPushOrigin() {
+    StageLibraryDefinition libraryDef = Mockito.mock(StageLibraryDefinition.class);
+    Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
+    StageDefinition sourceDef = StageDefinitionExtractor.get().extract(libraryDef, MyPushSource.class, "");
+    StageDefinition targetDef = StageDefinitionExtractor.get().extract(libraryDef, MyTarget.class, "");
+    StageDefinition errorStageDef = StageDefinitionExtractor.get().extract(libraryDef, ErrorMyTarget.class, "");
+    StageDefinition aggStageDef = StageDefinitionExtractor.get().extract(libraryDef, AggregatingMyTarget.class, "");
+    StageLibraryTask library = Mockito.mock(StageLibraryTask.class);
+    Mockito.when(library.getStage(Mockito.eq("default"), Mockito.eq("s"), Mockito.eq(false)))
+           .thenReturn(sourceDef);
+    Mockito.when(library.getStage(Mockito.eq("default"), Mockito.eq("t"), Mockito.eq(false)))
+           .thenReturn(targetDef);
+    Mockito.when(library.getStage(Mockito.eq("default"), Mockito.eq("e"), Mockito.eq(false)))
+           .thenReturn(errorStageDef);
+    Mockito.when(library.getStage(Mockito.eq("default"), Mockito.eq("a"), Mockito.eq(false)))
+      .thenReturn(aggStageDef);
+    Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
+
+    List<Config> pipelineConfigs = ImmutableList.of(
+        new Config("executionMode", ExecutionMode.CLUSTER_BATCH.name()),
+        new Config("memoryLimit", 1000)
+    );
+
+    StageConfiguration sourceConf = new StageConfigurationBuilder("si", "s")
+      .withConfig(new Config("list", ImmutableList.of("S")))
+      .build();
+    StageConfiguration targetConf = new StageConfigurationBuilder("si", "t")
+      .withConfig(new Config("list", ImmutableList.of("T")))
+      .build();
+    StageConfiguration errorStageConf = new StageConfigurationBuilder("ei", "e")
+      .withConfig(new Config("list", ImmutableList.of("E")))
+      .build();
+    StageConfiguration aggStageConf = new StageConfigurationBuilder("ai", "a")
+      .withConfig(new Config("list", ImmutableList.of("A")))
+      .build();
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(
+        1,
+        PipelineConfigBean.VERSION,
+        UUID.randomUUID(),
+        "D",
+        pipelineConfigs,
+        Collections.EMPTY_MAP,
+        ImmutableList.of(sourceConf, targetConf),
+        errorStageConf,
+        aggStageConf
+    );
+
+    List<Issue> issues = new ArrayList<>();
+    PipelineBean bean = PipelineBeanCreator.get().create(false, library, pipelineConf, issues);
+
+    Assert.assertNotNull(bean);
+
+    // pipeline configs
+    Assert.assertEquals(ExecutionMode.CLUSTER_BATCH, bean.getConfig().executionMode);
+
+    // Origin
+    Assert.assertNotNull(bean.getOrigin());
+    MyPushSource source = (MyPushSource) bean.getOrigin().getStage();
+    Assert.assertNotNull(source);
+
+    // There should be two parallel pipelines (~targets)
+    Assert.assertEquals(2, bean.getPipelineStageBeans().size());
+    for(int i = 0; i < 2; i++) {
+      PipelineStageBeans stages = bean.getPipelineStageBeans().get(i);
+      Assert.assertEquals(1, stages.getStages().size());
+      MyTarget target = (MyTarget)stages.getStages().get(0).getStage();
+      Assert.assertEquals(ImmutableList.of("T"), target.list);
+    }
   }
 
   @Test
@@ -569,7 +685,7 @@ public class TestPipelineBeanCreator {
     StageLibraryDefinition libraryDef = Mockito.mock(StageLibraryDefinition.class);
     ClassLoader cl = Thread.currentThread().getContextClassLoader();
     Mockito.when(libraryDef.getClassLoader()).thenReturn(cl);
-    StageDefinition stageDef = StageDefinitionExtractor.get().extract(libraryDef, MyTarget.class, "");
+    StageDefinition stageDef = StageDefinitionExtractor.get().extract(libraryDef, MySource.class, "");
 
     StageConfiguration stageConf =
         new StageConfiguration("i", "l", "n", 1, Collections.<Config>emptyList(),
@@ -595,7 +711,7 @@ public class TestPipelineBeanCreator {
   public void testConfigsWithJavaDefaults() {
     StageLibraryDefinition libraryDef = Mockito.mock(StageLibraryDefinition.class);
     Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
-    StageDefinition stageDef = StageDefinitionExtractor.get().extract(libraryDef, MyTarget.class, "");
+    StageDefinition stageDef = StageDefinitionExtractor.get().extract(libraryDef, MySource.class, "");
     StageDefinition errorStageDef = StageDefinitionExtractor.get().extract(libraryDef, ErrorMyTarget.class, "");
     StageDefinition aggregatingStageDef = StageDefinitionExtractor.get().extract(libraryDef, AggregatingMyTarget.class, "");
     StageLibraryTask library = Mockito.mock(StageLibraryTask.class);
@@ -637,12 +753,12 @@ public class TestPipelineBeanCreator {
     List<Issue> issues = new ArrayList<>();
     PipelineBean bean = PipelineBeanCreator.get().create(false, library, pipelineConf, issues);
 
-    MyTarget target = (MyTarget) bean.getStages().get(0).getStage();
+    MySource source = (MySource) bean.getOrigin().getStage();
 
-    Assert.assertEquals("Hello", target.stringJavaDefault);
-    Assert.assertEquals(E.B, target.enumSJavaDefault);
-    Assert.assertEquals(ImmutableList.of(E.A), target.enumMJavaDefault);
-    Assert.assertEquals(5, target.intJavaDefault);
-    Assert.assertEquals(E.A, target.enumSNoDefaultAlAll);
+    Assert.assertEquals("Hello", source.stringJavaDefault);
+    Assert.assertEquals(E.B, source.enumSJavaDefault);
+    Assert.assertEquals(ImmutableList.of(E.A), source.enumMJavaDefault);
+    Assert.assertEquals(5, source.intJavaDefault);
+    Assert.assertEquals(E.A, source.enumSNoDefaultAlAll);
   }
 }

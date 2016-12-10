@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.creation;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.ModelType;
@@ -38,6 +39,8 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.ProtoSource;
+import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -88,16 +91,29 @@ public abstract class PipelineBeanCreator {
     PipelineConfigBean pipelineConfigBean = create(pipelineConf, errors);
     StageBean errorStageBean = null;
     StageBean statsStageBean = null;
-    List<StageBean> stages = new ArrayList<>();
+    StageBean origin = null;
+    int copies = 1;
+    List<PipelineStageBeans> stages = new ArrayList<>();
     if (pipelineConfigBean != null && pipelineConfigBean.constants != null) {
-      for (StageConfiguration stageConf : pipelineConf.getStages()) {
-        StageBean stageBean = createStageBean(forExecution, library, stageConf, false, pipelineConfigBean.constants,
-                                              errors);
-        if (stageBean != null) {
-          stages.add(stageBean);
+      // Instantiate usual stages
+      if(!pipelineConf.getStages().isEmpty()) {
+        origin = createStageBean(forExecution, library, pipelineConf.getStages().get(0), false, pipelineConfigBean.constants, errors);
+        if (origin != null && origin.getStage() instanceof PushSource) {
+          // TODO: 	SDC-4728: Add ability to cap the number of threads in the pipeline config
+          copies = ((PushSource) origin.getStage()).getNumberOfThreads();
+        }
+
+        for (int i = 0; i < copies; i++) {
+          stages.add(createPipelineStageBeans(
+            forExecution,
+            library,
+            pipelineConf.getStages().subList(1, pipelineConf.getStages().size()),
+            pipelineConfigBean.constants, errors
+          ));
         }
       }
 
+      // It is not mandatory to have a stats aggregating target configured
       StageConfiguration statsStageConf = pipelineConf.getStatsAggregatorStage();
       if (statsStageConf != null) {
         statsStageBean = createStageBean(
@@ -108,9 +124,9 @@ public abstract class PipelineBeanCreator {
             pipelineConfigBean.constants,
             errors
         );
-        // It is not mandatory to have a stats aggregating target configured
       }
 
+      // Error stage is mandatory
       StageConfiguration errorStageConf = pipelineConf.getErrorStage();
       if (errorStageConf != null) {
         errorStageBean = createStageBean(forExecution, library, errorStageConf, true, pipelineConfigBean.constants,
@@ -120,8 +136,33 @@ public abstract class PipelineBeanCreator {
                                                      CreationError.CREATION_009));
       }
     }
-    return (errors.size() == priorErrors) ?
-        new PipelineBean(pipelineConfigBean, stages, errorStageBean, statsStageBean) : null;
+
+    // Something went wrong
+    if(errors.size() != priorErrors) {
+      return  null;
+    }
+
+    return new PipelineBean(pipelineConfigBean, origin, stages, errorStageBean, statsStageBean);
+  }
+
+  private PipelineStageBeans createPipelineStageBeans(
+    boolean forExecution,
+    StageLibraryTask library,
+    List<StageConfiguration> stageConfigurations,
+    Map<String, Object> constants,
+    List<Issue> errors
+  ) {
+    List<StageBean> stageBeans = new ArrayList<>(stageConfigurations.size());
+
+    for (StageConfiguration stageConf : stageConfigurations) {
+      StageBean stageBean = createStageBean(forExecution, library, stageConf, false, constants, errors);
+
+      if (stageBean != null) {
+        stageBeans.add(stageBean);
+      }
+    }
+
+    return new PipelineStageBeans(stageBeans);
   }
 
   public ExecutionMode getExecutionMode(PipelineConfiguration pipelineConf, List<Issue> errors) {

@@ -20,11 +20,13 @@
 package com.streamsets.datacollector.runner;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.creation.PipelineBean;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.creation.PipelineStageBeans;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.memory.MemoryUsageCollectorResourceBundle;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
@@ -268,10 +270,16 @@ public class Pipeline {
       StageRuntime errorStage;
       StageRuntime statsAggregator = null;
       if (pipelineBean != null) {
-        stages = new StageRuntime[pipelineBean.getStages().size()];
-        for (int i = 0; i < pipelineBean.getStages().size(); i++) {
-          stages[i] = new StageRuntime(pipelineBean, pipelineBean.getStages().get(i));
+        // TODO: SDC-4729: Enhance Pipeline class to work with the multithreaded pipelines, only single-threaded support for now
+        Preconditions.checkArgument(!pipelineBean.getPipelineStageBeans().isEmpty(), "At least one instance of pipeline must exist!");
+        PipelineStageBeans stageBeans = pipelineBean.getPipelineStageBeans().get(0);
+
+        stages = new StageRuntime[stageBeans.size() + 1];
+        stages[0] = new StageRuntime(pipelineBean, pipelineBean.getOrigin());
+        for (int i = 0; i < stageBeans.size(); i++) {
+          stages[i+1] = new StageRuntime(pipelineBean, stageBeans.get(i));
         }
+
         errorStage = new StageRuntime(pipelineBean, pipelineBean.getErrorStage());
         StatsAggregationHandler statsAggregationHandler = null;
         if (pipelineBean.getStatsAggregatorStage() != null) {

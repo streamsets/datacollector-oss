@@ -557,7 +557,9 @@ public class ClusterProviderImpl implements ClusterProvider {
     if (statsStage != null) {
       pipelineConfigurations.add(statsStage.getConfiguration());
     }
-    for (StageBean stageBean : pipelineBean.getStages()) {
+    // TODO: SDC-4730: Enhance ClusterProviderImpl class to work with the multithreaded pipelines, only single-threaded support for now
+    pipelineConfigurations.add(pipelineBean.getOrigin().getConfiguration());
+    for (StageBean stageBean : pipelineBean.getPipelineStageBeans().get(0).getStages()) {
       pipelineConfigurations.add(stageBean.getConfiguration());
     }
     ExecutionMode executionMode = ExecutionMode.STANDALONE;
