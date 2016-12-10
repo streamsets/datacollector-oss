@@ -82,7 +82,7 @@ public class HiveMetastoreTarget extends BaseTarget {
                 )
             )
             .maxCacheSize(conf.hiveConfigBean.maxCacheSize)
-            .build(new HiveQueryExecutor(conf.hiveConfigBean.getHiveConnection()));
+            .build(new HiveQueryExecutor(conf.hiveConfigBean));
       } catch (StageException e) {
         issues.add(getContext().createConfigIssue(
             Groups.HIVE.name(),
@@ -107,7 +107,7 @@ public class HiveMetastoreTarget extends BaseTarget {
         String qualifiedTableName = HiveMetastoreUtil.getQualifiedTableName(databaseName, tableName);
         String location = HiveMetastoreUtil.getLocation(metadataRecord);
 
-        HiveQueryExecutor hiveQueryExecutor = new HiveQueryExecutor(conf.hiveConfigBean.getHiveConnection());
+        HiveQueryExecutor hiveQueryExecutor = new HiveQueryExecutor(conf.hiveConfigBean);
 
         TBLPropertiesInfoCacheSupport.TBLPropertiesInfo tblPropertiesInfo = HiveMetastoreUtil.getCacheInfo(
             hmsCache,
