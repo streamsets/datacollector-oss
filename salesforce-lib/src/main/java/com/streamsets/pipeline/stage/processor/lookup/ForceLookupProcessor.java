@@ -139,7 +139,29 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
         errorRecordHandler.onError(new OnRecordErrorException(record, Errors.FORCE_15, preparedQuery));
       }
       for (Map.Entry<String, Field> entry : values.entrySet()) {
-        record.set(entry.getKey(), entry.getValue());
+        String columnName = entry.getKey();
+        String fieldPath = columnsToFields.get(columnName);
+        Field field = entry.getValue();
+        if (fieldPath == null) {
+          Field root = record.get();
+          // No mapping
+          switch (root.getType()) {
+            case LIST:
+              // Add new field to the end of the list
+              fieldPath = "[" + root.getValueAsList().size() + "]";
+              Map<String, Field> cell = new HashMap<>();
+              cell.put("header", Field.create(columnName));
+              cell.put("value", field);
+              field = Field.create(cell);
+              break;
+            case LIST_MAP:
+            case MAP:
+              // Just use the column name
+              fieldPath = "/" + columnName;
+              break;
+          }
+        }
+        record.set(fieldPath, field);
       }
       batchMaker.addRecord(record);
     } catch (ELEvalException e) {
