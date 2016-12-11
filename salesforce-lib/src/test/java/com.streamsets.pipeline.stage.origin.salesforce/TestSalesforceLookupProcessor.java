@@ -219,9 +219,7 @@ public class TestSalesforceLookupProcessor {
   }
 
   @Test
-  public void testBadColumnMapping() throws Exception {
-    thrown.expect(StageException.class);
-
+  public void testMissingColumnMappingList() throws Exception {
     mockServer.sforceApi().query().returnResults()
         .withRow().withField("Id", "001000000000001").withField("Name", "Pat");
 
@@ -243,16 +241,36 @@ public class TestSalesforceLookupProcessor {
 
     List<Record> singleRecord = ImmutableList.of(record);
     processorRunner.runInit();
-    try {
-      StageRunner.Output output = processorRunner.runProcess(singleRecord);
-      Assert.assertEquals(1, output.getRecords().get("lane").size());
+    List<Record> outputRecords = processorRunner.runProcess(singleRecord).getRecords().get("lane");
 
-      output.getRecords().get("lane").get(0);
-    } catch (Throwable t) {
-      t.printStackTrace();
-      throw t;
-    } finally {
-      processorRunner.runDestroy();
-    }
+    Assert.assertEquals("Pat", outputRecords.get(0).get("[2]").getValueAsMap().get("value").getValueAsString());
+  }
+
+  @Test
+  public void testMissingColumnMappingMap() throws Exception {
+    mockServer.sforceApi().query().returnResults()
+        .withRow().withField("Id", "001000000000001").withField("Name", "Pat");
+
+    ForceLookupDProcessor processor = new ForceLookupDProcessor();
+    processor.forceConfig = createConfigBean();
+
+    processor.forceConfig.fieldMappings = ImmutableList.of(new ForceSDCFieldMapping("QQQ", "[2]"));
+    processor.forceConfig.soqlQuery = mapQuery;
+
+    ProcessorRunner processorRunner = new ProcessorRunner.Builder(ForceLookupDProcessor.class, processor)
+        .addOutputLane("lane")
+        .build();
+
+    Record record = RecordCreator.create();
+    LinkedHashMap<String, Field> fields = new LinkedHashMap<>();
+    fields.put("id", Field.create("001000000000001"));
+    fields.put("blah", Field.create("abcd"));
+    record.set(Field.create(fields));
+
+    List<Record> singleRecord = ImmutableList.of(record);
+    processorRunner.runInit();
+    List<Record> outputRecords = processorRunner.runProcess(singleRecord).getRecords().get("lane");
+
+    Assert.assertEquals("Pat", outputRecords.get(0).get("/Name").getValueAsString());
   }
 }

@@ -89,12 +89,7 @@ class ForceLookupLoader extends CacheLoader<String, Map<String, Field>> {
             throw new StageException(Errors.FORCE_04,
                 "Key: "+key+", unexpected type for val: " + val.getClass().toString());
           }
-          String fieldPath = columnsToFields.get(key);
-          if (fieldPath == null) {
-            LOG.error(Errors.FORCE_18.getMessage(), key);
-            throw new OnRecordErrorException(Errors.FORCE_18, key);
-          }
-          values.put(fieldPath, field);
+          values.put(key, field);
         }
       }
     } catch (ConnectionException e) {

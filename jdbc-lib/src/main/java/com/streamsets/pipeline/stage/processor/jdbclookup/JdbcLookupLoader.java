@@ -87,15 +87,7 @@ public class JdbcLookupLoader extends CacheLoader<String, Map<String, Field>> {
               throw new OnRecordErrorException(JdbcErrors.JDBC_35, fields.size(), numColumns);
             }
 
-            for (Map.Entry<String, Field> entry : fields.entrySet()) {
-              String columnName = entry.getKey();
-              String fieldPath = columnsToFields.get(columnName);
-              if (fieldPath == null) {
-                LOG.error(JdbcErrors.JDBC_25.getMessage(), columnName);
-                throw new OnRecordErrorException(JdbcErrors.JDBC_25, columnName);
-              }
-              values.put(fieldPath, entry.getValue());
-            }
+            return fields;
           }
         }
       } catch (SQLException e) {

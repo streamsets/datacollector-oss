@@ -326,10 +326,8 @@ public class TestJdbcLookup {
   }
 
   @Test
-  public void testBadColumnMapping() throws Exception {
-    thrown.expect(StageException.class);
-
-    List<JdbcFieldColumnMapping> columnMappings = ImmutableList.of(new JdbcFieldColumnMapping("QQQ", "[2]"));
+  public void testMissingColumnMappingList() throws Exception {
+    List<JdbcFieldColumnMapping> columnMappings = ImmutableList.of();
 
     JdbcLookupDProcessor processor = new JdbcLookupDProcessor();
     processor.hikariConfigBean = createConfigBean(h2ConnectionString, username, password);
@@ -362,11 +360,52 @@ public class TestJdbcLookup {
 
     List<Record> records = ImmutableList.of(record1, record2, record3);
     processorRunner.runInit();
-    try {
-      processorRunner.runProcess(records).getRecords().get("lane");
-    } catch (Throwable t) {
-      t.printStackTrace();
-      throw t;
-    }
+    List<Record> outputRecords = processorRunner.runProcess(records).getRecords().get("lane");
+
+    Assert.assertEquals(1, outputRecords.get(0).get("[2]").getValueAsMap().get("value").getValueAsInteger());
+    Assert.assertEquals(2, outputRecords.get(1).get("[2]").getValueAsMap().get("value").getValueAsInteger());
+    Assert.assertEquals(3, outputRecords.get(2).get("[2]").getValueAsMap().get("value").getValueAsInteger());
+  }
+
+  @Test
+  public void testMissingColumnMappingMap() throws Exception {
+    List<JdbcFieldColumnMapping> columnMappings = ImmutableList.of();
+
+    JdbcLookupDProcessor processor = new JdbcLookupDProcessor();
+    processor.hikariConfigBean = createConfigBean(h2ConnectionString, username, password);
+
+    ProcessorRunner processorRunner = new ProcessorRunner.Builder(JdbcLookupDProcessor.class, processor)
+        .addConfiguration("query", mapQuery)
+        .addConfiguration("columnMappings", columnMappings)
+        .addConfiguration("maxClobSize", 1000)
+        .addConfiguration("maxBlobSize", 1000)
+        .addOutputLane("lane")
+        .build();
+
+    Record record1 = RecordCreator.create();
+    LinkedHashMap<String, Field> fields = new LinkedHashMap<>();
+    fields.put("first_name", Field.create("Adam"));
+    fields.put("last_name", Field.create("Kunicki"));
+    record1.set(Field.create(fields));
+
+    Record record2 = RecordCreator.create();
+    LinkedHashMap<String, Field> fields2 = new LinkedHashMap<>();
+    fields2.put("first_name", Field.create("Jon"));
+    fields2.put("last_name", Field.create("Natkins"));
+    record2.set(Field.create(fields2));
+
+    Record record3 = RecordCreator.create();
+    LinkedHashMap<String, Field> fields3 = new LinkedHashMap<>();
+    fields3.put("first_name", Field.create("Jon"));
+    fields3.put("last_name", Field.create("Daulton"));
+    record3.set(Field.create(fields3));
+
+    List<Record> records = ImmutableList.of(record1, record2, record3);
+    processorRunner.runInit();
+    List<Record> outputRecords = processorRunner.runProcess(records).getRecords().get("lane");
+
+    Assert.assertEquals(1, outputRecords.get(0).get("/P_ID").getValueAsInteger());
+    Assert.assertEquals(2, outputRecords.get(1).get("/P_ID").getValueAsInteger());
+    Assert.assertEquals(3, outputRecords.get(2).get("/P_ID").getValueAsInteger());
   }
 }
