@@ -1,0 +1,46 @@
+<div class="panel panel-default page-panel users-groups-page">
+  <div class="panel panel-default page-panel">
+    <div class="panel-heading clearfix">
+      <div class="panel-title ">
+        <h3 class="pull-left" translate="usersAndGroups.title">Users And Groups</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="list-content">
+    <ul class="list-group checked-list-box">
+
+      <li class="list-group-item header-list-group-item">
+        <div class="user-name header">
+          <span>User Name</span>
+        </div>
+        <div class="user-roles header">
+          <span>Roles</span>
+        </div>
+        <div class="user-groups header">
+          <span>Groups</span>
+        </div>
+      </li>
+
+      <li class="list-group-item" ng-repeat="user in userList">
+
+        <div class="user-name">
+          <span>{{user.name}}</span>
+        </div>
+
+        <div class="user-roles">
+          <span>{{user.roles.join(', ')}}</span>
+        </div>
+
+        <div class="user-groups">
+          <span>{{user.groups.join(', ')}}</span>
+        </div>
+      </li>
+
+      <div class="stage-libraries-loading">
+        <div class="pipeline-home-loading" show-loading="fetching"></div>
+      </div>
+
+    </ul>
+  </div>
+</div>

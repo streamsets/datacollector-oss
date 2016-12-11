@@ -487,6 +487,7 @@ angular.module('dataCollectorApp')
       .then(function(results) {
         $rootScope.common.userName = authService.getUserName();
         $rootScope.common.userRoles = authService.getUserRoles().join(', ');
+        $rootScope.common.userGroups = authService.getUserGroups().join(', ');
         $rootScope.userRoles = userRoles;
         $rootScope.isAuthorized = authService.isAuthorized;
 

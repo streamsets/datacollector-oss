@@ -91,6 +91,14 @@ angular.module('dataCollectorApp.common')
     };
 
     /**
+     * Return User Groups
+     * @returns {w.roles|*|string}
+     */
+    this.getUserGroups = function() {
+      return self.userInfo ? self.userInfo.groups : [''];
+    };
+
+    /**
      * Fetch Remote User Roles
      */
     this.fetchRemoteUserRoles = function() {

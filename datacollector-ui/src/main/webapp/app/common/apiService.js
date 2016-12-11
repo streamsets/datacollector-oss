@@ -266,6 +266,18 @@ angular.module('dataCollectorApp.common')
           method: 'GET',
           url: url
         });
+      },
+
+      /**
+       * Returns Users
+       * @returns {*}
+       */
+      getUsers: function() {
+        var url = apiBase + '/system/users';
+        return $http({
+          method: 'GET',
+          url: url
+        });
       }
 
     };

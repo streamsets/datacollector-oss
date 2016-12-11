@@ -5,6 +5,7 @@
       "account": {
         "title": "User",
         "assignedRoles": "Assigned Roles",
+        "assignedGroups": "Assigned Groups",
         "loggedInUser": "Logged In User",
         "logout": "Logout",
         "main": "Account"
@@ -18,7 +19,8 @@
         "main": "Administration",
         "resetLocalStorage": "Reset Browser Local Storage",
         "restart": "Restart",
-        "shutdown": "Shutdown"
+        "shutdown": "Shutdown",
+        "usersAndGroups": "Users & Groups"
       },
       "clusterManager": "Cluster Manager",
       "dpm": "Dataflow Performance Manager",
@@ -770,5 +772,8 @@
     "resourcesDir": "Resources Directory",
     "runtimeDir": "Runtime Directory",
     "staticWebDir": "Static Web Directory"
+  },
+  "usersAndGroups": {
+    "title": "Users And Groups"
   }
 }
