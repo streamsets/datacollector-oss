@@ -88,7 +88,8 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_65("Invalid value {} for Fetch Size Configuration should not be more than maxBatchSize"),
   JDBC_66("No Tables matches the configuration in the origin."),
   JDBC_67("Internal Error : {}"),
-  JDBC_68("Tables Referring to each other in cyclic fashion.")
+  JDBC_68("Tables Referring to each other in cyclic fashion."),
+  JDBC_69("Unsupported Offset Column Types. {}"),
   ;
 
   private final String msg;

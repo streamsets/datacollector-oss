@@ -344,12 +344,12 @@ public class ExtraOffsetConditionIT extends BaseTableJdbcSourceIT {
     TableConfigBean tableConfigBean = new TableConfigBean();
     tableConfigBean.tablePattern = tableName;
     tableConfigBean.schema = database;
-    tableConfigBean.overridePartitionColumns = true;
-    tableConfigBean.partitionColumns = new ArrayList<>();
+    tableConfigBean.overrideDefaultOffsetColumns = true;
+    tableConfigBean.offsetColumns = new ArrayList<>();
     tableConfigBean.extraOffsetColumnConditions = extraOffsetConditions;
 
     for (String partitionColumn : transactionOffsetFields.keySet()) {
-      tableConfigBean.partitionColumns.add(partitionColumn.toUpperCase());
+      tableConfigBean.offsetColumns.add(partitionColumn.toUpperCase());
     }
 
     TableJdbcSource tableJdbcSource = Mockito.spy(

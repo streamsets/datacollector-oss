@@ -60,7 +60,7 @@ public class TableJdbcConfigBean {
       defaultValue = "SWITCH_TABLES",
       label = "Per Batch Strategy",
       description = "Determines the strategy for each batch to generate records from.",
-      displayPosition = 180,
+      displayPosition = 80,
       group = "JDBC"
   )
   @ValueChooserModel(BatchTableStrategyChooserValues.class)

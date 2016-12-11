@@ -159,19 +159,16 @@ public class TableJdbcSource extends BaseSource {
           LOG.debug("Failure happened when fetching nextTable", e);
           throw new StageException(JdbcErrors.JDBC_67, e);
         }
+        initGauge(context);
       } catch (SQLException e) {
         logError(e);
         closeConnection();
         issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, e.toString()));
       } catch (StageException e) {
-        if (connection != null) {
-          LOG.debug("Error when finding tables:", e);
-          JdbcUtil.closeQuietly(connection);
-          connection = null;
-        }
+        LOG.debug("Error when finding tables:", e);
+        closeConnection();
         issues.add(context.createConfigIssue(Groups.JDBC.name(), TableJdbcConfigBean.TABLE_CONFIG, e.getErrorCode(), e.getParams()));
       }
-      initGauge(context);
     }
   }
 
@@ -260,7 +257,7 @@ public class TableJdbcSource extends BaseSource {
                 errorRecordHandler
             );
 
-            String offsetFormat = OffsetQueryUtil.getOffsetFormatForPartitionColumns(tableContext, fields);
+            String offsetFormat = OffsetQueryUtil.getOffsetFormatFromColumns(tableContext, fields);
             Record record = getContext().createRecord(tableContext.getTableName() + ":" + offsetFormat);
             record.set(Field.createListMap(fields));
 

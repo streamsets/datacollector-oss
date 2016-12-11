@@ -49,7 +49,7 @@ public class OffsetColumnEL {
   public static String getOffsetColumn(@ElParam("fieldPath") int position) {
     TableContext tableContext = getTableInContext();
     Utils.checkNotNull(tableContext, "No Table in the context");
-    List<String> offsetColumns = new ArrayList<>(tableContext.getPartitionColumns());
+    List<String> offsetColumns = new ArrayList<>(tableContext.getOffsetColumns());
     Utils.checkArgument(
         (position >= 0 && position < offsetColumns.size()),
         Utils.format(

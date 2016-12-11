@@ -643,4 +643,19 @@ public class JdbcUtil {
       }
     }
   }
+
+  /**
+   * Determines whether the actualSqlType is one of the sqlTypes list
+   * @param actualSqlType the actual sql type
+   * @param sqlTypes arbitrary list of sql types
+   * @return true if actual Sql Type is one of the sql Types else false.
+   */
+  public static boolean isSqlTypeOneOf(int actualSqlType, int... sqlTypes) {
+    for (int sqlType : sqlTypes) {
+      if (sqlType == actualSqlType) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

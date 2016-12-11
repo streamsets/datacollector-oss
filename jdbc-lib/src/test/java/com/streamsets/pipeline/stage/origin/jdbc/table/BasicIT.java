@@ -435,9 +435,9 @@ public class BasicIT extends BaseTableJdbcSourceIT {
     TableConfigBean tableConfigBean = new TableConfigBean();
     tableConfigBean.tablePattern = "TRANSACTION";
     tableConfigBean.schema = database;
-    tableConfigBean.overridePartitionColumns = true;
-    tableConfigBean.partitionColumns = new ArrayList<>();
-    tableConfigBean.partitionColumns.add("T_DATE");
+    tableConfigBean.overrideDefaultOffsetColumns = true;
+    tableConfigBean.offsetColumns = new ArrayList<>();
+    tableConfigBean.offsetColumns.add("T_DATE");
 
     TableJdbcSource tableJdbcSource = new TableJdbcSource(
         TestTableJdbcSource.createHikariPoolConfigBean(JDBC_URL, USER_NAME, PASSWORD),

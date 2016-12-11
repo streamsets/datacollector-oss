@@ -21,28 +21,27 @@ package com.streamsets.pipeline.stage.origin.jdbc.table;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public final class TableContext {
 
   private final String schema;
   private final String tableName;
-  private final LinkedHashMap<String, Integer> partitionColumnToType;
-  private final Map<String, String> partitionColumnToStartOffset;
+  private final LinkedHashMap<String, Integer> offsetColumnToType;
+  private final Map<String, String> offsetColumnToStartOffset;
   private final String extraOffsetColumnConditions;
 
   TableContext(
       String schema,
       String tableName,
-      LinkedHashMap<String, Integer> partitionColumnToType,
-      Map<String, String> partitionColumnToStartOffset,
+      LinkedHashMap<String, Integer> offsetColumnToType,
+      Map<String, String> offsetColumnToStartOffset,
       String extraOffsetColumnConditions
   ) {
     this.schema = schema;
     this.tableName = tableName;
-    this.partitionColumnToType = partitionColumnToType;
-    this.partitionColumnToStartOffset = partitionColumnToStartOffset;
+    this.offsetColumnToType = offsetColumnToType;
+    this.offsetColumnToStartOffset = offsetColumnToStartOffset;
     this.extraOffsetColumnConditions = extraOffsetColumnConditions;
   }
 
@@ -54,25 +53,25 @@ public final class TableContext {
     return tableName;
   }
 
-  public Collection<String> getPartitionColumns() {
-    return partitionColumnToType.keySet();
+  public Collection<String> getOffsetColumns() {
+    return offsetColumnToType.keySet();
   }
 
-  public int getPartitionType(String partitionColumn) {
-    return partitionColumnToType.get(partitionColumn);
+  public int getOffsetColumnType(String partitionColumn) {
+    return offsetColumnToType.get(partitionColumn);
   }
 
-  public boolean isPartitionOffsetOverride() {
-    return !partitionColumnToStartOffset.isEmpty();
+  public boolean isOffsetOverriden() {
+    return !offsetColumnToStartOffset.isEmpty();
   }
 
-  public Map<String, String> getPartitionColumnToStartOffset() {
-    return partitionColumnToStartOffset;
+  public Map<String, String> getOffsetColumnToStartOffset() {
+    return offsetColumnToStartOffset;
   }
 
   //Used to reset after the first batch we should not be using the initial offsets.
   public void clearStartOffset() {
-    partitionColumnToStartOffset.clear();
+    offsetColumnToStartOffset.clear();
   }
 
   public String getExtraOffsetColumnConditions() {

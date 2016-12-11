@@ -64,25 +64,25 @@ public final class TableConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Override Partition Columns",
-      description = "Overrides the primary key as the partition column.",
+      label = "Override Offset Columns",
+      description = "Overrides the primary key(s) as the offset column(s).",
       displayPosition = 50,
       defaultValue = "false",
       group = "JDBC"
   )
-  public boolean overridePartitionColumns;
+  public boolean overrideDefaultOffsetColumns;
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.LIST,
-      label = "Partition Columns",
+      label = "Offset Columns",
       displayPosition  = 60,
       group = "JDBC",
-      dependsOn = "overridePartitionColumns",
+      dependsOn = "overrideDefaultOffsetColumns",
       triggeredByValue = "true"
   )
   @ListBeanModel
-  public List<String> partitionColumns = new ArrayList<>();
+  public List<String> offsetColumns = new ArrayList<>();
 
   @ConfigDef(
       required = false,

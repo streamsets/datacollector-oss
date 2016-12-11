@@ -29,6 +29,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -61,6 +63,34 @@ public final class TableContextUtil {
     return columnNameToType;
   }
 
+  private static void checkForUnsupportedOffsetColumns(LinkedHashMap<String, Integer> offsetColumnToType) throws StageException {
+    //Validate if there are partition column types for offset maintenance
+    List<String> unsupportedOffsetColumnAndType = new ArrayList<>();
+    for (Map.Entry<String, Integer> offsetColumnToTypeEntry : offsetColumnToType.entrySet()) {
+      if (JdbcUtil.isSqlTypeOneOf(
+          offsetColumnToTypeEntry.getValue(),
+          Types.BLOB,
+          Types.BINARY,
+          Types.VARBINARY,
+          Types.LONGVARBINARY,
+          Types.ARRAY,
+          Types.DATALINK,
+          Types.DISTINCT,
+          Types.JAVA_OBJECT,
+          Types.NULL,
+          Types.OTHER,
+          Types.REF,
+          Types.SQLXML,
+          Types.STRUCT
+      )) {
+        unsupportedOffsetColumnAndType.add(offsetColumnToTypeEntry.getKey() + " - " + offsetColumnToTypeEntry.getValue());
+      }
+    }
+    if (!unsupportedOffsetColumnAndType.isEmpty()) {
+      throw new StageException(JdbcErrors.JDBC_69, COMMA_JOINER.join(unsupportedOffsetColumnAndType));
+    }
+  }
+
   /**
    * Returns qualified table name (schema.table name)
    * @param schema schema name, can be null
@@ -77,17 +107,17 @@ public final class TableContextUtil {
       String tableName,
       TableConfigBean tableConfigBean
   ) throws SQLException, StageException {
-    LinkedHashMap<String, Integer> partitionColumnToType = new LinkedHashMap<>();
+    LinkedHashMap<String, Integer> offsetColumnToType = new LinkedHashMap<>();
     //Even though we are using this only find partition column's type, we could cache it if need arises.
     Map<String, Integer> columnNameToType = getColumnNameType(connection, tableName);
+    Map<String, String> offsetColumnToStartOffset = new HashMap<>();
 
-    Map<String, String> partitionColumnToStartOffset = new HashMap<>();
-    if (tableConfigBean.overridePartitionColumns) {
-      for (String overridenPartitionColumn : tableConfigBean.partitionColumns) {
+    if (tableConfigBean.overrideDefaultOffsetColumns) {
+      for (String overridenPartitionColumn : tableConfigBean.offsetColumns) {
         if (!columnNameToType.containsKey(overridenPartitionColumn)) {
           throw new StageException(JdbcErrors.JDBC_63, tableName, overridenPartitionColumn);
         }
-        partitionColumnToType.put(overridenPartitionColumn, columnNameToType.get(overridenPartitionColumn));
+        offsetColumnToType.put(overridenPartitionColumn, columnNameToType.get(overridenPartitionColumn));
       }
     } else {
       List<String> primaryKeys = JdbcUtil.getPrimaryKeys(connection, tableName);
@@ -95,28 +125,31 @@ public final class TableContextUtil {
         throw new StageException(JdbcErrors.JDBC_62, tableName);
       }
       for (String primaryKey : primaryKeys) {
-        partitionColumnToType.put(primaryKey, columnNameToType.get(primaryKey));
+        offsetColumnToType.put(primaryKey, columnNameToType.get(primaryKey));
       }
     }
 
+
+    checkForUnsupportedOffsetColumns(offsetColumnToType);
+
     //Initial offset should exist for all partition columns or none at all.
     if (!tableConfigBean.offsetColumnToInitialOffsetValue.isEmpty()) {
-      Set<String> missingColumns = Sets.difference(partitionColumnToType.keySet(), tableConfigBean.offsetColumnToInitialOffsetValue.keySet());
-      Set<String> extraColumns = Sets.difference(tableConfigBean.offsetColumnToInitialOffsetValue.keySet(), partitionColumnToType.keySet());
+      Set<String> missingColumns = Sets.difference(offsetColumnToType.keySet(), tableConfigBean.offsetColumnToInitialOffsetValue.keySet());
+      Set<String> extraColumns = Sets.difference(tableConfigBean.offsetColumnToInitialOffsetValue.keySet(), offsetColumnToType.keySet());
 
       if (!missingColumns.isEmpty() || !extraColumns.isEmpty()) {
         throw new StageException(JdbcErrors.JDBC_64, COMMA_JOINER.join(missingColumns), COMMA_JOINER.join(extraColumns));
       }
 
       for (Map.Entry<String, String> partitionColumnInitialOffsetEntry : tableConfigBean.offsetColumnToInitialOffsetValue.entrySet()) {
-        partitionColumnToStartOffset.put(partitionColumnInitialOffsetEntry.getKey(), partitionColumnInitialOffsetEntry.getValue());
+        offsetColumnToStartOffset.put(partitionColumnInitialOffsetEntry.getKey(), partitionColumnInitialOffsetEntry.getValue());
       }
     }
     return new TableContext(
         schemaName,
         tableName,
-        partitionColumnToType,
-        partitionColumnToStartOffset,
+        offsetColumnToType,
+        offsetColumnToStartOffset,
         tableConfigBean.extraOffsetColumnConditions
     );
   }
@@ -150,18 +183,4 @@ public final class TableContextUtil {
     return tableContextMap;
   }
 
-  /**
-   * Determines whether the actualSqlType is one of the sqlTypes list
-   * @param actualSqlType the actual sql type
-   * @param sqlTypes arbitrary list of sql types
-   * @return true if actual Sql Type is one of the sql Types else false.
-   */
-  public static boolean isSqlTypeOneOf(int actualSqlType, int... sqlTypes) {
-    for (int sqlType : sqlTypes) {
-      if (sqlType == actualSqlType) {
-        return true;
-      }
-    }
-    return false;
-  }
 }
