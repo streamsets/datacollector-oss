@@ -64,7 +64,7 @@ public class AwaitConditionUtil {
   public static void waitForStart(final WebServerTask ws) {
     given().ignoreExceptions()
         .await()
-        .atMost(Duration.FIVE_SECONDS)
+        .atMost(Duration.TEN_SECONDS)
         .until(isWebServerTaskRunning(ws));
   }
 

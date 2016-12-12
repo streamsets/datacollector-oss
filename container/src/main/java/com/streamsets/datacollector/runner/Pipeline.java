@@ -22,11 +22,13 @@ package com.streamsets.datacollector.runner;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.creation.PipelineBean;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.creation.PipelineStageBeans;
+import com.streamsets.datacollector.creation.StageBean;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.memory.MemoryUsageCollectorResourceBundle;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
@@ -58,7 +60,8 @@ public class Pipeline {
   private final String name;
   private final String rev;
   private final Configuration configuration;
-  private final Pipe[] pipes;
+  private final Pipe originPipe;
+  private final List<List<Pipe>> pipes;
   private final PipelineRunner runner;
   private final Observer observer;
   private final BadRecordsHandler badRecordsHandler;
@@ -72,7 +75,8 @@ public class Pipeline {
       String rev,
       Configuration configuration,
       PipelineBean pipelineBean,
-      Pipe[] pipes,
+      Pipe originPipe,
+      List<List<Pipe>> pipes,
       Observer observer,
       BadRecordsHandler badRecordsHandler,
       PipelineRunner runner,
@@ -83,6 +87,7 @@ public class Pipeline {
     this.name = name;
     this.rev = rev;
     this.configuration = configuration;
+    this.originPipe = originPipe;
     this.pipes = pipes;
     this.observer = observer;
     this.badRecordsHandler = badRecordsHandler;
@@ -90,21 +95,39 @@ public class Pipeline {
     this.scheduledExecutorService = scheduledExecutorService;
     this.running = false;
     this.statsAggregationHandler = statsAggregationHandler;
-    for (Pipe pipe : pipes) {
-      StageContext stageContext = (StageContext) pipe.getStage().getContext();
-      if (stageContext.getOnErrorRecord() == OnRecordError.STOP_PIPELINE) {
-        shouldStopOnStageError = true;
-      }
-    }
+    this.shouldStopOnStageError = calculateShouldStopOnStageError();
   }
 
   PipelineConfigBean getPipelineConfig() {
-    return  pipelineBean.getConfig();
+    return pipelineBean.getConfig();
   }
 
+  // TODO: To be removed in subsequent patches
   @VisibleForTesting
   Pipe[] getPipes() {
-    return pipes;
+    List<Pipe> p = new ArrayList<>(1 + pipes.get(0).size());
+    p.add(originPipe);
+    p.addAll(pipes.get(0));
+    return p.toArray(new Pipe[p.size()]);
+  }
+
+  private boolean calculateShouldStopOnStageError() {
+    if(shouldPipeStopPipeline(originPipe)) {
+      return true;
+    }
+
+    for(Pipe pipe : pipes.get(0)) {
+      if(shouldPipeStopPipeline(pipe)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  private static boolean shouldPipeStopPipeline(Pipe pipe) {
+    StageContext stageContext = pipe.getStage().getContext();
+    return stageContext.getOnErrorRecord() == OnRecordError.STOP_PIPELINE;
   }
 
   public boolean shouldStopOnStageError() {
@@ -112,12 +135,7 @@ public class Pipeline {
   }
 
   public ProtoSource getSource() {
-    for (Pipe pipe : pipes) {
-      if (pipe.getStage().getStage() instanceof ProtoSource) {
-        return (ProtoSource)pipe.getStage().getStage();
-      }
-    }
-    throw new NullPointerException("Cannot find pipeline source");
+    return (ProtoSource) originPipe.getStage().getStage();
   }
 
   public PipelineRunner getRunner() {
@@ -155,27 +173,41 @@ public class Pipeline {
           ex.toString()));
       }
     }
-    for (Pipe pipe : pipes) {
-      try {
-        issues.addAll(pipe.init(pipeContext));
-      } catch (Exception ex) {
-        String instanceName = pipe.getStage().getConfiguration().getInstanceName();
-        LOG.warn(ContainerError.CONTAINER_0701.getMessage(), instanceName, ex.toString(), ex);
-        issues.add(IssueCreator.getStage(instanceName).create(ContainerError.CONTAINER_0701, instanceName,
-          ex.toString()));
+
+    issues.addAll(initPipe(originPipe, pipeContext));
+    for(List<Pipe> runnerPipes: pipes) {
+      for(Pipe pipe : runnerPipes) {
+        issues.addAll(initPipe(pipe, pipeContext));
       }
     }
     this.runner.setPipeContext(pipeContext);
     return issues;
   }
 
+  private List<Issue> initPipe(Pipe pipe, PipeContext pipeContext) {
+    try {
+      return pipe.init(pipeContext);
+    } catch (Exception ex) {
+      String instanceName = originPipe.getStage().getConfiguration().getInstanceName();
+      LOG.warn(ContainerError.CONTAINER_0701.getMessage(), instanceName, ex.toString(), ex);
+      return ImmutableList.of(
+        IssueCreator
+          .getStage(instanceName)
+          .create(ContainerError.CONTAINER_0701, instanceName, ex.toString()
+          )
+      );
+    }
+  }
+
   public void errorNotification(Throwable throwable) {
-    runner.errorNotification(pipes, throwable);
+    //TODO: SDC-4737 Enhance PipelineRunner for multithreaded pipelines, works only for single threaded pipelines
+    runner.errorNotification(getPipes(), throwable);
   }
 
   public void destroy() {
+    //TODO: SDC-4737 Enhance PipelineRunner for multithreaded pipelines, works only for single threaded pipelines
     try {
-      runner.destroy(pipes, badRecordsHandler, statsAggregationHandler);
+      runner.destroy(getPipes(), badRecordsHandler, statsAggregationHandler);
     } catch (StageException|PipelineRuntimeException ex) {
       String msg = Utils.format("Exception thrown in destroy phase: {}", ex.getMessage());
       LOG.warn(msg, ex);
@@ -203,7 +235,8 @@ public class Pipeline {
     this.running = true;
     try {
       runner.setObserver(observer);
-      runner.run(pipes, badRecordsHandler, statsAggregationHandler);
+      //TODO: SDC-4737 Enhance PipelineRunner for multithreaded pipelines, works only for single threaded pipelines
+      runner.run(getPipes(), badRecordsHandler, statsAggregationHandler);
     } finally {
       this.running = false;
     }
@@ -212,8 +245,9 @@ public class Pipeline {
   public void run(List<StageOutput> stageOutputsToOverride) throws StageException, PipelineRuntimeException {
     this.running = true;
     try {
-    runner.setObserver(observer);
-    runner.run(pipes, badRecordsHandler, stageOutputsToOverride, statsAggregationHandler);
+      runner.setObserver(observer);
+      //TODO: SDC-4737 Enhance PipelineRunner for multithreaded pipelines, works only for single threaded pipelines
+      runner.run(getPipes(), badRecordsHandler, stageOutputsToOverride, statsAggregationHandler);
     } finally {
       this.running = false;
     }
@@ -224,8 +258,11 @@ public class Pipeline {
   }
 
   public void stop() {
-    for(Pipe p : pipes) {
-      ((StageContext)p.getStage().getContext()).setStop(true);
+    ((StageContext)originPipe.getStage().getContext()).setStop(true);
+    for(List<Pipe> runnerPipes : pipes) {
+      for(Pipe p : runnerPipes) {
+        ((StageContext)p.getStage().getContext()).setStop(true);
+      }
     }
   }
 
@@ -266,18 +303,29 @@ public class Pipeline {
       Pipeline pipeline = null;
       errors = new ArrayList<>();
       PipelineBean pipelineBean = PipelineBeanCreator.get().create(true, stageLib, pipelineConf, errors);
-      StageRuntime[] stages;
       StageRuntime errorStage;
       StageRuntime statsAggregator = null;
+      List<List<Pipe>> pipes = new ArrayList<>();
       if (pipelineBean != null) {
-        // TODO: SDC-4729: Enhance Pipeline class to work with the multithreaded pipelines, only single-threaded support for now
         Preconditions.checkArgument(!pipelineBean.getPipelineStageBeans().isEmpty(), "At least one instance of pipeline must exist!");
-        PipelineStageBeans stageBeans = pipelineBean.getPipelineStageBeans().get(0);
 
-        stages = new StageRuntime[stageBeans.size() + 1];
-        stages[0] = new StageRuntime(pipelineBean, pipelineBean.getOrigin());
-        for (int i = 0; i < stageBeans.size(); i++) {
-          stages[i+1] = new StageRuntime(pipelineBean, stageBeans.get(i));
+        // Origin runtime and pipe
+        StageRuntime originRuntime = new StageRuntime(pipelineBean, pipelineBean.getOrigin());
+        Pipe originPipe = createOriginPipe(originRuntime, runner);
+
+        // Generate runtime and pipe for rest of the pipelines
+        for(PipelineStageBeans beans : pipelineBean.getPipelineStageBeans()) {
+          // Create runtime structures
+          StageRuntime[] stages = new StageRuntime[1 + beans.size()];
+          stages[0] = originRuntime;
+          int i = 1;
+          for(StageBean stageBean : beans.getStages()) {
+            stages[i] = new StageRuntime(pipelineBean, stageBean);
+            i++;
+          }
+
+          pipes.add(createPipes(stages, runner));
+
         }
 
         errorStage = new StageRuntime(pipelineBean, pipelineBean.getErrorStage());
@@ -287,8 +335,7 @@ public class Pipeline {
           statsAggregationHandler = new StatsAggregationHandler(statsAggregator);
         }
 
-        setStagesContext(stages, errorStage, statsAggregator, runner);
-        Pipe[] pipes = createPipes(stages, runner);
+        setStagesContext(originPipe, pipes, errorStage, statsAggregator, runner);
         BadRecordsHandler badRecordsHandler = new BadRecordsHandler(errorStage);
 
         try {
@@ -297,6 +344,7 @@ public class Pipeline {
               rev,
               configuration,
               pipelineBean,
+              originPipe,
               pipes,
               observer,
               badRecordsHandler,
@@ -317,33 +365,59 @@ public class Pipeline {
     }
 
     private void setStagesContext(
-        StageRuntime[] stages,
-        StageRuntime errorStage,
-        StageRuntime statsAggregatorStage,
-        PipelineRunner runner
+      Pipe originPipe,
+      List<List<Pipe>> pipes,
+      StageRuntime errorStage,
+      StageRuntime statsAggregatorStage,
+      PipelineRunner runner
     ) {
-      List<Stage.Info> infos = new ArrayList<>(stages.length);
+      List<Stage.Info> infos = new ArrayList<>();
       List<Stage.Info> infosUnmodifiable = Collections.unmodifiableList(infos);
       ExecutionMode executionMode = getExecutionMode(pipelineConf);
-      for (StageRuntime stage : stages) {
-        infos.add(stage.getInfo());
-        stage.setContext(
-            new StageContext(
-                pipelineName,
-                rev,
-                infosUnmodifiable,
-                stage.getDefinition().getType(),
-                runner.isPreview(),
-                runner.getMetrics(),
-                stage,
-                pipelineConf.getMemoryLimitConfiguration().getMemoryLimit(),
-                executionMode,
-                runner.getRuntimeInfo().getResourcesDir(),
-                new EmailSender(configuration),
-                configuration
-            )
-        );
+
+      // Origin
+      infos.add(originPipe.getStage().getInfo());
+      originPipe.getStage().setContext(
+        new StageContext(
+            pipelineName,
+            rev,
+            infosUnmodifiable,
+            originPipe.getStage().getDefinition().getType(),
+            runner.isPreview(),
+            runner.getMetrics(),
+            originPipe.getStage(),
+            pipelineConf.getMemoryLimitConfiguration().getMemoryLimit(),
+            executionMode,
+            runner.getRuntimeInfo().getResourcesDir(),
+            new EmailSender(configuration),
+            configuration
+        )
+      );
+
+      // Non-origin stages
+      for(List<Pipe> runnerPipes : pipes) {
+        for (Pipe pipe : runnerPipes) {
+          if (pipe instanceof StagePipe) {
+            infos.add(pipe.getStage().getInfo());
+            pipe.getStage().setContext(new StageContext(
+              pipelineName,
+              rev,
+              infosUnmodifiable,
+              pipe.getStage().getDefinition().getType(),
+              runner.isPreview(),
+              runner.getMetrics(),
+              pipe.getStage(),
+              pipelineConf.getMemoryLimitConfiguration().getMemoryLimit(),
+              executionMode,
+              runner.getRuntimeInfo().getResourcesDir(),
+              new EmailSender(configuration),
+              configuration
+            ));
+          }
+        }
       }
+
+      // Error stage
       errorStage.setContext(
           new StageContext(
               pipelineName,
@@ -360,6 +434,8 @@ public class Pipeline {
               configuration
           )
       );
+
+      // Aggregation stage is optional
       if (statsAggregatorStage != null) {
         statsAggregatorStage.setContext(
             new StageContext(
@@ -389,57 +465,70 @@ public class Pipeline {
 
     }
 
-    private Pipe[] createPipes(StageRuntime[] stages, PipelineRunner runner) throws PipelineRuntimeException {
+    private Pipe createOriginPipe(StageRuntime originRuntime, PipelineRunner runner) {
+      LaneResolver laneResolver = new LaneResolver(new StageRuntime[]{originRuntime});
+      return new StagePipe(
+        pipelineName,
+        rev,
+        configuration,
+        originRuntime,
+        laneResolver.getStageInputLanes(0),
+        laneResolver.getStageOutputLanes(0),
+        laneResolver.getStageEventLanes(0),
+        scheduledExecutor,
+        memoryUsageCollectorResourceBundle,
+        runner.getMetricRegistryJson()
+      );
+    }
+
+    private List<Pipe> createPipes(StageRuntime[] stages, PipelineRunner runner) throws PipelineRuntimeException {
       LaneResolver laneResolver = new LaneResolver(stages);
-      List<Pipe> pipes = new ArrayList<>(stages.length * 3);
+      ImmutableList.Builder<Pipe> pipesBuilder = ImmutableList.builder();
 
       for (int idx = 0; idx < stages.length; idx++) {
         Pipe pipe;
         StageRuntime stage = stages[idx];
         switch (stage.getDefinition().getType()) {
           case SOURCE:
-            pipe = new StagePipe(pipelineName, rev, configuration, stage, laneResolver.getStageInputLanes(idx),
-              laneResolver.getStageOutputLanes(idx), laneResolver.getStageEventLanes(idx), scheduledExecutor, memoryUsageCollectorResourceBundle, runner.getMetricRegistryJson());
-            pipes.add(pipe);
             pipe = new ObserverPipe(stage, laneResolver.getObserverInputLanes(idx),
                                     laneResolver.getObserverOutputLanes(idx), observer);
-            pipes.add(pipe);
+            pipesBuilder.add(pipe);
             pipe = new MultiplexerPipe(stage, laneResolver.getMultiplexerInputLanes(idx),
                                        laneResolver.getMultiplexerOutputLanes(idx));
-            pipes.add(pipe);
+            pipesBuilder.add(pipe);
             break;
           case PROCESSOR:
             pipe = new CombinerPipe(stage, laneResolver.getCombinerInputLanes(idx),
                                     laneResolver.getCombinerOutputLanes(idx));
-            pipes.add(pipe);
+            pipesBuilder.add(pipe);
             pipe = new StagePipe(pipelineName, rev, configuration, stage, laneResolver.getStageInputLanes(idx),
                                  laneResolver.getStageOutputLanes(idx), laneResolver.getStageEventLanes(idx), scheduledExecutor,
               memoryUsageCollectorResourceBundle, runner.getMetricRegistryJson());
-            pipes.add(pipe);
+            pipesBuilder.add(pipe);
             pipe = new ObserverPipe(stage, laneResolver.getObserverInputLanes(idx),
                                     laneResolver.getObserverOutputLanes(idx), observer);
-            pipes.add(pipe);
+            pipesBuilder.add(pipe);
             pipe = new MultiplexerPipe(stage, laneResolver.getMultiplexerInputLanes(idx),
                                        laneResolver.getMultiplexerOutputLanes(idx));
-            pipes.add(pipe);
+            pipesBuilder.add(pipe);
             break;
           case EXECUTOR:
           case TARGET:
             pipe = new CombinerPipe(stage, laneResolver.getCombinerInputLanes(idx),
                                     laneResolver.getCombinerOutputLanes(idx));
-            pipes.add(pipe);
+            pipesBuilder.add(pipe);
             pipe = new StagePipe(pipelineName, rev, configuration, stage, laneResolver.getStageInputLanes(idx),
               laneResolver.getStageOutputLanes(idx), laneResolver.getStageEventLanes(idx), scheduledExecutor, memoryUsageCollectorResourceBundle, runner.getMetricRegistryJson());
-            pipes.add(pipe);
+            pipesBuilder.add(pipe);
 
             // In case that this target is generating events, we need to add additional observer/multiplexer pipe
             if(stage.getConfiguration().getEventLanes().size() > 0) {
               pipe = new ObserverPipe(stage, laneResolver.getObserverInputLanes(idx),
                                       laneResolver.getObserverOutputLanes(idx), observer);
-              pipes.add(pipe);
+              pipesBuilder.add(pipe);
               pipe = new MultiplexerPipe(stage, laneResolver.getMultiplexerInputLanes(idx),
                                          laneResolver.getMultiplexerOutputLanes(idx));
-              pipes.add(pipe);
+              pipesBuilder.add(pipe);
             }
 
             break;
@@ -447,7 +536,7 @@ public class Pipeline {
             throw new IllegalStateException("Unexpected DefinitionType " + stage.getDefinition().getType());
         }
       }
-      return pipes.toArray(new Pipe[pipes.size()]);
+      return pipesBuilder.build();
     }
 
   }
@@ -455,7 +544,7 @@ public class Pipeline {
   @Override
   public String toString() {
     Set<String> instances = new LinkedHashSet<>();
-    for (Pipe pipe : pipes) {
+    for (Pipe pipe : getPipes()) {
       instances.add(pipe.getStage().getInfo().getInstanceName());
     }
     String observerName = (observer != null) ? observer.getClass().getSimpleName() : null;
