@@ -19,7 +19,7 @@
  */
 package com.streamsets.pipeline.stage.processor.spark.cluster;
 
-import com.google.api.client.repackaged.com.google.common.base.Throwables;
+import com.google.common.base.Throwables;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterators;
 import com.streamsets.pipeline.api.Field;
