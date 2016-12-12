@@ -27,14 +27,14 @@ public class RetryUtils {
 
   private RetryUtils() {}
 
-  public static long getNextRetryTimeStamp(int retryAttempt, long previousRetryEndTimeStamp) {
+  public static long getNextRetryTimeStamp(int retryAttempt, long currentTime) {
     Utils.checkState(retryAttempt != 0, "Retry attempt cannot be 0");
     if (retryAttempt - 1 >= RETRY_BACKOFF_SECS.length) {
       retryAttempt = RETRY_BACKOFF_SECS.length - 1;
     } else {
       retryAttempt = retryAttempt - 1;
     }
-    return previousRetryEndTimeStamp + (RETRY_BACKOFF_SECS[retryAttempt] * 1000);
+    return currentTime + (RETRY_BACKOFF_SECS[retryAttempt] * 1000);
   }
 
 }

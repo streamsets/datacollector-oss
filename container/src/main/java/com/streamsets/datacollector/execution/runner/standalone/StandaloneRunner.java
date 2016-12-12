@@ -266,20 +266,14 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     }
   }
 
-  private void retryOrStart() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException, StageException {
+  private void retryOrStart() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException,
+      StageException {
     PipelineState pipelineState = getState();
     if (pipelineState.getRetryAttempt() == 0) {
       prepareForStart();
       start();
     } else {
       validateAndSetStateTransition(PipelineStatus.RETRY, "Changing the state to RETRY on startup", null);
-      long retryTimeStamp = pipelineState.getNextRetryTimeStamp();
-      long delay = 0;
-      long currentTime = System.currentTimeMillis();
-      if (retryTimeStamp > currentTime) {
-        delay = retryTimeStamp - currentTime;
-      }
-      retryFuture = scheduleForRetries(runnerExecutor, delay);
       isRetrying = true;
       metricsForRetry = getState().getMetrics();
     }
@@ -527,13 +521,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
           retryAttempt = 0;
           nextRetryTimeStamp = 0;
         } else {
-          nextRetryTimeStamp = RetryUtils.getNextRetryTimeStamp(retryAttempt, getState().getTimeStamp());
-          long delay = 0;
-          long currentTime = System.currentTimeMillis();
-          if (nextRetryTimeStamp > currentTime) {
-            delay = nextRetryTimeStamp - currentTime;
-          }
-          retryFuture = scheduleForRetries(runnerExecutor, delay);
+          nextRetryTimeStamp = RetryUtils.getNextRetryTimeStamp(retryAttempt, System.currentTimeMillis());
           isRetrying = true;
           metricsForRetry = getState().getMetrics();
         }
@@ -560,6 +548,9 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
       pipelineState =
         pipelineStateStore.saveState(user, name, rev, toStatus, message, attributes, ExecutionMode.STANDALONE,
           metricString, retryAttempt, nextRetryTimeStamp);
+      if (toStatus == PipelineStatus.RETRY) {
+        retryFuture = scheduleForRetries(runnerExecutor);
+      }
     }
     eventListenerManager.broadcastStateChange(fromState, pipelineState, ThreadUsage.STANDALONE);
   }
