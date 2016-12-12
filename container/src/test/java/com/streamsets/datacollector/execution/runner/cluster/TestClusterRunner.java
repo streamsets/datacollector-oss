@@ -45,6 +45,7 @@ import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
@@ -75,6 +76,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 
 import static com.streamsets.datacollector.util.AwaitConditionUtil.desiredPipelineState;
 import static org.awaitility.Awaitility.await;
@@ -164,6 +167,64 @@ public class TestClusterRunner {
     }
   }
 
+  private static class RetryPipelineStateStore extends CachePipelineStateStore {
+    long retrySaveStateTime;
+    public RetryPipelineStateStore(PipelineStateStore pipelineStateStore, Configuration conf) {
+      super(pipelineStateStore, conf);
+    }
+    @Override
+    public PipelineState saveState(String user, String name, String rev, PipelineStatus status, String message,
+                                   Map<String, Object> attributes, ExecutionMode executionMode, String metrics, int retryAttempt,
+                                   long nextRetryTimeStamp) throws PipelineStoreException {
+      retrySaveStateTime = System.nanoTime();
+      return super.saveState(user, name, rev, status, message, attributes, executionMode, metrics, retryAttempt,
+          nextRetryTimeStamp);
+    }
+
+  }
+
+  private static class RetryRunner extends ClusterRunner {
+    static long retryInvocation;
+    public RetryRunner(
+        String name,
+        String rev,
+        String user,
+        RuntimeInfo runtimeInfo,
+        Configuration configuration,
+        PipelineStoreTask pipelineStore,
+        PipelineStateStore pipelineStateStore,
+        StageLibraryTask stageLibrary,
+        SafeScheduledExecutorService executorService,
+        ClusterHelper clusterHelper,
+        ResourceManager resourceManager,
+        EventListenerManager eventListenerManager,
+        String sdcToken
+    ) {
+      super(
+          name,
+          rev,
+          user,
+          runtimeInfo,
+          configuration,
+          pipelineStore,
+          pipelineStateStore,
+          stageLibrary,
+          executorService,
+          clusterHelper,
+          resourceManager,
+          eventListenerManager,
+          sdcToken
+      );
+    }
+
+    @Override
+    protected ScheduledFuture<Void> scheduleForRetries(ScheduledExecutorService runnerExecutor) throws
+        PipelineStoreException {
+      retryInvocation = System.nanoTime();
+      return super.scheduleForRetries(runnerExecutor);
+    }
+  }
+
   private void setExecModeAndRetries(ExecutionMode mode) throws Exception {
     PipelineConfiguration pipelineConf = pipelineStoreTask.load(NAME, REV);
     PipelineConfiguration conf = MockStages.createPipelineConfigurationWithClusterOnlyStage(mode);
@@ -173,13 +234,20 @@ public class TestClusterRunner {
 
   @Test
   public void testPipelineRetry() throws Exception {
-    Runner clusterRunner = createClusterRunner();
+    PipelineStateStore pipelineStateStore = new RetryPipelineStateStore(new CachePipelineStateStore(new
+        FilePipelineStateStore(runtimeInfo,
+        conf
+    ), conf), conf);
+    Runner clusterRunner = createRunnerForRetryTest(pipelineStateStore);
     clusterRunner.prepareForStart();
     Assert.assertEquals(PipelineStatus.STARTING, clusterRunner.getState().getStatus());
     clusterRunner.start();
     Assert.assertEquals(PipelineStatus.RUNNING, clusterRunner.getState().getStatus());
     ((ClusterRunner)clusterRunner).validateAndSetStateTransition(PipelineStatus.RUN_ERROR, "a", attributes);
     assertEquals(PipelineStatus.RETRY, clusterRunner.getState().getStatus());
+    long saveStateTime = ((RetryPipelineStateStore)pipelineStateStore).retrySaveStateTime;
+    long retryInvocationTime = ((RetryRunner)clusterRunner).retryInvocation;
+    Assert.assertTrue("Retry should be schedule after state is saved", retryInvocationTime > saveStateTime);
     pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.RUNNING, null, attributes, ExecutionMode.CLUSTER_MESOS_STREAMING, null, 1, 0);
     ((ClusterRunner)clusterRunner).validateAndSetStateTransition(PipelineStatus.RUN_ERROR, "a", attributes);
     assertEquals(PipelineStatus.RETRY, clusterRunner.getState().getStatus());
@@ -633,6 +701,14 @@ public class TestClusterRunner {
     return new ClusterRunner(NAME, "0", "admin", runtimeInfo, conf, pipelineStoreTask, pipelineStateStore,
       stageLibraryTask, executorService, clusterHelper, new ResourceManager(conf), eventListenerManager, "myToken");
   }
+
+  private Runner createRunnerForRetryTest(PipelineStateStore pipelineStateStore) {
+    eventListenerManager = new EventListenerManager();
+    pipelineStateStore.init();
+    return new RetryRunner(NAME, "0", "admin", runtimeInfo, conf, pipelineStoreTask, pipelineStateStore,
+        stageLibraryTask, executorService, clusterHelper, new ResourceManager(conf), eventListenerManager, "myToken");
+  }
+
 
   private Runner createClusterRunner(String name, PipelineStoreTask pipelineStoreTask, ResourceManager resourceManager) {
     eventListenerManager = new EventListenerManager();

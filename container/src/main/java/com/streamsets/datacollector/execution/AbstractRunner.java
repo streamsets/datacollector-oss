@@ -106,7 +106,14 @@ public abstract  class AbstractRunner implements Runner {
     return isRemote != null && (boolean) isRemote;
   }
 
-  protected ScheduledFuture<Void> scheduleForRetries(ScheduledExecutorService runnerExecutor, long delay) {
+  protected ScheduledFuture<Void> scheduleForRetries(ScheduledExecutorService runnerExecutor) throws
+      PipelineStoreException {
+    long delay = 0;
+    long retryTimeStamp = getState().getNextRetryTimeStamp();
+    long currentTime = System.currentTimeMillis();
+    if (retryTimeStamp > currentTime) {
+      delay = retryTimeStamp - currentTime;
+    }
     LOG.info("Scheduling retry in '{}' milliseconds", delay);
     ScheduledFuture<Void> future = runnerExecutor.schedule(new Callable<Void>() {
       @Override
