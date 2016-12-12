@@ -304,7 +304,7 @@ public class ClusterHDFSSourceIT {
           .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
                                ImmutableList.of("lane"), resourcesDir));
       assertEquals(String.valueOf(issues), 1, issues.size());
-      assertTrue(String.valueOf(issues), issues.get(0).toString().contains("HADOOPFS_16"));
+      assertTrue(String.valueOf(issues), issues.get(0).toString().contains("HADOOPFS_17"));
 
       Path path1 = new Path(emptyDir, "path1");
       fs.create(path1).close();
