@@ -32,6 +32,7 @@ import com.streamsets.pipeline.stage.common.mongodb.AuthenticationType;
 import com.streamsets.pipeline.stage.common.mongodb.MongoDBConfig;
 import org.bson.BsonTimestamp;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Ignore;
@@ -168,21 +169,6 @@ public class MongoDBSourceIT {
 
   @Test
   public void testInvalidPort() throws StageException {
-    MongoSourceConfigBean configBean = new MongoSourceConfigBean();
-    configBean.mongoConfig = new MongoDBConfig();
-    configBean.mongoConfig.connectionString = "mongodb://" + mongoContainerIp + ":abcd";
-    configBean.mongoConfig.database = DATABASE_NAME;
-    configBean.mongoConfig.collection = CAPPED_COLLECTION;
-    configBean.mongoConfig.authenticationType = AuthenticationType.NONE;
-    configBean.mongoConfig.username = null;
-    configBean.mongoConfig.password = null;
-    configBean.isCapped = true;
-    configBean.offsetField = "_id";
-    configBean.initialOffset = "2015-06-01 00:00:00";
-    configBean.batchSize = 100;
-    configBean.maxBatchWaitTime = 1;
-    configBean.readPreference = ReadPreferenceLabel.NEAREST;
-
     MongoDBSource origin = new MongoDBSourceBuilder()
         .connectionString("mongodb://" + mongoContainerIp + ":abcd")
         .database(DATABASE_NAME)
@@ -201,21 +187,6 @@ public class MongoDBSourceIT {
 
   @Test
   public void testReadCappedCollection() throws Exception {
-    MongoSourceConfigBean configBean = new MongoSourceConfigBean();
-    configBean.mongoConfig = new MongoDBConfig();
-    configBean.mongoConfig.connectionString = "mongodb://" + mongoContainerIp + ":"  + mongoContainerMappedPort;
-    configBean.mongoConfig.database = DATABASE_NAME;
-    configBean.mongoConfig.collection = CAPPED_COLLECTION;
-    configBean.mongoConfig.authenticationType = AuthenticationType.NONE;
-    configBean.mongoConfig.username = null;
-    configBean.mongoConfig.password = null;
-    configBean.isCapped = true;
-    configBean.offsetField = "_id";
-    configBean.initialOffset = "2015-06-01 00:00:00";
-    configBean.batchSize = 100;
-    configBean.maxBatchWaitTime = 1;
-    configBean.readPreference = ReadPreferenceLabel.NEAREST;
-
     MongoDBSource origin = new MongoDBSourceBuilder()
         .connectionString("mongodb://" + mongoContainerIp + ":"  + mongoContainerMappedPort)
         .database(DATABASE_NAME)
@@ -264,21 +235,6 @@ public class MongoDBSourceIT {
 
   @Test
   public void testReadCollection() throws Exception {
-    MongoSourceConfigBean configBean = new MongoSourceConfigBean();
-    configBean.mongoConfig = new MongoDBConfig();
-    configBean.mongoConfig.connectionString = "mongodb://" + mongoContainerIp + ":"  + mongoContainerMappedPort;
-    configBean.mongoConfig.database = DATABASE_NAME;
-    configBean.mongoConfig.collection = COLLECTION;
-    configBean.mongoConfig.authenticationType = AuthenticationType.NONE;
-    configBean.mongoConfig.username = null;
-    configBean.mongoConfig.password = null;
-    configBean.isCapped = false;
-    configBean.offsetField = "_id";
-    configBean.initialOffset = "2015-06-01 00:00:00";
-    configBean.batchSize = 100;
-    configBean.maxBatchWaitTime = 1;
-    configBean.readPreference = ReadPreferenceLabel.NEAREST;
-
     MongoDBSource origin = new MongoDBSourceBuilder()
         .connectionString("mongodb://" + mongoContainerIp + ":"  + mongoContainerMappedPort)
         .database(DATABASE_NAME)
@@ -330,21 +286,6 @@ public class MongoDBSourceIT {
 
   @Test
   public void testReadUUIDType() throws Exception {
-    MongoSourceConfigBean configBean = new MongoSourceConfigBean();
-    configBean.mongoConfig = new MongoDBConfig();
-    configBean.mongoConfig.connectionString = "mongodb://" + mongoContainerIp + ":"  + mongoContainerMappedPort;
-    configBean.mongoConfig.database = DATABASE_NAME;
-    configBean.mongoConfig.collection = UUID_COLLECTION;
-    configBean.mongoConfig.authenticationType = AuthenticationType.NONE;
-    configBean.mongoConfig.username = null;
-    configBean.mongoConfig.password = null;
-    configBean.isCapped = false;
-    configBean.offsetField = "_id";
-    configBean.initialOffset = "2015-06-01 00:00:00";
-    configBean.batchSize = 100;
-    configBean.maxBatchWaitTime = 1;
-    configBean.readPreference = ReadPreferenceLabel.NEAREST;
-
     MongoDBSource origin = new MongoDBSourceBuilder()
         .connectionString("mongodb://" + mongoContainerIp + ":"  + mongoContainerMappedPort)
         .database(DATABASE_NAME)
@@ -371,21 +312,6 @@ public class MongoDBSourceIT {
 
   @Test
   public void testReadBsonTimestampType() throws Exception {
-    MongoSourceConfigBean configBean = new MongoSourceConfigBean();
-    configBean.mongoConfig = new MongoDBConfig();
-    configBean.mongoConfig.connectionString = "mongodb://" + mongoContainerIp + ":"  + mongoContainerMappedPort;
-    configBean.mongoConfig.database = DATABASE_NAME;
-    configBean.mongoConfig.collection = BSON_COLLECTION;
-    configBean.mongoConfig.authenticationType = AuthenticationType.NONE;
-    configBean.mongoConfig.username = null;
-    configBean.mongoConfig.password = null;
-    configBean.isCapped = false;
-    configBean.offsetField = "_id";
-    configBean.initialOffset = "2015-06-01 00:00:00";
-    configBean.batchSize = 100;
-    configBean.maxBatchWaitTime = 100;
-    configBean.readPreference = ReadPreferenceLabel.NEAREST;
-
     MongoDBSource origin = new MongoDBSourceBuilder()
         .connectionString("mongodb://" + mongoContainerIp + ":"  + mongoContainerMappedPort)
         .database(DATABASE_NAME)
@@ -413,12 +339,77 @@ public class MongoDBSourceIT {
     assertEquals(0, parsedRecords.get(0).get("/value").getValueAsMap().get("ordinal").getValueAsInteger());
   }
 
+  @Test
+  public void testReadNestedOffset() throws Exception {
+    final int level = 5;
+    String offsetField = "";
+    for (int i = 1; i <= level; i++) {
+      offsetField = offsetField + "o" + i + ".";
+    }
+    offsetField = offsetField + "_id";
+
+    MongoDBSource origin = new MongoDBSourceBuilder()
+        .connectionString("mongodb://" + mongoContainerIp + ":"  + mongoContainerMappedPort)
+        .database(DATABASE_NAME)
+        .collection(COLLECTION)
+        .offsetField(offsetField)
+        .isCapped(false)
+        .initialOffset("2015-06-01 00:00:00")
+        .maxBatchWaitTime(100)
+        .readPreference(ReadPreferenceLabel.NEAREST)
+        .build();
+
+    SourceRunner runner = new SourceRunner.Builder(MongoDBSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    assertEquals(0, issues.size());
+
+    runner.runInit();
+
+    final int maxBatchSize = 10;
+    StageRunner.Output output = runner.runProduce(null, maxBatchSize);
+    List<Record> parsedRecords = output.getRecords().get("lane");
+
+    assertEquals(0, parsedRecords.size());
+
+
+    insertNewDocsIdInsideDoc(COLLECTION, level, TEST_COLLECTION_SIZE);
+
+    output = runner.runProduce(null, maxBatchSize);
+    parsedRecords = output.getRecords().get("lane");
+
+    assertEquals(TEST_COLLECTION_SIZE, parsedRecords.size());
+  }
+
   private void insertNewDocs(String collectionName) {
     MongoClient mongo = new MongoClient(mongoContainerIp, mongoContainerMappedPort);
     MongoDatabase db = mongo.getDatabase(DATABASE_NAME);
 
     MongoCollection<Document> collection = db.getCollection(collectionName);
     collection.insertOne(new Document("value", "document 12345"));
+
+    mongo.close();
+  }
+
+  private void insertNewDocsIdInsideDoc(String collectionName, int level, int size) {
+    MongoClient mongo = new MongoClient(mongoContainerIp, mongoContainerMappedPort);
+    MongoDatabase db = mongo.getDatabase(DATABASE_NAME);
+
+    MongoCollection<Document> collection = db.getCollection(collectionName);
+
+    List<Document> docs = new ArrayList<>();
+    for (int i = 0; i < size; i++) {
+      Document document = new Document("o" + level, new Document("_id", new ObjectId()));
+      for (int j = level-1; j > 0; j--) {
+        document = new Document("o" + j, document);
+      }
+
+      docs.add(document);
+    }
+
+    collection.insertMany(docs);
 
     mongo.close();
   }

@@ -63,13 +63,28 @@ public class MongoDBSourceBuilder {
     return this;
   }
 
+  public MongoDBSourceBuilder offsetField(String offset) {
+    config.offsetField = offset;
+    return this;
+  }
+
   public MongoDBSourceBuilder initialOffset(String initialOffset) {
     config.initialOffset = initialOffset;
     return this;
   }
 
+  public MongoDBSourceBuilder batchSize(int batchSize) {
+    config.batchSize = batchSize;
+    return this;
+  }
+
   public MongoDBSourceBuilder maxBatchWaitTime(long maxBatchWaitTime) {
     config.maxBatchWaitTime = maxBatchWaitTime;
+    return this;
+  }
+
+  public MongoDBSourceBuilder readPreference(ReadPreferenceLabel readPreferenceLabel) {
+    config.readPreference = readPreferenceLabel;
     return this;
   }
 

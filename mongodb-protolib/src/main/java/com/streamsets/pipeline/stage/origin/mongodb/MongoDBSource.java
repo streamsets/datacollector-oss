@@ -59,9 +59,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class MongoDBSource extends BaseSource {
-
   private static final Logger LOG = LoggerFactory.getLogger(MongoDBSource.class);
-  private static final String _ID = "_id";
 
   private final MongoSourceConfigBean configBean;
 
@@ -159,11 +157,8 @@ public class MongoDBSource extends BaseSource {
           continue;
         }
 
-        if (!doc.containsKey(_ID)) {
-          errorRecordHandler.onError(Errors.MONGODB_11, configBean.offsetField, doc.toString());
-          continue;
-        }
-        nextSourceOffset = doc.getObjectId(configBean.offsetField).toHexString();
+        // get the offsetField
+        nextSourceOffset = getNextSourceOffset(doc);
 
         final String recordContext = configBean.mongoConfig.connectionString + "::" +
             configBean.mongoConfig.database + "::" + configBean.mongoConfig.collection + "::" +
@@ -178,6 +173,23 @@ public class MongoDBSource extends BaseSource {
       throw new StageException(Errors.MONGODB_12, e.toString(), e);
     }
     return nextSourceOffset;
+  }
+
+  private String getNextSourceOffset(Document doc) throws StageException {
+    String[] keys = configBean.offsetField.split("\\.");
+    return parseSourceOffset(doc, keys, 0);
+  }
+
+  private String parseSourceOffset(Document doc, String[] keys, int i) throws StageException {
+    if (keys.length-1 == i) {
+      return doc.getObjectId(keys[i]).toHexString();
+    }
+
+    if (!doc.containsKey(keys[i])) {
+      errorRecordHandler.onError(Errors.MONGODB_11, configBean.offsetField, doc.toString());
+    }
+
+    return parseSourceOffset((Document)doc.get(keys[i]), keys, i+1);
   }
 
   private void prepareCursor(int maxBatchSize, String offsetField, String lastSourceOffset) {
