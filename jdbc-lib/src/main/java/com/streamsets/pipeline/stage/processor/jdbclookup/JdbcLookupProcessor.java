@@ -42,6 +42,7 @@ import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.destination.jdbc.Groups;
 import com.streamsets.pipeline.stage.processor.kv.CacheConfig;
 import com.streamsets.pipeline.stage.processor.kv.EvictionPolicyType;
+import com.streamsets.pipeline.stage.processor.kv.LookupUtils;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -185,36 +186,12 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
 
   @SuppressWarnings("unchecked")
   private LoadingCache<String, Map<String, Field>> buildCache() {
-    CacheBuilder cacheBuilder = CacheBuilder.newBuilder();
-    if (!cacheConfig.enabled) {
-      return cacheBuilder.maximumSize(0).build(new JdbcLookupLoader(dataSource,
-          columnsToFields,
-          maxClobSize,
-          maxBlobSize,
-          errorRecordHandler
-      ));
-    }
-
-    if (cacheConfig.maxSize == -1) {
-      cacheConfig.maxSize = Long.MAX_VALUE;
-    }
-
-    // CacheBuilder doesn't support specifying type thus suffers from erasure, so
-    // we build it with this if / else logic.
-    if (cacheConfig.evictionPolicyType == EvictionPolicyType.EXPIRE_AFTER_ACCESS) {
-      cacheBuilder.maximumSize(cacheConfig.maxSize).expireAfterAccess(cacheConfig.expirationTime, cacheConfig.timeUnit);
-    } else if (cacheConfig.evictionPolicyType == EvictionPolicyType.EXPIRE_AFTER_WRITE) {
-      cacheBuilder.maximumSize(cacheConfig.maxSize).expireAfterWrite(cacheConfig.expirationTime, cacheConfig.timeUnit);
-    } else {
-      throw new IllegalArgumentException(Utils.format("Unrecognized EvictionPolicyType: '{}'",
-          cacheConfig.evictionPolicyType
-      ));
-    }
-    return cacheBuilder.build(new JdbcLookupLoader(dataSource,
+    JdbcLookupLoader loader = new JdbcLookupLoader(dataSource,
         columnsToFields,
         maxClobSize,
         maxBlobSize,
         errorRecordHandler
-    ));
+    );
+    return LookupUtils.buildCache(loader, cacheConfig);
   }
 }

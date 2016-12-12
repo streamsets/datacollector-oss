@@ -385,7 +385,7 @@ public class HBaseTarget extends BaseTarget {
       hTable.flushCommits();
     } catch (RetriesExhaustedWithDetailsException rex) {
       LOG.debug("Got exception while flushing commits to HBase", rex);
-      HBaseUtil.handleNoColumnFamilyException(rex, null, rowKeyToRecord, errorRecordHandler);
+      HBaseUtil.handleHBaseException(rex, null, rowKeyToRecord, errorRecordHandler);
     } catch (OnRecordErrorException ex) {
       LOG.debug("Got exception while writing to HBase", ex);
       errorRecordHandler.onError(ex);
@@ -418,7 +418,7 @@ public class HBaseTarget extends BaseTarget {
       hTable.put(p);
     } catch (RetriesExhaustedWithDetailsException rex) {
       // There may be more than one row which failed to persist
-      HBaseUtil.handleNoColumnFamilyException(rex, record, null, errorRecordHandler);
+      HBaseUtil.handleHBaseException(rex, record, null, errorRecordHandler);
     }
   }
 

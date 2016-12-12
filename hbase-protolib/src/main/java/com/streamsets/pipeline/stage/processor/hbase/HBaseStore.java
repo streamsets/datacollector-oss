@@ -47,7 +47,7 @@ public class HBaseStore extends CacheLoader<Pair<String, HBaseColumn>, Optional<
   private static final Logger LOG = LoggerFactory.getLogger(HBaseStore.class);
   private HTable hTable;
 
-  public HBaseStore(HBaseLookupConfig config, Configuration hbaseConf) throws Exception{
+  public HBaseStore(HBaseLookupConfig config, Configuration hbaseConf) throws Exception {
     try {
       hTable = new HTable(hbaseConf, config.hBaseConnectionConfig.tableName);
     } catch (IOException e) {

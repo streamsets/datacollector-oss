@@ -20,7 +20,9 @@
 package com.streamsets.pipeline.lib.hbase.common;
 
 import com.google.common.base.Splitter;
+import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
+import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.streamsets.datacollector.security.HadoopSecurityUtil;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
@@ -51,11 +53,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.UndeclaredThrowableException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import static org.apache.hadoop.hbase.util.Strings.isEmpty;
 
@@ -265,26 +269,32 @@ public final class HBaseUtil {
     return hTableDescriptor;
   }
 
-  public static void handleNoColumnFamilyException(
-      Exception rex,
+  public static void handleHBaseException(
+      Throwable t,
       Iterator<Record> records,
       ErrorRecordHandler errorRecordHandler
   ) throws StageException {
+    Throwable cause = t;
+
+    // Drill down to root cause
+    while((cause instanceof UncheckedExecutionException || cause instanceof UndeclaredThrowableException ||
+        cause instanceof ExecutionException) && cause.getCause() != null) {
+      cause = cause.getCause();
+    }
+
     // Column is null or No such Column Family exception
-    if(rex.getCause() instanceof NullPointerException
-      || rex.getCause() instanceof NoSuchColumnFamilyException
-      || rex.getCause().getCause() instanceof NoSuchColumnFamilyException
-    ) {
+    if(cause instanceof NullPointerException || cause instanceof NoSuchColumnFamilyException) {
       while(records.hasNext()) {
         Record record = records.next();
-        errorRecordHandler.onError(new OnRecordErrorException(record, Errors.HBASE_37, rex.getCause()));
+        errorRecordHandler.onError(new OnRecordErrorException(record, Errors.HBASE_37, cause));
       }
     } else {
-      throw new StageException(Errors.HBASE_36, rex);
+      LOG.error(Errors.HBASE_36.getMessage(), cause.toString(), cause);
+      throw new StageException(Errors.HBASE_36, cause.toString(), cause);
     }
   }
 
-  public static void handleNoColumnFamilyException(
+  public static void handleHBaseException(
     RetriesExhaustedWithDetailsException rex,
     Record record,
     Map<String, Record> rowKeyToRecord,

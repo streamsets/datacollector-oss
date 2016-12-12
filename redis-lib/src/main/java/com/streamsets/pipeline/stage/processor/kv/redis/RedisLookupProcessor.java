@@ -39,6 +39,7 @@ import com.streamsets.pipeline.lib.redis.DataType;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.processor.kv.EvictionPolicyType;
+import com.streamsets.pipeline.stage.processor.kv.LookupUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,6 +76,7 @@ public class RedisLookupProcessor extends BaseProcessor {
     this.conf = conf;
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
@@ -104,38 +106,10 @@ public class RedisLookupProcessor extends BaseProcessor {
       error = new DefaultErrorRecordHandler(getContext());
       keyExprEval = getContext().createELEval("keyExpr");
       store = new RedisStore(conf);
-      cache = buildCache();
+      cache = LookupUtils.buildCache(store, conf.cache);
     }
 
     return issues;
-  }
-
-  @SuppressWarnings("unchecked")
-  private LoadingCache<Pair<String, DataType>, LookupValue> buildCache() {
-    CacheBuilder cacheBuilder = CacheBuilder.newBuilder();
-    if (!conf.cache.enabled) {
-      return cacheBuilder.maximumSize(0)
-                  .build(store);
-    }
-
-    if(conf.cache.maxSize == -1) {
-      conf.cache.maxSize = Long.MAX_VALUE;
-    }
-
-    // CacheBuilder doesn't support specifying type thus suffers from erasure, so
-    // we build it with this if / else logic.
-    if (conf.cache.evictionPolicyType == EvictionPolicyType.EXPIRE_AFTER_ACCESS) {
-      cacheBuilder.maximumSize(conf.cache.maxSize)
-          .expireAfterAccess(conf.cache.expirationTime, conf.cache.timeUnit);
-    } else if (conf.cache.evictionPolicyType == EvictionPolicyType.EXPIRE_AFTER_WRITE) {
-      cacheBuilder.maximumSize(conf.cache.maxSize)
-          .expireAfterWrite(conf.cache.expirationTime, conf.cache.timeUnit);
-    } else {
-      throw new IllegalArgumentException(
-          Utils.format("Unrecognized EvictionPolicyType: '{}'", conf.cache.evictionPolicyType)
-      );
-    }
-    return cacheBuilder.build(store);
   }
 
   @Override
