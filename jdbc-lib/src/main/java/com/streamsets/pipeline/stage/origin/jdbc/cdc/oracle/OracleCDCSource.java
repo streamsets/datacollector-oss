@@ -92,12 +92,12 @@ public class OracleCDCSource extends BaseSource {
   private static final String CONNECTION_STR = HIKARI_CONFIG_PREFIX + "connectionString";
   private static final String CURRENT_SCN = "SELECT CURRENT_SCN FROM V$DATABASE";
   private static final String GET_OLDEST_SCN =
-      "SELECT FIRST_CHANGE# from V$ARCHIVED_LOG ORDER BY FIRST_CHANGE#";
+      "SELECT FIRST_CHANGE# from V$ARCHIVED_LOG WHERE FIRST_CHANGE# >= ? ORDER BY FIRST_CHANGE#";
   private static final String SWITCH_TO_CDB_ROOT = "ALTER SESSION SET CONTAINER = CDB$ROOT";
   private static final String PREFIX = "oracle.cdc.";
   private static final String SCN = PREFIX + "scn";
   private static final String USER = PREFIX + "user";
-  private static final String OPERATION = PREFIX + "operation"; //this will be depricated
+  private static final String OPERATION = PREFIX + "operation"; //this will be deprecated
   private static final String DATE = "DATE";
   private static final String TIME = "TIME";
   private static final String TIMESTAMP = "TIMESTAMP";
@@ -131,6 +131,7 @@ public class OracleCDCSource extends BaseSource {
   private String redoLogEntriesSql = null;
   private ErrorRecordHandler errorRecordHandler;
   private boolean containerized = false;
+  private BigDecimal cachedSCN = BigDecimal.ZERO;
 
   private HikariDataSource dataSource = null;
   private Connection connection = null;
@@ -145,7 +146,6 @@ public class OracleCDCSource extends BaseSource {
 
   private final ParseTreeWalker parseTreeWalker = new ParseTreeWalker();
   private final SQLListener sqlListener = new SQLListener();
-  private boolean startedLogMiner = false;
 
   public OracleCDCSource(HikariPoolConfigBean hikariConf, OracleCDCConfigBean oracleCDCConfigBean) {
     this.configBean = oracleCDCConfigBean;
@@ -337,18 +337,33 @@ public class OracleCDCSource extends BaseSource {
   }
 
   private void startLogMiner() throws SQLException, StageException {
+    BigDecimal endSCN = getEndingSCN();
+
+    // Try starting using cached SCN to avoid additional query if the cache one is still the oldest.
+    if (cachedSCN != BigDecimal.ZERO) { // Yes, it is an == comparison since we are checking if this is the actual ZERO object
+      try {
+        startLogMinerUsingGivenSCNs(cachedSCN, endSCN);
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Started using cached SCN" + cachedSCN.toPlainString());
+        }
+        return;
+      } catch (SQLException ex) {
+        LOG.debug("Cached SCN is no longer valid", ex);
+      }
+    }
+
     SQLException lastException = null;
+    boolean startedLogMiner = false;
+
+    getOldestSCN.setBigDecimal(1, cachedSCN);
     try (ResultSet rs = getOldestSCN.executeQuery()) {
       while (rs.next()) {
         BigDecimal oldestSCN = rs.getBigDecimal(1);
-        startLogMnr.setBigDecimal(1, oldestSCN);
-        startLogMnr.setBigDecimal(2, getEndingSCN());
         try {
-          startLogMnr.execute();
+          startLogMinerUsingGivenSCNs(oldestSCN, endSCN);
           startedLogMiner = true;
           break;
         } catch (SQLException ex) {
-          LOG.debug("Caught SQLException", ex);
           lastException = ex;
         }
       }
@@ -360,6 +375,23 @@ public class OracleCDCSource extends BaseSource {
       } else {
         throw new StageException(JDBC_52);
       }
+    }
+  }
+
+  private void startLogMinerUsingGivenSCNs(BigDecimal oldestSCN, BigDecimal endSCN) throws SQLException {
+    try {
+      startLogMnr.setBigDecimal(1, oldestSCN);
+      startLogMnr.setBigDecimal(2, endSCN);
+      startLogMnr.execute();
+      cachedSCN = oldestSCN;
+      if (LOG.isDebugEnabled()) {
+        LOG.debug(
+            Utils.format("Started LogMiner with start offset: {} and end offset: {}",
+            oldestSCN.toPlainString(), endSCN.toPlainString()));
+      }
+    } catch (SQLException ex) {
+      LOG.debug("SQLException while starting LogMiner", ex);
+      throw ex;
     }
   }
 
@@ -559,7 +591,6 @@ public class OracleCDCSource extends BaseSource {
   }
 
   private void initializeLogMnrStatements() throws SQLException {
-    startedLogMiner = false;
     produceSelectChanges = getSelectChangesStatement();
     startLogMnr = connection.prepareCall(logMinerProcedure);
     LOG.debug("Redo select query = " + produceSelectChanges.toString());
@@ -683,13 +714,10 @@ public class OracleCDCSource extends BaseSource {
   @Override
   public void destroy() {
 
-    if (startedLogMiner) {
-      try (CallableStatement endLogMnr = connection.prepareCall("BEGIN DBMS_LOGMNR.END_LOGMNR; END;")) {
-        endLogMnr.execute();
-        startedLogMiner = false;
-      } catch (SQLException ex) {
-        LOG.warn("Error while stopping LogMiner", ex);
-      }
+    try (CallableStatement endLogMnr = connection.prepareCall("BEGIN DBMS_LOGMNR.END_LOGMNR; END;")) {
+      endLogMnr.execute();
+    } catch (SQLException ex) {
+      LOG.warn("Error while stopping LogMiner", ex);
     }
 
     // Close all statements
