@@ -83,7 +83,7 @@ public class PreviewPipelineRunner implements PipelineRunner {
   }
 
   @Override
-  public void errorNotification(Pipe[] pipes, Throwable throwable) {
+  public void errorNotification(Pipe originPipe, List<List<Pipe>> pipes, Throwable throwable) {
   }
 
   @Override
@@ -104,19 +104,21 @@ public class PreviewPipelineRunner implements PipelineRunner {
   @Override
   @SuppressWarnings("unchecked")
   public void run(
-      Pipe[] pipes,
-      BadRecordsHandler badRecordsHandler,
-      StatsAggregationHandler statsAggregationHandler
+    Pipe originPipe,
+    List<List<Pipe>> pipes,
+    BadRecordsHandler badRecordsHandler,
+    StatsAggregationHandler statsAggregationHandler
   ) throws StageException, PipelineRuntimeException {
-    run(pipes, badRecordsHandler, Collections.EMPTY_LIST, statsAggregationHandler);
+    run(originPipe, pipes, badRecordsHandler, Collections.EMPTY_LIST, statsAggregationHandler);
   }
 
   @Override
   public void run(
-      Pipe[] pipes,
-      BadRecordsHandler badRecordsHandler,
-      List<StageOutput> stageOutputsToOverride,
-      StatsAggregationHandler statsAggregationHandler
+    Pipe originPipe,
+    List<List<Pipe>> pipes,
+    BadRecordsHandler badRecordsHandler,
+    List<StageOutput> stageOutputsToOverride,
+    StatsAggregationHandler statsAggregationHandler
   ) throws StageException, PipelineRuntimeException {
     Map<String, StageOutput> stagesToSkip = new HashMap<>();
     for (StageOutput stageOutput : stageOutputsToOverride) {
@@ -126,7 +128,17 @@ public class PreviewPipelineRunner implements PipelineRunner {
       PipeBatch pipeBatch = new FullPipeBatch(offsetTracker, batchSize, true);
       long start = System.currentTimeMillis();
       sourceOffset = pipeBatch.getPreviousOffset();
-      for (Pipe pipe : pipes) {
+
+      // Process origin data
+      StageOutput originOutput = stagesToSkip.get(originPipe.getStage().getInfo().getInstanceName());
+      if(originOutput == null) {
+        originPipe.process(pipeBatch);
+      } else {
+        pipeBatch.overrideStageOutput((StagePipe) originPipe, originOutput);
+      }
+
+      // Currently only supports single-threaded pipelines
+      for (Pipe pipe : pipes.get(0)) {
         StageOutput stageOutput = stagesToSkip.get(pipe.getStage().getInfo().getInstanceName());
         if (stageOutput == null || (pipe instanceof ObserverPipe) || (pipe instanceof MultiplexerPipe) ) {
           if (!skipTargets || !pipe.getStage().getDefinition().getType().isOneOf(StageType.TARGET, StageType.EXECUTOR)) {
@@ -149,11 +161,25 @@ public class PreviewPipelineRunner implements PipelineRunner {
   }
 
   @Override
-  public void destroy(Pipe[] pipes, BadRecordsHandler badRecordsHandler, StatsAggregationHandler statsAggregationHandler) throws StageException, PipelineRuntimeException {
-    PipeBatch pipeBatch = new FullPipeBatch(offsetTracker, batchSize, true);
+  public void destroy(
+    Pipe originPipe,
+    List<List<Pipe>> pipes,
+    BadRecordsHandler badRecordsHandler,
+    StatsAggregationHandler statsAggregationHandler
+  ) throws StageException, PipelineRuntimeException {
     // We're not doing any special event propagation during preview destroy phase
-    for(Pipe pipe: pipes) {
-      pipe.destroy(pipeBatch);
+
+    // Destroy origin on it's own
+    PipeBatch pipeBatch = new FullPipeBatch(offsetTracker, batchSize, true);
+    originPipe.destroy(pipeBatch);
+
+    // And destroy each pipeline instance separately
+    for(List<Pipe> pipeRunner: pipes) {
+      pipeBatch = new FullPipeBatch(offsetTracker, batchSize, true);
+      pipeBatch.skipStage(originPipe);
+      for(Pipe pipe : pipeRunner) {
+        pipe.destroy(pipeBatch);
+      }
     }
   }
 

@@ -316,7 +316,7 @@ public class TestPipeline {
     // Mockito.verifyNoMoreInteractions(runner);
 
     pipeline.destroy();
-    Mockito.verify(runner, Mockito.times(1)).destroy(Mockito.any(Pipe[].class), Mockito.any(BadRecordsHandler.class), Mockito.any(StatsAggregationHandler.class));
+    Mockito.verify(runner, Mockito.times(1)).destroy(Mockito.any(Pipe.class), Mockito.any(List.class), Mockito.any(BadRecordsHandler.class), Mockito.any(StatsAggregationHandler.class));
     Mockito.verifyNoMoreInteractions(source);
     Mockito.verifyNoMoreInteractions(processor);
     Mockito.verifyNoMoreInteractions(target);
@@ -368,7 +368,7 @@ public class TestPipeline {
     Mockito.verify(target, Mockito.times(1)).init(Mockito.any(Stage.Info.class),
                                                   Mockito.any(Target.Context.class));
     pipeline.destroy();
-    Mockito.verify(runner, Mockito.times(1)).destroy(Mockito.any(Pipe[].class), Mockito.any(BadRecordsHandler.class), Mockito.any(StatsAggregationHandler.class));
+    Mockito.verify(runner, Mockito.times(1)).destroy(Mockito.any(Pipe.class), Mockito.any(List.class), Mockito.any(BadRecordsHandler.class), Mockito.any(StatsAggregationHandler.class));
 
     // test runtime exception on init
 
@@ -392,7 +392,7 @@ public class TestPipeline {
                                                   Mockito.any(Target.Context.class));
 
     pipeline.destroy();
-    Mockito.verify(runner, Mockito.times(1)).destroy(Mockito.any(Pipe[].class), Mockito.any(BadRecordsHandler.class), Mockito.any(StatsAggregationHandler.class));
+    Mockito.verify(runner, Mockito.times(1)).destroy(Mockito.any(Pipe.class), Mockito.any(List.class), Mockito.any(BadRecordsHandler.class), Mockito.any(StatsAggregationHandler.class));
 
     // test exception on destroy
 
@@ -408,7 +408,7 @@ public class TestPipeline {
 
     pipeline.init();
     pipeline.destroy();
-    Mockito.verify(runner, Mockito.times(1)).destroy(Mockito.any(Pipe[].class), Mockito.any(BadRecordsHandler.class), Mockito.any(StatsAggregationHandler.class));
+    Mockito.verify(runner, Mockito.times(1)).destroy(Mockito.any(Pipe.class), Mockito.any(List.class), Mockito.any(BadRecordsHandler.class), Mockito.any(StatsAggregationHandler.class));
   }
 
 }

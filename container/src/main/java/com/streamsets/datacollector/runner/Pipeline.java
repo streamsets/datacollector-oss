@@ -200,14 +200,12 @@ public class Pipeline {
   }
 
   public void errorNotification(Throwable throwable) {
-    //TODO: SDC-4737 Enhance PipelineRunner for multithreaded pipelines, works only for single threaded pipelines
-    runner.errorNotification(getPipes(), throwable);
+    runner.errorNotification(originPipe, pipes, throwable);
   }
 
   public void destroy() {
-    //TODO: SDC-4737 Enhance PipelineRunner for multithreaded pipelines, works only for single threaded pipelines
     try {
-      runner.destroy(getPipes(), badRecordsHandler, statsAggregationHandler);
+      runner.destroy(originPipe, pipes, badRecordsHandler, statsAggregationHandler);
     } catch (StageException|PipelineRuntimeException ex) {
       String msg = Utils.format("Exception thrown in destroy phase: {}", ex.getMessage());
       LOG.warn(msg, ex);
@@ -235,8 +233,7 @@ public class Pipeline {
     this.running = true;
     try {
       runner.setObserver(observer);
-      //TODO: SDC-4737 Enhance PipelineRunner for multithreaded pipelines, works only for single threaded pipelines
-      runner.run(getPipes(), badRecordsHandler, statsAggregationHandler);
+      runner.run(originPipe, pipes, badRecordsHandler, statsAggregationHandler);
     } finally {
       this.running = false;
     }
@@ -246,8 +243,7 @@ public class Pipeline {
     this.running = true;
     try {
       runner.setObserver(observer);
-      //TODO: SDC-4737 Enhance PipelineRunner for multithreaded pipelines, works only for single threaded pipelines
-      runner.run(getPipes(), badRecordsHandler, stageOutputsToOverride, statsAggregationHandler);
+      runner.run(originPipe, pipes, badRecordsHandler, stageOutputsToOverride, statsAggregationHandler);
     } finally {
       this.running = false;
     }
