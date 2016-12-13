@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,31 +19,25 @@
  */
 package com.streamsets.pipeline.stage.destination.elasticsearch;
 
-import com.streamsets.pipeline.api.ConfigDefBean;
-import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.configurablestage.DTarget;
+import com.streamsets.pipeline.api.Label;
+
 
 @GenerateResourceBundle
-@StageDef(
-    version = 6,
-    label = "Elasticsearch",
-    description = "Upload data to an Elasticsearch cluster",
-    icon = "elasticsearch.png",
-    onlineHelpRefUrl = "index.html#Destinations/Elasticsearch.html#task_uns_gtv_4r",
-    upgrader = ElasticSearchDTargetUpgrader.class
-)
-@ConfigGroups(Groups.class)
-public class ElasticSearchDTarget extends DTarget {
+public enum UnsupportedOperationAction implements Label {
+  DISCARD("Discard"),
+  SEND_TO_ERROR("Send to Error"),
+  USE_DEFAULT("Use Default Operation"),
+  ;
 
-  @ConfigDefBean
-  public ElasticSearchConfigBean elasticSearchConfigBean;
+  private final String label;
+  UnsupportedOperationAction(String label) {
+    this.label = label;
+  }
 
   @Override
-  protected Target createTarget() {
-    return new ElasticSearchTarget(elasticSearchConfigBean);
+  public String getLabel() {
+    return label;
   }
 
 }

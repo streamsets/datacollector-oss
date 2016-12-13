@@ -30,23 +30,19 @@ public enum Errors implements ErrorCode {
   ELASTICSEARCH_03("Could not evaluate the type template expression: {}"),
   ELASTICSEARCH_04("Could not parse the docId template expression: {}"),
   ELASTICSEARCH_05("Could not evaluate the docId template expression: {}"),
-  ELASTICSEARCH_06("Cluster name cannot be empty"),
-  ELASTICSEARCH_07("At least one URI must be provided"),
-  ELASTICSEARCH_08("Could not connect to the cluster: {}"),
-  ELASTICSEARCH_09("Invalid URI, it must be <HOSTNAME>:<PORT>: '{}'"),
-  ELASTICSEARCH_10("Port value out of range: '{}'"),
-  ELASTICSEARCH_11("Could not connect to the cluster HTTP endpoint: {}"),
-  ELASTICSEARCH_12("Could not get the cluster version from HTTP response: {}"),
-  ELASTICSEARCH_13("Stage library version '{}' and cluster version '{}' are not compatible"),
+  ELASTICSEARCH_06("HTTP URI cannot be empty"),
+  ELASTICSEARCH_07("Invalid URI, it must be <HOSTNAME>:<PORT>: '{}'"),
+  ELASTICSEARCH_08("Port value out of range: '{}'"),
+  ELASTICSEARCH_09("Could not connect to the cluster HTTP endpoint: {}"),
 
+  ELASTICSEARCH_13("Operation not supported: {}"),
+  ELASTICSEARCH_14("Unknown action for unsupported operation: {}"),
   ELASTICSEARCH_15("Could not write record '{}': {}"),
   ELASTICSEARCH_16("Could not index record '{}': {}"),
   ELASTICSEARCH_17("Could not index '{}' records: {}"),
-
   ELASTICSEARCH_18("Could not evaluate the time driver expression: {}"),
-  ELASTICSEARCH_19("Document ID expression must be provided to use the upsert option"),
-
-  ELASTICSEARCH_20("Invalid Shield user, it must be <USERNAME>:<PASSWORD>: '{}'"),
+  ELASTICSEARCH_19("Document ID expression must be provided to use {} operation"),
+  ELASTICSEARCH_20("Invalid Security user, it must be <USERNAME>:<PASSWORD>: '{}'"),
   ;
   private final String msg;
 

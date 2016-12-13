@@ -29,7 +29,6 @@ import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 
-import java.util.List;
 import java.util.Map;
 
 public class ElasticSearchConfigBean {
@@ -37,86 +36,40 @@ public class ElasticSearchConfigBean {
   public static final String CONF_PREFIX = "elasticSearchConfigBean.";
 
   @ConfigDefBean
-  public ShieldConfigBean shieldConfigBean;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "elasticsearch",
-      label = "Cluster Name",
-      description = "",
-      displayPosition = 10,
-      group = "ELASTIC_SEARCH"
-  )
-  public String clusterName;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.LIST,
-      label = "Cluster URIs",
-      defaultValue = "[\"hostname:port\"]",
-      description = "Elasticsearch Node URIs",
-      displayPosition = 20,
-      group = "ELASTIC_SEARCH"
-  )
-  public List<String> uris;
+  public SecurityConfigBean securityConfigBean;
 
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
       label = "Cluster HTTP URI",
-      defaultValue = "hostname:port",
-      description = "Elasticsearch HTTP Endpoint. " +
-          "This is needed to verify version compatibility between the stage library and Elasticsearch cluster.",
-      displayPosition = 21,
+      defaultValue = "https://hostname:port",
+      description = "Elasticsearch HTTP Endpoint.",
+      displayPosition = 10,
       group = "ELASTIC_SEARCH"
   )
   public String httpUri;
 
   @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      label = "Use Shield",
-      defaultValue = "false",
-      description = "Use Shield",
-      displayPosition = 22,
-      group = "ELASTIC_SEARCH"
-  )
-  public boolean useShield;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      label = "Elastic Cloud Cluster",
-      defaultValue = "false",
-      description = "Select this option when connecting to an Elastic Cloud hosted cluster",
-      displayPosition = 23,
-      group = "ELASTIC_SEARCH"
-  )
-  public boolean useElasticCloud;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      label = "Detect Additional Nodes in Cluster",
-      defaultValue = "false",
-      description = "Select to automatically discover additional Elasticsearch nodes in the cluster. " +
-          "Do not use if the Data Collector is on a different network from the cluster.",
-      displayPosition = 24,
-      group = "ELASTIC_SEARCH"
-  )
-  public boolean clientSniff;
-
-  @ConfigDef(
       required = false,
       type = ConfigDef.Type.MAP,
       defaultValue = "",
-      label = "Additional Configuration",
-      description = "Additional Elasticsearch client configuration properties",
+      label = "Additional HTTP Params",
+      description = "Additional HTTP Params.",
+      displayPosition = 20,
+      group = "ELASTIC_SEARCH"
+  )
+  public Map<String, String> params;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Use Security",
+      defaultValue = "false",
+      description = "Use Security",
       displayPosition = 30,
       group = "ELASTIC_SEARCH"
   )
-  public Map<String, String> configs;
+  public boolean useSecurity;
 
   @ConfigDef(
       required = true,
@@ -125,7 +78,7 @@ public class ElasticSearchConfigBean {
       label = "Time Basis",
       description = "Time basis to use for a record. Enter an expression that evaluates to a datetime. To use the " +
           "processing time, enter ${time:now()}. To use field values, use '${record:value(\"<field path>\")}'.",
-      displayPosition = 35,
+      displayPosition = 40,
       group = "ELASTIC_SEARCH",
       elDefs = {RecordEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
@@ -138,7 +91,7 @@ public class ElasticSearchConfigBean {
       defaultValue = "UTC",
       label = "Data Time Zone",
       description = "Time zone to use to resolve the datetime of a time based index",
-      displayPosition = 37,
+      displayPosition = 50,
       group = "ELASTIC_SEARCH"
   )
   @ValueChooserModel(TimeZoneChooserValues.class)
@@ -149,7 +102,7 @@ public class ElasticSearchConfigBean {
       type = ConfigDef.Type.STRING,
       label = "Index",
       description = "",
-      displayPosition = 40,
+      displayPosition = 60,
       group = "ELASTIC_SEARCH",
       elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
@@ -161,7 +114,7 @@ public class ElasticSearchConfigBean {
       type = ConfigDef.Type.STRING,
       label = "Mapping",
       description = "",
-      displayPosition = 50,
+      displayPosition = 70,
       group = "ELASTIC_SEARCH",
       elDefs = {RecordEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
@@ -172,9 +125,9 @@ public class ElasticSearchConfigBean {
       required = false,
       type = ConfigDef.Type.STRING,
       label = "Document ID",
-      description = "An expression which evaluates to a document ID. Required for upserts. Leave blank to use " +
-          "auto-generated IDs.",
-      displayPosition = 60,
+      description = "An expression which evaluates to a document ID. Required for create/update/delete. " +
+          "Leave blank to use auto-generated IDs.",
+      displayPosition = 80,
       group = "ELASTIC_SEARCH",
       elDefs = {RecordEL.class, DataUtilEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
@@ -186,7 +139,7 @@ public class ElasticSearchConfigBean {
       type = ConfigDef.Type.MODEL,
       defaultValue = "UTF-8",
       label = "Data Charset",
-      displayPosition = 70,
+      displayPosition = 90,
       group = "ELASTIC_SEARCH"
   )
   @ValueChooserModel(CharsetChooserValues.class)
@@ -194,12 +147,25 @@ public class ElasticSearchConfigBean {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
-      label = "Enable Upsert",
-      description = "Select to enable upserts. A Document ID expression is required.",
-      displayPosition = 80,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "INDEX",
+      label = "Default Operation",
+      description = "Default operation to perform if sdc.operation.type is not set in record header.",
+      displayPosition = 100,
       group = "ELASTIC_SEARCH"
   )
-  public boolean upsert;
+  @ValueChooserModel(ElasticSearchOperationChooserValues.class)
+  public ElasticSearchOperationType defaultOperation;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue= "DISCARD",
+      label = "Unsupported Operation Handling",
+      description = "Action to take when operation type is not supported",
+      displayPosition = 110,
+      group = "ELASTIC_SEARCH"
+  )
+  @ValueChooserModel(UnsupportedOperationActionChooserValues.class)
+  public UnsupportedOperationAction unsupportedAction;
 }

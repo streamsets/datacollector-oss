@@ -20,6 +20,9 @@
 package com.streamsets.pipeline.stage.destination.elasticsearch;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Record;
@@ -31,7 +34,6 @@ import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.JsonMode;
-import com.streamsets.pipeline.elasticsearch.api.ElasticSearchFactory;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
@@ -39,29 +41,30 @@ import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFormat;
+import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.http.client.fluent.Request;
-import org.elasticsearch.Version;
-import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest;
-import org.elasticsearch.action.bulk.BulkItemResponse;
-import org.elasticsearch.action.bulk.BulkRequestBuilder;
-import org.elasticsearch.action.bulk.BulkResponse;
-import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.update.UpdateRequest;
-import org.elasticsearch.client.Client;
-import org.elasticsearch.common.Strings;
-import org.elasticsearch.common.xcontent.XContentType;
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.message.BasicHeader;
+import org.elasticsearch.client.Response;
+import org.elasticsearch.client.RestClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
@@ -69,10 +72,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ElasticSearchTarget extends BaseTarget {
-
+  private static final Logger LOG = LoggerFactory.getLogger(ElasticSearchTarget.class);
   private static final Pattern URI_PATTERN = Pattern.compile("\\S+:(\\d+)");
-  private static final Pattern SHIELD_USER_PATTERN = Pattern.compile("\\S+:\\S+");
-  private static final Pattern VERSION_NUMBER_PATTERN = Pattern.compile(".*\"number\":\"([^\"]*)\".*");
+  private static final Pattern SECURITY_USER_PATTERN = Pattern.compile("\\S+:\\S+");
   private final ElasticSearchConfigBean conf;
   private ELEval timeDriverEval;
   private TimeZone timeZone;
@@ -82,10 +84,13 @@ public class ElasticSearchTarget extends BaseTarget {
   private ELEval docIdEval;
   private DataGeneratorFactory generatorFactory;
   private ErrorRecordHandler errorRecordHandler;
-  private Client elasticClient;
+  private RestClient restClient;
 
   public ElasticSearchTarget(ElasticSearchConfigBean conf) {
     this.conf = conf;
+    if (this.conf.params == null) {
+      this.conf.params = new HashMap<>();
+    }
     this.timeZone = TimeZone.getTimeZone(conf.timeZoneID);
   }
 
@@ -117,7 +122,6 @@ public class ElasticSearchTarget extends BaseTarget {
     docIdEval = getContext().createELEval("docIdTemplate");
     timeDriverEval = getContext().createELEval("timeDriver");
 
-    //validate timeDriver
     try {
       getRecordTime(getContext().createRecord("validateTimeDriver"));
     } catch (ELEvalException ex) {
@@ -146,7 +150,7 @@ public class ElasticSearchTarget extends BaseTarget {
         Errors.ELASTICSEARCH_03,
         issues
     );
-    if (conf.docIdTemplate != null && !conf.docIdTemplate.isEmpty()) {
+    if (!StringUtils.isEmpty(conf.docIdTemplate)) {
       validateEL(
           typeEval,
           conf.docIdTemplate,
@@ -155,153 +159,63 @@ public class ElasticSearchTarget extends BaseTarget {
           Errors.ELASTICSEARCH_05,
           issues
       );
-    }
-
-    if (conf.clusterName == null || conf.clusterName.isEmpty()) {
-      issues.add(
-          getContext().createConfigIssue(
-              Groups.ELASTIC_SEARCH.name(),
-              ElasticSearchConfigBean.CONF_PREFIX + "clusterName",
-              Errors.ELASTICSEARCH_06
-          )
-      );
-    }
-    if (conf.uris == null || conf.uris.isEmpty()) {
-      issues.add(
-          getContext().createConfigIssue(
-              Groups.ELASTIC_SEARCH.name(),
-              ElasticSearchConfigBean.CONF_PREFIX + "uris",
-              Errors.ELASTICSEARCH_07
-          )
-      );
     } else {
-      for (String uri : conf.uris) {
-        validateUri(uri, issues, ElasticSearchConfigBean.CONF_PREFIX + "uris");
-      }
-    }
-
-    if (conf.upsert) {
-      if (conf.docIdTemplate == null || conf.docIdTemplate.isEmpty()) {
+      if (conf.defaultOperation != ElasticSearchOperationType.INDEX) {
         issues.add(
             getContext().createConfigIssue(
                 Groups.ELASTIC_SEARCH.name(),
-                ElasticSearchConfigBean.CONF_PREFIX + "upsert",
-                Errors.ELASTICSEARCH_19
+                ElasticSearchConfigBean.CONF_PREFIX + "docIdTemplate",
+                Errors.ELASTICSEARCH_19,
+                conf.defaultOperation.getLabel()
             )
         );
       }
     }
 
-    if (conf.useShield) {
-      if (!SHIELD_USER_PATTERN.matcher(conf.shieldConfigBean.shieldUser).matches()) {
+    if (StringUtils.isEmpty(conf.httpUri)) {
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.ELASTIC_SEARCH.name(),
+              ElasticSearchConfigBean.CONF_PREFIX + "httpUri",
+              Errors.ELASTICSEARCH_06
+          )
+      );
+    } else {
+      validateUri(conf.httpUri, issues, ElasticSearchConfigBean.CONF_PREFIX + "httpUri");
+    }
+
+    if (conf.useSecurity) {
+      if (!SECURITY_USER_PATTERN.matcher(conf.securityConfigBean.securityUser).matches()) {
         issues.add(
             getContext().createConfigIssue(
-                Groups.SHIELD.name(),
-                ShieldConfigBean.CONF_PREFIX + "shieldUser",
+                Groups.SECURITY.name(),
+                SecurityConfigBean.CONF_PREFIX + "securityUser",
                 Errors.ELASTICSEARCH_20,
-                conf.shieldConfigBean.shieldUser
+                conf.securityConfigBean.securityUser
             )
         );
       }
     }
-
-    if (!issues.isEmpty()) {
-      return issues;
-    }
-
-    // By default, try to use the 1st cluster uri w/ port 9200 as http endpoint.
-    // If this doesn't work, validation will fail and ask the user provide an alternative uri.
-    if (conf.httpUri == null || conf.httpUri.isEmpty() || "hostname:port".equals(conf.httpUri)) {
-      conf.httpUri = conf.uris.get(0).split(":")[0] + ":9200";
-    }
-    validateUri(conf.httpUri, issues, ElasticSearchConfigBean.CONF_PREFIX + "httpUri");
 
     if (!issues.isEmpty()) {
       return issues;
     }
 
     try {
-      String httpUri;
-      if (!conf.httpUri.startsWith("http://") && !conf.httpUri.startsWith("https://")) {
-        httpUri = "http://" + conf.httpUri;
+      restClient = RestClient.builder(HttpHost.create(conf.httpUri)).build();
+      if (conf.useSecurity) {
+        restClient.performRequest("GET", "/", getAuthenticationHeader());
       } else {
-        httpUri = conf.httpUri;
-      }
-      Request request = Request.Get(httpUri + "?pretty=false");
-      if (conf.useShield) {
-        // credentials is in form of "username:password".
-        byte[] credentials = conf.shieldConfigBean.shieldUser.getBytes();
-        request.addHeader("Authorization", "Basic " + Base64.encodeBase64String(credentials));
-      }
-      String response = request.execute().returnContent().asString();
-      Matcher matcher = VERSION_NUMBER_PATTERN.matcher(response);
-
-      if (!matcher.matches()) {
-        issues.add(
-            getContext().createConfigIssue(
-                Groups.ELASTIC_SEARCH.name(),
-                null,
-                Errors.ELASTICSEARCH_12,
-                response
-            )
-        );
-      } else {
-        Version clientVersion = Version.CURRENT;
-        Version clusterVersion = Version.fromString(matcher.group(1));
-
-        // The major and minor version numbers must match between the client and cluster.
-        if (clientVersion.major != clusterVersion.major || clientVersion.minor != clusterVersion.minor) {
-          issues.add(
-              getContext().createConfigIssue(
-                  Groups.ELASTIC_SEARCH.name(),
-                  null,
-                  Errors.ELASTICSEARCH_13,
-                  clientVersion,
-                  clusterVersion
-              )
-          );
-        }
+        restClient.performRequest("GET", "/");
       }
     } catch (IOException e) {
       issues.add(
           getContext().createConfigIssue(
               Groups.ELASTIC_SEARCH.name(),
               ElasticSearchConfigBean.CONF_PREFIX + "httpUri",
-              Errors.ELASTICSEARCH_11,
+              Errors.ELASTICSEARCH_09,
               e.toString(),
               e
-          )
-      );
-    }
-
-    if (!issues.isEmpty()) {
-      return issues;
-    }
-
-    try {
-      elasticClient = ElasticSearchFactory.client(
-          conf.clusterName,
-          conf.uris,
-          conf.clientSniff,
-          conf.configs,
-          conf.useShield,
-          conf.shieldConfigBean.shieldUser,
-          conf.shieldConfigBean.shieldTransportSsl,
-          conf.shieldConfigBean.sslKeystorePath,
-          conf.shieldConfigBean.sslKeystorePassword,
-          conf.shieldConfigBean.sslTruststorePath,
-          conf.shieldConfigBean.sslTruststorePassword,
-          conf.useElasticCloud
-      );
-      elasticClient.admin().cluster().health(new ClusterHealthRequest(Strings.EMPTY_ARRAY));
-    } catch (RuntimeException|UnknownHostException ex) {
-      issues.add(
-          getContext().createConfigIssue(
-              Groups.ELASTIC_SEARCH.name(),
-              null,
-              Errors.ELASTICSEARCH_08,
-              ex.toString(),
-              ex
           )
       );
     }
@@ -320,8 +234,12 @@ public class ElasticSearchTarget extends BaseTarget {
 
   @Override
   public void destroy() {
-    if (elasticClient != null) {
-      elasticClient.close();
+    if (restClient != null) {
+      try {
+        restClient.close();
+      } catch (IOException e) {
+        LOG.warn("Exception thrown while closing REST client: " + e);
+      }
     }
     super.destroy();
   }
@@ -352,17 +270,14 @@ public class ElasticSearchTarget extends BaseTarget {
     TimeNowEL.setTimeNowInContext(elVars, getBatchTime());
     Iterator<Record> it = batch.getRecords();
 
-    BulkRequestBuilder bulkRequest = elasticClient.prepareBulk();
-    boolean atLeastOne = false;
+    StringBuilder bulkRequest = new StringBuilder();
 
     //we need to keep the records in order of appearance in case we have indexing errors
     //and error handling is TO_ERROR
     List<Record> records = new ArrayList<>();
 
     while (it.hasNext()) {
-      atLeastOne = true;
       Record record = it.next();
-
       records.add(record);
 
       try {
@@ -370,32 +285,42 @@ public class ElasticSearchTarget extends BaseTarget {
         String index = getRecordIndex(elVars, record);
         String type = typeEval.eval(elVars, conf.typeTemplate, String.class);
         String id = null;
-        if (conf.docIdTemplate != null && !conf.docIdTemplate.isEmpty()) {
+        if (!StringUtils.isEmpty(conf.docIdTemplate)) {
           id = docIdEval.eval(elVars, conf.docIdTemplate, String.class);
         }
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataGenerator generator = generatorFactory.getGenerator(baos);
         generator.write(record);
         generator.close();
-        String json = new String(baos.toByteArray(), StandardCharsets.UTF_8);
 
-        IndexRequest insert = elasticClient.prepareIndex(index, type, id)
-            .setContentType(XContentType.JSON)
-            .setSource(json)
-            .request();
-        if (conf.upsert) {
-          // Upsert cannot be processed without the id. Bulk process does not read document content
-          // but only headers and then pass content to the right shard. To extract the right shard,
-          // Elasticsearch needs to know the id without parsing the body itself.
-          Utils.checkNotNull(id, "Document ID");
-          UpdateRequest upsert = elasticClient.prepareUpdate(index, type, id)
-              .setDoc(json)
-              .setUpsert(insert)
-              .request();
-          bulkRequest.add(upsert);
+        int opCode = -1;
+        String opType = record.getHeader().getAttribute(OperationType.SDC_OPERATION_TYPE);
+        String recordJson = new String(baos.toByteArray(), StandardCharsets.UTF_8).replace("\n", "");
+        // Check if the operation code from header attribute is valid
+        if (!StringUtils.isEmpty(opType)) {
+          try {
+            opCode = ElasticSearchOperationType.convertToIntCode(opType);
+          } catch (NumberFormatException | UnsupportedOperationException ex) {
+            // Operation obtained from header is not supported. Handle accordingly
+            switch (conf.unsupportedAction) {
+              case DISCARD:
+                LOG.debug("Discarding record with unsupported operation {}", opType);
+                break;
+              case SEND_TO_ERROR:
+                errorRecordHandler.onError(new OnRecordErrorException(record, Errors.ELASTICSEARCH_13, ex.getMessage(), ex));
+                break;
+              case USE_DEFAULT:
+                opCode = conf.defaultOperation.code;
+                break;
+              default: //unknown action
+                errorRecordHandler.onError(new OnRecordErrorException(record, Errors.ELASTICSEARCH_14, ex.getMessage(), ex));
+            }
+          }
         } else {
-          bulkRequest.add(insert);
+          // No header attribute set. Use default.
+          opCode = conf.defaultOperation.code;
         }
+        bulkRequest.append(getOperation(index, type, id, recordJson, opCode));
       } catch (IOException ex) {
         errorRecordHandler.onError(
             new OnRecordErrorException(
@@ -408,40 +333,55 @@ public class ElasticSearchTarget extends BaseTarget {
         );
       }
     }
-    if (atLeastOne) {
-      BulkResponse bulkResponse = bulkRequest.execute().actionGet();
-      if (bulkResponse.hasFailures()) {
-        switch (getContext().getOnErrorRecord()) {
-          case DISCARD:
-            break;
-          case TO_ERROR:
-            for (BulkItemResponse item : bulkResponse.getItems()) {
-              if (item.isFailed()) {
-                Record record = records.get(item.getItemId());
-                getContext().toError(record, Errors.ELASTICSEARCH_16, item.getFailureMessage());
-              }
-            }
-            break;
-          case STOP_PIPELINE:
-            String msg = bulkResponse.buildFailureMessage();
-            if (msg != null && msg.length() > 100) {
-              msg = msg.substring(0, 100) + " ...";
-            }
-            throw new StageException(Errors.ELASTICSEARCH_17, msg);
-          default:
-            throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
-                                                         getContext().getOnErrorRecord()));
+
+    if (!records.isEmpty()) {
+      try {
+        HttpEntity entity = new StringEntity(bulkRequest.toString(), ContentType.APPLICATION_JSON);
+        Response response;
+        if (conf.useSecurity) {
+          response = restClient.performRequest("POST", "/_bulk", conf.params, entity, getAuthenticationHeader());
+        } else {
+          response = restClient.performRequest("POST", "/_bulk", conf.params, entity);
         }
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        response.getEntity().writeTo(baos);
+        JsonObject json = new JsonParser().parse(baos.toString()).getAsJsonObject();
+        baos.close();
+
+        boolean errors = json.get("errors").getAsBoolean();
+        if (errors) {
+          List<ErrorItem> errorItems;
+          switch (getContext().getOnErrorRecord()) {
+            case DISCARD:
+              break;
+            case TO_ERROR:
+              errorItems = extractErrorItems(json);
+              for (ErrorItem item : errorItems) {
+                Record record = records.get(item.index);
+                getContext().toError(record, Errors.ELASTICSEARCH_16, record.getHeader().getSourceId(), item.reason);
+              }
+              break;
+            case STOP_PIPELINE:
+              errorItems = extractErrorItems(json);
+              throw new StageException(Errors.ELASTICSEARCH_17, errorItems.size(), "One or more operations failed");
+            default:
+              throw new IllegalStateException(
+                  Utils.format("Unknown OnError value '{}'", getContext().getOnErrorRecord())
+              );
+          }
+        }
+      } catch (IOException ex) {
+        throw new StageException(Errors.ELASTICSEARCH_17, records.size(), ex.toString(), ex);
       }
     }
   }
 
-  protected Date setBatchTime() {
+  Date setBatchTime() {
     batchTime = new Date();
     return batchTime;
   }
 
-  protected Date getBatchTime() {
+  Date getBatchTime() {
     return batchTime;
   }
 
@@ -452,22 +392,86 @@ public class ElasticSearchTarget extends BaseTarget {
           getContext().createConfigIssue(
               Groups.ELASTIC_SEARCH.name(),
               configName,
-              Errors.ELASTICSEARCH_09,
+              Errors.ELASTICSEARCH_07,
               uri
           )
       );
     } else {
-      int port = Integer.valueOf(matcher.group(1));
+      int port = Integer.parseInt(matcher.group(1));
       if (port < 0 || port > 65535) {
         issues.add(
             getContext().createConfigIssue(
                 Groups.ELASTIC_SEARCH.name(),
                 configName,
-                Errors.ELASTICSEARCH_10,
+                Errors.ELASTICSEARCH_08,
                 port
             )
         );
       }
+    }
+  }
+
+  private String getOperation(String index, String type, String id, String record, int opCode) {
+    StringBuilder op = new StringBuilder();
+    switch (opCode) {
+      case OperationType.UPSERT_CODE:
+        if (StringUtils.isEmpty(id)) {
+          op.append(String.format("{\"index\":{\"_index\":\"%s\",\"_type\":\"%s\"}}%n", index, type));
+        } else {
+          op.append(String.format("{\"index\":{\"_index\":\"%s\",\"_type\":\"%s\",\"_id\":\"%s\"}}%n", index, type, id));
+        }
+        op.append(String.format("%s%n", record));
+        break;
+      case OperationType.INSERT_CODE:
+        op.append(String.format("{\"create\":{\"_index\":\"%s\",\"_type\":\"%s\",\"_id\":\"%s\"}}%n", index, type, id));
+        op.append(String.format("%s%n", record));
+        break;
+      case OperationType.UPDATE_CODE:
+      case OperationType.SELECT_FOR_UPDATE_CODE:
+      case OperationType.AFTER_UPDATE_CODE:
+        op.append(String.format("{\"update\":{\"_index\":\"%s\",\"_type\":\"%s\",\"_id\":\"%s\"}}%n", index, type, id));
+        op.append(String.format("{\"doc\":%s}%n", record));
+        break;
+      case OperationType.DELETE_CODE:
+        op.append(String.format("{\"delete\":{\"_index\":\"%s\",\"_type\":\"%s\",\"_id\":\"%s\"}}%n", index, type, id));
+        break;
+      default:
+        LOG.error("Operation {} not supported", opCode);
+        throw new UnsupportedOperationException(String.format("Unsupported Operation: %s", opCode));
+    }
+    return op.toString();
+  }
+
+  private Header getAuthenticationHeader() {
+    // Credentials are in form of "username:password".
+    byte[] credentials = conf.securityConfigBean.securityUser.getBytes();
+    return new BasicHeader("Authorization", "Basic " + Base64.encodeBase64String(credentials));
+  }
+
+  private List<ErrorItem> extractErrorItems(JsonObject json) {
+    List<ErrorItem> errorItems = new ArrayList<>();
+    JsonArray items = json.getAsJsonArray("items");
+    for (int i = 0; i < items.size(); i++) {
+      JsonObject item = items.get(i).getAsJsonObject().entrySet().iterator().next().getValue().getAsJsonObject();
+      int status = item.get("status").getAsInt();
+      if (status >= 400) {
+        // In some old versions, "error" is a simple string not a json object.
+        if (item.get("error") instanceof JsonObject) {
+          errorItems.add(new ErrorItem(i, item.getAsJsonObject("error").get("reason").getAsString()));
+        } else {
+          errorItems.add(new ErrorItem(i, item.getAsJsonPrimitive("error").getAsString()));
+        }
+      }
+    }
+    return errorItems;
+  }
+
+  private static class ErrorItem {
+    int index;
+    String reason;
+    ErrorItem(int index, String reason) {
+      this.index = index;
+      this.reason = reason;
     }
   }
 }

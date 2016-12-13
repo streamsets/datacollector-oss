@@ -25,6 +25,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class TestElasticSearchDTargetUpgrader {
@@ -34,15 +35,23 @@ public class TestElasticSearchDTargetUpgrader {
     StageUpgrader upgrader = new ElasticSearchDTargetUpgrader();
 
     List<Config> configs = new ArrayList<>();
-    configs.add(new Config("elasticSearchConfigBean.useFound", false));
+    configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "clusterName", "MyCluster"));
+    configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "uris", Collections.EMPTY_LIST));
+    configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "useShield", false));
+    configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "useFound", false));
+    configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "clientSniff", false));
+    configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "configs", Collections.EMPTY_MAP));
+    configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "upsert", false));
 
-    upgrader.upgrade("l", "s", "i", 1, 5, configs);
+    upgrader.upgrade("l", "s", "i", 1, 6, configs);
 
-    Assert.assertEquals(4, configs.size());
+    Assert.assertEquals(6, configs.size());
     Assert.assertEquals("elasticSearchConfigBean.timeDriver", configs.get(0).getName());
     Assert.assertEquals("elasticSearchConfigBean.timeZoneID", configs.get(1).getName());
     Assert.assertEquals("elasticSearchConfigBean.httpUri", configs.get(2).getName());
-    Assert.assertEquals("elasticSearchConfigBean.useElasticCloud", configs.get(3).getName());
+    Assert.assertEquals("elasticSearchConfigBean.useSecurity", configs.get(3).getName());
+    Assert.assertEquals("elasticSearchConfigBean.params", configs.get(4).getName());
+    Assert.assertEquals("elasticSearchConfigBean.defaultOperation", configs.get(5).getName());
   }
 
 }

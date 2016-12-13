@@ -51,6 +51,9 @@ public class ElasticSearchDTargetUpgrader implements StageUpgrader {
         // fall through
       case 4:
         upgradeV4ToV5(configs);
+        // fall through
+      case 5:
+        upgradeV5ToV6(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -122,6 +125,77 @@ public class ElasticSearchDTargetUpgrader implements StageUpgrader {
         configsToAdd.add(new Config(config.getName().replace("useFound", "useElasticCloud"), config.getValue()));
         configsToRemove.add(config);
         break;
+      }
+    }
+
+    configs.addAll(configsToAdd);
+    configs.removeAll(configsToRemove);
+  }
+
+  private static void upgradeV5ToV6(List<Config> configs) {
+    List<Config> configsToRemove = new ArrayList<>();
+    List<Config> configsToAdd = new ArrayList<>();
+
+    for (Config config : configs) {
+      // Rename shieldConfigBean to securityConfigBean.
+      if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "shieldConfigBean.shieldUser")) {
+        configsToAdd.add(new Config(config.getName().replace("shield", "security"), config.getValue()));
+        configsToRemove.add(config);
+      }
+      // Remove shieldTransportSsl.
+      if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "shieldConfigBean.shieldTransportSsl")) {
+        configsToRemove.add(config);
+      }
+      // Remove sslKeystorePath.
+      if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "shieldConfigBean.sslKeystorePath")) {
+        configsToRemove.add(config);
+      }
+      // Remove sslKeystorePassword.
+      if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "shieldConfigBean.sslKeystorePassword")) {
+        configsToRemove.add(config);
+      }
+      // Remove sslTruststorePath.
+      if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "shieldConfigBean.sslTruststorePath")) {
+        configsToRemove.add(config);
+      }
+      // Remove sslTruststorePassword.
+      if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "shieldConfigBean.sslTruststorePassword")) {
+        configsToRemove.add(config);
+      }
+      // Remove clusterName.
+      if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "clusterName")) {
+        configsToRemove.add(config);
+      }
+      // Remove uris.
+      if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "uris")) {
+        configsToRemove.add(config);
+      }
+      // Rename useShield to useSecurity.
+      if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "useShield")) {
+        configsToAdd.add(new Config(config.getName().replace("Shield", "Security"), config.getValue()));
+        configsToRemove.add(config);
+      }
+      // Remove useElasticCloud.
+      if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "useElasticCloud")) {
+        configsToRemove.add(config);
+      }
+      // Remove clientSniff.
+      if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "clientSniff")) {
+        configsToRemove.add(config);
+      }
+      // Rename configs to params.
+      if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "configs")) {
+        configsToAdd.add(new Config(config.getName().replace("configs", "params"), config.getValue()));
+        configsToRemove.add(config);
+      }
+      // Remove upsert.
+      if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "upsert")) {
+        if ((Boolean)config.getValue()) {
+          configsToAdd.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "defaultOperation", "INDEX"));
+        } else {
+          configsToAdd.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "defaultOperation", "CREATE"));
+        }
+        configsToRemove.add(config);
       }
     }
 

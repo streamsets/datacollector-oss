@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,24 +17,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.streamsets.pipeline.stage.destination.elasticsearch;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  ELASTIC_SEARCH("Elasticsearch"),
-  SECURITY("Security"),
-  ;
+public class UnsupportedOperationActionChooserValues extends BaseEnumChooserValues {
 
-  private final String label;
-  Groups(String label) {
-    this.label = label;
+  public UnsupportedOperationActionChooserValues() {
+    super(UnsupportedOperationAction.class);
   }
 
-  @Override
-  public String getLabel() {
-    return label;
-  }
 }

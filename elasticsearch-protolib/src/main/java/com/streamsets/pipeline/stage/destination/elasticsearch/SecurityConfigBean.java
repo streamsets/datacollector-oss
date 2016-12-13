@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,22 +19,24 @@
  */
 package com.streamsets.pipeline.stage.destination.elasticsearch;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.lib.el.VaultEL;
+import com.streamsets.pipeline.api.ConfigDef;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  ELASTIC_SEARCH("Elasticsearch"),
-  SECURITY("Security"),
-  ;
+public class SecurityConfigBean {
 
-  private final String label;
-  Groups(String label) {
-    this.label = label;
-  }
+  public static final String CONF_PREFIX = ElasticSearchConfigBean.CONF_PREFIX + "securityConfigBean.";
 
-  @Override
-  public String getLabel() {
-    return label;
-  }
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "username:password",
+      label = "Security Username/Password",
+      description = "",
+      dependsOn = "useSecurity^",
+      triggeredByValue = "true",
+      displayPosition = 10,
+      elDefs = VaultEL.class,
+      group = "SECURITY"
+  )
+  public String securityUser;
 }
