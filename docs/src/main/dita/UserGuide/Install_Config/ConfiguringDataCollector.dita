@@ -455,8 +455,8 @@
                     <tbody>
                         <row>
                             <entry>runtime.conf.location <xref
-                                    href="RuntimeProperties.dita#concept_fjx_g31_1s"
-                                        ><image href="../Graphics/icon_moreInfo.png" scale="10"/>
+                                    href="RuntimeProperties.dita#concept_fjx_g31_1s"><image
+                                        href="../Graphics/icon_moreInfo.png" scale="10"/>
                                 </xref></entry>
                             <entry>Location of runtime properties. Use to declare where runtime
                                 properties are defined:<ul id="ul_mh4_rrn_1s">
@@ -625,6 +625,85 @@ streamsets-datacollector-apache-kafka_0_8_1-lib</codeblock>Generally,
                                         <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                     /> configuration.</p></entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table><p>The <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> configuration file includes record sampling properties that indicate the size of
+                the sample set chosen from a total population of records. <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> uses the sampling properties when you run a pipeline that writes to a destination
+                system using the SDC Record data format and then run another pipeline that reads
+                from that same system using the SDC Record data format. <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> uses record sampling to calculate the time that a record stays in the
+                intermediate destination. </p><p>By default, <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> uses 1 out of 10,000 records for sampling. If you modify the sampling size,
+                simplify the fraction for better performance. For example, configure the sampling
+                size as 1/40 records instead of 250/10000 records. The following properties specify
+                the sampling size:</p><table frame="all" rowsep="1" colsep="1" id="table_wgr_klg_hx">
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="2.0*"/>
+                    <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+                    <thead>
+                        <row>
+                            <entry>Record Sampling Property</entry>
+                            <entry>Description</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>sdc.record.sampling.sample.size</entry>
+                            <entry>Size of the sample set.<p>Default is 1.</p></entry>
+                        </row>
+                        <row>
+                            <entry>sdc.record.sampling.population.size</entry>
+                            <entry>Size of the total number of records.<p>Default is
+                                10,000.</p></entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table><p>The <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> configuration file includes properties that define how <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> caches pipeline states. <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> can cache the state of pipelines for faster retrieval of those states in the Home
+                page. If <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> does not cache pipeline states, it must retrieve pipeline states from the
+                pipeline data files stored in the <codeph>$SDC_DATA</codeph> directory. You can
+                configure the following properties that specify how <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> caches pipeline states:</p><table frame="all" rowsep="1" colsep="1"
+                id="table_whr_llg_hx">
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="2.0*"/>
+                    <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+                    <thead>
+                        <row>
+                            <entry>Pipeline State Cache Property</entry>
+                            <entry>Description</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>store.pipeline.state.cache.maximum.size</entry>
+                            <entry>Maximum number of pipeline states that <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                /> caches. When the maximum number is reached, <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                /> evicts the oldest states from the cache.<p>Default is 100.
+                                </p></entry>
+                        </row>
+                        <row>
+                            <entry>store.pipeline.state.cache.expire.after.access</entry>
+                            <entry>Amount of time in minutes that a pipeline state can remain in the
+                                cache after the entry's creation, the most recent replacement of its
+                                value, or its last access.<p>Default is 10 minutes.</p></entry>
                         </row>
                     </tbody>
                 </tgroup>
