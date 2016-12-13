@@ -15,7 +15,7 @@
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
 <map>
  <title>Administration</title>
- <topicref href="../Administration/Administration_title.dita">
+ <topicref href="../Administration/Administration_title.dita"  chunk="to-content">
   <topicref href="../Administration/ViewingDCConfigs.dita">
    <topicmeta>
     <shortdesc/>
@@ -26,7 +26,7 @@
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Administration/ViewingDirectories.dita" chunk="to-content">
+  <topicref href="../Administration/ViewingDirectories.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
@@ -42,14 +42,14 @@
    </topicmeta>
   </topicref>
   <topicref href="../Administration/Restarting.dita"/>
-  <topicref href="../Administration/RESTResponse.dita" chunk="to-content">
+  <topicref href="../Administration/RESTResponse.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
    <topicref href="../Administration/RESTResponse-Viewing.dita"/>
    <topicref href="../Administration/RESTResponse-Disabling.dita"/>
   </topicref>
-  <topicref href="../Administration/CLI-Overview.dita" chunk="to-content">
+  <topicref href="../Administration/CLI-Overview.dita">
   <topicmeta>
    <shortdesc/>
   </topicmeta>

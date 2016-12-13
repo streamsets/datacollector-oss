@@ -15,7 +15,7 @@
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
 <map collection-type="sequence">
  <title>Pipeline Configuration</title>
- <topicref href="../Pipeline_Configuration/PipelineConfiguration_title.dita">
+ <topicref href="../Pipeline_Configuration/PipelineConfiguration_title.dita" chunk="to-content">
   <topicref href="../Pipeline_Configuration/DataCollectorWindow-Config.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
   <topicref href="../Pipeline_Configuration/Retry.dita">
@@ -42,7 +42,7 @@
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Pipeline_Configuration/Expressions.dita" chunk="to-content">
+  <topicref href="../Pipeline_Configuration/Expressions.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>

@@ -15,20 +15,20 @@
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
 <map>
  <title>Getting Started</title>
- <topicref href="../Getting_Started/GettingStarted_Title.dita">
-  <topicref href="../Getting_Started/What_is_DataCollector.dita" chunk="to-content">
+ <topicref href="../Getting_Started/GettingStarted_Title.dita" chunk="to-content">
+  <topicref href="../Getting_Started/What_is_DataCollector.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
    <topicref href="../Getting_Started/HowShouldIUsetheDataCollector.dita"/>
    <topicref href="../Getting_Started/HowDoesItWork.dita"/>
   </topicref>
-  <topicref href="../Getting_Started/LoggingIn_CreatingPipeline.dita" chunk="to-content">
+  <topicref href="../Getting_Started/LoggingIn_CreatingPipeline.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Getting_Started/DCollector_Window.dita" chunk="to-content">
+  <topicref href="../Getting_Started/DCollector_Window.dita" >
    <topicmeta>
     <shortdesc/>
    </topicmeta>

@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hmh_kfn_1s">
- <title>Cluster Pipelines</title>
+ <title>Cluster Pipeline Overview</title>
  <shortdesc>A <term>cluster pipeline</term> is a pipeline that runs in cluster execution mode. You
   can run a pipeline in standalone execution mode or cluster execution mode. </shortdesc>
  <conbody>

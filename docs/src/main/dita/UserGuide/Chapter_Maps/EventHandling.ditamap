@@ -15,35 +15,35 @@
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
 <map>
  <title>Event Framework</title>
-    <topicref href="../Event_Handling/EventFramework-Title.dita">
-        <topicref href="../Event_Handling/EventFramework-Overview.dita" chunk="to-content">
+    <topicref href="../Event_Handling/EventFramework-Title.dita" chunk="to-content">
+        <topicref href="../Event_Handling/EventFramework-Overview.dita">
             <topicmeta><shortdesc></shortdesc></topicmeta>
             <topicref href="../Event_Handling/EventGenerationStages.dita"/>
             <topicref href="../Event_Handling/ExecutorStages.dita"/>
             <topicref href="../Event_Handling/LogicalPairings.dita"/>
         </topicref>
-        <topicref href="../Event_Handling/EventStreams.dita" chunk="to-content">
+        <topicref href="../Event_Handling/EventStreams.dita" >
             <topicmeta><shortdesc></shortdesc></topicmeta>
             <topicref href="../Event_Handling/Streams-TaskExecution.dita"/>
             <topicref href="../Event_Handling/Streams-EventStorage.dita"/>
         </topicref>
-        <topicref href="../Event_Handling/EventRecords.dita" chunk="to-content">
+        <topicref href="../Event_Handling/EventRecords.dita" >
             <topicmeta><shortdesc></shortdesc></topicmeta>
             <topicref href="../Event_Handling/EventRecordHeaders.dita"/>
         </topicref>
-        <topicref href="../Event_Handling/CaseStudy-Parquet.dita" chunk="to-content">
+        <topicref href="../Event_Handling/CaseStudy-Parquet.dita" >
             <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
-        <topicref href="../Event_Handling/CaseStudy-Impala.dita" chunk="to-content">
+        <topicref href="../Event_Handling/CaseStudy-Impala.dita" >
             <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
-        <topicref href="../Event_Handling/CaseStudy-FileManagement.dita" chunk="to-content">
+        <topicref href="../Event_Handling/CaseStudy-FileManagement.dita" >
             <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
-        <topicref href="../Event_Handling/CaseStudy-EventStorage.dita" chunk="to-content">
+        <topicref href="../Event_Handling/CaseStudy-EventStorage.dita">
         <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
-        <topicref href="../Event_Handling/DataPreview_Monitor.dita" chunk="to-content">
+        <topicref href="../Event_Handling/DataPreview_Monitor.dita">
             <topicref href="../Event_Handling/DataPreview.dita"/>
             <topicref href="../Event_Handling/MonitorMode.dita"/>
         </topicref>
-        <topicref href="../Event_Handling/EventFramework-Summary.dita" chunk="to-content">
+        <topicref href="../Event_Handling/EventFramework-Summary.dita">
             <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
     </topicref>
 </map>

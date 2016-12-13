@@ -15,8 +15,8 @@
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
 <map>
  <title>Hive Drift Solution</title>
-    <topicref href="../Hive_Drift_Solution/HiveDriftSolution_title.dita">
-        <topicref href="../Hive_Drift_Solution/HiveDrift-Overview.dita" chunk="to-content">
+    <topicref href="../Hive_Drift_Solution/HiveDriftSolution_title.dita" chunk="to-content">
+        <topicref href="../Hive_Drift_Solution/HiveDrift-Overview.dita" >
             <topicmeta><shortdesc></shortdesc></topicmeta>
             <topicref href="../Hive_Drift_Solution/ImpalaSupport.dita"/>
             <topicref href="../Hive_Drift_Solution/FlattenRecords.dita"/>
@@ -25,7 +25,7 @@
             <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
         <topicref href="../Hive_Drift_Solution/Implementation.dita">
             <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
-        <topicref href="../Hive_Drift_Solution/CaseStudy.dita" chunk="to-content">
+        <topicref href="../Hive_Drift_Solution/CaseStudy.dita">
             <topicmeta><shortdesc></shortdesc></topicmeta>
             <topicref href="../Hive_Drift_Solution/Example-HMProcessor.dita"/>
             <topicref href="../Hive_Drift_Solution/Example-HMDestination.dita"/>

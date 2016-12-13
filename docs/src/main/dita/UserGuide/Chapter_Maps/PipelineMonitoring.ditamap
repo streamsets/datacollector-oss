@@ -15,29 +15,29 @@
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
 <map>
  <title>Pipeline Monitoring</title>
- <topicref href="../Pipeline_Monitoring/PipelineMonitoring_title.dita">
-  <topicref href="../Pipeline_Monitoring/PipelineMonitoring.dita" chunk="to-content">
+ <topicref href="../Pipeline_Monitoring/PipelineMonitoring_title.dita" chunk="to-content">
+  <topicref href="../Pipeline_Monitoring/PipelineMonitoring.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Pipeline_Monitoring/DataCollectorWindow-Monitor.dita" chunk="to-content">
+  <topicref href="../Pipeline_Monitoring/DataCollectorWindow-Monitor.dita" >
    <topicmeta>
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Pipeline_Monitoring/ViewingPipelineStageStatistics.dita" chunk="to-content">
+  <topicref href="../Pipeline_Monitoring/ViewingPipelineStageStatistics.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Pipeline_Monitoring/MonitoringErrors.dita" chunk="to-content">  
+  <topicref href="../Pipeline_Monitoring/MonitoringErrors.dita">  
    <topicmeta>
    <shortdesc/>
   </topicmeta>
    <topicref href="../Pipeline_Monitoring/Stage-RelatedErrors.dita"/>
   </topicref>
-  <topicref href="../Pipeline_Monitoring/Snapshots.dita" chunk="to-content"> 
+  <topicref href="../Pipeline_Monitoring/Snapshots.dita"> 
    <topicmeta>
    <shortdesc/>
   </topicmeta>
@@ -47,7 +47,7 @@
     </topicmeta>
    </topicref>
   </topicref>
-  <topicref href="../Pipeline_Monitoring/ViewingtheRunHistory.dita" chunk="to-content">   
+  <topicref href="../Pipeline_Monitoring/ViewingtheRunHistory.dita">   
    <topicmeta>
    <shortdesc/>
   </topicmeta>

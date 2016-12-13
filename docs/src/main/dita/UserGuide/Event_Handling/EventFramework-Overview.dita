@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_cph_5h4_lx">
-    <title>Event Framework</title>
+    <title>Event Framework Overview</title>
     <conbody>
         <p><indexterm>event framework<indexterm>overview</indexterm></indexterm>The <term>event
                 framework</term> enables the pipeline to trigger tasks in external systems based on
