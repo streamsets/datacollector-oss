@@ -74,11 +74,9 @@
                                 </row>
                                 <row>
                                     <entry>Output Field</entry>
-                                    <entry>Name of the field to pass the lookup value. You can
-                                        specify an existing field or a new field. If the field does
-                                        not exist, HBase Lookup creates the field. <p>Precede each
-                                            field name with a slash as follows:
-                                        /FieldName.</p></entry>
+                                    <entry>Name of the field in the record to pass the lookup value.
+                                        You can specify an existing field or a new field. If the
+                                        field does not exist, HBase Lookup creates the field. </entry>
                                 </row>
                                 <row>
                                     <entry>Enable Local Caching

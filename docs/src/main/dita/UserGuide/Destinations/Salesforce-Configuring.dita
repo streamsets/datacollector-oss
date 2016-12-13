@@ -89,12 +89,12 @@
                                     <entry>Map fields in the record to existing fields in the
                                         Salesforce object. Enter the following:<ul
                                             id="ul_zgb_wlw_tw">
-                                            <li>SDC Field - Name of the field in the record. Precede
-                                                each field name with a slash as follows:
-                                                /FieldName.</li>
+                                            <li>SDC Field - Name of the field in the record that
+                                                contains the data to be written. </li>
                                             <li>Salesforce Field - API name of the existing field in
-                                                the Salesforce object. Enter a field name or enter
-                                                an expression that defines the field. </li>
+                                                the Salesforce object that receives the data. Enter
+                                                a field name or enter an expression that defines the
+                                                field. </li>
                                         </ul><p>Use the <uicontrol>Add</uicontrol> icon to create
                                             additional field mappings.</p></entry>
                                 </row>

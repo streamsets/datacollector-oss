@@ -75,9 +75,7 @@
                                                 <li>SDC Field. Name of the field in the record that
                                                   receives the lookup value. You can specify an
                                                   existing field or a new field. If the field does
-                                                  not exist, JDBC Lookup creates the field. Precede
-                                                  each field name with a slash as follows:
-                                                  /FieldName.</li>
+                                                  not exist, JDBC Lookup creates the field. </li>
                                             </ul></p><p>Use the <uicontrol>Add</uicontrol> icon to
                                             create additional column mappings.</p></entry>
                                 </row>

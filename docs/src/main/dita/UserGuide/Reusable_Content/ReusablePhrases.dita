@@ -1949,8 +1949,8 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   </dl></p>
             <p id="LookupCacheSummary">When you stop the pipeline, the processor clears the
                   cache.</p>
-            <draft-comment author="alisontaylor">Lookup Cache - used for JDBC Lookup
-                  processor</draft-comment>
+            <draft-comment author="alisontaylor">Lookup Cache - used for JDBC Lookup and Salesforce
+                  Lookup processors</draft-comment>
             <p id="JDBCLookupCacheOverview">The processor caches values until the cache reaches the
                   maximum size or the expiration time. When the first limit is reached, the
                   processor evicts values from the cache.</p>

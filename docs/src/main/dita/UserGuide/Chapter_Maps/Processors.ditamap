@@ -210,6 +210,14 @@
    <topicref href="../Processors/RedisLookup-Cache.dita"/>
    <topicref href="../Processors/RedisLookup-Configuring.dita"/>
   </topicref>
+  <topicref href="../Processors/SalesforceLookup.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Processors/SalesforceLookup-Cache.dita"/>
+   <topicref href="../Processors/SalesforceLookup-APIVersion.dita"/>
+   <topicref href="../Processors/SalesforceLookup-Configuring.dita"/>
+  </topicref>
   <topicref href="../Processors/Spark.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
