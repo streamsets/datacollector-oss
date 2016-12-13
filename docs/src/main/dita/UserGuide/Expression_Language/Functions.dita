@@ -107,7 +107,10 @@
         <ul id="ul_mmh_mqr_5x">
          <li>file:fileExtension(&lt;filepath>)</li>
          <li>file:fileName(&lt;filepath>)</li>
-         <li>file:filePath(&lt;filepath>,&lt;integer>)</li>
+         <li>file:parentPath(&lt;filepath>)</li>
+         <li>
+          <p>file:pathElement(&lt;filepath>, &lt;integer>) </p>
+         </li>
          <li>file:removeExtension(&lt;filepath>)</li>
         </ul>
        </entry>
