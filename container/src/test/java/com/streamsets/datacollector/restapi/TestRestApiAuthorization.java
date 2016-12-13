@@ -205,6 +205,9 @@ public class TestRestApiAuthorization {
     list.add(new RestApi("/rest/v1/system/info", Method.GET, AuthzRole.ALL_ROLES));
     list.add(new RestApi("/rest/v1/system/info/currentUser", Method.GET, AuthzRole.ALL_ROLES));
 
+    list.add(new RestApi("/rest/v1/system/users", Method.GET, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/system/groups", Method.GET, AuthzRole.ADMIN));
+
     list.add(new RestApi("/rest/v1/logout", Method.POST, AuthzRole.ALL_ROLES));
 
     list.add(new RestApi("/rest/v1/pipelines/status", Method.GET, AuthzRole.ALL_ROLES));

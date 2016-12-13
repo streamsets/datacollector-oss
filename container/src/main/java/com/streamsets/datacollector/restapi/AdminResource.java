@@ -23,7 +23,9 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.event.handler.remote.RemoteEventHandlerTask;
 import com.streamsets.datacollector.io.DataStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.bean.DPMInfoJson;
+import com.streamsets.datacollector.restapi.bean.UserJson;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.datacollector.util.Configuration;
@@ -80,11 +82,13 @@ public class AdminResource {
 
   private final RuntimeInfo runtimeInfo;
   private final Configuration config;
+  private final UserGroupManager userGroupManager;
 
   @Inject
-  public AdminResource(RuntimeInfo runtimeInfo, Configuration config) {
+  public AdminResource(RuntimeInfo runtimeInfo, Configuration config, UserGroupManager userGroupManager) {
     this.runtimeInfo = runtimeInfo;
     this.config = config;
+    this.userGroupManager = userGroupManager;
   }
 
   @POST
@@ -398,7 +402,6 @@ public class AdminResource {
     return Response.ok(augmented).build();
   }
 
-
   @GET
   @Path("/directories")
   @ApiOperation(value = "Returns SDC Directories", response = Map.class, authorizations = @Authorization(value = "basic"))
@@ -413,4 +416,33 @@ public class AdminResource {
     map.put("resourcesDir", runtimeInfo.getResourcesDir());
     return Response.ok(map).build();
   }
+
+  @GET
+  @Path("/users")
+  @ApiOperation(
+      value = "Returns All Users Info",
+      response = UserJson.class,
+      responseContainer = "List",
+      authorizations = @Authorization(value = "basic")
+  )
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
+  public Response getUsers() throws IOException {
+    return Response.ok(userGroupManager.getUsers()).build();
+  }
+
+  @GET
+  @Path("/groups")
+  @ApiOperation(
+      value = "Returns All Group names",
+      response = UserJson.class,
+      responseContainer = "List",
+      authorizations = @Authorization(value = "basic")
+  )
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
+  public Response getGroups() throws IOException {
+    return Response.ok(userGroupManager.getGroups()).build();
+  }
+
 }

@@ -22,7 +22,9 @@ package com.streamsets.datacollector.http;
 import com.google.common.collect.ImmutableBiMap;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.util.Configuration;
+import org.eclipse.jetty.security.LoginService;
 
 import javax.inject.Inject;
 import java.util.Map;
@@ -30,6 +32,7 @@ import java.util.Set;
 
 public class DataCollectorWebServerTask extends WebServerTask {
   private BuildInfo buildInfo;
+  private UserGroupManager userGroupManager;
 
   @Inject
   public DataCollectorWebServerTask(
@@ -37,10 +40,12 @@ public class DataCollectorWebServerTask extends WebServerTask {
       RuntimeInfo runtimeInfo,
       Configuration conf,
       Set<ContextConfigurator> contextConfigurators,
-      Set<WebAppProvider> webAppProviders
+      Set<WebAppProvider> webAppProviders,
+      UserGroupManager userGroupManager
   ) {
     super(buildInfo, runtimeInfo, conf, contextConfigurators, webAppProviders);
     this.buildInfo = buildInfo;
+    this.userGroupManager = userGroupManager;
   }
 
   @Override
@@ -66,6 +71,13 @@ public class DataCollectorWebServerTask extends WebServerTask {
 
   protected boolean isDisconnectedSSOModeEnabled() {
     return true;
+  }
+
+  @Override
+  protected LoginService getLoginService(Configuration conf, String mode) {
+    LoginService loginService = super.getLoginService(conf, mode);
+    this.userGroupManager.setLoginService(loginService);
+    return loginService;
   }
 
 }

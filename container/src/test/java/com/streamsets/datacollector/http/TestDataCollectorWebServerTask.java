@@ -22,6 +22,7 @@ package com.streamsets.datacollector.http;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.DataCollectorBuildInfo;
+import com.streamsets.datacollector.main.FileUserGroupManager;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.SSOConstants;
@@ -39,9 +40,14 @@ public class TestDataCollectorWebServerTask {
     BuildInfo buildInfo = new DataCollectorBuildInfo();
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getBaseHttpUrl()).thenReturn("url");
-    WebServerTask webServerTask = new DataCollectorWebServerTask(buildInfo, runtimeInfo, new Configuration(),
+    WebServerTask webServerTask = new DataCollectorWebServerTask(
+        buildInfo,
+        runtimeInfo,
+        new Configuration(),
         Collections.<ContextConfigurator>emptySet(),
-        Collections.<WebAppProvider>emptySet());
+        Collections.<WebAppProvider>emptySet(),
+        new FileUserGroupManager()
+    );
     Map<String, String> expectedAttrs = ImmutableMap.<String, String>builder().put(SSOConstants.SERVICE_BASE_URL_ATTR,
         runtimeInfo
         .getBaseHttpUrl())

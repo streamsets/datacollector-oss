@@ -19,20 +19,19 @@
  */
 package com.streamsets.datacollector.http;
 
-import java.io.File;
-import java.nio.file.Paths;
-import java.util.Set;
-
-import javax.inject.Inject;
-
 import com.streamsets.datacollector.main.BuildInfo;
+import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.main.UserGroupManager;
+import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.pipeline.api.impl.Utils;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.streamsets.datacollector.main.RuntimeInfo;
-import com.streamsets.datacollector.util.Configuration;
-import com.streamsets.pipeline.api.impl.Utils;
+import javax.inject.Inject;
+import java.io.File;
+import java.nio.file.Paths;
+import java.util.Set;
 
 public class SlaveWebServerTask extends DataCollectorWebServerTask {
 
@@ -55,9 +54,10 @@ public class SlaveWebServerTask extends DataCollectorWebServerTask {
       RuntimeInfo runtimeInfo,
       Configuration conf,
       Set<ContextConfigurator> contextConfigurators,
-      Set<WebAppProvider> webAppProviders
+      Set<WebAppProvider> webAppProviders,
+      UserGroupManager userGroupManager
   ) {
-    super(buildInfo, runtimeInfo, conf, contextConfigurators, webAppProviders);
+    super(buildInfo, runtimeInfo, conf, contextConfigurators, webAppProviders, userGroupManager);
     this.conf = conf;
   }
 

@@ -25,6 +25,7 @@ import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.publicrestapi.PublicRestAPI;
 import com.streamsets.datacollector.restapi.RestAPI;
 import com.streamsets.datacollector.restapi.configuration.BuildInfoInjector;
@@ -34,6 +35,7 @@ import com.streamsets.datacollector.restapi.configuration.RestAPIResourceConfig;
 import com.streamsets.datacollector.restapi.configuration.RuntimeInfoInjector;
 import com.streamsets.datacollector.restapi.configuration.StageLibraryInjector;
 import com.streamsets.datacollector.restapi.configuration.StandAndClusterManagerInjector;
+import com.streamsets.datacollector.restapi.configuration.UserGroupManagerInjector;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.task.TaskWrapper;
@@ -318,6 +320,17 @@ public class WebServerModule {
       @Override
       public void init(ServletContextHandler context) {
         context.setAttribute(BuildInfoInjector.BUILD_INFO, buildInfo);
+      }
+    };
+  }
+
+
+  @Provides(type = Type.SET)
+  ContextConfigurator provideUserGroupManager(final UserGroupManager userGroupManager) {
+    return new ContextConfigurator() {
+      @Override
+      public void init(ServletContextHandler context) {
+        context.setAttribute(UserGroupManagerInjector.USER_GROUP_MANAGER, userGroupManager);
       }
     };
   }

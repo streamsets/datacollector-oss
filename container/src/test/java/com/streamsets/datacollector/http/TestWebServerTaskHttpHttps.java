@@ -22,6 +22,7 @@ package com.streamsets.datacollector.http;
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.main.DataCollectorBuildInfo;
+import com.streamsets.datacollector.main.FileUserGroupManager;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
@@ -123,7 +124,8 @@ public class TestWebServerTaskHttpHttps {
         runtimeInfo,
         conf,
         configurators,
-        webAppProviders
+        webAppProviders,
+        new FileUserGroupManager()
     );
   }
 

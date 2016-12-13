@@ -21,6 +21,8 @@ package com.streamsets.datacollector.restapi;
 
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.main.UserGroupManager;
+import com.streamsets.datacollector.restapi.bean.UserJson;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.datacollector.util.PipelineException;
 
@@ -54,11 +56,13 @@ public class InfoResource {
 
   private final BuildInfo buildInfo;
   private final RuntimeInfo runtimeInfo;
+  private final UserGroupManager userGroupManager;
 
   @Inject
-  public InfoResource(BuildInfo buildInfo, RuntimeInfo runtimeInfo) {
+  public InfoResource(BuildInfo buildInfo, RuntimeInfo runtimeInfo, UserGroupManager userGroupManager) {
     this.buildInfo = buildInfo;
     this.runtimeInfo = runtimeInfo;
+    this.userGroupManager = userGroupManager;
   }
 
   @GET
@@ -79,6 +83,7 @@ public class InfoResource {
     Map<String, Object> map = new HashMap<>();
     String user;
     List<String> roles = new ArrayList<>();
+    List<String> groups = new ArrayList<>();
     Principal principal = context.getUserPrincipal();
 
     if(principal != null) {
@@ -104,8 +109,11 @@ public class InfoResource {
       roles.add(AuthzRole.ADMIN);
     }
 
+    UserJson userJson = userGroupManager.getUser(user);
+
     map.put("user", user);
     map.put("roles", roles);
+    map.put("groups", userJson != null ? userJson.getGroups() : null);
     return Response.status(Response.Status.OK).entity(map).build();
   }
 

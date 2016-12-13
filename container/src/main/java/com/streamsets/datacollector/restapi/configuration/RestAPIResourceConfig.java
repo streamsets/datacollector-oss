@@ -22,6 +22,7 @@ package com.streamsets.datacollector.restapi.configuration;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.RestAPI;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
@@ -54,6 +55,7 @@ public class RestAPIResourceConfig extends ResourceConfig {
         bindFactory(RuntimeInfoInjector.class).to(RuntimeInfo.class);
         bindFactory(BuildInfoInjector.class).to(BuildInfo.class);
         bindFactory(StandAndClusterManagerInjector.class).to(Manager.class);
+        bindFactory(UserGroupManagerInjector.class).to(UserGroupManager.class);
       }
     });
 

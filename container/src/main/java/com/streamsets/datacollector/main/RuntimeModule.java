@@ -37,8 +37,13 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-@Module(library = true, injects = {BuildInfo.class, RuntimeInfo.class, Configuration.class, EventListenerManager.class},
-    includes = MetricsModule.class)
+@Module(library = true, injects = {
+    BuildInfo.class,
+    RuntimeInfo.class,
+    Configuration.class,
+    EventListenerManager.class,
+    UserGroupManager.class
+}, includes = MetricsModule.class)
 public class RuntimeModule {
   private static final Logger LOG = LoggerFactory.getLogger(RuntimeModule.class);
   public static final String DATA_COLLECTOR_BASE_HTTP_URL = "sdc.base.http.url";
@@ -87,6 +92,11 @@ public class RuntimeModule {
   @Provides @Singleton
   public EventListenerManager provideEventListenerManager() {
     return new EventListenerManager();
+  }
+
+  @Provides @Singleton
+  public UserGroupManager provideUserGroupManager() {
+    return new FileUserGroupManager();
   }
 
 }

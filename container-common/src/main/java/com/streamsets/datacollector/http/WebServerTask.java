@@ -790,7 +790,7 @@ public abstract class WebServerTask extends AbstractTask {
     }
   }
 
-  private LoginService getLoginService(Configuration conf, String mode) {
+  protected LoginService getLoginService(Configuration conf, String mode) {
     LoginService loginService = null;
     String loginModule = this.conf.get(HTTP_AUTHENTICATION_LOGIN_MODULE, HTTP_AUTHENTICATION_LOGIN_MODULE_DEFAULT);
     switch (loginModule) {
