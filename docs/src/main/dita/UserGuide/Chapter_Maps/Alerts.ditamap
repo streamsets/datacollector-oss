@@ -15,13 +15,13 @@
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
 <map>
  <title>Rules and Alerts</title>
- <topicref href="../Alerts/RulesAlerts_title.dita">
+ <topicref href="../Alerts/RulesAlerts_title.dita" chunk="to-content">
   <topicref href="../Alerts/RulesAlerts-Overview.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Alerts/MetricAlerts.dita" chunk="to-content">
+  <topicref href="../Alerts/MetricAlerts.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
@@ -36,14 +36,14 @@
    <topicref href="../Alerts/MetricConditions.dita"/>
    <topicref href="../Alerts/MetricAlerts-Configuring.dita"/>
   </topicref>
-  <topicref href="../Alerts/DataAlerts.dita" chunk="to-content">
+  <topicref href="../Alerts/DataAlerts.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
    <topicref href="../Alerts/DataAlerts-Configuring.dita"/>
    <topicref href="../Alerts/DataAlerts-ViewingMetricsSummary.dita"/>
   </topicref>
-  <topicref href="../Alerts/DataDriftAlerts.dita" chunk="to-content">
+  <topicref href="../Alerts/DataDriftAlerts.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>

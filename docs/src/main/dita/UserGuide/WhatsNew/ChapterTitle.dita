@@ -12,17 +12,11 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
-<map>
- <title>Data Format Support</title>
-    <topicref href="../Apx-DataFormats/DataFormat_Title.dita"  chunk="to-content">
-        <topicref href="../Apx-DataFormats/DataFormat_Overview.dita">
-            <topicmeta>
-                <shortdesc/>
-            </topicmeta>
-            <topicref href="../Apx-DataFormats/Origins.dita"/>
-                
-            <topicref href="../Apx-DataFormats/Destinations.dita"/>
-        </topicref>
-    </topicref>
-</map>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_hz3_5fk_fy">
+ <title>What's New</title>
+ <shortdesc></shortdesc>
+ <conbody>
+  <p></p>
+ </conbody>
+</concept>

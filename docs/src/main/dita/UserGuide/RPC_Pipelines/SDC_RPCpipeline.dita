@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_lnh_z3z_bt">
- <title>SDC RPC Pipelines</title>
+ <title>SDC RPC Pipeline Overview</title>
  <shortdesc><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
     Remote Protocol Call pipelines, a.k.a. <term>SDC RPC pipelines</term>, are a set of StreamSets
     pipelines that pass data from one pipeline to another without writing to an intermediary system. </shortdesc>

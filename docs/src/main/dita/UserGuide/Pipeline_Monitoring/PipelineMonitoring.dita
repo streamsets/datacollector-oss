@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hsp_tnt_lq">
-  <title>Pipeline Monitoring</title>
+  <title>Pipeline Monitoring Overview</title>
   <shortdesc>When the <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs a
     pipeline, you can view real-time statistics about the pipeline, examine a sample of the data

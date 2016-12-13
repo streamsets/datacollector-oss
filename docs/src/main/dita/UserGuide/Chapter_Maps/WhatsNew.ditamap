@@ -14,15 +14,10 @@
 -->
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
 <map>
- <title>Data Format Support</title>
-    <topicref href="../Apx-DataFormats/DataFormat_Title.dita"  chunk="to-content">
-        <topicref href="../Apx-DataFormats/DataFormat_Overview.dita">
-            <topicmeta>
-                <shortdesc/>
-            </topicmeta>
-            <topicref href="../Apx-DataFormats/Origins.dita"/>
-                
-            <topicref href="../Apx-DataFormats/Destinations.dita"/>
+ <title>What's New</title>
+    <topicref href="../WhatsNew/ChapterTitle.dita" chunk="to-content">
+        <topicref href="../WhatsNew/2200.dita">
+            <topicref href="../WhatsNew/2200-Upgrade.dita"/>
         </topicref>
     </topicref>
 </map>

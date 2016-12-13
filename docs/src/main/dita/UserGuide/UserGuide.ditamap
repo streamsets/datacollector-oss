@@ -42,6 +42,7 @@
         </booklists>
     </frontmatter>
     <chapter href="Chapter_Maps/GettingStarted.ditamap" format="ditamap" collection-type="sequence"/>
+    <chapter href="Chapter_Maps/WhatsNew.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/Install_Config.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/Upgrade.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/PipelineDesign.ditamap" format="ditamap"/>

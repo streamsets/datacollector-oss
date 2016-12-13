@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_vd4_nsc_gs">
-  <title>Regular Expressions</title>
+  <title>Regular Expressions Overview</title>
   <shortdesc>A regular expression, also known as <term>regex</term>, describes a pattern for a
     string. </shortdesc>
   <conbody>

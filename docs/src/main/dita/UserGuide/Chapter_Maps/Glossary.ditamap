@@ -15,7 +15,7 @@
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
 <map>
  <title>Glossary</title>
- <topicref href="../Glossary/Glossary_title.dita">
+ <topicref href="../Glossary/Glossary_title.dita" chunk="to-content">
   <topicref href="../Glossary/GlossaryOfTerms.dita"/>
  </topicref>
 

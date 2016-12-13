@@ -15,8 +15,8 @@
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
 <map>
  <title>Data Preview</title>
- <topicref href="../Data_Preview/DataPreview_Title.dita">
-  <topicref href="../Data_Preview/DataPreview.dita" chunk="to-content">
+ <topicref href="../Data_Preview/DataPreview_Title.dita" chunk="to-content">
+  <topicref href="../Data_Preview/DataPreview.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
@@ -25,28 +25,28 @@
    <topicref href="../Data_Preview/WritingToDestinations.dita"/>
    <topicref href="../Data_Preview/Notes.dita"/>
   </topicref>
-  <topicref href="../Data_Preview/DataCollectorWindow-Preview.dita" chunk="to-content">
+  <topicref href="../Data_Preview/DataCollectorWindow-Preview.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
    <topicref href="../Data_Preview/PreviewCodes.dita"/>
   </topicref>
-  <topicref href="../Data_Preview/PreviewingaSingleStage.dita" chunk="to-content">
+  <topicref href="../Data_Preview/PreviewingaSingleStage.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Data_Preview/PreviewingMultipleStages.dita" chunk="to-content">
+  <topicref href="../Data_Preview/PreviewingMultipleStages.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Data_Preview/EditingPreviewData.dita" chunk="to-content">
+  <topicref href="../Data_Preview/EditingPreviewData.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Data_Preview/EditingProperties.dita" chunk="to-content">
+  <topicref href="../Data_Preview/EditingProperties.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>

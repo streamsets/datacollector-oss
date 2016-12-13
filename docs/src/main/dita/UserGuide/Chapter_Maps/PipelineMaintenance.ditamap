@@ -15,13 +15,13 @@
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
 <map>
  <title>Pipeline Maintenance</title>
- <topicref href="../Pipeline_Maintenance/PipelineMaintenance_title.dita">
+ <topicref href="../Pipeline_Maintenance/PipelineMaintenance_title.dita" chunk="to-content">
   <topicref href="../Pipeline_Maintenance/DataCollectorWindow_AllPipelines.dita">
   <topicmeta>
    <shortdesc/>
   </topicmeta>
  </topicref>
-  <topicref href="../Pipeline_Maintenance/StartingPipelines.dita" chunk="to-content">
+  <topicref href="../Pipeline_Maintenance/StartingPipelines.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>

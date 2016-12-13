@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_jtn_s3m_lq">
- <title>Data Preview</title>
+ <title>Data Preview Overview</title>
  <shortdesc>You can preview data to help build or fine-tune a pipeline. When you preview data, the
             <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         passes data through the pipeline and allows you to review how the data passes through each

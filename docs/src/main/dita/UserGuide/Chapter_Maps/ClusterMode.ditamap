@@ -15,8 +15,8 @@
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
 <map>
  <title>Cluster Pipelines</title>
- <topicref href="../Cluster_Mode/ClusterPipelines_title.dita">
-  <topicref href="../Cluster_Mode/ClusterPipelines.dita" chunk="to-content">
+ <topicref href="../Cluster_Mode/ClusterPipelines_title.dita" chunk="to-content">
+  <topicref href="../Cluster_Mode/ClusterPipelines.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Cluster_Mode/ClusterPipelines-ExecutionMode.dita"/>
    <topicref href="../Cluster_Mode/HTTPProtocols.dita"/>
@@ -33,16 +33,16 @@
      <shortdesc/>
     </topicmeta>
    </topicref></topicref>
-  <topicref href="../Cluster_Mode/KafkaRequirements.dita" chunk="to-content">
+  <topicref href="../Cluster_Mode/KafkaRequirements.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Cluster_Mode/Kafka-YARNStreamMode.dita"/>
    <topicref href="../Cluster_Mode/Kafka-MesosStreamMode.dita"/></topicref>
-  <topicref href="../Cluster_Mode/MapRRequirements.dita" chunk="to-content">
+  <topicref href="../Cluster_Mode/MapRRequirements.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Cluster_Mode/MapR-BatchMode.dita"/>
    <topicref href="../Cluster_Mode/MapR-StreamingMode.dita"/>
   </topicref>
-  <topicref href="../Cluster_Mode/HDFSRequirements.dita" chunk="to-content">
+  <topicref href="../Cluster_Mode/HDFSRequirements.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
  </topicref>
 </map>

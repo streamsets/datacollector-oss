@@ -15,7 +15,7 @@
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
 <map>
  <title>Grok Patterns</title>
- <topicref href="../Apx-GrokPatterns/GrokPatterns_title.dita">
+ <topicref href="../Apx-GrokPatterns/GrokPatterns_title.dita" chunk="to-content">
   <topicref href="../Apx-GrokPatterns/GrokPatterns.dita">
    <topicmeta>
     <shortdesc/>

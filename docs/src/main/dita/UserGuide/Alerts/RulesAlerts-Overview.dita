@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ugl_nlh_q5">
- <title>Rules and Alerts</title>
+ <title>Rules and Alerts Overview</title>
  <shortdesc>Define rules to enable the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
         capture information about a running pipeline. Enable the alert associated with a rule to be
