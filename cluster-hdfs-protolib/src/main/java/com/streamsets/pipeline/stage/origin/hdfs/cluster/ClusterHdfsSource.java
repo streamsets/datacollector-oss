@@ -323,15 +323,17 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     InputSplit fileSplit = new FileSplit(filePath, 0, splitLength, null);
     TaskAttemptContext taskAttemptContext = new TaskAttemptContextImpl(hadoopConf,
       TaskAttemptID.forName("attempt_1439420318532_0011_m_000000_0"));
-    RecordReader<LongWritable, Text> recordReader = textInputFormat.createRecordReader(fileSplit, taskAttemptContext);
-    recordReader.initialize(fileSplit, taskAttemptContext);
-    boolean hasNext = recordReader.nextKeyValue();
 
-    while (hasNext && batch.size() < batchSize && previewCount < batchSize) {
-      batch.add(new Pair(filePath.toUri().getPath() + "::" + recordReader.getCurrentKey(),
-        String.valueOf(recordReader.getCurrentValue())));
-      hasNext = recordReader.nextKeyValue(); // not like iterator.hasNext, actually advances
-      previewCount++;
+    try (RecordReader<LongWritable, Text> recordReader = textInputFormat.createRecordReader(fileSplit, taskAttemptContext)) {
+      recordReader.initialize(fileSplit, taskAttemptContext);
+      boolean hasNext = recordReader.nextKeyValue();
+
+      while (hasNext && batch.size() < batchSize && previewCount < batchSize) {
+        batch.add(new Pair(filePath.toUri().getPath() + "::" + recordReader.getCurrentKey(),
+            String.valueOf(recordReader.getCurrentValue())));
+        hasNext = recordReader.nextKeyValue(); // not like iterator.hasNext, actually advances
+        previewCount++;
+      }
     }
     return batch;
   }
