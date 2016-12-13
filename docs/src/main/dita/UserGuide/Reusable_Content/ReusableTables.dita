@@ -85,8 +85,8 @@
   <p>
    <draft-comment author="Loretta">ORIGIN rows - <uicontrol>ProduceSingleRec</uicontrol> is used by
     Kafka Consumer and MapR Streams Consumer. <uicontrol>MaxBatchSize</uicontrol> and
-     <uicontrol>BatchWaitTime</uicontrol> rows are used in Configuring Kafka Consumer, JMS Consumer.
-    See if they should go anywhere else.</draft-comment>
+     <uicontrol>BatchWaitTime</uicontrol> rows are used in Configuring Kafka Consumer, JMS Consumer,
+    Salesforce origin, Salesforce Lookup. See if they should go anywhere else.</draft-comment>
    <draft-comment author="Loretta">Charsets are used by message and file origins. But Directory
     Charset is standalone. </draft-comment>
    <table frame="all" rowsep="1" colsep="1" id="table_tft_4jk_dt">
@@ -922,7 +922,8 @@
     </tbody>
    </tgroup>
   </table>
-  <draft-comment author="alisontaylor">JDBC Lookup uses rows in this table</draft-comment>
+  <draft-comment author="alisontaylor">JDBC Lookup and Salesforce Lookup use rows in this
+   table</draft-comment>
   <table frame="all" rowsep="1" colsep="1" id="table_ns3_p7s_zv">
    <tgroup cols="2">
     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -1172,9 +1173,9 @@
       </tbody>
      </tgroup>
     </table>
-  <draft-comment author="alisontaylor">Salesforce origin and destination use the first three rows in
-   this table, and use the description of the last row. Wave Analytics destination uses the first
-   two rows in the table.</draft-comment>
+  <draft-comment author="alisontaylor">Salesforce origin, Salesforce Lookup processor, and
+   Salesforce destination use the first three rows in this table, and use the description of the
+   last row. Wave Analytics destination uses the first two rows in the table.</draft-comment>
   <table frame="all" rowsep="1" colsep="1" id="table_fg1_cbc_tx">
    <tgroup cols="2">
     <colspec colname="c1" colnum="1" colwidth="1.5*"/>

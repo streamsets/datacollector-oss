@@ -40,8 +40,8 @@
                     </choice>
                 </choices>
                 <info>
-                    <p>Where &lt;version> is the API version number, for example, 38. For
-                        information about downloading libraries from Salesforce WSC, see <xref
+                    <p>Where &lt;version> is the API version number, for example, 38.</p> 
+                    <p>For information about downloading libraries from Salesforce WSC, see <xref
                             href="https://developer.salesforce.com/page/Introduction_to_the_Force.com_Web_Services_Connector"
                             format="html" scope="external"/>.</p>
                 </info>

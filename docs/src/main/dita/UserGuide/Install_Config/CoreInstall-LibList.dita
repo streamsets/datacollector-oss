@@ -591,6 +591,7 @@
                                 <p>For Salesforce. </p>
                                 <p>Includes:<ul id="ul_sbt_gkx_cy">
                                         <li>Salesforce origin</li>
+                                        <li>Salesforce Lookup processor</li>
                                         <li>Salesforce destination</li>
                                         <li>Wave Analytics destination</li>
                                     </ul></p>
