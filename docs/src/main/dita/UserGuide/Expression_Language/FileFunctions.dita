@@ -29,7 +29,7 @@
                             <li>filepath - An absolute path to a file.</li>
                         </ul></dd>
                     <dd>Return type: String.</dd>
-                    <dd>For example, the following expression returns .txt:
+                    <dd>For example, the following expression returns <codeph>.txt</codeph>:
                         <codeblock>${file:fileExtension('/logs/weblog.txt'}</codeblock></dd>
                 </dlentry>
                 <dlentry>
@@ -40,7 +40,25 @@
                         </ul></dd>
                     <dd>Return type: String.</dd>
                     <dd>For example, the following expression returns the filename,
-                        weblog.txt:<codeblock>${file:fileName('/logs/weblog.txt')}</codeblock></dd>
+                            <codeph>weblog.txt</codeph>:<codeblock>${file:fileName('/logs/weblog.txt')}</codeblock></dd>
+                </dlentry>
+                <dlentry>
+                    <dt>file:parentPath(&lt;filepath>)</dt>
+                    <dd>When used with a path to a file, returns the path to the file without the
+                        final separator, such as <codeph>/files</codeph> for
+                            <codeph>/files/file.log</codeph>. </dd>
+                    <dd>When used with a path to a directory, returns the path to the directory
+                        without the final separator, such as <codeph>/serverA/logs</codeph> for
+                            <codeph>/serverA/logs/2016</codeph>.</dd>
+                    <dd>Uses the following argument:<ul id="ul_cxd_hrf_gy">
+                            <li>filepath - An absolute path to a file.</li>
+                        </ul></dd>
+                    <dd>Return type: String.</dd>
+                    <dd>For example, the following expression that includes a path to a file returns
+                            <codeph>/serverB/logs</codeph>:<codeblock>${file:parentPath('/serverB/logs/weblog.txt')}</codeblock></dd>
+                    <dd>Similarly, the following expression that includes a path to a directory
+                        returns the parent directory,
+                        <codeph>/serverB/logs</codeph>:<codeblock>${file:parentPath('/serverB/logs/weblogs')}</codeblock></dd>
                 </dlentry>
                 <dlentry>
                     <dt>file:pathElement(&lt;filepath>, &lt;integer>)</dt>
@@ -69,7 +87,7 @@ ${file:pathElement('/logs/weblog.txt',-2}</codeblock></dd>
                         </ul></dd>
                     <dd>Return type: String.</dd>
                     <dd>For example, the following expression returns
-                        /logs/weblog:<codeblock>${file:removeExtension('/logs/weblog.txt'}</codeblock></dd>
+                        <codeph>/logs/weblog</codeph>:<codeblock>${file:removeExtension('/logs/weblog.txt'}</codeblock></dd>
                 </dlentry>
             </dl></p>
  </conbody>
