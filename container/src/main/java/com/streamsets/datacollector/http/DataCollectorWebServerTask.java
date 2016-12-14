@@ -32,6 +32,7 @@ import java.util.Set;
 
 public class DataCollectorWebServerTask extends WebServerTask {
   private BuildInfo buildInfo;
+  private Configuration conf;
   private UserGroupManager userGroupManager;
 
   @Inject
@@ -45,6 +46,7 @@ public class DataCollectorWebServerTask extends WebServerTask {
   ) {
     super(buildInfo, runtimeInfo, conf, contextConfigurators, webAppProviders);
     this.buildInfo = buildInfo;
+    this.conf = conf;
     this.userGroupManager = userGroupManager;
   }
 
@@ -76,7 +78,10 @@ public class DataCollectorWebServerTask extends WebServerTask {
   @Override
   protected LoginService getLoginService(Configuration conf, String mode) {
     LoginService loginService = super.getLoginService(conf, mode);
-    this.userGroupManager.setLoginService(loginService);
+    String loginModule = this.conf.get(HTTP_AUTHENTICATION_LOGIN_MODULE, HTTP_AUTHENTICATION_LOGIN_MODULE_DEFAULT);
+    if (loginModule.equals(FILE)) {
+      this.userGroupManager.setLoginService(loginService);
+    }
     return loginService;
   }
 

@@ -101,4 +101,10 @@ public class SlaveRuntimeModule {
   public EventListenerManager provideEventListenerManager() {
     return new EventListenerManager();
   }
+
+  @Provides @Singleton
+  public UserGroupManager provideUserGroupManager() {
+    return new FileUserGroupManager();
+  }
+
 }

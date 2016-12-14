@@ -21,6 +21,7 @@ package com.streamsets.datacollector.restapi;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.bean.DPMInfoJson;
 import com.streamsets.datacollector.util.Configuration;
 import org.glassfish.hk2.api.Factory;
@@ -102,6 +103,7 @@ public class TestAdminResource extends JerseyTest {
     protected void configure() {
       bindFactory(RuntimeInfoTestInjector.class).to(RuntimeInfo.class);
       bindFactory(ConfigurationTestInjector.class).to(Configuration.class);
+      bindFactory(UserGroupManagerTestInjector.class).to(UserGroupManager.class);
     }
   }
 
@@ -138,6 +140,20 @@ public class TestAdminResource extends JerseyTest {
 
     @Override
     public void dispose(Configuration configuration) {
+    }
+
+  }
+
+  public static class UserGroupManagerTestInjector implements Factory<UserGroupManager> {
+    @Singleton
+    @Override
+    public UserGroupManager provide() {
+      UserGroupManager userGroupManager = Mockito.mock(UserGroupManager.class);
+      return userGroupManager;
+    }
+
+    @Override
+    public void dispose(UserGroupManager userGroupManager) {
     }
 
   }

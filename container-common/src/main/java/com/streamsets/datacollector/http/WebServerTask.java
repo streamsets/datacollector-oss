@@ -147,7 +147,7 @@ public abstract class WebServerTask extends AbstractTask {
 
   public static final String HTTP_AUTHENTICATION_LOGIN_MODULE = "http.authentication.login.module";
   public static final String FILE = "file";
-  private static final String HTTP_AUTHENTICATION_LOGIN_MODULE_DEFAULT = "file";
+  public static final String HTTP_AUTHENTICATION_LOGIN_MODULE_DEFAULT = "file";
 
   public static final String HTTP_AUTHENTICATION_LDAP_ROLE_MAPPING = "http.authentication.ldap.role.mapping";
   private static final String HTTP_AUTHENTICATION_LDAP_ROLE_MAPPING_DEFAULT = "";
