@@ -37,10 +37,21 @@ public class EventRecordImpl extends RecordImpl implements EventRecord {
     setEventAtributes(type, version);
   }
 
+  private EventRecordImpl(RecordImpl record) {
+    super(record);
+  }
+
   private void setEventAtributes(String type, int version) {
     getHeader().setAttribute(EventRecord.TYPE, type);
     getHeader().setAttribute(EventRecord.VERSION, String.valueOf(version));
     getHeader().setAttribute(EventRecord.CREATION_TIMESTAMP, String.valueOf(System.currentTimeMillis()));
   }
+
+
+  @Override
+  public EventRecordImpl clone() {
+    return new EventRecordImpl(this);
+  }
+
 
 }
