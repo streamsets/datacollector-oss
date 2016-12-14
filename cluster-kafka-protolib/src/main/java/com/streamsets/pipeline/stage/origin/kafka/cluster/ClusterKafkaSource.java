@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.origin.kafka.cluster;
 
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.OffsetCommitter;
@@ -35,7 +36,6 @@ import com.streamsets.pipeline.stage.origin.kafka.KafkaConfigBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +44,7 @@ import java.util.Map;
  */
 public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitter, ClusterSource, ErrorListener {
   private static final Logger LOG = LoggerFactory.getLogger(ClusterKafkaSource.class);
+  private static final String NO_OF_PARTITIONS = "partitionCount";
   private final ControlChannel controlChannel;
   private final DataChannel dataChannel;
   private final Producer producer;
@@ -134,7 +135,12 @@ public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitt
 
   @Override
   public Map<String, String> getConfigsToShip() {
-    return new HashMap<String, String>();
+    try {
+      return ImmutableMap.of(NO_OF_PARTITIONS, String.valueOf(getParallelism()));
+    } catch (StageException e) {
+      //Won't happen as getParallelism is already called which would have caught and bubbled as exception.
+      throw new RuntimeException(e);
+    }
   }
 
   @Override

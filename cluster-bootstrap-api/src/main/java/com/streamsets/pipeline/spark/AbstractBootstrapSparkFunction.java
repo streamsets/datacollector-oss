@@ -50,7 +50,7 @@ public abstract class AbstractBootstrapSparkFunction<T1, T2> implements VoidFunc
   private Properties properties;
   private int batchSize;
   private volatile static boolean isPreprocessingMesosDone;
-  private static Object lockObject = new Object();
+  private static final Object lockObject = new Object();
   public AbstractBootstrapSparkFunction() {
   }
 
@@ -69,7 +69,7 @@ public abstract class AbstractBootstrapSparkFunction<T1, T2> implements VoidFunc
       synchronized (lockObject) {
         // If this is running under mesos
         if (!isPreprocessingMesosDone) {
-          isPreprocessingMesosDone = extractArchives(mesosHomeDir) ? true : false;
+          isPreprocessingMesosDone = extractArchives(mesosHomeDir);
           if (!isPreprocessingMesosDone) {
             throw new IllegalStateException("Cannot extract archives in dir:" + mesosHomeDir + "/" + SDC_MESOS_BASE_DIR
               + "; check the stdout file for more detailed errors");

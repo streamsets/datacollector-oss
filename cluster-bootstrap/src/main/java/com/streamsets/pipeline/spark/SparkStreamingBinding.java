@@ -19,14 +19,21 @@
  */
 package com.streamsets.pipeline.spark;
 
+import com.streamsets.pipeline.SdcClusterOffsetHelper;
 import com.streamsets.pipeline.Utils;
+import kafka.common.TopicAndPartition;
+import kafka.message.MessageAndMetadata;
 import kafka.serializer.DefaultDecoder;
 import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.function.Function;
 import org.apache.spark.streaming.Duration;
+import org.apache.spark.streaming.api.java.JavaInputDStream;
 import org.apache.spark.streaming.api.java.JavaPairInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.api.java.JavaStreamingContextFactory;
 import org.apache.spark.streaming.kafka.KafkaUtils;
+import scala.Tuple2;
+import scala.reflect.ClassTag;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -46,10 +53,20 @@ public class SparkStreamingBinding extends AbstractStreamingBinding {
 
   private static final Map<String, String> KAFKA_POST_0_9_TO_PRE_0_9_CONFIG_CHANGES = new HashMap<>();
   private static final String GROUP_ID_KEY = "group.id";
+
   static {
     KAFKA_POST_0_9_TO_PRE_0_9_CONFIG_CHANGES.put(KAFKA_AUTO_RESET_EARLIEST, KAFKA_AUTO_RESET_SMALLEST);
     KAFKA_POST_0_9_TO_PRE_0_9_CONFIG_CHANGES.put(KAFKA_AUTO_RESET_LATEST, KAFKA_AUTO_RESET_LARGEST);
   }
+
+  private static class MessageHandlerFunction implements Function<MessageAndMetadata<byte[], byte[]>, Tuple2<byte[], byte[]>> {
+    @Override
+    public Tuple2<byte[], byte[]> call(MessageAndMetadata<byte[], byte[]> v1) throws Exception {
+      return new Tuple2<>(v1.key(), v1.message());
+    }
+  }
+
+  private static Function<MessageAndMetadata<byte[], byte[]>, Tuple2<byte[], byte[]>> MESSAGE_HANDLER_FUNCTION  = new MessageHandlerFunction();
 
   public SparkStreamingBinding(Properties properties) {
     super(properties);
@@ -73,60 +90,59 @@ public class SparkStreamingBinding extends AbstractStreamingBinding {
   @Override
   protected JavaStreamingContextFactory getStreamingContextFactory(
       SparkConf conf,
-      String checkPointPath,
       String topic,
       String groupId,
       String autoOffsetValue,
       boolean isRunningInMesos
   ) {
-    JavaStreamingContextFactory javaStreamingContextFactory = new JavaStreamingContextFactoryImpl(
+    return new JavaStreamingContextFactoryImpl(
         conf,
         Utils.getKafkaMaxWaitTime(getProperties()),
-        checkPointPath.toString(),
         Utils.getKafkaMetadataBrokerList(getProperties()),
         topic,
+        Utils.getNumberOfPartitions(getProperties()),
         groupId,
         autoOffsetValue,
         isRunningInMesos
     );
-    return javaStreamingContextFactory;
   }
 
   private static class JavaStreamingContextFactoryImpl implements JavaStreamingContextFactory {
     private final SparkConf sparkConf;
     private final long duration;
-    private final String checkPointPath;
     private final String metaDataBrokerList;
     private final String topic;
+    private final int numberOfPartitions;
     private final String groupId;
     private final boolean isRunningInMesos;
+
     private String autoOffsetValue;
 
     public JavaStreamingContextFactoryImpl(
         SparkConf sparkConf,
         long duration,
-        String checkPointPath,
         String metaDataBrokerList,
         String topic,
+        int numberOfPartitions,
         String groupId,
         String autoOffsetValue,
         boolean isRunningInMesos
     ) {
       this.sparkConf = sparkConf;
       this.duration = duration;
-      this.checkPointPath = checkPointPath;
       this.metaDataBrokerList = metaDataBrokerList;
       this.topic = topic;
+      this.numberOfPartitions = numberOfPartitions;
       this.autoOffsetValue = autoOffsetValue;
       this.isRunningInMesos = isRunningInMesos;
       this.groupId = groupId;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public JavaStreamingContext create() {
       JavaStreamingContext result = new JavaStreamingContext(sparkConf, new Duration(duration));
-      result.checkpoint(checkPointPath);
-      Map<String, String> props = new HashMap<String, String>();
+      Map<String, String> props = new HashMap<>();
       props.put("metadata.broker.list", metaDataBrokerList);
       props.put(GROUP_ID_KEY, groupId);
       if (!autoOffsetValue.isEmpty()) {
@@ -136,9 +152,27 @@ public class SparkStreamingBinding extends AbstractStreamingBinding {
       logMessage("Meta data broker list " + metaDataBrokerList, isRunningInMesos);
       logMessage("Topic is " + topic, isRunningInMesos);
       logMessage("Auto offset reset is set to " + autoOffsetValue, isRunningInMesos);
-      JavaPairInputDStream<byte[], byte[]> dStream =
-          KafkaUtils.createDirectStream(result, byte[].class, byte[].class, DefaultDecoder.class, DefaultDecoder.class,
-              props, new HashSet<String>(Arrays.asList(topic.split(","))));
+      JavaPairInputDStream<byte[], byte[]> dStream;
+      if (offsetHelper.isSDCCheckPointing()) {
+        JavaInputDStream<Tuple2<byte[], byte[]>> stream =
+            KafkaUtils.createDirectStream(
+                result,
+                byte[].class,
+                byte[].class,
+                DefaultDecoder.class,
+                DefaultDecoder.class,
+                (Class<Tuple2<byte[], byte[]>>) ((Class)(Tuple2.class)),
+                props,
+                KafkaOffsetUtil.getOffsetForDStream(topic, numberOfPartitions),
+                MESSAGE_HANDLER_FUNCTION
+            );
+        ClassTag<byte[]> byteClassTag = scala.reflect.ClassTag$.MODULE$.apply(byte[].class);
+        dStream = JavaPairInputDStream.fromInputDStream(stream.inputDStream(), byteClassTag, byteClassTag);
+      } else {
+        dStream =
+            KafkaUtils.createDirectStream(result, byte[].class, byte[].class, DefaultDecoder.class, DefaultDecoder.class,
+                props, new HashSet<>(Arrays.asList(topic.split(","))));
+      }
       dStream.foreachRDD(new SparkDriverFunction());
       return result;
     }

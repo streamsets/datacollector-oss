@@ -21,12 +21,18 @@ package com.streamsets.pipeline.spark;
 
 import com.streamsets.pipeline.Utils;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.common.TopicPartition;
 import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.function.Function;
 import org.apache.spark.streaming.Duration;
+import org.apache.spark.streaming.api.java.JavaInputDStream;
 import org.apache.spark.streaming.api.java.JavaPairInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.api.java.JavaStreamingContextFactory;
 import org.apache.spark.streaming.kafka.v09.KafkaUtils;
+import scala.Tuple2;
+import scala.reflect.ClassTag;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -35,6 +41,17 @@ import java.util.Map;
 import java.util.Properties;
 
 public class MapRStreamingBinding extends AbstractStreamingBinding {
+
+  private static class MessageHandlerFunction implements Function<ConsumerRecord<byte[], byte[]>, Tuple2> {
+    @Override
+    public Tuple2<byte[], byte[]> call(ConsumerRecord<byte[], byte[]> v1) throws Exception {
+      return new Tuple2<>(v1.key(), v1.value());
+    }
+  }
+
+  private static final Function<ConsumerRecord<byte[], byte[]>, Tuple2> MESSAGE_HANDLER_FUNCTION
+      = new MessageHandlerFunction();
+
 
   public MapRStreamingBinding(Properties properties) {
     super(properties);
@@ -53,7 +70,6 @@ public class MapRStreamingBinding extends AbstractStreamingBinding {
   @Override
   protected JavaStreamingContextFactory getStreamingContextFactory(
       SparkConf conf,
-      String checkPointPath,
       String topic,
       String groupId,
       String autoOffsetValue,
@@ -62,8 +78,8 @@ public class MapRStreamingBinding extends AbstractStreamingBinding {
     return new JavaStreamingContextFactoryImpl(
         conf,
         Utils.getMaprStreamsWaitTime(getProperties()),
-        checkPointPath,
         topic,
+        Utils.getNumberOfPartitions(getProperties()),
         Utils.getPropertyOrEmptyString(getProperties(), AUTO_OFFSET_RESET),
         groupId,
         isRunningInMesos
@@ -74,8 +90,8 @@ public class MapRStreamingBinding extends AbstractStreamingBinding {
 
     private final SparkConf sparkConf;
     private final long duration;
-    private final String checkPointPath;
     private final String topic;
+    private final int numberOfPartitions;
     private final boolean isRunningInMesos;
     private final String autoOffsetValue;
     private final String groupId;
@@ -83,25 +99,34 @@ public class MapRStreamingBinding extends AbstractStreamingBinding {
     public JavaStreamingContextFactoryImpl(
         SparkConf sparkConf,
         long duration,
-        String checkPointPath,
         String topic,
+        int numberOfPartitions,
         String autoOffsetValue,
         String groupId,
         boolean isRunningInMesos
     ) {
       this.sparkConf = sparkConf;
       this.duration = duration;
-      this.checkPointPath = checkPointPath;
       this.topic = topic;
+      this.numberOfPartitions = numberOfPartitions;
       this.autoOffsetValue = autoOffsetValue;
       this.groupId = groupId;
       this.isRunningInMesos = isRunningInMesos;
     }
 
+    private Map<TopicPartition, Long> getOffsetForDStream(Map<Integer, Long> partitionToOffset) {
+      Map<TopicPartition, Long> offsetForDStream = new HashMap<>();
+      for (Map.Entry<Integer, Long> partitionAndOffset : partitionToOffset.entrySet()) {
+        offsetForDStream.put(new TopicPartition(topic, partitionAndOffset.getKey()), partitionAndOffset.getValue());
+      }
+      return offsetForDStream;
+    }
+
+
     @Override
+    @SuppressWarnings("unchecked")
     public JavaStreamingContext create() {
       JavaStreamingContext result = new JavaStreamingContext(sparkConf, new Duration(duration));
-      result.checkpoint(checkPointPath);
       Map<String, String> props = new HashMap<>();
       if (!autoOffsetValue.isEmpty()) {
         props.put(AbstractStreamingBinding.AUTO_OFFSET_RESET, autoOffsetValue);
@@ -111,9 +136,25 @@ public class MapRStreamingBinding extends AbstractStreamingBinding {
       props.put("key.deserializer", "org.apache.kafka.common.serialization.ByteArrayDeserializer");
       props.put("value.deserializer", "org.apache.kafka.common.serialization.ByteArrayDeserializer");
       props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
-      JavaPairInputDStream<byte[], byte[]> dStream =
-          KafkaUtils.createDirectStream(result, byte[].class, byte[].class,
-              props, new HashSet<>(Arrays.asList(topic.split(","))));
+      JavaPairInputDStream<byte[], byte[]> dStream;
+      if (offsetHelper.isSDCCheckPointing()) {
+        JavaInputDStream stream =
+            KafkaUtils.createDirectStream(
+                result,
+                byte[].class,
+                byte[].class,
+                Tuple2.class,
+                props,
+                MaprStreamsOffsetUtil.getOffsetForDStream(topic, numberOfPartitions),
+                MESSAGE_HANDLER_FUNCTION
+            );
+        ClassTag<byte[]> byteClassTag = scala.reflect.ClassTag$.MODULE$.apply(byte[].class);
+        dStream = JavaPairInputDStream.fromInputDStream(stream.inputDStream(), byteClassTag, byteClassTag);
+      } else {
+        dStream =
+            KafkaUtils.createDirectStream(result, byte[].class, byte[].class,
+                props, new HashSet<>(Arrays.asList(topic.split(","))));
+      }
       // This is not using foreach(Function<R, Void> foreachFunc) as its deprecated
       dStream.foreachRDD(new MapRSparkDriverFunction());
       return result;

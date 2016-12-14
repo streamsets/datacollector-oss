@@ -43,6 +43,7 @@ public class Utils {
   public static final String MAPR_STREAMS_SOURCE_CONFIG_BEAN_PREFIX = "maprstreamsSourceConfigBean.";
   public static final String MAPR_STREAMS_DATA_FORMAT_CONFIG_BEAN_PREFIX = MAPR_STREAMS_SOURCE_CONFIG_BEAN_PREFIX +
       "dataFormatConfig.";
+  private static final String NO_OF_PARTITIONS = "partitionCount";
 
   private Utils() {}
 
@@ -56,6 +57,12 @@ public class Utils {
   public static void checkArgument(boolean expression, String msg, Object ... params) {
     if (!expression) {
       throw new IllegalArgumentException((msg != null) ? format(msg, params) : "");
+    }
+  }
+
+  public static void checkState(boolean expression, String msg, Object... params) {
+    if (!expression) {
+      throw new IllegalStateException((msg != null) ? format(msg, params) : "");
     }
   }
 
@@ -188,6 +195,17 @@ public class Utils {
       return Long.parseLong(durationAsString);
     } catch (NumberFormatException e) {
       String msg = "Invalid " + MAPR_STREAMS_SOURCE_CONFIG_BEAN_PREFIX + "maxWaitTime '" + durationAsString + "' : "
+          + e;
+      throw new IllegalArgumentException(msg, e);
+    }
+  }
+
+  public static int getNumberOfPartitions(Properties properties) {
+    String numExecutors = properties.getProperty(NO_OF_PARTITIONS).trim();
+    try {
+      return Integer.parseInt(numExecutors);
+    } catch (NumberFormatException e) {
+      String msg = "Invalid parallelism/Number of executors : "
           + e;
       throw new IllegalArgumentException(msg, e);
     }

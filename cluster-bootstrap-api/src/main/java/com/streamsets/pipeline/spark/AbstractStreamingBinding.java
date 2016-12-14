@@ -21,8 +21,8 @@ package com.streamsets.pipeline.spark;
 
 import com.streamsets.pipeline.BootstrapCluster;
 import com.streamsets.pipeline.ClusterBinding;
+import com.streamsets.pipeline.SdcClusterOffsetHelper;
 import com.streamsets.pipeline.Utils;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.util.Properties;
 
@@ -46,6 +47,11 @@ public abstract class AbstractStreamingBinding implements ClusterBinding {
   private final boolean isRunningInMesos;
   private JavaStreamingContext ssc;
   private final Properties properties;
+  private FileSystem hdfs;
+
+  //Static mainly because we can't change the SparkDriverFunction to add this as a private variable instance
+  //because of the upgrade from spark checkpointing will fail to deserialize the Spark Driver Function
+  public static SdcClusterOffsetHelper offsetHelper;
 
   public AbstractStreamingBinding(Properties properties) {
     this.properties = Utils.checkNotNull(properties, "Properties");
@@ -62,13 +68,12 @@ public abstract class AbstractStreamingBinding implements ClusterBinding {
 
   //Visible For Testing (TODO - Import guava and make sure it doesn't conflict with spark's rootclassloader)
   CheckpointPath getCheckPointPath(String topic, String consumerGroup) {
-    CheckpointPath sdcCheckpointPath = new CheckpointPath.Builder(CHECKPOINT_BASE_DIR)
+    return new CheckpointPath.Builder(CHECKPOINT_BASE_DIR)
         .sdcId(Utils.getPropertyNotNull(properties, SDC_ID))
         .topic(topic)
         .consumerGroup(consumerGroup)
         .pipelineName(Utils.getPropertyNotNull(properties, CLUSTER_PIPELINE_NAME))
         .build();
-    return sdcCheckpointPath;
   }
 
   @Override
@@ -88,8 +93,7 @@ public abstract class AbstractStreamingBinding implements ClusterBinding {
     }
     URI hdfsURI = FileSystem.getDefaultUri(hadoopConf);
     logMessage("Default FS URI: " + hdfsURI, isRunningInMesos);
-    FileSystem hdfs = (new Path(hdfsURI)).getFileSystem(hadoopConf);
-
+    hdfs = (new Path(hdfsURI)).getFileSystem(hadoopConf);
 
     final Path checkPointPath = new Path(
         hdfs.getHomeDirectory(),
@@ -116,16 +120,25 @@ public abstract class AbstractStreamingBinding implements ClusterBinding {
       }
     }
 
+    offsetHelper = new SdcClusterOffsetHelper(checkPointPath, hdfs, Utils.getKafkaMaxWaitTime(properties));
+
     JavaStreamingContextFactory javaStreamingContextFactory = getStreamingContextFactory(
         conf,
-        checkPointPath.toString(),
         topic,
         consumerGroup,
         Utils.getPropertyOrEmptyString(properties, AUTO_OFFSET_RESET),
         isRunningInMesos
     );
 
-    ssc = JavaStreamingContext.getOrCreate(checkPointPath.toString(), hadoopConf, javaStreamingContextFactory, true);
+    //Upgrade path from spark check pointing to sdc check pointing
+    if (!offsetHelper.isSDCCheckPointing() && hdfs.listStatus(checkPointPath).length > 0) {
+      LOG.info("Initializing with existing spark checkpoint at: {}", checkPointPath);
+      ssc = JavaStreamingContext.getOrCreate(checkPointPath.toString(), hadoopConf, javaStreamingContextFactory, true);
+    } else {
+      LOG.info("Using SDC checkpoint mechanism at: {}", checkPointPath);
+      ssc = javaStreamingContextFactory.create();
+    }
+
     // mesos tries to stop the context internally, so don't do it here - deadlock bug in spark
     if (!isRunningInMesos) {
       final Thread shutdownHookThread = new Thread("Spark.shutdownHook") {
@@ -144,7 +157,6 @@ public abstract class AbstractStreamingBinding implements ClusterBinding {
 
   protected abstract JavaStreamingContextFactory getStreamingContextFactory(
       SparkConf conf,
-      String checkPointPath,
       String topic,
       String groupId,
       String autoOffsetValue,
@@ -163,7 +175,7 @@ public abstract class AbstractStreamingBinding implements ClusterBinding {
           conf.addResource(new Path(coreSite.getAbsolutePath()));
         } else {
           throw new IllegalStateException(
-            "Core-site xml for configuring Hadoop/S3 filesystem is required for checkpoint related metadata while running Spark Streaming");
+              "Core-site xml for configuring Hadoop/S3 filesystem is required for checkpoint related metadata while running Spark Streaming");
         }
         File hdfsSite = new File(hdfsS3ConfDir, "hdfs-site.xml");
         if (hdfsSite.exists()) {
@@ -185,6 +197,13 @@ public abstract class AbstractStreamingBinding implements ClusterBinding {
   public void close() {
     if (ssc != null) {
       ssc.close();
+    }
+    if (hdfs != null) {
+      try {
+        hdfs.close();
+      } catch (IOException e) {
+        LOG.error("Failed to close FileSystem. Reason: {}", e.toString(), e);
+      }
     }
   }
 

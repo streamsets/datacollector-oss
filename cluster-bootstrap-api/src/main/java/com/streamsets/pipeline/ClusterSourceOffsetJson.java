@@ -17,27 +17,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.spark;
+package com.streamsets.pipeline;
 
-import org.apache.spark.api.java.JavaPairRDD;
-import org.apache.spark.api.java.function.VoidFunction;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.io.Serializable;
-import java.util.Map;
+public class ClusterSourceOffsetJson {
+  private final String offset;
+  private final String version;
 
-/**
- * This function executes in the driver.
- */
-public class MapRSparkDriverFunction<T1, T2>  implements VoidFunction<JavaPairRDD<T1, T2>>, Serializable {
-
-  public MapRSparkDriverFunction() {
+  @JsonCreator
+  public ClusterSourceOffsetJson(
+      @JsonProperty("offset") String offset,
+      @JsonProperty("version") String version
+  ) {
+    this.offset = offset;
+    this.version = version;
   }
 
-  @Override
-  @SuppressWarnings("unchecked")
-  public void call(JavaPairRDD<T1, T2> byteArrayJavaRDD) throws Exception {
-    Map<Integer, Long> offsets = MaprStreamsOffsetUtil.getOffsets(byteArrayJavaRDD);
-    byteArrayJavaRDD.foreachPartition(new MapRBootstrapSparkFunction());
-    MaprStreamsOffsetUtil.saveOffsets(offsets);
+  public String getOffset() {
+    return offset;
+  }
+  public String getVersion() {
+    return version;
   }
 }
