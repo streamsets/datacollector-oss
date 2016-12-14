@@ -21,7 +21,6 @@ package com.streamsets.pipeline.stage.origin.ipctokafka;
 
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.RecordReader;
 import com.streamsets.pipeline.api.ext.RecordWriter;
@@ -32,7 +31,7 @@ import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
-import com.streamsets.pipeline.stage.origin.tokafka.ToKafkaSource;
+import com.streamsets.pipeline.stage.origin.tokafka.HttpServerToKafkaSource;
 import com.streamsets.testing.NetworkUtils;
 import com.streamsets.testing.SingleForkNoReuseTest;
 import kafka.consumer.ConsumerIterator;
@@ -106,7 +105,7 @@ public class TestSdcIpcToKafka {
     kafkaConfigBean.topic = TOPIC1;
     kafkaConfigBean.metadataBrokerList = sdcKafkaTestUtil.getMetadataBrokerURI();
 
-    final ToKafkaSource source = new SdcIpcToKafkaSource(configs, kafkaConfigBean, 1000);
+    final HttpServerToKafkaSource source = new SdcIpcToKafkaSource(configs, kafkaConfigBean, 1000);
 
     // create source runner
     final SourceRunner sourceRunner = new SourceRunner.Builder(SdcIpcToKafkaDSource.class, source)

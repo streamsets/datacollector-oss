@@ -20,26 +20,37 @@
 package com.streamsets.pipeline.stage.origin.httptokafka;
 
 import com.streamsets.pipeline.lib.http.HttpConfigs;
-import com.streamsets.pipeline.lib.http.HttpRequestFragmenter;
 import com.streamsets.pipeline.lib.http.NopHttpRequestFragmenter;
 import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
-import com.streamsets.pipeline.stage.origin.tokafka.ToKafkaSource;
+import com.streamsets.pipeline.stage.origin.tokafka.HttpServerToKafkaSource;
 
 import java.util.List;
 
-public class HttpToKafkaSource extends ToKafkaSource {
+public class HttpToKafkaSource extends HttpServerToKafkaSource {
+
+  public static final String HTTP_PATH = "/";
 
   public HttpToKafkaSource(HttpConfigs httpConfigs, KafkaTargetConfig kafkaConfigs, int kafkaMaxMessageSizeKB) {
-    super(httpConfigs, kafkaConfigs, kafkaMaxMessageSizeKB);
+    super(HTTP_PATH, httpConfigs, new NopHttpRequestFragmenter(), kafkaConfigs, kafkaMaxMessageSizeKB);
   }
 
   @Override
-  protected HttpRequestFragmenter createFragmenter() {
-    return new NopHttpRequestFragmenter();
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> issues = getHttpConfigs().init(getContext());
+    issues.addAll(getFragmenter().init(getContext()));
+    getKafkaConfigs().init(getContext(), issues);
+    if (issues.isEmpty()) {
+      issues.addAll(super.init());
+    }
+    return issues;
   }
 
   @Override
-  protected String getUriPath() {
-    return "/";
+  public void destroy() {
+    super.destroy();
+    getFragmenter().destroy();
+    getKafkaConfigs().destroy();
+    getHttpConfigs().destroy();
   }
+
 }

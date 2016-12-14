@@ -20,26 +20,37 @@
 package com.streamsets.pipeline.stage.origin.ipctokafka;
 
 import com.streamsets.pipeline.lib.http.HttpConfigs;
-import com.streamsets.pipeline.lib.http.HttpRequestFragmenter;
 import com.streamsets.pipeline.lib.sdcipc.SdcIpcRequestFragmenter;
 import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
-import com.streamsets.pipeline.stage.origin.tokafka.ToKafkaSource;
+import com.streamsets.pipeline.stage.origin.tokafka.HttpServerToKafkaSource;
 
-public class SdcIpcToKafkaSource extends ToKafkaSource {
+import java.util.List;
+
+public class SdcIpcToKafkaSource extends HttpServerToKafkaSource {
 
   public static final String IPC_PATH = "/ipc/v1";
 
-  public SdcIpcToKafkaSource(HttpConfigs httpConfigs, KafkaTargetConfig kafkaConfigs, int kafkaMaxMessageSize) {
-    super(httpConfigs, kafkaConfigs, kafkaMaxMessageSize);
+  public SdcIpcToKafkaSource(HttpConfigs httpConfigs, KafkaTargetConfig kafkaConfigs, int kafkaMaxMessageSizeKB) {
+    super(IPC_PATH, httpConfigs, new SdcIpcRequestFragmenter(), kafkaConfigs, kafkaMaxMessageSizeKB);
   }
 
   @Override
-  protected HttpRequestFragmenter createFragmenter() {
-    return new SdcIpcRequestFragmenter();
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> issues = getHttpConfigs().init(getContext());
+    issues.addAll(getFragmenter().init(getContext()));
+    getKafkaConfigs().init(getContext(), issues);
+    if (issues.isEmpty()) {
+      issues.addAll(super.init());
+    }
+    return issues;
   }
 
   @Override
-  protected String getUriPath() {
-    return IPC_PATH;
+  public void destroy() {
+    super.destroy();
+    getFragmenter().destroy();
+    getKafkaConfigs().destroy();
+    getHttpConfigs().destroy();
   }
+
 }
