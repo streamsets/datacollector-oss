@@ -40,8 +40,8 @@
                             <tbody>
                                 <row>
                                     <entry>Field to Flatten</entry>
-                                    <entry>String field that contains the XML data to
-                                        flatten.</entry>
+                                    <entry>String field that contains the well-formed XML document
+                                        to flatten.</entry>
                                 </row>
                                 <row>
                                     <entry>Keep Original Fields</entry>
@@ -49,14 +49,22 @@
                                         record. When selected, the processor flattens the specified
                                         field and keeps all other fields in the record. When
                                         cleared, the processor flattens the specified field and
-                                        removes all other fields in the record.<p>To keep original
-                                            fields, the root field of the record must be Map or
-                                            List-Map.</p></entry>
+                                        removes all other fields in the record.<p>To keep the
+                                            original fields, the root field of the record must be
+                                            Map or List-Map.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Overwrite Existing Fields</entry>
                                     <entry>Overwrites any existing fields with names that match the
-                                        new flattened fields. </entry>
+                                        new flattened fields. <p>When writing flattened fields to an
+                                            output field, allows the processor to overwrite an
+                                            existing field.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Output Field</entry>
+                                    <entry>Specifies an output field for flattened fields to be
+                                        written. You can use an existing field or name a new field
+                                        to be created. </entry>
                                 </row>
                                 <row>
                                     <entry>Record Delimiter <xref
@@ -65,9 +73,11 @@
                                                 id="image_h9p_p3v_yq"/></xref>
                                     </entry>
                                     <entry>
-                                        <p>XML element that indicates the end of a record. Used to
-                                            create multiple records from the XML data. To read the
-                                            data as a single record, omit this property. </p>
+                                        <p>XML element that indicates the data to use to generate
+                                            records. Use to create multiple records from an XML
+                                            document. Use an XML element directly under the root
+                                            element.</p>
+                                        <p>To read the data as a single record, omit this property. </p>
                                     </entry>
                                 </row>
                                 <row>

@@ -14,13 +14,15 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_eqj_vgw_vv">
- <title>Record Delimiter</title>
- <shortdesc>The XML Flattener creates records based on a user-defined record delimiter. The
-        delimiter specifies the XML element that indicates the end of a record. When no record
-        delimiter is defined, the processor reads the entire contents of the field as a single
-        record. </shortdesc>
+ <title>Generated Records</title>
  <conbody>
-  <p>For example, a string field contains the following XML:</p>
+  <p><indexterm>XML Flattener processor<indexterm>record delimiter</indexterm></indexterm>The XML
+            Flattener generates multiple records from a well-formed XML document based on a
+            user-defined record delimiter. The delimiter specifies the XML element to use to create
+            records. Use an XML element directly under the root element. </p>
+        <p>When no record delimiter is defined, the processor reads the entire contents of the field
+            as a single record. </p>
+        <p>For example, a string field contains the following XML:</p>
         <codeblock>&lt;contacts>
     &lt;contact>
         &lt;name type="maiden">NAME1&lt;/name>
@@ -44,6 +46,10 @@ contact.phone(1): (222)222-2222</codeblock>
 contact.name#type: maiden
 contact.phone(0): (333)333-3333
 contact.phone(1): (444)444-4444</codeblock>
+        <p>
+            <note>When you configure the processor to keep the original fields in the incoming
+                record, each generated record includes the original fields as well. </note>
+        </p>
         <p>If you do not specify a record delimiter, the XML Flattener creates one record that
             contains the following fields:</p>
         <codeblock>contacts.contact(0).name: NAME1

@@ -15,27 +15,20 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ck4_255_sv">
  <title>XML Flattener</title>
- <shortdesc>The XML Flattener processor flattens a valid XML document embedded in a string field and
-        adds the flattened data to the record as additional fields.</shortdesc>
  <conbody>
   <p><indexterm>XML Flattener
                     processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>XML
-                    Flattener</indexterm></indexterm>For example, let's assume that a string field
-            contains the following XML:</p>
-        <codeblock>&lt;contact>
-   &lt;name type="maiden">NAME&lt;/name>
-   &lt;phone>(111)111-1111&lt;/phone>  
-   &lt;phone>(222)222-2222&lt;/phone>
-&lt;/contact></codeblock>
-        <p>You can use the XML Flattener to flatten the data into the following fields:</p>
-        <codeblock>contact.name: NAME
-contact.name#type: maiden
-contact.phone(0): (111)111-1111
-contact.phone(1): (222)222-2222</codeblock>
-        <p>When you configure the XML Flattener, you specify the field that contains the XML data
-            and the XML element that indicates the end of a record. You can configure whether the
-            processor keeps all fields in the original record, or keeps just the flattened fields.
-            You can optionally configure the string used to separate entity names and attributes in
-            the flattened field names.</p>
+                    Flattener</indexterm></indexterm>The XML Flattener processor flattens a
+            well-formed XML document embedded in a string field and adds the flattened data to the
+            record as additional fields or as a map in a single field.</p>
+        <p>When you configure the XML Flattener, you specify the field that contains the XML data.
+            You can specify a record delimiter to generate multiple records from the XML document.
+            When specifying a record delimiter, use an XML element directly under the root element. </p>
+        <p>You can configure whether the processor keeps all fields in the original record, or keeps
+            just the flattened fields. </p>
+        <p>You can also specify an output field. When you define an output field, the processor
+            writes the flattened fields to the output field as a map. You can optionally configure
+            the string used to separate entity names and attributes in the flattened field
+            names.</p>
  </conbody>
 </concept>
