@@ -30,23 +30,40 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.common.io.Resources;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.hamcrest.Matchers;
-import org.junit.Rule;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.Ignore;
+import org.testcontainers.containers.BindMode;
+import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.MySQLContainer;
 
 public class MysqlGtidOffSourceIT extends AbstractMysqlSource {
-  @Rule
-  public MySQLContainer mysql = new MySQLContainer("mysql:5.6").withConfigurationOverride("mysql_gtid_off");
 
-  @Override
-  public MySQLContainer createMysqlContainer() {
-    return mysql;
+  @ClassRule
+  public static GenericContainer gtid_off = new MySQLContainer("mysql:5.6")
+      .withFileSystemBind(Resources.getResource("mysql_gtid_off").getPath(), "/etc/mysql/conf.d", BindMode.READ_ONLY);
+
+  @BeforeClass
+  public static void setUp() throws Exception {
+    mysql = gtid_off;
+    ds = connect();
+    Utils.runInitScript("schema.sql", ds);
   }
 
+  @AfterClass
+  public static void tearDown() {
+    ds.close();
+    mysql.stop();
+  }
+
+  @Ignore
   @Test
   public void shouldWriteBinLogPosition() throws Exception {
     MysqlSourceConfig config = createConfig("root");
@@ -77,6 +94,7 @@ public class MysqlGtidOffSourceIT extends AbstractMysqlSource {
     assertThat(records.get(0).get("/Offset"), is(notNullValue()));
 
     assertThat(records.get(1).get("/Offset").getValueAsString(), is(output.getNewOffset()));
+    execute(ds, "TRUNCATE foo");
   }
 
   @Test
@@ -118,5 +136,6 @@ public class MysqlGtidOffSourceIT extends AbstractMysqlSource {
         fail("Value before start offset found");
       }
     }
+    execute(ds, "TRUNCATE foo");
   }
 }

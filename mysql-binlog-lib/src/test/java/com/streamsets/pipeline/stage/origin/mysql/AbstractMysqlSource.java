@@ -53,34 +53,20 @@ import org.hamcrest.Matchers;
 import org.hamcrest.collection.IsEmptyCollection;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
-import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.containers.GenericContainer;
 
 public abstract class AbstractMysqlSource {
   public static final int MAX_BATCH_SIZE = 500;
   public static final int SERVER_ID = 999;
   public static final String LANE = "lane";
+  private static final Integer MYSQL_PORT = 3306;
+  private static final String MYSQL_PASSWORD = "test";
 
-  public abstract MySQLContainer createMysqlContainer();
+  protected static GenericContainer mysql;
 
-  protected MySQLContainer mysql;
-
-  protected HikariDataSource ds;
-
-  @Before
-  public void setUp() throws Exception {
-    mysql = createMysqlContainer();
-    ds = connect();
-    Utils.runInitScript("schema.sql", ds);
-  }
-
-  @After
-  public void tearDown() {
-    ds.close();
-    mysql.stop();
-  }
+  protected static HikariDataSource ds;
 
   @Test
   public void shouldFailWhenUserIsNotSuper() throws Exception {
@@ -105,6 +91,7 @@ public abstract class AbstractMysqlSource {
     assertThat(issues, hasSize(2));
   }
 
+  @Ignore
   @Test
   public void shouldConvertAllMysqlTypes() throws Exception {
     MysqlSourceConfig config = createConfig("root");
@@ -201,6 +188,7 @@ public abstract class AbstractMysqlSource {
     assertThat(rec.get("/Type"), is(create("INSERT")));
   }
 
+  @Ignore
   @Test
   public void shouldStartFromBeginning() throws Exception {
     execute(ds, "INSERT INTO foo (bar) VALUES (1)");
@@ -230,8 +218,10 @@ public abstract class AbstractMysqlSource {
       }
     }
     assertThat(found, notNullValue());
+    execute(ds, "TRUNCATE foo");
   }
 
+  @Ignore
   @Test
   public void shouldStartFromCurrent() throws Exception {
     execute(ds, "INSERT INTO foo (bar) VALUES (1)");
@@ -268,8 +258,10 @@ public abstract class AbstractMysqlSource {
     }
     assertThat(found, notNullValue());
     assertThat(found.get("/Data/bar"), is(create(2)));
+    execute(ds, "TRUNCATE foo");
   }
 
+  @Ignore
   @Test
   public void shouldCreateMutipleRecordsForEventWithMultipleRows() throws Exception {
     int count = 10;
@@ -314,8 +306,10 @@ public abstract class AbstractMysqlSource {
     runner.runInit();
     output = runner.runProduce(output.getNewOffset(), MAX_BATCH_SIZE);
     assertThat(output.getRecords().get(LANE), is(IsEmptyCollection.<Record>empty()));
+    execute(ds, "TRUNCATE foo");
   }
 
+  @Ignore
   @Test
   public void shouldSendAllEventRecordsDiscardingbatchSize() throws Exception {
     int count = 100;
@@ -342,9 +336,10 @@ public abstract class AbstractMysqlSource {
     records.addAll(output.getRecords().get(LANE));
 
     assertThat(records, hasSize(count));
+    execute(ds, "TRUNCATE foo");
   }
 
-
+  @Ignore
   @Test
   public void shouldHandlePartialUpdates() throws Exception {
     MysqlSourceConfig config = createConfig("root");
@@ -382,8 +377,10 @@ public abstract class AbstractMysqlSource {
     assertThat(rec.get("/OldData/a"), is(create(1)));
     assertThat(rec.get("/OldData/b"), is(create(2)));
     assertThat(rec.get("/OldData/c"), is(create(3)));
+    execute(ds, "TRUNCATE foo2");
   }
 
+  @Ignore
   @Test
   public void shouldIncludeAndIgnoreTables() throws Exception {
     MysqlSourceConfig config = createConfig("root");
@@ -406,8 +403,11 @@ public abstract class AbstractMysqlSource {
     List<Record> records = output.getRecords().get(LANE);
     assertThat(records, hasSize(1));
     assertThat(records.get(0).get("/Table").getValueAsString(), is("foo2"));
+    execute(ds, "TRUNCATE foo");
+    execute(ds, "TRUNCATE foo2");
   }
 
+  @Ignore
   @Test
   public void shouldIgnoreEmptyFilters() throws Exception {
     MysqlSourceConfig config = createConfig("root");
@@ -429,8 +429,10 @@ public abstract class AbstractMysqlSource {
     output = runner.runProduce(output.getNewOffset(), MAX_BATCH_SIZE);
     List<Record> records = output.getRecords().get(LANE);
     assertThat(records, hasSize(2));
+    execute(ds, "TRUNCATE foo");
+    execute(ds, "TRUNCATE foo2");
   }
-
+  @Ignore
   @Test
   public void shouldReturnCorrectOffsetForFilteredOutEvents() throws Exception {
     MysqlSourceConfig config = createConfig("root");
@@ -451,8 +453,10 @@ public abstract class AbstractMysqlSource {
     List<Record> records = output.getRecords().get(LANE);
     assertThat(records, is(empty()));
     assertThat(output.getNewOffset(), not(isEmptyString()));
+    execute(ds, "TRUNCATE foo");
   }
 
+  @Ignore
   @Test
   public void shouldCreateRecordWithoutColumnNamesWhenMetadataNotFound() throws Exception {
     MysqlSourceConfig config = createConfig("root");
@@ -550,6 +554,7 @@ public abstract class AbstractMysqlSource {
     assertThat(rec.get("/ServerId"), notNullValue());
     assertThat(rec.get("/Timestamp"), notNullValue());
     assertThat(rec.get("/Type"), is(create("INSERT")));
+    execute(ds, "TRUNCATE ALL_TYPES");
   }
 
   protected void execute(DataSource ds, String sql) throws SQLException {
@@ -568,11 +573,15 @@ public abstract class AbstractMysqlSource {
     }
   }
 
-  protected HikariDataSource connect() {
+  private static String getJdbcUrl(){
+    return"jdbc:mysql://" + mysql.getContainerIpAddress() +  ":" + mysql.getMappedPort(MYSQL_PORT) + "/test";
+  }
+
+  protected static HikariDataSource connect() {
     HikariConfig hikariConfig = new HikariConfig();
-    hikariConfig.setJdbcUrl(mysql.getJdbcUrl());
+    hikariConfig.setJdbcUrl(getJdbcUrl());
     hikariConfig.setUsername("root");
-    hikariConfig.setPassword(mysql.getPassword());
+    hikariConfig.setPassword(MYSQL_PASSWORD);
     hikariConfig.addDataSourceProperty("useSSL", false);
     hikariConfig.setAutoCommit(false);
     return new HikariDataSource(hikariConfig);
@@ -581,9 +590,9 @@ public abstract class AbstractMysqlSource {
   protected MysqlSourceConfig createConfig(String username) {
     MysqlSourceConfig config = new MysqlSourceConfig();
     config.username = username;
-    config.password = mysql.getPassword();
+    config.password = MYSQL_PASSWORD;
     Matcher matcher = Pattern.compile("jdbc:mysql://(.*):(\\d+)/test")
-        .matcher(mysql.getJdbcUrl());
+        .matcher(getJdbcUrl());
     matcher.find();
     config.port = matcher.group(2);
     config.hostname = matcher.group(1);
