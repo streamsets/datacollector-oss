@@ -95,7 +95,7 @@ angular.module('dataCollectorApp.common')
      * @returns {w.roles|*|string}
      */
     this.getUserGroups = function() {
-      return self.userInfo ? self.userInfo.groups : [''];
+      return (self.userInfo && self.userInfo.groups) ? self.userInfo.groups : [];
     };
 
     /**
