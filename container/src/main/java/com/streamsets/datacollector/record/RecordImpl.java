@@ -73,7 +73,7 @@ public class RecordImpl implements Record, Cloneable {
 
   // for clone() purposes
 
-  private RecordImpl(RecordImpl record) {
+  protected RecordImpl(RecordImpl record) {
     Preconditions.checkNotNull(record, "record cannot be null");
     header = record.header.clone();
     value = (record.value != null) ? record.value.clone() : null;

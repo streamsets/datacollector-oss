@@ -439,7 +439,12 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
 
   @Override
   public void toEvent(EventRecord record) {
-    eventSink.addEvent(record);
+    EventRecordImpl recordImpl = ((EventRecordImpl) record).clone();
+    if (recordImpl.isInitialRecord()) {
+      recordImpl.getHeader().setSourceRecord(recordImpl);
+      recordImpl.setInitialRecord(false);
+    }
+    eventSink.addEvent(recordImpl);
   }
 
   public void setStop(boolean stop) {
