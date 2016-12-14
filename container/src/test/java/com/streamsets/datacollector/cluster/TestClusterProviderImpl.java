@@ -448,10 +448,11 @@ public class TestClusterProviderImpl {
       out.println("app-token-dummy-text");
     }
     // dpm enabled and app token is absolute
-    Configuration.setFileRefsBaseDir(etcDir);
-    Configuration.FileRef fileRef = new Configuration.FileRef(appTokenFile.getAbsolutePath());
-    dpmProperties.setProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, fileRef.getDelimiter() +
-        fileRef.getUnresolvedValue() + fileRef.getDelimiter());
+    dpmProperties.setProperty(
+        RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG,
+        Configuration.FileRef.DELIMITER + appTokenFile.getAbsolutePath() + Configuration.FileRef.DELIMITER
+    );
+
     try (OutputStream out = new FileOutputStream(new File(etcDir, "dpm-test.properties"))) {
       dpmProperties.store(out, null);
     }
@@ -461,7 +462,8 @@ public class TestClusterProviderImpl {
       gotProperties.load(in);
       Assert.assertEquals("fooVal", gotProperties.getProperty("foo"));
       Assert.assertEquals("true", gotProperties.getProperty(RemoteSSOService.DPM_ENABLED));
-      Assert.assertEquals(fileRef.getDelimiter() + ClusterProviderImpl.CLUSTER_DPM_APP_TOKEN + fileRef.getDelimiter(),
+      Assert.assertEquals(
+          Configuration.FileRef.DELIMITER + ClusterProviderImpl.CLUSTER_DPM_APP_TOKEN + Configuration.FileRef.DELIMITER,
           gotProperties.getProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG)
       );
       List<String> gotLines = Files.readAllLines(new File(etcDir, ClusterProviderImpl.CLUSTER_DPM_APP_TOKEN).toPath(),
@@ -490,8 +492,8 @@ public class TestClusterProviderImpl {
     dpmProperties = new Properties();
     dpmProperties.setProperty("foo", "fooDpmEnabledTokenRelative");
     dpmProperties.setProperty(RemoteSSOService.DPM_ENABLED, "true");
-    dpmProperties.setProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, fileRef.getDelimiter() +
-        "relative_path_to_token.txt" + fileRef.getDelimiter());
+    dpmProperties.setProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, Configuration.FileRef.DELIMITER +
+        "relative_path_to_token.txt" + Configuration.FileRef.DELIMITER);
     try (OutputStream out = new FileOutputStream(new File(etcDir, "dpm-test.properties"))) {
       dpmProperties.store(out, null);
     }
@@ -501,26 +503,25 @@ public class TestClusterProviderImpl {
       gotProperties.load(in);
       Assert.assertEquals("fooDpmEnabledTokenRelative", gotProperties.getProperty("foo"));
       Assert.assertEquals("true", gotProperties.getProperty(RemoteSSOService.DPM_ENABLED));
-      Assert.assertEquals(fileRef.getDelimiter() +
-              "relative_path_to_token.txt" + fileRef.getDelimiter(),
+      Assert.assertEquals(Configuration.FileRef.DELIMITER +
+              "relative_path_to_token.txt" + Configuration.FileRef.DELIMITER,
           gotProperties.getProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG)
       );
     }
     // all configs in sdc.properties (similar to parcels)
     sdcProperties.remove(Configuration.CONFIG_INCLUDES);
     sdcProperties.setProperty(RemoteSSOService.DPM_ENABLED, "true");
-    fileRef = new Configuration.FileRef(appTokenFile.getAbsolutePath());
-    sdcProperties.setProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, fileRef.getDelimiter() +
-        fileRef.getUnresolvedValue() + fileRef.getDelimiter());
+    sdcProperties.setProperty(
+        RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG,
+        Configuration.FileRef.DELIMITER + appTokenFile.getAbsolutePath() + Configuration.FileRef.DELIMITER
+    );
     sparkProvider.copyDpmTokenIfRequired(sdcProperties, etcDir);
     Assert.assertEquals("true", sdcProperties.getProperty(RemoteSSOService.DPM_ENABLED));
-    Assert.assertEquals(
-        fileRef.getDelimiter() +
-            ClusterProviderImpl.CLUSTER_DPM_APP_TOKEN + fileRef.getDelimiter(),
-        sdcProperties.getProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG));
-
+    Assert.assertEquals(Configuration.FileRef.DELIMITER +
+            ClusterProviderImpl.CLUSTER_DPM_APP_TOKEN + Configuration.FileRef.DELIMITER,
+        sdcProperties.getProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG)
+    );
   }
-
 
   @Test
   public void testExclude() throws Throwable {

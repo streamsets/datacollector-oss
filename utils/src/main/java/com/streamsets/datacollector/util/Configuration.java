@@ -43,6 +43,7 @@ public class Configuration {
 
   private static File fileRefsBaseDir;
 
+  // Only RuntimeModules should be calling this
   public static void setFileRefsBaseDir(File dir) {
     fileRefsBaseDir = dir;
   }
@@ -74,12 +75,18 @@ public class Configuration {
       return unresolvedValue;
     }
 
-    public String getUnresolvedValueWithoutDelimiter() {
+    public static String getUnresolvedValueWithoutDelimiter(
+        String unresolvedValue, String prefix, String suffix, String delimiter
+    ) {
       String unquoted = unresolvedValue.replace("\"", "").replace("'", "");
-      if (isValueMyRef(getPrefix(), getSuffix(), unresolvedValue)) {
-        return unquoted.substring(getPrefix().length(), unquoted.length() - getSuffix().length());
+      if (isValueMyRef(prefix, suffix, unresolvedValue)) {
+        return unquoted.substring(prefix.length(), unquoted.length() - suffix.length());
       }
-      return unquoted.substring(getDelimiter().length(), unquoted.length() - getDelimiter().length());
+      return unquoted.substring(delimiter.length(), unquoted.length() - delimiter.length());
+    }
+
+    protected String getUnresolvedValueWithoutDelimiter() {
+      return getUnresolvedValueWithoutDelimiter(unresolvedValue, getPrefix(), getSuffix(), getDelimiter());
     }
 
     public abstract String getValue();
@@ -122,9 +129,9 @@ public class Configuration {
 
   public static class FileRef extends Ref {
     @Deprecated
-    private static final String DELIMITER = "@";
-    private static final String PREFIX = "${file(";
-    private static final String SUFFIX = ")}";
+    public static final String DELIMITER = "@";
+    public static final String PREFIX = "${file(";
+    public static final String SUFFIX = ")}";
 
     public FileRef(String unresolvedValue) {
       super(unresolvedValue);
@@ -148,10 +155,6 @@ public class Configuration {
     @Override
     public String getDelimiter() {
       return DELIMITER;
-    }
-
-    public boolean isAbsolute() {
-      return Paths.get(getUnresolvedValueWithoutDelimiter()).isAbsolute();
     }
 
     @Override
@@ -207,7 +210,7 @@ public class Configuration {
     }
 
     @Override
-    public String getUnresolvedValueWithoutDelimiter() {
+    protected String getUnresolvedValueWithoutDelimiter() {
       return getUnresolvedValue().substring(PREFIX.length(), getUnresolvedValue().length() - SUFFIX.length());
     }
 

@@ -921,9 +921,11 @@ public class ClusterProviderImpl implements ClusterProvider {
 
   private void copyDpmTokenIfAbsolute(Properties includesDpmProps, File etcStagingDir) throws IOException {
     String dpmTokenFile = includesDpmProps.getProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG);
-    Configuration.setFileRefsBaseDir(etcStagingDir);
-    Configuration.FileRef fileRef = new Configuration.FileRef(dpmTokenFile);
-    String tokenFile = fileRef.getUnresolvedValueWithoutDelimiter();
+    String tokenFile = Configuration.FileRef.getUnresolvedValueWithoutDelimiter(dpmTokenFile,
+        Configuration.FileRef.PREFIX,
+        Configuration.FileRef.SUFFIX,
+        Configuration.FileRef.DELIMITER
+    );
     if (Paths.get(tokenFile).isAbsolute()) {
       LOG.info("Copying application token from absolute location {} to etc's staging dir: {}",
           tokenFile,
@@ -936,7 +938,8 @@ public class ClusterProviderImpl implements ClusterProvider {
       }
       // set the property
       includesDpmProps.setProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG,
-          fileRef.getDelimiter() + CLUSTER_DPM_APP_TOKEN + fileRef.getDelimiter()
+          Configuration.FileRef.DELIMITER +
+              CLUSTER_DPM_APP_TOKEN + Configuration.FileRef.DELIMITER
       );
     }
   }
