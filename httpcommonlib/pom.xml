@@ -37,6 +37,7 @@
     <xz.version>1.5</xz.version>
     <snappy.version>0.4</snappy.version>
     <jetty.version>9.2.14.v20151106</jetty.version>
+    <tape.version>1.2.3</tape.version>
   </properties>
 
   <dependencies>
@@ -86,6 +87,12 @@
       <artifactId>jetty-servlet</artifactId>
       <version>${jetty.version}</version>
       <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.squareup</groupId>
+      <artifactId>tape</artifactId>
+      <scope>compile</scope>
+      <version>${tape.version}</version>
     </dependency>
 
     <!-- Test Dependencies -->
