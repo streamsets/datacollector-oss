@@ -33,7 +33,10 @@ import com.streamsets.pipeline.lib.http.HttpMethod;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.pipeline.stage.util.http.HttpStageTestUtil;
+import com.streamsets.pipeline.stage.util.http.HttpStageUtil;
 import com.streamsets.testing.SingleForkNoReuseTest;
+import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.test.DeploymentContext;
@@ -61,6 +64,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -349,7 +353,8 @@ public class HttpClientSourceIT extends JerseyTest {
             PreemptiveAuthResource.class,
             AuthResource.class,
             HeaderRequired.class,
-            AlwaysUnauthorized.class
+            AlwaysUnauthorized.class,
+            HttpStageTestUtil.TestPostCustomType.class
         )
     );
   }
@@ -373,7 +378,8 @@ public class HttpClientSourceIT extends JerseyTest {
                     PreemptiveAuthResource.class,
                     AuthResource.class,
                     HeaderRequired.class,
-                    AlwaysUnauthorized.class
+                    AlwaysUnauthorized.class,
+                    HttpStageTestUtil.TestPostCustomType.class
                 )
             )
         )
@@ -490,6 +496,62 @@ public class HttpClientSourceIT extends JerseyTest {
       }
     } finally {
       runner.runDestroy();
+    }
+
+  }
+
+  @Test
+  public void testDifferentContentTypesPost() throws Exception {
+    final Random random = new Random();
+
+    String fallbackContentType = "application/default";
+
+    for (Map.Entry<String, String> requestEntry : HttpStageTestUtil.CONTENT_TYPE_TO_BODY.entrySet()) {
+
+      String expectedContentType = requestEntry.getKey();
+
+      HttpClientConfigBean conf = new HttpClientConfigBean();
+      conf.client.authType = AuthenticationType.NONE;
+      conf.httpMode = HttpClientMode.BATCH;
+      conf.resourceUrl = getBaseUri() + "test/postCustomType";
+      conf.client.readTimeoutMillis = 1000;
+      conf.basic.maxBatchSize = 1;
+      conf.basic.maxWaitTime = 1000;
+      conf.pollingInterval = 1000;
+      conf.httpMethod = HttpMethod.POST;
+      conf.requestBody = requestEntry.getValue();
+      conf.defaultRequestContentType = fallbackContentType;
+      conf.dataFormat = DataFormat.JSON;
+      conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
+
+      if (StringUtils.isBlank(expectedContentType)) {
+        expectedContentType = fallbackContentType;
+      } else {
+        String contentTypeHeader = HttpStageUtil.CONTENT_TYPE_HEADER;
+        String header = HttpStageTestUtil.randomizeCapitalization(random, contentTypeHeader);
+        conf.headers.put(header.toString(), expectedContentType);
+      }
+
+      HttpClientSource origin = new HttpClientSource(conf);
+
+      SourceRunner runner = new SourceRunner.Builder(HttpClientDSource.class, origin)
+          .addOutputLane("lane")
+          .build();
+      runner.runInit();
+
+      try {
+        List<Record> parsedRecords = getRecords(runner);
+
+        assertEquals(1, parsedRecords.size());
+        final Record record = parsedRecords.get(0);
+        assertTrue(record.has("/Content-Type"));
+        assertEquals(expectedContentType, record.get("/Content-Type").getValueAsString());
+        assertTrue(record.has("/Content"));
+        assertEquals(requestEntry.getValue(), record.get("/Content").getValueAsString());
+      } finally {
+        runner.runDestroy();
+      }
+
     }
 
   }

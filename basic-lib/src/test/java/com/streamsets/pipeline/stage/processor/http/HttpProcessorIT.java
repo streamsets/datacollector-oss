@@ -32,7 +32,10 @@ import com.streamsets.pipeline.lib.http.HttpMethod;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.pipeline.stage.util.http.HttpStageTestUtil;
+import com.streamsets.pipeline.stage.util.http.HttpStageUtil;
 import com.streamsets.testing.SingleForkNoReuseTest;
+import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
@@ -51,6 +54,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -117,6 +121,7 @@ public class HttpProcessorIT extends JerseyTest {
         Sets.newHashSet(
             TestGet.class,
             TestPut.class,
+            HttpStageTestUtil.TestPostCustomType.class,
             TestXmlGet.class
         )
     );
@@ -272,7 +277,7 @@ public class HttpProcessorIT extends JerseyTest {
     conf.outputField = "/output";
     conf.dataFormat = DataFormat.JSON;
     conf.resourceUrl = getBaseUri() + "test/put";
-    conf.headers.put("Content-Type", "application/json");
+    conf.headers.put(HttpStageUtil.CONTENT_TYPE_HEADER, "application/json");
     conf.requestBody = "{\"hello\":\"world!\"}";
 
     Record record = RecordCreator.create();
@@ -297,6 +302,62 @@ public class HttpProcessorIT extends JerseyTest {
 
     } finally {
       runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testHttpPostDifferentTypes() throws Exception {
+    final Random random = new Random();
+
+    String fallbackContentType = "application/default";
+
+    for (Map.Entry<String, String> requestEntry : HttpStageTestUtil.CONTENT_TYPE_TO_BODY.entrySet()) {
+
+      String expectedContentType = requestEntry.getKey();
+
+      HttpProcessorConfig conf = new HttpProcessorConfig();
+      conf.httpMethod = HttpMethod.POST;
+      conf.outputField = "/output";
+      conf.dataFormat = DataFormat.JSON;
+      conf.resourceUrl = getBaseUri() + "test/postCustomType";
+      conf.defaultRequestContentType = fallbackContentType;
+
+      if (StringUtils.isBlank(expectedContentType)) {
+        expectedContentType = fallbackContentType;
+      } else {
+        String contentTypeHeader = HttpStageUtil.CONTENT_TYPE_HEADER;
+        String header = HttpStageTestUtil.randomizeCapitalization(random, contentTypeHeader);
+        conf.headers.put(header.toString(), expectedContentType);
+      }
+
+      conf.requestBody = requestEntry.getValue();
+
+      Record record = RecordCreator.create();
+      record.set("/", Field.create(new HashMap<String, Field>()));
+
+      List<Record> records = ImmutableList.of(record);
+      Processor processor = new HttpProcessor(conf);
+      ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
+          .addOutputLane("lane")
+          .build();
+      runner.runInit();
+      try {
+        StageRunner.Output output = runner.runProcess(records);
+        List<Record> outputRecords = output.getRecords().get("lane");
+        assertTrue(runner.getErrorRecords().isEmpty());
+        assertEquals(1, outputRecords.size());
+        assertTrue(outputRecords.get(0).has("/output"));
+        Map<String, Field> outputMap = outputRecords.get(0).get("/output").getValueAsMap();
+        assertTrue(!outputMap.isEmpty());
+        assertTrue(outputMap.containsKey(HttpStageUtil.CONTENT_TYPE_HEADER));
+        assertEquals(expectedContentType, outputMap.get(HttpStageUtil.CONTENT_TYPE_HEADER).getValueAsString());
+        assertTrue(outputMap.containsKey("Content"));
+        assertEquals(requestEntry.getValue(), outputMap.get("Content").getValueAsString());
+
+      } finally {
+        runner.runDestroy();
+      }
+
     }
   }
 

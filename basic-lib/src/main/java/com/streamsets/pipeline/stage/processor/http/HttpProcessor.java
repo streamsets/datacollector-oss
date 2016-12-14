@@ -41,6 +41,7 @@ import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.origin.http.Errors;
+import com.streamsets.pipeline.stage.util.http.HttpStageUtil;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.oauth1.AccessToken;
@@ -196,16 +197,20 @@ public class HttpProcessor extends SingleLaneProcessor {
       }
 
       // from HttpStreamConsumer
+      final MultivaluedMap<String, Object> resolvedHeaders = resolveHeaders(record);
+
+      String contentType = HttpStageUtil.getContentTypeWithDefault(resolvedHeaders, conf.defaultRequestContentType);
+
       final AsyncInvoker asyncInvoker = target.request()
           .property(OAuth1ClientSupport.OAUTH_PROPERTY_ACCESS_TOKEN, authToken)
-          .headers(resolveHeaders(record))
+          .headers(resolvedHeaders)
           .async();
 
       HttpMethod method = getHttpMethod(record);
       if (conf.requestBody != null && !conf.requestBody.isEmpty() && method != HttpMethod.GET) {
         RecordEL.setRecordInContext(bodyVars, record);
         final String requestBody = bodyEval.eval(bodyVars, conf.requestBody, String.class);
-        responses.add(asyncInvoker.method(method.getLabel(), Entity.json(requestBody)));
+        responses.add(asyncInvoker.method(method.getLabel(), Entity.entity(requestBody, contentType)));
       } else {
         responses.add(asyncInvoker.method(method.getLabel()));
       }
@@ -245,6 +250,7 @@ public class HttpProcessor extends SingleLaneProcessor {
 
     return requestHeaders;
   }
+
 
   /**
    * Waits for the Jersey client to complete an asynchronous request, checks the response code

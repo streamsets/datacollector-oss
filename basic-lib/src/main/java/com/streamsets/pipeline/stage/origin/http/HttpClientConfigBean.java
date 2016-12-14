@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.origin.http;
 
 import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
@@ -36,6 +37,7 @@ import com.streamsets.pipeline.lib.http.HttpMethod;
 import com.streamsets.pipeline.lib.http.JerseyClientConfigBean;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
+import com.streamsets.pipeline.stage.util.http.HttpStageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,6 +106,21 @@ public class HttpClientConfigBean {
       group = "HTTP"
   )
   public String requestBody = "";
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Default Request Content Type",
+      defaultValue = HttpStageUtil.DEFAULT_CONTENT_TYPE,
+      description = "Content-Type header to be sent with the request; used if that header is not already present",
+      displayPosition = 50,
+      dependsOn = "httpMethod",
+      elDefs = VaultEL.class,
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      triggeredByValue = { "POST", "PUT", "DELETE" },
+      group = "HTTP"
+  )
+  public String defaultRequestContentType = HttpStageUtil.DEFAULT_CONTENT_TYPE;
 
   @ConfigDefBean
   public JerseyClientConfigBean client = new JerseyClientConfigBean();

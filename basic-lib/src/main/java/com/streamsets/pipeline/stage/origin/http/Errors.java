@@ -44,6 +44,7 @@ public enum Errors implements ErrorCode {
   HTTP_17("A particular status code can only be mapped to one action.  Code {} was mapped more than once."),
   HTTP_18("Failing stage as per configuration for read timeout"),
   HTTP_19("Failing stage because number of request retries exceeded configured maximum of {}"),
+  HTTP_20("Content-Type header was present but was a {}, not a String"),
   ;
 
   private final String msg;

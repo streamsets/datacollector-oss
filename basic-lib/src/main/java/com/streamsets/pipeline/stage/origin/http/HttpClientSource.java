@@ -44,6 +44,7 @@ import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.util.http.HttpStageUtil;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.oauth1.AccessToken;
@@ -404,18 +405,21 @@ public class HttpClientSource extends BaseSource {
   private void makeRequest(WebTarget target) throws StageException {
     hasher = HF.newHasher();
 
+    MultivaluedMap<String, Object> resolvedHeaders = resolveHeaders();
     final Invocation.Builder invocationBuilder = target
         .request()
         .property(OAuth1ClientSupport.OAUTH_PROPERTY_ACCESS_TOKEN, authToken)
-        .headers(resolveHeaders());
+        .headers(resolvedHeaders);
 
     boolean keepRequesting = !getContext().isStopped();
     while (keepRequesting) {
       try {
         if (conf.requestBody != null && !conf.requestBody.isEmpty() && conf.httpMethod != HttpMethod.GET) {
           final String requestBody = bodyEval.eval(bodyVars, conf.requestBody, String.class);
+          final String contentType = HttpStageUtil.getContentTypeWithDefault(
+              resolvedHeaders, conf.defaultRequestContentType);
           hasher.putString(requestBody, Charset.forName(conf.dataFormatConfig.charset));
-          response = invocationBuilder.method(conf.httpMethod.getLabel(), Entity.json(requestBody));
+          response = invocationBuilder.method(conf.httpMethod.getLabel(), Entity.entity(requestBody, contentType));
         } else {
           response = invocationBuilder.method(conf.httpMethod.getLabel());
         }
