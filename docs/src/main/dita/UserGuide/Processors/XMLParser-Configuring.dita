@@ -54,10 +54,23 @@
                                     <entry/>
                                 </row>
                                 <row>
-                                    <entry>Delimiter Element</entry>
-                                    <entry>XML element that indicates the end of a record. Used to
-                                        create multiple records from the XML data. To read the data
-                                        as a single record, omit this property. </entry>
+                                    <entry>Delimiter Element <xref
+                                            href="../Pipeline_Design/XMLDF-XPath-Syntax.dita#concept_tmc_4bc_dy">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_xwx_xrm_js"
+                                        /></xref></entry>
+                                    <entry>Delimiter to use to process data and generate multiple
+                                        records. Omit a delimiter to treat the entire XML document
+                                        as one record. <p>Use one of the following as a delimiter
+                                            element: <ul
+                                                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/XML-ul-delimiterelements"
+                                                id="ul_zrb_j1n_gy">
+                                                <li/>
+                                            </ul></p></entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-row-XMLNamespaces">
+                                    <entry/>
                                 </row>
                                 <row>
                                     <entry>Target Field</entry>

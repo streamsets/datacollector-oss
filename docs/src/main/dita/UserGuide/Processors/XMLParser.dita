@@ -18,10 +18,15 @@
  <conbody>
   <p><indexterm>XML Parser
                     processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>XML
-                    Parser</indexterm></indexterm>The XML Parser parses a valid XML document
+                    Parser</indexterm></indexterm>The XML Parser parses a well-formed XML document
             embedded in a string field and passes the parsed data to an output field in the record. </p>
-        <p>The XML Parser creates records based on a user-defined delimiter element. When no
-            delimiter element is defined, it reads the entire contents of the field as a single
-            record.</p>
+        <p>The XML Parser can create multiple records from an XML document based on a user-defined
+            delimiter element. When defining the delimiter element, you can use an XML element or
+            simplified XPath expression. </p>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/XML-p-MultRec2"/>
+        <p>When no delimiter element is defined, XML Parser reads the entire contents of the field as
+            a single record.</p>
+        <p>For more information about how XML Parser processes XML data, see <xref
+                href="../Pipeline_Design/XMLDFormat.dita#concept_lty_42b_dy"/>.</p>
  </conbody>
 </concept>

@@ -33,14 +33,10 @@
                         the line. The origin adds a boolean field named Truncated to indicate if the
                         line was truncated. </dd>
                 </dlentry>
-                <dlentry>
-                    <dt>XML</dt>
-                    <dd>Generates a record for XML based on the specified delimiter element. When no
-                        delimiter element is specified, the origin treats the entire XML document as
-                        a single record.</dd>
-                    <dd>When a record exceeds the user-defined maximum record length, the origin
-                        skips the record and continues processing with the next record. It sends the
-                        skipped record to the pipeline for error handling.  </dd>
+                <dlentry
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-XML">
+                    <dt/>
+                    <dd/>
                 </dlentry>
             </dl>
         </p>
