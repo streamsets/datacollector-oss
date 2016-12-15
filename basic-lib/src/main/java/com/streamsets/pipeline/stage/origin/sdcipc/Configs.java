@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.origin.sdcipc;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.lib.http.HttpConfigs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +34,7 @@ import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Configs {
+public class Configs extends HttpConfigs {
   private static final Logger LOG = LoggerFactory.getLogger(Configs.class);
 
   private static final String CONFIG_PREFIX = "config.";
@@ -128,60 +129,46 @@ public class Configs {
   )
   public int maxRecordSize;
 
-  public List<Stage.ConfigIssue> init(Stage.Context context) {
-    List<Stage.ConfigIssue> issues = new ArrayList<>();
-
-    validatePort(context, issues);
-    validateSecurity(context, issues);
-    return issues;
-  }
-
-  void validatePort(Stage.Context context, List<Stage.ConfigIssue> issues) {
-    if (port < 1 || port > 65535) {
-      issues.add(context.createConfigIssue(Groups.RPC.name(), PORT, Errors.IPC_ORIG_00));
-
-    } else {
-      try (ServerSocket ss = new ServerSocket(port)){
-      } catch (Exception ex) {
-        LOG.debug("Can't bind to port, reporting as validation error. ", ex);
-        issues.add(context.createConfigIssue(Groups.RPC.name(), PORT, Errors.IPC_ORIG_01, ex.toString()));
-
-      }
-    }
-  }
-
-  void validateSecurity(Stage.Context context, List<Stage.ConfigIssue> issues) {
-    if (sslEnabled) {
-      if (!keyStoreFile.isEmpty()) {
-        File file = getKeyStoreFile(context);
-        if (!file.exists()) {
-          issues.add(context.createConfigIssue(Groups.RPC.name(), KEY_STORE_FILE, Errors.IPC_ORIG_07));
-        } else {
-          if (!file.isFile()) {
-            issues.add(context.createConfigIssue(Groups.RPC.name(), KEY_STORE_FILE, Errors.IPC_ORIG_08));
-          } else {
-            if (!file.canRead()) {
-              issues.add(context.createConfigIssue(Groups.RPC.name(), KEY_STORE_FILE, Errors.IPC_ORIG_09));
-            } else {
-              try {
-                KeyStore keystore = KeyStore.getInstance("jks");
-                try (InputStream is = new FileInputStream(getKeyStoreFile(context))) {
-                  keystore.load(is, keyStorePassword.toCharArray());
-                }
-              } catch (Exception ex) {
-                issues.add(context.createConfigIssue(Groups.RPC.name(), KEY_STORE_FILE, Errors.IPC_ORIG_10, ex.toString()));
-              }
-            }
-          }
-        }
-      } else {
-        issues.add(context.createConfigIssue(Groups.RPC.name(), KEY_STORE_FILE, Errors.IPC_ORIG_11));
-      }
-    }
-  }
-
   File getKeyStoreFile(Stage.Context context) {
     return new File(context.getResourcesDirectory(), keyStoreFile);
   }
 
+  public Configs() {
+    super("RPC", "config.");
+  }
+
+  @Override
+  public int getPort() {
+    return port;
+  }
+
+  @Override
+  public int getMaxConcurrentRequests() {
+    return 100;
+  }
+
+  @Override
+  public String getAppId() {
+    return appId;
+  }
+
+  @Override
+  public int getMaxHttpRequestSizeKB() {
+    return 10000;
+  }
+
+  @Override
+  public boolean isSslEnabled() {
+    return sslEnabled;
+  }
+
+  @Override
+  public String getKeyStoreFile() {
+    return keyStoreFile;
+  }
+
+  @Override
+  public String getKeyStorePassword() {
+    return keyStorePassword;
+  }
 }
