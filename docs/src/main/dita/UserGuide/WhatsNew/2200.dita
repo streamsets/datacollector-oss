@@ -103,15 +103,19 @@
                                     <li>MySQL Binary Log. </li>
                                     <li>Salesforce. </li>
                                 </ul></li>
-                            <li>LDAP authentication - If you use LDAP authentication, you can now
-                                configure Data Collector to connect to multiple LDAP servers. You
-                                can also configure Data Collector to support an LDAP deployment
-                                where members are defined by uid or by full DN. </li>
-                            <li>Java garbage collector - Data Collector now uses the Concurrent Mark
-                                Sweep (CMS) garbage collector by default. You can configure Data
-                                Collector to use a different garbage collector by modifying Java
-                                configuration options in the Data Collector environment
-                                configuration file.</li>
+                            <li><xref
+                                    href="../Install_Config/LDAP-Configuring.dita#concept_x2j_5ts_g5"
+                                    >LDAP authentication</xref> - If you use LDAP authentication,
+                                you can now configure Data Collector to connect to multiple LDAP
+                                servers. You can also configure Data Collector to support an LDAP
+                                deployment where members are defined by uid or by full DN. </li>
+                            <li><xref
+                                    href="../Install_Config/JavaConfig_GarbageCollector.dita#concept_kqh_lj3_vx"
+                                    >Java garbage collector</xref> - Data Collector now uses the
+                                Concurrent Mark Sweep (CMS) garbage collector by default. You can
+                                configure Data Collector to use a different garbage collector by
+                                modifying Java configuration options in the Data Collector
+                                environment configuration file.</li>
                             <li>Environment variables for Java configuration options. Data Collector
                                 now uses three environment variables to define Java configuration
                                 options: <ul id="ul_wym_thk_fy">
