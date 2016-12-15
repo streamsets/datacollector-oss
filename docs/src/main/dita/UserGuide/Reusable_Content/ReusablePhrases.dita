@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_vhs_5tz_xp">
-      <title>Reusable phrases for the book</title>
+      <title>Reusable phrases</title>
       <shortdesc>Use the following reusable phrases for conrefs in the book. <draft-comment
                   author="Loretta">Company name - not really using this</draft-comment></shortdesc>
       <conbody>
@@ -592,28 +592,44 @@
                                           href="../Pipeline_Design/WholeFile.dita#concept_nfc_qkh_xw"
                                     />.</dd>
                         </dlentry>
+                  </dl>
+            </p>
+            <p>
+                  <draft-comment author="Loretta">Two versions of XML below. First for message
+                        origins, then file origins - which have the extra error
+                        info.</draft-comment>
+                  <dl>
                         <dlentry id="OriginDF-XML">
                               <dt>XML</dt>
-                              <dd>Generates records based on the location of the XML element that
-                                    you define as the record delimiter. If you do not define a
-                                    delimiter element, the origin treats the XML file as a single
-                                    record.</dd>
+                              <dd>Generates records based on a user-defined delimiter element. Use
+                                    an XML element directly under the root element or define a
+                                    simplified XPath expression. </dd>
+                              <dd>If you do not define a delimiter element, the origin treats the
+                                    XML file as a single record.</dd>
+                              <dd>For more information about XML processing, see <xref
+                                          href="../Pipeline_Design/XMLDFormat.dita#concept_lty_42b_dy"
+                                    />.</dd>
                               <dd>When a record exceeds the user-defined maximum record length, the
                                     origin skips the record and continues processing with the next
                                     record. It sends the skipped record to the pipeline for error
                                     handling. </dd>
-                              <dd>If you want to process invalid XML documents, you can try using
-                                    the text data format with custom delimiters. For more
-                                    information, see <xref
+                              <dd>Use the XML data format to process valid XML documents. If you
+                                    want to process invalid XML documents, you can try using the
+                                    text data format with custom delimiters. For more information,
+                                    see <xref
                                           href="../Pipeline_Design/TextCDelim-XMLdata.dita#concept_okt_kmg_jx"
                                     />.</dd>
                         </dlentry>
                         <dlentry id="OriginDF-XMLFILE">
                               <dt>XML</dt>
-                              <dd>Generates records based on the location of the XML element that
-                                    you define as the record delimiter. If you do not define a
-                                    delimiter element, the origin treats the XML file as a single
-                                    record.</dd>
+                              <dd>Generates records based on a user-defined delimiter element. Use
+                                    an XML element directly under the root element or define a
+                                    simplified XPath expression. </dd>
+                              <dd>If you do not define a delimiter element, the origin treats the
+                                    XML file as a single record.</dd>
+                              <dd>For more information about XML processing, see <xref
+                                          href="../Pipeline_Design/XMLDFormat.dita#concept_lty_42b_dy"
+                                    />.</dd>
                               <dd>When a record exceeds the user-defined maximum record length, the
                                     origin cannot continue processing data in the file. Records
                                     already processed from the file are passed to the pipeline. The
@@ -628,14 +644,48 @@
                                                 partially-processed file to the error directory.
                                                 Otherwise, it leaves the file in the directory.</li>
                                           <li>Stop Pipeline - The origin stops the pipeline. </li>
-                                    </ul>If you want to process invalid XML documents, you can try
-                                    using the text data format with custom delimiters. For more
-                                    information, see <xref
-                                          href="../Pipeline_Design/TextCDelim-XMLdata.dita#concept_okt_kmg_jx"
-                                    />.</dd>
+                                    </ul></dd>
+                              <dd>Use the XML data format to process valid XML documents. <ph
+                                          id="ph-p-InvalidXML-CustomDelimXref">If you want to
+                                          process invalid XML documents, you can try using the text
+                                          data format with custom delimiters. For more information,
+                                          see <xref
+                                                href="../Pipeline_Design/TextCDelim-XMLdata.dita#concept_okt_kmg_jx"
+                                          />.</ph></dd>
                         </dlentry>
                   </dl>
             </p>
+            <p>
+                  <draft-comment author="Loretta">XML delimiter - Used in XML > Creating Multiple
+                        Records and XML Parser overview.</draft-comment>
+            </p>
+            <p><ph id="XML-ph-MultRecords">To create multiple records from an XML document, you
+                        define a delimiter element. You can use an actual XML element name, such as
+                              <codeph>msg</codeph>. You can also use a simplified XPath expression
+                        to specify the location of the delimiter element, such as
+                              <codeph>/root/*/msg</codeph>.</ph></p>
+            <p id="XML-p-MultRec2">Use an XML element when the element resides directly under the
+                  root node. Use a simplified XPath expression to access data deeper in the XML
+                  document.</p>
+            <p>
+                  <draft-comment author="Loretta">XML syntax - The following ph and code are used in
+                        the XPath Syntax and Node Predicates topics.</draft-comment>
+            </p>
+            <p><ph id="XML-ph-PosPredicate">The position predicate indicates the instance of the
+                        element to use in the file. Use a position predicate when the element
+                        appears multiple times in a file, and you want to use a particular instance
+                        based on the position of the instances in the file, e.g. the first, second,
+                        or third time the element appears in the file. </ph></p>
+            <p id="XML-p-PosPred-Syntax">Use the following syntax to specify a position
+                  predicate:<codeblock>/&lt;element>[&lt;position number>]</codeblock></p>
+            <p><ph id="XML-ph-AttPredicate">The attribute value predicate limits the data to
+                        elements with the specified attribute value. Use the attribute value
+                        predicate when you want to specify an element with a particular attribute
+                        values or an element that simply has an attribute value defined. </ph></p>
+            <p id="XML-p-AttPred-Syntax">Use the following syntax to specify an attribute value
+                  predicate:<codeblock>/&lt;element>[@&lt;attribute name>='&lt;attribute value>']</codeblock></p>
+            <p><ph id="XML-ph-AttAsterisk">You can use the asterisk wildcard as the attribute value.
+                        Surround the value in single quotation marks.</ph></p>
             <p>
                   <draft-comment author="Loretta">Amazon <uicontrol>S3origin-CopyMove1</uicontrol>
                         and 2 used in Amazon S3 origin Configuring.</draft-comment>

@@ -70,6 +70,22 @@
     <topicref href="../Pipeline_Design/WholeFile-IncludingChecksumEvent.dita"/>
    </topicref>
   </topicref>
+  <topicref href="../Pipeline_Design/XMLDFormat.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Pipeline_Design/XMLDF-XMLelement.dita">
+    <topicref href="../Pipeline_Design/XMLDF-XMLelem-Namespace.dita"/>
+   </topicref>
+   <topicref href="../Pipeline_Design/XMLDF-Xpath.dita">
+    <topicref href="../Pipeline_Design/XMLDF-XPath-Namespaces.dita"/>
+    <topicref href="../Pipeline_Design/XMLDF-XPath-Syntax.dita"/>
+    <topicref href="../Pipeline_Design/XMLDF-XPath-Examples.dita"/>
+    <topicref href="../Pipeline_Design/XMLDF-NodePredicates.dita"/>
+    <topicref href="../Pipeline_Design/XMLDF-PredicateExamples.dita"/>
+   </topicref>
+   <topicref href="../Pipeline_Design/XMLDF-Record.dita"/>
+  </topicref>
   <topicref href="../Pipeline_Design/ControlCharacters.dita">
    <topicmeta>
     <shortdesc/>

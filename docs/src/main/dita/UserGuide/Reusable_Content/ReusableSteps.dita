@@ -1374,37 +1374,59 @@
                     </cmd></step>
             
             <step id="XMLprops">
-                <cmd>For XML data, on the <wintitle>Data Format</wintitle> tab, configure the
-                    following properties:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_pmz_mcj_45">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                            <thead>
-                                <row>
-                                    <entry>XML Property</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row
+                <cmd>For XML data, on the <wintitle>XML</wintitle> tab, configure the following
+                    properties:</cmd>      
+            <info>
+                <table frame="all" rowsep="1" colsep="1" id="table_pmz_mcj_45">
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                        <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                        <thead> <row>                         
+                            <entry>XML Property</entry>
+                            <entry>Description</entry></row>  
+                        </thead>
+       <tbody><row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FileCompression">
                                     <entry/>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FilePatternCompressed">
-                                    <entry/>
-                                </row>
                                 <row id="O-row-XMLDelimElement">
-                                    <entry>Delimiter Element</entry>
+                                    <entry>Delimiter Element <xref
+                                            href="../Pipeline_Design/XMLDF-XPath-Syntax.dita#concept_tmc_4bc_dy">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_xwx_xrm_js"
+                                        /></xref></entry>
                                     <entry>
-                                        <p>XML element that acts as a delimiter. Omit a delimiter to
-                                            treat the entire XML document as one record.</p>
-                                        <p>Use the XML element name without surrounding angle
-                                            brackets ( &lt; > ) . For example, msg instead of
-                                            &lt;msg>. </p>
+                                        <p>Delimiter to use to generate records. Omit a delimiter to
+                                            treat the entire XML document as one record. Use one of
+                                            the following:<ul id="XML-ul-delimiterelements">
+                                                <li>An XML element directly under the root element.
+                                                  <p>Use the XML element name without surrounding
+                                                  angle brackets ( &lt; > ) . For example, msg
+                                                  instead of &lt;msg>. </p></li>
+                                                <li>A simplified XPath expression that specifies the
+                                                  data to use.<p>Use a simplified XPath expression
+                                                  to access data deeper in the XML document or data
+                                                  that requires a more complex access
+                                                  method.</p><p>For more information about valid
+                                                  syntax, see <xref
+                                                  href="../Pipeline_Design/XMLDF-XPath-Syntax.dita#concept_tmc_4bc_dy"
+                                                  />.</p></li>
+                                            </ul></p>
                                     </entry>
+                                </row>
+                                <row id="O-row-XMLNamespaces">
+                                    <entry>Namespaces </entry>
+                                    <entry>Namespace prefix and URI to use when parsing the XML
+                                        document. Define namespaces when the XML element being used
+                                        includes a namespace prefix or when the XPath expression
+                                        includes namespaces.<p>For information about using
+                                            namespaces with an XML element, see <xref
+                                                href="../Pipeline_Design/XMLDF-XMLelem-Namespace.dita#concept_ilc_r3g_2y"
+                                            />.</p><p>For information about using namespaces with
+                                            XPath expressions, see <xref
+                                                href="../Pipeline_Design/XMLDF-XPath-Namespaces.dita#concept_mkk_3zj_dy"
+                                            />.</p><p>Use the <uicontrol>Add</uicontrol> icon to add
+                                            additional namespaces.</p></entry>
                                 </row>
                                 <row id="O-row-XML-MaxRecLength">
                                     <entry>Max Record Length (chars)</entry>

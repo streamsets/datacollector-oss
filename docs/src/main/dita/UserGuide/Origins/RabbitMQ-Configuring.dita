@@ -548,6 +548,10 @@
                                     <entry/>
                                 </row>
                                 <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-row-XMLNamespaces">
+                                    <entry/>
+                                </row>
+                                <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-row-XML-MaxRecLength">
                                     <entry/>
                                 </row>
