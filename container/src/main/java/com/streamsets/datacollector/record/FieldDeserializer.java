@@ -50,6 +50,7 @@ public class FieldDeserializer extends JsonDeserializer<FieldJson> {
     if (map != null) {
       Field.Type type = Field.Type.valueOf((String) map.get("type"));
       Object value = map.get("value");
+      Map<String, String> attributes = (Map<String, String>) map.get("attributes");
       if (value != null) {
         switch (type) {
           case MAP:
@@ -94,7 +95,7 @@ public class FieldDeserializer extends JsonDeserializer<FieldJson> {
             break;
         }
       }
-      field = Field.create(type, value);
+      field = Field.create(type, value, attributes);
     }
     return field;
   }

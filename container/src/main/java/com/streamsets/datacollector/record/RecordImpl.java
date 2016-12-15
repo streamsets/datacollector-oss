@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.record;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.util.EscapeUtil;
 import com.streamsets.pipeline.api.Field;
@@ -26,6 +27,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -125,12 +127,23 @@ public class RecordImpl implements Record, Cloneable {
     private final String dqPath; //Double Quote escaped path
     private final Field.Type type;
     private final Object value;
+    private final Map<String, String> attributes;
 
     public FieldWithPath(String singleQuoteEscapedPath, String doubleQuoteEscapedPath, Field.Type type, Object value) {
+      this(singleQuoteEscapedPath, doubleQuoteEscapedPath, type, value, null);
+    }
+
+    public FieldWithPath(String singleQuoteEscapedPath, String doubleQuoteEscapedPath, Field.Type type, Object value,
+        Map<String, String> attributes) {
       this.sqPath = singleQuoteEscapedPath;
       this.dqPath = doubleQuoteEscapedPath;
       this.type = type;
       this.value = value;
+      if (attributes == null) {
+        this.attributes = null;
+      } else {
+        this.attributes = new LinkedHashMap<>(attributes);
+      }
     }
 
     /**
@@ -151,6 +164,15 @@ public class RecordImpl implements Record, Cloneable {
 
     public String getType() {
       return type.toString();
+    }
+
+    @JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+    public Map<String, String> getAttributes() {
+      if (attributes == null) {
+        return null;
+      } else {
+        return Collections.unmodifiableMap(attributes);
+      }
     }
 
     @SuppressWarnings("unchecked")
@@ -186,7 +208,13 @@ public class RecordImpl implements Record, Cloneable {
     FieldWithPath fieldWithPath = null;
     if (field != null) {
       if (field.getValue() == null) {
-        fieldWithPath = new FieldWithPath(singleQuoteEscapedPath, doubleQuoteEscapedPath, field.getType(), null);
+        fieldWithPath = new FieldWithPath(
+            singleQuoteEscapedPath,
+            doubleQuoteEscapedPath,
+            field.getType(),
+            null,
+            field.getAttributes()
+        );
       } else {
         switch (field.getType()) {
           case LIST:
@@ -197,7 +225,13 @@ public class RecordImpl implements Record, Cloneable {
               String ePath2 = doubleQuoteEscapedPath + "[" + i + "]";
               list.add(createFieldWithPath(ePath1, ePath2, fList.get(i)));
             }
-            fieldWithPath = new FieldWithPath(singleQuoteEscapedPath, doubleQuoteEscapedPath, Field.Type.LIST, list);
+            fieldWithPath = new FieldWithPath(
+                singleQuoteEscapedPath,
+                doubleQuoteEscapedPath,
+                Field.Type.LIST,
+                list,
+                field.getAttributes()
+            );
             break;
           case MAP:
           case LIST_MAP:
@@ -208,11 +242,22 @@ public class RecordImpl implements Record, Cloneable {
               Field eField = entry.getValue();
               map.put(entry.getKey(), createFieldWithPath(ePath1, ePath2, eField));
             }
-            fieldWithPath = new FieldWithPath(singleQuoteEscapedPath, doubleQuoteEscapedPath, field.getType(), map);
+            fieldWithPath = new FieldWithPath(
+                singleQuoteEscapedPath,
+                doubleQuoteEscapedPath,
+                field.getType(),
+                map,
+                field.getAttributes()
+            );
             break;
           default:
-            fieldWithPath = new FieldWithPath(singleQuoteEscapedPath, doubleQuoteEscapedPath, field.getType(),
-              field.getValue());
+            fieldWithPath = new FieldWithPath(
+                singleQuoteEscapedPath,
+                doubleQuoteEscapedPath,
+                field.getType(),
+                field.getValue(),
+                field.getAttributes()
+            );
             break;
         }
       }

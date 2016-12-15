@@ -23,13 +23,16 @@ import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.RecordJson;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TestRecordBean {
 
@@ -81,5 +84,25 @@ public class TestRecordBean {
 
   }
 
+  @Test
+  public void testWrapRecordWithAttributes() throws IOException {
+    List<Record> records = new ArrayList<>();
+    RecordImpl r = new RecordImpl("stage", "source", null, null);
+    Map<String, Field> fields = new HashMap<>();
+    final Field first = Field.create(2);
+    first.setAttribute("attr1-1", "one");
+    first.setAttribute("attr1-2", "two");
+    fields.put("first", first);
+    final Field second = Field.create("second_value");
+    second.setAttribute("attr2-1", "three");
+    second.setAttribute("attr2-2", "four");
+    fields.put("second", second);
+    Field root = Field.create(fields);
+    r.set(root);
+    records.add(r);
+
+    List<RecordJson> recordJsonList = BeanHelper.wrapRecords(records);
+    System.out.println(ObjectMapperFactory.get().writeValueAsString(recordJsonList));
+  }
 
 }

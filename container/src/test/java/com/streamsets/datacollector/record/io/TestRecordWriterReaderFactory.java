@@ -100,7 +100,11 @@ public  class TestRecordWriterReaderFactory {
     record1.getHeader().setStagesPath("stagePath");
     record1.getHeader().setTrackingId("trackingId");
     Map<String, Field> map = new HashMap<>();
-    map.put("a", Field.create(new BigDecimal(1)));
+    final Field fieldA = Field.create(new BigDecimal(1));
+    fieldA.setAttribute("a_attr1", "value1");
+    fieldA.setAttribute("a_attr2", "value2");
+    fieldA.setAttribute("a_attr3", "value3");
+    map.put("a", fieldA);
     map.put("b", Field.create("Hello"));
     map.put("c", Field.create(new ArrayList<Field>()));
     record1.set(Field.create(map));
@@ -121,7 +125,9 @@ public  class TestRecordWriterReaderFactory {
     listMap.put("c", Field.create(new ArrayList<Field>()));
 
     //Test with special characters in listMap key to test JIRA SDC-1562
-    listMap.put("foo bar", Field.create("foo space bar"));
+    final Field fooSpaceBarField = Field.create("foo space bar");
+    fooSpaceBarField.setAttribute("fooSpaceBar_attr1", "fooBar1");
+    listMap.put("foo bar", fooSpaceBarField);
     listMap.put("foo[bar", Field.create("foo open bracket bar"));
     listMap.put("foo]bar", Field.create("foo close bracket bar"));
     listMap.put("foo'bar", Field.create("foo single quote bar"));
@@ -138,7 +144,10 @@ public  class TestRecordWriterReaderFactory {
     nestedListMap.put("foo'bar", Field.create("foo single quote bar"));
     nestedListMap.put("foo\"bar", Field.create("foo double quote bar"));
     nestedListMap.put("foo -+^&*()#$@!~ bar", Field.create("foo special character bar"));
-    nestedListMap.put("foo/bar", Field.create("foo slash bar"));
+    final Field fooSlashBarField = Field.create("foo slash bar");
+    fooSlashBarField.setAttribute("fooSlashBar_attr1", "fooSlashBar1");
+    fooSlashBarField.setAttribute("fooSlashBar_attr2", "fooSlashBar2");
+    nestedListMap.put("foo/bar", fooSlashBarField);
 
     listMap.put("nestedListMap", Field.createListMap(nestedListMap));
     record3.set(Field.createListMap(listMap));
