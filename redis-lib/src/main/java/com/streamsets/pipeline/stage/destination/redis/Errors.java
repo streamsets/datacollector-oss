@@ -32,6 +32,7 @@ public enum Errors implements ErrorCode {
   REDIS_05("Unsupported data type '{}'"),
   REDIS_06("Failed to publish"),
   REDIS_07("Unsupported '{}' : '{}' found in record {}"),
+  REDIS_08("Error while writing records to redis"),
   ;
 
   private final String msg;

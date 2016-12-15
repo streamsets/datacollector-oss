@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
+import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.slf4j.Logger;
@@ -54,6 +55,7 @@ public class RedisTarget extends BaseTarget {
   private Jedis jedis;
   private static final Logger LOG = LoggerFactory.getLogger(RedisTarget.class);
   private final RedisTargetConfig conf;
+  private int retries;
 
   public RedisTarget(RedisTargetConfig conf) {
     this.conf = conf;
@@ -63,34 +65,38 @@ public class RedisTarget extends BaseTarget {
   public List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
 
-    JedisPoolConfig poolConfig = new JedisPoolConfig();
-
-    try {
-      pool = new JedisPool(poolConfig, URI.create(conf.uri), conf.connectionTimeout);
-      String userInfo = URI.create(conf.uri).getUserInfo();
-      jedis = pool.getResource();
-      if(userInfo != null && userInfo.split(":", 2).length > 0) {
-        jedis.clientSetname(userInfo.split(":",2)[0]);
-      }
-      jedis.ping();
-    } catch (JedisException e) { // NOSONAR
-      LOG.error(Errors.REDIS_01.getMessage(), e.toString());
-      issues.add(getContext().createConfigIssue("REDIS", "conf.uri", Errors.REDIS_01, conf.uri, e.toString()));
-    } catch (IllegalArgumentException e) {
-      LOG.error(Errors.REDIS_02.getMessage(), e.toString());
-      issues.add(getContext().createConfigIssue("REDIS", "conf.uri", Errors.REDIS_02, conf.uri, e.toString()));
-    } finally {
+    while (retries <= conf.maxRetries) {
       try {
-        if (pool != null) {
-          pool.close();
+        getRedisConnection();
+        break;
+      } catch (JedisConnectionException e) {
+        retries++;
+        if(retries >= conf.maxRetries) {
+          LOG.error(Errors.REDIS_01.getMessage(), e.toString());
+          issues.add(getContext().createConfigIssue("REDIS", "conf.uri", Errors.REDIS_01, conf.uri, e.toString()));
+          break;
         }
-      } catch (JedisException ignored) { // NOSONAR
+      } catch (JedisException e) { // NOSONAR
+        LOG.error(Errors.REDIS_01.getMessage(), e.toString());
+        issues.add(getContext().createConfigIssue("REDIS", "conf.uri", Errors.REDIS_01, conf.uri, e.toString()));
+        break;
+      } catch (IllegalArgumentException e) {
+        LOG.error(Errors.REDIS_02.getMessage(), e.toString());
+        issues.add(getContext().createConfigIssue("REDIS", "conf.uri", Errors.REDIS_02, conf.uri, e.toString()));
+        break;
+      } finally {
+        try {
+          if (pool != null) {
+            pool.close();
+          }
+        } catch (JedisException ignored) { // NOSONAR
+        }
       }
     }
 
     // Input Validation Check
-    if(conf.mode == ModeType.BATCH) {
-      if(conf.redisFieldMapping.isEmpty()) {
+    if (conf.mode == ModeType.BATCH) {
+      if (conf.redisFieldMapping.isEmpty()) {
         LOG.error(Errors.REDIS_04.getMessage(), "conf.redisFieldMapping is required for Batch Mode");
         issues.add(
             getContext().createConfigIssue(
@@ -102,8 +108,8 @@ public class RedisTarget extends BaseTarget {
             )
         );
       }
-    } else if(conf.mode == ModeType.PUBLISH) {
-      if(conf.channel.isEmpty()) {
+    } else if (conf.mode == ModeType.PUBLISH) {
+      if (conf.channel.isEmpty()) {
         LOG.error(Errors.REDIS_04.getMessage(), "conf.channel is required for Publish Mode");
         issues.add(
             getContext().createConfigIssue(
@@ -140,19 +146,19 @@ public class RedisTarget extends BaseTarget {
       return;
     }
 
-    if(conf.mode == ModeType.BATCH) {
+    if (conf.mode == ModeType.BATCH) {
       doBatch(batch);
-    } else if(conf.mode == ModeType.PUBLISH) {
+    } else if (conf.mode == ModeType.PUBLISH) {
       doPublish(batch);
     }
   }
 
   @Override
   public void destroy() {
-    if(jedis != null) {
+    if (jedis != null) {
       jedis.close();
     }
-    if(pool != null) {
+    if (pool != null) {
       pool.close();
     }
     super.destroy();
@@ -172,79 +178,116 @@ public class RedisTarget extends BaseTarget {
     }
   }
 
+  private void getRedisConnection() {
+    JedisPoolConfig poolConfig = new JedisPoolConfig();
+    pool = new JedisPool(poolConfig, URI.create(conf.uri), conf.connectionTimeout);
+    String userInfo = URI.create(conf.uri).getUserInfo();
+    jedis = pool.getResource();
+    if (userInfo != null && userInfo.split(":", 2).length > 0) {
+      jedis.clientSetname(userInfo.split(":", 2)[0]);
+    }
+    jedis.ping();
+  }
+
   private void doBatch(Batch batch) throws StageException {
     Iterator<Record> records = batch.getRecords();
-    Pipeline p = jedis.pipelined();
     List<ErrorRecord> tempRecord = new ArrayList<>();
+    Pipeline p;
 
-    while(records.hasNext()) {
-      Record record = records.next();
-      for(RedisFieldMappingConfig parameters : conf.redisFieldMapping) {
-        String key = null;
-        if (record.has(parameters.keyExpr)) {
-          key = record.get(parameters.keyExpr).getValueAsString();
-        }
-        Field value = record.get(parameters.valExpr);
+    try {
+      p = jedis.pipelined();
 
-        if(key != null && value != null) {
-          switch (parameters.dataType) {
-            case STRING:
-              doUpsertString(record, tempRecord, p, key, value);
-              break;
-            case LIST:
-              doUpsertList(record, tempRecord, p, key, value);
-              break;
-            case SET:
-              doUpsertSet(record, tempRecord, p, key, value);
-              break;
-            case HASH:
-              doUpsertHash(record, tempRecord, p, key, value);
-              break;
-            default:
-              LOG.error(Errors.REDIS_05.getMessage(), parameters.dataType);
-              errorRecordHandler.onError(
-                  new OnRecordErrorException(
-                      record,
-                      Errors.REDIS_05,
-                      parameters.dataType
-                  )
-              );
-              break;
+      while (records.hasNext()) {
+        Record record = records.next();
+        for (RedisFieldMappingConfig parameters : conf.redisFieldMapping) {
+          String key = null;
+          if (record.has(parameters.keyExpr)) {
+            key = record.get(parameters.keyExpr).getValueAsString();
           }
-        } else {
-          LOG.warn(Errors.REDIS_07.getMessage(), parameters.keyExpr, parameters.valExpr, record);
+          Field value = record.get(parameters.valExpr);
+
+          if (key != null && value != null) {
+            switch (parameters.dataType) {
+              case STRING:
+                doUpsertString(record, tempRecord, p, key, value);
+                break;
+              case LIST:
+                doUpsertList(record, tempRecord, p, key, value);
+                break;
+              case SET:
+                doUpsertSet(record, tempRecord, p, key, value);
+                break;
+              case HASH:
+                doUpsertHash(record, tempRecord, p, key, value);
+                break;
+              default:
+                LOG.error(Errors.REDIS_05.getMessage(), parameters.dataType);
+                errorRecordHandler.onError(new OnRecordErrorException(record, Errors.REDIS_05, parameters.dataType));
+                break;
+            }
+          } else {
+            LOG.warn(Errors.REDIS_07.getMessage(), parameters.keyExpr, parameters.valExpr, record);
+          }
         }
       }
-    }
 
-    List<Object> results = p.syncAndReturnAll();
-    int index = 0;
-    for(Object result : results) {
-      if(!("OK".equals(result) || Long.class.equals(result == null ? null : result.getClass()))) {
-        LOG.error(
-            Errors.REDIS_03.getMessage(),
-            tempRecord.get(index).operation,
-            tempRecord.get(index).key,
-            tempRecord.get(index).value
-        );
-        errorRecordHandler.onError(
-            new OnRecordErrorException(
-                tempRecord.get(index).record,
-                Errors.REDIS_03,
-                tempRecord.get(index).operation,
-                tempRecord.get(index).key,
-                tempRecord.get(index).value,
-                result.toString()
-            )
-        );
+      List<Object> results = p.syncAndReturnAll();
+
+      int index = 0;
+      for (Object result : results) {
+        if (!("OK".equals(result) || Long.class.equals(result == null ? null : result.getClass()))) {
+          LOG.error(
+              Errors.REDIS_03.getMessage(),
+              tempRecord.get(index).operation,
+              tempRecord.get(index).key,
+              tempRecord.get(index).value
+          );
+          errorRecordHandler.onError(new OnRecordErrorException(
+              tempRecord.get(index).record,
+              Errors.REDIS_03,
+              tempRecord.get(index).operation,
+              tempRecord.get(index).key,
+              tempRecord.get(index).value,
+              result.toString()
+          ));
+        }
+        index++;
       }
-      index++;
+      retries = 0;
+    } catch (JedisException ex) {
+      handleException(ex, batch, tempRecord);
+    }
+  }
+
+  private void handleException(JedisException ex, Batch batch, List<ErrorRecord> tempRecord) throws StageException {
+    if (ex instanceof JedisConnectionException) {
+      if (retries < conf.maxRetries) {
+        retries++;
+        LOG.debug("Redis connection retry: " + retries);
+        try {
+          LOG.trace("Sleeping for: {}", conf.connectionTimeout);
+          ThreadUtil.sleep(conf.connectionTimeout);
+          getRedisConnection();
+        } catch (JedisException e) {
+          //no-op
+        }
+        doBatch(batch);
+      } else {
+        // connection error restart the pipeline
+        throw new StageException(Errors.REDIS_08, ex.toString(), ex);
+      }
+    } else {
+      for (ErrorRecord errorRecord : tempRecord) {
+        Record record = errorRecord.record;
+        LOG.error(Errors.REDIS_08.getMessage(), ex.toString(), ex);
+        errorRecordHandler.onError(new OnRecordErrorException(record, Errors.REDIS_08, ex.toString(), ex));
+      }
     }
   }
 
   private void doUpsertString(Record record, List<ErrorRecord> tempRecords, Pipeline pipeline, String key, Field value)
       throws StageException {
-    if(value != null && value.getType() == Field.Type.STRING) {
+    if (value != null && value.getType() == Field.Type.STRING) {
       String val = value.getValueAsString();
       pipeline.set(key, val);
       tempRecords.add(new ErrorRecord(record, "String", key, val));
@@ -263,10 +306,10 @@ public class RedisTarget extends BaseTarget {
 
   private void doUpsertList(Record record, List<ErrorRecord> tempRecords, Pipeline pipeline, String key, Field value)
       throws StageException{
-    if(value != null && value.getType() == Field.Type.LIST) {
+    if (value != null && value.getType() == Field.Type.LIST) {
       List<Field> values = value.getValueAsList();
-      for(Field element : values) {
-        if(element != null) {
+      for (Field element : values) {
+        if (element != null) {
           String val = element.getValueAsString();
           pipeline.lpush(key, val);
           tempRecords.add(new ErrorRecord(record, "List", key, val));
@@ -287,10 +330,10 @@ public class RedisTarget extends BaseTarget {
 
   private void doUpsertSet(Record record, List<ErrorRecord> tempRecords, Pipeline pipeline, String key, Field value)
       throws StageException {
-    if(value != null && value.getType() == Field.Type.LIST) {
+    if (value != null && value.getType() == Field.Type.LIST) {
       List<Field> values = value.getValueAsList();
-      for(Field element : values) {
-        if(element != null) {
+      for (Field element : values) {
+        if (element != null) {
           String val = element.getValueAsString();
           pipeline.sadd(key, val);
           tempRecords.add(new ErrorRecord(record, "Set", key, val));
@@ -311,9 +354,9 @@ public class RedisTarget extends BaseTarget {
 
   private void doUpsertHash(Record record, List<ErrorRecord> tempRecords, Pipeline pipeline, String key, Field value)
       throws StageException {
-    if(value != null && value.getType().isOneOf(Field.Type.MAP, Field.Type.LIST_MAP)) {
+    if (value != null && value.getType().isOneOf(Field.Type.MAP, Field.Type.LIST_MAP)) {
       Map<String, Field> values = value.getValueAsMap();
-      for(Map.Entry<String, Field> entry : values.entrySet()) {
+      for (Map.Entry<String, Field> entry : values.entrySet()) {
         String fieldName = entry.getKey();
         String val = entry.getValue().getValueAsString();
         pipeline.hset(key, fieldName, val);

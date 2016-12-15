@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 
 import java.util.List;
@@ -53,6 +54,29 @@ public class RedisTargetConfig {
       group = "REDIS"
   )
   public int connectionTimeout = 1000;
+
+  @ConfigDef(
+      type = ConfigDef.Type.NUMBER,
+      label = "Retry Attempts",
+      defaultValue = "0",
+      required = true,
+      min = 0,
+      displayPosition = 21,
+      group = "REDIS"
+  )
+  public int maxRetries = 0;
+
+  @ConfigDef(
+      type = ConfigDef.Type.NUMBER,
+      label = "Max Batch Wait Time",
+      defaultValue = "${5 * SECONDS}",
+      required = true,
+      elDefs = {TimeEL.class},
+      evaluation = ConfigDef.Evaluation.IMPLICIT,
+      displayPosition = 22,
+      group = "REDIS"
+  )
+  public long maxBatchWaitTime;
 
   @ConfigDef(
       required = true,
