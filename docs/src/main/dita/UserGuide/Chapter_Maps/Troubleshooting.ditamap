@@ -49,6 +49,10 @@
    <topicref href="../Troubleshooting/Destinations-Kafka.dita"/>
    <topicref href="../Troubleshooting/Destinations-RPC.dita"/>
   </topicref>
+  <topicref href="../Troubleshooting/JDBCConnections.dita">
+   <topicref href="../Troubleshooting/JDBCConnections-Driver.dita"/>
+   <topicref href="../Troubleshooting/JDBCConnections-Database.dita"/>
+  </topicref>
   <topicref href="../Troubleshooting/Performance.dita">
    <topicmeta>
     <shortdesc/>

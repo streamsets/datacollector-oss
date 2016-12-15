@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_oqc_431_hy">
+ <title>No Suitable Driver</title>
+ <conbody>
+  <p>When <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            cannot find the JDBC driver for a stage, the following error message
+            displays:<codeblock>JDBC_00 - Cannot connect to specified database: com.streamsets.pipeline.api.StageException:
+JDBC_06 - Failed to initialize connection pool: java.sql.SQLException: No suitable driver</codeblock></p>
+        <p>Verify that you have followed the instructions to install additional drivers, as
+            explained in <xref
+                href="../Install_Config/AdditionalDrivers-Installing.dita#task_idl_hqw_ft"/>. </p>
+        <p>You can also use these additional tips to help resolve the issue:</p>
+        <dl>
+            <dlentry>
+                <dt>The JDBC connection string is not correct.</dt>
+                <dd>The <uicontrol>JDBC Connection String</uicontrol> property for the stage must
+                    include the <codeph>jdbc:</codeph> prefix. For example, a Postgres connection
+                    string might be <codeph>jdbc:postgresql://&lt;database host>/&lt;database
+                        name></codeph>. </dd>
+                <dd>Check your database documentation for the required connection string format. For
+                    example, if you are using a non-standard port, you must specify it in the
+                    connection string. </dd>
+            </dlentry>
+            <dlentry>
+                <dt>The JDBC driver is not stored in the correct directory.</dt>
+                <dd>You must store the JDBC driver in the following directory: <codeph>&lt;external
+                    directory>/streamsets-datacollector-jdbc-lib/lib/</codeph>.</dd>
+                <dd>
+                    <p>For example, assuming that you defined the external directory as
+                        <codeph>/opt/sdc-extras</codeph>, store the JDBC JAR files in
+                        <codeph>/opt/sdc-extras/streamsets-datacollector-jdbc-lib/lib/</codeph>.</p>
+                </dd>
+            </dlentry>
+            <dlentry>
+                <dt>STREAMSETS_LIBRARIES_EXTRA_DIR is not set correctly.</dt>
+                <dd>You must set the <codeph>STREAMSETS_LIBRARIES_EXTRA_DIR</codeph> environment
+                    variable to tell <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> where the JDBC drivers and other additional libraries are located. The
+                    location should be external to the Data Collector installation directory. </dd>
+                <dd>For example, to use <codeph>/opt/sdc-extras</codeph> as the external directory
+                    for additional libraries, then you would set
+                        <codeph>STREAMSETS_LIBRARIES_EXTRA_DIR</codeph> as follows:
+                    <codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR="/opt/sdc-extras/"</codeblock></dd>
+                <dd>If you start <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> as a service, set the environment variable in the
+                        <codeph>$SDC_DIST/libexec/sdcd-env.sh</codeph> file. If you start <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> manually, set the variable in the
+                        <codeph>$SDC_DIST/libexec/sdc-env.sh</codeph> file. </dd>
+            </dlentry>
+            <dlentry>
+                <dt>The security policy is not set.</dt>
+                <dd>You must grant permission for code in the external directory. Ensure that the
+                        <codeph>$SDC_CONF/sdc-security.policy</codeph> file contains the following
+                    lines:
+                    <codeblock>// user-defined external directory
+grant codebase "file://&lt;external directory>-" {
+  permission java.security.AllPermission;
+};</codeblock></dd>
+                <dd>For
+                    example:<codeblock>// user-defined external directory
+grant codebase "file:///opt/sdc-extras/-" {
+  permission java.security.AllPermission;
+};</codeblock></dd>
+            </dlentry>
+            <dlentry>
+                <dt>The JDBC driver does not support auto-loading.</dt>
+                <dd>Even if the connection string is correctly configured, the JDBC driver JAR file
+                    is in the correct location, the environment variable is correctly set, and
+                    you've set the correct security policy, the JDBC driver might not correctly
+                    support <xref
+                        href="http://archive.oreilly.com/pub/a/onjava/2006/08/02/jjdbc-4-enhancements-in-java-se-6.html"
+                        format="html" scope="external">JDBC 4.0 auto-loading</xref>. </dd>
+                <dd>If you have checked all of the above, and you are still seeing the "No suitable
+                    driver" error message, add the class name for the driver in the <uicontrol>JDBC
+                        Class Driver Name</uicontrol> property in the <uicontrol>Legacy
+                        Drivers</uicontrol> tab for the stage. </dd>
+            </dlentry>
+        </dl>
+ </conbody>
+</concept>
