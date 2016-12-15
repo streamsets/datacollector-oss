@@ -91,8 +91,11 @@ public class OracleCDCSource extends BaseSource {
   private static final String USERNAME = HIKARI_CONFIG_PREFIX + "username";
   private static final String CONNECTION_STR = HIKARI_CONFIG_PREFIX + "connectionString";
   private static final String CURRENT_SCN = "SELECT CURRENT_SCN FROM V$DATABASE";
+  // At the time of executing this statement, either the cachedSCN is 0
+  // (which means we are executing for the first time), or it is no longer valid, so select
+  // only the ones that are > than the cachedSCN.
   private static final String GET_OLDEST_SCN =
-      "SELECT FIRST_CHANGE# from V$ARCHIVED_LOG WHERE FIRST_CHANGE# >= ? ORDER BY FIRST_CHANGE#";
+      "SELECT FIRST_CHANGE# from V$ARCHIVED_LOG WHERE FIRST_CHANGE# > ? ORDER BY FIRST_CHANGE#";
   private static final String SWITCH_TO_CDB_ROOT = "ALTER SESSION SET CONTAINER = CDB$ROOT";
   private static final String PREFIX = "oracle.cdc.";
   private static final String SCN = PREFIX + "scn";
