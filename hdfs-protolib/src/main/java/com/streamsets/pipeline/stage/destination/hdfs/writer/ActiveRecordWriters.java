@@ -24,6 +24,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.stage.destination.hdfs.Errors;
 import org.apache.hadoop.fs.FileSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,7 +75,9 @@ public class ActiveRecordWriters {
   }
 
   private final RecordWriterManager manager;
-  private Map<String, RecordWriter> writers;
+
+  @VisibleForTesting
+  Map<String, RecordWriter> writers;
   private DelayQueue<DelayedRecordWriter> cutOffQueue;
 
   public ActiveRecordWriters(RecordWriterManager manager) {
@@ -170,7 +173,7 @@ public class ActiveRecordWriters {
     purge();
   }
 
-  public synchronized void flushAll() {
+  public synchronized void flushAll() throws StageException {
     if (IS_TRACE_ENABLED) {
       LOG.trace("Flush all '{}'", toString());
     }
@@ -179,8 +182,9 @@ public class ActiveRecordWriters {
         try {
           writer.flush();
         } catch (IOException ex) {
-          String msg = Utils.format("Error flushing writer {} : {}", writer, ex);
-          LOG.warn(msg, ex);
+          String msg = Utils.format("Flush failed on file : '{}'", writer.getPath().toString());
+          LOG.error(msg);
+          throw new StageException(Errors.HADOOPFS_58, writer.getPath().toString(), ex);
         }
       }
     }

@@ -22,11 +22,13 @@ package com.streamsets.pipeline.stage.destination.hdfs.writer;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
+import com.streamsets.pipeline.stage.destination.hdfs.Errors;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsDTarget;
 import org.apache.hadoop.fs.Path;
 import org.junit.Assert;
@@ -41,6 +43,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.spy;
 
 public class TestActiveRecordWriters {
   private Path testDir;
@@ -170,6 +175,7 @@ public class TestActiveRecordWriters {
     });
     Assert.assertEquals(0, files.length);
   }
+
   @Test
   public void testRenameOnIdleFlushNoData() throws Exception {
     RecordWriterManager mgr = new RecordWriterManagerTestBuilder()
@@ -213,4 +219,42 @@ public class TestActiveRecordWriters {
     Assert.assertEquals(0, files.length);
   }
 
+  @Test
+  public void testFailOnFlushFail() throws Exception {
+    RecordWriterManager mgr = new RecordWriterManagerTestBuilder()
+        .context(ContextInfoCreator.createTargetContext(HdfsDTarget.class, "testFailOnFlushFail", false, OnRecordError.TO_ERROR, null))
+        .dirPathTemplate(getTestDir().toString())
+        .build();
+
+    mgr.setIdleTimeoutSeconds(1L);
+    ActiveRecordWriters writers = new ActiveRecordWriters(mgr);
+
+    Date now = new Date();
+
+    Record record = RecordCreator.create();
+    Map<String, Field> data = new HashMap<>();
+    data.put("a", Field.create("blah"));
+
+    RecordWriter writer = writers.get(now, now, record);
+
+    // Find the key to the writer in the internal map, so we can replace it with a spy
+    String key = null;
+    for (Map.Entry<String, RecordWriter> writerEntry : writers.writers.entrySet()) {
+      if (writerEntry.getValue() == writer) {
+        key = writerEntry.getKey();
+      }
+    }
+    writer = spy(writer);
+    doThrow(IOException.class).when(writer).flush();
+    writers.writers.put(key, writer);
+    writer.write(record);
+    try {
+      writers.flushAll();
+      Assert.fail("Should have thrown stage exception!");
+    } catch (StageException ex) {
+      Assert.assertEquals(Errors.HADOOPFS_58, ex.getErrorCode());
+      Assert.assertTrue(ex.getMessage().contains(writer.getPath().toString()));
+      Assert.assertTrue(ex.getCause() instanceof IOException);
+    }
+  }
 }
