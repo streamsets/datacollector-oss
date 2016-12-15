@@ -84,8 +84,10 @@ final class WholeFileDataGenerator implements DataGenerator {
     int bufferSize = fileRef.getBufferSize();
     boolean canUseDirectByteBuffer = fileRef.getSupportedStreamClasses().contains(ReadableByteChannel.class);
     if (canUseDirectByteBuffer) {
-      WritableByteChannel writableByteChannel = Channels.newChannel(outputStream);
-      try (ReadableByteChannel readableByteChannel = getReadableStream(fileRef, ReadableByteChannel.class)){
+      try (
+          WritableByteChannel writableByteChannel = Channels.newChannel(outputStream);
+          ReadableByteChannel readableByteChannel = getReadableStream(fileRef, ReadableByteChannel.class)
+      ){
         ByteBuffer buffer = ByteBuffer.allocateDirect(bufferSize);
         while ((readableByteChannel.read(buffer)) > 0) {
           //Flip to use the buffer from 0 to position.

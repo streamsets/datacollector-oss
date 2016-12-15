@@ -35,6 +35,7 @@ import java.util.Set;
 public abstract class AbstractFileRef extends FileRef {
   private final boolean createMetrics;
   private final long totalSizeInBytes;
+  private final double rateLimit;
   private final boolean verifyChecksum;
   private final String checksum;
   private final HashingUtil.HashType checksumAlgorithm;
@@ -45,11 +46,12 @@ public abstract class AbstractFileRef extends FileRef {
    * @param createMetrics if the metrics are needed
    * @param totalSizeInBytes the file size, can be null, if {@link #createMetrics} is false
    */
-  public  AbstractFileRef(
+  public AbstractFileRef(
       Set<Class<? extends AutoCloseable>> supportedStreamClasses,
       int bufferSize,
       boolean createMetrics,
       long totalSizeInBytes,
+      double rateLimit,
       boolean verifyChecksum,
       String checksum,
       HashingUtil.HashType checksumAlgorithm
@@ -63,6 +65,7 @@ public abstract class AbstractFileRef extends FileRef {
     this.supportedStreamClasses = supportedStreamClasses;
     this.createMetrics = createMetrics;
     this.totalSizeInBytes = totalSizeInBytes;
+    this.rateLimit = rateLimit;
     this.verifyChecksum = verifyChecksum;
     this.checksum = checksum;
     this.checksumAlgorithm = checksumAlgorithm;
@@ -83,6 +86,7 @@ public abstract class AbstractFileRef extends FileRef {
     );
     T stream = createInputStream(streamClassType);
     stream = (createMetrics)?(T)new MetricEnabledWrapperStream<>(toString(), totalSizeInBytes, context, stream) : stream;
+    stream = (rateLimit > 0)? (T)new RateLimitingWrapperStream<>(stream, totalSizeInBytes, rateLimit) : stream;
     return (verifyChecksum)?(T)new VerifyChecksumWrapperStream<>(stream, checksum, checksumAlgorithm) : stream;
   }
 
@@ -105,6 +109,7 @@ public abstract class AbstractFileRef extends FileRef {
     protected boolean createMetrics = true;
     protected long totalSizeInBytes;
     protected boolean verifyChecksum = false;
+    protected double rateLimit = -1;
     protected String checksum;
     protected HashingUtil.HashType checksumAlgorithm;
 
@@ -117,6 +122,11 @@ public abstract class AbstractFileRef extends FileRef {
     @SuppressWarnings("unchecked")
     public B createMetrics(boolean createMetrics) {
       this.createMetrics = createMetrics;
+      return (B)this;
+    }
+
+    public B rateLimit(double rateLimit) {
+      this.rateLimit = rateLimit;
       return (B)this;
     }
 

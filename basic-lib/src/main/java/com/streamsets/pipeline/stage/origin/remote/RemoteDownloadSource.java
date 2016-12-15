@@ -26,10 +26,13 @@ import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.io.ObjectLengthException;
 import com.streamsets.pipeline.lib.io.OverrunException;
+import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
@@ -93,6 +96,8 @@ public class RemoteDownloadSource extends BaseSource {
   private final byte[] moveBuffer;
 
   private RemoteFile next = null;
+  private ELEval rateLimitElEval;
+  private ELVars rateLimitElVars;
 
 
   private final NavigableSet<RemoteFile> fileQueue = new TreeSet<>(new Comparator<RemoteFile>() {
@@ -234,6 +239,10 @@ public class RemoteDownloadSource extends BaseSource {
       LOG.error("Error trying to login to remote host", ex);
     }
     validateFilePattern(issues);
+    if (issues.isEmpty()) {
+      rateLimitElEval = FileRefUtil.createElEvalForRateLimit(getContext());;
+      rateLimitElVars = getContext().createELVars();
+    }
     return issues;
   }
 
@@ -309,6 +318,7 @@ public class RemoteDownloadSource extends BaseSource {
             FileRef fileRef = new RemoteSourceFileRef.Builder()
                 .bufferSize(conf.dataFormatConfig.wholeFileMaxObjectLen)
                 .totalSizeInBytes(next.remoteObject.getContent().getSize())
+                .rateLimit(FileRefUtil.evaluateAndGetRateLimit(rateLimitElEval, rateLimitElVars, conf.dataFormatConfig.rateLimit))
                 .remoteFile(next)
                 .remoteUri(remoteURI)
                 .createMetrics(true)

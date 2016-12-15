@@ -37,6 +37,7 @@ public final class LocalFileRef extends AbstractFileRef {
       int bufferSize,
       boolean createMetrics,
       long fileSize,
+      double rateLimit,
       boolean verifyChecksum,
       String checksum,
       HashingUtil.HashType checksumAlgorithm
@@ -46,6 +47,7 @@ public final class LocalFileRef extends AbstractFileRef {
         bufferSize,
         createMetrics,
         fileSize,
+        rateLimit,
         verifyChecksum,
         checksum,
         checksumAlgorithm
@@ -102,6 +104,7 @@ public final class LocalFileRef extends AbstractFileRef {
           bufferSize,
           createMetrics,
           totalSizeInBytes,
+          rateLimit,
           verifyChecksum,
           checksum,
           checksumAlgorithm

@@ -27,11 +27,15 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.hashing.HashingUtil;
 import com.streamsets.pipeline.lib.io.ObjectLengthException;
 import com.streamsets.pipeline.lib.io.OverrunException;
+import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.RecoverableDataParserException;
@@ -61,6 +65,9 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
   private DataParser parser;
   private S3Object object;
 
+  private ELEval rateLimitElEval;
+  private ELVars rateLimitElVars;
+
   public AmazonS3Source(S3ConfigBean s3ConfigBean) {
     super(s3ConfigBean);
   }
@@ -68,6 +75,8 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
   @Override
   protected void initChild(List<ConfigIssue> issues) {
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
+    rateLimitElEval = FileRefUtil.createElEvalForRateLimit(getContext());
+    rateLimitElVars = getContext().createELVars();
   }
 
   @Override
@@ -244,7 +253,7 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
 
   //For whole file we do not care whether it is a preview or not,
   //as the record is just the metadata along with file ref.
-  private void handleWholeFileDataFormat(S3ObjectSummary s3ObjectSummary, String recordId) throws DataParserException, IOException {
+  private void handleWholeFileDataFormat(S3ObjectSummary s3ObjectSummary, String recordId) throws ELEvalException, DataParserException, IOException {
     S3Object partialS3ObjectForMetadata = null;
     //partialObject with fetchSize 1 byte.
     //This is mostly used for extracting metadata and such.
@@ -265,7 +274,8 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
         .customerKeyMd5(s3ConfigBean.sseConfig.customerKeyMd5)
         .bufferSize(s3ConfigBean.dataFormatConfig.wholeFileMaxObjectLen)
         .createMetrics(true)
-        .totalSizeInBytes(s3ObjectSummary.getSize());
+        .totalSizeInBytes(s3ObjectSummary.getSize())
+        .rateLimit(FileRefUtil.evaluateAndGetRateLimit(rateLimitElEval, rateLimitElVars, s3ConfigBean.dataFormatConfig.rateLimit));
     if (s3ConfigBean.dataFormatConfig.verifyChecksum) {
       s3FileRefBuilder.verifyChecksum(true)
           .checksumAlgorithm(HashingUtil.HashType.MD5)

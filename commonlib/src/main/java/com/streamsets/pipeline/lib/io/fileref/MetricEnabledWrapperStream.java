@@ -24,16 +24,15 @@ import com.codahale.metrics.Meter;
 import com.streamsets.pipeline.api.Stage;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
 import java.util.Map;
 
 /**
- * The Implementation of {@link AbstractWrapperStream} which maintains the metrics
+ * The Implementation of {@link AbstractPrePostReadOperationPerformingStream} which maintains and updates the metrics
  * for the stream read.
  * @param <T> Stream implementation of {@link AutoCloseable}
  */
-final class MetricEnabledWrapperStream<T extends AutoCloseable> extends AbstractWrapperStream<T> {
+final class MetricEnabledWrapperStream<T extends AutoCloseable> extends AbstractPrePostReadOperationPerformingStream<T> {
   private final Meter dataThroughputMeterForCurrentStream;
   private final Meter dataTransferMeter;
   private final Counter remainingBytesCounter;
@@ -62,8 +61,13 @@ final class MetricEnabledWrapperStream<T extends AutoCloseable> extends Abstract
     //Shows the size of the file in the brack after the file name.
     gaugeStatisticsMap.put(FileRefUtil.FILE, String.format(FileRefUtil.BRACKETED_TEMPLATE, id, convertBytesToDisplayFormat(fileSize)));
   }
+  @Override
+  protected void performPreReadOperation(int bytesToBeRead) {
+    //NOOP
+  }
 
-  private int updateMetricsAndReturnBytesRead(int bytesRead) {
+  @Override
+  protected void performPostReadOperation(int bytesRead) {
     if (bytesRead > 0) {
       dataThroughputMeterForCurrentStream.mark(bytesRead);
       //In KB
@@ -90,7 +94,6 @@ final class MetricEnabledWrapperStream<T extends AutoCloseable> extends Abstract
           convertBytesToDisplayFormat((double)remainingBytesCounter.getCount())
       );
     }
-    return bytesRead;
   }
 
   /**
@@ -110,27 +113,6 @@ final class MetricEnabledWrapperStream<T extends AutoCloseable> extends Abstract
     return df.format(unitChangedBytes) + " " + UNITS[unitIdx];
   }
 
-  @Override
-  public int read() throws IOException {
-    int readByte = super.read();
-    updateMetricsAndReturnBytesRead((readByte != -1)? 1 : 0);
-    return readByte;
-  }
-
-  @Override
-  public int read(ByteBuffer dst) throws IOException {
-    return updateMetricsAndReturnBytesRead(super.read(dst));
-  }
-
-  @Override
-  public int read(byte[] b) throws IOException {
-    return updateMetricsAndReturnBytesRead(super.read(b));
-  }
-
-  @Override
-  public int read(byte[] b, int offset, int len) throws IOException {
-    return updateMetricsAndReturnBytesRead(super.read(b, offset, len));
-  }
 
   @Override
   public void close() throws IOException {

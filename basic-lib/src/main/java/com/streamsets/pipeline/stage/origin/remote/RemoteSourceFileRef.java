@@ -36,13 +36,15 @@ final class RemoteSourceFileRef extends AbstractFileRef{
       URI remoteUri,
       int bufferSize,
       boolean createMetrics,
-      long totalSizeInBytes
+      long totalSizeInBytes,
+      double rateLimit
   ) {
     super(
         ImmutableSet.<Class<? extends AutoCloseable>>of(InputStream.class),
         bufferSize,
         createMetrics,
         totalSizeInBytes,
+        rateLimit,
         false,
         null,
         null
@@ -81,7 +83,7 @@ final class RemoteSourceFileRef extends AbstractFileRef{
     public RemoteSourceFileRef build() {
       Utils.checkNotNull(remoteFile, "Remote file should not be null");
       Utils.checkNotNull(remoteUri, "Remote Uri should not be null");
-      return new RemoteSourceFileRef(remoteFile, remoteUri, bufferSize, createMetrics, totalSizeInBytes);
+      return new RemoteSourceFileRef(remoteFile, remoteUri, bufferSize, createMetrics, totalSizeInBytes, rateLimit);
     }
   }
 }

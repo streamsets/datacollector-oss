@@ -49,6 +49,7 @@ import com.streamsets.pipeline.config.OnParseErrorChooserValues;
 import com.streamsets.pipeline.config.OriginAvroSchemaLookupModeChooserValues;
 import com.streamsets.pipeline.config.OriginAvroSchemaSource;
 import com.streamsets.pipeline.config.OriginAvroSchemaSourceChooserValues;
+import com.streamsets.pipeline.lib.el.DataUnitsEL;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.DataParserFormat;
@@ -823,6 +824,22 @@ public class DataParserFormatConfig implements DataFormatConfig {
   )
   //Optimal 8KB
   public int wholeFileMaxObjectLen = 8 * 1024;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "-1",
+      label = "Rate per second",
+      description = "Rate / sec to manipulate bandwidth requirements for File Transfer." +
+          " Use <= 0 to opt out. Default unit is B/sec",
+      displayPosition = 920,
+      group = "DATA_FORMAT",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "WHOLE_FILE",
+      elDefs = {DataUnitsEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT
+  )
+  public String rateLimit = "-1";
 
   @ConfigDef(
       required = true,

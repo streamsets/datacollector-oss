@@ -25,11 +25,14 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
 import com.streamsets.pipeline.lib.io.ObjectLengthException;
 import com.streamsets.pipeline.lib.io.OverrunException;
+import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.io.fileref.LocalFileRef;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -79,6 +82,9 @@ public class SpoolDirSource extends BaseSource {
   private ErrorRecordHandler errorRecordHandler;
   private DataParserFactory parserFactory;
   private DataParser parser;
+
+  private ELEval rateLimitElEval;
+  private ELVars rateLimitElVars;
 
   public SpoolDirSource(SpoolDirConfigBean conf) {
     this.conf = conf;
@@ -220,6 +226,8 @@ public class SpoolDirSource extends BaseSource {
       builder.setUseLastModifiedTimestamp(useLastModified);
       spooler = builder.build();
       spooler.init(conf.initialFileToProcess);
+      rateLimitElEval = FileRefUtil.createElEvalForRateLimit(getContext());;
+      rateLimitElVars = getContext().createELVars();
     }
 
     return issues;
@@ -509,6 +517,7 @@ public class SpoolDirSource extends BaseSource {
             FileRef localFileRef = new LocalFileRef.Builder()
                 .filePath(file.getAbsolutePath())
                 .bufferSize(conf.dataFormatConfig.wholeFileMaxObjectLen)
+                .rateLimit(FileRefUtil.evaluateAndGetRateLimit(rateLimitElEval, rateLimitElVars, conf.dataFormatConfig.rateLimit))
                 .createMetrics(true)
                 .totalSizeInBytes(Files.size(file.toPath()))
                 .build();

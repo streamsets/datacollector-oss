@@ -45,6 +45,7 @@ public final class S3FileRef extends AbstractFileRef {
       int bufferSize,
       boolean createMetrics,
       long totalSizeInBytes,
+      double rateLimit,
       boolean verifyChecksum,
       String checksum,
       HashingUtil.HashType checksumAlgorithm) {
@@ -53,6 +54,7 @@ public final class S3FileRef extends AbstractFileRef {
         bufferSize,
         createMetrics,
         totalSizeInBytes,
+        rateLimit,
         verifyChecksum,
         checksum,
         checksumAlgorithm
@@ -129,6 +131,7 @@ public final class S3FileRef extends AbstractFileRef {
           bufferSize,
           createMetrics,
           totalSizeInBytes,
+          rateLimit,
           verifyChecksum,
           checksum,
           checksumAlgorithm

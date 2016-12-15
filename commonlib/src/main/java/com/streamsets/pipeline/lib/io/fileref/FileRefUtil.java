@@ -30,6 +30,9 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ChecksumAlgorithm;
 import com.streamsets.pipeline.lib.event.EventCreator;
@@ -58,7 +61,7 @@ public final class FileRefUtil {
   public static final String TRANSFER_THROUGHPUT = "Transfer Rate";
   public static final String SENT_BYTES = "Sent Bytes";
   public static final String REMAINING_BYTES = "Remaining Bytes";
-  public static final String TRANSFER_THROUGHPUT_METER = "transferRateKb";
+  public static final String TRANSFER_THROUGHPUT_METER = "transferRate";
   public static final String COMPLETED_FILE_COUNT = "Completed File Count";
 
   public static final String BRACKETED_TEMPLATE = "%s (%s)";
@@ -239,5 +242,12 @@ public final class FileRefUtil {
             COMMA_JOINER.join(Sets.difference(MANDATORY_FIELD_PATHS, fieldPathsInRecord))
         )
     );
+  }
+  public static ELEval createElEvalForRateLimit(Stage.Context context) {
+    return context.createELEval("rateLimit");
+  }
+
+  public static Double evaluateAndGetRateLimit(ELEval elEval, ELVars elVars, String rateLimit) throws ELEvalException {
+    return elEval.eval(elVars, rateLimit, Double.class);
   }
 }
