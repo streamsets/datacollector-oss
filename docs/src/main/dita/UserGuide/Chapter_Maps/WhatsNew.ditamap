@@ -15,7 +15,7 @@
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
 <map>
  <title>What's New</title>
-    <topicref href="../WhatsNew/ChapterTitle.dita" chunk="to-content">
+    <topicref href="../WhatsNew/WhatsNew_Title.dita" chunk="to-content">
         <topicref href="../WhatsNew/2200.dita"/>
     </topicref>
 </map>

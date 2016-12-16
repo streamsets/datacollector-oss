@@ -21,38 +21,59 @@
   <p><indexterm>origins<indexterm>overview</indexterm></indexterm>You can use different origins
       based on the execution mode of the pipeline. </p>
     <p>In standalone pipelines, you can use the following origins: <ul id="ul_mxz_jxm_jq">
-        <li>Amazon S3 - Reads objects from Amazon S3.</li>
-        <li>Directory - Reads fully-written files from a directory. </li>
-        <li>File Tail - Reads lines of data from an active file after reading related archived files
-          in the directory. </li>
-        <li>HTTP Client - Reads data from a streaming HTTP resource URL.</li>
-        <li>JDBC Consumer - Reads database data through a JDBC connection.</li>
-        <li>JMS Consumer - Reads messages from JMS. </li>
-        <li>Kafka Consumer - Reads messages from Kafka.</li>
-        <li>Kinesis Consumer - Reads data from Kinesis Streams.</li>
-        <li>MapR FS - Reads files from MapR FS.</li>
-        <li>MapR Streams Consumer - Reads messages from MapR Streams.</li>
-        <li>MongoDB - Reads documents from MongoDB.</li>
-        <li>MySQL Binary Log - Reads MySQL binary logs to generate change data capture records. </li>
-        <li>Omniture - Reads web usage reports from the Omniture reporting API.</li>
-        <li>Oracle CDC Client - Reads LogMiner redo logs to generate change data capture
-          records.</li>
-        <li>RabbitMQ Consumer - Reads messages from RabbitMQ.</li>
-        <li>Redis Consumer - Reads messages from Redis.</li>
-        <li>Salesforce - Reads data from Salesforce.</li>
-        <li>SDC RPC - Reads data from an SDC RPC destination in an SDC RPC pipeline.</li>
-        <li>SDC RPC to Kafka - Reads data from an SDC RPC destination in an SDC RPC pipeline and
-          writes it to Kafka.</li>
-        <li>SFTP/FTP Client - Reads files from an SFTP or FTP server.</li>
-        <li>UDP Source - Reads messages from one or more UDP ports. </li>
-        <li>UDP to Kafka - Reads messages from one or more UDP ports and writes the data to
-          Kafka.</li>
+        <li><xref href="AmazonS3.dita#concept_kvs_3hh_ht">Amazon S3</xref> - Reads objects from
+          Amazon S3.</li>
+        <li><xref href="Directory.dita#concept_qcq_54n_jq">Directory</xref> - Reads fully-written
+          files from a directory. </li>
+        <li><xref href="FileTail.dita#concept_n1y_qyp_5q">File Tail</xref> - Reads lines of data
+          from an active file after reading related archived files in the directory. </li>
+        <li><xref href="HTTPClient.dita#concept_wk4_bjz_5r">HTTP Client</xref> - Reads data from a
+          streaming HTTP resource URL.</li>
+        <li><xref href="JDBCConsumer.dita#concept_qhf_hjr_bs">JDBC Consumer</xref> - Reads database
+          data through a JDBC connection.</li>
+        <li><xref href="JMS.dita#concept_rhh_4nj_dt">JMS Consumer</xref> - Reads messages from JMS. </li>
+        <li><xref href="KConsumer.dita#concept_msz_wnr_5q">Kafka Consumer</xref> - Reads messages
+          from Kafka.</li>
+        <li><xref href="KinConsumer.dita#concept_anh_4y3_yr">Kinesis Consumer</xref> - Reads data
+          from Kinesis Streams.</li>
+        <li><xref href="MapRFS.dita#concept_psz_db4_lx">MapR FS</xref> - Reads files from MapR
+          FS.</li>
+        <li><xref href="MapRStreamsCons.dita#concept_cvy_xsf_2v">MapR Streams Consumer</xref> -
+          Reads messages from MapR Streams.</li>
+        <li><xref href="MongoDB.dita#concept_bk4_2rs_ns">MongoDB</xref> - Reads documents from
+          MongoDB.</li>
+        <li><xref href="MySQLBinaryLog.dita#concept_kqg_1yh_xx">MySQL Binary Log</xref> - Reads
+          MySQL binary logs to generate change data capture records. </li>
+        <li><xref href="Omniture.dita#concept_dsr_xmw_1s">Omniture</xref> - Reads web usage reports
+          from the Omniture reporting API.</li>
+        <li><xref href="OracleCDC.dita#concept_rs5_hjj_tw">Oracle CDC Client</xref> - Reads LogMiner
+          redo logs to generate change data capture records.</li>
+        <li><xref href="RabbitMQ.dita#concept_dyg_lq1_h5">RabbitMQ Consumer</xref> - Reads messages
+          from RabbitMQ.</li>
+        <li><xref href="Redis.dita#concept_plr_t3v_jw">Redis Consumer</xref> - Reads messages from
+          Redis.</li>
+        <li><xref href="Salesforce.dita#concept_odf_vr3_rx">Salesforce</xref> - Reads data from
+          Salesforce.</li>
+        <li><xref href="SDC_RPCorigin.dita#concept_agb_5c1_ct">SDC RPC</xref> - Reads data from an
+          SDC RPC destination in an SDC RPC pipeline.</li>
+        <li><xref href="SDCRPCtoKafka.dita#concept_tdk_slk_pw">SDC RPC to Kafka</xref> - Reads data
+          from an SDC RPC destination in an SDC RPC pipeline and writes it to Kafka.</li>
+        <li><xref href="SDCRPCtoKafka.dita#concept_tdk_slk_pw">SFTP/FTP Client</xref> - Reads files
+          from an SFTP or FTP server.</li>
+        <li><xref href="UDP.dita#concept_rst_2y5_1s">UDP Source</xref> - Reads messages from one or
+          more UDP ports. </li>
+        <li><xref href="UDPtoKafka.dita#concept_jzq_jcz_pw">UDP to Kafka</xref> - Reads messages
+          from one or more UDP ports and writes the data to Kafka.</li>
       </ul></p>
     <p>In cluster pipelines, you can use the following origins:<ul id="ul_unr_xhb_ws">
-        <li>Hadoop FS - Reads data from the Hadoop Distributed File System (HDFS). </li>
-        <li>Kafka Consumer - Reads messages from Kafka. Use the cluster version of the origin.</li>
-        <li>MapR FS - Reads data from MapR FS.</li>
-        <li>MapR Streams Consumer - Reads messages from MapR Streams.</li>
+        <li><xref href="HadoopFS-origin.dita#concept_lw2_tnm_vs">Hadoop FS</xref> - Reads data from
+          the Hadoop Distributed File System (HDFS). </li>
+        <li><xref href="KConsumer.dita#concept_msz_wnr_5q">Kafka Consumer</xref> - Reads messages
+          from Kafka. Use the cluster version of the origin.</li>
+        <li><xref href="MapRFS.dita#concept_psz_db4_lx">MapR FS</xref> - Reads data from MapR
+          FS.</li>
+        <li><xref href="MapRStreamsCons.dita#concept_cvy_xsf_2v">MapR Streams Consumer</xref> -
+          Reads messages from MapR Streams.</li>
       </ul></p>
     <p>To help create or test pipelines, you can use the following development origins:<ul
         id="ul_nr2_c1p_qv">

@@ -208,7 +208,7 @@
   </topicref>
   <topicref href="../Origins/SDC_RPCorigin.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
-   <topicref href="../Origins/RPCorigin-Configuring.dita"/>
+   <topicref href="../Origins/SDC_RPCorigin-Configuring.dita"/>
   </topicref>
    <topicref href="../Origins/SDCRPCtoKafka.dita" chunk="to-content">
     <topicmeta><shortdesc></shortdesc></topicmeta>

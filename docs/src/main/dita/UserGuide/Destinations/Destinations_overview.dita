@@ -20,35 +20,62 @@
  <conbody>
   <p><indexterm>destinations<indexterm>overview</indexterm></indexterm>You can use the following
       types of destinations in a pipeline: <ul id="ul_mxz_jxm_jq">
-        <li>Amazon S3 - Writes data to Amazon S3. </li>
-        <li>Azure Data Lake Store - Writes data to the Azure Data Lake Store.</li>
-        <li>Cassandra - Writes data to a Cassandra cluster.</li>
-        <li>Elasticsearch - Writes data to an Elasticsearch cluster.</li>
-        <li>Flume - Writes data to a Flume source.</li>
-        <li>Google Bigtable - Writes data to Google Cloud Bigtable.</li>
-        <li>Hadoop FS - Writes data to the Hadoop Distributed File System (HDFS).</li>
-        <li>HBase - Writes data to an HBase cluster.</li>
-        <li>Hive Metastore - Creates and updates Hive tables as needed.</li>
-        <li>Hive Streaming - Writes data to Hive.</li>
-        <li>InfluxDB - Writes data to InfluxDB.</li>
-        <li>JDBC Producer - Writes data to JDBC.</li>
-        <li>Kafka Producer - Writes data to a Kafka cluster.</li>
-        <li>Kinesis Firehose - Writes data to a Kinesis Firehose delivery stream.</li>
-        <li>Kinesis Producer - Writes data to Kinesis Streams.</li>
-        <li>Kudu - Writes data to Kudu.</li>
-        <li>Local FS - Writes data to a local file system. </li>
-        <li>MapR DB - Writes data to MapR DB.</li>
-        <li>MapR FS - Writes data to MapR FS.</li>
-        <li>MapR Streams Producer - Writes data to MapR Streams.</li>
-        <li>MongoDB - Writes data to MongoDB.</li>
-        <li>Rabbit MQ Producer - Writes data to RabbitMQ.</li>
-        <li>Redis - Writes data to Redis.</li>
-        <li>Salesforce - Writes data to Salesforce.</li>
-        <li>SDC RPC - Passes data to an SDC RPC origin in an SDC RPC pipeline.</li>
-        <li>Solr - Writes data to a Solr node or cluster.</li>
-        <li>To Error - Passes records to the pipeline for error handling.</li>
-        <li>Trash - Removes records from the pipeline.</li>
-        <li>Wave Analytics - Writes data to Salesforce Wave Analytics.</li>
+        <li><xref href="AmazonS3.dita#concept_avx_bnq_rt">Amazon S3</xref> - Writes data to Amazon
+          S3. </li>
+        <li><xref href="DataLakeStore.dita#concept_jzm_kf4_zx">Azure Data Lake Store</xref> - Writes
+          data to the Azure Data Lake Store.</li>
+        <li><xref href="Cassandra.dita#concept_hfy_mfd_sr">Cassandra</xref> - Writes data to a
+          Cassandra cluster.</li>
+        <li><xref href="Elasticsearch.dita#concept_u5t_vpv_4r">Elasticsearch</xref> - Writes data to
+          an Elasticsearch cluster.</li>
+        <li><xref href="Flume.dita#concept_pzn_hl4_yr">Flume</xref> - Writes data to a Flume
+          source.</li>
+        <li><xref href="Bigtable.dita#concept_pl5_tmq_tx">Google Bigtable</xref> - Writes data to
+          Google Cloud Bigtable.</li>
+        <li><xref href="HadoopFS-destination.dita#concept_awl_4km_zq">Hadoop FS</xref> - Writes data
+          to the Hadoop Distributed File System (HDFS).</li>
+        <li><xref href="HBase.dita#concept_wsz_5t5_vr">HBase</xref> - Writes data to an HBase
+          cluster.</li>
+        <li><xref href="HiveMetastore.dita#concept_gcr_z2t_zv">Hive Metastore</xref> - Creates and
+          updates Hive tables as needed.</li>
+        <li><xref href="Hive.dita#concept_kvs_3hh_ht">Hive Streaming</xref> - Writes data to
+          Hive.</li>
+        <li><xref href="InfluxDB.dita#concept_inf_db_sr">InfluxDB</xref> - Writes data to
+          InfluxDB.</li>
+        <li><xref href="JDBCProducer.dita#concept_kvs_3hh_ht">JDBC Producer</xref> - Writes data to
+          JDBC.</li>
+        <li><xref href="KProducer.dita#concept_oq2_5jl_zq">Kafka Producer</xref> - Writes data to a
+          Kafka cluster.</li>
+        <li><xref href="KinFirehose.dita#concept_bjv_dpk_kv">Kinesis Firehose</xref> - Writes data
+          to a Kinesis Firehose delivery stream.</li>
+        <li><xref href="KinProducer.dita#concept_swk_h1j_yr">Kinesis Producer</xref> - Writes data
+          to Kinesis Streams.</li>
+        <li><xref href="Kudu.dita#concept_chy_xxg_4v">Kudu</xref> - Writes data to Kudu.</li>
+        <li><xref href="LocalFS.dita#concept_zvc_bv5_1r">Local FS</xref> - Writes data to a local
+          file system. </li>
+        <li><xref href="MapRDB.dita#concept_vxg_w2z_yv">MapR DB</xref> - Writes data to MapR
+          DB.</li>
+        <li><xref href="MapRFS.dita#concept_spv_xlc_fv">MapR FS</xref> - Writes data to MapR
+          FS.</li>
+        <li><xref href="MapRStreamsProd.dita#concept_cfj_qbn_2v">MapR Streams Producer</xref> -
+          Writes data to MapR Streams.</li>
+        <li><xref href="MongoDB.dita#concept_eth_k5n_4v">MongoDB</xref> - Writes data to
+          MongoDB.</li>
+        <li><xref href="MongoDB.dita#concept_eth_k5n_4v">Rabbit MQ Producer</xref> - Writes data to
+          RabbitMQ.</li>
+        <li><xref href="Redis.dita#concept_ktc_gw2_gw">Redis</xref> - Writes data to Redis.</li>
+        <li><xref href="Salesforce.dita#concept_rlb_rt3_rx">Salesforce</xref> - Writes data to
+          Salesforce.</li>
+        <li><xref href="SDC_RPCdest.dita#concept_lfk_hx2_ct">SDC RPC</xref> - Passes data to an SDC
+          RPC origin in an SDC RPC pipeline.</li>
+        <li><xref href="Solr.dita#concept_lfk_hx2_ct">Solr</xref> - Writes data to a Solr node or
+          cluster.</li>
+        <li><xref href="ToError.dita#concept_ryn_v3z_lr">To Error</xref> - Passes records to the
+          pipeline for error handling.</li>
+        <li><xref href="Trash.dita#concept_htf_ydj_wq">Trash</xref> - Removes records from the
+          pipeline.</li>
+        <li><xref href="WaveAnalytics.dita#concept_hlx_r53_rx">Wave Analytics</xref> - Writes data
+          to Salesforce Wave Analytics.</li>
       </ul>To help create or test pipelines, you can use the following development destination:<ul
         id="ul_wvk_p3f_lx">
         <li>To Event</li>
