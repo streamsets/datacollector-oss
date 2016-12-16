@@ -1,38 +1,57 @@
-// parseUri 1.2.2
-// (c) Steven Levithan <stevenlevithan.com>
-// MIT License
-   
-/* 
- * The Oxygen Webhelp plugin redistributes this file under the terms of the MIT license. 
- * The full license terms of this license are available in the file MIT-License.txt 
- * located in the same directory as the present file you are reading. 
+
+// FROM: https://github.com/get/parseuri/blob/master/index.js
+
+/**
+ * Parses an URI
+ *
+ * @author Steven Levithan <stevenlevithan.com> (MIT license)
+ * @api private
  */
 
-function parseUri (str) {
-	var	o   = parseUri.options,
-		m   = o.parser[o.strictMode ? "strict" : "loose"].exec(str),
+// Added support for "file:" protocol
+var re = /^(?:(?![^:@]+:[^:@\/]*@)(http|https|ws|wss|file):\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?((?:[a-f0-9]{0,4}:){2,7}[a-f0-9]{0,4}|[^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/;
+
+var parts = [
+	'source', 'protocol', 'authority', 'userInfo', 'user', 'password', 'host', 'port', 'relative', 'path', 'directory', 'file', 'query', 'anchor'
+];
+
+function parseUri(str) {
+	str = str.toString();
+	var src = str,
+		b = str.indexOf('['),
+		e = str.indexOf(']');
+
+	if (b != -1 && e != -1) {
+		str = str.substring(0, b) + str.substring(b, e).replace(/:/g, ';') + str.substring(e, str.length);
+	}
+
+	var m = re.exec(str || ''),
 		uri = {},
-		i   = 14;
+		i = 14;
 
-	while (i--) uri[o.key[i]] = m[i] || "";
+	while (i--) {
+		uri[parts[i]] = m[i] || '';
+	}
 
-	uri[o.q.name] = {};
-	uri[o.key[12]].replace(o.q.parser, function ($0, $1, $2) {
-		if ($1) uri[o.q.name][$1] = $2;
+	if (b != -1 && e != -1) {
+		uri.source = src;
+		uri.host = uri.host.substring(1, uri.host.length - 1).replace(/;/g, ':');
+		// Keep square brackets
+		uri.authority = uri.authority.replace(/;/g, ':');
+		uri.ipv6uri = true;
+	}
+
+	// Parse parameters
+	var q = {
+		name:   "queryKey",
+		parser: /(?:^|&)([^&=]*)=?([^&]*)/g
+	};
+
+	uri[q.name] = {};
+	uri[parts[12]].replace(q.parser, function ($0, $1, $2) {
+		if ($1) uri[q.name][$1] = $2;
 	});
 
 	return uri;
 };
 
-parseUri.options = {
-	strictMode: false,
-	key: ["source","protocol","authority","userInfo","user","password","host","port","relative","path","directory","file","query","anchor"],
-	q:   {
-		name:   "queryKey",
-		parser: /(?:^|&)([^&=]*)=?([^&]*)/g
-	},
-	parser: {
-		strict: /^(?:([^:\/?#]+):)?(?:\/\/((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?))?((((?:[^?#\/]*\/)*)([^?#]*))(?:\?([^#]*))?(?:#(.*))?)/,
-		loose:  /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/
-	}
-};

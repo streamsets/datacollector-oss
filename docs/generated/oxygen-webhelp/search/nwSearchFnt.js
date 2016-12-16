@@ -106,9 +106,7 @@ var w = {};
 var searchTextField = '';
 var no = 0;
 var noWords = [];
-var partialSearch1 = "There is no page containing all the search terms.";
-//var partialSearch2 = "Partial results:";
-var partialSearch2 = "Excluded terms:";
+var partialSearch2 = "excluded.terms";
 var warningMsg = '<div style="padding: 5px;margin-right:5px;;background-color:#FFFF00;">';
 warningMsg += '<b>Please note that due to security settings, Google Chrome does not highlight';
 warningMsg += ' the search results.</b><br>';
@@ -196,6 +194,9 @@ function normalizeQuery(query) {
     query = query.trim();
     query = query.replace(/\( /g, "(");
     query = query.replace(/ \)/g, ")");
+    query = query.replace(/ -/g, "-");
+    query = query.replace(/- /g, "-");
+    query = query.replace(/-/g, " and ");
     query = query.replace(/ and or /g, " or ");
     query = query.replace(/^not /g, "");
     query = query.replace(/ or and /g, " or ");
@@ -205,6 +206,7 @@ function normalizeQuery(query) {
     query = query.replace(/ and not /g, " not ");
     query = query.replace(/ or not /g, " not ");
 
+    query = query.trim();
     query = query.indexOf("or ")==0 ? query.substring(3) : query;
     query = query.indexOf("and ")==0 ? query.substring(4) : query;
     query = query.indexOf("not ")==0 ? query.substring(4) : query;
@@ -213,8 +215,10 @@ function normalizeQuery(query) {
     query = (query.lastIndexOf(" and")==query.length-4 && query.lastIndexOf(" and")!=-1) ? query.substring(0,query.lastIndexOf(" and")) : query;
     query = (query.lastIndexOf(" not")==query.length-4 && query.lastIndexOf(" not")!=-1) ? query.substring(0,query.lastIndexOf(" not")) : query;
 
+    var result = "";
+
     try {
-        var result = query.toLowerCase().trim().replace(/ /g, " " + defaultOperator + " ");
+        result = query.toLowerCase().trim().replace(/ /g, " " + defaultOperator + " ");
 
         result = result.replace(/ or and or /g, " and ");
         result = result.replace(/ or not or /g, " not ");
@@ -406,14 +410,15 @@ function SearchToc(ditaSearch_Form) {
 
     searchTextField = trim(ditaSearch_Form.textToSearch.value);
     // Eliminate the cross site scripting possibility.
-    searchTextField = searchTextField.replace(/</g, " ");
-    searchTextField = searchTextField.replace(/>/g, " ");
-    searchTextField = searchTextField.replace(/"/g, " ");
-    searchTextField = searchTextField.replace(/'/g, " ");
-    searchTextField = searchTextField.replace(/=/g, " ");
-    searchTextField = searchTextField.replace(/0\\/g, " ");
-    searchTextField = searchTextField.replace(/\\/g, " ");
-    searchTextField = searchTextField.replace(/\//g, " ");
+    searchTextField = searchTextField.replace(/</g, " ")
+        .replace(/>/g, " ")
+        .replace(/"/g, " ")
+        .replace(/'/g, " ")
+        .replace(/=/g, " ")
+        .replace(/0\\/g, " ")
+        .replace(/\\/g, " ")
+        .replace(/\//g, " ")
+        .replace(/  +/g, " ");
 
     var expressionInput = searchTextField;
     debug('Search for: ' + expressionInput);
@@ -438,10 +443,10 @@ function SearchToc(ditaSearch_Form) {
         $searchResults.append(footer);
         $searchResults.scrollTop(0);
         //END - EXM-30790
-    } else {
-        alert(getLocalization(txt_enter_at_least_1_char));
-        ditaSearch_Form.textToSearch.focus();
     }
+    
+    clearHighlights();
+    ditaSearch_Form.textToSearch.focus();
 }
 
 var stemQueryMap = [];  // A hashtable which maps stems to query words
@@ -494,7 +499,7 @@ function realSearch(expressionInput) {
         finalWordsList = cjkTokenize(wordsList);
         debug('CJKTokenizing, finalWordsList: ' + finalWordsList);
     } else {
-    	finalWordsList = [searchFor];
+        finalWordsList = [searchFor];
     }
     if (!useCJKTokenizing) {
         /**
@@ -513,7 +518,7 @@ function realSearch(expressionInput) {
                     }
                 } else {
                     var searchedValue = finalWordsList[t].toString();
-                    var listOfWordsStartWith = wordsStartsWith(searchedValue);
+                        var listOfWordsStartWith = wordsStartsWith(searchedValue);
                     if (listOfWordsStartWith != undefined) {
                         listOfWordsStartWith = listOfWordsStartWith.substr(0, listOfWordsStartWith.length - 1);
                         wordsArray = listOfWordsStartWith.split(",");
@@ -562,8 +567,7 @@ function displayResults(fileAndWordList) {
         var allPages = fileAndWordList.sort().value;
 
         if (excluded.length > 0) {
-            var tempString = "<p>" + partialSearch1;
-            tempString += "<br />" + partialSearch2 + " " + txt_wordsnotfound + "</p>";
+            var tempString = "<p>" + getLocalization(partialSearch2) + " " + txt_wordsnotfound + "</p>";
             linkTab.push(tempString);
         }
 
@@ -1213,4 +1217,10 @@ function Pages(array) {
 
         return this;
     };
+}
+
+if(typeof String.prototype.trim !== 'function') {
+    String.prototype.trim = function() {
+        return $.trim(this);
+    }
 }

@@ -1,14 +1,19 @@
 /*
 
-Oxygen Webhelp plugin
-Copyright (c) 1998-2015 Syncro Soft SRL, Romania.  All rights reserved.
-Licensed under the terms stated in the license file EULA_Webhelp.txt
-available in the base directory of this Oxygen Webhelp plugin.
+Oxygen WebHelp Plugin
+Copyright (c) 1998-2016 Syncro Soft SRL, Romania.  All rights reserved.
 
- */
+*/
  
 $(document).ready(function(){
     $("#searchForm").css("background-color", $("#leftPane").css("background-color"));
+
+		$('#customLogo').click(
+        function(event) {
+            $(this).attr('target', '_parent');
+            return true;
+        }
+    );
 });
 
 /**
@@ -49,7 +54,13 @@ function markSelectItem(url) {
         if ($(loc).length == 0) {
             loc = '#contentBlock li:eq(' + closest + ') a[href="' + toFind + '"]';
         }
-        $.cookie("wh_pn", closest);
+        
+        if ( wh.protocol == 'https' ) {
+            $.cookie('wh_pn', closest, { secure: true });
+        } else {
+            $.cookie('wh_pn', closest);
+        }
+        
     } else {
         var loc = '#contentBlock a[href^="' + toFind + '"]';
     }

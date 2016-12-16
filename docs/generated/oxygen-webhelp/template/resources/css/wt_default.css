@@ -1,0 +1,958 @@
+@import "fonts.css";
+
+
+/*
+ * Responsive images
+ */
+.image:not([usemap]) {
+    max-width: 100%;
+    height: auto;
+}
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Fight bootstrap
+ *  
+ */
+ 
+/*Fix for: Bootstrap marks all the LIs as position:relative, so you cannot position an 
+  li:after or a li:before absolutely to a parent of your choice.*/
+.wh_side_toc .nav>li {
+    position:inherit;
+}
+
+/*Fix for: Bootstrap puts a two pixels border bottom under the thead, 
+    with a light color and bottom alignement.*/
+.table>thead>tr>th,
+.table>thead>tr>td,
+.table>tfoot>tr>th,
+.table>tfoot>tr>td,
+.table>tbody>tr>th,
+.table>tbody>tr>td,
+.table>caption+thead>tr:first-child>td, 
+.table>caption+thead>tr:first-child>th, 
+.table>colgroup+thead>tr:first-child>td, 
+.table>colgroup+thead>tr:first-child>th, 
+.table>thead:first-child>tr:first-child>td, 
+.table>thead:first-child>tr:first-child>th {
+    vertical-align:inherit;
+    border-color:inherit;
+}
+td, th {
+    padding: 0.5em;
+}
+
+/*Fix for: Bootstrap sets a light gray color to the table caption. Use a darker color.*/
+caption{
+    color:inherit;
+    margin-top:1em;    
+}
+
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Publication logo and title
+ *  
+ */
+
+.wh_header_flex_container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+    flex-wrap: wrap;
+}
+
+.wh_header {
+    padding: 1em;
+}
+
+.wh_logo_and_publication_title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.wh_top_menu_and_indexterms_link {
+    padding: 0;
+}
+
+@media only screen and (max-width: 767px) {
+    .wh_header_flex_container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .wh_logo_and_publication_title_container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        align-content: center;
+        flex-wrap: wrap;
+        align-self: stretch;
+        width: 100%;
+    }
+
+    .wh_indexterms_link a:before {
+        padding-left: .5em !important;
+    }
+}
+
+.wh_publication_title a {
+    display: inline-block;
+    margin: 1em 0;
+}
+
+@media only screen and (min-width: 768px) {
+    .wh_top_menu_and_indexterms_link.navbar-collapse {
+        float: none;
+        display: inline-block !important;
+        vertical-align: middle;
+    }
+
+    .wh_top_menu {
+        line-height: 1em;
+        vertical-align: middle;
+
+    }
+
+    .wh_header {
+        text-align: center;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .wh_toggle_button {
+        float: none;
+        line-height: 1em;
+        margin: 10px 0;
+    }
+
+    .wh_header {
+        text-align: left;
+    }
+}
+
+
+
+/*------------------------------------------------------*/
+
+
+
+
+.wh_logo{
+    display:inline-block;
+    vertical-align:baseline;
+}
+.wh_publication_title {
+    display:inline-block;
+}
+
+.wh_logo_and_publication_title.navbar-brand {
+    font-size: 1em;
+    line-height: 1em;
+}
+
+
+
+/* Generic top_menu styles*/
+.wh_top_menu ul {
+    list-style: none;
+    padding-left:0;
+}
+
+/* Render top_menu for devices larger than 767px */
+@media only screen and (min-width: 768px) {
+    .wh_top_menu {
+        display: inline-block;        
+    }
+
+    .wh_top_menu ul ul {
+        display: none;
+    }
+
+    .wh_top_menu ul li:hover > ul {
+        display: block;
+    }
+
+    .wh_top_menu ul {
+        position: relative;
+        display: inline-table;
+        z-index: 999;
+        margin-bottom:0;
+    }
+
+    .wh_top_menu ul:after {
+        content: "";
+        clear: both;
+        display: block;
+    }
+
+    .wh_top_menu > ul > li {
+        display: inline-block;
+    }
+
+
+    .wh_top_menu ul li a {
+        display: block;
+        padding: 0.5em 1em;
+        text-decoration: none;
+    }
+
+    .wh_top_menu ul ul {
+        padding: 0;
+        position: absolute;
+        text-align: left;
+    }
+
+    .wh_top_menu ul ul li {
+        float: none;
+        position: relative;
+        border-top: 1px solid;
+        min-width:210px;
+    }
+
+
+    .wh_top_menu ul ul ul {
+        position: absolute;
+        left: 100%;
+        top: 0;
+    }
+    
+    /* Mark the items that have a submenu with a small double arrow. */
+    .wh_top_menu ul ul li.has-children{
+        position:relative;
+    }
+    .wh_top_menu ul ul li.has-children > span > a{
+        padding-right: 1em;
+    }
+    .wh_top_menu ul ul li.has-children:after{
+        display:block;
+        content: "\00BB";
+        color:silver;
+        position:absolute;
+        right:5px;
+        top:0;
+        line-height: 2.5em;
+    }
+
+    .wh_top_menu ul ul {
+        background-color: #0f0f0f;
+    }
+    .wh_top_menu ul ul li {
+        border-top-color: #4b545f;
+    }
+    .wh_top_menu ul ul li.has-children:after{
+        color:silver;
+    }
+    
+}
+
+/* Render top_menu for devices smaller than 767px */
+@media only screen and (max-width: 767px) {
+
+    .wh_top_menu ul {
+        margin-bottom: 0;
+    }
+
+    .wh_top_menu ul ul {
+        display: none;
+    }
+    .wh_top_menu ul li.active > ul {
+        display: block;
+        padding-left: .5em;
+    }
+    .wh_top_menu ul li a {
+        display:block;
+        padding: .5em;
+        text-decoration: none;
+    }
+}
+
+/*
+ * ------------------------------------------------------------------
+ *
+ * Welcome area, before search
+ *
+ */
+.wh_welcome:not(:empty) {
+    display: block;
+    font-family:"Roboto Bold", Verdana;
+    text-align: center;
+    margin-bottom: 1.5em;
+    font-size: 2.5em;
+    text-shadow: 0 0 10px black;
+    padding: 0.5em;
+    width: 80%;
+    margin: 0 auto .5em auto;
+    color: #fff;
+}
+.wh_welcome:empty{
+    display:none;
+}
+
+/*
+ * ------------------------------------------------------------------
+ *
+ * Search area
+ *
+ */
+.wh_search_input{
+    border: 0;
+}
+#searchForm{
+    margin:0;
+}
+#searchForm > div {
+    position: relative;
+    margin:auto;
+    width: 65%;
+    max-width: 1000px;
+}
+
+.wh_search_textfield{
+    display:inline-block;
+    width: 100%;
+    height:100%;
+    border:none;
+}
+.wh_search_button{
+    display: inline-block;
+    position:absolute;
+    right:0;
+    float:right;
+    width:2.8em;
+    height:100%;
+    border:none;
+}
+.wh_search_button>span{
+    display: none;
+}
+.wh_search_button:after{
+    font-family: "Glyphicons Halflings", serif;
+    content:"\e003";
+}
+.showSimilarPages {
+    display: inline-block;
+    margin: .3em 0 0 .5em;
+    cursor: pointer
+}
+.showSimilarPages:before{
+    font-family: 'Glyphicons Halflings';
+    content: "\e250";
+    display: inline-block;
+    font-size: .7em;
+    padding-right: .3em
+}
+.showSimilarPages.expanded:before{
+    content: "\e252";
+}
+.similarResult {
+    display:none;
+    margin: 0 0 0 1.5em;
+}
+.showSimilarPages:hover {
+    color: red;
+}
+/* Render search area for devices smaller than 767px */
+@media only screen and (max-width: 767px) {
+    #searchForm > div {
+        width: 90%;
+    }
+    .wh_search_button {
+        display: none;
+    }
+}
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Breadcrumb
+ *  
+ */
+
+/* Place the right tools in line with the breadcrumb. */
+.wh_tools{
+    position:relative;
+}
+.wh_breadcrumb {
+    display:inline-block;
+}
+.wh_right_tools {
+    display:inline-block;
+    position:absolute;
+    right:0;
+    padding: 7px;
+}
+/* Breadcrumb */
+.wh_breadcrumb ol {
+    margin:0;
+    border-radius: 0;
+    font-size: .9em;
+    padding: 8px 15px;
+    list-style: none;
+    background:none;
+}
+.wh_breadcrumb li{
+    display:inline-block;
+}
+.wh_breadcrumb li:not(:last-of-type):after {
+    content: "/";
+    padding: 0 5px;
+}
+
+/*TODO - dan - discuss with bogdan what for??*/
+#printlink:before {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    padding: 0 3px 0 3px;
+    margin-right: 3px;
+    cursor: pointer;
+    content: "";
+}
+#printlink:before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAC1QTFRFAwQEAwQEAwQEgICAYGBggICAk5OT2tra3t7e5eXl7Ozs9PT0+/v7/f39////qdjBqAAAAAV0Uk5TAAsmTWgvFGPAAAAAWElEQVQI12NgYA4FAgMGBgbWd0AQQBzDNBTECA1miHsK0p73lCHmejkQ1BxliN4NBlsZolaBwVKGyKkgNZFTGSIguloZXCGMEAYhVZBUkCIDA5MSECgwAACPPj1sb0KIdAAAAABJRU5ErkJggg==');
+}
+
+#printlink:hover:before {
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+}
+
+#trigger.active {
+    transition: all 0.75s ease-in-out;
+}
+
+#trigger {
+    float:left;
+}
+
+
+/* Indexterms page */
+.wh_index_terms li, .wh_index_terms ul{
+    padding-left: 10px;
+    list-style: none;
+}
+.wh_index_terms li.wh_term{
+    line-height: 1.5em;
+}
+a.wh_term_target{
+    padding-left:5px;
+    vertical-align: super;
+    font-size: .8em;
+}
+.wh_index_terms .wh_first_letter{
+    text-indent: 0;
+    list-style: none;
+    font-size: 2em;
+    font-weight: bold;
+    display: inline-block;
+    border-bottom: 1px solid;
+    width: 100%;
+    margin: .4em 0 .2em;
+}
+
+.wh_side_toc ul{
+    list-style: none;
+    margin:0;
+    padding:0;
+    word-wrap: break-word;
+}
+.wh_side_toc ul {
+    padding-left: 1em;
+}
+
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Tools and navigation
+ * 
+ */
+.wh_print_link,
+.wh_navigation_links,
+.wh_navigation_links .navnext,
+.wh_navigation_links .navprev{
+    display:inline-block;
+    margin-left:0.5em;
+}
+
+/**
+ * Content area
+ */
+
+.wh_content_area {
+    min-height: 500px;
+}
+
+.wh_child_links .olchildlinks,
+.wh_child_links .ullinks,
+.wh_child_links li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.wh_child_links strong {
+    font-weight: normal;
+}
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Topic content
+ * 
+ */
+.wh_topic_content .related-links:empty{
+    display:none;
+}
+
+.sectiontitle {
+   /* EXM-37168: The section title should have the same color as the rest of the content. */
+   color:inherit;
+}
+
+/*
+ * Topic titles & subtitles
+ */
+.topictitle1 {
+    font-size: 2em;
+    margin-bottom: 1em;
+    font-weight: 400;
+}
+
+.topictitle2 {
+    margin: 1em 0 0.2em 0;
+    font-size: 1.7em;
+    font-weight: 400;
+    font-style: italic;
+}
+
+.topictitle3 {
+    margin: 1em 0 0.2em 0;
+    font-size: 1.4em;
+    font-weight: 300;
+    font-style: italic;
+}
+
+.topictitle4 {
+    margin: 1em 0 0.2em 0;
+    font-size: 1.1em;
+    font-weight: 400;
+    text-decoration: underline;
+}
+
+.topictitle5, .topictitle6 {
+    margin: 1em 0 0.2em 0;
+    font-size: 1em;
+    font-weight: 300;
+    font-style: italic;
+    text-decoration: underline;
+}
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Link to the index.
+ * 
+ */
+.wh_indexterms_link{
+    display: inline-block;
+    vertical-align: middle;
+}
+.wh_indexterms_link a:before{
+    content:"a"; /*The book symbol*/
+    font-family: "oXygen WebHelp";
+    display: inline-block;
+    position: relative;
+    bottom:0em;
+    font-size: 1.6em;
+    margin-left:0.8em;
+}
+
+@media only screen and (max-width: 767px) {
+
+    .wh_indexterms_link {
+        float: none;
+    }
+
+    .wh_indexterms_link a:before{
+        position: relative;
+        padding-bottom: 0 !important;
+        margin-left: 0;
+    }
+}
+
+/*
+ * ------------------------------------------------------------------
+ *  
+ * Tree TOC for the main page.
+ * 
+ */
+.wh_main_page_toc{
+    width: 80%;
+    margin: 1em auto 2em;
+}
+.wh_main_page_toc_entry{
+    padding: 0.5em;
+}
+.wh_main_page_toc_accordion_entries {
+    display: none;
+}
+
+/* The size of the tiltes should be larger, to standout more against the short descriptions. */
+.wh_main_page_toc a{
+    font-size:1.1em;
+}
+.wh_toc_shortdesc{
+    font-size:0.9em;
+    color:gray;
+}
+
+
+/* Padding for all children from the second level, but leave the shortdesc at the X as the header. */
+.wh_main_page_toc_accordion_entries > *{
+    margin-left:5em;
+}
+.wh_main_page_toc_accordion_entries > .wh_toc_shortdesc{
+    margin-left:3em;
+}
+
+
+.expanded + .wh_main_page_toc_accordion_entries {
+    display: block;
+}
+.wh_main_page_toc > .wh_main_page_toc_accordion_header,
+.wh_main_page_toc > .wh_main_page_toc_entry{
+    padding:0.5em;
+    padding-left:3em;
+    margin:0;
+}
+.wh_main_page_toc_accordion_entries .wh_main_page_toc_entry:last-child{
+    padding-bottom:0.7em
+}
+
+/* Expand / collapse symbols*/
+.wh_main_page_toc {
+    position:relative;
+}
+.wh_main_page_toc .wh_main_page_toc_accordion_header.expanded:before,
+.wh_main_page_toc .wh_main_page_toc_accordion_header:before{
+    display: inline-block;
+    font-weight: bold;
+    font-family:"Glyphicons Halflings";
+    position: absolute;
+    left: 1em;
+    cursor: pointer;
+}
+.wh_main_page_toc .wh_main_page_toc_accordion_header:before{
+    content: "\e258"; /* expand symbol */
+}
+.wh_main_page_toc .wh_main_page_toc_accordion_header.expanded:before{
+    content: "\e259"; /* collapse symbol */
+}
+
+/* Colors */
+.wh_main_page_toc{
+    border: 1px solid #c0c0c0;
+    background-color: #ffffff;
+}
+.wh_main_page_toc .wh_main_page_toc_accordion_header, 
+.wh_main_page_toc > .wh_main_page_toc_entry {
+    border-bottom: 1px solid #c0c0c0;
+}
+.wh_main_page_toc>.wh_main_page_toc_entry:last-child {
+    border-bottom: none;
+}
+.wh_main_page_toc_accordion_entries{
+    background-color: #eeeeee;
+    border-bottom: 1px solid #c0c0c0;
+}
+.wh_main_page_toc .expanded {
+    background-color: #eeeeee;
+    border-bottom: 0;
+}
+.wh_main_page_toc .wh_main_page_toc_accordion_header:hover, 
+.wh_main_page_toc>.wh_main_page_toc_entry:hover{
+    background-color: #eeeeee;
+}
+.wh_main_page_toc a {
+    color: #2874bd;
+}
+
+
+/**
+ * 
+ * Tiles
+ * 
+ */
+
+.wh_content_flex_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: stretch;
+    flex-wrap: nowrap;
+}
+
+.wh_tiles {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    align-content: stretch;
+    flex-wrap: wrap;
+}
+
+.wh_tile {
+    margin: 1em;
+    padding: 1em;
+    width: 30%;
+    min-width: 300px;
+    min-height: 140px;
+}
+
+@media only screen and (max-width: 1200px) {
+    .wh_tile {
+        width: 45%;
+    }
+}
+
+
+@media only screen and (max-width: 767px) {
+    .wh_tile {
+        width: 100%;
+        min-width: 240px;
+    }
+}
+
+.wh_tile_image {
+    text-align: center;
+    padding-bottom: .5em;
+}
+
+/* Make the link from the tile the entire width */
+.wh_tile_text{
+    position:relative;
+    height:100%;
+    overflow:hidden;
+}
+
+.wh_tile_title span{
+    display: block;
+    width: 100%;
+}
+
+.wh_tile_title a{
+    display: block;
+    width: 100%;
+}
+
+@media only screen and (max-width: 767px) {
+    .wh_tile_text:after{
+        display: none;
+    }
+}
+
+/**
+ *
+ * Remove outline border on focus
+ *
+ */
+ input:focus{
+    outline:none;
+}
+
+.dd{margin-bottom: .5em}
+
+/**
+ *
+ * Styles used for RTL pages
+ *
+ */
+html[dir='rtl'] .wh_search_button{
+    left:0;
+    right: auto;
+    float:left;
+    border-radius: 5px 0 0 5px;
+}
+
+html[dir='rtl'] .wh_right_tools {
+    right: auto;
+    left:0;
+}
+html[dir='rtl'] .wh_indexterms_link {
+    float: left;
+}
+html[dir='rtl'] .wh_toggle_button {
+    float:left;
+}
+html[dir='rtl'] .navprev, html[dir='rtl'] .navnext, html[dir='rtl'] .wh_print_link {
+    float:left;
+}
+
+@media only screen and (min-width: 768px){
+    html[dir='rtl'] .wh_logo_and_publication_title_container{
+        float:right;
+    }
+}
+@media only screen and (max-width: 767px) {
+    html[dir='rtl'] .wh_logo_and_publication_title {
+        float: right;
+    }
+    html[dir='rtl'] .wh_toggle_button {
+        margin-right: 0;
+        margin-left: 15px;
+    }
+}
+
+/* Render top_menu for devices larger than 767px */
+@media only screen and (min-width: 768px) {
+    html[dir='rtl'] .wh_top_menu {
+        float: left;
+    }
+
+    html[dir='rtl'] .wh_top_menu ul li {
+        float: right;
+    }
+
+    html[dir='rtl'] .wh_top_menu ul ul ul {
+        right: 100%;
+        left:auto;
+    }
+
+    /* Mark the items that have a submenu with a small double arrow. */
+    html[dir='rtl'] .wh_top_menu ul ul li.has-children > span > a{
+        padding-left: 0;
+        padding-right: 1em;
+    }
+    html[dir='rtl'] .wh_top_menu ul ul li.has-children:after{
+        left:5px;
+        right:auto;
+    }
+    html[dir='rtl'] .wh_top_menu ul li:hover > ul {
+        max-width: 210px;
+    }
+}
+
+/**
+ * WebHelp Feedback section
+ */
+
+#wh_feedback
+{
+    padding: 10px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+#comments
+{
+    border-style: solid;
+    border-width: 1px;
+    border-color: #ccc;
+}
+#u_Profile,
+#confirmDelete
+{
+    background-color: #fff;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #ccc;
+}
+.bt_reply
+{
+    color: grey;
+}
+.bt_reply:hover
+{
+    color: red;
+}
+input
+{
+    color: #000;
+}
+/**
+  * Administration page
+  */
+#loginData,
+#signUp,
+#recoverPwd,
+#exportDiv,
+#inlineViewDiv,
+#setVersionDiv
+{
+    background-color: #fff;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #ccc;
+}
+#editUser
+{
+    background-color: #fff;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #ccc;
+}
+#loginResponse
+{
+    color: red;
+}
+
+/**
+  * Product / Version buttons
+  */
+.selectedItem
+{
+    background-color: #369;
+    color: #fff;
+}
+.selectable:hover,
+.p_selectable:hover
+{
+    background-color: #58b;
+    color: #fff;
+}
+.products, .versions
+{
+    border-style: solid;
+    border-width: 1px;
+    border-color: #ccc;
+}
+
+/**
+  * Tables
+  */
+.tbHRow
+{
+    font-weight: bold;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: #000;
+}
+.tbRow:nth-of-type(2n)
+{
+    background-color: #dfefff;
+}
+.tbRow:hover
+{
+    background-color: #cef4ff;
+}
+
+/**
+  * Set version
+  */
+.v_true,.v_false
+{
+    background-color: #eee;
+}
+.v_true:hover,.v_false:hover
+{
+    background-color: #98C1D6;
+}
+.v_true
+{
+    background-color: #dfd;
+}

@@ -1,9 +1,7 @@
 /*
 
-Oxygen Webhelp plugin
-Copyright (c) 1998-2015 Syncro Soft SRL, Romania.  All rights reserved.
-Licensed under the terms stated in the license file EULA_Webhelp.txt 
-available in the base directory of this Oxygen Webhelp plugin.
+Oxygen WebHelp Plugin
+Copyright (c) 1998-2016 Syncro Soft SRL, Romania.  All rights reserved.
 
 */
 
@@ -220,13 +218,14 @@ table.nav tbody td:last-child{
   z-index: 20000;
 }
 
-div#searchResults a{
+div#searchResults div#webhelp_search_results a {
   background: none no-repeat;
 }
 
 #bck_toc{
   background-color:transparent;
   padding:20px 0 0 0;
+    overflow: auto;
 }
 #rightPane iframe{
   float: left;
@@ -251,12 +250,6 @@ div#searchResults a{
     z-index: 10;
   }
 
-.oXygenLogo {
-    color:#1166DD;
-    background-color:inherit;
-    font-weight:bold;
-    font-size:1.2em;
-}
 
 span#warningSign{  
   cursor: pointer;

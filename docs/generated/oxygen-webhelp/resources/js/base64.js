@@ -3,7 +3,7 @@
  *  Base64 encode / decode
  *  http://www.webtoolkit.info/
  *
- *  ï¿½ 2013 webtoolkit.info Inc. All rights reserved.
+ *  © 2013 webtoolkit.info Inc. All rights reserved.
  *
  *  Licensed under the terms of the Creative Commons license, 
  *  Attribution 2.0 England and Wales (CC BY 2.0 UK): 

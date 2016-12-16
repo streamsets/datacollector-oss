@@ -1,12 +1,14 @@
 
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
-<html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Kafka Consumer origin reads data from an Apache Kafka cluster. When you configure a Kafka Consumer, you configure the consumer group name, topic, and ZooKeeper connection information. When using ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Kafka Consumer"></meta><meta name="abstract" content="The Kafka Consumer origin reads data from an Apache Kafka cluster."></meta><meta name="description" content="The Kafka Consumer origin reads data from an Apache Kafka cluster."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_msz_wnr_5q"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Kafka Consumer</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
-          
-          var prefix = "../index.html";
-          
-          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Kafka Consumer" /><meta name="abstract" content="The Kafka Consumer origin reads data from an Apache Kafka cluster." /><meta name="description" content="The Kafka Consumer origin reads data from an Apache Kafka cluster." /><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_msz_wnr_5q" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Kafka Consumer</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+            
+            var prefix = "../index.html";
+            
+            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
+<!--
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -18,10 +20,11 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
---></head>
+-->
+</head>
 <body onload="highlightSearchTerm()" class="frmBody">
-<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Origins/Origins_title.html" title="Origins">Origins</a></td><td><div class="navheader">
-<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div></td></tr></tbody></table>
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../Origins/Origins_title.html" title="Origins">Origins</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </span></td></tr></tbody></table>
 <div class="nested0" id="concept_msz_wnr_5q">
  <h1 class="title topictitle1">Kafka Consumer</h1>
 
@@ -112,7 +115,7 @@ For more information about auto.offset.reset, see the Apache Kafka
                               <dd class="dd">Generates a record for every message.</dd>
 
                               <dd class="dd">You can use one of the following methods to specify the location
-                                    of the Avro schema definition:<ul class="ul" id="concept_xgs_nlc_wr__d21706e380">
+                                    of the Avro schema definition:<ul class="ul" id="concept_xgs_nlc_wr__d21899e380">
                                           <li class="li"><span class="ph uicontrol">Message/Data Includes Schema</span> -
                                                 Use the schema in the message.</li>
 
@@ -177,7 +180,7 @@ For more information about auto.offset.reset, see the Apache Kafka
                               <dt class="dt dlterm">Delimited</dt>
 
                               <dd class="dd">Generates a record for each delimited line. You can use the
-                                    following delimited format types:<ul class="ul" id="concept_xgs_nlc_wr__d21706e615">
+                                    following delimited format types:<ul class="ul" id="concept_xgs_nlc_wr__d21899e615">
                                           <li class="li"><span class="ph uicontrol">Default CSV</span> - File that
                                                 includes comma-separated values. Ignores empty lines
                                                 in the file.</li>
@@ -290,19 +293,24 @@ For more information about auto.offset.reset, see the Apache Kafka
       
                               <dt class="dt dlterm">XML</dt>
 
-                              <dd class="dd">Generates records based on the location of the XML element that
-                                    you define as the record delimiter. If you do not define a
-                                    delimiter element, the origin treats the XML file as a single
-                                    record.</dd>
+                              <dd class="dd">Generates records based on a user-defined delimiter element. Use
+                                    an XML element directly under the root element or define a
+                                    simplified XPath expression. </dd>
+
+                              <dd class="dd">If you do not define a delimiter element, the origin treats the
+                                    XML file as a single record.</dd>
+
+                              <dd class="dd">For more information about XML processing, see <a class="xref" href="../Pipeline_Design/XMLDFormat.html#concept_lty_42b_dy">XML Data Format and Data Processing</a>.</dd>
 
                               <dd class="dd">When a record exceeds the user-defined maximum record length, the
                                     origin skips the record and continues processing with the next
                                     record. It sends the skipped record to the pipeline for error
                                     handling. </dd>
 
-                              <dd class="dd">If you want to process invalid XML documents, you can try using
-                                    the text data format with custom delimiters. For more
-                                    information, see <a class="xref" href="../Pipeline_Design/TextCDelim.html#concept_okt_kmg_jx">Processing XML Data with Custom Delimiters</a>.</dd>
+                              <dd class="dd">Use the XML data format to process valid XML documents. If you
+                                    want to process invalid XML documents, you can try using the
+                                    text data format with custom delimiters. For more information,
+                                    see <a class="xref" href="../Pipeline_Design/TextCDelim.html#concept_okt_kmg_jx">Processing XML Data with Custom Delimiters</a>.</dd>
 
                         
     </dl>
@@ -365,7 +373,7 @@ For more information about auto.offset.reset, see the Apache Kafka
                   Collector</span>. You can
       also define a custom grok pattern and then use it as part of the log format. </dd>
 
-     <dd class="dd">For more information about supported grok patterns, see <a class="xref" href="../Apx-GrokPatterns/GrokPatterns.html#concept_vdk_xjb_wr" title="You can use the grok patterns in this appendix to define the structure of log data.">Defining Grok Patterns</a>.</dd>
+     <dd class="dd">For more information about supported grok patterns, see <a class="xref" href="../Apx-GrokPatterns/GrokPatterns_title.html#concept_vdk_xjb_wr" title="You can use the grok patterns in this appendix to define the structure of log data.">Defining Grok Patterns</a>.</dd>
 
     
     
@@ -440,11 +448,11 @@ For more information about auto.offset.reset, see the Apache Kafka
             You can use the same steps to configure a Kafka Producer. </p>
 
         <div class="p">
-            <ol class="ol" id="concept_ann_l2b_t5__d26453e27">
+            <ol class="ol" id="concept_ann_l2b_t5__d26668e27">
                 <li class="li">To use SSL to connect, first make sure Kafka is configured for SSL as described
                     in the Kafka documentation: <a class="xref" href="http://kafka.apache.org/documentation.html#security_ssl" target="_blank">http://kafka.apache.org/documentation.html#security_ssl</a>. </li>
 
-                <li class="li" id="concept_ann_l2b_t5__d26453e34">On the <span class="ph uicontrol">General</span> tab of the stage, set
+                <li class="li" id="concept_ann_l2b_t5__d26668e34">On the <span class="ph uicontrol">General</span> tab of the stage, set
                     the <span class="ph uicontrol">Stage Library</span> property to Apache Kafka 0.9.0.0 or a
                     later version.</li>
 
@@ -452,8 +460,8 @@ For more information about auto.offset.reset, see the Apache Kafka
                         <span class="ph uicontrol">security.protocol</span> Kafka configuration property and
                     set it to <span class="ph uicontrol">SSL</span>.</li>
 
-                <li class="li" id="concept_ann_l2b_t5__d26453e55">Then, add the following SSL Kafka configuration
-                        properties:<ul class="ul" id="concept_ann_l2b_t5__d26453e57">
+                <li class="li" id="concept_ann_l2b_t5__d26668e55">Then, add the following SSL Kafka configuration
+                        properties:<ul class="ul" id="concept_ann_l2b_t5__d26668e57">
                         <li class="li">ssl.truststore.location</li>
 
                         <li class="li">ssl.truststore.password</li>
@@ -461,7 +469,7 @@ For more information about auto.offset.reset, see the Apache Kafka
                     </ul>
 <div class="p">When the Kafka broker requires client authentication - when the
                         ssl.client.auth broker property is set to "required" - add and configure the
-                        following properties: <ul class="ul" id="concept_ann_l2b_t5__d26453e67">
+                        following properties: <ul class="ul" id="concept_ann_l2b_t5__d26668e67">
                             <li class="li">ssl.keystore.location</li>
 
                             <li class="li">ssl.keystore.password</li>
@@ -471,7 +479,7 @@ For more information about auto.offset.reset, see the Apache Kafka
                         </ul>
 </div>
 <div class="p">Some brokers might require adding the following properties as
-                            well:<ul class="ul" id="concept_ann_l2b_t5__d26453e80">
+                            well:<ul class="ul" id="concept_ann_l2b_t5__d26668e80">
                             <li class="li">ssl.enabled.protocols</li>
 
                             <li class="li">ssl.truststore.type</li>
@@ -491,7 +499,7 @@ For more information about auto.offset.reset, see the Apache Kafka
         <p class="p">For example, the following properties allow the stage to use SSL to
             connect to Kafka 0.0.9.0 with client authentication:</p>
 
-        <img class="image" id="concept_ann_l2b_t5__image_w3r_mzc_rw" src="../Reusable_Content/Reusable_Topics/../../Graphics/Kafka-SSLoptions.png" height="179" width="549"></img>
+        <img class="image" id="concept_ann_l2b_t5__image_w3r_mzc_rw" src="../Reusable_Content/Reusable_Topics/../../Graphics/Kafka-SSLoptions.png" height="179" width="549" />
     </div>
 
 </div>
@@ -511,7 +519,7 @@ For more information about auto.offset.reset, see the Apache Kafka
                 <li class="li">To use Kerberos, first make sure Kafka is configured for Kerberos as described
                     in the Kafka documentation: <a class="xref" href="http://kafka.apache.org/documentation.html#security_sasl" target="_blank">http://kafka.apache.org/documentation.html#security_sasl</a>.</li>
 
-                <li class="li" id="concept_w4j_3vb_t5__d26378e46">In the <span class="ph">Data
+                <li class="li" id="concept_w4j_3vb_t5__d26593e46">In the <span class="ph">Data
                   Collector</span>
                     configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>, make sure the
                     following Kerberos properties are configured: <ul class="ul" id="concept_w4j_3vb_t5__ul_epq_gbd_rw">
@@ -531,7 +539,7 @@ For more information about auto.offset.reset, see the Apache Kafka
                         <span class="ph uicontrol">security.protocol</span> Kafka configuration property, and
                     set it to <span class="ph uicontrol">SASL_PLAINTEXT</span>.</li>
 
-                <li class="li" id="concept_w4j_3vb_t5__d26378e76">Then, add the
+                <li class="li" id="concept_w4j_3vb_t5__d26593e76">Then, add the
                         <span class="ph uicontrol">sasl.kerberos.service.name</span> configuration property,
                     and set it to the Kerberos principal name that Kafka runs as. </li>
 
@@ -542,7 +550,7 @@ For more information about auto.offset.reset, see the Apache Kafka
         <p class="p">For example, the following Kafka properties enable connecting to Kafka
             0.0.9.0 with Kerberos:</p>
 
-        <p class="p"><img class="image" id="concept_w4j_3vb_t5__d26378e88" src="../Reusable_Content/Reusable_Topics/../../Graphics/Kafka-Kerberos.png" height="58" width="561"></img></p>
+        <p class="p"><img class="image" id="concept_w4j_3vb_t5__d26593e88" src="../Reusable_Content/Reusable_Topics/../../Graphics/Kafka-Kerberos.png" height="58" width="561" /></p>
 
  </div>
 
@@ -555,9 +563,9 @@ For more information about auto.offset.reset, see the Apache Kafka
             can enable Kafka Consumer to use SSL and Kerberos to connect to <span class="ph">Kafka version 0.9.0.0 or later</span>.</p>
 
         <div class="p">To use SSL and Kerberos, combine the steps required to enable each and set the
-            security.protocol property as follows: <ol class="ol" id="concept_qzq_jrk_55__d26507e31">
+            security.protocol property as follows: <ol class="ol" id="concept_qzq_jrk_55__d26722e31">
                 <li class="li">Make sure Kafka is configured to use SSL and Kerberos (SASL) as described in the
-                    following Kafka documentation:<ul class="ul" id="concept_qzq_jrk_55__d26507e35">
+                    following Kafka documentation:<ul class="ul" id="concept_qzq_jrk_55__d26722e35">
                         <li class="li"><a class="xref" href="http://kafka.apache.org/documentation.html#security_ssl" target="_blank">http://kafka.apache.org/documentation.html#security_ssl</a></li>
 
                         <li class="li"><a class="xref" href="http://kafka.apache.org/documentation.html#security_sasl" target="_blank">http://kafka.apache.org/documentation.html#security_sasl</a></li>
@@ -590,7 +598,7 @@ For more information about auto.offset.reset, see the Apache Kafka
                     and set it to the Kerberos principal name that Kafka runs as. </li>
 
                 <li class="li">Then, add the following SSL Kafka configuration
-                        properties:<ul class="ul" id="concept_qzq_jrk_55__d26453e57">
+                        properties:<ul class="ul" id="concept_qzq_jrk_55__d26668e57">
                         <li class="li">ssl.truststore.location</li>
 
                         <li class="li">ssl.truststore.password</li>
@@ -598,7 +606,7 @@ For more information about auto.offset.reset, see the Apache Kafka
                     </ul>
 <div class="p">When the Kafka broker requires client authentication - when the
                         ssl.client.auth broker property is set to "required" - add and configure the
-                        following properties: <ul class="ul" id="concept_qzq_jrk_55__d26453e67">
+                        following properties: <ul class="ul" id="concept_qzq_jrk_55__d26668e67">
                             <li class="li">ssl.keystore.location</li>
 
                             <li class="li">ssl.keystore.password</li>
@@ -608,7 +616,7 @@ For more information about auto.offset.reset, see the Apache Kafka
                         </ul>
 </div>
 <div class="p">Some brokers might require adding the following properties as
-                            well:<ul class="ul" id="concept_qzq_jrk_55__d26453e80">
+                            well:<ul class="ul" id="concept_qzq_jrk_55__d26668e80">
                             <li class="li">ssl.enabled.protocols</li>
 
                             <li class="li">ssl.truststore.type</li>
@@ -644,46 +652,46 @@ For more information about auto.offset.reset, see the Apache Kafka
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_npx_xgf_vq__d21804e519" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_npx_xgf_vq__d21997e519" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
-                                <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d160261e979">General Property</th>
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d158704e990">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d160261e982">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d158704e993">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e979 ">Name</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e990 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e982 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e979 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d160261e982 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d158704e993 ">Stage name.</td>
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e979 ">Stage Library</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e990 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e982 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d158704e993 ">Optional description.</td>
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e979 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_npx_xgf_vq__d21804e574" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e990 ">Stage Library</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e982 ">Error record handling for the stage: <ul class="ul" id="task_npx_xgf_vq__d21804e578">
+                                    <td class="entry" valign="top" width="70%" headers="d158704e993 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e990 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_npx_xgf_vq__d21997e574" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d158704e993 ">Error record handling for the stage: <ul class="ul" id="task_npx_xgf_vq__d21997e578">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -713,20 +721,20 @@ For more information about auto.offset.reset, see the Apache Kafka
                             
                             
                             <thead class="thead" align="left">
-                                <tr class="row">
-                                    <th class="entry" valign="top" width="27.77777777777778%" id="d160261e1072">Kafka Property</th>
+                                <tr>
+                                    <th class="entry" valign="top" width="27.77777777777778%" id="d158704e1083">Kafka Property</th>
 
-                                    <th class="entry" valign="top" width="72.22222222222221%" id="d160261e1075">Description</th>
+                                    <th class="entry" valign="top" width="72.22222222222221%" id="d158704e1086">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d160261e1072 ">Broker URI</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d158704e1083 ">Broker URI</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d160261e1075 ">Connection string for the Kafka broker. Use the following
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d158704e1086 ">Connection string for the Kafka broker. Use the following
                                         format: <samp class="ph codeph">&lt;host&gt;:&lt;port&gt;</samp>. <p class="p">To ensure a
                                             connection, enter a comma-separated list of additional
                                             broker URI.</p>
@@ -734,10 +742,10 @@ For more information about auto.offset.reset, see the Apache Kafka
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d160261e1072 ">ZooKeeper URI</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d158704e1083 ">ZooKeeper URI</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d160261e1075 ">Connection string for the ZooKeeper of the Kafka cluster.
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d158704e1086 ">Connection string for the ZooKeeper of the Kafka cluster.
                                         Use the following format:
                                             <samp class="ph codeph">&lt;host&gt;:&lt;port&gt;</samp>. <p class="p">To use a
                                             ZooKeeper quorum, enter a comma-separated list.
@@ -749,35 +757,35 @@ For more information about auto.offset.reset, see the Apache Kafka
 </td>
 
                                 </tr>
-  <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d160261e1072 ">Consumer Group</td>
+  <tr>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d158704e1083 ">Consumer Group</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d160261e1075 ">Kafka consumer group that the <span class="ph">Data
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d158704e1086 ">Kafka consumer group that the <span class="ph">Data
                   Collector</span> belongs to.</td>
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d160261e1072 ">Topic</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d158704e1083 ">Topic</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d160261e1075 ">Kafka topic to read.</td>
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d158704e1086 ">Kafka topic to read.</td>
 
                                 </tr>
 
-                                <tr class="row">
-       <td class="entry" valign="top" width="27.77777777777778%" headers="d160261e1072 ">Produce Single Record</td>
+                                <tr>
+       <td class="entry" valign="top" width="27.77777777777778%" headers="d158704e1083 ">Produce Single Record</td>
 
-       <td class="entry" valign="top" width="72.22222222222221%" headers="d160261e1075 ">For each partition, generates a single record for records that include multiple
+       <td class="entry" valign="top" width="72.22222222222221%" headers="d158704e1086 ">For each partition, generates a single record for records that include multiple
         objects. <p class="p">When not selected, the origin generates multiple records when a record includes
          multiple objects.</p>
 </td>
 
       </tr>
 
-                                <tr class="row">
-       <td class="entry" valign="top" width="27.77777777777778%" headers="d160261e1072 ">Max Batch Size (records)</td>
+                                <tr>
+       <td class="entry" valign="top" width="27.77777777777778%" headers="d158704e1083 ">Max Batch Size (records)</td>
 
-       <td class="entry" valign="top" width="72.22222222222221%" headers="d160261e1075 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data
+       <td class="entry" valign="top" width="72.22222222222221%" headers="d158704e1086 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data
                   Collector</span> maximum
         batch size. <p class="p">Default is 1000. The <span class="ph">Data
                   Collector</span> default
@@ -786,29 +794,29 @@ For more information about auto.offset.reset, see the Apache Kafka
 
       </tr>
 
-                                <tr class="row">
-       <td class="entry" valign="top" width="27.77777777777778%" headers="d160261e1072 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
-         <img class="image" id="task_npx_xgf_vq__d21817e199" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                <tr>
+       <td class="entry" valign="top" width="27.77777777777778%" headers="d158704e1083 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
+         <img class="image" id="task_npx_xgf_vq__d22010e199" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="72.22222222222221%" headers="d160261e1075 ">Number of milliseconds to wait before sending a partial or empty batch. </td>
+       <td class="entry" valign="top" width="72.22222222222221%" headers="d158704e1086 ">Number of milliseconds to wait before sending a partial or empty batch. </td>
 
       </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d160261e1072 ">Kafka Configuration <a class="xref" href="KConsumer.html#concept_d5f_n2g_vq" title="You can add custom Kafka configuration properties to the Kafka Consumer.">
-                                            <img class="image" id="task_npx_xgf_vq__d21804e2901" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
+                                <tr>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d158704e1083 ">Kafka Configuration <a class="xref" href="KConsumer.html#concept_d5f_n2g_vq" title="You can add custom Kafka configuration properties to the Kafka Consumer.">
+                                            <img class="image" id="task_npx_xgf_vq__d21997e2931" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d160261e1075 ">
-                                        <p class="p" id="task_npx_xgf_vq__d21804e2906">Additional Kafka configuration
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d158704e1086 ">
+                                        <p class="p" id="task_npx_xgf_vq__d21997e2936">Additional Kafka configuration
                                             properties to use. To add properties, click
                                                 <span class="ph uicontrol">Add</span> and define the Kafka
                                             property name and value.</p>
 
-                                        <p class="p" id="task_npx_xgf_vq__d21804e2912">Use the property names and values as
+                                        <p class="p" id="task_npx_xgf_vq__d21997e2942">Use the property names and values as
                                             expected by Kafka.</p>
 
-                                        <p class="p" id="task_npx_xgf_vq__d21804e2915">For information about enabling secure
+                                        <p class="p" id="task_npx_xgf_vq__d21997e2945">For information about enabling secure
                                             connections to Kafka, see <a class="xref" href="KConsumer.html#concept_yg3_k31_t5">Enabling Security</a>.</p>
 
                                     </td>
@@ -832,21 +840,21 @@ For more information about auto.offset.reset, see the Apache Kafka
                             
                             
                             <thead class="thead" align="left">
-                                <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d160261e1240">Data Format Property</th>
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d158704e1251">Data Format Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d160261e1243">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d158704e1254">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e1240 ">Data Format <a class="xref" href="KConsumer.html#concept_xgs_nlc_wr" title="When you use an origin to read log data, you define the format of the log files to be read.">
-                                            <img class="image" id="task_npx_xgf_vq__image_bmy_h5q_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e1251 ">Data Format <a class="xref" href="KConsumer.html#concept_xgs_nlc_wr" title="When you use an origin to read log data, you define the format of the log files to be read.">
+                                            <img class="image" id="task_npx_xgf_vq__image_bmy_h5q_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e1243 ">Type of data to be read. Use one of the following
+                                    <td class="entry" valign="top" width="70%" headers="d158704e1254 ">Type of data to be read. Use one of the following
                                             options:<ul class="ul" id="task_npx_xgf_vq__ul_l1j_hnf_qw">
                         <li class="li">Avro</li>
 
@@ -865,7 +873,7 @@ For more information about auto.offset.reset, see the Apache Kafka
                         <li class="li">Protobuf</li>
 
                         <li class="li">SDC Record <a class="xref" href="../Pipeline_Design/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a proprietary data format that Data Collector uses to generate error records. Data Collector can also use the data format to read and write data.">
-                                    <img class="image" id="task_npx_xgf_vq__d21706e347" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></li>
+                                    <img class="image" id="task_npx_xgf_vq__d21899e347" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14" /></a></li>
 
                         <li class="li">XML</li>
 
@@ -890,21 +898,21 @@ For more information about auto.offset.reset, see the Apache Kafka
                             
                             
                             <thead class="thead" align="left">
-                                <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d160261e1339">Avro Property</th>
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d158704e1350">Avro Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d160261e1342">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d158704e1353">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e1339 ">Avro Schema Location</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e1350 ">Avro Schema Location</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e1342 ">Location of the Avro schema definition to use when
-                                        processing data:<ul class="ul" id="task_npx_xgf_vq__d21804e783">
+                                    <td class="entry" valign="top" width="70%" headers="d158704e1353 ">Location of the Avro schema definition to use when
+                                        processing data:<ul class="ul" id="task_npx_xgf_vq__d21997e783">
                                             <li class="li">Message/Data Includes Schema - Use the schema in the
                                                 message.</li>
 
@@ -922,10 +930,10 @@ For more information about auto.offset.reset, see the Apache Kafka
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e1339 ">Avro Schema</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e1350 ">Avro Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e1342 ">Avro schema definition used to process the data.
+                                    <td class="entry" valign="top" width="70%" headers="d158704e1353 ">Avro schema definition used to process the data.
                                         Overrides any existing schema definitions associated with
                                         the data. <p class="p">You can optionally use the runtime:loadResource
                                             function to use a schema definition stored in a runtime
@@ -934,10 +942,10 @@ For more information about auto.offset.reset, see the Apache Kafka
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e1339 ">Schema Registry URLs</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e1350 ">Schema Registry URLs</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e1342 ">Confluent Schema Registry URLs used to look up the
+                                    <td class="entry" valign="top" width="70%" headers="d158704e1353 ">Confluent Schema Registry URLs used to look up the
                                         schema. To add a URL, click <span class="ph uicontrol">Add</span>. Use
                                         the following format to enter the
                                         URL:<pre class="pre codeblock">http://&lt;host name&gt;:&lt;port number&gt;</pre>
@@ -945,11 +953,11 @@ For more information about auto.offset.reset, see the Apache Kafka
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e1339 ">Lookup Schema By</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e1350 ">Lookup Schema By</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e1342 ">Method used to look up the schema in the Confluent Schema
-                                            Registry:<ul class="ul" id="task_npx_xgf_vq__d21804e830">
+                                    <td class="entry" valign="top" width="70%" headers="d158704e1353 ">Method used to look up the schema in the Confluent Schema
+                                            Registry:<ul class="ul" id="task_npx_xgf_vq__d21997e830">
                                             <li class="li">Subject - Look up the specified Avro schema
                                                 subject.</li>
 
@@ -964,10 +972,10 @@ Overrides any existing schema definitions associated
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e1339 ">Schema Subject</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e1350 ">Schema Subject</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e1342 ">Avro schema subject to look up in the Confluent Schema
+                                    <td class="entry" valign="top" width="70%" headers="d158704e1353 ">Avro schema subject to look up in the Confluent Schema
                                             Registry.<p class="p">If the specified subject has multiple schema
                                             versions, the origin uses the latest schema version for
                                             that subject. To use an older version, find the
@@ -978,10 +986,10 @@ Overrides any existing schema definitions associated
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e1339 ">Schema ID</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e1350 ">Schema ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e1342 ">Avro schema ID to look up in the Confluent Schema
+                                    <td class="entry" valign="top" width="70%" headers="d158704e1353 ">Avro schema ID to look up in the Confluent Schema
                                         Registry.</td>
 
                                 </tr>
@@ -1002,20 +1010,20 @@ Overrides any existing schema definitions associated
                             
                             
                             <thead class="thead" align="left">
-                                <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d160261e1468">Binary Property</th>
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d158704e1479">Binary Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d160261e1471">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d158704e1482">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e1468 ">Max Data Size</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e1479 ">Max Data Size</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e1471 ">Maximum number of bytes in the message. Larger messages
+                                    <td class="entry" valign="top" width="70%" headers="d158704e1482 ">Maximum number of bytes in the message. Larger messages
                                         cannot be processed or written to error. </td>
 
                                 </tr>
@@ -1032,25 +1040,25 @@ Overrides any existing schema definitions associated
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_npx_xgf_vq__d21804e1130" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_npx_xgf_vq__d21997e1130" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
-                                <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d160261e1514">Datagram Properties</th>
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d158704e1525">Datagram Properties</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d160261e1517">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d158704e1528">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e1514 ">Data Format <a class="xref" href="KConsumer.html#concept_xgs_nlc_wr" title="When you use an origin to read log data, you define the format of the log files to be read.">
-                                            <img class="image" id="task_npx_xgf_vq__d21804e1158" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e1525 ">Data Format <a class="xref" href="KConsumer.html#concept_xgs_nlc_wr" title="When you use an origin to read log data, you define the format of the log files to be read.">
+                                            <img class="image" id="task_npx_xgf_vq__d21997e1158" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e1517 ">Message type: <ul class="ul" id="task_npx_xgf_vq__ul_q1q_yp4_4x">
+                                    <td class="entry" valign="top" width="70%" headers="d158704e1528 ">Message type: <ul class="ul" id="task_npx_xgf_vq__ul_q1q_yp4_4x">
                                             <li class="li">collectd</li>
 
                                             <li class="li">NetFlow</li>
@@ -1062,57 +1070,57 @@ Overrides any existing schema definitions associated
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e1514 ">TypesDB File Path</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e1525 ">TypesDB File Path</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e1517 "><span class="ph">Path to a user-provided types.db
+                                    <td class="entry" valign="top" width="70%" headers="d158704e1528 "><span class="ph">Path to a user-provided types.db
                                             file. Overrides the default types.db file.</span><p class="p">For collectd data only.</p>
 </td>
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e1514 ">Convert Hi-Res Time &amp;
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e1525 ">Convert Hi-Res Time &amp;
                                         Interval</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e1517 "><span class="ph">Converts the collectd high
+                                    <td class="entry" valign="top" width="70%" headers="d158704e1528 "><span class="ph">Converts the collectd high
                                             resolution time format interval and timestamp to UNIX
                                             time, in milliseconds.</span><p class="p">For collectd data only.</p>
 </td>
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e1514 ">Exclude Interval</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e1525 ">Exclude Interval</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e1517 "><span class="ph">Excludes the interval field from
+                                    <td class="entry" valign="top" width="70%" headers="d158704e1528 "><span class="ph">Excludes the interval field from
                                             output record.</span><p class="p">For collectd data only.</p>
 </td>
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e1514 ">Auth File</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e1525 ">Auth File</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e1517 "><span class="ph">Path to an optional authentication
+                                    <td class="entry" valign="top" width="70%" headers="d158704e1528 "><span class="ph">Path to an optional authentication
                                             file. Use an authentication file to accept signed and
                                             encrypted data.</span><p class="p">For collectd data only.</p>
 </td>
 
                                 </tr>
 
-                                <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d160261e1514 ">Charset</td>
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d158704e1525 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d160261e1517 ">Character encoding of the messages to be processed.</td>
+       <td class="entry" valign="top" width="70%" headers="d158704e1528 ">Character encoding of the messages to be processed.</td>
 
       </tr>
 
-                                <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d160261e1514 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_npx_xgf_vq__d21817e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d158704e1525 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_npx_xgf_vq__d22010e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d160261e1517 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d158704e1528 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
@@ -1133,20 +1141,20 @@ Overrides any existing schema definitions associated
                             
                             
                             <thead class="thead" align="left">
-                                <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d160261e1653">Delimited Property</th>
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d158704e1664">Delimited Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d160261e1656">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d158704e1667">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e1653 ">Delimiter Format Type</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e1664 ">Delimiter Format Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e1656 ">Delimiter format type. Use one of the following options:
+                                    <td class="entry" valign="top" width="70%" headers="d158704e1667 ">Delimiter format type. Use one of the following options:
                                             <ul class="ul" id="task_npx_xgf_vq__ul_s5z_b3z_3r">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
@@ -1170,26 +1178,26 @@ Overrides any existing schema definitions associated
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e1653 ">Header Line</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e1664 ">Header Line</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e1656 ">Indicates whether a file contains a header line, and
+                                    <td class="entry" valign="top" width="70%" headers="d158704e1667 ">Indicates whether a file contains a header line, and
                                         whether to use the header line.</td>
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e1653 ">Max Record Length (chars)</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e1664 ">Max Record Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e1656 ">Maximum length of a record in characters. Longer records
+                                    <td class="entry" valign="top" width="70%" headers="d158704e1667 ">Maximum length of a record in characters. Longer records
                                         are not read. </td>
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e1653 ">Delimiter Character</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e1664 ">Delimiter Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e1656 ">Delimiter character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="70%" headers="d158704e1667 ">Delimiter character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                             character.<p class="p">You can enter a Unicode control character
                                             using the format \u<em class="ph i">NNNN</em>, where ​<em class="ph i">N</em> is a
@@ -1203,25 +1211,25 @@ Overrides any existing schema definitions associated
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e1653 ">Escape Character</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e1664 ">Escape Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e1656 ">Escape character for a custom file type.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e1653 ">Quote Character</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d160261e1656 ">Quote character for a custom file type.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d158704e1667 ">Escape character for a custom file type.</td>
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e1653 ">Root Field Type <a class="xref" href="../Pipeline_Design/DelimitedDataRootFieldTypes.html#concept_zcg_bm4_fs">
-                                            <img class="image" id="task_npx_xgf_vq__d21804e1353" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e1664 ">Quote Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e1656 ">Root field type to use:<ul class="ul" id="task_npx_xgf_vq__d21804e1357">
+                                    <td class="entry" valign="top" width="70%" headers="d158704e1667 ">Quote character for a custom file type.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e1664 ">Root Field Type <a class="xref" href="../Pipeline_Design/DelimitedDataRootFieldTypes.html#concept_zcg_bm4_fs">
+                                            <img class="image" id="task_npx_xgf_vq__d21997e1353" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d158704e1667 ">Root field type to use:<ul class="ul" id="task_npx_xgf_vq__d21997e1357">
                                             <li class="li">List-Map - Generates an indexed list of data.
                                                 Enables you to use standard functions to process
                                                 data. Use for new pipelines.</li>
@@ -1236,40 +1244,40 @@ Overrides any existing schema definitions associated
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e1653 ">Lines to Skip</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e1664 ">Lines to Skip</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e1656 ">Lines to skip before reading data. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d158704e1667 ">Lines to skip before reading data. </td>
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e1653 ">Parse NULLs</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e1664 ">Parse NULLs</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e1656 ">Replaces the specified string constant with null
+                                    <td class="entry" valign="top" width="70%" headers="d158704e1667 ">Replaces the specified string constant with null
                                         values.</td>
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e1653 ">NULL Constant</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e1664 ">NULL Constant</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e1656 ">String constant to replace with null values.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d158704e1667 ">String constant to replace with null values.</td>
 
                                 </tr>
 
-                                <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d160261e1653 ">Charset</td>
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d158704e1664 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d160261e1656 ">Character encoding of the files to be processed.</td>
+       <td class="entry" valign="top" width="70%" headers="d158704e1667 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
-                                <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d160261e1653 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_npx_xgf_vq__d21817e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d158704e1664 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_npx_xgf_vq__d22010e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d160261e1656 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d158704e1667 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
@@ -1290,21 +1298,21 @@ Overrides any existing schema definitions associated
                             
                             
                             <thead class="thead" align="left">
-                                <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d160261e1862">JSON Property</th>
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d158704e1873">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d160261e1865">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d158704e1876">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e1862 ">JSON Content</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e1873 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e1865 ">Type of JSON content. Use one of the following options: <div class="p">
-                                            <ul class="ul" id="task_npx_xgf_vq__d21804e1472">
+                                    <td class="entry" valign="top" width="70%" headers="d158704e1876 ">Type of JSON content. Use one of the following options: <div class="p">
+                                            <ul class="ul" id="task_npx_xgf_vq__d21997e1472">
                                                 <li class="li">Array of Objects </li>
 
                                                 <li class="li">Multiple Objects</li>
@@ -1316,28 +1324,28 @@ Overrides any existing schema definitions associated
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e1862 ">Maximum Object Length (chars)</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e1873 ">Maximum Object Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e1865 ">Maximum number of characters in a JSON object. <p class="p">Longer
+                                    <td class="entry" valign="top" width="70%" headers="d158704e1876 ">Maximum number of characters in a JSON object. <p class="p">Longer
                                             objects are diverted to the pipeline for error handling.
                                         </p>
 </td>
 
                                 </tr>
 
-                                <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d160261e1862 ">Charset</td>
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d158704e1873 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d160261e1865 ">Character encoding of the files to be processed.</td>
+       <td class="entry" valign="top" width="70%" headers="d158704e1876 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
-                                <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d160261e1862 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_npx_xgf_vq__d21817e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d158704e1873 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_npx_xgf_vq__d22010e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d160261e1865 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d158704e1876 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
@@ -1358,21 +1366,21 @@ Overrides any existing schema definitions associated
                             
                             
                             <thead class="thead" align="left">
-                                <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d160261e1955">Log Property</th>
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d158704e1966">Log Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d160261e1958">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d158704e1969">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e1955 ">Log Format</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e1966 ">Log Format</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e1958 ">Format of the log files. Use one of the following
-                                            options:<ul class="ul" id="task_npx_xgf_vq__d21804e1580">
+                                    <td class="entry" valign="top" width="70%" headers="d158704e1969 ">Format of the log files. Use one of the following
+                                            options:<ul class="ul" id="task_npx_xgf_vq__d21997e1580">
                                             <li class="li">Common Log Format</li>
 
                                             <li class="li">Combined Log Format</li>
@@ -1392,18 +1400,18 @@ Overrides any existing schema definitions associated
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e1955 ">Max Line Length</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e1966 ">Max Line Length</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e1958 ">Maximum length of a log line. The origin truncates longer
+                                    <td class="entry" valign="top" width="70%" headers="d158704e1969 ">Maximum length of a log line. The origin truncates longer
                                         lines. </td>
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e1955 ">Retain Original Line</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e1966 ">Retain Original Line</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e1958 ">Determines how to treat the original log line. Select to
+                                    <td class="entry" valign="top" width="70%" headers="d158704e1969 ">Determines how to treat the original log line. Select to
                                         include the original log line as a field in the resulting
                                             record.<p class="p">By default, the original line is
                                             discarded.</p>
@@ -1411,18 +1419,18 @@ Overrides any existing schema definitions associated
 
                                 </tr>
 
-                                <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d160261e1955 ">Charset</td>
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d158704e1966 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d160261e1958 ">Character encoding of the files to be processed.</td>
+       <td class="entry" valign="top" width="70%" headers="d158704e1969 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
-                                <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d160261e1955 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_npx_xgf_vq__d21817e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d158704e1966 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_npx_xgf_vq__d22010e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d160261e1958 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d158704e1969 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
@@ -1450,30 +1458,30 @@ Overrides any existing schema definitions associated
                                     <span class="ph uicontrol">Grok Pattern Definition</span>.</p>
 <p class="p">For more
                                 information about defining grok patterns and supported grok
-                                patterns, see <a class="xref" href="../Apx-GrokPatterns/GrokPatterns.html#concept_vdk_xjb_wr" title="You can use the grok patterns in this appendix to define the structure of log data.">Defining Grok Patterns</a>.</p>
+                                patterns, see <a class="xref" href="../Apx-GrokPatterns/GrokPatterns_title.html#concept_vdk_xjb_wr" title="You can use the grok patterns in this appendix to define the structure of log data.">Defining Grok Patterns</a>.</p>
 </li>
 
                         <li class="li">When you select <span class="ph uicontrol">Log4j</span>, define the following properties:<div class="p">
                                 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_npx_xgf_vq__d21804e1685" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_npx_xgf_vq__d21997e1685" class="table" frame="border" border="1" rules="all">
                                         
                                         
                                         <thead class="thead" align="left">
-                                            <tr class="row">
-                                                <th class="entry" valign="top" width="22.22222222222222%" id="d160261e2108">Log4j Property</th>
+                                            <tr>
+                                                <th class="entry" valign="top" width="22.22222222222222%" id="d158704e2119">Log4j Property</th>
 
-                                                <th class="entry" valign="top" width="77.77777777777779%" id="d160261e2111">Description</th>
+                                                <th class="entry" valign="top" width="77.77777777777779%" id="d158704e2122">Description</th>
 
                                             </tr>
 
                                         </thead>
 
                                         <tbody class="tbody">
-                                            <tr class="row">
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d160261e2108 ">On Parse Error</td>
+                                            <tr>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d158704e2119 ">On Parse Error</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d160261e2111 ">Determines how to handle information that
-                                                  cannot be parsed:<ul class="ul" id="task_npx_xgf_vq__d21804e1714">
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d158704e2122 ">Determines how to handle information that
+                                                  cannot be parsed:<ul class="ul" id="task_npx_xgf_vq__d21997e1714">
                                                   <li class="li">Skip and Log Error - Skips reading the line
                                                   and logs a stage error.</li>
 
@@ -1491,18 +1499,18 @@ Overrides any existing schema definitions associated
 
                                             </tr>
 
-                                            <tr class="row">
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d160261e2108 ">Use Custom Log Format</td>
+                                            <tr>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d158704e2119 ">Use Custom Log Format</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d160261e2111 ">Allows you to define a custom log
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d158704e2122 ">Allows you to define a custom log
                                                   format.</td>
 
                                             </tr>
 
-                                            <tr class="row">
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d160261e2108 ">Custom Format</td>
+                                            <tr>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d158704e2119 ">Custom Format</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d160261e2111 ">Use log4j variables to define a custom log
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d158704e2122 ">Use log4j variables to define a custom log
                                                   format. </td>
 
                                             </tr>
@@ -1528,20 +1536,20 @@ Overrides any existing schema definitions associated
                             
                             
                             <thead class="thead" align="left">
-                                <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d160261e2185">Protobuf Property</th>
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d158704e2196">Protobuf Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d160261e2188">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d158704e2199">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e2185 ">Protobuf Descriptor File </td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e2196 ">Protobuf Descriptor File </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e2188 ">Descriptor file (.desc) to use. The descriptor file must
+                                    <td class="entry" valign="top" width="70%" headers="d158704e2199 ">Descriptor file (.desc) to use. The descriptor file must
                                         be in the <span class="ph">Data
                   Collector</span> resources directory,
                                             <samp class="ph codeph">$SDC_RESOURCES</samp>.<p class="p">For information about
@@ -1551,10 +1559,10 @@ Overrides any existing schema definitions associated
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e2185 ">Message Type</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e2196 ">Message Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e2188 ">The fully-qualified name for the message type to use when
+                                    <td class="entry" valign="top" width="70%" headers="d158704e2199 ">The fully-qualified name for the message type to use when
                                         reading data.<p class="p">Use the following format:
                                                 <samp class="ph codeph">&lt;package name&gt;.&lt;message
                                             type&gt;</samp>. </p>
@@ -1563,10 +1571,10 @@ Use a message type defined in the
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e2185 ">Delimited Messages</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e2196 ">Delimited Messages</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e2188 ">Indicates if a message might include more than one
+                                    <td class="entry" valign="top" width="70%" headers="d158704e2199 ">Indicates if a message might include more than one
                                         protobuf message.</td>
 
                                 </tr>
@@ -1587,20 +1595,20 @@ Use a message type defined in the
                             
                             
                             <thead class="thead" align="left">
-                                <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d160261e2324">Text Property</th>
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d158704e2335">Text Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d160261e2327">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d158704e2338">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e2324 ">Max Line Length</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e2335 ">Max Line Length</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e2327 ">Maximum number of characters allowed for a line. Longer
+                                    <td class="entry" valign="top" width="70%" headers="d158704e2338 ">Maximum number of characters allowed for a line. Longer
                                         lines are truncated.<p class="p">Adds a boolean field to the record to
                                             indicate if it was truncated. The field name is
                                             Truncated. </p>
@@ -1608,41 +1616,41 @@ Use a message type defined in the
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e2324 ">Use Custom Delimiter <a class="xref" href="../Pipeline_Design/TextCDelim.html#concept_lg2_gcg_jx">
-                                            <img class="image" id="task_npx_xgf_vq__d21804e2183" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e2335 ">Use Custom Delimiter <a class="xref" href="../Pipeline_Design/TextCDelim.html#concept_lg2_gcg_jx">
+                                            <img class="image" id="task_npx_xgf_vq__d21997e2183" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e2327 ">Uses custom delimiters to define records instead of line
+                                    <td class="entry" valign="top" width="70%" headers="d158704e2338 ">Uses custom delimiters to define records instead of line
                                         breaks. </td>
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e2324 ">Custom Delimiter</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e2335 ">Custom Delimiter</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e2327 ">One or more characters to use to define records. </td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e2324 ">Include Custom Delimiter</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d160261e2327 ">Includes delimiter characters in the record.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d158704e2338 ">One or more characters to use to define records. </td>
 
                                 </tr>
 
-                                <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d160261e2324 ">Charset</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e2335 ">Include Custom Delimiter</td>
 
-       <td class="entry" valign="top" width="70%" headers="d160261e2327 ">Character encoding of the files to be processed.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d158704e2338 ">Includes delimiter characters in the record.</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d158704e2335 ">Charset</td>
+
+       <td class="entry" valign="top" width="70%" headers="d158704e2338 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
-                                <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d160261e2324 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_npx_xgf_vq__d21817e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d158704e2335 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_npx_xgf_vq__d22010e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d160261e2327 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d158704e2338 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
@@ -1663,35 +1671,66 @@ Use a message type defined in the
                             
                             
                             <thead class="thead" align="left">
-                                <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d160261e2429">XML Property</th>
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d158704e2440">XML Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d160261e2432">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d158704e2443">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e2429 ">Delimiter Element</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e2440 ">Delimiter Element <a class="xref" href="../Pipeline_Design/XMLDFormat.html#concept_tmc_4bc_dy">
+                                            <img class="image" id="task_npx_xgf_vq__d21997e2397" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e2432 ">
-                                        <p class="p">XML element that acts as a delimiter. Omit a delimiter to
-                                            treat the entire XML document as one record.</p>
+                                    <td class="entry" valign="top" width="70%" headers="d158704e2443 ">
+                                        <div class="p">Delimiter to use to generate records. Omit a delimiter to
+                                            treat the entire XML document as one record. Use one of
+                                            the following:<ul class="ul" id="task_npx_xgf_vq__d21997e2403">
+                                                <li class="li">An XML element directly under the root element.
+                                                  <p class="p">Use the XML element name without surrounding
+                                                  angle brackets ( &lt; &gt; ) . For example, msg
+                                                  instead of &lt;msg&gt;. </p>
+</li>
 
-                                        <p class="p">Use the XML element name without surrounding angle
-                                            brackets ( &lt; &gt; ) . For example, msg instead of
-                                            &lt;msg&gt;. </p>
+                                                <li class="li">A simplified XPath expression that specifies the
+                                                  data to use.<p class="p">Use a simplified XPath expression
+                                                  to access data deeper in the XML document or data
+                                                  that requires a more complex access
+                                                  method.</p>
+<p class="p">For more information about valid
+                                                  syntax, see <a class="xref" href="../Pipeline_Design/XMLDFormat.html#concept_tmc_4bc_dy">Simplified XPath Syntax</a>.</p>
+</li>
+
+                                            </ul>
+</div>
 
                                     </td>
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d160261e2429 ">Max Record Length (chars)</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e2440 ">Namespaces </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d160261e2432 ">
+                                    <td class="entry" valign="top" width="70%" headers="d158704e2443 ">Namespace prefix and URI to use when parsing the XML
+                                        document. Define namespaces when the XML element being used
+                                        includes a namespace prefix or when the XPath expression
+                                        includes namespaces.<p class="p">For information about using
+                                            namespaces with an XML element, see <a class="xref" href="../Pipeline_Design/XMLDFormat.html#concept_ilc_r3g_2y">Using XML Elements with Namespaces</a>.</p>
+<p class="p">For information about using namespaces with
+                                            XPath expressions, see <a class="xref" href="../Pipeline_Design/XMLDFormat.html#concept_mkk_3zj_dy">Using XPath Expressions with Namespaces</a>.</p>
+<p class="p">Use the <span class="ph uicontrol">Add</span> icon to add
+                                            additional namespaces.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d158704e2440 ">Max Record Length (chars)</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d158704e2443 ">
                                         <p class="p">The maximum number of characters in a record. Longer
                                             records are diverted to the pipeline for error handling.
                                         </p>
@@ -1700,18 +1739,18 @@ Use a message type defined in the
 
                                 </tr>
 
-                                <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d160261e2429 ">Charset</td>
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d158704e2440 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d160261e2432 ">Character encoding of the files to be processed.</td>
+       <td class="entry" valign="top" width="70%" headers="d158704e2443 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
-                                <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d160261e2429 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_npx_xgf_vq__d21817e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d158704e2440 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_npx_xgf_vq__d22010e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d160261e2432 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d158704e2443 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
@@ -1727,14 +1766,14 @@ Use a message type defined in the
 
     </div>
 
-    <div class="related-links"><div class="relinfo reltasks"><strong>Related tasks</strong><br xmlns="http://www.w3.org/1999/xhtml" />
+    <div class="related-links"><div class="relinfo reltasks"><strong>Related tasks</strong><br />
 <div class="related_link"><a class="navheader_parent_path" href="Origins_overview.html#task_jp5_ql1_tq" title="You can preview raw source data for Directory, File Tail, and Kafka Consumer origins. Preview raw source data when reviewing the data might help with origin configuration.">Previewing Raw Source Data</a></div>
 </div>
 </div>
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div><div class="footer"><!-- SDC google analytics --><script>
+<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

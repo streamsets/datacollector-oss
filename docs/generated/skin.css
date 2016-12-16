@@ -39,7 +39,7 @@ h2 {
 }
 h3 {
 	font-family: 'Lato', Helvetica, Arial, Lucida, sans-serif !important;
-	font-size: 20px !important;
+	font-size: 22px !important;
     line-height: 32px;
 	font-weight: 400 !important;
 	margin-top: 25px !important;
@@ -47,13 +47,12 @@ h3 {
 	color: #003399;
 }
 h4 {
-	font-family: 'Montserrat', 'Lato', Helvetica, Arial, Lucida, sans-serif !important;
+	font-family: 'Lato', Helvetica, Arial, Lucida, sans-serif !important;
 	font-size: 18px !important;
 	line-height: 24px;
-	font-weight: 600 !important;
-	text-transform: uppercase;
-	letter-spacing: 2px;
-	margin-bottom: 5px;
+	font-weight: 400 !important;
+	margin-top: 25px !important;
+	margin-bottom: 12px;
 	color: #003399;
 }
 h5 {

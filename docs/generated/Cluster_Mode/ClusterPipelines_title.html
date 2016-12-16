@@ -1,12 +1,13 @@
 
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
-<html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content=""></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Cluster Pipelines"></meta><meta name="DC.Relation" scheme="URI" content="../RPC_Pipelines/ConfiguringSDCRPCPipelines.html"></meta><meta name="DC.Relation" scheme="URI" content="../Cluster_Mode/ClusterPipelines.html#concept_hmh_kfn_1s"></meta><meta name="DC.Relation" scheme="URI" content="../Cluster_Mode/ClusterPipelines.html#concept_hmh_kfn_1s"></meta><meta name="DC.Relation" scheme="URI" content="../Cluster_Mode/KafkaRequirements.html#task_gmd_msw_yr"></meta><meta name="DC.Relation" scheme="URI" content="../Cluster_Mode/MapRRequirements.html#concept_kry_gn5_lx"></meta><meta name="DC.Relation" scheme="URI" content="../Cluster_Mode/HDFSRequirements.html#task_akz_w5b_ws"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_fpz_5r4_vs"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Cluster Pipelines</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
-          
-          var prefix = "../index.html";
-          
-          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="A cluster pipeline is a pipeline that runs in cluster execution mode. You can run a pipeline in standalone execution mode or cluster execution mode. In standalone mode, a single Data Collector process ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Cluster Pipelines" /><meta name="DC.Relation" scheme="URI" content="../RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt" /><meta name="DC.Relation" scheme="URI" content="../Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_fpz_5r4_vs" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Cluster Pipelines</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+            
+            var prefix = "../index.html";
+            
+            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
+<!--
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -18,29 +19,777 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
---></head>
-<body onload="highlightSearchTerm()" class="frmBody" id="concept_fpz_5r4_vs">
-<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"></td><td><div class="navheader">
-<span class="navprev"><a class="link" href="../RPC_Pipelines/ConfiguringSDCRPCPipelines.html" title="Configuration Guidelines for SDC RPC Pipelines"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Configuration Guidelines for SDC RPC Pipelines</span></a></span>  
-<span class="navnext"><a class="link" href="../Cluster_Mode/ClusterPipelines.html#concept_hmh_kfn_1s" title="Cluster Pipelines"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Cluster Pipelines</span></a></span>  </div></td></tr></tbody></table>
-
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navprev"><a class="link" href="../RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt" title="SDC RPC Pipelines"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">SDC RPC Pipelines</span></a></span>  
+<span class="navnext"><a class="link" href="../Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq" title="Data Preview"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Data Preview</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_fpz_5r4_vs">
  <h1 class="title topictitle1">Cluster Pipelines</h1>
 
-<div class="related-links">
-<ul class="ullinks">
-<li class="link ulchildlink"><strong><a href="../Cluster_Mode/ClusterPipelines.html#concept_hmh_kfn_1s">Cluster Pipelines</a></strong><br xmlns="http://www.w3.org/1999/xhtml" />
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_hmh_kfn_1s">
+ <h2 class="title topictitle2">Cluster Pipeline Overview</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">A <dfn class="term">cluster pipeline</dfn> is a pipeline that runs in cluster execution mode. You
+  can run a pipeline in standalone execution mode or cluster execution mode. </p>
+
+  <p class="p">In standalone mode, a single <span class="ph">Data
+                  Collector</span> process runs
+   the pipeline. A pipeline runs in standalone mode by default. </p>
+
+  <p class="p">In cluster mode, the <span class="ph">Data
+                  Collector</span> uses a cluster
+   manager and a cluster application to spawn additional workers as needed. Use cluster mode to read
+   data from a Kafka cluster, MapR cluster, or HDFS.</p>
+
+  <p class="p">When would you choose standalone or cluster mode? Say you want to ingest logs from application
+   servers and perform a computationally expensive transformation. To do this, you might use a set
+   of standalone pipelines to stream log data from each application server to a Kafka or MapR
+   cluster. And then use a cluster pipeline to process the data from the cluster and perform the
+   expensive transformation.</p>
+
+  <p class="p">Or, you might use cluster mode to move data from HDFS to another destination, such as
+   Elasticsearch.</p>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_rjc_4m5_lx">
+ <h3 class="title topictitle3">Cluster Batch and Streaming Execution Modes</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc"><span class="ph">Data
+                  Collector</span>
+        can run a cluster pipeline using the cluster batch or the cluster streaming execution
+        mode.</p>
+
+  <p class="p">The execution mode that <span class="ph">Data
+                  Collector</span>
+            can use depends on the origin system that the cluster pipeline reads from:</p>
+
+     <dl class="dl">
+         
+             <dt class="dt dlterm">Kafka cluster</dt>
+
+             <dd class="dd"><span class="ph">Data
+                  Collector</span> can
+                 process data from a Kafka cluster in cluster streaming mode. In cluster streaming mode, <span class="ph">Data
+                  Collector</span> processes
+                 data continuously until you stop the pipeline. </dd>
+
+             <dd class="dd"><span class="ph">Data
+                  Collector</span> runs
+                 as an application within Spark Streaming, an open source cluster-computing application. Spark
+                 Streaming runs on either the Mesos or YARN cluster manager to process data from a Kafka
+                 cluster. The cluster manager and Spark Streaming spawn a <span class="ph">Data
+                  Collector</span> worker for
+                 each topic partition in the Kafka cluster. So each partition has a <span class="ph">Data
+                  Collector</span> worker to
+                 process data. <p class="p">Use the Kafka Consumer origin to process data from a Kafka cluster in cluster
+                     streaming mode.</p>
+</dd>
+
+         
+     </dl>
+<dl class="dl">
+         
+             <dt class="dt dlterm">MapR cluster</dt>
+
+             <dd class="dd"><span class="ph">Data
+                  Collector</span> can process data from a MapR cluster in both execution modes: <ul class="ul" id="concept_rjc_4m5_lx__ul_ay3_lzt_lx">
+                        <li class="li">Cluster batch mode - In cluster batch mode, <span class="ph">Data
+                  Collector</span> processes all available data and then stops the pipeline. <span class="ph">Data
+                  Collector</span> runs as an application on top of MapReduce, an open-source
+                            cluster-computing framework. MapReduce runs on a YARN cluster manager.
+                            YARN and MapReduce generate additional worker nodes as needed. MapReduce
+                            creates one map task for each MapR FS block.<p class="p">Use the MapR FS origin to
+                                process data from MapR in cluster batch mode.</p>
 </li>
-<li class="link ulchildlink"><strong><a href="../Cluster_Mode/KafkaRequirements.html#task_gmd_msw_yr">Kafka Requirements</a></strong><br xmlns="http://www.w3.org/1999/xhtml" />
+
+                        <li class="li">Cluster streaming mode - In cluster streaming mode, <span class="ph">Data
+                  Collector</span> processes data continuously until you stop the pipeline. <span class="ph">Data
+                  Collector</span> runs as an application within Spark Streaming, an open source
+                            cluster-computing application. Spark Streaming runs on a YARN cluster
+                            manager to process data from a MapR cluster. The cluster manager and
+                            Spark Streaming spawn a <span class="ph">Data
+                  Collector</span> worker for each topic partition in the MapR cluster. So each
+                            partition has a <span class="ph">Data
+                  Collector</span> worker to process data. <p class="p">Use the MapR Streams Consumer origin to
+                                process data from a MapR cluster in cluster streaming mode.</p>
 </li>
-<li class="link ulchildlink"><strong><a href="../Cluster_Mode/MapRRequirements.html#concept_kry_gn5_lx">MapR Requirements</a></strong><br xmlns="http://www.w3.org/1999/xhtml" />
+
+                    </ul>
+</dd>
+
+         
+         
+             <dt class="dt dlterm">HDFS</dt>
+
+             <dd class="dd"><span class="ph">Data
+                  Collector</span> can process data from HDFS in cluster batch mode. In cluster batch mode, <span class="ph">Data
+                  Collector</span> processes all available data and then stops the pipeline. </dd>
+
+             <dd class="dd"><span class="ph">Data
+                  Collector</span> runs
+                 as an application on top of MapReduce, an open-source cluster-computing framework. MapReduce
+                 runs on a YARN cluster manager. YARN and MapReduce generate additional worker nodes as needed.
+                 MapReduce creates one map task for each HDFS block. <p class="p">Use the Hadoop FS origin to process
+                     data from HDFS in cluster batch mode.</p>
+</dd>
+
+         
+     </dl>
+
+ </div>
+
+</div>
+<div class="topic concept nested2" id="concept_rmd_hgp_cw">
+ <h3 class="title topictitle3">HTTP Protocols</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can configure Data Collector to use HTTP or HTTPS when you run cluster pipelines. By
+        default Data Collector uses HTTP.</p>
+
+  <p class="p">To configure HTTPS when you run cluster pipelines, you must generate an SSL certificate for the
+            gateway node and the worker nodes. You then specify the generated keystore file and
+            keystore password file for the gateway and worker nodes in the <span class="ph">Data
+                  Collector</span>
+            configuration file, <samp class="ph codeph">sdc.properties</samp>. You can optionally generate a
+            truststore file for the gateway and worker nodes.</p>
+
+ </div>
+
+    <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br />
+<div class="related_link"><a class="navheader_parent_path" href="../Install_Config/DCConfig.html#concept_rdt_h54_cw" title="To configure HTTPS when you run cluster pipelines, you can use a self-signed certificate. Or, you can generate an SSL certificate for the gateway node and the worker nodes. You specify the generated keystore file and keystore password file for the gateway and worker nodes in the Data Collector configuration file, sdc.properties. You can optionally generate a truststore file for the gateway and worker nodes.">Configuring HTTPS for Cluster Pipelines</a></div>
+</div>
+</div>
+</div>
+<div class="topic concept nested2" id="concept_cs4_lcg_j5">
+    <h3 class="title topictitle3">Checkpoint Storage for Streaming Pipelines</h3>
+
+    
+    <div class="body conbody"><p class="shortdesc">When the <span class="ph">Data
+                  Collector</span> runs a
+        cluster streaming pipeline, on either Mesos or YARN, the <span class="ph">Data
+                  Collector</span>
+        generates and stores checkpoint metadata. The checkpoint metadata provides the offset for
+        the origin.</p>
+
+        <div class="p">The <span class="ph">Data
+                  Collector</span>
+            stores the checkpoint metadata in the following path on HDFS or Amazon
+            S3:<pre class="pre codeblock">/user/$USER/.streamsets-spark-streaming/&lt;DataCollector WorkerID&gt;/&lt;Kafka topic&gt;/&lt;consumer group&gt;/&lt;pipelineName&gt;</pre>
+</div>
+
+        <p class="p">When you run a cluster streaming pipeline on YARN, the <span class="ph">Data
+                  Collector</span>
+            stores the metadata on HDFS. </p>
+
+        <p class="p">When you run a cluster pipeline on Mesos, the <span class="ph">Data
+                  Collector</span>
+            can store the metadata on HDFS or Amazon S3.</p>
+
+    </div>
+
+<div class="topic task nested3" id="task_gxz_h1q_k5">
+    <h4 class="title topictitle4">Configuring the Location for Mesos</h4>
+
+    
+    <div class="body taskbody"><p class="shortdesc">When you run a cluster pipeline on Mesos, the <span class="ph">Data
+                  Collector</span> can
+        write checkpoint information to either HDFS or Amazon S3. </p>
+
+        <div class="section context">
+            <p class="p">To define the location for checkpoint
+                storage:</p>
+
+        </div>
+
+        <ol class="ol steps" id="task_gxz_h1q_k5__steps_mt1_l1q_k5"><li class="li step stepexpand">
+                <span class="ph cmd">Configure the core-site.xml and hdfs-site.xml files to define where to write
+                    the checkpoint information. </span>
+                <div class="itemgroup info">For more information about configuring the files, see <a class="xref" href="https://wiki.apache.org/hadoop/AmazonS3" target="_blank">https://wiki.apache.org/hadoop/AmazonS3</a>.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Store the files within the <span class="ph">Data
+                  Collector</span> resources directory.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Enter the location of the files in the <span class="ph menucascade"><span class="ph uicontrol">Cluster</span> &gt; <span class="ph uicontrol">Checkpoint Configuration Directory</span></span> pipeline property.</span>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="topic concept nested2" id="concept_xxz_nft_ls">
+ <h3 class="title topictitle3">Error Handling Limitations</h3>
+
+ <div class="body conbody">
+  <div class="p">Please
+      note the following limitations to pipeline configuration options at this time:<ul class="ul" id="concept_xxz_nft_ls__ul_vf1_zft_ls">
+        <li class="li"><span class="ph uicontrol">Memory Limit Exceeded</span> - Use the log or log and alert options.
+          Stopping the pipeline is not supported at this time. </li>
+
+        <li class="li"><span class="ph uicontrol">Error Records</span> - Write error records to Kafka or discard the
+          records. Stopping the pipeline or writing records to file is not supported at this time.
+        </li>
+
+      </ul>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested2" id="concept_fk4_gd4_1s">
+ <h3 class="title topictitle3">Cluster Monitoring</h3>
+
+ <div class="body conbody">
+    <p class="p">The <span class="ph">Data
+                  Collector</span> console
+      allows you to monitor each <span class="ph">Data
+                  Collector</span> worker. </p>
+
+    <div class="p">After you start a pipeline, the <span class="ph">Data
+                  Collector</span> console
+      displays basic monitoring information for the pipeline and links to each <span class="ph">Data
+                  Collector</span> worker.
+      For monitoring details for a <span class="ph">Data
+                  Collector</span> worker,
+      click the worker link. You can then view metrics and alerts for the worker. <div class="note note"><span class="notetitle">Note:</span> Metric and
+        data alerts are defined for the pipeline, but triggered by individual workers.  When you
+        define a metric or data alert, each worker inherits the alert and triggers the alert based
+        on the statistics for the worker.</div>
+</div>
+
+  </div>
+
+</div>
+</div>
+<div class="topic task nested1" id="task_gmd_msw_yr">
+    <h2 class="title topictitle2">Kafka Requirements</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <div class="p">Cluster mode pipelines that read from a Kafka cluster
+                have the following minimum requirements: 
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gmd_msw_yr__table_agw_5pn_zw" class="table" frame="border" border="1" rules="all">
+                        
+                        
+                        <thead class="thead" align="left">
+                            <tr>
+                                <th class="entry" valign="top" width="33.33333333333333%" id="d21613e481">Component</th>
+
+                                <th class="entry" valign="top" width="66.66666666666666%" id="d21613e484">Minimum Requirement</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody class="tbody">
+                            <tr>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d21613e481 ">Spark Streaming</td>
+
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d21613e484 ">Spark version 1.3 through 1.6</td>
+
+                            </tr>
+
+                            <tr>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d21613e481 ">Apache Kafka</td>
+
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d21613e484 ">Spark Streaming on YARN requires a Cloudera or Hortonworks
+                                    distribution of an Apache Kafka cluster. <p class="p">Spark Streaming on
+                                        Mesos requires Apache Kafka on Apache Mesos.</p>
+</td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+</div>
+</div>
+
+            <div class="note note"><span class="notetitle">Note:</span> When you add a partition to the Kafka topic, restart the pipeline to enable the
+                    <span class="ph">Data
+                  Collector</span> to generate a new worker to read from the new partition. </div>
+
+        </div>
+
+    </div>
+
+<div class="topic task nested2" id="task_hhk_bfv_cy">
+    <h3 class="title topictitle3">Configuring Cluster YARN Streaming for Kafka</h3>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Complete
+                the following steps to configure a cluster pipeline to read from a Kafka cluster on
+                YARN:</p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">Verify the installation of Kafka, Spark Streaming, and YARN as the cluster
+                    manager.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Install the <span class="ph">Data
+                  Collector</span> on a Spark and YARN gateway node.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">If necessary, specify the location of the spark-submit script.</span>
+                <div class="itemgroup info">The <span class="ph">Data
+                  Collector</span> assumes that the spark-submit script, used to submit job requests to Spark
+                    Streaming, is located in the following directory:
+                    <pre class="pre codeblock">/usr/bin/spark-submit</pre>
+If the script is not in this
+                    directory, use the SPARK_SUBMIT_YARN_COMMAND environment variable to define the
+                    location of the script.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To enable <span class="ph">Data
+                  Collector</span> to submit YARN jobs, perform one of the following tasks:</span>
+                <div class="itemgroup info">
+                    <ul class="ul" id="task_hhk_bfv_cy__ul_qf3_r1j_cy">
+                        <li class="li">On YARN, set the min.user.id to a value equal to or lower than the user
+                            ID associated with the <span class="ph">Data
+                  Collector</span> user ID, typically named "sdc".</li>
+
+                        <li class="li">On YARN, add the <span class="ph">Data
+                  Collector</span> user name, typically "sdc", to the allowed.system.users
+                            property.</li>
+
+                    </ul>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On YARN, verify that the Spark logging level is set to a severity of INFO or
+                    lower.</span>
+                <div class="itemgroup info">YARN sets the Spark logging level to INFO by default. To change the logging
+                        level:<ol class="ol" type="a" id="task_hhk_bfv_cy__ol_tzg_ggl_px">
+                              <li class="li">Edit the log4j.properties file, located in the following
+                                    directory:
+                                    <pre class="pre codeblock">&lt;spark-home&gt;/conf/log4j.properties</pre>
 </li>
-<li class="link ulchildlink"><strong><a href="../Cluster_Mode/HDFSRequirements.html#task_akz_w5b_ws">HDFS Requirements</a></strong><br xmlns="http://www.w3.org/1999/xhtml" />
+
+                              <li class="li">Set the <span class="ph uicontrol">log4j.rootCategory</span> property to a
+                                    severity of INFO or lower, such as DEBUG or TRACE.</li>
+
+                        </ol>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">If YARN is configured to use Kerberos authentication, configure <span class="ph">Data
+                  Collector</span> to use Kerberos authentication. </span>
+                <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data
+                  Collector</span>, you enable <span class="ph">Data
+                  Collector</span> to use Kerberos and define the principal and keytab. <p class="p">When Kerberos is
+                        enabled for <span class="ph">Data
+                  Collector</span>, <span class="ph">Data
+                  Collector</span> automatically uses the Kerberos principal and keytab to connect to any
+                        YARN cluster that uses Kerberos. </p>
+<p class="p">For more information, see <a class="xref" href="../Install_Config/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Enabling Kerberos Authentication</a>.</p>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the pipeline properties, on the <span class="keyword wintitle">General</span> tab, set the
+                        <span class="ph uicontrol">Execution Mode</span> property to <span class="ph uicontrol">Cluster YARN
+                        Streaming</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Cluster</span> tab, enter the required properties for
+                    YARN.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the pipeline, use a Kafka Consumer origin.</span>
+                <div class="itemgroup info">If necessary, select a cluster mode stage library on the
+                        <span class="keyword wintitle">General</span> tab of the origin. </div>
+            </li>
+</ol>
+
+    </div>
+
+    <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
+<div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/PipelineConfiguration_title.html#task_xlv_jdw_kq" title="Configure a pipeline to define the stream of data. After you configure the pipeline, you can start the pipeline.">Configuring a Pipeline</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Origins/KConsumer.html#concept_msz_wnr_5q" title="The Kafka Consumer origin reads data from an Apache Kafka cluster.">Kafka Consumer</a></div>
+</div>
+</div>
+</div>
+<div class="topic task nested2" id="task_kf1_fgv_cy">
+    <h3 class="title topictitle3">Configuring Cluster Mesos Streaming for Kafka</h3>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Complete
+                the following steps to configure a cluster pipeline to read from a Kafka cluster on
+                Mesos:</p>
+
+        </div>
+
+        <ol class="ol steps" id="task_kf1_fgv_cy__steps_jhp_wgv_cy"><li class="li step stepexpand">
+                <span class="ph cmd">Verify the installation of Kafka, Spark Streaming, and Mesos as the cluster
+                    manager.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Install the <span class="ph">Data
+                  Collector</span> on a Spark and Mesos gateway node.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">If necessary, specify the location of the spark-submit script.</span>
+                <div class="itemgroup info">The <span class="ph">Data
+                  Collector</span> assumes that the spark-submit script, used to submit job requests to Spark
+                    Streaming, is located in the following directory:
+                    <pre class="pre codeblock">/usr/bin/spark-submit</pre>
+If the script is not in this
+                    directory, use the SPARK_SUBMIT_MESOS_COMMAND environment variable to define the
+                    location of the script.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the pipeline properties, on the <span class="keyword wintitle">General</span> tab, set the
+                        <span class="ph uicontrol">Execution Mode</span> property to <span class="ph uicontrol">Cluster Mesos
+                        Streaming</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Cluster</span> tab, enter the required properties for
+                    Mesos.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the pipeline, use a Kafka Consumer origin for cluster mode.</span>
+                <div class="itemgroup info">If necessary, select a cluster mode stage library on the
+                        <span class="keyword wintitle">General</span> tab of the origin. </div>
+            </li>
+</ol>
+
+    </div>
+
+    <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
+<div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/PipelineConfiguration_title.html#task_xlv_jdw_kq" title="Configure a pipeline to define the stream of data. After you configure the pipeline, you can start the pipeline.">Configuring a Pipeline</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Origins/KConsumer.html#concept_msz_wnr_5q" title="The Kafka Consumer origin reads data from an Apache Kafka cluster.">Kafka Consumer</a></div>
+</div>
+</div>
+</div>
+</div>
+<div class="topic concept nested1" id="concept_kry_gn5_lx">
+ <h2 class="title topictitle2">MapR Requirements</h2>
+
+ <div class="body conbody">
+        <div class="p">Cluster
+            mode pipelines that read from a MapR cluster have the following minimum requirements:
+                
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_kry_gn5_lx__table_agw_5pn_zw" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d21613e863">Component</th>
+
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d21613e866">Minimum Requirement</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d21613e863 ">Spark Streaming (for cluster streaming mode)</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d21613e866 ">Spark version 1.5.2 through 1.6</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d21613e863 ">MapR</td>
+
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d21613e866 ">MapR version 5.1 or 5.2</td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+</div>
+
+        <div class="note note"><span class="notetitle">Note:</span> When you add a partition to the MapR topic, restart the pipeline to enable <span class="ph">Data
+                  Collector</span> to
+            generate a new worker to read from the new partition. </div>
+
+ </div>
+
+<div class="topic task nested2" id="task_n2l_z45_lx">
+    <h3 class="title topictitle3">Configuring Cluster Batch Mode for MapR</h3>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Complete the following steps to configure a cluster
+                pipeline to read from MapR in cluster batch mode.</p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">Verify the installation of MapR and YARN.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Install the <span class="ph">Data
+                  Collector</span> on a YARN gateway node.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To enable <span class="ph">Data
+                  Collector</span> to submit YARN jobs, perform one of the following tasks:</span>
+                <div class="itemgroup info">
+                    <ul class="ul" id="task_n2l_z45_lx__ul_qf3_r1j_cy">
+                        <li class="li">On YARN, set the min.user.id to a value equal to or lower than the user
+                            ID associated with the <span class="ph">Data
+                  Collector</span> user ID, typically named "sdc".</li>
+
+                        <li class="li">On YARN, add the <span class="ph">Data
+                  Collector</span> user name, typically "sdc", to the allowed.system.users
+                            property.</li>
+
+                        <li class="li">After you create the pipeline, specify a Hadoop FS user in the MapR FS
+                            origin. <p class="p">For the Hadoop FS User property, enter a user with an ID that
+                                is higher than the min.user.id property, or with a user name that is
+                                listed in the allowed.system.users property. </p>
 </li>
-</ul>
+
+                    </ul>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">If YARN is configured to use Kerberos authentication, configure <span class="ph">Data
+                  Collector</span> to use Kerberos authentication. </span>
+                <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data
+                  Collector</span>, you enable <span class="ph">Data
+                  Collector</span> to use Kerberos and define the principal and keytab. <p class="p">When Kerberos is
+                        enabled for <span class="ph">Data
+                  Collector</span>, <span class="ph">Data
+                  Collector</span> automatically uses the Kerberos principal and keytab to connect to any
+                        YARN cluster that uses Kerberos. </p>
+<p class="p">For more information, see <a class="xref" href="../Install_Config/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Enabling Kerberos Authentication</a>.</p>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the pipeline properties, on the <span class="keyword wintitle">General</span> tab, set the
+                        <span class="ph uicontrol">Execution Mode</span> property to <span class="ph uicontrol">Cluster
+                        Batch</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Cluster</span> tab, enter the required properties for
+                    YARN.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the pipeline, use the MapR FS origin for cluster mode. </span>
+                <div class="itemgroup info">If necessary, select a cluster mode stage library on the
+                        <span class="keyword wintitle">General</span> tab of the origin. </div>
+            </li>
+</ol>
+
+    </div>
+
+    <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
+<div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/PipelineConfiguration_title.html#task_xlv_jdw_kq" title="Configure a pipeline to define the stream of data. After you configure the pipeline, you can start the pipeline.">Configuring a Pipeline</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Origins/MapRFS.html#concept_psz_db4_lx" title="The MapR FS origin reads files from MapR FS. Use this origin only in pipelines configured for cluster execution mode.">MapR FS</a></div>
+</div>
+</div>
+</div>
+<div class="topic task nested2" id="task_i3h_q3w_hx">
+    <h3 class="title topictitle3">Configuring Cluster Streaming Mode for MapR</h3>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Complete the following steps to configure a cluster pipeline to read from MapR in
+        cluster streaming mode.</p>
+
+        <ol class="ol steps" id="task_i3h_q3w_hx__steps_knp_2p5_lx"><li class="li step stepexpand">
+                <span class="ph cmd">Verify the installation of MapR, Spark Streaming, and YARN.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Install the <span class="ph">Data
+                  Collector</span> on a Spark and YARN gateway node.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">If necessary, specify the location of the spark-submit script. </span>
+                <div class="itemgroup info"><span class="ph">Data
+                  Collector</span> assumes that the spark-submit script, used to submit job requests to Spark
+                    Streaming, is located in the following directory:
+                    <pre class="pre codeblock">/usr/bin/spark-submit</pre>
+If the script is not in this
+                    directory, use the SPARK_SUBMIT_YARN_COMMAND environment variable to define the
+                    location of the script.<div class="p">For example, say the spark-submit script is in the
+                        following directory: /opt/mapr/spark/spark-1.6.1/bin/spark-submit. Then, you
+                        might use the following command to define the location of the
+                        script:<pre class="pre codeblock">export SPARK_SUBMIT_YARN_COMMAND=/opt/mapr/spark/spark-1.6.1/bin/spark-submit</pre>
+</div>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To enable <span class="ph">Data
+                  Collector</span> to submit YARN jobs, perform one of the following tasks:</span>
+                <div class="itemgroup info">
+                    <ul class="ul" id="task_i3h_q3w_hx__ul_tzs_zbj_cy">
+                        <li class="li">On YARN, set the min.user.id to a value equal to or lower than the user
+                            ID associated with the <span class="ph">Data
+                  Collector</span> user ID, typically named "sdc".</li>
+
+                        <li class="li">On YARN, add the <span class="ph">Data
+                  Collector</span> user name, typically "sdc", to the allowed.system.users
+                            property.</li>
+
+                    </ul>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">If necessary, set the Spark logging level to a severity of INFO or lower.</span>
+                <div class="itemgroup info">By default, MapR sets the Spark logging level to WARN. To change the logging
+                        level:<ol class="ol" type="a" id="task_i3h_q3w_hx__ol_nfd_jgl_px">
+                              <li class="li">Edit the log4j.properties file, located in the following
+                                    directory:
+                                    <pre class="pre codeblock">&lt;spark-home&gt;/conf/log4j.properties</pre>
+</li>
+
+                              <li class="li">Set the <span class="ph uicontrol">log4j.rootCategory</span> property to a
+                                    severity of INFO or lower, such as DEBUG or TRACE.</li>
+
+                        </ol>
+</div>
+                <div class="itemgroup info">For example, when using Spark 1.6.1, you would edit
+                        <samp class="ph codeph">/opt/mapr/spark/spark-1.6.1/conf/log4j.properties</samp>, and you
+                    might set the property as follows:
+                    <pre class="pre codeblock">log4j.rootCategory=INFO</pre>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">If YARN is configured to use Kerberos authentication, configure <span class="ph">Data
+                  Collector</span> to use Kerberos authentication. </span>
+                <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data
+                  Collector</span>, you enable <span class="ph">Data
+                  Collector</span> to use Kerberos and define the principal and keytab. <p class="p">When Kerberos is
+                        enabled for <span class="ph">Data
+                  Collector</span>, <span class="ph">Data
+                  Collector</span> automatically uses the Kerberos principal and keytab to connect to any
+                        YARN cluster that uses Kerberos. </p>
+<p class="p">For more information, see <a class="xref" href="../Install_Config/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Enabling Kerberos Authentication</a>.</p>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the pipeline properties, on the <span class="keyword wintitle">General</span> tab, set the
+                        <span class="ph uicontrol">Execution Mode</span> property to <span class="ph uicontrol">Cluster YARN
+                        Streaming</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Cluster</span> tab, enter the required properties for
+                    YARN.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the pipeline, use the MapR Streams Consumer origin for cluster mode. </span>
+                <div class="itemgroup info">If necessary, select a cluster mode stage library on the
+                        <span class="keyword wintitle">General</span> tab of the origin. </div>
+            </li>
+</ol>
+
+    </div>
+
+    <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
+<div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/PipelineConfiguration_title.html#task_xlv_jdw_kq" title="Configure a pipeline to define the stream of data. After you configure the pipeline, you can start the pipeline.">Configuring a Pipeline</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Origins/MapRStreamsCons.html#concept_cvy_xsf_2v" title="The MapR Streams Consumer origin reads messages from MapR Streams.">MapR Streams Consumer</a></div>
+</div>
+</div>
+</div>
+</div>
+<div class="topic task nested1" id="task_akz_w5b_ws">
+    <h2 class="title topictitle2">HDFS Requirements</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Cluster mode pipelines that read from HDFS require the
+                Cloudera distribution of Hadoop (CDH) or Hortonworks Data Platform (HDP).</p>
+
+            <p class="p">Complete the following steps to configure a cluster mode pipeline to read from HDFS: </p>
+
+        </div>
+
+        <ol class="ol steps" id="task_akz_w5b_ws__steps_ldn_rhw_cy"><li class="li step stepexpand">
+                <span class="ph cmd">Verify the installation of HDFS and YARN.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Install <span class="ph">Data
+                  Collector</span> on a YARN gateway node.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To enable <span class="ph">Data
+                  Collector</span> to submit YARN jobs, perform one of the following tasks:</span>
+                <div class="itemgroup info">
+                    <ul class="ul" id="task_akz_w5b_ws__ul_qf3_r1j_cy">
+                        <li class="li">On YARN, set the min.user.id to a value equal to or lower than the user
+                            ID associated with the <span class="ph">Data
+                  Collector</span> user ID, typically named "sdc".</li>
+
+                        <li class="li">On YARN, add the <span class="ph">Data
+                  Collector</span> user name, typically "sdc", to the allowed.system.users
+                            property.</li>
+
+                        <li class="li">After you create the pipeline, specify a Hadoop FS user in the Hadoop FS
+                            origin. <p class="p">For the Hadoop FS User property, enter a user with an ID that
+                                is higher than the min.user.id property, or with a user name that is
+                                listed in the allowed.system.users property. </p>
+</li>
+
+                    </ul>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">If YARN is configured to use Kerberos authentication, configure <span class="ph">Data
+                  Collector</span> to use Kerberos authentication. </span>
+                <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data
+                  Collector</span>, you enable <span class="ph">Data
+                  Collector</span> to use Kerberos and define the principal and keytab. <p class="p">When Kerberos is
+                        enabled for <span class="ph">Data
+                  Collector</span>, <span class="ph">Data
+                  Collector</span> automatically uses the Kerberos principal and keytab to connect to any
+                        YARN cluster that uses Kerberos. </p>
+<p class="p">For more information, see <a class="xref" href="../Install_Config/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Enabling Kerberos Authentication</a>.</p>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the pipeline properties, on the <span class="keyword wintitle">General</span> tab, set the
+                        <span class="ph uicontrol">Execution Mode</span> property to <span class="ph uicontrol">Cluster
+                        Batch</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Cluster</span> tab, enter the required properties to
+                    read from HDFS. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the pipeline, use the Hadoop FS origin for cluster mode.</span>
+                <div class="itemgroup info">On the <span class="keyword wintitle">General</span> tab of the origin, select the appropriate
+                    CDH or HDP stage library for cluster mode.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">If YARN is configured to use Kerberos authentication, in the origin, enable the
+                        <span class="ph uicontrol">Kerberos Authentication</span> property on the
+                        <span class="keyword wintitle">Hadoop FS</span> tab. </span>
+            </li>
+</ol>
+
+    </div>
+
+    <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
+<div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/PipelineConfiguration_title.html#task_xlv_jdw_kq" title="Configure a pipeline to define the stream of data. After you configure the pipeline, you can start the pipeline.">Configuring a Pipeline</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Origins/HadoopFS-origin.html#concept_lw2_tnm_vs" title="The Hadoop FS origin reads data from the Hadoop Distributed File System (HDFS). Use this origin only in pipelines configured for cluster execution mode.">Hadoop FS</a></div>
+</div>
+</div>
+</div>
 </div>
 <div class="navfooter"><!---->
-<span class="navprev"><a class="link" href="../RPC_Pipelines/ConfiguringSDCRPCPipelines.html" title="Configuration Guidelines for SDC RPC Pipelines"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Configuration Guidelines for SDC RPC Pipelines</span></a></span>  
-<span class="navnext"><a class="link" href="../Cluster_Mode/ClusterPipelines.html#concept_hmh_kfn_1s" title="Cluster Pipelines"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Cluster Pipelines</span></a></span>  </div><div class="footer"><!-- SDC google analytics --><script>
+<span class="navprev"><a class="link" href="../RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt" title="SDC RPC Pipelines"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">SDC RPC Pipelines</span></a></span>  
+<span class="navnext"><a class="link" href="../Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq" title="Data Preview"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Data Preview</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

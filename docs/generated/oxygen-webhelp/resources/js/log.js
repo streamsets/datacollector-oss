@@ -1,9 +1,7 @@
 /*
 
-Oxygen Webhelp plugin
-Copyright (c) 1998-2015 Syncro Soft SRL, Romania.  All rights reserved.
-Licensed under the terms stated in the license file EULA_Webhelp.txt 
-available in the base directory of this Oxygen Webhelp plugin.
+Oxygen WebHelp Plugin
+Copyright (c) 1998-2016 Syncro Soft SRL, Romania.  All rights reserved.
 
 */
 
@@ -95,7 +93,7 @@ Log.prototype.openDebugWindow = function() {
       <html>\n\
 <head>\n\
 <title>Debug window for oXygen Web Help</title>\n\
-<script type="text/javascript" src="./oxygen-webhelp/resources/js/jquery-1.8.2.min.js"> </script>\n\
+<script type="text/javascript" src="./oxygen-webhelp/resources/js/jquery-1.11.3.min.js"> </script>\n\
 <style type="text/css">\n\
 #debug{\n\
 width: 100%;\n\

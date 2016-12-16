@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+  <defs>
+    <style>
+      .cls-1 {
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <path id="ExpandCircle" class="cls-1" d="M12,21a9,9,0,1,1,9-9A9,9,0,0,1,12,21Zm4-10H13V8H11v3H8v2h3v3h2V13h3V11Z" transform="translate(-3 -3)"/>
+</svg>

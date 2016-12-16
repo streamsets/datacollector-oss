@@ -204,3 +204,173 @@ pre.screen, #header #lHeader, #header .tab.selectedTab, #splitterContainer #left
 #permalink a {
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAjJJREFUeNqEUkFo02AUbtKWQigaoWAvXWnTQw7iYeuhgnrcZuZxinNOFNSDnrXKBjrECU4YKKgXb7bFHTxZa3pyiE4vFcEiBWGp0m6lsY1tjdmWpH5/STVstP3h4yXv/e+97//eo9rttsPldjsGnTPT05dgrgMh4Aew8CyReEINKoBECmYJ946uSdJcoVAoHYrFJliWnYP/qssx+Nw2TfPI+9XVGUmSvuF/62U6LQmCYOxj2Rv0ANocTLxarS4i+Su+N4E28KuysZGkKGp/3wKGaY7D6IZhfECxUWCkG+N5/oCu6597FtC3tx2bmqaU19cv+/3+4VAolFEURbWY8ej+FMzu7BIRwQjMGCBD5fSJycnj6JYSRXEsGAwqHo/nIGLztVrt/qtM5v8ULLVvArOEgKqqpxiGodH5BUmORCIjNE0vIPazKsuz8KXw3bBPYQlqHy6Xy+eLxWIhGo1ySO50brVa75rNJoOiF77k8x8rlYqE+y2S5LJoX7RGdRZqr52emjrGcVzK6jyM9zKJZDKLq4TlH8Dsdu2IiGdcQ2LcGpUK1fnXojgaCARqoH1X0zQn8QO/7cn/GKAD5/V6893g8+XlR+QyFw6fQ3EFG/i217Roa97ffT7fSZu/jmeFnU7nLQgWz+Vycq8CHQbNRuMhdvseksgvUTcGPK7X64vZbDa5k7b9dMe4Z0IQrqDIDJ4zBN+nUqn04M3KikhG1W9b7Yu0F2ABt7XzsqV43/NXgAEAwlcULR7CYrMAAAAASUVORK5CYII=');
 }
+.topic_breadcrumb_link:not(:last-child):before{
+    content: " ";
+    display: block;
+    width: 0;
+    height: 0;
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    border-left: 12px solid #cccccc;
+    position: absolute;
+    top: 50%;
+    margin-top: -12px;
+    margin-left: 1px;
+    left: 100%;
+    z-index: 3;
+}
+
+.topic_breadcrumb_link:not(:last-child):after {
+    content: " ";
+    display: block;
+    width: 0;
+    height: 0;
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    border-left: 12px solid white;
+    position: absolute;
+    top: 50%;
+    margin-top: -12px;
+    left: 100%;
+    z-index: 3;
+}
+
+.topic_breadcrumb_link:not(:last-child):hover:after {
+    border-left: 12px solid white;
+}
+.topic_breadcrumb_link:last-child{
+    border-top-right-radius: 5px;
+}
+.topic_breadcrumb_link:first-child{
+    border-top-left-radius: 5px;
+}
+
+.topic_breadcrumb_link {
+    display:inline-block;
+    position:relative;
+    border: 1px solid transparent;
+    overflow: visible;
+    padding-top: 2px;
+}
+
+.topic_breadcrumb_link a{
+    display:inline-block;
+    position:relative;
+    margin-top:0px;
+    margin-bottom:0px;
+    padding-top:3px;
+    /*line-height: 1.5em;*/
+    max-width: 15em;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.topic_breadcrumb_link:hover {
+    border: 1px solid #cccccc;
+}
+
+.navheader_parent_path{
+    padding-left: 17px;
+}
+.navheader_parent_path a:hover{
+    text-decoration: none;
+    color: #0000FF;
+}
+
+table.tool td{
+    vertical-align: bottom;
+}
+
+.topic_breadcrumb_link + .topic_breadcrumb_link:before{
+    content:"";
+}
+/**
+ * WebHelp Feedback section
+ */
+#comments
+{
+    border-style: solid;
+    border-width: 1px;
+    border-color: #ccc;
+}
+#u_Profile,
+#confirmDelete
+{
+    background-color: #fff;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #ccc;
+}
+.bt_reply
+{
+    color: grey;
+}
+.bt_reply:hover
+{
+    color: red;
+}
+/**
+  * Administration page
+  */
+#loginData,
+#signUp,
+#recoverPwd,
+#exportDiv,
+#inlineViewDiv,
+#setVersionDiv
+{
+    background-color: #fff;
+    border: 1px solid #ccc;
+}
+#editUser {
+    background-color: #fff;
+    border: 1px solid #ccc;
+}
+#loginResponse {
+    color: red;
+}
+
+/**
+  * Product / Version buttons
+  */
+.selectedItem {
+    background-color: #369;
+    color: #fff;
+}
+.selectable:hover,
+.p_selectable:hover {
+    background-color: #58b;
+    color: #fff;
+}
+.products, .versions {
+    border: 1px solid #ccc;
+}
+
+/**
+  * Tables
+  */
+.tbHRow {
+    font-weight: bold;
+    border-bottom: 1px solid #000;
+}
+.tbRow:nth-of-type(2n) {
+    background-color: #dfefff;
+}
+.tbRow:hover {
+    background-color: #cef4ff;
+}
+
+/**
+  * Set version
+  */
+.v_true,.v_false {
+    background-color: #eee;
+    box-shadow: 0 1px 2px #999;
+}
+.v_true:hover,.v_false:hover {
+    background-color: #98C1D6;
+}
+.v_true {
+    background-color: #dfd;
+}

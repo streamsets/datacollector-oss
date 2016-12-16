@@ -1,12 +1,13 @@
 
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
-<html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The MapReduce executor starts a MapReduce job in HDFS or MapR FS each time it receives an event record. Use the MapReduce executor as part of an event stream. You can use the MapReduce executor to ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="MapReduce Executor"></meta><meta name="DC.Relation" scheme="URI" content="../Executors/Executors-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_bj2_zlk_fx"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>MapReduce Executor</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
-          
-          var prefix = "../index.html";
-          
-          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The MapReduce executor starts a MapReduce job in HDFS or MapR FS each time it receives an event record. Use the MapReduce executor as part of an event stream. You can use the MapReduce executor to ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="MapReduce Executor" /><meta name="DC.Relation" scheme="URI" content="../Executors/Executors-title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_bj2_zlk_fx" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>MapReduce Executor</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+            
+            var prefix = "../index.html";
+            
+            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
+<!--
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -18,10 +19,11 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
---></head>
+-->
+</head>
 <body onload="highlightSearchTerm()" class="frmBody">
-<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Executors/Executors-title.html" title="Executors">Executors</a></td><td><div class="navheader">
-<span class="navparent"><a class="link" href="../Executors/Executors-title.html" title="Executors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Executors</span></a></span>  </div></td></tr></tbody></table>
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../Executors/Executors-title.html" title="Executors">Executors</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../Executors/Executors-title.html" title="Executors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Executors</span></a></span>  </span></td></tr></tbody></table>
 <div class="nested0" id="concept_bj2_zlk_fx">
  <h1 class="title topictitle1">MapReduce Executor</h1>
 
@@ -44,7 +46,7 @@
             key-value pairs to use. </p>
 
         <p class="p">You can also configure the executor to generate events for another event stream. For more
-            information about the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Overview.html#concept_cph_5h4_lx">Event Framework</a>.</p>
+            information about the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Event Framework Overview</a>.</p>
 
  </div>
 
@@ -182,9 +184,9 @@
             events each time it starts a MapReduce job.</p>
 
         <p class="p">MapReduce executor <span class="ph">events can be used with a destination to store
-                        file processing information for later use. For an example, see <a class="xref" href="../Event_Handling/CaseStudy-EventStorage.html#concept_ocb_nnl_px">Case Study: Event Storage</a>.</span></p>
+                        file processing information for later use. For an example, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_ocb_nnl_px">Case Study: Event Storage</a>.</span></p>
 
-        <p class="p">For more information about the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Overview.html#concept_cph_5h4_lx">Event Framework</a>.</p>
+        <p class="p">For more information about the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Event Framework Overview</a>.</p>
 
  </div>
 
@@ -199,20 +201,20 @@
                     
                     
                     <thead class="thead" align="left">
-                        <tr class="row">
-                            <th class="entry" valign="top" width="30%" id="d105107e293">Record Header Attribute</th>
+                        <tr>
+                            <th class="entry" valign="top" width="30%" id="d103103e293">Record Header Attribute</th>
 
-                            <th class="entry" valign="top" width="70%" id="d105107e296">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d103103e296">Description</th>
 
                         </tr>
 
                     </thead>
 
                     <tbody class="tbody">
-                        <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d105107e293 ">sdc.event.type</td>
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d103103e293 ">sdc.event.type</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d105107e296 ">Event type. Uses one of the following types:<ul class="ul" id="concept_vjr_cn5_sx__ul_tmk_gp5_sx">
+                            <td class="entry" valign="top" width="70%" headers="d103103e296 ">Event type. Uses one of the following types:<ul class="ul" id="concept_vjr_cn5_sx__ul_tmk_gp5_sx">
                                     <li class="li">job-created - Generated when the executor creates and starts
                                         a MapReduce job.</li>
 
@@ -221,17 +223,17 @@
 
                         </tr>
 
-                        <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d105107e293 ">sdc.event.version</td>
+                        <tr>
+       <td class="entry" valign="top" width="30%" headers="d103103e293 ">sdc.event.version</td>
 
-       <td class="entry" valign="top" width="70%" headers="d105107e296 ">An integer that indicates the version of the event record type.</td>
+       <td class="entry" valign="top" width="70%" headers="d103103e296 ">An integer that indicates the version of the event record type.</td>
 
       </tr>
 
-                        <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d105107e293 ">sdc.event.creation_timestamp</td>
+                        <tr>
+       <td class="entry" valign="top" width="30%" headers="d103103e293 ">sdc.event.creation_timestamp</td>
 
-       <td class="entry" id="concept_vjr_cn5_sx__d15086e1203" valign="top" width="70%" headers="d105107e296 ">Epoch timestamp when the stage created the event.
+       <td class="entry" id="concept_vjr_cn5_sx__d15147e1203" valign="top" width="70%" headers="d103103e296 ">Epoch timestamp when the stage created the event.
        </td>
 
       </tr>
@@ -247,27 +249,27 @@
                     
                     
                     <thead class="thead" align="left">
-                        <tr class="row">
-                            <th class="entry" valign="top" width="30%" id="d105107e352">Event Field Name</th>
+                        <tr>
+                            <th class="entry" valign="top" width="30%" id="d103103e352">Event Field Name</th>
 
-                            <th class="entry" valign="top" width="70%" id="d105107e355">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d103103e355">Description</th>
 
                         </tr>
 
                     </thead>
 
                     <tbody class="tbody">
-                        <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d105107e352 ">tracking-url</td>
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d103103e352 ">tracking-url</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d105107e355 ">Tracking URL for the MapReduce job.</td>
+                            <td class="entry" valign="top" width="70%" headers="d103103e355 ">Tracking URL for the MapReduce job.</td>
 
                         </tr>
 
-                        <tr class="row">
-                            <td class="entry" valign="top" width="30%" headers="d105107e352 ">job-id</td>
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d103103e352 ">job-id</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d105107e355 ">Job ID of the MapReduce job.</td>
+                            <td class="entry" valign="top" width="70%" headers="d103103e355 ">Job ID of the MapReduce job.</td>
 
                         </tr>
 
@@ -299,7 +301,7 @@
 
  </div>
 
-    <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br xmlns="http://www.w3.org/1999/xhtml" />
+    <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br />
 <div class="related_link"><a class="navheader_parent_path" href="../Install_Config/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Enabling Kerberos Authentication</a></div>
 </div>
 </div>
@@ -353,61 +355,61 @@
                             
                             
                             <thead class="thead" align="left">
-                                <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d105107e523">General Property</th>
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d103103e523">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d105107e526">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d103103e526">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d105107e523 ">Name</td>
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d103103e523 ">Name</td>
 
-       <td class="entry" valign="top" width="70%" headers="d105107e526 ">Stage name.</td>
-
-      </tr>
-
-                                <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d105107e523 ">Description</td>
-
-       <td class="entry" valign="top" width="70%" headers="d105107e526 ">Optional description.</td>
+       <td class="entry" valign="top" width="70%" headers="d103103e526 ">Stage name.</td>
 
       </tr>
 
-                                <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d105107e523 ">Stage Library</td>
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d103103e523 ">Description</td>
 
-       <td class="entry" valign="top" width="70%" headers="d105107e526 ">Library version that you want to use. </td>
+       <td class="entry" valign="top" width="70%" headers="d103103e526 ">Optional description.</td>
 
       </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d105107e523 ">Produce Events <a class="xref" href="MapReduce.html#concept_e1s_sm5_sx">
-                                            <img class="image" id="task_olh_bmk_fx__image_qqz_cxs_5x" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d103103e523 ">Stage Library</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d105107e526 ">Generates event records when events occur. Use for event
-        handling. <a class="xref" href="../Event_Handling/EventFramework-Overview.html#concept_cph_5h4_lx">
-         <img class="image" id="task_olh_bmk_fx__d15086e1076" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+       <td class="entry" valign="top" width="70%" headers="d103103e526 ">Library version that you want to use. </td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d103103e523 ">Produce Events <a class="xref" href="MapReduce.html#concept_e1s_sm5_sx">
+                                            <img class="image" id="task_olh_bmk_fx__image_qqz_cxs_5x" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d103103e526 ">Generates event records when events occur. Use for event
+        handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
+         <img class="image" id="task_olh_bmk_fx__d15147e1076" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                 </tr>
 
-                                <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d105107e523 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-         <img class="image" id="task_olh_bmk_fx__d15086e1085" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d103103e523 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+         <img class="image" id="task_olh_bmk_fx__d15147e1085" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d105107e526 ">Fields that must include data to be passed into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields that the stage uses.</div>
+       <td class="entry" valign="top" width="70%" headers="d103103e526 ">Fields that must include data to be passed into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields that the stage uses.</div>
 </td>
 
       </tr>
 
-                                <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d105107e523 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-         <img class="image" id="task_olh_bmk_fx__d15086e1100" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d103103e523 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+         <img class="image" id="task_olh_bmk_fx__d15147e1100" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d105107e526 ">Conditions that must evaluate to TRUE to allow a record to enter the stage for
+       <td class="entry" valign="top" width="70%" headers="d103103e526 ">Conditions that must evaluate to TRUE to allow a record to enter the stage for
         processing. Click <span class="ph uicontrol">Add</span> to create additional preconditions. </td>
 
       </tr>
@@ -428,20 +430,20 @@
                             
                             
                             <thead class="thead" align="left">
-                                <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d105107e642">MapReduce Property</th>
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d103103e642">MapReduce Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d105107e645">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d103103e645">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d105107e642 ">MapReduce Configuration Directory</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d103103e642 ">MapReduce Configuration Directory</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d105107e645 ">Absolute path to the directory containing the Hive and
+                                    <td class="entry" valign="top" width="70%" headers="d103103e645 ">Absolute path to the directory containing the Hive and
                                         Hadoop configuration files. For a Cloudera Manager
                                         installation, enter hive-conf. <div class="p">The stage uses the
                                             following configuration files:<ul class="ul" id="task_olh_bmk_fx__ul_bhl_zfy_mx">
@@ -463,10 +465,10 @@
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d105107e642 ">MapReduce Configuration</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d103103e642 ">MapReduce Configuration</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d105107e645 ">
+                                    <td class="entry" valign="top" width="70%" headers="d103103e645 ">
                                         <p class="p">Additional properties to use. </p>
 
                                         <p class="p">To add properties, click <span class="ph uicontrol">Add</span> and
@@ -477,11 +479,11 @@
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d105107e642 ">MapReduce User <a class="xref" href="MapReduce.html#concept_akp_p3m_zx">
-                                            <img class="image" id="task_olh_bmk_fx__image_xqm_fjm_zx" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d103103e642 ">MapReduce User <a class="xref" href="MapReduce.html#concept_akp_p3m_zx">
+                                            <img class="image" id="task_olh_bmk_fx__image_xqm_fjm_zx" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d105107e645 ">
+                                    <td class="entry" valign="top" width="70%" headers="d103103e645 ">
                                         <p class="p">The MapReduce user to use to connect to the external
                                             system. When using this property, make sure the external
                                             system is configured appropriately. </p>
@@ -493,11 +495,11 @@
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d105107e642 ">Kerberos Authentication <a class="xref" href="MapReduce.html#concept_kry_p3y_mx">
-                                            <img class="image" id="task_olh_bmk_fx__image_a5x_jzn_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d103103e642 ">Kerberos Authentication <a class="xref" href="MapReduce.html#concept_kry_p3y_mx">
+                                            <img class="image" id="task_olh_bmk_fx__image_a5x_jzn_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d105107e645 ">Uses Kerberos credentials to connect to the external
+                                    <td class="entry" valign="top" width="70%" headers="d103103e645 ">Uses Kerberos credentials to connect to the external
                                         system. <p class="p">When selected, uses the Kerberos principal and
                                             keytab defined in the <span class="ph">Data
                   Collector</span> configuration file,
@@ -523,31 +525,31 @@
                             
                             
                             <thead class="thead" align="left">
-                                <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d105107e764">Job Property</th>
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d103103e764">Job Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d105107e767">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d103103e767">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d105107e764 ">Job Name</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d103103e764 ">Job Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d105107e767 ">Display name for the MapReduce job. <p class="p">This name displays
+                                    <td class="entry" valign="top" width="70%" headers="d103103e767 ">Display name for the MapReduce job. <p class="p">This name displays
                                             in Hadoop web applications and other reporting tools
                                             that list MapReduce jobs.</p>
 </td>
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d105107e764 ">Job Type <a class="xref" href="MapReduce.html#concept_jqk_g4y_mx">
-                                            <img class="image" id="task_olh_bmk_fx__image_ogb_4rk_wx" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d103103e764 ">Job Type <a class="xref" href="MapReduce.html#concept_jqk_g4y_mx">
+                                            <img class="image" id="task_olh_bmk_fx__image_ogb_4rk_wx" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d105107e767 ">Type of MapReduce job to run:<ul class="ul" id="task_olh_bmk_fx__ul_llg_rrk_wx">
+                                    <td class="entry" valign="top" width="70%" headers="d103103e767 ">Type of MapReduce job to run:<ul class="ul" id="task_olh_bmk_fx__ul_llg_rrk_wx">
                                             <li class="li">Custom - Use a custom job creator interface and
                                                 key-value pairs to define the job.</li>
 
@@ -562,17 +564,17 @@
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d105107e764 ">Custom JobCreator</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d103103e764 ">Custom JobCreator</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d105107e767 ">MapReduce Job Creator interface to use for custom jobs. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d103103e767 ">MapReduce Job Creator interface to use for custom jobs. </td>
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d105107e764 ">Job Configuration</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d103103e764 ">Job Configuration</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d105107e767 ">Key-value pairs of configuration properties to define the
+                                    <td class="entry" valign="top" width="70%" headers="d103103e767 ">Key-value pairs of configuration properties to define the
                                         job. You can use expressions in keys and values. <p class="p">Click
                                             the <span class="ph uicontrol">Add</span> icon to add additional
                                             properties. </p>
@@ -596,21 +598,21 @@
                             
                             
                             <thead class="thead" align="left">
-                                <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d105107e859">Avro to Parquet</th>
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d103103e859">Avro to Parquet</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d105107e862">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d103103e862">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d105107e859 ">Input Avro File <a class="xref" href="MapReduce.html#concept_cnx_hqy_mx">
-                                            <img class="image" id="task_olh_bmk_fx__image_jqd_xz2_nx" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d103103e859 ">Input Avro File <a class="xref" href="MapReduce.html#concept_cnx_hqy_mx">
+                                            <img class="image" id="task_olh_bmk_fx__image_jqd_xz2_nx" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d105107e862 ">Expression that evaluates to the name and location of the
+                                    <td class="entry" valign="top" width="70%" headers="d103103e862 ">Expression that evaluates to the name and location of the
                                         Avro file to process. <p class="p">By default, processes the file with
                                             the name and location specified in the filepath field of
                                             the event record.</p>
@@ -618,59 +620,59 @@
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d105107e859 ">Keep Input File</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d103103e859 ">Keep Input File</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d105107e862 ">Leaves the processed Avro file in place. By default, the
+                                    <td class="entry" valign="top" width="70%" headers="d103103e862 ">Leaves the processed Avro file in place. By default, the
                                         executor removes the file after processing.</td>
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d105107e859 ">Output Directory</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d103103e859 ">Output Directory</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d105107e862 ">Location to write the resulting Parquet file. Use an
+                                    <td class="entry" valign="top" width="70%" headers="d103103e862 ">Location to write the resulting Parquet file. Use an
                                         absolute path. </td>
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d105107e859 ">Compression Codec</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d103103e859 ">Compression Codec</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d105107e862 ">Compression codec to use. If you do not enter a
+                                    <td class="entry" valign="top" width="70%" headers="d103103e862 ">Compression codec to use. If you do not enter a
                                         compression code, the executor uses the default compression
                                         codec for Parquet.</td>
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d105107e859 ">Row Group Size</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d103103e859 ">Row Group Size</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d105107e862 ">Parquet row group size. Use -1 to use the Parquet
+                                    <td class="entry" valign="top" width="70%" headers="d103103e862 ">Parquet row group size. Use -1 to use the Parquet
                                         default. </td>
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d105107e859 ">Page Size</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d103103e859 ">Page Size</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d105107e862 ">Parquet page size. Use -1 to use the Parquet
+                                    <td class="entry" valign="top" width="70%" headers="d103103e862 ">Parquet page size. Use -1 to use the Parquet
                                         default.</td>
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d105107e859 ">Dictionary Page Size</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d103103e859 ">Dictionary Page Size</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d105107e862 ">Parquet dictionary page size. Use -1 to use the Parquet
+                                    <td class="entry" valign="top" width="70%" headers="d103103e862 ">Parquet dictionary page size. Use -1 to use the Parquet
                                         default. </td>
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d105107e859 ">Max Padding Size</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d103103e859 ">Max Padding Size</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d105107e862 ">Parquet maximum padding size. Use -1 to use the Parquet
+                                    <td class="entry" valign="top" width="70%" headers="d103103e862 ">Parquet maximum padding size. Use -1 to use the Parquet
                                         default.</td>
 
                                 </tr>
@@ -689,7 +691,7 @@
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Executors/Executors-title.html" title="Executors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Executors</span></a></span>  </div><div class="footer"><!-- SDC google analytics --><script>
+<span class="navparent"><a class="link" href="../Executors/Executors-title.html" title="Executors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Executors</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
