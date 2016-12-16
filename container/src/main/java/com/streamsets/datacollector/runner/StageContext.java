@@ -42,11 +42,13 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.ElUtil;
 import com.streamsets.datacollector.validation.Issue;
+import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Processor;
+import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
@@ -74,7 +76,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class StageContext implements Source.Context, Target.Context, Processor.Context, ContextExtensions {
+public class StageContext implements Source.Context, PushSource.Context, Target.Context, Processor.Context, ContextExtensions {
 
   private static final Logger LOG = LoggerFactory.getLogger(StageContext.class);
   private static final String CUSTOM_METRICS_PREFIX = "custom.";
@@ -203,6 +205,26 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     }
     return configToElDefMap;
 
+  }
+
+  PushSourceContextDelegate pushSourceContextDelegate;
+  public void setPushSourceContextDelegate(PushSourceContextDelegate delegate) {
+    this.pushSourceContextDelegate = delegate;
+  }
+
+  @Override
+  public BatchContext startBatch() {
+    return pushSourceContextDelegate.startBatch();
+  }
+
+  @Override
+  public boolean processBatch(BatchContext batchContext) {
+    return pushSourceContextDelegate.processBatch(batchContext);
+  }
+
+  @Override
+  public void commitOffset(String offset) {
+    pushSourceContextDelegate.commitOffset(offset);
   }
 
   private static class ConfigIssueImpl extends Issue implements Stage.ConfigIssue {

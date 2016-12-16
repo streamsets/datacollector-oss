@@ -31,6 +31,7 @@ import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.record.EventRecordImpl;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -46,6 +47,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @SuppressWarnings("unchecked")
 public class TestStageContext {
@@ -439,6 +441,56 @@ public class TestStageContext {
     Assert.assertTrue(g.getValue().containsKey("1"));
     Assert.assertTrue(g.getValue().containsKey("2"));
     Assert.assertFalse(g.getValue().containsKey("3"));
+  }
+
+  @Test
+  public void testPushSourceContextDelegate() throws Exception {
+    StageContext context = new StageContext(
+        "stage",
+        StageType.SOURCE,
+        false,
+        OnRecordError.TO_ERROR,
+        Collections.EMPTY_LIST,
+        Collections.EMPTY_MAP,
+        Collections.<String, Object> emptyMap(),
+        ExecutionMode.STANDALONE,
+        null,
+        new EmailSender(new Configuration())
+    );
+
+    final AtomicBoolean startBatchCalled = new AtomicBoolean();
+    final AtomicBoolean processBatchCalled = new AtomicBoolean();
+    final AtomicBoolean commitOffsetCalled = new AtomicBoolean();
+
+    context.setPushSourceContextDelegate(new PushSourceContextDelegate() {
+      @Override
+      public BatchContext startBatch() {
+        startBatchCalled.set(true);
+        return null;
+      }
+
+      @Override
+      public boolean processBatch(BatchContext batchContext) {
+        processBatchCalled.set(true);
+        return false;
+      }
+
+      @Override
+      public void commitOffset(String offset) {
+        commitOffsetCalled.set(true);
+      }
+    });
+
+    context.startBatch();
+    Assert.assertTrue(startBatchCalled.get());
+
+    context.processBatch(null);
+    Assert.assertTrue(processBatchCalled.get());
+
+    context.commitOffset("offset");
+    Assert.assertTrue(commitOffsetCalled.get());
+
+
   }
 
 }
