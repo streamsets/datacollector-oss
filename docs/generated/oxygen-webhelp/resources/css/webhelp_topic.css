@@ -1,12 +1,12 @@
 /*
 
-Oxygen Webhelp plugin
-Copyright (c) 1998-2015 Syncro Soft SRL, Romania.  All rights reserved.
-Licensed under the terms stated in the license file EULA_Webhelp.txt 
-available in the base directory of this Oxygen Webhelp plugin.
+Oxygen WebHelp Plugin
+Copyright (c) 1998-2016 Syncro Soft SRL, Romania.  All rights reserved.
 
 */
 
+
+@import "webhelp_topic_elements_styles.css";
 @import "print.css";
 
 /* Start RTL */
@@ -144,44 +144,6 @@ h1.topictitle1 {
   margin:0;
 }
 
-.booklibrary, .booktitlealt {
-    display:none;
-}
-
-div.rate_page{float:left; width:400px; margin:40px 0 0 0;}
-div.rate_response {color:#555; font-size:0.9em;}
-.stars {
-  position:absolute;
-  width:105px;
-  height:16px;
-  left:140px;
-  margin:-15px 0 0 0;
-  background:url("../img/dot.png") no-repeat 0 1px;
-  overflow:hidden;
-  padding:0;
-}
-
-ul.stars li{  margin:0; height:20px; width:21px;position:absolute;float:left;list-style-type:none;}
-ul.stars li a{ text-decoration:none; position:absolute; overflow:hidden; padding:0; margin:0;}
-ul.stars li a:hover, ul.stars li a.show_star {
-    text-decoration:none;
-    background:url("../img/star.png") no-repeat 0 0;
-    height:25px;
-}
-input {margin:14px 0 0 0;}
-textarea.text-input{margin:4px 0 0 0; width:225px; height:100px; border:1px solid #ccc;}
-
-a#star1 { width:18px; z-index:6;  }
-a#star2 { width:40px; z-index:5; }
-a#star3 { width:60px; z-index:4; }
-a#star4 { width:80px; z-index:3; }
-a#star5 { width:100px; z-index:2; }
-
-div#rate_comment {clear:both; margin:14px 0 0 0;}
-div.rate_response {margin:-14px 0 0 0; }
-.small {font-size:0.9em;}
-.hide {display:none;}
-.show {display:block;}
 
 /*----------------------*/
 
@@ -207,10 +169,6 @@ a.oxyFooter{text-decoration:none; color:#444}
   padding:0.4em 0 0 0;
 }
 
-div.footer span.oXygenLogo img{  
-  vertical-align:bottom;
-  border:0;
-}
 div.footer span.xmlauthor{
   margin-bottom:14px;
 }
@@ -326,16 +284,6 @@ div.nav_path{
     font-size:1.2em;
 }
 
-.oXygenLogo {
-    color:#1166DD;
-    background-color:inherit;
-    font-weight:bold;
-    font-size:1.2em;
-}
-
-.highlight { 
-    background-color: #FFFF88; 
-}
 
 #permalink>a {
   display: block;
@@ -360,138 +308,6 @@ div.nav_path{
     cursor: pointer;
 }
 
-/* Use the admonitions from the oXygen WebHelp resources. */
-.warningtitle,
-div[class="warning"]>h3{
-    background-image:url("../img/warning.png") !important;
-    background-repeat:no-repeat;
-    padding:4px 4px 4px 23px;
-}
-
-.warningtitle {
-    font-weight:bold;
-}
-
-.notetitle,
-div[class="note"]>h3{
-    background-image:url("../img/note.png") !important;
-    background-repeat:no-repeat;
-    padding:4px 4px 4px 23px;
-}
-
-
-.cautiontitle,
-div[class="caution"]>h3 {
-    background-image:url("../img/caution.png") !important;
-    background-repeat:no-repeat;
-    padding:4px 4px 4px 23px;
-}
-
-.troubletitle,
-div[class="trouble"]>h3 {
-    background-image:url("../img/troubleshooting.png") !important;
-    background-repeat:no-repeat;
-    padding:4px 4px 4px 23px;
-}
-
-
-.importanttitle,
-div[class="important"]>h3,
-.attentiontitle,
-div[class="attention"]>h3,
-.noticetitle,
-div[class="notice"]>h3{
-    background-image:url("../img/important.png") !important;
-    background-repeat:no-repeat;
-    padding:4px 4px 4px 23px;
-}
-
-.remembertitle,
-div[class="remember"]>h3{
-    background-image:url("../img/remember.png") !important;
-    background-repeat:no-repeat;
-    padding:4px 4px 4px 23px;
-}
-
-.restrictiontitle,
-div[class="restriction"]>h3{
-    background-image:url("../img/restriction.png") !important;
-    background-repeat:no-repeat;
-    padding:4px 4px 4px 23px;
-}
-
-.dangertitle,
-div[class="danger"]>h3{
-    background-image:url("../img/danger.png") !important;
-    background-repeat:no-repeat;
-    padding:4px 4px 4px 23px;
-}
-
-.tiptitle,
-div[class="tip"]>h3{
-    background-image:url("../img/tip.png") !important;
-    background-repeat:no-repeat;
-    padding:4px 4px 4px 23px;
-}
-
-/*
- * Make the programlisting/codeblock stand-up.
- */
-pre {
-  padding: 0.5em;
-  background-color: #EEE;
-  overflow: auto;
-  max-height: 600px;
-  margin: 0.5em;
-} 
-
-
-/*  OXYGEN PATCH  EXM-31508  - window titles and UI controls should be bold. */
-.uicontrol, .wintitle { font-weight: bold; }
-
-
-/* OXYGEN PATCH START - EXM-18138 - Insert space between button image and button name. */
-span.uicontrol > img {
-  padding-right: 5px;
-}
-/* OXYGEN PATCH END - EXM-18138 */
-
-/* OXYGEN PATCH START EXM-17248 - Center figure captions. */
-div.fignone p.figcap {
-  display:block;
-  text-align:left;
-  font-weight:bold;
-  padding:2px 10px 5px 10px;
-}
-
-div.fignone p.figcapcenter {
-  display:block;
-  text-align:center;
-  font-weight:bold;
-  padding:2px 10px 5px 10px;
-}
-
-div.fignone p.figcapright {
-  display:block;
-  text-align:right;
-  font-weight:bold;
-  padding:2px 10px 5px 10px;
-}
-
-div.fignone p.figcapjustify {
-  display:block;
-  text-align:justify;
-  font-weight:bold;
-  padding:2px 10px 5px 10px;
-}
-
-div.fignone img {
-  padding-top: 5px;
-  padding-left: 10px;
-  padding-right: 10px;
-}
-/* OXYGEN PATCH END EXM-17248 */
-
 
 /* IE6 & IE7 style */
 @media screen\9 {
@@ -510,7 +326,12 @@ div.loadingError {
   font-weight:bold;
 }
 
-.italic {
-    font-style:italic; 	 
-}	 
-	 
+
+.topic_breadcrumb_link + .topic_breadcrumb_link:before{
+    content:" /";
+}
+
+
+#topic_navigation_links {
+    display: block;
+}

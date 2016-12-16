@@ -1,12 +1,13 @@
 
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
-<html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content=""></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Event Framework"></meta><meta name="DC.Relation" scheme="URI" content="../DPM/UnregisterSDCwithDPM.html#concept_r4v_fwf_nx"></meta><meta name="DC.Relation" scheme="URI" content="../Event_Handling/EventFramework-Overview.html#concept_cph_5h4_lx"></meta><meta name="DC.Relation" scheme="URI" content="../Event_Handling/EventFramework-Overview.html#concept_cph_5h4_lx"></meta><meta name="DC.Relation" scheme="URI" content="../Event_Handling/EventStreams.html#concept_sjr_nrx_4x"></meta><meta name="DC.Relation" scheme="URI" content="../Event_Handling/EventRecords.html#concept_gvh_5wm_xx"></meta><meta name="DC.Relation" scheme="URI" content="../Event_Handling/CaseStudy-Parquet.html#concept_jkm_rnz_kx"></meta><meta name="DC.Relation" scheme="URI" content="../Event_Handling/CaseStudy-Impala.html#concept_szz_xwm_lx"></meta><meta name="DC.Relation" scheme="URI" content="../Event_Handling/CaseStudy-FileManagement.html#concept_d1q_xl4_lx"></meta><meta name="DC.Relation" scheme="URI" content="../Event_Handling/CaseStudy-EventStorage.html#concept_ocb_nnl_px"></meta><meta name="DC.Relation" scheme="URI" content="../Event_Handling/DataPreview_Monitor.html#concept_awx_xlq_cy"></meta><meta name="DC.Relation" scheme="URI" content="../Event_Handling/EventFramework-Summary.html#concept_azz_tq4_lx"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_xxd_f5r_kx"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Event Framework</title><!--  Generated with Oxygen version 17.1, build number 2016020417.  --><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
-          
-          var prefix = "../index.html";
-          
-          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The event framework enables the pipeline to trigger tasks in external systems based on actions that occur in the pipeline, such as running a MapReduce job after the pipeline writes a file to HDFS. You ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Event Framework" /><meta name="DC.Relation" scheme="URI" content="../DPM/UnregisterSDCwithDPM.html#concept_ldb_sr5_cx" /><meta name="DC.Relation" scheme="URI" content="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_xxd_f5r_kx" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Event Framework</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+            
+            var prefix = "../index.html";
+            
+            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
+<!--
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -18,39 +19,1146 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
---></head>
-<body onload="highlightSearchTerm()" class="frmBody" id="concept_xxd_f5r_kx">
-<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"></td><td><div class="navheader">
-<span class="navprev"><a class="link" href="../DPM/UnregisterSDCwithDPM.html#concept_r4v_fwf_nx" title="You can unregister a Data Collector from DPM using the Data Collector command line interface."><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Unregistering from the Command Line Interface</span></a></span>  
-<span class="navnext"><a class="link" href="../Event_Handling/EventFramework-Overview.html#concept_cph_5h4_lx" title="Event Framework"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Event Framework</span></a></span>  </div></td></tr></tbody></table>
-
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navprev"><a class="link" href="../DPM/UnregisterSDCwithDPM.html#concept_ldb_sr5_cx" title="Unregister Data Collector from DPM"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Unregister Data Collector from DPM</span></a></span>  
+<span class="navnext"><a class="link" href="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w" title="Hive Drift Solution"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Hive Drift Solution</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_xxd_f5r_kx">
  <h1 class="title topictitle1">Event Framework</h1>
 
-<div class="related-links">
-<ul class="ullinks">
-<li class="link ulchildlink"><strong><a href="../Event_Handling/EventFramework-Overview.html#concept_cph_5h4_lx">Event Framework</a></strong><br xmlns="http://www.w3.org/1999/xhtml" />
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_cph_5h4_lx">
+    <h2 class="title topictitle2">Event Framework Overview</h2>
+
+    <div class="body conbody">
+        <p class="p">The <dfn class="term">event
+                framework</dfn> enables the pipeline to trigger tasks in external systems based on
+            actions that occur in the pipeline, such as running a MapReduce job after the pipeline
+            writes a file to HDFS. </p>
+
+        <p class="p">You can also use the event framework to store event information, such as when an origin
+            starts or completes reading a file. </p>
+
+        <p class="p">Event handling begins with enabling event generation for a stage in the pipeline, then
+            configuring the rest of the event stream to do your bidding. You can add an event stream
+            to any pipeline that includes an event-generating stage. </p>
+
+        <div class="p">Event streams consist of the following conceptual components:<dl class="dl">
+                
+                    <dt class="dt dlterm">event generation</dt>
+
+                    <dd class="dd">Events are generated by an event-generating stage when a specific action
+                        takes place. The action that generates an event is related to how the stage
+                        processes data and differs from stage to stage. </dd>
+
+                    <dd class="dd">For example, the Hive Metastore destination updates the Hive metastore, so
+                        it generates events each time it changes the metastore. In contrast, the
+                        Hadoop FS destination writes files to HDFS, so it generates events each time
+                        it closes a file. </dd>
+
+                    <dd class="dd">When an event occurs, a stage generates an <dfn class="term">event record</dfn> that
+                        passes to the pipeline through an event output stream. Event streams cannot
+                        be merged with data streams.</dd>
+
+                
+                
+                    <dt class="dt dlterm">task execution</dt>
+
+                    <dd class="dd">To use events to trigger a task, connect the event stream to an
+                            <dfn class="term">executor</dfn>. Executor stages perform tasks in external
+                        systems.</dd>
+
+                    <dd class="dd">Each time an executor receives an event record, it performs the specified
+                        task.</dd>
+
+                    <dd class="dd">For example, the Hive Query executor runs a Hive or Impala query each time
+                        it receives an event. Similarly, the MapReduce executor triggers a MapReduce
+                        job when it receives events. </dd>
+
+                
+                
+                    <dt class="dt dlterm">event storage</dt>
+
+                    <dd class="dd">To store event information, connect the event stream to a destination. The
+                        destination writes the event records to the destination system, just like
+                        any other data.</dd>
+
+                    <dd class="dd">For example, you might store event records to keep an audit trail of the
+                        files that the pipeline origin reads. </dd>
+
+                
+            </dl>
+</div>
+
+    </div>
+
+<div class="topic concept nested2" id="concept_zrl_mhn_lx">
+ <h3 class="title topictitle3">Event Generation Stages</h3>
+
+ <div class="body conbody">
+  <p class="p">You can configure certain
+            stages to generate events. Event generation differs from stage to stage, based on how
+            the stage processes data. </p>
+
+        <div class="p">The following table lists event-generating stages and when they can generate events:
+                
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_zrl_mhn_lx__table_pzz_thf_lx" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="30%" id="d96073e146">Stage</th>
+
+                            <th class="entry" valign="top" width="70%" id="d96073e149">Generates event records when the stage...</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d96073e146 ">Directory origin</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d96073e149 ">
+                                <ul class="ul" id="concept_zrl_mhn_lx__ul_opf_5ck_px">
+                                    <li class="li">Starts processing a file.</li>
+
+                                    <li class="li">Completes processing a file. </li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d96073e146 ">File Tail origin</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d96073e149 ">
+                                <ul class="ul" id="concept_zrl_mhn_lx__ul_as2_12n_qx">
+                                    <li class="li">Starts processing a file.</li>
+
+                                    <li class="li">Completes processing a file. </li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d96073e146 ">Amazon S3 destination</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d96073e149 ">
+                                <ul class="ul" id="concept_zrl_mhn_lx__ul_lb3_zck_px">
+                                    <li class="li">Completes writing to an object.</li>
+
+                                    <li class="li">Completes streaming a whole file.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d96073e146 ">Hadoop FS destination</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d96073e149 ">
+                                <ul class="ul" id="concept_zrl_mhn_lx__ul_x5c_cdk_px">
+                                    <li class="li">Closes a file.</li>
+
+                                    <li class="li">Completes streaming a whole file.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d96073e146 ">Groovy Evaluator processor</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d96073e149 ">
+                                <ul class="ul" id="concept_zrl_mhn_lx__ul_cj5_tnp_1y">
+                                    <li class="li">Runs a script that generates events.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d96073e146 ">JavaScript Evaluator processor</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d96073e149 ">
+                                <ul class="ul" id="concept_zrl_mhn_lx__ul_qtz_vnp_1y">
+                                    <li class="li">Runs a script that generates events.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d96073e146 ">Jython Evaluator processor</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d96073e149 ">
+                                <ul class="ul" id="concept_zrl_mhn_lx__ul_ujt_wnp_1y">
+                                    <li class="li">Runs a script that generates events.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d96073e146 ">Hive Metastore destination</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d96073e149 ">
+                                <ul class="ul" id="concept_zrl_mhn_lx__ul_fgw_mt4_qx">
+                                    <li class="li">Updates the Hive metastore.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d96073e146 ">Local FS destination</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d96073e149 ">
+                                <ul class="ul" id="concept_zrl_mhn_lx__ul_flq_ddk_px">
+                                    <li class="li">Closes a file.</li>
+
+                                    <li class="li">Completes streaming a whole file.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d96073e146 ">MapR FS destination</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d96073e149 ">
+                                <ul class="ul" id="concept_zrl_mhn_lx__ul_m11_gdk_px">
+                                    <li class="li">Closes a file.</li>
+
+                                    <li class="li">Completes streaming a whole file.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d96073e146 ">HDFS File Metadata executor</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d96073e149 ">
+                                <ul class="ul" id="concept_zrl_mhn_lx__ul_fmy_4t4_qx">
+                                    <li class="li">Changes file metadata, such as the file name, location, or
+                                        permissions.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d96073e146 ">MapReduce executor</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d96073e149 ">
+                                <ul class="ul" id="concept_zrl_mhn_lx__ul_fy2_qt4_qx">
+                                    <li class="li">Starts a MapReduce job.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested2" id="concept_rxg_shn_lx">
+ <h3 class="title topictitle3">Executors</h3>
+
+ <div class="body conbody">
+        <div class="p">
+            Executors perform
+            tasks when they receive event records. You can use the following executor stages for
+            event handling:<dl class="dl">
+                
+                    <dt class="dt dlterm">Hive Query executor</dt>
+
+                    <dd class="dd">Executes a user-defined Hive or Impala query for each event.</dd>
+
+                    <dd class="dd">Use with the Hive Metadata destination to run a Hive or Impala query after
+                        Hive metastore updates. You can also use the executor with the Hadoop FS or
+                        MapR FS destinations to run a Hive or Impala query after closing files. </dd>
+
+                    <dd class="dd">For example, you might use the Hive Query executor as part of the Hive Drift
+                        Solution if you read data with Impala.</dd>
+
+                    <dd class="dd">Impala requires you to run the Invalidate Metadata command when the table
+                        structure or data changes. Instead of trying to time this action manually,
+                        you can use the Hive Query executor to submit the command automatically each
+                        time the Hive Metastore destination changes the structure of a table and
+                        each time the Hadoop FS destination closes a file. </dd>
+
+                
+                
+                    <dt class="dt dlterm">HDFS File Metadata executor</dt>
+
+                    <dd class="dd">Connects to HDFS, MapR FS, or a local file system and performs file-based
+                        tasks for each event. Can rename, move, and define the owner, group,
+                        permissions and ACLs for files. </dd>
+
+                    <dd class="dd">Use with the Hadoop FS, Local FS, and MapR FS destinations, which generate
+                        events when they close an output file or finish streaming a whole file.</dd>
+
+                    <dd class="dd">For example, you can use the HDFS File Metadata executor with the Local FS
+                        destination to move and change the permissions of files when the destination
+                        closes a file.</dd>
+
+                
+                
+                    <dt class="dt dlterm">JDBC Query executor</dt>
+
+                    <dd class="dd">Connects to a database using JDBC and runs the specified SQL query. </dd>
+
+                    <dd class="dd">Use to run a SQL query on a database after an event occurs.</dd>
+
+                
+                
+                    <dt class="dt dlterm">MapReduce executor</dt>
+
+                    <dd class="dd">Connects to HDFS or MapR FS and starts a MapReduce job for each event. </dd>
+
+                    <dd class="dd">Use with the Hadoop FS or MapR FS destinations to run MapReduce jobs on
+                        closed files. </dd>
+
+                    <dd class="dd">For example, you can use the MapReduce executor with the Hadoop FS
+                        destination to convert Avro files to Parquet when Hadoop FS closes a file.
+                    </dd>
+
+                
+            </dl>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested2" id="concept_scs_3hh_tx">
+ <h3 class="title topictitle3">Logical Pairings</h3>
+
+ <div class="body conbody">
+  <p class="p">Some origins and destinations can generate
+            events, and executors and destinations can consume events. You can use event generating
+            stages and event records in any logical way. </p>
+
+        <div class="p">The following tables outline some logical pairings of event generating stages with
+            executors and destinations:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_scs_3hh_tx__table_pwj_d4p_1y" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="30%" id="d96073e477">Event Generating Origin</th>
+
+                            <th class="entry" valign="top" width="70%" id="d96073e480">Event Consumer</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d96073e477 ">Directory</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d96073e480 ">
+                                <ul class="ul" id="concept_scs_3hh_tx__ul_wvy_h4p_1y">
+                                    <li class="li">Any destination for event storage.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d96073e477 ">File Tail</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d96073e480 ">
+                                <ul class="ul" id="concept_scs_3hh_tx__ul_hgh_34p_1y">
+                                    <li class="li">Any destination for event storage.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_scs_3hh_tx__table_r5m_b3h_tx" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="30%" id="d96073e531">Event Generating Destination</th>
+
+                            <th class="entry" valign="top" width="70%" id="d96073e534">Event Consumer</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d96073e531 ">Amazon S3 </td>
+
+                            <td class="entry" valign="top" width="70%" headers="d96073e534 ">
+                                <ul class="ul" id="concept_scs_3hh_tx__ul_tyv_24p_1y">
+                                    <li class="li">Any destination for event storage.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d96073e531 ">Hadoop FS</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d96073e534 ">
+                                <ul class="ul" id="concept_scs_3hh_tx__ul_hbx_blh_tx">
+                                    <li class="li">HDFS File Metadata executor to change file metadata for
+                                        closed files.</li>
+
+                                    <li class="li">Hive Query executor to run a Hive or Impala query after
+                                        closing a file. <p class="p">Particularly useful when using the Hive
+                                            Drift Solution with Impala. </p>
 </li>
-<li class="link ulchildlink"><strong><a href="../Event_Handling/EventStreams.html#concept_sjr_nrx_4x">Event Streams</a></strong><br xmlns="http://www.w3.org/1999/xhtml" />
+
+                                    <li class="li">MapReduce executor to run a MapReduce job after closing a
+                                        file.</li>
+
+                                    <li class="li">Any destination for event storage.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d96073e531 ">Hive Metastore </td>
+
+                            <td class="entry" valign="top" width="70%" headers="d96073e534 ">
+                                <ul class="ul" id="concept_scs_3hh_tx__ul_kkj_dlh_tx">
+                                    <li class="li">Hive Query executor to run a Hive or Impala query after
+                                        changing table structures. <p class="p">Particularly useful when using
+                                            the Hive Drift Solution with Impala. </p>
 </li>
-<li class="link ulchildlink"><strong><a href="../Event_Handling/EventRecords.html#concept_gvh_5wm_xx">Event Records</a></strong><br xmlns="http://www.w3.org/1999/xhtml" />
+
+                                    <li class="li">Any destination for event storage.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d96073e531 ">Local FS</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d96073e534 ">
+                                <ul class="ul" id="concept_scs_3hh_tx__ul_p3l_glh_tx">
+                                    <li class="li">HDFS File Metadata executor to change file metadata for
+                                        closed files.</li>
+
+                                    <li class="li">Any destination for event storage.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d96073e531 ">MapR FS</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d96073e534 ">
+                                <ul class="ul" id="concept_scs_3hh_tx__ul_rvh_dsq_tx">
+                                    <li class="li">HDFS File Metadata executor to change file metadata for
+                                        closed files.</li>
+
+                                    <li class="li">MapReduce executor to run a MapReduce job after closing a
+                                        file.</li>
+
+                                    <li class="li">Any destination for event storage.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_scs_3hh_tx__table_sc4_4nh_tx" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="30%" id="d96073e655">Event Generating Executor</th>
+
+                            <th class="entry" valign="top" width="70%" id="d96073e658">Event Consumer</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d96073e655 ">HDFS File Metadata executor</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d96073e658 ">Any destination for event storage.</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d96073e655 ">MapReduce executor</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d96073e658 ">Any destination for event storage.</td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+</div>
+
+ </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_sjr_nrx_4x">
+ <h2 class="title topictitle2">Event Streams</h2>
+
+ <div class="body conbody">
+        <p class="p">You can use the
+            event framework in any pipeline where the event handling logic suits your needs. When
+            configuring the event stream, you can add additional stages as needed, but you cannot
+            merge the event stream with a data stream. </p>
+
+        <div class="p">There are two general types of event streams that you might create: <ul class="ul" id="concept_sjr_nrx_4x__ul_pr4_qz2_zx">
+                <li class="li">Task execution streams that route data to an executor to perform a task. </li>
+
+                <li class="li">Event storage streams that route data to a destination to store event
+                    information.</li>
+
+            </ul>
+You can, of course, configure an event stream to perform tasks and store events by
+            routing event records to both an executor and a destination. You can also configure
+            event streams to route data to multiple executors and destinations, as needed.</div>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_ivh_xy2_zx">
+ <h3 class="title topictitle3">Task Execution Streams</h3>
+
+ <div class="body conbody">
+  <p class="p">A task
+            execution stream routes event records from the event generating stage to an executor
+            stage. The executor performs a task each time it receives an event record. </p>
+
+        <p class="p">For example, you have a pipeline that reads from Kafka and writes files to HDFS:</p>
+
+        <p class="p"><img class="image" id="concept_ivh_xy2_zx__image_b5z_25q_tx" src="../Graphics/Event-ParquetBasicPipe.png" height="81" width="581" /></p>
+
+        <p class="p">When Hadoop FS closes a file, you would like the file moved to a different directory and
+            the file permissions changed to read-only. </p>
+
+        <p class="p">Leaving the rest of the pipeline as is, you can enable event handling in the Hadoop FS
+            destination, connect it to the HDFS File Metadata executor, and configure the HDFS File
+            Metadata executor to files and change permissions. The resulting pipeline looks like
+            this:</p>
+
+        <p class="p"><img class="image" id="concept_ivh_xy2_zx__image_c5z_25q_tx" src="../Graphics/Event-EventPipe.png" height="150" width="635" /></p>
+
+        <p class="p">If you needed to set permissions differently based on the file name or location, you
+            could use a Stream Selector to route the event records accordingly, then use two HDFS
+            File Metadata executors to alter file permissions, as follows:</p>
+
+        <p class="p"><img class="image" id="concept_ivh_xy2_zx__image_os2_nqf_zx" src="../Graphics/Event-EventPipe-SSelector.png" height="160" width="639" /></p>
+
+ </div>
+
+</div>
+<div class="topic concept nested2" id="concept_bfd_31f_zx">
+ <h3 class="title topictitle3">Event Storage Streams</h3>
+
+ <div class="body conbody">
+        <p class="p">An event storage
+            stream routes event records from the event generating stage to a destination. The
+            destination writes the event record to a destination system.</p>
+
+        <p class="p">Event records include information about the event in record header attributes and record
+            fields. You can add processors to the event stream to enrich the event record before
+            writing it to the destination. </p>
+
+        <p class="p">For example, you have a pipeline that uses the Directory origin to process weblogs:</p>
+
+        <p class="p"><img class="image" id="concept_bfd_31f_zx__image_g5w_m1f_zx" src="../Graphics/Event-Directory.png" height="98" width="637" /></p>
+
+        <p class="p">Directory generates event records each time it starts and completes reading a file, and
+            the event record includes a field with the file path of the file. For auditing purposes,
+            you'd like to write this information to a database table.</p>
+
+        <p class="p">Leaving the rest of the pipeline as is, you can enable event handling for the Directory
+            origin and simply connect it to the JDBC Producer as follows:</p>
+
+        <p class="p"><img class="image" id="concept_bfd_31f_zx__image_d2y_1vq_tx" src="../Graphics/Event-Directory-JDBC.png" height="166" width="540" /></p>
+
+        <div class="p">But you want to know when events occur. The Directory event record stores the event
+            creation time in the sdc.event.creation_timestamp record header attribute. So you can
+            use an Expression Evaluator with the following expression to add the creation date and
+            time to the record:
+            <pre class="pre codeblock">${record:attribute('sdc.event.creation_timestamp')}</pre>
+</div>
+
+        <div class="p">And if you have multiple pipelines writing events to the same location, you can use the
+            following expression to include the pipeline name in the event record as
+            well:<pre class="pre codeblock">${pipeline:name()}</pre>
+</div>
+
+        <p class="p">The Expression Evaluator and the final pipeline looks like this:</p>
+
+        <p class="p"><img class="image" id="concept_bfd_31f_zx__image_e2y_1vq_tx" src="../Graphics/Event-Directory-ExpJDBC.png" height="328" width="572" /></p>
+
+    </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_gvh_5wm_xx">
+ <h2 class="title topictitle2">Event Records</h2>
+
+ <div class="body conbody">
+  <p class="p">Event records are records
+            created by a stage when a stage-related event occurs, like when an origin starts reading
+            a new file or a destination closes an output file. </p>
+
+        <p class="p">Most event records pass general event information in record headers, such as when the
+            event occurred. They also include event-specific details in record fields, like the name
+            and location of the output file that was closed. </p>
+
+        <p class="p">Event records generated by the File Tail origin are the exception - they include all
+            event information in record fields. </p>
+
+        <p class="p"><span class="ph"><span class="ph" id="concept_gvh_5wm_xx__d15021e2793">Event records differ from stage
+                              to stage.</span> For a list of event header attributes and fields in an
+                        event record, see "Event Record" in the documentation for the
+                        event-generating stage.</span></p>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_zft_rdq_tx">
+ <h3 class="title topictitle3">Event Record Header Attributes</h3>
+
+ <div class="body conbody">
+        <p class="p">In addition
+            to the standard record header attributes, most event records include record header
+            attributes for event information such as the event type and when the event occurred. </p>
+
+        <p class="p">As with any record header attribute, you can use the Expression Evaluator and the
+            record:attribute function to include record header attribute information as a field in
+            the record. Note that all record header attributes are String values.</p>
+
+        <div class="p">When storing event records, you most likely want to include the time of the event in the
+            event record, using the following expression in an Expression
+            Evaluator:<pre class="pre codeblock">${record:attribute('sdc.event.creation_timestamp')}</pre>
+</div>
+
+        <p class="p">For more information, see <a class="xref" href="EventFramework-Title.html#concept_ocb_nnl_px">Case Study: Event Storage</a>.</p>
+
+        <div class="p">Most events include the following event record header attributes. The exception, File
+            Tail, writes all of the event information to record fields. 
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_zft_rdq_tx__table_bxn_dhs_5x" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="30%" id="d96073e892">Event Record Header Attribute</th>
+
+                            <th class="entry" valign="top" width="70%" id="d96073e895">Description</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d96073e892 ">sdc.event.type</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d96073e895 ">Event type. Defined by the stage that generates the event. <p class="p">For
+                                    information about the event types available for an event
+                                    generating stage, see the stage documentation.</p>
+</td>
+
+                        </tr>
+
+                        <tr>
+       <td class="entry" valign="top" width="30%" headers="d96073e892 ">sdc.event.version</td>
+
+       <td class="entry" valign="top" width="70%" headers="d96073e895 ">An integer that indicates the version of the event record type.</td>
+
+      </tr>
+
+                        <tr>
+       <td class="entry" valign="top" width="30%" headers="d96073e892 ">sdc.event.creation_timestamp</td>
+
+       <td class="entry" id="concept_zft_rdq_tx__d15081e1203" valign="top" width="70%" headers="d96073e895 ">Epoch timestamp when the stage created the event.
+       </td>
+
+      </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+</div>
+
+        <p class="p"><span class="ph"><span class="ph" id="concept_zft_rdq_tx__d15021e2793">Event records differ from stage
+                              to stage.</span> For a list of event header attributes and fields in an
+                        event record, see "Event Record" in the documentation for the
+                        event-generating stage.</span></p>
+
+    </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_jkm_rnz_kx">
+    <h2 class="title topictitle2">Case Study: Parquet Conversion</h2>
+
+    <div class="body conbody">
+        <p class="p">Say you want to store data on HDFS using the columnar
+            format, Parquet. But <span class="ph">Data
+                  Collector</span>
+            doesn't have a Parquet data format. How do you do it? </p>
+
+        <p class="p">The event framework was created for exactly this purpose. The simple addition of an event
+            stream to the pipeline generates automatic conversion of Avro files to Parquet using a
+            MapReduce job. </p>
+
+        <p class="p">It's just a few simple steps:</p>
+
+        <div class="p">
+            <ol class="ol" id="concept_jkm_rnz_kx__ol_oh1_4gm_lx">
+                <li class="li">Create the pipeline you want to use.<p class="p">Use the origin and processors that you
+                        need, like any other pipeline. And then, configure Hadoop FS to write Avro
+                        data to HDFS.</p>
+<p class="p">The Hadoop FS destination generates events each time it
+                        closes a file. This is perfect because we want to convert files to Parquet
+                        only after they are fully written. </p>
+<div class="p">
+                        <div class="note note"><span class="notetitle">Note:</span> To avoid running unnecessary numbers of MapReduce jobs, configure the
+                            destination to create files as large as the destination system can
+                            comfortably handle.</div>
+
+                    </div>
+<p class="p"><img class="image" id="concept_jkm_rnz_kx__image_x2b_yvm_lx" src="../Graphics/Event-ParquetBasicPipe.png" height="87" width="622" /></p>
 </li>
-<li class="link ulchildlink"><strong><a href="../Event_Handling/CaseStudy-Parquet.html#concept_jkm_rnz_kx">Case Study: Parquet Conversion</a></strong><br xmlns="http://www.w3.org/1999/xhtml" />
+
+                <li class="li">Configure Hadoop FS to generate events. <p class="p">On the <span class="keyword wintitle">General</span>
+                        tab of the destination, select the <span class="ph uicontrol">Produce Events</span>
+                        property.</p>
+<p class="p">With this property selected, the event output stream becomes
+                        available and Hadoop FS generates an event record each time it closes an
+                        output file. The event record includes the file path for the closed file.
+                            </p>
+<p class="p"><img class="image" id="concept_jkm_rnz_kx__image_ibh_mvm_lx" src="../Graphics/Event-ParquetHDFS.png" height="324" width="750" /></p>
 </li>
-<li class="link ulchildlink"><strong><a href="../Event_Handling/CaseStudy-Impala.html#concept_szz_xwm_lx">Case Study: Impala Metadata Updates for HDS</a></strong><br xmlns="http://www.w3.org/1999/xhtml" />
+
+                <li class="li">Connect the Hadoop FS event output stream to a MapReduce executor. <p class="p">Now, each
+                        time the MapReduce executor receives an event, it triggers the jobs that you
+                        configure it to run.</p>
+<p class="p"><img class="image" id="concept_jkm_rnz_kx__image_wjn_k5m_lx" src="../Graphics/Event-ParquetPipe.png" height="176" width="812" /></p>
 </li>
-<li class="link ulchildlink"><strong><a href="../Event_Handling/CaseStudy-FileManagement.html#concept_d1q_xl4_lx">Case Study: Output File Management</a></strong><br xmlns="http://www.w3.org/1999/xhtml" />
+
+                <li class="li">Configure the MapReduce executor to run a job that converts the completed Avro
+                    file to Parquet.<p class="p">In the MapReduce executor, configure the MapReduce
+                        configuration details and select the Avro to Parquet job type. Then, on the
+                        Avro to Parquet tab, configure the details for the job. </p>
+<p class="p"><img class="image" id="concept_jkm_rnz_kx__image_rzm_frb_tx" src="../Graphics/Event-Parquet-MapReduce.png" height="387" width="646" /></p>
+<p class="p">The <span class="ph uicontrol">Input Avro File</span> property
+                        default, <samp class="ph codeph">${record:value('/filepath')}</samp>, runs the job on the
+                        file specified in the Hadoop FS file closure event record. </p>
 </li>
-<li class="link ulchildlink"><strong><a href="../Event_Handling/CaseStudy-EventStorage.html#concept_ocb_nnl_px">Case Study: Event Storage</a></strong><br xmlns="http://www.w3.org/1999/xhtml" />
+
+            </ol>
+
+        </div>
+
+        <p class="p">With this event stream added to the pipeline, each time the Hadoop FS destination closes
+            a file, it generates an event. When the MapReduce executor receives the event, it kicks
+            off a MapReduce job that converts the Avro file to Parquet. Simple!</p>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_szz_xwm_lx">
+    <h2 class="title topictitle2">Case Study: Impala Metadata Updates for HDS</h2>
+
+    <div class="body conbody">
+        <p class="p">You love the <a class="xref" href="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_phk_bdf_2w">Hive Drift
+                Solution</a> (HDS) because it automatically updates the Hive metastore when
+            needed. But if you've been using it with Impala, you've been trying to time the
+            Invalidate Metadata command after each metadata change and file write.</p>
+
+        <p class="p">Instead of running the command manually, you use the event framework in your Hive Drift
+            Solution pipeline to execute the command automatically. </p>
+
+        <p class="p">Enable both the Hive Metastore destination and the Hadoop FS destination to generate
+            events. You can connect both event streams to a single Hive Query executor. The executor
+            then runs the Invalidate Metadata command each time the Hive Metastore destination
+            changes the Hive metastore and each time Hadoop FS writes a file to a Hive table.</p>
+
+        <p class="p">Here's how it works:</p>
+
+        <p class="p">The following Hive Drift Solution pipeline reads files from a directory. The Hive
+            Metadata processor evaluates the data for structural changes. It passes data to Hadoop
+            FS and metadata records to the Hive Metastore destination. Hive Metastore creates and
+            updates tables in Hive based on the metadata records it receives:</p>
+
+        <p class="p"><img class="image" id="concept_szz_xwm_lx__image_lz5_414_lx" src="../Graphics/Event-HDS-BasicPipe.png" height="188" width="412" /></p>
+
+        <div class="p">
+            <ol class="ol" id="concept_szz_xwm_lx__ol_mtf_tzn_lx">
+                <li class="li">Configure the Hive Metastore destination to generate events.<p class="p">On the
+                            <span class="keyword wintitle">General</span> tab, select the <span class="ph uicontrol">Produce
+                            Events</span> property.</p>
+<p class="p">Now, the event output stream becomes
+                        available, and Hive Metastore destination generates an event record every
+                        time it updates the Hive metastore. The event record contains the name of
+                        the table that was created or updated.</p>
+<p class="p"><img class="image" id="concept_szz_xwm_lx__image_cht_bc4_lx" src="../Graphics/Event-HDS-HMetastore.png" height="425" width="467" /></p>
 </li>
-<li class="link ulchildlink"><strong><a href="../Event_Handling/DataPreview_Monitor.html#concept_awx_xlq_cy">Event Records in Data Preview, Monitor, and Snapshot</a></strong><br xmlns="http://www.w3.org/1999/xhtml" />
+
+                <li class="li">We also need to add an event stream to the Hadoop FS destination so we can run
+                    the Invalidate Metadata command each time the destination writes a file to Hive.
+                    So in the Hadoop FS destination, on the <span class="keyword wintitle">General</span> tab, select
+                        <span class="ph uicontrol">Produce Events</span>.<p class="p">With this property selected the
+                        event output stream becomes available, and Hadoop FS generates an event
+                        record every time it closes a file:</p>
+<p class="p"><img class="image" id="concept_szz_xwm_lx__image_c35_qns_5x" src="../Graphics/Event-HDS-HDFS.png" height="337" width="435" /></p>
 </li>
-<li class="link ulchildlink"><strong><a href="../Event_Handling/EventFramework-Summary.html#concept_azz_tq4_lx">Event Framework Summary</a></strong><br xmlns="http://www.w3.org/1999/xhtml" />
+
+                <li class="li">The event record generated by the Hadoop FS destination does not include the
+                    table name required by the Hive Query executor, but it contains the table name
+                    in the file path. So add an Expression Evaluator processor to the event stream.
+                    Create a new Table field and use the following
+                        expression:<pre class="pre codeblock"><span class="ph" id="concept_szz_xwm_lx__d15021e2985">`${file:pathElement(record:value('/filepath'), -3)}`.`${file:pathElement(record:value('/filepath'), -2)}`</span></pre>
+<div class="p">This
+                        expression uses the path in the Filepath field of the event record and
+                        performs the following calculations:<ul class="ul" id="concept_szz_xwm_lx__ul_umt_2sm_5x">
+                            <li class="li">Extracts the third-to-last section of the path and uses it as the
+                                database name. </li>
+
+                            <li class="li">Extracts the second-to-last section of the path and uses it as the
+                                table name.</li>
+
+                        </ul>
+</div>
+<p class="p">So when Hadoop FS completes a file, it writes the path of the
+                        written file in the filepath field, such as users/logs/server1weblog.txt.
+                        And the expression above properly interprets the database and table name as:
+                        logs.server1weblog.</p>
+<p class="p"><img class="image" id="concept_szz_xwm_lx__image_pcc_3zm_5x" src="../Graphics/Event-HDS-Expression.png" height="342" width="718" /></p>
 </li>
-</ul>
+
+                <li class="li">Add the Hive Query executor and connect the Hive Metastore destination and the
+                    Expression Evaluator to the executor. Then configure the Hive Query
+                        executor.<div class="p">In the Hive Query executor, on the <span class="keyword wintitle">Hive</span>
+                        tab, configure the Hive configuration details. Then, on the
+                            <span class="keyword wintitle">Query</span> tab, verify the query to use. By default, the
+                        executor uses the following
+                        query:<pre class="pre codeblock">invalidate metadata ${record:value('/table')}</pre>
+</div>
+<p class="p">This
+                        is the query that we want, so we don't need to change a thing. </p>
+<p class="p">Here's
+                        how the final pipeline looks:</p>
+<p class="p"><img class="image" id="concept_szz_xwm_lx__image_ccr_hpr_mx" src="../Graphics/Event-HDS-HiveQueryDeets.png" height="410" width="637" /></p>
+<p class="p">With these new event streams, each time the Hive
+                        Metastore destination creates a table, partition or column, and each time
+                        the Hadoop FS destination completes writing a file, the destinations
+                        generate event records. When the Hive Query executor receives an event
+                        record, it runs the Invalidate Metadata command so Impala can update its
+                        cache with the new information. Done!</p>
+</li>
+
+            </ol>
+
+        </div>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_d1q_xl4_lx">
+    <h2 class="title topictitle2">Case Study: Output File Management</h2>
+
+    <div class="body conbody">
+        <p class="p">By default, the Hadoop FS destination creates a
+            complex set of directories for output files and late record files, keeping files open
+            for writing based on stage configuration. That's great, but once the files are complete,
+            you'd like the files moved to a different location. And while you're at it, it would be
+            nice to set the permissions for the written files. </p>
+
+        <p class="p">So what do you do? </p>
+
+        <p class="p">Add an event stream to the pipeline to manage output files when the Hadoop FS destination
+            is done writing them. </p>
+
+        <p class="p">Here's a pipeline that reads from a database using JDBC, performs some processing, and
+            writes to HDFS:</p>
+
+        <p class="p"><img class="image" id="concept_d1q_xl4_lx__image_y1d_zm4_lx" src="../Graphics/Event-Move-BasicPipe.png" height="102" width="651" /></p>
+
+        <ol class="ol" id="concept_d1q_xl4_lx__ol_fvh_5m4_lx">
+            <li class="li">To add an event stream, first configure Hadoop FS to generate events:<p class="p">On the
+                        <span class="keyword wintitle">General</span> tab of the Hadoop FS destination, select the
+                        <span class="ph uicontrol">Produce Events</span> property. </p>
+<p class="p">Now, the event output
+                    stream becomes available, and Hadoop FS generates an event record each time it
+                    closes an output file. The Hadoop FS event record includes fields for the file
+                    name, path, and size.</p>
+<p class="p"><img class="image" id="concept_d1q_xl4_lx__image_n5q_5p4_lx" src="../Graphics/Event-Move-HDFS.png" height="299" width="619" /></p>
+</li>
+
+            <li class="li">Connect the Hadoop FS event output stream to a HDFS File Metadata executor.<p class="p">Now,
+                    each time the HDFS File Metadata executor receives an event, it triggers the
+                    tasks that you configure it to run.</p>
+<p class="p"><img class="image" id="concept_d1q_xl4_lx__image_x4w_kq4_lx" src="../Graphics/Event-Move-HDFSMetadata.png" height="172" width="675" /></p>
+</li>
+
+            <li class="li">Configure the HDFS File Metadata executor to move the files to the directory that
+                you want and set the permissions for the file.<p class="p">In the HDFS File Metadata executor,
+                    configure the HDFS configuration details on the <span class="keyword wintitle">HDFS</span> tab.
+                    Then, on the <span class="keyword wintitle">Tasks</span> tab, configure the changes that you want
+                    to make. </p>
+<p class="p">In this case, you want to move files to
+                        <span class="ph filepath">/new/location</span>, and set the file permissions to 0440 to
+                    allow the user and group read access to the files:</p>
+<p class="p"><img class="image" id="concept_d1q_xl4_lx__image_uk1_l1c_tx" src="../Graphics/Event-Move-FileMetadata-props.png" height="381" width="703" /></p>
+</li>
+
+        </ol>
+
+        <p class="p">With this event stream added to the pipeline, each time the Hadoop FS destination closes
+            a file, it generates an event record. When the HDFS File Metadata executor receives the
+            event record, it moves the file and sets the file permissions. No muss, no fuss.</p>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_ocb_nnl_px">
+ <h2 class="title topictitle2">Case Study: Event Storage </h2>
+
+ <div class="body conbody">
+  <p class="p">Store
+            event records to preserve an audit trail of the events that occur. You can store event
+            records from any event-generating stage. For this case study, say you want to keep a log
+            of the files written to HDFS by the following pipeline: </p>
+
+        <p class="p"><img class="image" id="concept_ocb_nnl_px__image_csj_gwl_px" src="../Graphics/Event-Storage.png" height="94" width="531" /></p>
+
+        <div class="p">To do this, you simply:<ol class="ol" id="concept_ocb_nnl_px__ol_xgc_3wl_px">
+                <li class="li">Configure the Hadoop FS destination to generate events.<p class="p">On the
+                            <span class="keyword wintitle">General</span> tab, select the <span class="ph uicontrol">Produce
+                            Events</span> property </p>
+<p class="p">Now the event output stream becomes
+                        available, and the destination generates an event each time it closes a
+                        file. For this destination, each event record includes fields for the file
+                        name, file path, and size of the closed file. </p>
+<p class="p"><img class="image" id="concept_ocb_nnl_px__image_qbc_1hj_yx" src="../Graphics/Event-Storage-HDFS.png" height="271" width="544" /></p>
+</li>
+
+                <li class="li">You can write the event records to any destination, but let's assume you want to
+                    write them to HDFS as well:<p class="p"><img class="image" id="concept_ocb_nnl_px__image_orv_fyl_px" src="../Graphics/Event-Storage-HDFS-2.png" height="150" width="580" /></p>
+<p class="p">You could be done right there,
+                        but you want to include the time of the event in the record, so you know
+                        exactly when the Hadoop FS destination closed a file. </p>
+</li>
+
+                <li class="li"> All event records include the event creation time in the
+                    sdc.event.creation_timestamp record header attribute, so you can add an
+                    Expression Evaluator to the pipeline and use the following expression to include
+                    the creation time in the
+                        record:<pre class="pre codeblock">${record:attribute('sdc.event.creation_timestamp')}</pre>
+<p class="p">The
+                        resulting pipeline looks like this: </p>
+<p class="p"><img class="image" id="concept_ocb_nnl_px__image_sqc_3bq_tx" src="../Graphics/Event-Storage-EEval.png" height="318" width="742" /></p>
+<p class="p">Note that event creation time is expressed as an
+                        epoch or Unix timestamp, such as 1477698601031. And record header attributes
+                        provide data as strings.</p>
+<div class="p">
+                        <div class="note tip"><span class="tiptitle">Tip:</span> You can use the time functions, time:extractLongFromDate
+                            and time:extractStringFromDate, to convert the timestamp to the long or
+                            string data types, respectively.</div>
+
+                    </div>
+</li>
+
+            </ol>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_awx_xlq_cy">
+    <h2 class="title topictitle2">Event Records in Data Preview, Monitor, and Snapshot</h2>
+
+    <div class="body conbody">
+        <p class="p">When generated, event records display in data preview, Monitor mode, and snapshot as
+            event records. Once a record leaves the event-generating stage, it is treated like a
+            standard record.</p>
+
+    </div>
+
+<div class="topic concept nested2" id="concept_hfy_ryv_cy">
+ <h3 class="title topictitle3">Event Records in Data Preview and Snapshot</h3>
+
+ <div class="body conbody">
+  <p class="p">In data preview and when reviewing snapshots of
+            data, event records display in the event-generating stage marked as "event records," and
+            they appear below the batch of standard records.</p>
+
+        <p class="p">After leaving the event-generating stage, the record displays like any other record. </p>
+
+        <p class="p">For example, the Directory origin below generates an event record as it starts reading a
+            file for data preview:</p>
+
+        <p class="p"><img class="image" id="concept_hfy_ryv_cy__image_jcz_5qq_cy" src="../Graphics/Event-DataPreview.png" height="393" width="424" /></p>
+
+        <p class="p">When you select the Local FS destination where the event record is written, you see that
+            the same event record no longer displays the event record label. It is treated like any
+            other record: </p>
+
+        <p class="p"><img class="image" id="concept_hfy_ryv_cy__image_wlx_4sq_cy" src="../Graphics/Event-DataPreview-Dest.png" height="390" width="414" /></p>
+
+ </div>
+
+</div>
+<div class="topic concept nested2" id="concept_zwr_kzv_cy">
+ <h3 class="title topictitle3">Event Records in Monitor Mode</h3>
+
+ <div class="body conbody">
+  <p class="p">In Monitor mode, the
+            event-generating stage provides statistics about generated event records. Once the event
+            records leave the event-generating stage, Monitor mode treats event records like any
+            other record.</p>
+
+        <p class="p">For example, when you run and monitor the pipeline featured above, the Directory origin
+            information displays event records in its statistics:</p>
+
+        <p class="p"><img class="image" id="concept_zwr_kzv_cy__image_s1s_g5q_cy" src="../Graphics/Event-Monitor-Origin.png" height="438" width="875" /></p>
+
+        <p class="p">Notice, in the Record Throughput chart, that you can hover over graphics to get the exact
+            number of records that they represent.</p>
+
+        <p class="p">And when you select the Local FS destination where the event record is written, Monitor
+            mode displays statistics for the records written to the destination. At this point, the
+            event records are treated like any other record:</p>
+
+        <p class="p"><img class="image" id="concept_zwr_kzv_cy__image_op2_v5q_cy" src="../Graphics/Event-Monitor-Dest.png" height="438" width="861" /></p>
+
+ </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_azz_tq4_lx">
+ <h2 class="title topictitle2">Event Framework Summary</h2>
+
+ <div class="body conbody">
+        <div class="p">To summarize the key
+            points of the event framework: <ol class="ol" id="concept_azz_tq4_lx__ol_fz4_ygh_tx">
+                <li class="li">You can use the event framework to any pipeline that includes a stage that
+                    generates events. </li>
+
+                <li class="li">The event-generating stage generates events at logical moments related to stage
+                    processing, such as the closing of a file.</li>
+
+                <li class="li">When generating an event, the stage creates an <dfn class="term">event record</dfn> that
+                    contains relevant information regarding the event, such as the path to the file
+                    that was closed. <p class="p"><span class="ph"><span class="ph" id="concept_azz_tq4_lx__d15021e2793">Event records differ from stage
+                              to stage.</span> For a list of event header attributes and fields in an
+                        event record, see "Event Record" in the documentation for the
+                        event-generating stage.</span></p>
+</li>
+
+                <li class="li">In the simplest use case, you can route event records to a destination to save
+                    event information.</li>
+
+                <li class="li">You can also use event records to trigger tasks, such as changing permissions
+                    for closed files. </li>
+
+                <li class="li">To trigger a task, connect the event stream to an executor stage.<p class="p">For a list
+                        of logical event generation and executor pairings, see <a class="xref" href="EventFramework-Title.html#concept_scs_3hh_tx">Logical Pairings</a>.</p>
+</li>
+
+                <li class="li">When necessary, you can add processors to the event stream.<p class="p">For example, you
+                        might add an Expression Evaluator to add the event generation time to an
+                        event record before writing it to a destination. Or, you might use a Stream
+                        Selector to route different types of event records to different
+                        executors.</p>
+</li>
+
+                <li class="li">You cannot merge event streams with data streams. </li>
+
+                <li class="li">You can use the Dev Data Generator and To Event development stages to generate
+                    events for pipeline development and testing. For more information about the
+                    development stages, see <a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Development Stages</a>.</li>
+
+                <li class="li">In data preview, when reviewing snapshots of data, and in Monitor mode, event
+                    records display as event records in the record-generating stage. Afterwards they
+                    are treated like any standard record. </li>
+
+            </ol>
+ For examples of how you might use the event framework, see the case studies
+            earlier in this chapter. </div>
+
+ </div>
+
+</div>
 </div>
 <div class="navfooter"><!---->
-<span class="navprev"><a class="link" href="../DPM/UnregisterSDCwithDPM.html#concept_r4v_fwf_nx" title="You can unregister a Data Collector from DPM using the Data Collector command line interface."><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Unregistering from the Command Line Interface</span></a></span>  
-<span class="navnext"><a class="link" href="../Event_Handling/EventFramework-Overview.html#concept_cph_5h4_lx" title="Event Framework"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Event Framework</span></a></span>  </div><div class="footer"><!-- SDC google analytics --><script>
+<span class="navprev"><a class="link" href="../DPM/UnregisterSDCwithDPM.html#concept_ldb_sr5_cx" title="Unregister Data Collector from DPM"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Unregister Data Collector from DPM</span></a></span>  
+<span class="navnext"><a class="link" href="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w" title="Hive Drift Solution"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Hive Drift Solution</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

@@ -2,16 +2,13 @@
  * jQuery.splitter.js - animated splitter plugin
  *
  * version 1.0 (2010/01/02) 
- * 
+ *
+ *Licensed under the MIT license:
+*   http://www.opensource.org/licenses/mit-license.php
+*
+* Code cleaned up and made to pass jslint <scudette@google.com>. Also
+* changed default behaviour to not animate when dragged.
  */
-
-
-/**
- * The Oxygen Webhelp plugin redistributes this file under the terms of the MIT license. 
- * The full license terms of this license are available in the file MIT-License.txt 
- * located in the same directory as the present file you are reading. 
- */
-
  
 /**
 * jQuery.splitter() plugin implements a two-pane resizable animated window, using existing DIV elements for layout.
@@ -254,7 +251,7 @@
                     A.show().css(opts.sizing,sizeA+'px');
                     B.show().css(opts.sizing,sizeB+'px');
                     Bt.show();
-                    if (!$.browser.msie ){
+                    if (BrowserDetect.browser!='Explorer' ){
                         mychilds.trigger("resize");
                         if(slave)slave.trigger("resize");
                     }

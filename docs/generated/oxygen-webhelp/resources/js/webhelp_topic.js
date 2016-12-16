@@ -1,9 +1,7 @@
 /*
 
-Oxygen Webhelp plugin
-Copyright (c) 1998-2015 Syncro Soft SRL, Romania.  All rights reserved.
-Licensed under the terms stated in the license file EULA_Webhelp.txt 
-available in the base directory of this Oxygen Webhelp plugin.
+Oxygen WebHelp Plugin
+Copyright (c) 1998-2016 Syncro Soft SRL, Romania.  All rights reserved.
 
 */
 
@@ -39,10 +37,10 @@ function highlightSearchTerm(words) {
         // For index with frames
         try {
             if (parent.termsToHighlight != null) {
-             // highlight each term in the content view
-             for (i = 0; i < parent.termsToHighlight.length; i++) {
-                 $('*', window.parent.contentwin.document).highlight(parent.termsToHighlight[i]);
-             }
+                // highlight each term in the content view
+                for (i = 0; i < parent.termsToHighlight.length; i++) {
+                    $(window.parent.contentwin.document).find('body').highlight(parent.termsToHighlight[i]);
+                }
             }
         } catch (e) {
             debug(e);
