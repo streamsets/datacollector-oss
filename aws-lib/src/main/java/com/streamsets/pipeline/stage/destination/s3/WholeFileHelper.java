@@ -144,7 +144,7 @@ final class WholeFileHelper extends FileHelper {
         uploads.add(upload);
 
         //Add event to event lane.
-        context.toEvent(eventRecord);
+        cachedEventRecords.add(eventRecord);
       } catch (OnRecordErrorException e) {
         errorRecordHandler.onError(
             new OnRecordErrorException(

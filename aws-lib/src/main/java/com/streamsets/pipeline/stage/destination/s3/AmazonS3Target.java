@@ -25,6 +25,7 @@ import com.amazonaws.services.s3.transfer.TransferManagerConfiguration;
 import com.amazonaws.services.s3.transfer.Upload;
 import com.google.common.collect.Multimap;
 import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
@@ -165,6 +166,14 @@ public class AmazonS3Target extends BaseTarget {
       for (Upload upload : uploads) {
         upload.waitForCompletion();
       }
+      List<EventRecord> eventRecords = fileHelper.getEventRecordsForTheBatch();
+
+      for (EventRecord eventRecord : eventRecords) {
+        getContext().toEvent(eventRecord);
+      }
+      //Clear the batch events.
+      fileHelper.clearEventRecordsForTheBatch();
+
     } catch (AmazonClientException | IOException | InterruptedException e) {
       LOG.error(Errors.S3_21.getMessage(), e.toString(), e);
       throw new StageException(Errors.S3_21, e.toString(), e);

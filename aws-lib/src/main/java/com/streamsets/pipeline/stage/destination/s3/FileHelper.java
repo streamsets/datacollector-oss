@@ -27,6 +27,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.SSEAlgorithm;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.Upload;
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
@@ -38,6 +39,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -53,12 +55,22 @@ abstract class FileHelper {
   protected final S3TargetConfigBean s3TargetConfigBean;
   protected final ErrorRecordHandler errorRecordHandler;
 
+  protected List<EventRecord> cachedEventRecords;
 
   FileHelper(Stage.Context context, S3TargetConfigBean s3TargetConfigBean, TransferManager transferManager) {
     this.context = context;
     this.s3TargetConfigBean = s3TargetConfigBean;
     this.transferManager = transferManager;
     this.errorRecordHandler = new DefaultErrorRecordHandler(context);
+    this.cachedEventRecords = new ArrayList<>();
+  }
+
+  public List<EventRecord> getEventRecordsForTheBatch() {
+    return cachedEventRecords;
+  }
+
+  public void clearEventRecordsForTheBatch() {
+    cachedEventRecords.clear();
   }
 
   abstract List<Upload> handle(Iterator<Record> recordIterator, String keyPrefix) throws IOException, StageException;

@@ -88,7 +88,6 @@ public class TestAmazonS3TargetForWholeFile {
   private static final Map<String, String> SAMPLE_TEXT_FOR_FILE =
       ImmutableMap.of(FILE_NAME_1, SAMPLE_TEXT_TO_FILE_PATH_1, FILE_NAME_2, SAMPLE_TEXT_TO_FILE_PATH_2);
 
-
   private static String fakeS3Root;
   private static FakeS3 fakeS3;
   private static AmazonS3Client s3client;
@@ -119,7 +118,7 @@ public class TestAmazonS3TargetForWholeFile {
     this.checksumAlgorithm = checksumAlgorithm;
   }
 
-  @Parameterized.Parameters(name = "File Name Prefix : {1}, Source Type: {2}, , Checksum Algorithm: {2}")
+  @Parameterized.Parameters(name = "File Name Prefix : {1}, Source Type: {2}, , Checksum Algorithm: {3}")
   public static Collection<Object[]> data() throws Exception {
     List<Object[]> finalData = new ArrayList<>();
     List<Object[]> array = Arrays.asList(new Object[][]{
@@ -220,6 +219,7 @@ public class TestAmazonS3TargetForWholeFile {
               new LocalFileRef.Builder()
                   .filePath(testDir.getAbsolutePath() + "/" + fileName)
                   .bufferSize(1024)
+                  .verifyChecksum(false)
                   .build(),
               getLocalFileMetadata(testDir.getAbsolutePath() + "/" + fileName)
           )
@@ -260,7 +260,7 @@ public class TestAmazonS3TargetForWholeFile {
                   .s3Client(s3client)
                   .s3ObjectSummary(s3ObjectSummary)
                   .useSSE(false)
-                  .verifyChecksum(true)
+                  .verifyChecksum(false)
                   .bufferSize(1024)
                   .build(),
               metadata
@@ -372,6 +372,7 @@ public class TestAmazonS3TargetForWholeFile {
 
       while (eventRecordIterator.hasNext()) {
         Record eventRecord = eventRecordIterator.next();
+
         Assert.assertTrue(eventRecord.has(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO_PATH));
         Assert.assertTrue(eventRecord.has(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH));
         Map<String, Field> targetFileInfo = eventRecord.get(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH).getValueAsMap();
