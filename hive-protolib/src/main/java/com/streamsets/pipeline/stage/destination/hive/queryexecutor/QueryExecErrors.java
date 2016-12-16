@@ -22,7 +22,7 @@ package com.streamsets.pipeline.stage.destination.hive.queryexecutor;
 import com.streamsets.pipeline.api.ErrorCode;
 
 public enum QueryExecErrors implements ErrorCode {
-  QUERY_EXECUTOR_001("Failed to execute query: {}"),
+  QUERY_EXECUTOR_001("Failed to execute query '{}' got error: {}"),
   ;
 
   private final String msg;

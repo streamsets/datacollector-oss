@@ -76,7 +76,7 @@ public class HiveQueryExecutor extends BaseExecutor {
         stmt.execute(query);
       } catch(SQLException ex) {
         LOG.error("Can't execute query", ex);
-        errorRecordHandler.onError(new OnRecordErrorException(record, QueryExecErrors.QUERY_EXECUTOR_001, query));
+        errorRecordHandler.onError(new OnRecordErrorException(record, QueryExecErrors.QUERY_EXECUTOR_001, query, ex.getMessage(), ex));
       }
     }
   }

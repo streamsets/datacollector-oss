@@ -37,6 +37,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * To verify that the Hive query is indeed executed properly, we're creating tables and validating their proper structure.
@@ -96,7 +97,7 @@ public class HiveQueryExecutorIT extends BaseHiveIT {
 
   @Test
   public void testIncorrectQuery() throws Exception {
-    HiveQueryExecutor queryExecutor = createExecutor("THIS REALLY IS NOT VALID QUERY");
+    HiveQueryExecutor queryExecutor = createExecutor("INVALID");
 
     ExecutorRunner runner = new ExecutorRunner.Builder(HiveQueryDExecutor.class, queryExecutor)
       .setOnRecordError(OnRecordError.TO_ERROR)
@@ -111,6 +112,10 @@ public class HiveQueryExecutorIT extends BaseHiveIT {
     assertNotNull(errors);
     assertEquals(1, errors.size());
     assertEquals("FIELD", errors.get(0).get().getValueAsString());
+
+    String errorMessage = errors.get(0).getHeader().getErrorMessage();
+    String errorMessageFormat = ".* Failed to execute query 'INVALID' got error: Error while compiling statement: FAILED: .* cannot recognize input near .*";
+    assertTrue("Error message '" + errorMessage + "' doesn't conform to regexp: " + errorMessageFormat, errorMessage.matches(errorMessageFormat));
 
     runner.runDestroy();
   }
