@@ -23,24 +23,34 @@ import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Record;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Sink for catching all event records.
  */
 public class EventSink {
-  private List<Record> eventRecords;
+  private Map<String, List<Record>> eventRecords;
 
   public EventSink() {
-    this.eventRecords = new ArrayList<>();
+    this.eventRecords = new LinkedHashMap<>();
   }
 
-  public void addEvent(EventRecord event) {
-    eventRecords.add(event);
+  public void addEvent(String stage, EventRecord event) {
+    List<Record> events = eventRecords.get(stage);
+    if(events == null) {
+      events = new ArrayList<>();
+      eventRecords.put(stage, events);
+    }
+
+    events.add(event);
   }
 
-  public List<Record> getEventRecords() {
-    return eventRecords;
+  public List<Record> getStageEvents(String stage) {
+    return eventRecords.containsKey(stage) ? eventRecords.get(stage) : Collections.<Record>emptyList();
   }
 
   public void clear() {

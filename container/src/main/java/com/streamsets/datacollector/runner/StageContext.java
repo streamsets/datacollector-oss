@@ -444,7 +444,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
       recordImpl.getHeader().setSourceRecord(recordImpl);
       recordImpl.setInitialRecord(false);
     }
-    eventSink.addEvent(recordImpl);
+    eventSink.addEvent(instanceName, recordImpl);
   }
 
   public void setStop(boolean stop) {

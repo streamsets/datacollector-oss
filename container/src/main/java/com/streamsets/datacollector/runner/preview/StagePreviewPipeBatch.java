@@ -38,12 +38,14 @@ public class StagePreviewPipeBatch implements PipeBatch {
   private final List<Record> inputRecords;
   private final List<StageOutput> stageOutputSnapshot;
   private final ErrorSink errorSink;
+  private final EventSink eventSink;
 
   public StagePreviewPipeBatch(String instanceName, List<Record> inputRecords) {
     this.instanceName = instanceName;
     this.inputRecords = inputRecords;
     stageOutputSnapshot = new ArrayList<>();
     this.errorSink = new ErrorSink();
+    this.eventSink = new EventSink();
   }
 
   @Override
@@ -76,12 +78,12 @@ public class StagePreviewPipeBatch implements PipeBatch {
   }
 
   @Override
-  public void completeStage(BatchMakerImpl batchMaker, EventSink eventSink) {
+  public void completeStage(BatchMakerImpl batchMaker) {
     stageOutputSnapshot.add(new StageOutput(instanceName, batchMaker.getStageOutputSnapshot(), errorSink, eventSink));
   }
 
   @Override
-  public void completeStage(StagePipe pipe, EventSink eventSink) {
+  public void completeStage(StagePipe pipe) {
   }
 
   @Override
@@ -108,6 +110,11 @@ public class StagePreviewPipeBatch implements PipeBatch {
   @Override
   public ErrorSink getErrorSink() {
     return errorSink;
+  }
+
+  @Override
+  public EventSink getEventSink() {
+    return eventSink;
   }
 
   @Override

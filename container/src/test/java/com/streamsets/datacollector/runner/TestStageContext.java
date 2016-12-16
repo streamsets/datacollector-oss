@@ -293,8 +293,8 @@ public class TestStageContext {
     EventRecord event = new EventRecordImpl("custom-type", 1, "local-stage", "super-secret-id", null, null);
     event.set(Field.create(ImmutableMap.of("key", Field.create("value"))));
     context.toEvent(event);
-    Assert.assertEquals(1, sink.getEventRecords().size());
-    Record retrieved = sink.getEventRecords().get(0);
+    Assert.assertEquals(1, sink.getStageEvents("stage").size());
+    Record retrieved = sink.getStageEvents("stage").get(0);
 
     // Header is properly propagated
     Assert.assertEquals("custom-type", retrieved.getHeader().getAttribute(EventRecord.TYPE));

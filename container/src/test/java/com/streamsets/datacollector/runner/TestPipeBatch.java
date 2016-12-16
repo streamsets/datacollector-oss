@@ -113,7 +113,7 @@ public class TestPipeBatch {
     batchMaker.addRecord(origRecord, stageOutputLanes.get(0));
 
     // completing source
-    pipeBatch.completeStage(batchMaker, new EventSink());
+    pipeBatch.completeStage(batchMaker);
 
     pipe = new StagePipe(stages[1], LaneResolver.getPostFixed(stageOutputLanes, LaneResolver.STAGE_OUT),
       Collections.EMPTY_LIST, Collections.EMPTY_LIST);
@@ -124,7 +124,7 @@ public class TestPipeBatch {
     BatchImpl batch = pipeBatch.getBatch(pipe);
 
     // completing target
-    pipeBatch.completeStage(batchMaker, new EventSink());
+    pipeBatch.completeStage(batchMaker);
 
     Iterator<Record> records = batch.getRecords();
     Record recordFromBatch = records.next();
@@ -178,7 +178,7 @@ public class TestPipeBatch {
     batchMaker.addRecord(origRecord, stageOutputLanes.get(0));
 
     // completing source
-    pipeBatch.completeStage(batchMaker, new EventSink());
+    pipeBatch.completeStage(batchMaker);
 
     StagePipe targetPipe = new StagePipe(stages[1], LaneResolver.getPostFixed(stageOutputLanes, LaneResolver.STAGE_OUT),
       Collections.EMPTY_LIST, Collections.EMPTY_LIST);
@@ -189,7 +189,7 @@ public class TestPipeBatch {
     BatchImpl batch = pipeBatch.getBatch(targetPipe);
 
     // completing target
-    pipeBatch.completeStage(batchMaker, new EventSink());
+    pipeBatch.completeStage(batchMaker);
 
     Iterator<Record> records = batch.getRecords();
     Record recordFromBatch = records.next();
@@ -272,7 +272,7 @@ public class TestPipeBatch {
     batchMaker.addRecord(record, stageOutputLanes.get(0));
 
     // completing source
-    pipeBatch.completeStage(batchMaker, new EventSink());
+    pipeBatch.completeStage(batchMaker);
 
     Record origRecord = pipeBatch.getFullPayload().get(pipe.getOutputLanes().get(0)).get(0);
     pipeBatch.moveLane(pipe.getOutputLanes().get(0), "x");
@@ -314,7 +314,7 @@ public class TestPipeBatch {
     batchMaker.addRecord(record, stageOutputLanes.get(0));
 
     // completing source
-    pipeBatch.completeStage(batchMaker, new EventSink());
+    pipeBatch.completeStage(batchMaker);
 
     List<String> list = ImmutableList.of("x", "y");
 
@@ -368,7 +368,7 @@ public class TestPipeBatch {
     batchMaker.addRecord(record, stageOutputLanes.get(0));
 
     // completing source
-    pipeBatch.completeStage(batchMaker, new EventSink());
+    pipeBatch.completeStage(batchMaker);
 
     List<String> list = ImmutableList.of("x", "y");
     pipeBatch.moveLaneCopying(pipe.getOutputLanes().get(0), list);
@@ -417,7 +417,7 @@ public class TestPipeBatch {
     batchMaker.addRecord(origRecord, stageOutputLanes.get(0));
 
     // completing source
-    pipeBatch.completeStage(batchMaker, new EventSink());
+    pipeBatch.completeStage(batchMaker);
 
     StagePipe targetPipe = new StagePipe(stages[1], LaneResolver.getPostFixed(stageOutputLanes,
       LaneResolver.STAGE_OUT), Collections.EMPTY_LIST, Collections.EMPTY_LIST);
@@ -428,7 +428,7 @@ public class TestPipeBatch {
     BatchImpl batch = pipeBatch.getBatch(targetPipe);
 
     // completing target
-    pipeBatch.completeStage(batchMaker, new EventSink());
+    pipeBatch.completeStage(batchMaker);
 
     // getting stages ouptut
     List<StageOutput> stageOutputs = pipeBatch.getSnapshotsOfAllStagesOutput();
@@ -457,6 +457,6 @@ public class TestPipeBatch {
     Assert.assertFalse(it.hasNext());
 
     // completing target
-    pipeBatch.completeStage(batchMaker, new EventSink());
+    pipeBatch.completeStage(batchMaker);
   }
 }

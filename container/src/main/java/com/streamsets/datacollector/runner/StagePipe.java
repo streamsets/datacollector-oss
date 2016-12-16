@@ -218,7 +218,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     BatchMakerImpl batchMaker = pipeBatch.startStage(this);
     BatchImpl batchImpl = pipeBatch.getBatch(this);
     ErrorSink errorSink = pipeBatch.getErrorSink();
-    EventSink eventSink = new EventSink();
+    EventSink eventSink = pipeBatch.getEventSink();
     String previousOffset = pipeBatch.getPreviousOffset();
 
     InstanceErrorSink instanceErrorSink = new InstanceErrorSink(getStage().getInfo().getInstanceName(), errorSink);
@@ -276,7 +276,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
 
     if(getStage().getConfiguration().getEventLanes().size() > 0) {
       String lane = getStage().getConfiguration().getEventLanes().get(0);
-      int eventRecords = eventSink.getEventRecords().size();
+      int eventRecords = eventSink.getStageEvents(getStage().getInfo().getInstanceName()).size();
       outputRecordsPerLane.put(lane, eventRecords);
       outputRecordsPerLaneCounter.get(lane).inc(eventRecords);
       outputRecordsPerLaneMeter.get(lane).mark(eventRecords);
@@ -291,7 +291,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     batchMetrics.put(AggregatorUtil.STAGE_ERROR, stageErrorsCount);
     batchMetrics.put(AggregatorUtil.OUTPUT_RECORDS_PER_LANE, outputRecordsPerLane);
 
-    pipeBatch.completeStage(batchMaker, eventSink);
+    pipeBatch.completeStage(batchMaker);
 
     //get records count to determine if this stage saw any record in this batch
     int recordsCount = batchSize;
@@ -305,12 +305,12 @@ public class StagePipe extends Pipe<StagePipe.Context> {
 
   @Override
   public void destroy(PipeBatch pipeBatch) {
-    EventSink eventSink = new EventSink();
+    EventSink eventSink = pipeBatch.getEventSink();
     ErrorSink errorSink = pipeBatch.getErrorSink();
 
     getStage().destroy(errorSink, eventSink);
 
-    pipeBatch.completeStage(this, eventSink);
+    pipeBatch.completeStage(this);
   }
 
   public long getMemoryConsumed() {

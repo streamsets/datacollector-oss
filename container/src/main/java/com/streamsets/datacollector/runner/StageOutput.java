@@ -39,7 +39,7 @@ public class StageOutput {
       (Map) output,
       (List) errorSink.getErrorRecords(instanceName),
       errorSink.getStageErrors().get(instanceName),
-      eventSink.getEventRecords()
+      eventSink.getStageEvents(instanceName)
     );
   }
 

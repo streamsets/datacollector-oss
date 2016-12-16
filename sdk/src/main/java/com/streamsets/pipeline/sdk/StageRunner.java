@@ -327,7 +327,7 @@ public abstract class StageRunner<S extends Stage> {
   }
 
   public List<Record> getEventRecords() {
-    return context.getEventSink().getEventRecords();
+    return context.getEventSink().getStageEvents(info.getInstanceName());
   }
 
   public void clearEvents() {
