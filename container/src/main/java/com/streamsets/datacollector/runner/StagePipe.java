@@ -235,7 +235,27 @@ public class StagePipe extends Pipe<StagePipe.Context> {
       pipeBatch.setNewOffset(newOffset);
     }
 
-    long processingTime = System.currentTimeMillis() - start;
+    batchMetrics = finishBatchAndCalculateMetrics(
+      start,
+      pipeBatch,
+      batchMaker,
+      batchImpl,
+      errorSink,
+      eventSink,
+      newOffset
+    );
+  }
+
+  protected Map<String, Object> finishBatchAndCalculateMetrics(
+    long startTimeInStage,
+    PipeBatch pipeBatch,
+    BatchMakerImpl batchMaker,
+    BatchImpl batchImpl,
+    ErrorSink errorSink,
+    EventSink eventSink,
+    String newOffset
+  ) {
+    long processingTime = System.currentTimeMillis() - startTimeInStage;
     processingTimer.update(processingTime, TimeUnit.MILLISECONDS);
 
     int batchSize = batchImpl.getSize();
@@ -283,7 +303,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     }
 
     // capture stage metrics for this batch
-    batchMetrics.clear();
+    Map<String, Object> batchMetrics = new HashMap<>();
     batchMetrics.put(AggregatorUtil.PROCESSING_TIME, processingTime);
     batchMetrics.put(AggregatorUtil.INPUT_RECORDS, batchSize);
     batchMetrics.put(AggregatorUtil.ERROR_RECORDS, stageErrorRecordCount);
@@ -301,6 +321,8 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     }
     //update stats
     updateStatsAtEnd(startTimeInStage, newOffset, recordsCount);
+
+    return batchMetrics;
   }
 
   @Override
@@ -343,7 +365,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     return runtimeStatsGauge;
   }
 
-  private void updateStatsAtStart(long startTimeInStage) {
+  protected void updateStatsAtStart(long startTimeInStage) {
     //update the runtime stats
     //The following needs to be done at the beginning of a stage per batch
     //1. set name of current stage
@@ -359,7 +381,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     context.getRuntimeStats().setTimeInCurrentStage(System.currentTimeMillis() - startTimeInStage);
   }
 
-  private void updateStatsAtEnd(long startTimeInStage, String offset, int outputRecordsCount) {
+  protected void updateStatsAtEnd(long startTimeInStage, String offset, int outputRecordsCount) {
     //update the runtime stats
     //The following needs to be done at the beginning of a stage per batch
     //1. If source, update batch counter, current offset, if there was at least one record in this batch then

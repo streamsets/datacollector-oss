@@ -36,6 +36,7 @@ import com.streamsets.datacollector.runner.PipeContext;
 import com.streamsets.datacollector.runner.PipelineRunner;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.SourceOffsetTracker;
+import com.streamsets.datacollector.runner.SourcePipe;
 import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.runner.StagePipe;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
@@ -83,7 +84,7 @@ public class PreviewPipelineRunner implements PipelineRunner {
   }
 
   @Override
-  public void errorNotification(Pipe originPipe, List<List<Pipe>> pipes, Throwable throwable) {
+  public void errorNotification(SourcePipe originPipe, List<List<Pipe>> pipes, Throwable throwable) {
   }
 
   @Override
@@ -104,7 +105,7 @@ public class PreviewPipelineRunner implements PipelineRunner {
   @Override
   @SuppressWarnings("unchecked")
   public void run(
-    Pipe originPipe,
+    SourcePipe originPipe,
     List<List<Pipe>> pipes,
     BadRecordsHandler badRecordsHandler,
     StatsAggregationHandler statsAggregationHandler
@@ -114,7 +115,7 @@ public class PreviewPipelineRunner implements PipelineRunner {
 
   @Override
   public void run(
-    Pipe originPipe,
+    SourcePipe originPipe,
     List<List<Pipe>> pipes,
     BadRecordsHandler badRecordsHandler,
     List<StageOutput> stageOutputsToOverride,
@@ -162,7 +163,7 @@ public class PreviewPipelineRunner implements PipelineRunner {
 
   @Override
   public void destroy(
-    Pipe originPipe,
+    SourcePipe originPipe,
     List<List<Pipe>> pipes,
     BadRecordsHandler badRecordsHandler,
     StatsAggregationHandler statsAggregationHandler

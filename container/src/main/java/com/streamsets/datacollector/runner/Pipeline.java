@@ -60,7 +60,7 @@ public class Pipeline {
   private final String name;
   private final String rev;
   private final Configuration configuration;
-  private final Pipe originPipe;
+  private final SourcePipe originPipe;
   private final List<List<Pipe>> pipes;
   private final PipelineRunner runner;
   private final Observer observer;
@@ -75,7 +75,7 @@ public class Pipeline {
       String rev,
       Configuration configuration,
       PipelineBean pipelineBean,
-      Pipe originPipe,
+      SourcePipe originPipe,
       List<List<Pipe>> pipes,
       Observer observer,
       BadRecordsHandler badRecordsHandler,
@@ -307,7 +307,7 @@ public class Pipeline {
 
         // Origin runtime and pipe
         StageRuntime originRuntime = new StageRuntime(pipelineBean, pipelineBean.getOrigin());
-        Pipe originPipe = createOriginPipe(originRuntime, runner);
+        SourcePipe originPipe = createOriginPipe(originRuntime, runner);
 
         // Generate runtime and pipe for rest of the pipelines
         for(PipelineStageBeans beans : pipelineBean.getPipelineStageBeans()) {
@@ -461,9 +461,9 @@ public class Pipeline {
 
     }
 
-    private Pipe createOriginPipe(StageRuntime originRuntime, PipelineRunner runner) {
+    private SourcePipe createOriginPipe(StageRuntime originRuntime, PipelineRunner runner) {
       LaneResolver laneResolver = new LaneResolver(new StageRuntime[]{originRuntime});
-      return new StagePipe(
+      return new SourcePipe(
         pipelineName,
         rev,
         configuration,

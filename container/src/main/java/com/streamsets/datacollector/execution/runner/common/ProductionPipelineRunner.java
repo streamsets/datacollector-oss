@@ -52,6 +52,7 @@ import com.streamsets.datacollector.runner.PipeContext;
 import com.streamsets.datacollector.runner.PipelineRunner;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.SourceOffsetTracker;
+import com.streamsets.datacollector.runner.SourcePipe;
 import com.streamsets.datacollector.runner.StageContext;
 import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.runner.StagePipe;
@@ -283,7 +284,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
   @Override
   public void run(
-    Pipe originPipe,
+    SourcePipe originPipe,
     List<List<Pipe>> pipes,
     BadRecordsHandler badRecordsHandler,
     StatsAggregationHandler statsAggregationHandler
@@ -314,7 +315,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
   }
 
   @Override
-  public void errorNotification(Pipe originPipe, List<List<Pipe>> pipes, Throwable throwable) {
+  public void errorNotification(SourcePipe originPipe, List<List<Pipe>> pipes, Throwable throwable) {
     Set<ErrorListener> listeners = Sets.newIdentityHashSet();
     for (BatchListener batchListener : batchListenerList) {
       batchListener.postBatch();
@@ -343,7 +344,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
   @Override
   public void run(
-    Pipe originPipe,
+    SourcePipe originPipe,
     List<List<Pipe>> pipes,
     BadRecordsHandler badRecordsHandler,
     List<StageOutput> stageOutputsToOverride,
@@ -360,7 +361,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
    */
   @Override
   public void destroy(
-    Pipe originPipe,
+    SourcePipe originPipe,
     List<List<Pipe>> pipes,
     BadRecordsHandler badRecordsHandler,
     StatsAggregationHandler statsAggregationHandler
@@ -771,7 +772,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
   }
 
   // TODO: Do we need to keep list of all offset committing stages?
-  private OffsetCommitTrigger getOffsetCommitTrigger(Pipe originPipe, List<List<Pipe>> pipes) {
+  private OffsetCommitTrigger getOffsetCommitTrigger(SourcePipe originPipe, List<List<Pipe>> pipes) {
     // Origin can't be OffsetCommitTrigger, so going only through out the pipe list and only through first instance
     // as we're interested in the first offset committing stage at this point.
     for (Pipe pipe : pipes.get(0)) {

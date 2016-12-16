@@ -37,14 +37,14 @@ public interface PipelineRunner {
   public MetricRegistry getMetrics();
 
   public void run(
-    Pipe originPipe,
+    SourcePipe originPipe,
     List<List<Pipe>> pipes,
     BadRecordsHandler badRecordsHandler,
     StatsAggregationHandler statsAggregationHandler
   ) throws StageException, PipelineRuntimeException;
 
   public void run(
-    Pipe originPipe,
+    SourcePipe originPipe,
     List<List<Pipe>> pipes,
     BadRecordsHandler badRecordsHandler,
     List<StageOutput> stageOutputsToOverride,
@@ -52,7 +52,7 @@ public interface PipelineRunner {
   ) throws StageException, PipelineRuntimeException;
 
   public void destroy(
-    Pipe originPipe,
+    SourcePipe originPipe,
     List<List<Pipe>> pipes,
     BadRecordsHandler badRecordsHandler,
     StatsAggregationHandler statsAggregationHandler
@@ -71,7 +71,7 @@ public interface PipelineRunner {
   public MetricRegistryJson getMetricRegistryJson();
 
   void errorNotification(
-    Pipe originPipe,
+    SourcePipe originPipe,
     List<List<Pipe>> pipes,
     Throwable throwable
   );
