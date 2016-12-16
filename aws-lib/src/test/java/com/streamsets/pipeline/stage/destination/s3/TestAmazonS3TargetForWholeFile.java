@@ -28,8 +28,10 @@ import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.ChecksumAlgorithm;
 import com.streamsets.pipeline.config.DataFormat;
@@ -38,6 +40,7 @@ import com.streamsets.pipeline.lib.hashing.HashingUtil;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.io.fileref.LocalFileRef;
 import com.streamsets.pipeline.sdk.RecordCreator;
+import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.common.FakeS3;
 import com.streamsets.pipeline.stage.common.TestUtil;
@@ -399,6 +402,23 @@ public class TestAmazonS3TargetForWholeFile {
             .hashString(SAMPLE_TEXT_FOR_FILE.get(objectKey), Charset.defaultCharset()).toString();
         Assert.assertEquals(checksum, eventRecord.get("/" + FileRefUtil.WHOLE_FILE_CHECKSUM).getValueAsString());
       }
+    } finally {
+      targetRunner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testWholeFileInvalidRecord() throws Exception {
+    AmazonS3Target amazonS3Target = createS3targetWithWholeFile();
+    TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+    targetRunner.runInit();
+    try {
+      Record invalidRecord = getRecords().get(0);
+      invalidRecord.set(Field.create(new HashMap<String, Field>()));
+      targetRunner.runWrite(ImmutableList.of(invalidRecord));
+      Assert.assertEquals(1, targetRunner.getErrorRecords().size());
     } finally {
       targetRunner.runDestroy();
     }

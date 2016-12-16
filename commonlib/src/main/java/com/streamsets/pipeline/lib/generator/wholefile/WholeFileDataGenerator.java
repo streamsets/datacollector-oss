@@ -59,10 +59,10 @@ final class WholeFileDataGenerator implements DataGenerator {
   }
 
   private void validateRecord(Record record) throws DataGeneratorException {
-    for (String fieldPath : FileRefUtil.MANDATORY_FIELD_PATHS) {
-      if (!record.has(fieldPath)) {
-        throw new DataGeneratorException(Errors.WHOLE_FILE_GENERATOR_ERROR_0, fieldPath);
-      }
+    try {
+      FileRefUtil.validateWholeFileRecord(record);
+    } catch (IllegalArgumentException e) {
+      throw new DataGeneratorException(Errors.WHOLE_FILE_GENERATOR_ERROR_0, e);
     }
   }
 

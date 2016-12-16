@@ -21,12 +21,14 @@ package com.streamsets.pipeline.lib.io.fileref;
 
 import com.codahale.metrics.Gauge;
 import com.codahale.metrics.Meter;
-import com.google.common.collect.ImmutableList;
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.FileRef;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.ChecksumAlgorithm;
@@ -44,6 +46,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 public final class FileRefUtil {
@@ -80,6 +83,8 @@ public final class FileRefUtil {
   public static final String WHOLE_FILE_CHECKSUM = "checksum";
   public static final String WHOLE_FILE_CHECKSUM_ALGO = "checksumAlgorithm";
 
+  public static final Joiner COMMA_JOINER = Joiner.on(",");
+
   public static final EventCreator FILE_TRANSFER_COMPLETE_EVENT =
       new EventCreator.Builder(FileRefUtil.WHOLE_FILE_WRITE_FINISH_EVENT, 1)
           .withRequiredField(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO)
@@ -93,8 +98,8 @@ public final class FileRefUtil {
       new ImmutableSet.Builder<String>().add("size").build();
 
 
-  public static final List<String> MANDATORY_FIELD_PATHS =
-      ImmutableList.of(FILE_REF_FIELD_PATH, FILE_INFO_FIELD_PATH, FILE_INFO_FIELD_PATH + "/size");
+  public static final Set<String> MANDATORY_FIELD_PATHS =
+      ImmutableSet.of(FILE_REF_FIELD_PATH, FILE_INFO_FIELD_PATH, FILE_INFO_FIELD_PATH + "/size");
 
   public static final Map<String, Integer> GAUGE_MAP_ORDERING
       = new ImmutableMap.Builder<String, Integer>()
@@ -223,5 +228,16 @@ public final class FileRefUtil {
       stream = (T) new ChecksumCalculatingWrapperStream(stream, checksumAlgorithm.getHashType(), streamCloseEventHandler);
     }
     return stream;
+  }
+
+  public static void validateWholeFileRecord(Record record) {
+    Set<String> fieldPathsInRecord = record.getEscapedFieldPaths();
+    Utils.checkArgument(
+        fieldPathsInRecord.containsAll(MANDATORY_FIELD_PATHS),
+        Utils.format(
+            "Record does not contain the mandatory fields {} for Whole File Format.",
+            COMMA_JOINER.join(Sets.difference(MANDATORY_FIELD_PATHS, fieldPathsInRecord))
+        )
+    );
   }
 }

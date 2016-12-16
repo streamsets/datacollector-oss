@@ -32,6 +32,8 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.WholeFileExistsAction;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.lib.generator.DataGenerator;
+import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.lib.generator.StreamCloseEventHandler;
 import com.streamsets.pipeline.lib.io.fileref.FileRefStreamCloseEventHandler;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
@@ -148,7 +150,12 @@ final class WholeFileFormatFsHelper implements FsHelper {
     return path;
   }
 
-  private EventRecord createWholeFileEventRecord(Record record, Path renamableFinalPath) {
+  private EventRecord createWholeFileEventRecord(Record record, Path renamableFinalPath) throws StageException {
+    try {
+      FileRefUtil.validateWholeFileRecord(record);
+    } catch (IllegalArgumentException e) {
+      throw new OnRecordErrorException(record, Errors.HADOOPFS_14, e);
+    }
     //Update the event record with source file info information
     return HdfsEvents.FILE_TRANSFER_COMPLETE_EVENT
         .create(context)

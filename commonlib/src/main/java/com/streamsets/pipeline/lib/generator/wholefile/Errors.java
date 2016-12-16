@@ -22,7 +22,7 @@ package com.streamsets.pipeline.lib.generator.wholefile;
 import com.streamsets.pipeline.api.ErrorCode;
 
 public enum  Errors implements ErrorCode {
-  WHOLE_FILE_GENERATOR_ERROR_0("Record does not contain the mandatory field {} for Whole File Format."),
+  WHOLE_FILE_GENERATOR_ERROR_0("Whole File Format Error. Reason : {}"),
   ;
 
   private final String msg;

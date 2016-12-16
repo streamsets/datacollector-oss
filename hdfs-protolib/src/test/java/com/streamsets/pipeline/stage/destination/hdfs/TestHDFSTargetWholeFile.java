@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.destination.hdfs;
 
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.OnRecordError;
@@ -232,12 +233,9 @@ public class TestHDFSTargetWholeFile {
 
   @Test
   public void testWholeFilePermission() throws Exception {
-
     java.nio.file.Path filePath1 = Paths.get(getTestDir() + "/source_testWholeFilePermissionFiles1.txt");
     java.nio.file.Path filePath2 = Paths.get(getTestDir() + "/source_testWholeFilePermissionFiles2.txt");
     java.nio.file.Path filePath3 = Paths.get(getTestDir() + "/source_testWholeFilePermissionFiles3.txt");
-
-
 
     Files.write(filePath1, "This is a sample file 1 with some text".getBytes());
     Files.write(filePath2, "This is a sample file 2 with some text".getBytes());
@@ -440,6 +438,47 @@ public class TestHDFSTargetWholeFile {
 
         Assert.assertEquals(getTestDir()+ "/sdc-"+ filePath.getFileName(), eventRecord.get(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH + "/path").getValueAsString());
       }
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testWholeFileInvalidRecord() throws Exception {
+    java.nio.file.Path filePath = Paths.get(getTestDir() + "/source_testWholeFileEventRecords.txt");
+    Files.write(filePath, "This is a sample file 1 with some text".getBytes());
+
+    HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
+        .hdfsUri(uri.toString())
+        .dirPathTemplate(getTestDir())
+        .timeDriver("${time:now()}")
+        .dataForamt(DataFormat.WHOLE_FILE)
+        .fileType(HdfsFileType.WHOLE_FILE)
+        .fileNameEL("${record:value('"+ FileRefUtil.FILE_INFO_FIELD_PATH +"/filename')}")
+        .maxRecordsPerFile(1)
+        .maxFileSize(0)
+        .uniquePrefix("sdc-")
+        .idleTimeout("-1")
+        .wholeFileExistsAction(WholeFileExistsAction.TO_ERROR)
+        .lateRecordsAction(LateRecordsAction.SEND_TO_LATE_RECORDS_FILE)
+        .build();
+
+    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+
+    runner.runInit();
+
+    try {
+      Record record1 = getFileRefRecordForFile(filePath);
+      record1.delete("/fileRef");
+
+      Record record2 = getFileRefRecordForFile(filePath);
+      record2.delete("/fileInfo");
+
+      runner.runWrite(ImmutableList.of(record1, record2));
+      Assert.assertEquals(2, runner.getErrorRecords().size());
 
     } finally {
       runner.runDestroy();

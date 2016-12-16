@@ -44,6 +44,7 @@ public enum Errors implements ErrorCode {
 
   S3_50("Compression Option not supported for Whole file Data format"),
   S3_51("Object Key {} already exists"),
+  S3_52("Cannot Write Record : {}"),
 
   ;
 
