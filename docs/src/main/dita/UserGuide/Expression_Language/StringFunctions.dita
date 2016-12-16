@@ -163,7 +163,9 @@
        <li>string - The string to truncate. </li>
        <li>length - An integer that represents the number of characters to keep. </li>
       </ul></dd>
-     <dd>For example, ${str:truncate("vacation", 4)} returns: vaca. </dd>
+     <dd>For example, when a phone number field includes string numbers such as 415-555-5555,
+            ${str:truncate(record:value('/phone'),3)} returns the area code of the phone
+            number.</dd>
     </dlentry>
    </dl>
   </p>
