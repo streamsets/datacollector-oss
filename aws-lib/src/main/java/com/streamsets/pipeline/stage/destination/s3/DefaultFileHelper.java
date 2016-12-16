@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.destination.s3;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.Upload;
 import com.amazonaws.util.StringUtils;
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
@@ -77,6 +78,7 @@ final class DefaultFileHelper extends FileHelper {
 
     DataGenerator generator = s3TargetConfigBean.getGeneratorFactory().getGenerator(out);
     Record currentRecord;
+
     while (recordIterator.hasNext()) {
       currentRecord = recordIterator.next();
       try {
@@ -109,17 +111,19 @@ final class DefaultFileHelper extends FileHelper {
       String fileName = getUniqueDateWithIncrementalFileName(keyPrefix);
 
       //Create and issue file close event record, but the events are thrown after the batch completion.
-      S3Events.S3_OBJECT_WRITTEN
+      EventRecord eventRecord = S3Events.S3_OBJECT_WRITTEN
           .create(context)
           .with(BUCKET, s3TargetConfigBean.s3Config.bucket)
           .with(OBJECT_KEY, fileName)
-          .createAndSend();
+          .create();
 
       // Avoid making a copy of the internal buffer maintained by the ByteArrayOutputStream by using
       // ByRefByteArrayOutputStream
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bOut.getInternalBuffer(), 0, bOut.size());
       Upload upload = doUpload(fileName, byteArrayInputStream, getObjectMetadata());
       uploads.add(upload);
+
+      cachedEventRecords.add(eventRecord);
     }
 
     return uploads;
