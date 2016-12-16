@@ -63,12 +63,18 @@ public class HiveQueryExecutorIT extends BaseHiveIT {
     record.set(Field.create("blank line"));
 
     runner.runWrite(ImmutableList.of(record));
-    runner.runDestroy();
 
     assertTableStructure("default.copy",
       ImmutablePair.of("copy.id", Types.INTEGER),
       ImmutablePair.of("copy.name", Types.VARCHAR)
     );
+
+    List<Record> events = runner.getEventRecords();
+    assertNotNull(events);
+    assertEquals(1, events.size());
+    assertEquals("CREATE TABLE copy AS SELECT * FROM origin", events.get(0).get("/query").getValueAsString());
+
+    runner.runDestroy();
   }
 
   @Test
@@ -87,12 +93,19 @@ public class HiveQueryExecutorIT extends BaseHiveIT {
     record.set(Field.create(map));
 
     runner.runWrite(ImmutableList.of(record));
-    runner.runDestroy();
 
     assertTableStructure("default.el",
       ImmutablePair.of("el.id", Types.INTEGER),
       ImmutablePair.of("el.name", Types.VARCHAR)
     );
+
+
+    List<Record> events = runner.getEventRecords();
+    assertNotNull(events);
+    assertEquals(1, events.size());
+    assertEquals("CREATE TABLE el AS SELECT * FROM origin", events.get(0).get("/query").getValueAsString());
+
+    runner.runDestroy();
   }
 
   @Test
@@ -116,6 +129,10 @@ public class HiveQueryExecutorIT extends BaseHiveIT {
     String errorMessage = errors.get(0).getHeader().getErrorMessage();
     String errorMessageFormat = ".* Failed to execute query 'INVALID' got error: Error while compiling statement: FAILED: .* cannot recognize input near .*";
     assertTrue("Error message '" + errorMessage + "' doesn't conform to regexp: " + errorMessageFormat, errorMessage.matches(errorMessageFormat));
+
+    List<Record> events = runner.getEventRecords();
+    assertNotNull(events);
+    assertEquals(0, events.size());
 
     runner.runDestroy();
   }

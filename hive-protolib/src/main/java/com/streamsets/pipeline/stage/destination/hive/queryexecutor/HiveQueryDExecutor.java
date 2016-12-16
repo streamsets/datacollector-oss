@@ -35,6 +35,7 @@ import com.streamsets.pipeline.configurablestage.DExecutor;
     description = "Executes Hive or Impala queries.",
     icon = "hive-executor.png",
     privateClassLoader = true,
+    producesEvents = true,
     onlineHelpRefUrl = "index.html#Executors/HiveQuery.html#task_mgm_4lk_fx"
 )
 @ConfigGroups(value = Groups.class)

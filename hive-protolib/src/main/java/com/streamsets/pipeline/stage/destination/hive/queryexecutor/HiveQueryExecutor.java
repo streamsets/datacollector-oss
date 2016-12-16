@@ -73,7 +73,13 @@ public class HiveQueryExecutor extends BaseExecutor {
       LOG.info("Executing query: {}", query);
 
       try(Statement stmt = config.hiveConfigBean.getHiveConnection().createStatement()) {
+        // Execute the query
         stmt.execute(query);
+
+        // And if it was successful, issue event with the generated query
+        HiveQueryExecutorEvents.successfulQuery.create(getContext())
+          .with("query", query)
+          .createAndSend();
       } catch(SQLException ex) {
         LOG.error("Can't execute query", ex);
         errorRecordHandler.onError(new OnRecordErrorException(record, QueryExecErrors.QUERY_EXECUTOR_001, query, ex.getMessage(), ex));
