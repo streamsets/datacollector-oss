@@ -287,4 +287,20 @@ public class TestStringEL {
     Assert.assertTrue(eval.eval(variables, "${str:length(str:trim(\" abc \"))}", Integer.class) == 3);
     Assert.assertTrue(eval.eval(variables, "${str:length(str:substring(\"abcdef\", 0, 3))}", Integer.class) == 3);
   }
+
+  @Test
+  public void testUrlEncode() throws Exception {
+    ELEvaluator eval = new ELEvaluator("testUrlEncode", StringEL.class);
+    ELVariables variables = new ELVariables();
+    Assert.assertEquals("", eval.eval(variables, "${str:urlEncode(\"\", \"UTF8\")}", String.class));
+    Assert.assertEquals("Ahoj+tady+medusa", eval.eval(variables, "${str:urlEncode(\"Ahoj tady medusa\", \"UTF8\")}", String.class));
+  }
+
+  @Test
+  public void testUrlDecode() throws Exception {
+    ELEvaluator eval = new ELEvaluator("testUrlDecode", StringEL.class);
+    ELVariables variables = new ELVariables();
+    Assert.assertEquals("", eval.eval(variables, "${str:urlDecode(\"\", \"UTF8\")}", String.class));
+    Assert.assertEquals("Ahoj tady medusa", eval.eval(variables, "${str:urlDecode(\"Ahoj+tady+medusa\", \"UTF8\")}", String.class));
+  }
 }

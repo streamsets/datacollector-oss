@@ -26,6 +26,9 @@ import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -227,6 +230,38 @@ public class StringEL {
   ) {
     string = (string == null)? "" : string;
     return string.length();
+  }
+
+  @ElFunction(
+      prefix = "str",
+      name = "urlEncode",
+      description = "Returns URL encoded variant of the string."
+  )
+  public static String urlEncode (
+      @ElParam("string") String string,
+      @ElParam("encoding") String encoding
+  ) throws UnsupportedEncodingException {
+    if(string == null) {
+      return null;
+    }
+
+    return URLEncoder.encode(string, encoding);
+  }
+
+  @ElFunction(
+      prefix = "str",
+      name = "urlDecode",
+      description = "Returns decoded string from URL encoded variant."
+  )
+  public static String urlDecode (
+      @ElParam("string") String string,
+      @ElParam("encoding") String encoding
+  ) throws UnsupportedEncodingException {
+    if(string == null) {
+      return null;
+    }
+
+    return URLDecoder.decode(string, encoding);
   }
 
 }
