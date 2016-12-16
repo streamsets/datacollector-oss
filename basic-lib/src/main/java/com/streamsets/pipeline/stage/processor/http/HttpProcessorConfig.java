@@ -19,7 +19,6 @@
  */
 package com.streamsets.pipeline.stage.processor.http;
 
-import com.streamsets.lib.security.http.HttpUtils;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
