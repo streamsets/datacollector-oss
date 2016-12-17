@@ -42,6 +42,7 @@ import com.streamsets.datacollector.restapi.bean.CounterJson;
 import com.streamsets.datacollector.restapi.bean.HistogramJson;
 import com.streamsets.datacollector.restapi.bean.MeterJson;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
+import com.streamsets.datacollector.runner.BatchContextImpl;
 import com.streamsets.datacollector.runner.BatchListener;
 import com.streamsets.datacollector.runner.ErrorSink;
 import com.streamsets.datacollector.runner.FullPipeBatch;
@@ -51,6 +52,7 @@ import com.streamsets.datacollector.runner.PipeBatch;
 import com.streamsets.datacollector.runner.PipeContext;
 import com.streamsets.datacollector.runner.PipelineRunner;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
+import com.streamsets.datacollector.runner.PushSourceContextDelegate;
 import com.streamsets.datacollector.runner.SourceOffsetTracker;
 import com.streamsets.datacollector.runner.SourcePipe;
 import com.streamsets.datacollector.runner.StageContext;
@@ -63,8 +65,10 @@ import com.streamsets.datacollector.util.AggregatorUtil;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
+import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.OffsetCommitTrigger;
+import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
@@ -87,7 +91,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
 
-public class ProductionPipelineRunner implements PipelineRunner {
+public class ProductionPipelineRunner implements PipelineRunner, PushSourceContextDelegate {
 
   private static final Logger LOG = LoggerFactory.getLogger(ProductionPipelineRunner.class);
 
@@ -102,6 +106,11 @@ public class ProductionPipelineRunner implements PipelineRunner {
   private final String pipelineName;
   private final String revision;
   private final List<ErrorListener> errorListeners;
+
+  private SourcePipe originPipe;
+  private List<List<Pipe>> pipes;
+  private BadRecordsHandler badRecordsHandler;
+  private StatsAggregationHandler statsAggregationHandler;
 
   private final Timer batchProcessingTimer;
   private final Meter batchCountMeter;
@@ -289,9 +298,90 @@ public class ProductionPipelineRunner implements PipelineRunner {
     BadRecordsHandler badRecordsHandler,
     StatsAggregationHandler statsAggregationHandler
   ) throws StageException, PipelineRuntimeException {
+    this.originPipe = originPipe;
+    this.pipes = pipes;
+    this.badRecordsHandler = badRecordsHandler;
+    this.statsAggregationHandler = statsAggregationHandler;
 
-    OffsetCommitTrigger offsetCommitTrigger = getOffsetCommitTrigger(originPipe, pipes);
+    if(originPipe.getStage().getStage() instanceof PushSource) {
+      runPushSource();
+    } else {
+      runPollSource();
+    }
+  }
 
+  private void runPushSource() throws StageException, PipelineRuntimeException {
+    // This object will receive delegated calls from the push origin callbacks
+    originPipe.getStage().setPushSourceContextDelegate(this);
+
+    // Configured maximal batch size
+    int batchSize = configuration.get(Constants.MAX_BATCH_SIZE_KEY, Constants.MAX_BATCH_SIZE_DEFAULT);
+
+    // Push origin will block on the call until the either all data have been consumed or the pipeline stopped
+    originPipe.process(batchSize);
+  }
+
+  private FullPipeBatch createFullPipeBatch() {
+    FullPipeBatch pipeBatch;
+    if(batchesToCapture > 0) {
+      pipeBatch = new FullPipeBatch(offsetTracker, snapshotBatchSize, true);
+    } else {
+      pipeBatch = new FullPipeBatch(offsetTracker, configuration.get(Constants.MAX_BATCH_SIZE_KEY, Constants.MAX_BATCH_SIZE_DEFAULT), false);
+    }
+    pipeBatch.setRateLimiter(rateLimiter);
+
+    return pipeBatch;
+  }
+
+  @Override
+  public BatchContext startBatch() {
+    // Pick up any recent changes done to the rule definitions
+    if(observer != null) {
+      observer.reconfigure();
+    }
+
+    FullPipeBatch pipeBatch = createFullPipeBatch();
+    BatchContextImpl batchContext = new BatchContextImpl(pipeBatch);
+
+    originPipe.prepareBatchContext(batchContext);
+
+    return batchContext;
+  }
+
+  @Override
+  public boolean processBatch(BatchContext batchCtx) {
+    BatchContextImpl batchContext = (BatchContextImpl) batchCtx;
+
+    Map<String, Long> memoryConsumedByStage = new HashMap<>();
+    Map<String, Object> stageBatchMetrics = new HashMap<>();
+
+    Map<String, Object> batchMetrics = originPipe.finishBatchContext(batchContext);
+
+    if (isStatsAggregationEnabled()) {
+      stageBatchMetrics.put(originPipe.getStage().getInfo().getInstanceName(), batchMetrics);
+    }
+
+    try {
+      runSourceLessBatch(
+        batchContext.getStartTime(),
+        batchContext.getPipeBatch(),
+        memoryConsumedByStage,
+        stageBatchMetrics
+      );
+    } catch (PipelineException|StageException e) {
+      LOG.error("Can't process batch", e);
+      return false;
+    }
+
+    return true;
+  }
+
+  @Override
+  public void commitOffset(String offset) {
+    // TODO: SDC-4784	Provide offset handling for Push origins
+  }
+
+  public void runPollSource() throws StageException, PipelineRuntimeException {
     while (!offsetTracker.isFinished() && !stop) {
       if (threadHealthReporter != null) {
         threadHealthReporter.reportHealth(ProductionPipelineRunnable.RUNNABLE_NAME, -1, System.currentTimeMillis());
@@ -300,7 +390,23 @@ public class ProductionPipelineRunner implements PipelineRunner {
         for (BatchListener batchListener : batchListenerList) {
           batchListener.preBatch();
         }
-        runBatch(originPipe, pipes, badRecordsHandler, statsAggregationHandler, offsetCommitTrigger);
+
+        if(observer != null) {
+          observer.reconfigure();
+        }
+
+        // Start of the batch execution
+        long start = System.currentTimeMillis();
+        FullPipeBatch pipeBatch = createFullPipeBatch();
+
+        // Run origin
+        Map<String, Long> memoryConsumedByStage = new HashMap<>();
+        Map<String, Object> stageBatchMetrics = new HashMap<>();
+        processPipe(originPipe, pipeBatch, false, memoryConsumedByStage, stageBatchMetrics);
+
+        // And rest of the pipeline
+        runSourceLessBatch(start, pipeBatch, memoryConsumedByStage, stageBatchMetrics);
+
         for (BatchListener batchListener : batchListenerList) {
           batchListener.postBatch();
         }
@@ -505,38 +611,19 @@ public class ProductionPipelineRunner implements PipelineRunner {
     return committed;
   }
 
-  private void runBatch(
-    Pipe originPipe,
-    List<List<Pipe>> pipes,
-    BadRecordsHandler badRecordsHandler,
-    StatsAggregationHandler statsAggregationHandler,
-    OffsetCommitTrigger offsetCommitTrigger
+  private void runSourceLessBatch(
+    long start,
+    FullPipeBatch pipeBatch,
+    Map<String, Long> memoryConsumedByStage,
+    Map<String, Object> stageBatchMetrics
   ) throws PipelineException, StageException {
     boolean committed = false;
-    /*value true indicates that this batch is captured */
-    boolean batchCaptured = false;
-    PipeBatch pipeBatch;
-    //pick up any recent changes done to the rule definitions
-    if(observer != null) {
-      observer.reconfigure();
-    }
 
-    if(batchesToCapture > 0) {
-      batchCaptured = true;
-      pipeBatch = new FullPipeBatch(offsetTracker, snapshotBatchSize, true /*snapshot stage output*/);
-    } else {
-      pipeBatch = new FullPipeBatch(offsetTracker,
-        configuration.get(Constants.MAX_BATCH_SIZE_KEY, Constants.MAX_BATCH_SIZE_DEFAULT),
-        false /*snapshot stage output*/);
-    }
-    ((FullPipeBatch) pipeBatch).setRateLimiter(rateLimiter);
-    long start = System.currentTimeMillis();
+    OffsetCommitTrigger offsetCommitTrigger = getOffsetCommitTrigger(originPipe, pipes);
+
     sourceOffset = pipeBatch.getPreviousOffset();
-    Map<String, Long> memoryConsumedByStage = new HashMap<>();
-    Map<String, Object> stageBatchMetrics = new HashMap<>();
 
-    // This method runs only single threaded pipeline
-    committed = processPipe(originPipe, pipeBatch, committed, memoryConsumedByStage, stageBatchMetrics);
+    // TODO: SDC-4803	Provide a pipeline runner pool support in ProductionPipelineRunner
     for (Pipe pipe : pipes.get(0)) {
       committed = processPipe(pipe, pipeBatch, committed, memoryConsumedByStage, stageBatchMetrics);
     }
@@ -596,7 +683,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
     newSourceOffset = offsetTracker.getOffset();
 
     synchronized (this) {
-      if(batchCaptured && batchesToCapture > 0) {
+      if( batchesToCapture > 0 && pipeBatch.getSnapshotsOfAllStagesOutput() != null) {
         List<StageOutput> snapshot = pipeBatch.getSnapshotsOfAllStagesOutput();
         if (!snapshot.isEmpty()) {
           capturedBatches.add(snapshot);
@@ -617,7 +704,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
       }
     }
 
-    //Retain X number of error records per stage
+    // Retain X number of error records per stage
     Map<String, List<Record>> errorRecords = pipeBatch.getErrorSink().getErrorRecords();
     Map<String, List<ErrorMessage>> errorMessages = pipeBatch.getErrorSink().getStageErrors();
     retainErrorsInMemory(errorRecords, errorMessages);
