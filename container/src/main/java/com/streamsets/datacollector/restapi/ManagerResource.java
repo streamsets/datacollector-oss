@@ -226,12 +226,12 @@ public class ManagerResource {
   public Response stopPipeline(
     @PathParam("pipelineName") String pipelineName,
     @QueryParam("rev") @DefaultValue("0") String rev,
-    @Context SecurityContext context) throws PipelineException {
+    @Context SecurityContext context
+  ) throws PipelineException {
     RestAPIUtils.injectPipelineInMDC(pipelineName);
-    if (manager.isRemotePipeline(pipelineName, rev)) {
-      if (!context.isUserInRole(AuthzRole.ADMIN) && !context.isUserInRole(AuthzRole.ADMIN_REMOTE)) {
-        throw new PipelineException(ContainerError.CONTAINER_01101, "STOP_PIPELINE", pipelineName);
-      }
+    if (manager.isRemotePipeline(pipelineName, rev) && !context.isUserInRole(AuthzRole.ADMIN) &&
+        !context.isUserInRole(AuthzRole.ADMIN_REMOTE)) {
+      throw new PipelineException(ContainerError.CONTAINER_01101, "STOP_PIPELINE", pipelineName);
     }
     Runner runner = manager.getRunner(user, pipelineName, rev);
     Utils.checkState(runner.getState().getExecutionMode() != ExecutionMode.SLAVE,
@@ -253,7 +253,10 @@ public class ManagerResource {
       AuthzRole.MANAGER_REMOTE,
       AuthzRole.ADMIN_REMOTE
   })
-  public Response stopPipelines(List<String> pipelineNames) throws StageException, PipelineException {
+  public Response stopPipelines(
+      List<String> pipelineNames,
+      @Context SecurityContext context
+  ) throws StageException, PipelineException {
     List<PipelineState> successEntities = new ArrayList<>();
     List<String> errorMessages = new ArrayList<>();
 
@@ -261,7 +264,8 @@ public class ManagerResource {
       if (pipelineName != null) {
         RestAPIUtils.injectPipelineInMDC(pipelineName);
 
-        if (manager.isRemotePipeline(pipelineName, "0")) {
+        if (manager.isRemotePipeline(pipelineName, "0") && !context.isUserInRole(AuthzRole.ADMIN) &&
+            !context.isUserInRole(AuthzRole.ADMIN_REMOTE)) {
           errorMessages.add("Cannot stop a remote pipeline: " + pipelineName);
           continue;
         }
