@@ -19,8 +19,17 @@
  */
 package com.streamsets.datacollector.runner;
 
+import com.google.common.base.Preconditions;
+import com.streamsets.datacollector.record.EventRecordImpl;
+import com.streamsets.datacollector.record.RecordImpl;
+import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.EventRecord;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.impl.ErrorMessage;
 
 /**
  * BatchContext implementation keeping all the state for given Batch while the pipeline is running the origin's code.
@@ -42,9 +51,61 @@ public class BatchContextImpl implements BatchContext {
    */
   private long startTime;
 
+  /**
+   * Stage name of the source to properly route event and error records.
+   */
+  private String originStageName;
+
   public BatchContextImpl(FullPipeBatch pipeBatch) {
     this.pipeBatch = pipeBatch;
     this.startTime = System.currentTimeMillis();
+  }
+
+  @Override
+  @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
+  public void toError(Record record, Exception ex) {
+    Preconditions.checkNotNull(record, "record cannot be null");
+    Preconditions.checkNotNull(ex, "exception cannot be null");
+    if (ex instanceof StageException) {
+      toError(record, new ErrorMessage((StageException) ex));
+    } else {
+      toError(record, new ErrorMessage(ContainerError.CONTAINER_0001, ex.toString(), ex));
+    }
+  }
+
+  @Override
+  public void toError(Record record, String errorMessage) {
+    Preconditions.checkNotNull(record, "record cannot be null");
+    Preconditions.checkNotNull(errorMessage, "errorMessage cannot be null");
+    toError(record, new ErrorMessage(ContainerError.CONTAINER_0002, errorMessage));
+  }
+
+  @Override
+  public void toError(Record record, ErrorCode errorCode, Object... args) {
+    Preconditions.checkNotNull(record, "record cannot be null");
+    Preconditions.checkNotNull(errorCode, "errorId cannot be null");
+    // the last args needs to be Exception in order to show stack trace
+    toError(record, new ErrorMessage(errorCode, args));
+  }
+
+  private void toError(Record record, ErrorMessage errorMessage) {
+    RecordImpl recordImpl = ((RecordImpl) record).clone();
+    if (recordImpl.isInitialRecord()) {
+      recordImpl.getHeader().setSourceRecord(recordImpl);
+      recordImpl.setInitialRecord(false);
+    }
+    recordImpl.getHeader().setError(originStageName, errorMessage);
+    pipeBatch.getErrorSink().addRecord(originStageName, recordImpl);
+  }
+
+  @Override
+  public void toEvent(EventRecord record) {
+    EventRecordImpl recordImpl = ((EventRecordImpl) record).clone();
+    if (recordImpl.isInitialRecord()) {
+      recordImpl.getHeader().setSourceRecord(recordImpl);
+      recordImpl.setInitialRecord(false);
+    }
+    pipeBatch.getEventSink().addEvent(originStageName, recordImpl);
   }
 
   @Override
@@ -54,6 +115,10 @@ public class BatchContextImpl implements BatchContext {
 
   public void setBatchMaker(BatchMaker batchMaker) {
     this.batchMaker = batchMaker;
+  }
+
+  public void setOriginStageName(String name) {
+    this.originStageName = name;
   }
 
   public FullPipeBatch getPipeBatch() {

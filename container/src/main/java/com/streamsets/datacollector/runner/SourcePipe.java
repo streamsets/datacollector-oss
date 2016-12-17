@@ -86,6 +86,8 @@ public class SourcePipe extends StagePipe {
     BatchMakerImpl batchMaker = pipeBatch.startStage(this);
     batchContext.setBatchMaker(batchMaker);
 
+    batchContext.setOriginStageName(getStage().getInfo().getInstanceName());
+
     updateStatsAtStart(batchContext.getStartTime());
   }
 
