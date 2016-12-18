@@ -470,13 +470,13 @@ public class TestStageContext {
       }
 
       @Override
-      public boolean processBatch(BatchContext batchContext) {
+      public boolean processBatch(BatchContext batchContext, String entity, String offset) {
         processBatchCalled.set(true);
         return false;
       }
 
       @Override
-      public void commitOffset(String offset) {
+      public void commitOffset(String entity, String offset) {
         commitOffsetCalled.set(true);
       }
     });
@@ -487,7 +487,7 @@ public class TestStageContext {
     context.processBatch(null);
     Assert.assertTrue(processBatchCalled.get());
 
-    context.commitOffset("offset");
+    context.commitOffset("entity", "offset");
     Assert.assertTrue(commitOffsetCalled.get());
 
 

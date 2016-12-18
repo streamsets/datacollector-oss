@@ -219,12 +219,18 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
 
   @Override
   public boolean processBatch(BatchContext batchContext) {
-    return pushSourceContextDelegate.processBatch(batchContext);
+    return pushSourceContextDelegate.processBatch(batchContext, null, null);
   }
 
   @Override
-  public void commitOffset(String offset) {
-    pushSourceContextDelegate.commitOffset(offset);
+  public boolean processBatch(BatchContext batchContext, String entityName, String entityOffset) {
+    Preconditions.checkNotNull(entityName);
+    return pushSourceContextDelegate.processBatch(batchContext, entityName, entityOffset);
+  }
+
+  @Override
+  public void commitOffset(String entity, String offset) {
+    pushSourceContextDelegate.commitOffset(entity, offset);
   }
 
   private static class ConfigIssueImpl extends Issue implements Stage.ConfigIssue {

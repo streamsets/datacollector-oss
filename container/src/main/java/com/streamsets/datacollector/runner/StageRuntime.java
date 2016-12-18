@@ -154,54 +154,18 @@ public class StageRuntime implements PushSourceContextDelegate {
     }
   }
 
-  String execute(Callable<String> callable) throws Exception {
-    // if the stage is annotated as recordsByRef it means it does not reuse the records/fields it creates, thus
-    // we have to call it within a create-by-ref context so Field.create does not clone Fields and BatchMakerImpl
-    // does not clone output records.
-    return (def.getRecordsByRef() && !context.isPreview()) ? CreateByRef.call(callable) : callable.call();
-  }
-
-  public String execute(final String previousOffset, final int batchSize, final Batch batch,
-      final BatchMaker batchMaker, ErrorSink errorSink, EventSink eventSink) throws StageException {
+  String execute(Callable<String> callable, ErrorSink errorSink, EventSink eventSink) throws StageException {
     mainClassLoader = Thread.currentThread().getContextClassLoader();
     try {
-      setErrorAndEventSink(errorSink, eventSink);
       context.setPushSourceContextDelegate(this);
+      setErrorAndEventSink(errorSink, eventSink);
       Thread.currentThread().setContextClassLoader(getDefinition().getStageClassLoader());
 
-      Callable<String> callable = new Callable<String>() {
-        @Override
-        public String call() throws Exception {
-          String newOffset = null;
-          switch (getDefinition().getType()) {
-            case SOURCE: {
-              if(getStage() instanceof PushSource) {
-                ((PushSource)getStage()).produce(batchSize);
-              } else {
-                newOffset = ((Source) getStage()).produce(previousOffset, batchSize, batchMaker);
-              }
-              break;
-            }
-            case PROCESSOR: {
-              ((Processor) getStage()).process(batch, batchMaker);
-              break;
-
-            }
-            case EXECUTOR:
-            case TARGET: {
-              ((Target) getStage()).write(batch);
-              break;
-            }
-            default: {
-              throw new IllegalStateException(Utils.format("Unknown stage type: '{}'", getDefinition().getType()));
-            }
-          }
-          return newOffset;
-        }
-      };
-
       try {
-        return execute(callable);
+        // if the stage is annotated as recordsByRef it means it does not reuse the records/fields it creates, thus
+        // we have to call it within a create-by-ref context so Field.create does not clone Fields and BatchMakerImpl
+        // does not clone output records.
+        return (def.getRecordsByRef() && !context.isPreview()) ? CreateByRef.call(callable) : callable.call();
       } catch (Exception ex) {
         if (ex instanceof StageException) {
           throw (StageException) ex;
@@ -216,6 +180,65 @@ public class StageRuntime implements PushSourceContextDelegate {
       setErrorAndEventSink(null, null);
       Thread.currentThread().setContextClassLoader(mainClassLoader);
     }
+  }
+
+  public void execute(final Map<String, String> offsets, final int batchSize) throws StageException {
+      Callable<String> callable = new Callable<String>() {
+        @Override
+        public String call() throws Exception {
+          switch (getDefinition().getType()) {
+            case SOURCE: {
+              if(getStage() instanceof PushSource) {
+                ((PushSource)getStage()).produce(offsets, batchSize);
+                return null;
+              }
+            }
+            default: {
+              throw new IllegalStateException(Utils.format("Unknown stage type: '{}'", getDefinition().getType()));
+            }
+          }
+        }
+      };
+
+      execute(callable, null, null);
+  }
+
+  public String execute(
+    final String previousOffset,
+    final int batchSize,
+    final Batch batch,
+    final BatchMaker batchMaker,
+    ErrorSink errorSink,
+    EventSink eventSink
+  ) throws StageException {
+    Callable<String> callable = new Callable<String>() {
+      @Override
+      public String call() throws Exception {
+        String newOffset = null;
+        switch (getDefinition().getType()) {
+          case SOURCE: {
+            newOffset = ((Source) getStage()).produce(previousOffset, batchSize, batchMaker);
+            break;
+          }
+          case PROCESSOR: {
+            ((Processor) getStage()).process(batch, batchMaker);
+            break;
+
+          }
+          case EXECUTOR:
+          case TARGET: {
+            ((Target) getStage()).write(batch);
+            break;
+          }
+          default: {
+            throw new IllegalStateException(Utils.format("Unknown stage type: '{}'", getDefinition().getType()));
+          }
+        }
+        return newOffset;
+      }
+    };
+
+    return execute(callable, errorSink, eventSink);
   }
 
   public void destroy(ErrorSink errorSink, EventSink eventSink) {
@@ -261,12 +284,12 @@ public class StageRuntime implements PushSourceContextDelegate {
   }
 
   @Override
-  public boolean processBatch(final BatchContext batchContext) {
+  public boolean processBatch(final BatchContext batchContext, final String entity, final String offset) {
     return (boolean) AccessController.doPrivileged(new PrivilegedAction() {
       public Object run() {
         try {
           Thread.currentThread().setContextClassLoader(mainClassLoader);
-          return pushSourceContextDelegate.processBatch(batchContext);
+          return pushSourceContextDelegate.processBatch(batchContext, entity, offset);
         } finally {
           Thread.currentThread().setContextClassLoader(getDefinition().getStageClassLoader());
         }
@@ -275,12 +298,12 @@ public class StageRuntime implements PushSourceContextDelegate {
   }
 
   @Override
-  public void commitOffset(final String offset) {
+  public void commitOffset(final String entity, final String offset) {
     AccessController.doPrivileged(new PrivilegedAction() {
       public Object run() {
         try {
           Thread.currentThread().setContextClassLoader(mainClassLoader);
-          pushSourceContextDelegate.commitOffset(offset);
+          pushSourceContextDelegate.commitOffset(entity, offset);
           return null;
         } finally {
           Thread.currentThread().setContextClassLoader(getDefinition().getStageClassLoader());

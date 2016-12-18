@@ -64,14 +64,7 @@ public class SourcePipe extends StagePipe {
    * @param batchSize Maximal configured batch size
    */
   public void process(int batchSize) throws StageException, PipelineRuntimeException {
-    getStage().execute(
-      null,
-      batchSize,
-      null,
-      null,
-      null,
-      null
-    );
+    getStage().execute(null, batchSize);
   }
 
   /**

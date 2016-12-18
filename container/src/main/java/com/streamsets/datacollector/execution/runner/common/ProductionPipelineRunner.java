@@ -349,7 +349,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   }
 
   @Override
-  public boolean processBatch(BatchContext batchCtx) {
+  public boolean processBatch(BatchContext batchCtx, String entity, String offset) {
     BatchContextImpl batchContext = (BatchContextImpl) batchCtx;
 
     Map<String, Long> memoryConsumedByStage = new HashMap<>();
@@ -377,7 +377,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   }
 
   @Override
-  public void commitOffset(String offset) {
+  public void commitOffset(String entity, String offset) {
     // TODO: SDC-4784	Provide offset handling for Push origins
   }
 

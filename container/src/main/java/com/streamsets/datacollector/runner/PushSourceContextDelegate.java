@@ -31,8 +31,8 @@ public interface PushSourceContextDelegate {
 
   public BatchContext startBatch();
 
-  public boolean processBatch(BatchContext batchContext);
+  public boolean processBatch(BatchContext batchContext, String entityName, String entityOffset);
 
-  public void commitOffset(String offset);
+  public void commitOffset(String entityName, String entityOffset);
 
 }

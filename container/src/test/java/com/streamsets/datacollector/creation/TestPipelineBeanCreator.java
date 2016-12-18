@@ -319,7 +319,7 @@ public class TestPipelineBeanCreator {
     }
 
     @Override
-    public void produce(int maxBatchSize) throws StageException {
+    public void produce(Map<String, String> offsets, int maxBatchSize) throws StageException {
 
     }
   }
