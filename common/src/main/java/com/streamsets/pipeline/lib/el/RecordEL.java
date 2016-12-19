@@ -130,6 +130,39 @@ public class RecordEL {
     return false;
   }
 
+  @ElFunction(
+      prefix = RECORD_EL_PREFIX,
+      name = "fieldAttribute",
+      description = "Returns the value of the attribute named 'attributeName' of the field specified by 'fieldPath'")
+  @SuppressWarnings("unchecked")
+  public static String getFieldAttributeValue(
+      @ElParam("fieldPath") String fieldPath, @ElParam("attributeName") String attributeName) {
+    Record record = getRecordInContext();
+    if (record != null) {
+      Field field = record.get(fieldPath);
+      if (field != null) {
+        return field.getAttribute(attributeName);
+      }
+    }
+    return null;
+  }
+
+  @ElFunction(
+      prefix = RECORD_EL_PREFIX,
+      name = "fieldAttributeOrDefault",
+      description = "Returns the value of the attribute named 'attributeName' of the field specified by 'fieldPath'" +
+          " or the 'defaultValue' if not found "
+  )
+  @SuppressWarnings("unchecked")
+  public static String getFieldAttributeValueOrDefault(
+      @ElParam("fieldPath") String fieldPath,
+      @ElParam("attributeName") String attributeName,
+      @ElParam("defaultValue") String defaultValue
+  ) {
+    String value = getFieldAttributeValue(fieldPath, attributeName);
+    return value != null ? value : defaultValue;
+  }
+
   private enum HeaderProperty {
     ID, STAGE_CREATOR, STAGES_PATH, ERROR_STAGE, ERROR_CODE, ERROR_MESSAGE, ERROR_DATA_COLLECTOR_ID,
     ERROR_PIPELINE_NAME, ERROR_TIME
