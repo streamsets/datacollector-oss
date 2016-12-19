@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.PostProcessingOptions;
+import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -70,6 +71,7 @@ public class TestWholeFileSpoolDirSource {
     conf.overrunLimit = 100;
     conf.poolingTimeoutSecs = 1;
     conf.filePattern = "*";
+    conf.pathMatcherMode = PathMatcherMode.GLOB;
     conf.maxSpoolFiles = 10;
     conf.initialFileToProcess = null;
     conf.dataFormatConfig.compression = Compression.NONE;

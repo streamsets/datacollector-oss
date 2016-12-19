@@ -281,7 +281,7 @@ public class SpoolDirSource extends BaseSource {
       );
     } else {
       try {
-        DirectorySpooler.createPathMatcher(conf.filePattern);
+        DirectorySpooler.createPathMatcher(conf.filePattern, conf.pathMatcherMode);
       } catch (Exception ex) {
         issues.add(
             getContext().createConfigIssue(
@@ -300,7 +300,7 @@ public class SpoolDirSource extends BaseSource {
   private void validateInitialFileToProcess(List<ConfigIssue> issues) {
     if (conf.initialFileToProcess != null && !conf.initialFileToProcess.isEmpty()) {
       try {
-        PathMatcher pathMatcher = DirectorySpooler.createPathMatcher(conf.filePattern);
+        PathMatcher pathMatcher = DirectorySpooler.createPathMatcher(conf.filePattern, conf.pathMatcherMode);
         if (!pathMatcher.matches(new File(conf.initialFileToProcess).toPath().getFileName())) {
           issues.add(
               getContext().createConfigIssue(

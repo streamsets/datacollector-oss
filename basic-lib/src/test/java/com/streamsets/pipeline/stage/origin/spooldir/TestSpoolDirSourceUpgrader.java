@@ -21,11 +21,13 @@ package com.streamsets.pipeline.stage.origin.spooldir;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
-import org.junit.Assert;
+import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 public class TestSpoolDirSourceUpgrader {
 
@@ -34,25 +36,36 @@ public class TestSpoolDirSourceUpgrader {
     SpoolDirSourceUpgrader spoolDirSourceUpgrader = new SpoolDirSourceUpgrader();
 
     List<Config> upgrade = spoolDirSourceUpgrader.upgrade("x", "y", "z", 1, 7, new ArrayList<Config>());
-    Assert.assertEquals(9, upgrade.size());
-    Assert.assertEquals("conf.dataFormatConfig.compression", upgrade.get(0).getName());
-    Assert.assertEquals("NONE", upgrade.get(0).getValue());
-    Assert.assertEquals("conf.dataFormatConfig.csvCustomDelimiter", upgrade.get(1).getName());
-    Assert.assertEquals('|', upgrade.get(1).getValue());
-    Assert.assertEquals("conf.dataFormatConfig.csvCustomEscape", upgrade.get(2).getName());
-    Assert.assertEquals('\\', upgrade.get(2).getValue());
-    Assert.assertEquals("conf.dataFormatConfig.csvCustomQuote", upgrade.get(3).getName());
-    Assert.assertEquals('\"', upgrade.get(3).getValue());
-    Assert.assertEquals("conf.dataFormatConfig.csvRecordType", upgrade.get(4).getName());
-    Assert.assertEquals("LIST", upgrade.get(4).getValue());
-    Assert.assertEquals("conf.dataFormatConfig.filePatternInArchive", upgrade.get(5).getName());
-    Assert.assertEquals("*", upgrade.get(5).getValue());
-    Assert.assertEquals("conf.dataFormatConfig.csvSkipStartLines", upgrade.get(6).getName());
-    Assert.assertEquals(0, upgrade.get(6).getValue());
-    Assert.assertEquals("conf.allowLateDirectory", upgrade.get(7).getName());
-    Assert.assertEquals(false, upgrade.get(7).getValue());
-    Assert.assertEquals("conf.useLastModified", upgrade.get(8).getName());
-    Assert.assertEquals(FileOrdering.LEXICOGRAPHICAL.name(), upgrade.get(8).getValue());
+    assertEquals(9, upgrade.size());
+    assertEquals("conf.dataFormatConfig.compression", upgrade.get(0).getName());
+    assertEquals("NONE", upgrade.get(0).getValue());
+    assertEquals("conf.dataFormatConfig.csvCustomDelimiter", upgrade.get(1).getName());
+    assertEquals('|', upgrade.get(1).getValue());
+    assertEquals("conf.dataFormatConfig.csvCustomEscape", upgrade.get(2).getName());
+    assertEquals('\\', upgrade.get(2).getValue());
+    assertEquals("conf.dataFormatConfig.csvCustomQuote", upgrade.get(3).getName());
+    assertEquals('\"', upgrade.get(3).getValue());
+    assertEquals("conf.dataFormatConfig.csvRecordType", upgrade.get(4).getName());
+    assertEquals("LIST", upgrade.get(4).getValue());
+    assertEquals("conf.dataFormatConfig.filePatternInArchive", upgrade.get(5).getName());
+    assertEquals("*", upgrade.get(5).getValue());
+    assertEquals("conf.dataFormatConfig.csvSkipStartLines", upgrade.get(6).getName());
+    assertEquals(0, upgrade.get(6).getValue());
+    assertEquals("conf.allowLateDirectory", upgrade.get(7).getName());
+    assertEquals(false, upgrade.get(7).getValue());
+    assertEquals("conf.useLastModified", upgrade.get(8).getName());
+    assertEquals(FileOrdering.LEXICOGRAPHICAL.name(), upgrade.get(8).getValue());
   }
 
+  @Test
+  public void testV8toV9() throws StageException {
+    SpoolDirSourceUpgrader spoolDirSourceUpgrader = new SpoolDirSourceUpgrader();
+
+    List<Config> configs = new ArrayList<>();
+    List<Config> upgraded = spoolDirSourceUpgrader.upgrade("x", "y", "z", 8, 9, configs);
+
+    assertEquals(1, upgraded.size());
+    assertEquals(PathMatcherMode.GLOB, upgraded.get(0).getValue());
+    assertEquals("conf.pathMatcherMode", upgraded.get(0).getName());
+  }
 }

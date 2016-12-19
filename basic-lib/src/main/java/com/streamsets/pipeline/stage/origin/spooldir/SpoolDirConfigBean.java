@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.config.PostProcessingOptionsChooserValues;
+import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
 public class SpoolDirConfigBean {
@@ -52,6 +53,18 @@ public class SpoolDirConfigBean {
       group = "FILES"
   )
   public String spoolDir;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "File Name Pattern Mode",
+      description = "Select whether the File Name Pattern specified uses glob pattern syntax or regex syntax.",
+      defaultValue = "GLOB",
+      displayPosition = 15,
+      group = "FILES"
+  )
+  @ValueChooserModel(PathMatcherModeChooserValues.class)
+  public PathMatcherMode pathMatcherMode;
 
   @ConfigDef(
       required = true,

@@ -27,6 +27,7 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
+import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
 import com.streamsets.pipeline.lib.parser.log.Constants;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -168,6 +169,7 @@ public class TestLogSpoolDirSourceLog4jFormat {
     conf.batchSize = 10;
     conf.poolingTimeoutSecs = 1;
     conf.filePattern = "file-[0-9].log";
+    conf.pathMatcherMode = PathMatcherMode.GLOB;
     conf.maxSpoolFiles = 10;
     conf.initialFileToProcess = null;
     conf.dataFormatConfig.compression = Compression.NONE;
@@ -329,6 +331,7 @@ public class TestLogSpoolDirSourceLog4jFormat {
     conf.batchSize = 10;
     conf.poolingTimeoutSecs = 1;
     conf.filePattern = "file-[0-9].log";
+    conf.pathMatcherMode = PathMatcherMode.GLOB;
     conf.maxSpoolFiles = 10;
     conf.initialFileToProcess = null;
     conf.dataFormatConfig.compression = Compression.NONE;

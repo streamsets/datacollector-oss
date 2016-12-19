@@ -31,6 +31,7 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
+import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
@@ -89,6 +90,7 @@ public class TestSpoolDirSource {
     conf.overrunLimit = 100;
     conf.poolingTimeoutSecs = 1;
     conf.filePattern = "file-[0-9].log";
+    conf.pathMatcherMode = PathMatcherMode.GLOB;
     conf.maxSpoolFiles = 10;
     conf.initialFileToProcess = initialFile;
     conf.dataFormatConfig.compression = Compression.NONE;
@@ -147,6 +149,7 @@ public class TestSpoolDirSource {
     conf.overrunLimit = 100;
     conf.poolingTimeoutSecs = 1;
     conf.filePattern = "file-[0-9].log";
+    conf.pathMatcherMode = PathMatcherMode.GLOB;
     conf.maxSpoolFiles = 10;
     conf.initialFileToProcess = null;
     conf.dataFormatConfig.compression = Compression.NONE;
@@ -368,6 +371,7 @@ public class TestSpoolDirSource {
     conf.overrunLimit = 100;
     conf.poolingTimeoutSecs = 1;
     conf.filePattern = "file-[0-9].log";
+    conf.pathMatcherMode = PathMatcherMode.GLOB;
     conf.maxSpoolFiles = 10;
     conf.initialFileToProcess = "file-0.log";
     conf.dataFormatConfig.compression = Compression.NONE;
@@ -423,6 +427,7 @@ public class TestSpoolDirSource {
     conf.overrunLimit = 100;
     conf.poolingTimeoutSecs = 1;
     conf.filePattern = "*";
+    conf.pathMatcherMode = PathMatcherMode.GLOB;
     conf.maxSpoolFiles = 10;
     conf.dataFormatConfig.compression = Compression.NONE;
     conf.dataFormatConfig.filePatternInArchive = "*";
@@ -524,6 +529,7 @@ public class TestSpoolDirSource {
     conf.overrunLimit = 100;
     conf.poolingTimeoutSecs = 1;
     conf.filePattern = "file-[0-9].log";
+    conf.pathMatcherMode = PathMatcherMode.GLOB;
     conf.maxSpoolFiles = 10;
     conf.initialFileToProcess = "file-0.log";
     conf.dataFormatConfig.compression = Compression.NONE;

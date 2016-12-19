@@ -26,6 +26,7 @@ import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
+import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.apache.commons.compress.compressors.CompressorException;
@@ -190,6 +191,7 @@ public class TestSpoolDirWithCompression {
     conf.overrunLimit = 65;
     conf.poolingTimeoutSecs = 1;
     conf.filePattern = "logArchive*.zip";
+    conf.pathMatcherMode = PathMatcherMode.GLOB;
     conf.maxSpoolFiles = 10;
     conf.initialFileToProcess = null;
     conf.dataFormatConfig.compression = Compression.ARCHIVE;
@@ -213,6 +215,7 @@ public class TestSpoolDirWithCompression {
     conf.overrunLimit = 65;
     conf.poolingTimeoutSecs = 1;
     conf.filePattern = "logArchive*.tar.gz";
+    conf.pathMatcherMode = PathMatcherMode.GLOB;
     conf.maxSpoolFiles = 10;
     conf.initialFileToProcess = null;
     conf.dataFormatConfig.compression = Compression.COMPRESSED_ARCHIVE;
@@ -237,6 +240,7 @@ public class TestSpoolDirWithCompression {
     conf.overrunLimit = 65;
     conf.poolingTimeoutSecs = 1;
     conf.filePattern = "testAvro*.tar.gz";
+    conf.pathMatcherMode = PathMatcherMode.GLOB;
     conf.maxSpoolFiles = 10;
     conf.initialFileToProcess = null;
     conf.dataFormatConfig.compression = Compression.COMPRESSED_ARCHIVE;
@@ -259,6 +263,7 @@ public class TestSpoolDirWithCompression {
     conf.overrunLimit = 65;
     conf.poolingTimeoutSecs = 1;
     conf.filePattern = "testFile*.bz2";
+    conf.pathMatcherMode = PathMatcherMode.GLOB;
     conf.maxSpoolFiles = 10;
     conf.initialFileToProcess = null;
     conf.dataFormatConfig.compression = Compression.COMPRESSED_FILE;

@@ -54,8 +54,25 @@ import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static com.streamsets.pipeline.lib.dirspooler.PathMatcherMode.GLOB;
+import static com.streamsets.pipeline.lib.dirspooler.PathMatcherMode.REGEX;
+
 public class DirectorySpooler {
   private static final Logger LOG = LoggerFactory.getLogger(DirectorySpooler.class);
+  private static final String PENDING_FILES = "pending.files";
+
+  private final Source.Context context;
+  private final String spoolDir;
+  private final int maxSpoolFiles;
+  private final String pattern;
+  private final PathMatcherMode pathMatcherMode;
+  private final FilePostProcessing postProcessing;
+  private final String archiveDir;
+  private final long archiveRetentionMillis;
+  private final String errorArchiveDir;
+  private final boolean useLastModified;
+  private final Comparator<Path> pathComparator;
+  private final boolean processSubdirectories;
 
   public enum FilePostProcessing {NONE, DELETE, ARCHIVE}
 
@@ -68,6 +85,7 @@ public class DirectorySpooler {
     private String spoolDir;
     private int maxSpoolFiles;
     private String pattern;
+    private PathMatcherMode pathMatcherMode = PathMatcherMode.GLOB;
     private FilePostProcessing postProcessing;
     private String archiveDir;
     private long archiveRetentionMillis;
@@ -99,6 +117,11 @@ public class DirectorySpooler {
 
     public Builder setFilePattern(String pattern) {
       this.pattern = Preconditions.checkNotNull(pattern, "pattern cannot be null");
+      return this;
+    }
+
+    public Builder setPathMatcherMode(PathMatcherMode mode) {
+      this.pathMatcherMode = Preconditions.checkNotNull(mode, "path matcher mode cannot be null");
       return this;
     }
 
@@ -154,35 +177,40 @@ public class DirectorySpooler {
       if (postProcessing == FilePostProcessing.ARCHIVE) {
         Preconditions.checkArgument(archiveDir != null, "archive dir not specified");
       }
-      return new DirectorySpooler(context, spoolDir, maxSpoolFiles, pattern, postProcessing, archiveDir,
-          archiveRetentionMillis, errorArchiveDir, waitForPathAppearance, useLastModifiedTimestamp,
+      return new DirectorySpooler(context,
+          spoolDir,
+          maxSpoolFiles,
+          pattern,
+          pathMatcherMode,
+          postProcessing,
+          archiveDir,
+          archiveRetentionMillis,
+          errorArchiveDir,
+          waitForPathAppearance,
+          useLastModifiedTimestamp,
           processSubdirectories
       );
     }
   }
 
-  private final Source.Context context;
-  private final String spoolDir;
-  private final int maxSpoolFiles;
-  private final String pattern;
-  private final FilePostProcessing postProcessing;
-  private final String archiveDir;
-  private final long archiveRetentionMillis;
-  private final String errorArchiveDir;
-  private final boolean useLastModified;
-  private final Comparator<Path> pathComparator;
-  private final boolean processSubdirectories;
-
-  private static final String PENDING_FILES = "pending.files";
-
-  public DirectorySpooler(Source.Context context, String spoolDir, int maxSpoolFiles, String pattern,
-                          FilePostProcessing postProcessing, String archiveDir, long archiveRetentionMillis,
-                          String errorArchiveDir, boolean processSubdirectories) {
+  public DirectorySpooler(
+      Source.Context context,
+      String spoolDir,
+      int maxSpoolFiles,
+      String pattern,
+      PathMatcherMode pathMatcherMode,
+      FilePostProcessing postProcessing,
+      String archiveDir,
+      long archiveRetentionMillis,
+      String errorArchiveDir,
+      boolean processSubdirectories
+  ) {
     this(
         context,
         spoolDir,
         maxSpoolFiles,
         pattern,
+        pathMatcherMode,
         postProcessing,
         archiveDir,
         archiveRetentionMillis,
@@ -193,15 +221,25 @@ public class DirectorySpooler {
     );
   }
 
-  public DirectorySpooler(Source.Context context, String spoolDir, int maxSpoolFiles, String pattern,
-      FilePostProcessing postProcessing, String archiveDir, long archiveRetentionMillis,
-      String errorArchiveDir, boolean waitForPathAppearance, final boolean useLastModified,
+  public DirectorySpooler(
+      Source.Context context,
+      String spoolDir,
+      int maxSpoolFiles,
+      String pattern,
+      PathMatcherMode pathMatcherMode,
+      FilePostProcessing postProcessing,
+      String archiveDir,
+      long archiveRetentionMillis,
+      String errorArchiveDir,
+      boolean waitForPathAppearance,
+      final boolean useLastModified,
       boolean processSubdirectories
   ) {
     this.context = context;
     this.spoolDir = spoolDir;
     this.maxSpoolFiles = maxSpoolFiles;
     this.pattern = pattern;
+    this.pathMatcherMode = pathMatcherMode;
     this.postProcessing = postProcessing;
     this.archiveDir = archiveDir;
     this.archiveRetentionMillis = archiveRetentionMillis;
@@ -257,8 +295,17 @@ public class DirectorySpooler {
     Preconditions.checkState(Files.isDirectory(path), Utils.formatL("Path '{}' is not a directory", path));
   }
 
-  public static PathMatcher createPathMatcher(String pattern) {
-    return FileSystems.getDefault().getPathMatcher("glob:" + pattern);
+  public static PathMatcher createPathMatcher(String pattern, PathMatcherMode mode) {
+    FileSystem fs = FileSystems.getDefault();
+    PathMatcher matcher;
+    if (mode == GLOB) {
+      matcher = fs.getPathMatcher("glob:" + pattern);
+    } else if (mode == REGEX) {
+      matcher = fs.getPathMatcher("regex:" + pattern);
+    } else {
+      throw new IllegalArgumentException("Unrecognized Path Matcher Mode: " + mode.getLabel());
+    }
+    return matcher;
   }
 
   public void init(String sourceFile) {
@@ -301,7 +348,7 @@ public class DirectorySpooler {
       }
       LOG.debug("Post processing mode '{}'{}", postProcessing, extraInfo);
 
-      fileMatcher = createPathMatcher(pattern);
+      fileMatcher = createPathMatcher(pattern, pathMatcherMode);
 
       if (useLastModified) {
         // 11 is the DEFAULT_INITIAL_CAPACITY -- seems pretty random, but lets use the same one.

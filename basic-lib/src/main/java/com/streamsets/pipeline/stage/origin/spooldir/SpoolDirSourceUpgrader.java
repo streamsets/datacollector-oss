@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
+import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,11 +84,21 @@ public class SpoolDirSourceUpgrader implements StageUpgrader {
         // fall through
       case 7:
         upgradeV7ToV8(configs);
+        if (toVersion == 8) {
+          break;
+        }
+        // fall through
+      case 8:
+        upgradeV8ToV9(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
     return configs;
+  }
+
+  private void upgradeV8ToV9(List<Config> configs) {
+    configs.add(new Config(joiner.join(CONF, "pathMatcherMode"), PathMatcherMode.GLOB));
   }
 
   private void upgradeV7ToV8(List<Config> configs) {
