@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.configurablestage.DTarget;
@@ -37,6 +38,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
     recordsByRef = true,
     onlineHelpRefUrl = "index.html#Destinations/DataLakeStore.html#task_jfl_nf4_zx"
 )
+@HideConfigs(value = {"dataLakeConfig.dataFormatConfig.includeChecksumInTheEvents"})
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
 public class DataLakeDTarget extends DTarget {
