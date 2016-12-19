@@ -168,7 +168,12 @@
   </topicref>
   <topicref href="../Origins/OracleCDC.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
-   <topicref href="../Origins/OracleCDC-Prerequisites.dita"/>
+   <topicref href="../Origins/OracleCDC-Prerequisites.dita">
+    <topicref href="../Origins/OracleCDC-T1-LogMiner.dita"/>
+    <topicref href="../Origins/OracleCDC-T2-SuppLogg.dita"/>
+    <topicref href="../Origins/OracleCDC-T3-UserAcct.dita"/>
+    <topicref href="../Origins/OracleCDC-T4-InstallDriver.dita"/>
+   </topicref>
    <topicref href="../Origins/OracleCDC-Dictionary.dita"/>
    <topicref href="../Origins/OracleCDC-InitialChange.dita"/>
    <topicref href="../Origins/OracleCDC-GeneratedRecords.dita">
