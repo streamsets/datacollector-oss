@@ -127,7 +127,7 @@
                                                 the origin. Common user accounts for Oracle 12c
                                                 multitenant databases start with "c##". For more
                                                 information, see <xref
-                                                  href="OracleCDC-Prerequisites.dita#concept_xwg_33w_cx"
+                                                  href="OracleCDC-T3-UserAcct.dita#concept_jnz_bd2_3y"
                                                 />.</note></p>
                                     </entry>
                                 </row>
@@ -178,7 +178,7 @@
                                             created for the origin. Common user accounts for Oracle
                                             12c multitenant databases start with "c##".</p>
                                         <p>For more information, see <xref
-                                                href="OracleCDC-Prerequisites.dita#concept_xwg_33w_cx"
+                                                href="OracleCDC-T3-UserAcct.dita#concept_jnz_bd2_3y"
                                             />.</p>
                                     </entry>
                                 </row>
