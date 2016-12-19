@@ -44,17 +44,22 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
 
   private final List<ExpressionProcessorConfig> expressionProcessorConfigs;
   private final List<HeaderAttributeConfig> headerAttributeConfigs;
+  private final List<FieldAttributeConfig> fieldAttributeConfigs;
   private final Map<String, ?> memoizedVars = new HashMap<>();
 
   private ELEval expressionEval;
   private ELVars expressionVars;
   private ELEval headerAttributeEval;
+  private ELEval fieldAttributeEval;
 
   public ExpressionProcessor(
       List<ExpressionProcessorConfig> expressionProcessorConfigs,
-      List<HeaderAttributeConfig> headerAttributeConfigs) {
+      List<HeaderAttributeConfig> headerAttributeConfigs,
+      List<FieldAttributeConfig> fieldAttributeConfigs
+  ) {
     this.expressionProcessorConfigs = expressionProcessorConfigs;
     this.headerAttributeConfigs = headerAttributeConfigs;
+    this.fieldAttributeConfigs = fieldAttributeConfigs;
   }
 
   @Override
@@ -78,6 +83,24 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
           getContext(), Groups.EXPRESSIONS.name(), "headerAttributeConfigs", Errors.EXPR_00, Object.class, issues);
       }
     }
+
+    if (fieldAttributeConfigs != null && !fieldAttributeConfigs.isEmpty()) {
+      fieldAttributeEval = createFieldAttributeEval(getContext());
+      for (FieldAttributeConfig fieldAttributeConfig : fieldAttributeConfigs) {
+        ELUtils.validateExpression(
+            fieldAttributeEval,
+            expressionVars,
+            fieldAttributeConfig.fieldAttributeExpression,
+            getContext(),
+            Groups.EXPRESSIONS.name(),
+            "fieldAttributeConfigs",
+            Errors.EXPR_00,
+            Object.class,
+            issues
+        );
+      }
+    }
+
     return issues;
   }
 
@@ -87,6 +110,10 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
 
   private ELEval createHeaderAttributeEval(ELContext elContext) {
     return elContext.createELEval("headerAttributeExpression");
+  }
+
+  private ELEval createFieldAttributeEval(ELContext elContext) {
+    return elContext.createELEval("fieldAttributeExpression");
   }
 
   @Override
@@ -154,6 +181,43 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
         record.getHeader().setAttribute(attributeToSet, result);
       }
     }
+
+    if (fieldAttributeConfigs != null && !fieldAttributeConfigs.isEmpty()) {
+      for (FieldAttributeConfig fieldAttributeConfig : fieldAttributeConfigs) {
+        String attributeToSet = fieldAttributeConfig.attributeToSet;
+        if (attributeToSet == null || attributeToSet.isEmpty()) {
+          continue;
+        }
+        Field field = record.get(fieldAttributeConfig.fieldToSet);
+        if (field == null) {
+          throw new OnRecordErrorException(
+              Errors.EXPR_05,
+              record.getHeader().getSourceId(),
+              fieldAttributeConfig.fieldToSet,
+              fieldAttributeConfig.attributeToSet,
+              fieldAttributeConfig.fieldAttributeExpression
+          );
+        }
+        String result;
+        try {
+          result = fieldAttributeEval.eval(
+              expressionVars,
+              fieldAttributeConfig.fieldAttributeExpression,
+              String.class
+          );
+        } catch (ELEvalException e) {
+          throw new OnRecordErrorException(
+              Errors.EXPR_03,
+              fieldAttributeConfig.fieldAttributeExpression,
+              record.getHeader().getSourceId(),
+              e.toString(),
+              e
+          );
+        }
+        field.setAttribute(fieldAttributeConfig.attributeToSet, result);
+      }
+    }
+
     batchMaker.addRecord(record);
   }
 

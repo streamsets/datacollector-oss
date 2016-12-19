@@ -55,15 +55,25 @@ public class ExpressionDProcessor extends DProcessor {
     required = false,
     type = ConfigDef.Type.MODEL,
     label = "Header Attribute Expressions",
-    displayPosition = 10,
+    displayPosition = 20,
     group = "EXPRESSIONS"
   )
   @ListBeanModel
   public List<HeaderAttributeConfig> headerAttributeConfigs;
 
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MODEL,
+      label = "Field Attribute Expressions",
+      displayPosition = 30,
+      group = "EXPRESSIONS"
+  )
+  @ListBeanModel
+  public List<FieldAttributeConfig> fieldAttributeConfigs;
+
   @Override
   protected Processor createProcessor() {
-    return new ExpressionProcessor(expressionProcessorConfigs, headerAttributeConfigs);
+    return new ExpressionProcessor(expressionProcessorConfigs, headerAttributeConfigs, fieldAttributeConfigs);
   }
 
 }

@@ -569,6 +569,48 @@ public class TestExpressionProcessor {
   }
 
   @Test
+  public void testFieldAttributeExpressions() throws StageException {
+    FieldAttributeConfig fAttrConf1 = new FieldAttributeConfig();
+    fAttrConf1.attributeToSet = "fieldAttr1";
+    fAttrConf1.fieldAttributeExpression = "attrValue1";
+    fAttrConf1.fieldToSet = "/first";
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
+        .addConfiguration("expressionProcessorConfigs", new ArrayList<>())
+        .addConfiguration("headerAttributeConfigs", new ArrayList<>())
+        .addConfiguration("fieldAttributeConfigs", ImmutableList.of(fAttrConf1))
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map1 = new LinkedHashMap<>();
+      map1.put("first", Field.create(Field.Type.STRING, "firstValue1"));
+      Record record1 = RecordCreator.create("s", "s:1");
+      record1.set(Field.create(map1));
+
+      Map<String, Field> map2 = new LinkedHashMap<>();
+      map2.put("second", Field.create(Field.Type.STRING, "secondValue1"));
+      Record record2 = RecordCreator.create("s", "s:2");
+      record2.set(Field.create(map2));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record1, record2));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+
+      Record outputRecord = output.getRecords().get("a").get(0);
+
+      Assert.assertEquals("attrValue1", outputRecord.get("/first").getAttribute("fieldAttr1"));
+
+      Assert.assertEquals(1, runner.getErrorRecords().size());
+      Record errorRecord = runner.getErrorRecords().get(0);
+      Assert.assertEquals(Errors.EXPR_05.name(), errorRecord.getHeader().getErrorCode());
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
   public void testTimeExpression() throws StageException {
 
     ExpressionProcessorConfig expressionProcessorConfig = new ExpressionProcessorConfig();
