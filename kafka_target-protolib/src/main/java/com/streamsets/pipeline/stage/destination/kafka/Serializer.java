@@ -22,12 +22,13 @@ package com.streamsets.pipeline.stage.destination.kafka;
 import com.streamsets.pipeline.api.Label;
 
 import static com.streamsets.pipeline.stage.destination.kafka.Serializer.SerializerConstants.BYTE_ARRAY_SERIALIZER;
+import static com.streamsets.pipeline.stage.destination.kafka.Serializer.SerializerConstants.KAFKA_AVRO_SERIALIZER;
 import static com.streamsets.pipeline.stage.destination.kafka.Serializer.SerializerConstants.STRING_SERIALIZER;
 
 public enum Serializer implements Label {
   STRING("String", STRING_SERIALIZER, STRING_SERIALIZER),
   DEFAULT("Default", BYTE_ARRAY_SERIALIZER, BYTE_ARRAY_SERIALIZER),
-  CONFLUENT("Confluent", STRING_SERIALIZER, BYTE_ARRAY_SERIALIZER);
+  CONFLUENT("Confluent",KAFKA_AVRO_SERIALIZER, BYTE_ARRAY_SERIALIZER);
 
   class SerializerConstants {
     static final String STRING_SERIALIZER = "org.apache.kafka.common.serialization.StringSerializer";
