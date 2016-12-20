@@ -84,6 +84,15 @@
    <topicref href="../Processors/FieldTypeConverter-ChangeScale.dita"/>
    <topicref href="../Processors/FieldTypeConverter-Configuring.dita"/>
   </topicref>
+  <topicref href="../Processors/FieldZip.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Processors/FieldZip-MergingLists.dita"/>
+   <topicref href="../Processors/FieldZip-ListMap.dita"/>
+   <topicref href="../Processors/FieldZip-PivotMerged.dita"/>
+   <topicref href="../Processors/FieldZip-Configuring.dita"/>
+  </topicref>
   <topicref href="../Processors/GeoIP.dita" chunk="to-content"> 
    <topicmeta>
    <shortdesc/>
