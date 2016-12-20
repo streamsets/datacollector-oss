@@ -44,6 +44,8 @@ public interface SSOPrincipal extends Principal {
 
   Set<String> getRoles();
 
+  Set<String> getGroups();
+
   Map<String, String> getAttributes();
 
   boolean isApp();
