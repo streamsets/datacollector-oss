@@ -45,6 +45,8 @@
           string values in a field into different fields.</li>
         <li><xref href="FieldTypeConverter.dita#concept_is3_zkp_wq">Field Type Converter</xref> -
           Converts the data types of fields.</li>
+        <li><xref href="FieldZip.dita#concept_o3b_t1k_yx">Field Zip</xref> - Merges list data from
+          two fields.</li>
         <li><xref href="GeoIP.dita#concept_fch_fc3_ms">Geo IP</xref>- Returns geolocation and IP
           intelligence information for a specified IP address. </li>
         <li><xref href="Groovy.dita#concept_ldh_sct_gv">Groovy Evaluator</xref> - Processes records
