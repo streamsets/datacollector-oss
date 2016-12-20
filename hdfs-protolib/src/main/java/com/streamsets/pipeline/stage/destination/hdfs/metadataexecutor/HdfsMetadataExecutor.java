@@ -30,6 +30,7 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.destination.hdfs.util.HdfsUtils;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.permission.AclEntry;
@@ -156,7 +157,7 @@ public class HdfsMetadataExecutor extends BaseExecutor {
 
             if(actions.shouldSetPermissions) {
               String stringPerms = evaluate(variables, "newPermissions", actions.newPermissions);
-              FsPermission fsPerms = new FsPermission(stringPerms);
+              FsPermission fsPerms = HdfsUtils.parseFsPermission(stringPerms);
               LOG.debug("Applying permissions: {} loaded from value '{}'", fsPerms, stringPerms);
               fs.setPermission(workingFile, fsPerms);
             }

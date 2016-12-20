@@ -32,12 +32,11 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.WholeFileExistsAction;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
-import com.streamsets.pipeline.lib.generator.DataGenerator;
-import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.lib.generator.StreamCloseEventHandler;
 import com.streamsets.pipeline.lib.io.fileref.FileRefStreamCloseEventHandler;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.stage.destination.hdfs.Errors;
+import com.streamsets.pipeline.stage.destination.hdfs.util.HdfsUtils;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.permission.FsPermission;
@@ -113,24 +112,10 @@ final class WholeFileFormatFsHelper implements FsHelper {
         throw new OnRecordErrorException(Errors.HADOOPFS_55, permissionEL);
       }
       try {
-        //octal or symbolic representation (w.r.t to HDFS)
-        fsPermissions = new FsPermission(permissions);
+        fsPermissions = HdfsUtils.parseFsPermission(permissions);
       } catch (IllegalArgumentException e) {
-        try {
-          //FsPermission.valueOf will work with unix style permissions which is 10 characters
-          //where the first character says the type of file
-          if (permissions.length() == 9) {
-            //This means it is a posix standard without the first character for file type
-            //We will simply set it to '-' suggesting regular file
-            permissions = "-" + permissions;
-          }
-
-          //try to parse unix style format.
-          fsPermissions = FsPermission.valueOf(permissions);
-        } catch (IllegalArgumentException e1) {
-          LOG.error("Can't parse the permission value string:", e1);
-          throw new OnRecordErrorException(Errors.HADOOPFS_56, permissions);
-        }
+        LOG.error("Can't parse the permission value string:", e);
+        throw new OnRecordErrorException(Errors.HADOOPFS_56, permissions);
       }
     }
   }
