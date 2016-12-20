@@ -241,7 +241,10 @@
   <topicref href="../Processors/ValueReplacer.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/ValueReplacer-ProcessingOrder.dita"/>
-   <topicref href="../Processors/ValueReplacer-DataTypes.dita"/>
+   <topicref href="../Processors/ValueReplacer-Nulls.dita"/>
+   <topicref href="../Processors/ValueReplacer-Constants.dita">
+    <topicref href="../Processors/ValueReplacer-DataTypes.dita"/>
+   </topicref>
    <topicref href="../Processors/ValueReplacer-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/XMLFlattener.dita" chunk="to-content">
