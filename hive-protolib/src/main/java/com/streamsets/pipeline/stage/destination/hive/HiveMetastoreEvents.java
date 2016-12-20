@@ -29,8 +29,10 @@ public final class HiveMetastoreEvents {
   /**
    * Fired once a new table is being created.
    */
-  public static EventCreator NEW_TABLE = new EventCreator.Builder("new-table", 1)
+  public static EventCreator NEW_TABLE = new EventCreator.Builder("new-table", 2)
     .withRequiredField("table") // Fully qualified Table table name in format `db`.`table`
+    .withRequiredField("columns") // LinkedHashMap<String, String> where key is a column name and value Hive type (INT, DECIMAL(10,2))
+    .withRequiredField("partitions") // LinkedHashMap<String, String> where key is a column name and value Hive type (INT, DECIMAL(10,2))
     .build();
 
   /**
@@ -38,7 +40,7 @@ public final class HiveMetastoreEvents {
    */
   public static EventCreator NEW_COLUMNS = new EventCreator.Builder("new-columns", 1)
     .withRequiredField("table") // Fully qualified Table table name in format `db`.`table`
-    .withRequiredField("columns") // Map<String, String> where key is a column name and value Hive type (INT, DECIMAL(10,2))
+    .withRequiredField("columns") // LinkedHashMap<String, String> where key is a column name and value Hive type (INT, DECIMAL(10,2))
     .build();
 
   /**

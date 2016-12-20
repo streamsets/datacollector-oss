@@ -38,6 +38,7 @@ import org.junit.Test;
 import java.sql.Types;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EventCreationIT extends BaseHiveIT {
 
@@ -122,8 +123,30 @@ public class EventCreationIT extends BaseHiveIT {
 
     Assert.assertNotNull(events);
     Assert.assertEquals(1, events.size());
-    Assert.assertEquals("new-table", events.get(0).getHeader().getAttribute(EventRecord.TYPE));
-    Assert.assertEquals("`default`.`tbl`", events.get(0).get("/table").getValueAsString());
+
+    Record event = events.get(0);
+    Assert.assertEquals("new-table", event.getHeader().getAttribute(EventRecord.TYPE));
+    Assert.assertEquals("`default`.`tbl`", event.get("/table").getValueAsString());
+
+    // Validate proper columns
+    LinkedHashMap<String, Field> columns = event.get("/columns").getValueAsListMap();
+    Assert.assertNotNull(columns);
+    for(Map.Entry<String, Field> entry : columns.entrySet()) {
+      System.out.println("FUCK: " + entry.getKey() + " => " + entry.getValue());
+    }
+    Assert.assertEquals(2, columns.size());
+    Assert.assertTrue(columns.containsKey("name"));
+    Assert.assertTrue(columns.containsKey("surname"));
+    Assert.assertEquals("STRING", columns.get("name").getValueAsString());
+    Assert.assertEquals("STRING", columns.get("surname").getValueAsString());
+
+    // Validate proper partitions
+    LinkedHashMap<String, Field> partitions = event.get("/partitions").getValueAsListMap();
+    Assert.assertNotNull(partitions);
+    Assert.assertEquals(1, partitions.size());
+    Assert.assertTrue(partitions.containsKey("dt"));
+    Assert.assertEquals("STRING", partitions.get("dt").getValueAsString());
+
   }
 
   @Test

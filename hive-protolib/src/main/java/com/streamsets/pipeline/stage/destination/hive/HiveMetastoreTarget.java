@@ -218,6 +218,8 @@ public class HiveMetastoreTarget extends BaseTarget {
       // Generate new table event
       HiveMetastoreEvents.NEW_TABLE.create(getContext())
         .with("table", qualifiedTableName)
+        .withStringMap("columns", Collections.<String, Object>unmodifiableMap(newColumnTypeInfo))
+        .withStringMap("partitions", Collections.<String, Object>unmodifiableMap(partitionTypeInfo))
         .createAndSend();
 
     } else {
