@@ -1338,7 +1338,10 @@ input_stream.read()</codeblock></p>
             </dl>
             <p>
                   <draft-comment author="Loretta"><uicontrol>D-DF-WholeFile</uicontrol> - must be
-                        used by S3. <uicontrol>D-DF-WholeF-Basic</uicontrol> is used by Local FS.
+                        used by S3 - cannot change permissions.
+                              <uicontrol>D-DF-WholeF-Basic</uicontrol> is used by Local FS.
+                              <uicontrol>D-DF-WholeF-noEvent</uicontrol> - can change permission, no
+                        events - used by Azure Data Lake Store.
                               <uicontrol>D-DF-WholeF-HDFS</uicontrol> is used by Hadoop FS and MapR
                         FS.</draft-comment>
             </p>
@@ -1370,6 +1373,19 @@ input_stream.read()</codeblock></p>
                         <dd>You can configure the destination to generate a checksum for the written
                               file and pass checksum information to the destination system in an
                               event record. </dd>
+                        <dd>For more information about the whole file data format, see <xref
+                                    href="../Pipeline_Design/WholeFile.dita#concept_nfc_qkh_xw"
+                              />.</dd>
+                  </dlentry>
+                  <dlentry id="D-DF-WholeF-noEvent">
+                        <dt>Whole File</dt>
+                        <dd>Streams whole files to the destination system. The destination writes
+                              the data to the file and location defined in the stage. If a file of
+                              the same name already exists, you can configure the destination to
+                              overwrite the existing file or send the current file to error.</dd>
+                        <dd>By default, written files use the default access permissions for the
+                              destination system. You can specify an expression that defines access
+                              permissions. </dd>
                         <dd>For more information about the whole file data format, see <xref
                                     href="../Pipeline_Design/WholeFile.dita#concept_nfc_qkh_xw"
                               />.</dd>

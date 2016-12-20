@@ -3341,7 +3341,8 @@
                 <cmd/>
                 <info>
                     <draft-comment author="Loretta"><b>D-WHOLEFile-props</b> - Whole table used by
-                        Hadoop FS, Local FS, and MapR FS. Rows used by S3.</draft-comment>
+                        Hadoop FS, Local FS, and MapR FS. Rows used by S3 and Azure Data Lake
+                        Store</draft-comment>
                 </info>
             </step>
             <step id="D-WholeFile_props">
@@ -3372,7 +3373,7 @@
                                             file name. </p>
                                     </entry>
                                 </row>
-                                <row>
+                                <row id="row-PermExp">
                                     <entry>Permissions Expression <xref
                                             href="../Pipeline_Design/WholeFile-AccessPermissions.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
@@ -3613,12 +3614,12 @@
                                 </row>
                                 <row id="row-ValidateHDFSPerms">
                                     <entry>Validate HDFS Permissions</entry>
-                                    <entry>When you start the pipeline, the destination tries
-                                        writing to the configured directory template to validate
-                                        permissions. The pipeline does not start if validation
-                                            fails.<note>Do not use this option when the directory
-                                            template uses expressions to represent the entire
-                                            directory.</note></entry>
+                                    <entry id="D-entry-ValidatePermissions">When you start the
+                                        pipeline, the destination tries writing to the configured
+                                        directory template to validate permissions. The pipeline
+                                        does not start if validation fails.<note>Do not use this
+                                            option when the directory template uses expressions to
+                                            represent the entire directory.</note></entry>
                                 </row>
                             </tbody>
                         </tgroup>

@@ -103,7 +103,12 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_jwd_mxw_zx"/></xref></entry>
                                     <entry
-                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-TimeBasis"
+                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-TimeBasis"/>
+                                </row>
+                                <row>
+                                    <entry>Validate Directory Permissions</entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-entry-ValidatePermissions"
                                     />
                                 </row>
                             </tbody>
@@ -138,6 +143,7 @@
                                             <li>Delimited</li>
                                             <li>JSON</li>
                                             <li>Text</li>
+                                            <li>Whole File</li>
                                         </ul></entry>
                                     
                                 </row>
@@ -157,6 +163,38 @@
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TextProps">
                 <cmd/>
+            </step>
+            <step>
+                <cmd>For whole files, on the <wintitle>Data Format</wintitle> tab, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_wvv_hcw_1x">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Whole File Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-FileNameExp">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-PermExp">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-FileExists">
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
         </steps>
     </taskbody>
