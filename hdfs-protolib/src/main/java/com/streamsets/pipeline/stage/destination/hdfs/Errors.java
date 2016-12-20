@@ -63,13 +63,14 @@ public enum Errors implements ErrorCode {
 
   HADOOPFS_29("Path template uses the '{}' function, it must use the '{}' function"),
   HADOOPFS_30("The 'every(<UNIT>, <VALUE>)' function can be used only once in the path"),
-  HADOOPFS_31("The 'every(<UNIT>, <VALUE>)' function must use YYYY(), YY(), MM(), DD(), hh(), mm() or ss() as <UNIT>"),
+  HADOOPFS_31("The 'every(<UNIT>, <VALUE>)' function must use hh(), mm() or ss() as <UNIT>"),
   HADOOPFS_32("The 'every(<UNIT>, <VALUE>)' function has the <VALUE> argument out of range, it must be between '1' and '{}'"),
   HADOOPFS_33("The 'every(<UNIT>, <VALUE>)' function must use the smallest unit in the path template"),
   HADOOPFS_34("The 'every(<UNIT>, <VALUE>)' function value must be a sub-multiple of the maximum value of the <UNIT>"),
   HADOOPFS_35("Failed to retrieve increment time unit and value from the path template: {}"),
   HADOOPFS_36("The 'ss()' function cannot be used within and outside of the 'every()' function at the same time"),
   HADOOPFS_37("The 'mm()' function cannot be used within and outside of the 'every()' function at the same time"),
+  HADOOPFS_38("The 'hh()' function cannot be used within and outside of the 'every()' function at the same time"),
 
   HADOOPFS_40("Base directory path must be absolute"),
   HADOOPFS_41("Base directory path could not be created"),

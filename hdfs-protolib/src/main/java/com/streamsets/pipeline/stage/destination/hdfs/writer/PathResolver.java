@@ -46,17 +46,32 @@ public class PathResolver {
   private static final String TIME_INCREMENT_VALUE = "timeIncrement";
   private static final String[] FUNCTION_NAMES = { "YYYY() or YY()", "MM()", "DD()", "hh()", "mm()", "ss()"};
 
-  private static final int[] UNITS_ORDERED = { Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH, Calendar.HOUR_OF_DAY,
-      Calendar.MINUTE, Calendar.SECOND};
+  private static final int[] UNITS_ORDERED = {
+    Calendar.YEAR,
+    Calendar.MONTH,
+    Calendar.DAY_OF_MONTH,
+    Calendar.HOUR_OF_DAY,
+    Calendar.MINUTE,
+    Calendar.SECOND
+  };
 
-  private static final Map<String, Integer> VALID_UNITS = ImmutableMap.<String, Integer>builder().
-      //TODO: we'll not support arbitrary frequencies for the following units for now:
-      //TODO:    put("YYYY", 3000).put("MM", 12).put("DD", 31).put("hh", 23).
-          put("mm", 59).put("ss", 59).build();
+  private static final Map<String, Integer> VALID_UNITS = ImmutableMap.<String, Integer>builder()
+    //.put("YYYY", 3000)
+    //.put("MM", 12)
+    //.put("DD", 31)
+    .put("hh", 23)
+    .put("mm", 59)
+    .put("ss", 59)
+    .build();
 
-  private static final Map<String, Integer> UNIT_TO_CALENDAR = ImmutableMap.<String, Integer>builder().
-      put("YYYY", Calendar.YEAR).put("MM", Calendar.MONTH).put("DD", Calendar.DAY_OF_MONTH).
-      put("hh", Calendar.HOUR_OF_DAY).put("mm", Calendar.MINUTE).put("ss", Calendar.SECOND).build();
+  private static final Map<String, Integer> UNIT_TO_CALENDAR = ImmutableMap.<String, Integer>builder()
+    .put("YYYY", Calendar.YEAR)
+    .put("MM", Calendar.MONTH)
+    .put("DD", Calendar.DAY_OF_MONTH)
+    .put("hh", Calendar.HOUR_OF_DAY)
+    .put("mm", Calendar.MINUTE)
+    .put("ss", Calendar.SECOND)
+    .build();
 
   private final Stage.Context context;
   private final String pathTemplate;
@@ -285,11 +300,17 @@ public class PathResolver {
             (60 % validationInfo[10] != 0)) {
           issues.add(context.createConfigIssue(group, qualifiedConfigName, Errors.HADOOPFS_34));
         }
+        if (validationInfo[9] == Calendar.HOUR_OF_DAY && (24 % validationInfo[10] != 0)) {
+          issues.add(context.createConfigIssue(group, qualifiedConfigName, Errors.HADOOPFS_34));
+        }
         if (validationInfo[9] == Calendar.SECOND && validationInfo[5] > 1) {
           issues.add(context.createConfigIssue(group, qualifiedConfigName, Errors.HADOOPFS_36));
         }
         if (validationInfo[9] == Calendar.MINUTE && validationInfo[4] > 1) {
           issues.add(context.createConfigIssue(group, qualifiedConfigName, Errors.HADOOPFS_37));
+        }
+        if (validationInfo[9] == Calendar.HOUR_OF_DAY && validationInfo[3] > 1) {
+          issues.add(context.createConfigIssue(group, qualifiedConfigName, Errors.HADOOPFS_38));
         }
       }
     } catch (ELEvalException ex) {

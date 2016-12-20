@@ -86,6 +86,11 @@ public class TestPathResolver {
     Assert.assertTrue(validate("/${YY()}${MM()}${DD()}${hh()}${every(15, mm())}"));
     Assert.assertTrue(validate("/${YY()}${MM()}${DD()}${hh()}${every(20, mm())}"));
     Assert.assertTrue(validate("/${YY()}${MM()}${DD()}${hh()}${every(30, mm())}"));
+    Assert.assertTrue(validate("/${YY()}${MM()}${DD()}${every(1, hh())}"));
+    Assert.assertTrue(validate("/${YY()}${MM()}${DD()}${every(2, hh())}"));
+    Assert.assertTrue(validate("/${YY()}${MM()}${DD()}${every(3, hh())}"));
+    Assert.assertTrue(validate("/${YY()}${MM()}${DD()}${every(4, hh())}"));
+    Assert.assertTrue(validate("/${YY()}${MM()}${DD()}${every(6, hh())}"));
   }
 
   @Test
@@ -103,6 +108,7 @@ public class TestPathResolver {
     Assert.assertFalse(validate("/${YY()}${MM()}${every(1, MM())}"));
     Assert.assertFalse(validate("/${YY()}${every(1, YYYY())}"));
     Assert.assertFalse(validate("/${YY()}${MM()}${DD()}${hh()}${ss()}${every(1, mm())}"));
+    Assert.assertFalse(validate("/${YY()}${MM()}${DD()}${hh()}${ss()}${every(1, hh())}"));
     Assert.assertFalse(validate("/${YY()}${MM()}${DD()}${hh()}${mm()}${every(1, mm())}"));
   }
 
