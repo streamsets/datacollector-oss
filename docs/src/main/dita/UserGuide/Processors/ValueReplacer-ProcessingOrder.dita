@@ -17,17 +17,24 @@
  <title>Processing Order</title>
  <conbody>
   <p><indexterm>Value Replacer processor<indexterm>processing order</indexterm></indexterm>Value
-            Replacer replaces values in the order that the properties display in the processor:<ol
+            Replacer replaces values in the order that the properties display in the processor: <ol
                 id="ol_amz_gyr_3x">
-                <li>Replaces existing values in the specified fields with null values.</li>
-                <li>Replaces null values with the specified constants.</li>
-                <li>Replaces the specified values with constants based on a condition.</li>
-            </ol>When you configure multiple fields for a replacement type, Value Replacer processes
-            them in the listed order as well. </p>
-        <p>For example, in the following Value Replacer, the processor first replaces null values in
-            the <uicontrol>product_id</uicontrol> field, then replaces the "0289" store ID with
-            "0132". And finally, it replaces values less than 1.00 in the
-                <uicontrol>cost</uicontrol> field with "1.00":</p>
-        <p><image href="../Graphics/ValueReplacer-props.png" id="image_zmp_nys_3x" scale="60"/></p>
+                <li><uicontrol>Fields to Null</uicontrol> - Replaces existing values with null
+                    values, optionally based on a condition.</li>
+                <li><uicontrol>Replace Null Values</uicontrol> - Replaces null values with the
+                    specified constants.</li>
+                <li><uicontrol>Conditionally Replace Values</uicontrol> - Replaces the specified
+                    values with constants based on a condition. </li>
+            </ol></p>
+        <p>When you list multiple fields in a property, Value Replacer processes them in the listed
+            order as well. </p>
+        <draft-comment author="Loretta">
+            <p>For example, in the following Value Replacer, the processor first replaces null
+                values in the <uicontrol>product_id</uicontrol> field, then replaces the "0289"
+                store ID with "0132". And finally, it replaces values less than 1.00 in the
+                    <uicontrol>cost</uicontrol> field with "1.00":</p>
+            <p><image href="../Graphics/ValueReplacer-props.png" id="image_zmp_nys_3x" scale="60"
+                /></p>
+        </draft-comment>
  </conbody>
 </concept>
