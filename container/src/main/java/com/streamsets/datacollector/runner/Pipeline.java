@@ -312,12 +312,10 @@ public class Pipeline {
         // Generate runtime and pipe for rest of the pipelines
         for(PipelineStageBeans beans : pipelineBean.getPipelineStageBeans()) {
           // Create runtime structures
-          StageRuntime[] stages = new StageRuntime[1 + beans.size()];
-          stages[0] = originRuntime;
-          int i = 1;
+          List<StageRuntime> stages = new ArrayList<>(1 + beans.size());
+          stages.add(originRuntime);
           for(StageBean stageBean : beans.getStages()) {
-            stages[i] = new StageRuntime(pipelineBean, stageBean);
-            i++;
+            stages.add(new StageRuntime(pipelineBean, stageBean));
           }
 
           pipes.add(createPipes(stages, runner));
@@ -462,7 +460,7 @@ public class Pipeline {
     }
 
     private SourcePipe createOriginPipe(StageRuntime originRuntime, PipelineRunner runner) {
-      LaneResolver laneResolver = new LaneResolver(new StageRuntime[]{originRuntime});
+      LaneResolver laneResolver = new LaneResolver(ImmutableList.of(originRuntime));
       return new SourcePipe(
         pipelineName,
         rev,
@@ -477,13 +475,14 @@ public class Pipeline {
       );
     }
 
-    private List<Pipe> createPipes(StageRuntime[] stages, PipelineRunner runner) throws PipelineRuntimeException {
+    private List<Pipe> createPipes(List<StageRuntime> stages, PipelineRunner runner) throws PipelineRuntimeException {
       LaneResolver laneResolver = new LaneResolver(stages);
       ImmutableList.Builder<Pipe> pipesBuilder = ImmutableList.builder();
 
-      for (int idx = 0; idx < stages.length; idx++) {
+      int idx = -1;
+      for(StageRuntime stage : stages) {
+        idx++;
         Pipe pipe;
-        StageRuntime stage = stages[idx];
         switch (stage.getDefinition().getType()) {
           case SOURCE:
             pipe = new ObserverPipe(stage, laneResolver.getObserverInputLanes(idx),

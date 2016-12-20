@@ -58,9 +58,9 @@ public class LaneResolver {
     return from + ROUTING_SEPARATOR + to;
   }
 
-  private final StageRuntime[] stages;
+  private final List<StageRuntime> stages;
 
-  public LaneResolver(StageRuntime[] stages) {
+  public LaneResolver(List<StageRuntime> stages) {
     this.stages = stages;
   }
 
@@ -69,19 +69,19 @@ public class LaneResolver {
   }
 
   public List<String> getStageOutputLanes(int idx) {
-    return getPostFixed(stages[idx].getConfiguration().getOutputLanes(), STAGE_OUT);
+    return getPostFixed(stages.get(idx).getConfiguration().getOutputLanes(), STAGE_OUT);
   }
 
   public List<String> getStageEventLanes(int idx) {
-    return getPostFixed(stages[idx].getConfiguration().getEventLanes(), STAGE_OUT);
+    return getPostFixed(stages.get(idx).getConfiguration().getEventLanes(), STAGE_OUT);
   }
 
   public List<String> getObserverInputLanes(int idx) {
-    return getPostFixed(stages[idx].getConfiguration().getOutputAndEventLanes(), STAGE_OUT);
+    return getPostFixed(stages.get(idx).getConfiguration().getOutputAndEventLanes(), STAGE_OUT);
   }
 
   public List<String> getObserverOutputLanes(int idx) {
-    return getPostFixed(stages[idx].getConfiguration().getOutputAndEventLanes(), OBSERVER_OUT);
+    return getPostFixed(stages.get(idx).getConfiguration().getOutputAndEventLanes(), OBSERVER_OUT);
   }
 
   public List<String> getMultiplexerInputLanes(int idx) {
@@ -90,11 +90,11 @@ public class LaneResolver {
 
   public List<String> getMultiplexerOutputLanes(int idx) {
     List<String> list = new ArrayList<>();
-    for (String output : stages[idx].getConfiguration().getOutputAndEventLanes()) {
-      for (int i = idx + 1; i < stages.length; i++) {
-        for (String input : stages[i].getConfiguration().getInputLanes()) {
+    for (String output : stages.get(idx).getConfiguration().getOutputAndEventLanes()) {
+      for (int i = idx + 1; i < stages.size(); i++) {
+        for (String input : stages.get(i).getConfiguration().getInputLanes()) {
           if (input.equals(output)) {
-            list.add(createLane(output, stages[i].getInfo().getInstanceName()));
+            list.add(createLane(output, stages.get(i).getInfo().getInstanceName()));
           }
         }
       }
@@ -104,11 +104,11 @@ public class LaneResolver {
 
   public List<String> getCombinerInputLanes(int idx) {
     List<String> list = new ArrayList<>();
-    for (String input : stages[idx].getConfiguration().getInputLanes()) {
+    for (String input : stages.get(idx).getConfiguration().getInputLanes()) {
       for (int i = 0; i < idx; i++) {
-        for (String output : stages[i].getConfiguration().getOutputAndEventLanes()) {
+        for (String output : stages.get(i).getConfiguration().getOutputAndEventLanes()) {
           if (output.equals(input)) {
-            list.add(createLane(output, stages[idx].getInfo().getInstanceName()));
+            list.add(createLane(output, stages.get(idx).getInfo().getInstanceName()));
           }
         }
       }
@@ -118,8 +118,8 @@ public class LaneResolver {
 
   @SuppressWarnings("unchecked")
   public List<String> getCombinerOutputLanes(int idx) {
-    boolean noInput = stages[idx].getConfiguration().getInputLanes().isEmpty();
-    return (noInput) ? Collections.EMPTY_LIST : getPostFixed(ImmutableList.of(stages[idx].getInfo().getInstanceName()),
+    boolean noInput = stages.get(idx).getConfiguration().getInputLanes().isEmpty();
+    return (noInput) ? Collections.EMPTY_LIST : getPostFixed(ImmutableList.of(stages.get(idx).getInfo().getInstanceName()),
                                                              COMBINER_OUT);
   }
 
@@ -137,7 +137,7 @@ public class LaneResolver {
 
   @Override
   public String toString() {
-    List<String> names = new ArrayList<>(stages.length);
+    List<String> names = new ArrayList<>(stages.size());
     for (StageRuntime stage : stages) {
       names.add(stage.getInfo().getInstanceName());
     }

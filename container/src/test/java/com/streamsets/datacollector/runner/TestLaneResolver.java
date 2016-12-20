@@ -103,10 +103,10 @@ public class TestLaneResolver {
   public void testPipeline1() {
     String sourceInstance = "s1";
     String targetInstance = "t1";
-    StageRuntime[] stages = {
-        createMockSource(sourceInstance, ImmutableList.of(sourceInstance)),
-        createMockTarget(targetInstance, ImmutableList.of(sourceInstance))
-    };
+    List<StageRuntime> stages = ImmutableList.of(
+      createMockSource(sourceInstance, ImmutableList.of(sourceInstance)),
+      createMockTarget(targetInstance, ImmutableList.of(sourceInstance))
+    );
     LaneResolver resolver = new LaneResolver(stages);
 
     // source combiner
@@ -169,11 +169,11 @@ public class TestLaneResolver {
     String sourceInstance = "s1";
     String processorInstance = "p1";
     String targetInstance = "t1";
-    StageRuntime[] stages = {
+    List<StageRuntime> stages = ImmutableList.of(
         createMockSource(sourceInstance, ImmutableList.of(sourceInstance)),
         createMockProcessor(processorInstance, ImmutableList.of(sourceInstance), ImmutableList.of(processorInstance)),
         createMockTarget(targetInstance, ImmutableList.of(processorInstance))
-    };
+    );
     LaneResolver resolver = new LaneResolver(stages);
 
     // source combiner
@@ -272,12 +272,12 @@ public class TestLaneResolver {
     String processorInstance1 = "p1";
     String processorInstance2 = "p2";
     String targetInstance = "t1";
-    StageRuntime[] stages = {
+    List<StageRuntime> stages = ImmutableList.of(
         createMockSource(sourceInstance, ImmutableList.of(sourceInstance)),
         createMockProcessor(processorInstance1, ImmutableList.of(sourceInstance), ImmutableList.of(processorInstance1)),
         createMockProcessor(processorInstance2, ImmutableList.of(processorInstance1), ImmutableList.of(processorInstance2)),
         createMockTarget(targetInstance, ImmutableList.of(processorInstance2))
-    };
+    );
     LaneResolver resolver = new LaneResolver(stages);
 
     // source combiner
@@ -431,12 +431,12 @@ public class TestLaneResolver {
     String processorInstance1 = "p1";
     String processorInstance2 = "p2";
     String targetInstance = "t1";
-    StageRuntime[] stages = {
+    List<StageRuntime> stages = ImmutableList.of(
         createMockSource(sourceInstance, ImmutableList.of(sourceInstance)),
         createMockProcessor(processorInstance1, ImmutableList.of(sourceInstance), ImmutableList.of(processorInstance1)),
         createMockProcessor(processorInstance2, ImmutableList.of(processorInstance1), ImmutableList.of(processorInstance2)),
         createMockTarget(targetInstance, ImmutableList.of(processorInstance1, processorInstance2))
-    };
+    );
     LaneResolver resolver = new LaneResolver(stages);
 
     // source combiner
@@ -593,12 +593,12 @@ public class TestLaneResolver {
     String processorInstance1b = "p1b";
     String processorInstance2 = "p2";
     String targetInstance = "t1";
-    StageRuntime[] stages = {
+    List<StageRuntime> stages = ImmutableList.of(
         createMockSource(sourceInstance, ImmutableList.of(sourceInstance)),
         createMockProcessor(processorInstance1, ImmutableList.of(sourceInstance), ImmutableList.of(processorInstance1a, processorInstance1b)),
         createMockProcessor(processorInstance2, ImmutableList.of(processorInstance1a), ImmutableList.of(processorInstance2)),
         createMockTarget(targetInstance, ImmutableList.of(processorInstance1b, processorInstance2))
-    };
+    );
     LaneResolver resolver = new LaneResolver(stages);
 
     // source combiner
@@ -752,11 +752,11 @@ public class TestLaneResolver {
   @Test
   @SuppressWarnings("unchecked")
   public void testPipeline6() {
-    StageRuntime[] stages = {
+    List<StageRuntime> stages = ImmutableList.of(
       createMockSource("s", ImmutableList.of("s"), ImmutableList.of("se")),
       createMockTarget("t", ImmutableList.of("s"), ImmutableList.of("te")),
-      createMockTarget("e", ImmutableList.of("se", "te")),
-    };
+      createMockTarget("e", ImmutableList.of("se", "te"))
+    );
     LaneResolver resolver = new LaneResolver(stages);
 
     // source combiner
