@@ -18,9 +18,8 @@
  <conbody>
   <p><indexterm>whole file data format<indexterm>file access permissions</indexterm></indexterm>By
             default, when using the whole file data format, target files use the default access
-            permissions defined in the destination system. When using the Hadoop FS, Local FS, or
-            MapR FS destinations to write whole files, you can specify access permissions for target
-            files. </p>
+            permissions defined in the destination system. Most destinations allow you to specify
+            access permissions for target files. Amazon S3 does not allow it.</p>
         <p>You can enter an expression to define access permissions. Expressions should evaluate to
             a symbolic or numeric/octal representation of the permissions you want to use. For
             example, to make files read-only for all users, the symbolic representation is

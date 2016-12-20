@@ -18,9 +18,10 @@
  <conbody>
         <p><indexterm>whole file<indexterm>including checksums in
             events</indexterm></indexterm>Destinations that generate events can include a checksum
-            for each file. When you enable checksum use, the destination includes the checksum and
-            the checksum algorithm in the whole file event record. Whole file event records are
-            generated each time the destination completes writing a whole file. </p>
+            for each file. The Azure Data Lake Store destination does not generate events. </p>
+        <p>When you enable checksum use, the destination includes the checksum and the checksum
+            algorithm in the whole file event record. Whole file event records are generated each
+            time the destination completes writing a whole file. </p>
         <p>You can use the following algorithms to generate checksums:<ul id="ul_lqh_35p_vx">
                 <li>MD5</li>
                 <li>SHA1</li>

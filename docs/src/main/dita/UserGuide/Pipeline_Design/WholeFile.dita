@@ -41,6 +41,7 @@
             </ul></p>
         <p>You can use the following destinations to write whole files:<ul id="ul_wrs_cvh_xw">
                 <li>Amazon S3</li>
+                <li>Azure Data Lake Store</li>
                 <li>Hadoop FS</li>
                 <li>Local FS</li>
                 <li>MapR FS</li>
