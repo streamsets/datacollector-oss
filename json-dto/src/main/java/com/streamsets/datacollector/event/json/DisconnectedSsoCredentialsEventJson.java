@@ -30,6 +30,7 @@ public class DisconnectedSsoCredentialsEventJson implements EventJson {
     private String userNameSha;
     private String passwordHash;
     private List<String> roles;
+    private List<String> groups;
 
     public EntryJson() {
       roles = new ArrayList<>();
@@ -57,6 +58,14 @@ public class DisconnectedSsoCredentialsEventJson implements EventJson {
 
     public void setRoles(List<String> roles) {
       this.roles = roles;
+    }
+
+    public List<String> getGroups() {
+      return groups;
+    }
+
+    public void setGroups(List<String> groups) {
+      this.groups = groups;
     }
   }
 

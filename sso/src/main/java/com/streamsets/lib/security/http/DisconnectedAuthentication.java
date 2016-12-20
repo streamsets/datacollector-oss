@@ -84,6 +84,7 @@ public class DisconnectedAuthentication implements Authentication {
           principal.setOrganizationName("-");
           Set<String> roles = new ImmutableSet.Builder<String>().addAll(entry.getRoles()).add(DISCONNECTED_MODE_ROLE).build();
           principal.getRoles().addAll(roles);
+          principal.getGroups().addAll(entry.getGroups());
           principal.setTokenStr(UUID.randomUUID().toString());
           principal.setExpires(-1);
           principal.setRequestIpAddress(ipAddress);

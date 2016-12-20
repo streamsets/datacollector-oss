@@ -27,6 +27,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.UUID;
 
 public class TestDisconnectedAuthentication {
@@ -46,12 +47,14 @@ public class TestDisconnectedAuthentication {
     info.addEntry(
         "admin@org",
         hasher.getPasswordHash("admin@org", "admin"),
-        ImmutableList.of("datacollector:admin", "user")
+        ImmutableList.of("datacollector:admin", "user"),
+        Collections.<String>emptyList()
     );
     info.addEntry(
         "guest@org",
         hasher.getPasswordHash("guest@org", "guest"),
-        ImmutableList.of("datacollector:guest", "user")
+        ImmutableList.of("datacollector:guest", "user"),
+        Collections.<String>emptyList()
     );
     info.toJsonFile(authInfoFile);
   }

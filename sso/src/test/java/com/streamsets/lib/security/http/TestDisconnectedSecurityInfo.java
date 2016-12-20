@@ -61,7 +61,7 @@ public class TestDisconnectedSecurityInfo {
   @Test
   public void testInfoPopulation() {
     DisconnectedSecurityInfo info = new DisconnectedSecurityInfo();
-    info.addEntry("user", "ph", ImmutableList.of("r"));
+    info.addEntry("user", "ph", ImmutableList.of("r"), ImmutableList.of("g"));
     String userSha = DigestUtils.sha256Hex("user");
     DisconnectedSecurityInfo.Entry entry = info.getEntry("user");
     Assert.assertEquals(userSha, entry.getUserNameSha());
@@ -72,7 +72,7 @@ public class TestDisconnectedSecurityInfo {
   @Test
   public void testJson() throws Exception {
     DisconnectedSecurityInfo info = new DisconnectedSecurityInfo();
-    info.addEntry("user", "ph", ImmutableList.of("r"));
+    info.addEntry("user", "ph", ImmutableList.of("r"), ImmutableList.of("g"));
     String json = info.toJsonString();
 
     info = DisconnectedSecurityInfo.fromJsonString(json);

@@ -40,6 +40,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Collections;
 import java.util.UUID;
 
 public class TestDisconnectedSSOManager {
@@ -58,11 +59,13 @@ public class TestDisconnectedSSOManager {
     DisconnectedSecurityInfo info = new DisconnectedSecurityInfo();
     info.addEntry("admin@org",
         hasher.getPasswordHash("admin@org", "admin"),
-        ImmutableList.of("datacollector:admin", "user")
+        ImmutableList.of("datacollector:admin", "user"),
+        Collections.<String>emptyList()
     );
     info.addEntry("guest@org",
         hasher.getPasswordHash("guest@org", "guest"),
-        ImmutableList.of("datacollector:guest", "user")
+        ImmutableList.of("datacollector:guest", "user"),
+        Collections.<String>emptyList()
     );
     info.toJsonFile(disconnectedCredentials);
     dataDir = dir.getAbsolutePath();

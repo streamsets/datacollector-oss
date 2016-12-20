@@ -28,9 +28,18 @@ public class DisconnectedSsoCredentialsEvent implements Event {
     private String userNameSha;
     private String passwordHash;
     private List<String> roles;
+    private List<String> groups;
 
     public Entry() {
       roles = new ArrayList<>();
+    }
+
+    public List<String> getGroups() {
+      return groups;
+    }
+
+    public void setGroups(List<String> groups) {
+      this.groups = groups;
     }
 
     public String getUserNameSha() {
