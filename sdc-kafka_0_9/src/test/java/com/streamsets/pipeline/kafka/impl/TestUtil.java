@@ -49,11 +49,15 @@ public class TestUtil {
   }
 
   public static KafkaServer createKafkaServer(int port, String zkConnect, boolean autoCreateTopic) {
-    KafkaConfig config = new KafkaConfig(createKafkaConfig(port, zkConnect, autoCreateTopic));
+    return createKafkaServer(port, zkConnect, autoCreateTopic, 1);
+  }
+
+  public static KafkaServer createKafkaServer(int port, String zkConnect, boolean autoCreateTopic, int numPartitions) {
+    KafkaConfig config = new KafkaConfig(createKafkaConfig(port, zkConnect, autoCreateTopic, numPartitions));
     return TestUtils.createServer(config, SystemTime$.MODULE$);
   }
 
-  public static Properties createKafkaConfig(int port, String zkConnect, boolean autoCreateTopic) {
+  public static Properties createKafkaConfig(int port, String zkConnect, boolean autoCreateTopic, int numPartitions) {
     final Option<File> noFile = scala.Option.apply(null);
     final Option<SecurityProtocol> noInterBrokerSecurityProtocol = scala.Option.apply(null);
     Properties props = TestUtils.createBrokerConfig(
@@ -61,7 +65,7 @@ public class TestUtil {
       noFile, true, false, TestUtils.RandomPort(), false, TestUtils.RandomPort(), false,
       TestUtils.RandomPort());
     props.setProperty("auto.create.topics.enable", String.valueOf(autoCreateTopic));
-    props.setProperty("num.partitions", "1");
+    props.setProperty("num.partitions", String.valueOf(numPartitions));
     props.setProperty("message.max.bytes", "500");
     return props;
   }

@@ -92,7 +92,7 @@ public abstract class SecureKafkaBase {
     final String message = "Hello StreamSets";
 
     // create broker config with auto create topic option enabled
-    Properties props = TestUtil.createKafkaConfig(getPlainTextPort(), zkConnect, true);
+    Properties props = TestUtil.createKafkaConfig(getPlainTextPort(), zkConnect, true, 1);
     // add SSL configuration properties to broker
     addBrokerSecurityConfig(props);
     // create server

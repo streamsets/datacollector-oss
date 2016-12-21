@@ -36,9 +36,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -123,6 +125,22 @@ public abstract class BaseKafkaConsumer09 implements SdcKafkaConsumer {
   @Override
   public void commit() {
     synchronized (pollCommitMutex) {
+      // NOTE: there is still a potential race condition with our client; if another rebalance happens while this
+      //  method is running (ex: before commitSync), we will miss it and still commit the wrong offsets
+      Set<TopicPartition> unassignedPartitions = new HashSet<>(topicPartitionToOffsetMetadataMap.keySet());
+      for (TopicPartition partition : kafkaConsumer.assignment()) {
+        unassignedPartitions.remove(partition);
+      }
+      if (!unassignedPartitions.isEmpty()) {
+        for (TopicPartition unassignedPartition : unassignedPartitions) {
+          LOG.info(
+              "Removing partition {} for topic {} from offset map because it's no longer assigned to this consumer",
+              unassignedPartition.partition(),
+              unassignedPartition.topic()
+          );
+          topicPartitionToOffsetMetadataMap.remove(unassignedPartition);
+        }
+      }
       kafkaConsumer.commitSync(topicPartitionToOffsetMetadataMap);
     }
   }
@@ -229,4 +247,7 @@ public abstract class BaseKafkaConsumer09 implements SdcKafkaConsumer {
     }
   }
 
+  public Map<TopicPartition, OffsetAndMetadata> getTopicPartitionToOffsetMetadataMap() {
+    return Collections.unmodifiableMap(topicPartitionToOffsetMetadataMap);
+  }
 }
