@@ -117,11 +117,11 @@
 
         <p class="p">In the Purchase field, the merged data is a list of Map fields. Each map has the field
             name and value in the ItemID list merged with the corresponding field name and value
-            from the Cost list. Notice that the fourth ItemID, 6502, is not included in the merged
-            list because it has no corresponding cost information.</p>
+            from the Cost list. Notice that the fourth ItemID, /ItemID/3, is not included in the
+            merged list because it has no corresponding cost information.</p>
 
         <p class="p">If you configure the Field Zip processor to merge only the values, the processor returns
-            a list of Map fields without the original field names, as follows:</p>
+            the same data without the original field names, as follows:</p>
 
         <p class="p"><img class="image" id="concept_ifv_3h1_hy__image_l5j_r41_hy" src="../Graphics/FieldZip-Record-NoNames.png" height="369" width="223" /></p>
 
@@ -159,15 +159,15 @@
                             <td class="entry" valign="top" width="50%" headers="d225506e183 ">0<ul class="ul" id="concept_gf1_sz2_3y__ul_sbt_l1f_3y">
                                     <li class="li">id: 23</li>
 
-                                    <li class="li">inventory: 80</li>
+                                    <li class="li">color: 20005</li>
 
-                                    <li class="li">misc: none</li>
+                                    <li class="li">info: &lt;null&gt;</li>
 
                                 </ul>
 </td>
 
                             <td class="entry" valign="top" width="50%" headers="d225506e187 ">0<ul class="ul" id="concept_gf1_sz2_3y__ul_hbq_r1f_3y">
-                                    <li class="li">color: 20005</li>
+                                    <li class="li">inventory: 80</li>
 
                                     <li class="li">cost: $5.98</li>
 
@@ -184,14 +184,18 @@
 
         <p class="p">Say you configure the Field Zip processor to merge the Basics and Additional List-Map
             fields and to write the results to an All field. The Field Zip generates the following
-                record:</p>
+            record:</p>
 
-        <p class="p"><img class="image" id="concept_gf1_sz2_3y__image_nwj_g2f_3y" src="../Graphics/FieldZip-ListMap.png" height="253" width="207" /></p>
+        <p class="p"><img class="image" id="concept_gf1_sz2_3y__image_nwj_g2f_3y" src="../Graphics/FieldZip-ListMap.png" height="270" width="220" /></p>
 
         <p class="p">Notice how each map contains a different set of fields. When processing List fields,
-            Field Zip returns the matching sets of fields. Also notice, the Misc information in the
-            Basics field is not included because it has no corresponding item in the Additional
-            field. </p>
+            Field Zip returns the matching sets of fields. Also notice, the /Basics/Info field is
+            not included because it has no corresponding item in the other List-Map field. </p>
+
+        <p class="p">If you configure the Field Zip processor to merge only the values, the processor returns
+            the same data without the original field names, as follows: </p>
+
+        <p class="p"><img class="image" id="concept_gf1_sz2_3y__image_rx3_pvr_3y" src="../Graphics/FieldZip-ListMap-NoFields.png" height="265" width="219" /></p>
 
  </div>
 
@@ -222,15 +226,15 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="14.804845222072679%" id="d225506e291">Order</th>
+                            <th class="entry" valign="top" width="14.804845222072679%" id="d225506e295">Order</th>
 
-                            <th class="entry" valign="top" width="13.458950201884253%" id="d225506e294">ItemID</th>
+                            <th class="entry" valign="top" width="13.458950201884253%" id="d225506e298">ItemID</th>
 
-                            <th class="entry" valign="top" width="14.939434724091521%" id="d225506e297">Cost</th>
+                            <th class="entry" valign="top" width="14.939434724091521%" id="d225506e301">Cost</th>
 
-                            <th class="entry" valign="top" width="28.802153432032306%" id="d225506e300">Purchase</th>
+                            <th class="entry" valign="top" width="28.802153432032306%" id="d225506e304">Purchase</th>
 
-                            <th class="entry" valign="top" width="27.99461641991925%" id="d225506e303">Purchased_Item</th>
+                            <th class="entry" valign="top" width="27.99461641991925%" id="d225506e307">Purchased_Item</th>
 
                         </tr>
 
@@ -238,9 +242,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="14.804845222072679%" headers="d225506e291 ">23523482</td>
+                            <td class="entry" valign="top" width="14.804845222072679%" headers="d225506e295 ">23523482</td>
 
-                            <td class="entry" valign="top" width="13.458950201884253%" headers="d225506e294 ">
+                            <td class="entry" valign="top" width="13.458950201884253%" headers="d225506e298 ">
                                 <ul class="ul" id="concept_bmt_s41_hy__ul_op1_lj1_hy">
                                     <li class="li">2</li>
 
@@ -254,7 +258,7 @@
 
                             </td>
 
-                            <td class="entry" valign="top" width="14.939434724091521%" headers="d225506e297 ">
+                            <td class="entry" valign="top" width="14.939434724091521%" headers="d225506e301 ">
                                 <ul class="ul" id="concept_bmt_s41_hy__ul_dbm_qk1_hy">
                                     <li class="li">89.95</li>
 
@@ -266,7 +270,7 @@
 
                             </td>
 
-                            <td class="entry" valign="top" width="28.802153432032306%" headers="d225506e300 ">
+                            <td class="entry" valign="top" width="28.802153432032306%" headers="d225506e304 ">
                                 <ol class="ol" id="concept_bmt_s41_hy__ol_vqc_4r1_hy">
                                     <li class="li">
                                         <ul class="ul" id="concept_bmt_s41_hy__ul_wqc_4r1_hy">
@@ -320,7 +324,7 @@
 
                             </td>
 
-                            <td class="entry" valign="top" width="27.99461641991925%" headers="d225506e303 ">
+                            <td class="entry" valign="top" width="27.99461641991925%" headers="d225506e307 ">
                                 <ul class="ul" id="concept_bmt_s41_hy__ul_uqc_lr1_hy">
                                     <li class="li">
                                         <ul class="ul" id="concept_bmt_s41_hy__ul_lpr_jr1_hy">
@@ -339,9 +343,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="14.804845222072679%" headers="d225506e291 ">23523482</td>
+                            <td class="entry" valign="top" width="14.804845222072679%" headers="d225506e295 ">23523482</td>
 
-                            <td class="entry" valign="top" width="13.458950201884253%" headers="d225506e294 ">
+                            <td class="entry" valign="top" width="13.458950201884253%" headers="d225506e298 ">
                                 <ul class="ul" id="concept_bmt_s41_hy__ul_csl_qq1_hy">
                                     <li class="li">2</li>
 
@@ -355,7 +359,7 @@
 
                             </td>
 
-                            <td class="entry" valign="top" width="14.939434724091521%" headers="d225506e297 ">
+                            <td class="entry" valign="top" width="14.939434724091521%" headers="d225506e301 ">
                                 <ul class="ul" id="concept_bmt_s41_hy__ul_fd1_rq1_hy">
                                     <li class="li">89.95</li>
 
@@ -367,7 +371,7 @@
 
                             </td>
 
-                            <td class="entry" valign="top" width="28.802153432032306%" headers="d225506e300 ">
+                            <td class="entry" valign="top" width="28.802153432032306%" headers="d225506e304 ">
                                 <ol class="ol" id="concept_bmt_s41_hy__ol_p4v_nr1_hy">
                                     <li class="li">
                                         <ul class="ul" id="concept_bmt_s41_hy__ul_q4v_nr1_hy">
@@ -421,7 +425,7 @@
 
                             </td>
 
-                            <td class="entry" valign="top" width="27.99461641991925%" headers="d225506e303 ">
+                            <td class="entry" valign="top" width="27.99461641991925%" headers="d225506e307 ">
                                 <ul class="ul" id="concept_bmt_s41_hy__ul_zqq_kr1_hy">
                                     <li class="li">
                                         <ul class="ul" id="concept_bmt_s41_hy__ul_a4r_kr1_hy">
@@ -440,9 +444,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="14.804845222072679%" headers="d225506e291 ">23523482</td>
+                            <td class="entry" valign="top" width="14.804845222072679%" headers="d225506e295 ">23523482</td>
 
-                            <td class="entry" valign="top" width="13.458950201884253%" headers="d225506e294 ">
+                            <td class="entry" valign="top" width="13.458950201884253%" headers="d225506e298 ">
                                 <ul class="ul" id="concept_bmt_s41_hy__ul_itn_qq1_hy">
                                     <li class="li">2</li>
 
@@ -456,7 +460,7 @@
 
                             </td>
 
-                            <td class="entry" valign="top" width="14.939434724091521%" headers="d225506e297 ">
+                            <td class="entry" valign="top" width="14.939434724091521%" headers="d225506e301 ">
                                 <ul class="ul" id="concept_bmt_s41_hy__ul_w2b_rq1_hy">
                                     <li class="li">89.95</li>
 
@@ -468,7 +472,7 @@
 
                             </td>
 
-                            <td class="entry" valign="top" width="28.802153432032306%" headers="d225506e300 ">
+                            <td class="entry" valign="top" width="28.802153432032306%" headers="d225506e304 ">
                                 <ol class="ol" id="concept_bmt_s41_hy__ol_upv_cr1_hy">
                                     <li class="li">
                                         <ul class="ul" id="concept_bmt_s41_hy__ul_dj2_mr1_hy">
@@ -522,7 +526,7 @@
 
                             </td>
 
-                            <td class="entry" valign="top" width="27.99461641991925%" headers="d225506e303 ">
+                            <td class="entry" valign="top" width="27.99461641991925%" headers="d225506e307 ">
                                 <ul class="ul" id="concept_bmt_s41_hy__ul_hrq_lr1_hy">
                                     <li class="li">
                                         <ul class="ul" id="concept_bmt_s41_hy__ul_u2r_lr1_hy">
@@ -569,9 +573,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d225506e709">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d225506e713">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d225506e712">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d225506e716">Description</th>
 
                                 </tr>
 
@@ -579,24 +583,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d225506e709 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d225506e713 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d225506e712 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d225506e709 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d225506e712 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d225506e716 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d225506e709 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                    <td class="entry" valign="top" width="30%" headers="d225506e713 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d225506e716 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d225506e713 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
                                             <img class="image" id="task_nqj_51k_yx__d35045e4307" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d225506e712 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d225506e716 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -604,10 +608,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d225506e709 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                    <td class="entry" valign="top" width="30%" headers="d225506e713 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
                                             <img class="image" id="task_nqj_51k_yx__d35045e4321" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d225506e712 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d225506e716 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -615,10 +619,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d225506e709 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                    <td class="entry" valign="top" width="30%" headers="d225506e713 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
                                             <img class="image" id="task_nqj_51k_yx__d35045e4336" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d225506e712 ">Error record handling for the stage: <ul class="ul" id="task_nqj_51k_yx__d35045e4340">
+                                    <td class="entry" valign="top" width="70%" headers="d225506e716 ">Error record handling for the stage: <ul class="ul" id="task_nqj_51k_yx__d35045e4340">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -647,9 +651,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d225506e831">Field Zip Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d225506e835">Field Zip Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d225506e834">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d225506e838">Description</th>
 
                                 </tr>
 
@@ -657,9 +661,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d225506e831 ">Fields to Zip</td>
+                                    <td class="entry" valign="top" width="30%" headers="d225506e835 ">Fields to Zip</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d225506e834 ">Configure the fields to merge and the output field as
+                                    <td class="entry" valign="top" width="70%" headers="d225506e838 ">Configure the fields to merge and the output field as
                                             follows:<ul class="ul" id="task_nqj_51k_yx__ul_edc_bw1_hy">
                                             <li class="li">First Field - The first List or List-Map field to
                                                 use. </li>
@@ -676,9 +680,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d225506e831 ">Zip Values Only</td>
+                                    <td class="entry" valign="top" width="30%" headers="d225506e835 ">Zip Values Only</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d225506e834 ">Includes only field values when merging lists. When not
+                                    <td class="entry" valign="top" width="70%" headers="d225506e838 ">Includes only field values when merging lists. When not
                                         selected, the processor includes field names and values.
                                             <p class="p">For more information about how the processor merges
                                             list data, see <a class="xref" href="FieldZip.html#concept_ifv_3h1_hy">Merging List Data</a>.</p>
@@ -687,9 +691,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d225506e831 ">Field Does Not Exist</td>
+                                    <td class="entry" valign="top" width="30%" headers="d225506e835 ">Field Does Not Exist</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d225506e834 ">
+                                    <td class="entry" valign="top" width="70%" headers="d225506e838 ">
                                         <div class="p">Action to take when both list fields do not exist in a
                                                 record:<ul class="ul" id="task_nqj_51k_yx__ul_mtx_rw1_hy">
                                                 <li class="li">Continue - Passes nulls for the missing

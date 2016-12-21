@@ -200,7 +200,7 @@
 
                     <dd class="dd">
                         <ul class="ul" id="concept_oyv_zfk_fy__ul_v5w_mhk_fy">
-                            <li class="li"><a class="xref" href="../Install_Config/AdditionalStageLibraries.html#concept_zhl_k4f_cr" title="The Data Collector includes a wide range of stages for pipeline development, but you might need additional functionality. You can install stage libraries to provide access to additional stages.">New stage libraries</a>. Data Collector now supports the
+                            <li class="li">New <a class="xref" href="../Install_Config/AdditionalStageLibraries.html#concept_zhl_k4f_cr" title="The Data Collector includes a wide range of stages for pipeline development, but you might need additional functionality. You can install stage libraries to provide access to additional stages.">stage libraries</a>. Data Collector now supports the
                                 following stage libraries: <ul class="ul" id="concept_oyv_zfk_fy__ul_oxv_nhk_fy">
                                     <li class="li">Apache Kudu version 1.0.x - Earlier Kudu versions are no
                                         longer supported. </li>
@@ -233,9 +233,9 @@
                                 modifying Java configuration options in the Data Collector
                                 environment configuration file.</li>
 
-                            <li class="li">Environment variables for Java configuration options. Data Collector
-                                now uses three environment variables to define Java configuration
-                                options: <ul class="ul" id="concept_oyv_zfk_fy__ul_wym_thk_fy">
+                            <li class="li">Environment variables for <a class="xref" href="../Install_Config/DCEnvironmentConfig.html#concept_vrx_4fg_qr" title="You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. To enable remote debugging, define debugging options in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file.You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.When you use Data Collector with Java 7, Data Collector is configured to use TLS versions 1.1 and 1.2. To connect to a system that uses an earlier version of TLS, modify the Dhttps.protocols option in the SDC_JAVA7_OPTS environment variable in the Data Collector environment configuration file.When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.">Java configuration options</a>. Data Collector now uses
+                                three environment variables to define Java configuration options:
+                                    <ul class="ul" id="concept_oyv_zfk_fy__ul_wym_thk_fy">
                                     <li class="li">SDC_JAVA_OPTS - Includes configuration options for all Java
                                         versions. SDC_JAVA7_OPTS - Includes configuration options
                                         used only when Data Collector is running Java 7.</li>
@@ -324,10 +324,13 @@
                                 include examples of both and a new tip for generating unique record
                                 IDs. </li>
 
-                            <li class="li">XML Flattener processor enhancement - You can now configure the XML
-                                Flattener processor to write the flattened data to a new output
-                                field. Previously, the processor wrote the flattened data to the
-                                same field. XML Parser processor enhancement. You can now generate
+                            <li class="li"><a class="xref" href="../Processors/XMLFlattener.html#task_pmb_l55_sv" title="Configure an XML Flattener to flatten XML data embedded in a string field.">XML Flattener processor</a> enhancement - You can now
+                                configure the XML Flattener processor to write the flattened data to
+                                a new output field. Previously, the processor wrote the flattened
+                                data to the same field. </li>
+
+                            <li class="li"><a class="xref" href="../Processors/XMLParser.html#concept_dtt_q5q_k5" title="Configure an XML Parser to parse XML data in a string field.">XML
+                                    Parser processor</a> enhancement. You can now generate
                                 records from XML documents using simplified XPath expressions. This
                                 enables reading records from deeper within XML documents. </li>
 
@@ -475,7 +478,7 @@
                                 </ul>
 </li>
 
-                            <li class="li">New <a class="xref" href="../Expression_Language/Functions.html#concept_kxj_nyl_5x">time functions</a> - You can use the following new time
+                            <li class="li">New <a class="xref" href="../Expression_Language/Functions.html#concept_qkr_trf_sw" title="Use time functions to return the current time or to transform datetime data.">time functions</a> - You can use the following new time
                                 functions to transform datetime data:<ul class="ul" id="concept_oyv_zfk_fy__ul_znz_skk_fy">
                                     <li class="li"> time:extractLongFromDate(&lt;Date object&gt;, &lt;string&gt;) -
                                         Extracts a long value from a Date object, based on the
