@@ -333,8 +333,8 @@
 
         <div class="p">For example, the following directory template creates
                   output directories for event data based on the state and timestamp of a record
-                  with hours as the smallest unit of measure, creating a new directory every twelve
-                  hours:<pre class="pre codeblock"> /outputfiles/${record:valueOrDefault("/State", "unknown")}/${YY()}-${MM()}-${DD()}-${every(12,hh())}</pre>
+                  with hours as the smallest unit of measure, creating a new directory every
+                  hour:<pre class="pre codeblock"> /outputfiles/${record:valueOrDefault("/State", "unknown")}/${YY()}-${MM()}-${DD()}-${hh()}</pre>
 </div>
 
         <div class="p">You can use the following elements in a directory template:<dl class="dl">
