@@ -287,6 +287,7 @@ public class RemoteDownloadSource extends BaseSource {
 
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+    final int batchSize = Math.min(maxBatchSize, conf.basic.maxBatchSize);
     // Just started up, currentOffset has not yet been set.
     // This method returns NOTHING_READ when only no events have ever been read
     if (currentOffset == null
@@ -344,7 +345,7 @@ public class RemoteDownloadSource extends BaseSource {
           }
         }
       }
-      offset = addRecordsToBatch(maxBatchSize, batchMaker, next);
+      offset = addRecordsToBatch(batchSize, batchMaker, next);
     } catch (IOException | DataParserException ex) {
       handleFatalException(ex, next);
     } finally {

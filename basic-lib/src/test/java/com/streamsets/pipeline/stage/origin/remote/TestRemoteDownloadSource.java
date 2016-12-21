@@ -200,6 +200,41 @@ public class TestRemoteDownloadSource {
     destroyAndValidate(runner);
   }
 
+  @Test
+  public void testRespectsConfiguredBatchSize() throws Exception {
+    path = "remote-download-source/parseNoError";
+    setupSSHD(path, false);
+    RemoteDownloadSource origin =
+        new RemoteDownloadSource(getBean(
+            "sftp://localhost:" + String.valueOf(port) + "/",
+            true,
+            "testuser",
+            "pass",
+            null,
+            null,
+            null,
+            true,
+            DataFormat.JSON,
+            null,
+            false,
+            "*",
+            1
+        ));
+    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+    for (int j = 0; j < 2; j++) {
+      StageRunner.Output op = runner.runProduce(RemoteDownloadSource.NOTHING_READ, 1000);
+      List<Record> expected = getExpectedRecords();
+      List<Record> actual = op.getRecords().get("lane");
+      Assert.assertEquals(1, actual.size());
+      Assert.assertEquals(expected.get(j).get(), actual.get(0).get());
+    }
+    destroyAndValidate(runner);
+  }
+
+
   private void destroyAndValidate(SourceRunner runner) throws Exception {
     runner.runDestroy();
     await()
@@ -1434,6 +1469,38 @@ public class TestRemoteDownloadSource {
       boolean processSubDirectories,
       String filePattern
   ) {
+    return getBean(
+        remoteHost,
+        userDirIsRoot,
+        username,
+        password,
+        privateKey,
+        passphrase,
+        knownHostsFile,
+        noHostChecking,
+        dataFormat,
+        errorArchive,
+        processSubDirectories,
+        filePattern,
+        1000
+    );
+  }
+
+  private RemoteDownloadConfigBean getBean(
+      String remoteHost,
+      boolean userDirIsRoot,
+      String username,
+      String password,
+      String privateKey,
+      String passphrase,
+      String knownHostsFile,
+      boolean noHostChecking,
+      DataFormat dataFormat,
+      String errorArchive,
+      boolean processSubDirectories,
+      String filePattern,
+      int batchSize
+  ) {
     RemoteDownloadConfigBean configBean = new RemoteDownloadConfigBean();
     configBean.remoteAddress = remoteHost;
     configBean.userDirIsRoot = userDirIsRoot;
@@ -1448,6 +1515,7 @@ public class TestRemoteDownloadSource {
     configBean.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
     configBean.processSubDirectories = processSubDirectories;
     configBean.filePattern = filePattern;
+    configBean.basic.maxBatchSize = batchSize;
     if (password != null) {
       configBean.auth = Authentication.PASSWORD;
     } else {
@@ -1455,7 +1523,6 @@ public class TestRemoteDownloadSource {
     }
     return configBean;
   }
-
   private static class PasswdAuth implements PasswordAuthenticator {
 
     @Override
