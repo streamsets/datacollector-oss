@@ -34,63 +34,90 @@
 
   <div class="p">You can use the following
       types of destinations in a pipeline: <ul class="ul" id="concept_hpr_twm_jq__ul_mxz_jxm_jq">
-        <li class="li">Amazon S3 - Writes data to Amazon S3. </li>
+        <li class="li"><a class="xref" href="AmazonS3.html#concept_avx_bnq_rt" title="The Amazon S3 destination writes data to Amazon S3. To write data to an Amazon Kinesis Firehose delivery system, use the Kinesis Firehose destination. To write data to Amazon Kinesis Streams, use the Kinesis Producer destination.">Amazon S3</a> - Writes data to Amazon
+          S3. </li>
 
-        <li class="li">Azure Data Lake Store - Writes data to the Azure Data Lake Store.</li>
+        <li class="li"><a class="xref" href="DataLakeStore.html#concept_jzm_kf4_zx">Azure Data Lake Store</a> - Writes
+          data to the Azure Data Lake Store.</li>
 
-        <li class="li">Cassandra - Writes data to a Cassandra cluster.</li>
+        <li class="li"><a class="xref" href="Cassandra.html#concept_hfy_mfd_sr" title="The Cassandra destination writes data to a Cassandra cluster.">Cassandra</a> - Writes data to a
+          Cassandra cluster.</li>
 
-        <li class="li">Elasticsearch - Writes data to an Elasticsearch cluster.</li>
+        <li class="li"><a class="xref" href="Elasticsearch.html#concept_u5t_vpv_4r" title="The Elasticsearch destination writes data to an Elasticsearch cluster. It can also write to Elastic Cloud clusters (formerly Found clusters) and Shield-enabled clusters. The Elasticsearch destination writes each record to Elasticsearch as a document.">Elasticsearch</a> - Writes data to
+          an Elasticsearch cluster.</li>
 
-        <li class="li">Flume - Writes data to a Flume source.</li>
+        <li class="li"><a class="xref" href="Flume.html#concept_pzn_hl4_yr" title="The Flume destination writes data to a Flume source. When you write data to Flume, you pass data to a Flume client. The Flume client passes data to hosts based on client configuration properties.">Flume</a> - Writes data to a Flume
+          source.</li>
 
-        <li class="li">Google Bigtable - Writes data to Google Cloud Bigtable.</li>
+        <li class="li"><a class="xref" href="Bigtable.html#concept_pl5_tmq_tx" title="The Google Bigtable destination writes data to Google Cloud Bigtable.">Google Bigtable</a> - Writes data to
+          Google Cloud Bigtable.</li>
 
-        <li class="li">Hadoop FS - Writes data to the Hadoop Distributed File System (HDFS).</li>
+        <li class="li"><a class="xref" href="HadoopFS-destination.html#concept_awl_4km_zq" title="You can use Kerberos authentication to connect to HDFS. When you use Kerberos authentication, Data Collector uses the Kerberos principal and keytab to connect to HDFS. You can configure the Hadoop FS destination to use an HDFS user to write data to HDFS.">Hadoop FS</a> - Writes data
+          to the Hadoop Distributed File System (HDFS).</li>
 
-        <li class="li">HBase - Writes data to an HBase cluster.</li>
+        <li class="li"><a class="xref" href="HBase.html#concept_wsz_5t5_vr" title="The HBase destination writes data to an HBase cluster. The destination can write data to HBase as text, binary data, or JSON strings. You can define the data format for each column written to HBase.">HBase</a> - Writes data to an HBase
+          cluster.</li>
 
-        <li class="li">Hive Metastore - Creates and updates Hive tables as needed.</li>
+        <li class="li"><a class="xref" href="HiveMetastore.html#concept_gcr_z2t_zv" title="The Hive Metastore destination works with the Hive Metadata processor and the Hadoop FS or MapR FS destination as part of the Hive Drift Solution.">Hive Metastore</a> - Creates and
+          updates Hive tables as needed.</li>
 
-        <li class="li">Hive Streaming - Writes data to Hive.</li>
+        <li class="li"><a class="xref" href="Hive.html#concept_kvs_3hh_ht" title="The Hive Streaming destination writes data to Hive tables stored in the ORC (Optimized Row Columnar) file format.">Hive Streaming</a> - Writes data to
+          Hive.</li>
 
-        <li class="li">InfluxDB - Writes data to InfluxDB.</li>
+        <li class="li"><a class="xref" href="InfluxDB.html#concept_inf_db_sr" title="The InfluxDB destination writes data to an InfluxDB database.">InfluxDB</a> - Writes data to
+          InfluxDB.</li>
 
-        <li class="li">JDBC Producer - Writes data to JDBC.</li>
+        <li class="li"><a class="xref" href="JDBCProducer.html#concept_kvs_3hh_ht" title="The JDBC Producer destination uses a JDBC connection to write data to a database table. You can also use the JDBC Producer to write change capture data from a Microsoft SQL Server change log.">JDBC Producer</a> - Writes data to
+          JDBC.</li>
 
-        <li class="li">Kafka Producer - Writes data to a Kafka cluster.</li>
+        <li class="li"><a class="xref" href="KProducer.html#concept_oq2_5jl_zq" title="The Kafka Producer destination writes data to a Kafka cluster.">Kafka Producer</a> - Writes data to a
+          Kafka cluster.</li>
 
-        <li class="li">Kinesis Firehose - Writes data to a Kinesis Firehose delivery stream.</li>
+        <li class="li"><a class="xref" href="KinFirehose.html#concept_bjv_dpk_kv" title="The Kinesis Firehose destination writes data to an Amazon Kinesis Firehose delivery stream. Firehose automatically delivers the data to the Amazon S3 bucket or Amazon Redshift table that you specify in the delivery stream.">Kinesis Firehose</a> - Writes data
+          to a Kinesis Firehose delivery stream.</li>
 
-        <li class="li">Kinesis Producer - Writes data to Kinesis Streams.</li>
+        <li class="li"><a class="xref" href="KinProducer.html#concept_swk_h1j_yr" title="The Kinesis Producer destination writes data to Amazon Kinesis Streams. To write data to an Amazon Kinesis Firehose delivery system, use the Kinesis Firehose destination. To write data to Amazon S3, use the Amazon S3 destination.">Kinesis Producer</a> - Writes data
+          to Kinesis Streams.</li>
 
-        <li class="li">Kudu - Writes data to Kudu.</li>
+        <li class="li"><a class="xref" href="Kudu.html#concept_chy_xxg_4v" title="The Kudu destination writes data to a Kudu cluster.">Kudu</a> - Writes data to Kudu.</li>
 
-        <li class="li">Local FS - Writes data to a local file system. </li>
+        <li class="li"><a class="xref" href="LocalFS.html#concept_zvc_bv5_1r">Local FS</a> - Writes data to a local
+          file system. </li>
 
-        <li class="li">MapR DB - Writes data to MapR DB.</li>
+        <li class="li"><a class="xref" href="MapRDB.html#concept_vxg_w2z_yv" title="The MapR DB destination writes data to MapR DB. The destination can write data to MapR DB as text, binary data, or JSON strings. You can define the data format for each column written to MapR DB.">MapR DB</a> - Writes data to MapR
+          DB.</li>
 
-        <li class="li">MapR FS - Writes data to MapR FS.</li>
+        <li class="li"><a class="xref" href="MapRFS.html#concept_spv_xlc_fv" title="The MapR FS destination writes files to MapR FS. You can write the data to MapR as flat files or Hadoop sequence files.">MapR FS</a> - Writes data to MapR
+          FS.</li>
 
-        <li class="li">MapR Streams Producer - Writes data to MapR Streams.</li>
+        <li class="li"><a class="xref" href="MapRStreamsProd.html#concept_cfj_qbn_2v" title="The MapR Streams Producer destination writes messages to MapR Streams.">MapR Streams Producer</a> -
+          Writes data to MapR Streams.</li>
 
-        <li class="li">MongoDB - Writes data to MongoDB.</li>
+        <li class="li"><a class="xref" href="MongoDB.html#concept_eth_k5n_4v" title="The MongoDB destination writes data to MongoDB. To write data to MongoDB, you must define an operation record header attribute in the pipeline. The operation header attribute indicates the operation to perform for each record: insert, upsert, or delete.">MongoDB</a> - Writes data to
+          MongoDB.</li>
 
-        <li class="li">Rabbit MQ Producer - Writes data to RabbitMQ.</li>
+        <li class="li"><a class="xref" href="MongoDB.html#concept_eth_k5n_4v" title="The MongoDB destination writes data to MongoDB. To write data to MongoDB, you must define an operation record header attribute in the pipeline. The operation header attribute indicates the operation to perform for each record: insert, upsert, or delete.">Rabbit MQ Producer</a> - Writes data to
+          RabbitMQ.</li>
 
-        <li class="li">Redis - Writes data to Redis.</li>
+        <li class="li"><a class="xref" href="Redis.html#concept_ktc_gw2_gw" title="The Redis destination writes data to Redis.">Redis</a> - Writes data to Redis.</li>
 
-        <li class="li">Salesforce - Writes data to Salesforce.</li>
+        <li class="li"><a class="xref" href="Salesforce.html#concept_rlb_rt3_rx" title="The Salesforce destination writes data to Salesforce objects.">Salesforce</a> - Writes data to
+          Salesforce.</li>
 
-        <li class="li">SDC RPC - Passes data to an SDC RPC origin in an SDC RPC pipeline.</li>
+        <li class="li"><a class="xref" href="SDC_RPCdest.html#concept_lfk_hx2_ct" title="The SDC RPC destination enables connectivity between two SDC RPC pipelines. The SDC RPC destination passes data to one or more SDC RPC origins. Use the SDC RPC destination as part of an SDC RPC origin pipeline.">SDC RPC</a> - Passes data to an SDC
+          RPC origin in an SDC RPC pipeline.</li>
 
-        <li class="li">Solr - Writes data to a Solr node or cluster.</li>
+        <li class="li"><a class="xref" href="Solr.html#concept_lfk_hx2_ct">Solr</a> - Writes data to a Solr node or
+          cluster.</li>
 
-        <li class="li">To Error - Passes records to the pipeline for error handling.</li>
+        <li class="li"><a class="xref" href="ToError.html#concept_ryn_v3z_lr" title="The To Error destination passes records to the pipeline for error handling. Use the To Error destination to send a stream of records to pipeline error handling.">To Error</a> - Passes records to the
+          pipeline for error handling.</li>
 
-        <li class="li">Trash - Removes records from the pipeline.</li>
+        <li class="li"><a class="xref" href="Trash.html#concept_htf_ydj_wq" title="The Trash destination discards records. Use the Trash destination as a visual representation of records discarded from the pipeline. Or, you might use the Trash destination during development as a temporary placeholder.">Trash</a> - Removes records from the
+          pipeline.</li>
 
-        <li class="li">Wave Analytics - Writes data to Salesforce Wave Analytics.</li>
+        <li class="li"><a class="xref" href="WaveAnalytics.html#concept_hlx_r53_rx" title="The Wave Analytics destination writes data to Salesforce Wave Analytics. The destination connects to Wave Analytics to create a dataset with external data.">Wave Analytics</a> - Writes data
+          to Salesforce Wave Analytics.</li>
 
       </ul>
 To help create or test pipelines, you can use the following development destination:<ul class="ul" id="concept_hpr_twm_jq__ul_wvk_p3f_lx">

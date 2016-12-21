@@ -50,7 +50,7 @@
                     redo logs. You do not need to enable both:<dl>
                         <dlentry>
                             <dt>To enable identification key logging</dt>
-                            <dd>You can enable indentification key logging for individual tables or
+                            <dd>You can enable identification key logging for individual tables or
                                 all tables in the database:</dd>
                             <dd>
                                 <ul id="ul_ehq_msh_hy">

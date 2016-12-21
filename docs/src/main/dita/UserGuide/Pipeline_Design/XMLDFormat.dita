@@ -34,7 +34,7 @@
             document, as follows:<dl>
                 <dlentry>
                     <dt>Generate a single record</dt>
-                    <dd>To generate a single record from an XML document, do not specify a delimeter
+                    <dd>To generate a single record from an XML document, do not specify a delimiter
                         element.</dd>
                     <dd>When you generate a single record from an XML document, the entire document
                         is written to the record as a map.</dd>

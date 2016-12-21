@@ -75,7 +75,8 @@
               <entry/>
               <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_ltc_k4k_1y"
                 /></entry>
-              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_tts_2wl_3y"
+                /></entry>
             </row>
                                                 <row>
                                                   <entry>Cassandra</entry>

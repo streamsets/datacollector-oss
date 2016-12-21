@@ -16,7 +16,8 @@
 <concept id="concept_oyv_zfk_fy">
  <title>What's New in 2.2.0.0</title>
  <conbody>
-  <p>This version features new features and enhancements in the following areas.<dl>
+  <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> version
+            2.2.0.0 includes the following new features and enhancements:<dl>
                 <dlentry>
                     <dt>Event Framework</dt>
                     <dd>The Data Collector event framework enables the pipeline to trigger tasks in
@@ -33,31 +34,59 @@
                                     >New executor stages</xref>. A new type of stage that performs
                                 tasks in external systems upon receiving an event. This release
                                 includes the following executors:<ul id="ul_bn4_ygk_fy">
-                                    <li>HDFS File Metadata executor - Changes file metadata such as
-                                        the name, location, permissions, and ACLs. </li>
-                                    <li>Hive Query executor - Runs a Hive or Impala query. </li>
-                                    <li>JDBC Query executor - Runs a SQL query. </li>
-                                    <li>MapReduce executor - Runs a custom MapReduce job or an Avro
-                                        to Parquet MapReduce job. </li>
+                                    <li><xref
+                                            href="../Executors/HDFSMetadata.dita#concept_wgj_slk_fx"
+                                            >HDFS File Metadata executor</xref> - Changes file
+                                        metadata such as the name, location, permissions, and ACLs. </li>
+                                    <li><xref href="../Executors/HiveQuery.dita#concept_kjw_llk_fx"
+                                            >Hive Query executor</xref> - Runs a Hive or Impala
+                                        query. </li>
+                                    <li><xref href="../Executors/JDBCQuery.dita#concept_j3r_gcv_sx"
+                                            >JDBC Query executor</xref> - Runs a SQL query. </li>
+                                    <li><xref href="../Executors/MapReduce.dita#concept_bj2_zlk_fx"
+                                            >MapReduce executor</xref> - Runs a custom MapReduce job
+                                        or an Avro to Parquet MapReduce job. </li>
                                 </ul></li>
                             <li>Event generation. The following stages now generate events that you
                                 can use in a pipeline: <ul id="ul_sxd_bhk_fy">
-                                    <li>Directory and File Tail origins - Generate events when they
+                                    <li><xref
+                                            href="../Origins/Directory-EventGeneration.dita#concept_ttg_vgn_qx"
+                                            >Directory</xref> and <xref
+                                            href="../Origins/FileTail-EventGeneration.dita#concept_gwn_c32_px"
+                                            >File Tail</xref> origins - Generate events when they
                                         start and complete reading a file.</li>
-                                    <li>Amazon S3 destination - Generates events when it completes
-                                        writing to an object or streaming a whole file. </li>
-                                    <li>Hadoop FS, Local FS, and MapR FS destinations - Generate
-                                        events when they close an output file or complete streaming
-                                        a whole file. </li>
-                                    <li>Groovy Evaluator, JavaScript Evaluator, and Jython Evaluator
-                                        processors - Can run scripts that generate events. HDFS File
-                                        Metadata executor - Generates events when it changes file
-                                        metadata. </li>
-                                    <li>Hive Query executor - Generates events when it runs a Hive
-                                        or Impala query.</li>
+                                    <li><xref
+                                            href="../Destinations/AmazonS3-EventGeneration.dita#concept_aqq_tt2_px"
+                                            >Amazon S3 destination</xref> - Generates events when it
+                                        completes writing to an object or streaming a whole file. </li>
+                                    <li><xref
+                                            href="../Destinations/HadoopFS-EventGeneration.dita#concept_bvb_rxj_px"
+                                            >Hadoop FS</xref>, <xref
+                                            href="../Destinations/LocalFS-EventGeneration.dita#concept_in1_fcm_px"
+                                            >Local FS</xref>, and <xref
+                                            href="../Destinations/MapRFS-EventGeneration.dita#concept_bqd_3qb_rx"
+                                            >MapR FS</xref> destinations - Generate events when they
+                                        close an output file or complete streaming a whole file. </li>
+                                    <li><xref
+                                            href="../Processors/Groovy-EventGeneration.dita#concept_qcz_ssq_1y"
+                                            >Groovy Evaluator</xref>, <xref
+                                            href="../Processors/JavaScript-EventGeneration.dita#concept_mkv_wgh_cy"
+                                            >JavaScript Evaluator</xref>, and <xref
+                                            href="../Processors/Jython-EventGeneration.dita#concept_zhd_chh_cy"
+                                            >Jython Evaluator</xref> processors - Can run scripts
+                                        that generate events. </li>
+                                    <li><xref
+                                            href="../Executors/HDFSFileMeta-EventGeneration.dita#concept_vhl_mfj_rx"
+                                            >HDFS File Metadata executor</xref> - Generates events
+                                        when it changes file metadata. </li>
+                                    <li><xref
+                                            href="../Executors/MapReduce-EventGeneration.dita#concept_e1s_sm5_sx"
+                                            >MapReduce executor</xref> - Generates events when it
+                                        starts a MapReduce job.</li>
                                 </ul></li>
-                            <li>Dev stages. You can use the following stages to develop and test
-                                event handling: <ul id="ul_ysc_2hk_fy">
+                            <li><xref href="../Pipeline_Design/DevStages.dita#concept_czx_ktn_ht"
+                                    >Dev stages</xref>. You can use the following stages to develop
+                                and test event handling: <ul id="ul_ysc_2hk_fy">
                                     <li>Dev Data Generator enhancement - You can now configure the
                                         Dev Data Generator to generate event records as well as data
                                         records. You can also specify the number of records in a
@@ -70,20 +99,28 @@
                 <dlentry>
                     <dt>Installation</dt>
                     <dd>
+                        <ul id="ul_q3x_pvm_3y">
+                            <li><xref href="../Install_Config/Requirements.dita#concept_vzg_n2p_kq"
+                                    >Installation requirements</xref>:<ul id="ul_zh5_qvm_3y">
+                                    <li>Java requirement - Oracle Java 7 is supported but now
+                                        deprecated. Oracle announced the end of public updates for
+                                        Java 7 in April 2015. StreamSets recommends migrating to
+                                        Java 8, as Java 7 support will be removed in a future Data
+                                        Collector release. </li>
+                                    <li>File descriptors requirement - Data Collector now requires a
+                                        minimum of 32,768 open file descriptors. </li>
+                                </ul></li>
+                        </ul>
                         <ul id="ul_jtf_ghk_fy">
-                            <li>Java requirement - Oracle Java 7 is supported but now deprecated.
-                                Oracle announced the end of public updates for Java 7 in April 2015.
-                                StreamSets recommends migrating to Java 8, as Java 7 support will be
-                                removed in a future Data Collector release. </li>
-                            <li>File descriptors requirement - Data Collector now requires a minimum
-                                of 32,768 open file descriptors. </li>
-                            <li>Core installation includes the basic stage library only - The core
-                                RPM and tarball installations now include the basic stage library
-                                only, to allow Data Collector to use less disk space. Install
-                                additional stage libraries using the Package Manager for tarball
-                                installations or the command line for RPM and tarball installations.
-                                    <p>Previously, the core installation also included the Groovy,
-                                    Jython, and statistics stage libraries.</p></li>
+                            <li><xref
+                                    href="../Install_Config/CoreInstall_Overview.dita#concept_vvw_p3m_s5"
+                                    >Core installation</xref> includes the basic stage library only
+                                - The core RPM and tarball installations now include the basic stage
+                                library only, to allow Data Collector to use less disk space.
+                                Install additional stage libraries using the Package Manager for
+                                tarball installations or the command line for RPM and tarball
+                                installations. <p>Previously, the core installation also included
+                                    the Groovy, Jython, and statistics stage libraries.</p></li>
                         </ul>
                     </dd>
                 </dlentry>
@@ -91,8 +128,10 @@
                     <dt>Configuration</dt>
                     <dd>
                         <ul id="ul_v5w_mhk_fy">
-                            <li>New stage libraries. Data Collector now supports the following stage
-                                libraries: <ul id="ul_oxv_nhk_fy">
+                            <li><xref
+                                    href="../Install_Config/AdditionalStageLibraries.dita#concept_zhl_k4f_cr"
+                                    >New stage libraries</xref>. Data Collector now supports the
+                                following stage libraries: <ul id="ul_oxv_nhk_fy">
                                     <li>Apache Kudu version 1.0.x - Earlier Kudu versions are no
                                         longer supported. </li>
                                     <li>Cloudera CDH version 5.9 distribution of Apache Hadoop. </li>
@@ -125,10 +164,12 @@
                                     <li>SDC_JAVA8_OPTS - Includes configuration options used only
                                         when Data Collector is running Java 8. </li>
                                 </ul></li>
-                            <li>New time zone property - You can configure the Data Collector
-                                console to use UTC, the browser time zone, or the Data Collector
-                                time zone. The time zone property affects how dates and times
-                                display in the UI. The default is the browser time zone.</li>
+                            <li><xref
+                                    href="../Getting_Started/ConfiguringConsoleSettings.dita#task_r3q_fnx_pr"
+                                    >New time zone property</xref> - You can configure the Data
+                                Collector console to use UTC, the browser time zone, or the Data
+                                Collector time zone. The time zone property affects how dates and
+                                times display in the UI. The default is the browser time zone.</li>
                         </ul>
                     </dd>
                 </dlentry>
@@ -144,10 +185,16 @@
                                 origin can execute a SOQL query to read existing data from
                                 Salesforce. The origin can also subscribe to the Force.com Streaming
                                 API to receive notifications for changes to Salesforce data. </li>
-                            <li>Directory origin enhancement - You can configure the Directory
-                                origin to read files from all subdirectories when using the
-                                last-modified timestamp for the read order. </li>
-                            <li>JDBC Consumer and Oracle CDC Client origin enhancement - You can now
+                            <li><xref
+                                    href="../Origins/Directory-Subdirectories.dita#concept_qpt_rg3_cy"
+                                    >Directory origin</xref> enhancement - You can configure the
+                                Directory origin to read files from all subdirectories when using
+                                the last-modified timestamp for the read order. </li>
+                            <li><xref
+                                    href="../Origins/JDBCConsumer-Configuring.dita#task_ryz_tkr_bs"
+                                    >JDBC Consumer</xref> and <xref
+                                    href="../Origins/OracleCDC-Configuring.dita#task_ehh_mjj_tw"
+                                    >Oracle CDC Client</xref> origin enhancement - You can now
                                 configure the transaction isolation level that the JDBC Consumer and
                                 Oracle CDC Client origins use to connect to the database.
                                 Previously, the origins used the default transaction isolation level
@@ -164,29 +211,44 @@
                                 application that you develop. Use the Spark Evaluator processor to
                                 develop a Spark application that performs custom processing within a
                                 pipeline. </li>
-                            <li>Field Flattener processor enhancements - In addition to flattening
-                                the entire record, you can also now use the Field Flattener
-                                processor to flatten specific list or map fields in the record. </li>
-                            <li>Field Type Converter processor enhancements - You can now use the
-                                Field Type Converter processor to change the scale of a decimal
-                                field. Or, if you convert a field with another data type to the
-                                Decimal data type, you can configure the scale to use in the
+                            <li><xref
+                                    href="../Processors/FieldFlattener-FlatField.dita#concept_vpx_zc1_xx"
+                                    >Field Flattener processor</xref> enhancements - In addition to
+                                flattening the entire record, you can also now use the Field
+                                Flattener processor to flatten specific list or map fields in the
+                                record. </li>
+                            <li><xref
+                                    href="../Processors/FieldTypeConverter-ChangeScale.dita#concept_sym_c4g_xx"
+                                    >Field Type Converter processor</xref> enhancements - You can
+                                now use the Field Type Converter processor to change the scale of a
+                                decimal field. Or, if you convert a field with another data type to
+                                the Decimal data type, you can configure the scale to use in the
                                 conversion. </li>
-                            <li>Field Pivoter processor enhancements - The List Pivoter processor
-                                has been renamed to the Field Pivoter processor. You can now use the
-                                processor to pivot data in a list, map, or list-map field. You can
-                                also use the processor to save the field name of the first-level
-                                item in the pivoted field. </li>
-                            <li>JDBC Lookup and JDBC Tee processor enhancement - You can now
-                                configure the transaction isolation level that the JDBC Lookup and
-                                JDBC Tee processors use to connect to the database. Previously, the
-                                origins used the default transaction isolation level configured for
-                                the database. </li>
-                            <li>Scripting processor enhancements - The Groovy Evaluator, JavaScript
-                                Evaluator, and Jython Evaluator processors can generate event
-                                records and work with record header attributes. The sample scripts
-                                now include examples of both and a new tip for generating unique
-                                record IDs. </li>
+                            <li><xref href="../Processors/ListPivoter.dita#concept_ekg_313_qw">Field
+                                    Pivoter processor</xref> enhancements - The List Pivoter
+                                processor has been renamed to the Field Pivoter processor. You can
+                                now use the processor to pivot data in a list, map, or list-map
+                                field. You can also use the processor to save the field name of the
+                                first-level item in the pivoted field. </li>
+                            <li><xref
+                                    href="../Processors/JDBCLookup-Configuring.dita#task_kbr_2cy_hw"
+                                    >JDBC Lookup</xref> and <xref
+                                    href="../Processors/JDBCTee-Configuring.dita#task_qpj_ncy_hw"
+                                    >JDBC Tee</xref> processor enhancement - You can now configure
+                                the transaction isolation level that the JDBC Lookup and JDBC Tee
+                                processors use to connect to the database. Previously, the origins
+                                used the default transaction isolation level configured for the
+                                database. </li>
+                            <li>Scripting processor enhancements - The <xref
+                                    href="../Processors/Groovy-EventGeneration.dita#concept_qcz_ssq_1y"
+                                    >Groovy Evaluator</xref>, <xref
+                                    href="../Processors/JavaScript-EventGeneration.dita#concept_mkv_wgh_cy"
+                                    >JavaScript Evaluator</xref>, and <xref
+                                    href="../Processors/Jython-EventGeneration.dita#concept_zhd_chh_cy"
+                                    >Jython Evaluator</xref> processors can generate event records
+                                and work with record header attributes. The sample scripts now
+                                include examples of both and a new tip for generating unique record
+                                IDs. </li>
                             <li>XML Flattener processor enhancement - You can now configure the XML
                                 Flattener processor to write the flattened data to a new output
                                 field. Previously, the processor wrote the flattened data to the
@@ -211,19 +273,32 @@
                                     >Salesforce destination</xref> - Writes data to Salesforce. New
                                 Wave Analytics destination. Writes data to Salesforce Wave
                                 Analytics. The destination creates a dataset with external data. </li>
-                            <li>Amazon S3 destination change - The AWS KMS Key ID property has been
-                                renamed AWS KMS Key ARN. Data Collector upgrades existing pipelines
-                                seamlessly. </li>
+                            <li><xref
+                                    href="../Destinations/AmazonS3-Configuring.dita#task_pxb_j3r_rt"
+                                    >Amazon S3 destination</xref> change - The AWS KMS Key ID
+                                property has been renamed AWS KMS Key ARN. Data Collector upgrades
+                                existing pipelines seamlessly. </li>
                             <li>File suffix enhancement. You can now configure a file suffix, such
-                                as txt or json, for output files generated by Hadoop FS, Local FS,
-                                MapR FS, and the Amazon S3 destinations. </li>
-                            <li>JDBC Producer destination enhancement - You can now configure the
-                                transaction isolation level that the JDBC Producer destination uses
-                                to connect to the database. Previously, the destination used the
-                                default transaction isolation level configured for the database. </li>
-                            <li>Kudu destination enhancement - You can now configure the destination
-                                to perform one of the following write operations: insert, update,
-                                delete, or upsert.</li>
+                                as txt or json, for output files generated by <xref
+                                    href="../Destinations/HadoopFS-destination.dita#concept_awl_4km_zq"
+                                    >Hadoop FS</xref>, <xref
+                                    href="../Destinations/LocalFS.dita#concept_zvc_bv5_1r">Local
+                                    FS</xref>, <xref
+                                    href="../Destinations/MapRFS.dita#concept_spv_xlc_fv">MapR
+                                    FS</xref>, and the <xref
+                                    href="../Destinations/AmazonS3.dita#concept_avx_bnq_rt">Amazon
+                                    S3</xref> destinations. </li>
+                            <li><xref href="../Destinations/JDBCProducer.dita#concept_kvs_3hh_ht"
+                                    >JDBC Producer</xref> destination enhancement - You can now
+                                configure the transaction isolation level that the JDBC Producer
+                                destination uses to connect to the database. Previously, the
+                                destination used the default transaction isolation level configured
+                                for the database. </li>
+                            <li><xref
+                                    href="../Destinations/Kudu-DefineOperation.dita#concept_dvg_vvj_wx"
+                                    >Kudu destination</xref> enhancement - You can now configure the
+                                destination to perform one of the following write operations:
+                                insert, update, delete, or upsert.</li>
                         </ul>
                     </dd>
                 </dlentry>
@@ -231,11 +306,13 @@
                     <dt>Data Formats</dt>
                     <dd>
                         <ul id="ul_r3d_dkk_fy">
-                            <li>XML processing enhancement - You can now generate records from XML
-                                documents using simplified XPath expressions with origins that
-                                process XML data and the XML Parser processor. This enables reading
-                                records from deeper within XML documents. <draft-comment
-                                    author="Loretta">create cross ref later.</draft-comment></li>
+                            <li><xref href="../Pipeline_Design/XMLDFormat.dita#concept_lty_42b_dy"
+                                    >XML processing</xref> enhancement - You can now generate
+                                records from XML documents using <xref
+                                    href="../Pipeline_Design/XMLDF-Xpath.dita#concept_zw2_mfk_dy"
+                                    >simplified XPath expressions</xref> with origins that process
+                                XML data and the XML Parser processor. This enables reading records
+                                from deeper within XML documents. </li>
                             <li>Consolidated data format properties - You now configure the data
                                 format and related properties on a new Data Format tab. Previously,
                                 data formats had individual configuration tabs, e.g., Avro,
@@ -269,8 +346,9 @@
                     <dt>Rules and Alerts</dt>
                     <dd>
                         <ul id="ul_sfk_lkk_fy">
-                            <li>Metric rules and alerts enhancements - The gauge metric type can now
-                                provide alerts based on the number of input, output, or error
+                            <li><xref href="../Alerts/MetricGauge.dita#concept_ky2_g4f_qv">Metric
+                                    rules and alerts</xref> enhancements - The gauge metric type can
+                                now provide alerts based on the number of input, output, or error
                                 records for the last processed batch.</li>
                         </ul>
                     </dd>

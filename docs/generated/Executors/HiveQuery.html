@@ -37,7 +37,7 @@
             for Impala as part of the Hive Drift Solution. For more information, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_szz_xwm_lx">Case Study: Impala Metadata Updates for HDS</a>.</p>
 
         <div class="p">
-            <div class="note note"><span class="notetitle">Note:</span> <span class="ph" id="concept_kjw_llk_fx__d15225e3339">The Hive Query executor waits for
+            <div class="note note"><span class="notetitle">Note:</span> <span class="ph" id="concept_kjw_llk_fx__d15282e3359">The Hive Query executor waits for
                               each query to complete before starting a query for a new event record.
                               Depending on the speed of the pipeline and the complexity of the
                               query, the wait for query completion can slow pipeline
@@ -130,46 +130,46 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mgm_4lk_fx__d15381e4379" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mgm_4lk_fx__d15438e4379" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d100965e185">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d101555e185">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d100965e188">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d101555e188">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr id="task_mgm_4lk_fx__d15381e4401">
-                                    <td class="entry" valign="top" width="30%" headers="d100965e185 ">Name</td>
+                                <tr id="task_mgm_4lk_fx__d15438e4401">
+                                    <td class="entry" valign="top" width="30%" headers="d101555e185 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d100965e188 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr id="task_mgm_4lk_fx__d15381e4410">
-                                    <td class="entry" valign="top" width="30%" headers="d100965e185 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d100965e188 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d101555e188 ">Stage name.</td>
 
                                 </tr>
 
-                                <tr id="task_mgm_4lk_fx__d15381e4419">
-                                    <td class="entry" valign="top" width="30%" headers="d100965e185 ">Stage Library</td>
+                                <tr id="task_mgm_4lk_fx__d15438e4410">
+                                    <td class="entry" valign="top" width="30%" headers="d101555e185 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d100965e188 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d101555e188 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr id="task_mgm_4lk_fx__d15438e4419">
+                                    <td class="entry" valign="top" width="30%" headers="d101555e185 ">Stage Library</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d101555e188 ">Library version that you want to use. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d100965e185 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_mgm_4lk_fx__d15381e4434" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d101555e185 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_mgm_4lk_fx__d15438e4434" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d100965e188 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d101555e188 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -177,21 +177,21 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d100965e185 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_mgm_4lk_fx__d15381e4448" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d101555e185 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_mgm_4lk_fx__d15438e4448" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d100965e188 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d101555e188 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
 
                                 </tr>
 
-                                <tr id="task_mgm_4lk_fx__d15381e4458">
-                                    <td class="entry" valign="top" width="30%" headers="d100965e185 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_mgm_4lk_fx__d15381e4464" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                <tr id="task_mgm_4lk_fx__d15438e4458">
+                                    <td class="entry" valign="top" width="30%" headers="d101555e185 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_mgm_4lk_fx__d15438e4464" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d100965e188 ">Error record handling for the stage: <ul class="ul" id="task_mgm_4lk_fx__d15381e4468">
+                                    <td class="entry" valign="top" width="70%" headers="d101555e188 ">Error record handling for the stage: <ul class="ul" id="task_mgm_4lk_fx__d15438e4468">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -221,9 +221,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d100965e317">Hive Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d101555e317">Hive Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d100965e320">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d101555e320">Description</th>
 
                                 </tr>
 
@@ -231,24 +231,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d100965e317 ">JDBC URL</td>
+       <td class="entry" valign="top" width="30%" headers="d101555e317 ">JDBC URL</td>
 
-       <td class="entry" valign="top" width="70%" headers="d100965e320 ">JDBC URL for Hive. You can use the default, or replace the expression for the database
+       <td class="entry" valign="top" width="70%" headers="d101555e320 ">JDBC URL for Hive. You can use the default, or replace the expression for the database
         name with a specific database name when appropriate.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d100965e317 ">JDBC Driver Name</td>
+       <td class="entry" valign="top" width="30%" headers="d101555e317 ">JDBC Driver Name</td>
 
-       <td class="entry" valign="top" width="70%" headers="d100965e320 ">The fully-qualified JDBC driver name.</td>
+       <td class="entry" valign="top" width="70%" headers="d101555e320 ">The fully-qualified JDBC driver name.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d100965e317 ">Hadoop Configuration Directory</td>
+       <td class="entry" valign="top" width="30%" headers="d101555e317 ">Hadoop Configuration Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d100965e320 ">
+       <td class="entry" valign="top" width="70%" headers="d101555e320 ">
         <p class="p">Absolute path to the directory containing the Hive and Hadoop configuration files. For a
          Cloudera Manager installation, enter hive-conf. </p>
 
@@ -270,9 +270,9 @@
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d100965e317 ">Additional Hadoop Configuration</td>
+       <td class="entry" valign="top" width="30%" headers="d101555e317 ">Additional Hadoop Configuration</td>
 
-       <td class="entry" valign="top" width="70%" headers="d100965e320 ">
+       <td class="entry" valign="top" width="70%" headers="d101555e320 ">
         <p class="p">Additional properties to use. </p>
 
         <p class="p">To add properties, click <span class="ph uicontrol">Add</span> and define the property name and
@@ -299,9 +299,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d100965e419">Query Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d101555e419">Query Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d100965e422">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d101555e422">Description</th>
 
                                 </tr>
 
@@ -309,10 +309,10 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d100965e419 ">SQL Query <a class="xref" href="HiveQuery.html#concept_jzl_yrr_mx">
+                                    <td class="entry" valign="top" width="30%" headers="d101555e419 ">SQL Query <a class="xref" href="HiveQuery.html#concept_jzl_yrr_mx">
                                             <img class="image" id="task_mgm_4lk_fx__image_rfz_thp_fs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d100965e422 ">SQL query to execute on Hive or Impala upon receiving an
+                                    <td class="entry" valign="top" width="70%" headers="d101555e422 ">SQL query to execute on Hive or Impala upon receiving an
                                         event record.<p class="p">Use the default Invalidate Metadata
                                             expression to process events from the Hive Metastore
                                             destination when using the Hive Drift Solution with

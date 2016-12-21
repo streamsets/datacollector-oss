@@ -65,6 +65,8 @@
         <div class="p">You can use the following destinations to write whole files:<ul class="ul" id="concept_nfc_qkh_xw__ul_wrs_cvh_xw">
                 <li class="li">Amazon S3</li>
 
+                <li class="li">Azure Data Lake Store</li>
+
                 <li class="li">Hadoop FS</li>
 
                 <li class="li">Local FS</li>
@@ -127,7 +129,7 @@
             pipeline to read the file data in the fileref field or to modify file information in the
             fileInfo field, such as the file owner or permissions.</p>
 
-        <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="concept_kgs_msy_yw__d33717e2162">You can use
+        <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="concept_kgs_msy_yw__d33791e2182">You can use
                               data preview to determine the information and field names that are
                               included in the fileInfo field.</span> The information and field names
                         can differ based on the origin system.</div>
@@ -225,9 +227,8 @@
  <div class="body conbody">
   <p class="p">By
             default, when using the whole file data format, target files use the default access
-            permissions defined in the destination system. When using the Hadoop FS, Local FS, or
-            MapR FS destinations to write whole files, you can specify access permissions for target
-            files. </p>
+            permissions defined in the destination system. Most destinations allow you to specify
+            access permissions for target files. Amazon S3 does not allow it.</p>
 
         <p class="p">You can enter an expression to define access permissions. Expressions should evaluate to
             a symbolic or numeric/octal representation of the permissions you want to use. For
@@ -250,9 +251,11 @@
 
  <div class="body conbody">
         <p class="p">Destinations that generate events can include a checksum
-            for each file. When you enable checksum use, the destination includes the checksum and
-            the checksum algorithm in the whole file event record. Whole file event records are
-            generated each time the destination completes writing a whole file. </p>
+            for each file. The Azure Data Lake Store destination does not generate events. </p>
+
+        <p class="p">When you enable checksum use, the destination includes the checksum and the checksum
+            algorithm in the whole file event record. Whole file event records are generated each
+            time the destination completes writing a whole file. </p>
 
         <div class="p">You can use the following algorithms to generate checksums:<ul class="ul" id="concept_ojv_sr4_vx__ul_lqh_35p_vx">
                 <li class="li">MD5</li>
