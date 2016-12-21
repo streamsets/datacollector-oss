@@ -36,11 +36,11 @@
                         <row>
                             <entry>0<ul id="ul_sbt_l1f_3y">
                                     <li>id: 23</li>
-                                    <li>inventory: 80</li>
-                                    <li>misc: none</li>
+                                    <li>color: 20005</li>
+                                    <li>info: &lt;null></li>
                                 </ul></entry>
                             <entry>0<ul id="ul_hbq_r1f_3y">
-                                    <li>color: 20005</li>
+                                    <li>inventory: 80</li>
                                     <li>cost: $5.98</li>
                                 </ul></entry>
                         </row>
@@ -49,12 +49,14 @@
             </table></p>
         <p>Say you configure the Field Zip processor to merge the Basics and Additional List-Map
             fields and to write the results to an All field. The Field Zip generates the following
-                record:<draft-comment author="Loretta">Update screenshot with data
-                above.</draft-comment></p>
+            record:</p>
         <p><image href="../Graphics/FieldZip-ListMap.png" id="image_nwj_g2f_3y" scale="60"/></p>
         <p>Notice how each map contains a different set of fields. When processing List fields,
-            Field Zip returns the matching sets of fields. Also notice, the Misc information in the
-            Basics field is not included because it has no corresponding item in the Additional
-            field. </p>
+            Field Zip returns the matching sets of fields. Also notice, the /Basics/Info field is
+            not included because it has no corresponding item in the other List-Map field. </p>
+        <p>If you configure the Field Zip processor to merge only the values, the processor returns
+            the same data without the original field names, as follows: </p>
+        <p><image href="../Graphics/FieldZip-ListMap-NoFields.png" id="image_rx3_pvr_3y" scale="60"
+            /></p>
  </conbody>
 </concept>
