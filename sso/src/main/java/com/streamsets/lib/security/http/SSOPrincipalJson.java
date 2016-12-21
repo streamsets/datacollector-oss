@@ -176,6 +176,7 @@ public class SSOPrincipalJson implements SSOPrincipal {
     locked = true;
     roles = (roles == null) ? Collections.<String>emptySet() : ImmutableSet.copyOf(roles);
     attributes = (attributes == null) ? Collections.<String, String>emptyMap() : ImmutableMap.copyOf(attributes);
+    groups = (groups == null) ? Collections.<String>emptySet() : ImmutableSet.copyOf(groups);
   }
 
   @JsonIgnore
