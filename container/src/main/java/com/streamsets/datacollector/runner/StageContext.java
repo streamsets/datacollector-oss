@@ -305,7 +305,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
 
   @Override
   public Timer createTimer(String name) {
-    return MetricsConfigurator.createTimer(getMetrics(), CUSTOM_METRICS_PREFIX + instanceName + "." + name, pipelineName,
+    return MetricsConfigurator.createStageTimer(getMetrics(), CUSTOM_METRICS_PREFIX + instanceName + "." + name, pipelineName,
       rev);
   }
 
@@ -315,7 +315,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
 
   @Override
   public Meter createMeter(String name) {
-    return MetricsConfigurator.createMeter(getMetrics(), CUSTOM_METRICS_PREFIX + instanceName + "." + name, pipelineName,
+    return MetricsConfigurator.createStageMeter(getMetrics(), CUSTOM_METRICS_PREFIX + instanceName + "." + name, pipelineName,
       rev);
   }
 
@@ -325,7 +325,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
 
   @Override
   public Counter createCounter(String name) {
-    return MetricsConfigurator.createCounter(getMetrics(), CUSTOM_METRICS_PREFIX +instanceName + "." + name, pipelineName,
+    return MetricsConfigurator.createStageCounter(getMetrics(), CUSTOM_METRICS_PREFIX +instanceName + "." + name, pipelineName,
       rev);
   }
 

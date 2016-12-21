@@ -24,16 +24,30 @@ import com.codahale.metrics.ExponentiallyDecayingReservoir;
 import com.codahale.metrics.Gauge;
 import com.codahale.metrics.Histogram;
 import com.codahale.metrics.Meter;
+import com.codahale.metrics.Metric;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.SlidingTimeWindowReservoir;
 import com.codahale.metrics.Timer;
+import com.sun.org.apache.xerces.internal.util.HTTPInputSource;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Provides various helpful tools to work with metric objects. This util class expose several families of
+ * methods that can be used for various purposes:
+ *
+ * createX and deleteX
+ *  Will always create a new metric object and throws an exception of metric of given name already exists.
+ *
+ * createStageX and deleteStageX
+ *  Will create or create new or return existing stage specific metric object. Particularly useful for metrics
+ *  that are covering all instances of given stage when pipeline is running in multi-threaded fashion.
+ */
 public class MetricsConfigurator {
   public static final String JMX_PREFIX = "sdc.pipeline.";
 
@@ -59,111 +73,114 @@ public class MetricsConfigurator {
     return JMX_PREFIX + pipelineName + "." + pipelineRev + ".";
   }
 
-  //we need to use the AccessController.doPrivilege for sdcMetric calls because there are calls to JMX MBs
-  //and user-libs stages fail otherwise due to lesser privileges
-  public static Timer createTimer(MetricRegistry metrics, String name, final String pipelineName,
-                                  final String pipelineRev) {
-    final String timerName = metricName(name, TIMER_SUFFIX);
+  private static <T extends Metric> T create(
+    MetricRegistry metrics,
+    final T metric,
+    final String name,
+    final String pipelineName,
+    final String pipelineRev
+  ) {
     final String jmxNamePrefix = jmxNamePrefix(pipelineName, pipelineRev);
-    final Timer timer = new Timer(new SlidingTimeWindowReservoir(60, TimeUnit.SECONDS));
     final MetricRegistry metricRegistry = sdcMetrics;
     if (metricRegistry != null && runningPipelines.contains(jmxNamePrefix)) {
       AccessController.doPrivileged(new PrivilegedAction<Void>() {
         @Override
         public Void run() {
-          String metricName = jmxNamePrefix + timerName;
+          String metricName = jmxNamePrefix + name;
           if(!metricRegistry.getNames().contains(metricName)) {
-            metricRegistry.register(metricName, timer);
+            metricRegistry.register(metricName, metric);
           }
           return null;
         }
       });
     }
-    return metrics.register(timerName, timer);
+    return metrics.register(name, metric);
   }
 
-  public static Meter createMeter(MetricRegistry metrics, String name, final String pipelineName,
-                                  final String pipelineRev) {
-    final String meterName = metricName(name, METER_SUFFIX);
-    final String jmxNamePrefix = jmxNamePrefix(pipelineName, pipelineRev);
-    final ExtendedMeter meter = new ExtendedMeter();
-    final MetricRegistry metricRegistry = sdcMetrics;
-    if (metricRegistry != null && runningPipelines.contains(jmxNamePrefix)) {
-      AccessController.doPrivileged(new PrivilegedAction<Void>() {
-        @Override
-        public Void run() {
-          String metricName = jmxNamePrefix  + meterName;
-          if(!metricRegistry.getNames().contains(metricName)) {
-            metricRegistry.register(metricName, meter);
-          }
-
-          return null;
-        }
-      });
+  public static Timer createStageTimer(MetricRegistry metrics, String nameSuffix, final String pipelineName, final String pipelineRev) {
+    String name = metricName(nameSuffix, TIMER_SUFFIX);
+    if(metrics.getTimers().containsKey(name)) {
+      return metrics.getTimers().get(name);
     }
-    return metrics.register(meterName, meter);
+
+    return createTimer(metrics, nameSuffix, pipelineName, pipelineRev);
   }
 
-  public static Counter createCounter(MetricRegistry metrics, String name, final String pipelineName,
-                                      final String pipelineRev) {
-    final String counterName = metricName(name, COUNTER_SUFFIX);
-    final String jmxNamePrefix = jmxNamePrefix(pipelineName, pipelineRev);
-    final Counter counter = new Counter();
-    final MetricRegistry metricRegistry = sdcMetrics;
-    if (metricRegistry != null && runningPipelines.contains(jmxNamePrefix)) {
-      AccessController.doPrivileged(new PrivilegedAction<Void>() {
-        @Override
-        public Void run() {
-          String metricName = jmxNamePrefix  + counterName;
-          if(!metricRegistry.getNames().contains(metricName)) {
-            metricRegistry.register(metricName, counter);
-          }
-          return null;
-        }
-      });
-    }
-    return metrics.register(counterName, counter);
+  public static Timer createTimer(MetricRegistry metrics, String name, final String pipelineName, final String pipelineRev) {
+    return create(
+      metrics,
+      new Timer(new SlidingTimeWindowReservoir(60, TimeUnit.SECONDS)),
+      metricName(name, TIMER_SUFFIX),
+      pipelineName,
+      pipelineRev
+    );
   }
 
-  public static Histogram createHistogram5Min(MetricRegistry metrics, String name, final String pipelineName,
-                                              final String pipelineRev) {
-    final String histogramName = metricName(name, HISTOGRAM_M5_SUFFIX);
-    final String jmxNamePrefix = jmxNamePrefix(pipelineName, pipelineRev);
-    final Histogram histogram = new Histogram(new ExponentiallyDecayingReservoir());
-    final MetricRegistry metricRegistry = sdcMetrics;
-    if (metricRegistry != null && runningPipelines.contains(jmxNamePrefix)) {
-      AccessController.doPrivileged(new PrivilegedAction<Void>() {
-        @Override
-        public Void run() {
-          String metricName = jmxNamePrefix  + histogramName;
-          if(!metricRegistry.getNames().contains(metricName)) {
-            metricRegistry.register(metricName, histogram);
-          }
-          return null;
-        }
-      });
+  public static Meter createStageMeter(MetricRegistry metrics, String nameSuffix, final String pipelineName, final String pipelineRev) {
+    String name = metricName(nameSuffix, METER_SUFFIX);
+    if(metrics.getMeters().containsKey(name)) {
+      return metrics.getMeters().get(name);
     }
-    return metrics.register(histogramName, histogram);
+
+    return createMeter(metrics, nameSuffix, pipelineName, pipelineRev);
   }
 
-  public static Gauge createGauge(MetricRegistry metrics, String name, final Gauge guage, final String pipelineName,
-                                  final String pipelineRev) {
-    final String gaugeName = metricName(name, GAUGE_SUFFIX);
-    final String jmxNamePrefix = jmxNamePrefix(pipelineName, pipelineRev);
-    final MetricRegistry metricRegistry = sdcMetrics;
-    if (metricRegistry != null && runningPipelines.contains(jmxNamePrefix)) {
-      AccessController.doPrivileged(new PrivilegedAction<Void>() {
-        @Override
-        public Void run() {
-          String metricName = jmxNamePrefix  + gaugeName;
-          if(!metricRegistry.getNames().contains(metricName)) {
-            metricRegistry.register(metricName, guage);
-          }
-          return null;
-        }
-      });
+  public static Meter createMeter(MetricRegistry metrics, String name, final String pipelineName, final String pipelineRev) {
+    return create(
+      metrics,
+      new ExtendedMeter(),
+      metricName(name, METER_SUFFIX),
+      pipelineName,
+      pipelineRev
+    );
+  }
+
+  public static Counter createStageCounter(MetricRegistry metrics, String nameSuffix, final String pipelineName, final String pipelineRev) {
+    String name = metricName(nameSuffix, COUNTER_SUFFIX);
+    if(metrics.getCounters().containsKey(name)) {
+      return metrics.getCounters().get(name);
     }
-    return metrics.register(gaugeName, guage);
+
+    return createCounter(metrics, nameSuffix, pipelineName, pipelineRev);
+  }
+
+  public static Counter createCounter(MetricRegistry metrics, String name, final String pipelineName, final String pipelineRev) {
+    return create(
+      metrics,
+      new Counter(),
+      metricName(name, COUNTER_SUFFIX),
+      pipelineName,
+      pipelineRev
+    );
+  }
+
+  public static Histogram createStageHistogram5Min(MetricRegistry metrics, String nameSuffix, final String pipelineName, final String pipelineRev) {
+    String name = metricName(nameSuffix, HISTOGRAM_M5_SUFFIX);
+    if(metrics.getHistograms().containsKey(name)) {
+      return metrics.getHistograms().get(name);
+    }
+
+    return createHistogram5Min(metrics, nameSuffix, pipelineName, pipelineRev);
+  }
+
+  public static Histogram createHistogram5Min(MetricRegistry metrics, String name, final String pipelineName, final String pipelineRev) {
+    return create(
+      metrics,
+      new Histogram(new ExponentiallyDecayingReservoir()),
+      metricName(name, HISTOGRAM_M5_SUFFIX),
+      pipelineName,
+      pipelineRev
+    );
+  }
+
+  public static Gauge createGauge(MetricRegistry metrics, String name, final Gauge guage, final String pipelineName, final String pipelineRev) {
+    return create(
+      metrics,
+      guage,
+      metricName(name, GAUGE_SUFFIX),
+      pipelineName,
+      pipelineRev
+    );
   }
 
   public static Counter getCounter(MetricRegistry metrics, String name) {
@@ -186,55 +203,46 @@ public class MetricsConfigurator {
     return metrics.getGauges().get(metricName(name, GAUGE_SUFFIX));
   }
 
-  public static boolean removeGauge(MetricRegistry metrics, String name, final String pipelineName,
-                                    final String pipelineRev) {
-    final String gaugeName = metricName(name, GAUGE_SUFFIX);
+  /**
+   * Remove metric object (regardless of it's type)
+   */
+  private static boolean remove(final MetricRegistry metrics, final String name, String pipelineName, String pipelineRev) {
     final String jmxNamePrefix = jmxNamePrefix(pipelineName, pipelineRev);
     final MetricRegistry metricRegistry = sdcMetrics;
     if (metricRegistry != null) {
       AccessController.doPrivileged(new PrivilegedAction<Void>() {
         @Override
         public Void run() {
-          metricRegistry.remove(jmxNamePrefix  + gaugeName);
+          metricRegistry.remove(jmxNamePrefix  + name);
           return null;
         }
       });
     }
-    return metrics.remove(gaugeName);
+    return metrics.remove(name);
   }
 
-  public static boolean removeMeter(MetricRegistry metrics, String name, final String pipelineName,
-                                    final String pipelineRev) {
-    final String meterName = metricName(name, METER_SUFFIX);
-    final String jmxNamePrefix = jmxNamePrefix(pipelineName, pipelineRev);
-    final MetricRegistry metricRegistry = sdcMetrics;
-    if (metricRegistry != null) {
-      AccessController.doPrivileged(new PrivilegedAction<Void>() {
-        @Override
-        public Void run() {
-          metricRegistry.remove(jmxNamePrefix  + meterName);
-          return null;
-        }
-      });
-    }
-    return metrics.remove(meterName);
+  public static boolean removeGauge(MetricRegistry metrics, String name, final String pipelineName, final String pipelineRev) {
+    return remove(metrics, metricName(name, GAUGE_SUFFIX), pipelineName, pipelineRev);
   }
 
-  public static boolean removeCounter(MetricRegistry metrics, String name, final String pipelineName,
-                                      final String pipelineRev) {
-    final String counterName = metricName(name, COUNTER_SUFFIX);
-    final String jmxNamePrefix = jmxNamePrefix(pipelineName, pipelineRev);
-    final MetricRegistry metricRegistry = sdcMetrics;
-    if (metricRegistry != null) {
-      AccessController.doPrivileged(new PrivilegedAction<Void>() {
-        @Override
-        public Void run() {
-          metricRegistry.remove(jmxNamePrefix  + counterName);
-          return null;
-        }
-      });
-    }
-    return metrics.remove(counterName);
+  public static boolean removeMeter(MetricRegistry metrics, String name, final String pipelineName, final String pipelineRev) {
+    return remove(metrics, metricName(name, METER_SUFFIX), pipelineName, pipelineRev);
+  }
+
+  public static boolean removeCounter(MetricRegistry metrics, String name, final String pipelineName, final String pipelineRev) {
+    return remove(metrics, metricName(name, COUNTER_SUFFIX), pipelineName, pipelineRev);
+  }
+
+  public static boolean removeStageGauge(MetricRegistry metrics, String name, final String pipelineName, final String pipelineRev) {
+    return remove(metrics, metricName(name, GAUGE_SUFFIX), pipelineName, pipelineRev);
+  }
+
+  public static boolean removeStageMeter(MetricRegistry metrics, String name, final String pipelineName, final String pipelineRev) {
+    return remove(metrics, metricName(name, METER_SUFFIX), pipelineName, pipelineRev);
+  }
+
+  public static boolean removeStageCounter(MetricRegistry metrics, String name, final String pipelineName, final String pipelineRev) {
+    return remove(metrics, metricName(name, COUNTER_SUFFIX), pipelineName, pipelineRev);
   }
 
   public static synchronized void registerJmxMetrics(MetricRegistry metrics) {

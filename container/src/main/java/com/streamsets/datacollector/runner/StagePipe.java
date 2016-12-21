@@ -105,20 +105,20 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     if(issues.isEmpty()) {
       MetricRegistry metrics = getStage().getContext().getMetrics();
       String metricsKey = "stage." + getStage().getConfiguration().getInstanceName();
-      processingTimer = MetricsConfigurator.createTimer(metrics, metricsKey + ".batchProcessing", name, rev);
-      memoryConsumedCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".memoryConsumed", name, rev);
-      inputRecordsMeter = MetricsConfigurator.createMeter(metrics, metricsKey + ".inputRecords", name, rev);
-      outputRecordsMeter = MetricsConfigurator.createMeter(metrics, metricsKey + ".outputRecords", name, rev);
-      errorRecordsMeter = MetricsConfigurator.createMeter(metrics, metricsKey + ".errorRecords", name, rev);
-      stageErrorMeter = MetricsConfigurator.createMeter(metrics, metricsKey + ".stageErrors", name, rev);
-      inputRecordsCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".inputRecords", name, rev);
-      outputRecordsCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".outputRecords", name, rev);
-      errorRecordsCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".errorRecords", name, rev);
-      stageErrorCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".stageErrors", name, rev);
-      inputRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, metricsKey + ".inputRecords", name, rev);
-      outputRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, metricsKey + ".outputRecords", name, rev);
-      errorRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, metricsKey + ".errorRecords", name, rev);
-      stageErrorsHistogram = MetricsConfigurator.createHistogram5Min(metrics, metricsKey + ".stageErrors", name, rev);
+      processingTimer = MetricsConfigurator.createStageTimer(metrics, metricsKey + ".batchProcessing", name, rev);
+      memoryConsumedCounter = MetricsConfigurator.createStageCounter(metrics, metricsKey + ".memoryConsumed", name, rev);
+      inputRecordsMeter = MetricsConfigurator.createStageMeter(metrics, metricsKey + ".inputRecords", name, rev);
+      outputRecordsMeter = MetricsConfigurator.createStageMeter(metrics, metricsKey + ".outputRecords", name, rev);
+      errorRecordsMeter = MetricsConfigurator.createStageMeter(metrics, metricsKey + ".errorRecords", name, rev);
+      stageErrorMeter = MetricsConfigurator.createStageMeter(metrics, metricsKey + ".stageErrors", name, rev);
+      inputRecordsCounter = MetricsConfigurator.createStageCounter(metrics, metricsKey + ".inputRecords", name, rev);
+      outputRecordsCounter = MetricsConfigurator.createStageCounter(metrics, metricsKey + ".outputRecords", name, rev);
+      errorRecordsCounter = MetricsConfigurator.createStageCounter(metrics, metricsKey + ".errorRecords", name, rev);
+      stageErrorCounter = MetricsConfigurator.createStageCounter(metrics, metricsKey + ".stageErrors", name, rev);
+      inputRecordsHistogram = MetricsConfigurator.createStageHistogram5Min(metrics, metricsKey + ".inputRecords", name, rev);
+      outputRecordsHistogram = MetricsConfigurator.createStageHistogram5Min(metrics, metricsKey + ".outputRecords", name, rev);
+      errorRecordsHistogram = MetricsConfigurator.createStageHistogram5Min(metrics, metricsKey + ".errorRecords", name, rev);
+      stageErrorsHistogram = MetricsConfigurator.createStageHistogram5Min(metrics, metricsKey + ".stageErrors", name, rev);
 
 
       if (metricRegistryJson != null) {
@@ -168,7 +168,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
         outputRecordsPerLaneMeter = new HashMap<>();
         for (String lane : getStage().getConfiguration().getOutputAndEventLanes()) {
           Counter outputRecordsCounter =
-            MetricsConfigurator.createCounter(metrics, metricsKey + ":" + lane + ".outputRecords", name, rev);
+            MetricsConfigurator.createStageCounter(metrics, metricsKey + ":" + lane + ".outputRecords", name, rev);
           if (metricRegistryJson != null) {
             CounterJson counterJson =
               metricRegistryJson.getCounters().get(
@@ -177,7 +177,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
           }
           outputRecordsPerLaneCounter.put(lane, outputRecordsCounter);
 
-          Meter outputRecordsMeter = MetricsConfigurator.createMeter(
+          Meter outputRecordsMeter = MetricsConfigurator.createStageMeter(
             metrics, metricsKey + ":" + lane + ".outputRecords", name, rev);
           if (metricRegistryJson != null) {
             MeterJson meterJson =
