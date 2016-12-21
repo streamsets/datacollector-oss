@@ -23,10 +23,28 @@ import com.streamsets.pipeline.lib.event.EventCreator;
 
 public final class HiveQueryExecutorEvents {
 
+  public static final String SUCCESSFUL_QUERY_EVENT = "successful-query";
+  public static final String FAILED_QUERY_EVENT = "failed-query";
+
+  public static final String QUERY_EVENT_FIELD = "query";
+  public static final String UNEXECUTED_QUERIES_EVENT_FIELD = "unexecuted-queries";
+
+
+
   /**
    * Issued on every successful query execution
    */
-  public static final  EventCreator successfulQuery = new EventCreator.Builder("successful-query", 1)
-    .withRequiredField("query")
+  public static final  EventCreator successfulQuery = new EventCreator.Builder(SUCCESSFUL_QUERY_EVENT, 1)
+    .withRequiredField(QUERY_EVENT_FIELD)
     .build();
+
+  /**
+   * Issued on every failed query execution
+   * with an optional
+   */
+  public static final  EventCreator failedQuery = new EventCreator.Builder(FAILED_QUERY_EVENT, 1)
+      .withRequiredField(QUERY_EVENT_FIELD)
+      .withOptionalField(UNEXECUTED_QUERIES_EVENT_FIELD)
+      .build();
+
 }

@@ -28,8 +28,10 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.lang.StringUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -140,6 +142,15 @@ public class EventCreator {
     public EventBuilder with(String key, Map<String, Field> value) {
       Field field = (value instanceof LinkedHashMap)? Field.create(Field.Type.LIST_MAP, value) : Field.create(Field.Type.MAP, value);
       rootMap.put(key, field);
+      return this;
+    }
+
+    public EventBuilder withStringList(String key, List<Object> value) {
+      List<Field> wrappedList = new ArrayList<>();
+      for (Object object : value) {
+        wrappedList.add(Field.create(Field.Type.STRING, object.toString()));
+      }
+      rootMap.put(key, Field.create(Field.Type.LIST, wrappedList));
       return this;
     }
 

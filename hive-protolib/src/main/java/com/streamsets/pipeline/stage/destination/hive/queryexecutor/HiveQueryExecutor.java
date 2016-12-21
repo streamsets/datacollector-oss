@@ -19,14 +19,19 @@
  */
 package com.streamsets.pipeline.stage.destination.hive.queryexecutor;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseExecutor;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.event.EventCreator;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.slf4j.Logger;
@@ -34,6 +39,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -41,11 +47,13 @@ import java.util.List;
  * Executor (destination) that executes given queries against hive or impala.
  */
 public class HiveQueryExecutor extends BaseExecutor {
-
   private static final Logger LOG = LoggerFactory.getLogger(HiveQueryExecutor.class);
 
   private HiveQueryExecutorConfig config;
   private ErrorRecordHandler errorRecordHandler;
+  private ELEval queriesElEval;
+
+  private static final Joiner NEW_LINE_JOINER = Joiner.on("\n");
 
   public HiveQueryExecutor(HiveQueryExecutorConfig config) {
     this.config = config;
@@ -55,35 +63,80 @@ public class HiveQueryExecutor extends BaseExecutor {
   public List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
     config.init(getContext(), "config.hiveConfigBean", issues);
+    queriesElEval = getContext().createELEval("queries");
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
     return  issues;
   }
 
   @Override
   public void write(Batch batch) throws StageException {
-    ELVars variables = getContext().createELVars();
-    ELEval eval = getContext().createELEval("query");
-
     Iterator<Record> it = batch.getRecords();
+    ELVars variables = getContext().createELVars();
     while(it.hasNext()) {
       Record record = it.next();
       RecordEL.setRecordInContext(variables, record);
-
-      String query = eval.eval(variables, config.query, String.class);
-      LOG.info("Executing query: {}", query);
-
-      try(Statement stmt = config.hiveConfigBean.getHiveConnection().createStatement()) {
-        // Execute the query
-        stmt.execute(query);
-
-        // And if it was successful, issue event with the generated query
-        HiveQueryExecutorEvents.successfulQuery.create(getContext())
-          .with("query", query)
-          .createAndSend();
-      } catch(SQLException ex) {
-        LOG.error("Can't execute query", ex);
-        errorRecordHandler.onError(new OnRecordErrorException(record, QueryExecErrors.QUERY_EXECUTOR_001, query, ex.getMessage(), ex));
+      try {
+        List<String> queriesToExecute = getEvaluatedQueriesForTheRecord(record, variables);
+        executeQueries(record, queriesToExecute);
+      } catch (OnRecordErrorException e) {
+        LOG.error("Error when processing record", e.toString());
+        errorRecordHandler.onError(e);
       }
+    }
+  }
+
+  private List<String> getEvaluatedQueriesForTheRecord(Record record, ELVars variables) throws OnRecordErrorException {
+    List<String> evaluatedQueries = new ArrayList<>();
+    List<String> badQueriesAndErrors = new ArrayList<>();
+    for (String confQuery : config.queries) {
+      try {
+        String query = queriesElEval.eval(variables, confQuery, String.class);
+        evaluatedQueries.add(query);
+      } catch (ELEvalException e) {
+        LOG.error("Error evaluating Query : {}, Reason: {}", confQuery, e);
+        badQueriesAndErrors.add(Utils.format("Query Failed to Evaluate: {}. Error: {}", confQuery, e));
+      }
+    }
+    if (!badQueriesAndErrors.isEmpty()) {
+      throw new OnRecordErrorException(record, QueryExecErrors.QUERY_EXECUTOR_002, NEW_LINE_JOINER.join(badQueriesAndErrors));
+    }
+    return evaluatedQueries;
+  }
+
+  private void executeQueries(Record record, List<String> queriesToExecute) throws StageException {
+    List<Object> remainingQueriesToExecute = new ArrayList<>();
+    remainingQueriesToExecute.addAll(queriesToExecute);
+
+    List<String> failedQueriesToReason = new ArrayList<>();
+    for (String query : queriesToExecute) {
+      //Remove queries from queries to execute as we are going to execute
+      remainingQueriesToExecute.remove(query);
+      //Get and validate connection before each query execution
+      //to make sure we don't have stale connection
+      try (Statement st = config.hiveConfigBean.getHiveConnection().createStatement()){
+        st.execute(query);
+        //Query Successful
+        HiveQueryExecutorEvents.successfulQuery.create(getContext()).with(HiveQueryExecutorEvents.QUERY_EVENT_FIELD, query).createAndSend();
+      } catch (SQLException e) {
+        //Query failed for some reason
+        EventCreator.EventBuilder failedQueryEventBuilder = HiveQueryExecutorEvents.failedQuery.create(getContext()).with(HiveQueryExecutorEvents.QUERY_EVENT_FIELD, query);
+        failedQueriesToReason.add(Utils.format("Failed to execute query '{}'. Reason: {}", query, e));
+
+        //Optionally populate unexecutedQueries
+        if (config.stopOnQueryFailure && !remainingQueriesToExecute.isEmpty()) {
+          failedQueryEventBuilder.withStringList(HiveQueryExecutorEvents.UNEXECUTED_QUERIES_EVENT_FIELD, remainingQueriesToExecute);
+        }
+
+        failedQueryEventBuilder.createAndSend();
+
+        if (config.stopOnQueryFailure) {
+          break;
+        }
+      }
+    }
+    //Join all the error queries and reason with a new line joiner and use that in the error.
+    if (!failedQueriesToReason.isEmpty()) {
+      throw new OnRecordErrorException(record, QueryExecErrors.QUERY_EXECUTOR_001, NEW_LINE_JOINER.join(failedQueriesToReason));
     }
   }
 

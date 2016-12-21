@@ -264,6 +264,9 @@ public abstract class BaseHiveIT {
       // Tables from default have to be dropped separately
       while(tables.next()) {
         String table = tables.getString(1);
+        //Only after hive 2.2.0 we can do show views, so for now doing a drop view if exists on all tables.
+        //to delete views as well as drop table on a view will fail.
+        dropStatement.executeUpdate(Utils.format("drop view if exists default.`{}`", table));
         dropStatement.executeUpdate(Utils.format("drop table default.`{}`", table));
       }
     }

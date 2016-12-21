@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.destination.hive.queryexecutor;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
@@ -37,16 +38,28 @@ public class HiveQueryExecutorConfig {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.TEXT,
-      label = "SQL Query",
-      description = "Query that will be executed on Hive or Impala.",
+      type = ConfigDef.Type.LIST,
+      label = "SQL Queries",
+      description = "Queries that will be executed on Hive or Impala.",
       displayPosition = 40,
       group = "QUERY",
       defaultValue = "invalidate metadata ${record:value('/table')}",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       elDefs = {RecordEL.class, StringEL.class}
   )
-  public String query;
+  @ListBeanModel
+  public List<String> queries;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Stop On Query Failure",
+      description = "Determines whether to stop executing the subsequent queries if there is a failure per record",
+      displayPosition = 50,
+      group = "QUERY",
+      defaultValue = "true"
+  )
+  public boolean stopOnQueryFailure = true;
 
   public void init(Stage.Context context, String prefix, List<Stage.ConfigIssue> issues) {
     hiveConfigBean.init(context, prefix, issues);
