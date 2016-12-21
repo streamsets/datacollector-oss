@@ -470,7 +470,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
       type = ConfigDef.Type.STRING,
       elDefs = {RecordEL.class, StringEL.class, MathEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      defaultValue = "${record:value('/fileInfo/filename')}",
+      defaultValue = "",
       description = "File Name Expression",
       label = "File Name Expression",
       displayPosition = 450,
