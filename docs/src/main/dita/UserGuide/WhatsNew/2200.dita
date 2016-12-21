@@ -128,9 +128,9 @@
                     <dt>Configuration</dt>
                     <dd>
                         <ul id="ul_v5w_mhk_fy">
-                            <li><xref
+                            <li>New <xref
                                     href="../Install_Config/AdditionalStageLibraries.dita#concept_zhl_k4f_cr"
-                                    >New stage libraries</xref>. Data Collector now supports the
+                                    >stage libraries</xref>. Data Collector now supports the
                                 following stage libraries: <ul id="ul_oxv_nhk_fy">
                                     <li>Apache Kudu version 1.0.x - Earlier Kudu versions are no
                                         longer supported. </li>
@@ -155,9 +155,11 @@
                                 configure Data Collector to use a different garbage collector by
                                 modifying Java configuration options in the Data Collector
                                 environment configuration file.</li>
-                            <li>Environment variables for Java configuration options. Data Collector
-                                now uses three environment variables to define Java configuration
-                                options: <ul id="ul_wym_thk_fy">
+                            <li>Environment variables for <xref
+                                    href="../Install_Config/JavaConfigOptions.dita#concept_vrx_4fg_qr"
+                                    >Java configuration options</xref>. Data Collector now uses
+                                three environment variables to define Java configuration options:
+                                    <ul id="ul_wym_thk_fy">
                                     <li>SDC_JAVA_OPTS - Includes configuration options for all Java
                                         versions. SDC_JAVA7_OPTS - Includes configuration options
                                         used only when Data Collector is running Java 7.</li>
@@ -249,10 +251,14 @@
                                 and work with record header attributes. The sample scripts now
                                 include examples of both and a new tip for generating unique record
                                 IDs. </li>
-                            <li>XML Flattener processor enhancement - You can now configure the XML
-                                Flattener processor to write the flattened data to a new output
-                                field. Previously, the processor wrote the flattened data to the
-                                same field. XML Parser processor enhancement. You can now generate
+                            <li><xref
+                                    href="../Processors/XMLFlattener-Configuring.dita#task_pmb_l55_sv"
+                                    >XML Flattener processor</xref> enhancement - You can now
+                                configure the XML Flattener processor to write the flattened data to
+                                a new output field. Previously, the processor wrote the flattened
+                                data to the same field. </li>
+                            <li><xref href="../Processors/XMLParser.dita#concept_dtt_q5q_k5">XML
+                                    Parser processor</xref> enhancement. You can now generate
                                 records from XML documents using simplified XPath expressions. This
                                 enables reading records from deeper within XML documents. </li>
                         </ul>
@@ -384,7 +390,7 @@
                                         (DPM). </li>
                                 </ul></li>
                             <li>New <xref
-                                    href="../Expression_Language/FileFunctions.dita#concept_kxj_nyl_5x"
+                                    href="../Expression_Language/TimeFunctions.dita#concept_qkr_trf_sw"
                                     >time functions</xref> - You can use the following new time
                                 functions to transform datetime data:<ul id="ul_znz_skk_fy">
                                     <li> time:extractLongFromDate(&lt;Date object>, &lt;string>) -
