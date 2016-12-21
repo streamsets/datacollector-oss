@@ -104,9 +104,9 @@ public class JdbcDTarget extends DTarget {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "true",
+      defaultValue = "false",
       label = "Use Multi-Row Insert",
-      description = "Whether to generate multi-row INSERT statements instead of batches of single-row INSERTs",
+      description = "Select to generate multi-row INSERT in form of 'INSERT ... VALUES(), (), (), ...'. Significantly improves performance, but not all databases are supporting this syntax.",
       displayPosition = 60,
       group = "JDBC"
   )
