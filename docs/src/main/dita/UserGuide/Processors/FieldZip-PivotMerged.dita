@@ -25,7 +25,7 @@
         <p>The Field Pivoter can pivot merged list data and create a record for each first-level
             item in the list. </p>
         <p>For example, say you use the Field Pivoter to process the data generated in the first
-                <xref href="FieldZip-MergingLists.dita#concept_ifv_3h1_hy">List example,
+                <xref href="FieldZip-List.dita#concept_ifv_3h1_hy">List example,
                 above</xref>, with field names included in the merged list. You configure the Field
             Pivoter to write the pivoted data to a new field called Purchased_Item. </p>
         <p>The pivot of the single record results in the following three records from the merged

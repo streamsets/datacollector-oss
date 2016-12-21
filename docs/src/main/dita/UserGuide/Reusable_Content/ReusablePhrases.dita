@@ -1587,8 +1587,8 @@ input_stream.read()</codeblock></p>
                   default in the directory template. </p>
             <p id="DirectoryTemplate_Example">For example, the following directory template creates
                   output directories for event data based on the state and timestamp of a record
-                  with hours as the smallest unit of measure, creating a new directory every twelve
-                  hours:<codeblock> /outputfiles/${record:valueOrDefault("/State", "unknown")}/${YY()}-${MM()}-${DD()}-${every(12,hh())}</codeblock></p>
+                  with hours as the smallest unit of measure, creating a new directory every
+                  hour:<codeblock> /outputfiles/${record:valueOrDefault("/State", "unknown")}/${YY()}-${MM()}-${DD()}-${hh()}</codeblock></p>
             <p id="DirectoryTemplate_DL">You can use the following elements in a directory template:<dl>
                         <dlentry>
                               <dt>Constants</dt>

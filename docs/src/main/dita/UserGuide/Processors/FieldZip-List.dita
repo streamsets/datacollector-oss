@@ -62,10 +62,10 @@
         <p><image href="../Graphics/FieldZip-RecordMap.png" id="image_x44_vn1_hy" scale="60"/></p>
         <p>In the Purchase field, the merged data is a list of Map fields. Each map has the field
             name and value in the ItemID list merged with the corresponding field name and value
-            from the Cost list. Notice that the fourth ItemID, 6502, is not included in the merged
-            list because it has no corresponding cost information.</p>
+            from the Cost list. Notice that the fourth ItemID, /ItemID/3, is not included in the
+            merged list because it has no corresponding cost information.</p>
         <p>If you configure the Field Zip processor to merge only the values, the processor returns
-            a list of Map fields without the original field names, as follows:</p>
+            the same data without the original field names, as follows:</p>
         <p><image href="../Graphics/FieldZip-Record-NoNames.png" id="image_l5j_r41_hy" scale="60"
             /></p>
  </conbody>
