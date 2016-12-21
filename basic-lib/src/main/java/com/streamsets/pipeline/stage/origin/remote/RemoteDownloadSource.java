@@ -81,6 +81,7 @@ public class RemoteDownloadSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(RemoteDownloadSource.class);
   private static final String OFFSET_DELIMITER = "::";
   private static final String CONF_PREFIX = "conf.";
+  private static final String REMOTE_ADDRESS_CONF = CONF_PREFIX + "remoteAddress";
 
   static final String NOTHING_READ = "null";
   static final String SIZE = "size";
@@ -162,7 +163,12 @@ public class RemoteDownloadSource extends BaseSource {
       this.remoteURI = new URI(conf.remoteAddress);
     } catch (Exception ex) {
       issues.add(getContext().createConfigIssue(
-          Groups.REMOTE.getLabel(), CONF_PREFIX + "remoteAddress", Errors.REMOTE_01, conf.remoteAddress));
+          Groups.REMOTE.getLabel(), REMOTE_ADDRESS_CONF, Errors.REMOTE_01, conf.remoteAddress));
+    }
+
+    if (!conf.remoteAddress.startsWith("sftp") && !conf.remoteAddress.startsWith("ftp")) {
+      issues.add(getContext().createConfigIssue(
+          Groups.REMOTE.getLabel(), REMOTE_ADDRESS_CONF, Errors.REMOTE_15, conf.remoteAddress));
     }
 
     try {
@@ -235,7 +241,7 @@ public class RemoteDownloadSource extends BaseSource {
 
     } catch (FileSystemException | URISyntaxException ex) {
       issues.add(getContext().createConfigIssue(
-          Groups.REMOTE.getLabel(), CONF_PREFIX + "remoteAddress", Errors.REMOTE_08, conf.remoteAddress));
+          Groups.REMOTE.getLabel(), REMOTE_ADDRESS_CONF, Errors.REMOTE_08, conf.remoteAddress));
       LOG.error("Error trying to login to remote host", ex);
     }
     validateFilePattern(issues);

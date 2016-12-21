@@ -241,6 +241,34 @@ public class TestRemoteDownloadSource {
   }
 
   @Test
+  public void testInvalidURL() throws Exception {
+    RemoteDownloadSource origin =
+        new RemoteDownloadSource(getBean(
+            "localhost:" + String.valueOf(port) + "/",
+            true,
+            "testuser",
+            "wrongpass",
+            null,
+            null,
+            null,
+            true,
+            DataFormat.JSON,
+            null,
+            false,
+            "*"
+        ));
+    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+    try {
+      runner.runInit();
+      Assert.fail();
+    } catch (StageException ex) {
+      Assert.assertTrue(ex.getMessage().contains("REMOTE_15"));
+    }
+  }
+
+  @Test
   public void testNoErrorPrivateKey() throws Exception {
     path = "remote-download-source/parseNoError";
     setupSSHD(path, false);
