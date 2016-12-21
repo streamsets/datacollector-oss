@@ -41,7 +41,7 @@
                   use constants or runtime properties throughout the pipeline. You can use
                   expression completion to determine where you can use an expression and the
                   expression elements that you can use in that location. </p>
-<div class="p">You can use the following elements in an expression:<ul class="ul" id="concept_p54_4kl_vq__d15951e2184">
+<div class="p">You can use the following elements in an expression:<ul class="ul" id="concept_p54_4kl_vq__d16008e2204">
                         <li class="li">Constants</li>
 
                         <li class="li">Datetime variables</li>
@@ -71,137 +71,227 @@
  <h2 class="title topictitle2">Expression Examples</h2>
 
  
- <div class="body conbody"><p class="shortdesc">The following tables include some examples of how you might use expressions in the <span class="ph">Data
+ <div class="body conbody"><p class="shortdesc"></p>
+
+        <p class="p">The following tables include some examples of how you might use expressions in the <span class="ph">Data
                   Collector</span>.</p>
 
-        <p class="p">Here are some examples of conditions:</p>
+        <div class="p">
+            <dl class="dl">
+                
+                    <dt class="dt dlterm">Conditions</dt>
 
-        
+                    <dd class="dd">The following table includes some examples of conditions:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_r1w_tkp_tt__table_zhy_jmp_tt" class="table" frame="border" border="1" rules="all">
+                                
+                                
+                                <thead class="thead" align="left">
+                                    <tr>
+                                        <th class="entry" valign="top" width="55.55555555555556%" id="d105832e125">Sample Condition Expressions</th>
+
+                                        <th class="entry" valign="top" width="44.44444444444444%" id="d105832e128">Description</th>
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody class="tbody">
+                                    <tr>
+                                        <td class="entry" valign="top" width="55.55555555555556%" headers="d105832e125 ">${record:value('/payment_type') == 'CRD'}</td>
+
+                                        <td class="entry" valign="top" width="44.44444444444444%" headers="d105832e128 ">In a Stream Selector, this condition routes records
+                                            where the payment type is credit card to the
+                                            stream.</td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td class="entry" valign="top" width="55.55555555555556%" headers="d105832e125 ">${record:value('[3]/State') == "MD"}</td>
+
+                                        <td class="entry" valign="top" width="44.44444444444444%" headers="d105832e128 ">The same as above, but for a record in list
+                                            format.</td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td class="entry" valign="top" width="55.55555555555556%" headers="d105832e125 ">${record:errorCode()=="FIELD_MERGER_02"}</td>
+
+                                        <td class="entry" valign="top" width="44.44444444444444%" headers="d105832e128 ">Used in a Stream Selector in an error pipeline, this
+                                            condition routes records with the FIELD_MERGER_02 error
+                                            to a stream that corrects the error.</td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td class="entry" valign="top" width="55.55555555555556%" headers="d105832e125 ">${record:value("[20]/value") == ""}</td>
+
+                                        <td class="entry" valign="top" width="44.44444444444444%" headers="d105832e128 ">When used in an alert, triggers an alert when the
+                                            specified field contains no data.</td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td class="entry" valign="top" width="55.55555555555556%" headers="d105832e125 ">${record:type('/ID')=STRING}</td>
+
+                                        <td class="entry" valign="top" width="44.44444444444444%" headers="d105832e128 ">In the Stream Selector, routes records where the ID
+                                            is a String to a branch that includes a Field Type
+                                            Converter to convert the field to a numeric data
+                                            type.</td>
+
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+</div>
+</dd>
+
                 
                 
-                <thead class="thead" align="left">
-                    <tr>
-                        <th class="entry" valign="top" width="55.55555555555556%" id="d105242e115">Sample Conditions</th>
+                    <dt class="dt dlterm">if-then-else </dt>
 
-                        <th class="entry" valign="top" width="44.44444444444444%" id="d105242e118">Description</th>
+                    <dd class="dd">The following table includes some examples of if-then-else
+                            expressions:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_r1w_tkp_tt__table_zrt_lz5_gy" class="table" frame="border" border="1" rules="all">
+                                
+                                
+                                <thead class="thead" align="left">
+                                    <tr>
+                                        <th class="entry" valign="top" width="55.55555555555556%" id="d105832e203">Sample if-then-else Expressions</th>
 
-                    </tr>
+                                        <th class="entry" valign="top" width="44.44444444444444%" id="d105832e206">Description</th>
 
-                </thead>
+                                    </tr>
 
-                <tbody class="tbody">
-                    <tr>
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d105242e115 ">${record:value('/payment_type') == 'CRD'}</td>
+                                </thead>
 
-                        <td class="entry" valign="top" width="44.44444444444444%" headers="d105242e118 ">In a Stream Selector, this condition routes records where the payment
-                            type is credit card to the stream.</td>
+                                <tbody class="tbody">
+                                    <tr>
+                                        <td class="entry" valign="top" width="55.55555555555556%" headers="d105832e203 ">
+                                            <p class="p">${record:value('/gender')=='1'?'M':(record:value('/gender')=='2'?'F':'U')}</p>
 
-                    </tr>
+                                        </td>
 
-                    <tr>
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d105242e115 ">${record:value('[3]/State') == "MD"}</td>
+                                        <td class="entry" valign="top" width="44.44444444444444%" headers="d105832e206 ">Replaces 1 with "M", 2 with "F", and any other value
+                                            with "U" for unknown. </td>
 
-                        <td class="entry" valign="top" width="44.44444444444444%" headers="d105242e118 ">The same as above, but for a record in list format.</td>
+                                    </tr>
 
-                    </tr>
+                                    <tr>
+                                        <td class="entry" valign="top" width="55.55555555555556%" headers="d105832e203 ">
+                                            <p class="p">${record:value('/phone_home')!=""?record:value('/phone_home'):(record:value('/phone_mobile')!=""?record:value('/phone_mobile'):(record:value('/phone_work')!=""?record:value('/phone_work'):''))}</p>
 
-                    <tr>
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d105242e115 ">${record:errorCode()=="FIELD_MERGER_02"}</td>
+                                        </td>
 
-                        <td class="entry" valign="top" width="44.44444444444444%" headers="d105242e118 ">Used in a Stream Selector in an error pipeline, this condition routes
-                            records with the FIELD_MERGER_02 error to a stream that corrects the
-                            error.</td>
+                                        <td class="entry" valign="top" width="44.44444444444444%" headers="d105832e206 ">
+                                            <div class="p">The phone number to use for a  primary_phone field
+                                                based on phone numbers in the home_phone,
+                                                mobile_phone and work_phone fields:<ul class="ul" id="concept_r1w_tkp_tt__ul_plh_pbv_gy">
+                                                  <li class="li">If there's a home phone number, use the home
+                                                  phone. </li>
 
-                    </tr>
+                                                  <li class="li">If there's no home phone number, use the
+                                                  mobile phone number.</li>
 
-                    <tr>
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d105242e115 ">${record:value("[20]/value") == ""}</td>
+                                                  <li class="li"> If there's no home or mobile phone number,
+                                                  use the work phone number.</li>
 
-                        <td class="entry" valign="top" width="44.44444444444444%" headers="d105242e118 ">When used in an alert, triggers an alert when the specified field
-                            contains no data.</td>
+                                                  <li class="li">If there are no home, mobile, or work numbers,
+                                                  use a null value.</li>
 
-                    </tr>
-
-                    <tr>
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d105242e115 ">${record:type('/ID')=STRING}</td>
-
-                        <td class="entry" valign="top" width="44.44444444444444%" headers="d105242e118 ">In the Stream Selector, routes records where the ID is a String to a
-                            branch that includes a Field Type Converter to convert the field to a
-                            numeric data type.</td>
-
-                    </tr>
-
-                </tbody>
-
-            </table>
+                                                </ul>
 </div>
 
-        <div class="p">The following table includes some string manipulation examples:
+                                        </td>
+
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+</div>
+</dd>
+
+                
+                
+                    <dt class="dt dlterm">String manipulation</dt>
+
+                    <dd class="dd">The following table includes some string manipulation examples:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_r1w_tkp_tt__table_wnx_v5s_q5" class="table" frame="border" border="1" rules="all">
-                    
-                    
-                    <thead class="thead" align="left">
-                        <tr>
-                            <th class="entry" valign="top" width="55.55555555555556%" id="d105242e187">Sample String Manipulation</th>
+                                
+                                
+                                <thead class="thead" align="left">
+                                    <tr>
+                                        <th class="entry" valign="top" width="55.55555555555556%" id="d105832e277">Sample String Manipulation Expressions</th>
 
-                            <th class="entry" valign="top" width="44.44444444444444%" id="d105242e190">Description</th>
+                                        <th class="entry" valign="top" width="44.44444444444444%" id="d105832e280">Description</th>
 
-                        </tr>
+                                    </tr>
 
-                    </thead>
+                                </thead>
 
-                    <tbody class="tbody">
-                        <tr>
-                            <td class="entry" valign="top" width="55.55555555555556%" headers="d105242e187 ">${record:valueOrDefault('/Payment', 'unknown')} </td>
+                                <tbody class="tbody">
+                                    <tr>
+                                        <td class="entry" valign="top" width="55.55555555555556%" headers="d105832e277 ">${record:valueOrDefault('/Payment', 'unknown')} </td>
 
-                            <td class="entry" valign="top" width="44.44444444444444%" headers="d105242e190 ">Replaces missing or null values in the Payment field with
-                                "unknown". </td>
+                                        <td class="entry" valign="top" width="44.44444444444444%" headers="d105832e280 ">Replaces missing or null values in the Payment field
+                                            with "unknown". </td>
 
-                        </tr>
+                                    </tr>
 
-                        <tr>
-                            <td class="entry" valign="top" width="55.55555555555556%" headers="d105242e187 ">${str:toUpper(record:value('/STATE')}</td>
+                                    <tr>
+                                        <td class="entry" valign="top" width="55.55555555555556%" headers="d105832e277 ">${str:toUpper(record:value('/STATE')}</td>
 
-                            <td class="entry" valign="top" width="44.44444444444444%" headers="d105242e190 ">Capitalizes all strings in the STATE field.</td>
+                                        <td class="entry" valign="top" width="44.44444444444444%" headers="d105832e280 ">Capitalizes all strings in the STATE field.</td>
 
-                        </tr>
+                                    </tr>
 
-                    </tbody>
+                                </tbody>
 
-                </table>
+                            </table>
 </div>
-</div>
+</dd>
 
-        <div class="p">The following table includes an example of a numeric operation:
+                
+                
+                    <dt class="dt dlterm">Numeric operation</dt>
+
+                    <dd class="dd">The following table includes an example of a numeric operation:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_r1w_tkp_tt__table_txw_dvs_q5" class="table" frame="border" border="1" rules="all">
-                    
-                    
-                    <thead class="thead" align="left">
-                        <tr>
-                            <th class="entry" valign="top" width="55.55555555555556%" id="d105242e232">Sample Numeric Operations</th>
+                                
+                                
+                                <thead class="thead" align="left">
+                                    <tr>
+                                        <th class="entry" valign="top" width="55.55555555555556%" id="d105832e328">Sample Numeric Operations</th>
 
-                            <th class="entry" valign="top" width="44.44444444444444%" id="d105242e235"> </th>
+                                        <th class="entry" valign="top" width="44.44444444444444%" id="d105832e331"> </th>
 
-                        </tr>
+                                    </tr>
 
-                    </thead>
+                                </thead>
 
-                    <tbody class="tbody">
-                        <tr>
-                            <td class="entry" valign="top" width="55.55555555555556%" headers="d105242e232 ">${record:value('/total_amount') - (record:value('/tip_amount') +
-                                record:value('/tolls') + record:value('/mta_tax'))}</td>
+                                <tbody class="tbody">
+                                    <tr>
+                                        <td class="entry" valign="top" width="55.55555555555556%" headers="d105832e328 ">${record:value('/total_amount') -
+                                            (record:value('/tip_amount') + record:value('/tolls') +
+                                            record:value('/mta_tax'))}</td>
 
-                            <td class="entry" valign="top" width="44.44444444444444%" headers="d105242e235 ">An expression that calculates trip revenue by subtracting the
-                                tip, taxes, and tolls from the total fare amount</td>
+                                        <td class="entry" valign="top" width="44.44444444444444%" headers="d105832e331 ">An expression that calculates trip revenue by
+                                            subtracting the tip, taxes, and tolls from the total
+                                            fare amount</td>
 
-                        </tr>
+                                    </tr>
 
-                    </tbody>
+                                </tbody>
 
-                </table>
+                            </table>
 </div>
-</div>
+</dd>
+
+                
+            </dl>
+
+        </div>
 
  </div>
 

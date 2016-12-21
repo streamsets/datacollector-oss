@@ -281,9 +281,9 @@
                         
                         <thead class="thead" align="left">
                             <tr>
-                                <th class="entry" valign="top" width="33.33333333333333%" id="d21613e481">Component</th>
+                                <th class="entry" valign="top" width="33.33333333333333%" id="d21617e481">Component</th>
 
-                                <th class="entry" valign="top" width="66.66666666666666%" id="d21613e484">Minimum Requirement</th>
+                                <th class="entry" valign="top" width="66.66666666666666%" id="d21617e484">Minimum Requirement</th>
 
                             </tr>
 
@@ -291,16 +291,16 @@
 
                         <tbody class="tbody">
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d21613e481 ">Spark Streaming</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d21617e481 ">Spark Streaming</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d21613e484 ">Spark version 1.3 through 1.6</td>
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d21617e484 ">Spark version 1.3 through 1.6</td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d21613e481 ">Apache Kafka</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d21617e481 ">Apache Kafka</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d21613e484 ">Spark Streaming on YARN requires a Cloudera or Hortonworks
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d21617e484 ">Spark Streaming on YARN requires a Cloudera or Hortonworks
                                     distribution of an Apache Kafka cluster. <p class="p">Spark Streaming on
                                         Mesos requires Apache Kafka on Apache Mesos.</p>
 </td>
@@ -486,9 +486,9 @@ If the script is not in this
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d21613e863">Component</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d21617e863">Component</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d21613e866">Minimum Requirement</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d21617e866">Minimum Requirement</th>
 
                         </tr>
 
@@ -496,16 +496,16 @@ If the script is not in this
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d21613e863 ">Spark Streaming (for cluster streaming mode)</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d21617e863 ">Spark Streaming (for cluster streaming mode)</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d21613e866 ">Spark version 1.5.2 through 1.6</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d21617e866 ">Spark version 1.5.2 through 1.6</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d21613e863 ">MapR</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d21617e863 ">MapR</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d21613e866 ">MapR version 5.1 or 5.2</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d21617e866 ">MapR version 5.1 or 5.2</td>
 
                         </tr>
 
@@ -560,6 +560,23 @@ If the script is not in this
                     </ul>
 
                 </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On YARN, verify that the Hadoop logging level is set to a severity of INFO or
+                    lower.  </span>
+                <div class="itemgroup info">YARN sets the Hadoop logging level to INFO by default. To change the logging
+                        level:<ol class="ol" type="a" id="task_n2l_z45_lx__ol_f33_ghv_gy">
+                        <li class="li">Edit the log4j.properties file. <div class="p">By default, the file is located in
+                                the following directory:
+                                <pre class="pre codeblock">/opt/mapr/hadoop/&lt;hadoop-version&gt;/conf/</pre>
+</div>
+</li>
+
+                        <li class="li">Set the <span class="ph uicontrol">log4j.rootLogger</span> property to a severity
+                            of INFO or lower, such as DEBUG or TRACE.</li>
+
+                    </ol>
+</div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">If YARN is configured to use Kerberos authentication, configure <span class="ph">Data
@@ -743,6 +760,23 @@ If the script is not in this
                     </ul>
 
                 </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On YARN, verify that the Hadoop logging level is set to a severity of INFO or
+                    lower.  </span>
+                <div class="itemgroup info">YARN sets the Hadoop logging level to INFO by default. To change the logging
+                        level:<ol class="ol" type="a" id="task_akz_w5b_ws__ol_f33_ghv_gy">
+                        <li class="li">Edit the log4j.properties file. <div class="p">By default, the file is located in
+                                the following directory:
+                            <pre class="pre codeblock">/etc/hadoop/conf</pre>
+</div>
+</li>
+
+                        <li class="li">Set the <span class="ph uicontrol">log4j.rootLogger</span> property to a severity
+                            of INFO or lower, such as DEBUG or TRACE.</li>
+
+                    </ol>
+</div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">If YARN is configured to use Kerberos authentication, configure <span class="ph">Data

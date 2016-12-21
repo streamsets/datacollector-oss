@@ -31,7 +31,7 @@
                 <dd>
                     <p>When the database is enabled for GTID, the MySQL Binary Log origin expects
                         the initial offset to contain a GTID using the following
-                        format:<codeblock>&lt;source_id>:&lt;transation_id></codeblock></p>
+                        format:<codeblock>&lt;source_id>:&lt;transaction_id></codeblock></p>
                     <p>For example, to begin reading the binary log file at the GTID
                             <codeph>8720bebf-bb38-11e6-97b1-0242ac110004:7066</codeph>, you simply
                         enter that GTID for the offset.</p>
