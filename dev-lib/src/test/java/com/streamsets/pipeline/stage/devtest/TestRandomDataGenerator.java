@@ -22,12 +22,14 @@ package com.streamsets.pipeline.stage.devtest;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.sdk.SourceRunner;
+import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class TestRandomDataGenerator {
@@ -56,18 +58,28 @@ public class TestRandomDataGenerator {
     doubleData.type = RandomDataGeneratorSource.Type.DOUBLE;
 
 
-    SourceRunner runner = new SourceRunner.Builder(RandomDataGeneratorSource.class)
+    final PushSourceRunner runner = new PushSourceRunner.Builder(RandomDataGeneratorSource.class)
       .addConfiguration("dataGenConfigs", Arrays.asList(stringData, dateData, doubleData, longData, intData))
       .addConfiguration("rootFieldType", RandomDataGeneratorSource.RootType.MAP)
       .addConfiguration("delay", 0)
       .addConfiguration("batchSize", 1000)
+      .addConfiguration("numThreads", 1)
       .addOutputLane("a")
       .build();
     runner.runInit();
     try {
-      StageRunner.Output output = runner.runProduce(null, 1);
-      List<Record> records = output.getRecords().get("a");
-      Assert.assertTrue(records.size() == 1);
+      final List<Record> records = new ArrayList<>();
+      runner.runProduce(Collections.<String, String>emptyMap(), 1, new PushSourceRunner.Callback() {
+        @Override
+        public void processBatch(StageRunner.Output output) {
+          records.clear();
+          records.addAll(output.getRecords().get("a"));
+          runner.setStop();
+        }
+      });
+      runner.waitOnProduce();
+
+      Assert.assertEquals(1, records.size());
       Assert.assertEquals(Field.Type.STRING, records.get(0).get("/name").getType());
       Assert.assertEquals(Field.Type.INTEGER, records.get(0).get("/age").getType());
       Assert.assertEquals(Field.Type.LONG, records.get(0).get("/milliSecondsSinceBirth").getType());
@@ -84,17 +96,27 @@ public class TestRandomDataGenerator {
     seq.field = "id";
     seq.type = RandomDataGeneratorSource.Type.LONG_SEQUENCE;
 
-    SourceRunner runner = new SourceRunner.Builder(RandomDataGeneratorSource.class)
+    final PushSourceRunner runner = new PushSourceRunner.Builder(RandomDataGeneratorSource.class)
       .addConfiguration("dataGenConfigs", Arrays.asList(seq))
       .addConfiguration("rootFieldType", RandomDataGeneratorSource.RootType.MAP)
       .addConfiguration("delay", 0)
       .addConfiguration("batchSize", 1000)
+      .addConfiguration("numThreads", 1)
       .addOutputLane("a")
       .build();
     runner.runInit();
     try {
-      StageRunner.Output output = runner.runProduce(null, 1000);
-      List<Record> records = output.getRecords().get("a");
+      final List<Record> records = new ArrayList<>();
+      runner.runProduce(Collections.<String, String>emptyMap(), 1000, new PushSourceRunner.Callback() {
+        @Override
+        public void processBatch(StageRunner.Output output) {
+          records.clear();
+          records.addAll(output.getRecords().get("a"));
+          runner.setStop();
+        }
+      });
+      runner.waitOnProduce();
+
       Assert.assertTrue(records.size() > 1);
       for(long i = 0; i < records.size(); i++) {
         Field field = records.get((int)i).get().getValueAsMap().get("id");
@@ -110,23 +132,31 @@ public class TestRandomDataGenerator {
   @Test
   public void testEventGeneration() throws StageException {
     RandomDataGeneratorSource.DataGeneratorConfig seq = new RandomDataGeneratorSource.DataGeneratorConfig();
-    seq.field = "id";
+    seq.field = "event";
     seq.type = RandomDataGeneratorSource.Type.LONG_SEQUENCE;
 
-    SourceRunner runner = new SourceRunner.Builder(RandomDataGeneratorSource.class)
+    final PushSourceRunner runner = new PushSourceRunner.Builder(RandomDataGeneratorSource.class)
       .addConfiguration("dataGenConfigs", Arrays.asList(seq))
       .addConfiguration("rootFieldType", RandomDataGeneratorSource.RootType.MAP)
       .addConfiguration("delay", 0)
       .addConfiguration("batchSize", 1000)
+      .addConfiguration("numThreads", 1)
       .addOutputLane("a")
       .build();
     runner.runInit();
     try {
-      StageRunner.Output output = runner.runProduce(null, 1000);
+      runner.runProduce(Collections.<String, String>emptyMap(), 1000, new PushSourceRunner.Callback() {
+        @Override
+        public void processBatch(StageRunner.Output output) {
+          runner.setStop();
+        }
+      });
+      runner.waitOnProduce();
+
       List<Record> records = runner.getEventRecords();
       Assert.assertTrue(records.size() > 1);
       for(long i = 0; i < records.size(); i++) {
-        Field field = records.get((int)i).get().getValueAsMap().get("id");
+        Field field = records.get((int)i).get().getValueAsMap().get("event");
         Assert.assertNotNull(field);
         Assert.assertEquals(Field.Type.LONG, field.getType());
         Assert.assertEquals(i, field.getValueAsLong());
@@ -142,21 +172,30 @@ public class TestRandomDataGenerator {
     seq.field = "id";
     seq.type = RandomDataGeneratorSource.Type.LONG_SEQUENCE;
 
-    SourceRunner runner = new SourceRunner.Builder(RandomDataGeneratorSource.class)
+    final PushSourceRunner runner = new PushSourceRunner.Builder(RandomDataGeneratorSource.class)
       .addConfiguration("dataGenConfigs", Arrays.asList(seq))
       .addConfiguration("rootFieldType", RandomDataGeneratorSource.RootType.MAP)
       .addConfiguration("delay", 0)
       .addConfiguration("batchSize", 1)
+      .addConfiguration("numThreads", 1)
       .addOutputLane("a")
       .build();
     runner.runInit();
     try {
-      StageRunner.Output output = runner.runProduce(null, 1000);
-      List<Record> records = output.getRecords().get("a");
+      final List<Record> records = new ArrayList<>();
+      runner.runProduce(Collections.<String, String>emptyMap(), 1000, new PushSourceRunner.Callback() {
+        @Override
+        public void processBatch(StageRunner.Output output) {
+          records.clear();
+          records.addAll(output.getRecords().get("a"));
+          runner.setStop();
+        }
+      });
+      runner.waitOnProduce();
+
       Assert.assertEquals(1, records.size());
     } finally {
       runner.runDestroy();
     }
   }
-
 }

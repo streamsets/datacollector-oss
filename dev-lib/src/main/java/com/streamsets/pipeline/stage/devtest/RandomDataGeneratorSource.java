@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.devtest;
 
+import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.EventRecord;
@@ -30,13 +31,16 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
-import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.api.base.BasePushSource;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
@@ -44,6 +48,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 @GenerateResourceBundle
 @StageDef(
@@ -56,7 +64,9 @@ import java.util.UUID;
   upgrader = RandomDataGeneratorSourceUpgrader.class,
   onlineHelpRefUrl = "index.html#Pipeline_Design/DevStages.html"
 )
-public class RandomDataGeneratorSource extends BaseSource {
+public class RandomDataGeneratorSource extends BasePushSource {
+
+  private static final Logger LOG = LoggerFactory.getLogger(RandomDataGeneratorSource.class);
 
   private final String EVENT_TYPE = "generated-event";
   private final int EVENT_VERSION = 1;
@@ -103,10 +113,25 @@ public class RandomDataGeneratorSource extends BaseSource {
     max = Integer.MAX_VALUE)
   public int batchSize;
 
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.NUMBER,
+    defaultValue = "1",
+    label = "Number of Threads",
+    description = "Number of concurrent threads that will be generating data in parallel.",
+    min = 1,
+    max = Integer.MAX_VALUE)
+  public int numThreads;
+
   /**
    * Counter for LONG_SEQUENCE type
    */
   private long counter;
+
+  /**
+   * Max batch size the origin should produce.
+   */
+  private int maxBatchSize;
 
   @Override
   protected List<ConfigIssue> init() {
@@ -115,20 +140,65 @@ public class RandomDataGeneratorSource extends BaseSource {
   }
 
   @Override
-  public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-    if (delay > 0) {
-      ThreadUtil.sleep(delay);
-    }
-
-    int records = Math.min(batchSize, maxBatchSize);
-    for(int i =0; i < records; i++) {
-      createRecord(i, batchMaker);
-    }
-
-    return "random";
+  public int getNumberOfThreads() {
+    return numThreads;
   }
 
-  private void createRecord(int batchOffset, BatchMaker batchMaker) {
+  @Override
+  public void produce(Map<String, String> offsets, int maxBatchSize) throws StageException {
+    this.maxBatchSize = Math.min(maxBatchSize, batchSize);
+
+    ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+    List<Future<Runnable>> futures = new ArrayList<>(numThreads);
+
+    // Run all the threads
+    for(int i = 0; i < numThreads; i++) {
+      Future future = executor.submit(new GeneratorRunnable(i));
+      futures.add(future);
+    }
+
+    // Wait for proper execution finish
+    for(Future<Runnable> f : futures) {
+      try {
+        f.get();
+      } catch (InterruptedException|ExecutionException e) {
+        LOG.error("Interrupted data generation thread", e);
+      }
+    }
+  }
+
+  public class GeneratorRunnable implements Runnable {
+    int threadId;
+
+    GeneratorRunnable(int threadId) {
+      this.threadId = threadId;
+    }
+
+    @Override
+    public void run() {
+      while (!getContext().isStopped()) {
+        LOG.trace("Starting new batch in thread {}", threadId);
+
+        // Create new batch
+        BatchContext batchContext = getContext().startBatch();
+
+        // Fill it with random records
+        for (int i = 0; i < maxBatchSize; i++) {
+          createRecord(threadId, i, batchContext);
+        }
+
+        // And finally send them the rest of the pipeline for further processing
+        getContext().processBatch(batchContext);
+
+        // Wait if configured
+        if (delay > 0) {
+          ThreadUtil.sleep(delay);
+        }
+      }
+    }
+  }
+
+  private void createRecord(int threadId, int batchOffset, BatchContext batchContext) {
     // Generate random data per configuration
     LinkedHashMap<String, Field> map = new LinkedHashMap<>();
     for(DataGeneratorConfig dataGeneratorConfig : dataGenConfigs) {
@@ -137,14 +207,14 @@ public class RandomDataGeneratorSource extends BaseSource {
     }
 
     // Sent normal record
-    Record record = getContext().createRecord("random:" + batchOffset);
+    Record record = getContext().createRecord("random:" + threadId + ":" + batchOffset);
     fillRecord(record, map);
-    batchMaker.addRecord(record);
+    batchContext.getBatchMaker().addRecord(record);
 
     String recordSourceId = Utils.format("event:{}:{}:{}", EVENT_TYPE, EVENT_VERSION, batchOffset);
     EventRecord event = getContext().createEventRecord(EVENT_TYPE, EVENT_VERSION, recordSourceId);
     fillRecord(event, map);
-    getContext().toEvent(event);
+    batchContext.toEvent(event);
   }
 
   private void fillRecord(Record record, LinkedHashMap map) {

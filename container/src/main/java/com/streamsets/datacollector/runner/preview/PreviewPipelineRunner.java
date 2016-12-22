@@ -25,6 +25,7 @@ import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
+import com.streamsets.datacollector.runner.BatchContextImpl;
 import com.streamsets.datacollector.runner.BatchListener;
 import com.streamsets.datacollector.runner.FullPipeBatch;
 import com.streamsets.datacollector.runner.MultiplexerPipe;
@@ -35,13 +36,19 @@ import com.streamsets.datacollector.runner.PipeBatch;
 import com.streamsets.datacollector.runner.PipeContext;
 import com.streamsets.datacollector.runner.PipelineRunner;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
+import com.streamsets.datacollector.runner.PushSourceContextDelegate;
 import com.streamsets.datacollector.runner.SourceOffsetTracker;
 import com.streamsets.datacollector.runner.SourcePipe;
+import com.streamsets.datacollector.runner.StageContext;
 import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.runner.StagePipe;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
 import com.streamsets.datacollector.runner.production.StatsAggregationHandler;
+import com.streamsets.pipeline.api.BatchContext;
+import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.StageException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,8 +56,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class PreviewPipelineRunner implements PipelineRunner {
+public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextDelegate {
+
+  private static final Logger LOG = LoggerFactory.getLogger(PreviewPipelineRunner.class);
+
   private final RuntimeInfo runtimeInfo;
   private final SourceOffsetTracker offsetTracker;
   private final int batchSize;
@@ -64,6 +75,13 @@ public class PreviewPipelineRunner implements PipelineRunner {
   private String newSourceOffset;
   private final Timer processingTimer;
 
+  private SourcePipe originPipe;
+  private List<List<Pipe>> pipes;
+  private BadRecordsHandler badRecordsHandler;
+  private StatsAggregationHandler statsAggregationHandler;
+  private Map<String, StageOutput> stagesToSkip;
+  private AtomicInteger batchesProcessed;
+
   public PreviewPipelineRunner(String name, String rev, RuntimeInfo runtimeInfo, SourceOffsetTracker offsetTracker,
                                int batchSize, int batches, boolean skipTargets) {
     this.name = name;
@@ -75,7 +93,7 @@ public class PreviewPipelineRunner implements PipelineRunner {
     this.skipTargets = skipTargets;
     this.metrics = new MetricRegistry();
     processingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing", name, rev);
-    batchesOutput = new ArrayList<>();
+    batchesOutput = Collections.synchronizedList(new ArrayList<List<StageOutput>>());
   }
 
   @Override
@@ -121,44 +139,119 @@ public class PreviewPipelineRunner implements PipelineRunner {
     List<StageOutput> stageOutputsToOverride,
     StatsAggregationHandler statsAggregationHandler
   ) throws StageException, PipelineRuntimeException {
-    Map<String, StageOutput> stagesToSkip = new HashMap<>();
+    this.originPipe = originPipe;
+    this.pipes = pipes;
+    this.badRecordsHandler = badRecordsHandler;
+    this.statsAggregationHandler = statsAggregationHandler;
+
+    stagesToSkip = new HashMap<>();
     for (StageOutput stageOutput : stageOutputsToOverride) {
       stagesToSkip.put(stageOutput.getInstanceName(), stageOutput);
     }
-    for (int i = 0; i < batches; i++) {
-      PipeBatch pipeBatch = new FullPipeBatch(offsetTracker, batchSize, true);
-      long start = System.currentTimeMillis();
-      sourceOffset = pipeBatch.getPreviousOffset();
 
-      // Process origin data
-      StageOutput originOutput = stagesToSkip.get(originPipe.getStage().getInfo().getInstanceName());
-      if(originOutput == null) {
-        originPipe.process(pipeBatch);
-      } else {
-        pipeBatch.overrideStageOutput((StagePipe) originPipe, originOutput);
+    if (originPipe.getStage().getStage() instanceof PushSource) {
+      runPushSource();
+    } else {
+      runPollSource();
+    }
+  }
+
+  private void runPushSource() throws StageException, PipelineRuntimeException {
+    // This object will receive delegated calls from the push origin callbacks
+    originPipe.getStage().setPushSourceContextDelegate(this);
+
+    // Counter of batches that were already processed
+    batchesProcessed = new AtomicInteger(0);
+
+    if(stagesToSkip.containsKey(originPipe.getStage().getInfo().getInstanceName())) {
+      // We're skipping the origin's execution, so let's run the pipeline in "usual" manner
+      runPollSource();
+    } else {
+      // Push origin will block on the call until the either all data have been consumed or the pipeline stopped
+      originPipe.process(batchSize);
+    }
+  }
+
+  @Override
+  public BatchContext startBatch() {
+    FullPipeBatch pipeBatch = new FullPipeBatch(offsetTracker, batchSize, true);
+    BatchContextImpl batchContext = new BatchContextImpl(pipeBatch);
+
+    originPipe.prepareBatchContext(batchContext);
+
+    return batchContext;
+  }
+
+  @Override
+  public boolean processBatch(BatchContext batchCtx, String entityName, String entityOffset) {
+    try {
+      BatchContextImpl batchContext = (BatchContextImpl) batchCtx;
+
+      // Finish origin processing
+      originPipe.finishBatchContext(batchContext);
+
+      // Run rest of the pipeline
+      runSourceLessBatch(batchContext.getStartTime(), batchContext.getPipeBatch());
+
+      // Increment amount of intercepted batches by one and end the processing if we have desirable amount
+      int count = batchesProcessed.incrementAndGet();
+      if(count >= batches) {
+        ((StageContext)originPipe.getStage().getContext()).setStop(true);
       }
 
-      // Currently only supports single-threaded pipelines
-      for (Pipe pipe : pipes.get(0)) {
-        StageOutput stageOutput = stagesToSkip.get(pipe.getStage().getInfo().getInstanceName());
-        if (stageOutput == null || (pipe instanceof ObserverPipe) || (pipe instanceof MultiplexerPipe) ) {
-          if (!skipTargets || !pipe.getStage().getDefinition().getType().isOneOf(StageType.TARGET, StageType.EXECUTOR)) {
-            pipe.process(pipeBatch);
-          } else {
-            pipeBatch.skipStage(pipe);
-          }
+      // Not doing any commits in the preview
+      return true;
+    } catch (StageException|PipelineRuntimeException e) {
+      LOG.error("Error while executing preview", e);
+      return  false;
+    }
+  }
+
+  @Override
+  public void commitOffset(String entityName, String entityOffset) {
+    // Not doing anything in preview
+  }
+
+  private void runPollSource() throws StageException, PipelineRuntimeException {
+    for (int i = 0; i < batches; i++) {
+      FullPipeBatch pipeBatch = new FullPipeBatch(offsetTracker, batchSize, true);
+      long start = System.currentTimeMillis();
+
+        // Process origin data
+        StageOutput originOutput = stagesToSkip.get(originPipe.getStage().getInfo().getInstanceName());
+        if(originOutput == null) {
+          originPipe.process(pipeBatch);
         } else {
-          if (pipe instanceof StagePipe) {
-            pipeBatch.overrideStageOutput((StagePipe) pipe, stageOutput);
-          }
+          pipeBatch.overrideStageOutput(originPipe, originOutput);
+        }
+
+        runSourceLessBatch(start, pipeBatch);
+      }
+    }
+
+  private void runSourceLessBatch(long start, FullPipeBatch pipeBatch) throws StageException, PipelineRuntimeException {
+    sourceOffset = pipeBatch.getPreviousOffset();
+
+    for (Pipe pipe : pipes.get(0)) {
+      StageOutput stageOutput = stagesToSkip.get(pipe.getStage().getInfo().getInstanceName());
+      if (stageOutput == null || (pipe instanceof ObserverPipe) || (pipe instanceof MultiplexerPipe) ) {
+        if (!skipTargets || !pipe.getStage().getDefinition().getType().isOneOf(StageType.TARGET, StageType.EXECUTOR)) {
+          pipe.process(pipeBatch);
+        } else {
+          pipeBatch.skipStage(pipe);
+        }
+      } else {
+        if (pipe instanceof StagePipe) {
+          pipeBatch.overrideStageOutput((StagePipe) pipe, stageOutput);
         }
       }
-      offsetTracker.commitOffset();
-      //TODO badRecordsHandler HANDLE ERRORS
-      processingTimer.update(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
-      newSourceOffset = offsetTracker.getOffset();
-      batchesOutput.add(pipeBatch.getSnapshotsOfAllStagesOutput());
     }
+
+    offsetTracker.commitOffset();
+    //TODO badRecordsHandler HANDLE ERRORS
+    processingTimer.update(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
+    newSourceOffset = offsetTracker.getOffset();
+    batchesOutput.add(pipeBatch.getSnapshotsOfAllStagesOutput());
   }
 
   @Override
