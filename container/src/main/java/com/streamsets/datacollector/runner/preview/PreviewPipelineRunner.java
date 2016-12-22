@@ -37,6 +37,7 @@ import com.streamsets.datacollector.runner.PipeContext;
 import com.streamsets.datacollector.runner.PipelineRunner;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.PushSourceContextDelegate;
+import com.streamsets.datacollector.runner.RunnerPool;
 import com.streamsets.datacollector.runner.SourceOffsetTracker;
 import com.streamsets.datacollector.runner.SourcePipe;
 import com.streamsets.datacollector.runner.StageContext;
@@ -77,6 +78,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
 
   private SourcePipe originPipe;
   private List<List<Pipe>> pipes;
+  private RunnerPool<List<Pipe>> runnerPool;
   private BadRecordsHandler badRecordsHandler;
   private StatsAggregationHandler statsAggregationHandler;
   private Map<String, StageOutput> stagesToSkip;
@@ -143,6 +145,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
     this.pipes = pipes;
     this.badRecordsHandler = badRecordsHandler;
     this.statsAggregationHandler = statsAggregationHandler;
+    this.runnerPool = new RunnerPool<>(pipes);
 
     stagesToSkip = new HashMap<>();
     for (StageOutput stageOutput : stageOutputsToOverride) {
@@ -232,18 +235,26 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
   private void runSourceLessBatch(long start, FullPipeBatch pipeBatch) throws StageException, PipelineRuntimeException {
     sourceOffset = pipeBatch.getPreviousOffset();
 
-    for (Pipe pipe : pipes.get(0)) {
-      StageOutput stageOutput = stagesToSkip.get(pipe.getStage().getInfo().getInstanceName());
-      if (stageOutput == null || (pipe instanceof ObserverPipe) || (pipe instanceof MultiplexerPipe) ) {
-        if (!skipTargets || !pipe.getStage().getDefinition().getType().isOneOf(StageType.TARGET, StageType.EXECUTOR)) {
-          pipe.process(pipeBatch);
+    List<Pipe> runnerPipes = null;
+    try {
+      runnerPipes = runnerPool.getRunner();
+      for (Pipe pipe : pipes.get(0)) {
+        StageOutput stageOutput = stagesToSkip.get(pipe.getStage().getInfo().getInstanceName());
+        if (stageOutput == null || (pipe instanceof ObserverPipe) || (pipe instanceof MultiplexerPipe)) {
+          if (!skipTargets || !pipe.getStage().getDefinition().getType().isOneOf(StageType.TARGET, StageType.EXECUTOR)) {
+            pipe.process(pipeBatch);
+          } else {
+            pipeBatch.skipStage(pipe);
+          }
         } else {
-          pipeBatch.skipStage(pipe);
+          if (pipe instanceof StagePipe) {
+            pipeBatch.overrideStageOutput((StagePipe) pipe, stageOutput);
+          }
         }
-      } else {
-        if (pipe instanceof StagePipe) {
-          pipeBatch.overrideStageOutput((StagePipe) pipe, stageOutput);
-        }
+      }
+    } finally {
+      if(runnerPipes != null) {
+        runnerPool.returnRunner(runnerPipes);
       }
     }
 

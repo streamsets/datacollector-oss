@@ -132,6 +132,7 @@ public enum ContainerError implements ErrorCode {
 
   //Runner
   CONTAINER_0800("Pipeline '{}' validation error : {}"),
+  CONTAINER_0801("Thread unexpectedly interrupted"),
 
   //PipelineConfigurationUpgrader
   CONTAINER_0900("Error while upgrading stage configuration from version '{}' to version '{}': {}"),

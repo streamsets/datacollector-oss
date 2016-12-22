@@ -53,6 +53,7 @@ import com.streamsets.datacollector.runner.PipeContext;
 import com.streamsets.datacollector.runner.PipelineRunner;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.PushSourceContextDelegate;
+import com.streamsets.datacollector.runner.RunnerPool;
 import com.streamsets.datacollector.runner.SourceOffsetTracker;
 import com.streamsets.datacollector.runner.SourcePipe;
 import com.streamsets.datacollector.runner.StageContext;
@@ -109,6 +110,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
 
   private SourcePipe originPipe;
   private List<List<Pipe>> pipes;
+  private RunnerPool<List<Pipe>> runnerPool;
   private BadRecordsHandler badRecordsHandler;
   private StatsAggregationHandler statsAggregationHandler;
 
@@ -302,6 +304,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     this.pipes = pipes;
     this.badRecordsHandler = badRecordsHandler;
     this.statsAggregationHandler = statsAggregationHandler;
+    this.runnerPool = new RunnerPool<>(pipes);
 
     if(originPipe.getStage().getStage() instanceof PushSource) {
       runPushSource();
@@ -618,14 +621,19 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     Map<String, Object> stageBatchMetrics
   ) throws PipelineException, StageException {
     boolean committed = false;
-
     OffsetCommitTrigger offsetCommitTrigger = getOffsetCommitTrigger(originPipe, pipes);
-
     sourceOffset = pipeBatch.getPreviousOffset();
 
-    // TODO: SDC-4803	Provide a pipeline runner pool support in ProductionPipelineRunner
-    for (Pipe pipe : pipes.get(0)) {
-      committed = processPipe(pipe, pipeBatch, committed, memoryConsumedByStage, stageBatchMetrics);
+    List<Pipe> runnerPipes = null;
+    try {
+      runnerPipes = runnerPool.getRunner();
+      for (Pipe pipe : runnerPipes) {
+        committed = processPipe(pipe, pipeBatch, committed, memoryConsumedByStage, stageBatchMetrics);
+      }
+    } finally {
+      if(runnerPipes != null) {
+        runnerPool.returnRunner(runnerPipes);
+      }
     }
 
     enforceMemoryLimit(memoryConsumedByStage);
