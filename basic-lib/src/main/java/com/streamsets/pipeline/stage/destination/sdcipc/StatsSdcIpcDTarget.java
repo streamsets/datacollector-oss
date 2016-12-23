@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.destination.sdcipc;
 
+import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
@@ -27,6 +28,9 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StatsAggregatorStage;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.configurablestage.DTarget;
+import com.streamsets.pipeline.lib.el.VaultEL;
+
+import java.util.Arrays;
 
 @StageDef(
     version = 1,
@@ -39,16 +43,41 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 @StatsAggregatorStage
 @HideConfigs(
     preconditions = true,
-    onErrorRecord = true
+    onErrorRecord = true,
+    value = {"config.hostPorts", "config.appId"}
 )
 @GenerateResourceBundle
 public class StatsSdcIpcDTarget extends DTarget {
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    label = "SDC RPC Connection",
+    description = "System pipeline will be started on the specified host and port. Use the format <host>:<port>.",
+    displayPosition = 10,
+    group = "RPC"
+  )
+  public String hostPorts;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    label = "SDC RPC ID",
+    description = "The id to be assigned to the system pipeline.",
+    displayPosition = 20,
+    elDefs = VaultEL.class,
+    group = "RPC"
+  )
+  public String appId;
 
   @ConfigDefBean
   public Configs config;
 
   @Override
   protected Target createTarget() {
+    config.retryDuringValidation = true;
+    config.hostPorts = Arrays.asList(hostPorts);
+    config.appId = appId;
     return new SdcIpcTarget(config);
   }
 }

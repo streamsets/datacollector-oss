@@ -24,6 +24,7 @@ import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.util.ThreadUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -144,7 +145,7 @@ public class Configs {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      defaultValue = "0",
+      defaultValue = "30",
       label = "Back off period",
       description = "If set to non-zero, each retry will be spaced exponentially. For value 10, first retry will be" +
         " done after 10 milliseconds, second retry after additional 100 milliseconds, third retry after additional second, ...",
@@ -186,6 +187,9 @@ public class Configs {
   )
   public boolean compression;
 
+  // This flag indicates that connection validation must apply the retry and backoff.
+  boolean retryDuringValidation = false;
+
   private SSLSocketFactory sslSocketFactory;
 
   public List<Stage.ConfigIssue> init(Stage.Context context) {
@@ -204,7 +208,26 @@ public class Configs {
         }
       }
       if (ok && !context.isPreview()) {
-        validateConnectivity(context, issues);
+        List<Stage.ConfigIssue> moreIssues = new ArrayList<>();
+        validateConnectivity(context, moreIssues);
+
+        int retryCount = 0;
+        long waitTime = backOff;
+        while (moreIssues.size() > 0 && retryDuringValidation && retryCount < retriesPerBatch) {
+          if(retryCount > 0 && backOff > 0) {
+            LOG.debug("Waiting '{}' milliseconds before re-try", backOff);
+            boolean uninterrupted = ThreadUtil.sleep(waitTime);
+            if (!uninterrupted) {
+              LOG.info("Backoff waiting was interrupted");
+            }
+            waitTime *= backOff;
+          }
+          moreIssues.clear();
+          validateConnectivity(context, moreIssues);
+          retryCount++;
+        }
+
+        issues.addAll(moreIssues);
       }
     }
     return issues;
