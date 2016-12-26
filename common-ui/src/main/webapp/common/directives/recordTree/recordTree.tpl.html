@@ -49,7 +49,8 @@
             editable="editable"
             selectable="selectable"
             selected-path="selectedPath"
-            show-field-type="showFieldType">
+            show-field-type="showFieldType"
+            show-header="showHeader">
           </record-tree>
 
           <span ng-if="recordValue.value == null" class="field-value">null</span>
@@ -70,7 +71,8 @@
             editable="editable"
             selectable="selectable"
             selected-path="selectedPath"
-            show-field-type="showFieldType">
+            show-field-type="showFieldType"
+            show-header="showHeader">
           </record-tree>
 
           <span ng-if="recordValue.value == null" class="field-value">null</span>
@@ -90,7 +92,8 @@
             editable="editable"
             selectable="selectable"
             selected-path="selectedPath"
-            show-field-type="showFieldType">
+            show-field-type="showFieldType"
+            show-header="showHeader">
           </record-tree>
 
           <span ng-if="recordValue.value == null" class="field-value">null</span>
@@ -193,7 +196,21 @@
 
       </div>
     </div>
+  </li>
 
+  <li class="record-list-item" ng-if="showHeader && recordValue.attributes" ng-init="fieldHeaderExpand=false">
+    <label>
+      <span class="pointer toggler {{fieldHeaderExpand ? 'open' : ''}}"
+            ng-click="fieldHeaderExpand = !fieldHeaderExpand"></span>
+      <span class="field-name" translate="global.form.fieldHeader">Field Header</span>
+    </label>
+    <ul class="record-list" ng-if="fieldHeaderExpand">
+      <li class="record-list-item"
+          ng-repeat="(headerName, headerValue) in recordValue.attributes">
+        <label class="pull-left"><span class="field-name">{{headerName}}:</span></label>
+        <span class="field-value STRING">{{headerValue + ''}}</span>
+      </li>
+    </ul>
   </li>
 
   <li class="record-list-item" ng-if="showHeader && record.header && (isOpen || (isRoot && record.expand))">
