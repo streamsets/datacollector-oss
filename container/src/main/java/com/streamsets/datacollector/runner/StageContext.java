@@ -83,6 +83,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   private static final String SDC_RECORD_SAMPLING_POPULATION_SIZE = "sdc.record.sampling.population.size";
   private static final String SDC_RECORD_SAMPLING_SAMPLE_SIZE = "sdc.record.sampling.sample.size";
 
+  private final int runnerId;
   private final List<Stage.Info> pipelineInfo;
   private final StageType stageType;
   private final boolean isPreview;
@@ -108,6 +109,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   public StageContext(
       String instanceName,
       StageType stageType,
+      int runnerId,
       boolean isPreview,
       OnRecordError onRecordError,
       List<String> outputLanes,
@@ -138,6 +140,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
     };
     pipelineInfo = ImmutableList.of(info);
     this.stageType = stageType;
+    this.runnerId = runnerId;
     this.isPreview = isPreview;
     metrics = new MetricRegistry();
     this.instanceName = instanceName;
@@ -162,6 +165,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
       String rev,
       List<Stage.Info> pipelineInfo,
       StageType stageType,
+      int runnerId,
       boolean isPreview,
       MetricRegistry metrics,
       StageRuntime stageRuntime,
@@ -175,6 +179,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
     this.rev = rev;
     this.pipelineInfo = pipelineInfo;
     this.stageType = stageType;
+    this.runnerId = runnerId;
     this.isPreview = isPreview;
     this.metrics = metrics;
     this.instanceName = stageRuntime.getConfiguration().getInstanceName();
@@ -291,6 +296,10 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   @Override
   public boolean isPreview() {
     return isPreview;
+  }
+
+  public int getRunnerId() {
+    return runnerId;
   }
 
   @Override

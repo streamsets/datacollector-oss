@@ -72,6 +72,7 @@ public class TestStageContext {
     StageContext context = new StageContext(
         "stage",
         StageType.SOURCE,
+        -1,
         false,
         OnRecordError.TO_ERROR,
         Collections.EMPTY_LIST,
@@ -101,6 +102,7 @@ public class TestStageContext {
     StageContext context = new StageContext(
         "stage",
         StageType.SOURCE,
+        -1,
         false,
         OnRecordError.TO_ERROR,
         Collections.EMPTY_LIST,
@@ -128,6 +130,7 @@ public class TestStageContext {
     StageContext context = new StageContext(
         "stage",
         StageType.SOURCE,
+        -1,
         false,
         OnRecordError.TO_ERROR,
         Collections.EMPTY_LIST,
@@ -154,6 +157,7 @@ public class TestStageContext {
     StageContext context = new StageContext(
         "stage",
         type,
+        -1,
         false,
         OnRecordError.TO_ERROR,
         Collections.EMPTY_LIST,
@@ -207,6 +211,7 @@ public class TestStageContext {
     StageContext context = new StageContext(
       "stage",
       StageType.SOURCE,
+      -1,
       false,
       OnRecordError.TO_ERROR,
       Collections.EMPTY_LIST,
@@ -234,6 +239,7 @@ public class TestStageContext {
     StageContext context = new StageContext(
       "stage",
       StageType.SOURCE,
+      -1,
       false,
       OnRecordError.TO_ERROR,
       Collections.EMPTY_LIST,
@@ -257,6 +263,7 @@ public class TestStageContext {
     StageContext context = new StageContext(
       "stage",
       StageType.SOURCE,
+      -1,
       false,
       OnRecordError.TO_ERROR,
       Collections.EMPTY_LIST,
@@ -279,6 +286,7 @@ public class TestStageContext {
     StageContext context = new StageContext(
         "stage",
         StageType.SOURCE,
+        -1,
         false,
         OnRecordError.TO_ERROR,
         Collections.EMPTY_LIST,
@@ -341,6 +349,7 @@ public class TestStageContext {
     StageContext context = new StageContext(
         "stage",
         StageType.SOURCE,
+        -1,
         false,
         OnRecordError.TO_ERROR,
         Collections.EMPTY_LIST,
@@ -365,6 +374,7 @@ public class TestStageContext {
     StageContext context = new StageContext(
         "stage",
         StageType.SOURCE,
+        -1,
         false,
         OnRecordError.TO_ERROR,
         Collections.EMPTY_LIST,
@@ -390,6 +400,7 @@ public class TestStageContext {
     StageContext context = new StageContext(
         "stage",
         StageType.SOURCE,
+        -1,
         false,
         OnRecordError.TO_ERROR,
         Collections.EMPTY_LIST,
@@ -414,6 +425,7 @@ public class TestStageContext {
     StageContext context = new StageContext(
         "stage",
         StageType.SOURCE,
+        -1,
         false,
         OnRecordError.TO_ERROR,
         Collections.EMPTY_LIST,
@@ -448,6 +460,7 @@ public class TestStageContext {
     StageContext context = new StageContext(
         "stage",
         StageType.SOURCE,
+        -1,
         false,
         OnRecordError.TO_ERROR,
         Collections.EMPTY_LIST,

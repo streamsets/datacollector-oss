@@ -377,6 +377,7 @@ public class Pipeline {
             rev,
             infosUnmodifiable,
             originPipe.getStage().getDefinition().getType(),
+            -1,
             runner.isPreview(),
             runner.getMetrics(),
             originPipe.getStage(),
@@ -389,6 +390,7 @@ public class Pipeline {
       );
 
       // Non-origin stages
+      int runnerId = 0;
       for(List<Pipe> runnerPipes : pipes) {
         for (Pipe pipe : runnerPipes) {
           if (pipe instanceof StagePipe) {
@@ -398,6 +400,7 @@ public class Pipeline {
               rev,
               infosUnmodifiable,
               pipe.getStage().getDefinition().getType(),
+              runnerId,
               runner.isPreview(),
               runner.getMetrics(),
               pipe.getStage(),
@@ -408,7 +411,10 @@ public class Pipeline {
               configuration
             ));
           }
+
+          runnerId++;
         }
+
       }
 
       // Error stage
@@ -418,6 +424,7 @@ public class Pipeline {
               rev,
               infosUnmodifiable,
               errorStage.getDefinition().getType(),
+              -1,
               runner.isPreview(),
               runner.getMetrics(),
               errorStage,
@@ -437,6 +444,7 @@ public class Pipeline {
                 rev,
                 infosUnmodifiable,
                 statsAggregatorStage.getDefinition().getType(),
+                -1,
                 runner.isPreview(),
                 runner.getMetrics(),
                 statsAggregatorStage,

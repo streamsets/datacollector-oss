@@ -52,6 +52,7 @@ public class TestPreconditionsPredicate {
     return new StageContext(
         "i",
         StageType.PROCESSOR,
+        -1,
         true,
         null,
         (List) Collections.emptyList(),
