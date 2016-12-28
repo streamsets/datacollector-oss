@@ -190,7 +190,6 @@ public class AllTypesIT extends BaseTableJdbcSourceIT {
   public static void setupTables() throws SQLException {
     populateRecords();
     try (Statement statement = connection.createStatement())  {
-      statement.addBatch("CREATE SCHEMA IF NOT EXISTS TEST;");
       //CHAR_AND_BINARY
       statement.addBatch(
           "CREATE TABLE IF NOT EXISTS TEST.CHAR_AND_BINARY " +

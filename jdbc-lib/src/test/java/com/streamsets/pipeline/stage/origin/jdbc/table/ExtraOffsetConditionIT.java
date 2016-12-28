@@ -205,21 +205,6 @@ public class ExtraOffsetConditionIT extends BaseTableJdbcSourceIT {
     );
   }
 
-
-  @BeforeClass
-  public static void createSchema() throws Exception {
-    try (Statement statement = connection.createStatement()) {
-      statement.execute("CREATE SCHEMA IF NOT EXISTS TEST;");
-    }
-  }
-
-  @AfterClass
-  public static void deleteSchema() throws Exception {
-    try (Statement statement = connection.createStatement()) {
-      statement.execute("DROP SCHEMA IF EXISTS TEST;");
-    }
-  }
-
   @Before
   public void setupTables() throws Exception {
     try (Statement statement = connection.createStatement()) {

@@ -65,7 +65,6 @@ public class CompositeKeysIT extends BaseTableJdbcSourceIT {
   @BeforeClass
   public static void setupTables() throws SQLException {
     try (Statement statement = connection.createStatement()) {
-      statement.addBatch("CREATE SCHEMA IF NOT EXISTS TEST;");
       statement.addBatch(
           "CREATE TABLE IF NOT EXISTS TEST.MULTIPLE_INT_PRIMARY" +
               "(" +

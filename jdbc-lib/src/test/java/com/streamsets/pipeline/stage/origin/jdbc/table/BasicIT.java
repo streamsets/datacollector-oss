@@ -113,8 +113,6 @@ public class BasicIT extends BaseTableJdbcSourceIT {
     EXPECTED_TRANSACTION_RECORDS = createTransactionRecords(20);
 
     try (Statement statement = connection.createStatement()) {
-      statement.addBatch("CREATE SCHEMA IF NOT EXISTS TEST;");
-
       //CRICKET_STARS
       statement.addBatch(
           "CREATE TABLE IF NOT EXISTS TEST.CRICKET_STARS " +
@@ -178,6 +176,8 @@ public class BasicIT extends BaseTableJdbcSourceIT {
     try (Statement statement = connection.createStatement()) {
       statement.execute("DROP TABLE IF EXISTS TEST.CRICKET_STARS;");
       statement.execute("DROP TABLE IF EXISTS TEST.TENNIS_STARS;");
+      statement.execute("DROP TABLE IF EXISTS TEST.TRANSACTION;");
+
     }
   }
 

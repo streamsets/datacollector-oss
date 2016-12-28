@@ -203,8 +203,6 @@ public class ReferentialConstraintOrderingIT extends BaseTableJdbcSourceIT {
     populateRecords();
 
     try (Statement statement = connection.createStatement()) {
-      statement.addBatch("CREATE SCHEMA IF NOT EXISTS TEST;");
-
       //USER TABLE
       statement.addBatch("CREATE TABLE TEST.USER (u_id INT PRIMARY KEY, name varchar(100), address varchar(1000));");
 

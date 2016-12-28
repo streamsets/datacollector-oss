@@ -61,10 +61,18 @@ public abstract class BaseTableJdbcSourceIT {
   @BeforeClass
   public static void setup() throws SQLException {
     connection = DriverManager.getConnection(JDBC_URL, USER_NAME, PASSWORD);
+    try (Statement statement = connection.createStatement()) {
+      //If not exists is skipped because some of the databases do not support that.
+      statement.execute("CREATE SCHEMA TEST");
+    }
   }
 
   @AfterClass
   public static void tearDown() throws SQLException {
+    try (Statement statement = connection.createStatement()) {
+      //If not exists is skipped because some of the databases do not support that.
+      statement.execute("DROP SCHEMA TEST");
+    }
     connection.close();
   }
 
