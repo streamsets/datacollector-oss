@@ -34,6 +34,7 @@ import org.junit.Test;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -230,8 +231,11 @@ public class ReferentialConstraintOrderingIT extends BaseTableJdbcSourceIT {
   @AfterClass
   public static void deleteTables() throws SQLException {
     try (Statement statement = connection.createStatement()) {
-      for (String table  : TABLE_TO_TEMPLATE_AND_RECORDS_MAP.keySet()) {
-        statement.addBatch("DROP TABLE TEST." + table + ";");
+      List<String> tablesToDelete = new ArrayList<>(TABLE_TO_TEMPLATE_AND_RECORDS_MAP.keySet());
+      //Reverse order of tables for deletion.
+      Collections.reverse(tablesToDelete);
+      for (String tableToDelete  : tablesToDelete) {
+        statement.addBatch("DROP TABLE TEST." + tableToDelete);
       }
       statement.executeBatch();
     }
