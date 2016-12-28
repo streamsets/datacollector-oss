@@ -206,12 +206,6 @@ public class TableJdbcSource extends BaseSource {
     rs = st.executeQuery(query);
   }
 
-  private boolean shouldCloseRs() throws SQLException {
-    //We close the current result set when we have to switch tables
-    //or if the cursor is after the last row we could read from the result set.
-    return (tableJdbcConfigBean.batchTableStrategy == BatchTableStrategy.SWITCH_TABLES || rs.isClosed() || rs.isAfterLast());
-  }
-
   @Override
   protected List<Stage.ConfigIssue> init() {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
@@ -247,9 +241,15 @@ public class TableJdbcSource extends BaseSource {
         }
 
         ResultSetMetaData md = rs.getMetaData();
+        boolean shouldCloseRs = false;
 
         try {
-          while (recordCount < batchSize && rs.next()) {
+          while (recordCount < batchSize) {
+            //Close ResultSet if there are no more rows
+            if (!rs.next()) {
+              shouldCloseRs = true;
+              break;
+            }
             LinkedHashMap<String, Field> fields = JdbcUtil.resultSetToFields(
                 rs,
                 commonSourceConfigBean.maxClobSize,
@@ -273,11 +273,17 @@ public class TableJdbcSource extends BaseSource {
             }
             recordCount++;
           }
+          //We close the result set definitely if the SWITCH_TABLES is the BatchStrategy
+          shouldCloseRs = (tableJdbcConfigBean.batchTableStrategy == BatchTableStrategy.SWITCH_TABLES) || shouldCloseRs;
         } finally {
           //Make sure we close the result set only when there are no more rows in the result set
           //This will happen if Batch Strategy is SWITCH_TABLES
           //or We use PROCESS_ALL_ROWS and there are no more rows to process in the current table.
-          if (shouldCloseRs()) {
+          if (shouldCloseRs) {
+            LOG.debug(
+                "Closing the current result set for: {}",
+                TableContextUtil.getQualifiedTableName(tableContext.getSchema(), tableContext.getTableName())
+            );
             JdbcUtil.closeQuietly(rs);
             JdbcUtil.closeQuietly(st);
             rs = null;
