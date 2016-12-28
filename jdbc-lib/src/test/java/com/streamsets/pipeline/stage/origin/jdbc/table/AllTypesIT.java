@@ -275,16 +275,16 @@ public class AllTypesIT extends BaseTableJdbcSourceIT {
 
   @Test
   public void testDataTypes() throws Exception {
-    TableConfigBean tableConfigBean = new TableConfigBean();
-    tableConfigBean.tablePattern = table;
-    tableConfigBean.schema = database;
+    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+        .tablePattern(table)
+        .schema(database)
+        .build();
 
-    TableJdbcSource partitionableJdbcSource = new TableJdbcSource(
-        TestTableJdbcSource.createHikariPoolConfigBean(JDBC_URL, USER_NAME, PASSWORD),
-        TestTableJdbcSource.createCommonSourceConfigBean(1, 1000, 1000, 1000),
-        TestTableJdbcSource.createTableJdbcConfigBean(ImmutableList.of(tableConfigBean), false, -1, TableOrderStrategy.NONE, BatchTableStrategy.SWITCH_TABLES)
-    );
-    SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, partitionableJdbcSource)
+    TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
+        .tableConfigBeans(ImmutableList.of(tableConfigBean))
+        .build();
+
+    SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
         .addOutputLane("a").build();
     runner.runInit();
     try {

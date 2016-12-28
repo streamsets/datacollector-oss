@@ -341,24 +341,23 @@ public class ExtraOffsetConditionIT extends BaseTableJdbcSourceIT {
 
   @Test
   public void testExtraOffsetConditions() throws Exception {
-    TableConfigBean tableConfigBean = new TableConfigBean();
-    tableConfigBean.tablePattern = tableName;
-    tableConfigBean.schema = database;
-    tableConfigBean.overrideDefaultOffsetColumns = true;
-    tableConfigBean.offsetColumns = new ArrayList<>();
-    tableConfigBean.extraOffsetColumnConditions = extraOffsetConditions;
-
+    List<String> offsetColumns = new ArrayList<>();
     for (String partitionColumn : transactionOffsetFields.keySet()) {
-      tableConfigBean.offsetColumns.add(partitionColumn.toUpperCase());
+      offsetColumns.add(partitionColumn.toUpperCase());
     }
 
-    TableJdbcSource tableJdbcSource = Mockito.spy(
-        new TableJdbcSource(
-            TestTableJdbcSource.createHikariPoolConfigBean(JDBC_URL, USER_NAME, PASSWORD),
-            TestTableJdbcSource.createCommonSourceConfigBean(1, 1000, 1000, 1000),
-            TestTableJdbcSource.createTableJdbcConfigBean(ImmutableList.of(tableConfigBean), false, -1, TableOrderStrategy.NONE, BatchTableStrategy.SWITCH_TABLES)
-        )
-    );
+    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+        .tablePattern(tableName)
+        .schema(database)
+        .overrideDefaultOffsetColumns(true)
+        .offsetColumns(offsetColumns)
+        .extraOffsetColumnConditions(extraOffsetConditions)
+        .build();
+
+    TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
+        .tableConfigBeans(ImmutableList.of(tableConfigBean))
+        .build();
+
     SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
         .addOutputLane("a").build();
     runner.runInit();

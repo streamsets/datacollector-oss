@@ -113,15 +113,14 @@ public class CompositeKeysIT extends BaseTableJdbcSourceIT {
 
   @Test
   public void testCompositePrimaryKeys() throws Exception {
-    TableConfigBean tableConfigBean = new TableConfigBean();
-    tableConfigBean.tablePattern = "%";
-    tableConfigBean.schema = database;
+    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+        .tablePattern("%")
+        .schema(database)
+        .build();
 
-    TableJdbcSource tableJdbcSource = new TableJdbcSource(
-        TestTableJdbcSource.createHikariPoolConfigBean(JDBC_URL, USER_NAME, PASSWORD),
-        TestTableJdbcSource.createCommonSourceConfigBean(1, 1000, 1000, 1000),
-        TestTableJdbcSource.createTableJdbcConfigBean(ImmutableList.of(tableConfigBean), false, -1, TableOrderStrategy.NONE, BatchTableStrategy.SWITCH_TABLES)
-    );
+    TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
+        .tableConfigBeans(ImmutableList.of(tableConfigBean))
+        .build();
 
     SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
         .addOutputLane("a").build();

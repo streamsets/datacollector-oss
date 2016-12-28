@@ -183,15 +183,14 @@ public class BasicIT extends BaseTableJdbcSourceIT {
 
   @Test
   public void testNoTableMatchesTablePatternValidationError() throws Exception {
-    TableConfigBean tableConfigBean = new TableConfigBean();
-    tableConfigBean.tablePattern = "NO_TABLE%";
-    tableConfigBean.schema = database;
+    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+        .tablePattern("NO_TABLE%")
+        .schema(database)
+        .build();
 
-    TableJdbcSource tableJdbcSource = new TableJdbcSource(
-        TestTableJdbcSource.createHikariPoolConfigBean(JDBC_URL, USER_NAME, PASSWORD),
-        TestTableJdbcSource.createCommonSourceConfigBean(1, 1000, 1000, 1000),
-        TestTableJdbcSource.createTableJdbcConfigBean(ImmutableList.of(tableConfigBean), false, -1, TableOrderStrategy.NONE, BatchTableStrategy.SWITCH_TABLES)
-    );
+    TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
+        .tableConfigBeans(ImmutableList.of(tableConfigBean))
+        .build();
 
     SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
         .addOutputLane("a").build();
@@ -201,15 +200,14 @@ public class BasicIT extends BaseTableJdbcSourceIT {
 
   @Test
   public void testSingleTableSingleBatch() throws Exception {
-    TableConfigBean tableConfigBean = new TableConfigBean();
-    tableConfigBean.tablePattern = "CRICKET_STARS";
-    tableConfigBean.schema = database;
+    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+        .tablePattern("CRICKET_STARS")
+        .schema(database)
+        .build();
 
-    TableJdbcSource tableJdbcSource = new TableJdbcSource(
-        TestTableJdbcSource.createHikariPoolConfigBean(JDBC_URL, USER_NAME, PASSWORD),
-        TestTableJdbcSource.createCommonSourceConfigBean(1, 1000, 1000, 1000),
-        TestTableJdbcSource.createTableJdbcConfigBean(ImmutableList.of(tableConfigBean), false, -1, TableOrderStrategy.NONE, BatchTableStrategy.SWITCH_TABLES)
-    );
+    TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
+        .tableConfigBeans(ImmutableList.of(tableConfigBean))
+        .build();
 
     SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
         .addOutputLane("a").build();
@@ -227,15 +225,15 @@ public class BasicIT extends BaseTableJdbcSourceIT {
 
   @Test
   public void testSingleTableMultipleBatches() throws Exception {
-    TableConfigBean tableConfigBean = new TableConfigBean();
-    tableConfigBean.tablePattern = "CRICKET_STARS";
-    tableConfigBean.schema = database;
+    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+        .tablePattern("CRICKET_STARS")
+        .schema(database)
+        .build();
 
-    TableJdbcSource tableJdbcSource = new TableJdbcSource(
-        TestTableJdbcSource.createHikariPoolConfigBean(JDBC_URL, USER_NAME, PASSWORD),
-        TestTableJdbcSource.createCommonSourceConfigBean(1, 1000, 1000, 1000),
-        TestTableJdbcSource.createTableJdbcConfigBean(ImmutableList.of(tableConfigBean), false, -1, TableOrderStrategy.NONE, BatchTableStrategy.SWITCH_TABLES)
-    );
+    TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
+        .tableConfigBeans(ImmutableList.of(tableConfigBean))
+        .build();
+
     SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
         .addOutputLane("a").build();
     runner.runInit();
@@ -258,19 +256,18 @@ public class BasicIT extends BaseTableJdbcSourceIT {
 
   @Test
   public void testMultipleTablesSingleBatch() throws Exception {
-    TableConfigBean tableConfigBean1 = new TableConfigBean();
-    tableConfigBean1.tablePattern = "CRICKET_STARS";
-    tableConfigBean1.schema = database;
+    TableConfigBean tableConfigBean1 =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+        .tablePattern("CRICKET_STARS")
+        .schema(database)
+        .build();
+    TableConfigBean tableConfigBean2 =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+        .tablePattern("TENNIS_STARS")
+        .schema(database)
+        .build();
 
-    TableConfigBean tableConfigBean2 = new TableConfigBean();
-    tableConfigBean2.tablePattern = "TENNIS_STARS";
-    tableConfigBean2.schema = database;
-
-    TableJdbcSource tableJdbcSource = new TableJdbcSource(
-        TestTableJdbcSource.createHikariPoolConfigBean(JDBC_URL, USER_NAME, PASSWORD),
-        TestTableJdbcSource.createCommonSourceConfigBean(1, 1000, 1000, 1000),
-        TestTableJdbcSource.createTableJdbcConfigBean(ImmutableList.of(tableConfigBean1, tableConfigBean2), false, -1, TableOrderStrategy.NONE, BatchTableStrategy.SWITCH_TABLES)
-    );
+    TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
+        .tableConfigBeans(ImmutableList.of(tableConfigBean1, tableConfigBean2))
+        .build();
 
     SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
         .addOutputLane("a").build();
@@ -294,15 +291,14 @@ public class BasicIT extends BaseTableJdbcSourceIT {
   @Test
   public void testBatchStrategySwitchTables() throws Exception {
     //With a '%_STARS' regex which has to select both tables.
-    TableConfigBean tableConfigBean = new TableConfigBean();
-    tableConfigBean.tablePattern = "%_STARS";
-    tableConfigBean.schema = database;
+    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+        .tablePattern("%_STARS")
+        .schema(database)
+        .build();
 
-    TableJdbcSource tableJdbcSource = new TableJdbcSource(
-        TestTableJdbcSource.createHikariPoolConfigBean(JDBC_URL, USER_NAME, PASSWORD),
-        TestTableJdbcSource.createCommonSourceConfigBean(1, 1000, 1000, 1000),
-        TestTableJdbcSource.createTableJdbcConfigBean(ImmutableList.of(tableConfigBean), false, -1, TableOrderStrategy.NONE, BatchTableStrategy.SWITCH_TABLES)
-    );
+    TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
+        .tableConfigBeans(ImmutableList.of(tableConfigBean))
+        .build();
 
     SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
         .addOutputLane("a").build();
@@ -340,25 +336,20 @@ public class BasicIT extends BaseTableJdbcSourceIT {
 
   @Test
   public void testBatchStrategyProcessAllRows() throws Exception {
-    TableConfigBean tableConfigBean1 = new TableConfigBean();
-    tableConfigBean1.tablePattern = "TENNIS_STARS";
-    tableConfigBean1.schema = database;
+    TableConfigBean tableConfigBean1 =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+        .tablePattern("TENNIS_STARS")
+        .schema(database)
+        .build();
 
-    TableConfigBean tableConfigBean2 = new TableConfigBean();
-    tableConfigBean2.tablePattern = "CRICKET_STARS";
-    tableConfigBean2.schema = database;
+    TableConfigBean tableConfigBean2 =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+        .tablePattern("CRICKET_STARS")
+        .schema(database)
+        .build();
 
-    TableJdbcSource tableJdbcSource = new TableJdbcSource(
-        TestTableJdbcSource.createHikariPoolConfigBean(JDBC_URL, USER_NAME, PASSWORD),
-        TestTableJdbcSource.createCommonSourceConfigBean(1, 1000, 1000, 1000),
-        TestTableJdbcSource.createTableJdbcConfigBean(
-            ImmutableList.of(tableConfigBean1, tableConfigBean2),
-            false,
-            -1,
-            TableOrderStrategy.NONE,
-            BatchTableStrategy.PROCESS_ALL_AVAILABLE_ROWS_FROM_TABLE
-        )
-    );
+    TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
+        .tableConfigBeans(ImmutableList.of(tableConfigBean1, tableConfigBean2))
+        .batchTableStrategy(BatchTableStrategy.PROCESS_ALL_AVAILABLE_ROWS_FROM_TABLE)
+        .build();
 
     SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
         .addOutputLane("a").build();
@@ -388,9 +379,6 @@ public class BasicIT extends BaseTableJdbcSourceIT {
       records = output.getRecords().get("a");
       Assert.assertEquals(5, records.size());
       checkRecords(EXPECTED_CRICKET_STARS_RECORDS.subList(5, 10), records);
-
-
-
     } finally {
       runner.runDestroy();
     }
@@ -401,15 +389,14 @@ public class BasicIT extends BaseTableJdbcSourceIT {
   @SuppressWarnings("unchecked")
   public void testMetrics() throws Exception {
     //With a '%' regex which has to select both tables.
-    TableConfigBean tableConfigBean = new TableConfigBean();
-    tableConfigBean.tablePattern = "%_STARS";
-    tableConfigBean.schema = database;
+    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+        .tablePattern("%_STARS")
+        .schema(database)
+        .build();
 
-    TableJdbcSource tableJdbcSource = new TableJdbcSource(
-        TestTableJdbcSource.createHikariPoolConfigBean(JDBC_URL, USER_NAME, PASSWORD),
-        TestTableJdbcSource.createCommonSourceConfigBean(1, 1000, 1000, 1000),
-        TestTableJdbcSource.createTableJdbcConfigBean(ImmutableList.of(tableConfigBean), false, -1, TableOrderStrategy.NONE, BatchTableStrategy.SWITCH_TABLES)
-    );
+    TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
+        .tableConfigBeans(ImmutableList.of(tableConfigBean))
+        .build();
 
     SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
         .addOutputLane("a").build();
@@ -432,18 +419,18 @@ public class BasicIT extends BaseTableJdbcSourceIT {
 
   @Test
   public void testOverridePartitionColumn() throws Exception {
-    TableConfigBean tableConfigBean = new TableConfigBean();
-    tableConfigBean.tablePattern = "TRANSACTION";
-    tableConfigBean.schema = database;
-    tableConfigBean.overrideDefaultOffsetColumns = true;
-    tableConfigBean.offsetColumns = new ArrayList<>();
-    tableConfigBean.offsetColumns.add("T_DATE");
+    TableConfigBean tableConfigBean =
+        new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+            .tablePattern("TRANSACTION")
+            .schema(database)
+            .overrideDefaultOffsetColumns(true)
+            .offsetColumns(ImmutableList.of("T_DATE"))
+            .build();
 
-    TableJdbcSource tableJdbcSource = new TableJdbcSource(
-        TestTableJdbcSource.createHikariPoolConfigBean(JDBC_URL, USER_NAME, PASSWORD),
-        TestTableJdbcSource.createCommonSourceConfigBean(1, 1000, 1000, 1000),
-        TestTableJdbcSource.createTableJdbcConfigBean(ImmutableList.of(tableConfigBean), false, -1, TableOrderStrategy.NONE, BatchTableStrategy.SWITCH_TABLES)
-    );
+    TableJdbcSource tableJdbcSource =
+        new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
+            .tableConfigBeans(ImmutableList.of(tableConfigBean))
+            .build();
 
     SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
         .addOutputLane("a").build();
