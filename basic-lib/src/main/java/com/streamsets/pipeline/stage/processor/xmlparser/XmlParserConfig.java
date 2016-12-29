@@ -31,6 +31,10 @@ import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
 import com.streamsets.pipeline.lib.xml.xpath.Constants;
 import com.streamsets.pipeline.lib.xml.xpath.XPathValidatorUtil;
 import com.streamsets.pipeline.stage.common.DataFormatErrors;
+import com.streamsets.pipeline.stage.processor.common.MultipleValuesBehavior;
+import com.streamsets.pipeline.stage.processor.common.MultipleValuesBehaviorChooserValues;
+import com.streamsets.pipeline.stage.processor.http.HeaderOutputLocation;
+import com.streamsets.pipeline.stage.processor.http.HeaderOutputLocationChooserValues;
 import org.apache.commons.lang.StringUtils;
 
 import java.nio.charset.Charset;
@@ -109,6 +113,18 @@ public class XmlParserConfig {
   )
   @FieldSelectorModel(singleValued = true)
   public String parsedFieldPath;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Multiple Values Behavior",
+      description = "How to handle multiple values produced by the parser",
+      defaultValue = "FIRST_ONLY",
+      displayPosition = 60,
+      group = "XML"
+  )
+  @ValueChooserModel(MultipleValuesBehaviorChooserValues.class)
+  public MultipleValuesBehavior multipleValuesBehavior = MultipleValuesBehavior.DEFAULT;
 
   public boolean init(Stage.Context context, List<Stage.ConfigIssue> issues) {
     boolean valid = true;

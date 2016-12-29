@@ -24,10 +24,12 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 
 public class XmlParserProcessor extends SingleLaneRecordProcessor {
@@ -53,8 +55,41 @@ public class XmlParserProcessor extends SingleLaneRecordProcessor {
     Field field = record.get(configs.fieldPathToParse);
     if (field != null) {
       try {
-        Record xmlRecord = parserFactory.getParser("", field.getValueAsString()).parse();
-        record.set(configs.parsedFieldPath, xmlRecord != null ? xmlRecord.get() : Field.create(field.getType(), null));
+        final DataParser parser = parserFactory.getParser("", field.getValueAsString());
+
+        Record xmlRecord = parser.parse();
+        switch (configs.multipleValuesBehavior) {
+          case FIRST_ONLY:
+            record.set(
+                configs.parsedFieldPath,
+                xmlRecord != null ? xmlRecord.get() : Field.create(field.getType(), null)
+            );
+            batchMaker.addRecord(record);
+            break;
+          case ALL_AS_LIST:
+            List<Field> multipleFieldValues = new LinkedList<>();
+            while (xmlRecord != null) {
+              multipleFieldValues.add(xmlRecord.get());
+              xmlRecord = parser.parse();
+            }
+            record.set(configs.parsedFieldPath, Field.create(multipleFieldValues));
+            batchMaker.addRecord(record);
+            break;
+          case SPLIT_INTO_MULTIPLE_RECORDS:
+            List<Record> splitRecords = new LinkedList<>();
+            while (xmlRecord != null) {
+              Record splitRecord = getContext().cloneRecord(record);
+              splitRecord.set(configs.parsedFieldPath, xmlRecord.get());
+              splitRecords.add(splitRecord);
+              xmlRecord = parser.parse();
+            }
+
+            for (Record splitRecord : splitRecords) {
+              batchMaker.addRecord(splitRecord);
+            }
+
+            break;
+        }
       } catch (IOException|DataParserException ex) {
         throw new OnRecordErrorException(
             Errors.XMLP_01,
@@ -65,7 +100,6 @@ public class XmlParserProcessor extends SingleLaneRecordProcessor {
         );
       }
     }
-    batchMaker.addRecord(record);
   }
 
 }

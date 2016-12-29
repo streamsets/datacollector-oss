@@ -25,10 +25,12 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.pipeline.stage.processor.common.MultipleValuesBehavior;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -130,4 +132,96 @@ public class TestXmlParserProcessor {
       runner.runDestroy();
     }
   }
+
+  @Test
+  public void testParsingMultipleValuesAsList() throws Exception {
+    XmlParserConfig configs = new XmlParserConfig();
+    configs.charset = "UTF-8";
+    configs.fieldPathToParse = "/xml";
+    configs.parsedFieldPath = "/data";
+    configs.removeCtrlChars = false;
+    configs.xmlRecordElement = "a";
+    configs.multipleValuesBehavior = MultipleValuesBehavior.ALL_AS_LIST;
+
+    XmlParserDProcessor processor = new XmlParserDProcessor();
+    processor.configs = configs;
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(XmlParserDProcessor.class, processor)
+        .addOutputLane("out").setOnRecordError(OnRecordError.TO_ERROR).build();
+    Map<String, Field> map = new HashMap<>();
+    map.put("xml", Field.create("<root><a>1</a><a>2</a><a>3</a></root>"));
+    Record record = RecordCreator.create();
+    record.set(Field.create(map));
+    List<Record> input = new ArrayList<>();
+    input.add(record);
+    try {
+      runner.runInit();
+      StageRunner.Output output = runner.runProcess(input);
+      Assert.assertTrue(output.getRecords().containsKey("out"));
+      final List<Record> records = output.getRecords().get("out");
+      Assert.assertEquals(1, records.size());
+      final Field outputField = records.get(0).get("/data");
+      Assert.assertNotNull(outputField);
+      final List<Field> valueList = outputField.getValueAsList();
+      Assert.assertNotNull(valueList);
+      Assert.assertEquals(3, valueList.size());
+      Assert.assertEquals("1", valueList.get(0).getValueAsMap().get("value").getValueAsString());
+      Assert.assertEquals("2", valueList.get(1).getValueAsMap().get("value").getValueAsString());
+      Assert.assertEquals("3", valueList.get(2).getValueAsMap().get("value").getValueAsString());
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testParsingMultipleValuesAsSplitRecords() throws Exception {
+    XmlParserConfig configs = new XmlParserConfig();
+    configs.charset = "UTF-8";
+    configs.fieldPathToParse = "/xml";
+    configs.parsedFieldPath = "/data";
+    configs.removeCtrlChars = false;
+    configs.xmlRecordElement = "a";
+    configs.multipleValuesBehavior = MultipleValuesBehavior.SPLIT_INTO_MULTIPLE_RECORDS;
+
+    XmlParserDProcessor processor = new XmlParserDProcessor();
+    processor.configs = configs;
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(XmlParserDProcessor.class, processor)
+        .addOutputLane("out").setOnRecordError(OnRecordError.TO_ERROR).build();
+    Map<String, Field> map = new HashMap<>();
+    map.put("xml", Field.create("<root><a>1</a><a>2</a><a>3</a></root>"));
+    map.put("first", Field.create(1));
+    map.put("second", Field.create(Arrays.asList(Field.create("val1"), Field.create("val2"), Field.create("val3"))));
+    Record record = RecordCreator.create();
+    record.set(Field.create(map));
+    List<Record> input = new ArrayList<>();
+    input.add(record);
+    try {
+      runner.runInit();
+      StageRunner.Output output = runner.runProcess(input);
+      Assert.assertTrue(output.getRecords().containsKey("out"));
+      final List<Record> records = output.getRecords().get("out");
+      Assert.assertEquals(3, records.size());
+
+      for (int i=0; i<records.size(); i++) {
+        assertCommonFields(records.get(i), String.valueOf(i+1));
+      }
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  private void assertCommonFields(Record outRecord, String expectedDataValue) {
+    Assert.assertEquals(expectedDataValue, outRecord.get("/data").getValueAsMap().get("value").getValueAsString());
+    Assert.assertEquals(1, outRecord.get("/first").getValueAsInteger());
+    final List<Field> originalList = outRecord.get("/second").getValueAsList();
+    Assert.assertNotNull(originalList);
+    Assert.assertEquals(3, originalList.size());
+    Assert.assertEquals("val1", originalList.get(0).getValueAsString());
+    Assert.assertEquals("val2", originalList.get(1).getValueAsString());
+    Assert.assertEquals("val3", originalList.get(2).getValueAsString());
+  }
+
 }
