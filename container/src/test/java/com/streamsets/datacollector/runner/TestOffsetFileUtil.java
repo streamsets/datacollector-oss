@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.runner;
 
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.production.OffsetFileUtil;
 import org.junit.Assert;
@@ -28,6 +29,7 @@ import org.junit.rules.TemporaryFolder;
 import org.mockito.Mockito;
 
 import java.io.File;
+import java.util.Map;
 
 public class TestOffsetFileUtil {
 
@@ -35,7 +37,7 @@ public class TestOffsetFileUtil {
   public TemporaryFolder tempFolder= new TemporaryFolder();
 
   @Test
-  public void testSaveAndGetOffset() throws Exception {
+  public void testSaveAndGetOffsetPoll() throws Exception {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     File offsetFolder = tempFolder.newFolder();
     Mockito.when(runtimeInfo.getDataDir()).thenReturn(offsetFolder.getPath());
@@ -46,12 +48,39 @@ public class TestOffsetFileUtil {
   }
 
   @Test
-  public void testResetOffset() throws Exception {
+  public void testSaveAndGetOffsetPush() throws Exception {
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    File offsetFolder = tempFolder.newFolder();
+    Mockito.when(runtimeInfo.getDataDir()).thenReturn(offsetFolder.getPath());
+    OffsetFileUtil.saveIfEmpty(runtimeInfo, "foo", "1");
+    Assert.assertNull(OffsetFileUtil.getOffset(runtimeInfo, "foo", "1"));
+    OffsetFileUtil.saveOffsets(runtimeInfo, "foo", "1", ImmutableMap.of("a", "b", "c", "d"));
+    Map<String, String> offsets = OffsetFileUtil.getOffsets(runtimeInfo, "foo", "1");
+    Assert.assertNotNull(offsets);
+    Assert.assertEquals(2, offsets.size());
+    Assert.assertTrue(offsets.containsKey("a"));
+    Assert.assertEquals("b", offsets.get("a"));
+    Assert.assertTrue(offsets.containsKey("c"));
+    Assert.assertEquals("d", offsets.get("c"));
+  }
+
+  @Test
+  public void testResetOffsetPoll() throws Exception {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     File offsetFolder = tempFolder.newFolder();
     Mockito.when(runtimeInfo.getDataDir()).thenReturn(offsetFolder.getPath());
     OffsetFileUtil.saveOffset(runtimeInfo, "foo", "1", "offset:1000");
-    OffsetFileUtil.resetOffset(runtimeInfo, "foo", "1");
+    OffsetFileUtil.resetOffsets(runtimeInfo, "foo", "1");
     Assert.assertNull(OffsetFileUtil.getOffset(runtimeInfo, "foo", "1"));
+  }
+
+  @Test
+  public void testResetOffsetPush() throws Exception {
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    File offsetFolder = tempFolder.newFolder();
+    Mockito.when(runtimeInfo.getDataDir()).thenReturn(offsetFolder.getPath());
+    OffsetFileUtil.saveOffsets(runtimeInfo, "foo", "1", ImmutableMap.of("a", "b"));
+    OffsetFileUtil.resetOffsets(runtimeInfo, "foo", "1");
+    Assert.assertEquals(0, OffsetFileUtil.getOffsets(runtimeInfo, "foo", "1").size());
   }
 }

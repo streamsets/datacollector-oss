@@ -19,20 +19,66 @@
  */
 package com.streamsets.datacollector.runner.production;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.Map;
 
 public class SourceOffset {
 
-  private final String offset;
+  /**
+   * Current version of the offset file.
+   *
+   * (nothing): First version with just "offset"
+   * 1: Skipped to have nothing as "1"
+   * 2: Added version and pushOffsets fields
+   */
+  public static final int CURRENT_VERSION = 2;
 
-  @JsonCreator
-  public SourceOffset(
-      @JsonProperty("offset") String offset) {
+  /**
+   * Version of this SourceOffset file
+   */
+  private int version;
+
+  /**
+   * Deprecated, available for backward compatibility
+   */
+  private String offset;
+
+  /**
+   * Offset map for all entities, in case of single-threaded origin the offset will be stored in null key
+   */
+  private Map<String, String> offsets;
+
+  public SourceOffset() {
+  }
+
+  public SourceOffset(int version, Map<String, String> offsets) {
+    this.version = version;
+    this.offsets = offsets;
+  }
+
+  public int getVersion() {
+    return version;
+  }
+
+  public void setVersion(int version) {
+    this.version = version;
+  }
+
+  @JsonIgnore
+  public String getOffset() {
+    return offset;
+  }
+
+  public void setOffset(String offset) {
     this.offset = offset;
   }
 
-  public String getOffset() {
-    return offset;
+  public Map<String, String> getOffsets() {
+    return offsets;
+  }
+
+  public void setOffsets(Map<String, String> offsets) {
+    this.offsets = offsets;
   }
 }

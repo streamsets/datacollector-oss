@@ -19,27 +19,50 @@
  */
 package com.streamsets.datacollector.restapi.bean;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.datacollector.runner.production.SourceOffset;
+
+import java.util.Map;
 
 public class SourceOffsetJson {
 
   private final SourceOffset sourceOffset;
 
+  public SourceOffsetJson() {
+    this.sourceOffset = new SourceOffset();
+  }
+
   public SourceOffsetJson(SourceOffset sourceOffset) {
     this.sourceOffset = sourceOffset;
   }
 
-  @JsonCreator
-  public SourceOffsetJson(
-    @JsonProperty("offset") String offset) {
-    this.sourceOffset = new SourceOffset(offset);
+  public SourceOffsetJson(int version, Map<String, String> offsets) {
+    this.sourceOffset = new SourceOffset(version, offsets);
   }
 
+  @JsonIgnore
   public String getOffset() {
     return sourceOffset.getOffset();
+  }
+
+  public void setOffset(String offset) {
+    sourceOffset.setOffset(offset);
+  }
+
+  public int getVersion() {
+    return sourceOffset.getVersion();
+  }
+
+  public void setVersion(int version) {
+    sourceOffset.setVersion(version);
+  }
+
+  public Map<String, String> getOffsets() {
+    return sourceOffset.getOffsets();
+  }
+
+  public void setOffsets(Map<String, String> offsets) {
+    sourceOffset.setOffsets(offsets);
   }
 
   @JsonIgnore
