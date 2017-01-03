@@ -191,7 +191,7 @@ public class RandomDataGeneratorSource extends BasePushSource {
         getContext().processBatch(batchContext);
 
         // Wait if configured
-        if (delay > 0) {
+        if (delay > 0 && !getContext().isPreview()) {
           ThreadUtil.sleep(delay);
         }
       }
