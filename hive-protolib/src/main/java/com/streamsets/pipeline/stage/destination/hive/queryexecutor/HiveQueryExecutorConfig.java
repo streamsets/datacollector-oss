@@ -41,13 +41,12 @@ public class HiveQueryExecutorConfig {
       type = ConfigDef.Type.LIST,
       label = "SQL Queries",
       description = "Queries that will be executed on Hive or Impala.",
+      defaultValue = "",
       displayPosition = 40,
       group = "QUERY",
-      defaultValue = "invalidate metadata ${record:value('/table')}",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       elDefs = {RecordEL.class, StringEL.class}
   )
-  @ListBeanModel
   public List<String> queries;
 
   @ConfigDef(
