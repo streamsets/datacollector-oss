@@ -30,7 +30,9 @@ import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.creation.StageConfigBean;
 import com.streamsets.pipeline.api.OffsetCommitTrigger;
+import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.ProtoSource;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StatsAggregatorStage;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ErrorStage;
@@ -115,7 +117,9 @@ public abstract class StageDefinitionExtractor {
       if (type != null && errorStage && type == StageType.SOURCE) {
         errors.add(new ErrorMessage(DefinitionError.DEF_303, contextMsg));
       }
-
+      if (OffsetCommitter.class.isAssignableFrom(klass) && !Source.class.isAssignableFrom(klass)) {
+        errors.add(new ErrorMessage(DefinitionError.DEF_314, contextMsg));
+      }
       if (OffsetCommitTrigger.class.isAssignableFrom(klass) && type != StageType.TARGET) {
         errors.add(new ErrorMessage(DefinitionError.DEF_312, contextMsg));
       }

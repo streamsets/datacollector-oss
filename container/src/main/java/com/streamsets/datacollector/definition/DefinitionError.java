@@ -99,6 +99,7 @@ public enum DefinitionError implements ErrorCode {
   DEF_311("{} icon file '{}' not found in the classpath"),
   DEF_312("{} only a TARGET can trigger offset commit"),
   DEF_313("{} is hiding non-existing config {}"),
+  DEF_314("{} OffsetCommitter can only be a (Pull) Source"),
 
   DEF_400("Stage library '{}', file '{}' not found"),
   DEF_401("Stage library '{}', could not read file '{}': {}"),
