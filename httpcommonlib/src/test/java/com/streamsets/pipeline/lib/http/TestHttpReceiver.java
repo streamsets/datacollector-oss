@@ -37,7 +37,7 @@ public class TestHttpReceiver {
     Mockito.when(configs.getAppId()).thenReturn("id");
     HttpRequestFragmenter fragmenter = Mockito.mock(HttpRequestFragmenter.class);
     FragmentWriter writer = Mockito.mock(FragmentWriter.class);
-    HttpReceiver receiver = new HttpReceiver("/", configs, fragmenter, writer);
+    HttpReceiver receiver = new HttpReceiverWithFragmenterWriter("/", configs, fragmenter, writer);
 
     Assert.assertEquals("/", receiver.getUriPath());
 

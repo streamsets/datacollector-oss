@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.origin.httptokafka;
 import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtil;
 import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtilFactory;
 import com.streamsets.pipeline.lib.http.HttpConstants;
+import com.streamsets.pipeline.lib.httpsource.RawHttpConfigs;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;

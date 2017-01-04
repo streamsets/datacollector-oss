@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 StreamSets Inc.
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,74 +19,26 @@
  */
 package com.streamsets.pipeline.lib.http;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Stage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
-public class HttpReceiver {
-  private static final Logger LOG = LoggerFactory.getLogger(HttpReceiver.class);
+public interface HttpReceiver {
 
-  private final String uriPath;
-  private final HttpConfigs httpConfigs;
-  private final HttpRequestFragmenter fragmenter;
-  private final FragmentWriter writer;
+  List<Stage.ConfigIssue> init(Stage.Context context);
 
-  public HttpReceiver(
-      String uriPath,
-      HttpConfigs httpConfigs,
-      HttpRequestFragmenter fragmenter,
-      FragmentWriter writer
-  ) {
-    this.uriPath = uriPath;
-    this.httpConfigs = httpConfigs;
-    this.fragmenter = fragmenter;
-    this.writer = writer;
-  }
+  void destroy();
 
-  @VisibleForTesting
-  public HttpRequestFragmenter getFragmenter() {
-    return fragmenter;
-  }
+  String getAppId();
 
-  @VisibleForTesting
-  public FragmentWriter getWriter() {
-    return writer;
-  }
+  String getUriPath();
 
-  public List<Stage.ConfigIssue> init(Stage.Context context) {
-    return new ArrayList<>();
-  }
+  boolean validate(HttpServletRequest req, HttpServletResponse res) throws IOException;
 
-  public void destroy() {
-  }
-
-  public String getAppId() {
-    return httpConfigs.getAppId();
-  }
-
-  public String getUriPath() {
-    return uriPath;
-  }
-
-  public boolean validate(HttpServletRequest req, HttpServletResponse res) throws IOException {
-    return getFragmenter().validate(req, res);
-  }
-
-  public void process(HttpServletRequest req, InputStream is) throws IOException {
-    String requestor = req.getRemoteAddr() + ":" + req.getRemotePort();
-    LOG.debug("Processing request from '{}'", requestor);
-    List<byte[]> fragments =
-        getFragmenter().fragment(is, writer.getMaxFragmentSizeKB(), httpConfigs.getMaxHttpRequestSizeKB());
-    LOG.debug("Request from '{}' broken into '{}KB' fragments for writing", requestor, fragments.size());
-    getWriter().write(fragments);
-  }
+  void process(HttpServletRequest req, InputStream is) throws IOException;
 
 }

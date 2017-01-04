@@ -21,7 +21,7 @@ package com.streamsets.pipeline.stage.origin.tokafka;
 
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.http.HttpConfigs;
-import com.streamsets.pipeline.lib.http.HttpReceiver;
+import com.streamsets.pipeline.lib.http.HttpReceiverWithFragmenterWriter;
 import com.streamsets.pipeline.lib.http.HttpRequestFragmenter;
 import com.streamsets.pipeline.lib.httpsource.AbstractHttpServerSource;
 import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
@@ -29,7 +29,7 @@ import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 
 import java.util.List;
 
-public abstract class HttpServerToKafkaSource extends AbstractHttpServerSource<HttpReceiver> {
+public abstract class HttpServerToKafkaSource extends AbstractHttpServerSource<HttpReceiverWithFragmenterWriter> {
   private final HttpRequestFragmenter fragmenter;
   private final KafkaTargetConfig kafkaConfigs;
 
@@ -40,7 +40,7 @@ public abstract class HttpServerToKafkaSource extends AbstractHttpServerSource<H
       KafkaTargetConfig kafkaConfigs,
       int kafkaMaxMessageSizeKB
   ) {
-    super(httpConfigs, new HttpReceiver(uriPath,
+    super(httpConfigs, new HttpReceiverWithFragmenterWriter(uriPath,
         httpConfigs,
         fragmenter,
         new KafkaFragmentWriter(kafkaConfigs, kafkaMaxMessageSizeKB, httpConfigs.getMaxConcurrentRequests())

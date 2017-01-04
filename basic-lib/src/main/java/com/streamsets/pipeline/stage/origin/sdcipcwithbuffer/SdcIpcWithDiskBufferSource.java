@@ -29,7 +29,7 @@ import com.streamsets.pipeline.lib.fragmentqueue.FileFragmentQueue;
 import com.streamsets.pipeline.lib.fragmentqueue.FragmentQueue;
 import com.streamsets.pipeline.lib.fragmentqueue.MemoryBufferFragmentQueue;
 import com.streamsets.pipeline.lib.http.HttpConfigs;
-import com.streamsets.pipeline.lib.http.HttpReceiver;
+import com.streamsets.pipeline.lib.http.HttpReceiverWithFragmenterWriter;
 import com.streamsets.pipeline.lib.httpsource.AbstractHttpServerSource;
 import com.streamsets.pipeline.lib.sdcipc.SdcIpcRequestFragmenter;
 
@@ -37,7 +37,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 
-public class SdcIpcWithDiskBufferSource extends AbstractHttpServerSource<HttpReceiver> {
+public class SdcIpcWithDiskBufferSource extends AbstractHttpServerSource<HttpReceiverWithFragmenterWriter> {
 
   public static final String IPC_PATH = "/ipc/v1";
 
@@ -51,7 +51,7 @@ public class SdcIpcWithDiskBufferSource extends AbstractHttpServerSource<HttpRec
       int maxDiskSpaceMB,
       long waitTimeForEmptyBatches
   ) {
-    super(httpConfigs, new HttpReceiver(IPC_PATH,
+    super(httpConfigs, new HttpReceiverWithFragmenterWriter(IPC_PATH,
         httpConfigs,
         new SdcIpcRequestFragmenter(),
         new MemoryBufferFragmentQueue(maxFragmentsInMemory, new FileFragmentQueue(maxDiskSpaceMB))
@@ -78,8 +78,8 @@ public class SdcIpcWithDiskBufferSource extends AbstractHttpServerSource<HttpRec
     getReceiver().destroy();
   }
 
-  @Override
-  protected void produceSleep() {
+  protected long getProduceSleepMillis() {
+    return 0;
   }
 
   @Override

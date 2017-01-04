@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.httptokafka;
+package com.streamsets.pipeline.lib.httpsource;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.lib.el.VaultEL;
@@ -26,7 +26,7 @@ import com.streamsets.pipeline.lib.http.HttpConfigs;
 public class RawHttpConfigs extends HttpConfigs {
 
   public RawHttpConfigs() {
-    super(Groups.HTTP.name(), "config.");
+    super("HTTP", "config.");
   }
 
   @ConfigDef(

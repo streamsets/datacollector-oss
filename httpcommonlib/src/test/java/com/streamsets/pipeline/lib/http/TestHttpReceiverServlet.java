@@ -43,7 +43,7 @@ public class TestHttpReceiverServlet {
   public void testValidateAppId() throws Exception {
     Stage.Context context =
         ContextInfoCreator.createSourceContext("n", false, OnRecordError.TO_ERROR, ImmutableList.of("a"));
-    HttpReceiver receiver = Mockito.mock(HttpReceiver.class);
+    HttpReceiver receiver = Mockito.mock(HttpReceiverWithFragmenterWriter.class);
     Mockito.when(receiver.getAppId()).thenReturn("id");
     HttpReceiverServlet servlet = new HttpReceiverServlet(context, receiver, null);
 
@@ -71,7 +71,7 @@ public class TestHttpReceiverServlet {
   public void testDoGet() throws Exception {
     Stage.Context context =
         ContextInfoCreator.createSourceContext("n", false, OnRecordError.TO_ERROR, ImmutableList.of("a"));
-    HttpReceiver receiver = Mockito.mock(HttpReceiver.class);
+    HttpReceiver receiver = Mockito.mock(HttpReceiverWithFragmenterWriter.class);
     HttpReceiverServlet servlet = new HttpReceiverServlet(context, receiver, null);
 
     servlet = Mockito.spy(servlet);
@@ -98,7 +98,7 @@ public class TestHttpReceiverServlet {
   public void testValidatePostRequest() throws Exception {
     Stage.Context context =
         ContextInfoCreator.createSourceContext("n", false, OnRecordError.TO_ERROR, ImmutableList.of("a"));
-    HttpReceiver receiver = Mockito.mock(HttpReceiver.class);
+    HttpReceiver receiver = Mockito.mock(HttpReceiverWithFragmenterWriter.class);
     Mockito.when(receiver.getAppId()).thenReturn("id");
     HttpReceiverServlet servlet = new HttpReceiverServlet(context, receiver, null);
     servlet = Mockito.spy(servlet);
@@ -177,7 +177,7 @@ public class TestHttpReceiverServlet {
   public void testDoPost() throws Exception {
     Stage.Context context =
         ContextInfoCreator.createSourceContext("n", false, OnRecordError.TO_ERROR, ImmutableList.of("a"));
-    HttpReceiver receiver = Mockito.mock(HttpReceiver.class);
+    HttpReceiver receiver = Mockito.mock(HttpReceiverWithFragmenterWriter.class);
     Mockito.when(receiver.getAppId()).thenReturn("id");
     BlockingQueue<Exception> errorQueue = new ArrayBlockingQueue<Exception>(1);
     HttpReceiverServlet servlet = new HttpReceiverServlet(context, receiver, errorQueue);
