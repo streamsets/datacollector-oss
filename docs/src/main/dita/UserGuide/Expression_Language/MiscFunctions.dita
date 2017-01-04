@@ -37,24 +37,37 @@
     <dd>Creates an empty map. </dd>
    </dlentry>
       <dlentry>
-        <dt>every(&lt;interval>, &lt; mm() | ss() >)</dt>
-        <dd>Represents the interval of minutes or seconds for generating output directories for the
-          Hadoop FS, Local FS, or MapR FS destination. You can use the function once in the
-          Directory Template property in place of the minutes or seconds datetime variables. Use the
-          function to replace the smallest time interval in the directory template.</dd>
-        <dd>For example, the following usage in the Directory Template property generates a new
-          directory every
-          minute:<codeblock>/outputfiles/${YY()}-${MM()}-${DD()}-${hh()}-${every(1,mm())}</codeblock></dd>
-        <dd>To include seconds in the directories and generate a new directory every 60 seconds,
-          replace the seconds datetime variable as
-          follows:<codeblock>/outputfiles/${YY()}-${MM()}-${DD()}-${hh()}-${mm()}-${every(60,ss())}</codeblock></dd>
+        <dt>every(&lt;interval>, &lt; hh() | mm() | ss() >)</dt>
+        <dd>Represents the interval of hours, minutes, or seconds for generating output directories
+          for the Hadoop FS, Local FS, or MapR FS destination. </dd>
+        <dd>When used, a destination generates output directories for the specified interval
+          beginning on the hour. For example, when generating directories every 30 minutes, it
+          generates a directory on the hour and on the half-hour.</dd>
+        <dd>You can use the function once in the Directory Template property to replace the hour,
+          minute, or second datetime variables. </dd>
+        <dd>Use the function to replace the smallest time interval in the directory template. </dd>
+        <dd>
+          <note>Destinations generate a directory for the smallest unit of measure by default, so do
+            not use the <codeph>every</codeph> function to generate a directory every hour, minute,
+            or second. For more information, see <xref
+              href="../Destinations/HadoopFS-DirectoryTemplates.dita#concept_cvc_skd_br"/>.</note>
+        </dd>
         <dd>Uses the following arguments:<ul id="ul_p1j_vdr_ns">
             <li>interval - An integer factor or submultiple of 60 that represents the interval of
               minutes or seconds to wait between directory generation. Use one of the following
               values: 1, 2, 3, 4, 5, 6, 10, 12, 15, 20, or 30.</li>
-            <li>&lt; mm() | ss() > - Use <codeph>mm()</codeph> to represent minutes, and
-                <codeph>ss()</codeph> to represent seconds. </li>
+            <li>&lt; hh() | mm() | ss() > - Use <codeph>hh()</codeph> for hours,
+                <codeph>mm()</codeph> for minutes, and <codeph>ss()</codeph> for seconds. </li>
           </ul></dd>
+        <dd>For example, the following Directory Template generates a new directory every twelve
+          hours, beginning on the
+          hour:<codeblock>/outputfiles/${YY()}-${MM()}-${DD()}-${every(12,hh())}</codeblock></dd>
+        <dd>The following Directory Template generates a new directory every fifteen minutes,
+          beginning on the
+          hour:<codeblock>/outputfiles/${YY()}-${MM()}-${DD()}-${hh()}-${every(15,mm())}</codeblock></dd>
+        <dd>The following Directory Template generates a new directory every 30 seconds, beginning
+          on the
+          hour:<codeblock>/outputfiles/${YY()}-${MM()}-${DD()}-${hh()}-${mm()}-${every(30,ss())}</codeblock></dd>
       </dlentry>
       <dlentry>
         <dt>field:field()</dt>

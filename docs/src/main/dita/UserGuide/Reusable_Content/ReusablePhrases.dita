@@ -1582,8 +1582,8 @@ input_stream.read()</codeblock></p>
             <p id="DirectoryTemplate_Intro">When you define a directory template, you can use a mix
                   of constants, field values, and datetime variables. You can use the
                         <codeph>every</codeph> function to create new directories at regular
-                  intervals based on seconds or minutes. You can also use the
-                        <codeph>record:valueOrDefault</codeph> function to use field values or a
+                  intervals based on hours, minutes, or seconds, starting on the hour. You can also
+                  use the <codeph>record:valueOrDefault</codeph> function to use field values or a
                   default in the directory template. </p>
             <p id="DirectoryTemplate_Example">For example, the following directory template creates
                   output directories for event data based on the state and timestamp of a record
@@ -1617,23 +1617,23 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                                     />.</dd>
                         </dlentry>
                         <dlentry>
-                              <dt>every() function</dt>
-                              <dd>You can use the <codeph>every()</codeph> function in a directory
+                              <dt><codeph>every</codeph> function</dt>
+                              <dd>You can use the <codeph>every</codeph> function in a directory
                                     template to create directories at regular intervals based on
-                                    minutes or seconds. The intervals should be a submultiple or
-                                    integer factor of 60. For example, you can create directories
-                                    every 15 minutes or 30 seconds. </dd>
-                              <dd>Use the <codeph>every()</codeph> function to replace the smallest
+                                    hours, minutes, or seconds, beginning on the hour. The intervals
+                                    should be a submultiple or integer factor of 60. For example,
+                                    you can create directories every 15 minutes or 30 seconds. </dd>
+                              <dd>Use the <codeph>every</codeph> function to replace the smallest
                                     datetime variable used in the template.</dd>
                               <dd>For example, the following directory template creates directories
-                                    every 5
-                                    minutes:<codeblock>/HDFS_output/${YYYY()}-${MM()}-${DD()}-${hh()}-${every(5,mm())}</codeblock></dd>
-                              <dd>For details about the <codeph>every()</codeph> function, see <xref
+                                    every 5 minutes, starting on the
+                                    hour:<codeblock>/HDFS_output/${YYYY()}-${MM()}-${DD()}-${hh()}-${every(5,mm())}</codeblock></dd>
+                              <dd>For details about the <codeph>every</codeph> function, see <xref
                                           href="../Expression_Language/MiscFunctions.dita#concept_ddw_ld1_1s"
                                     />.</dd>
                         </dlentry>
                         <dlentry>
-                              <dt>record:valueOrDefault function</dt>
+                              <dt><codeph>record:valueOrDefault</codeph> function</dt>
                               <dd>You can use the following expression to use the value of a field
                                     and the specified default value if the field does not exist or
                                     if the field is null:
