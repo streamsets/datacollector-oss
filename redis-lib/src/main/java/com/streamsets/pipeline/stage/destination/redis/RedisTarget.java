@@ -228,6 +228,11 @@ public class RedisTarget extends BaseTarget {
           } else {
             LOG.warn(Errors.REDIS_07.getMessage(), parameters.keyExpr, parameters.valExpr, record);
           }
+
+          // set the expire time
+          if (parameters.ttl > 0) {
+            p.expire(key, parameters.ttl);
+          }
         }
       }
 

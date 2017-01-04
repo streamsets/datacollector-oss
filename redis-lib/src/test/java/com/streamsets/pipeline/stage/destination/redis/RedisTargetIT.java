@@ -34,6 +34,7 @@ import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.lib.redis.DataType;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -48,8 +49,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.google.common.collect.Range.lessThan;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class RedisTargetIT {
@@ -263,6 +266,32 @@ public class RedisTargetIT {
     runner.runWrite(records);
 
     assertTrue(runner.getErrorRecords().isEmpty());
+  }
+
+  @Test
+  public void testBatchTTL() throws Exception {
+    RedisTargetConfig conf = getDefaultConfig();
+    for (RedisFieldMappingConfig mappingConfig : conf.redisFieldMapping) {
+      mappingConfig.ttl = 3600;
+    }
+
+    Target target = new RedisTarget(conf);
+
+    List<Record> records = getTestRecords();
+
+    TargetRunner runner = new TargetRunner.Builder(RedisDTarget.class, target)
+        .setOnRecordError(OnRecordError.DISCARD)
+        .build();
+    runner.runInit();
+    runner.runWrite(records.subList(0,4));
+
+    assertTrue(runner.getErrorRecords().isEmpty());
+
+    final String keyExpression = "key";
+    for (Record record : records.subList(0,4)) {
+      String key = record.get().getValueAsMap().get(keyExpression).getValueAsString();
+      assertTrue(jedis.ttl(key) >= Long.valueOf(0));
+    }
   }
 
   private RedisTargetConfig getDefaultConfig() {
