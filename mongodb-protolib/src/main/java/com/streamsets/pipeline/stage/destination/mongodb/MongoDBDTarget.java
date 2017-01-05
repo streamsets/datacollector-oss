@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.destination.mongodb;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.configurablestage.DTarget;
@@ -35,7 +36,13 @@ import com.streamsets.pipeline.stage.common.mongodb.Groups;
     onlineHelpRefUrl = "index.html#Destinations/MongoDB.html#task_mrc_k5n_4v",
     upgrader = MongoDBTargetUpgrader.class
 )
+
 @ConfigGroups(value = Groups.class)
+@HideConfigs(
+    preconditions = true,
+    onErrorRecord = true,
+    value = {"configBean.mongoConfig.isSingleMode"}
+)
 @GenerateResourceBundle
 public class MongoDBDTarget extends DTarget {
 

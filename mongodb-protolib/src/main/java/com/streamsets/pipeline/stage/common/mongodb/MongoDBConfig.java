@@ -63,6 +63,17 @@ public class MongoDBConfig {
   public String connectionString;
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Enable Single Mode",
+      description = "Connect to the first provided mongo server.",
+      displayPosition = 11,
+      group = "MONGODB"
+  )
+  public boolean isSingleMode;
+
+  @ConfigDef(
       type = ConfigDef.Type.STRING,
       label = "Database",
       required = true,
@@ -418,7 +429,11 @@ public class MongoDBConfig {
     MongoClient mongoClient = null;
     List<MongoCredential> credentials = createCredentials();
     try {
-      mongoClient = new MongoClient(servers, credentials, mongoURI.getOptions());
+      if(isSingleMode) {
+        mongoClient = new MongoClient(servers.get(0), credentials, mongoURI.getOptions());
+      } else {
+        mongoClient = new MongoClient(servers, credentials, mongoURI.getOptions());
+      }
     } catch (MongoException e) {
       issues.add(context.createConfigIssue(
           Groups.MONGODB.name(),
