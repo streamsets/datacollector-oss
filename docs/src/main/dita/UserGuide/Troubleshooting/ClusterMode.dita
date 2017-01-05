@@ -56,7 +56,7 @@ Kerberos Error: No valid credentials provided (Mechanism level: Failed to find a
           <dd>It's likely that the cluster is configured to use Kerberos, but the <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> is
             not configured to use Kerberos. For more information see <xref
-              href="../Install_Config/Kerberos.dita#concept_hnm_n4l_xs"/>.</dd>
+              href="../Configuration/Kerberos.dita#concept_hnm_n4l_xs"/>.</dd>
         </dlentry>
         <dlentry>
           <dt>My pipeline stopped unexpectedly.</dt>

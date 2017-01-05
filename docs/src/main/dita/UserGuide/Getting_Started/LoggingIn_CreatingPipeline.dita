@@ -64,6 +64,6 @@
     </taskbody>
     <related-links>
         <link href="../Pipeline_Design/What_isa_Pipeline.dita#concept_isl_w44_kq" type="topic"/>
-        <link href="../Install_Config/DCConfig.dita#concept_pq5_xjq_kr" type="topic"/>
+        <link href="../Configuration/DCConfig.dita#concept_pq5_xjq_kr" type="topic"/>
     </related-links>
 </task>

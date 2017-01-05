@@ -100,7 +100,7 @@
                     <dt>Installation</dt>
                     <dd>
                         <ul id="ul_q3x_pvm_3y">
-                            <li><xref href="../Install_Config/Requirements.dita#concept_vzg_n2p_kq"
+                            <li><xref href="../Installation/Requirements.dita#concept_vzg_n2p_kq"
                                     >Installation requirements</xref>:<ul id="ul_zh5_qvm_3y">
                                     <li>Java requirement - Oracle Java 7 is supported but now
                                         deprecated. Oracle announced the end of public updates for
@@ -113,7 +113,7 @@
                         </ul>
                         <ul id="ul_jtf_ghk_fy">
                             <li><xref
-                                    href="../Install_Config/CoreInstall_Overview.dita#concept_vvw_p3m_s5"
+                                    href="../Installation/CoreInstall_Overview.dita#concept_vvw_p3m_s5"
                                     >Core installation</xref> includes the basic stage library only
                                 - The core RPM and tarball installations now include the basic stage
                                 library only, to allow Data Collector to use less disk space.
@@ -128,9 +128,9 @@
                     <dt>Configuration</dt>
                     <dd>
                         <ul id="ul_v5w_mhk_fy">
-                            <li>New <xref
-                                    href="../Install_Config/AdditionalStageLibraries.dita#concept_zhl_k4f_cr"
-                                    >stage libraries</xref>. Data Collector now supports the
+                            <li><xref
+                                    href="../Installation/CoreInstall-LibList.dita#concept_evs_xkm_s5"
+                                    >New stage libraries</xref>. Data Collector now supports the
                                 following stage libraries: <ul id="ul_oxv_nhk_fy">
                                     <li>Apache Kudu version 1.0.x - Earlier Kudu versions are no
                                         longer supported. </li>
@@ -143,20 +143,20 @@
                                     <li>Salesforce. </li>
                                 </ul></li>
                             <li><xref
-                                    href="../Install_Config/LDAP-Configuring.dita#concept_x2j_5ts_g5"
+                                    href="../Configuration/LDAP-Configuring.dita#concept_x2j_5ts_g5"
                                     >LDAP authentication</xref> - If you use LDAP authentication,
                                 you can now configure Data Collector to connect to multiple LDAP
                                 servers. You can also configure Data Collector to support an LDAP
                                 deployment where members are defined by uid or by full DN. </li>
                             <li><xref
-                                    href="../Install_Config/JavaConfig_GarbageCollector.dita#concept_kqh_lj3_vx"
+                                    href="../Configuration/JavaConfig_GarbageCollector.dita#concept_kqh_lj3_vx"
                                     >Java garbage collector</xref> - Data Collector now uses the
                                 Concurrent Mark Sweep (CMS) garbage collector by default. You can
                                 configure Data Collector to use a different garbage collector by
                                 modifying Java configuration options in the Data Collector
                                 environment configuration file.</li>
                             <li>Environment variables for <xref
-                                    href="../Install_Config/JavaConfigOptions.dita#concept_vrx_4fg_qr"
+                                    href="../Configuration/JavaConfigOptions.dita#concept_vrx_4fg_qr"
                                     >Java configuration options</xref>. Data Collector now uses
                                 three environment variables to define Java configuration options:
                                     <ul id="ul_wym_thk_fy">

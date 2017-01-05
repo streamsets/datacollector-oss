@@ -56,7 +56,7 @@
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>.</dd>
           <dd>For more information, see <xref
-              href="../Install_Config/RunningMultiplePipelines.dita#task_nkc_ydl_bw"/>.</dd>
+              href="../Configuration/RunningMultiplePipelines.dita#task_nkc_ydl_bw"/>.</dd>
         </dlentry>
     <dlentry>
      <dt>How can I tell what's slowing down my pipeline?</dt>

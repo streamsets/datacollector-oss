@@ -19,6 +19,6 @@
         upgraded pipelines require. </shortdesc>
  <conbody>
         <p>For instructions on installing additional stage libraries, see <xref
-                href="../Install_Config/CoreInstall_RPMStep2.dita#concept_amc_cf3_dx"/>.</p>
+                href="../Installation/CoreInstall_RPMStep2.dita#concept_amc_cf3_dx"/>.</p>
  </conbody>
 </concept>

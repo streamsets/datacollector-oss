@@ -31,6 +31,6 @@
       configuration file, and then enable Kerberos in the Hadoop FS destination.</p>
  </conbody>
  <related-links>
-  <link href="../Install_Config/Kerberos.dita#concept_hnm_n4l_xs"/>
+  <link href="../Configuration/Kerberos.dita#concept_hnm_n4l_xs"/>
  </related-links>
 </concept>

@@ -24,7 +24,7 @@
                 <uicontrol>Configuration</uicontrol>
             </menucascade>.<p>For details about the configuration properties or to edit the
                 configuration file, see <xref
-                    href="../Install_Config/ConfiguringDataCollector.dita#task_lxk_kjw_1r"
+                    href="../Configuration/ConfiguringDataCollector.dita#task_lxk_kjw_1r"
             />.</p></context>
     </taskbody>
 </task>

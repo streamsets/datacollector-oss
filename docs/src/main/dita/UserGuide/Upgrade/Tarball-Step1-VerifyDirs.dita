@@ -70,9 +70,9 @@
             <step>
                 <cmd>To move additional drivers or custom stage libraries outside of the
                         <codeph>$SDC_DIST</codeph> runtime directory, see the instructions in <xref
-                        href="../Install_Config/AdditionalDrivers-Installing.dita#task_idl_hqw_ft"/>
+                        href="../Configuration/AdditionalDrivers-Installing.dita#task_idl_hqw_ft"/>
                     or <xref
-                        href="../Install_Config/CustomStageLibraries-Storing.dita#task_hyk_sk1_1x"
+                        href="../Configuration/CustomStageLibraries-Storing.dita#task_hyk_sk1_1x"
                     />.</cmd>
             </step>
             <step>
@@ -88,6 +88,6 @@
         </steps>
     </taskbody>
     <related-links>
-        <link href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr" type="topic"/>
+        <link href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr" type="topic"/>
     </related-links>
 </task>

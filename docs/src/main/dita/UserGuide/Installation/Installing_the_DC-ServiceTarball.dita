@@ -168,7 +168,7 @@ chown sdc:sdc /var/lib/sdc-resources</codeblock>
         </steps>
     </taskbody>
     <related-links>
-        <link href="DCDirectories.dita#concept_mnx_j3r_3v" type="topic"/>
-        <link href="DCUserGroupServiceStart.dita#concept_htz_t1s_3v" type="topic"/>
+        <link href="../Configuration/DCDirectories.dita#concept_mnx_j3r_3v" type="topic"/>
+        <link href="../Configuration/DCUserGroupServiceStart.dita#concept_htz_t1s_3v" type="topic"/>
     </related-links>
 </task>

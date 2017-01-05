@@ -31,7 +31,7 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
           resources directory, <filepath>$SDC_RESOURCES</filepath>.
           <p>For more information about environment variables, see <xref
-            href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"/>.</p></li>
+            href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"/>.</p></li>
         <li>In the SDC RPC destination, enter the truststore file name and password when using a
           self-signed certificate.</li>
         <li>In the SDC RPC origin, enter the keystore file name and password. </li>

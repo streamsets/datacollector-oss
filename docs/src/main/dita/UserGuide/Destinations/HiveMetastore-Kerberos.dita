@@ -28,6 +28,6 @@
             configuration file and include the Kerberos principal in the HiveServer2 JDBC URL.</p>
  </conbody>
     <related-links>
-        <link href="../Install_Config/Kerberos.dita#concept_hnm_n4l_xs"/>
+        <link href="../Configuration/Kerberos.dita#concept_hnm_n4l_xs"/>
     </related-links>
 </concept>

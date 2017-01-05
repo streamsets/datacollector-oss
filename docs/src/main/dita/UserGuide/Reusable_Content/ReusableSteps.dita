@@ -1061,7 +1061,7 @@
                                                 href="../Pipeline_Design/Protobuf-Prerequisites.dita"
                                             />. For more information about environment variables,
                                             see <xref
-                                                href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"
+                                                href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"
                                             />.</p></entry>
                                 </row>
                                 <row id="Mess-MessType">
@@ -1121,7 +1121,7 @@
                                         /> resources directory, <codeph>$SDC_RESOURCES</codeph>.
                                             <p>For more information about environment variables, see
                                                 <xref
-                                                href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"
+                                                href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"
                                             />. For information about generating the descriptor
                                             file, see <xref
                                                 href="../Pipeline_Design/Protobuf-Prerequisites.dita"
@@ -1994,7 +1994,7 @@
                                             /> resources directory,
                                                 <filepath>$SDC_RESOURCES</filepath>. For more
                                             information about environment variables, see <xref
-                                                href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"
+                                                href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"
                                             />.</p></entry>
                                 </row>
                                 <row id="O-RPC-KeystorePass">
@@ -3237,7 +3237,7 @@
                                         /> resources directory, <codeph>$SDC_RESOURCES</codeph>.
                                             <p>For more information about environment variables, see
                                                 <xref
-                                                href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"
+                                                href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"
                                             />. For information about generating the descriptor
                                             file, see <xref
                                                 href="../Pipeline_Design/Protobuf-Prerequisites.dita"
@@ -3496,7 +3496,7 @@
                                             /> ID is stored in the following file:
                                                 <filepath>$SDC_DATA/sdc.id</filepath>. For more
                                             information about environment variables, see <xref
-                                                href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"
+                                                href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"
                                             />.</p></entry>
                                 </row>
                                 <row id="row-FileSuffix">
@@ -4157,7 +4157,7 @@
                                             /> resources directory,
                                                 <filepath>$SDC_RESOURCES</filepath>. For more
                                             information about environment variables, see <xref
-                                                href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"
+                                                href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"
                                             />.</p></entry>
                                 </row>
                                 <row id="row-TSpass">

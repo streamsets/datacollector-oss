@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
+<map>
+ <title>Configuration</title>
+ <topicref href="../Configuration/Config_title.dita">
+  <topicref href="../Configuration/Authentication.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Configuration/LDAP-Configuring.dita">
+    <topicref href="../Configuration/LDAP-Step1ConnectionInfo.dita"/>
+    <topicref href="../Configuration/LDAP-Step2GroupsRoles.dita"/>
+    <topicref href="../Configuration/LDAP-Step3MultipleServers.dita"/>
+    <topicref href="../Configuration/LDAP-Step4MapR.dita"/>
+   </topicref>
+   <topicref href="../Configuration/FileAuth-Configuring.dita">
+    <topicref href="../Configuration/FileAuth-Step1Type.dita"/>
+    <topicref href="../Configuration/FileAuth-Step2UsersRoles.dita"/>
+   </topicref>
+  </topicref>
+  <topicref href="../Configuration/DCConfig.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Configuration/Kerberos.dita"/>
+   <topicref href="../Configuration/StoringLoadingSensitiveInformation.dita"/>
+   <topicref href="../Configuration/ReferencingEnvVariables.dita"/>
+   <topicref href="../Configuration/RunningMultiplePipelines.dita"/>
+   <topicref href="../Configuration/HTTP_protocols.dita">
+    <topicref href="../Configuration/HTTP_protocolsStandalone.dita"/>
+    <topicref href="../Configuration/HTTP_protocolsCluster.dita"/>
+    <topicref href="../Configuration/HTTP_protocolsClusterKeystore.dita"/>
+    <topicref href="../Configuration/HTTP_protocolsClusterTruststore.dita"/>
+   </topicref>
+   <topicref href="../Configuration/BlacklistWhitelist.dita"/>
+   <topicref href="../Configuration/ConfiguringDataCollector.dita"/>
+  </topicref>
+  <topicref href="../Configuration/DCEnvironmentConfig.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Configuration/DCDirectories.dita"/>
+   <topicref href="../Configuration/DCUserGroupServiceStart.dita"/>
+   <topicref href="../Configuration/JavaConfigOptions.dita">
+    <topicref href="../Configuration/JavaHeapSize.dita"/>
+    <topicref href="../Configuration/JavaConfig_RemoteDebug.dita"/>
+    <topicref href="../Configuration/JavaConfig_GarbageCollector.dita"/>
+    <topicref href="../Configuration/JavaConfig_TLSProtocolVersions.dita"/>
+    <topicref href="../Configuration/PermGenSize.dita"/>
+   </topicref>
+   <topicref href="../Configuration/JavaSecurityManager.dita"/>
+   <topicref href="../Configuration/RootClassloader.dita"/>
+  </topicref>
+  <topicref href="../Configuration/RuntimeProperties.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Configuration/RuntimeProperties-Defining.dita"/>
+   <topicref href="../Configuration/RuntimeProperties-Calling.dita"/>
+  </topicref>
+  <topicref href="../Configuration/RuntimeResources.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Configuration/RuntimeResources-Defining.dita"/>
+   <topicref href="../Configuration/RuntimeResources-Calling.dita"/>
+  </topicref>
+  <topicref href="../Configuration/AdditionalDrivers.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Configuration/AdditionalDrivers-Installing.dita"/>
+  </topicref>
+  <topicref href="../Configuration/CustomStageLibraries.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Configuration/CustomStageLibraries-Storing.dita"/>
+  </topicref>
+  <topicref href="../Configuration/Vault-Overview.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Configuration/Vault-Step1-VaultProps.dita"/>
+   <topicref href="../Configuration/Vault-Step2-AuthorizeDC.dita"/>
+   <topicref href="../Configuration/Vault-Step3-CallVault.dita"/>
+  </topicref>
+  <topicref href="../Configuration/JMXMetrics-EnableExternalTools.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Configuration/JMXMetrics-ViewExternalTools.dita"/>
+   <topicref href="../Configuration/JMXMetrics-Custom.dita"/>
+  </topicref>
+  <topicref href="../Configuration/LogLevel.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
+ </topicref>
+</map>

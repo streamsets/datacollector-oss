@@ -44,6 +44,6 @@
         </steps>
     </taskbody>
     <related-links>
-        <link href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr" type="topic"/>
+        <link href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr" type="topic"/>
     </related-links>
 </task>

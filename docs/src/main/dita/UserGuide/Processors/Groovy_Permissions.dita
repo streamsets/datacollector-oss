@@ -57,6 +57,6 @@ grant codebase "file:///groovy/script" {
         </steps>
     </taskbody>
     <related-links>
-        <link href="../Install_Config/JavaSecurityManager.dita#concept_tm4_pbg_ht" type="topic"/>
+        <link href="../Configuration/JavaSecurityManager.dita#concept_tm4_pbg_ht" type="topic"/>
     </related-links>
 </task>

@@ -47,7 +47,7 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             upgrades. For information on modifying <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            directories, see <xref href="DCDirectories.dita#concept_mnx_j3r_3v"/>.</note>
+            directories, see <xref href="../Configuration/DCDirectories.dita#concept_mnx_j3r_3v"/>.</note>
         <p>The <codeph>create-dc</codeph> command uses the following syntax:</p>
         <codeblock>create-dc \
 -home=&lt;SDC_HOME_DIR> (-httpPort=&lt;SDC_HTTP_PORT> | -httpsPort=&lt;SDC_HTTPS_PORT>) \

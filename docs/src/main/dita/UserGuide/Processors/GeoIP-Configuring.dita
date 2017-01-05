@@ -55,7 +55,7 @@
                                         /> resources directory, <filepath>$SDC_RESOURCES</filepath>.
                                             <p>For more information about environment variables, see
                                                 <xref
-                                                href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"
+                                                href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"
                                             />.</p></entry>
                                 </row>
                                 <row>

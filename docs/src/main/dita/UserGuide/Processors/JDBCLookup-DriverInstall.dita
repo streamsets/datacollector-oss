@@ -21,6 +21,6 @@
             driver for the database. You cannot access the database until you install the required
             driver.</p>
         <p>For more information about installing drivers, see <xref
-                href="../Install_Config/AdditionalDrivers.dita#concept_pdv_qlw_ft"/>.</p>
+                href="../Configuration/AdditionalDrivers.dita#concept_pdv_qlw_ft"/>.</p>
  </conbody>
 </concept>

@@ -21,7 +21,7 @@
         Manager or the <codeph>stagelibs</codeph> command to install additional stage
         libraries.</shortdesc>
     <related-links>
-        <link href="../Install_Config/CoreInstall-Tarball-LibsPackageMgr.dita#concept_h5k_jbl_nx" type="topic"/>
-        <link href="../Install_Config/CoreInstall-Tarball-LibsCommand.dita#concept_bnl_n3n_s5" type="topic"/>
+        <link href="../Installation/CoreInstall-Tarball-LibsPackageMgr.dita#concept_h5k_jbl_nx" type="topic"/>
+        <link href="../Installation/CoreInstall-Tarball-LibsCommand.dita#concept_bnl_n3n_s5" type="topic"/>
     </related-links>
 </concept>

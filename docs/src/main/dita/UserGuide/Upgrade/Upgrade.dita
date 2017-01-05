@@ -24,6 +24,6 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             can change with each version. Before you upgrade to a new version, verify that the
             machine meets the latest minimum requirements as described in <xref
-                href="../Install_Config/Requirements.dita#concept_vzg_n2p_kq"/>.</note>
+                href="../Installation/Requirements.dita#concept_vzg_n2p_kq"/>.</note>
     </conbody>
 </concept>

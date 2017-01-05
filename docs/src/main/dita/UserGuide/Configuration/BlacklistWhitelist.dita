@@ -36,7 +36,7 @@ user.stagelibs.blacklist</codeblock></p>
             remove it from the <codeph>system.statelibs.blacklist</codeph> property. </p>
     </conbody>
     <related-links>
-        <link href="MapR-Prerequisites.dita#concept_jgs_qpg_2v"/>
+        <link href="../Installation/MapR-Prerequisites.dita#concept_jgs_qpg_2v"/>
         <link href="../Destinations/Solr-Prerequisites.dita#concept_gm2_y12_pw"/>
     </related-links>
 </concept>

@@ -22,7 +22,7 @@
  <conbody>
   <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
    directories are defined in environment variables. For more information, see <xref
-    href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"/>.</p>
+    href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"/>.</p>
   <p>To view <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
    directories, click <menucascade>
     <uicontrol>Administration</uicontrol>

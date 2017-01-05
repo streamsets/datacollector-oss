@@ -94,7 +94,7 @@
        sdc.properties file. </li>
      </ul></dd>
         <dd>For more information, see <xref
-            href="../Install_Config/RuntimeProperties.dita#concept_fjx_g31_1s"/>.</dd>
+            href="../Configuration/RuntimeProperties.dita#concept_fjx_g31_1s"/>.</dd>
    </dlentry>
       <dlentry>
         <dt>runtime:loadResource(&lt;file name>, &lt;restricted: true | false>)</dt>
@@ -108,7 +108,7 @@
               and read and writable only by the owner.</li>
           </ul></dd>
         <dd>For more information about runtime resources, see <xref
-            href="../Install_Config/RuntimeResources.dita#concept_bs4_5nm_2s"/>.</dd>
+            href="../Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/>.</dd>
       </dlentry>
       <dlentry>
         <dt>sdc:hostname()</dt>

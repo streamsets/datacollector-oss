@@ -69,7 +69,7 @@
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> logs
       messages at the INFO severity level. You can modify the log level to display messages at
       another severity level. For more information, see <xref
-       href="../Install_Config/LogLevel.dita#concept_yrv_ck2_px"/>.</dd>
+       href="../Configuration/LogLevel.dita#concept_yrv_ck2_px"/>.</dd>
     </dlentry>
    </dl>
   </p>

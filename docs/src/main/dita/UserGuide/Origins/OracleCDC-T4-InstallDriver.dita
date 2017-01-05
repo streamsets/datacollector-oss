@@ -21,6 +21,6 @@
             until you install the required driver. </p>
         <p>Install the Oracle JDBC driver for the Oracle database version that you use. For more
             information, see <xref
-                href="../Install_Config/AdditionalDrivers.dita#concept_pdv_qlw_ft"/>.</p>
+                href="../Configuration/AdditionalDrivers.dita#concept_pdv_qlw_ft"/>.</p>
  </conbody>
 </concept>

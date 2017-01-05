@@ -26,6 +26,6 @@
             truststore file for the gateway and worker nodes.</p>
  </conbody>
     <related-links>
-        <link href="../Install_Config/HTTP_protocolsCluster.dita#concept_rdt_h54_cw"/>
+        <link href="../Configuration/HTTP_protocolsCluster.dita#concept_rdt_h54_cw"/>
     </related-links>
 </concept>

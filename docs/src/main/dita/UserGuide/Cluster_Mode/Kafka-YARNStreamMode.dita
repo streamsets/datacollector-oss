@@ -85,7 +85,7 @@
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> automatically uses the Kerberos principal and keytab to connect to any
                         YARN cluster that uses Kerberos. </p><p>For more information, see <xref
-                            href="../Install_Config/Kerberos.dita#concept_hnm_n4l_xs"/>.</p></info>
+                            href="../Configuration/Kerberos.dita#concept_hnm_n4l_xs"/>.</p></info>
             </step>
             <step>
                 <cmd>In the pipeline properties, on the <wintitle>General</wintitle> tab, set the

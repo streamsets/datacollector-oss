@@ -31,6 +31,6 @@
     <p>You can optionally use a truststore and keystore, and proxy.</p>
  </conbody>
   <related-links>
-    <link href="../Install_Config/RuntimeResources.dita#concept_bs4_5nm_2s"/>
+    <link href="../Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/>
   </related-links>
 </concept>
