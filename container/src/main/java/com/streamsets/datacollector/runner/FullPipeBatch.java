@@ -82,6 +82,10 @@ public class FullPipeBatch implements PipeBatch {
     offsetTracker.setOffset(offset);
   }
 
+  public String getNewOffset() {
+    return newOffset;
+  }
+
   public void setRateLimiter(@Nullable RateLimiter rateLimiter) {
     this.rateLimiter = rateLimiter;
   }

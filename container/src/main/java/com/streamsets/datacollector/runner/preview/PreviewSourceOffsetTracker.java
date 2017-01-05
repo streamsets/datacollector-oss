@@ -21,6 +21,8 @@ package com.streamsets.datacollector.runner.preview;
 
 import com.streamsets.datacollector.runner.SourceOffsetTracker;
 
+import java.util.Map;
+
 public class PreviewSourceOffsetTracker implements SourceOffsetTracker {
   private String currentOffset;
   private String newOffset;
@@ -51,6 +53,18 @@ public class PreviewSourceOffsetTracker implements SourceOffsetTracker {
     currentOffset = newOffset;
     finished = (currentOffset == null);
     newOffset = null;
+  }
+
+  @Override
+  public void commitOffset(String entity, String newOffset) {
+    //TODO: Implement proper offset handling in preview for PushOrigin
+    commitOffset();
+  }
+
+  @Override
+  public Map<String, String> getOffsets() {
+    //TODO: Implement proper offset handling in preview for PushOrigin
+    return null;
   }
 
   @Override

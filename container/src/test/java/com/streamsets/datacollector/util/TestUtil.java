@@ -70,6 +70,7 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
@@ -133,10 +134,24 @@ public class TestUtil {
 
     @Override
     public void commitOffset() {
-      currentOffset = newOffset;
-      finished = (currentOffset == null);
+      commitOffsetInternal(Source.POLL_SOURCE_OFFSET_KEY, newOffset);
       newOffset = null;
+    }
+
+    public void commitOffsetInternal(String entity, String offset) {
+      currentOffset = offset;
+      finished = (currentOffset == null);
       lastBatchTime = System.currentTimeMillis();
+    }
+
+    @Override
+    public void commitOffset(String entity, String newOffset) {
+      commitOffsetInternal(entity, newOffset);
+    }
+
+    @Override
+    public Map<String, String> getOffsets() {
+      return null;
     }
 
     @Override

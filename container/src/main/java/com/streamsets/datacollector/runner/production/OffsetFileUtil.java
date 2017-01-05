@@ -50,17 +50,13 @@ public class OffsetFileUtil {
     return new File(PipelineDirectoryUtil.getPipelineDir(runtimeInfo, pipelineName, rev), OFFSET_FILE);
   }
 
-  public static String saveIfEmpty(RuntimeInfo runtimeInfo, String pipelineName, String rev) {
+  public static Map<String, String> saveIfEmpty(RuntimeInfo runtimeInfo, String pipelineName, String rev) {
     File pipelineOffsetFile =  getPipelineOffsetFile(runtimeInfo, pipelineName, rev);
     SourceOffset sourceOffset;
     DataStore ds = new DataStore(pipelineOffsetFile);
     try {
       if (ds.exists()) {
-        // offset file exists, read from it
-        try (InputStream is = ds.getInputStream()) {
-          SourceOffsetJson sourceOffsetJson = ObjectMapperFactory.get().readValue(is, SourceOffsetJson.class);
-          sourceOffset = BeanHelper.unwrapSourceOffset(sourceOffsetJson);
-        }
+        return readSourceOffsetFromDataStore(ds).getOffsets();
       } else {
         sourceOffset = new SourceOffset(SourceOffset.CURRENT_VERSION, DEFAULT_OFFSET);
         try (OutputStream os = ds.getOutputStream()) {
@@ -73,7 +69,7 @@ public class OffsetFileUtil {
     } catch (IOException e) {
       throw new IllegalStateException(e);
     }
-    return sourceOffset.getOffset();
+    return sourceOffset.getOffsets();
   }
 
   // TODO: Kept for easier compatibility, remove in the future
@@ -119,13 +115,7 @@ public class OffsetFileUtil {
         if (pipelineOffsetFile.exists()) {
           DataStore ds = new DataStore(pipelineOffsetFile);
           if (ds.exists()) {
-            // offset file exists, read from it
-            try (InputStream is = ds.getInputStream()) {
-              SourceOffsetJson sourceOffsetJson = ObjectMapperFactory.get().readValue(is, SourceOffsetJson.class);
-              SourceOffset sourceOffset = BeanHelper.unwrapSourceOffset(sourceOffsetJson);
-              SourceOffsetUpgrader.upgrade(sourceOffset);
-              return sourceOffset;
-            }
+            return readSourceOffsetFromDataStore(ds);
           }
         }
 
@@ -137,6 +127,15 @@ public class OffsetFileUtil {
       retries++;
     }
     throw new IllegalStateException(Utils.format("Retrieving offset failed for last attempt {}", retries));
+  }
+
+  private static SourceOffset readSourceOffsetFromDataStore(DataStore ds) throws IOException {
+    try (InputStream is = ds.getInputStream()) {
+      SourceOffsetJson sourceOffsetJson = ObjectMapperFactory.get().readValue(is, SourceOffsetJson.class);
+      SourceOffset sourceOffset = BeanHelper.unwrapSourceOffset(sourceOffsetJson);
+      SourceOffsetUpgrader.upgrade(sourceOffset);
+      return sourceOffset;
+    }
   }
 }
 

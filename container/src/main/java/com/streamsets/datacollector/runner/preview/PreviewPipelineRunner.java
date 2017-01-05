@@ -171,7 +171,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
       runPollSource();
     } else {
       // Push origin will block on the call until the either all data have been consumed or the pipeline stopped
-      originPipe.process(batchSize);
+      originPipe.process(offsetTracker.getOffsets(), batchSize);
     }
   }
 

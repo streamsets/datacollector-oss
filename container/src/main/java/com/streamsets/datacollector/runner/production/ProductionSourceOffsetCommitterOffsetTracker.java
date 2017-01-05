@@ -19,9 +19,11 @@
  */
 package com.streamsets.datacollector.runner.production;
 
+import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.SourceOffsetTracker;
 import com.streamsets.pipeline.api.OffsetCommitter;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import org.slf4j.Logger;
@@ -29,7 +31,14 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
 
+/**
+ * Offset committer that doesn't store offsets in external system, but let's the (Pull) origin to handle the offsets
+ * on it's own. Since OffsetCommitter interface is not applicable to PushSource class, this will properly work only
+ * with Source implementing OffsetCommitter interface.
+ */
 public class ProductionSourceOffsetCommitterOffsetTracker implements SourceOffsetTracker {
   private static final Logger LOG = LoggerFactory.getLogger(ProductionSourceOffsetCommitterOffsetTracker.class);
   private final OffsetCommitter offsetCommitter;
@@ -70,6 +79,16 @@ public class ProductionSourceOffsetCommitterOffsetTracker implements SourceOffse
 
   @Override
   public void commitOffset() {
+    commitOffsetInternal(newOffset);
+  }
+
+  @Override
+  public void commitOffset(String entity, String newOffset) {
+    Preconditions.checkArgument(Source.POLL_SOURCE_OFFSET_KEY.equals(entity), "Trying to commit offset for invalid entity: " + entity);
+    commitOffsetInternal(newOffset);
+  }
+
+  public void commitOffsetInternal(String newOffset) {
     try {
       if (LOG.isTraceEnabled()) {
         LOG.trace("Commit offset '{}'", newOffset);
@@ -81,6 +100,11 @@ public class ProductionSourceOffsetCommitterOffsetTracker implements SourceOffse
     } catch (Exception ex) {
       throw new RuntimeException(ex);
     }
+  }
+
+  @Override
+  public Map<String, String> getOffsets() {
+    return Collections.singletonMap(Source.POLL_SOURCE_OFFSET_KEY, newOffset);
   }
 
   @Override

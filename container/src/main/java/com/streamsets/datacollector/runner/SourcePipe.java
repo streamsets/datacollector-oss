@@ -61,10 +61,11 @@ public class SourcePipe extends StagePipe {
   /**
    * Process method for Push source that will give control of the execution to the origin.
    *
+   * @param offsets Offsets from last execution
    * @param batchSize Maximal configured batch size
    */
-  public void process(int batchSize) throws StageException, PipelineRuntimeException {
-    getStage().execute(null, batchSize);
+  public void process(Map<String, String> offsets, int batchSize) throws StageException, PipelineRuntimeException {
+    getStage().execute(offsets, batchSize);
   }
 
   /**

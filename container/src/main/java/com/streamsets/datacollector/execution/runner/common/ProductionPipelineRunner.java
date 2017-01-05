@@ -71,6 +71,7 @@ import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.OffsetCommitTrigger;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
@@ -321,7 +322,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     int batchSize = configuration.get(Constants.MAX_BATCH_SIZE_KEY, Constants.MAX_BATCH_SIZE_DEFAULT);
 
     // Push origin will block on the call until the either all data have been consumed or the pipeline stopped
-    originPipe.process(batchSize);
+    originPipe.process(offsetTracker.getOffsets(), batchSize);
   }
 
   private FullPipeBatch createFullPipeBatch() {
@@ -368,6 +369,8 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       runSourceLessBatch(
         batchContext.getStartTime(),
         batchContext.getPipeBatch(),
+        entity,
+        offset,
         memoryConsumedByStage,
         stageBatchMetrics
       );
@@ -381,7 +384,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
 
   @Override
   public void commitOffset(String entity, String offset) {
-    // TODO: SDC-4784	Provide offset handling for Push origins
+    offsetTracker.commitOffset(entity, offset);
   }
 
   public void runPollSource() throws StageException, PipelineRuntimeException {
@@ -405,10 +408,28 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
         // Run origin
         Map<String, Long> memoryConsumedByStage = new HashMap<>();
         Map<String, Object> stageBatchMetrics = new HashMap<>();
-        processPipe(originPipe, pipeBatch, false, memoryConsumedByStage, stageBatchMetrics);
+        processPipe(
+          originPipe,
+          pipeBatch,
+          false,
+          null,
+          null,
+          memoryConsumedByStage,
+          stageBatchMetrics
+        );
 
-        // And rest of the pipeline
-        runSourceLessBatch(start, pipeBatch, memoryConsumedByStage, stageBatchMetrics);
+        // Since the origin already run, the FullPipeBatch will have a new offset
+        String newOffset = pipeBatch.getNewOffset();
+
+        // Run rest of the pipeline
+        runSourceLessBatch(
+          start,
+          pipeBatch,
+          Source.POLL_SOURCE_OFFSET_KEY,
+          newOffset,
+          memoryConsumedByStage,
+          stageBatchMetrics
+        );
 
         for (BatchListener batchListener : batchListenerList) {
           batchListener.postBatch();
@@ -588,6 +609,8 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     Pipe pipe,
     PipeBatch pipeBatch,
     boolean committed,
+    String entityName,
+    String newOffset,
     Map<String, Long> memoryConsumedByStage,
     Map<String, Object> stageBatchMetrics
   ) throws PipelineRuntimeException, StageException {
@@ -600,7 +623,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
         && !committed
       ) {
       // target cannot control offset commit in AT_MOST_ONCE mode
-      offsetTracker.commitOffset();
+      offsetTracker.commitOffset(entityName, newOffset);
       committed = true;
     }
     pipe.process(pipeBatch);
@@ -617,6 +640,8 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   private void runSourceLessBatch(
     long start,
     FullPipeBatch pipeBatch,
+    String entityName,
+    String newOffset,
     Map<String, Long> memoryConsumedByStage,
     Map<String, Object> stageBatchMetrics
   ) throws PipelineException, StageException {
@@ -628,7 +653,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     try {
       runnerPipes = runnerPool.getRunner();
       for (Pipe pipe : runnerPipes) {
-        committed = processPipe(pipe, pipeBatch, committed, memoryConsumedByStage, stageBatchMetrics);
+        committed = processPipe(pipe, pipeBatch, committed, entityName, newOffset, memoryConsumedByStage, stageBatchMetrics);
       }
     } finally {
       if(runnerPipes != null) {
@@ -643,7 +668,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       // 1. There is no offset commit trigger for this pipeline or
       // 2. there is a commit trigger and it is on
       if (offsetCommitTrigger == null || offsetCommitTrigger.commit()) {
-        offsetTracker.commitOffset();
+        offsetTracker.commitOffset(entityName, newOffset);
       }
     }
 
