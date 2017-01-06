@@ -25,8 +25,8 @@ import com.streamsets.pipeline.api.Label;
 @GenerateResourceBundle
 public enum InsertOrReplace implements Label {
 
-  INSERT("Use MapR Insert routine."),
-  REPLACE("Use MapR InsertOrReplace routine.");
+  INSERT("Use MapR Insert API"),
+  REPLACE("Use MapR InsertOrReplace API");
 
   private final String label;
 

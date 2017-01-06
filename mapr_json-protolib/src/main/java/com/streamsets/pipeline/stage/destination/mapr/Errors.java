@@ -33,10 +33,10 @@ public enum Errors implements ErrorCode {
   MAPR_JSON_08("Field to use as _id column cannot be blank"),
   MAPR_JSON_09("Exception while creating, writing or closing JSON document: '{}'"),
   MAPR_JSON_10("Exception creating new MapRDB document. '{}'"),
-  MAPR_JSON_11("Document _id field '{}' does not exist in the record."),
-  MAPR_JSON_12("Exception while setting _id field '{}': '{}' "),
-  MAPR_JSON_13("Document _id field '{}' is empty."),
-  MAPR_JSON_15("Exception converting field '{}' from '{}' to String."),
+  MAPR_JSON_11("Document key field '{}' does not exist in the record or is empty (or null)."),
+  MAPR_JSON_12("BINARY key error - invalid value or Field {} is type {} - not byte array. Use a FieldTypeConverter?"),
+  MAPR_JSON_13("Exception converting key field '{}'"),
+  MAPR_JSON_14("Row Key '{}' data type must be String for a string key or byte array for BINARY key"),
   ;
 
   private final String msg;

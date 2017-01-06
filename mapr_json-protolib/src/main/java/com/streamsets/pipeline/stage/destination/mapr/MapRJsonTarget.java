@@ -46,6 +46,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.List;
@@ -61,7 +62,6 @@ public class MapRJsonTarget extends BaseTarget {
   private DataGeneratorFactory generatorFactory;
 
   public MapRJsonTarget(MapRJsonConfigBean mapRJsonConfigBean) {
-
     conf = mapRJsonConfigBean;
   }
 
@@ -75,8 +75,8 @@ public class MapRJsonTarget extends BaseTarget {
       issues.add(getContext().createConfigIssue(Groups.MAPR_JSON.name(), TABLE_SETUP, Errors.MAPR_JSON_01));
     }
 
-    if (StringUtils.isEmpty(conf.idField)) {
-      issues.add(getContext().createConfigIssue(Groups.MAPR_JSON.name(), "id field", Errors.MAPR_JSON_08));
+    if (StringUtils.isEmpty(conf.keyField)) {
+      issues.add(getContext().createConfigIssue(Groups.MAPR_JSON.name(), "key field", Errors.MAPR_JSON_08));
     }
 
     try {
@@ -124,8 +124,7 @@ public class MapRJsonTarget extends BaseTarget {
         ByteArrayOutputStream os = new ByteArrayOutputStream(1024 * 1024);
         createJson(os, rec);
         Document document = populateDocument(os, rec);
-        String keyValue = getKey(rec);
-        setId(document, keyValue, rec);
+        setId(document, rec);
         doInsert(document, rec);
 
       } catch(OnRecordErrorException ee) {
@@ -133,33 +132,6 @@ public class MapRJsonTarget extends BaseTarget {
       }
     }
 
-  }
-
-  private String getKey(Record rec) throws OnRecordErrorException {
-
-    // check if the _id column exists...
-    Field field = rec.get(conf.idField);
-    if (field == null) {
-      throw new OnRecordErrorException(rec, Errors.MAPR_JSON_11, conf.idField);
-    }
-
-    try {
-      String key;
-      if (StringUtils.isEmpty(field.getValueAsString())) {
-        throw new OnRecordErrorException(rec, Errors.MAPR_JSON_13, conf.idField);
-
-      } else {
-        if (field.getType().isOneOf(Field.Type.DATE, Field.Type.DATETIME, Field.Type.TIME)) {
-          key = String.valueOf(field.getValueAsLong());
-        } else {
-          key = field.getValueAsString();
-        }
-        return key;
-      }
-
-    } catch (IllegalArgumentException ex) {  // getValueAsString exception.
-      throw new OnRecordErrorException(rec, Errors.MAPR_JSON_15, conf.idField, field.getType().name(), ex);
-    }
   }
 
   private void createJson(OutputStream os, Record rec) throws OnRecordErrorException {
@@ -174,15 +146,57 @@ public class MapRJsonTarget extends BaseTarget {
 
   }
 
-  private void setId(Document document, String theID, Record rec) throws OnRecordErrorException {
+  private void setId(Document document, Record rec) throws OnRecordErrorException {
+
+    // check if the key column exists...
+    Field field;
     try {
-      document.setId(theID);
+      field = rec.get(conf.keyField);
 
     } catch (IllegalArgumentException ex) {
-      LOG.error(Errors.MAPR_JSON_12.getMessage(), conf.idField, ex.toString(), ex);
-      throw new OnRecordErrorException(rec, Errors.MAPR_JSON_12, conf.idField, ex.toString(), ex);
+      LOG.info(Errors.MAPR_JSON_11.getMessage(), conf.keyField, ex);
+      throw new OnRecordErrorException(rec, Errors.MAPR_JSON_11, conf.keyField, ex);
     }
 
+    checkRowKeyType(field, rec);
+    if (field.getType() == Field.Type.BYTE_ARRAY) {
+      try {
+        document.setId(ByteBuffer.wrap(field.getValueAsByteArray()));
+
+      } catch (IllegalArgumentException ex) {
+        LOG.error(Errors.MAPR_JSON_12.getMessage(), conf.keyField, field.getType().name(), ex);
+        throw new OnRecordErrorException(rec, Errors.MAPR_JSON_12, conf.keyField, field.getType().name(), ex);
+      }
+
+    } else {
+
+      String str = field.getValueAsString();
+      if (StringUtils.isEmpty(str)) {
+        LOG.error(Errors.MAPR_JSON_11.getMessage(), conf.keyField);
+        throw new OnRecordErrorException(rec, Errors.MAPR_JSON_11, conf.keyField);
+      }
+
+      try {
+        document.setId(str);
+
+      } catch (IllegalArgumentException ex) {
+        LOG.error(Errors.MAPR_JSON_13.getMessage(), conf.keyField, ex);
+        throw new OnRecordErrorException(rec, Errors.MAPR_JSON_13, conf.keyField, ex);
+      }
+    }
+
+  }
+
+  private void checkRowKeyType(Field field, Record rec) throws OnRecordErrorException {
+    try {
+      if (!field.getType().isOneOf(Field.Type.BYTE_ARRAY, Field.Type.STRING)) {
+        LOG.error(Errors.MAPR_JSON_14.getMessage(), conf.keyField);
+        throw new OnRecordErrorException(rec, Errors.MAPR_JSON_14, conf.keyField);
+      }
+    } catch (IllegalArgumentException | NullPointerException ex) {
+      LOG.error(Errors.MAPR_JSON_14.getMessage(), conf.keyField, ex);
+      throw new OnRecordErrorException(rec, Errors.MAPR_JSON_14, conf.keyField, ex);
+    }
   }
 
   private Document populateDocument(ByteArrayOutputStream os, Record rec) throws OnRecordErrorException {

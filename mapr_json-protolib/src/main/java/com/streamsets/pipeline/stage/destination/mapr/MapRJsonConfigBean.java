@@ -38,8 +38,8 @@ public class MapRJsonConfigBean {
   @ConfigDef(required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
-      label = "Create Table if it does not Exist",
-      description = "Create the table if it does not exist",
+      label = "Create Table",
+      description = "If checked, create the table if it does not exist.  No action is taken if the table exists.",
       displayPosition = 20,
       group = "MAPR_JSON"
   )
@@ -49,24 +49,27 @@ public class MapRJsonConfigBean {
   @ConfigDef(required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue="",
-      label = "Field to use as _id",
-      description = "Select the field to use as the _id element",
+      label = "Row Key",
+      description = "Select the field to use as the row key to select documents.  " +
+          "Ensure this field is unique or documents may be skipped.",
       displayPosition = 30,
       group = "MAPR_JSON"
   )
   @FieldSelectorModel(singleValued = true)
-  public String idField;
+  public String keyField;
 
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "INSERT",
-      label = "Use Insert or InsertOrReplace",
-      description = "Select which MapR DB API routine to use when inserting a record into MapR DB JSON.  " +
-          "When encountering a duplicate document _id Insert will fail.  The record will be sent to the "+
-          "On Record Error destination.  InsertOrReplace will replace the document when a duplicate " +
-          "document _id is encountered.",
-      displayPosition = 40,
+      defaultValue = "REPLACE",
+      label = "Insert API",
+      description = "Select which MapR DB API to use when inserting a record into "
+          + "MapR JSON Document Database.  "
+          + "When encountering a duplicate document _id Insert will fail.  "
+          + "The record will be sent to the "
+          + "On Record Error destination.  InsertOrReplace will replace the document when a duplicate "
+          + "document _id is encountered.",
+      displayPosition = 50,
       group = "MAPR_JSON"
   )
   @ValueChooserModel(InsertOrReplaceChooserValues.class)
