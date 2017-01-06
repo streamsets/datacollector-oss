@@ -96,6 +96,10 @@ public class AvroDataGeneratorFactory extends DataGeneratorFactory {
         break;
       case REGISTRY:
         schema = schemaHelper.loadFromRegistry(subject, schemaId);
+        // If subject configuration is specified, figure out schemaId
+        if (!subject.isEmpty()) {
+          schemaId = schemaHelper.getSchemaIdFromSubject(subject);
+        }
         break;
       case INLINE:
         schema = schemaHelper.loadFromString((String) settings.getConfig(SCHEMA_KEY));

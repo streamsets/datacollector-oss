@@ -150,6 +150,21 @@ public class AvroSchemaHelper {
   }
 
   /**
+   * Looks up schema id for the specified subject from the schema registry
+   * @param subject subject for which schema Id must be looked up.
+   * @return the schema id
+   * @throws SchemaRegistryException if there is an error with the registry client
+   */
+  public int getSchemaIdFromSubject(String subject) throws SchemaRegistryException {
+    try {
+      SchemaMetadata metadata = registryClient.getLatestSchemaMetadata(subject);
+      return metadata.getId();
+    } catch (IOException | RestClientException e) {
+      throw new SchemaRegistryException(e);
+    }
+  }
+
+  /**
    * Loads and parses a schema for the specified schema ID from the schema registry
    * @param id schema ID to fetch from the registry
    * @return parsed avro schema
