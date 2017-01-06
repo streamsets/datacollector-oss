@@ -32,6 +32,7 @@ public class DataLakeTargetBuilder {
     conf.clientKey = dummyKey;
     conf.dirPathTemplate = "/tmp/out/";
     conf.uniquePrefix = "test";
+    conf.fileNameSuffix = "";
     conf.timeDriver = "${time:now()}";
     conf.dataFormat = DataFormat.TEXT;
     conf.dataFormatConfig.textFieldPath = "/";

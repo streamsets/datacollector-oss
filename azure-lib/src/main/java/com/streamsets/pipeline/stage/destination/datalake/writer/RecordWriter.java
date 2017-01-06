@@ -20,19 +20,23 @@
 
 package com.streamsets.pipeline.stage.destination.datalake.writer;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.microsoft.azure.datalake.store.ADLStoreClient;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.WholeFileExistsAction;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
+import com.streamsets.pipeline.stage.destination.datalake.DataLakeTarget;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,60 +46,74 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TimeZone;
 
 public class RecordWriter {
   private final static Logger LOG = LoggerFactory.getLogger(RecordWriter.class);
 
+  // FilePath with ADLS connections stream
   private Map<String, DataGenerator> generators;
-  private ADLStoreClient client;
-  private DataFormat dataFormat;
-  private DataGeneratorFormatConfig dataFormatConfig;
-  private String uniquePrefix;
-  private String fileNameEL;
-  private TimeZone timeZone;
-  private ELEval dirPathTemplateEval;
-  private ELVars dirPathTemplateVars;
-  private WholeFileExistsAction wholeFileExistsAction;
-  private OutputStreamHelper outputStreamHelper;
+  private final ADLStoreClient client;
+  private final DataFormat dataFormat;
+  private final DataGeneratorFormatConfig dataFormatConfig;
+  private final String uniquePrefix;
+  private final String fileNameSuffix;
+  private final String fileNameEL;
+  private final boolean dirPathTemplateInHeader;
+  private final Target.Context context;
+
+  private final ELEval dirPathTemplateEval;
+  private final ELVars dirPathTemplateVars;
+  private final ELEval fileNameEval;
+  private final ELVars fileNameVars;
+  private final boolean rollIfHeader;
+  private final String rollHeaderName;
+  private final long maxRecordsPerFile;
+  private final WholeFileExistsAction wholeFileExistsAction;
+  private final OutputStreamHelper outputStreamHelper;
 
   public RecordWriter(
       ADLStoreClient client,
       DataFormat dataFormat,
       DataGeneratorFormatConfig dataFormatConfig,
       String uniquePrefix,
+      String fileNameSuffix,
       String fileNameEL,
-      ELEval dirPathTemplateEval,
-      ELVars dirPathTemplateVars,
-      String timeZoneID,
+      boolean dirPathTemplateInHeader,
+      Target.Context context,
+      boolean rollIfHeader,
+      String rollHeaderName,
+      long maxRecordsPerFile,
       WholeFileExistsAction wholeFileExistsAction
   ) {
+    generators = new HashMap<>();
+    dirPathTemplateEval = context.createELEval("dirPathTemplate");
+    dirPathTemplateVars = context.createELVars();
+    fileNameEval = context.createELEval("fileNameEL");
+    fileNameVars = context.createELVars();
+
+
     this.client = client;
     this.dataFormat = dataFormat;
     this.dataFormatConfig = dataFormatConfig;
     this.uniquePrefix = uniquePrefix;
+    this.fileNameSuffix = fileNameSuffix;
     this.fileNameEL = fileNameEL;
-    this.dirPathTemplateEval = dirPathTemplateEval;
-    this.dirPathTemplateVars = dirPathTemplateVars;
-    this.timeZone = TimeZone.getTimeZone(timeZoneID);
+    this.dirPathTemplateInHeader = dirPathTemplateInHeader;
+    this.context = context;
+    this.rollIfHeader = rollIfHeader;
+    this.rollHeaderName = rollHeaderName;
+    this.maxRecordsPerFile = maxRecordsPerFile;
     this.wholeFileExistsAction = wholeFileExistsAction;
-
-    generators = new HashMap<>();
-    outputStreamHelper = getStream();
-  }
-
-  private DataGenerator get(String filePath) throws StageException, IOException{
-    DataGenerator generator = generators.get(filePath);
-    if (generator == null) {
-      generator = createDataGenerator(filePath);
-      generators.put(filePath, generator);
-    }
-    return generator;
+    this.outputStreamHelper = getOutputStreamHelper();
   }
 
   public void write(String filePath, Record record) throws StageException, IOException {
-    DataGenerator generator = get(filePath);
+    DataGenerator generator = getGenerator(filePath);
     generator.write(record);
+
+    if (dataFormat == DataFormat.WHOLE_FILE) {
+      commitOldFile(filePath.substring(0, filePath.lastIndexOf("/")), filePath);
+    }
   }
 
   /*
@@ -106,30 +124,32 @@ public class RecordWriter {
       Record record,
       Date recordTime
   ) throws ELEvalException {
-    String dirPath = resolvePath(dirPathTemplateEval, dirPathTemplateVars, dirPathTemplate, recordTime, record);
-    return outputStreamHelper.getFilePath(dirPath, record, recordTime);
-  }
+    String dirPath;
+    // get directory path
+    if (dirPathTemplateInHeader) {
+      dirPath = record.getHeader().getAttribute(DataLakeTarget.TARGET_DIRECTORY_HEADER);
 
-  private DataGenerator createDataGenerator(String filePath) throws StageException, IOException{
-    return dataFormatConfig.getDataGeneratorFactory().getGenerator(outputStreamHelper.getStream(filePath));
-  }
-
-  private OutputStreamHelper getStream() {
-    OutputStreamHelper outputStream;
-    if (dataFormat != DataFormat.WHOLE_FILE) {
-      outputStream = new DefaultOutputStreamHandler(client, uniquePrefix);
+      Utils.checkArgument(!(dirPath == null || dirPath.isEmpty()), "Directory Path cannot be null");
     } else {
-      outputStream = new WholeFileFormatOutputStreamHandler(client, uniquePrefix, fileNameEL, dirPathTemplateEval, dirPathTemplateVars, wholeFileExistsAction);
+      dirPath = resolvePath(dirPathTemplateEval, dirPathTemplateVars, dirPathTemplate, recordTime, record);
     }
-    return outputStream;
+
+    return outputStreamHelper.getTempFilePath(dirPath, record, recordTime);
   }
 
   public void close() throws IOException {
-    for (String key : generators.keySet()) {
-      generators.get(key).close();
+    for (Map.Entry<String, DataGenerator> entry : generators.entrySet()) {
+      entry.getValue().close();
+      String dirPath = entry.getKey().substring(0, entry.getKey().lastIndexOf("/"));
+      outputStreamHelper.commitFile(dirPath);
     }
     generators.clear();
     outputStreamHelper.clearStatus();
+  }
+
+  public void commitOldFile(String dirPath, String filePath) throws IOException {
+    outputStreamHelper.commitFile(dirPath);
+    generators.remove(filePath);
   }
 
   public static Date getRecordTime(
@@ -148,6 +168,40 @@ public class RecordWriter {
     }
   }
 
+  private DataGenerator getGenerator(String filePath) throws StageException, IOException {
+    DataGenerator generator = generators.get(filePath);
+    if (generator == null) {
+      generator = createDataGenerator(filePath);
+      generators.put(filePath, generator);
+    }
+    return generator;
+  }
+
+  private DataGenerator createDataGenerator(String filePath) throws StageException, IOException {
+    return dataFormatConfig.getDataGeneratorFactory().getGenerator(outputStreamHelper.getOutputStream(filePath));
+  }
+
+  OutputStreamHelper getOutputStreamHelper() {
+    if (dataFormat != DataFormat.WHOLE_FILE) {
+      return new DefaultOutputStreamHandler(
+          client,
+          uniquePrefix,
+          fileNameSuffix,
+          context.getRunnerId(),
+          maxRecordsPerFile
+      );
+    } else {
+      return new WholeFileFormatOutputStreamHandler(
+          client,
+          uniquePrefix,
+          fileNameEL,
+          fileNameEval,
+          fileNameVars,
+          wholeFileExistsAction
+      );
+    }
+  }
+
   private String resolvePath(
       ELEval dirPathTemplateEval,
       ELVars dirPathTemplateVars,
@@ -157,10 +211,24 @@ public class RecordWriter {
   ) throws ELEvalException {
     RecordEL.setRecordInContext(dirPathTemplateVars, record);
     if (date != null) {
-      Calendar calendar = Calendar.getInstance(timeZone);
+      Calendar calendar = Calendar.getInstance();
       calendar.setTime(date);
       TimeEL.setCalendarInContext(dirPathTemplateVars, calendar);
     }
     return dirPathTemplateEval.eval(dirPathTemplateVars, dirPathTemplate, String.class);
+  }
+
+  @VisibleForTesting
+  boolean shouldRoll(Record record, String dirPath) {
+    if (rollIfHeader && record.getHeader().getAttribute(rollHeaderName) != null) {
+      return true;
+    }
+
+    return outputStreamHelper.shouldRoll(dirPath);
+  }
+
+  void flush(String filePath) throws IOException {
+    generators.get(filePath).flush();
+    outputStreamHelper.commitFile(filePath.substring(0, filePath.lastIndexOf("/")));
   }
 }

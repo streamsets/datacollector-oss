@@ -29,8 +29,11 @@ import java.io.IOException;
 import java.util.Date;
 
 interface OutputStreamHelper {
-  ADLFileOutputStream getStream(String filePath)
+  final static String TMP_FILE_PREFIX = "_tmp_";
+  ADLFileOutputStream getOutputStream(String filePath)
       throws StageException, IOException;
-  String getFilePath(String dirPath, Record record, Date recordTime) throws ELEvalException;
-  void clearStatus();
+  String getTempFilePath(String dirPath, Record record, Date recordTime) throws ELEvalException;
+  void commitFile(String dirPath) throws IOException;
+  void clearStatus() throws IOException;
+  boolean shouldRoll(String dirPath);
 }

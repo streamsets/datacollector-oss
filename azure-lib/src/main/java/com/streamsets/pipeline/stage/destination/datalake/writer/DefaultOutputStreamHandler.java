@@ -26,6 +26,7 @@ import com.microsoft.azure.datalake.store.IfExists;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.impl.Utils;
 
 import java.io.IOException;
 import java.util.Date;
@@ -34,17 +35,34 @@ import java.util.Map;
 import java.util.UUID;
 
 final class DefaultOutputStreamHandler implements OutputStreamHelper {
-  private ADLStoreClient client;
-  private String uniquePrefix;
-  private Map<String, String> filePathMap = new HashMap<>();
+  private final static String DOT = ".";
 
-  public DefaultOutputStreamHandler(ADLStoreClient client, String uniquePrefix) {
+  private final ADLStoreClient client;
+  private final String uniquePrefix;
+  private final String fileNameSuffix;
+  private final Map<String, Long> filePathCount;
+  private final long maxRecordsPerFile;
+  private final String tempFileName;
+  private final int uniqueId;
+
+  public DefaultOutputStreamHandler(
+      ADLStoreClient client,
+      String uniquePrefix,
+      String fileNameSuffix,
+      int uniqueId,
+      long maxRecordsPerFile
+  ) {
+    filePathCount = new HashMap<>();
     this.client = client;
     this.uniquePrefix = uniquePrefix;
+    this.fileNameSuffix = fileNameSuffix;
+    this.uniqueId = uniqueId;
+    this.maxRecordsPerFile = maxRecordsPerFile;
+    this.tempFileName = TMP_FILE_PREFIX + uniquePrefix + "-" + uniqueId + getExtention();
   }
 
   @Override
-  public ADLFileOutputStream getStream(String filePath)
+  public ADLFileOutputStream getOutputStream(String filePath)
       throws StageException, IOException {
     ADLFileOutputStream stream;
     if (!client.checkExists(filePath)) {
@@ -56,17 +74,58 @@ final class DefaultOutputStreamHandler implements OutputStreamHelper {
   }
 
   @Override
-  public String getFilePath(String dirPath, Record record, Date recordTime) throws ELEvalException {
-    String filePath = filePathMap.get(dirPath);
-    if (filePath == null) {
-      filePath = uniquePrefix + "-" + UUID.randomUUID();
-      filePathMap.put(dirPath, filePath);
-    }
-    return dirPath + "/" + filePath;
+  public void commitFile(String dirPath) throws IOException {
+    String filePath = dirPath + "/" +
+        tempFileName.replaceFirst(TMP_FILE_PREFIX + uniquePrefix + "-" + uniqueId, uniquePrefix + "-" + UUID.randomUUID());
+    client.rename(dirPath + "/" + tempFileName, filePath);
   }
 
   @Override
-  public void clearStatus() {
-    filePathMap.clear();
+  public String getTempFilePath(String dirPath, Record record, Date recordTime) throws ELEvalException {
+    String tmpFilePath = TMP_FILE_PREFIX + uniquePrefix + "-" + uniqueId + getExtention();
+    return dirPath + "/" + tmpFilePath;
+  }
+
+  @Override
+  public void clearStatus() throws IOException {
+    for (String dirPath : filePathCount.keySet()) {
+      commitFile(dirPath);
+    }
+    filePathCount.clear();
+  }
+
+  @Override
+  public boolean shouldRoll(String dirPath) {
+    if (maxRecordsPerFile <= 0) {
+      return false;
+    }
+
+    Long count = filePathCount.get(dirPath);
+
+    if (count == null) {
+      filePathCount.put(dirPath, 1L);
+      return false;
+    }
+
+    if (count >= maxRecordsPerFile) {
+      filePathCount.put(dirPath, 1L);
+      return true;
+    }
+
+    count++;
+
+    filePathCount.put(dirPath, count);
+    return false;
+  }
+
+  private String getExtention() {
+    StringBuilder extension = new StringBuilder();
+
+    if (fileNameSuffix != null && !fileNameSuffix.isEmpty()) {
+      extension.append(DOT);
+      extension = extension.append(fileNameSuffix);
+    }
+
+    return extension.toString();
   }
 }

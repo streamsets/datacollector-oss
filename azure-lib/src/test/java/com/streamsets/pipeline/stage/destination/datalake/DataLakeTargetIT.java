@@ -30,6 +30,7 @@ import com.streamsets.pipeline.sdk.TargetRunner;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -130,6 +131,7 @@ public class DataLakeTargetIT {
     Assert.assertEquals(0, targetRunner.getErrorRecords().size());
   }
 
+  @Ignore
   @Test
   public void testExceptionWhileWriting() throws Exception {
     // one success write record and then 5 retries to write record to fail

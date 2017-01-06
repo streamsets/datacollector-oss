@@ -29,8 +29,14 @@ public enum Errors implements ErrorCode {
   ADLS_01("Invalid time basis expression: '{}'"),
   ADLS_02("Failed to connect to Azure Data Lake Store: '{}'"),
   ADLS_03("Failed to write to Azure Data Lake Store: '{}'"),
-  ADLS_04("Failed to close stream: '{}'"),
+  ADLS_04("Failed to close the stream: '{}'"),
   ADLS_05("The path '{}' already exists."),
+  ADLS_06("Directory template header '" + DataLakeTarget.TARGET_DIRECTORY_HEADER + "' missing"),
+  ADLS_07("Time basis expression '{}' evaluated to NULL for this record"),
+  ADLS_08("Files Suffix contains '/' or starts with '.'"),
+  ADLS_09("The maximum records in a file must be a positive integer or zero to opt out of the option"),
+  ADLS_10("Failed to flush the stream: '{}'"),
+  ADLS_11("ExecutionException data generation thread '{}'"),
   ;
   private final String msg;
 

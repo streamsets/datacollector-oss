@@ -48,47 +48,69 @@ final class WholeFileFormatOutputStreamHandler implements OutputStreamHelper {
   private String uniquePrefix;
   private String fileNameEL;
   private WholeFileExistsAction wholeFileAlreadyExistsAction;
+  private String tmpFileName;
+  private String tmpFilePath;
 
-  private ELEval dirPathTemplateEval;
-  private ELVars dirPathTemplateVars;
+  private ELEval fileNameEval;
+  private ELVars fileNameVars;
 
-  public WholeFileFormatOutputStreamHandler(ADLStoreClient client, String uniquePrefix, String fileNameEL, ELEval dirPathTemplateEval, ELVars dirPathTemplateVars, WholeFileExistsAction wholeFileAlreadyExistsAction) {
+  public WholeFileFormatOutputStreamHandler(
+      ADLStoreClient client,
+      String uniquePrefix,
+      String fileNameEL,
+      ELEval fileNameEval,
+      ELVars fileNameVars,
+      WholeFileExistsAction wholeFileAlreadyExistsAction
+  ) {
     this.client = client;
     this.uniquePrefix = uniquePrefix;
     this.fileNameEL = fileNameEL;
-    this.dirPathTemplateEval = dirPathTemplateEval;
-    this.dirPathTemplateVars = dirPathTemplateVars;
+    this.fileNameEval = fileNameEval;
+    this.fileNameVars = fileNameVars;
     this.wholeFileAlreadyExistsAction = wholeFileAlreadyExistsAction;
   }
 
   @Override
-  public ADLFileOutputStream getStream(String filePath)
-      throws StageException, IOException {
+  public ADLFileOutputStream getOutputStream(String tempFilePath) throws StageException, IOException {
+    String filePath = tmpFilePath.replaceFirst(TMP_FILE_PREFIX, "");
     if (client.checkExists(filePath)) {
       if (wholeFileAlreadyExistsAction == WholeFileExistsAction.OVERWRITE) {
         client.delete(filePath);
-        stream = client.createFile(filePath, IfExists.OVERWRITE);
         LOG.debug(Utils.format(Errors.ADLS_05.getMessage(), filePath) + "so deleting it");
       } else {
         throw new OnRecordErrorException(Errors.ADLS_05, filePath);
       }
-    } else {
-      stream = client.createFile(filePath, IfExists.FAIL);
     }
+    stream = client.createFile(tmpFilePath, IfExists.OVERWRITE);
     return stream;
   }
 
   @Override
-  public String getFilePath(String dirPath, Record record, Date recordTime) throws ELEvalException {
-    RecordEL.setRecordInContext(dirPathTemplateVars, record);
-    TimeNowEL.setTimeNowInContext(dirPathTemplateVars, recordTime);
-    String fileName = dirPathTemplateEval.eval(dirPathTemplateVars, fileNameEL, String.class);
-    String filePath = uniquePrefix + "-" + fileName;
-    return dirPath + "/" + filePath;
+  public void commitFile(String dirPath) throws IOException {
+    if (dirPath != null && tmpFileName != null) {
+      boolean overwrite = wholeFileAlreadyExistsAction == WholeFileExistsAction.OVERWRITE;
+      String filePath = dirPath + "/" + tmpFileName.replaceFirst(TMP_FILE_PREFIX, "");
+      client.rename(dirPath + "/" + tmpFileName, filePath, overwrite);
+    }
   }
 
   @Override
-  public void clearStatus() {
-    //no-op
+  public String getTempFilePath(String dirPath, Record record, Date recordTime) throws ELEvalException {
+    RecordEL.setRecordInContext(fileNameVars, record);
+    TimeNowEL.setTimeNowInContext(fileNameVars, recordTime);
+    String fileName = fileNameEval.eval(fileNameVars, fileNameEL, String.class);
+    tmpFileName = TMP_FILE_PREFIX + uniquePrefix + "-" + fileName;
+    tmpFilePath = dirPath + "/" + tmpFileName;
+    return tmpFilePath;
+  }
+
+  @Override
+  public void clearStatus() throws IOException {
+    tmpFilePath = null;
+  }
+
+  @Override
+  public boolean shouldRoll(String dirPath) {
+    return false;
   }
 }

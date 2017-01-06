@@ -34,7 +34,6 @@ import com.streamsets.pipeline.configurablestage.DTarget;
     label = "Azure Data Lake Store",
     description = "Writes data to Azure Data Lake Store",
     icon = "data-lake-store.png",
-    execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     onlineHelpRefUrl = "index.html#Destinations/DataLakeStore.html#task_jfl_nf4_zx"
 )
