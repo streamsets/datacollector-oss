@@ -43,6 +43,13 @@ public enum Errors implements ErrorCode {
   MONGODB_16("Record {} does not contain the expected unique key field {}"),
   MONGODB_17("Error writing records to Mongo : {}"),
   MONGODB_18("Operation '{}' requires unique key to be configured"),
+
+  MONGODB_30("Oplog Document Missing the follow mandatory fields '{}'"),
+  MONGODB_31("Oplog Offset Invalid, Cannot parse offset '{}'," +
+      " offset should be of the form 'time_t::ordinal'. Reason {}"),
+  MONGODB_32("Invalid Initial Offset Value for '{}', should be greater than -1 if '{}' is not -1"),
+  MONGODB_33("Invalid Oplog Collection Name '{}', Oplog collection should start with 'oplog.'"),
+
   ;
   private final String msg;
 

@@ -20,28 +20,17 @@
 package com.streamsets.pipeline.stage.origin.mongodb;
 
 import com.mongodb.CursorType;
-import com.mongodb.MongoClient;
 import com.mongodb.MongoClientException;
-import com.mongodb.MongoQueryException;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Sorts;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.base.BaseSource;
-import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.lib.util.JsonUtil;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
-import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
-import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.mongodb.Errors;
 import com.streamsets.pipeline.stage.common.mongodb.Groups;
 import com.streamsets.pipeline.stage.common.mongodb.MongoDBConfig;
-import org.apache.commons.io.IOUtils;
-import org.bson.BsonTimestamp;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
@@ -50,36 +39,24 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-public class MongoDBSource extends BaseSource {
+public class MongoDBSource extends AbstractMongoDBSource {
   private static final Logger LOG = LoggerFactory.getLogger(MongoDBSource.class);
-
-  private final MongoSourceConfigBean configBean;
+  private static final String TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
   private ObjectId initialObjectId;
-  private ErrorRecordHandler errorRecordHandler;
-  private MongoClient mongoClient;
-  private MongoCollection<Document> mongoCollection;
-  private MongoCursor<Document> cursor;
 
   public MongoDBSource(MongoSourceConfigBean configBean) {
-    this.configBean = configBean;
+    super(configBean);
   }
 
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
-    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
-
     try {
-      initialObjectId = new ObjectId(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(configBean.initialOffset));
+      initialObjectId = new ObjectId(new SimpleDateFormat(TIMESTAMP_FORMAT).parse(configBean.initialOffset));
     } catch (ParseException e) {
       issues.add(
           getContext().createConfigIssue(
@@ -90,29 +67,8 @@ public class MongoDBSource extends BaseSource {
           )
       );
     }
-
-    configBean.mongoConfig.init(getContext(), issues, configBean.readPreference.getReadPreference(), null);
-    if (!issues.isEmpty()) {
-      return issues;
-    }
-
-    // since no issue was found in validation, the followings must not be null at this point.
-    Utils.checkNotNull(configBean.mongoConfig.getMongoDatabase(), "MongoDatabase");
-    mongoClient = Utils.checkNotNull(configBean.mongoConfig.getMongoClient(), "MongoClient");
-    mongoCollection = Utils.checkNotNull(configBean.mongoConfig.getMongoCollection(), "MongoCollection");
-
-    checkCursor(issues);
-
     return issues;
   }
-
-  @Override
-  public void destroy() {
-    IOUtils.closeQuietly(cursor);
-    IOUtils.closeQuietly(mongoClient);
-    super.destroy();
-  }
-
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     // do not return null in the case where the table is empty on startup
@@ -145,13 +101,9 @@ public class MongoDBSource extends BaseSource {
           continue;
         }
 
-        Set<Map.Entry<String, Object>> entrySet = doc.entrySet();
-        Map<String, Field> fields = new HashMap<>(entrySet.size());
-
+        Map<String, Field> fields;
         try {
-          for (Map.Entry<String, Object> entry : entrySet) {
-            fields.put(entry.getKey(), jsonToField(entry.getValue()));
-          }
+          fields = MongoDBSourceUtil.createFieldFromDocument(doc);
         } catch (IOException e) {
           errorRecordHandler.onError(Errors.MONGODB_10, e.toString(), e);
           continue;
@@ -160,9 +112,13 @@ public class MongoDBSource extends BaseSource {
         // get the offsetField
         nextSourceOffset = getNextSourceOffset(doc);
 
-        final String recordContext = configBean.mongoConfig.connectionString + "::" +
-            configBean.mongoConfig.database + "::" + configBean.mongoConfig.collection + "::" +
-            nextSourceOffset;
+        final String recordContext =
+            MongoDBSourceUtil.getSourceRecordId(
+                configBean.mongoConfig.connectionString,
+                configBean.mongoConfig.database,
+                configBean.mongoConfig.collection,
+                nextSourceOffset
+            );
 
         Record record = getContext().createRecord(recordContext);
         record.set(Field.create(fields));
@@ -218,63 +174,5 @@ public class MongoDBSource extends BaseSource {
             .iterator();
       }
     }
-  }
-
-  private void checkCursor(List<ConfigIssue> issues) {
-    if (configBean.isCapped) {
-      try {
-        mongoCollection.find().cursorType(CursorType.TailableAwait).batchSize(1).limit(1).iterator().close();
-      } catch (MongoQueryException e) {
-        issues.add(getContext().createConfigIssue(
-            Groups.MONGODB.name(),
-            MongoDBConfig.MONGO_CONFIG_PREFIX + "collection",
-            Errors.MONGODB_04,
-            configBean.mongoConfig.database,
-            e.toString()
-        ));
-      }
-    } else {
-      try {
-        mongoCollection.find().cursorType(CursorType.NonTailable).batchSize(1).limit(1).iterator().close();
-      } catch (MongoQueryException e) {
-        issues.add(getContext().createConfigIssue(
-            Groups.MONGODB.name(),
-            MongoDBConfig.MONGO_CONFIG_PREFIX + "collection",
-            Errors.MONGODB_06,
-            configBean.mongoConfig.database,
-            e.toString()
-        ));
-      }
-    }
-  }
-
-  private Field jsonToField(Object object) throws IOException {
-    if (object instanceof ObjectId) {
-      String objectId = object.toString();
-      return JsonUtil.jsonToField(objectId);
-    } else if (object instanceof BsonTimestamp) {
-      int time = ((BsonTimestamp) object).getTime();
-      Date date = new Date(time * 1000L);
-      Map<String, Object> jsonMap = new LinkedHashMap<>();
-      jsonMap.put("timestamp", date);
-      jsonMap.put("ordinal", ((BsonTimestamp) object).getInc());
-      return JsonUtil.jsonToField(jsonMap);
-    } else if (object instanceof List) {
-      List jsonList = (List) object;
-      List<Field> list = new ArrayList<>(jsonList.size());
-      for (Object element : jsonList) {
-        list.add(jsonToField(element));
-      }
-      return Field.create(list);
-    } else if (object instanceof Map) {
-      Map<String, Object> jsonMap = (Map<String, Object>) object;
-      Map<String, Field> map = new LinkedHashMap<>();
-      for (Map.Entry<String, Object> entry : jsonMap.entrySet()) {
-        map.put(entry.getKey(), jsonToField(entry.getValue()));
-      }
-      return Field.create(map);
-    }
-
-    return JsonUtil.jsonToField(object);
   }
 }

@@ -58,7 +58,7 @@ public class MongoSourceConfigBean {
       defaultValue = "_id",
       label = "Offset Field",
       description = "Field checked to track current offset. Must be an ObjectId.",
-      displayPosition = 1003,
+      displayPosition = 1010,
       group = "MONGODB"
   )
   public String offsetField;
@@ -69,7 +69,7 @@ public class MongoSourceConfigBean {
       defaultValue = "1000",
       required = true,
       min = 2, // Batch size of 1 in MongoDB is special and analogous to LIMIT 1
-      displayPosition = 1004,
+      displayPosition = 1011,
       group = "MONGODB"
   )
   public int batchSize;
@@ -81,7 +81,7 @@ public class MongoSourceConfigBean {
       required = true,
       elDefs = {TimeEL.class},
       evaluation = ConfigDef.Evaluation.IMPLICIT,
-      displayPosition = 1005,
+      displayPosition = 1012,
       group = "MONGODB"
   )
   public long maxBatchWaitTime;
@@ -93,7 +93,7 @@ public class MongoSourceConfigBean {
       label = "Read Preference",
       description = "Sets the read preference",
       group = "MONGODB",
-      displayPosition = 1006
+      displayPosition = 1013
   )
   @ValueChooserModel(ReadPreferenceChooserValues.class)
   public ReadPreferenceLabel readPreference;
