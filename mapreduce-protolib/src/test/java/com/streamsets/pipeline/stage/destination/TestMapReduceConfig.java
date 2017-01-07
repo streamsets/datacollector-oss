@@ -67,6 +67,7 @@ public class TestMapReduceConfig {
     FileUtils.deleteQuietly(new File(confDir, "yarn-site.xml"));
     FileUtils.deleteQuietly(new File(confDir, "core-site.xml"));
     FileUtils.deleteQuietly(new File(confDir, "mapred-site.xml"));
+    FileUtils.deleteQuietly(new File(confDir, "hdfs-site.xml"));
   }
 
   @Test
@@ -80,10 +81,11 @@ public class TestMapReduceConfig {
   @Test
   public void testInitWithMissingConfFiles() {
     List<Stage.ConfigIssue> issues = config.init(context, "prefix");
-    Assert.assertEquals(3, issues.size());
+    Assert.assertEquals(4, issues.size());
     verify(context).createConfigIssue(anyString(), anyString(), eq(MapReduceErrors.MAPREDUCE_0002), contains("core-site.xml"));
     verify(context).createConfigIssue(anyString(), anyString(), eq(MapReduceErrors.MAPREDUCE_0002), contains("yarn-site.xml"));
     verify(context).createConfigIssue(anyString(), anyString(), eq(MapReduceErrors.MAPREDUCE_0002), contains("mapred-site.xml"));
+    verify(context).createConfigIssue(anyString(), anyString(), eq(MapReduceErrors.MAPREDUCE_0002), contains("hdfs-site.xml"));
   }
 
   @Test
@@ -100,6 +102,10 @@ public class TestMapReduceConfig {
     mapreduceConf.set("mapreduceConf", "present");
     writeConfiguration(mapreduceConf, new File(confDir, "mapred-site.xml"));
 
+    Configuration hdfsConf = new Configuration();
+    mapreduceConf.set("hdfsConf", "present");
+    writeConfiguration(mapreduceConf, new File(confDir, "hdfs-site.xml"));
+
     config.mapreduceConfigs = ImmutableMap.of("sdcConf", "present");
 
     List<Stage.ConfigIssue> issues = config.init(context, "prefix");
@@ -107,7 +113,7 @@ public class TestMapReduceConfig {
     Assert.assertEquals(0, issues.size());
 
     Configuration finalConf = config.getConfiguration();
-    for(String property : ImmutableList.of("coreConf", "yarnConf", "mapreduceConf", "sdcConf")) {
+    for(String property : ImmutableList.of("coreConf", "yarnConf", "mapreduceConf", "sdcConf", "hdfsConf")) {
       Assert.assertEquals("Key is not present: " + property, "present", finalConf.get(property));
     }
   }

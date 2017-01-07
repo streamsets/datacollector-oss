@@ -60,7 +60,7 @@ abstract public class BaseMapReduceIT {
     new File(inputDir).mkdirs();
 
     // We're using LocalJobRunner for the tests, so we just create default files on disk to pass validations
-    for(String configFile : ImmutableList.of("core-site.xml", "yarn-site.xml", "mapred-site.xml")) {
+    for(String configFile : ImmutableList.of("core-site.xml", "yarn-site.xml", "mapred-site.xml", "hdfs-site.xml")) {
       writeConfiguration(new Configuration(), new File(confDir, configFile));
     }
   }

@@ -46,7 +46,7 @@ public class MapReduceConfig {
     type = ConfigDef.Type.STRING,
     defaultValue = "/etc/hadoop/conf/",
     label = "MapReduce Configuration Directory",
-    description = "Directory containing configuration files for MapReduce (core-site.xml, yarn-site.xml and mapreduce-site.xml)",
+    description = "Directory containing configuration files for MapReduce (core-site.xml, yarn-site.xml, hdfs-site.xml and mapreduce-site.xml)",
     displayPosition = 10,
     group = "MAPREDUCE"
   )
@@ -116,6 +116,7 @@ public class MapReduceConfig {
     }
 
     addResourceFileToConfig(prefix, confDir, "core-site.xml", context, issues);
+    addResourceFileToConfig(prefix, confDir, "hdfs-site.xml", context, issues);
     addResourceFileToConfig(prefix, confDir, "yarn-site.xml", context, issues);
     addResourceFileToConfig(prefix, confDir, "mapred-site.xml", context, issues);
 
