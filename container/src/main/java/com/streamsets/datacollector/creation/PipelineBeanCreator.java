@@ -19,7 +19,6 @@
  */
 package com.streamsets.datacollector.creation;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.ModelType;
@@ -39,8 +38,6 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ExecutionMode;
-import com.streamsets.pipeline.api.ProtoSource;
-import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -85,6 +82,14 @@ public abstract class PipelineBeanCreator {
     return (errors.size() == priorErrors) ? pipelineConfigBean : null;
   }
 
+  /**
+   * Create PipelineBean which means instantiating all stages for the pipeline.
+   *
+   * For multi-threaded pipelines this method will *NOT* create all required instances since the number of required
+   * instances is not known at the time of creation - for that the origin has to be initialized which is not at this
+   * point. Hence this method will create only one instance of the whole pipeline and it's up to the caller to call
+   * createPipelineStageBeans to instantiate remaining source-less pipelines later in the execution.
+   */
   public PipelineBean create(boolean forExecution, StageLibraryTask library, PipelineConfiguration pipelineConf,
       List<Issue> errors) {
     int priorErrors = errors.size();
@@ -92,25 +97,18 @@ public abstract class PipelineBeanCreator {
     StageBean errorStageBean = null;
     StageBean statsStageBean = null;
     StageBean origin = null;
-    int copies = 1;
     List<PipelineStageBeans> stages = new ArrayList<>();
     if (pipelineConfigBean != null && pipelineConfigBean.constants != null) {
       // Instantiate usual stages
       if(!pipelineConf.getStages().isEmpty()) {
         origin = createStageBean(forExecution, library, pipelineConf.getStages().get(0), false, pipelineConfigBean.constants, errors);
-        if (origin != null && origin.getStage() instanceof PushSource) {
-          // TODO: 	SDC-4728: Add ability to cap the number of threads in the pipeline config
-          copies = ((PushSource) origin.getStage()).getNumberOfThreads();
-        }
 
-        for (int i = 0; i < copies; i++) {
-          stages.add(createPipelineStageBeans(
-            forExecution,
-            library,
-            pipelineConf.getStages().subList(1, pipelineConf.getStages().size()),
-            pipelineConfigBean.constants, errors
-          ));
-        }
+        stages.add(createPipelineStageBeans(
+          forExecution,
+          library,
+          pipelineConf.getStages().subList(1, pipelineConf.getStages().size()),
+          pipelineConfigBean.constants, errors
+        ));
       }
 
       // It is not mandatory to have a stats aggregating target configured
@@ -145,7 +143,7 @@ public abstract class PipelineBeanCreator {
     return new PipelineBean(pipelineConfigBean, origin, stages, errorStageBean, statsStageBean);
   }
 
-  private PipelineStageBeans createPipelineStageBeans(
+  public PipelineStageBeans createPipelineStageBeans(
     boolean forExecution,
     StageLibraryTask library,
     List<StageConfiguration> stageConfigurations,
