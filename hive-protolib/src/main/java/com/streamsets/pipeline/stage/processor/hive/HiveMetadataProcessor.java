@@ -455,7 +455,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
       updateRecordForHDFS(record, schemaDrift, avroSchema, targetPath);
       batchMaker.addRecord(record, hdfsLane);
     } catch (HiveStageCheckedException error) {
-      LOG.error("Error happened when processing the record : {}" + record.toString(), error);
+      LOG.error("Error happened when processing record", error);
+      LOG.trace("Record that caused the error: {}", record.toString());
       errorRecordHandler.onError(new OnRecordErrorException(record, error.getErrorCode(), error.getParams()));
     }
   }
