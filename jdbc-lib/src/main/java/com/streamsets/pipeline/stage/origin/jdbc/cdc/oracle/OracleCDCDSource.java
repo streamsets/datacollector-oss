@@ -33,6 +33,7 @@ import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
     description = "Origin that an read change events from an Oracle Database",
     icon = "rdbms.png",
     recordsByRef = true,
+    producesEvents = true,
     resetOffset = true,
     onlineHelpRefUrl = "index.html#Origins/OracleCDC.html#task_ehh_mjj_tw"
 )
