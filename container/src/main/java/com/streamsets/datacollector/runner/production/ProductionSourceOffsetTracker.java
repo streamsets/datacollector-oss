@@ -80,17 +80,21 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
   }
 
   public void commitOffsetInternal(String pipelineName, String rev, String entity, String offset) {
+    // Short cut when origin is committing "null" entity then they are in fact not changing anything, so we don't need
+    // to synchronize on single file to write it down.
+    if(entity == null) {
+      return;
+    }
+
     // Backward compatibility calculation
     finished = Source.POLL_SOURCE_OFFSET_KEY.equals(entity) && offset == null;
 
     // This object can be called from multiple threads, so we have to synchronize access to the offset map
     synchronized (offsets) {
-      if(entity != null) {
-        if(offset == null) {
-          offsets.remove(entity);
-        } else {
-          offsets.put(entity, offset);
-        }
+      if (offset == null) {
+        offsets.remove(entity);
+      } else {
+        offsets.put(entity, offset);
       }
 
       // Finally write new variant of the offset file
