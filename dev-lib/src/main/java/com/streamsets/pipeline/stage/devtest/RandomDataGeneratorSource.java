@@ -176,6 +176,9 @@ public class RandomDataGeneratorSource extends BasePushSource {
 
     @Override
     public void run() {
+      // Override thread name, so that it's easier to find threads from this origin
+      Thread.currentThread().setName("RandomDataGenerator-" + threadId);
+
       while (!getContext().isStopped()) {
         LOG.trace("Starting new batch in thread {}", threadId);
 
