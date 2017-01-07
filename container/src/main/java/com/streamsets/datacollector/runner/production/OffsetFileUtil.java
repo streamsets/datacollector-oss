@@ -135,6 +135,8 @@ public class OffsetFileUtil {
       SourceOffset sourceOffset = BeanHelper.unwrapSourceOffset(sourceOffsetJson);
       SourceOffsetUpgrader.upgrade(sourceOffset);
       return sourceOffset;
+    } finally {
+      ds.release();
     }
   }
 }
