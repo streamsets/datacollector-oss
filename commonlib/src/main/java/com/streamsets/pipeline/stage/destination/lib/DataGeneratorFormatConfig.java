@@ -214,7 +214,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.MODEL,
-    defaultValue = "/",
+    defaultValue = "/text",
     label = "Text Field Path",
     description = "String field that will be written to the destination",
     displayPosition = 380,
