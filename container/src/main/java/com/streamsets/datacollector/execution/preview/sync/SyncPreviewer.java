@@ -66,6 +66,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class SyncPreviewer implements Previewer {
@@ -276,7 +277,7 @@ public class SyncPreviewer implements Previewer {
     PipelineConfiguration pipelineConf = pipelineStore.load(name, rev);
     PipelineEL.setConstantsInContext(pipelineConf);
     batches = Math.min(maxBatches, batches);
-    SourceOffsetTracker tracker = new PreviewSourceOffsetTracker(null);
+    SourceOffsetTracker tracker = new PreviewSourceOffsetTracker(Collections.<String, String>emptyMap());
     PreviewPipelineRunner runner = new PreviewPipelineRunner(name, rev, runtimeInfo, tracker, batchSize, batches,
       skipTargets);
     return new PreviewPipelineBuilder(stageLibrary, configuration, name, rev, pipelineConf, endStageInstanceName)

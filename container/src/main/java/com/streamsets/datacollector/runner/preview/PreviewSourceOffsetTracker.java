@@ -20,16 +20,18 @@
 package com.streamsets.datacollector.runner.preview;
 
 import com.streamsets.datacollector.runner.SourceOffsetTracker;
+import com.streamsets.pipeline.api.Source;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class PreviewSourceOffsetTracker implements SourceOffsetTracker {
-  private String currentOffset;
-  private String newOffset;
+  private Map<String, String> offsets;
+  private String stagedOffset;
   private boolean finished;
 
-  public PreviewSourceOffsetTracker(String currentOffset) {
-    this.currentOffset = currentOffset;
+  public PreviewSourceOffsetTracker(Map<String, String> offset) {
+    this.offsets = new HashMap<>(offset);
     finished = false;
   }
 
@@ -40,31 +42,37 @@ public class PreviewSourceOffsetTracker implements SourceOffsetTracker {
 
   @Override
   public String getOffset() {
-    return currentOffset;
+    return offsets.get(Source.POLL_SOURCE_OFFSET_KEY);
   }
 
   @Override
   public void setOffset(String newOffset) {
-    this.newOffset = newOffset;
+    this.stagedOffset = newOffset;
   }
 
   @Override
   public void commitOffset() {
-    currentOffset = newOffset;
-    finished = (currentOffset == null);
-    newOffset = null;
+    commitOffset(Source.POLL_SOURCE_OFFSET_KEY, stagedOffset);
+    finished = (stagedOffset == null);
+    stagedOffset = null;
   }
 
   @Override
   public void commitOffset(String entity, String newOffset) {
-    //TODO: Implement proper offset handling in preview for PushOrigin
-    commitOffset();
+    if(entity == null) {
+      return;
+    }
+
+    if(newOffset == null) {
+      offsets.remove(entity);
+    } else {
+      offsets.put(entity, newOffset);
+    }
   }
 
   @Override
   public Map<String, String> getOffsets() {
-    //TODO: Implement proper offset handling in preview for PushOrigin
-    return null;
+    return offsets;
   }
 
   @Override
