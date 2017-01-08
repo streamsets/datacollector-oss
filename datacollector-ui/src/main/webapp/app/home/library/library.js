@@ -47,6 +47,9 @@ angular
       function (results) {
         $scope.systemPipelineLabels = results[0].data;
         $scope.pipelineLabels = results[1].data;
+        if ($scope.pipelineLabels && $scope.pipelineLabels.length) {
+          $scope.pipelineLabels.sort();
+        }
       },
       function (results) {
       }
