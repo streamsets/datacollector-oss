@@ -386,6 +386,26 @@ public class TestRecordWriterManager {
   }
 
   @Test
+  public void testMissingUniquePrefix() throws Exception {
+    RecordWriterManager mgr = managerBuilder()
+      .uniquePrefix("")
+      .build();
+
+    FileSystem fs = FileSystem.get(uri, hdfsConf);
+    Record record = RecordCreator.create();
+    record.set(Field.create("a"));
+
+
+    RecordWriter writer = mgr.getWriter(new Date(), new Date(), record);
+    Assert.assertNotNull(writer);
+
+    Path finalPath = mgr.commitWriter(writer);
+
+    Assert.assertNotNull(finalPath);
+    Assert.assertTrue("Path should not start with '_'", !finalPath.toString().startsWith("_"));
+  }
+
+  @Test
   public void testThresholdRecords() throws Exception {
     RecordWriterManager mgr = managerBuilder()
       .build();

@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.generator.StreamCloseEventHandler;
 import com.streamsets.pipeline.stage.destination.hdfs.Errors;
+import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -112,7 +113,7 @@ final class DefaultFsHelper implements FsHelper {
 
   @Override
   public Path renameAndGetPath(FileSystem fs, Path tempPath) throws IOException, StageException {
-    Path finalPath =  new Path(tempPath.getParent(), uniquePrefix + "_" + UUID.randomUUID().toString() + recordWriterManager.getExtension());
+    Path finalPath =  new Path(tempPath.getParent(), (StringUtils.isEmpty(uniquePrefix) ? "" : (uniquePrefix + "_") ) + UUID.randomUUID().toString() + recordWriterManager.getExtension());
     if (!fs.rename(tempPath, finalPath)) {
       throw new IOException(Utils.format("Could not rename '{}' to '{}'", tempPath, finalPath));
     }
