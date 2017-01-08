@@ -25,6 +25,7 @@ import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.runner.production.OffsetFileUtil;
 import com.streamsets.datacollector.runner.production.ProductionSourceOffsetTracker;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import org.apache.commons.io.FileUtils;
@@ -71,8 +72,7 @@ public class TestProdSourceOffsetTracker {
     Assert.assertEquals(false, offsetTracker.isFinished());
     Assert.assertEquals(null, offsetTracker.getOffset());
 
-    offsetTracker.setOffset("abc");
-    offsetTracker.commitOffset();
+    offsetTracker.commitOffset(Source.POLL_SOURCE_OFFSET_KEY, "abc");
     Assert.assertEquals("abc", offsetTracker.getOffset());
 
     Assert.assertEquals(OffsetFileUtil.getPipelineOffsetFile(info, PIPELINE_NAME, PIPELINE_REV).lastModified(),

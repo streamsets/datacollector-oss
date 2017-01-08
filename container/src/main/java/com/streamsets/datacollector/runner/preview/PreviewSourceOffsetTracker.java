@@ -51,16 +51,14 @@ public class PreviewSourceOffsetTracker implements SourceOffsetTracker {
   }
 
   @Override
-  public void commitOffset() {
-    commitOffset(Source.POLL_SOURCE_OFFSET_KEY, stagedOffset);
-    finished = (stagedOffset == null);
-    stagedOffset = null;
-  }
-
-  @Override
   public void commitOffset(String entity, String newOffset) {
     if(entity == null) {
       return;
+    }
+
+    if(Source.POLL_SOURCE_OFFSET_KEY.equals(entity)) {
+      finished = (stagedOffset == null);
+      stagedOffset = null;
     }
 
     if(newOffset == null) {

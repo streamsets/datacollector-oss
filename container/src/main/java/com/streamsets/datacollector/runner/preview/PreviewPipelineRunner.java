@@ -195,7 +195,12 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
       originPipe.finishBatchContext(batchContext);
 
       // Run rest of the pipeline
-      runSourceLessBatch(batchContext.getStartTime(), batchContext.getPipeBatch());
+      runSourceLessBatch(
+        batchContext.getStartTime(),
+        batchContext.getPipeBatch(),
+        entityName,
+        entityOffset
+      );
 
       // Increment amount of intercepted batches by one and end the processing if we have desirable amount
       int count = batchesProcessed.incrementAndGet();
@@ -234,11 +239,21 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
           pipeBatch.overrideStageOutput(originPipe, originOutput);
         }
 
-        runSourceLessBatch(start, pipeBatch);
+        runSourceLessBatch(
+          start,
+          pipeBatch,
+          Source.POLL_SOURCE_OFFSET_KEY,
+          pipeBatch.getNewOffset()
+        );
       }
     }
 
-  private void runSourceLessBatch(long start, FullPipeBatch pipeBatch) throws StageException, PipelineRuntimeException {
+  private void runSourceLessBatch(
+    long start,
+    FullPipeBatch pipeBatch,
+    String offsetEntity,
+    String newOffset
+  ) throws StageException, PipelineRuntimeException {
     sourceOffset = pipeBatch.getPreviousOffset();
 
     List<Pipe> runnerPipes = null;
@@ -264,7 +279,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
       }
     }
 
-    offsetTracker.commitOffset();
+    offsetTracker.commitOffset(offsetEntity, newOffset);
     //TODO badRecordsHandler HANDLE ERRORS
     processingTimer.update(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
     newSourceOffset = offsetTracker.getOffset();

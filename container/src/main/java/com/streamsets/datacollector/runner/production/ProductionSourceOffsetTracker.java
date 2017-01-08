@@ -68,13 +68,6 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
   }
 
   @Override
-  public void commitOffset() {
-    commitOffsetInternal(pipelineName, rev, stagedEntity, stagedOffset);
-    this.stagedEntity = null;
-    this.stagedOffset = null;
-  }
-
-  @Override
   public void commitOffset(String entity, String newOffset) {
     commitOffsetInternal(pipelineName, rev, entity, newOffset);
   }
@@ -87,7 +80,11 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
     }
 
     // Backward compatibility calculation
-    finished = Source.POLL_SOURCE_OFFSET_KEY.equals(entity) && offset == null;
+    if(Source.POLL_SOURCE_OFFSET_KEY.equals(entity)) {
+      finished = offset == null;
+      stagedEntity = null;
+      stagedOffset = null;
+    }
 
     // This object can be called from multiple threads, so we have to synchronize access to the offset map
     synchronized (offsets) {

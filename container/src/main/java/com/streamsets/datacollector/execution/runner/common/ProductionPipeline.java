@@ -206,12 +206,6 @@ public class ProductionPipeline {
     pipelineRunner.cancelSnapshot(snapshotName);
   }
 
-  public void setOffset(String offset) {
-    ProductionSourceOffsetTracker offsetTracker = (ProductionSourceOffsetTracker) pipelineRunner.getOffSetTracker();
-    offsetTracker.setOffset(offset);
-    offsetTracker.commitOffset();
-  }
-
   public List<Record> getErrorRecords(String instanceName, int size) {
     return pipelineRunner.getErrorRecords(instanceName, size);
   }

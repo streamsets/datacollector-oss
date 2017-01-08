@@ -52,12 +52,6 @@ public interface SourceOffsetTracker {
   public void setOffset(String newOffset);
 
   /**
-   * Commit currently staged offsets to persistent store.
-   */
-  @Deprecated
-  public void commitOffset();
-
-  /**
    * Change offset for entity in the tracked offsets map and commit it to persistent store.
    *
    * @param entity Entity to be changed, null will disable changing the staged object (making this equivalent to commitOffsets() call)

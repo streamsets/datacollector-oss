@@ -134,12 +134,6 @@ public class TestUtil {
     }
 
     @Override
-    public void commitOffset() {
-      commitOffset(Source.POLL_SOURCE_OFFSET_KEY, stagedOffset);
-      stagedOffset = null;
-    }
-
-    @Override
     public void commitOffset(String entity, String newOffset) {
       lastBatchTime = System.currentTimeMillis();
       System.out.println(Utils.format("Committing entity({}), offset({}) on time({})", entity, newOffset, lastBatchTime));
@@ -150,6 +144,7 @@ public class TestUtil {
 
       if(Source.POLL_SOURCE_OFFSET_KEY.equals(entity)) {
         finished = (newOffset == null);
+        stagedOffset = null;
       }
 
       if(newOffset == null) {
