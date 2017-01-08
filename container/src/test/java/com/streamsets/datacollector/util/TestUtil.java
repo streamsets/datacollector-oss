@@ -109,7 +109,6 @@ public class TestUtil {
 
   public static class SourceOffsetTrackerImpl implements SourceOffsetTracker {
     private final Map<String, String> offsets;
-    private String stagedOffset;
     private boolean finished;
     private long lastBatchTime;
 
@@ -129,11 +128,6 @@ public class TestUtil {
     }
 
     @Override
-    public void setOffset(String newOffset) {
-      this.stagedOffset = newOffset;
-    }
-
-    @Override
     public void commitOffset(String entity, String newOffset) {
       lastBatchTime = System.currentTimeMillis();
       System.out.println(Utils.format("Committing entity({}), offset({}) on time({})", entity, newOffset, lastBatchTime));
@@ -144,7 +138,6 @@ public class TestUtil {
 
       if(Source.POLL_SOURCE_OFFSET_KEY.equals(entity)) {
         finished = (newOffset == null);
-        stagedOffset = null;
       }
 
       if(newOffset == null) {

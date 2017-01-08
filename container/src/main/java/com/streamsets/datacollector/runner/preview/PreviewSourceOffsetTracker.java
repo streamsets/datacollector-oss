@@ -27,7 +27,6 @@ import java.util.Map;
 
 public class PreviewSourceOffsetTracker implements SourceOffsetTracker {
   private Map<String, String> offsets;
-  private String stagedOffset;
   private boolean finished;
 
   public PreviewSourceOffsetTracker(Map<String, String> offset) {
@@ -46,19 +45,13 @@ public class PreviewSourceOffsetTracker implements SourceOffsetTracker {
   }
 
   @Override
-  public void setOffset(String newOffset) {
-    this.stagedOffset = newOffset;
-  }
-
-  @Override
   public void commitOffset(String entity, String newOffset) {
     if(entity == null) {
       return;
     }
 
     if(Source.POLL_SOURCE_OFFSET_KEY.equals(entity)) {
-      finished = (stagedOffset == null);
-      stagedOffset = null;
+      finished = (newOffset == null);
     }
 
     if(newOffset == null) {

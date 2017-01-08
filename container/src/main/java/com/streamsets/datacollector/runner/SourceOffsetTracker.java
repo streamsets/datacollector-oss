@@ -44,14 +44,6 @@ public interface SourceOffsetTracker {
   public String getOffset();
 
   /**
-   * Set one dimensional offset.
-   *
-   * Applicable only for (Pull)Source. This method is kept for backward compatibility and will be removed in the future.
-   */
-  @Deprecated
-  public void setOffset(String newOffset);
-
-  /**
    * Change offset for entity in the tracked offsets map and commit it to persistent store.
    *
    * @param entity Entity to be changed, null will disable changing the staged object (making this equivalent to commitOffsets() call)

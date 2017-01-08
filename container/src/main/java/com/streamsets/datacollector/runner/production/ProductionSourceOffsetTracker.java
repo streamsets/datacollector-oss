@@ -36,8 +36,6 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
 
   private static final Logger LOG = LoggerFactory.getLogger(ProductionSourceOffsetTracker.class);
   private Map<String, String> offsets;
-  private String stagedEntity;
-  private String stagedOffset;
   private boolean finished;
   private final String pipelineName;
   private final String rev;
@@ -62,12 +60,6 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
   }
 
   @Override
-  public void setOffset(String offset) {
-    this.stagedEntity = Source.POLL_SOURCE_OFFSET_KEY;
-    this.stagedOffset = offset;
-  }
-
-  @Override
   public void commitOffset(String entity, String newOffset) {
     commitOffsetInternal(pipelineName, rev, entity, newOffset);
   }
@@ -82,8 +74,6 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
     // Backward compatibility calculation
     if(Source.POLL_SOURCE_OFFSET_KEY.equals(entity)) {
       finished = offset == null;
-      stagedEntity = null;
-      stagedOffset = null;
     }
 
     // This object can be called from multiple threads, so we have to synchronize access to the offset map
