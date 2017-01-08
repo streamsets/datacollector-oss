@@ -76,6 +76,7 @@ import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import dagger.Module;
 import dagger.ObjectGraph;
@@ -107,13 +108,13 @@ public class TestUtil {
   public volatile static boolean EMPTY_OFFSET = false;
 
   public static class SourceOffsetTrackerImpl implements SourceOffsetTracker {
-    private String currentOffset;
-    private String newOffset;
+    private final Map<String, String> offsets;
+    private String stagedOffset;
     private boolean finished;
     private long lastBatchTime;
 
-    public SourceOffsetTrackerImpl(String currentOffset) {
-      this.currentOffset = currentOffset;
+    public SourceOffsetTrackerImpl(Map<String, String> offsets) {
+      this.offsets = new HashMap<>(offsets);
       finished = false;
     }
 
@@ -124,34 +125,43 @@ public class TestUtil {
 
     @Override
     public String getOffset() {
-      return currentOffset;
+      return offsets.get(Source.POLL_SOURCE_OFFSET_KEY);
     }
 
     @Override
     public void setOffset(String newOffset) {
-      this.newOffset = newOffset;
+      this.stagedOffset = newOffset;
     }
 
     @Override
     public void commitOffset() {
-      commitOffsetInternal(Source.POLL_SOURCE_OFFSET_KEY, newOffset);
-      newOffset = null;
-    }
-
-    public void commitOffsetInternal(String entity, String offset) {
-      currentOffset = offset;
-      finished = (currentOffset == null);
-      lastBatchTime = System.currentTimeMillis();
+      commitOffset(Source.POLL_SOURCE_OFFSET_KEY, stagedOffset);
+      stagedOffset = null;
     }
 
     @Override
     public void commitOffset(String entity, String newOffset) {
-      commitOffsetInternal(entity, newOffset);
+      lastBatchTime = System.currentTimeMillis();
+      System.out.println(Utils.format("Committing entity({}), offset({}) on time({})", entity, newOffset, lastBatchTime));
+
+      if(entity == null) {
+        return;
+      }
+
+      if(Source.POLL_SOURCE_OFFSET_KEY.equals(entity)) {
+        finished = (newOffset == null);
+      }
+
+      if(newOffset == null) {
+        offsets.remove(entity);
+      } else {
+        offsets.put(entity, newOffset);
+      }
     }
 
     @Override
     public Map<String, String> getOffsets() {
-      return null;
+      return offsets;
     }
 
     @Override

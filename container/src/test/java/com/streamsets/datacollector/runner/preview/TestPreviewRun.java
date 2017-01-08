@@ -231,7 +231,6 @@ public class TestPreviewRun {
     PreviewPipeline pipeline = new PreviewPipelineBuilder(MockStages.createStageLibrary(), configuration, "name", "0",
                                                           pipelineConfiguration, null).build(runner);
     PreviewPipelineOutput previewOutput = pipeline.run();
-    Mockito.verify(tracker).setOffset(Mockito.eq("X"));
   }
 
   @Test

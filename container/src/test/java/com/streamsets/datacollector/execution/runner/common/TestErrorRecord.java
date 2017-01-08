@@ -40,6 +40,7 @@ import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseProcessor;
 import com.streamsets.pipeline.api.base.BaseSource;
@@ -196,7 +197,7 @@ public class TestErrorRecord {
     runner.setDeliveryGuarantee(DeliveryGuarantee.AT_LEAST_ONCE);
     runner.setMemoryLimitConfiguration(new MemoryLimitConfiguration());
     runner.setObserveRequests(new ArrayBlockingQueue<>(100, true /*FIFO*/));
-    runner.setOffsetTracker(new TestUtil.SourceOffsetTrackerImpl("1"));
+    runner.setOffsetTracker(new TestUtil.SourceOffsetTrackerImpl(Collections.singletonMap(Source.POLL_SOURCE_OFFSET_KEY, "1")));
     ProductionPipeline pipeline = new ProductionPipelineBuilder(
         TestUtil.MY_PIPELINE,
         "0",

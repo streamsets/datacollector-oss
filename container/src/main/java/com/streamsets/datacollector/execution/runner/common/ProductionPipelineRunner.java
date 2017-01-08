@@ -325,12 +325,12 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     originPipe.process(offsetTracker.getOffsets(), batchSize);
   }
 
-  private FullPipeBatch createFullPipeBatch() {
+  private FullPipeBatch createFullPipeBatch(String previousOffset) {
     FullPipeBatch pipeBatch;
     if(batchesToCapture > 0) {
-      pipeBatch = new FullPipeBatch(offsetTracker, snapshotBatchSize, true);
+      pipeBatch = new FullPipeBatch(previousOffset, snapshotBatchSize, true);
     } else {
-      pipeBatch = new FullPipeBatch(offsetTracker, configuration.get(Constants.MAX_BATCH_SIZE_KEY, Constants.MAX_BATCH_SIZE_DEFAULT), false);
+      pipeBatch = new FullPipeBatch(previousOffset, configuration.get(Constants.MAX_BATCH_SIZE_KEY, Constants.MAX_BATCH_SIZE_DEFAULT), false);
     }
     pipeBatch.setRateLimiter(rateLimiter);
 
@@ -344,7 +344,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       observer.reconfigure();
     }
 
-    FullPipeBatch pipeBatch = createFullPipeBatch();
+    FullPipeBatch pipeBatch = createFullPipeBatch(null);
     BatchContextImpl batchContext = new BatchContextImpl(pipeBatch);
 
     originPipe.prepareBatchContext(batchContext);
@@ -403,7 +403,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
 
         // Start of the batch execution
         long start = System.currentTimeMillis();
-        FullPipeBatch pipeBatch = createFullPipeBatch();
+        FullPipeBatch pipeBatch = createFullPipeBatch(offsetTracker.getOffsets().get(Source.POLL_SOURCE_OFFSET_KEY));
 
         // Run origin
         Map<String, Long> memoryConsumedByStage = new HashMap<>();
@@ -500,7 +500,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     FullPipeBatch pipeBatch;
 
     // Destroy origin pipe
-    pipeBatch = new FullPipeBatch(offsetTracker, batchSize, false);
+    pipeBatch = new FullPipeBatch(null, batchSize, false);
     try {
       LOG.trace("Destroying origin pipe");
       originPipe.destroy(pipeBatch);
@@ -514,7 +514,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       destroyPipes(pipeRunner, pipeBatch, badRecordsHandler);
 
       // Next iteration should have new and empty PipeBatch
-      pipeBatch = new FullPipeBatch(offsetTracker, batchSize, false);
+      pipeBatch = new FullPipeBatch(null, batchSize, false);
     }
   }
 

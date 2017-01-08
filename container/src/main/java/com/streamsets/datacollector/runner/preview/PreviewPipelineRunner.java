@@ -47,6 +47,7 @@ import com.streamsets.datacollector.runner.production.BadRecordsHandler;
 import com.streamsets.datacollector.runner.production.StatsAggregationHandler;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.PushSource;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -177,7 +178,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
 
   @Override
   public BatchContext startBatch() {
-    FullPipeBatch pipeBatch = new FullPipeBatch(offsetTracker, batchSize, true);
+    FullPipeBatch pipeBatch = new FullPipeBatch(null, batchSize, true);
     BatchContextImpl batchContext = new BatchContextImpl(pipeBatch);
 
     originPipe.prepareBatchContext(batchContext);
@@ -217,7 +218,12 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
 
   private void runPollSource() throws StageException, PipelineRuntimeException {
     for (int i = 0; i < batches; i++) {
-      FullPipeBatch pipeBatch = new FullPipeBatch(offsetTracker, batchSize, true);
+      FullPipeBatch pipeBatch = new FullPipeBatch(
+        offsetTracker.getOffsets().get(Source.POLL_SOURCE_OFFSET_KEY),
+        batchSize,
+        true
+      );
+
       long start = System.currentTimeMillis();
 
         // Process origin data
@@ -275,12 +281,12 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
     // We're not doing any special event propagation during preview destroy phase
 
     // Destroy origin on it's own
-    PipeBatch pipeBatch = new FullPipeBatch(offsetTracker, batchSize, true);
+    PipeBatch pipeBatch = new FullPipeBatch(null, batchSize, true);
     originPipe.destroy(pipeBatch);
 
     // And destroy each pipeline instance separately
     for(List<Pipe> pipeRunner: pipes) {
-      pipeBatch = new FullPipeBatch(offsetTracker, batchSize, true);
+      pipeBatch = new FullPipeBatch(null, batchSize, true);
       pipeBatch.skipStage(originPipe);
       for(Pipe pipe : pipeRunner) {
         pipe.destroy(pipeBatch);

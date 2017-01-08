@@ -41,6 +41,7 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.util.TestUtil;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 
@@ -161,7 +162,7 @@ public class TestProdPipelineRunnable {
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
     Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
 
-    SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl("1");
+    SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl(Collections.singletonMap(Source.POLL_SOURCE_OFFSET_KEY, "1"));
     FileSnapshotStore snapshotStore = Mockito.mock(FileSnapshotStore.class);
 
     Mockito.when(snapshotStore.getInfo(TestUtil.MY_PIPELINE, "0", SNAPSHOT_NAME)).

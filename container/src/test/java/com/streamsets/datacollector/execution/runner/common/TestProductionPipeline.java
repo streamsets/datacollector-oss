@@ -68,6 +68,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -389,7 +390,7 @@ public class TestProductionPipeline {
   }
 
   private ProductionPipeline createProductionPipeline(DeliveryGuarantee deliveryGuarantee, boolean captureNextBatch, long rateLimit, PipelineType type) throws Exception {
-    SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl("1");
+    SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl(Collections.singletonMap(Source.POLL_SOURCE_OFFSET_KEY, "1"));
     SnapshotStore snapshotStore = Mockito.mock(FileSnapshotStore.class);
 
     Mockito.when(snapshotStore.getInfo(PIPELINE_NAME, REVISION, SNAPSHOT_NAME)).thenReturn(

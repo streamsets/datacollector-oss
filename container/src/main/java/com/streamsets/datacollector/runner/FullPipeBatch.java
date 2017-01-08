@@ -39,7 +39,7 @@ import java.util.Set;
 
 public class FullPipeBatch implements PipeBatch {
 
-  private final SourceOffsetTracker offsetTracker;
+  private final String lastOffset;
   private final int batchSize;
   private final Map<String, List<Record>> fullPayload;
   private final Set<String> processedStages;
@@ -51,8 +51,8 @@ public class FullPipeBatch implements PipeBatch {
   private int outputRecords;
   private RateLimiter rateLimiter;
 
-  public FullPipeBatch(SourceOffsetTracker offsetTracker, int batchSize, boolean snapshotStagesOutput) {
-    this.offsetTracker = offsetTracker;
+  public FullPipeBatch(String lastOffset, int batchSize, boolean snapshotStagesOutput) {
+    this.lastOffset = lastOffset;
     this.batchSize = batchSize;
     fullPayload = new HashMap<>();
     processedStages = new HashSet<>();
@@ -73,13 +73,12 @@ public class FullPipeBatch implements PipeBatch {
 
   @Override
   public String getPreviousOffset() {
-    return offsetTracker.getOffset();
+    return lastOffset;
   }
 
   @Override
   public void setNewOffset(String offset) {
     newOffset = offset;
-    offsetTracker.setOffset(offset);
   }
 
   public String getNewOffset() {
@@ -101,7 +100,7 @@ public class FullPipeBatch implements PipeBatch {
     if (pipe.getStage().getDefinition().getType().isOneOf(StageType.TARGET, StageType.EXECUTOR)) {
       outputRecords += records.size();
     }
-    return new BatchImpl(pipe.getStage().getInfo().getInstanceName(), offsetTracker.getOffset(), records);
+    return new BatchImpl(pipe.getStage().getInfo().getInstanceName(), lastOffset, records);
   }
 
   @Override
@@ -290,8 +289,13 @@ public class FullPipeBatch implements PipeBatch {
   @Override
   public String toString() {
     return Utils.format(
-        "PipeBatch[previousOffset='{}' currentOffset='{}' batchSize='{}' keepSnapshot='{}' errorRecords='{}]'",
-        offsetTracker.getOffset(), newOffset, batchSize, stageOutputSnapshot != null, errorSink.size());
+      "PipeBatch[previousOffset='{}' currentOffset='{}' batchSize='{}' keepSnapshot='{}' errorRecords='{}]'",
+      lastOffset,
+      newOffset,
+      batchSize,
+      stageOutputSnapshot != null,
+      errorSink.size()
+    );
   }
 
 }
