@@ -87,11 +87,6 @@ public class StagePreviewPipeBatch implements PipeBatch {
   }
 
   @Override
-  public void commitOffset() {
-    throw new UnsupportedOperationException("commitOffset()");
-  }
-
-  @Override
   public Map<String, List<Record>> getLaneOutputRecords(List<String> pipeLanes) {
     throw new UnsupportedOperationException("getLaneOutputRecords()");
   }

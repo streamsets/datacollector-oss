@@ -53,8 +53,6 @@ public interface PipeBatch {
    */
   void completeStage(StagePipe pipe);
 
-  void commitOffset();
-
   Map<String, List<Record>> getLaneOutputRecords(List<String> pipeLanes);
 
   void overrideStageOutput(StagePipe pipe, StageOutput stageOutput);

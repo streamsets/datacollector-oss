@@ -162,11 +162,6 @@ public class FullPipeBatch implements PipeBatch {
   }
 
   @Override
-  public void commitOffset() {
-    offsetTracker.commitOffset();
-  }
-
-  @Override
   public Map<String, List<Record>> getLaneOutputRecords(List<String> pipeLanes) {
     Map<String, List<Record>> snapshot = new HashMap<>();
     for (String pipeLane : pipeLanes) {

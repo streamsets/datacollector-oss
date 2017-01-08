@@ -55,36 +55,6 @@ public class TestPipeBatch {
 
   @Test
   @SuppressWarnings("unchecked")
-  public void testSourceOffsetTracker() throws Exception {
-    SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
-    Mockito.when(tracker.getOffset()).thenReturn("foo");
-    PipeBatch pipeBatch = new FullPipeBatch(tracker, -1, false);
-    Assert.assertEquals("foo", pipeBatch.getPreviousOffset());
-    Mockito.verify(tracker, Mockito.times(1)).getOffset();
-    Mockito.verifyNoMoreInteractions(tracker);
-    pipeBatch.setNewOffset("bar");
-    Mockito.verify(tracker, Mockito.times(1)).setOffset(Mockito.eq("bar"));
-    Mockito.verifyNoMoreInteractions(tracker);
-
-    pipeBatch.commitOffset();
-    Mockito.verify(tracker, Mockito.times(1)).commitOffset();
-    Mockito.verifyNoMoreInteractions(tracker);
-
-    PipelineBean pipelineBean = getPipelineBean();
-    StageBean stageBean = pipelineBean.getOrigin();
-
-    StageRuntime stage = new StageRuntime(pipelineBean, stageBean);
-
-    StagePipe pipe = new StagePipe(stage, Collections.EMPTY_LIST,
-      LaneResolver.getPostFixed(stage.getConfiguration().getOutputLanes(),
-                                LaneResolver.STAGE_OUT), Collections.EMPTY_LIST);
-
-    Batch batch = pipeBatch.getBatch(pipe);
-    Assert.assertEquals("foo", batch.getSourceOffset());
-  }
-
-  @Test
-  @SuppressWarnings("unchecked")
   public void testStageMethodsNoSnapshot() throws Exception {
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
     PipeBatch pipeBatch = new FullPipeBatch(tracker, -1, false);
