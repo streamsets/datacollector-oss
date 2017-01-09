@@ -562,7 +562,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
 
   // TODO: This offset does not make sense in multi-threaded environment
   public String getCommittedOffset() {
-    return offsetTracker.getOffset();
+    return offsetTracker.getOffsets().get(Source.POLL_SOURCE_OFFSET_KEY);
   }
 
   /**
@@ -704,7 +704,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       );
     }
 
-    newSourceOffset = offsetTracker.getOffset();
+    newSourceOffset = newOffset;
 
     synchronized (this) {
       if( batchesToCapture > 0 && pipeBatch.getSnapshotsOfAllStagesOutput() != null) {
