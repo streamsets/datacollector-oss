@@ -21,6 +21,7 @@ package com.streamsets.datacollector.event.handler.remote;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,7 @@ import com.streamsets.datacollector.event.dto.WorkerInfo;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.production.OffsetFileUtil;
+import com.streamsets.pipeline.api.Source;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -158,7 +160,8 @@ public class RemoteDataCollector implements DataCollector {
     pipelineStore.storeRules(name, rev, ruleDefinitions);
     LOG.info("Offset for remote pipeline '{}:{}' is {}", name, rev, offset);
     if (offset != null) {
-      OffsetFileUtil.saveOffset(runtimeInfo, name, rev, offset);
+      // TODO(SDC-4920): DPM Doesn't support two dimensional offset
+      OffsetFileUtil.saveOffsets(runtimeInfo, name, rev, Collections.singletonMap(Source.POLL_SOURCE_OFFSET_KEY, offset));
     }
   }
 
@@ -269,7 +272,8 @@ public class RemoteDataCollector implements DataCollector {
   }
 
   private String getOffset(String pipelineName, String rev) {
-    return OffsetFileUtil.getOffset(runtimeInfo, pipelineName, rev);
+    // TODO(SDC-4920): DPM Doesn't support two dimensional offset
+    return OffsetFileUtil.getOffsets(runtimeInfo, pipelineName, rev).get(Source.POLL_SOURCE_OFFSET_KEY);
   }
 
   @Override

@@ -72,11 +72,6 @@ public class OffsetFileUtil {
     return sourceOffset.getOffsets();
   }
 
-  // TODO: Kept for easier compatibility, remove in the future
-  public static void saveOffset(RuntimeInfo runtimeInfo, String pipelineName, String rev, String offset) {
-    saveOffsets(runtimeInfo, pipelineName, rev, Collections.singletonMap(Source.POLL_SOURCE_OFFSET_KEY, offset));
-  }
-
   public static void saveOffsets(RuntimeInfo runtimeInfo, String pipelineName, String rev, Map<String, String> offset) {
     LOG.debug("Saving offset {} for pipeline {}", offset, pipelineName);
     SourceOffset sourceOffset = new SourceOffset(SourceOffset.CURRENT_VERSION, offset);

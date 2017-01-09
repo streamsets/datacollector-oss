@@ -37,18 +37,7 @@ public class TestOffsetFileUtil {
   public TemporaryFolder tempFolder= new TemporaryFolder();
 
   @Test
-  public void testSaveAndGetOffsetPoll() throws Exception {
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    File offsetFolder = tempFolder.newFolder();
-    Mockito.when(runtimeInfo.getDataDir()).thenReturn(offsetFolder.getPath());
-    OffsetFileUtil.saveIfEmpty(runtimeInfo, "foo", "1");
-    Assert.assertNull(OffsetFileUtil.getOffset(runtimeInfo, "foo", "1"));
-    OffsetFileUtil.saveOffset(runtimeInfo, "foo", "1", "offset:100");
-    Assert.assertEquals("offset:100", OffsetFileUtil.getOffset(runtimeInfo, "foo", "1"));
-  }
-
-  @Test
-  public void testSaveAndGetOffsetPush() throws Exception {
+  public void testSaveAndGetOffsets() throws Exception {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     File offsetFolder = tempFolder.newFolder();
     Mockito.when(runtimeInfo.getDataDir()).thenReturn(offsetFolder.getPath());
@@ -65,21 +54,10 @@ public class TestOffsetFileUtil {
   }
 
   @Test
-  public void testResetOffsetPoll() throws Exception {
+  public void testResetOffsets() throws Exception {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     File offsetFolder = tempFolder.newFolder();
     Mockito.when(runtimeInfo.getDataDir()).thenReturn(offsetFolder.getPath());
-    OffsetFileUtil.saveOffset(runtimeInfo, "foo", "1", "offset:1000");
-    OffsetFileUtil.resetOffsets(runtimeInfo, "foo", "1");
-    Assert.assertNull(OffsetFileUtil.getOffset(runtimeInfo, "foo", "1"));
-  }
-
-  @Test
-  public void testResetOffsetPush() throws Exception {
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    File offsetFolder = tempFolder.newFolder();
-    Mockito.when(runtimeInfo.getDataDir()).thenReturn(offsetFolder.getPath());
-    OffsetFileUtil.saveOffsets(runtimeInfo, "foo", "1", ImmutableMap.of("a", "b"));
     OffsetFileUtil.resetOffsets(runtimeInfo, "foo", "1");
     Assert.assertEquals(0, OffsetFileUtil.getOffsets(runtimeInfo, "foo", "1").size());
   }

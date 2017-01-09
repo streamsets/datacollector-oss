@@ -56,6 +56,7 @@ import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -70,6 +71,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -833,9 +835,9 @@ public class TestRemoteDataCollector {
       RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
       File testFolder = tempFolder.newFolder();
       Mockito.when(runtimeInfo.getDataDir()).thenReturn(testFolder.getAbsolutePath());
-      OffsetFileUtil.saveOffset(runtimeInfo, "ns:name", "rev", "offset:100");
-      OffsetFileUtil.saveOffset(runtimeInfo, "ns:name1", "rev1", "offset:101");
-      OffsetFileUtil.saveOffset(runtimeInfo, "ns:name2", "rev1", "offset:102");
+      OffsetFileUtil.saveOffsets(runtimeInfo, "ns:name", "rev", Collections.singletonMap(Source.POLL_SOURCE_OFFSET_KEY, "offset:100"));
+      OffsetFileUtil.saveOffsets(runtimeInfo, "ns:name1", "rev1", Collections.singletonMap(Source.POLL_SOURCE_OFFSET_KEY, "offset:101"));
+      OffsetFileUtil.saveOffsets(runtimeInfo, "ns:name2", "rev1", Collections.singletonMap(Source.POLL_SOURCE_OFFSET_KEY, "offset:102"));
 
       RemoteDataCollector dataCollector = new RemoteDataCollector(new MockManager(),
           new MockPipelineStoreTask(),
