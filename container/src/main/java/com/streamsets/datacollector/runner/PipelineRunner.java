@@ -60,10 +60,6 @@ public interface PipelineRunner {
 
   public List<List<StageOutput>> getBatchesOutput();
 
-  public String getSourceOffset();
-
-  public String getNewSourceOffset();
-
   public void setObserver(Observer observer);
 
   public void registerListener(BatchListener batchListener);

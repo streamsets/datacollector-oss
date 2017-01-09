@@ -50,8 +50,6 @@ public class TestSyncPreviewer extends TestPreviewer {
     PreviewPipelineRunner previewPipelineRunner = Mockito.mock(PreviewPipelineRunner.class);
     Mockito.doReturn(null).when(previewPipelineRunner).getMetrics();
     Mockito.doReturn(null).when(previewPipelineRunner).getBatchesOutput();
-    Mockito.doReturn(null).when(previewPipelineRunner).getSourceOffset();
-    Mockito.doReturn(null).when(previewPipelineRunner).getNewSourceOffset();
     Mockito.doReturn(previewPipelineRunner).when(pipeline).getRunner();
     PreviewPipeline previewPipeline = new PreviewPipeline("","", pipeline, new Issues());
     Mockito.doReturn(previewPipeline).when(spyPreviewer).buildPreviewPipeline(Mockito.anyInt(), Mockito.anyInt(),

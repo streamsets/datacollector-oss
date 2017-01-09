@@ -30,15 +30,11 @@ public class PreviewPipelineOutput {
   private final Issues issues;
   private final MetricRegistry metrics;
   private final List<List<StageOutput>> batchesOutput;
-  private String sourceOffset;
-  private String newSourceOffset;
 
   public PreviewPipelineOutput(Issues issues, PipelineRunner runner) {
     this.issues = issues;
     this.metrics = runner.getMetrics();
     this.batchesOutput = runner.getBatchesOutput();
-    this.sourceOffset = runner.getSourceOffset();
-    this.newSourceOffset = runner.getNewSourceOffset();
   }
 
   public Issues getIssues() {
@@ -51,14 +47,6 @@ public class PreviewPipelineOutput {
 
   public List<List<StageOutput>> getBatchesOutput() {
     return batchesOutput;
-  }
-
-  public String getSourceOffset() {
-    return sourceOffset;
-  }
-
-  public String getNewSourceOffset() {
-    return newSourceOffset;
   }
 
 }

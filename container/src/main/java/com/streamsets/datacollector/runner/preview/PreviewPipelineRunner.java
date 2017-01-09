@@ -73,8 +73,6 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
   private final List<List<StageOutput>> batchesOutput;
   private final String name;
   private final String rev;
-  private String sourceOffset;
-  private String newSourceOffset;
   private final Timer processingTimer;
 
   private SourcePipe originPipe;
@@ -254,8 +252,6 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
     String offsetEntity,
     String newOffset
   ) throws StageException, PipelineRuntimeException {
-    sourceOffset = pipeBatch.getPreviousOffset();
-
     List<Pipe> runnerPipes = null;
     try {
       runnerPipes = runnerPool.getRunner();
@@ -282,7 +278,6 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
     offsetTracker.commitOffset(offsetEntity, newOffset);
     //TODO badRecordsHandler HANDLE ERRORS
     processingTimer.update(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
-    newSourceOffset = offsetTracker.getOffset();
     batchesOutput.add(pipeBatch.getSnapshotsOfAllStagesOutput());
   }
 
@@ -312,17 +307,6 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
   @Override
   public List<List<StageOutput>> getBatchesOutput() {
     return batchesOutput;
-  }
-
-
-  @Override
-  public String getSourceOffset() {
-    return sourceOffset;
-  }
-
-  @Override
-  public String getNewSourceOffset() {
-    return newSourceOffset;
   }
 
   @Override

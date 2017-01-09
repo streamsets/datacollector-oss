@@ -138,19 +138,6 @@ public class TestProductionPipeline {
   }
 
   @Test
-  public void testProductionRunnerOffsetAPIs() throws Exception {
-
-    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_LEAST_ONCE, false, PipelineType.DEFAULT);
-    pipeline.registerStatusListener(new MyStateListener());
-    pipeline.run();
-
-    //The source returns null offset the first time.
-    Assert.assertEquals("1", pipeline.getPipeline().getRunner().getSourceOffset());
-    Assert.assertEquals(null, pipeline.getPipeline().getRunner().getNewSourceOffset());
-
-  }
-
-  @Test
   public void testProductionRunAtLeastOnce() throws Exception {
 
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_LEAST_ONCE, true, PipelineType.DEFAULT);

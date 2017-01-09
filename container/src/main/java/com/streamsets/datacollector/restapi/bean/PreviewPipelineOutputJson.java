@@ -44,14 +44,6 @@ public class PreviewPipelineOutputJson {
     return BeanHelper.wrapStageOutputLists(previewPipelineOutput.getBatchesOutput());
   }
 
-  public String getSourceOffset() {
-    return previewPipelineOutput.getSourceOffset();
-  }
-
-  public String getNewSourceOffset() {
-    return previewPipelineOutput.getNewSourceOffset();
-  }
-
   @JsonIgnore
   public com.streamsets.datacollector.runner.preview.PreviewPipelineOutput getPreviewPipelineOutput() {
     return previewPipelineOutput;

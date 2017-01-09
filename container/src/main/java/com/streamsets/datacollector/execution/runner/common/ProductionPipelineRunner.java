@@ -560,16 +560,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     throw new UnsupportedOperationException();
   }
 
-  @Override
-  public String getSourceOffset() {
-    return sourceOffset;
-  }
-
-  @Override
-  public String getNewSourceOffset() {
-    return newSourceOffset;
-  }
-
+  // TODO: This offset does not make sense in multi-threaded environment
   public String getCommittedOffset() {
     return offsetTracker.getOffset();
   }
