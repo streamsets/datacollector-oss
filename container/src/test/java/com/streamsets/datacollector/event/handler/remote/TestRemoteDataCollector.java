@@ -896,7 +896,7 @@ public class TestRemoteDataCollector {
     Mockito.when(runtimeInfo.getDataDir()).thenReturn(testFolder.getAbsolutePath());
     dataCollector.savePipeline("user", "foo", "0", "", "offset:1000", Mockito.mock(PipelineConfiguration.class), null);
     assertTrue("Offset File doesn't exist", OffsetFileUtil.getPipelineOffsetFile(runtimeInfo, "foo", "0").exists());
-    assertEquals("offset:1000", OffsetFileUtil.getOffset(runtimeInfo, "foo", "0"));
+    assertEquals("offset:1000", OffsetFileUtil.getOffsets(runtimeInfo, "foo", "0").get(Source.POLL_SOURCE_OFFSET_KEY));
   }
 
   @Test

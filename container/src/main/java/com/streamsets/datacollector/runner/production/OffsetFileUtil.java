@@ -91,12 +91,6 @@ public class OffsetFileUtil {
     saveOffsets(runtimeInfo, pipelineName, rev, DEFAULT_OFFSET);
   }
 
-  // TODO: Kept for easier compatibility, remove in the future
-  public static String getOffset(RuntimeInfo runtimeInfo, String pipelineName, String rev) {
-    SourceOffset sourceOffset = getOffsetInternal(runtimeInfo, pipelineName, rev);
-    return sourceOffset == null ? null : sourceOffset.getOffsets().get(Source.POLL_SOURCE_OFFSET_KEY);
-  }
-
   public static Map<String, String> getOffsets(RuntimeInfo runtimeInfo, String pipelineName, String rev) {
     SourceOffset sourceOffset = getOffsetInternal(runtimeInfo, pipelineName, rev);
     return sourceOffset == null ? DEFAULT_OFFSET : sourceOffset.getOffsets();

@@ -42,7 +42,6 @@ public class TestOffsetFileUtil {
     File offsetFolder = tempFolder.newFolder();
     Mockito.when(runtimeInfo.getDataDir()).thenReturn(offsetFolder.getPath());
     OffsetFileUtil.saveIfEmpty(runtimeInfo, "foo", "1");
-    Assert.assertNull(OffsetFileUtil.getOffset(runtimeInfo, "foo", "1"));
     OffsetFileUtil.saveOffsets(runtimeInfo, "foo", "1", ImmutableMap.of("a", "b", "c", "d"));
     Map<String, String> offsets = OffsetFileUtil.getOffsets(runtimeInfo, "foo", "1");
     Assert.assertNotNull(offsets);
