@@ -23,11 +23,16 @@ import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.dc.execution.manager.standalone.ThreadUsage;
 
 import java.util.EventListener;
+import java.util.Map;
 
 public interface StateEventListener extends EventListener {
 
   void onStateChange(
-      PipelineState fromState, PipelineState toState, String toStateJson, ThreadUsage threadUsage, String offset
+      PipelineState fromState,
+      PipelineState toState,
+      String toStateJson,
+      ThreadUsage threadUsage,
+      Map<String, String> offset
   ) throws PipelineException;
 
 }

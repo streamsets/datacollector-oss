@@ -557,7 +557,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         fromState,
         pipelineState,
         ThreadUsage.STANDALONE,
-        OffsetFileUtil.getOffset(runtimeInfo, name, rev)
+        OffsetFileUtil.getOffsets(runtimeInfo, name, rev)
     );
   }
 

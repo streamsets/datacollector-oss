@@ -581,7 +581,7 @@ public class ClusterRunner extends AbstractRunner {
             fromState,
             pipelineState,
             ThreadUsage.CLUSTER,
-            OffsetFileUtil.getOffset(runtimeInfo, name, rev)
+            OffsetFileUtil.getOffsets(runtimeInfo, name, rev)
         );
       }
     }

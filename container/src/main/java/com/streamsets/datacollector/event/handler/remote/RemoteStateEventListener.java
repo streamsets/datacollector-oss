@@ -24,6 +24,7 @@ import com.streamsets.datacollector.execution.StateEventListener;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.dc.execution.manager.standalone.ThreadUsage;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.slf4j.Logger;
@@ -58,11 +59,16 @@ public class RemoteStateEventListener implements StateEventListener {
 
   @Override
   public void onStateChange(
-      PipelineState fromState, PipelineState toState, String toStateJson, ThreadUsage threadUsage, String offset
+      PipelineState fromState,
+      PipelineState toState,
+      String toStateJson,
+      ThreadUsage threadUsage,
+      Map<String, String> offset
   ) throws PipelineException {
     Object isRemote = toState.getAttributes().get(RemoteDataCollector.IS_REMOTE_PIPELINE);
     if ((isRemote == null) ? false : (boolean) isRemote) {
-      if (pipelineStateQueue.offer(new ImmutablePair<>(toState, offset))) {
+      // TODO: SDC-4923: Convert RemoteStateEventListener to properly work with two dimensional offset
+      if (pipelineStateQueue.offer(new ImmutablePair<>(toState, offset.get(Source.POLL_SOURCE_OFFSET_KEY)))) {
         LOG.debug(Utils.format("Adding status event for remote pipeline: '{}' in status: '{}'",
             toState.getName(),
             toState.getStatus()

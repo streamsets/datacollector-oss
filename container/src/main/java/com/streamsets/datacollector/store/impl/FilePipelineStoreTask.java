@@ -228,7 +228,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         if (pipelineStatus.isActive()) {
           throw new PipelineStoreException(ContainerError.CONTAINER_0208, pipelineStatus);
         }
-        String offset = OffsetFileUtil.getOffset(runtimeInfo, name, REV);
+        Map<String, String> offset = OffsetFileUtil.getOffsets(runtimeInfo, name, REV);
         if (!cleanUp(name)) {
           throw new PipelineStoreException(ContainerError.CONTAINER_0203, name);
         }

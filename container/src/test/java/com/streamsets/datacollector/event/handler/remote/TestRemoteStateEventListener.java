@@ -24,11 +24,13 @@ import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.manager.PipelineStateImpl;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.Source;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +44,7 @@ public class TestRemoteStateEventListener {
     attributes.put(RemoteDataCollector.IS_REMOTE_PIPELINE, true);
     PipelineState pipelineState = new PipelineStateImpl("user", "name", "0", PipelineStatus.RUNNING, "msg", -1,
         attributes, ExecutionMode.STANDALONE, "", 1, -1);
-    remoteStateEventListener.onStateChange(null, pipelineState, null, null, "offset:1000");
+    remoteStateEventListener.onStateChange(null, pipelineState, null, null, Collections.singletonMap(Source.POLL_SOURCE_OFFSET_KEY, "offset:1000"));
     Collection<Pair<PipelineState, String>> pipelineStateAndOffset = remoteStateEventListener.getPipelineStateEvents();
     Assert.assertEquals(1, pipelineStateAndOffset.size());
     Assert.assertEquals(PipelineStatus.RUNNING, pipelineStateAndOffset.iterator().next().getLeft().getStatus());
@@ -51,8 +53,8 @@ public class TestRemoteStateEventListener {
 
     PipelineState pipelineStateDeleted = new PipelineStateImpl("user", "name", "0", PipelineStatus.DELETED, "msg", -1,
         attributes, ExecutionMode.STANDALONE, "", 1, -1);
-    remoteStateEventListener.onStateChange(null, pipelineState, null, null, "offset:old");
-    remoteStateEventListener.onStateChange(null, pipelineStateDeleted, null, null, "offset:new");
+    remoteStateEventListener.onStateChange(null, pipelineState, null, null, Collections.singletonMap(Source.POLL_SOURCE_OFFSET_KEY, "offset:old"));
+    remoteStateEventListener.onStateChange(null, pipelineStateDeleted, null, null, Collections.singletonMap(Source.POLL_SOURCE_OFFSET_KEY, "offset:new"));
     pipelineStateAndOffset = remoteStateEventListener.getPipelineStateEvents();
     Assert.assertEquals(1, pipelineStateAndOffset.size());
     Assert.assertEquals(PipelineStatus.DELETED, pipelineStateAndOffset.iterator().next().getLeft().getStatus());

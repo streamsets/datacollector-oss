@@ -26,6 +26,7 @@ import com.streamsets.datacollector.execution.common.ExecutorConstants;
 import com.streamsets.datacollector.util.Configuration;
 
 import javax.inject.Inject;
+import java.util.Map;
 
 public class ResourceManager implements StateEventListener {
 
@@ -51,7 +52,11 @@ public class ResourceManager implements StateEventListener {
   @Override
   public void
     onStateChange(
-      PipelineState fromState, PipelineState toState, String toStateJson, ThreadUsage threadUsage, String offset
+      PipelineState fromState,
+      PipelineState toState,
+      String toStateJson,
+      ThreadUsage threadUsage,
+      Map<String, String> offset
   ) {
     if ((fromState.getStatus().isActive() && !toState.getStatus().isActive())
       || toState.getStatus() == PipelineStatus.RETRY) {
