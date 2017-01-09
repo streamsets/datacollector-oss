@@ -100,7 +100,7 @@ public class TestProdPipelineRunnable {
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RUNNING, null, null, null, null, 0, 0);
     runnable.run();
     // The source returns null offset because all the data from source was read
-    Assert.assertNull(pipeline.getCommittedOffset());
+    Assert.assertTrue(pipeline.getCommittedOffsets().isEmpty());
   }
 
   @Test

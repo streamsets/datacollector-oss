@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -157,9 +158,9 @@ public class ProductionPipelineRunnable implements Runnable {
     //Update pipeline state accordingly
     if (pipeline.wasStopped()) {
       try {
-        String offset = pipeline.getCommittedOffset();
+        Map<String, String> offset = pipeline.getCommittedOffsets();
         String offsetStatus = "";
-        if (!StringUtils.isEmpty(offset)) {
+        if (!offset.isEmpty()) {
           offsetStatus = Utils.format("The last committed source offset is {}.", offset);
         }
         if (this.nodeProcessShutdown) {

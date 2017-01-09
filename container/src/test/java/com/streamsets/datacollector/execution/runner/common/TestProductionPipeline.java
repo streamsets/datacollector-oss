@@ -133,8 +133,7 @@ public class TestProductionPipeline {
     pipeline.registerStatusListener(new MyStateListener());
     pipeline.run();
 
-    //The source returns null offset the first time.
-    Assert.assertEquals(null, pipeline.getCommittedOffset());
+    Assert.assertTrue(pipeline.getCommittedOffsets().isEmpty());
   }
 
   @Test
@@ -144,9 +143,7 @@ public class TestProductionPipeline {
     pipeline.registerStatusListener(new MyStateListener());
     pipeline.run();
 
-    //The source returns null offset the first time.
-    Assert.assertNull(pipeline.getCommittedOffset());
-
+    Assert.assertTrue(pipeline.getCommittedOffsets().isEmpty());
   }
 
   @Test
@@ -155,8 +152,7 @@ public class TestProductionPipeline {
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, PipelineType.DEFAULT);
     pipeline.registerStatusListener(new MyStateListener());
     pipeline.run();
-    //The source returns null offset the first time.
-    Assert.assertNull(pipeline.getCommittedOffset());
+    Assert.assertTrue(pipeline.getCommittedOffsets().isEmpty());
   }
 
   private static class SourceOffsetCommitterCapture extends BaseSource implements OffsetCommitter {

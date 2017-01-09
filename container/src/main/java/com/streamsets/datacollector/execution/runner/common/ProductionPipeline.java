@@ -194,8 +194,14 @@ public class ProductionPipeline {
     return pipelineRunner.wasStopped();
   }
 
-  public String getCommittedOffset() {
-    return pipelineRunner.getCommittedOffset();
+  /**
+   * Returns committed offsets.
+   *
+   * This method returns unmodifiable view of the map where we're maintaining offsets - hence this is not
+   * a snapshot and as additional offsets are committed this map and the return view will change.
+   */
+  public Map<String, String> getCommittedOffsets() {
+    return pipelineRunner.getCommittedOffsets();
   }
 
   public void captureSnapshot(String snapshotName, int batchSize, int batches) {

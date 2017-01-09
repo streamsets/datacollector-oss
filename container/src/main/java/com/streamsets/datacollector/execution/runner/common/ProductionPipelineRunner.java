@@ -560,9 +560,8 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     throw new UnsupportedOperationException();
   }
 
-  // TODO: This offset does not make sense in multi-threaded environment
-  public String getCommittedOffset() {
-    return offsetTracker.getOffsets().get(Source.POLL_SOURCE_OFFSET_KEY);
+  public Map<String, String> getCommittedOffsets() {
+    return offsetTracker.getOffsets();
   }
 
   /**
