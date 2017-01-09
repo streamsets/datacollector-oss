@@ -713,7 +713,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       );
     }
 
-    newSourceOffset = newOffset;
+    newSourceOffset = offsetTracker.getOffset();
 
     synchronized (this) {
       if( batchesToCapture > 0 && pipeBatch.getSnapshotsOfAllStagesOutput() != null) {

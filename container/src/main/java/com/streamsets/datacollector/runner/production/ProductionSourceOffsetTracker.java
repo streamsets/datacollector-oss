@@ -55,6 +55,11 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
   }
 
   @Override
+  public String getOffset() {
+    return offsets.get(Source.POLL_SOURCE_OFFSET_KEY);
+  }
+
+  @Override
   public void commitOffset(String entity, String newOffset) {
     commitOffsetInternal(pipelineName, rev, entity, newOffset);
   }

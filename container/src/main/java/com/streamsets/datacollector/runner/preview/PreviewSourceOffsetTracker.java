@@ -40,6 +40,11 @@ public class PreviewSourceOffsetTracker implements SourceOffsetTracker {
   }
 
   @Override
+  public String getOffset() {
+    return offsets.get(Source.POLL_SOURCE_OFFSET_KEY);
+  }
+
+  @Override
   public void commitOffset(String entity, String newOffset) {
     if(entity == null) {
       return;
