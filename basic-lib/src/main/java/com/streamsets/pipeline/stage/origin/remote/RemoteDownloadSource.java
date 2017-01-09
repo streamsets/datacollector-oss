@@ -176,6 +176,7 @@ public class RemoteDownloadSource extends BaseSource {
               issues.add(getContext().createConfigIssue(
                   Groups.CREDENTIALS.getLabel(), CONF_PREFIX + "privateKey", Errors.REMOTE_11));
             } else {
+              SftpFileSystemConfigBuilder.getInstance().setPreferredAuthentications(options, "publickey");
               SftpFileSystemConfigBuilder.getInstance().setIdentities(options, new File[]{privateKeyFile});
               if (conf.privateKeyPassphrase != null && !conf.privateKeyPassphrase.isEmpty()) {
                 SftpFileSystemConfigBuilder.getInstance()
@@ -187,6 +188,7 @@ public class RemoteDownloadSource extends BaseSource {
         case PASSWORD:
           StaticUserAuthenticator auth = new StaticUserAuthenticator(
               remoteURI.getHost(), conf.username, conf.password);
+          SftpFileSystemConfigBuilder.getInstance().setPreferredAuthentications(options, "password");
           DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
           break;
         default:
