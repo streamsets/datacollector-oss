@@ -22,6 +22,7 @@ package com.streamsets.datacollector.main;
 import com.streamsets.datacollector.restapi.bean.UserJson;
 import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.security.LoginService;
+import org.eclipse.jetty.security.MappedLoginService;
 import org.eclipse.jetty.server.UserIdentity;
 
 import java.security.Principal;
@@ -88,16 +89,18 @@ public class FileUserGroupManager implements UserGroupManager {
         UserIdentity userIdentity = userIdentityMap.get(userName);
         Set<Principal> principals = userIdentity.getSubject().getPrincipals();
         for (Principal principal: principals) {
-          if (principal.getName().startsWith(GROUP_PREFIX)) {
-            String groupName = principal.getName().replace(GROUP_PREFIX, "");
-            if (!groups.contains(groupName)) {
-              groups.add(groupName);
+          if (principal instanceof MappedLoginService.RolePrincipal) {
+            if (principal.getName().startsWith(GROUP_PREFIX)) {
+              String groupName = principal.getName().replace(GROUP_PREFIX, "");
+              if (!groups.contains(groupName)) {
+                groups.add(groupName);
+              }
+              if (!groupList.contains(groupName)) {
+                groupList.add(groupName);
+              }
+            } else if (!roles.contains(principal.getName())){
+              roles.add(principal.getName());
             }
-            if (!groupList.contains(groupName)) {
-              groupList.add(groupName);
-            }
-          } else if (!roles.contains(principal.getName())){
-            roles.add(principal.getName());
           }
         }
         user.setRoles(roles);
