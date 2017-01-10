@@ -67,8 +67,8 @@
                                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                                 /> jobs. <p>After you publish or import pipelines to <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                                    />, you add them to a job, and then run the job. When you run a
-                                    job on a group of <ph
+                                    />, you add them to a job, and then start the job. When you
+                                    start a job on a group of <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                     />s, <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
@@ -91,7 +91,7 @@
                                     /> automatically generates and runs system pipelines to
                                     aggregate statistics for jobs. System pipelines collect,
                                     aggregate, and push metrics for all of the remote pipeline
-                                    instances run from a job. When you run a job on a group of <ph
+                                    instances run from a job. When you start a job on a group of <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                     />s, <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"

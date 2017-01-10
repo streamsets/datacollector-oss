@@ -32,7 +32,7 @@
             <step>
                 <cmd>In <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                    />, stop all jobs running on the <ph
+                    />, stop all jobs started on the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     />. </cmd>
             </step>

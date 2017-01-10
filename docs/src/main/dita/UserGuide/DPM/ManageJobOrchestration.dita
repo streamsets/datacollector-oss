@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_inh_ccs_bx">
- <title>Manage the Orchestration of Running Jobs</title>
+ <title>Manage the Orchestration of Jobs</title>
  <shortdesc>In <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>,
         pipelines are the design of the dataflow. Jobs are the execution of the
         dataflow.</shortdesc>
@@ -24,14 +24,14 @@
             engineer - the person responsible for ensuring that all services and systems are
             scalable and reliable - you create <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
-            jobs to run pipelines and to determine the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s
-            that run the jobs. When you run a job on a group of <ph
+            jobs to run pipelines on groups of <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s.
+            When you start a job on a group of <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s,
                 <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
             remotely runs the pipeline on all <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s
-            in the group. This enables you to manage and orchestrate large scale dataflow jobs run
+            in the group. This enables you to manage and orchestrate large scale dataflows run
             across multiple <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
             />s.</p>
@@ -47,11 +47,11 @@
         <p>The following image displays how the WebLog Collection job runs a remote pipeline
             instance on each <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> in
-            the web server group. The job does not run on <ph
+            the web server group. The job does not run pipelines on <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s
             in the data warehouse group, which are <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s
-            that are reserved for jobs that read from the enterprise data warehouse.</p>
+            that are reserved for pipelines that read from the enterprise data warehouse.</p>
         <p><image href="../Graphics/DPM_ManageOrchestration.png" scale="80" id="image_dtc_h21_cx"
             /></p>
     </conbody>

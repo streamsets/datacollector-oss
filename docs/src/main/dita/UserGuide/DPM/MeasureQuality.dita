@@ -26,14 +26,14 @@
             systems included in the topology. <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
             monitoring provides real-time statistics, error information, and alerts about the
-            running jobs. </p>
+            running pipelines. </p>
         <p>For example, the Summary tab of the Customer 360 topology provides a single view into the
-            record count and throughput for all running jobs in the topology:</p>
+            record count and throughput for all running pipelines in the topology:</p>
         <p><image href="../Graphics/DPM_MeasureQualityTopology.png" scale="55" id="image_hv1_ctq_fx"
             /></p>
         <p>You can select a job or a connecting system within the topology to discover more detailed
             monitoring about the job or system. </p>
-        <p>When a job runs on a group of <ph
+        <p>When you start a job on a group of <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s,
                 <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
             provides a single view of the statistics for the complete job. From a job, you can view

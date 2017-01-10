@@ -49,9 +49,9 @@
                 remote pipeline instances run from the job. Running system pipelines are named as
                 follows:<codeblock>System Pipeline for Job &lt;job name>:&lt;system job ID></codeblock></li>
         </ul>
-        <note type="tip">In the image above, a job is running on a <ph
+        <note type="tip">In the image above, the job was started on a <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            that is being used to design pipelines. As a best practice, use labels within <ph
+            used to design pipelines. As a best practice, use labels within <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/> to
             separate development <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s

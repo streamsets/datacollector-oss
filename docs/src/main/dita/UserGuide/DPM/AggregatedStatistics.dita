@@ -34,7 +34,7 @@
             Kinesis Streams.<draft-comment author="alisontaylor">2 paragraphs above have same text
                 as in DPM Tutorial > Configure Statistics for a Pipeline. Make same updates in both
                 places.</draft-comment></p>
-        <p>When you run a job that includes a pipeline configured to aggregate statistics, <ph
+        <p>When you start a job that includes a pipeline configured to aggregate statistics, <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
             automatically generates and runs a system pipeline for the job. The system pipeline
             reads the statistics written by each running pipeline instance to Kafka or Kinesis.
