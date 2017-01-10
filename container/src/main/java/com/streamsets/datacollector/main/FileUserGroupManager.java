@@ -35,6 +35,7 @@ import java.util.concurrent.ConcurrentMap;
 
 public class FileUserGroupManager implements UserGroupManager {
   private static final String GROUP_PREFIX = "group:";
+  private static final String USER_ROLE = "user";
   private HashLoginService hashLoginService;
   private Map<String, UserJson> usersMap;
   private List<UserJson> userList;
@@ -98,7 +99,7 @@ public class FileUserGroupManager implements UserGroupManager {
               if (!groupList.contains(groupName)) {
                 groupList.add(groupName);
               }
-            } else if (!roles.contains(principal.getName())){
+            } else if (!roles.contains(principal.getName()) && !USER_ROLE.equals(principal.getName())) {
               roles.add(principal.getName());
             }
           }
