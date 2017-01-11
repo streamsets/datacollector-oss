@@ -41,15 +41,23 @@ import java.util.List;
 import java.util.UUID;
 
 public class PushHttpReceiver implements HttpReceiver {
+  static final String MAXREQUEST_SYS_PROP =
+      "com.streamsets.httpserverpushsource.maxrequest.mb";
+
+  private static int getMaxRequestSizeMBLimit() {
+    return Integer.parseInt(System.getProperty(MAXREQUEST_SYS_PROP, "100"));
+  }
+
   private final HttpConfigs httpConfigs;
-  private final int maxRequestSize;
+  private final int maxRequestSizeMB;
+  private int maxRequestSize;
   private final DataParserFormatConfig dataParserFormatConfig;
   private PushSource.Context context;
   private DataParserFactory parserFactory;
 
   public PushHttpReceiver(HttpConfigs httpConfigs, int maxRequestSizeMB, DataParserFormatConfig dataParserFormatConfig) {
     this.httpConfigs = httpConfigs;
-    maxRequestSize = maxRequestSizeMB * 1000 * 1000;
+    this.maxRequestSizeMB = maxRequestSizeMB;
     this.dataParserFormatConfig = dataParserFormatConfig;
   }
 
@@ -61,7 +69,14 @@ public class PushHttpReceiver implements HttpReceiver {
   public List<Stage.ConfigIssue> init(Stage.Context context) {
     this.context = (PushSource.Context) context;
     parserFactory = dataParserFormatConfig.getParserFactory();
-    return new ArrayList<>();
+    List<Stage.ConfigIssue> issues = new ArrayList<>();
+    if (maxRequestSizeMB > getMaxRequestSizeMBLimit()) {
+      issues.add(getContext().createConfigIssue("HTTP", "maxRequestSizeMB", Errors.HTTP_SERVER_PUSH_00,
+          maxRequestSizeMB, getMaxRequestSizeMBLimit()));
+    } else {
+      maxRequestSize = maxRequestSizeMB * 1000 * 1000;
+    }
+    return issues;
   }
 
   @Override

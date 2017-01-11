@@ -19,23 +19,74 @@
  */
 package com.streamsets.pipeline.stage.origin.httpserver;
 
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.http.HttpConfigs;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
+import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.io.InputStream;
+import java.util.List;
 
 public class TestPushHttpReceiver {
 
+  @Before
+  @After
+  public void beforeAndAfter() {
+    System.clearProperty(PushHttpReceiver.MAXREQUEST_SYS_PROP);
+  }
+
   @Test
+  public void testInit() {
+    HttpConfigs httpConfigs = Mockito.mock(HttpConfigs.class);
+    DataParserFormatConfig dataConfigs = Mockito.mock(DataParserFormatConfig.class);
+    Stage.Context context = ContextInfoCreator.createSourceContext("i", true, OnRecordError.DISCARD, ImmutableList.of
+        ("a"));
+    PushHttpReceiver receiver = new PushHttpReceiver(httpConfigs, 0, dataConfigs);
+    try {
+      Assert.assertTrue(receiver.init(context).isEmpty());
+      Assert.assertEquals(0, receiver.getMaxRequestSize());
+    } finally {
+      receiver.destroy();
+    }
+    receiver = new PushHttpReceiver(httpConfigs, 100, dataConfigs);
+    try {
+      Assert.assertTrue(receiver.init(context).isEmpty());
+      Assert.assertEquals(100 * 1000 * 1000, receiver.getMaxRequestSize());
+    } finally {
+      receiver.destroy();
+    }
+    receiver = new PushHttpReceiver(httpConfigs, 101, dataConfigs);
+    try {
+      List<Stage.ConfigIssue> issues = receiver.init(context);
+      Assert.assertEquals(1, issues.size());
+      Assert.assertTrue(issues.get(0).toString().contains(Errors.HTTP_SERVER_PUSH_00.name()));
+    } finally {
+      receiver.destroy();
+    }
+    System.setProperty(PushHttpReceiver.MAXREQUEST_SYS_PROP, "101");
+    receiver = new PushHttpReceiver(httpConfigs, 101, dataConfigs);
+    try {
+      Assert.assertTrue(receiver.init(context).isEmpty());
+      Assert.assertEquals(101 * 1000 * 1000, receiver.getMaxRequestSize());
+    } finally {
+      receiver.destroy();
+    }
+  }
+
+    @Test
   public void testGetters() {
     HttpConfigs httpConfigs = Mockito.mock(HttpConfigs.class);
     Mockito.when(httpConfigs.getAppId()).thenReturn("id");

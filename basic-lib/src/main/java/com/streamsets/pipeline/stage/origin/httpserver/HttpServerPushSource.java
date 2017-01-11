@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.origin.httpserver;
 
+import com.streamsets.pipeline.common.DataFormatConstants;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.http.HttpConfigs;
 import com.streamsets.pipeline.lib.http.HttpReceiver;
@@ -30,7 +31,6 @@ import java.util.List;
 public class HttpServerPushSource extends AbstractHttpServerPushSource<HttpReceiver> {
 
   private final HttpConfigs httpConfigs;
-  private final int maxRequestSizeMB;
 
   private final DataFormat dataFormat;
 
@@ -44,7 +44,6 @@ public class HttpServerPushSource extends AbstractHttpServerPushSource<HttpRecei
   ) {
     super(httpConfigs, new PushHttpReceiver(httpConfigs, maxRequestSizeMB, dataFormatConfig));
     this.httpConfigs = httpConfigs;
-    this.maxRequestSizeMB = maxRequestSizeMB;
     this.dataFormat = dataFormat;
     this.dataFormatConfig = dataFormatConfig;
   }
@@ -57,7 +56,7 @@ public class HttpServerPushSource extends AbstractHttpServerPushSource<HttpRecei
         dataFormat,
         Groups.DATA_FORMAT.name(),
         "dataFormatConfig",
-        maxRequestSizeMB * 1000 * 1000,
+        DataFormatConstants.MAX_OVERRUN_LIMIT,
         issues
     );
     issues.addAll(getReceiver().init(getContext()));
