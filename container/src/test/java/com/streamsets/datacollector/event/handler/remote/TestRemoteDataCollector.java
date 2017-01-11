@@ -927,8 +927,8 @@ public class TestRemoteDataCollector {
     Mockito.when(runtimeInfo.getDataDir()).thenReturn(testFolder.getAbsolutePath());
     Mockito.when(pipelineStoreTask.hasPipeline(Mockito.anyString())).thenReturn(false);
     Mockito.when(remoteStateEventListener.getPipelineStateEvents()).thenReturn(Arrays.<Pair<PipelineState,
-        String>>asList(
-        new ImmutablePair<>(pipelineStates.get(0), "offset:1000")));
+        Map<String, String>>>asList(
+        new ImmutablePair<>(pipelineStates.get(0), Collections.singletonMap(Source.POLL_SOURCE_OFFSET_KEY, "offset:1000"))));
     List<PipelineAndValidationStatus> pipelineAndValidationStatuses = dataCollector.getRemotePipelinesWithChanges();
     assertEquals(1, pipelineAndValidationStatuses.size());
     PipelineAndValidationStatus pipelineAndValidationStatus = pipelineAndValidationStatuses.get(0);

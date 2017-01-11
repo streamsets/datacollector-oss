@@ -46,7 +46,7 @@ public class RemoteStateEventListener implements StateEventListener {
   private static final String REMOTE_EVENTS_QUEUE_CAPACITY = "remote.events.queue.capacity";
   private static final int REMOTE_EVENTS_QUEUE_CAPACITY_DEFAULT = 1000;
   private final int capacity;
-  private BlockingQueue<Pair<PipelineState, String>> pipelineStateQueue;
+  private BlockingQueue<Pair<PipelineState, Map<String, String>>> pipelineStateQueue;
 
   @Inject
   public RemoteStateEventListener(Configuration conf) {
@@ -67,8 +67,7 @@ public class RemoteStateEventListener implements StateEventListener {
   ) throws PipelineException {
     Object isRemote = toState.getAttributes().get(RemoteDataCollector.IS_REMOTE_PIPELINE);
     if ((isRemote == null) ? false : (boolean) isRemote) {
-      // TODO: SDC-4923: Convert RemoteStateEventListener to properly work with two dimensional offset
-      if (pipelineStateQueue.offer(new ImmutablePair<>(toState, offset.get(Source.POLL_SOURCE_OFFSET_KEY)))) {
+      if (pipelineStateQueue.offer(new ImmutablePair<>(toState, offset))) {
         LOG.debug(Utils.format("Adding status event for remote pipeline: '{}' in status: '{}'",
             toState.getName(),
             toState.getStatus()
@@ -80,12 +79,12 @@ public class RemoteStateEventListener implements StateEventListener {
     }
   }
 
-  public Collection<Pair<PipelineState, String>> getPipelineStateEvents() {
-    List<Pair<PipelineState, String>> pipelineStates = new ArrayList<>();
+  public Collection<Pair<PipelineState, Map<String, String>>> getPipelineStateEvents() {
+    List<Pair<PipelineState, Map<String, String>>> pipelineStates = new ArrayList<>();
     pipelineStateQueue.drainTo(pipelineStates);
     // Keep last state for a given pipeline
-    Map<String, Pair<PipelineState, String>> map = new HashMap<>();
-    for (Pair<PipelineState, String> pipelineStateAndOffset: pipelineStates) {
+    Map<String, Pair<PipelineState, Map<String, String>>> map = new HashMap<>();
+    for (Pair<PipelineState, Map<String, String>> pipelineStateAndOffset: pipelineStates) {
       map.put(pipelineStateAndOffset.getLeft().getName(), pipelineStateAndOffset);
     }
     return map.values();

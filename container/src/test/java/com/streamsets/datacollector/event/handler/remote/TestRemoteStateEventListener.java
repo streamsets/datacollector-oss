@@ -45,10 +45,10 @@ public class TestRemoteStateEventListener {
     PipelineState pipelineState = new PipelineStateImpl("user", "name", "0", PipelineStatus.RUNNING, "msg", -1,
         attributes, ExecutionMode.STANDALONE, "", 1, -1);
     remoteStateEventListener.onStateChange(null, pipelineState, null, null, Collections.singletonMap(Source.POLL_SOURCE_OFFSET_KEY, "offset:1000"));
-    Collection<Pair<PipelineState, String>> pipelineStateAndOffset = remoteStateEventListener.getPipelineStateEvents();
+    Collection<Pair<PipelineState, Map<String, String>>> pipelineStateAndOffset = remoteStateEventListener.getPipelineStateEvents();
     Assert.assertEquals(1, pipelineStateAndOffset.size());
     Assert.assertEquals(PipelineStatus.RUNNING, pipelineStateAndOffset.iterator().next().getLeft().getStatus());
-    Assert.assertEquals("offset:1000", pipelineStateAndOffset.iterator().next().getRight());
+    Assert.assertEquals("offset:1000", pipelineStateAndOffset.iterator().next().getRight().get(Source.POLL_SOURCE_OFFSET_KEY));
     Assert.assertEquals(0, remoteStateEventListener.getPipelineStateEvents().size());
 
     PipelineState pipelineStateDeleted = new PipelineStateImpl("user", "name", "0", PipelineStatus.DELETED, "msg", -1,
@@ -58,7 +58,7 @@ public class TestRemoteStateEventListener {
     pipelineStateAndOffset = remoteStateEventListener.getPipelineStateEvents();
     Assert.assertEquals(1, pipelineStateAndOffset.size());
     Assert.assertEquals(PipelineStatus.DELETED, pipelineStateAndOffset.iterator().next().getLeft().getStatus());
-    Assert.assertEquals("offset:new", pipelineStateAndOffset.iterator().next().getRight());
+    Assert.assertEquals("offset:new", pipelineStateAndOffset.iterator().next().getRight().get(Source.POLL_SOURCE_OFFSET_KEY));
     Assert.assertEquals(0, remoteStateEventListener.getPipelineStateEvents().size());
   }
 

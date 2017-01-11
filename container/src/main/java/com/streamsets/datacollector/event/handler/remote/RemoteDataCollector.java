@@ -230,9 +230,9 @@ public class RemoteDataCollector implements DataCollector {
   @Override
   public List<PipelineAndValidationStatus> getRemotePipelinesWithChanges() throws PipelineException {
     List<PipelineAndValidationStatus> pipelineAndValidationStatuses = new ArrayList<>();
-    for (Pair<PipelineState, String> pipelineStateAndOffset: stateEventListener.getPipelineStateEvents()) {
+    for (Pair<PipelineState, Map<String, String>> pipelineStateAndOffset: stateEventListener.getPipelineStateEvents()) {
       PipelineState pipelineState = pipelineStateAndOffset.getLeft();
-      String offset = pipelineStateAndOffset.getRight();
+      Map<String, String> offset = pipelineStateAndOffset.getRight();
       String name = pipelineState.getName();
       String rev = pipelineState.getRev();
       PipelineState latestState;
@@ -254,7 +254,8 @@ public class RemoteDataCollector implements DataCollector {
           latestState.getMessage(),
           workerInfos,
           isClusterMode,
-          offset
+          // TODO(SDC-4920): DPM Doesn't support two dimensional offset
+          offset.get(Source.POLL_SOURCE_OFFSET_KEY)
       ));
     }
     return pipelineAndValidationStatuses;
