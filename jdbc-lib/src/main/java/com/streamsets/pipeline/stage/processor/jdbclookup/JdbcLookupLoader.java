@@ -23,6 +23,7 @@ import com.google.common.cache.CacheLoader;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.lib.jdbc.DataType;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
@@ -46,17 +47,23 @@ public class JdbcLookupLoader extends CacheLoader<String, Map<String, Field>> {
   private final int maxBlobSize;
   private final ErrorRecordHandler errorRecordHandler;
   private final Map<String, String> columnsToFields;
+  private final Map<String, String> columnsToDefaults;
+  private final Map<String, DataType> columnsToTypes;
   private final DataSource dataSource;
 
   public JdbcLookupLoader(
       DataSource dataSource,
       Map<String, String> columnsToFields,
+      Map<String, String> columnsToDefaults,
+      Map<String, DataType> columnsToTypes,
       int maxClobSize,
       int maxBlobSize,
       ErrorRecordHandler errorRecordHandler
   ) {
     this.dataSource = dataSource;
     this.columnsToFields = columnsToFields;
+    this.columnsToDefaults = columnsToDefaults;
+    this.columnsToTypes = columnsToTypes;
     this.maxClobSize = maxClobSize;
     this.maxBlobSize = maxBlobSize;
     this.errorRecordHandler = errorRecordHandler;
@@ -68,7 +75,7 @@ public class JdbcLookupLoader extends CacheLoader<String, Map<String, Field>> {
   }
 
   private Map<String, Field> lookupValuesForRecord(String preparedQuery) throws StageException {
-    Map<String, Field> values = new HashMap<>();
+    Map<String, Field> defaultValues = new HashMap<>();
 
     try (Connection connection = dataSource.getConnection()) {
       try (Statement stmt = connection.createStatement()) {
@@ -79,6 +86,7 @@ public class JdbcLookupLoader extends CacheLoader<String, Map<String, Field>> {
             LinkedHashMap<String, Field> fields = JdbcUtil.resultSetToFields(resultSet,
                 maxClobSize,
                 maxBlobSize,
+                columnsToTypes,
                 errorRecordHandler
             );
 
@@ -88,6 +96,17 @@ public class JdbcLookupLoader extends CacheLoader<String, Map<String, Field>> {
             }
 
             return fields;
+          } else {
+            // Database returns no row. Use default values.
+            for (String column : columnsToFields.keySet()) {
+              if (columnsToTypes.get(column) != DataType.USE_COLUMN_TYPE) {
+                Field field = Field.create(
+                    Field.Type.valueOf(columnsToTypes.get(column).getLabel()),
+                    columnsToDefaults.get(column)
+                );
+                defaultValues.put(column, field);
+              }
+            }
           }
         }
       } catch (SQLException e) {
@@ -100,6 +119,6 @@ public class JdbcLookupLoader extends CacheLoader<String, Map<String, Field>> {
       LOG.error(JdbcErrors.JDBC_02.getMessage(), preparedQuery, e);
       throw new OnRecordErrorException(JdbcErrors.JDBC_02, preparedQuery, e.getMessage());
     }
-    return values;
+    return defaultValues;
   }
 }

@@ -79,6 +79,7 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_50("Error while getting table schema. Please verify the connectivity to the DB and the privileges for the user"),
   JDBC_51("Invalid value: {}"),
   JDBC_52("Error starting LogMiner"),
+  JDBC_53("Since the default value of '{}' is not empty, its data type cannot be '" + DataType.USE_COLUMN_TYPE.getLabel() + "'."),
 
   JDBC_60("Cannot Serialize Offset: {}"),
   JDBC_61("Cannot Deserialize Offset: {}"),

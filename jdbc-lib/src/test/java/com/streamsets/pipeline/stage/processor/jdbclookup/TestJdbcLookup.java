@@ -23,8 +23,8 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.lib.jdbc.DataType;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnMapping;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
@@ -59,6 +59,8 @@ public class TestJdbcLookup {
   private final String listQuery = "SELECT P_ID FROM TEST.TEST_TABLE" +
       " WHERE FIRST_NAME = '${record:value(\"[0]\")}'" +
       "   AND LAST_NAME = '${record:value(\"[1]\")}'";
+  private final String queryReturnsNoRow = "SELECT P_ID FROM TEST.TEST_TABLE" +
+      " WHERE false";
   private final String h2ConnectionString = "jdbc:h2:mem:" + database;
 
   private Connection connection = null;
@@ -407,5 +409,65 @@ public class TestJdbcLookup {
     Assert.assertEquals(1, outputRecords.get(0).get("/P_ID").getValueAsInteger());
     Assert.assertEquals(2, outputRecords.get(1).get("/P_ID").getValueAsInteger());
     Assert.assertEquals(3, outputRecords.get(2).get("/P_ID").getValueAsInteger());
+  }
+
+  @Test
+  public void testBadDataTypeForDefaultValue() throws Exception {
+    List<JdbcFieldColumnMapping> columnMappings = ImmutableList.of(
+        new JdbcFieldColumnMapping("P_ID", "[2]", "100", DataType.USE_COLUMN_TYPE)
+    );
+
+    JdbcLookupDProcessor processor = new JdbcLookupDProcessor();
+    processor.hikariConfigBean = createConfigBean(h2ConnectionString, username, password);
+
+    ProcessorRunner processorRunner = new ProcessorRunner.Builder(JdbcLookupDProcessor.class, processor)
+        .addConfiguration("query", listQuery)
+        .addConfiguration("columnMappings", columnMappings)
+        .addConfiguration("maxClobSize", 1000)
+        .addConfiguration("maxBlobSize", 1000)
+        .addOutputLane("lane")
+        .build();
+
+    // Data type must be explicitly set if default value is not empty.
+    List<Stage.ConfigIssue> issues = processorRunner.runValidateConfigs();
+    assertEquals(1, issues.size());
+  }
+
+  @Test
+  public void testDefaultValue() throws Exception {
+    List<JdbcFieldColumnMapping> columnMappings = ImmutableList.of(
+        new JdbcFieldColumnMapping("P_ID", "[2]", "100", DataType.INTEGER)
+    );
+
+    JdbcLookupDProcessor processor = new JdbcLookupDProcessor();
+    processor.hikariConfigBean = createConfigBean(h2ConnectionString, username, password);
+
+    ProcessorRunner processorRunner = new ProcessorRunner.Builder(JdbcLookupDProcessor.class, processor)
+        .addConfiguration("query", queryReturnsNoRow)
+        .addConfiguration("columnMappings", columnMappings)
+        .addConfiguration("maxClobSize", 1000)
+        .addConfiguration("maxBlobSize", 1000)
+        .addOutputLane("lane")
+        .build();
+
+    Record record = RecordCreator.create();
+    List<Field> fields = new ArrayList<>();
+    fields.add(Field.create("Adam"));
+    fields.add(Field.create("Kunicki"));
+    record.set(Field.create(fields));
+
+    List<Record> singleRecord = ImmutableList.of(record);
+    processorRunner.runInit();
+    try {
+      StageRunner.Output output = processorRunner.runProcess(singleRecord);
+      Assert.assertEquals(1, output.getRecords().get("lane").size());
+
+      record = output.getRecords().get("lane").get(0);
+
+      Assert.assertNotEquals(null, record.get("[2]"));
+      Assert.assertEquals(100, record.get("[2]").getValueAsInteger());
+    } finally {
+      processorRunner.runDestroy();
+    }
   }
 }

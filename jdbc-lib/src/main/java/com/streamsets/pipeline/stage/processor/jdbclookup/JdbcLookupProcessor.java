@@ -20,7 +20,6 @@
 package com.streamsets.pipeline.stage.processor.jdbclookup;
 
 import com.google.common.base.Throwables;
-import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Processor;
@@ -31,8 +30,8 @@ import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.jdbc.DataType;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnMapping;
@@ -41,9 +40,9 @@ import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.destination.jdbc.Groups;
 import com.streamsets.pipeline.stage.processor.kv.CacheConfig;
-import com.streamsets.pipeline.stage.processor.kv.EvictionPolicyType;
 import com.streamsets.pipeline.stage.processor.kv.LookupUtils;
 import com.zaxxer.hikari.HikariDataSource;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,6 +59,7 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
 
   private static final String HIKARI_CONFIG_PREFIX = "hikariConfigBean.";
   private static final String CONNECTION_STRING = HIKARI_CONFIG_PREFIX + "connectionString";
+  private static final String COLUMN_MAPPINGS = "columnMappings";
   private final CacheConfig cacheConfig;
 
   private ELEval queryEval;
@@ -73,6 +73,8 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
   private ErrorRecordHandler errorRecordHandler;
   private HikariDataSource dataSource = null;
   private Map<String, String> columnsToFields = new HashMap<>();
+  private Map<String, String> columnsToDefaults = new HashMap<>();
+  private Map<String, DataType> columnsToTypes = new HashMap<>();
   private final Properties driverProperties = new Properties();
 
   private LoadingCache<String, Map<String, Field>> cache;
@@ -118,6 +120,11 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
     for (JdbcFieldColumnMapping mapping : columnMappings) {
       LOG.debug("Mapping field {} to column {}", mapping.field, mapping.columnName);
       columnsToFields.put(mapping.columnName, mapping.field);
+      if (!StringUtils.isEmpty(mapping.defaultValue) && mapping.dataType == DataType.USE_COLUMN_TYPE) {
+        issues.add(context.createConfigIssue(Groups.JDBC.name(), COLUMN_MAPPINGS, JdbcErrors.JDBC_53, mapping.field));
+      }
+      columnsToDefaults.put(mapping.columnName, mapping.defaultValue);
+      columnsToTypes.put(mapping.columnName, mapping.dataType);
     }
 
     if (issues.isEmpty()) {
@@ -188,6 +195,8 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
   private LoadingCache<String, Map<String, Field>> buildCache() {
     JdbcLookupLoader loader = new JdbcLookupLoader(dataSource,
         columnsToFields,
+        columnsToDefaults,
+        columnsToTypes,
         maxClobSize,
         maxBlobSize,
         errorRecordHandler

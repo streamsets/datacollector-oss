@@ -21,6 +21,7 @@ package com.streamsets.pipeline.lib.jdbc;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.FieldSelectorModel;
+import com.streamsets.pipeline.api.ValueChooserModel;
 
 public class JdbcFieldColumnMapping {
 
@@ -30,8 +31,21 @@ public class JdbcFieldColumnMapping {
    * @param field
    */
   public JdbcFieldColumnMapping(final String columnName, final String field) {
+    this(columnName, field, "", DataType.USE_COLUMN_TYPE);
+  }
+
+  /**
+   * Constructor used for unit testing purposes
+   * @param columnName
+   * @param field
+   * @param defaultValue
+   * @param dataType
+   */
+  public JdbcFieldColumnMapping(final String columnName, final String field, final String defaultValue, final DataType dataType) {
     this.columnName = columnName;
     this.field = field;
+    this.defaultValue = defaultValue;
+    this.dataType = dataType;
   }
 
   /**
@@ -59,4 +73,28 @@ public class JdbcFieldColumnMapping {
   )
   @FieldSelectorModel(singleValued = true)
   public String field;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "",
+      label = "Default Value",
+      description = "The default value to be used when the database returns no row. " +
+          "If not set, the record is sent to error in such a case.",
+      displayPosition = 30
+  )
+  public String defaultValue;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "USE_COLUMN_TYPE",
+      label = "Data Type",
+      description = "The field type. By default, the column type from the database will be used. " +
+          "But if the field type is provided, it will overwrite the column type. " +
+          "Note that if the default value is provided, the field type must also be provided.",
+      displayPosition = 40
+  )
+  @ValueChooserModel(DataTypeChooserValues.class)
+  public DataType dataType;
 }

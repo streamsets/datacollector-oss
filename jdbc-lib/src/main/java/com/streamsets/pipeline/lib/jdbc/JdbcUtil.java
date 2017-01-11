@@ -54,6 +54,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -360,7 +361,6 @@ public class JdbcUtil {
     return os.toByteArray();
   }
 
-
   public static Field resultToField(
       ResultSetMetaData md,
       ResultSet rs,
@@ -368,83 +368,99 @@ public class JdbcUtil {
       int maxClobSize,
       int maxBlobSize
   ) throws SQLException, IOException {
+    return resultToField(md, rs, columnIndex, maxClobSize, maxBlobSize, DataType.USE_COLUMN_TYPE);
+  }
+
+  public static Field resultToField(
+      ResultSetMetaData md,
+      ResultSet rs,
+      int columnIndex,
+      int maxClobSize,
+      int maxBlobSize,
+      DataType userSpecifiedType
+  ) throws SQLException, IOException {
       Field field;
-      // All types as of JDBC 2.0 are here:
-      // https://docs.oracle.com/javase/8/docs/api/constant-values.html#java.sql.Types.ARRAY
-      // Good source of recommended mappings is here:
-      // http://www.cs.mun.ca/java-api-1.5/guide/jdbc/getstart/mapping.html
-      switch (md.getColumnType(columnIndex)) {
-        case Types.BIGINT:
-          field = Field.create(Field.Type.LONG, rs.getObject(columnIndex));
-          break;
-        case Types.BINARY:
-        case Types.LONGVARBINARY:
-        case Types.VARBINARY:
-          field = Field.create(Field.Type.BYTE_ARRAY, rs.getBytes(columnIndex));
-          break;
-        case Types.BIT:
-        case Types.BOOLEAN:
-          field = Field.create(Field.Type.BOOLEAN, rs.getObject(columnIndex));
-          break;
-        case Types.CHAR:
-        case Types.LONGNVARCHAR:
-        case Types.LONGVARCHAR:
-        case Types.NCHAR:
-        case Types.NVARCHAR:
-        case Types.VARCHAR:
-          field = Field.create(Field.Type.STRING, rs.getObject(columnIndex));
-          break;
-        case Types.CLOB:
-        case Types.NCLOB:
-          field = Field.create(Field.Type.STRING, getClobString(rs.getClob(columnIndex), maxClobSize));
-          break;
-        case Types.BLOB:
-          field = Field.create(Field.Type.BYTE_ARRAY, getBlobBytes(rs.getBlob(columnIndex), maxBlobSize));
-          break;
-        case Types.DATE:
-          field = Field.create(Field.Type.DATE, rs.getDate(columnIndex));
-          break;
-        case Types.DECIMAL:
-        case Types.NUMERIC:
-          field = Field.create(Field.Type.DECIMAL, rs.getBigDecimal(columnIndex));
-          break;
-        case Types.DOUBLE:
-          field = Field.create(Field.Type.DOUBLE, rs.getObject(columnIndex));
-          break;
-        case Types.FLOAT:
-        case Types.REAL:
-          field = Field.create(Field.Type.FLOAT, rs.getObject(columnIndex));
-          break;
-        case Types.INTEGER:
-          field = Field.create(Field.Type.INTEGER, rs.getObject(columnIndex));
-          break;
-        case Types.ROWID:
-          field = Field.create(Field.Type.STRING, rs.getRowId(columnIndex).toString());
-          break;
-        case Types.SMALLINT:
-        case Types.TINYINT:
-          field = Field.create(Field.Type.SHORT, rs.getObject(columnIndex));
-          break;
-        case Types.TIME:
-          field = Field.create(Field.Type.TIME, rs.getObject(columnIndex));
-          break;
-        case Types.TIMESTAMP:
-          field = Field.create(Field.Type.DATETIME, rs.getTimestamp(columnIndex));
-          break;
-        case Types.ARRAY:
-        case Types.DATALINK:
-        case Types.DISTINCT:
-        case Types.JAVA_OBJECT:
-        case Types.NULL:
-        case Types.OTHER:
-        case Types.REF:
-          //case Types.REF_CURSOR: // JDK8 only
-        case Types.SQLXML:
-        case Types.STRUCT:
-          //case Types.TIME_WITH_TIMEZONE: // JDK8 only
-          //case Types.TIMESTAMP_WITH_TIMEZONE: // JDK8 only
-        default:
-          return null;
+      if (userSpecifiedType != DataType.USE_COLUMN_TYPE) {
+        // If user specifies the data type, overwrite the column type returned by database.
+        field = Field.create(Field.Type.valueOf(userSpecifiedType.getLabel()), rs.getObject(columnIndex));
+      } else {
+        // All types as of JDBC 2.0 are here:
+        // https://docs.oracle.com/javase/8/docs/api/constant-values.html#java.sql.Types.ARRAY
+        // Good source of recommended mappings is here:
+        // http://www.cs.mun.ca/java-api-1.5/guide/jdbc/getstart/mapping.html
+        switch (md.getColumnType(columnIndex)) {
+          case Types.BIGINT:
+            field = Field.create(Field.Type.LONG, rs.getObject(columnIndex));
+            break;
+          case Types.BINARY:
+          case Types.LONGVARBINARY:
+          case Types.VARBINARY:
+            field = Field.create(Field.Type.BYTE_ARRAY, rs.getBytes(columnIndex));
+            break;
+          case Types.BIT:
+          case Types.BOOLEAN:
+            field = Field.create(Field.Type.BOOLEAN, rs.getObject(columnIndex));
+            break;
+          case Types.CHAR:
+          case Types.LONGNVARCHAR:
+          case Types.LONGVARCHAR:
+          case Types.NCHAR:
+          case Types.NVARCHAR:
+          case Types.VARCHAR:
+            field = Field.create(Field.Type.STRING, rs.getObject(columnIndex));
+            break;
+          case Types.CLOB:
+          case Types.NCLOB:
+            field = Field.create(Field.Type.STRING, getClobString(rs.getClob(columnIndex), maxClobSize));
+            break;
+          case Types.BLOB:
+            field = Field.create(Field.Type.BYTE_ARRAY, getBlobBytes(rs.getBlob(columnIndex), maxBlobSize));
+            break;
+          case Types.DATE:
+            field = Field.create(Field.Type.DATE, rs.getDate(columnIndex));
+            break;
+          case Types.DECIMAL:
+          case Types.NUMERIC:
+            field = Field.create(Field.Type.DECIMAL, rs.getBigDecimal(columnIndex));
+            break;
+          case Types.DOUBLE:
+            field = Field.create(Field.Type.DOUBLE, rs.getObject(columnIndex));
+            break;
+          case Types.FLOAT:
+          case Types.REAL:
+            field = Field.create(Field.Type.FLOAT, rs.getObject(columnIndex));
+            break;
+          case Types.INTEGER:
+            field = Field.create(Field.Type.INTEGER, rs.getObject(columnIndex));
+            break;
+          case Types.ROWID:
+            field = Field.create(Field.Type.STRING, rs.getRowId(columnIndex).toString());
+            break;
+          case Types.SMALLINT:
+          case Types.TINYINT:
+            field = Field.create(Field.Type.SHORT, rs.getObject(columnIndex));
+            break;
+          case Types.TIME:
+            field = Field.create(Field.Type.TIME, rs.getObject(columnIndex));
+            break;
+          case Types.TIMESTAMP:
+            field = Field.create(Field.Type.DATETIME, rs.getTimestamp(columnIndex));
+            break;
+          case Types.ARRAY:
+          case Types.DATALINK:
+          case Types.DISTINCT:
+          case Types.JAVA_OBJECT:
+          case Types.NULL:
+          case Types.OTHER:
+          case Types.REF:
+            //case Types.REF_CURSOR: // JDK8 only
+          case Types.SQLXML:
+          case Types.STRUCT:
+            //case Types.TIME_WITH_TIMEZONE: // JDK8 only
+            //case Types.TIMESTAMP_WITH_TIMEZONE: // JDK8 only
+          default:
+            return null;
+        }
       }
 
       return field;
@@ -456,12 +472,24 @@ public class JdbcUtil {
       int maxBlobSize,
       ErrorRecordHandler errorRecordHandler
   ) throws SQLException, StageException {
+    return resultSetToFields(rs, maxClobSize, maxBlobSize, Collections.<String, DataType>emptyMap(), errorRecordHandler);
+  }
+
+  public static LinkedHashMap<String, Field> resultSetToFields(
+      ResultSet rs,
+      int maxClobSize,
+      int maxBlobSize,
+      Map<String, DataType> columnsToTypes,
+      ErrorRecordHandler errorRecordHandler
+  ) throws SQLException, StageException {
     ResultSetMetaData md = rs.getMetaData();
     LinkedHashMap<String, Field> fields = new LinkedHashMap<>(md.getColumnCount());
 
     for (int i = 1; i <= md.getColumnCount(); i++) {
       try {
-        Field field = resultToField(md, rs, i, maxClobSize, maxBlobSize);
+        DataType dataType = columnsToTypes.get(md.getColumnName(i));
+        Field field = resultToField(md, rs, i, maxClobSize, maxBlobSize,
+            dataType == null ? DataType.USE_COLUMN_TYPE : dataType);
 
         if (field == null) {
           throw new StageException(JdbcErrors.JDBC_37, md.getColumnType(i), md.getColumnLabel(i));
@@ -472,37 +500,6 @@ public class JdbcUtil {
         errorRecordHandler.onError(JdbcErrors.JDBC_13, e.getMessage(), e);
       } catch (IOException e) {
         errorRecordHandler.onError(JdbcErrors.JDBC_03, md.getColumnName(i), rs.getObject(i), e);
-      }
-    }
-
-    return fields;
-  }
-
-  public static LinkedHashMap<String, Field> resultSetToFields(
-      Record record,
-      ResultSet rs,
-      int maxClobSize,
-      int maxBlobSize,
-      List<OnRecordErrorException> errorRecords
-      ) throws SQLException, StageException {
-    ResultSetMetaData md = rs.getMetaData();
-    LinkedHashMap<String, Field> fields = new LinkedHashMap<>(md.getColumnCount());
-
-    for (int i = 1; i <= md.getColumnCount(); i++) {
-      try {
-        Field field = resultToField(md, rs, i, maxClobSize, maxBlobSize);
-
-        if (field == null) {
-          throw new StageException(JdbcErrors.JDBC_37, md.getColumnType(i), md.getColumnLabel(i));
-        }
-
-        fields.put(md.getColumnLabel(i), field);
-      } catch (SQLException e) {
-        errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_13,
-            md.getColumnName(i), rs.getObject(i)));
-      } catch (IOException e) {
-        errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_03,
-            md.getColumnName(i), rs.getObject(i)));
       }
     }
 
