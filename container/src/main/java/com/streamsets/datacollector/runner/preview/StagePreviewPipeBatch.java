@@ -65,7 +65,7 @@ public class StagePreviewPipeBatch implements PipeBatch {
 
   @Override
   public BatchImpl getBatch(Pipe pipe) {
-    return new BatchImpl(instanceName, null, inputRecords);
+    return new BatchImpl(instanceName, null, null, inputRecords);
   }
 
   @Override

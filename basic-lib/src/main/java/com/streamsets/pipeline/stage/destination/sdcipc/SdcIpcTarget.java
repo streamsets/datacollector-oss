@@ -138,7 +138,7 @@ public class SdcIpcTarget extends BaseTarget {
     HttpURLConnection conn = null;
 
     while (!ok && retryCount <= config.retriesPerBatch) {
-      LOG.debug("Writing out batch '{}' retry '{}'", batch.getSourceOffset(), retryCount);
+      LOG.debug("Writing out batch for entity '{}' and offset '{}' retry '{}'", batch.getSourceEntity(), batch.getSourceOffset(), retryCount);
 
       if(retryCount > 0 && waitTime > 0) {
         LOG.debug("Waiting '{}' milliseconds before re-try", waitTime);
@@ -169,13 +169,13 @@ public class SdcIpcTarget extends BaseTarget {
         ok = conn.getResponseCode() == HttpURLConnection.HTTP_OK;
         if (!ok) {
           errorReason = conn.getResponseMessage();
-          LOG.warn("Batch '{}' could not be written out: {}", batch.getSourceOffset(), errorReason);
+          LOG.warn("Batch for entity '{}' and offset '{}' could not be written out: {}", batch.getSourceEntity(), batch.getSourceOffset(), errorReason);
         } else {
-          LOG.debug("Batch '{}' written out on retry '{}'", batch.getSourceOffset(), retryCount);
+          LOG.debug("Batch for entity '{}' and offset '{}' written out on retry '{}'", batch.getSourceEntity(), batch.getSourceOffset(), retryCount);
         }
       } catch (IOException ex) {
         errorReason = ex.toString();
-        LOG.warn("Batch '{}' could not be written out: {}", batch.getSourceOffset(), errorReason, ex);
+        LOG.warn("Batch for entity '{}' and offset '{}' could not be written out: {}", batch.getSourceEntity(), batch.getSourceOffset(), errorReason, ex);
 
         if (conn != null) {
           conn.disconnect();

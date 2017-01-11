@@ -156,6 +156,7 @@ public class KafkaTarget extends BaseTarget {
                   new StageException(
                       KafkaErrors.KAFKA_60,
                       sourceId,
+                      batch.getSourceEntity(),
                       batch.getSourceOffset(),
                       partition,
                       ex.toString(),
@@ -174,6 +175,7 @@ public class KafkaTarget extends BaseTarget {
                     new StageException(
                         KafkaErrors.KAFKA_60,
                         "<NONE>",
+                        batch.getSourceEntity(),
                         batch.getSourceOffset(),
                         partition,
                         error.toString(),

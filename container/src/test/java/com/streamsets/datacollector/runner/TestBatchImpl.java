@@ -37,8 +37,9 @@ public class TestBatchImpl {
   @Test
   public void testBatch() {
     List<Record> records = ImmutableList.of(Mockito.mock(Record.class), Mockito.mock(Record.class));
-    Batch batch = new BatchImpl("i", "offset", records);
+    Batch batch = new BatchImpl("i", "entity", "offset", records);
 
+    Assert.assertEquals("entity", batch.getSourceEntity());
     Assert.assertEquals("offset", batch.getSourceOffset());
     Iterator<Record> it = batch.getRecords();
     Assert.assertTrue(it.hasNext());

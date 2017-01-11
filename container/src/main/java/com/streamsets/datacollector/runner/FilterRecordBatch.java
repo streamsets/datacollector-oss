@@ -52,6 +52,11 @@ public class FilterRecordBatch implements Batch {
   }
 
   @Override
+  public String getSourceEntity() {
+    return batch.getSourceEntity();
+  }
+
+  @Override
   public String getSourceOffset() {
     return batch.getSourceOffset();
   }

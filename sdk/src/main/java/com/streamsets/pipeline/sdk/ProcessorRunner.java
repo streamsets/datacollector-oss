@@ -57,7 +57,7 @@ public class ProcessorRunner extends StageRunner<Processor> {
     try {
       LOG.debug("Stage '{}' process starts", getInfo().getInstanceName());
       ensureStatus(Status.INITIALIZED);
-      BatchImpl batch = new BatchImpl(getInfo().getInstanceName(), "sdk:sourceOffset", inputRecords);
+      BatchImpl batch = new BatchImpl(getInfo().getInstanceName(), "sdk", "sourceOffset", inputRecords);
       BatchMakerImpl batchMaker = new BatchMakerImpl(((Source.Context) getContext()).getOutputLanes());
       getStage().process(batch, batchMaker);
       return new Output("sdk:sourceOffset", batchMaker.getOutput());

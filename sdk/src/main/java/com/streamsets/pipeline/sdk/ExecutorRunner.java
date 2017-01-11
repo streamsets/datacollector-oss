@@ -82,7 +82,7 @@ public class ExecutorRunner extends StageRunner<Executor> {
   public void runWrite(List<Record> inputRecords) throws StageException {
     LOG.debug("Stage '{}' write starts", getInfo().getInstanceName());
     ensureStatus(Status.INITIALIZED);
-    BatchImpl batch = new BatchImpl(getInfo().getInstanceName(), "sdk:sourceOffset", inputRecords);
+    BatchImpl batch = new BatchImpl(getInfo().getInstanceName(),  "sdk", "sourceOffset", inputRecords);
     getStage().write(batch);
     LOG.debug("Stage '{}' write ends", getInfo().getInstanceName());
   }

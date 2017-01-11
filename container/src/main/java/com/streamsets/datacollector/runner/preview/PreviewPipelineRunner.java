@@ -176,7 +176,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
 
   @Override
   public BatchContext startBatch() {
-    FullPipeBatch pipeBatch = new FullPipeBatch(null, batchSize, true);
+    FullPipeBatch pipeBatch = new FullPipeBatch(null, null, batchSize, true);
     BatchContextImpl batchContext = new BatchContextImpl(pipeBatch);
 
     originPipe.prepareBatchContext(batchContext);
@@ -222,6 +222,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
   private void runPollSource() throws StageException, PipelineRuntimeException {
     for (int i = 0; i < batches; i++) {
       FullPipeBatch pipeBatch = new FullPipeBatch(
+        Source.POLL_SOURCE_OFFSET_KEY,
         offsetTracker.getOffsets().get(Source.POLL_SOURCE_OFFSET_KEY),
         batchSize,
         true
@@ -291,12 +292,12 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
     // We're not doing any special event propagation during preview destroy phase
 
     // Destroy origin on it's own
-    PipeBatch pipeBatch = new FullPipeBatch(null, batchSize, true);
+    PipeBatch pipeBatch = new FullPipeBatch(null,null, batchSize, true);
     originPipe.destroy(pipeBatch);
 
     // And destroy each pipeline instance separately
     for(List<Pipe> pipeRunner: pipes) {
-      pipeBatch = new FullPipeBatch(null, batchSize, true);
+      pipeBatch = new FullPipeBatch(null,null, batchSize, true);
       pipeBatch.skipStage(originPipe);
       for(Pipe pipe : pipeRunner) {
         pipe.destroy(pipeBatch);

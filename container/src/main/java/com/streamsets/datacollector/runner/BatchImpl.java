@@ -30,12 +30,19 @@ import java.util.List;
 public class BatchImpl implements Batch {
   private final String instanceName;
   private final List<Record> records;
+  private final String sourceEntity;
   private final String sourceOffset;
 
-  public BatchImpl(String instanceName, String sourceOffset, List<Record> records) {
+  public BatchImpl(String instanceName, String sourceEntity, String sourceOffset, List<Record> records) {
     this.instanceName = instanceName;
     this.records = Collections.unmodifiableList(records);
+    this.sourceEntity = sourceEntity;
     this.sourceOffset = sourceOffset;
+  }
+
+  @Override
+  public String getSourceEntity() {
+    return sourceEntity;
   }
 
   @Override

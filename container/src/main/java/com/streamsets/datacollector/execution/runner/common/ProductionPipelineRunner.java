@@ -102,8 +102,6 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   private final MetricRegistry metrics;
   private SourceOffsetTracker offsetTracker;
   private final SnapshotStore snapshotStore;
-  private String sourceOffset;
-  private String newSourceOffset;
   private DeliveryGuarantee deliveryGuarantee;
   private final String pipelineName;
   private final String revision;
@@ -325,12 +323,12 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     originPipe.process(offsetTracker.getOffsets(), batchSize);
   }
 
-  private FullPipeBatch createFullPipeBatch(String previousOffset) {
+  private FullPipeBatch createFullPipeBatch(String entityName, String previousOffset) {
     FullPipeBatch pipeBatch;
     if(batchesToCapture > 0) {
-      pipeBatch = new FullPipeBatch(previousOffset, snapshotBatchSize, true);
+      pipeBatch = new FullPipeBatch(entityName, previousOffset, snapshotBatchSize, true);
     } else {
-      pipeBatch = new FullPipeBatch(previousOffset, configuration.get(Constants.MAX_BATCH_SIZE_KEY, Constants.MAX_BATCH_SIZE_DEFAULT), false);
+      pipeBatch = new FullPipeBatch(entityName, previousOffset, configuration.get(Constants.MAX_BATCH_SIZE_KEY, Constants.MAX_BATCH_SIZE_DEFAULT), false);
     }
     pipeBatch.setRateLimiter(rateLimiter);
 
@@ -344,7 +342,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       observer.reconfigure();
     }
 
-    FullPipeBatch pipeBatch = createFullPipeBatch(null);
+    FullPipeBatch pipeBatch = createFullPipeBatch(null,null);
     BatchContextImpl batchContext = new BatchContextImpl(pipeBatch);
 
     originPipe.prepareBatchContext(batchContext);
@@ -403,7 +401,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
 
         // Start of the batch execution
         long start = System.currentTimeMillis();
-        FullPipeBatch pipeBatch = createFullPipeBatch(offsetTracker.getOffsets().get(Source.POLL_SOURCE_OFFSET_KEY));
+        FullPipeBatch pipeBatch = createFullPipeBatch(Source.POLL_SOURCE_OFFSET_KEY, offsetTracker.getOffsets().get(Source.POLL_SOURCE_OFFSET_KEY));
 
         // Run origin
         Map<String, Long> memoryConsumedByStage = new HashMap<>();
@@ -500,7 +498,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     FullPipeBatch pipeBatch;
 
     // Destroy origin pipe
-    pipeBatch = new FullPipeBatch(null, batchSize, false);
+    pipeBatch = new FullPipeBatch(null, null, batchSize, false);
     try {
       LOG.trace("Destroying origin pipe");
       originPipe.destroy(pipeBatch);
@@ -514,7 +512,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       destroyPipes(pipeRunner, pipeBatch, badRecordsHandler);
 
       // Next iteration should have new and empty PipeBatch
-      pipeBatch = new FullPipeBatch(null, batchSize, false);
+      pipeBatch = new FullPipeBatch(null,null, batchSize, false);
     }
   }
 
@@ -552,7 +550,8 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
         LOG.warn("Exception throw while destroying pipe", e);
       }
     }
-    badRecordsHandler.handle(newSourceOffset, getBadRecords(pipeBatch.getErrorSink()));
+
+    badRecordsHandler.handle(null, null, getBadRecords(pipeBatch.getErrorSink()));
   }
 
   @Override
@@ -637,7 +636,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   ) throws PipelineException, StageException {
     boolean committed = false;
     OffsetCommitTrigger offsetCommitTrigger = getOffsetCommitTrigger(originPipe, pipes);
-    sourceOffset = pipeBatch.getPreviousOffset();
+    String previousOffset = pipeBatch.getPreviousOffset();
 
     List<Pipe> runnerPipes = null;
     try {
@@ -652,7 +651,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     }
 
     enforceMemoryLimit(memoryConsumedByStage);
-    badRecordsHandler.handle(newSourceOffset, getBadRecords(pipeBatch.getErrorSink()));
+    badRecordsHandler.handle(entityName, newOffset, getBadRecords(pipeBatch.getErrorSink()));
     if (deliveryGuarantee == DeliveryGuarantee.AT_LEAST_ONCE) {
       // When AT_LEAST_ONCE commit only if
       // 1. There is no offset commit trigger for this pipeline or
@@ -703,8 +702,6 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       );
     }
 
-    newSourceOffset = newOffset;
-
     synchronized (this) {
       if( batchesToCapture > 0 && pipeBatch.getSnapshotsOfAllStagesOutput() != null) {
         List<StageOutput> snapshot = pipeBatch.getSnapshotsOfAllStagesOutput();
@@ -736,7 +733,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     if (isStatsAggregationEnabled()) {
       List<Record> stats = new ArrayList<>();
       statsAggregatorRequests.drainTo(stats);
-      statsAggregationHandler.handle(sourceOffset, stats);
+      statsAggregationHandler.handle(entityName, previousOffset, stats);
     }
   }
 

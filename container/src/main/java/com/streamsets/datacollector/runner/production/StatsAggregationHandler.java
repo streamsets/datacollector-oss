@@ -45,8 +45,8 @@ public class StatsAggregationHandler {
     return  statsAggregator.init();
   }
 
-  public void handle(String sourceOffset, List<Record> statsRecords) throws StageException {
-    ((Target) statsAggregator.getStage()).write(new BatchImpl(STATS_AGGREGATOR, sourceOffset, statsRecords));
+  public void handle(String sourceEntity, String sourceOffset, List<Record> statsRecords) throws StageException {
+    ((Target) statsAggregator.getStage()).write(new BatchImpl(STATS_AGGREGATOR, sourceEntity, sourceOffset, statsRecords));
   }
 
   public void destroy() {

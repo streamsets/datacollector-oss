@@ -225,11 +225,11 @@ public class TestErrorRecord {
     );
 
     PowerMockito.replace(
-        MemberMatcher.method(BadRecordsHandler.class, "handle", String.class, List.class)
+        MemberMatcher.method(BadRecordsHandler.class, "handle", String.class, String.class, List.class)
     ).with(new InvocationHandler() {
       @Override
       public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        List<Record> records = (List<Record>)args[1];
+        List<Record> records = (List<Record>)args[2];
         badHandlerErrorRecords.addAll(records);
         return null;
       }

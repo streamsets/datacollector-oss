@@ -44,8 +44,8 @@ public class BadRecordsHandler {
     return  errorStage.init();
   }
 
-  public void handle(String sourceOffset, List<Record> badRecords) throws StageException {
-    ((Target)errorStage.getStage()).write(new BatchImpl("errorStage", sourceOffset, badRecords));
+  public void handle(String sourceEntity, String sourceOffset, List<Record> badRecords) throws StageException {
+    ((Target)errorStage.getStage()).write(new BatchImpl("errorStage", sourceEntity, sourceOffset, badRecords));
   }
 
   public void destroy() {

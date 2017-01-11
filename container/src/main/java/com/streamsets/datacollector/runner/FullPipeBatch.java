@@ -39,6 +39,7 @@ import java.util.Set;
 
 public class FullPipeBatch implements PipeBatch {
 
+  private final String sourceEntity;
   private final String lastOffset;
   private final int batchSize;
   private final Map<String, List<Record>> fullPayload;
@@ -51,7 +52,8 @@ public class FullPipeBatch implements PipeBatch {
   private int outputRecords;
   private RateLimiter rateLimiter;
 
-  public FullPipeBatch(String lastOffset, int batchSize, boolean snapshotStagesOutput) {
+  public FullPipeBatch(String sourceEntity, String lastOffset, int batchSize, boolean snapshotStagesOutput) {
+    this.sourceEntity = sourceEntity;
     this.lastOffset = lastOffset;
     this.batchSize = batchSize;
     fullPayload = new HashMap<>();
@@ -100,7 +102,7 @@ public class FullPipeBatch implements PipeBatch {
     if (pipe.getStage().getDefinition().getType().isOneOf(StageType.TARGET, StageType.EXECUTOR)) {
       outputRecords += records.size();
     }
-    return new BatchImpl(pipe.getStage().getInfo().getInstanceName(), lastOffset, records);
+    return new BatchImpl(pipe.getStage().getInfo().getInstanceName(), sourceEntity, lastOffset, records);
   }
 
   @Override

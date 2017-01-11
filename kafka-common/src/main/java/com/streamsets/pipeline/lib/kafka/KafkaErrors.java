@@ -65,7 +65,7 @@ public enum KafkaErrors implements ErrorCode {
   KAFKA_57("Invalid partition expression '{}': {}"),
   KAFKA_58("Field cannot be empty"),
   KAFKA_59("Fields cannot be empty"),
-  KAFKA_60("Cannot serialize record '{}'. All records from batch '{}' for partition '{}' are sent to error: {}"),
+  KAFKA_60("Cannot serialize record '{}'. All records from batch with entity '{}' and offset '{}' for partition '{}' are sent to error: {}"),
   KAFKA_61("Invalid topic expression '{}': {}"),
   KAFKA_62("Topic expression '{}' generated a null or empty topic for record '{}'"),
   KAFKA_63("Error evaluating topic expression '{}' for record '{}': {}"),
