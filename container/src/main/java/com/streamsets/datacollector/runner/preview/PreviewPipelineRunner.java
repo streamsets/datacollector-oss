@@ -38,6 +38,7 @@ import com.streamsets.datacollector.runner.PipelineRunner;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.PushSourceContextDelegate;
 import com.streamsets.datacollector.runner.RunnerPool;
+import com.streamsets.datacollector.runner.RuntimeStats;
 import com.streamsets.datacollector.runner.SourceOffsetTracker;
 import com.streamsets.datacollector.runner.SourcePipe;
 import com.streamsets.datacollector.runner.StageContext;
@@ -144,7 +145,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
     this.pipes = pipes;
     this.badRecordsHandler = badRecordsHandler;
     this.statsAggregationHandler = statsAggregationHandler;
-    this.runnerPool = new RunnerPool<>(pipes);
+    this.runnerPool = new RunnerPool<>(pipes, new RuntimeStats());
 
     stagesToSkip = new HashMap<>();
     for (StageOutput stageOutput : stageOutputsToOverride) {

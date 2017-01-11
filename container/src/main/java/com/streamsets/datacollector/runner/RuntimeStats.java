@@ -37,6 +37,8 @@ public class RuntimeStats implements GaugeValue {
   private long lastBatchOutputRecordsCount;
   private long lastBatchErrorRecordsCount;
   private long lastBatchErrorMessagesCount;
+  private long totalRunners;
+  private long availableRunners;
 
   public RuntimeStats() {
     //initialize to current time, otherwise it will be 0 and will trigger the pipeline idle alert as soon as the
@@ -132,6 +134,22 @@ public class RuntimeStats implements GaugeValue {
     this.lastBatchErrorMessagesCount = lastBatchErrorMessagesCount;
   }
 
+  public long getTotalRunners() {
+    return totalRunners;
+  }
+
+  public void setTotalRunners(long totalRunners) {
+    this.totalRunners = totalRunners;
+  }
+
+  public long getAvailableRunners() {
+    return availableRunners;
+  }
+
+  public void setAvailableRunners(long availableRunners) {
+    this.availableRunners = availableRunners;
+  }
+
   @Override
   public void serialize(JsonGenerator jg) throws IOException {
     jg.writeStartObject();
@@ -146,6 +164,8 @@ public class RuntimeStats implements GaugeValue {
     jg.writeObjectField("lastBatchOutputRecordsCount", lastBatchOutputRecordsCount);
     jg.writeObjectField("lastBatchErrorRecordsCount", lastBatchErrorRecordsCount);
     jg.writeObjectField("lastBatchErrorMessagesCount", lastBatchErrorMessagesCount);
+    jg.writeObjectField("totalRunners", totalRunners);
+    jg.writeObjectField("availableRunners", availableRunners);
     jg.writeEndObject();
   }
 

@@ -384,6 +384,20 @@
             <span class="properties-value">{{common.pipelineMetrics.gauges['health.MetricsEventRunnable.gauge'].value.timestamp  | date:'medium'}}</span>
           </li>
 
+          <li>
+            <span class="properties-value">{{'home.detailPane.summaryTab.runners' | translate}}</span>
+          </li>
+
+          <li>
+            <span class="properties-label">{{'home.detailPane.summaryTab.totalRunners' | translate}}:</span>
+            <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.totalRunners}}</span>
+          </li>
+
+          <li>
+            <span class="properties-label">{{'home.detailPane.summaryTab.availableRunners' | translate}}:</span>
+            <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.availableRunners}}</span>
+          </li>
+
         </ul>
 
       </div>

@@ -303,7 +303,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     this.pipes = pipes;
     this.badRecordsHandler = badRecordsHandler;
     this.statsAggregationHandler = statsAggregationHandler;
-    this.runnerPool = new RunnerPool<>(pipes);
+    this.runnerPool = new RunnerPool<>(pipes, pipeContext.getRuntimeStats());
 
     if(originPipe.getStage().getStage() instanceof PushSource) {
       runPushSource();

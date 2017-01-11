@@ -32,16 +32,25 @@ public class RunnerPool <T> {
   /**
    * Internal blocking queue with all available runners
    */
-  private ArrayBlockingQueue<T> queue;
+  private final ArrayBlockingQueue<T> queue;
+
+  /**
+   * Runtime stats to keep info about available runners.
+   */
+  private final RuntimeStats runtimeStats;
 
   /**
    * Create new runner pool.
    *
    * @param runners Runners that this pool object should manage
    */
-  public RunnerPool(List<T> runners) {
+  public RunnerPool(List<T> runners, RuntimeStats runtimeStats) {
     queue = new ArrayBlockingQueue<>(runners.size());
     queue.addAll(runners);
+
+    this.runtimeStats = runtimeStats;
+    this.runtimeStats.setTotalRunners(queue.size());
+    this.runtimeStats.setAvailableRunners(queue.size());
   }
 
   /**
@@ -55,6 +64,8 @@ public class RunnerPool <T> {
       return queue.take();
     } catch (InterruptedException e) {
       throw new PipelineRuntimeException(ContainerError.CONTAINER_0801, e);
+    } finally {
+      runtimeStats.setAvailableRunners(queue.size());
     }
   }
 
@@ -65,5 +76,6 @@ public class RunnerPool <T> {
    */
   public void returnRunner(T runner) {
     queue.add(runner);
+    runtimeStats.setAvailableRunners(queue.size());
   }
 }

@@ -502,7 +502,10 @@
         "stageBatchProcessingTimer": "Stage Batch Processing Timer (in seconds)",
         "stageBatchProcessingTimerYAxis": "( Mean Timer Percentiles )",
         "stageMemoryConsumed": "Stage Heap Memory Usage (in MB)",
-        "triggered": "Triggered"
+        "triggered": "Triggered",
+        "runners": "Runners",
+        "totalRunners": "Total runners",
+        "availableRunners": "Available runners"
       },
       "timeSeries": "Time Series",
       "timeSeriesTab": {
