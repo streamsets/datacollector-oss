@@ -29,6 +29,8 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.mongodb.Errors;
 import com.streamsets.pipeline.stage.common.mongodb.Groups;
@@ -209,6 +211,36 @@ public class MongoDBOplogSource extends AbstractMongoDBSource {
     return "";
   }
 
+  //@VisibleForTesting
+  static void populateGenericOperationTypeInHeader(Record record, String opType) {
+    OplogOpType oplogOpType = OplogOpType.getOplogTypeFromOpString(opType);
+    if (oplogOpType == null) {
+      throw new IllegalArgumentException(Utils.format("Unsupported Op Log Op type : {}", opType));
+    }
+    //All operation types in OperationType are positive, so using -1 to indicate no matching operation type
+    int operationType = -1;
+    switch (oplogOpType) {
+      case INSERT:
+        operationType = OperationType.INSERT_CODE;
+        break;
+      case UPDATE:
+        operationType = OperationType.UPDATE_CODE;
+        break;
+      case DELETE:
+        operationType = OperationType.DELETE_CODE;
+        break;
+      //These specific to Mongo DB so not handling this for generic cases.
+      case CMD:
+      case DB:
+      case NOOP:
+        break;
+      default: throw new IllegalArgumentException(Utils.format("Unsupported Op Log Op type : {}", opType));
+    }
+    if (operationType != -1) {
+      record.getHeader().setAttribute(OperationType.SDC_OPERATION_TYPE, OperationType.getLabelFromIntCode(operationType));
+    }
+  }
+
   private Record getOplogRecord() throws IOException {
     Document doc = cursor.tryNext();
     if (doc != null) {
@@ -233,6 +265,8 @@ public class MongoDBOplogSource extends AbstractMongoDBSource {
       String opType = doc.getString(OP_TYPE_FIELD);
       record.getHeader().setAttribute(NS_FIELD, ns);
       record.getHeader().setAttribute(OP_TYPE_FIELD, opType);
+      //Populate Generic operation type
+      populateGenericOperationTypeInHeader(record, opType);
       record.set(Field.create(MongoDBSourceUtil.createFieldFromDocument(doc)));
       return record;
     } else {

@@ -47,4 +47,13 @@ public enum OplogOpType implements Label{
     return this.op;
   }
 
+  public static OplogOpType getOplogTypeFromOpString(String op) {
+    for (OplogOpType oplogOpType : OplogOpType.values()) {
+      if (oplogOpType.getOp().equals(op)) {
+        return oplogOpType;
+      }
+    }
+    return null;
+  }
+
 }

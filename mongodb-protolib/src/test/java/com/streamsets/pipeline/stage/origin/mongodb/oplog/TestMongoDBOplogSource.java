@@ -20,8 +20,11 @@
 package com.streamsets.pipeline.stage.origin.mongodb.oplog;
 
 import com.streamsets.pipeline.api.OnRecordError;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
+import com.streamsets.pipeline.sdk.RecordCreator;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -60,4 +63,60 @@ public class TestMongoDBOplogSource {
   public void testInvalidOplogCollection() throws Exception {
     testInvalidConfiguration( -1, -1, "random_collection");
   }
+
+  public void testGenericOpTypesWithPopulateGenericOpTypeInHeader(String op, String expectedOperationTypeLabel) throws Exception {
+    Record record = RecordCreator.create();
+    MongoDBOplogSource.populateGenericOperationTypeInHeader(record, op);
+    Assert.assertNotNull(record.getHeader().getAttribute(OperationType.SDC_OPERATION_TYPE));
+    Assert.assertEquals(expectedOperationTypeLabel, record.getHeader().getAttribute(OperationType.SDC_OPERATION_TYPE));
+  }
+
+  public void testNonGenericOpTypesWithPopulateGenericOpTypeInHeader(String op) throws Exception {
+    Record record = RecordCreator.create();
+    MongoDBOplogSource.populateGenericOperationTypeInHeader(record, op);
+    Assert.assertNull(record.getHeader().getAttribute(OperationType.SDC_OPERATION_TYPE));
+  }
+
+  @Test
+  public void testGenericOpLogRecordFromTheDocumentInsert() throws Exception {
+    testGenericOpTypesWithPopulateGenericOpTypeInHeader(OplogOpType.INSERT.getOp(), OperationType.getLabelFromIntCode(OperationType.INSERT_CODE));
+  }
+
+  @Test
+  public void testGenericOpLogRecordFromTheDocumentUpdate() throws Exception {
+    testGenericOpTypesWithPopulateGenericOpTypeInHeader(OplogOpType.UPDATE.getOp(), OperationType.getLabelFromIntCode(OperationType.UPDATE_CODE));
+  }
+
+  @Test
+  public void testGenericOpLogRecordFromTheDocumentDelete() throws Exception {
+    testGenericOpTypesWithPopulateGenericOpTypeInHeader(OplogOpType.DELETE.getOp(), OperationType.getLabelFromIntCode(OperationType.DELETE_CODE));
+  }
+
+  @Test
+  public void testGenericOpLogRecordFromTheDocumentCMD() throws Exception {
+    testNonGenericOpTypesWithPopulateGenericOpTypeInHeader(OplogOpType.CMD.getOp());
+  }
+
+  @Test
+  public void testGenericOpLogRecordFromTheDocumentNOOP() throws Exception {
+    testNonGenericOpTypesWithPopulateGenericOpTypeInHeader(OplogOpType.NOOP.getOp());
+  }
+
+  @Test
+  public void testGenericOpLogRecordFromTheDocumentDB() throws Exception {
+    testNonGenericOpTypesWithPopulateGenericOpTypeInHeader(OplogOpType.DB.getOp());
+  }
+
+  @Test
+  public void testInvalidOpTypeWithPopulateGenericOperationTypeInHeader() throws Exception {
+    Record record = RecordCreator.create();
+    String op = "unknown";
+    try {
+      MongoDBOplogSource.populateGenericOperationTypeInHeader(record, op);
+    } catch (IllegalArgumentException e) {
+      Assert.assertTrue(e.getMessage().contains(op));
+    }
+  }
+
+
 }
