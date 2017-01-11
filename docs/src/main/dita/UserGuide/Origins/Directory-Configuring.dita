@@ -86,10 +86,18 @@
                                         /> where source files are stored.</entry>
                                 </row>
                                 <row>
-                                    <entry>File Name Pattern</entry>
-                                    <entry>Pattern of the file names to process.<p>You can use
-                                            UNIX-style wildcards in the file name pattern, such as *
-                                            or ?. For example, *.log.</p></entry>
+                                    <entry>File Name Pattern Mode</entry>
+                                    <entry>Indicates whether the file name pattern uses glob
+                                        patterns or regular expressions.</entry>
+                                </row>
+                                <row>
+                                    <entry>File Name Pattern <xref href="Directory-FileNamePattern-Mode.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_lwb_zcp_4y"
+                                        /></xref></entry>
+                                    <entry>Pattern of the file names to process. Use glob patterns
+                                        or regular expressions based on the specified file name
+                                        pattern mode. </entry>
                                 </row>
                                 <row>
                                     <entry>Read Order <xref href="Directory-ReadOrder.dita">

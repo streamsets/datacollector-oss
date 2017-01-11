@@ -35,6 +35,7 @@
   </topicref>
   <topicref href="../Origins/Directory.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/Directory-FileNamePattern-Mode.dita"/>
    <topicref href="../Origins/Directory-ReadOrder.dita"/>
    <topicref href="../Origins/Directory-Subdirectories.dita">
     <topicref href="../Origins/Directory-SubdirArchiving.dita"/>
