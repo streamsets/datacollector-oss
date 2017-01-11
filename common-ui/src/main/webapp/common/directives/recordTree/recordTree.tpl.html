@@ -213,7 +213,7 @@
     </ul>
   </li>
 
-  <li class="record-list-item" ng-if="showHeader && record.header && (isOpen || (isRoot && record.expand))">
+  <li class="record-list-item" ng-if="showHeader && record.header && isRoot && (isOpen || (isRoot && record.expand))">
       <label>
         <span class="pointer toggler {{headerExpand ? 'open' : ''}}"
               ng-click="headerExpand = !headerExpand"></span>
