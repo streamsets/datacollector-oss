@@ -20,6 +20,7 @@
 package com.streamsets.datacollector.metrics;
 
 import com.codahale.metrics.Counter;
+import com.codahale.metrics.Histogram;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
@@ -43,7 +44,6 @@ public class TestMetricsConfigurator {
     Assert.assertEquals("a.timer", entry.getKey());
   }
 
-
   @Test
   public void testCreateMeter() {
     MetricRegistry metrics = new MetricRegistry();
@@ -55,7 +55,6 @@ public class TestMetricsConfigurator {
     Assert.assertEquals("a.meter", entry.getKey());
   }
 
-
   @Test
   public void testCreateCounter() {
     MetricRegistry metrics = new MetricRegistry();
@@ -66,4 +65,91 @@ public class TestMetricsConfigurator {
     Assert.assertEquals(counter, entry.getValue());
     Assert.assertEquals("a.counter", entry.getKey());
   }
+
+  @Test
+  public void testCreateHistogram() {
+    MetricRegistry metrics = new MetricRegistry();
+    Histogram histogram = MetricsConfigurator.createHistogram5Min(metrics, "a", "name", "0");
+    Assert.assertNotNull(histogram);
+    Assert.assertEquals(1, metrics.getHistograms().size());
+    Map.Entry<String, Histogram> entry = metrics.getHistograms().entrySet().iterator().next();
+    Assert.assertEquals(histogram, entry.getValue());
+    Assert.assertEquals("a.histogramM5", entry.getKey());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testCreateTimerTwice() {
+    MetricRegistry metrics = new MetricRegistry();
+    MetricsConfigurator.createTimer(metrics, "a", "name", "0");
+    MetricsConfigurator.createTimer(metrics, "a", "name", "0");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testCreateMeterTwice() {
+    MetricRegistry metrics = new MetricRegistry();
+    MetricsConfigurator.createMeter(metrics, "a", "name", "0");
+    MetricsConfigurator.createMeter(metrics, "a", "name", "0");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testCreateSCounterTwice() {
+    MetricRegistry metrics = new MetricRegistry();
+    MetricsConfigurator.createCounter(metrics, "a", "name", "0");
+    MetricsConfigurator.createCounter(metrics, "a", "name", "0");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testCreateHistogramTwice() {
+    MetricRegistry metrics = new MetricRegistry();
+    MetricsConfigurator.createHistogram5Min(metrics, "a", "name", "0");
+    MetricsConfigurator.createHistogram5Min(metrics, "a", "name", "0");
+  }
+
+  @Test
+  public void testCreateStageTimer() {
+    MetricRegistry metrics = new MetricRegistry();
+    MetricsConfigurator.createStageTimer(metrics, "a", "name", "0");
+    MetricsConfigurator.createStageTimer(metrics, "a", "name", "0");
+
+    // There should be only one metric object
+    Assert.assertEquals(1, metrics.getTimers().size());
+    Map.Entry<String, Timer> entry = metrics.getTimers().entrySet().iterator().next();
+    Assert.assertEquals("a.timer", entry.getKey());
+  }
+
+  @Test
+  public void testCreateStageMeter() {
+    MetricRegistry metrics = new MetricRegistry();
+    MetricsConfigurator.createStageMeter(metrics, "a", "name", "0");
+    MetricsConfigurator.createStageMeter(metrics, "a", "name", "0");
+
+    // There should be only one metric object
+    Assert.assertEquals(1, metrics.getMeters().size());
+    Map.Entry<String, Meter> entry = metrics.getMeters().entrySet().iterator().next();
+    Assert.assertEquals("a.meter", entry.getKey());
+  }
+
+  @Test
+  public void testCreateStageCounter() {
+    MetricRegistry metrics = new MetricRegistry();
+    MetricsConfigurator.createStageCounter(metrics, "a", "name", "0");
+    MetricsConfigurator.createStageCounter(metrics, "a", "name", "0");
+
+    // There should be only one metric object
+    Assert.assertEquals(1, metrics.getCounters().size());
+    Map.Entry<String, Counter> entry = metrics.getCounters().entrySet().iterator().next();
+    Assert.assertEquals("a.counter", entry.getKey());
+  }
+
+  @Test
+  public void testCreateStageHistogram() {
+    MetricRegistry metrics = new MetricRegistry();
+    MetricsConfigurator.createStageHistogram5Min(metrics, "a", "name", "0");
+    MetricsConfigurator.createStageHistogram5Min(metrics, "a", "name", "0");
+
+    Assert.assertEquals(1, metrics.getHistograms().size());
+    Map.Entry<String, Histogram> entry = metrics.getHistograms().entrySet().iterator().next();
+    Assert.assertEquals("a.histogramM5", entry.getKey());
+  }
+
 }
