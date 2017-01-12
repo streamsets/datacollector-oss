@@ -19,10 +19,15 @@
  */
 package com.streamsets.pipeline.stage.destination.kudu;
 
-import com.streamsets.pipeline.api.*;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
+import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import junit.framework.Assert;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.api.support.membermodification.MemberMatcher;
@@ -31,7 +36,13 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.apache.kudu.ColumnSchema;
 import org.apache.kudu.Schema;
 import org.apache.kudu.Type;
-import org.apache.kudu.client.*;
+import org.apache.kudu.client.KuduClient;
+import org.apache.kudu.client.KuduTable;
+import org.apache.kudu.client.KuduSession;
+import org.apache.kudu.client.Operation;
+import org.apache.kudu.client.Insert;
+import org.apache.kudu.client.PartialRow;
+import org.apache.kudu.client.KuduException;
 import org.junit.runner.RunWith;
 import org.junit.Before;
 import org.junit.Test;
@@ -326,10 +337,10 @@ public class TestKuduTarget {
     field.put("value", Field.create("value"));
     field.put("name", Field.create("name"));
     record.set(Field.createListMap(field));
-    // BEFORE_UPDATE_CODE is not supported by Kudu. This record gets discarded
+    // UNSUPPORTED_CODE is not supported by Kudu. This record gets discarded
     record.getHeader().setAttribute(
         OperationType.SDC_OPERATION_TYPE,
-        String.valueOf(OperationType.BEFORE_UPDATE_CODE)
+        String.valueOf(OperationType.UNSUPPORTED_CODE)
     );
     targetRunner.runInit();
 

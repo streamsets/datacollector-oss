@@ -27,10 +27,8 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.lib.jdbc.ChangeLogFormat;
-import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
-import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnParamMapping;
-import com.streamsets.pipeline.lib.jdbc.JdbcMultiRowRecordWriter;
+import com.streamsets.pipeline.lib.jdbc.*;
+import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import org.joda.time.Instant;
@@ -148,7 +146,10 @@ public class TestJdbcTarget {
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
+        PreparedStatementCache.UNLIMITED_CACHE,
         ChangeLogFormat.NONE,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
         createConfigBean(h2ConnectionString, username, password)
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
@@ -174,7 +175,10 @@ public class TestJdbcTarget {
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
+        PreparedStatementCache.UNLIMITED_CACHE,
         ChangeLogFormat.NONE,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
         createConfigBean(h2ConnectionString, username, password)
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
@@ -214,7 +218,10 @@ public class TestJdbcTarget {
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
+        PreparedStatementCache.UNLIMITED_CACHE,
         ChangeLogFormat.NONE,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
         createConfigBean(h2ConnectionString, username, password)
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
@@ -255,7 +262,10 @@ public class TestJdbcTarget {
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
+        PreparedStatementCache.UNLIMITED_CACHE,
         ChangeLogFormat.NONE,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
         createConfigBean(h2ConnectionString, username, password)
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target)
@@ -316,7 +326,10 @@ public class TestJdbcTarget {
         true,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
+        PreparedStatementCache.UNLIMITED_CACHE,
         ChangeLogFormat.NONE,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
         createConfigBean(h2ConnectionString, username, password)
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target)
@@ -353,13 +366,17 @@ public class TestJdbcTarget {
     targetRunner.runWrite(records);
 
     connection = DriverManager.getConnection(h2ConnectionString, username, password);
+    // Since we don't batch same operations anymore, rollback is done to records that are executed already
+    // in the same connection. Then we will continue processing rest of the records in batch.
+    // In this test, 1st record success, 2nd record fail, so 1nd and 2nd records will rollback,
+    // then 3rd record will success.
     try (Statement statement = connection.createStatement()) {
       ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM TEST.TEST_TABLE");
       rs.next();
-      assertEquals(0, rs.getInt(1));
+      assertEquals(1, rs.getInt(1));  // the 3rd record should make it
     }
-
-    assertEquals(3, targetRunner.getErrorRecords().size());
+    // The record that caused failure, which is 2nd record.
+    assertEquals(1, targetRunner.getErrorRecords().size());
   }
 
   @Test
@@ -376,8 +393,11 @@ public class TestJdbcTarget {
         fieldMappings,
         false,
         false,
-        -1,
+        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
+        PreparedStatementCache.UNLIMITED_CACHE,
         ChangeLogFormat.NONE,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
         createConfigBean(h2ConnectionString, username, password)
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target)
@@ -439,8 +459,11 @@ public class TestJdbcTarget {
         fieldMappings,
         false,
         true,
-        -1,
+        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
+        PreparedStatementCache.UNLIMITED_CACHE,
         ChangeLogFormat.NONE,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
         createConfigBean(h2ConnectionString, username, password)
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target)
@@ -497,7 +520,10 @@ public class TestJdbcTarget {
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
+        PreparedStatementCache.UNLIMITED_CACHE,
         ChangeLogFormat.NONE,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
         createConfigBean(h2ConnectionString, unprivUser, unprivPassword)
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
@@ -553,7 +579,10 @@ public class TestJdbcTarget {
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
+        PreparedStatementCache.UNLIMITED_CACHE,
         ChangeLogFormat.NONE,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
         createConfigBean("bad connection string", username, password)
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
@@ -577,7 +606,10 @@ public class TestJdbcTarget {
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
+        PreparedStatementCache.UNLIMITED_CACHE,
         ChangeLogFormat.NONE,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
         createConfigBean(h2ConnectionString, "foo", "bar")
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
@@ -601,7 +633,10 @@ public class TestJdbcTarget {
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
+        PreparedStatementCache.UNLIMITED_CACHE,
         ChangeLogFormat.NONE,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
         createConfigBean(h2ConnectionString, username, password)
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
@@ -625,7 +660,10 @@ public class TestJdbcTarget {
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
+        PreparedStatementCache.UNLIMITED_CACHE,
         ChangeLogFormat.NONE,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
         createConfigBean(h2ConnectionString, username, password)
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
@@ -689,7 +727,10 @@ public class TestJdbcTarget {
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
+        PreparedStatementCache.UNLIMITED_CACHE,
         ChangeLogFormat.NONE,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
         createConfigBean(h2ConnectionString, username, password)
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
@@ -732,7 +773,10 @@ public class TestJdbcTarget {
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
+        PreparedStatementCache.UNLIMITED_CACHE,
         ChangeLogFormat.NONE,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
         createConfigBean(h2ConnectionString, username, password)
     );
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();

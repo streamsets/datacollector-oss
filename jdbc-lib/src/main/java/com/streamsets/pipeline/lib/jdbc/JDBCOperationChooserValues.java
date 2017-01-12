@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,23 +19,12 @@
  */
 package com.streamsets.pipeline.lib.jdbc;
 
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public enum ChangeLogFormat implements Label {
-  NONE("None"),
-  MSSQL("Microsoft SQL Server"),
-  OracleCDC("Oracle CDC Client"),
-  MySQLBinLog("MySQL Binary Log"),
-  ;
+public class JDBCOperationChooserValues extends BaseEnumChooserValues<JDBCOperationType> {
 
-  private final String label;
-
-  ChangeLogFormat(String label) {
-    this.label = label;
+  public JDBCOperationChooserValues() {
+    super(JDBCOperationType.class);
   }
 
-  @Override
-  public String getLabel() {
-    return this.label;
-  }
 }

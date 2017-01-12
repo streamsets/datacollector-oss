@@ -53,6 +53,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -654,5 +655,23 @@ public class JdbcUtil {
       }
     }
     return false;
+  }
+
+  protected static PreparedStatement getPreparedStatement(
+      List<JdbcFieldColumnMapping> generatedColumnMappings,
+      String query,
+      Connection connection
+  ) throws SQLException {
+    PreparedStatement statement;
+    if (generatedColumnMappings != null) {
+      String[] generatedColumns = new String[generatedColumnMappings.size()];
+      for (int i = 0; i < generatedColumnMappings.size(); i++) {
+        generatedColumns[i] = generatedColumnMappings.get(i).columnName;
+      }
+      statement = connection.prepareStatement(query, generatedColumns);
+    } else {
+      statement = connection.prepareStatement(query);
+    }
+    return statement;
   }
 }

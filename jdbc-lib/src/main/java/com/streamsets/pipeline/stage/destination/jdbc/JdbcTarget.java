@@ -29,15 +29,8 @@ import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.ELUtils;
-import com.streamsets.pipeline.lib.jdbc.ChangeLogFormat;
-import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
-import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
-import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnParamMapping;
-import com.streamsets.pipeline.lib.jdbc.JdbcGenericRecordWriter;
-import com.streamsets.pipeline.lib.jdbc.JdbcMultiRowRecordWriter;
-import com.streamsets.pipeline.lib.jdbc.JdbcRecordWriter;
-import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
-import com.streamsets.pipeline.lib.jdbc.MicrosoftJdbcRecordWriter;
+import com.streamsets.pipeline.lib.jdbc.*;
+import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.zaxxer.hikari.HikariDataSource;
@@ -60,8 +53,9 @@ public class JdbcTarget extends BaseTarget {
   private static final String CONNECTION_STRING = HIKARI_CONFIG_PREFIX + "connectionString";
 
   private final boolean rollbackOnError;
-  private final boolean useMultiRowInsert;
+  private final boolean useMultiRowOp;
   private final int maxPrepStmtParameters;
+  private final int maxPrepStmtCache;
 
   private final String tableNameTemplate;
   private final List<JdbcFieldColumnParamMapping> customMappings;
@@ -77,10 +71,25 @@ public class JdbcTarget extends BaseTarget {
 
   private Connection connection = null;
 
+  private JDBCOperationType defaultOperation;
+  private UnsupportedOperationAction unsupportedAction;
+
   class RecordWriterLoader extends CacheLoader<String, JdbcRecordWriter> {
     @Override
     public JdbcRecordWriter load(String tableName) throws Exception {
-      return createRecordWriter(tableName);
+      return JdbcRecordReaderWriterFactory.createJdbcRecordWriter(
+          hikariConfigBean.connectionString,
+          dataSource,
+          tableName,
+          customMappings,
+          rollbackOnError,
+          useMultiRowOp,
+          maxPrepStmtParameters,
+          maxPrepStmtCache,
+          defaultOperation,
+          unsupportedAction,
+          JdbcRecordReaderWriterFactory.createRecordReader(changeLogFormat)
+      );
     }
   }
 
@@ -93,18 +102,24 @@ public class JdbcTarget extends BaseTarget {
       final String tableNameTemplate,
       final List<JdbcFieldColumnParamMapping> customMappings,
       final boolean rollbackOnError,
-      final boolean useMultiRowInsert,
+      final boolean useMultiRowOp,
       int maxPrepStmtParameters,
+      int maxPrepStmtCache,
       final ChangeLogFormat changeLogFormat,
+      final JDBCOperationType defaultOperation,
+      final UnsupportedOperationAction unsupportedAction,
       final HikariPoolConfigBean hikariConfigBean
   ) {
     this.tableNameTemplate = tableNameTemplate;
     this.customMappings = customMappings;
     this.rollbackOnError = rollbackOnError;
-    this.useMultiRowInsert = useMultiRowInsert;
+    this.useMultiRowOp = useMultiRowOp;
     this.maxPrepStmtParameters = maxPrepStmtParameters;
+    this.maxPrepStmtCache = maxPrepStmtCache;
     this.driverProperties.putAll(hikariConfigBean.driverProperties);
     this.changeLogFormat = changeLogFormat;
+    this.defaultOperation = defaultOperation;
+    this.unsupportedAction = unsupportedAction;
     this.hikariConfigBean = hikariConfigBean;
   }
 
@@ -158,39 +173,6 @@ public class JdbcTarget extends BaseTarget {
       dataSource.close();
     }
     super.destroy();
-  }
-
-  private JdbcRecordWriter createRecordWriter(String tableName) throws StageException {
-    JdbcRecordWriter recordWriter;
-
-    switch (changeLogFormat) {
-      case NONE:
-        if (!useMultiRowInsert) {
-          recordWriter = new JdbcGenericRecordWriter(
-              hikariConfigBean.connectionString,
-              dataSource,
-              tableName,
-              rollbackOnError,
-              customMappings
-          );
-        } else {
-          recordWriter = new JdbcMultiRowRecordWriter(
-              hikariConfigBean.connectionString,
-              dataSource,
-              tableName,
-              rollbackOnError,
-              customMappings,
-              maxPrepStmtParameters
-          );
-        }
-        break;
-      case MSSQL:
-        recordWriter = new MicrosoftJdbcRecordWriter(dataSource, tableName);
-        break;
-      default:
-        throw new IllegalStateException("Unrecognized format specified: " + changeLogFormat);
-    }
-    return recordWriter;
   }
 
   @Override

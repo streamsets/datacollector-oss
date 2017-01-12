@@ -381,7 +381,7 @@ public class OracleCDCSource extends BaseSource {
             break;
           case SELECT_FOR_UPDATE_CODE:
             ruleContext = parser.update_statement();
-            operationCode = OperationType.SELECT_FOR_UPDATE_CODE;
+            operationCode = OperationType.UPDATE_CODE;
             break;
           case DDL_CODE:
             break;

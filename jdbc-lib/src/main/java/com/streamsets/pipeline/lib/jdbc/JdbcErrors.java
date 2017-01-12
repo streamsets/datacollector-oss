@@ -92,7 +92,7 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_67("Internal Error : {}"),
   JDBC_68("Tables Referring to each other in cyclic fashion."),
   JDBC_69("Unsupported Offset Column Types. {}"),
-
+  JDBC_70("Unsupported operation in record header: {}"),
   ;
 
   private final String msg;

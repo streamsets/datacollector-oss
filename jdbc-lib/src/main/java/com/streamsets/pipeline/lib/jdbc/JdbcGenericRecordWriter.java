@@ -19,28 +19,27 @@
  */
 package com.streamsets.pipeline.lib.jdbc;
 
-import com.streamsets.pipeline.api.Field;
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.lib.operation.OperationType;
+import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
-import java.sql.Array;
-import java.sql.BatchUpdateException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.SortedMap;
-import java.util.TreeMap;
 
 public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
   private static final Logger LOG = LoggerFactory.getLogger(JdbcGenericRecordWriter.class);
+  private final int maxPrepStmtCache;
 
   /**
    * Class constructor
@@ -49,26 +48,9 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
    * @param tableName the name of the table to write to
    * @param rollbackOnError whether to attempt rollback of failed queries
    * @param customMappings any custom mappings the user provided
-   * @throws StageException
-   */
-  public JdbcGenericRecordWriter(
-      String connectionString,
-      DataSource dataSource,
-      String tableName,
-      boolean rollbackOnError,
-      List<JdbcFieldColumnParamMapping> customMappings
-  ) throws StageException {
-    super(connectionString, dataSource, tableName, rollbackOnError, customMappings);
-  }
-
-  /**
-   * Class constructor
-   * @param connectionString database connection string
-   * @param dataSource a JDBC {@link javax.sql.DataSource} to get a connection from
-   * @param tableName the name of the table to write to
-   * @param rollbackOnError whether to attempt rollback of failed queries
-   * @param customMappings any custom mappings the user provided
-   * @param generatedColumnMappings mappings from field names to generated column names
+   * @param defaultOp Default Opertaion
+   * @param unsupportedAction What action to take if operation is invalid
+   * @param recordReader JDBCRecordReader to obtain data from incoming record
    * @throws StageException
    */
   public JdbcGenericRecordWriter(
@@ -77,9 +59,44 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
       String tableName,
       boolean rollbackOnError,
       List<JdbcFieldColumnParamMapping> customMappings,
-      List<JdbcFieldColumnMapping> generatedColumnMappings
+      int maxStmtCache,
+      JDBCOperationType defaultOp,
+      UnsupportedOperationAction unsupportedAction,
+      JdbcRecordReader recordReader
   ) throws StageException {
-    super(connectionString, dataSource, tableName, rollbackOnError, customMappings, generatedColumnMappings);
+    super(connectionString, dataSource, tableName, rollbackOnError,
+        customMappings, defaultOp, unsupportedAction, recordReader, null);
+    this.maxPrepStmtCache = maxStmtCache;
+  }
+
+  /**
+   * Class constructor
+   * @param connectionString database connection string
+   * @param dataSource a JDBC {@link javax.sql.DataSource} to get a connection from
+   * @param tableName the name of the table to write to
+   * @param rollbackOnError whether to attempt rollback of failed queries
+   * @param customMappings any custom mappings the user provided
+   * @param defaultOp Default Opertaion
+   * @param unsupportedAction What action to take if operation is invalid
+   * @param generatedColumnMappings mappings from field names to generated column names
+   * @param recordReader JDBCRecordReader to obtain data from incoming record
+   * @throws StageException
+   */
+  public JdbcGenericRecordWriter(
+      String connectionString,
+      DataSource dataSource,
+      String tableName,
+      boolean rollbackOnError,
+      List<JdbcFieldColumnParamMapping> customMappings,
+      int maxStmtCache,
+      JDBCOperationType defaultOp,
+      UnsupportedOperationAction unsupportedAction,
+      List<JdbcFieldColumnMapping> generatedColumnMappings,
+      JdbcRecordReader recordReader
+  ) throws StageException {
+    super(connectionString, dataSource, tableName, rollbackOnError,
+        customMappings, defaultOp, unsupportedAction, recordReader, generatedColumnMappings);
+    this.maxPrepStmtCache = maxStmtCache;
   }
 
   /** {@inheritDoc} */
@@ -88,48 +105,62 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
   public List<OnRecordErrorException> writeBatch(Collection<Record> batch) throws StageException {
     List<OnRecordErrorException> errorRecords = new LinkedList<>();
     Connection connection = null;
+    PreparedStatementMap statementsForBatch = null;
     try {
       connection = getDataSource().getConnection();
 
-      PreparedStatementMap statementsForBatch = new PreparedStatementMap(connection, getTableName());
-
-      List<JdbcFieldColumnMapping> generatedColumnMappings = getGeneratedColumnMappings();
+      statementsForBatch = new PreparedStatementMap(
+          connection,
+          getTableName(),
+          getGeneratedColumnMappings(),
+          getPrimaryKeyColumns(),
+          maxPrepStmtCache
+      );
 
       for (Record record : batch) {
-        Map<String, String> parameters = getColumnsToParameters();
-        SortedMap<String, String> columnsToParameters = new TreeMap<>();
-        for (Map.Entry<String, String> entry : getColumnsToFields().entrySet()) {
-          String columnName = entry.getKey();
-          String fieldPath = entry.getValue();
-
-          if (record.has(fieldPath)) {
-            columnsToParameters.put(columnName, parameters.get(columnName));
-          }
+        // First, find the operation code
+        int opCode = recordReader.getOperationFromRecord(record, defaultOp, unsupportedAction, errorRecords);
+        if (opCode <= 0) {
+          continue;
         }
-        PreparedStatement statement = statementsForBatch.getInsertFor(columnsToParameters, generatedColumnMappings);
-
-        if (setParameters(columnsToParameters, record, connection, statement, errorRecords)) {
-          statement.addBatch();
-        }
-      }
-
-      for (PreparedStatement statement : statementsForBatch.getStatements()) {
+        // columnName to parameter mapping. Ex. parameter is default "?".
+        SortedMap<String, String> columnsToParameters = recordReader.getColumnsToParameters(
+            record,
+            opCode,
+            getColumnsToParameters(),
+            getColumnsToFields()
+        );
+        PreparedStatement statement = null;
         try {
-          statement.executeBatch();
+          statement = statementsForBatch.getPreparedStatement(
+              opCode,
+              columnsToParameters
+          );
+          setParameters(opCode, columnsToParameters, record, connection, statement);
+          LOG.debug("Bound Query: {}", statement.toString());
+          statement.execute();
+
+          if (getGeneratedColumnMappings() != null) {
+            writeGeneratedColumns(statement, batch.iterator(), errorRecords);
+          }
         } catch (SQLException e) {
           if (getRollbackOnError()) {
+            LOG.debug("Error due to {}. Rollback the record: {}", e.getMessage(), record.toString());
             connection.rollback();
           }
-          handleBatchUpdateException(batch, e, errorRecords);
-        }
-        if (generatedColumnMappings != null) {
-          writeGeneratedColumns(statement, batch.iterator(), errorRecords);
+          errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_34, e.getMessage(), e.getCause()));
+        } catch (OnRecordErrorException ex){
+          errorRecords.add(ex);
         }
       }
       connection.commit();
     } catch (SQLException e) {
       handleSqlException(e);
     } finally {
+      if (statementsForBatch != null) {
+        // PreparedStatements for this tableName are cached. Close all.
+        statementsForBatch.destroy();
+      }
       if (connection != null) {
         try {
           connection.close();
@@ -141,103 +172,35 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
     return errorRecords;
   }
 
+  /**
+   * Set parameters and primary keys in query.
+   * @param opCode
+   * @param columnsToParameters
+   * @param record
+   * @param connection
+   * @param statement
+   * @return
+   */
+  @VisibleForTesting
   @SuppressWarnings("unchecked")
-  private boolean setParameters(
-      Map<String, String> columnsToParameters,
-      Record record,
-      Connection connection,
-      PreparedStatement statement,
-      List<OnRecordErrorException> errorRecords
-  ) {
-    boolean isOk = true;
+  int setParameters(
+      int opCode,
+      SortedMap<String, String> columnsToParameters,
+      final Record record,
+      final Connection connection,
+      PreparedStatement statement
+  ) throws OnRecordErrorException {
     int paramIdx = 1;
-    for (String column : columnsToParameters.keySet()) {
-      Field field = record.get(getColumnsToFields().get(column));
-      Field.Type fieldType = field.getType();
-      Object value = field.getValue();
 
-      try {
-        switch (fieldType) {
-          case LIST:
-            List<Object> unpackedList = unpackList((List<Field>) value);
-            Array array = connection.createArrayOf(getSQLTypeName(fieldType), unpackedList.toArray());
-            statement.setArray(paramIdx, array);
-            break;
-          case DATE:
-          case TIME:
-          case DATETIME:
-            // Java Date types are not accepted by JDBC drivers, so we need to convert to java.sql.Timestamp
-            statement.setTimestamp(paramIdx, field.getValueAsDate() == null ? null : new java.sql.Timestamp(field.getValueAsDatetime().getTime()));
-            break;
-          default:
-            statement.setObject(paramIdx, value, getColumnType(column));
-            break;
-        }
-      } catch (SQLException e) {
-        LOG.error(JdbcErrors.JDBC_23.getMessage(), column, fieldType.toString(), e);
-        errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_23, column, fieldType.toString()));
-        isOk = false;
-      } catch (OnRecordErrorException e) {
-        LOG.error(e.toString(), e);
-        errorRecords.add(e);
-        isOk = false;
-      }
-      ++paramIdx;
+    // Set columns and their value in query. No need to perform this for delete operation.
+    if(opCode != OperationType.DELETE_CODE) {
+      paramIdx = setParamsToStatement(paramIdx, statement, columnsToParameters, record, connection);
     }
-    return isOk;
-  }
-
-  /**
-   * This is an error that is not due to bad input record and should throw a StageException
-   * once we format the error.
-   * @param e SQLException
-   * @throws StageException
-   */
-  private void handleSqlException(SQLException e) throws StageException {
-    String formattedError = JdbcUtil.formatSqlException(e);
-    LOG.error(formattedError);
-    LOG.debug(formattedError, e);
-    throw new StageException(JdbcErrors.JDBC_14, formattedError);
-  }
-
-  /**
-   * <p>
-   *   Some databases drivers allow us to figure out which record in a particular batch failed.
-   * </p>
-   * <p>
-   *   In the case that we have a list of update counts, we can mark just the record as erroneous.
-   *   Otherwise we must send the entire batch to error.
-   * </p>
-   * @param failedRecords List of Failed Records
-   * @param e BatchUpdateException
-   * @param errorRecords List of error records for this batch
-   */
-  private void handleBatchUpdateException(
-      Collection<Record> failedRecords, SQLException e, List<OnRecordErrorException> errorRecords
-  ) throws StageException {
-    if (JdbcUtil.isDataError(getConnectionString(), e)) {
-      String formattedError = JdbcUtil.formatSqlException(e);
-      LOG.error(formattedError);
-      LOG.debug(formattedError, e);
-
-      if (!getRollbackOnError() && e instanceof BatchUpdateException &&
-          ((BatchUpdateException) e).getUpdateCounts().length > 0) {
-        BatchUpdateException bue = (BatchUpdateException) e;
-
-        int i = 0;
-        for (Record record : failedRecords) {
-          if (i >= bue.getUpdateCounts().length || bue.getUpdateCounts()[i] == PreparedStatement.EXECUTE_FAILED) {
-            errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_14, formattedError));
-          }
-          i++;
-        }
-      } else {
-        for (Record record : failedRecords) {
-          errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_14, formattedError));
-        }
-      }
-    } else {
-      handleSqlException(e);
+    // Set primary keys in WHERE clause for update and delete operations
+    if(opCode != OperationType.INSERT_CODE){
+      paramIdx = setPrimaryKeys(paramIdx, record, statement, opCode);
     }
+    return paramIdx;
   }
+
 }

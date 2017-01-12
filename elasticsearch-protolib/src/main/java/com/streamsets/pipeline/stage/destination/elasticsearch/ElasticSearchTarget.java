@@ -427,8 +427,6 @@ public class ElasticSearchTarget extends BaseTarget {
         op.append(String.format("%s%n", record));
         break;
       case OperationType.UPDATE_CODE:
-      case OperationType.SELECT_FOR_UPDATE_CODE:
-      case OperationType.AFTER_UPDATE_CODE:
         op.append(String.format("{\"update\":{\"_index\":\"%s\",\"_type\":\"%s\",\"_id\":\"%s\"}}%n", index, type, id));
         op.append(String.format("{\"doc\":%s}%n", record));
         break;

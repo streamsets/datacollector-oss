@@ -44,6 +44,8 @@ public class JdbcTargetUpgrader extends JdbcBaseUpgrader{
         // fall through
       case 4:
         upgradeV4toV5(configs);
+      case 5:
+        upgradeV5toV6(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -111,5 +113,12 @@ public class JdbcTargetUpgrader extends JdbcBaseUpgrader{
       configs.remove(readOnlyConfig);
     }
 
+  }
+
+  private void upgradeV5toV6(List<Config> configs) {
+    // added default operation, unsupported operation action, and maxPrepStmtCache
+    configs.add(new Config("defaultOperation", null));
+    configs.add(new Config("unsupportedAction", "DISCARD"));
+    configs.add(new Config("maxPrepStmtCache", -1));
   }
 }

@@ -27,31 +27,31 @@ public class TestOperationType {
   @Test
   public void testGetLabelFromIntCode() throws Exception {
     Assert.assertEquals("INSERT", OperationType.getLabelFromIntCode(1));
+    Assert.assertEquals("DELETE", OperationType.getLabelFromIntCode(2));
     Assert.assertEquals("UPDATE", OperationType.getLabelFromIntCode(3));
-    Assert.assertEquals("SELECT FOR UPDATE", OperationType.getLabelFromIntCode(5));
-    Assert.assertEquals("AFTER UPDATE", OperationType.getLabelFromIntCode(7));
+    Assert.assertEquals("UPSERT", OperationType.getLabelFromIntCode(4));
     // Invalid parameter
     String test = OperationType.getLabelFromIntCode(13);
-    Assert.assertEquals(null, test);
+    Assert.assertEquals("UNSUPPORTED", test);
   }
 
   @Test
   public void testGetLabelFromStringCode() throws Exception {
     Assert.assertEquals("INSERT", OperationType.getLabelFromStringCode("1"));
+    Assert.assertEquals("DELETE", OperationType.getLabelFromStringCode("2"));
     Assert.assertEquals("UPDATE", OperationType.getLabelFromStringCode("3"));
-    Assert.assertEquals("SELECT FOR UPDATE", OperationType.getLabelFromStringCode("5"));
-    Assert.assertEquals("AFTER UPDATE", OperationType.getLabelFromStringCode("7"));
+    Assert.assertEquals("UPSERT", OperationType.getLabelFromStringCode("4"));
 
     // Invalid parameter
     try {
-      String test = OperationType.getLabelFromStringCode("abc");
+      OperationType.getLabelFromStringCode("abc");
       Assert.fail();
     } catch (NumberFormatException ex){
       // pass
     }
 
     String test = OperationType.getLabelFromStringCode("100");
-    Assert.assertEquals(null, test);
+    Assert.assertEquals("UNSUPPORTED", test);
   }
 
   @Test

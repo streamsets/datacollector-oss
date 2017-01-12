@@ -30,19 +30,13 @@ public class OperationType {
   public static final int DELETE_CODE = 2;
   public static final int UPDATE_CODE = 3;
   public static final int UPSERT_CODE = 4;
-  public static final int SELECT_FOR_UPDATE_CODE = 5;
-  public static final int BEFORE_UPDATE_CODE = 6;
-  public static final int AFTER_UPDATE_CODE = 7;
-  public static final int UNSUPPORTED_CODE = 8;
+  public static final int UNSUPPORTED_CODE = 5;
 
   private static final Map<Integer, String> CODE_LABEL = new ImmutableMap.Builder<Integer, String>()
       .put(INSERT_CODE, "INSERT")
       .put(DELETE_CODE, "DELETE")
       .put(UPDATE_CODE, "UPDATE")
       .put(UPSERT_CODE, "UPSERT")
-      .put(SELECT_FOR_UPDATE_CODE, "SELECT FOR UPDATE")
-      .put(BEFORE_UPDATE_CODE, "BEFORE UPDATE")
-      .put(AFTER_UPDATE_CODE, "AFTER UPDATE")
       .put(UNSUPPORTED_CODE, "UNSUPPORTED")
       .build();
 
@@ -51,9 +45,6 @@ public class OperationType {
       .put("DELETE", DELETE_CODE)
       .put("UPDATE", UPDATE_CODE)
       .put("UPSERT", UPSERT_CODE)
-      .put("SELECT FOR UPDATE", SELECT_FOR_UPDATE_CODE)
-      .put("BEFORE UPDATE", BEFORE_UPDATE_CODE)
-      .put("AFTER UPDATE", AFTER_UPDATE_CODE)
       .put("UNSUPPORTED", UNSUPPORTED_CODE)
       .build();
 
@@ -67,7 +58,7 @@ public class OperationType {
     if (CODE_LABEL.containsKey(code)){
       return CODE_LABEL.get(code);
     }
-    return null;
+    return "UNSUPPORTED";
   }
 
   /**

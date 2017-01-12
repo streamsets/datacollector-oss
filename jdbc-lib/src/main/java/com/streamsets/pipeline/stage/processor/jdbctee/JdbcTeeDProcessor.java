@@ -32,19 +32,23 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
-import com.streamsets.pipeline.lib.jdbc.ChangeLogFormat;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
-import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnMapping;
 import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnParamMapping;
+import com.streamsets.pipeline.lib.jdbc.JDBCOperationChooserValues;
+import com.streamsets.pipeline.lib.jdbc.ChangeLogFormat;
+import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnMapping;
+import com.streamsets.pipeline.lib.jdbc.JDBCOperationType;
+import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
+import com.streamsets.pipeline.lib.operation.UnsupportedOperationActionChooserValues;
 import com.streamsets.pipeline.stage.destination.jdbc.ChangeLogFormatChooserValues;
 import com.streamsets.pipeline.stage.destination.jdbc.Groups;
-
 import java.util.List;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "JDBC Tee",
     description = "Write records to JDBC and enrich records with generated columns",
+    upgrader = JdbcTeeUpgrader.class,
     icon = "rdbms.png",
     onlineHelpRefUrl = "index.html#Processors/JDBCTee.html#task_qpj_ncy_hw"
 )
@@ -108,6 +112,30 @@ public class JdbcTeeDProcessor extends DProcessor {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "",
+      label = "Default Operation",
+      description = "Default operation to perform if sdc.operation.type is not set in record header.",
+      displayPosition = 40,
+      group = "JDBC"
+  )
+  @ValueChooserModel(JDBCOperationChooserValues.class)
+  public JDBCOperationType defaultOperation;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue= "DISCARD",
+      label = "Unsupported Operation Handling",
+      description = "Action to take when operation type is not supported",
+      displayPosition = 30,
+      group = "JDBC"
+  )
+  @ValueChooserModel(UnsupportedOperationActionChooserValues.class)
+  public UnsupportedOperationAction unsupportedAction;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
       label = "Rollback Batch on Error",
@@ -122,12 +150,12 @@ public class JdbcTeeDProcessor extends DProcessor {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "true",
-      label = "Use Multi-Row Insert",
+      label = "Use Multi-Row Operation",
       description = "Whether to generate multi-row INSERT statements instead of batches of single-row INSERTs",
       displayPosition = 60,
       group = "JDBC"
   )
-  public boolean useMultiRowInsert;
+  public boolean useMultiRowOp;
 
   @ConfigDef(
       required = true,
@@ -136,12 +164,26 @@ public class JdbcTeeDProcessor extends DProcessor {
       label = "Statement Parameter Limit",
       description = "The maximum number of prepared statement parameters allowed in each batch insert statement when " +
           "" + "using multi-row inserts. Set to -1 to disable limit.",
-      dependsOn = "useMultiRowInsert",
+      dependsOn = "useMultiRowOp",
       triggeredByValue = "true",
       displayPosition = 60,
       group = "JDBC"
   )
-  public int maxPrepStmtParameters;
+  public int maxPrepStmtParameters = -1;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "-1",
+      label = "Max Cache Size Per Batch (Entries)",
+      description = "The maximum number of prepared statement stored in cache. Cache is used only when " +
+          "'Use Multi-Row Operation' checkbox is unchecked. Use -1 for unlimited number of entries.",
+      dependsOn = "useMultiRowOp",
+      triggeredByValue = "false",
+      displayPosition = 60,
+      group = "JDBC"
+  )
+  public int maxPrepStmtCache = -1;
 
   @ConfigDefBean()
   public HikariPoolConfigBean hikariConfigBean;
@@ -153,10 +195,13 @@ public class JdbcTeeDProcessor extends DProcessor {
         customMappings,
         generatedColumnMappings,
         rollbackOnError,
-        useMultiRowInsert,
+        useMultiRowOp,
         maxPrepStmtParameters,
+        maxPrepStmtCache,
         changeLogFormat,
-        hikariConfigBean
+        hikariConfigBean,
+        defaultOperation,
+        unsupportedAction
     );
   }
 }

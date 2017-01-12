@@ -17,27 +17,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.kudu;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+package com.streamsets.pipeline.lib.operation;
 
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-@GenerateResourceBundle
-public enum UnsupportedOperationAction implements Label {
-  DISCARD("Discard"),
-  SEND_TO_ERROR("Send to Error"),
-  USE_DEFAULT("Use Default Operation"),
-  ;
+public class UnsupportedOperationActionChooserValues extends BaseEnumChooserValues {
 
-  private final String label;
-  UnsupportedOperationAction(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return label;
+  public UnsupportedOperationActionChooserValues() {
+    super(UnsupportedOperationAction.class);
   }
 
 }

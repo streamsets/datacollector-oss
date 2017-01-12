@@ -20,24 +20,30 @@
 package com.streamsets.pipeline.lib.jdbc;
 
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSortedMap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.lib.operation.OperationType;
+import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -45,11 +51,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.SortedMap;
+import java.util.LinkedList;
 
 import static org.junit.Assert.assertEquals;
 
 public class TestJdbcMultiRowRecordWriter {
-  private static final Logger LOG = LoggerFactory.getLogger(TestMicrosoftChangeLogWriter.class);
+  private static final Logger LOG = LoggerFactory.getLogger(TestJdbcMultiRowRecordWriter.class);
 
   private final String username = "sa";
   private final String password = "sa";
@@ -110,7 +118,10 @@ public class TestJdbcMultiRowRecordWriter {
         "TEST.TEST_TABLE",
         false,
         mappings,
-        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS);
+        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
+        new JdbcRecordReader());
     List<Record> batch = generateRecords(10);
     writer.writeBatch(batch);
 
@@ -132,7 +143,10 @@ public class TestJdbcMultiRowRecordWriter {
         "TEST.TEST_TABLE",
         false,
         mappings,
-        8
+        8,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
+        new JdbcRecordReader()
     );
 
     Collection<Record> records = generateRecords(10);
@@ -159,7 +173,10 @@ public class TestJdbcMultiRowRecordWriter {
         "TEST.TEST_TABLE",
         false,
         mappings,
-        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS
+        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
+        new JdbcRecordReader()
     );
 
     Collection<Record> records = generateRecords(1);
@@ -184,7 +201,10 @@ public class TestJdbcMultiRowRecordWriter {
         "TEST.TEST_TABLE",
         false,
         mappings,
-        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS
+        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
+        new JdbcRecordReader()
     );
 
     Collection<Record> records = new ArrayList<>();
@@ -194,6 +214,63 @@ public class TestJdbcMultiRowRecordWriter {
     } catch (StageException e) {
       assertEquals(JdbcErrors.JDBC_22.getCode(), e.getErrorCode().toString());
       throw e;
+    }
+  }
+
+  @Test
+  public void testGenerateQueryForMultiRow() throws StageException {
+    SortedMap<String, String> columns = ImmutableSortedMap.of(
+        "P_ID", "?",
+        "F1", "?",
+        "F2", "?",
+        "F3", "?",
+        "F4", "?"
+    );
+    List<String> primaryKeys = ImmutableList.of("P_ID");
+    List<Record> records = generateRecords(3);
+    JdbcMultiRowRecordWriter writer = new JdbcMultiRowRecordWriter(
+        connectionString,
+        dataSource,
+        "TEST.TEST_TABLE",
+        false, //rollback
+        new LinkedList<JdbcFieldColumnParamMapping>(),
+        15,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
+        new JdbcRecordReader()
+    );
+    // Test Insert query
+    try {
+      Assert.assertEquals(
+          "Generated a wrong query",
+          "INSERT INTO TEST.TEST_TABLE (F1, F2, F3, F4, P_ID) " +
+              "VALUES (?, ?, ?, ?, ?), (?, ?, ?, ?, ?), (?, ?, ?, ?, ?)",
+          writer.generateQueryForMultiRow(OperationType.INSERT_CODE, columns, primaryKeys, records.size())
+      );
+    } catch (SQLException ex) {
+      Assert.fail("Error while generating a query:" + ex.getMessage());
+    }
+
+    // Test Update query
+    try {
+      Assert.assertEquals(
+          "Generated a wrong query",
+          "UPDATE TEST.TEST_TABLE SET F1 = ?, F2 = ?, F3 = ?, F4 = ?, P_ID = ? WHERE P_ID = ?",
+          writer.generateQueryForMultiRow(OperationType.UPDATE_CODE, columns, primaryKeys, records.size())
+      );
+    } catch (SQLException ex) {
+      Assert.fail("Error while generating a query:" + ex.getMessage());
+    }
+
+    // Test Delete query
+    try {
+      Assert.assertEquals(
+          "Generated a wrong query",
+          "DELETE FROM TEST.TEST_TABLE WHERE (P_ID) IN ((?), (?), (?))",
+          writer.generateQueryForMultiRow(OperationType.DELETE_CODE, columns, primaryKeys, records.size())
+      );
+    } catch (SQLException ex) {
+      Assert.fail("Error while generating a query:" + ex.getMessage());
     }
   }
 

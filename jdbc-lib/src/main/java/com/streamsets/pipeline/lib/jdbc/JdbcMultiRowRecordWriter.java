@@ -19,33 +19,32 @@
  */
 package com.streamsets.pipeline.lib.jdbc;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import com.google.common.hash.Funnel;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import com.google.common.hash.PrimitiveSink;
-import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.lib.operation.OperationType;
+import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
-import java.sql.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.LinkedList;
 import java.util.SortedMap;
+import java.util.Collection;
 import java.util.TreeMap;
 
 public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
@@ -63,6 +62,9 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
 
   public static final int UNLIMITED_PARAMETERS = -1;
   private int maxPrepStmtParameters;
+  private static final Joiner joiner = Joiner.on(", ");
+  private static final Joiner joinerColumn = Joiner.on(" = ?, ");
+  private static final Joiner joinerWhereClause =  Joiner.on(" = ? AND ");
 
   /**
    * Class constructor
@@ -80,9 +82,12 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       String tableName,
       boolean rollbackOnError,
       List<JdbcFieldColumnParamMapping> customMappings,
-      int maxPrepStmtParameters
+      int maxPrepStmtParameters,
+      JDBCOperationType defaultOp,
+      UnsupportedOperationAction unsupportedAction,
+      JdbcRecordReader recordReader
   ) throws StageException {
-    super(connectionString, dataSource, tableName, rollbackOnError, customMappings);
+    super(connectionString, dataSource, tableName, rollbackOnError, customMappings, defaultOp, unsupportedAction, recordReader);
     this.maxPrepStmtParameters = maxPrepStmtParameters == UNLIMITED_PARAMETERS ? Integer.MAX_VALUE :
         maxPrepStmtParameters;
   }
@@ -95,6 +100,8 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
    * @param rollbackOnError whether to attempt rollback of failed queries
    * @param customMappings any custom mappings the user provided
    * @param maxPrepStmtParameters max number of parameters to include in each INSERT statement
+   * @param defaultOp Default Opertaion
+   * @param unsupportedAction What action to take if operation is invalid
    * @param generatedColumnMappings mappings from field names to generated column names
    * @throws StageException
    */
@@ -105,12 +112,17 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       boolean rollbackOnError,
       List<JdbcFieldColumnParamMapping> customMappings,
       int maxPrepStmtParameters,
-      List<JdbcFieldColumnMapping> generatedColumnMappings
+      JDBCOperationType defaultOp,
+      UnsupportedOperationAction unsupportedAction,
+      List<JdbcFieldColumnMapping> generatedColumnMappings,
+      JdbcRecordReader recordReader
   ) throws StageException {
-    super(connectionString, dataSource, tableName, rollbackOnError, customMappings, generatedColumnMappings);
+    super(connectionString, dataSource, tableName, rollbackOnError, customMappings,
+        defaultOp, unsupportedAction, recordReader, generatedColumnMappings);
     this.maxPrepStmtParameters = maxPrepStmtParameters == UNLIMITED_PARAMETERS ? Integer.MAX_VALUE :
         maxPrepStmtParameters;
   }
+
 
   /** {@inheritDoc} */
   @SuppressWarnings("unchecked")
@@ -120,14 +132,45 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
     Connection connection = null;
     try {
       connection = getDataSource().getConnection();
-
-      // Since we are doing multi-row inserts we have to partition the batch into groups of the same
-      // set of fields. We'll also sort each partition for optimal inserts into column stores.
-      Multimap<Long, Record> partitions = partitionBatch(batch);
-
-      for (Long partitionKey : partitions.keySet()) {
-        processPartition(connection, partitions, partitionKey, errorRecords);
+      // compute number of rows per batch
+      if (getColumnsToParameters().isEmpty()) {
+        throw new StageException(JdbcErrors.JDBC_22);
       }
+
+      int maxRowsPerBatch = maxPrepStmtParameters / getColumnsToParameters().size();
+      int prevOpCode = -1;
+      HashCode prevColumnHash = null;
+      // put all the records with the same operation in a queue to create a multi-row query
+      LinkedList<Record> queue = new LinkedList<>();
+      for (Record record : batch) {
+        int opCode = recordReader.getOperationFromRecord(record, defaultOp, unsupportedAction, errorRecords);
+        if (opCode <= 0) { // sent to errorRecords
+          errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_70, opCode));
+          continue;
+        }
+        // Need to consider the number of columns in query. If different, process saved records in queue.
+        HashCode columnHash = getColumnHash(record);
+        if (prevOpCode == opCode && (opCode == OperationType.DELETE_CODE ||
+              (opCode == OperationType.INSERT_CODE && columnHash.equals(prevColumnHash)))) {
+          queue.add(record);
+          continue;
+        }
+        // Execute the records in queue.
+        if (!queue.isEmpty()) {
+          processQueue(queue, errorRecords, connection, maxRowsPerBatch, prevOpCode);
+        }
+        queue.clear();
+        queue.add(record);
+        prevOpCode = opCode;
+        prevColumnHash = columnHash;
+      }
+
+
+      // Check if any records are left in queue unprocessed
+      if (!queue.isEmpty()) {
+        processQueue(queue, errorRecords, connection, maxRowsPerBatch, prevOpCode);
+      }
+      connection.commit();
     } catch (SQLException e) {
       handleSqlException(e);
     } finally {
@@ -143,137 +186,145 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
     return errorRecords;
   }
 
-  @SuppressWarnings("unchecked")
-  private void processPartition(
+  /**
+   * Process all records in queue. All records have same operation to same table.
+   * Generate a query and set parameters from each record. INSERT and DELETE can be multi-row operation
+   * but UPDATE is single-row operation.
+   * If maxStatement
+   * @param errorRecords
+   * @param connection
+   * @param maxRowsPerBatch
+   * @param opCode
+   * @param queue
+   * @return
+   * @throws OnRecordErrorException
+   * @throws SQLException
+   */
+  private void processQueue(
+      LinkedList<Record> queue,
+      List<OnRecordErrorException> errorRecords,
       Connection connection,
-      Multimap<Long, Record> partitions,
-      Long partitionKey,
-      List<OnRecordErrorException> errorRecords
-  ) throws SQLException, OnRecordErrorException {
-    Collection<Record> partition = partitions.get(partitionKey);
-    // Fetch the base insert query for this partition.
-    SortedMap<String, String> columnsToParameters = getFilteredColumnsToParameters(
-        getColumnsToParameters(),
-        partition.iterator().next()
-    );
-
-    // put all the records in a queue for consumption
-    LinkedList<Record> queue = new LinkedList<>(partition);
-
-    // compute number of rows per batch
-    if (columnsToParameters.isEmpty()) {
-      throw new OnRecordErrorException(JdbcErrors.JDBC_22);
-    }
-    int maxRowsPerBatch = maxPrepStmtParameters / columnsToParameters.size();
-
-    PreparedStatement statement = null;
-
-    List<JdbcFieldColumnMapping> generatedColumnMappings = getGeneratedColumnMappings();
-
-    // parameters are indexed starting with 1
-    int paramIdx = 1;
+      int maxRowsPerBatch,
+      int opCode
+  ) throws StageException {
     int rowCount = 0;
-    while (!queue.isEmpty()) {
-      // we're at the start of a batch.
-      if (statement == null) {
-        // instantiate the new statement
-        statement = generatePreparedStatement(columnsToParameters,
-            // the next batch will have either the max number of records, or however many are left.
-            Math.min(maxRowsPerBatch, queue.size()),
-            getTableName(),
-            connection,
-            generatedColumnMappings
-        );
-      }
-
-      // process the next record into the current statement
-      Record record = queue.removeFirst();
-      for (String column : columnsToParameters.keySet()) {
-        Field field = record.get(getColumnsToFields().get(column));
-        Field.Type fieldType = field.getType();
-        Object value = field.getValue();
-
-        try {
-          switch (fieldType) {
-            case LIST:
-              List<Object> unpackedList = unpackList((List<Field>) value);
-              Array array = connection.createArrayOf(getSQLTypeName(fieldType), unpackedList.toArray());
-              statement.setArray(paramIdx, array);
-              break;
-            case DATE:
-            case TIME:
-            case DATETIME:
-              // Java Date types are not accepted by JDBC drivers, so we need to convert to java.sql.Timestamp
-              statement.setTimestamp(paramIdx, new java.sql.Timestamp(field.getValueAsDatetime().getTime()));
-              break;
-            default:
-              statement.setObject(paramIdx, value, getColumnType(column));
-              break;
-          }
-        } catch (SQLException e) {
-          LOG.error(JdbcErrors.JDBC_23.getMessage(), column, fieldType.toString(), e);
-          throw new OnRecordErrorException(record, JdbcErrors.JDBC_23, column, fieldType.toString());
+    PreparedStatement statement = null;
+    String query;
+    //Assume that columns are all same for the same operation to the same table
+    //If some columns are missing in record, the record goes to error.
+    SortedMap<String, String> columnsToParameters = recordReader.getColumnsToParameters(
+        queue.getFirst(),
+        opCode,
+        getColumnsToParameters(),
+        getColumnsToFields()
+    );
+    try {
+      int paramIdx = 1;
+      // Need to store removed records from queue, because we might need to add newly generated columns
+      // to records for Jdbc Tee Processor.
+      LinkedList<Record> removed = new LinkedList<>();
+      // Start processing records in queue. All records have the same operation to the same table.
+      while (!queue.isEmpty()) {
+        if (statement == null) {
+          query = generateQueryForMultiRow(
+              opCode,
+              columnsToParameters,
+              getPrimaryKeyColumns(),
+              // the next batch will have either the max number of records, or however many are left.
+              Math.min(maxRowsPerBatch, queue.size())
+          );
+          statement = JdbcUtil.getPreparedStatement(getGeneratedColumnMappings(), query, connection);
         }
-        ++paramIdx;
-      }
-
-      rowCount++;
-
-      // check if we've filled up the current batch
-      if (rowCount == maxRowsPerBatch) {
-        // time to execute the current batch
-        statement.addBatch();
-        statement.executeBatch();
-        if (generatedColumnMappings != null) {
-          writeGeneratedColumns(statement, partition.iterator(), errorRecords);
+        Record r = queue.removeFirst();
+        if (opCode != OperationType.DELETE_CODE) {
+          paramIdx = setParamsToStatement(paramIdx, statement, columnsToParameters, r, connection);
         }
-        statement.close();
-        statement = null;
-
-        // reset our counters
-        rowCount = 0;
-        paramIdx = 1;
+        if (opCode != OperationType.INSERT_CODE) {
+          paramIdx = setPrimaryKeys(paramIdx, r, statement, opCode);
+        }
+        rowCount++;
+        removed.add(r);
+        if (rowCount == maxRowsPerBatch) {
+          // time to execute the current batch
+          processBatch(removed, errorRecords, statement, connection);
+          // reset our counters
+          rowCount = 0;
+          paramIdx = 1;
+          removed.clear();
+        }
       }
-    }
-
-    // check if there are any records left. this should occur whenever there isn't *exactly* maxRowsPerBatch records in
-    // this partition.
-    if (statement != null) {
-      statement.addBatch();
-      statement.executeBatch();
-      if (generatedColumnMappings != null) {
-        writeGeneratedColumns(statement, partition.iterator(), errorRecords);
+      // Process the rest of the records that are removed from queue but haven't processed yet
+      // this happens when rowCount is still less than maxRowsPerBatch.
+      if (rowCount != 0) {
+        processBatch(removed, errorRecords, statement, connection);
       }
-      statement.close();
+    } catch (SQLException e) {
+      handleSqlException(e);
     }
   }
 
-  private static PreparedStatement generatePreparedStatement(
-      SortedMap<String, String> columns,
-      int numRecords,
-      Object tableName,
-      Connection connection,
-      List<JdbcFieldColumnMapping> generatedColumnMappings
-  ) throws SQLException {
-    String valuePlaceholder = String.format("(%s)", Joiner.on(", ").join(columns.values()));
-    String valuePlaceholders = StringUtils.repeat(valuePlaceholder, ", ", numRecords);
-    String query = String.format("INSERT INTO %s (%s) VALUES %s",
-        tableName,
-        // keySet and values will both return the same ordering, due to using a SortedMap
-        Joiner.on(", ").join(columns.keySet()),
-        valuePlaceholders
-    );
-    LOG.debug("Generated multi-row insert query: {}", query);
-
-    if (generatedColumnMappings != null) {
-      String[] generatedColumns = new String[generatedColumnMappings.size()];
-      for (int i = 0; i < generatedColumnMappings.size(); i++) {
-        generatedColumns[i] = generatedColumnMappings.get(i).columnName;
+  private void processBatch(
+      LinkedList<Record> queue,
+      List<OnRecordErrorException> errorRecords,
+      PreparedStatement statement,
+      Connection connection) throws SQLException
+  {
+    try {
+      statement.addBatch();
+      statement.executeBatch();
+    } catch (SQLException ex) {
+      if (getRollbackOnError()) {
+        LOG.debug("Error due to {}. Rollback the batch.", ex.getMessage());
+        connection.rollback();
       }
-      return connection.prepareStatement(query, generatedColumns);
+      throw ex;
+    }
+    if (getGeneratedColumnMappings() != null) {
+      writeGeneratedColumns(statement, queue.iterator(), errorRecords);
+    }
+  }
+
+  @VisibleForTesting
+  String generateQueryForMultiRow(
+      int opCode,
+      SortedMap<String, String> columns,
+      List<String> primaryKeys,
+      int numRecords
+  ) throws OnRecordErrorException, SQLException {
+    if(opCode != OperationType.INSERT_CODE && primaryKeys.isEmpty()){
+      LOG.error("Primary key columns are missing in records: {}", primaryKeys);
+      throw new OnRecordErrorException(JdbcErrors.JDBC_62, getTableName());
     }
 
-    return connection.prepareStatement(query);
+    String query;
+    String valuePlaceholder;
+    String valuePlaceholders;
+    switch (opCode) {
+      case OperationType.INSERT_CODE:
+        valuePlaceholder = String.format("(%s)", joiner.join(columns.values()));
+        valuePlaceholders = StringUtils.repeat(valuePlaceholder, ", ", numRecords);
+        query = String.format("INSERT INTO %s (%s) VALUES %s",
+            getTableName(), Joiner.on(", ").join(columns.keySet()), valuePlaceholders);
+        break;
+      case OperationType.DELETE_CODE:
+        valuePlaceholder = String.format("(%s)", joiner.join(getPrimaryKeyParams()));
+        valuePlaceholders = StringUtils.repeat(valuePlaceholder, ", ", numRecords);
+        query = String.format("DELETE FROM %s WHERE (%s) IN (%s)",
+            getTableName(), joiner.join(primaryKeys), valuePlaceholders);
+        break;
+      case OperationType.UPDATE_CODE:
+        query = String.format("UPDATE %s SET %s = ? WHERE %s = ?",
+            getTableName(),
+            joinerColumn.join(columns.keySet()),
+            joinerWhereClause.join(primaryKeys));
+        break;
+      default:
+        // Should be checked earlier. Shouldn't reach here
+        LOG.error("Unsupported Operation code: {}}", opCode);
+        throw new OnRecordErrorException(JdbcErrors.JDBC_70, opCode);
+    }
+    LOG.debug("Generated multi-row operation query: {}", query);
+    return query;
   }
 
   private SortedMap<String, String> getFilteredColumnsToParameters(Map<String, String> parameters, Record record) {
@@ -290,45 +341,18 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
   }
 
   /**
-   * Partitions a batch into partitions of the same set of fields.
-   * Does not sort the records in each partition.
-   *
-   * @param batch input batch of records
-   * @return Multi-valued map of records. Key is a hash of the columns present.
-   */
-  private Multimap<Long, Record> partitionBatch(Collection<Record> batch) {
-    Multimap<Long, Record> partitions = ArrayListMultimap.create();
-    for (Record record : batch) {
-      Long columnHash = getColumnHash(record).asLong();
-      partitions.put(columnHash, record);
-    }
-    return partitions;
-  }
-
-  /**
    * Generates a hash for the fields present in a record and their mappings.
    * A specific implementation of the hash function is not guaranteed.
    *
    * @param record The record to generate a hash for.
    * @return A Guava HashCode of the fields.
    */
-  private HashCode getColumnHash(Record record) {
+  private HashCode getColumnHash(Record record) throws OnRecordErrorException {
     Map<String, String> parameters = getColumnsToParameters();
     SortedMap<String, String> columnsToParameters = getFilteredColumnsToParameters(parameters, record);
+    if (columnsToParameters.isEmpty()){
+      throw new OnRecordErrorException(JdbcErrors.JDBC_22);
+    }
     return columnHashFunction.newHasher().putObject(columnsToParameters, stringMapFunnel).hash();
-  }
-
-  /**
-   * This is an error that is not due to bad input record and should throw a StageException
-   * once we format the error.
-   *
-   * @param e SQLException
-   * @throws StageException
-   */
-  private static void handleSqlException(SQLException e) throws StageException {
-    String formattedError = JdbcUtil.formatSqlException(e);
-    LOG.error(formattedError);
-    LOG.debug(formattedError, e);
-    throw new StageException(JdbcErrors.JDBC_14, formattedError);
   }
 }

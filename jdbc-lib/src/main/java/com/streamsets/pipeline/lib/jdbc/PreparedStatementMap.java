@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,63 +19,74 @@
  */
 package com.streamsets.pipeline.lib.jdbc;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.lib.operation.OperationType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.Collection;
+import java.util.SortedMap;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
+import java.util.concurrent.ExecutionException;
 
-class PreparedStatementMap {
-  private static final Logger LOG = LoggerFactory.getLogger(PreparedStatementMap.class);
+final class PreparedStatementMap {
 
-  private final Connection connection;
-  private final String tableName;
-  private final Map<SortedMap<String, String>, PreparedStatement> cache = new HashMap<>();
+  /**
+   * Map of opCode and PreparedStatementCache.
+   */
+  private final Map<Integer, PreparedStatementCache> cache = new HashMap<>();
 
-  public PreparedStatementMap(Connection connection, String tableName) {
-    this.connection = connection;
-    this.tableName = tableName;
-  }
-
-  public PreparedStatement getInsertFor(SortedMap<String, String> columns,
-      List<JdbcFieldColumnMapping> generatedColumnMappings) throws SQLException {
-    // The INSERT query we're going to perform (parameterized).
-    if (cache.containsKey(columns)) {
-      return cache.get(columns);
-    } else {
-      String query = String.format(
-          "INSERT INTO %s (%s) VALUES (%s)",
+  public PreparedStatementMap(
+      Connection connection,
+      String tableName,
+      List<JdbcFieldColumnMapping> generatedColumnMappings,
+      List<String> primaryKeyColumns,
+      int maxPrepStmtCache)
+  {
+    for (JDBCOperationType type: JDBCOperationType.values()) {
+      cache.put(type.code, new PreparedStatementCache(
+          connection,
           tableName,
-          // keySet and values will both return the same ordering, due to using a SortedMap
-          Joiner.on(", ").join(columns.keySet()),
-          Joiner.on(", ").join(columns.values())
+          generatedColumnMappings,
+          primaryKeyColumns,
+          type.code,
+          maxPrepStmtCache)
       );
-      LOG.debug("Generated insert query: {}", query);
-
-      PreparedStatement statement;
-      if (generatedColumnMappings != null) {
-        String[] generatedColumns = new String[generatedColumnMappings.size()];
-        for (int i = 0; i < generatedColumnMappings.size(); i++) {
-          generatedColumns[i] = generatedColumnMappings.get(i).columnName;
-        }
-        statement = connection.prepareStatement(query, generatedColumns);
-      } else {
-        statement = connection.prepareStatement(query);
-      }
-
-      cache.put(columns, statement);
-      return statement;
     }
   }
 
-  public final Collection<PreparedStatement> getStatements() {
-    return cache.values();
+  /**
+   * Receive operation code and columnName-param map per each record.
+   * Return a PreparedStatement if cache already has one for the same operation code
+   * and same number of columns. Otherwise load one.
+   * @param opCode Operation Code
+   * @param columns Column to param mapping.
+   * @return PreparedStatement
+   * @throws StageException
+   */
+  @VisibleForTesting
+  PreparedStatement getPreparedStatement(int opCode, SortedMap<String, String> columns)
+      throws StageException {
+    //Cache already has PreparedStatementCache for all opCode.
+    if (!cache.containsKey(opCode)){
+      // This check has been done earlier, so shouldn't come here.
+      throw new StageException(JdbcErrors.JDBC_70, opCode);
+    }
+    return cache.get(opCode).get(columns);
+  }
+
+  void destroy(){
+    for (Map.Entry<Integer, PreparedStatementCache> pcache: cache.entrySet()){
+      pcache.getValue().destroy();
+    }
   }
 }

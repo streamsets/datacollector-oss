@@ -430,8 +430,6 @@ public class KuduTarget extends BaseTarget {
         operation = table.newUpsert();
         break;
       case OperationType.UPDATE_CODE:
-      case OperationType.SELECT_FOR_UPDATE_CODE:
-      case OperationType.AFTER_UPDATE_CODE:
         operation = table.newUpdate();
         break;
       case OperationType.DELETE_CODE:
@@ -439,7 +437,7 @@ public class KuduTarget extends BaseTarget {
         break;
       default:
         LOG.error("Operation {} not supported", op);
-        throw new UnsupportedOperationException(String.format("Unsupported Opertaion: %s", op));
+        throw new UnsupportedOperationException(String.format("Unsupported Operation: %s", op));
     }
     return operation;
   }
