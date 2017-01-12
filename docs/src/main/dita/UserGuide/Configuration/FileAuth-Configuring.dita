@@ -24,7 +24,7 @@
             <li>Configure file authentication properties.</li>
             <li>Configure <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> users and roles.</li>
+                /> users, groups, and roles.</li>
         </ol>
  </conbody>
 </concept>

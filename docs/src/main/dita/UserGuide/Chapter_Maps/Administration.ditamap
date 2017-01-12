@@ -21,12 +21,12 @@
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Administration/ViewingJVMMetrics.dita">
+  <topicref href="../Administration/ViewingDirectories.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Administration/ViewingDirectories.dita">
+  <topicref href="../Administration/ViewingJVMMetrics.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
@@ -42,6 +42,7 @@
    </topicmeta>
   </topicref>
   <topicref href="../Administration/Restarting.dita"/>
+  <topicref href="../Administration/ViewingUsersGroups.dita"/>
   <topicref href="../Administration/RESTResponse.dita">
    <topicmeta>
     <shortdesc/>

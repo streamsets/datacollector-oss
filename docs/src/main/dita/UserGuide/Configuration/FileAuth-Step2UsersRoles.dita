@@ -14,12 +14,13 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_nsz_lp4_1r">
-    <title>Step 2. Configure Users and Roles</title>
-    <shortdesc>For file-based authentication, <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        provides a default user account based on each role. You can change or remove these accounts.
-        You can also create new user accounts. For increased security, change the passwords for the
-        default accounts. </shortdesc>
+    <title>Step 2. Configure Users, Groups, and Roles</title>
+    <shortdesc>For file-based authentication, you configure the users that can log in to <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. You
+        assign roles to each user account and you can optionally create and assign groups to the
+        user accounts. Configure users, groups, and roles in the properties file for the type of
+        authentication that you use,
+            <filepath>$SDC_CONF/&lt;authentication>-realm.properties</filepath>. </shortdesc>
     <taskbody>
         <context>
             <p><indexterm>users<indexterm>creating for file
@@ -29,7 +30,17 @@
                         authentication</indexterm></indexterm><indexterm>roles<indexterm>for users
                         with file authentication</indexterm></indexterm><ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> provides the following roles and default user accounts: </p>
+                /> roles determine the tasks that a user can perform. <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> provides a default user account based on each role. You can change or remove
+                these user accounts, or you can create new user accounts. For increased security,
+                change the passwords for the default user accounts. </p>
+            <p>You can also create groups and assign the groups to user accounts to group related
+                users. <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> does not provide any default groups.</p>
+            <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+                provides the following roles and default user accounts: </p>
             <table frame="all" rowsep="1" colsep="1" id="table_x3c_kwy_7x">
                 <tgroup cols="3">
                     <colspec colname="c1" colnum="1" colwidth=".5*"/>
@@ -45,33 +56,37 @@
                     <tbody>
                         <row>
                             <entry>admin</entry>
-                            <entry conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry_adminRole"/>
+                            <entry
+                                conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry_adminRole"/>
                             <entry>Default login is <codeph>admin</codeph> /
                                 <codeph>admin</codeph>.</entry>
                         </row>
                         <row>
                             <entry>manager</entry>
-                            <entry conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry_managerRole"/>
+                            <entry
+                                conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry_managerRole"/>
                             <entry>Default login is <codeph>manager</codeph> /
                                     <codeph>manager</codeph>.</entry>
                         </row>
                         <row>
                             <entry>creator</entry>
-                            <entry conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry_creatorRole"/>
+                            <entry
+                                conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry_creatorRole"/>
                             <entry>Default login is <codeph>creator</codeph> /
                                     <codeph>creator</codeph>.</entry>
                         </row>
                         <row>
                             <entry>guest</entry>
-                            <entry conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry_guestRole"/>
+                            <entry
+                                conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry_guestRole"/>
                             <entry>Default login is <codeph>guest</codeph> /
                                 <codeph>guest</codeph>.</entry>
                         </row>
                     </tbody>
                 </tgroup>
             </table>
-            <p>Configure additional users in the properties file for the type of authentication that
-                you use. For example, if you use basic authentication, use the
+            <p>Configure additional users and groups in the properties file for the type of
+                authentication that you use. For example, if you use basic authentication, use the
                     <codeph>basic-realm.properties</codeph> file.</p>
             <p>To hash login information, you can use an md5 program such as md5 on Mac OS X or
                 md5sum on Linux. </p>
@@ -88,19 +103,22 @@
         </context>
         <steps id="steps_ody_3q4_1r">
             <step>
-                <cmd>To configure a user, modify the properties file for the type of authentication
-                    that you use. </cmd>
+                <cmd>To configure users and groups, modify the properties file for the type of
+                    authentication that you use. </cmd>
                 <info>The file name is
                         <filepath>$SDC_CONF/&lt;authentication>-realm.properties</filepath>. </info>
             </step>
             <step>
                 <cmd>For each new user, add a user definition using the following format:</cmd>
                 <info>
-                    <codeblock>&lt;user name>: MD5:&lt;md5-text>, user, &lt;role> [, &lt;additional role>, &lt;additional role>...]</codeblock>
+                    <codeblock>&lt;user name>: MD5:&lt;md5-text>, user, &lt;role> [, &lt;additional role>, &lt;additional role>...] [, group:&lt;group>, group:&lt;additional group>...]</codeblock>
                 </info>
                 <info>
                     <note>Assign one or more roles to each user. Be sure to include "user" in every
                         user definition.</note>
+                    <p>For example, the following line defines a user named jsmith assigned the
+                        creator role and to the Development
+                        group:<codeblock>jsmith: MD5:6d0258c2440a7d19e916292b231e3190,user,creator,group:Development</codeblock></p>
                 </info>
             </step>
             <step>
