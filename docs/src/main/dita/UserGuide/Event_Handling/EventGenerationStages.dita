@@ -97,7 +97,8 @@
                             <entry>Hive Metastore destination</entry>
                             <entry>
                                 <ul id="ul_fgw_mt4_qx">
-                                    <li>Updates the Hive metastore.</li>
+                                    <li>Updates the Hive metastore by creating a table, adding
+                                        columns, or creating a partition. </li>
                                 </ul>
                             </entry>
                         </row>
@@ -125,6 +126,14 @@
                                 <ul id="ul_fmy_4t4_qx">
                                     <li>Changes file metadata, such as the file name, location, or
                                         permissions.</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>Hive Query executor</entry>
+                            <entry>
+                                <ul id="ul_qsl_bsk_my">
+                                    <li>Determines if the submitted query has completed.</li>
                                 </ul>
                             </entry>
                         </row>

@@ -19,19 +19,40 @@
         <p><indexterm>Hive Query executor<indexterm>Impala queries for the Hive Drift
                     Solution</indexterm></indexterm><indexterm>Hive Drift
                     Solution<indexterm>implementing Impala Invalidate Metadata
-                queries</indexterm></indexterm>The default query, <codeph>invalidate metadata
-                ${record:attribute('/table')}</codeph>, is an Impala query that you can use when
-            implementing the Hive Drift Solution with Impala. </p>
-        <p>Use the query to process event records from the Hive Metastore destination. When used
-            with the Hive Metastore destination, the destination generates an event record each time
-            it changes a table and places the table name in the "table" record header attribute.
-            When the Hive Query executor receives the event record, it runs the Invalidate Metadata
-            query on the specified table.</p>
-        <p>When implementing the Hive Drift Solution with Impala, you can also use the Hive Query
-            executor with the Hadoop FS destination. The Hadoop FS destination writes the file path
-            to a "filepath" field in the event record. To use the default query with the Hadoop FS
-            destination, you can use an Expression Evaluator to extract the table name from the
-            filepath field as described in <xref
-                href="../Event_Handling/CaseStudy-Impala.dita#concept_szz_xwm_lx"/>. </p>
+                queries</indexterm></indexterm>The Hive Drift Solution enables a pipeline to
+            automatically create and update Hive tables and to write files to the tables. </p>
+        <p>When implementing the Hive Drift Solution with Impala, you can use the Hive Query
+            executor to submit an invalidate metadata query each time you need to update the Impala
+            metadata cache. For a detailed example, see <xref
+                href="../Event_Handling/CaseStudy-Impala.dita#concept_szz_xwm_lx"/>.</p>
+        <p>Connect a Hive Query executor to the event stream from the Hive Metastore destination and
+            the Hadoop FS destination. You can use the same executor for both, or use a separate
+            executor for each.<dl>
+                <dlentry>
+                    <dt>Processing event records from the Hive Metastore destination</dt>
+                    <dd>The Hive Metastore destination generates an event record each time it
+                        changes a table and places the table name in the "table" record header
+                        attribute. Use the following query to update the Impala metadata cache:
+                        <codeblock>invalidate metadata ${record:attribute('/table')}</codeblock></dd>
+                    <dd>When the Hive Query executor receives the event record, it runs the
+                        Invalidate Metadata query on the table specified in the event record. </dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Processing event records from the Hadoop FS destination</dt>
+                    <dd>The Hadoop FS destination generates an event record each time it closes a
+                        file. It places the file path in a "filepath" field in the event record. If
+                        you use a separate Hive Query executor for each destination, use the
+                        following query to update the Impala
+                        cache:<codeblock>invalidate metadata `${file:pathElement(record:value('/filepath'), -3)}`.
+`${file:pathElement(record:value('/filepath'), -2)}`      </codeblock></dd>
+                    <dd>This expression uses the third-to-last section of the path as the database
+                        name, and the second-to-last section of the path as the table name. </dd>
+                    <dd>If you want to use the same Hive Query executor to process records from Hive
+                        Query and Hadoop FS, add an Expression Evaluator in the Hadoop FS event
+                        stream to perform this processing. For an example, see <xref
+                            href="../Event_Handling/CaseStudy-Impala.dita#concept_szz_xwm_lx"
+                        />.</dd>
+                </dlentry>
+            </dl></p>
  </conbody>
 </concept>

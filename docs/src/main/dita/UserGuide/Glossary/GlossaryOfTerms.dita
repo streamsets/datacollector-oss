@@ -61,6 +61,12 @@
         <dd>Preview of data as it moves through a pipeline. Use to develop and test pipelines.</dd>
       </dlentry>
       <dlentry>
+        <dt>dataflow triggers</dt>
+        <dd>Instructions for the pipeline to kick off asynchronous tasks in external systems in
+          response to events that occur in the pipeline. For more information, see <xref
+            href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"/>.</dd>
+      </dlentry>
+      <dlentry>
         <dt>delivery guarantee</dt>
         <dd>Pipeline property that determines how the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>

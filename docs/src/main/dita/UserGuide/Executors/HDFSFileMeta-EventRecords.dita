@@ -35,8 +35,7 @@
                         <row>
                             <entry
                                 conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-eventType"/>
-                            <entry>Event type. Uses one of the following types:<ul
-                                    id="ul_m12_mgp_qx">
+                            <entry>Event type. Uses the following event type:<ul id="ul_m12_mgp_qx">
                                     <li>file-changed - Generated when the executor changes file
                                         metadata, including file name, file location, or file
                                         permissions.</li>

@@ -17,9 +17,10 @@
     <title>Event Framework Overview</title>
     <conbody>
         <p><indexterm>event framework<indexterm>overview</indexterm></indexterm>The <term>event
-                framework</term> enables the pipeline to trigger tasks in external systems based on
-            actions that occur in the pipeline, such as running a MapReduce job after the pipeline
-            writes a file to HDFS. </p>
+                framework</term> enables the use of <term>dataflow triggers</term> -  instructions
+            for the pipeline to kick off asynchronous tasks in external systems in response to
+            events that occur in the pipeline. With the event framework, you can configure dataflow
+            triggers such as running a MapReduce job after the pipeline writes a file to HDFS. </p>
         <p>You can also use the event framework to store event information, such as when an origin
             starts or completes reading a file. </p>
         <p>Event handling begins with enabling event generation for a stage in the pipeline, then
@@ -46,9 +47,9 @@
                         systems.</dd>
                     <dd>Each time an executor receives an event record, it performs the specified
                         task.</dd>
-                    <dd>For example, the Hive Query executor runs a Hive or Impala query each time
-                        it receives an event. Similarly, the MapReduce executor triggers a MapReduce
-                        job when it receives events. </dd>
+                    <dd>For example, the Hive Query executor runs user-defined Hive or Impala
+                        queries each time it receives an event. Similarly, the MapReduce executor
+                        triggers a MapReduce job when it receives events. </dd>
                 </dlentry>
                 <dlentry>
                     <dt>event storage</dt>

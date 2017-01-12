@@ -84,6 +84,42 @@
                                                 format:
                                                 <codeph>'&lt;DB>'.'&lt;table>'</codeph>.</entry>
                                         </row>
+                                        <row>
+                                            <entry>columns</entry>
+                                            <entry>A list-map field with the following information
+                                                for each new column:<ul id="ul_wky_yky_my">
+                                                  <li>Column name</li>
+                                                  <li>Hive data type, precision and scale</li>
+                                                </ul><p>For example: <ol id="ol_ktz_tlj_4y">
+                                                  <li>
+                                                  <ul id="ul_kkj_vlj_4y">
+                                                  <li>key: `id`</li>
+                                                  <li>value: INT</li>
+                                                  </ul>
+                                                  </li>
+                                                  <li>
+                                                  <ul id="ul_tkm_srq_4y">
+                                                  <li>key: `desc`</li>
+                                                  <li>value: STRING</li>
+                                                  </ul>
+                                                  </li>
+                                                  </ol></p></entry>
+                                        </row>
+                                        <row>
+                                            <entry>partitions</entry>
+                                            <entry>A list-map field with the following information:
+                                                  <ul id="ul_sck_zky_my">
+                                                  <li>Partition name</li>
+                                                  <li>Partition value</li>
+                                                </ul><p>For example: <ol id="ol_un4_zlj_4y">
+                                                  <li>
+                                                  <ul id="ul_r3y_zlj_4y">
+                                                  <li>name: `dt`</li>
+                                                  <li>value: 2017-01-01</li>
+                                                  </ul>
+                                                  </li>
+                                                  </ol></p></entry>
+                                        </row>
                                     </tbody>
                                 </tgroup>
                             </table></p>

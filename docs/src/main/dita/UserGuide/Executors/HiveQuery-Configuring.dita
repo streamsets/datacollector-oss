@@ -23,7 +23,7 @@
         </context>
         <steps>
             <step
-                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-StageLib-ReqField-EHandling">
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-D-E-EventHandling">
                 <cmd/>
             </step>
             <step>
@@ -78,19 +78,30 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>SQL Query <xref
-                                            href="HiveQuery-Query.dita">
+                                    <entry>SQL Queries <xref href="HiveQuery-Queries.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_rfz_thp_fs"/></xref></entry>
-                                    <entry>SQL query to execute on Hive or Impala upon receiving an
-                                        event record.<p>Use the default Invalidate Metadata
-                                            expression to process events from the Hive Metastore
-                                            destination when using the Hive Drift Solution with
-                                            Impala. </p><p>You might also use the default expression
-                                            with Hadoop FS, but you need to configure the pipeline
-                                            accordingly. For more information, see <xref
+                                    <entry>One or more SQL queries to execute on Hive or Impala upon
+                                        receiving an event record.<p>To add additional queries,
+                                            click the <uicontrol>Add</uicontrol> icon.</p><p>The
+                                            executor processes multiple queries in order, and waits
+                                            for each query to complete before continuing to the next
+                                            query.</p><p>To process events from the Hive Metastore
+                                            or Hadoop FS destinations when using the Hive Drift
+                                            Solution with Impala, you might use the following query:
+                                            <codeblock>invalidate metadata ${record:attribute('/table')}</codeblock></p><p>For
+                                            more information, see <xref
                                                 href="HiveQuery-ImpalaHDS.dita#concept_hqg_nzh_vx"
                                             />.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Stop on Query Failure</entry>
+                                    <entry>Skips the remaining queries for an event record when a
+                                        query fails. <p>By default, upon a failed query, the
+                                            executor continues to run all configured queries for the
+                                            event record. </p><p>When selected, the executor skips
+                                            the remaining queries and starts running queries for the
+                                            next event record.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

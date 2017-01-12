@@ -840,7 +840,7 @@ web-0011.log</codeblock></dd>
                               or change permissions on closed files. <p>For an example, see <xref
                                           href="../Event_Handling/CaseStudy-FileManagement.dita#concept_d1q_xl4_lx"
                                     />.</p></li>
-                        <li>With the Hive Query executor to run a Hive or Impala query after closing
+                        <li>With the Hive Query executor to run Hive or Impala queries after closing
                               output files. <p>For an example, see <xref
                                           href="../Event_Handling/CaseStudy-Impala.dita#concept_szz_xwm_lx"
                                     />.</p></li>
@@ -2172,10 +2172,11 @@ ${YY()}_${MM()}_${DD()}</codeblock>
             </p>
             <p>
                   <note id="note-HiveQuery"><ph id="ph-HiveQuery">The Hive Query executor waits for
-                              each query to complete before starting a query for a new event record.
-                              Depending on the speed of the pipeline and the complexity of the
-                              query, the wait for query completion can slow pipeline
-                              performance.</ph></note>
+                              each query to complete before continuing with the next query for the
+                              same event record. It also waits for all queries to complete before
+                              starting the queries for the next event record. Depending on the speed
+                              of the pipeline and the complexity of the queries, the wait for query
+                              completion can slow pipeline performance.</ph></note>
             </p>
             <draft-comment author="alisontaylor">Note is used in all places where we mention Java 7:
                   Permanent Generation Size and 2 topics in JavaScript Evaluator.</draft-comment>

@@ -16,9 +16,10 @@
 <concept id="concept_stt_2lk_fx">
  <title>Executors</title>
  <conbody>
-  <p><indexterm>executors<indexterm>overview</indexterm></indexterm>An executor stage executes a
-            task in an external system when it receives an event - it does not write or store
-            events. Use executor stages as part of an event stream to perform event-driven,
+  <p><indexterm>executors<indexterm>overview</indexterm></indexterm>An executor stage triggers a
+            task in an external system when it receives an event. Executors do not write or store
+            events. </p>
+        <p>Use executors as part of a dataflow trigger in an event stream to perform event-driven,
             pipeline-related tasks, such as moving a fully-written file when a destination closes
             it.</p>
         <p>For more information about the event framework, see <xref
@@ -26,8 +27,8 @@
         <p>You can use the following executors in a pipeline:<ul id="ul_htl_4dr_mx">
                 <li><xref href="HDFSMetadata.dita#concept_wgj_slk_fx">HDFS File Metadata</xref> -
                     Changes file metadata upon receiving an event record.</li>
-                <li><xref href="HiveQuery.dita#concept_kjw_llk_fx">Hive Query</xref> - Runs a
-                    user-defined Hive or Impala query upon receiving an event record. </li>
+                <li><xref href="HiveQuery.dita#concept_kjw_llk_fx">Hive Query</xref> - Runs
+                    user-defined Hive or Impala queries upon receiving an event record. </li>
                 <li><xref href="JDBCQuery.dita#concept_j3r_gcv_sx">JDBC Query</xref> - Runs a
                     user-defined SQL query upon receiving an event record.</li>
                 <li><xref href="MapReduce.dita#concept_bj2_zlk_fx">MapReduce</xref> - Starts the

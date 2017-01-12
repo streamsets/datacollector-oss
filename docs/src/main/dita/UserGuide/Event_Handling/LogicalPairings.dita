@@ -77,7 +77,7 @@
                                 <ul id="ul_hbx_blh_tx">
                                     <li>HDFS File Metadata executor to change file metadata for
                                         closed files.</li>
-                                    <li>Hive Query executor to run a Hive or Impala query after
+                                    <li>Hive Query executor to run Hive or Impala queries after
                                         closing a file. <p>Particularly useful when using the Hive
                                             Drift Solution with Impala. </p></li>
                                     <li>MapReduce executor to run a MapReduce job after closing a
@@ -90,7 +90,7 @@
                             <entry>Hive Metastore </entry>
                             <entry>
                                 <ul id="ul_kkj_dlh_tx">
-                                    <li>Hive Query executor to run a Hive or Impala query after
+                                    <li>Hive Query executor to run Hive or Impala queries after
                                         changing table structures. <p>Particularly useful when using
                                             the Hive Drift Solution with Impala. </p></li>
                                     <li>Any destination for event storage.</li>
@@ -134,6 +134,10 @@
                     <tbody>
                         <row>
                             <entry>HDFS File Metadata executor</entry>
+                            <entry>Any destination for event storage.</entry>
+                        </row>
+                        <row>
+                            <entry>Hive Query executor</entry>
                             <entry>Any destination for event storage.</entry>
                         </row>
                         <row>

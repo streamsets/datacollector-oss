@@ -25,7 +25,7 @@
                 tables, columns and partitions are treated as creates since the destination does not
                 change or delete existing structures. </note>Hive Metastore events can be used as
             follows: <ul id="ul_ohl_4pg_zx">
-                <li>With the Hive Query executor to run a Hive or Impala query after updating the
+                <li>With the Hive Query executor to run Hive or Impala queries after updating the
                     Hive metastore.<p>For an example, see <xref
                             href="../Event_Handling/CaseStudy-Impala.dita#concept_szz_xwm_lx"
                     />.</p></li>
