@@ -34,8 +34,7 @@ import com.streamsets.pipeline.stage.origin.mongodb.MongoDBDSource;
     icon="mongodb.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
-    //TODO
-    onlineHelpRefUrl = "index.html#Origins/",
+    onlineHelpRefUrl = "index.html#Origins/MongoDBOplog.html#task_qj5_drw_4y",
     resetOffset = true
 )
 @GenerateResourceBundle
