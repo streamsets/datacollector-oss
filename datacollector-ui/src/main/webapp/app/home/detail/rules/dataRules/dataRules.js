@@ -45,7 +45,7 @@ angular
        */
       createDataRule: function() {
         if((!$scope.fieldPaths || $scope.fieldPaths.length === 0 ) && $scope.selectedType === pipelineConstant.LINK &&
-          !$rootScope.common.isSlaveNode && !$scope.isPipelineRunning) {
+          !$rootScope.common.isSlaveNode && !$scope.isPipelineRunning && $rootScope.$storage.runPreviewForFieldPaths) {
           updateFieldDataForStage($scope.selectedObject);
         }
 

@@ -149,7 +149,8 @@ angular.module('dataCollectorApp')
       pipelineListState: {
         gridView: false,
         searchInput: ''
-      }
+      },
+      runPreviewForFieldPaths: true
     });
 
     api.pipelineAgent.getUIConfiguration().then(function (res) {

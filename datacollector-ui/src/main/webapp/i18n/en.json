@@ -763,7 +763,8 @@
   "sdcSettings": {
     "title": "Settings",
     "helpBar": "Hide Pipeline Creation Help Bar",
-    "restResponse": "Hide REST Response Menu"
+    "restResponse": "Hide REST Response Menu",
+    "runPreviewForFieldPaths": "Run preview in background for fetching fields paths"
   },
   "sdcDirectories" : {
     "title": "SDC Directories",

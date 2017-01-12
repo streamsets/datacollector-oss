@@ -238,7 +238,7 @@ angular
        */
       onFieldSelectorFocus: function(stageInstance) {
         if ((!$scope.fieldPaths || $scope.fieldPaths.length === 0 ) && !$scope.isPipelineReadOnly &&
-          !$scope.isPipelineRunning) {
+          !$scope.isPipelineRunning && $rootScope.$storage.runPreviewForFieldPaths) {
           updateFieldDataForStage(stageInstance);
         }
       },

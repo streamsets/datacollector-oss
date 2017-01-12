@@ -44,8 +44,8 @@ angular
        * Callback function for Create New Data Rule button.
        */
       createDataRule: function() {
-        if((!$scope.fieldPaths || $scope.fieldPaths.length === 0 ) && $scope.selectedType === pipelineConstant.LINK &&
-          !$rootScope.common.isSlaveNode && !$scope.isPipelineRunning) {
+        if ((!$scope.fieldPaths || $scope.fieldPaths.length === 0 ) && $scope.selectedType === pipelineConstant.LINK &&
+          !$rootScope.common.isSlaveNode && !$scope.isPipelineRunning && $rootScope.$storage.runPreviewForFieldPaths) {
           updateFieldDataForStage($scope.selectedObject);
         }
 
@@ -58,7 +58,7 @@ angular
           backdrop: 'static',
           resolve: {
             laneName: function () {
-              if($scope.selectedType === pipelineConstant.LINK) {
+              if ($scope.selectedType === pipelineConstant.LINK) {
                 return $scope.selectedObject.outputLane;
               } else {
                 var firstStage = stageInstances.length ? stageInstances[0] : undefined;
@@ -95,11 +95,11 @@ angular
        */
       editDataRule: function(dataDriftRuleDefn, index, $event) {
 
-        if($event) {
+        if ($event) {
           $event.stopPropagation();
         }
 
-        if((!$scope.fieldPaths || $scope.fieldPaths.length === 0) && $scope.selectedType === pipelineConstant.LINK &&
+        if ((!$scope.fieldPaths || $scope.fieldPaths.length === 0) && $scope.selectedType === pipelineConstant.LINK &&
           !$rootScope.common.isSlaveNode && !$scope.isPipelineRunning) {
           updateFieldDataForStage($scope.selectedObject);
         }
@@ -142,19 +142,19 @@ angular
        * @param rule
        */
       removeRule: function(ruleList, rule, $event) {
-        if($event) {
+        if ($event) {
           $event.stopPropagation();
         }
 
         var index;
 
         angular.forEach(ruleList, function(r, ind) {
-          if(r.id === rule.id) {
+          if (r.id === rule.id) {
             index = ind;
           }
         });
 
-        if(index !== undefined) {
+        if (index !== undefined) {
           ruleList.splice(index, 1);
         }
       },
@@ -165,7 +165,7 @@ angular
        * @returns {*}
        */
       getFilteredDataDriftRules: function() {
-        if($scope.selectedType === pipelineConstant.LINK) {
+        if ($scope.selectedType === pipelineConstant.LINK) {
           return _.filter($scope.pipelineRules.driftRuleDefinitions, function(rule) {
             return rule.lane === $scope.selectedObject.outputLane;
           });
@@ -175,19 +175,16 @@ angular
       }
     });
 
-
-
     /**
      * Update Stage Preview Data when stage selection changed.
      *
      * @param edge
      */
     var updateFieldDataForStage = function(edge) {
-      if(edge) {
-
+      if (edge) {
         previewService.getEdgeInputRecordsFromPreview($scope.activeConfigInfo.name, edge, 1).
           then(function (inputRecords) {
-            if(_.isArray(inputRecords) && inputRecords.length) {
+            if (_.isArray(inputRecords) && inputRecords.length) {
               var fieldPaths = [],
                 dFieldPaths = [];
               pipelineService.getFieldPaths(inputRecords[0].value, fieldPaths, undefined, undefined, dFieldPaths);
@@ -198,8 +195,6 @@ angular
           function(res) {
             $rootScope.common.errors = [res.data];
           });
-      } else {
-
       }
     };
 
@@ -240,7 +235,7 @@ angular
           }
         };
 
-        if(fieldType === 'condition') {
+        if (fieldType === 'condition') {
           $timeout(function() {
             $scope.refreshCodemirror = true;
           });
@@ -283,7 +278,7 @@ angular
           }
         };
 
-        if(fieldType === 'condition') {
+        if (fieldType === 'condition') {
           $timeout(function() {
             $scope.refreshCodemirror = true;
           });
