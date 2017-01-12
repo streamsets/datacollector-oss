@@ -71,10 +71,7 @@ public class ProductionSourceOffsetCommitterOffsetTracker implements SourceOffse
   public void commitOffset(String entity, String newOffset) {
     Preconditions.checkArgument(Source.POLL_SOURCE_OFFSET_KEY.equals(entity), "Trying to commit offset for invalid entity: " + entity);
     this.newOffset = newOffset;
-    commitOffsetInternal(newOffset);
-  }
 
-  public void commitOffsetInternal(String newOffset) {
     try {
       if (LOG.isTraceEnabled()) {
         LOG.trace("Commit offset '{}'", newOffset);

@@ -57,9 +57,12 @@ public class TestProductionSourceOffsetCommitterOffsetTracker {
 
   @Test
   public void testProductionSourceOffsetCommitterOffsetTracker() {
+    RuntimeInfo info = new StandaloneRuntimeInfo(
+      RuntimeModule.SDC_PROPERTY_PREFIX,
+      new MetricRegistry(),
+      Arrays.asList(getClass().getClassLoader())
+    );
 
-    RuntimeInfo info = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
-      Arrays.asList(getClass().getClassLoader()));
     ProductionSourceOffsetCommitterOffsetTracker offsetTracker = new ProductionSourceOffsetCommitterOffsetTracker(
       PIPELINE_NAME, PIPELINE_REV, info, new OffsetCommitter() {
       @Override

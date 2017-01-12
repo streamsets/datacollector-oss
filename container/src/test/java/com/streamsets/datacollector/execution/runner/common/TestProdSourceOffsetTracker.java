@@ -31,6 +31,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -46,6 +47,8 @@ public class TestProdSourceOffsetTracker {
   private static final String PIPELINE_NAME = "myPipeline";
   private static final String PIPELINE_REV = "2.0";
 
+  private static ProductionSourceOffsetTracker offsetTracker;
+
   @BeforeClass
   public static void beforeClass() throws IOException {
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR, "./target/var");
@@ -55,6 +58,7 @@ public class TestProdSourceOffsetTracker {
     } catch (Exception ex) {
       LOG.info(Utils.format("Got exception while deleting directory: {}", f.getAbsolutePath()), ex);
     }
+
   }
 
   @AfterClass
@@ -62,22 +66,42 @@ public class TestProdSourceOffsetTracker {
     System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR);
   }
 
-  @Test
-  public void testProductionSourceOffsetTracker() {
-
-    RuntimeInfo info = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
-      Arrays.asList(getClass().getClassLoader()));
-    ProductionSourceOffsetTracker offsetTracker = new ProductionSourceOffsetTracker(PIPELINE_NAME, PIPELINE_REV, info);
-
-    Assert.assertEquals(false, offsetTracker.isFinished());
-    Assert.assertEquals(null, offsetTracker.getOffsets().get(Source.POLL_SOURCE_OFFSET_KEY));
-
-    offsetTracker.commitOffset(Source.POLL_SOURCE_OFFSET_KEY, "abc");
-    Assert.assertEquals("abc", offsetTracker.getOffsets().get(Source.POLL_SOURCE_OFFSET_KEY));
-
-    Assert.assertEquals(OffsetFileUtil.getPipelineOffsetFile(info, PIPELINE_NAME, PIPELINE_REV).lastModified(),
-      offsetTracker.getLastBatchTime());
+  @Before
+  public void createOffsetTracker() {
+    RuntimeInfo info = new StandaloneRuntimeInfo(
+      RuntimeModule.SDC_PROPERTY_PREFIX,
+      new MetricRegistry(),
+      Arrays.asList(TestProdSourceOffsetTracker.class.getClassLoader())
+    );
+    OffsetFileUtil.resetOffsets(info, PIPELINE_NAME, PIPELINE_REV);
+    offsetTracker = new ProductionSourceOffsetTracker(PIPELINE_NAME, PIPELINE_REV, info);
   }
 
+  @Test
+  public void testCommitOffset() {
+    Assert.assertEquals(false, offsetTracker.isFinished());
+    Assert.assertTrue(offsetTracker.getOffsets().isEmpty());
+
+    offsetTracker.commitOffset(Source.POLL_SOURCE_OFFSET_KEY, "abc");
+    Assert.assertEquals(1, offsetTracker.getOffsets().size());
+    Assert.assertEquals("abc", offsetTracker.getOffsets().get(Source.POLL_SOURCE_OFFSET_KEY));
+
+    offsetTracker.commitOffset("key", "offset");
+    Assert.assertEquals(2, offsetTracker.getOffsets().size());
+    Assert.assertEquals("offset", offsetTracker.getOffsets().get("key"));
+  }
+
+  @Test
+  public void testGetLastBatchTime() {
+    Assert.assertEquals(0, offsetTracker.getLastBatchTime());
+
+    long start = System.currentTimeMillis();
+    offsetTracker.commitOffset("random-key", "random-value");
+    long end = System.currentTimeMillis();
+    long batchTime = offsetTracker.getLastBatchTime();
+
+    Assert.assertTrue(Utils.format("{} <= {}", start, batchTime), start <= batchTime);
+    Assert.assertTrue(Utils.format("{} <= {}", batchTime, end), batchTime <= end);
+  }
 
 }

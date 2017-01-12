@@ -36,6 +36,7 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
 
   private static final Logger LOG = LoggerFactory.getLogger(ProductionSourceOffsetTracker.class);
   private Map<String, String> offsets;
+  private volatile long lastBatchTime;
   private boolean finished;
   private final String pipelineName;
   private final String rev;
@@ -56,10 +57,9 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
 
   @Override
   public void commitOffset(String entity, String newOffset) {
-    commitOffsetInternal(pipelineName, rev, entity, newOffset);
-  }
+    // Update last batch time
+    lastBatchTime = System.currentTimeMillis();
 
-  public void commitOffsetInternal(String pipelineName, String rev, String entity, String offset) {
     // Short cut when origin is committing "null" entity then they are in fact not changing anything, so we don't need
     // to synchronize on single file to write it down.
     if(entity == null) {
@@ -68,15 +68,15 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
 
     // Backward compatibility calculation
     if(Source.POLL_SOURCE_OFFSET_KEY.equals(entity)) {
-      finished = offset == null;
+      finished = newOffset == null;
     }
 
     // This object can be called from multiple threads, so we have to synchronize access to the offset map
     synchronized (offsets) {
-      if (offset == null) {
+      if (newOffset == null) {
         offsets.remove(entity);
       } else {
-        offsets.put(entity, offset);
+        offsets.put(entity, newOffset);
       }
 
       // Finally write new variant of the offset file
@@ -104,6 +104,6 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
 
   @Override
   public long getLastBatchTime() {
-    return OffsetFileUtil.getPipelineOffsetFile(runtimeInfo, pipelineName, rev).lastModified();
+    return lastBatchTime;
   }
 }
