@@ -74,34 +74,42 @@ public class ForceUtils {
   }
 
   public static Field createField(Object val) {
-    if (val instanceof Boolean) {
-      return Field.create((Boolean)val);
-    } else if (val instanceof Character) {
-      return  Field.create((Character)val);
-    } else if (val instanceof Byte) {
-      return  Field.create((Byte)val);
-    } else if (val instanceof Short) {
-      return  Field.create((Short)val);
-    } else if (val instanceof Integer) {
-      return  Field.create((Integer)val);
-    } else if (val instanceof Long) {
-      return  Field.create((Long)val);
-    } else if (val instanceof Float) {
-      return  Field.create((Float)val);
-    } else if (val instanceof Double) {
-      return  Field.create((Double)val);
-    } else if (val instanceof BigDecimal) {
-      return  Field.create((BigDecimal)val);
-    } else if (val instanceof String) {
-      return  Field.create((String)val);
-    } else if (val instanceof byte[]) {
-      return  Field.create((byte[])val);
-    } else if (val instanceof Date) {
-      return  Field.createDatetime((Date)val);
-    } else if (val == null) {
-      return  Field.create(Field.Type.STRING, null);
+    return createField(val, DataType.USE_SALESFORCE_TYPE);
+  }
+
+  public static Field createField(Object val, DataType userSpecifiedType) {
+    if (userSpecifiedType != DataType.USE_SALESFORCE_TYPE) {
+      return Field.create(Field.Type.valueOf(userSpecifiedType.getLabel()), val);
     } else {
-      return null;
+      if (val instanceof Boolean) {
+        return Field.create((Boolean)val);
+      } else if (val instanceof Character) {
+        return  Field.create((Character)val);
+      } else if (val instanceof Byte) {
+        return  Field.create((Byte)val);
+      } else if (val instanceof Short) {
+        return  Field.create((Short)val);
+      } else if (val instanceof Integer) {
+        return  Field.create((Integer)val);
+      } else if (val instanceof Long) {
+        return  Field.create((Long)val);
+      } else if (val instanceof Float) {
+        return  Field.create((Float)val);
+      } else if (val instanceof Double) {
+        return  Field.create((Double)val);
+      } else if (val instanceof BigDecimal) {
+        return  Field.create((BigDecimal)val);
+      } else if (val instanceof String) {
+        return  Field.create((String)val);
+      } else if (val instanceof byte[]) {
+        return  Field.create((byte[])val);
+      } else if (val instanceof Date) {
+        return  Field.createDatetime((Date)val);
+      } else if (val == null) {
+        return  Field.create(Field.Type.STRING, null);
+      } else {
+        return null;
+      }
     }
   }
 }

@@ -37,8 +37,8 @@ import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.salesforce.DataType;
 import com.streamsets.pipeline.lib.salesforce.Errors;
-import com.streamsets.pipeline.lib.salesforce.ForceFieldMapping;
 import com.streamsets.pipeline.lib.salesforce.ForceLookupConfigBean;
 import com.streamsets.pipeline.lib.salesforce.ForceSDCFieldMapping;
 import com.streamsets.pipeline.lib.salesforce.ForceUtils;
@@ -46,6 +46,7 @@ import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.origin.salesforce.Groups;
 import com.streamsets.pipeline.stage.processor.kv.EvictionPolicyType;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,6 +61,8 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
   private final ForceLookupConfigBean conf;
 
   private Map<String, String> columnsToFields = new HashMap<>();
+  private Map<String, String> columnsToDefaults = new HashMap<>();
+  private Map<String, DataType> columnsToTypes = new HashMap<>();
 
   private LoadingCache<String, Map<String, Field>> cache;
 
@@ -110,6 +113,15 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
     for (ForceSDCFieldMapping mapping : conf.fieldMappings) {
       LOG.debug("Mapping Salesforce field {} to SDC field {}", mapping.salesforceField, mapping.sdcField);
       columnsToFields.put(mapping.salesforceField.toLowerCase(), mapping.sdcField);
+      if (!StringUtils.isEmpty(mapping.defaultValue) && mapping.dataType == DataType.USE_SALESFORCE_TYPE) {
+        issues.add(getContext().createConfigIssue(Groups.FORCE.name(),
+            "fieldMappings",
+            Errors.FORCE_18,
+            mapping.salesforceField)
+        );
+      }
+      columnsToDefaults.put(mapping.salesforceField.toLowerCase(), mapping.defaultValue);
+      columnsToTypes.put(mapping.salesforceField.toLowerCase(), mapping.dataType);
     }
 
     if (issues.isEmpty()) {
@@ -180,7 +192,11 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
   private LoadingCache<String, Map<String, Field>> buildCache() {
     CacheBuilder cacheBuilder = CacheBuilder.newBuilder();
     if (!conf.cacheConfig.enabled) {
-      return cacheBuilder.maximumSize(0).build(new ForceLookupLoader(partnerConnection));
+      return cacheBuilder.maximumSize(0).build(new ForceLookupLoader(partnerConnection,
+          columnsToFields,
+          columnsToDefaults,
+          columnsToTypes
+      ));
     }
 
     if (conf.cacheConfig.maxSize == -1) {
@@ -198,6 +214,10 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
           conf.cacheConfig.evictionPolicyType
       ));
     }
-    return cacheBuilder.build(new ForceLookupLoader(partnerConnection));
+    return cacheBuilder.build(new ForceLookupLoader(partnerConnection,
+        columnsToFields,
+        columnsToDefaults,
+        columnsToTypes
+    ));
   }
 }

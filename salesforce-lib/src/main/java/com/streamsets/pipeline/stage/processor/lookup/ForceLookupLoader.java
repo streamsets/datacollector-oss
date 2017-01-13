@@ -28,6 +28,7 @@ import com.sforce.ws.bind.XmlObject;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.lib.salesforce.DataType;
 import com.streamsets.pipeline.lib.salesforce.Errors;
 import com.streamsets.pipeline.lib.salesforce.ForceUtils;
 import org.slf4j.Logger;
@@ -40,12 +41,21 @@ import java.util.Map;
 class ForceLookupLoader extends CacheLoader<String, Map<String, Field>> {
   private static final Logger LOG = LoggerFactory.getLogger(ForceLookupLoader.class);
 
+  private final Map<String, String> columnsToFields;
+  private final Map<String, String> columnsToDefaults;
+  private final Map<String, DataType> columnsToTypes;
   private final PartnerConnection partnerConnection;
 
   ForceLookupLoader(
-      PartnerConnection partnerConnection
+      PartnerConnection partnerConnection,
+      Map<String, String> columnsToFields,
+      Map<String, String> columnsToDefaults,
+      Map<String, DataType> columnsToTypes
   ) {
     this.partnerConnection = partnerConnection;
+    this.columnsToFields = columnsToFields;
+    this.columnsToDefaults = columnsToDefaults;
+    this.columnsToTypes = columnsToTypes;
   }
 
   @Override
@@ -81,12 +91,24 @@ class ForceLookupLoader extends CacheLoader<String, Map<String, Field>> {
             // Get a null Id if you don't include it in the SELECT
             continue;
           }
-          Field field = ForceUtils.createField(val);
+          DataType dataType = columnsToTypes.get(key.toLowerCase());
+          Field field = ForceUtils.createField(val, dataType == null ? DataType.USE_SALESFORCE_TYPE : dataType);
           if (field == null) {
             throw new StageException(Errors.FORCE_04,
                 "Key: "+key+", unexpected type for val: " + val.getClass().toString());
           }
           values.put(key, field);
+        }
+      } else {
+        // Salesforce returns no row. Use default values.
+        for (String key : columnsToFields.keySet()) {
+          if (columnsToTypes.get(key) != DataType.USE_SALESFORCE_TYPE) {
+            Field field = Field.create(
+                Field.Type.valueOf(columnsToTypes.get(key).getLabel()),
+                columnsToDefaults.get(key)
+            );
+            values.put(key, field);
+          }
         }
       }
     } catch (ConnectionException e) {

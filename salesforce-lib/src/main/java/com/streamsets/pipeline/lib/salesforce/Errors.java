@@ -43,7 +43,7 @@ public enum Errors implements ErrorCode {
   FORCE_15("No results for query: '{}'"),
   FORCE_16("Failed to evaluate expression: '{}'"),
   FORCE_17("Exception executing query: '{}' - '{}'"),
-  FORCE_18("No mapping for Salesforce field '{}'"),
+  FORCE_18("Since the default value of '{}' is not empty, its data type cannot be '" + DataType.USE_SALESFORCE_TYPE.getLabel() + "'."),
   ;
   private final String msg;
 

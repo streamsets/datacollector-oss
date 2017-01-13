@@ -20,7 +20,7 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.salesforce.DataType;
 import com.streamsets.pipeline.lib.salesforce.ForceLookupConfigBean;
 import com.streamsets.pipeline.lib.salesforce.ForceSDCFieldMapping;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
@@ -57,10 +57,9 @@ public class TestSalesforceLookupProcessor {
   private static final String username = "test@example.com";
   private static final String password = "p455w0rd";
   private static final String apiVersion = "37.0";
-  private static final int maxBatchSize = 1000;
-  private static final int maxWaitTime = 1000;
   private static final String listQuery = "SELECT Name FROM Account WHERE Id = '${record:value(\"[0]\")}'";
   private static final String mapQuery = "SELECT Name FROM Account WHERE Id = '${record:value(\"/id\")}'";
+  private static final String queryReturnsNoRow = "SELECT Name FROM Account WHERE false";
 
   private int port;
   private String authEndpoint;
@@ -308,6 +307,63 @@ public class TestSalesforceLookupProcessor {
     } finally {
       processorRunner.runDestroy();
     }
+  }
 
+  @Test
+  public void testBadDataTypeForDefaultValue() throws Exception {
+    ForceLookupDProcessor processor = new ForceLookupDProcessor();
+    processor.forceConfig = createConfigBean();
+
+    processor.forceConfig.fieldMappings = ImmutableList.of(
+        new ForceSDCFieldMapping("Name", "[2]", "Pat", DataType.USE_SALESFORCE_TYPE)
+    );
+    processor.forceConfig.soqlQuery = listQuery;
+
+    ProcessorRunner processorRunner = new ProcessorRunner.Builder(ForceLookupDProcessor.class, processor)
+        .addOutputLane("lane")
+        .build();
+
+    List<Stage.ConfigIssue> issues = processorRunner.runValidateConfigs();
+    for (Stage.ConfigIssue issue : issues) {
+      LOG.info(issue.toString());
+    }
+    assertEquals(1, issues.size());
+  }
+
+  @Test
+  public void testDefaultValue() throws Exception {
+    mockServer.sforceApi().query().returnResults(); // return empty result
+
+    ForceLookupDProcessor processor = new ForceLookupDProcessor();
+    processor.forceConfig = createConfigBean();
+
+    processor.forceConfig.fieldMappings = ImmutableList.of(
+        new ForceSDCFieldMapping("Name", "[2]", "Bob", DataType.STRING)
+    );
+    processor.forceConfig.soqlQuery = listQuery;
+
+    ProcessorRunner processorRunner = new ProcessorRunner.Builder(ForceLookupDProcessor.class, processor)
+        .addOutputLane("lane")
+        .build();
+
+    Record record = RecordCreator.create();
+    List<Field> fields = new ArrayList<>();
+    fields.add(Field.create("001000000000001"));
+    fields.add(Field.create("abcd"));
+    record.set(Field.create(fields));
+
+    List<Record> singleRecord = ImmutableList.of(record);
+    processorRunner.runInit();
+    try {
+      StageRunner.Output output = processorRunner.runProcess(singleRecord);
+      Assert.assertEquals(1, output.getRecords().get("lane").size());
+
+      record = output.getRecords().get("lane").get(0);
+
+      Assert.assertNotEquals(null, record.get("[2]"));
+      Assert.assertEquals("Bob", record.get("[2]").getValueAsString());
+    } finally {
+      processorRunner.runDestroy();
+    }
   }
 }

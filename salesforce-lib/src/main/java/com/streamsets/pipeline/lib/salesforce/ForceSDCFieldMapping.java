@@ -21,6 +21,7 @@ package com.streamsets.pipeline.lib.salesforce;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.FieldSelectorModel;
+import com.streamsets.pipeline.api.ValueChooserModel;
 
 public class ForceSDCFieldMapping {
 
@@ -30,8 +31,26 @@ public class ForceSDCFieldMapping {
    * @param sdcField
    */
   public ForceSDCFieldMapping(final String salesforceField, final String sdcField) {
+    this(salesforceField, sdcField, "", DataType.USE_SALESFORCE_TYPE);
+  }
+
+  /**
+   * Constructor used for unit testing purposes
+   * @param salesforceField
+   * @param sdcField
+   * @param defaultValue
+   * @param dataType
+   */
+  public ForceSDCFieldMapping(
+      final String salesforceField,
+      final String sdcField,
+      final String defaultValue,
+      final DataType dataType
+  ) {
     this.salesforceField = salesforceField;
     this.sdcField = sdcField;
+    this.defaultValue = defaultValue;
+    this.dataType = dataType;
   }
 
   /**
@@ -59,4 +78,28 @@ public class ForceSDCFieldMapping {
   )
   @FieldSelectorModel(singleValued = true)
   public String sdcField;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "",
+      label = "Default Value",
+      description = "The default value to be used when Salesforce returns no row. " +
+          "If not set, the record is sent to error in such a case.",
+      displayPosition = 30
+  )
+  public String defaultValue;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "USE_SALESFORCE_TYPE",
+      label = "Data Type",
+      description = "The field type. By default, the field type from Salesforce will be used. " +
+          "But if the field type is provided, it will overwrite the Salesforce type. " +
+          "Note that if the default value is provided, the field type must also be provided.",
+      displayPosition = 40
+  )
+  @ValueChooserModel(DataTypeChooserValues.class)
+  public DataType dataType;
 }

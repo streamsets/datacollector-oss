@@ -22,10 +22,8 @@ package com.streamsets.pipeline.lib.salesforce;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ListBeanModel;
-import com.streamsets.pipeline.lib.el.OffsetEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
-import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.processor.kv.CacheConfig;
 
 import java.util.List;
