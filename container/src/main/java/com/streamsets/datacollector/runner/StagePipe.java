@@ -79,6 +79,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
   private final Configuration configuration;
   private final MetricRegistryJson metricRegistryJson;
   private Map<String, Object> batchMetrics;
+  FilterRecordBatch.Predicate[] predicates;
 
   @VisibleForTesting
   StagePipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes, List<String> eventLanes) {
@@ -203,6 +204,11 @@ public class StagePipe extends Pipe<StagePipe.Context> {
             }));
       }
       createRuntimeStatsGauge(metrics);
+
+      predicates = new FilterRecordBatch.Predicate[2];
+      predicates[0] = new RequiredFieldsPredicate(getStage().getRequiredFields());
+      predicates[1] = new PreconditionsPredicate(getStage().getContext(), getStage().getPreconditions());
+
     }
     return issues;
   }
@@ -222,11 +228,6 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     String previousOffset = pipeBatch.getPreviousOffset();
 
     InstanceErrorSink instanceErrorSink = new InstanceErrorSink(getStage().getInfo().getInstanceName(), errorSink);
-    FilterRecordBatch.Predicate[] predicates = new FilterRecordBatch.Predicate[2];
-
-    predicates[0] = new RequiredFieldsPredicate(getStage().getRequiredFields());
-    predicates[1] = new PreconditionsPredicate(getStage().getContext(), getStage().getPreconditions());
-
     Batch batch = new FilterRecordBatch(batchImpl, predicates, instanceErrorSink);
 
     long start = System.currentTimeMillis();
