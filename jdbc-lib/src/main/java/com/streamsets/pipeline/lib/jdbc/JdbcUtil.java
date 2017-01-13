@@ -598,7 +598,7 @@ public class JdbcUtil {
       dataSource = new HikariDataSource(createDataSourceConfig(
         hikariConfigBean,
         driverProperties,
-        true,
+        hikariConfigBean.autoCommit,
         hikariConfigBean.readOnly
       ));
     } catch (RuntimeException e) {

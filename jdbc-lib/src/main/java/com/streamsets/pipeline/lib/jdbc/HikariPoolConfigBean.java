@@ -207,6 +207,17 @@ public class HikariPoolConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
+      label = "Auto Commit",
+      description = "Whether the connection should have property auto-commit set to true or not.",
+      defaultValue = "false",
+      displayPosition = 55,
+      group = "ADVANCED"
+  )
+  public boolean autoCommit = false;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
       label = "Enforce Read-only Connection",
       description = "Should be set to true whenever possible to avoid unintended writes. Set to false with extreme " +
           "caution.",
