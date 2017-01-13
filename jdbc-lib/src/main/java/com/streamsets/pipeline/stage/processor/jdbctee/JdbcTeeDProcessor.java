@@ -49,8 +49,11 @@ import java.util.List;
     onlineHelpRefUrl = "index.html#Processors/JDBCTee.html#task_qpj_ncy_hw"
 )
 @ConfigGroups(Groups.class)
-@HideConfigs(value = {"hikariConfigBean.readOnly"})
 @GenerateResourceBundle
+@HideConfigs(value = {
+  "hikariConfigBean.readOnly",
+  "hikariConfigBean.autoCommit"
+})
 public class JdbcTeeDProcessor extends DProcessor {
 
   @ConfigDef(

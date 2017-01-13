@@ -38,7 +38,6 @@ import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnParamMapping;
 
 import java.util.List;
 
-@HideConfigs(value = {"hikariConfigBean.readOnly"})
 @GenerateResourceBundle
 @StageDef(
     version = 5,
@@ -49,6 +48,10 @@ import java.util.List;
     onlineHelpRefUrl = "index.html#Destinations/JDBCProducer.html#task_cx3_lhh_ht"
 )
 @ConfigGroups(value = Groups.class)
+@HideConfigs(value = {
+  "hikariConfigBean.readOnly",
+  "hikariConfigBean.autoCommit",
+})
 public class JdbcDTarget extends DTarget {
 
   @ConfigDef(
