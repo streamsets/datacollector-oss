@@ -91,7 +91,7 @@ public enum DataGeneratorFormat implements DataFormat<DataGeneratorFactory> {
         cause = ex.getCause();
       }
       throw new RuntimeException(Utils.format("Could not create DataFactory instance for '{}': {}",
-        klass.getName(), cause.toString(), cause));
+        klass.getName(), cause.toString()), cause);
     }
   }
 }
