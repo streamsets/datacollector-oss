@@ -24,11 +24,16 @@ import com.streamsets.pipeline.api.ElParam;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class TimeNowEL {
+  private static final Logger LOG = LoggerFactory.getLogger(TimeNowEL.class);
 
   public static final String TIME_CONTEXT_VAR = "time";
   public static final String TIME_NOW_CONTEXT_VAR = "time_now";
@@ -123,4 +128,49 @@ public class TimeNowEL {
     String value = str.replaceAll("[^0-9]","");
     return Long.parseLong(value);
   }
+
+  @ElFunction(prefix = TIME_CONTEXT_VAR, name = "extractStringFromDateTZ", description = "Format a Date into a " +
+      "string" + " date, adjusting for time zone.")
+  public static String extractStringFromDateTZ(
+      @ElParam("datetime") Date in, @ElParam("string") String timeZone, @ElParam("string") String outputFormat
+  ) {
+    if (in == null) {
+      LOG.error(Utils.format("Invalid parameter - Date is null"));
+      return "";
+    }
+
+    if (StringUtils.isEmpty(outputFormat) || StringUtils.isEmpty(timeZone)) {
+      LOG.error(Utils.format("Invalid parameter - outputFormat or timeZone"));
+      return "";
+    }
+
+    TimeZone tz = TimeZone.getTimeZone(timeZone);
+
+    // TimeZone.getTimeZone() returns "GMT" by default
+    // when the time zone is not valid.
+    //
+    // so we must check if the user asked for "GMT".  otherwise,
+    // if TimeZone.getTimeZone() returned GMT, the input time zone is not valid.
+    //
+    if ("GMT".equals(tz.getID()) && (!"GMT".equals(timeZone))) {
+      LOG.error(Utils.format("Error matching time zone/invalid timezone. '{}' returning empty ", timeZone));
+      return "";
+    }
+
+    SimpleDateFormat formatter;
+    try {
+      formatter = new SimpleDateFormat(outputFormat);
+    } catch (IllegalArgumentException ex) {
+      LOG.error(Utils.format("SimpleDateFormatter error.  Invalid outputFormat '{}' or timezone '{}'",
+          outputFormat,
+          timeZone,
+          ex
+      ));
+      return "";
+    }
+
+    formatter.setTimeZone(tz);
+    return formatter.format(in);
+  }
+
 }

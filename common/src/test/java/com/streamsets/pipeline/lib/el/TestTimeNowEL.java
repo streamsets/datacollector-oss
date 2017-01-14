@@ -1,0 +1,141 @@
+/**
+ * Copyright 2016 StreamSets Inc.
+ *
+ * Licensed under the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.streamsets.pipeline.lib.el;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.Date;
+
+public class TestTimeNowEL {
+
+  @Test
+  public void testTimeToAmerica_New_York() {
+
+    // 1484320146987   GMT: Fri, 13 Jan 2017 15:09:06.987 GMT
+    Assert.assertEquals("2017-01-13 10:09:06.987",
+        TimeNowEL.extractStringFromDateTZ(new Date(1484320146987L), "America/New_York", "yyyy-MM-dd HH:mm:ss.SSS")
+    );
+  }
+
+  @Test
+  public void testTimeToGMT() {
+
+    // 1484320146987   GMT: Fri, 13 Jan 2017 15:09:06.987 GMT
+    Assert.assertEquals("2017-01-13 15:09:06",
+        TimeNowEL.extractStringFromDateTZ(new Date(1484320146987L), "GMT", "yyyy-MM-dd HH:mm:ss")
+    );
+  }
+
+  @Test
+  public void testTimeToGMT_0800() {
+
+    // 1484320146987   GMT: Fri, 13 Jan 2017 15:09:06.987 GMT
+    Assert.assertEquals("2017-01-13 07:09:06 GMT-08:00",
+        TimeNowEL.extractStringFromDateTZ(new Date(1484320146987L), "GMT-0800", "yyyy-MM-dd HH:mm:ss zzz")
+    );
+    Assert.assertEquals("2017-01-13 07:09:06 GMT-08:00",
+        TimeNowEL.extractStringFromDateTZ(new Date(1484320146987L), "GMT-08:00", "yyyy-MM-dd HH:mm:ss zzz")
+    );
+  }
+
+  @Test
+  public void testTimeTo_0500() {
+
+    // 1484320146987   GMT: Fri, 13 Jan 2017 15:09:06.987 GMT
+    // must be GMT-05:00 not -05:00
+    Assert.assertEquals("",
+        TimeNowEL.extractStringFromDateTZ(new Date(1484320146987L), "-05:00", "yyyy-MM-dd HH:mm:ss ZZZ")
+    );
+  }
+
+  @Test
+  public void testTimeTo_EDT() {
+
+    // 1484320146987   GMT: Fri, 13 Jan 2017 15:09:06.987 GMT
+    // EDT is not valid.
+    Assert.assertEquals("",
+        TimeNowEL.extractStringFromDateTZ(new Date(1484320146987L), "EDT", "yyyy-MM-dd HH:mm:ss ZZZ")
+    );
+  }
+
+  @Test
+  public void testTimeTo_EST() {
+
+    // 1484320146987   GMT: Fri, 13 Jan 2017 15:09:06.987 GMT
+    //  EST is valid 3-letter short timezone but gives the wrong result for DST.  This non-DST date works...
+    Assert.assertEquals("2017-01-13 10:09:06 -0500",
+        TimeNowEL.extractStringFromDateTZ(new Date(1484320146987L), "EST", "yyyy-MM-dd HH:mm:ss ZZZ")
+    );
+
+    // This date in US daylight savings time does not work.
+    // 1472393106987 Sun, 28 Aug 2016 14:05:06 GMT
+    // should by 10:05:06, but comes out as 09:05:06.  and -0500 is misleading. should be -0400
+    Assert.assertEquals("2016-08-28 09:05:06 -0500",
+        TimeNowEL.extractStringFromDateTZ(new Date(1472393106987L), "EST", "yyyy-MM-dd HH:mm:ss ZZZZZ")
+    );
+  }
+
+  @Test
+  public void testTimeTo_EST5EDT() {
+
+    // 1484320146987   GMT: Fri, 13 Jan 2017 15:09:06.987 GMT
+    //  EST5EDT works for both daylight savings and standard time.
+    Assert.assertEquals("2017-01-13 10:09:06 Eastern Standard Time",
+        TimeNowEL.extractStringFromDateTZ(new Date(1484320146987L), "EST5EDT", "yyyy-MM-dd HH:mm:ss zzzzz")
+    );
+
+    // This date in US daylight savings time does not work.
+    // 1472393106987 Sun, 28 Aug 2016 14:05:06 GMT
+    Assert.assertEquals("2016-08-28 10:05:06 Eastern Daylight Time",
+        TimeNowEL.extractStringFromDateTZ(new Date(1472393106987L), "EST5EDT", "yyyy-MM-dd HH:mm:ss zzzzz")
+    );
+
+  }
+
+  @Test
+  public void testTimeTo_America_Los_Angeles() {
+
+    // 1484320146987   GMT: Fri, 13 Jan 2017 15:09:06.987 GMT
+    // America/Los_Angeles works for both daylight savings and standard time.
+    Assert.assertEquals("2017-01-13 07:09:06 Pacific Standard Time",
+        TimeNowEL.extractStringFromDateTZ(new Date(1484320146987L), "America/Los_Angeles", "yyyy-MM-dd HH:mm:ss zzzzz")
+    );
+
+    // This date is in US daylight savings time.
+    // 1472393106987 Sun, 28 Aug 2016 14:05:06 GMT
+    Assert.assertEquals("2016-08-28 07:05:06 Pacific Daylight Time",
+        TimeNowEL.extractStringFromDateTZ(new Date(1472393106987L), "America/Los_Angeles", "yyyy-MM-dd HH:mm:ss zzzzz")
+    );
+
+  }
+
+  @Test
+  public void testTimeToAsiaRiyadh() {
+
+    // 1484320146987 GMT: Fri, 13 Jan 2017 15:09:06.987 GMT
+    // AST: 1/13/2017, 18:09:06 AM GMT-5:00
+
+    Assert.assertEquals("2017-01-13 18:09:06 +0300",
+        TimeNowEL.extractStringFromDateTZ(new Date(1484320146987L), "Asia/Riyadh", "yyyy-MM-dd HH:mm:ss ZZZZZ")
+    );
+  }
+
+}
