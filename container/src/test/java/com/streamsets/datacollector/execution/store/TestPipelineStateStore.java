@@ -161,7 +161,7 @@ public class TestPipelineStateStore {
 
   @Test
   public void testCreatePipeline() throws Exception {
-    pipelineStoreTask.create("user2", "name1", "description", false);
+    pipelineStoreTask.create("user2", "name1", "label", "description", false);
     PipelineState pipelineState = pipelineStateStore.getState("name1", "0");
 
     assertEquals("user2", pipelineState.getUser());

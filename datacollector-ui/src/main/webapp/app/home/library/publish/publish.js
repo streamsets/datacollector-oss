@@ -32,7 +32,7 @@ angular
         errors: []
       },
       commitPipelineModel : {
-        name: _.isArray(pipelineInfo) ? undefined : pipelineInfo.name,
+        name: _.isArray(pipelineInfo) ? undefined : pipelineInfo.title,
         commitMessage: ''
       },
       isList: _.isArray(pipelineInfo),
@@ -46,7 +46,7 @@ angular
               authService.getSSOToken(),
               pipelineInfo[i].name,
               {
-                name:  pipelineInfo[i].name,
+                name:  pipelineInfo[i].title,
                 commitMessage: $scope.commitPipelineModel.commitMessage
               }
             ));

@@ -29,6 +29,7 @@ import java.util.UUID;
 
 public class PipelineInfo implements Serializable {
   private String name;
+  private String title;
   private String description;
   private Date created;
   private Date lastModified;
@@ -42,6 +43,7 @@ public class PipelineInfo implements Serializable {
   @JsonCreator
   public PipelineInfo(
       @JsonProperty("name") String name,
+      @JsonProperty("title") String title,
       @JsonProperty("description") String description,
       @JsonProperty("created") Date created,
       @JsonProperty("lastModified") Date lastModified,
@@ -53,6 +55,7 @@ public class PipelineInfo implements Serializable {
       @JsonProperty("metadata") Map<String, Object> metadata
   ) {
     this.name = name;
+    this.title = title;
     this.description = description;
     this.created = created;
     this.lastModified = lastModified;
@@ -66,6 +69,7 @@ public class PipelineInfo implements Serializable {
 
   public PipelineInfo(
       PipelineInfo pipelineInfo,
+      String title,
       String description,
       Date lastModified,
       String lastModifier,
@@ -73,12 +77,16 @@ public class PipelineInfo implements Serializable {
       UUID uuid, boolean valid,
       Map<String, Object> metadata
   ) {
-    this(pipelineInfo.getName(), description, pipelineInfo.getCreated(), lastModified,
+    this(pipelineInfo.getName(), title, description, pipelineInfo.getCreated(), lastModified,
          pipelineInfo.getCreator(), lastModifier, lastRev, uuid, valid, metadata);
   }
 
   public String getName() {
     return name;
+  }
+
+  public String getTitle() {
+    return title;
   }
 
   public String getDescription() {

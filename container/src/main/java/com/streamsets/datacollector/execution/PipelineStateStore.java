@@ -19,11 +19,11 @@
  */
 package com.streamsets.datacollector.execution;
 
-import java.util.List;
-import java.util.Map;
-
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.pipeline.api.ExecutionMode;
+
+import java.util.List;
+import java.util.Map;
 
 // one per SDC
 public interface PipelineStateStore {
@@ -34,13 +34,29 @@ public interface PipelineStateStore {
 
   // the edited method should record only a change from <new> to EDITED or <other-status> to EDITED,
   // ignoring all EDITED to EDITED.
-  public PipelineState edited(String user, String name, String rev, ExecutionMode executionMode, boolean isRemote) throws PipelineStoreException;
+  public PipelineState edited(
+      String user,
+      String name,
+      String rev,
+      ExecutionMode executionMode,
+      boolean isRemote
+  ) throws PipelineStoreException;
 
  //called by PipelineStore when the pipeline is being deleted from the store.
   public void delete(String name, String rev) throws PipelineStoreException;
 
-  public PipelineState saveState(String user, String name, String rev, PipelineStatus status, String message,
-    Map<String, Object> attributes, ExecutionMode executionMode, String metrics, int retryAttempt, long nextRetryTimeStamp) throws PipelineStoreException;
+  public PipelineState saveState(
+      String user,
+      String name,
+      String rev,
+      PipelineStatus status,
+      String message,
+      Map<String, Object> attributes,
+      ExecutionMode executionMode,
+      String metrics,
+      int retryAttempt,
+      long nextRetryTimeStamp
+  ) throws PipelineStoreException;
 
   public PipelineState getState(String name, String rev) throws PipelineStoreException;
 

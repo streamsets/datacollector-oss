@@ -72,7 +72,8 @@ angular
         pipelineGridView: $rootScope.$storage.pipelineListState.gridView,
         sortColumn: 'LAST_MODIFIED',
         sortReverse: true,
-        searchInput: $scope.$storage.pipelineListState.searchInput
+        searchInput: $scope.$storage.pipelineListState.searchInput,
+        showNameColumn: $scope.$storage.pipelineListState.showNameColumn
       },
       selectedPipelineMap: {},
       selectedPipelineList: [],
@@ -765,7 +766,17 @@ angular
           pipelineInfo.name.indexOf('System Pipeline for Job') === 0 &&
           pipelineStatus.attributes && pipelineStatus.attributes.IS_REMOTE_PIPELINE
         );
+      },
+
+      /**
+       * Callback function when Show Name column menu item clicked
+       */
+      onToggleShowNameColumn: function() {
+        var showNameColumn = !$scope.header.showNameColumn;
+        $scope.$storage.pipelineListState.showNameColumn = showNameColumn;
+        $scope.header.showNameColumn = showNameColumn;
       }
+
 
     });
 

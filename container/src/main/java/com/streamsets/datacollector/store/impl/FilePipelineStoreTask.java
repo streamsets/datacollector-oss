@@ -170,29 +170,62 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   }
 
   @Override
-  public PipelineConfiguration create(String user, String name, String description, boolean isRemote) throws PipelineStoreException {
+  public PipelineConfiguration create(
+      String user,
+      String name,
+      String label,
+      String description,
+      boolean isRemote
+  ) throws PipelineStoreException {
     synchronized (lockCache.getLock(name)) {
       if (hasPipeline(name)) {
         throw new PipelineStoreException(ContainerError.CONTAINER_0201, name);
       }
-
       try {
         Files.createDirectory(getPipelineDir(name));
       } catch (IOException e) {
-        throw new PipelineStoreException(ContainerError.CONTAINER_0202, name, Utils.format("'{}' mkdir failed", getPipelineDir(name)), e);
+        throw new PipelineStoreException(
+            ContainerError.CONTAINER_0202,
+            name,
+            Utils.format("'{}' mkdir failed", getPipelineDir(name)),
+            e
+        );
       }
 
       Date date = new Date();
       UUID uuid = UUID.randomUUID();
-      PipelineInfo info = new PipelineInfo(name, description, date, date, user, user, REV, uuid, false, null);
+      PipelineInfo info = new PipelineInfo(
+          name,
+          label,
+          description,
+          date,
+          date,
+          user,
+          user,
+          REV,
+          uuid,
+          false,
+          null
+      );
+
       PipelineConfiguration pipeline =
-        new PipelineConfiguration(SCHEMA_VERSION, PipelineConfigBean.VERSION, uuid, description, stageLibrary
-          .getPipeline().getPipelineDefaultConfigs(), Collections.<String, Object>emptyMap(), Collections.<StageConfiguration>emptyList(), null, null);
+          new PipelineConfiguration(
+              SCHEMA_VERSION,
+              PipelineConfigBean.VERSION,
+              uuid,
+              label,
+              description,
+              stageLibrary.getPipeline().getPipelineDefaultConfigs(),
+              Collections.<String, Object>emptyMap(),
+              Collections.<StageConfiguration>emptyList(),
+              null,
+              null
+          );
 
       try (
           OutputStream infoFile = Files.newOutputStream(getInfoFile(name));
           OutputStream pipelineFile = Files.newOutputStream(getPipelineFile(name));
-        ){
+      ){
         json.writeValue(infoFile, BeanHelper.wrapPipelineInfo(info));
         json.writeValue(pipelineFile, BeanHelper.wrapPipelineConfiguration(pipeline));
       } catch (Exception ex) {
@@ -326,6 +359,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       UUID uuid = UUID.randomUUID();
       PipelineInfo info = new PipelineInfo(
           getInfo(name),
+          pipeline.getTitle(),
           pipeline.getDescription(),
           new Date(),
           user,
@@ -524,9 +558,12 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
   @Override
   public boolean isRemotePipeline(String name, String rev) throws PipelineStoreException {
-    Object isRemote = pipelineStateStore.getState(name, rev).getAttributes().get(RemoteDataCollector.IS_REMOTE_PIPELINE);
+    Object isRemote = pipelineStateStore
+        .getState(name, rev)
+        .getAttributes()
+        .get(RemoteDataCollector.IS_REMOTE_PIPELINE);
     // remote attribute will be null for pipelines with version earlier than 1.3
-    return (isRemote == null) ? false : (boolean) isRemote;
+    return isRemote != null && (boolean) isRemote;
   }
 
 }

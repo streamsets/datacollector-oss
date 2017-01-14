@@ -30,11 +30,12 @@ import java.util.Map;
 import java.util.UUID;
 
 public class PipelineInfoJson {
-  private final com.streamsets.datacollector.store.PipelineInfo pipelineInfo;
+  private final PipelineInfo pipelineInfo;
 
   @JsonCreator
   public PipelineInfoJson(
     @JsonProperty("name") String name,
+    @JsonProperty("title") String title,
     @JsonProperty("description") String description,
     @JsonProperty("created") Date created,
     @JsonProperty("lastModified") Date lastModified,
@@ -45,17 +46,24 @@ public class PipelineInfoJson {
     @JsonProperty("valid") boolean valid,
     @JsonProperty("metadata") Map<String, Object> metadata
   ) {
-    this.pipelineInfo = new PipelineInfo(name, description, created, lastModified,
+    this.pipelineInfo = new PipelineInfo(name, title, description, created, lastModified,
       creator, lastModifier, lastRev, uuid, valid, metadata);
   }
 
-  public PipelineInfoJson(com.streamsets.datacollector.store.PipelineInfo pipelineInfo) {
+  public PipelineInfoJson(PipelineInfo pipelineInfo) {
     Utils.checkNotNull(pipelineInfo, "pipelineInfo");
     this.pipelineInfo = pipelineInfo;
   }
 
   public String getName() {
     return pipelineInfo.getName();
+  }
+
+  public String getTitle() {
+    if (pipelineInfo.getTitle() == null) {
+      return pipelineInfo.getName();
+    }
+    return pipelineInfo.getTitle();
   }
 
   public String getDescription() {

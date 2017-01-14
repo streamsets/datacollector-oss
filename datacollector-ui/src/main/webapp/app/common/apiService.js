@@ -522,7 +522,7 @@ angular.module('dataCollectorApp.common')
        * @param description
        */
       createNewPipelineConfig: function(name, description) {
-        var url = apiBase + '/pipeline/' + name + '?description=' + description;
+        var url = apiBase + '/pipeline/' + name + '?autoGenerateName=true&description=' + description;
 
         return $http({
           method: 'PUT',
@@ -563,20 +563,21 @@ angular.module('dataCollectorApp.common')
       /**
        * Duplicate Pipeline Configuration
        *
-       * @param name
+       * @param label
        * @param description
        * @param pipelineObject
        * @param pipelineRulesObject
        * @returns {*|promise}
        */
-      duplicatePipelineConfig: function(name, description, pipelineObject, pipelineRulesObject) {
+      duplicatePipelineConfig: function(label, description, pipelineObject, pipelineRulesObject) {
         var deferred = $q.defer();
         var duplicatePipelineObject;
         var duplicatePipelineRulesObject;
+        var name;
 
         // Create new config object
         // then copy the configuration from pipelineInfo to new Object.
-        api.pipelineAgent.createNewPipelineConfig(name, description)
+        api.pipelineAgent.createNewPipelineConfig(label, description)
           .then(function(res) {
             duplicatePipelineObject = res.data;
             duplicatePipelineObject.configuration = pipelineObject.configuration;
@@ -589,6 +590,7 @@ angular.module('dataCollectorApp.common')
                 labels: pipelineObject.metadata.labels
               };
             }
+            name = duplicatePipelineObject.info.name;
             return api.pipelineAgent.savePipelineConfig(name, duplicatePipelineObject);
           })
           .then(function(res) {
@@ -650,9 +652,9 @@ angular.module('dataCollectorApp.common')
        * @param overwrite
        */
       importPipelineConfig: function(pipelineName, pipelineEnvelope, overwrite) {
-        var url = apiBase + '/pipeline/' + pipelineName + '/import';
+        var url = apiBase + '/pipeline/' + pipelineName + '/import?autoGenerateName=true';
         if (overwrite) {
-          url += '?overwrite=' + overwrite;
+          url += '&overwrite=' + overwrite;
         }
 
         return $http({

@@ -99,6 +99,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 @Path("/v1")
 @Api(value = "store")
@@ -526,7 +527,7 @@ public class PipelineStoreResource {
 
   }
 
-  @Path("/pipeline/{pipelineName}")
+  @Path("/pipeline/{pipelineTitle}")
   @PUT
   @ApiOperation(value = "Add a new Pipeline Configuration to the store", response = PipelineConfigurationJson.class,
     authorizations = @Authorization(value = "basic"))
@@ -535,11 +536,16 @@ public class PipelineStoreResource {
       AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
   })
   public Response createPipeline(
-      @PathParam("pipelineName") String name,
-      @QueryParam("description") @DefaultValue("") String description)
-      throws URISyntaxException, PipelineException {
+      @PathParam("pipelineTitle") String pipelineTitle,
+      @QueryParam("description") @DefaultValue("") String description,
+      @QueryParam("autoGenerateName") @DefaultValue("false") boolean autoGenerateName
+  ) throws URISyntaxException, PipelineException {
+    String name = pipelineTitle;
+    if (autoGenerateName) {
+      name = UUID.randomUUID().toString();
+    }
     RestAPIUtils.injectPipelineInMDC(name);
-    PipelineConfiguration pipeline = store.create(user, name, description, false);
+    PipelineConfiguration pipeline = store.create(user, name, pipelineTitle, description, false);
 
     //Add predefined Metric Rules to the pipeline
     List<MetricsRuleDefinition> metricsRuleDefinitions = new ArrayList<>();
@@ -794,6 +800,7 @@ public class PipelineStoreResource {
       @PathParam("pipelineName") String name,
       @QueryParam("rev") @DefaultValue("0") String rev,
       @QueryParam("overwrite") @DefaultValue("false") boolean overwrite,
+      @QueryParam("autoGenerateName") @DefaultValue("false") boolean autoGenerateName,
       @ApiParam(name="pipelineEnvelope", required = true) PipelineEnvelopeJson pipelineEnvelope
   ) throws PipelineStoreException, URISyntaxException {
     RestAPIUtils.injectPipelineInMDC(name);
@@ -807,14 +814,22 @@ public class PipelineStoreResource {
     PipelineConfiguration newPipelineConfig;
     RuleDefinitions newRuleDefinitions;
 
+    String label = name;
+
     if (overwrite) {
       if (store.hasPipeline(name)) {
         newPipelineConfig = store.load(name, rev);
       } else {
-        newPipelineConfig = store.create(user, name, pipelineConfig.getDescription(), false);
+        if (autoGenerateName) {
+          name = UUID.randomUUID().toString();
+        }
+        newPipelineConfig = store.create(user, name, label, pipelineConfig.getDescription(), false);
       }
     } else {
-      newPipelineConfig = store.create(user, name, pipelineConfig.getDescription(), false);
+      if (autoGenerateName) {
+        name = UUID.randomUUID().toString();
+      }
+      newPipelineConfig = store.create(user, name, label, pipelineConfig.getDescription(), false);
     }
 
     newRuleDefinitions = store.retrieveRules(name, rev);

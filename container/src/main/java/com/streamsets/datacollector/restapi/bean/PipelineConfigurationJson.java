@@ -39,6 +39,7 @@ public class PipelineConfigurationJson implements Serializable{
     @JsonProperty("schemaVersion") int schemaVersion,
     @JsonProperty("version") int version,
     @JsonProperty("uuid") UUID uuid,
+    @JsonProperty("title") String title,
     @JsonProperty("description") String description,
     @JsonProperty("configuration") List<ConfigConfigurationJson> configuration,
     @JsonProperty("uiInfo") Map<String, Object> uiInfo,
@@ -52,6 +53,7 @@ public class PipelineConfigurationJson implements Serializable{
         schemaVersion,
         version,
         uuid,
+        title,
         description,
         BeanHelper.unwrapConfigConfiguration(configuration),
         uiInfo,
@@ -74,6 +76,13 @@ public class PipelineConfigurationJson implements Serializable{
 
   public int getVersion() {
     return pipelineConfiguration.getVersion();
+  }
+
+  public String getTitle() {
+    if (pipelineConfiguration.getTitle() == null) {
+      return pipelineConfiguration.getInfo().getName();
+    }
+    return pipelineConfiguration.getTitle();
   }
 
   public String getDescription() {

@@ -37,6 +37,7 @@ import java.util.Map;
 public class PipelineInfoJson   {
 
   private String name = null;
+  private String title = null;
   private String description = null;
   private Date created = null;
   private Date lastModified = null;
@@ -58,6 +59,16 @@ public class PipelineInfoJson   {
     this.name = name;
   }
 
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("title")
+  public String getTitle() {
+    return title;
+  }
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
   /**
    **/

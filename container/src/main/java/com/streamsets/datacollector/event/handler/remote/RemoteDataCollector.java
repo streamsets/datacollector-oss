@@ -19,31 +19,13 @@
  */
 package com.streamsets.datacollector.event.handler.remote;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.inject.Inject;
-
-import com.streamsets.datacollector.callback.CallbackObjectType;
-import com.streamsets.datacollector.event.dto.WorkerInfo;
-import com.streamsets.datacollector.execution.Runner;
-import com.streamsets.datacollector.main.RuntimeInfo;
-import com.streamsets.datacollector.runner.production.OffsetFileUtil;
-import com.streamsets.pipeline.api.Source;
-import org.apache.commons.lang3.tuple.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.callback.CallbackInfo;
+import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.dto.ValidationStatus;
+import com.streamsets.datacollector.event.dto.WorkerInfo;
 import com.streamsets.datacollector.event.handler.DataCollector;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineState;
@@ -52,14 +34,30 @@ import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.PreviewOutput;
 import com.streamsets.datacollector.execution.PreviewStatus;
 import com.streamsets.datacollector.execution.Previewer;
+import com.streamsets.datacollector.execution.Runner;
+import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.runner.production.OffsetFileUtil;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class RemoteDataCollector implements DataCollector {
 
@@ -148,7 +146,7 @@ public class RemoteDataCollector implements DataCollector {
     }
     UUID uuid;
     if (!pipelineExists) {
-      uuid = pipelineStore.create(user, name, description, true).getUuid();
+      uuid = pipelineStore.create(user, name, name, description, true).getUuid();
     } else {
       validateIfRemote(name, rev, "SAVE");
       PipelineInfo pipelineInfo = pipelineStore.getInfo(name);

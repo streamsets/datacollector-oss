@@ -233,7 +233,7 @@ angular
         if(selectedObject) {
           switch(selectedType) {
             case pipelineConstant.PIPELINE:
-              return selectedObject.info.name;
+              return selectedObject.info.title;
             case pipelineConstant.STAGE_INSTANCE:
               return selectedObject.uiInfo.label;
             case pipelineConstant.LINK:

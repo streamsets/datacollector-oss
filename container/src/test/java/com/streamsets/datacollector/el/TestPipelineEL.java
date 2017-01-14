@@ -36,7 +36,7 @@ public class TestPipelineEL {
 
   @Test
   public void testUndefinedPipelineNameAndVersion() {
-    PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(5, 5, UUID.randomUUID(), "", Collections.<Config>emptyList(), Collections.<String, Object>emptyMap(), Collections.<StageConfiguration>emptyList(), null, null);
+    PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(5, 5, UUID.randomUUID(), "label", "", Collections.<Config>emptyList(), Collections.<String, Object>emptyMap(), Collections.<StageConfiguration>emptyList(), null, null);
     PipelineEL.setConstantsInContext(pipelineConfiguration);
     Assert.assertEquals("UNDEFINED", PipelineEL.name());
     Assert.assertEquals("UNDEFINED", PipelineEL.version());
@@ -45,9 +45,9 @@ public class TestPipelineEL {
   @Test
   public void testPipelineNameAndVersion() {
     Map<String, Object> metadata = ImmutableMap.<String, Object>of(PipelineEL.PIPELINE_VERSION_VAR, "3");
-    PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(5, 5, UUID.randomUUID(), "", Collections.<Config>emptyList(), Collections.<String, Object>emptyMap(), Collections.<StageConfiguration>emptyList(), null, null);
+    PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(5, 5, UUID.randomUUID(), "label", "", Collections.<Config>emptyList(), Collections.<String, Object>emptyMap(), Collections.<StageConfiguration>emptyList(), null, null);
     pipelineConfiguration.setMetadata(metadata);
-    pipelineConfiguration.setPipelineInfo(new PipelineInfo("hello" , "", new Date(), new Date(), "", "", "", UUID.randomUUID(), false, metadata));
+    pipelineConfiguration.setPipelineInfo(new PipelineInfo("hello" , "label", "", new Date(), new Date(), "", "", "", UUID.randomUUID(), false, metadata));
     PipelineEL.setConstantsInContext(pipelineConfiguration);
     Assert.assertEquals("hello", PipelineEL.name());
     Assert.assertEquals("3", PipelineEL.version());

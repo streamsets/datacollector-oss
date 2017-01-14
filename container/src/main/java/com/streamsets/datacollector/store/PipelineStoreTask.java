@@ -31,7 +31,13 @@ public interface PipelineStoreTask extends Task {
   // Provide upgrade path in PipelineConfigurationUpgrader when increasing
   public static final int SCHEMA_VERSION = 2;
 
-  public PipelineConfiguration create(String user, String name, String description, boolean isRemote) throws PipelineStoreException;
+  public PipelineConfiguration create(
+      String user,
+      String name,
+      String label,
+      String description,
+      boolean isRemote
+  ) throws PipelineStoreException;
 
   public void delete(String name) throws PipelineStoreException;
 

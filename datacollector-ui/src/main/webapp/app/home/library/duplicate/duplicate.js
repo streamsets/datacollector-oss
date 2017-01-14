@@ -30,7 +30,7 @@ angular
         errors: []
       },
       newConfig : {
-        name: pipelineInfo.name + 'copy',
+        name: pipelineInfo.title + 'copy',
         description: pipelineInfo.description,
         numberOfCopies: 1
       },

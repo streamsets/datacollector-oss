@@ -102,20 +102,22 @@ angular
                   });
               } else { // If no pipeline exist or create pipeline option selected
                 var newPipelineObject,
+                  label,
                   name,
                   description;
 
                 if ($scope.createNewPipeline) {
-                  name = $scope.newConfig.name;
+                  label = $scope.newConfig.name;
                   description = $scope.newConfig.description;
                 } else {
-                  name = jsonConfigObj.info.name;
+                  label = jsonConfigObj.info.label || jsonConfigObj.info.name;
                   description = jsonConfigObj.info.description;
                 }
 
-                api.pipelineAgent.createNewPipelineConfig(name, description)
+                api.pipelineAgent.createNewPipelineConfig(label, description)
                   .then(function(res) {
                     newPipelineObject = res.data;
+                    name = newPipelineObject.info.name;
                     newPipelineObject.configuration = jsonConfigObj.configuration;
                     newPipelineObject.errorStage = jsonConfigObj.errorStage;
                     newPipelineObject.statsAggregatorStage = jsonConfigObj.statsAggregatorStage;

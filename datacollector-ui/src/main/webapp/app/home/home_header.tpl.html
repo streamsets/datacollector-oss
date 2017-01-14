@@ -86,6 +86,15 @@
             </a>
           </li>
 
+
+          <li role="presentation">
+            <a href="#" dropdown-toggle
+               ng-click="onToggleShowNameColumn()">
+              <i class="glyphicon glyphicon-record"></i>
+              <span>{{(header.showNameColumn ? 'global.form.hideNameColumn' : 'global.form.showNameColumn') | translate}}</span>
+            </a>
+          </li>
+
         </ul>
       </div>
 

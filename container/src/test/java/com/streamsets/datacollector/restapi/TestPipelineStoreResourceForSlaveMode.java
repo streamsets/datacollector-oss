@@ -136,18 +136,18 @@ public class TestPipelineStoreResourceForSlaveMode extends JerseyTest {
       PipelineStoreTask pipelineStore = Mockito.mock(PipelineStoreTask.class);
       try {
         Mockito.when(pipelineStore.getPipelines()).thenReturn(ImmutableList.of(
-            new com.streamsets.datacollector.store.PipelineInfo("name", "description", new java.util.Date(0), new java.util.Date(0), "creator",
+            new com.streamsets.datacollector.store.PipelineInfo("name", "label", "description", new java.util.Date(0), new java.util.Date(0), "creator",
                 "lastModifier", "1", UUID.randomUUID(), true, null)));
         Mockito.when(pipelineStore.getInfo("xyz")).thenReturn(
-            new com.streamsets.datacollector.store.PipelineInfo("xyz", "xyz description",new java.util.Date(0), new java.util.Date(0), "xyz creator",
+            new com.streamsets.datacollector.store.PipelineInfo("xyz", "xyz label", "xyz description",new java.util.Date(0), new java.util.Date(0), "xyz creator",
                 "xyz lastModifier", "1", UUID.randomUUID(), true, null));
         Mockito.when(pipelineStore.getHistory("xyz")).thenReturn(ImmutableList.of(
           new com.streamsets.datacollector.store.PipelineRevInfo(new com.streamsets.datacollector.store.PipelineInfo("xyz",
-            "xyz description", new java.util.Date(0), new java.util.Date(0), "xyz creator",
+              "xyz label","xyz description", new java.util.Date(0), new java.util.Date(0), "xyz creator",
                 "xyz lastModifier", "1", UUID.randomUUID(), true, null))));
         Mockito.when(pipelineStore.load("xyz", "1.0.0")).thenReturn(
             MockStages.createPipelineConfigurationSourceProcessorTarget());
-        Mockito.when(pipelineStore.create("nobody", "myPipeline", "my description", false)).thenReturn(
+        Mockito.when(pipelineStore.create("nobody", "myPipeline", "myPipeline", "my description", false)).thenReturn(
             MockStages.createPipelineConfigurationSourceProcessorTarget());
         Mockito.doNothing().when(pipelineStore).delete("myPipeline");
         Mockito.doThrow(new PipelineStoreException(ContainerError.CONTAINER_0200, "xyz"))

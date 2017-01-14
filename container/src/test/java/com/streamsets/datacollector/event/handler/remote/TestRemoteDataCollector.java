@@ -687,13 +687,23 @@ public class TestRemoteDataCollector {
     public PipelineConfiguration create(
         String user,
         String name,
+        String label,
         String description,
         boolean isRemote
     ) throws PipelineStoreException {
       // TODO Auto-generated method stub
-      return new PipelineConfiguration(1, 1, UUID.randomUUID(), "", Arrays.asList(new Config("", "")), null, null,
+      return new PipelineConfiguration(
+          1,
+          1,
+          UUID.randomUUID(),
+          "label",
+          "",
+          Arrays.asList(new Config("", "")),
           null,
-          null);
+          null,
+          null,
+          null
+      );
     }
 
     @Override

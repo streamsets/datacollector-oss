@@ -369,27 +369,27 @@ public class TestPipelineStoreResource extends JerseyTest {
       try {
         Map<String, Object> metadata = new HashMap<>();
         metadata.put("labels", ImmutableList.of("label1"));
-        PipelineInfo pipeline1 = new PipelineInfo("name1", "description", new java.util.Date(0), new java.util.Date(0),
+        PipelineInfo pipeline1 = new PipelineInfo("name1", "label","description", new java.util.Date(0), new java.util.Date(0),
             "creator", "lastModifier", "1", UUID.randomUUID(), true, metadata);
-        PipelineInfo pipeline2 = new PipelineInfo("name2", "description", new java.util.Date(0), new java.util.Date(0),
+        PipelineInfo pipeline2 = new PipelineInfo("name2", "label","description", new java.util.Date(0), new java.util.Date(0),
             "creator", "lastModifier", "1", UUID.randomUUID(), true, metadata);
-        PipelineInfo pipeline3 = new PipelineInfo("name3", "description", new java.util.Date(0), new java.util.Date(0),
+        PipelineInfo pipeline3 = new PipelineInfo("name3", "label", "description", new java.util.Date(0), new java.util.Date(0),
             "creator", "lastModifier", "1", UUID.randomUUID(), true, null);
 
         Mockito.when(pipelineStore.getPipelines()).thenReturn(ImmutableList.of(pipeline1, pipeline2, pipeline3));
 
         Mockito.when(pipelineStore.getInfo("xyz")).thenReturn(
-            new PipelineInfo("xyz", "xyz description",new java.util.Date(0), new java.util.Date(0), "xyz creator",
+            new PipelineInfo("xyz", "label","xyz description",new java.util.Date(0), new java.util.Date(0), "xyz creator",
                 "xyz lastModifier", "1", UUID.randomUUID(), true, null));
         Mockito.when(pipelineStore.getHistory("xyz")).thenReturn(ImmutableList.of(
-          new com.streamsets.datacollector.store.PipelineRevInfo(new PipelineInfo("xyz",
+          new com.streamsets.datacollector.store.PipelineRevInfo(new PipelineInfo("xyz","label",
             "xyz description", new java.util.Date(0), new java.util.Date(0), "xyz creator",
                 "xyz lastModifier", "1", UUID.randomUUID(), true, null))));
         Mockito.when(pipelineStore.load("xyz", "1")).thenReturn(
             MockStages.createPipelineConfigurationSourceProcessorTarget());
         Mockito.when(pipelineStore.load(Matchers.matches("abc|def"), Matchers.matches("0"))).thenReturn(
             MockStages.createPipelineConfigurationWithLabels(new ArrayList<String>()));
-        Mockito.when(pipelineStore.create("nobody", "myPipeline", "my description", false)).thenReturn(
+        Mockito.when(pipelineStore.create("nobody", "myPipeline", "myPipeline", "my description", false)).thenReturn(
           MockStages.createPipelineConfigurationSourceProcessorTarget());
         Mockito.doNothing().when(pipelineStore).delete("myPipeline");
         Mockito.doThrow(new PipelineStoreException(ContainerError.CONTAINER_0200, "xyz"))
@@ -442,7 +442,7 @@ public class TestPipelineStoreResource extends JerseyTest {
           LOG.debug("Ignoring exception", e);
         }
 
-        Mockito.when(pipelineStore.create("nobody", "newFromImport", null, false)).thenReturn(
+        Mockito.when(pipelineStore.create("nobody", "newFromImport", "newFromImport",null, false)).thenReturn(
             MockStages.createPipelineConfigurationSourceProcessorTarget());
 
       } catch (PipelineStoreException e) {

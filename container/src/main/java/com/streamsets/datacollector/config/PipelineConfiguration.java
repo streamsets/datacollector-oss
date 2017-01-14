@@ -41,6 +41,7 @@ public class PipelineConfiguration implements Serializable{
   private int version;
   private UUID uuid = null;
   private PipelineInfo info;
+  private String title;
   private String description;
   private List<Config> configuration;
   private final Map<String, Object> uiInfo;
@@ -57,6 +58,7 @@ public class PipelineConfiguration implements Serializable{
       int schemaVersion,
       int version,
       UUID uuid,
+      String title,
       String description,
       List<Config> configuration,
       Map<String, Object> uiInfo,
@@ -67,6 +69,7 @@ public class PipelineConfiguration implements Serializable{
     this.schemaVersion = schemaVersion;
     this.version = version;
     this.uuid = Preconditions.checkNotNull(uuid, "uuid cannot be null");
+    this.title = title;
     this.description = description;
     this.configuration = new ArrayList<>(configuration);
     this.uiInfo = (uiInfo != null) ? new HashMap<>(uiInfo) : new HashMap<String, Object>();
@@ -101,6 +104,14 @@ public class PipelineConfiguration implements Serializable{
 
   public int getVersion() {
     return version;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
   }
 
   public void setDescription(String description) {
@@ -240,6 +251,7 @@ public class PipelineConfiguration implements Serializable{
         schemaVersion,
         version,
         uuid,
+        title,
         description,
         newConfigurations,
         uiInfo,

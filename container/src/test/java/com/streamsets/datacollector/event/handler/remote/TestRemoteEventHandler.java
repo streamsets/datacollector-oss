@@ -271,6 +271,7 @@ public class TestRemoteEventHandler {
         PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
             PipelineConfigBean.VERSION,
             UUID.randomUUID(),
+            "label",
             "description",
             list,
             uiInfo,

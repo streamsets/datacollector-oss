@@ -39,6 +39,7 @@ public class PipelineConfigurationJson   {
   private Integer schemaVersion = null;
   private Integer version = null;
   private String uuid = null;
+  private String title = null;
   private String description = null;
   private List<ConfigConfigurationJson> configuration = new ArrayList<ConfigConfigurationJson>();
   private Map<String, Object> uiInfo = new HashMap<String, Object>();
@@ -82,6 +83,17 @@ public class PipelineConfigurationJson   {
   }
   public void setUuid(String uuid) {
     this.uuid = uuid;
+  }
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("title")
+  public String getTitle() {
+    return title;
+  }
+  public void setTitle(String title) {
+    this.title = title;
   }
 
   /**

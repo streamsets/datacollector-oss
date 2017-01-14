@@ -11,7 +11,19 @@
            ng-click="selectAll()"
            class="glyphicon glyphicon-unchecked fa-12x header-check-box"></i>
 
-        <div class="pipeline-name header">
+        <div class="pipeline-name header"
+             ng-class="{'show-name-column': header.showNameColumn}">
+          <a ng-click="onSortColumnHeaderClick('TITLE')">
+            <span>Title</span>
+            <i ng-if="header.sortColumn !== 'TITLE'" class="fa fa-sort" aria-hidden="true"></i>
+            <i ng-if="header.sortColumn === 'TITLE' && !header.sortReverse" class="fa fa-arrow-down"></i>
+            <i ng-if="header.sortColumn === 'TITLE' && header.sortReverse" class="fa fa-arrow-up"></i>
+          </a>
+        </div>
+
+        <div class="pipeline-name header"
+             ng-class="{'show-name-column': header.showNameColumn}"
+             ng-if="header.showNameColumn">
           <a ng-click="onSortColumnHeaderClick('NAME')">
             <span>Name</span>
             <i ng-if="header.sortColumn !== 'NAME'" class="fa fa-sort" aria-hidden="true"></i>
@@ -61,15 +73,22 @@
            ng-click="selectPipeline(pipeline, $event)"
            class="glyphicon glyphicon-unchecked fa-12x"></i>
 
-        <div class="pipeline-name">
+        <div class="pipeline-name"
+             ng-class="{'show-name-column': header.showNameColumn}">
           <span class="system-pipeline-label"
                 ng-if="isSystemPipeline(pipeline)">system</span>
-          <a ng-click="openPipeline(pipeline)" ><span>{{pipeline.name}}</span></a>
+          <a ng-click="openPipeline(pipeline)" ><span>{{pipeline.title}}</span></a>
           <span class="version-text"
                 ng-if="pipeline.metadata && pipeline.metadata['dpm.pipeline.version']"> (v{{pipeline.metadata['dpm.pipeline.version']}})</span>
           <span class="pipeline-label"
                 ng-if="pipeline.metadata && pipeline.metadata.labels && pipeline.metadata.labels.length > 0"
                 ng-repeat="label in pipeline.metadata.labels">{{label}}</span>
+        </div>
+
+        <div class="pipeline-name"
+             ng-class="{'show-name-column': header.showNameColumn}"
+             ng-if="header.showNameColumn">
+          <span>{{pipeline.name}}</span>
         </div>
 
         <span class="pipeline-update-time">

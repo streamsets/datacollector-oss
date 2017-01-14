@@ -92,11 +92,11 @@ public class CachePipelineStoreTask implements PipelineStoreTask {
   }
 
   @Override
-  public PipelineConfiguration create(String user, String name, String description, boolean isRemote)
+  public PipelineConfiguration create(String user, String name, String label, String description, boolean isRemote)
       throws PipelineStoreException {
     synchronized (lockCache.getLock(name)) {
-      PipelineConfiguration pipelineConf = pipelineStore.create(user, name, description, isRemote);
-      pipelineInfoMap.put(name, pipelineConf.getInfo());
+      PipelineConfiguration pipelineConf = pipelineStore.create(user, name, label, description, isRemote);
+      pipelineInfoMap.put(pipelineConf.getInfo().getName(), pipelineConf.getInfo());
       return pipelineConf;
     }
   }

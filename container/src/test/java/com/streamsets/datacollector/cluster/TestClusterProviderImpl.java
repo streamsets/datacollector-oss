@@ -25,7 +25,6 @@ import com.streamsets.datacollector.config.DriftRuleDefinition;
 import com.streamsets.datacollector.config.MetricsRuleDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
-import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
@@ -37,7 +36,6 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -145,6 +143,7 @@ public class TestClusterProviderImpl {
         PipelineStoreTask.SCHEMA_VERSION,
         PipelineConfigBean.VERSION,
         UUID.randomUUID(),
+        "label",
         null,
         configs,
         null,
@@ -152,7 +151,7 @@ public class TestClusterProviderImpl {
         MockStages.getErrorStageConfig(),
         MockStages.getStatsAggregatorStageConfig()
     );
-    pipelineConf.setPipelineInfo(new PipelineInfo("name", "desc", null, null,
+    pipelineConf.setPipelineInfo(new PipelineInfo("name", "label", "desc", null, null,
       "aaa", null, null, null, true, null));
     File sparkKafkaJar = new File(tempDir, "spark-streaming-kafka-1.2.jar");
     File avroJar = new File(tempDir, "avro-1.7.7.jar");
@@ -244,6 +243,7 @@ public class TestClusterProviderImpl {
         PipelineStoreTask.SCHEMA_VERSION,
         PipelineConfigBean.VERSION,
         UUID.randomUUID(),
+        "label",
         null,
         list,
         null,
@@ -251,7 +251,7 @@ public class TestClusterProviderImpl {
         MockStages.getErrorStageConfig(),
         MockStages.getStatsAggregatorStageConfig()
     );
-    pipelineConf.setPipelineInfo(new PipelineInfo("name", "desc", null, null,
+    pipelineConf.setPipelineInfo(new PipelineInfo("name", "desc", "label", null, null,
       "aaa", null, null, null, true, null));
     Assert.assertNotNull(sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
       providerTemp, env, sourceInfo, pipelineConf, MockStages.createClusterStreamingStageLibrary(classLoader), etcDir, resourcesDir,
@@ -276,6 +276,7 @@ public class TestClusterProviderImpl {
         PipelineStoreTask.SCHEMA_VERSION,
         PipelineConfigBean.VERSION,
         UUID.randomUUID(),
+        "label",
         null,
         list,
         null,
@@ -283,7 +284,7 @@ public class TestClusterProviderImpl {
         MockStages.getErrorStageConfig(),
         MockStages.getStatsAggregatorStageConfig()
     );
-    pipelineConf.setPipelineInfo(new PipelineInfo("name", "desc", null, null,
+    pipelineConf.setPipelineInfo(new PipelineInfo("name", "desc", "label", null, null,
       "aaa", null, null, null, true, null));
     ApplicationState appState = sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
       providerTemp, env, sourceInfo, pipelineConf, MockStages.createClusterStreamingStageLibrary(classLoader), etcDir, resourcesDir,
@@ -306,6 +307,7 @@ public class TestClusterProviderImpl {
     PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
         PipelineConfigBean.VERSION,
         UUID.randomUUID(),
+        "label",
         null,
         list,
         null,
@@ -313,7 +315,7 @@ public class TestClusterProviderImpl {
         MockStages.getErrorStageConfig(),
         MockStages.getStatsAggregatorStageConfig()
     );
-    pipelineConf.setPipelineInfo(new PipelineInfo("name", "desc", null, null, "aaa", null, null, null, true, null));
+    pipelineConf.setPipelineInfo(new PipelineInfo("name", "label", "desc", null, null, "aaa", null, null, null, true, null));
     Mockito.doReturn(Pattern.compile("streamsets-datacollector-mapr-cluster-bootstrap-\\d+.*")).when(sparkProvider)
         .findClusterBootstrapJar(
         Mockito.eq(ExecutionMode.CLUSTER_YARN_STREAMING),
@@ -369,6 +371,7 @@ public class TestClusterProviderImpl {
         PipelineStoreTask.SCHEMA_VERSION,
         PipelineConfigBean.VERSION,
         UUID.randomUUID(),
+        "label",
         null,
         list,
         null,
@@ -376,7 +379,7 @@ public class TestClusterProviderImpl {
         MockStages.getErrorStageConfig(),
         MockStages.getStatsAggregatorStageConfig()
     );
-    pipelineConf.setPipelineInfo(new PipelineInfo("name", "desc", null, null,
+    pipelineConf.setPipelineInfo(new PipelineInfo("name", "label", "desc", null, null,
       "aaa", null, null, null, true, null));
     Assert.assertNotNull(sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
       providerTemp, env, sourceInfo, pipelineConf, MockStages.createClusterBatchStageLibrary(classLoader), etcDir, resourcesDir, webDir,

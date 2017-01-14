@@ -89,24 +89,24 @@ public class TestPipelineManagerModule {
     Assert.assertTrue(pipelineManager instanceof StandaloneAndClusterPipelineManager);
 
     PipelineStoreTask pipelineStoreTask = pipelineTask.getPipelineStoreTask();
-    PipelineConfiguration pc = pipelineStoreTask.create("user", "p1", "description", false);
+    PipelineConfiguration pc = pipelineStoreTask.create("user", "p1", "p1", "description", false);
     //Create previewer
-    Previewer previewer = pipelineManager.createPreviewer("user", "p1", "1");
+    Previewer previewer = pipelineManager.createPreviewer("user", pc.getInfo().getName(), "1");
     assertEquals(previewer, pipelineManager.getPreviewer(previewer.getId()));
     ((StandaloneAndClusterPipelineManager)pipelineManager).outputRetrieved(previewer.getId());
     assertNull(pipelineManager.getPreviewer(previewer.getId()));
 
-    pipelineStoreTask.save("user", "p1", "0", "description", pc);
+    pipelineStoreTask.save("user", pc.getInfo().getName(), "0", "description", pc);
 
     //create Runner
-    Runner runner = pipelineManager.getRunner("user", "p1", "0");
+    Runner runner = pipelineManager.getRunner("user", pc.getInfo().getName(), "0");
     Assert.assertTrue(runner instanceof AsyncRunner);
 
     runner = ((AsyncRunner)runner).getRunner();
     Assert.assertTrue(runner instanceof StandaloneRunner);
 
     Assert.assertEquals(PipelineStatus.EDITED, runner.getState().getStatus());
-    Assert.assertEquals("p1", runner.getName());
+    Assert.assertEquals(pc.getInfo().getName(), runner.getName());
     Assert.assertEquals("0", runner.getRev());
   }
 
@@ -131,7 +131,7 @@ public class TestPipelineManagerModule {
     Assert.assertTrue(pipelineStoreTask instanceof SlavePipelineStoreTask);
 
     try {
-      pipelineStoreTask.create("user", "p1", "description", false);
+      pipelineStoreTask.create("user", "p1", "p1", "description", false);
       Assert.fail("Expected UnsupportedOperationException");
     } catch (UnsupportedOperationException e) {
 

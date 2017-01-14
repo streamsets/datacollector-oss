@@ -148,7 +148,8 @@ angular.module('dataCollectorApp')
       readNotifications: [],
       pipelineListState: {
         gridView: false,
-        searchInput: ''
+        searchInput: '',
+        showNameColumn: true
       },
       runPreviewForFieldPaths: true
     });

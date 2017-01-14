@@ -135,7 +135,7 @@ public class TestFilePipelineStoreTask {
     try {
       store.init();
       Assert.assertEquals(0, store.getPipelines().size());
-      store.create("foo", "a", "A", false);
+      store.create("foo", "a","label", "A", false);
       Assert.assertEquals(1, store.getPipelines().size());
       store.save("foo2", "a", "A", "", store.load("a", "0"));
       assertEquals("foo2", store.getPipelines().get(0).getLastModifier());
@@ -151,8 +151,8 @@ public class TestFilePipelineStoreTask {
   public void testCreateExistingPipeline() throws Exception {
     try {
       store.init();
-      store.create("foo", "a", "A", false);
-      store.create("foo", "a", "A", false);
+      store.create("foo", "a", "label", "A", false);
+      store.create("foo", "a", "label", "A", false);
     } finally {
       store.stop();
     }
@@ -368,7 +368,7 @@ public class TestFilePipelineStoreTask {
   }
 
   private void createDefaultPipeline(PipelineStoreTask store) throws PipelineStoreException {
-    store.create(SYSTEM_USER, DEFAULT_PIPELINE_NAME, DEFAULT_PIPELINE_DESCRIPTION, false);
+    store.create(SYSTEM_USER, DEFAULT_PIPELINE_NAME, "label", DEFAULT_PIPELINE_DESCRIPTION, false);
   }
 
   @Test
