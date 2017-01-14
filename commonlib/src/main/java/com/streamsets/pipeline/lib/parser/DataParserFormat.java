@@ -100,7 +100,7 @@ public enum DataParserFormat implements DataFormat<DataParserFactory> {
         cause = ex.getCause();
       }
       throw new RuntimeException(
-        Utils.format("Could not create DataFactory instance for '{}': {}", klass.getName(), cause.toString(), cause),
+        Utils.format("Could not create DataFactory instance for '{}': {}", klass.getName(), cause.toString()),
         cause
       );
     }

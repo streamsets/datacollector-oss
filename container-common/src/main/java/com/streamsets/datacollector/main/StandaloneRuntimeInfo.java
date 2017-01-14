@@ -83,13 +83,13 @@ public class StandaloneRuntimeInfo extends RuntimeInfo {
       try {
         Files.write(UUID.randomUUID().toString(), idFile, StandardCharsets.UTF_8);
       } catch (IOException ex) {
-        throw new RuntimeException(Utils.format("Could not create SDC ID file '{}': {}", idFile, ex.toString(), ex));
+        throw new RuntimeException(Utils.format("Could not create SDC ID file '{}': {}", idFile, ex.toString()), ex);
       }
     }
     try {
       return Files.readFirstLine(idFile, StandardCharsets.UTF_8).trim();
     } catch (IOException ex) {
-      throw new RuntimeException(Utils.format("Could not read SDC ID file '{}': {}", idFile, ex.toString(), ex));
+      throw new RuntimeException(Utils.format("Could not read SDC ID file '{}': {}", idFile, ex.toString()), ex);
     }
   }
 

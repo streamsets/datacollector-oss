@@ -167,7 +167,7 @@ public class XmlParserConfig {
 
       builder.setCharset(Charset.forName(charset));
     } catch (UnsupportedCharsetException ex) {
-      throw new RuntimeException("It should not happen: " + ex.toString());
+      throw new RuntimeException("It should not happen: " + ex.toString(), ex);
     }
 
     builder.setRemoveCtrlChars(removeCtrlChars).setMaxDataLen(-1)

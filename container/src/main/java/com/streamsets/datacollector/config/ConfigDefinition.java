@@ -292,7 +292,7 @@ public class ConfigDefinition {
             }
           } catch (Exception ex) {
             throw new RuntimeException(Utils.format("Could not extract localization info from '{}': {}",
-                                                    model.getValuesProviderClass(), ex.toString(), ex));
+                                                    model.getValuesProviderClass(), ex.toString()), ex);
           }
           break;
         case LIST_BEAN:

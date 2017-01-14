@@ -57,7 +57,7 @@ public class ProductionSourceOffsetCommitterOffsetTracker implements SourceOffse
       try {
         offsetFile.createNewFile();
       } catch (IOException e) {
-        throw new RuntimeException(Utils.format("Could not create file '{}'", offsetFile.getAbsolutePath()));
+        throw new RuntimeException(Utils.format("Could not create file '{}'", offsetFile.getAbsolutePath()), e);
       }
     }
   }

@@ -304,7 +304,7 @@ public class SystemProcessImpl implements SystemProcess {
       try {
         readLines(randomAccessFile, result);
       } catch (IOException e) {
-        throw new RuntimeException(Utils.format("Error reading from '{}': {}", file, e, e));
+        throw new RuntimeException(Utils.format("Error reading from '{}': {}", file, e), e);
       }
       history.addAll(result);
       return result;

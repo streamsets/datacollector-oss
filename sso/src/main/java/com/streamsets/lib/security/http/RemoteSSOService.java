@@ -117,7 +117,7 @@ public class RemoteSSOService extends AbstractSSOService {
     } catch (InterruptedException ex) {
       String msg = "Interrupted while attempting DPM registration";
       LOG.error(msg);
-      throw new RuntimeException(msg);
+      throw new RuntimeException(msg, ex);
     }
   }
 

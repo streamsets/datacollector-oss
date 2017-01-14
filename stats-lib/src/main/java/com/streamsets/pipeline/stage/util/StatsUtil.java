@@ -32,7 +32,7 @@ public class StatsUtil {
     } catch (InterruptedException ex) {
       String msg = "Interrupted while attempting to fetch latest Metrics from DPM";
       LOG.error(msg);
-      throw new RuntimeException(msg);
+      throw new RuntimeException(msg, ex);
     }
   }
 }

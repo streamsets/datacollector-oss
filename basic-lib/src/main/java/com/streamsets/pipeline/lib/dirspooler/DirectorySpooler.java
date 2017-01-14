@@ -470,7 +470,7 @@ public class DirectorySpooler {
           LOG.debug(Utils.format("Directory Paths does not exist yet: {}", spoolDirPath));
         }
       } catch (IOException e) {
-        throw new RuntimeException(Utils.format("Some Problem with the file system: {}", e.toString(), e));
+        throw new RuntimeException(Utils.format("Some Problem with the file system: {}", e.toString()), e);
       }
     }
     return !waitForPathAppearance;
@@ -500,9 +500,8 @@ public class DirectorySpooler {
                 LOG.error("failed to delete previous file '{}'", previousFile);
               }
             } catch (IOException ex) {
-              throw new RuntimeException(Utils.format("Could not delete file '{}', {}", previousFile, ex.toString(),
-                  ex
-              ));
+              throw new RuntimeException(Utils.format("Could not delete file '{}', {}", previousFile, ex.toString()),
+                  ex);
             }
             break;
           case ARCHIVE:
@@ -515,8 +514,7 @@ public class DirectorySpooler {
               }
             } catch (IOException ex) {
               throw new RuntimeException(Utils.format("Could not move file '{}' to archive dir {}, {}", previousFile,
-                  archiveDirPath, ex.toString(), ex
-              ));
+                  archiveDirPath, ex.toString()), ex);
             }
             break;
           default:

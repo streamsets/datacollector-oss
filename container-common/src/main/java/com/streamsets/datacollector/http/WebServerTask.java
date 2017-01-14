@@ -439,7 +439,7 @@ public abstract class WebServerTask extends AbstractTask {
       }
     } catch (IOException ex) {
       throw new RuntimeException(Utils.format("Could not get the permissions of the realm file '{}', {}", realmFile,
-                                              ex.toString(), ex));
+                                              ex.toString()), ex);
     }
   }
 

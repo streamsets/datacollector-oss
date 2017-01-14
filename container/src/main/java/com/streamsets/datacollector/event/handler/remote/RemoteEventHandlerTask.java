@@ -154,9 +154,8 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       } catch (IOException ex1) {
         throw new RuntimeException(Utils.format("Could not clear invalid disconected credentials file '{}': {}",
             dataStore.getFile(),
-            ex.toString(),
-            ex
-        ));
+            ex.toString()),
+            ex);
       }
     }
     remoteDataCollector.init();

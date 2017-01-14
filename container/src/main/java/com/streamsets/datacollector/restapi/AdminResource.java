@@ -256,7 +256,7 @@ public class AdminResource {
 
       builder.save();
     } catch (ConfigurationException e) {
-      throw new RuntimeException(Utils.format("Updating dpm.properties file failed: {}", e.getMessage()));
+      throw new RuntimeException(Utils.format("Updating dpm.properties file failed: {}", e.getMessage()), e);
     }
 
     return Response.ok().build();
@@ -377,7 +377,7 @@ public class AdminResource {
       config.setProperty(RemoteSSOService.DPM_ENABLED, "false");
       builder.save();
     } catch (ConfigurationException e) {
-      throw new RuntimeException(Utils.format("Updating dpm.properties file failed: {}", e.getMessage()));
+      throw new RuntimeException(Utils.format("Updating dpm.properties file failed: {}", e.getMessage()), e);
     }
     return Response.ok().build();
   }
