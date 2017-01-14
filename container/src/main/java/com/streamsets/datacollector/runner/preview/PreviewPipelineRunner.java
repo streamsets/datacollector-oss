@@ -45,11 +45,13 @@ import com.streamsets.datacollector.runner.StageContext;
 import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.runner.StagePipe;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
+import com.streamsets.datacollector.runner.production.ReportErrorDelegate;
 import com.streamsets.datacollector.runner.production.StatsAggregationHandler;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.impl.ErrorMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,7 +63,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextDelegate {
+public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextDelegate, ReportErrorDelegate {
 
   private static final Logger LOG = LoggerFactory.getLogger(PreviewPipelineRunner.class);
 
@@ -171,7 +173,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
       runPollSource();
     } else {
       // Push origin will block on the call until the either all data have been consumed or the pipeline stopped
-      originPipe.process(offsetTracker.getOffsets(), batchSize);
+      originPipe.process(offsetTracker.getOffsets(), batchSize, this);
     }
   }
 
@@ -324,5 +326,9 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
 
   public void setPipeContext(PipeContext pipeContext) {
 
+  }
+
+  @Override
+  public void reportError(String stage, ErrorMessage errorMessage) {
   }
 }

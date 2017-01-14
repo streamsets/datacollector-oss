@@ -38,6 +38,7 @@ import com.streamsets.datacollector.record.EventRecordImpl;
 import com.streamsets.datacollector.record.HeaderImpl;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.record.io.RecordWriterReaderFactory;
+import com.streamsets.datacollector.runner.production.ReportErrorDelegate;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.ElUtil;
@@ -154,6 +155,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
     this.executionMode = executionMode;
     this.resourcesDir = resourcesDir;
     this.emailSender = emailSender;
+    reportErrorDelegate = errorSink;
 
     // sample all records while testing
     Configuration configuration = new Configuration();
@@ -371,30 +373,34 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
     this.eventSink = sink;
   }
 
+  ReportErrorDelegate reportErrorDelegate;
+  public void setReportErrorDelegate(ReportErrorDelegate delegate) {
+    this.reportErrorDelegate = delegate;
+  }
+
   @Override
   @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
   public void reportError(Exception exception) {
     Preconditions.checkNotNull(exception, "exception cannot be null");
     if (exception instanceof StageException) {
       StageException stageException = (StageException)exception;
-      errorSink.addError(instanceName, new ErrorMessage(stageException.getErrorCode(), stageException.getParams()));
+      reportErrorDelegate.reportError(instanceName, new ErrorMessage(stageException.getErrorCode(), stageException.getParams()));
     } else {
-      errorSink.addError(instanceName, new ErrorMessage(ContainerError.CONTAINER_0001, exception.toString()));
+      reportErrorDelegate.reportError(instanceName, new ErrorMessage(ContainerError.CONTAINER_0001, exception.toString()));
     }
   }
 
   @Override
   public void reportError(String errorMessage) {
     Preconditions.checkNotNull(errorMessage, "errorMessage cannot be null");
-    errorSink.addError(instanceName, new ErrorMessage(ContainerError.CONTAINER_0002, errorMessage));
+    reportErrorDelegate.reportError(instanceName, new ErrorMessage(ContainerError.CONTAINER_0002, errorMessage));
   }
 
   @Override
   public void reportError(ErrorCode errorCode, Object... args) {
     Preconditions.checkNotNull(errorCode, "errorId cannot be null");
-    errorSink.addError(instanceName, new ErrorMessage(errorCode, args));
+    reportErrorDelegate.reportError(instanceName, new ErrorMessage(errorCode, args));
   }
-
 
   @Override
   public OnRecordError getOnErrorRecord() {

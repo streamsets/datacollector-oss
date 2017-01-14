@@ -279,11 +279,8 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     outputRecordsMeter.mark(outputRecordsCount);
     outputRecordsHistogram.update(outputRecordsCount);
 
-
     int stageErrorsCount = errorSink.getStageErrors(getStage().getInfo().getInstanceName()).size();
-    stageErrorCounter.inc(stageErrorsCount);
-    stageErrorMeter.mark(stageErrorsCount);
-    stageErrorsHistogram.update(stageErrorsCount);
+    increaseStageErrorMetrics(stageErrorsCount);
 
     Map<String, Integer> outputRecordsPerLane = new HashMap<>();
     if (getStage().getConfiguration().getOutputLanes().size() > 0) {
@@ -324,6 +321,12 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     updateStatsAtEnd(startTimeInStage, newOffset, recordsCount);
 
     return batchMetrics;
+  }
+
+  protected void increaseStageErrorMetrics(int count) {
+    stageErrorCounter.inc(count);
+    stageErrorMeter.mark(count);
+    stageErrorsHistogram.update(count);
   }
 
   @Override

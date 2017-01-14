@@ -24,6 +24,7 @@ import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.creation.PipelineBean;
 import com.streamsets.datacollector.creation.StageBean;
+import com.streamsets.datacollector.runner.production.ReportErrorDelegate;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchContext;
@@ -58,6 +59,13 @@ public class StageRuntime implements PushSourceContextDelegate {
    * In case of PushSource, the delegate that needs to be called for it's callbacks.
    */
   private PushSourceContextDelegate pushSourceContextDelegate;
+
+  /**
+   * Optional error delegate.
+   *
+   * If not set, then the ErrorSink will be used instead.
+   */
+  private ReportErrorDelegate reportErrorDelegate;
 
   /**
    * Classloader of the main application persisted on each execute() and destroy() call.
@@ -126,6 +134,7 @@ public class StageRuntime implements PushSourceContextDelegate {
   }
 
   public void setErrorAndEventSink(ErrorSink errorSink, EventSink eventSink) {
+    context.setReportErrorDelegate(reportErrorDelegate == null ? errorSink : reportErrorDelegate);
     context.setErrorSink(errorSink);
     context.setEventSink(eventSink);
   }
@@ -314,5 +323,9 @@ public class StageRuntime implements PushSourceContextDelegate {
 
   public void setPushSourceContextDelegate(PushSourceContextDelegate delegate) {
     this.pushSourceContextDelegate = delegate;
+  }
+
+  public void setReportErrorDelegate(ReportErrorDelegate delegate) {
+    this.reportErrorDelegate = delegate;
   }
 }

@@ -21,8 +21,10 @@ package com.streamsets.datacollector.runner;
 
 import com.streamsets.datacollector.memory.MemoryUsageCollectorResourceBundle;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
+import com.streamsets.datacollector.runner.production.ReportErrorDelegate;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.impl.ErrorMessage;
 
 import java.util.List;
 import java.util.Map;
@@ -30,7 +32,7 @@ import java.util.Map;
 /**
  * Specific pipe for sources that have additional methods to deal with push ones.
  */
-public class SourcePipe extends StagePipe {
+public class SourcePipe extends StagePipe implements ReportErrorDelegate {
 
   public SourcePipe(
     String name,
@@ -59,12 +61,23 @@ public class SourcePipe extends StagePipe {
   }
 
   /**
+   * Report error delegate for PushSource.
+   */
+  private ReportErrorDelegate reportErrorDelegate;
+
+  /**
    * Process method for Push source that will give control of the execution to the origin.
    *
    * @param offsets Offsets from last execution
    * @param batchSize Maximal configured batch size
    */
-  public void process(Map<String, String> offsets, int batchSize) throws StageException, PipelineRuntimeException {
+  public void process(
+    Map<String, String> offsets,
+    int batchSize,
+    ReportErrorDelegate reportErrorDelegate
+  ) throws StageException, PipelineRuntimeException {
+    this.reportErrorDelegate = reportErrorDelegate;
+    getStage().setReportErrorDelegate(this);
     getStage().execute(offsets, batchSize);
   }
 
@@ -103,4 +116,9 @@ public class SourcePipe extends StagePipe {
     );
   }
 
+  @Override
+  public void reportError(String stage, ErrorMessage errorMessage) {
+    increaseStageErrorMetrics(1);
+    reportErrorDelegate.reportError(stage, errorMessage);
+  }
 }

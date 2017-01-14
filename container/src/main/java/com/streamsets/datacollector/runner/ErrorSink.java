@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.runner;
 
+import com.streamsets.datacollector.runner.production.ReportErrorDelegate;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -31,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class ErrorSink {
+public class ErrorSink implements ReportErrorDelegate {
 
   private final Map<String, List<ErrorMessage>> stageErrors;
   private final Map<String, List<Record>> errorRecords;
@@ -53,7 +54,8 @@ public class ErrorSink {
     errorRecords.clear();
   }
 
-  public void addError(String stage, ErrorMessage errorMessage) {
+  @Override
+  public void reportError(String stage, ErrorMessage errorMessage) {
     addError(stageErrors, stage, errorMessage);
     totalErrorMessages++;
   }
@@ -113,4 +115,5 @@ public class ErrorSink {
   public int getTotalErrorMessages() {
     return totalErrorMessages;
   }
+
 }

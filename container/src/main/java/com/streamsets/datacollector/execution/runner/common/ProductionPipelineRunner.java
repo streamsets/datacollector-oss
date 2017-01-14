@@ -27,6 +27,8 @@ import com.codahale.metrics.Timer;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
 import com.google.common.collect.EvictingQueue;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.RateLimiter;
 import com.streamsets.datacollector.config.DeliveryGuarantee;
@@ -61,6 +63,7 @@ import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.runner.StagePipe;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
 import com.streamsets.datacollector.runner.production.PipelineErrorNotificationRequest;
+import com.streamsets.datacollector.runner.production.ReportErrorDelegate;
 import com.streamsets.datacollector.runner.production.StatsAggregationHandler;
 import com.streamsets.datacollector.util.AggregatorUtil;
 import com.streamsets.datacollector.util.Configuration;
@@ -93,7 +96,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
 
-public class ProductionPipelineRunner implements PipelineRunner, PushSourceContextDelegate {
+public class ProductionPipelineRunner implements PipelineRunner, PushSourceContextDelegate, ReportErrorDelegate {
 
   private static final Logger LOG = LoggerFactory.getLogger(ProductionPipelineRunner.class);
 
@@ -151,7 +154,6 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   private Observer observer;
   private BlockingQueue<Record> statsAggregatorRequests;
   private final List<BatchListener> batchListenerList = new CopyOnWriteArrayList<>();
-  private final Object errorRecordsMutex;
   private MemoryLimitConfiguration memoryLimitConfiguration;
   private long lastMemoryLimitNotification;
   private ThreadHealthReporter threadHealthReporter;
@@ -172,7 +174,6 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     this.revision = revision;
     stageToErrorRecordsMap = new HashMap<>();
     stageToErrorMessagesMap = new HashMap<>();
-    errorRecordsMutex = new Object();
     this.errorListeners = new ArrayList<>();
 
     MetricsConfigurator.registerPipeline(pipelineName, revision);
@@ -320,7 +321,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     int batchSize = configuration.get(Constants.MAX_BATCH_SIZE_KEY, Constants.MAX_BATCH_SIZE_DEFAULT);
 
     // Push origin will block on the call until the either all data have been consumed or the pipeline stopped
-    originPipe.process(offsetTracker.getOffsets(), batchSize);
+    originPipe.process(offsetTracker.getOffsets(), batchSize, this);
   }
 
   private FullPipeBatch createFullPipeBatch(String entityName, String previousOffset) {
@@ -383,6 +384,12 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   @Override
   public void commitOffset(String entity, String offset) {
     offsetTracker.commitOffset(entity, offset);
+  }
+
+  @Override
+  public void reportError(String stage, ErrorMessage errorMessage) {
+    // For PushSource, the runner itself is listening to errors because they can happen outside of batch's scope
+    retainErrorMessagesInMemory(ImmutableMap.<String, List<ErrorMessage>>of(stage, ImmutableList.of(errorMessage)));
   }
 
   public void runPollSource() throws StageException, PipelineRuntimeException {
@@ -727,7 +734,8 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     // Retain X number of error records per stage
     Map<String, List<Record>> errorRecords = pipeBatch.getErrorSink().getErrorRecords();
     Map<String, List<ErrorMessage>> errorMessages = pipeBatch.getErrorSink().getStageErrors();
-    retainErrorsInMemory(errorRecords, errorMessages);
+    retainErrorMessagesInMemory(errorMessages);
+    retainErrorRecordsInMemory(errorRecords);
 
     // Write Pipeline data rule and drift rule results to aggregator target
     if (isStatsAggregationEnabled()) {
@@ -814,25 +822,19 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     return this.offsetTracker;
   }
 
-  private void retainErrorsInMemory(Map<String, List<Record>> errorRecords, Map<String,
-    List<ErrorMessage>> errorMessages) {
-    synchronized (errorRecordsMutex) {
-      for (Map.Entry<String, List<Record>> e : errorRecords.entrySet()) {
-        EvictingQueue<Record> errorRecordList = stageToErrorRecordsMap.get(e.getKey());
-        if (errorRecordList == null) {
-          //replace with a data structure with an upper cap
-          errorRecordList = EvictingQueue.create(configuration.get(Constants.MAX_ERROR_RECORDS_PER_STAGE_KEY,
-            Constants.MAX_ERROR_RECORDS_PER_STAGE_DEFAULT));
-          stageToErrorRecordsMap.put(e.getKey(), errorRecordList);
-        }
-        errorRecordList.addAll(errorRecords.get(e.getKey()));
-      }
+  private void retainErrorMessagesInMemory(Map<String, List<ErrorMessage>> errorMessages) {
+    // Shortcut to avoid synchronization
+    if(errorMessages.isEmpty()) {
+      return;
+    }
+
+    synchronized (stageToErrorMessagesMap) {
       for (Map.Entry<String, List<ErrorMessage>> e : errorMessages.entrySet()) {
         EvictingQueue<ErrorMessage> errorMessageList = stageToErrorMessagesMap.get(e.getKey());
         if (errorMessageList == null) {
-          //replace with a data structure with an upper cap
-          errorMessageList = EvictingQueue.create(configuration.get(Constants.MAX_PIPELINE_ERRORS_KEY,
-            Constants.MAX_PIPELINE_ERRORS_DEFAULT));
+          errorMessageList = EvictingQueue.create(
+            configuration.get(Constants.MAX_PIPELINE_ERRORS_KEY, Constants.MAX_PIPELINE_ERRORS_DEFAULT)
+          );
           stageToErrorMessagesMap.put(e.getKey(), errorMessageList);
         }
         errorMessageList.addAll(errorMessages.get(e.getKey()));
@@ -840,9 +842,30 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     }
   }
 
+  private void retainErrorRecordsInMemory(Map<String, List<Record>> errorRecords) {
+    // Shortcut to avoid synchronization
+    if(errorRecords.isEmpty()) {
+      return;
+    }
+
+    synchronized (stageToErrorRecordsMap) {
+      for (Map.Entry<String, List<Record>> e : errorRecords.entrySet()) {
+        EvictingQueue<Record> errorRecordList = stageToErrorRecordsMap.get(e.getKey());
+        if (errorRecordList == null) {
+          //replace with a data structure with an upper cap
+          errorRecordList = EvictingQueue.create(
+            configuration.get(Constants.MAX_ERROR_RECORDS_PER_STAGE_KEY, Constants.MAX_ERROR_RECORDS_PER_STAGE_DEFAULT)
+          );
+          stageToErrorRecordsMap.put(e.getKey(), errorRecordList);
+        }
+        errorRecordList.addAll(errorRecords.get(e.getKey()));
+      }
+    }
+  }
+
   @SuppressWarnings("unchecked")
   public List<Record> getErrorRecords(String instanceName, int size) {
-    synchronized (errorRecordsMutex) {
+    synchronized (stageToErrorRecordsMap) {
       if (stageToErrorRecordsMap == null || stageToErrorRecordsMap.isEmpty()
         || stageToErrorRecordsMap.get(instanceName) == null || stageToErrorRecordsMap.get(instanceName).isEmpty()) {
         return Collections.emptyList();
@@ -856,7 +879,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   }
 
   public List<ErrorMessage> getErrorMessages(String instanceName, int size) {
-    synchronized (errorRecordsMutex) {
+    synchronized (stageToErrorMessagesMap) {
       if (stageToErrorMessagesMap == null || stageToErrorMessagesMap.isEmpty()
         || stageToErrorMessagesMap.get(instanceName) == null || stageToErrorMessagesMap.get(instanceName).isEmpty()) {
         return Collections.emptyList();
