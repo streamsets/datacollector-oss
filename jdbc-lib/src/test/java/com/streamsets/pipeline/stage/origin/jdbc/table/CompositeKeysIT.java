@@ -46,8 +46,10 @@ public class CompositeKeysIT extends BaseTableJdbcSourceIT {
   private static final List<Record> MULTIPLE_INT_COMPOSITE_RECORDS = new ArrayList<>();
   private static final Random RANDOM = new Random();
   private static final String LOG_TEMPLATE =
-      "Batches Read Till Now : {}, Record Read Till Now: {}, Remaining Records : {}, Current Batch Size: {}, Output Record Size : {}";
-  private static final String MULTIPLE_INT_COMPOSITE_INSERT_TEMPLATE = "INSERT into TEST.%s values (%s, %s, %s, '%s');";
+      "Batches Read Till Now : {}," +
+          " Record Read Till Now: {}," +
+          " Remaining Records : {}, Current Batch Size: {}, Output Record Size : {}";
+  private static final String MULTIPLE_INT_COMPOSITE_INSERT_TEMPLATE = "INSERT into TEST.%s values (%s, %s, %s, '%s')";
 
   private static Record createMultipleIntCompositePrimaryKeyRecord(int id_1, int id_2, int id_3, String stringCol) {
     Record record = RecordCreator.create();
@@ -66,14 +68,14 @@ public class CompositeKeysIT extends BaseTableJdbcSourceIT {
   public static void setupTables() throws SQLException {
     try (Statement statement = connection.createStatement()) {
       statement.addBatch(
-          "CREATE TABLE IF NOT EXISTS TEST.MULTIPLE_INT_PRIMARY" +
+          "CREATE TABLE TEST.MULTIPLE_INT_PRIMARY" +
               "(" +
-              " id_1 INT," +
-              " id_2 INT," +
-              " id_3 INT," +
+              " id_1 INT NOT NULL," +
+              " id_2 INT NOT NULL," +
+              " id_3 INT NOT NULL," +
               " stringcol varchar(500)," +
               " PRIMARY KEY (id_1, id_2, id_3)" +
-              ");"
+              ")"
       );
       //Totally create 5 * 5 * 5 = 125 records
       for (int i = 1; i <= 5; i++) {
@@ -106,7 +108,7 @@ public class CompositeKeysIT extends BaseTableJdbcSourceIT {
   @AfterClass
   public static void dropTables() throws SQLException {
     try (Statement statement = connection.createStatement()) {
-      statement.execute("DROP TABLE IF EXISTS TEST.MULTIPLE_INT_PRIMARY;");
+      statement.execute(String.format(DROP_STATEMENT_TEMPLATE, database, "MULTIPLE_INT_PRIMARY"));
     }
   }
 

@@ -48,10 +48,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @RunWith(Parameterized.class)
 public class AllTypesIT extends BaseTableJdbcSourceIT {
-  private static final String CHAR_AND_BINARY_TEMPLATE  = "INSERT INTO TEST.CHAR_AND_BINARY VALUES (%s, '%s', '%s', '%s', X'%s', X'%s');";
-  private static final String DATE_AND_TIME_TEMPLATE  = "INSERT INTO TEST.DATE_AND_TIME VALUES (%s, '%s', '%s', '%s', '%s');";
-  private static final String DIFFERENT_INTS_TEMPLATE = "INSERT INTO TEST.DIFFERENT_INTS VALUES (%s, %s, %s, %s, %s, %s, %s);";
-  private static final String FLOATING_PT_INTS_TEMPLATE  = "INSERT INTO TEST.FLOATING_PT_INTS VALUES (%s, %s, %s, %s, %s, %s);";
+  private static final String CHAR_AND_BINARY_TEMPLATE  = "INSERT INTO TEST.CHAR_AND_BINARY VALUES (%s, '%s', '%s', '%s', X'%s', X'%s')";
+  private static final String DATE_AND_TIME_TEMPLATE  = "INSERT INTO TEST.DATE_AND_TIME VALUES (%s, '%s', '%s', '%s', '%s')";
+  private static final String DIFFERENT_INTS_TEMPLATE = "INSERT INTO TEST.DIFFERENT_INTS VALUES (%s, %s, %s, %s, %s, %s, %s)";
+  private static final String FLOATING_PT_INTS_TEMPLATE  = "INSERT INTO TEST.FLOATING_PT_INTS VALUES (%s, %s, %s, %s, %s, %s)";
   private static final String OTHER_TYPES_TEMPLATE  = "INSERT INTO TEST.OTHER_TYPES VALUES (%s, %s);";
   private static final Map<String, Pair<String, ArrayList<Record>>> TABLE_TO_TEMPLATE_AND_RECORDS_MAP =
       new ImmutableMap.Builder<String, Pair<String, ArrayList<Record>>>()
@@ -192,7 +192,7 @@ public class AllTypesIT extends BaseTableJdbcSourceIT {
     try (Statement statement = connection.createStatement())  {
       //CHAR_AND_BINARY
       statement.addBatch(
-          "CREATE TABLE IF NOT EXISTS TEST.CHAR_AND_BINARY " +
+          "CREATE TABLE TEST.CHAR_AND_BINARY " +
               "(" +
               " p_id INT NOT NULL PRIMARY KEY," +
               " char1 char(10)," +
@@ -200,24 +200,24 @@ public class AllTypesIT extends BaseTableJdbcSourceIT {
               " clob1 CLOB(500)," +
               " varbinary1 VARBINARY(500)," +
               " blob1 BLOB(500)" +
-              ");"
+              ")"
       );
 
       //DATE_AND_TIME
       statement.addBatch(
-          "CREATE TABLE IF NOT EXISTS TEST.DATE_AND_TIME " +
+          "CREATE TABLE TEST.DATE_AND_TIME " +
               "(" +
               " p_id INT NOT NULL PRIMARY KEY," +
               " date1 DATE," +
               " timestamp1 TIMESTAMP," +
               " datetime1 DATETIME," +
               " time1 TIME" +
-              ");"
+              ")"
       );
 
       //DIFFERENT_INTS
       statement.addBatch(
-          "CREATE TABLE IF NOT EXISTS TEST.DIFFERENT_INTS " +
+          "CREATE TABLE TEST.DIFFERENT_INTS " +
               "(" +
               " p_id INT NOT NULL PRIMARY KEY," +
               " int1 INT," +
@@ -226,12 +226,12 @@ public class AllTypesIT extends BaseTableJdbcSourceIT {
               " tinyint1 TINYINT," +
               " smallint1 SMALLINT," +
               " bigint1 BIGINT" +
-              ");"
+              ")"
       );
 
       //FLOATING_PT_INTS
       statement.addBatch(
-          "CREATE TABLE IF NOT EXISTS TEST.FLOATING_PT_INTS " +
+          "CREATE TABLE TEST.FLOATING_PT_INTS " +
               "(" +
               " p_id INT NOT NULL PRIMARY KEY," +
               " decimal1 DECIMAL(5, 3)," +
@@ -240,16 +240,16 @@ public class AllTypesIT extends BaseTableJdbcSourceIT {
               " real1 REAL," +
               //H2 returns float as double.
               " floatdouble1 FLOAT" +
-              ");"
+              ")"
       );
 
       //OTHER_TYPES
       statement.addBatch(
-          "CREATE TABLE IF NOT EXISTS TEST.OTHER_TYPES " +
+          "CREATE TABLE TEST.OTHER_TYPES " +
               "(" +
               " p_id INT NOT NULL PRIMARY KEY," +
               " boolean1 BOOLEAN" +
-              ");"
+              ")"
       );
       statement.executeBatch();
     }
@@ -259,7 +259,7 @@ public class AllTypesIT extends BaseTableJdbcSourceIT {
   public static void deleteTables() throws SQLException {
     try (Statement statement = connection.createStatement()) {
       for (String table  : TABLE_TO_TEMPLATE_AND_RECORDS_MAP.keySet()) {
-        statement.addBatch("DROP TABLE TEST." + table + ";");
+        statement.addBatch(String.format(DROP_STATEMENT_TEMPLATE, database, table));
       }
       statement.executeBatch();
     }

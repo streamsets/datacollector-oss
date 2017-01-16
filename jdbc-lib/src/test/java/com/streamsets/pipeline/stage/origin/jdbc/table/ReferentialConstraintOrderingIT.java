@@ -45,19 +45,19 @@ public class ReferentialConstraintOrderingIT extends BaseTableJdbcSourceIT {
   //                  -- ORDER_TBL <--
   //                 |                |
   //                \|/               |
-  //                USER            ITEMS
+  //                USER_TABLE            ITEMS
   //                                  |
   //                                 \|/
   //                                PRODUCT
 
-  private static final String USER_INSERT_TEMPLATE  = "INSERT INTO TEST.USER VALUES (%s, '%s', '%s');";
-  private static final String PRODUCT_INSERT_TEMPLATE  = "INSERT INTO TEST.PRODUCT VALUES (%s, '%s', '%s');";
-  private static final String ORDER_TBL_INSERT_TEMPLATE  = "INSERT INTO TEST.ORDER_TBL VALUES (%s, %s);";
-  private static final String ITEMS_INSERT_TEMPLATE = "INSERT INTO TEST.ITEMS VALUES (%s, %s, %s, %s);";
+  private static final String USER_TABLE_INSERT_TEMPLATE  = "INSERT INTO TEST.USER_TABLE VALUES (%s, '%s', '%s')";
+  private static final String PRODUCT_INSERT_TEMPLATE  = "INSERT INTO TEST.PRODUCT VALUES (%s, '%s', '%s')";
+  private static final String ORDER_TBL_INSERT_TEMPLATE  = "INSERT INTO TEST.ORDER_TBL VALUES (%s, %s)";
+  private static final String ITEMS_INSERT_TEMPLATE = "INSERT INTO TEST.ITEMS VALUES (%s, %s, %s, %s)";
 
   private static final Map<String, Pair<String, ArrayList<Record>>> TABLE_TO_TEMPLATE_AND_RECORDS_MAP =
       new ImmutableMap.Builder<String, Pair<String, ArrayList<Record>>>()
-          .put("USER", Pair.of(USER_INSERT_TEMPLATE, new ArrayList<Record>()))
+          .put("USER_TABLE", Pair.of(USER_TABLE_INSERT_TEMPLATE, new ArrayList<Record>()))
           .put("PRODUCT", Pair.of(PRODUCT_INSERT_TEMPLATE, new ArrayList<Record>()))
           .put("ORDER_TBL", Pair.of(ORDER_TBL_INSERT_TEMPLATE, new ArrayList<Record>()))
           .put("ITEMS", Pair.of(ITEMS_INSERT_TEMPLATE, new ArrayList<Record>()))
@@ -67,7 +67,7 @@ public class ReferentialConstraintOrderingIT extends BaseTableJdbcSourceIT {
     Record record ;
     LinkedHashMap<String, Field> fields;
 
-    //User Records
+    //USER_TABLE Records
     int i = 0;
 
     record = RecordCreator.create();
@@ -76,7 +76,7 @@ public class ReferentialConstraintOrderingIT extends BaseTableJdbcSourceIT {
     fields.put("name", Field.create("Alice"));
     fields.put("address", Field.create("100 First Street, Sunnyvale, CA."));
     record.set(Field.createListMap(fields));
-    TABLE_TO_TEMPLATE_AND_RECORDS_MAP.get("USER").getRight().add(record);
+    TABLE_TO_TEMPLATE_AND_RECORDS_MAP.get("USER_TABLE").getRight().add(record);
 
     record = RecordCreator.create();
     fields = new LinkedHashMap<>();
@@ -84,14 +84,14 @@ public class ReferentialConstraintOrderingIT extends BaseTableJdbcSourceIT {
     fields.put("name", Field.create("Zach"));
     fields.put("address", Field.create("200 Second Street, Sunnyvale, CA."));
     record.set(Field.createListMap(fields));
-    TABLE_TO_TEMPLATE_AND_RECORDS_MAP.get("USER").getRight().add(record);
+    TABLE_TO_TEMPLATE_AND_RECORDS_MAP.get("USER_TABLE").getRight().add(record);
 
     record = RecordCreator.create();
     fields.put("u_id" ,Field.create(++i));
     fields.put("name", Field.create("Jack"));
     fields.put("address", Field.create("300 Third Street, Sunnyvale, CA."));
     record.set(Field.createListMap(fields));
-    TABLE_TO_TEMPLATE_AND_RECORDS_MAP.get("USER").getRight().add(record);
+    TABLE_TO_TEMPLATE_AND_RECORDS_MAP.get("USER_TABLE").getRight().add(record);
 
 
     //Product Records
@@ -203,24 +203,26 @@ public class ReferentialConstraintOrderingIT extends BaseTableJdbcSourceIT {
     populateRecords();
 
     try (Statement statement = connection.createStatement()) {
-      //USER TABLE
-      statement.addBatch("CREATE TABLE TEST.USER (u_id INT PRIMARY KEY, name varchar(100), address varchar(1000));");
+      //USER_TABLE TABLE
+      statement.addBatch("CREATE TABLE TEST.USER_TABLE (u_id INT PRIMARY KEY, name varchar(100), address varchar(1000))");
 
       //PRODUCT TABLE
-      statement.addBatch("CREATE TABLE TEST.PRODUCT (p_id INT PRIMARY KEY, name varchar(100), manufacturer varchar(1000));");
+      statement.addBatch("CREATE TABLE TEST.PRODUCT" +
+          " (p_id INT PRIMARY KEY, name varchar(100), manufacturer varchar(1000))");
 
-      //ORDER_TBL TABLE
-      statement.addBatch("CREATE TABLE TEST.ORDER_TBL (o_id INT PRIMARY KEY, u_id INT, FOREIGN KEY (u_id) REFERENCES USER(u_id))");
+      statement.addBatch("CREATE TABLE TEST.ORDER_TBL" +
+          " (o_id INT PRIMARY KEY, u_id INT, FOREIGN KEY (u_id) REFERENCES TEST.USER_TABLE(u_id))");
 
       //ITEMS TABLE
       //We do not support composite keys so for now the primary key here is a timestamp.
       statement.addBatch("CREATE TABLE TEST.ITEMS (" +
-          "time_id long PRIMARY KEY, o_id INT," +
+          "time_id BIGINT PRIMARY KEY, o_id INT," +
           " p_id INT, quantity int," +
-          " FOREIGN KEY (o_id) REFERENCES ORDER_TBL(o_id), FOREIGN KEY (p_id) REFERENCES PRODUCT(p_id))");
-
+          " FOREIGN KEY (o_id) REFERENCES TEST.ORDER_TBL(o_id), FOREIGN KEY (p_id) REFERENCES TEST.PRODUCT(p_id))");
       statement.executeBatch();
     }
+
+
     for (Pair<String, ArrayList<Record>> value : TABLE_TO_TEMPLATE_AND_RECORDS_MAP.values()) {
       insertRows(value.getLeft(), value.getRight());
     }
@@ -263,12 +265,12 @@ public class ReferentialConstraintOrderingIT extends BaseTableJdbcSourceIT {
         .addOutputLane("a").build();
     runner.runInit();
 
-    //USER and PRODUCT are the only tables which do not depend on Anything, but PRODUCT gets scheduled first
-    //because of the alphabetical ORDER_TBL, then USER, then ORDER_TBL, then ITEM.
+    //USER_TABLE and PRODUCT are the only tables which do not depend on Anything, but PRODUCT gets scheduled first
+    //because of the alphabetical ORDER_TBL, then USER_TABLE, then ORDER_TBL, then ITEM.
     String offset = "";
     try {
       offset = runCheckAndReturnOffset(runner, offset, "PRODUCT");
-      offset = runCheckAndReturnOffset(runner, offset, "USER");
+      offset = runCheckAndReturnOffset(runner, offset, "USER_TABLE");
       offset = runCheckAndReturnOffset(runner, offset, "ORDER_TBL");
       runCheckAndReturnOffset(runner, offset, "ITEMS");
     } finally {

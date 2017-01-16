@@ -41,8 +41,8 @@ import java.util.Random;
 import java.util.UUID;
 
 public class BasicIT extends BaseTableJdbcSourceIT {
-  private static final String STARS_INSERT_TEMPLATE = "INSERT into TEST.%s values (%s, '%s', '%s');";
-  private static final String TRANSACTION_INSERT_TEMPLATE = "INSERT into TEST.%s values (%s, %s, '%s');";
+  private static final String STARS_INSERT_TEMPLATE = "INSERT into TEST.%s values (%s, '%s', '%s')";
+  private static final String TRANSACTION_INSERT_TEMPLATE = "INSERT into TEST.%s values (%s, %s, '%s')";
 
   private static final Random RANDOM = new Random();
 
@@ -115,8 +115,8 @@ public class BasicIT extends BaseTableJdbcSourceIT {
     try (Statement statement = connection.createStatement()) {
       //CRICKET_STARS
       statement.addBatch(
-          "CREATE TABLE IF NOT EXISTS TEST.CRICKET_STARS " +
-              "(p_id INT NOT NULL PRIMARY KEY, first_name VARCHAR(255), last_name VARCHAR(255));"
+          "CREATE TABLE TEST.CRICKET_STARS " +
+              "(p_id INT NOT NULL PRIMARY KEY, first_name VARCHAR(255), last_name VARCHAR(255))"
       );
 
       for (Record record : EXPECTED_CRICKET_STARS_RECORDS) {
@@ -133,8 +133,8 @@ public class BasicIT extends BaseTableJdbcSourceIT {
 
       //TENNIS STARS
       statement.addBatch(
-          "CREATE TABLE IF NOT EXISTS TEST.TENNIS_STARS " +
-              "(p_id INT NOT NULL PRIMARY KEY, first_name VARCHAR(255), last_name VARCHAR(255));"
+          "CREATE TABLE TEST.TENNIS_STARS " +
+              "(p_id INT NOT NULL PRIMARY KEY, first_name VARCHAR(255), last_name VARCHAR(255))"
       );
 
       for (Record record : EXPECTED_TENNIS_STARS_RECORDS) {
@@ -151,15 +151,15 @@ public class BasicIT extends BaseTableJdbcSourceIT {
 
       //TRANSACTION
       statement.addBatch(
-          "CREATE TABLE IF NOT EXISTS TEST.TRANSACTION " +
-              "(random_int INT NOT NULL , t_date LONG, random_string VARCHAR(255));"
+          "CREATE TABLE TEST.TRANSACTION_TABLE " +
+              "(random_int INT NOT NULL , t_date LONG, random_string VARCHAR(255))"
       );
 
       for (Record record : EXPECTED_TRANSACTION_RECORDS) {
         statement.addBatch(
             String.format(
                 TRANSACTION_INSERT_TEMPLATE,
-                "TRANSACTION",
+                "TRANSACTION_TABLE",
                 record.get("/random_int").getValueAsInteger(),
                 record.get("/t_date").getValueAsLong(),
                 record.get("/random_string").getValueAsString()
@@ -174,10 +174,10 @@ public class BasicIT extends BaseTableJdbcSourceIT {
   @AfterClass
   public static void tearDown() throws SQLException {
     try (Statement statement = connection.createStatement()) {
-      statement.execute("DROP TABLE IF EXISTS TEST.CRICKET_STARS;");
-      statement.execute("DROP TABLE IF EXISTS TEST.TENNIS_STARS;");
-      statement.execute("DROP TABLE IF EXISTS TEST.TRANSACTION;");
-
+      for (String table : ImmutableList.of("CRICKET_STARS", "TENNIS_STARS", "TRANSACTION_TABLE")) {
+        statement.addBatch(String.format(DROP_STATEMENT_TEMPLATE, database, table));
+      }
+      statement.executeBatch();
     }
   }
 
@@ -421,7 +421,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
   public void testOverridePartitionColumn() throws Exception {
     TableConfigBean tableConfigBean =
         new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
-            .tablePattern("TRANSACTION")
+            .tablePattern("TRANSACTION_TABLE")
             .schema(database)
             .overrideDefaultOffsetColumns(true)
             .offsetColumns(ImmutableList.of("T_DATE"))

@@ -20,7 +20,6 @@
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import org.apache.commons.codec.binary.Hex;
@@ -35,25 +34,21 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 public abstract class BaseTableJdbcSourceIT {
+  private static final Logger LOG = LoggerFactory.getLogger(BaseTableJdbcSourceIT.class);
+
   protected static final String USER_NAME = "sa";
   protected static final String PASSWORD = "sa";
   protected static final String database = "TEST";
   protected static final String JDBC_URL = "jdbc:h2:mem:" + database;
-
-  private static final Logger LOG = LoggerFactory.getLogger(BaseTableJdbcSourceIT.class);
-
-
-  protected static final String CREATE_STATEMENT_TEMPLATE = "CREATE TABLE IF NOT EXISTS %s.%s ( %s )";
+  protected static final String CREATE_STATEMENT_TEMPLATE = "CREATE TABLE %s.%s ( %s )";
   protected static final String INSERT_STATEMENT_TEMPLATE = "INSERT INTO %s.%s values ( %s )";
-  protected static final String DROP_STATEMENT_TEMPLATE = "DROP TABLE IF EXISTS %s.%s";
-
+  protected static final String DROP_STATEMENT_TEMPLATE = "DROP TABLE %s.%s";
   protected static final Joiner COMMA_SPACE_JOINER = Joiner.on(", ");
 
   protected static Connection connection;

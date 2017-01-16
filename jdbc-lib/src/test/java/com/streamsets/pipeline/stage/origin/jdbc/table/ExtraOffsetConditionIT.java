@@ -235,9 +235,8 @@ public class ExtraOffsetConditionIT extends BaseTableJdbcSourceIT {
 
       for (Record recordToInsert : recordsToInsert) {
         Map<String, Field> fields = recordToInsert.get().getValueAsListMap();
-        statement.addBatch(getInsertStatement("TEST", tableName, fields.values()));
+        statement.addBatch(getInsertStatement(database, tableName, fields.values()));
       }
-
       statement.executeBatch();
     }
   }
@@ -245,7 +244,7 @@ public class ExtraOffsetConditionIT extends BaseTableJdbcSourceIT {
   @After
   public void deleteTables() throws Exception {
     try (Statement statement = connection.createStatement()) {
-      statement.execute(String.format(DROP_STATEMENT_TEMPLATE, "TEST", tableName));
+      statement.execute(String.format(DROP_STATEMENT_TEMPLATE, database, tableName));
     }
   }
 
