@@ -39,6 +39,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class PushHttpReceiver implements HttpReceiver {
   static final String MAXREQUEST_SYS_PROP =
@@ -54,6 +55,7 @@ public class PushHttpReceiver implements HttpReceiver {
   private final DataParserFormatConfig dataParserFormatConfig;
   private PushSource.Context context;
   private DataParserFactory parserFactory;
+  private AtomicLong counter = new AtomicLong();
 
   public PushHttpReceiver(HttpConfigs httpConfigs, int maxRequestSizeMB, DataParserFormatConfig dataParserFormatConfig) {
     this.httpConfigs = httpConfigs;
@@ -123,7 +125,7 @@ public class PushHttpReceiver implements HttpReceiver {
     // parse request into records
     List<Record> records = new ArrayList<>();
     try {
-      String requestId = System.currentTimeMillis() + UUID.randomUUID().toString();
+      String requestId = System.currentTimeMillis() + "." + counter.getAndIncrement();
       DataParser parser = getParserFactory().getParser(requestId, is, "0");
       Record record = parser.parse();
       while (record != null) {
