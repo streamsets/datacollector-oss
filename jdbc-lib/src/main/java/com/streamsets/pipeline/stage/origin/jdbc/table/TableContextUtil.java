@@ -109,7 +109,7 @@ public final class TableContextUtil {
   ) throws SQLException, StageException {
     LinkedHashMap<String, Integer> offsetColumnToType = new LinkedHashMap<>();
     //Even though we are using this only find partition column's type, we could cache it if need arises.
-    Map<String, Integer> columnNameToType = getColumnNameType(connection, tableName);
+    Map<String, Integer> columnNameToType = getColumnNameType(connection, getQualifiedTableName(schemaName, tableName));
     Map<String, String> offsetColumnToStartOffset = new HashMap<>();
 
     if (tableConfigBean.overrideDefaultOffsetColumns) {
@@ -120,7 +120,7 @@ public final class TableContextUtil {
         offsetColumnToType.put(overridenPartitionColumn, columnNameToType.get(overridenPartitionColumn));
       }
     } else {
-      List<String> primaryKeys = JdbcUtil.getPrimaryKeys(connection, tableName);
+      List<String> primaryKeys = JdbcUtil.getPrimaryKeys(connection, getQualifiedTableName(schemaName, tableName));
       if (primaryKeys.isEmpty()) {
         throw new StageException(JdbcErrors.JDBC_62, tableName);
       }
