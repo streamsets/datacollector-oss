@@ -702,7 +702,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
     builder.setConfig(SCHEMA_SOURCE_KEY, avroSchemaSource);
     builder.setConfig(SCHEMA_REPO_URLS_KEY, schemaRegistryUrls);
 
-    if (avroSchemaSource == INLINE || avroSchemaSource == HEADER && registerSchema) {
+    if ((avroSchemaSource == INLINE || avroSchemaSource == HEADER) && registerSchema) {
       // Subject used for registering schema
       builder.setConfig(SUBJECT_KEY, subjectToRegister);
       builder.setConfig(SCHEMA_REPO_URLS_KEY, schemaRegistryUrlsForRegistration);
