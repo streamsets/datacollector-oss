@@ -14,7 +14,7 @@
         <div class="pipeline-name header"
              ng-class="{'show-name-column': header.showNameColumn}">
           <a ng-click="onSortColumnHeaderClick('TITLE')">
-            <span>Title</span>
+            <span>{{'global.form.title' | translate}}</span>
             <i ng-if="header.sortColumn !== 'TITLE'" class="fa fa-sort" aria-hidden="true"></i>
             <i ng-if="header.sortColumn === 'TITLE' && !header.sortReverse" class="fa fa-arrow-down"></i>
             <i ng-if="header.sortColumn === 'TITLE' && header.sortReverse" class="fa fa-arrow-up"></i>
@@ -25,7 +25,7 @@
              ng-class="{'show-name-column': header.showNameColumn}"
              ng-if="header.showNameColumn">
           <a ng-click="onSortColumnHeaderClick('NAME')">
-            <span>Name</span>
+            <span>{{'global.form.id' | translate}}</span>
             <i ng-if="header.sortColumn !== 'NAME'" class="fa fa-sort" aria-hidden="true"></i>
             <i ng-if="header.sortColumn === 'NAME' && !header.sortReverse" class="fa fa-arrow-down"></i>
             <i ng-if="header.sortColumn === 'NAME' && header.sortReverse" class="fa fa-arrow-up"></i>
@@ -34,16 +34,25 @@
 
         <div class="pipeline-update-time header">
           <a ng-click="onSortColumnHeaderClick('LAST_MODIFIED')">
-            <span>Last Updated</span>
+            <span>{{'global.form.lastUpdated' | translate}}</span>
             <i ng-if="header.sortColumn !== 'LAST_MODIFIED'" class="fa fa-sort" aria-hidden="true"></i>
             <i ng-if="header.sortColumn === 'LAST_MODIFIED' && !header.sortReverse" class="fa fa-arrow-down"></i>
             <i ng-if="header.sortColumn === 'LAST_MODIFIED' && header.sortReverse" class="fa fa-arrow-up"></i>
           </a>
         </div>
 
+        <div class="pipeline-creator header">
+          <a ng-click="onSortColumnHeaderClick('CREATOR')">
+            <span>{{'global.form.createdBy' | translate}}</span>
+            <i ng-if="header.sortColumn !== 'CREATOR'" class="fa fa-sort" aria-hidden="true"></i>
+            <i ng-if="header.sortColumn === 'CREATOR' && !header.sortReverse" class="fa fa-arrow-down"></i>
+            <i ng-if="header.sortColumn === 'CREATOR' && header.sortReverse" class="fa fa-arrow-up"></i>
+          </a>
+        </div>
+
         <div class="pipeline-status-header header">
           <a ng-click="onSortColumnHeaderClick('STATUS')">
-            <span>Status</span>
+            <span>{{'global.form.status' | translate}}</span>
             <i ng-if="header.sortColumn !== 'STATUS'" class="fa fa-sort" aria-hidden="true"></i>
             <i ng-if="header.sortColumn === 'STATUS' && !header.sortReverse" class="fa fa-arrow-down"></i>
             <i ng-if="header.sortColumn === 'STATUS' && header.sortReverse" class="fa fa-arrow-up"></i>
@@ -95,6 +104,8 @@
           <span class="time-update" am-time-ago="pipeline.lastModified"></span>
           <span class="time-update" translate="home.ago">ago</span>
         </span>
+
+        <span class="pipeline-creator">{{pipeline.creator}}</span>
 
         <span class="pipeline-status {{common.pipelineStatusMap[pipeline.name].status}}">{{common.pipelineStatusMap[pipeline.name].status}}</span>
 

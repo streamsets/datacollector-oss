@@ -25,6 +25,7 @@ public enum PipelineOrderByFields {
   TITLE("title"),
   LAST_MODIFIED("lastModified"),
   CREATED("created"),
+  CREATOR("creator"),
   STATUS("status")
 
   ;
