@@ -41,12 +41,14 @@ import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.BasePushSource;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
@@ -71,6 +73,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public abstract class TestPreviewer {
 
@@ -344,6 +347,67 @@ public abstract class TestPreviewer {
     List<StageOutput> output = previewOutput.getOutput().get(0);
     Assert.assertEquals(1, output.get(0).getOutput().get("s").get(0).get().getValue());
     Assert.assertEquals(2, output.get(1).getOutput().get("p").get(0).get().getValue());
+
+    List<PreviewStatus> previewStatuses = ((RecordingPreviewListener) previewerListener).getPreviewStatuses();
+    Assert.assertEquals(2, previewStatuses.size());
+    Assert.assertEquals(PreviewStatus.RUNNING.name(), previewStatuses.get(0).name());
+    Assert.assertEquals(PreviewStatus.FINISHED.name(), previewStatuses.get(1).name());
+  }
+
+  @Test
+  public void testPreviewRunPushSource() throws Throwable {
+    Mockito
+      .when(pipelineStore.load(Mockito.anyString(), Mockito.anyString()))
+      .thenReturn(MockStages.createPipelineConfigurationPushSourceTarget());
+
+    MockStages.setPushSourceCapture(new BasePushSource() {
+      @Override
+      public int getNumberOfThreads() {
+        return 1;
+      }
+
+      @Override
+      public void produce(Map<String, String> lastOffsets, int maxBatchSize) throws StageException {
+        BatchContext batchContext = getContext().startBatch();
+
+        Record record = getContext().createRecord("x");
+        record.set(Field.create(1));
+        batchContext.getBatchMaker().addRecord(record);
+
+        getContext().processBatch(batchContext);
+      }
+    });
+
+    MockStages.setTargetCapture(new BaseTarget() {
+      @Override
+      public void write(Batch batch) throws StageException {
+      }
+    });
+
+    //create Sync Previewer
+    Previewer previewer  = createPreviewer();
+
+    //check id, name, revision
+    Assert.assertEquals(ID, previewer.getId());
+    Assert.assertEquals(NAME, previewer.getName());
+    Assert.assertEquals(REV, previewer.getRev());
+    Assert.assertNull(previewer.getStatus());
+
+    //start preview
+    previewer.start(1, 10, false, null, new ArrayList<StageOutput>(), 5000);
+    previewer.waitForCompletion(5000);
+
+    //when sync previewer returns from start, the preview should be finished
+    Assert.assertEquals(PreviewStatus.FINISHED.name(), previewer.getStatus().name());
+
+    //stop should be a no-op
+    previewer.stop();
+    Assert.assertEquals(PreviewStatus.FINISHED.name(), previewer.getStatus().name());
+
+    //check the output
+    PreviewOutput previewOutput = previewer.getOutput();
+    List<StageOutput> output = previewOutput.getOutput().get(0);
+    Assert.assertEquals(1, output.get(0).getOutput().get("a").get(0).get().getValue());
 
     List<PreviewStatus> previewStatuses = ((RecordingPreviewListener) previewerListener).getPreviewStatuses();
     Assert.assertEquals(2, previewStatuses.size());

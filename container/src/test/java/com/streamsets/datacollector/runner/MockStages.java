@@ -47,6 +47,8 @@ import com.streamsets.pipeline.api.Executor;
 import com.streamsets.pipeline.api.OffsetCommitTrigger;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Processor;
+import com.streamsets.pipeline.api.ProtoSource;
+import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.RawSourcePreviewer;
 import com.streamsets.pipeline.api.Source;
@@ -117,6 +119,7 @@ public class MockStages {
   }
 
   private static Source sourceCapture;
+  private static PushSource pushSourceCapture;
   private static Processor processorCapture;
   private static Target targetCapture;
   private static Executor executorCapture;
@@ -129,6 +132,15 @@ public class MockStages {
 
   public static Source getSourceCapture() {
     return sourceCapture;
+  }
+
+  // it must be called after the pipeline is built
+  public static void setPushSourceCapture(PushSource s) {
+    pushSourceCapture = s;
+  }
+
+  public static PushSource getPushSourceCapture() {
+    return pushSourceCapture;
   }
 
   // it must be called after the pipeline is built
@@ -225,6 +237,41 @@ public class MockStages {
     public void errorNotification(Throwable throwable) {
       if (sourceCapture != null && sourceCapture instanceof ErrorListener) {
         ((ErrorListener)sourceCapture).errorNotification(throwable);
+      }
+    }
+  }
+
+  public static class MPushSource implements PushSource {
+
+    @Override
+    public int getNumberOfThreads() {
+      if(pushSourceCapture != null) {
+        return pushSourceCapture.getNumberOfThreads();
+      }
+
+      return 1;
+    }
+
+    @Override
+    public void produce(Map<String, String> lastOffsets, int maxBatchSize) throws StageException {
+      if(pushSourceCapture != null) {
+        pushSourceCapture.produce(lastOffsets, maxBatchSize);
+      }
+    }
+
+    @Override
+    public List<ConfigIssue> init(Info info, Context context) {
+      if(pushSourceCapture != null) {
+        return pushSourceCapture.init(info, context);
+      }
+
+      return Collections.emptyList();
+    }
+
+    @Override
+    public void destroy() {
+      if(pushSourceCapture != null) {
+        pushSourceCapture.destroy();
       }
     }
   }
@@ -647,6 +694,9 @@ public class MockStages {
         StageDefinition seDef = new StageDefinitionBuilder(cl, MSource.class, "sourceNameEvent")
           .withProducingEvents(true)
           .build();
+        StageDefinition pushSourceDef = new StageDefinitionBuilder(cl, MPushSource.class, "pushSourceName")
+          .withProducingEvents(true)
+          .build();
 
 
         StageDefinition pDef = new StageDefinitionBuilder(cl, MProcessor.class, "processorName")
@@ -767,6 +817,7 @@ public class MockStages {
               sDef,
               socDef,
               seDef,
+              pushSourceDef,
               pDef,
               tDef,
               tEventDef,
@@ -1353,6 +1404,21 @@ public class MockStages {
     stages.add(target);
     return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION, UUID.randomUUID(),
         "label", null, createPipelineConfigs(), null, stages, getErrorStageConfig(), getStatsAggregatorStageConfig());
+  }
+
+  @SuppressWarnings("unchecked")
+  public static PipelineConfiguration createPipelineConfigurationPushSourceTarget() {
+    List<StageConfiguration> stages = new ArrayList<>();
+    StageConfiguration source = new StageConfigurationBuilder("s", "pushSourceName")
+      .withOutputLanes("a")
+      .build();
+    stages.add(source);
+    StageConfiguration target = new StageConfigurationBuilder("t", "targetName")
+      .withInputLanes("a")
+      .build();
+    stages.add(target);
+    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION, UUID.randomUUID(),
+                                     null, createPipelineConfigs(), null, stages, getErrorStageConfig(), getStatsAggregatorStageConfig());
   }
 
   public static PipelineConfiguration createPipelineConfigurationSourceTwoTargets() {
