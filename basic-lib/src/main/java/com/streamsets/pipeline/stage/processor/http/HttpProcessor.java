@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.processor.http;
 
+import com.google.common.util.concurrent.RateLimiter;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -81,6 +82,9 @@ import static com.streamsets.pipeline.stage.origin.http.Errors.HTTP_24;
  * Useful for enriching records based on their content by making requests to external systems.
  */
 public class HttpProcessor extends SingleLaneProcessor {
+  public static final String OAUTH2_GROUP = "OAUTH2";
+  public static final String CONF_CLIENT_OAUTH2_TOKEN_URL = "conf.client.oauth2.tokenUrl";
+
   private static final Logger LOG = LoggerFactory.getLogger(HttpProcessor.class);
   private static final String RESOURCE_CONFIG_NAME = "resourceUrl";
   private static final String REQUEST_BODY_CONFIG_NAME = "requestBody";
@@ -89,12 +93,11 @@ public class HttpProcessor extends SingleLaneProcessor {
   private static final String DATA_FORMAT_CONFIG_PREFIX = "conf.dataFormatConfig.";
   private static final String SSL_CONFIG_PREFIX = "conf.sslConfig.";
   private static final String VAULT_EL_PREFIX = VaultEL.PREFIX + ":read";
-  public static final String OAUTH2_GROUP = "OAUTH2";
-  public static final String CONF_CLIENT_OAUTH2_TOKEN_URL = "conf.client.oauth2.tokenUrl";
 
   private HttpProcessorConfig conf;
   private AccessToken authToken;
   private Client client = null;
+  private RateLimiter rateLimiter;
 
   private ELVars resourceVars;
   private ELVars bodyVars;
@@ -147,6 +150,9 @@ public class HttpProcessor extends SingleLaneProcessor {
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
     errorRecordHandler = new DefaultErrorRecordHandler(getContext()); // NOSONAR
+
+    int rateLimit = conf.rateLimit > 0 ? conf.rateLimit : Integer.MAX_VALUE;
+    rateLimiter = RateLimiter.create(rateLimit);
 
     conf.dataFormatConfig.init(
         getContext(),
@@ -218,6 +224,7 @@ public class HttpProcessor extends SingleLaneProcessor {
 
     Iterator<Record> records = batch.getRecords();
     while (records.hasNext()) {
+
       Record record = records.next();
       RecordEL.setRecordInContext(resourceVars, record);
       String resolvedUrl = resourceEval.eval(resourceVars, conf.resourceUrl, String.class);
@@ -240,6 +247,7 @@ public class HttpProcessor extends SingleLaneProcessor {
 
       HttpMethod method = getHttpMethod(record);
 
+      rateLimiter.acquire();
       if (conf.requestBody != null && !conf.requestBody.isEmpty() && method != HttpMethod.GET) {
         RecordEL.setRecordInContext(bodyVars, record);
         final String requestBody = bodyEval.eval(bodyVars, conf.requestBody, String.class);

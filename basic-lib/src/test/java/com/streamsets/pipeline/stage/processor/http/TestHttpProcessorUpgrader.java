@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class TestHttpProcessorUpgrader {
@@ -118,5 +119,18 @@ public class TestHttpProcessorUpgrader {
     assertTrue(configValues.containsKey("conf.client.readTimeoutMillis"));
     assertTrue(configValues.containsKey("conf.client.connectTimeoutMillis"));
     assertTrue(configValues.containsKey("conf.maxRequestCompletionSecs"));
+  }
+
+  @Test
+  public void testV6ToV7() throws Exception {
+    List<Config> configs = new ArrayList<>();
+
+    HttpProcessorUpgrader upgrader = new HttpProcessorUpgrader();
+
+    upgrader.upgrade("a", "b", "c", 6, 7, configs);
+    Map<String, Object> configValues = getConfigsAsMap(configs);
+
+    assertTrue(configValues.containsKey("conf.rateLimit"));
+    assertEquals(configValues.get("conf.rateLimit"), 0);
   }
 }
