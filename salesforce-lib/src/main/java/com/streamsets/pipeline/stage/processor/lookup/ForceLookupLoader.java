@@ -40,15 +40,12 @@ import java.util.Map;
 class ForceLookupLoader extends CacheLoader<String, Map<String, Field>> {
   private static final Logger LOG = LoggerFactory.getLogger(ForceLookupLoader.class);
 
-  private final Map<String, String> columnsToFields;
   private final PartnerConnection partnerConnection;
 
   ForceLookupLoader(
-      PartnerConnection partnerConnection,
-      Map<String, String> columnsToFields
+      PartnerConnection partnerConnection
   ) {
     this.partnerConnection = partnerConnection;
-    this.columnsToFields = columnsToFields;
   }
 
   @Override

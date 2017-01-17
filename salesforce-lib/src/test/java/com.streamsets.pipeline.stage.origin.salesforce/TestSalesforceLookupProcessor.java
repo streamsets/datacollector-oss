@@ -273,4 +273,41 @@ public class TestSalesforceLookupProcessor {
 
     Assert.assertEquals("Pat", outputRecords.get(0).get("/Name").getValueAsString());
   }
+
+  @Test
+  public void testCaseInsensitiveMap() throws Exception {
+    mockServer.sforceApi().query().returnResults()
+        .withRow().withField("Id", "001000000000001").withField("Name", "Pat");
+
+    ForceLookupDProcessor processor = new ForceLookupDProcessor();
+    processor.forceConfig = createConfigBean();
+
+    processor.forceConfig.fieldMappings = ImmutableList.of(new ForceSDCFieldMapping("NAME", "/name"));
+    processor.forceConfig.soqlQuery = mapQuery;
+
+    ProcessorRunner processorRunner = new ProcessorRunner.Builder(ForceLookupDProcessor.class, processor)
+        .addOutputLane("lane")
+        .build();
+
+    Record record = RecordCreator.create();
+    LinkedHashMap<String, Field> fields = new LinkedHashMap<>();
+    fields.put("id", Field.create("001000000000001"));
+    fields.put("blah", Field.create("abcd"));
+    record.set(Field.create(fields));
+
+    List<Record> singleRecord = ImmutableList.of(record);
+    processorRunner.runInit();
+    try {
+      StageRunner.Output output = processorRunner.runProcess(singleRecord);
+      Assert.assertEquals(1, output.getRecords().get("lane").size());
+
+      record = output.getRecords().get("lane").get(0);
+
+      Assert.assertNotEquals(null, record.get("/name"));
+      Assert.assertEquals("Pat", record.get("/name").getValueAsString());
+    } finally {
+      processorRunner.runDestroy();
+    }
+
+  }
 }

@@ -109,7 +109,7 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
 
     for (ForceSDCFieldMapping mapping : conf.fieldMappings) {
       LOG.debug("Mapping Salesforce field {} to SDC field {}", mapping.salesforceField, mapping.sdcField);
-      columnsToFields.put(mapping.salesforceField, mapping.sdcField);
+      columnsToFields.put(mapping.salesforceField.toLowerCase(), mapping.sdcField);
     }
 
     if (issues.isEmpty()) {
@@ -140,7 +140,7 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
       }
       for (Map.Entry<String, Field> entry : values.entrySet()) {
         String columnName = entry.getKey();
-        String fieldPath = columnsToFields.get(columnName);
+        String fieldPath = columnsToFields.get(columnName.toLowerCase());
         Field field = entry.getValue();
         if (fieldPath == null) {
           Field root = record.get();
@@ -180,9 +180,7 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
   private LoadingCache<String, Map<String, Field>> buildCache() {
     CacheBuilder cacheBuilder = CacheBuilder.newBuilder();
     if (!conf.cacheConfig.enabled) {
-      return cacheBuilder.maximumSize(0).build(new ForceLookupLoader(partnerConnection,
-          columnsToFields
-      ));
+      return cacheBuilder.maximumSize(0).build(new ForceLookupLoader(partnerConnection));
     }
 
     if (conf.cacheConfig.maxSize == -1) {
@@ -200,8 +198,6 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
           conf.cacheConfig.evictionPolicyType
       ));
     }
-    return cacheBuilder.build(new ForceLookupLoader(partnerConnection,
-        columnsToFields
-    ));
+    return cacheBuilder.build(new ForceLookupLoader(partnerConnection));
   }
 }
