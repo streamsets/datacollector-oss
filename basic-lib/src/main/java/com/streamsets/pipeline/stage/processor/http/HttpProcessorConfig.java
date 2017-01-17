@@ -190,6 +190,17 @@ public class HttpProcessorConfig {
   public JerseyClientConfigBean client = new JerseyClientConfigBean();
 
   @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.NUMBER,
+      label = "Rate Limit (Requests/sec)",
+      defaultValue = "0",
+      description = "Maximum requests per second (0 for unlimited). Useful for rate-limited APIs.",
+      displayPosition = 160,
+      group = "HTTP"
+  )
+  public int rateLimit;
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Maximum Request Time (sec)",
