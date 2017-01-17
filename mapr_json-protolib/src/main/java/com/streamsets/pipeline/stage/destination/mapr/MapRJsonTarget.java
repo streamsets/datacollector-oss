@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.destination.mapr;
 import com.mapr.db.MapRDB;
 import com.mapr.db.Table;
 import com.mapr.db.exceptions.DBException;
+import com.mapr.org.apache.hadoop.hbase.util.Bytes;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -158,10 +159,10 @@ public class MapRJsonTarget extends BaseTarget {
       throw new OnRecordErrorException(rec, Errors.MAPR_JSON_11, conf.keyField, ex);
     }
 
-    checkRowKeyType(field, rec);
-    if (field.getType() == Field.Type.BYTE_ARRAY) {
+    if(conf.isBinaryRowKey || field.getType() == Field.Type.BYTE_ARRAY) {
       try {
-        document.setId(ByteBuffer.wrap(field.getValueAsByteArray()));
+        byte [] bArr = convertToByteArray(field, rec);
+        document.setId(ByteBuffer.wrap(bArr));
 
       } catch (IllegalArgumentException ex) {
         LOG.error(Errors.MAPR_JSON_12.getMessage(), conf.keyField, field.getType().name(), ex);
@@ -169,14 +170,12 @@ public class MapRJsonTarget extends BaseTarget {
       }
 
     } else {
-
-      String str = field.getValueAsString();
-      if (StringUtils.isEmpty(str)) {
-        LOG.error(Errors.MAPR_JSON_11.getMessage(), conf.keyField);
-        throw new OnRecordErrorException(rec, Errors.MAPR_JSON_11, conf.keyField);
-      }
-
       try {
+        String str = field.getValueAsString();
+        if (StringUtils.isEmpty(str)) {
+          LOG.error(Errors.MAPR_JSON_11.getMessage(), conf.keyField);
+          throw new OnRecordErrorException(rec, Errors.MAPR_JSON_11, conf.keyField);
+        }
         document.setId(str);
 
       } catch (IllegalArgumentException ex) {
@@ -187,15 +186,37 @@ public class MapRJsonTarget extends BaseTarget {
 
   }
 
-  private void checkRowKeyType(Field field, Record rec) throws OnRecordErrorException {
-    try {
-      if (!field.getType().isOneOf(Field.Type.BYTE_ARRAY, Field.Type.STRING)) {
-        LOG.error(Errors.MAPR_JSON_14.getMessage(), conf.keyField);
-        throw new OnRecordErrorException(rec, Errors.MAPR_JSON_14, conf.keyField);
-      }
-    } catch (IllegalArgumentException | NullPointerException ex) {
-      LOG.error(Errors.MAPR_JSON_14.getMessage(), conf.keyField, ex);
-      throw new OnRecordErrorException(rec, Errors.MAPR_JSON_14, conf.keyField, ex);
+  private byte [] convertToByteArray(Field field, Record rec) throws OnRecordErrorException {
+
+    switch (field.getType()) {
+      case INTEGER:
+        return Bytes.toBytes(field.getValueAsInteger());
+
+      case SHORT:
+        return Bytes.toBytes(field.getValueAsShort());
+
+      case LONG:
+      case DATE:
+      case TIME:
+      case DATETIME:
+        return Bytes.toBytes(field.getValueAsLong());
+
+      case STRING:
+        return Bytes.toBytes(field.getValueAsString());
+
+      case BYTE_ARRAY:
+        return field.getValueAsByteArray();
+
+      case BOOLEAN:
+      case MAP:
+      case LIST:
+      case LIST_MAP:
+      case DOUBLE:
+      case FLOAT:
+      case CHAR:
+      case BYTE:
+      default:
+        throw new OnRecordErrorException(rec, Errors.MAPR_JSON_15, field.getType().name());
     }
   }
 

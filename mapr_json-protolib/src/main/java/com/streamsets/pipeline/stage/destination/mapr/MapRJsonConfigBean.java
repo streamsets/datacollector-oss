@@ -39,7 +39,7 @@ public class MapRJsonConfigBean {
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
       label = "Create Table",
-      description = "If checked, create the table if it does not exist.  No action is taken if the table exists.",
+      description = "If checked, create the table if it does not exist.",
       displayPosition = 20,
       group = "MAPR_JSON"
   )
@@ -57,6 +57,16 @@ public class MapRJsonConfigBean {
   )
   @FieldSelectorModel(singleValued = true)
   public String keyField;
+
+  @ConfigDef(required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Process Row Key as Binary",
+      description = "If checked, process the row key as binary, otherwise process it as String.",
+      displayPosition = 40,
+      group = "MAPR_JSON"
+  )
+  public boolean isBinaryRowKey;
 
   @ConfigDef(
       required = false,

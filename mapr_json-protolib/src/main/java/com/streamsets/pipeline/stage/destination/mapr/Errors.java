@@ -37,6 +37,7 @@ public enum Errors implements ErrorCode {
   MAPR_JSON_12("BINARY key error - invalid value or Field {} is type {} - not byte array. Use a FieldTypeConverter?"),
   MAPR_JSON_13("Exception converting key field '{}'"),
   MAPR_JSON_14("Row Key '{}' data type must be String for a string key or byte array for BINARY key"),
+  MAPR_JSON_15("Conversion to byte array failed for Row Key - type '{}' "),
   ;
 
   private final String msg;
