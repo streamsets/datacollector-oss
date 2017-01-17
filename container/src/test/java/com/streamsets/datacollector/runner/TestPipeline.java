@@ -33,6 +33,7 @@ import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Processor;
+import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
@@ -409,6 +410,56 @@ public class TestPipeline {
     pipeline.init();
     pipeline.destroy();
     Mockito.verify(runner, Mockito.times(1)).destroy(Mockito.any(SourcePipe.class), Mockito.any(List.class), Mockito.any(BadRecordsHandler.class), Mockito.any(StatsAggregationHandler.class));
+  }
+
+  @Test
+  public void testCreateAdditionalRunnersOnInit() throws Exception {
+    StageLibraryTask lib = MockStages.createStageLibrary();
+    List<StageConfiguration> stageDefs = ImmutableList.of(
+        MockStages.createPushSource("s", ImmutableList.of("p")),
+        MockStages.createTarget("t", ImmutableList.of("p"))
+    );
+    List<Config> pipelineConfigs = new ArrayList<>(2);
+    pipelineConfigs.add(new Config("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
+    pipelineConfigs.add(new Config("stopPipelineOnError", false));
+    pipelineConfigs.add(new Config("executionMode", ExecutionMode.STANDALONE));
+
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(
+      PipelineStoreTask.SCHEMA_VERSION,
+      PipelineConfigBean.VERSION,
+      UUID.randomUUID(),
+      null,
+      pipelineConfigs,
+      null,
+      stageDefs,
+      MockStages.getErrorStageConfig(),
+      MockStages.getStatsAggregatorStageConfig()
+    );
+    Pipeline.Builder builder = new Pipeline.Builder(lib, new Configuration(), "name", "name", "0", pipelineConf);
+
+    PipelineRunner runner = Mockito.mock(PipelineRunner.class);
+    MetricRegistry metrics = Mockito.mock(MetricRegistry.class);
+    Mockito.when(runner.getMetrics()).thenReturn(metrics);
+    Mockito.when(runner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
+
+    // We want 10 pipeline runners to be created
+    PushSource source = Mockito.mock(PushSource.class);
+    Mockito.when(source.getNumberOfThreads()).thenReturn(10);
+
+    Target target = Mockito.mock(Target.class);
+    MockStages.setPushSourceCapture(source);
+    MockStages.setTargetCapture(target);
+
+    Pipeline pipeline = builder.build(runner);
+
+    Assert.assertTrue(pipeline.init().isEmpty());
+
+    // Origin is initialized only once
+    Mockito.verify(source, Mockito.times(1)).init(Mockito.any(Stage.Info.class), Mockito.any(PushSource.Context.class));
+
+    // But the Target is initialized 10 times (~10 different "virtual" instances)
+    Mockito.verify(target, Mockito.times(10)).init(Mockito.any(Stage.Info.class), Mockito.any(Target.Context.class));
+    Assert.assertEquals(10, pipeline.getRunners().size());
   }
 
 }

@@ -120,6 +120,12 @@ public class Pipeline {
     return pipelineBean.getConfig();
   }
 
+
+  @VisibleForTesting
+  List<List<Pipe>> getRunners() {
+    return pipes;
+  }
+
   // TODO: To be removed in subsequent patches
   @VisibleForTesting
   Pipe[] getPipes() {

@@ -73,6 +73,17 @@ import java.util.UUID;
 
 public class MockStages {
 
+  public static StageConfiguration createPushSource(String instanceName, List<String> outputs) {
+    return createPushSource(instanceName, outputs, Collections.<String>emptyList());
+  }
+
+  public static StageConfiguration createPushSource(String instanceName, List<String> outputs, List<String> events) {
+    return new StageConfigurationBuilder(instanceName, "pushSourceName")
+      .withOutputLanes(outputs)
+      .withEventLanes(events)
+      .build();
+  }
+
   public static StageConfiguration createSource(String instanceName, List<String> outputs) {
     return createSource(instanceName, outputs, Collections.<String>emptyList());
   }
