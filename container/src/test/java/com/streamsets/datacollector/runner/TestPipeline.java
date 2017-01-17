@@ -429,6 +429,7 @@ public class TestPipeline {
       PipelineConfigBean.VERSION,
       UUID.randomUUID(),
       null,
+      "",
       pipelineConfigs,
       null,
       stageDefs,
