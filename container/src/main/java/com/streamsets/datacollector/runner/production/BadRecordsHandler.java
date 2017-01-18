@@ -45,7 +45,14 @@ public class BadRecordsHandler {
   }
 
   public void handle(String sourceEntity, String sourceOffset, List<Record> badRecords) throws StageException {
-    ((Target)errorStage.getStage()).write(new BatchImpl("errorStage", sourceEntity, sourceOffset, badRecords));
+    // Shortcut to avoid synchronization if there are no error records
+    if(badRecords.isEmpty()) {
+      return;
+    }
+
+    synchronized (errorStage) {
+      ((Target) errorStage.getStage()).write(new BatchImpl("errorStage", sourceEntity, sourceOffset, badRecords));
+    }
   }
 
   public void destroy() {
