@@ -160,8 +160,9 @@ public class TestUserGroupManager {
     UserJson adminUser = usersList.get(0);
     Assert.assertEquals("admin", adminUser.getName());
     Assert.assertEquals(1, adminUser.getRoles().size());
-    Assert.assertEquals(2, adminUser.getGroups().size());
-    Assert.assertEquals("group1", adminUser.getGroups().get(0));
-    Assert.assertEquals("group2", adminUser.getGroups().get(1));
+    Assert.assertEquals(3, adminUser.getGroups().size());
+    Assert.assertEquals("all", adminUser.getGroups().get(0));
+    Assert.assertEquals("group1", adminUser.getGroups().get(1));
+    Assert.assertEquals("group2", adminUser.getGroups().get(2));
   }
 }
