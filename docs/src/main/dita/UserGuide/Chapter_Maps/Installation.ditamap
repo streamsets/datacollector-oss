@@ -77,5 +77,14 @@
     <shortdesc/>
    </topicmeta>
   </topicref>
+  <topicref href="../Installation/Uninstall.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Installation/Uninstall_TarballManual.dita"/>
+   <topicref href="../Installation/Uninstall_TarballService.dita"/>
+   <topicref href="../Installation/Uninstall_RPM.dita"/>
+   <topicref href="../Installation/Uninstall_ClouderaManager.dita"/>
+  </topicref>
  </topicref>
 </map>
