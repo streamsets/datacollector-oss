@@ -73,6 +73,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.security.auth.Subject;
+import javax.security.auth.login.AppConfigurationEntry;
+import javax.security.auth.login.LoginContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -820,6 +822,24 @@ public abstract class WebServerTask extends AbstractTask {
         if (loginModuleName.trim().isEmpty()) {
           loginModuleName = LDAP;
         }
+
+        // resetting it becuase it is cached and testcases fail then
+        javax.security.auth.login.Configuration.getConfiguration().setConfiguration(null);
+        // verifying that is authentication mode is DIGEST and we are using LDAP, we don't allow forceBindingLogin
+        // set to TRUE as it won't work
+        if ("digest".equals(mode)) {
+          AppConfigurationEntry configEntries[] =
+              javax.security.auth.login.Configuration.getConfiguration().getAppConfigurationEntry(loginModuleName);
+          if (configEntries.length == 1) {
+            String forceBindingLogin = (String) configEntries[0].getOptions().get("forceBindingLogin");
+            if (forceBindingLogin != null && Boolean.parseBoolean(forceBindingLogin.trim())) {
+              throw new RuntimeException(
+                  "Digest authentication cannot be used with LDAP 'forceBindingLoging' set to true");
+            }
+          }
+        }
+
+
         loginService = new JAASLoginService(loginModuleName);
 
         loginService.setIdentityService(new DefaultIdentityService() {

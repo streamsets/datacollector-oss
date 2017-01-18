@@ -20,24 +20,22 @@
 
 package com.streamsets.datacollector.http;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.util.Configuration;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.jaas.callback.ObjectCallback;
 import org.eclipse.jetty.jaas.spi.AbstractLoginModule;
 import org.eclipse.jetty.jaas.spi.UserInfo;
 import org.eclipse.jetty.util.security.Credential;
+import org.ldaptive.*;
+import org.ldaptive.auth.AuthenticationRequest;
+import org.ldaptive.auth.AuthenticationResponse;
+import org.ldaptive.auth.Authenticator;
+import org.ldaptive.auth.BindAuthenticationHandler;
+import org.ldaptive.auth.SearchDnResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.naming.Context;
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.directory.Attribute;
-import javax.naming.directory.Attributes;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.InitialDirContext;
-import javax.naming.directory.SearchControls;
-import javax.naming.directory.SearchResult;
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
@@ -47,11 +45,10 @@ import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * This is copy of class org.eclipse.jetty.server.server.plus.jaas.spi.LdapLoginModule
@@ -72,6 +69,7 @@ import java.util.Properties;
  * ldaploginmodule {
  *    com.streamsets.datacollector.http.LdapLoginModule required
  *    useLdaps="false"
+ *    useStartTLS="false"
  *    contextFactory="com.sun.jndi.ldap.LdapCtxFactory"
  *    hostname="ldap.example.com"
  *    port="389"
@@ -84,6 +82,7 @@ import java.util.Properties;
  *    userIdAttribute="uid"
  *    userPasswordAttribute="userPassword"
  *    userObjectClass="inetOrgPerson"
+ *    useFilter="uid={user}"
  *    roleBaseDn="ou=groups,dc=example,dc=com"
  *    roleNameAttribute="cn"
  *    roleMemberAttribute="uniqueMember"
@@ -108,16 +107,6 @@ public class LdapLoginModule extends AbstractLoginModule
    * port of the ldap server
    */
   private int _port;
-
-  /**
-   * Context.SECURITY_AUTHENTICATION
-   */
-  private String _authenticationMethod;
-
-  /**
-   * Context.INITIAL_CONTEXT_FACTORY
-   */
-  private String _contextFactory;
 
   /**
    * root DN used to connect to
@@ -189,19 +178,34 @@ public class LdapLoginModule extends AbstractLoginModule
   private boolean _useLdaps = false;
 
   /**
-   * Filter to do the role search.
+   * When true changes the protocol to ldaps
    */
-  private String _roleFilter;
+  private boolean _useStarttls = false;
 
   /**
-   * username that user enteresd to login to SDC.
+   * Default filter to do the user search.
    */
-  private String _username;
+  private String _userFilter = "%s={user}";
 
-  private static final String DN_FILTER = "{dn}";
-  private static final String USER_FILTER = "{user}";
+  /**
+   * Default filter to do the role search.
+   */
+  private String _roleFilter = "%s={dn})";
 
-  private DirContext _rootContext;
+  private static final String filterFormat = "(&(objectClass=%s)%s)";
+
+  private static final String DN = "{dn}";
+  private static final String USER= "{user}";
+
+  /**
+   * LDAP configuration.
+   */
+  private ConnectionConfig connConfig;
+
+  /**
+   * Connection to Ldap server.
+   */
+  private Connection conn;
 
   /**
    * get the available information about the user
@@ -218,49 +222,19 @@ public class LdapLoginModule extends AbstractLoginModule
   @Override
   public UserInfo getUserInfo(String username) throws Exception
   {
-    String pwdCredential = getUserCredentials(username);
+    LdapEntry entry = getEntryWithCredential(username);
 
-    if (pwdCredential == null)
+    if (entry == null)
     {
       return null;
     }
 
+    String pwdCredential = getUserCredential(entry);
     pwdCredential = convertCredentialLdapToJetty(pwdCredential);
     Credential credential = Credential.getCredential(pwdCredential);
-    List<String> roles = getUserRoles(_rootContext, username);
+    List<String> roles = getUserRoles(username, entry.getDn());
 
     return new UserInfo(username, credential, roles);
-  }
-
-  protected String doRFC2254Encoding(String inputString)
-  {
-    StringBuffer buf = new StringBuffer(inputString.length());
-    for (int i = 0; i < inputString.length(); i++)
-    {
-      char c = inputString.charAt(i);
-      switch (c)
-      {
-        case '\\':
-          buf.append("\\5c");
-          break;
-        case '*':
-          buf.append("\\2a");
-          break;
-        case '(':
-          buf.append("\\28");
-          break;
-        case ')':
-          buf.append("\\29");
-          break;
-        case '\0':
-          buf.append("\\00");
-          break;
-        default:
-          buf.append(c);
-          break;
-      }
-    }
-    return buf.toString();
   }
 
   /**
@@ -272,63 +246,51 @@ public class LdapLoginModule extends AbstractLoginModule
    * @return
    * @throws LoginException
    */
-  private String getUserCredentials(String username) throws LoginException
+  private LdapEntry getEntryWithCredential(String username) throws LdapException
   {
-    String ldapCredential = null;
-
-    SearchControls ctls = new SearchControls();
-    ctls.setCountLimit(1);
-    ctls.setDerefLinkFlag(true);
-    ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-
-    String filter = "(&(objectClass={0})({1}={2}))";
-
-    LOG.debug("Checking if the user exists with filter: (&(objectClass={})({}={})) from base dn: {}",
-        _userObjectClass, _userIdAttribute, username, _userBaseDn );
-
-    try
-    {
-      Object[] filterArguments = {_userObjectClass, _userIdAttribute, username};
-      NamingEnumeration<SearchResult> results = _rootContext.search(_userBaseDn, filter, filterArguments, ctls);
-
-      LOG.debug("Found user?: " + results.hasMoreElements());
-
-      if (!results.hasMoreElements())
-      {
-        LOG.warn("User {} not found at LDAP server {}:{}", username, _hostname, _port);
-        return null;
-      }
-      // Next, get the user's attributes
-      SearchResult result = findUser(username);
-      if (result == null) {
-        return null;
-      }
-
-      Attributes attributes = result.getAttributes();
-
-      Attribute attribute = attributes.get(_userPasswordAttribute);
-      if (attribute != null)
-      {
-        try
-        {
-          byte[] value = (byte[]) attribute.get();
-
-          ldapCredential = new String(value, StandardCharsets.UTF_8);
-        }
-        catch (NamingException e)
-        {
-          LOG.warn("no password available under attribute: " + _userPasswordAttribute);
-        }
-      }
-    }
-    catch (NamingException e)
-    {
-      throw new LoginException("Root context binding failure.");
+    if (StringUtils.isBlank(_userObjectClass)|| StringUtils.isBlank(_userIdAttribute)
+        || StringUtils.isBlank(_userBaseDn) || StringUtils.isBlank(_userPasswordAttribute)){
+      LOG.error("Failed to get user because at least one of the following is null : " +
+          "[_userObjectClass, _userIdAttribute, _userBaseDn, _userPasswordAttribute ]");
+      return null;
     }
 
-    LOG.debug("user cred is: " + ldapCredential);
+    // Create the format of &(objectClass=_userObjectClass)(_userIdAttribute={user}))
+    String userFilter = buildFilter(_userFilter, _userObjectClass, _userIdAttribute);
+    if (userFilter.contains("{user}")){
+      userFilter = userFilter.replace("{user}", username);
+    }
+    LOG.debug("Searching user using the filter {} on user baseDn {}", userFilter, _userBaseDn);
 
-    return ldapCredential;
+    // Get the group names from each group, which is obtained from roleNameAttribute attribute.
+    SearchRequest request = new SearchRequest(_userBaseDn, userFilter, _userPasswordAttribute);
+    request.setSearchScope(SearchScope.SUBTREE);
+    request.setSizeLimit(1);
+
+    try {
+      SearchOperation search = new SearchOperation(conn);
+      org.ldaptive.SearchResult result = search.execute(request).getResult();
+      LdapEntry entry = result.getEntry();
+      LOG.info("Found user?: {}", (entry == null)? false : true);
+      return entry;
+    } catch (LdapException ex) {
+      LOG.error("{}", ex.toString(), ex);
+      return null;
+    }
+  }
+
+  public String getUserCredential(LdapEntry entry) {
+    String credential = null;
+    if (entry != null) {
+      LdapAttribute attr = entry.getAttribute(_userPasswordAttribute);
+      if (attr == null){
+        LOG.error("Failed to receive user password from LDAP server. Possibly userPasswordAttribute is wrong");
+        return null;
+      }
+      byte[] value = attr.getBinaryValue();
+      credential = new String(value, StandardCharsets.UTF_8);
+    }
+    return credential;
   }
 
   /**
@@ -341,80 +303,72 @@ public class LdapLoginModule extends AbstractLoginModule
    * @return
    * @throws LoginException
    */
-  private List<String> getUserRoles(DirContext dirContext, String username) throws LoginException, NamingException
+  /**
+   * attempts to get the users roles
+   * <p/>
+   * NOTE: this is not an user authenticated operation
+   *
+   * @param username
+   * @return
+   * @throws LoginException
+   */
+  private List<String> getUserRoles(String username, String userDn)
   {
-    String userDn = _userRdnAttribute + "=" + username + "," + _userBaseDn;
-
-    return getUserRolesByDn(dirContext, userDn);
-  }
-
-  private List<String> getUserRolesByDn(DirContext dirContext, String userDn) throws LoginException, NamingException
-  {
-    List<String> roleList = new ArrayList<String>();
-
-    if (dirContext == null || _roleBaseDn == null || _roleObjectClass == null || (_roleMemberAttribute == null && _roleFilter == null))
-    {
-      LOG.debug("getUserRolesByDn returns an empty list because at least one of the following is null : " +
-          "[ dirContext, _roleBaseDn, _roleMemberAttribute, _roleObjectClass ]");
-      LOG.debug("dirContext - " + dirContext);
+    List<String> roleList = new ArrayList<>();
+    if (StringUtils.isBlank(_roleBaseDn)|| StringUtils.isBlank(_roleObjectClass)
+        || StringUtils.isBlank(_roleNameAttribute) || StringUtils.isBlank(_roleMemberAttribute)){
+      LOG.debug("Failed to get roles because at least one of the following is null : " +
+          "[_roleBaseDn, _roleObjectClass, _roleNameAttribute, _roleMemberAttribute ]");
       return roleList;
     }
 
-    SearchControls ctls = new SearchControls();
-    ctls.setDerefLinkFlag(true);
-    ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-    ctls.setReturningAttributes(new String[]{_roleNameAttribute});
-
-    String roleFilter = null;
-    if (!StringUtils.isEmpty(_roleFilter)) {
-      // apply the filter and construct the {}={} part.
-      if (_roleFilter.contains(DN_FILTER)){
-        roleFilter = _roleFilter.replace(DN_FILTER, userDn);
-      } else if (_roleFilter.contains(USER_FILTER)){
-        roleFilter = _roleFilter.replace(USER_FILTER, _username);
-      }
-    }
-    if (roleFilter == null) {
-      // apply the default behavior(search by full DN) and construct the (_roleMemberAttribute=userDn) part
-      roleFilter = String.format("%s=%s", _roleMemberAttribute, userDn);
-    }
-    LOG.debug("Searching for roles with filter: (&(objectClass={})({}) from roleBaseDn: {}",
-        _roleObjectClass, roleFilter, _roleBaseDn);
-
-    String filter = "(&(objectClass={0})({1}))";
-    Object[] filterArguments = {_roleObjectClass, roleFilter};
-    NamingEnumeration<SearchResult> results = dirContext.search(_roleBaseDn, filter, filterArguments, ctls);
-
-    LOG.debug("Found user roles?: " + results.hasMoreElements());
-
-    while (results.hasMoreElements())
-    {
-      SearchResult result = (SearchResult) results.nextElement();
-
-      Attributes attributes = result.getAttributes();
-
-      if (attributes == null)
-      {
-        continue;
-      }
-
-      Attribute roleAttribute = attributes.get(_roleNameAttribute);
-
-      if (roleAttribute == null)
-      {
-        continue;
-      }
-
-      NamingEnumeration<?> roles = roleAttribute.getAll();
-      while (roles.hasMore())
-      {
-        roleList.add(roles.next().toString());
-      }
+    String roleFilter = buildFilter(_roleFilter, _roleObjectClass, _roleMemberAttribute);
+    if (_roleFilter.contains(DN)) {
+      roleFilter = roleFilter.replace(DN, userDn);
+    } else if (_roleFilter.contains(USER)){
+      roleFilter = roleFilter.replace(USER, username);
+    } else {
+      LOG.error("roleFilter contains invalid filter {}. Check the roleFilter option");
+      return roleList;
     }
 
-    LOG.debug("Found user roles: " + roleList);
+    LOG.debug("Searching roles using the filter {} on role baseDn {}", roleFilter, _roleBaseDn);
+    // Get the group names from each group, which is obtained from roleNameAttribute attribute.
+    SearchRequest request = new SearchRequest(_roleBaseDn, roleFilter, _roleNameAttribute);
 
+    try {
+      SearchOperation search = new SearchOperation(conn);
+      org.ldaptive.SearchResult result = search.execute(request).getResult();
+      Collection<LdapEntry> entries = result.getEntries();
+      LOG.info("Found roles?: {}", (entries == null || entries.isEmpty())? false : true);
+      for(LdapEntry entry : entries){
+        roleList.add(entry.getAttribute().getStringValue());
+      }
+    } catch (LdapException ex) {
+      LOG.error(ex.getMessage());
+    }
+    LOG.info("Found roles: {}", roleList);
     return roleList;
+  }
+
+  /**
+   * Given a filter(user/role filter), replace attributes using given information from config.
+   * This will create complete filter, which will look like &(objectClass=inetOrgPerson)(uid={user}))
+   * @param attrFilter We obtain this part from config
+   * @param objClass objectClass
+   * @param attrName attribute name
+   * @return Complete filter
+   */
+  @VisibleForTesting
+  static String buildFilter(String attrFilter, String objClass, String attrName){
+    // check if the filter has surrounding "()"
+    if(!attrFilter.startsWith("(")){
+      attrFilter = "(" + attrFilter;
+    }
+    if (!attrFilter.endsWith(")")) {
+      attrFilter = attrFilter + ")";
+    }
+    return String.format(filterFormat, objClass, String.format(attrFilter, attrName));
   }
 
 
@@ -437,7 +391,7 @@ public class LdapLoginModule extends AbstractLoginModule
       {
         throw new LoginException("No callback handler");
       }
-      if (_rootContext == null){
+      if (conn == null){
         return false;
       }
 
@@ -462,7 +416,6 @@ public class LdapLoginModule extends AbstractLoginModule
         setAuthenticated(false);
         return isAuthenticated();
       }
-      this._username = webUserName;
       if (_forceBindingLogin)
       {
         return bindingLogin(webUserName, webCredential);
@@ -529,20 +482,29 @@ public class LdapLoginModule extends AbstractLoginModule
    * @return true always
    * @throws LoginException
    */
-  public boolean bindingLogin(String username, Object password) throws LoginException, NamingException
+  public boolean bindingLogin(String username, Object password)
   {
-    SearchResult searchResult = findUser(username);
+    if (StringUtils.isBlank(_userObjectClass)|| StringUtils.isBlank(_userIdAttribute)
+        || StringUtils.isBlank(_userBaseDn)){
+      LOG.error("Failed to get user because at least one of the following is null : " +
+          "[_userObjectClass, _userIdAttribute, _userBaseDn ]");
+      return false;
+    }
 
-    String userDn = searchResult.getNameInNamespace();
+    LdapEntry userEntry = authenticate(username, password);
+    if (userEntry == null) {
+      return false;
+    }
+    // If authenticated by LDAP server, the returned LdapEntry contains full DN of the user
+    String userDn = userEntry.getDn();
 
-    LOG.info("Attempting authentication: " + userDn);
+    if(userDn == null){
+      // This shouldn't happen if LDAP server is configured properly.
+      LOG.error("userDn is found null for the user {}", username);
+      return false;
+    }
 
-    Hashtable<Object,Object> environment = getEnvironment();
-    environment.put(Context.SECURITY_PRINCIPAL, userDn);
-    environment.put(Context.SECURITY_CREDENTIALS, password.toString());
-
-    new InitialDirContext(environment);
-    List<String> roles = getUserRolesByDn(_rootContext, userDn);
+    List<String> roles = getUserRoles(username, userDn);
 
     UserInfo userInfo = new UserInfo(username, null, roles);
     setCurrentUser(new JAASUserInfo(userInfo));
@@ -551,36 +513,56 @@ public class LdapLoginModule extends AbstractLoginModule
     return true;
   }
 
-  private SearchResult findUser(String username) throws NamingException, LoginException
+  /**
+   * Perform authentication with given username and password.
+   * Receive the result from Ldap server
+   * @param username Username that user entered to login
+   * @param password Password that user entered to login
+   * @return LdapEntry which contains all user attributes
+   */
+  private LdapEntry authenticate(String username,Object password)
   {
-    SearchControls ctls = new SearchControls();
-    ctls.setCountLimit(1);
-    ctls.setDerefLinkFlag(true);
-    ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+    try {
+      SearchDnResolver dnResolver = new SearchDnResolver(new DefaultConnectionFactory(connConfig));
 
-    String filter = "(&(objectClass={0})({1}={2}))";
+      dnResolver.setBaseDn(_userBaseDn);
+      String userFilter = buildFilter(_userFilter, _userObjectClass, _userIdAttribute);
+      LOG.debug("Searching a user with filter {} where user is {}", userFilter, username);
+      dnResolver.setUserFilter(userFilter);
 
-    LOG.info("Obtaining the user's attributes with filter: (&(objectClass={})({}={})) from base dn: ",
-        _userObjectClass,_userIdAttribute, username, _userBaseDn);
+      // Set Authenticator with username and password. It will return the user if username/password matches.
+      BindAuthenticationHandler authHandler = new BindAuthenticationHandler(new DefaultConnectionFactory(connConfig));
+      Authenticator auth = new Authenticator(dnResolver, authHandler);
+      AuthenticationRequest authRequest = new AuthenticationRequest();
+      authRequest.setUser(username);
+      if (password instanceof char[]) {
+        authRequest.setCredential(new org.ldaptive.Credential(new String((char[]) password)));
+      } else if (password instanceof String){
+        authRequest.setCredential(new org.ldaptive.Credential((String)password));
+      } else {
+        LOG.error("Unexpected type for password '{}'", (password != null) ? password.getClass() : "NULL");
+        return null;
+      }
+      String[] userRoleAttribute = ReturnAttributes.ALL.value();
+      authRequest.setReturnAttributes(userRoleAttribute);
 
-    Object[] filterArguments = new Object[]{
-        _userObjectClass,
-        _userIdAttribute,
-        username
-    };
-    NamingEnumeration<SearchResult> results = _rootContext.search(_userBaseDn, filter, filterArguments, ctls);
+      LOG.debug("Retrieved authenticator from factory: {}", auth);
+      LOG.debug("Retrieved authentication request from factory: {}", authRequest);
 
-    LOG.info("Found user?: " + results.hasMoreElements());
-
-    if (!results.hasMoreElements())
-    {
-      LOG.warn("User {} not found at LDAP server {}:{}", username, _hostname, _port);
-      return null;
-    } else {
-      return (SearchResult)results.nextElement();
+      AuthenticationResponse response = auth.authenticate(authRequest);
+      LOG.info("Found user?: {}", response.getResult());
+      if (response.getResult()) {
+        LdapEntry entry = response.getLdapEntry();
+        return entry;
+      } else {
+        // User not found. Most likely username/password didn't match. Log the reason.
+        LOG.error("Result code: {} - {}", response.getResultCode(), response.getMessage());
+      }
+    } catch (LdapException e) {
+      LOG.warn(e.getMessage());
     }
+    return null;
   }
-
 
   /**
    * Init LoginModule.
@@ -598,88 +580,82 @@ public class LdapLoginModule extends AbstractLoginModule
                          Map<String,?> options)
   {
     super.initialize(subject, callbackHandler, sharedState, options);
+    LOG.debug("Initializing Ldap configuration");
 
     _hostname = (String) options.get("hostname");
     _port = Integer.parseInt((String) options.get("port"));
-    _contextFactory = (String) options.get("contextFactory");
     _bindDn = (String) options.get("bindDn");
     _bindPassword = (String) options.get("bindPassword");
-    _authenticationMethod = (String) options.get("authenticationMethod");
-
     _userBaseDn = (String) options.get("userBaseDn");
-
     _roleBaseDn = (String) options.get("roleBaseDn");
 
-    if (options.containsKey("forceBindingLogin"))
-    {
+    if (options.containsKey("forceBindingLogin")) {
       _forceBindingLogin = Boolean.parseBoolean((String) options.get("forceBindingLogin"));
     }
 
-    if (options.containsKey("useLdaps"))
-    {
+    if (options.containsKey("useLdaps")) {
       _useLdaps = Boolean.parseBoolean((String) options.get("useLdaps"));
     }
-    if (options.containsKey("roleFilter"))
-    {
-      _roleFilter = (String)options.get("roleFilter");
+
+    if (options.containsKey("useStartTLS")) {
+      _useStarttls = Boolean.parseBoolean((String) options.get("useStartTLS"));
     }
 
     _userObjectClass = getOption(options, "userObjectClass", _userObjectClass);
-    _userRdnAttribute = getOption(options, "userRdnAttribute", _userRdnAttribute);
+    _userRdnAttribute = getOption(options, "userRdnAttribute", _userRdnAttribute); //depricated
     _userIdAttribute = getOption(options, "userIdAttribute", _userIdAttribute);
     _userPasswordAttribute = getOption(options, "userPasswordAttribute", _userPasswordAttribute);
     _roleObjectClass = getOption(options, "roleObjectClass", _roleObjectClass);
     _roleMemberAttribute = getOption(options, "roleMemberAttribute", _roleMemberAttribute);
     _roleNameAttribute = getOption(options, "roleNameAttribute", _roleNameAttribute);
+    _userFilter = getOption(options, "userFilter", _userFilter);
+    _roleFilter = getOption(options, "roleFilter", _roleFilter);
 
-    if(Configuration.FileRef.isValueMyRef(_bindPassword)) {
+    if (Configuration.FileRef.isValueMyRef(_bindPassword)) {
       Configuration.FileRef fileRef = new Configuration.FileRef(_bindPassword);
       _bindPassword = fileRef.getValue();
       if (_bindPassword != null) {
         _bindPassword = _bindPassword.trim();
       }
     }
-    LOG.debug("Accessing LDAP Server: {}:{}", _hostname, _port);
-    try
-    {
-      _rootContext = new InitialDirContext(getEnvironment());
+
+    // Setup environment. If both useLdaps and useStartTLS are set to true, apply useStartTLS
+    String ldapUrl;
+    if (_useStarttls){
+      ldapUrl = String.format("ldap://%s:%s", _hostname, _port);
+    } else {
+      ldapUrl = String.format("%s://%s:%s", _useLdaps ? "ldaps" : "ldap", _hostname, _port);
     }
-    catch (NamingException ex)
-    {
-      // Note: when reaching here, _rootContext is null
-      LOG.error("Unable to establish root context at the server {}:{}. Check the configuration",
-          _hostname, _port, ex);
+    LOG.info("Accessing LDAP Server: {} startTLS: {}", ldapUrl, _useStarttls);
+    connConfig = new ConnectionConfig(ldapUrl);
+    connConfig.setUseStartTLS(_useStarttls);
+    connConfig.setConnectionInitializer(
+        new BindConnectionInitializer(_bindDn, new org.ldaptive.Credential(_bindPassword))
+    );
+    conn = DefaultConnectionFactory.getConnection(connConfig);
+    try {
+      conn.open();
+    } catch (LdapException ex){
+      LOG.error("Failed to establish connection to the LDAP server {}. {}", ldapUrl, ex);
+      // We don't throw exception here because there might be multiple LDAP servers configured
     }
   }
 
   @Override
   public boolean commit() throws LoginException
   {
-    if (_rootContext != null) {
-      try {
-        _rootContext.close();
-      } catch (NamingException e) {
-        LOG.error("Error while closing root context ", e );
-        throw new LoginException("error closing root context: " + e.getMessage());
-      }
+    if (conn != null && conn.isOpen()) {
+      conn.close();
     }
-
     return super.commit();
   }
 
   @Override
   public boolean abort() throws LoginException
   {
-    try
-    {
-      _rootContext.close();
+    if (conn != null && conn.isOpen()) {
+      conn.close();
     }
-    catch (NamingException e)
-    {
-      LOG.error("Error while closing root context ", e );
-      throw new LoginException( "error closing root context: " + e.getMessage() );
-    }
-
     return super.abort();
   }
 
@@ -693,55 +669,6 @@ public class LdapLoginModule extends AbstractLoginModule
     }
 
     return (String) value;
-  }
-
-  /**
-   * get the context for connection
-   *
-   * @return the environment details for the context
-   */
-  public Hashtable<Object, Object> getEnvironment()
-  {
-    Properties env = new Properties();
-
-    env.put(Context.INITIAL_CONTEXT_FACTORY, _contextFactory);
-
-    if (_hostname != null)
-    {
-      env.put(Context.PROVIDER_URL, (_useLdaps?"ldaps://":"ldap://") + _hostname + (_port==0?"":":"+_port) +"/");
-    }
-
-    if (_authenticationMethod != null)
-    {
-      env.put(Context.SECURITY_AUTHENTICATION, _authenticationMethod);
-    }
-
-    if (_bindDn != null)
-    {
-      env.put(Context.SECURITY_PRINCIPAL, _bindDn);
-    }
-
-    if (_bindPassword != null)
-    {
-      env.put(Context.SECURITY_CREDENTIALS, _bindPassword);
-    }
-
-    return env;
-  }
-
-  public static String convertCredentialJettyToLdap(String encryptedPassword)
-  {
-    if ("MD5:".startsWith(encryptedPassword.toUpperCase(Locale.ENGLISH)))
-    {
-      return "{MD5}" + encryptedPassword.substring("MD5:".length(), encryptedPassword.length());
-    }
-
-    if ("CRYPT:".startsWith(encryptedPassword.toUpperCase(Locale.ENGLISH)))
-    {
-      return "{CRYPT}" + encryptedPassword.substring("CRYPT:".length(), encryptedPassword.length());
-    }
-
-    return encryptedPassword;
   }
 
   public static String convertCredentialLdapToJetty(String encryptedPassword)

@@ -82,6 +82,7 @@ public class TestLDAPAuthentication extends AbstractLdapTestUnit {
 
   @Before
   public void setup() throws Exception {
+    System.clearProperty(WebServerTask.JAVA_SECURITY_AUTH_LOGIN_CONFIG);
     server = null;
     baseDir = createTestDir();
     Assert.assertTrue(new File(baseDir, "etc").mkdir());
@@ -107,7 +108,9 @@ public class TestLDAPAuthentication extends AbstractLdapTestUnit {
 
   @After
   public void cleanup() {
-    stopServer();
+    if (server.getStatus() == Task.Status.RUNNING) {
+      stopServer();
+    }
     System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR);
     System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR);
     System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.LOG_DIR);
@@ -129,13 +132,13 @@ public class TestLDAPAuthentication extends AbstractLdapTestUnit {
     writer.close();
 
 
-    File realmFile = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX +
+    File ldapConfFile = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX +
         RuntimeInfo.CONFIG_DIR), "ldap-login.conf");
-    writer = new FileWriter(realmFile);
+    writer = new FileWriter(ldapConfFile);
     writer.write(ldapConf);
     writer.close();
 
-    Files.setPosixFilePermissions(realmFile.toPath(), ImmutableSet.of(PosixFilePermission.OWNER_EXECUTE,
+    Files.setPosixFilePermissions(ldapConfFile.toPath(), ImmutableSet.of(PosixFilePermission.OWNER_EXECUTE,
         PosixFilePermission.OWNER_READ,
         PosixFilePermission.OWNER_WRITE));
 
@@ -192,10 +195,22 @@ public class TestLDAPAuthentication extends AbstractLdapTestUnit {
     }
   }
 
+  @Test
+  public void testLDAPAuthenticationForm() throws Exception {
+    testLDAPAuthentication("form");
+  }
 
   @Test
-  public void testFormLDAPAuthentication() throws Exception {
-    String[] authenticationTypes = {"basic", "form", "digest"};
+  public void testLDAPAuthenticationBasic() throws Exception {
+    testLDAPAuthentication("basic");
+  }
+
+  @Test
+  public void testLDAPAuthenticationDigest() throws Exception {
+    testLDAPAuthentication("digest");
+  }
+
+  private void testLDAPAuthentication(String authType) throws Exception {
     String single = "ldap {\n" +
         "  com.streamsets.datacollector.http.LdapLoginModule required\n" +
         "  debug=\"false\"\n" +
@@ -218,14 +233,12 @@ public class TestLDAPAuthentication extends AbstractLdapTestUnit {
         "  roleObjectClass=\"groupofnames\";\n" +
         "};";
     try {
-      for(String authType: authenticationTypes) {
-        String baseURL = startServer(authType, single);
-        testAuthenticationAndRoleMapping(baseURL, authType, "admin1", "admin1", "admin");
-        testAuthenticationAndRoleMapping(baseURL, authType, "manager", "manager", "manager");
-        testAuthenticationAndRoleMapping(baseURL, authType, "creator", "creator", "creator");
-        testAuthenticationAndRoleMapping(baseURL, authType, "guest", "guest", "guest");
-        stopServer();
-      }
+      String baseURL = startServer(authType, single);
+      testAuthenticationAndRoleMapping(baseURL, authType, "admin1", "admin1", "admin");
+      testAuthenticationAndRoleMapping(baseURL, authType, "manager", "manager", "manager");
+      testAuthenticationAndRoleMapping(baseURL, authType, "creator", "creator", "creator");
+      testAuthenticationAndRoleMapping(baseURL, authType, "guest", "guest", "guest");
+      stopServer();
     } catch (Exception e) {
       LOG.debug("Ignoring exception", e);
     } finally {
@@ -324,6 +337,32 @@ public class TestLDAPAuthentication extends AbstractLdapTestUnit {
     List<String> roles = (List<String>)userInfo.get("roles");
     Assert.assertEquals(1, roles.size());
     Assert.assertEquals(role, roles.get(0));
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void testDigesLDAPForceBinding() throws Exception {
+    String single = "ldap {\n" +
+        "  com.streamsets.datacollector.http.LdapLoginModule required\n" +
+        "  debug=\"false\"\n" +
+        "  useLdaps=\"false\"\n" +
+        "  contextFactory=\"com.sun.jndi.ldap.LdapCtxFactory\"\n" +
+        "  hostname=\"localhost\"\n" +
+        "  port=\"" + ldapServer.getPort() + "\"\n" +
+        "  bindDn=\"uid=admin,ou=system\"\n" +
+        "  bindPassword=\"secret\"\n" +
+        "  authenticationMethod=\"simple\"\n" +
+        "  forceBindingLogin=\"true\"\n" +
+        "  userBaseDn=\"ou=users,ou=system\"\n" +
+        "  userRdnAttribute=\"uid\"\n" +
+        "  userIdAttribute=\"uid\"\n" +
+        "  userPasswordAttribute=\"userPassword\"\n" +
+        "  userObjectClass=\"inetOrgPerson\"\n" +
+        "  roleBaseDn=\"ou=groups,ou=system\"\n" +
+        "  roleNameAttribute=\"cn\"\n" +
+        "  roleMemberAttribute=\"member\"\n" +
+        "  roleObjectClass=\"groupofnames\";\n" +
+        "};";
+    startServer("digest", single);
   }
 
 }

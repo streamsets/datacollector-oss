@@ -32,6 +32,7 @@
 
   <properties>
     <snappy.version>0.4</snappy.version>
+    <ldaptive.version>1.0.9</ldaptive.version>
   </properties>
 
   <dependencies>
@@ -136,6 +137,13 @@
       <artifactId>jetty-jaas</artifactId>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>org.ldaptive</groupId>
+      <artifactId>ldaptive</artifactId>
+      <version>${ldaptive.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
