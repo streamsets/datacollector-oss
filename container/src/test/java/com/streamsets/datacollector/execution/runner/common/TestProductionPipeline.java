@@ -43,6 +43,7 @@ import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.TestUtil;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.EventRecord;
@@ -54,8 +55,11 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.BaseExecutor;
 import com.streamsets.pipeline.api.base.BaseProcessor;
+import com.streamsets.pipeline.api.base.BasePushSource;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.api.impl.ErrorMessage;
+import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -90,8 +94,9 @@ public class TestProductionPipeline {
   private enum PipelineType {
     DEFAULT,
     OFFSET_COMMITTERS,
-    EVENTS
-  };
+    EVENTS,
+    PUSH_SOURCE,
+  }
 
   @BeforeClass
   public static void beforeClass() throws Exception {
@@ -402,6 +407,9 @@ public class TestProductionPipeline {
       case EVENTS:
         pConf =  MockStages.createPipelineConfigurationSourceTargetWithEventsProcessed();
         break;
+      case PUSH_SOURCE:
+        pConf =  MockStages.createPipelineConfigurationPushSourceTarget();
+        break;
     }
 
     ProductionPipeline pipeline =
@@ -668,6 +676,83 @@ public class TestProductionPipeline {
     pipeline.run();
 
     Assert.assertEquals(1, errorStage.records.size());
+  }
+
+  /**
+   * Simple PushSource implementation for testing that will end after producing one record.
+   */
+  private static class MPushSource extends BasePushSource {
+
+    boolean shouldProduceError;
+
+    @Override
+    public int getNumberOfThreads() {
+      return 1;
+    }
+
+    @Override
+    public void produce(Map<String, String> lastOffsets, int maxBatchSize) throws StageException {
+      // Conditional error generation
+      if(shouldProduceError) {
+        getContext().reportError("Cake is a lie");
+      }
+
+      // Produce one batch
+      BatchContext batchContext = getContext().startBatch();
+      Record record = getContext().createRecord("abcd");
+      record.set(Field.create("text"));
+      batchContext.getBatchMaker().addRecord(record);
+      getContext().processBatch(batchContext);
+    }
+  }
+
+  private static class CaptureTarget extends BaseTarget {
+    List<Record> records = new ArrayList<>();
+
+    @Override
+    public void write(Batch batch) throws StageException {
+      Iterator<Record> it = batch.getRecords();
+      while(it.hasNext()) {
+        records.add(it.next());
+      }
+    }
+  }
+
+  /**
+   * Run simple PushSource origin to make sure that we can execute the origin properly.
+   */
+  @Test
+  public void testPushSource() throws Exception {
+    CaptureTarget target = new CaptureTarget();
+
+    MockStages.setPushSourceCapture(new MPushSource());
+    MockStages.setTargetCapture(target);
+
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, PipelineType.PUSH_SOURCE);
+    pipeline.registerStatusListener(new MyStateListener());
+    pipeline.run();
+
+    Assert.assertEquals(1, target.records.size());
+  }
+
+  /**
+   * Producing error messages should work even outside of batch context
+   */
+  @Test
+  public void testPushSourceReportError() throws Exception {
+    MPushSource source = new MPushSource();
+    source.shouldProduceError = true;
+
+    MockStages.setPushSourceCapture(source);
+
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, PipelineType.PUSH_SOURCE);
+    pipeline.registerStatusListener(new MyStateListener());
+    pipeline.run();
+
+    List<ErrorMessage> errors = pipeline.getErrorMessages("s", 10);
+    Assert.assertNotNull(errors);
+    Assert.assertEquals(1, errors.size());
+    Assert.assertTrue(Utils.format("Unexpected message: {}", errors.get(0)), errors.get(0).toString().contains("Cake is a lie"));
   }
 
 }
