@@ -2119,6 +2119,7 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   you want to use: <ul id="ul_k3t_mrw_jx">
                         <li>JDBC Consumer origin</li>
                         <li>JMS Consumer origin</li>
+                        <li>MySQL Binary Log origin</li>
                         <li>Oracle CDC Client origin</li>
                         <li>JDBC Lookup processor</li>
                         <li>JDBC Tee processor</li>

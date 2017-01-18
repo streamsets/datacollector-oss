@@ -41,10 +41,16 @@
                     <p>
                         <codeblock>/opt/sdc-extras/&lt;stage library name>/lib/</codeblock>
                     </p>
-                    <p>For example, to install drivers for JDBC, create the following
+                    <p>For example, to install drivers for stages included with the JDBC stage
+                        library, create the following
                         subdirectory:<codeblock>/opt/sdc-extras/streamsets-datacollector-jdbc-lib/lib/</codeblock></p>
-                    <p>To also install drivers for JMS, create the following subdirectory:
+                    <p>To also install drivers for stages included with the JMS stage library,
+                        create the following subdirectory:
                         <codeblock>/opt/sdc-extras/streamsets-datacollector-jms-lib/lib/</codeblock></p>
+                    <p>To also install drivers for stages included with the MySQL binary logs stage
+                        library, create the following
+                        subdirectory:<codeblock><codeph>/opt/sdc-extras/streamsets-datacollector-mysql-binlog-lib/lib/</codeph></codeblock>
+                    </p>
                 </info>
             </step>
             <step>

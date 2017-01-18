@@ -162,6 +162,7 @@
   </topicref>
   <topicref href="../Origins/MySQLBinaryLog.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/MySQLBinaryLog-DriverInstall.dita"/>
    <topicref href="../Origins/MySQLBinaryLog-Offset.dita"/>
    <topicref href="../Origins/MySQLBinaryLog-Record.dita"/>
    <topicref href="../Origins/MySQLBinaryLog-Tables.dita"/>
