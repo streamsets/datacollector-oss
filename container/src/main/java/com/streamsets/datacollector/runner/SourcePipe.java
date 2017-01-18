@@ -112,7 +112,7 @@ public class SourcePipe extends StagePipe implements ReportErrorDelegate {
       batchContext.getPipeBatch().getBatch(this),
       batchContext.getPipeBatch().getErrorSink(),
       batchContext.getPipeBatch().getEventSink(),
-      "ignored-offset-for-now"
+      null
     );
   }
 
