@@ -182,7 +182,7 @@ public class RecordWriterManager {
   }
 
   String getTempFileName() {
-    return TMP_FILE_PREFIX + uniquePrefix + getExtension();
+    return TMP_FILE_PREFIX + uniquePrefix + "_" + context.getRunnerId() + getExtension();
   }
 
   public String getDirPath(Date date) throws StageException {

@@ -453,7 +453,7 @@ public class HdfsTargetConfigBean {
 
   //public API
 
-  public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
+  public void init(final Stage.Context context, List<Stage.ConfigIssue> issues) {
     boolean hadoopFSValidated = validateHadoopFS(context, issues);
     String fileNameEL = "";
 
@@ -727,8 +727,10 @@ public class HdfsTargetConfigBean {
           @Override
           public Void run() throws Exception {
             if(!dirPathTemplateInHeader) {
-              // handle already existing files, so all _temp files will roll in the instance of unknown crash
-              getCurrentWriters().getWriterManager().handleAlreadyExistingFiles();
+              // Run recovery only in the first runner
+              if(context.getRunnerId() == 0) {
+                getCurrentWriters().getWriterManager().handleAlreadyExistingFiles();
+              }
             }
 
             return null;

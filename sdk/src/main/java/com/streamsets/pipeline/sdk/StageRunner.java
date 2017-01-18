@@ -242,7 +242,7 @@ public abstract class StageRunner<S extends Stage> {
     context = new StageContext(
         instanceName,
         stageType,
-        -1,
+        0,
         isPreview,
         onRecordError,
         outputLanes,

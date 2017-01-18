@@ -80,7 +80,7 @@ public class ContextInfoCreator {
     return new StageContext(
         instanceName,
         stageType,
-        -1,
+        0,
         isPreview,
         onRecordError,
         outputLanes,

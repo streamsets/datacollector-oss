@@ -219,8 +219,12 @@ public class TestRecordWriterManager {
     Date date = getFixedDate();
     Record record = RecordCreator.create();
     record.set(Field.create("a"));
-    Assert.assertTrue(mgr.getPath(date, record).toString().startsWith(
-        new Path(getTestDir(), "2015/15/01/20/09/56/01/a/_tmp_prefix").toString()));
+
+    String prefix = mgr.getPath(date, record).toString();
+    Assert.assertTrue(
+      Utils.format("Unexpected prefix: {}", prefix),
+      prefix.startsWith(new Path(getTestDir(), "2015/15/01/20/09/56/01/a/_tmp_prefix_0").toString())
+    );
   }
 
   private void testTextFile(CompressionCodec compressionCodec) throws Exception {
