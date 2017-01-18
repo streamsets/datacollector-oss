@@ -33,7 +33,6 @@
 
   <properties>
     <jython.version>2.7.0</jython.version>
-    <guava.version>18.0</guava.version>
   </properties>
 
   <dependencies>
@@ -69,19 +68,8 @@
     </dependency>
 
     <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <scope>test</scope>
-      <version>${guava.version}</version>
-    </dependency>
-    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

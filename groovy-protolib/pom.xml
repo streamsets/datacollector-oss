@@ -33,6 +33,7 @@
 
   <properties>
     <groovy.version>2.4.6</groovy.version>
+    <guava.version>20.0</guava.version>
   </properties>
 
   <dependencies>
@@ -72,6 +73,13 @@
       <artifactId>groovy-jsr223</artifactId>
       <version>${groovy.version}</version>
       <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <scope>compile</scope>
+      <version>${guava.version}</version>
     </dependency>
 
     <dependency>

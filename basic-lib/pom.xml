@@ -35,7 +35,7 @@
     <commons-io.version>2.4</commons-io.version>
     <commons-lang.version>3.4</commons-lang.version>
     <geoip2.version>2.1.0</geoip2.version>
-    <guava.version>18.0</guava.version>
+    <guava.version>20.0</guava.version>
     <h2.version>1.4.187</h2.version>
     <jackson.version>2.4.3</jackson.version>
     <jersey.version>2.23.1</jersey.version>

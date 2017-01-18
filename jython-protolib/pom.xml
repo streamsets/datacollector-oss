@@ -33,6 +33,7 @@
 
   <properties>
     <jython.version>2.7.0</jython.version>
+    <guava.version>20.0</guava.version>
   </properties>
 
   <dependencies>
@@ -71,6 +72,13 @@
       <groupId>org.python</groupId>
       <artifactId>jython-standalone</artifactId>
       <version>${jython.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>${guava.version}</version>
       <scope>compile</scope>
     </dependency>
 
