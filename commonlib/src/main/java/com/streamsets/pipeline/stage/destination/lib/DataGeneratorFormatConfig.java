@@ -400,8 +400,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
       displayPosition = 470,
       group = "DATA_FORMAT",
       dependencies = {
-          @Dependency(configName = "dataFormat^", triggeredByValues = "AVRO"),
-          @Dependency(configName = "avroSchemaSource", triggeredByValues = {"INLINE", "HEADER"})
+          @Dependency(configName = "dataFormat^", triggeredByValues = "AVRO")
       }
   )
   public boolean includeSchema = true;
