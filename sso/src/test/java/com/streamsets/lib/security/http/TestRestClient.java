@@ -19,6 +19,7 @@
  */
 package com.streamsets.lib.security.http;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -253,9 +254,11 @@ public class TestRestClient {
     inputStream = new ByteArrayInputStream("[\"a\"]".getBytes());
     Mockito.when(conn.getInputStream()).thenReturn(inputStream);
     response = new RestClient.Response(new ObjectMapper(), conn);
-    List list = response.getData(List.class);
+    TypeReference<List<String>> typeReference = new TypeReference<List<String>>() {
+    };
+    List<String> list = response.getData(typeReference);
     Assert.assertNotNull(list);
-    Assert.assertEquals(ImmutableList.of("a"), list);
+    Assert.assertEquals("a", list.get(0));
 
     inputStream = new ByteArrayInputStream("{\"message\" : \"hello\"}".getBytes());
     Mockito.when(conn.getErrorStream()).thenReturn(inputStream);

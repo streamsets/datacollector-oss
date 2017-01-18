@@ -19,6 +19,7 @@
  */
 package com.streamsets.lib.security.http;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 
@@ -189,6 +190,10 @@ public class RestClient {
 
     public InputStream getInputStream() throws IOException {
       return conn.getInputStream();
+    }
+
+    public <T> T getData(TypeReference<T> typeReference) throws IOException {
+      return jsonMapper.readValue(getInputStream(), typeReference);
     }
 
     public <T> T getData(Class<T> klass) throws IOException {
