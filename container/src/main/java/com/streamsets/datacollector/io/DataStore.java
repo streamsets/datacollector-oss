@@ -41,7 +41,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class DataStore {
   private final static Logger LOG = LoggerFactory.getLogger(DataStore.class);
-  private final static Map<Path, ReentrantLock> FILE_LOCKS = new HashMap<>();
+  private final static Map<Path, CounterLock> FILE_LOCKS = new HashMap<>();
 
   private final Path file;
   private final Path fileTmp;
@@ -50,6 +50,40 @@ public class DataStore {
   private Closeable stream;
   private boolean forWrite;
   private boolean isClosed;
+
+  /**
+   * Lock with counter so that we know how many threads are using the lock.
+   */
+  private static class CounterLock {
+
+    ReentrantLock lock;
+    int counter;
+
+    public CounterLock() {
+      lock = new ReentrantLock();
+      counter = 1;
+    }
+
+    public void inc() {
+      counter++;
+    }
+
+    public void dec() {
+      counter--;
+    }
+
+    public void lock() {
+      lock.lock();
+    }
+
+    public boolean isHeldByCurrentThread() {
+      return lock.isHeldByCurrentThread();
+    }
+
+    public void unlock() {
+      lock.unlock();
+    }
+  }
 
   public DataStore(File file) {
     Utils.checkNotNull(file, "file");
@@ -89,19 +123,20 @@ public class DataStore {
   @VisibleForTesting
   void acquireLock() {
     LOG.trace("Acquiring lock for '{}'", file);
-    ReentrantLock lock  = null;
+    CounterLock lock;
     synchronized (DataStore.class) {
       lock = FILE_LOCKS.get(file);
       if (lock == null) {
-        lock = new ReentrantLock();
+        lock = new CounterLock();
         FILE_LOCKS.put(file, lock);
       } else {
+        lock.inc();
         Utils.checkState(!lock.isHeldByCurrentThread(), Utils.format("The current thread already has a lock on '{}'",
                                                                      file));
       }
     }
     lock.lock();
-    LOG.trace("Acquired lock for '{}'", file);
+    LOG.trace("Acquired lock '{}' for '{}'", lock, file);
   }
 
   /**
@@ -126,15 +161,25 @@ public class DataStore {
    *
    */
   public void release() {
-    ReentrantLock lock;
+    CounterLock lock;
     synchronized (DataStore.class) {
-      lock = FILE_LOCKS.remove(file);
+      lock = FILE_LOCKS.get(file);
+
+      if(lock == null) {
+        LOG.error("Trying to release unlocked file {}", file);
+        return;
+      }
+
+      lock.dec();
+
+      if(lock.counter == 0) {
+        FILE_LOCKS.remove(file);
+      }
     }
-    if (lock != null) {
-      LOG.trace("Releasing the lock for '{}'", file);
-      lock.unlock();
-      LOG.trace("Released the lock for '{}'", file);
-    }
+
+    LOG.trace("Releasing the lock {} for '{}'", lock, file);
+    lock.unlock();
+    LOG.trace("Released the lock {} for '{}'", lock, file);
   }
 
   /**
@@ -321,8 +366,13 @@ public class DataStore {
    * This method will check for the presence of the set of files that can be used to read data from the store.
    */
   public boolean exists() throws IOException {
-    verifyAndRecover();
-    return Files.exists(file) && Files.size(file) > 0;
+    acquireLock();
+    try {
+      verifyAndRecover();
+      return Files.exists(file) && Files.size(file) > 0;
+    } finally {
+      release();
+    }
   }
 
   public void delete() throws IOException {

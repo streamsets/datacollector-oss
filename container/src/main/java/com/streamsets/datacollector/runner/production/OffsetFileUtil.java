@@ -25,7 +25,6 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.SourceOffsetJson;
 import com.streamsets.datacollector.util.PipelineDirectoryUtil;
-import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -124,8 +123,6 @@ public class OffsetFileUtil {
       SourceOffset sourceOffset = BeanHelper.unwrapSourceOffset(sourceOffsetJson);
       SourceOffsetUpgrader.upgrade(sourceOffset);
       return sourceOffset;
-    } finally {
-      ds.release();
     }
   }
 }
