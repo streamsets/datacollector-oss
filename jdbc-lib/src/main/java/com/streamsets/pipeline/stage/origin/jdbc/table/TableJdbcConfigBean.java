@@ -68,11 +68,26 @@ public class TableJdbcConfigBean {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "-1",
+      label = "Result Set Cache Size",
+      description = "Determines how many open statements/result sets can be cached." +
+          " Leave -1 to Opt Out and have one statement open per table.",
+      displayPosition = 180,
+      group = "JDBC",
+      dependsOn = "batchTableStrategy",
+      //For Process all rows we will need a cache with size 1, user does not have to configure it.
+      triggeredByValue = "SWITCH_TABLES"
+  )
+  public int resultCacheSize;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "NONE",
       label = "Table Order Strategy",
       description = "Determines the strategy for table ordering",
-      displayPosition = 180,
+      displayPosition = 190,
       group = "ADVANCED"
   )
   @ValueChooserModel(TableOrderStrategyChooserValues.class)
@@ -84,7 +99,7 @@ public class TableJdbcConfigBean {
       defaultValue = "false",
       label = "Configure Fetch Size",
       description = "Determines whether to configure fetch size for the JDBC Statement",
-      displayPosition = 190,
+      displayPosition = 200,
       group = "ADVANCED"
   )
   public boolean configureFetchSize;
@@ -95,7 +110,7 @@ public class TableJdbcConfigBean {
       defaultValue = "",
       label = "Fetch Size",
       description = "Fetch Size for the JDBC Statement. Should not be 0 and Should be less than or equal to batch size.",
-      displayPosition = 200,
+      displayPosition = 210,
       group = "ADVANCED",
       dependsOn = "configureFetchSize",
       triggeredByValue = "true"

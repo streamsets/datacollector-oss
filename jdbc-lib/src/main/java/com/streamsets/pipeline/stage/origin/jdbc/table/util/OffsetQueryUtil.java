@@ -86,7 +86,7 @@ public final class OffsetQueryUtil {
    * @param lastOffset the last offset for this particular table
    * @return A query to execute for the current batch.
    */
-  public static String buildQuery(TableContext tableContext, String lastOffset,TableJdbcELEvalContext tableJdbcELEvalContext) throws ELEvalException {
+  public static String buildQuery(TableContext tableContext, String lastOffset, TableJdbcELEvalContext tableJdbcELEvalContext) throws ELEvalException {
     StringBuilder queryBuilder = new StringBuilder();
     queryBuilder.append(
         String.format(

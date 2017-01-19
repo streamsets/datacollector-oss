@@ -152,7 +152,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
       //TRANSACTION
       statement.addBatch(
           "CREATE TABLE TEST.TRANSACTION_TABLE " +
-              "(random_int INT NOT NULL , t_date LONG, random_string VARCHAR(255))"
+              "(random_int INT NOT NULL , t_date BIGINT, random_string VARCHAR(255))"
       );
 
       for (Record record : EXPECTED_TRANSACTION_RECORDS) {
