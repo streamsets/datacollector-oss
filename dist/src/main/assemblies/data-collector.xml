@@ -23,11 +23,11 @@
 
   <files>
     <file>
-      <source>${basedir}/src/main/etc/sdc-log4j.properties</source>
+      <source>${basedir}/../container/src/main/resources/sdc-log4j.properties-default</source>
       <outputDirectory>etc</outputDirectory>
-      <destName>sdc-log4j.properties-default</destName>
+      <destName>sdc-log4j.properties</destName>
       <filtered>true</filtered>
-      <fileMode>0444</fileMode>
+      <fileMode>0644</fileMode>
     </file>
   </files>
 
@@ -86,17 +86,7 @@
         <exclude>*-realm.properties</exclude>
         <exclude>vault.properties</exclude>
         <exclude>sdc-keystore.jks</exclude>
-        <exclude>sdc-log4j.properties</exclude>
       </excludes>
-    </fileSet>
-
-    <fileSet>
-      <directory>${basedir}/src/main/etc</directory>
-      <outputDirectory>/etc</outputDirectory>
-      <includes>
-        <include>sdc-log4j.properties</include>
-      </includes>
-      <filtered>true</filtered>
     </fileSet>
 
     <fileSet>

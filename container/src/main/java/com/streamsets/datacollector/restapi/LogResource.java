@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.restapi;
 
+import com.google.common.io.Resources;
 import com.streamsets.datacollector.log.LogStreamer;
 import com.streamsets.datacollector.log.LogUtils;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -279,11 +280,15 @@ public class LogResource {
       @QueryParam("default") @DefaultValue("false") boolean defaultConfig
   ) throws IOException {
     String fileName = runtimeInfo.getLog4jPropertiesFileName();
+    InputStream log4jProperties;
+
     if (defaultConfig) {
-      fileName += "-default";
+      log4jProperties = Resources.getResource(fileName + "-default").openStream();
+    } else {
+      File file = new File(runtimeInfo.getConfigDir(), fileName);
+      log4jProperties = new FileInputStream(file);
     }
-    File file = new File(runtimeInfo.getConfigDir(), fileName);
-    return Response.ok(new FileInputStream(file)).build();
+    return Response.ok(log4jProperties).build();
   }
 
   @POST

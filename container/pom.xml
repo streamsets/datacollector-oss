@@ -33,6 +33,7 @@
 
   <properties>
     <commons-compress.version>1.10</commons-compress.version>
+    <sdc.log4j.level>DEBUG</sdc.log4j.level>
   </properties>
 
   <dependencies>
@@ -438,6 +439,7 @@
         <directory>${basedir}/src/main/resources</directory>
         <includes>
           <include>datacollector-buildinfo.properties</include>
+          <include>sdc-log4j.properties-default</include>
         </includes>
         <filtering>true</filtering>
       </resource>
@@ -620,5 +622,21 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>release</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+        <property>
+          <name>release</name>
+        </property>
+      </activation>
+      <properties>
+        <!-- Override for log4j level for releases -->
+        <sdc.log4j.level>INFO</sdc.log4j.level>
+      </properties>
+    </profile>
+  </profiles>
 
 </project>
