@@ -25,6 +25,8 @@
             streams file data from the origin system and writes the data to the destination system.
                 <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
             /> writes the files based on the directory and file name defined in the destination. </p>
+        <p>You can limit the resources used to transfer data by specifying a transfer rate. By
+            default, whole file transfers use available resources as needed.</p>
         <p>When the origin system provides checksum metadata, you can configure the origin to verify
             the checksum. Destinations that generate events can include checksum information in
             event records.</p>

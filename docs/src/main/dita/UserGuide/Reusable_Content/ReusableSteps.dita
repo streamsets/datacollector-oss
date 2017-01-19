@@ -1320,9 +1320,21 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Max Buffer Size (bytes)</entry>
-                                    <entry>Maximum buffer size to use when transferring
-                                        data.</entry>
+                                    <entry>Buffer Size (bytes)</entry>
+                                    <entry>Size of the buffer to use to transfer data.</entry>
+                                </row>
+                                <row>
+                                    <entry>Rate per Second <xref
+                                            href="../Pipeline_Design/WholeFile-TransferRate.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" 
+                                        /></xref></entry>
+                                    <entry>Transfer rate to use. <p>Enter a number to specify a rate
+                                            in bytes per second. Use an expression to specify a rate
+                                            that uses a different unit of measure per second, e.g.
+                                            ${5 * MB}. Use -1 to opt out of this property. </p><p>By
+                                            default, the origin does not use a transfer rate.
+                                        </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -1351,9 +1363,21 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Max Buffer Size (bytes)</entry>
-                                    <entry>Maximum buffer size to use when transferring
-                                        data.</entry>
+                                    <entry>Buffer Size (bytes)</entry>
+                                    <entry>Size of the buffer to use to transfer data.</entry>
+                                </row>
+                                <row>
+                                    <entry>Rate per Second <xref
+                                            href="../Pipeline_Design/WholeFile-TransferRate.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_ljp_wy2_py"
+                                        /></xref></entry>
+                                    <entry>Transfer rate to use. <p>Enter a number to specify a rate
+                                            in bytes per second. Use an expression to specify a rate
+                                            that uses a different unit of measure per second, e.g.
+                                            ${5 * MB}. Use -1 to opt out of this property. </p><p>By
+                                            default, the origin does not use a transfer rate.
+                                        </p></entry>
                                 </row>
                                 <row>
                                     <entry>Verify Checksum</entry>

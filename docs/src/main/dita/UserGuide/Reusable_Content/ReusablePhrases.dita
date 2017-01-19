@@ -568,7 +568,8 @@
                         <dlentry id="OriginDF-WFile">
                               <dt>Whole File</dt>
                               <dd>Streams whole files from the origin system to the destination
-                                    system. </dd>
+                                    system. You can specify a transfer rate or use all available
+                                    resources to perform the transfer. </dd>
                               <dd>The origin generates two fields: one for a file reference and one
                                     for file information. For more information, see <xref
                                           href="../Pipeline_Design/WholeFile.dita#concept_nfc_qkh_xw"
@@ -585,8 +586,10 @@
                         <dlentry id="OriginDF-WFile-Checksum">
                               <dt>Whole File</dt>
                               <dd>Streams whole files from the origin system to the destination
-                                    system. The origin uses checksums to verify the integrity of
-                                    data transmission.</dd>
+                                    system. You can specify a transfer rate or use all available
+                                    resources to perform the transfer. </dd>
+                              <dd>The origin uses checksums to verify the integrity of data
+                                    transmission.</dd>
                               <dd>The origin generates two fields: one for a file reference and one
                                     for file information. For more information, see <xref
                                           href="../Pipeline_Design/WholeFile.dita#concept_nfc_qkh_xw"
