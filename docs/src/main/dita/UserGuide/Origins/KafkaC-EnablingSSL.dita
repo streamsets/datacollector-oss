@@ -14,11 +14,11 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ann_l2b_t5">
-    <title>Enabling SSL</title>
+    <title>Enabling SSL/TLS</title>
     <conbody>
-        <p><indexterm>Kafka Consumer origin<indexterm>enabling SSL
-            security</indexterm></indexterm>Perform the following steps to enable Kafka Consumer to
-            use SSL to connect to <ph
+        <p><indexterm>Kafka Consumer origin<indexterm>enabling SSL/TLS
+                security</indexterm></indexterm>Perform the following steps to enable Kafka Consumer
+            to use SSL/TLS to connect to <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>.
             You can use the same steps to configure a Kafka Producer. </p>
         <p

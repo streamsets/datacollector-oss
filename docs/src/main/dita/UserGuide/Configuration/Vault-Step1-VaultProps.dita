@@ -86,7 +86,7 @@
                         </row>
                         <row>
                             <entry>vault.ssl.enabled.protocols</entry>
-                            <entry>SSL enabled protocols. Versions TLSv1.2 or later are
+                            <entry>SSL/TLS-enabled protocols. Versions TLSv1.2 or later are
                                 recommended.</entry>
                         </row>
                         <row>
@@ -106,8 +106,8 @@
                         </row>
                         <row>
                             <entry>vault.ssl.timeout</entry>
-                            <entry>Timeout for the SSL handshake in milliseconds. <p>Default is 0
-                                    for no limit. </p></entry>
+                            <entry>Timeout for the SSL/TLS handshake in milliseconds. <p>Default is
+                                    0 for no limit. </p></entry>
                         </row>
                         <row>
                             <entry>vault.open.timeout</entry>

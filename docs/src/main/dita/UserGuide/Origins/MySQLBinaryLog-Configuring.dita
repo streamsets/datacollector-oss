@@ -144,7 +144,7 @@
                                 </row>
                                 <row>
                                     <entry>Use SSL</entry>
-                                    <entry>Specifies whether to use SSL to connect to the MySQL
+                                    <entry>Specifies whether to use SSL/TLS to connect to the MySQL
                                         server.</entry>
                                 </row>
                                 <row>

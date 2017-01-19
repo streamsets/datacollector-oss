@@ -87,6 +87,18 @@
    <topicref href="../Origins/HTTPClient-ResponseHeaderFields.dita"/>
    <topicref href="../Origins/HTTPClient-Configuring.dita"/>
   </topicref>
+  <topicref href="../Origins/HTTPtoKafka.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/HTTPtoKafka-Prerequisites.dita"/>
+   <topicref href="../Origins/HTTPtoKafka-PipeConfig.dita"/>
+   <topicref href="../Origins/HTTPtoKafka-MaxMessageSize.dita"/>
+   <topicref href="../Origins/HTTPtoKafka-EnablingKSecurity.dita">
+    <topicref href="../Origins/HTTPtoKafka-EnableSSL.dita"/>
+    <topicref href="../Origins/HTTPtoKafka-EnablingKerberos.dita"/>
+    <topicref href="../Origins/HTTPtoKafka-SSLKerb.dita"/>
+   </topicref>
+   <topicref href="../Origins/HTTPtoKafka-Configuring.dita"/>
+  </topicref>
   <topicref href="../Origins/JDBCConsumer.dita" chunk="to-content"> <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/JDBCConsumer-DriverInstall.dita"/>
    <topicref href="../Origins/JDBCConsumer-OffsetColumn_Value.dita"/>

@@ -158,7 +158,7 @@
                                     </row>
                                     <row>
                                         <entry>SSL Enabled</entry>
-                                        <entry>Enables SSL between <ph
+                                        <entry>Enables SSL/TLS between <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> and MongoDB.<p>You also must define the truststore
                                                 file and password in the SDC_JAVA_OPTS environment

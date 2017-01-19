@@ -20,8 +20,8 @@
                 security</indexterm></indexterm><indexterm>enabling security<indexterm>UDP to
                     Kafka</indexterm></indexterm>When using <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>,
-            you can configure the UDP to Kafka origin to connect securely through SSL, Kerberos, or
-            both. </p>
+            you can configure the UDP to Kafka origin to connect securely through SSL/TLS, Kerberos,
+            or both. </p>
         <p
             conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSecurity.dita#concept_nrg_5mb_t5/P2"/>
         <p

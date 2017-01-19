@@ -14,11 +14,11 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_wb5_sxc_rw">
- <title>Enabling SSL</title>
+ <title>Enabling SSL/TLS</title>
  <conbody>
-        <p><indexterm>UDP to Kafka origin<indexterm>enabling SSL security for
+        <p><indexterm>UDP to Kafka origin<indexterm>enabling SSL/TLS security for
                 Kafka</indexterm></indexterm>Perform the following steps to enable the UDP to Kafka
-            origin to use SSL to connect to <ph
+            origin to use SSL/TLS to connect to <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>. </p>
         <p
             conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSSL.dita#concept_vcx_bnb_t5/P2-SSLlist"/>

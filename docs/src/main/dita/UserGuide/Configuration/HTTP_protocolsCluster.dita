@@ -15,14 +15,16 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_rdt_h54_cw">
  <title>Configuring HTTPS for Cluster Pipelines</title>
- <shortdesc>To configure HTTPS when you run cluster pipelines, you can use a self-signed
-        certificate. Or, you can generate an SSL certificate for the gateway node and the worker
-        nodes. You specify the generated keystore file and keystore password file for the gateway
-        and worker nodes in the <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        configuration file, <codeph>sdc.properties</codeph>. You can optionally generate a
-        truststore file for the gateway and worker nodes.</shortdesc>
  <conbody>
+        <p><indexterm>HTTPS<indexterm>configuring for cluster
+                pipelines</indexterm></indexterm><indexterm>cluster pipelines<indexterm>configuring
+                    HTTPS</indexterm></indexterm>To configure HTTPS when you run cluster pipelines,
+            you can use a self-signed certificate. Or, you can generate an SSL/TLS certificate for
+            the gateway node and the worker nodes. You specify the generated keystore file and
+            keystore password file for the gateway and worker nodes in the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            configuration file, <codeph>sdc.properties</codeph>. You can optionally generate a
+            truststore file for the gateway and worker nodes.</p>
             <note>If you run both standalone and cluster pipelines, configure HTTPS for cluster
             pipelines.</note>
 

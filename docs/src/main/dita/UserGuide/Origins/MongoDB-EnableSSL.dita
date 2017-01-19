@@ -14,14 +14,15 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_zry_dg2_ww">
-    <title>Enabling SSL</title>
+    <title>Enabling SSL/TLS</title>
     <taskbody>
         <context>
             <p><indexterm>MongoDB origin<indexterm>enabling
-                        SSL</indexterm></indexterm><indexterm>SSL<indexterm>MongoDB
-                        origin</indexterm></indexterm>You can enable the MongoDB origin to use SSL
-                to connect to MongoDB. You enable SSL for the origin, and then define the truststore
-                file and password to use in the SDC_JAVA_OPTS environment variable.</p>
+                        SSL/TLS</indexterm></indexterm><indexterm>SSL/TLS<indexterm>MongoDB
+                        origin</indexterm></indexterm>You can enable the MongoDB origin to use
+                SSL/TLS to connect to MongoDB. You enable SSL/TLS for the origin, and then define
+                the truststore file and password to use in the SDC_JAVA_OPTS environment
+                variable.</p>
         </context>
         <steps>
             <step

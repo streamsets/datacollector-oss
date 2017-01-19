@@ -1168,7 +1168,7 @@
      </row>
        <row id="MongoDB_SSLInvalid_row">
       <entry>SSL Invalid Host Name Allowed</entry>
-      <entry>Specifies whether invalid host names are allowed in SSL certificates.</entry>
+      <entry>Specifies whether invalid host names are allowed in SSL/TLS certificates.</entry>
      </row>
       </tbody>
      </tgroup>

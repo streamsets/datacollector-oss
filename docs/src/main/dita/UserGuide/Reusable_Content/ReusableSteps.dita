@@ -1711,7 +1711,7 @@
                                     <entry>Connection string for the Kafka broker. Use the following
                                         format: <codeph>&lt;host>:&lt;port></codeph>. <p>To ensure a
                                             connection, enter a comma-separated list of additional
-                                            broker URI.</p></entry>
+                                            broker URIs.</p></entry>
                                 </row>
                                 <row id="O-KafkaTopic">
                                     <entry>Topic</entry>
@@ -1975,8 +1975,8 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta">The following is used for SDC RPC origins
-                    </draft-comment>
+                    <draft-comment author="Loretta">The following is used for SDC RPC origins. Last
+                        two rows used by HTTP to Kafka origin</draft-comment>
                 </cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_uq4_2rr_pw">
@@ -2007,13 +2007,13 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 placement="inline" id="image_b2n_wrr_pw"
                                         /></xref></entry>
-                                    <entry>Enables the secure transfer of data using TLS. <p>To use
-                                            encryption, both the origin and SDC RPC destination must
-                                            be enabled for TLS.</p></entry>
+                                    <entry>Enables the secure transfer of data using TLS (SSL).
+                                            <p>To use encryption, both the origin and SDC RPC
+                                            destination must be enabled for TLS.</p></entry>
                                 </row>
                                 <row id="O-RPC-KeystoreFile">
                                     <entry>Keystore File</entry>
-                                    <entry>Keystore file for SSL. <p>Must be stored in the <ph
+                                    <entry>Keystore file for SSL/TLS. <p>Must be stored in the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> resources directory,
                                                 <filepath>$SDC_RESOURCES</filepath>. For more
@@ -3820,7 +3820,7 @@
                                 </row>
                                 <row>
                                     <entry>Enable SSL</entry>
-                                    <entry>Enables SSL between the <ph
+                                    <entry>Enables SSL/TLS between the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> and the Elasticsearch cluster.<p>Selecting this property
                                             is the equivalent to setting the shield.transport.ssl
@@ -3828,8 +3828,8 @@
                                 </row>
                                 <row>
                                     <entry>SSL Keystore Path</entry>
-                                    <entry>Location of the keystore file. <p>Configuring this
-                                            property is the equivalent to configuring the
+                                    <entry>Location of the keystore file for SSL/TLS. <p>Configuring
+                                            this property is the equivalent to configuring the
                                             shield.ssl.keystore.path Elasticsearch
                                             property.</p><p>Not necessary for Elastic Cloud
                                             clusters. </p></entry>
@@ -3844,11 +3844,11 @@
                                 </row>
                                 <row>
                                     <entry>SSL Truststore Path</entry>
-                                    <entry>Location of the truststore file. <p>Configuring this
-                                            property is the equivalent to configuring the
-                                            shield.ssl.truststore.path Elasticsearch
-                                            property.</p><p>Not necessary for Elastic Cloud
-                                            clusters. </p></entry>
+                                    <entry>Location of the truststore file for
+                                            SSL/TLS.<p>Configuring this property is the equivalent
+                                            to configuring the shield.ssl.truststore.path
+                                            Elasticsearch property.</p><p>Not necessary for Elastic
+                                            Cloud clusters. </p></entry>
                                 </row>
                                 <row>
                                     <entry>SSL Truststore Password</entry>

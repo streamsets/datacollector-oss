@@ -23,6 +23,6 @@
       define the offset field, start timestamp, and the collection type. These properties determine
       how the origin queries the database. </p>
     <p>You can optionally configure advanced options that determine how the origin connects to
-      MongoDB, including enabling SSL for the origin.</p>
+      MongoDB, including enabling SSL/TLS for the origin.</p>
  </conbody>
 </concept>

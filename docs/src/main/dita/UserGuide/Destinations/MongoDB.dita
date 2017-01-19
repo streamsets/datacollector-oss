@@ -29,6 +29,6 @@
             matching document in MongoDB. It does not delete all matching documents, as is sometimes
             possible with MongoDB.</p>
         <p>You can optionally configure advanced options that determine how the destination connects
-            to MongoDB, including enabling SSL for the destination.</p>
+            to MongoDB, including enabling SSL/TLS for the destination.</p>
  </conbody>
 </concept>

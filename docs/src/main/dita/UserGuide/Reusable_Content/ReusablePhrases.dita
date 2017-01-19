@@ -79,7 +79,7 @@
                   <draft-comment author="Loretta">KafkaSecure - used in KConsumer &amp; Producer
                         encryption areas. Original value: Kafka 0.9.0.0</draft-comment>
             </p>
-            <p>Kafka version that supports SSL and SASL/Kerberos security: <ph id="KafkaSecure"
+            <p>Kafka version that supports SSL/TLS and SASL/Kerberos security: <ph id="KafkaSecure"
                         >Kafka version 0.9.0.0 or later</ph></p>
             <draft-comment author="Loretta">Using this in all DC Console topics:</draft-comment>
             <p>
@@ -917,6 +917,14 @@ web-0011.log</codeblock></dd>
             <p id="O-p-PipeConfig">However, since a pipeline requires a destination, you should
                   connect the origin to the Trash destination to satisfy pipeline validation
                   requirements.</p>
+            <p>
+                  <draft-comment author="Loretta">Use din SDC to Kafka > Batch Request Size, Kafka
+                        Message Size... > Important:  and also in HTTP to Kafka > Request Message
+                        Size > Important</draft-comment>
+            </p>
+            <p><ph id="ph-ToKafka-DefKafkaMessageSize">By default, the maximum message size in a
+                        Kafka cluster is 1 MB, as defined by the message.max.bytes property.
+                  </ph></p>
             <p>
                   <draft-comment author="Loretta">PROCESSOR INFO –-</draft-comment>
             </p>

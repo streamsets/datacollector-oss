@@ -15,15 +15,16 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_xxz_vlr_dw">
  <title>Truststore Files for Cluster Pipelines</title>
- <shortdesc>Optionally, you can generate and use your own truststore file when <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs
-        cluster pipelines. By default, <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses
-        the truststore file from the following directory on all nodes in the cluster:
-            <codeph>$JAVA_HOME/jre/lib/security/cacerts</codeph>.</shortdesc>
  <conbody>
-     <p>When you generate a truststore file to run cluster pipelines, use the following
-         files:</p>
+     <p><indexterm>cluster pipelines<indexterm>truststore files</indexterm></indexterm>Optionally,
+            you can generate and use your own truststore file when <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            runs cluster pipelines. By default, <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            uses the truststore file from the following directory on all nodes in the cluster:
+                <codeph>$JAVA_HOME/jre/lib/security/cacerts</codeph>.</p>
+        <p>When you generate a truststore file to run cluster pipelines, use the following
+            files:</p>
      <dl>
          <dlentry>
              <dt>truststore file and truststore password file on the gateway node</dt>

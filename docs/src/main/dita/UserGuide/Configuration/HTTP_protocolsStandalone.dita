@@ -15,13 +15,15 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ecx_hkq_kr">
  <title>Configuring HTTPS for Standalone Pipelines</title>
-  <shortdesc>To configure HTTPS when you run standalone pipelines only, you can use a self-signed
-    certificate. Or, you can generate an SSL certificate and specify the generated keystore file and
-    keystore password file in the <ph
-      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-    configuration file, <codeph>sdc.properties</codeph>. </shortdesc>
  <conbody>
-  <p>When you generate an SSL certificate to run standalone pipelines only, use the following files: <dl>
+    <p><indexterm>HTTPS<indexterm>configuring for standalone pipelines</indexterm></indexterm>To
+      configure HTTPS when you run standalone pipelines only, you can use a self-signed certificate.
+      Or, you can generate an SSL/TLS certificate and specify the generated keystore file and
+      keystore password file in the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      configuration file, <codeph>sdc.properties</codeph>. </p>
+  <p>When you generate an SSL/TLS certificate to run standalone pipelines only, use the following
+      files: <dl>
         <dlentry>
           <dt>keystore file</dt>
           <dd>A file that contains the private key and self-signed certificates for the web server.

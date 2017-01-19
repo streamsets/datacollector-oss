@@ -15,20 +15,20 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ezk_btx_pw">
     <title>Batch Request Size, Kafka Message Size, and Kafka Configuration</title>
-    <shortdesc>Configure the SDC RPC to Kafka maximum batch request size and message size properties
-        in relationship to each other and to the Kafka configuration for maximum message
-        size.</shortdesc>
+    <shortdesc>Configure the SDC RPC to Kafka maximum batch request size and Kafka message size
+        properties in relationship to each other and to the maximum message size configured in
+        Kafka.</shortdesc>
     <conbody>
         <p>The <uicontrol>Max Batch Request Size (MB) </uicontrol> property determines the maximum
             size of the batch of data that the origin accepts from each SDC RPC destination. Upon
             receiving a batch of data, the origin immediately writes the data to Kafka.</p>
         <p>To promote peak performance, the origin writes as many records as possible into a single
-            Kafka message. The <uicontrol>Max Message Size (KB)</uicontrol> property determines the
-            maximum size of the message that it creates. </p>
+            Kafka message. The Kafka <uicontrol>Max Message Size (KB)</uicontrol> property
+            determines the maximum size of the message that it creates. </p>
         <note type="important">The maximum message size specified in the origin must be smaller than
-            the maximum message size configured in Kafka. By default, the maximum message size in
-            Kafka - currently defined by the message.max.bytes Kafka configuration property - is 1
-            MB. If the origin receives a message greater than the maximum message size, it fails to
+            the maximum message size configured in Kafka. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-ToKafka-DefKafkaMessageSize"
+            /> If the origin receives a message greater than the maximum message size, it fails to
             process the batch, and the destination that provided the batch processes it based on the
             error record handling configured for the destination.</note>
         <p>For example, say the origin uses the default 100 MB for the maximum batch request size

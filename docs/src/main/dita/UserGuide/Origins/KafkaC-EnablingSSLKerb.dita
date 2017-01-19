@@ -14,12 +14,12 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_qzq_jrk_55">
- <title>Enabling SSL and Kerberos</title>
+ <title>Enabling SSL/TLS and Kerberos</title>
  <conbody>
-        <p><indexterm>Kafka Consumer origin<indexterm>enabling SSL and Kerberos
-                security</indexterm></indexterm><indexterm>SSL and Kerberos
+        <p><indexterm>Kafka Consumer origin<indexterm>enabling SSL/TLS and Kerberos
+                    security</indexterm></indexterm><indexterm>SSL/TLS and Kerberos
                     authentication<indexterm>using with Kafka Consumer</indexterm></indexterm>You
-            can enable Kafka Consumer to use SSL and Kerberos to connect to <ph
+            can enable Kafka Consumer to use SSL/TLS and Kerberos to connect to <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"
             />.</p>
         <p

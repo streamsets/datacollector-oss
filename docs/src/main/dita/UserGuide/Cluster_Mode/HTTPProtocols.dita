@@ -18,8 +18,8 @@
  <shortdesc>You can configure Data Collector to use HTTP or HTTPS when you run cluster pipelines. By
         default Data Collector uses HTTP.</shortdesc>
  <conbody>
-  <p>To configure HTTPS when you run cluster pipelines, you must generate an SSL certificate for the
-            gateway node and the worker nodes. You then specify the generated keystore file and
+  <p>To configure HTTPS when you run cluster pipelines, you must generate an SSL/TLS certificate for
+            the gateway node and the worker nodes. You then specify the generated keystore file and
             keystore password file for the gateway and worker nodes in the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             configuration file, <codeph>sdc.properties</codeph>. You can optionally generate a

@@ -23,7 +23,7 @@
                     statistics</indexterm></indexterm>You also configure the partition strategy. The
             pipeline passes data to partitions in the Kafka topic based on the partition strategy
             that you choose. You can add additional Kafka configuration properties as needed. </p>
-        <note>At this time, you cannot configure the pipeline to connect securely through SSL or
+        <note>At this time, you cannot configure the pipeline to connect securely through SSL/TLS or
             Kerberos when using Kafka.</note>
     </conbody>
 </concept>

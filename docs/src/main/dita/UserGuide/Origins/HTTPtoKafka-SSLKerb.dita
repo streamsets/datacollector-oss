@@ -13,11 +13,15 @@
   limitations under the License.
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_ksm_svc_rw">
+<concept id="concept_h4n_wzv_4y">
  <title>Enabling SSL/TLS and Kerberos</title>
  <conbody>
-        <p
-            conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSSLandKerb.dita#concept_d3x_v5k_55/P1"/>
+  <p><indexterm>HTTP to Kafka origin<indexterm>enabling SSL/TLS and Kerberos
+                security</indexterm></indexterm><indexterm>SSL/TLS and Kerberos
+                    authentication<indexterm>using with HTTP to Kafka</indexterm></indexterm>You can
+            enable the HTTP to Kafka origin to use SSL/TLS and Kerberos to connect to <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"
+            />.</p>
         <p
             conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSSLandKerb.dita#concept_d3x_v5k_55/P2"/>
  </conbody>

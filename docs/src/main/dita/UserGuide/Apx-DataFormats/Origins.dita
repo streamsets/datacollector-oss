@@ -147,6 +147,10 @@
                 /></entry>
             </row>
             <row>
+              <entry>HTTP to Kafka</entry>
+              <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
+            </row>
+            <row>
               <entry>JDBC Consumer</entry>
               <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
             </row>

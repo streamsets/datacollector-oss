@@ -13,16 +13,20 @@
   limitations under the License.
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_czm_55c_rw">
-    <title>Enabling SSL/TLS</title>
-    <conbody>
-        <p conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSSL.dita#concept_vcx_bnb_t5/P1"/>
+<concept id="concept_rjs_twv_4y">
+ <title>Enabling SSL/TLS</title>
+ <conbody>
+        <p><indexterm>HTTP to Kafka origin<indexterm>enabling SSL/TLS security for
+                Kafka</indexterm></indexterm><indexterm>SSL/TLS authentication<indexterm>enabling
+                    for the HTTP to Kafka origin</indexterm></indexterm>Perform the following steps
+            to enable the HTTP to Kafka origin to use SSL/TLS to connect to <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>. </p>
         <p
             conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSSL.dita#concept_vcx_bnb_t5/P2-SSLlist"/>
         <p
             conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSSL.dita#concept_vcx_bnb_t5/P3-example"/>
         <image
             conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSSL.dita#concept_vcx_bnb_t5/P4-image"
-            id="image_dvs_4zc_rw"/>
+            id="image_hgt_xzc_rw"/>
     </conbody>
 </concept>

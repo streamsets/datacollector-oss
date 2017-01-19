@@ -13,14 +13,14 @@
   limitations under the License.
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_vhx_2jc_rw">
+<concept id="concept_y1b_pwv_4y">
  <title>Enabling Kafka Security</title>
  <conbody>
-  <p><indexterm>SDC RPC to Kafka origin<indexterm>enabling Kafka
-                security</indexterm></indexterm><indexterm>enabling security<indexterm>SDC RPC to
+  <p><indexterm>HTTP to Kafka origin<indexterm>enabling Kafka
+                security</indexterm></indexterm><indexterm>enabling security<indexterm>HTTP to
                     Kafka</indexterm></indexterm>When using <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>,
-            you can configure the SDC RPC to Kafka origin to connect securely through SSL/TLS,
+            you can configure the HTTP to Kafka origin to connect securely through SSL/TLS,
             Kerberos, or both. </p>
         <p
             conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSecurity.dita#concept_nrg_5mb_t5/P2"/>

@@ -31,6 +31,7 @@
                         <row>
                             <entry>streamsets-datacollector-apache-kafka_0_8_1-lib </entry>
                             <entry>For Kafka version 0.8.1.<p>Includes: <ul id="ul_hfn_3yp_vw">
+                                        <li>HTTP to Kafka origin</li>
                                         <li>Kafka Consumer origin</li>
                                         <li>SDC RPC to Kafka origin</li>
                                         <li>UDP to Kafka origin</li>
@@ -40,6 +41,7 @@
                         <row>
                             <entry>streamsets-datacollector-apache-kafka_0_8_2-lib </entry>
                             <entry>For Kafka version 0.8.2.<p>Includes: <ul id="ul_jfg_jyp_vw">
+                                        <li>HTTP to Kafka origin</li>
                                         <li>Kafka Consumer origin</li>
                                         <li>SDC RPC to Kafka origin</li>
                                         <li>UDP to Kafka origin</li>
@@ -49,6 +51,7 @@
                         <row>
                             <entry>streamsets-datacollector-apache-kafka_0_9-lib</entry>
                             <entry>For Kafka version 0.9.<p>Includes:<ul id="ul_hpb_htg_qw">
+                                        <li>HTTP to Kafka origin</li>
                                         <li>Kafka Consumer origin</li>
                                         <li>SDC RPC to Kafka origin</li>
                                         <li>UDP to Kafka origin</li>
@@ -58,6 +61,7 @@
                         <row>
                             <entry>streamsets-datacollector-apache-kafka_0_10-lib</entry>
                             <entry>For Kafka version 0.10.<p>Includes:<ul id="ul_jyh_nml_zw">
+                                        <li>HTTP to Kafka origin</li>
                                         <li>Kafka Consumer origin</li>
                                         <li>SDC RPC to Kafka origin</li>
                                         <li>UDP to Kafka origin</li>
@@ -309,6 +313,7 @@
                             <entry>streamsets-datacollector-cdh_kafka_1_2-lib </entry>
                             <entry>For the Cloudera distribution of Apache Kafka 1.2 (0.8.2.0).
                                     <p>Includes: <ul id="ul_pt3_nyp_vw">
+                                        <li>HTTP to Kafka origin</li>
                                         <li>Kafka Consumer origin</li>
                                         <li>SDC RPC to Kafka origin</li>
                                         <li>UDP to Kafka origin</li>
@@ -319,6 +324,7 @@
                             <entry>streamsets-datacollector-cdh_kafka_1_3-lib </entry>
                             <entry>For the Cloudera distribution of Apache Kafka 1.3 (0.8.2.0).
                                     <p>Includes: <ul id="ul_w1y_nyp_vw">
+                                        <li>HTTP to Kafka origin</li>
                                         <li>Kafka Consumer origin</li>
                                         <li>SDC RPC to Kafka origin</li>
                                         <li>UDP to Kafka origin</li>
@@ -329,6 +335,7 @@
                             <entry>streamsets-datacollector-cdh_kafka_2_0-lib </entry>
                             <entry>For the Cloudera distribution of Apache Kafka 2.0 (0.9.0).
                                     <p>Includes: <ul id="ul_kjf_ntg_qw">
+                                        <li>HTTP to Kafka origin</li>
                                         <li>Kafka Consumer origin</li>
                                         <li>SDC RPC to Kafka origin</li>
                                         <li>UDP to Kafka origin</li>
@@ -397,6 +404,7 @@
                                         <li>
                                             <p>Hadoop FS origin for cluster mode pipelines</p>
                                         </li>
+                                        <li>HTTP to Kafka origin</li>
                                         <li>Kafka Consumer origin</li>
                                         <li>SDC RPC to Kafka origin</li>
                                         <li>UDP to Kafka origin</li>
@@ -420,6 +428,7 @@
                                         <li>
                                             <p>Hadoop FS origin for cluster mode pipelines</p>
                                         </li>
+                                        <li>HTTP to Kafka origin</li>
                                         <li>Kafka Consumer origin</li>
                                         <li>SDC RPC to Kafka origin</li>
                                         <li>UDP to Kafka origin</li>
@@ -443,6 +452,7 @@
                                         <li>
                                             <p>Hadoop FS origin for cluster mode pipelines</p>
                                         </li>
+                                        <li>HTTP to Kafka origin</li>
                                         <li>Kafka Consumer origin for standalone and cluster mode
                                             pipelines</li>
                                         <li>SDC RPC to Kafka origin</li>
@@ -467,6 +477,7 @@
                                         <li>
                                             <p>Hadoop FS origin for cluster mode pipelines</p>
                                         </li>
+                                        <li>HTTP to Kafka origin</li>
                                         <li>Kafka Consumer origin for standalone and cluster mode
                                             pipelines</li>
                                         <li>SDC RPC to Kafka origin</li>

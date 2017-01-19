@@ -14,12 +14,12 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hx4_3yd_rw">
- <title>Enabling SSL and Kerberos</title>
+ <title>Enabling SSL/TLS and Kerberos</title>
  <conbody>
-  <p><indexterm>SDC RPC to Kafka origin<indexterm>enabling SSL and Kerberos
-                security</indexterm></indexterm><indexterm>SSL and Kerberos
+  <p><indexterm>SDC RPC to Kafka origin<indexterm>enabling SSL/TLS and Kerberos
+                security</indexterm></indexterm><indexterm>SSL/TLS and Kerberos
                     authentication<indexterm>using with SDC RPC to Kafka</indexterm></indexterm>You
-            can enable the SDC RPC to Kafka origin to use SSL and Kerberos to connect to <ph
+            can enable the SDC RPC to Kafka origin to use SSL/TLS and Kerberos to connect to <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"
             />.</p>
         <p
