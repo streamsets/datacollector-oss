@@ -145,6 +145,8 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   private volatile String snapshotName;
   /*indicates the batch size to be captured*/
   private volatile int snapshotBatchSize;
+  // Exception thrown while executing the pipeline
+  private volatile Throwable exceptionFromExecution = null;
   /*Cache last N error records per stage in memory*/
   private final Map<String, EvictingQueue<Record>> stageToErrorRecordsMap;
   /*Cache last N error messages in memory*/
@@ -306,10 +308,18 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     this.statsAggregationHandler = statsAggregationHandler;
     this.runnerPool = new RunnerPool<>(pipes, pipeContext.getRuntimeStats());
 
-    if(originPipe.getStage().getStage() instanceof PushSource) {
-      runPushSource();
-    } else {
-      runPollSource();
+    try {
+      if (originPipe.getStage().getStage() instanceof PushSource) {
+        runPushSource();
+      } else {
+        runPollSource();
+      }
+    } catch (Throwable throwable) {
+      sendPipelineErrorNotificationRequest(throwable);
+      errorNotification(originPipe, pipes, throwable);
+      Throwables.propagateIfInstanceOf(throwable, StageException.class);
+      Throwables.propagateIfInstanceOf(throwable, PipelineRuntimeException.class);
+      Throwables.propagate(throwable);
     }
   }
 
@@ -322,6 +332,13 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
 
     // Push origin will block on the call until the either all data have been consumed or the pipeline stopped
     originPipe.process(offsetTracker.getOffsets(), batchSize, this);
+
+    // If execution failed on exception, we should propagate it up
+    if(exceptionFromExecution != null) {
+      Throwables.propagateIfInstanceOf(exceptionFromExecution, StageException.class);
+      Throwables.propagateIfInstanceOf(exceptionFromExecution, PipelineRuntimeException.class);
+      Throwables.propagate(exceptionFromExecution);
+    }
   }
 
   private FullPipeBatch createFullPipeBatch(String entityName, String previousOffset) {
@@ -373,8 +390,20 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
         memoryConsumedByStage,
         stageBatchMetrics
       );
-    } catch (PipelineException|StageException e) {
+    } catch (Throwable e) {
       LOG.error("Can't process batch", e);
+
+      // We got exception while executing pipeline which is a signal that we should stop processing
+      ((StageContext)originPipe.getStage().getContext()).setStop(true);
+
+      // Persist the exception so that we can re-throw it later in runPushSource method
+      synchronized (this) {
+        if(exceptionFromExecution == null) {
+          exceptionFromExecution = e;
+        }
+      }
+
+      // Returning false so that origin can properly communicate back that this request wasn't processed
       return false;
     }
 
@@ -392,59 +421,52 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     retainErrorMessagesInMemory(ImmutableMap.<String, List<ErrorMessage>>of(stage, ImmutableList.of(errorMessage)));
   }
 
-  public void runPollSource() throws StageException, PipelineRuntimeException {
+  public void runPollSource() throws StageException, PipelineException {
     while (!offsetTracker.isFinished() && !stop) {
       if (threadHealthReporter != null) {
         threadHealthReporter.reportHealth(ProductionPipelineRunnable.RUNNABLE_NAME, -1, System.currentTimeMillis());
       }
-      try {
-        for (BatchListener batchListener : batchListenerList) {
-          batchListener.preBatch();
-        }
 
-        if(observer != null) {
-          observer.reconfigure();
-        }
+      for (BatchListener batchListener : batchListenerList) {
+        batchListener.preBatch();
+      }
 
-        // Start of the batch execution
-        long start = System.currentTimeMillis();
-        FullPipeBatch pipeBatch = createFullPipeBatch(Source.POLL_SOURCE_OFFSET_KEY, offsetTracker.getOffsets().get(Source.POLL_SOURCE_OFFSET_KEY));
+      if(observer != null) {
+        observer.reconfigure();
+      }
 
-        // Run origin
-        Map<String, Long> memoryConsumedByStage = new HashMap<>();
-        Map<String, Object> stageBatchMetrics = new HashMap<>();
-        processPipe(
-          originPipe,
-          pipeBatch,
-          false,
-          null,
-          null,
-          memoryConsumedByStage,
-          stageBatchMetrics
-        );
+      // Start of the batch execution
+      long start = System.currentTimeMillis();
+      FullPipeBatch pipeBatch = createFullPipeBatch(Source.POLL_SOURCE_OFFSET_KEY, offsetTracker.getOffsets().get(Source.POLL_SOURCE_OFFSET_KEY));
 
-        // Since the origin already run, the FullPipeBatch will have a new offset
-        String newOffset = pipeBatch.getNewOffset();
+      // Run origin
+      Map<String, Long> memoryConsumedByStage = new HashMap<>();
+      Map<String, Object> stageBatchMetrics = new HashMap<>();
+      processPipe(
+        originPipe,
+        pipeBatch,
+        false,
+        null,
+        null,
+        memoryConsumedByStage,
+        stageBatchMetrics
+      );
 
-        // Run rest of the pipeline
-        runSourceLessBatch(
-          start,
-          pipeBatch,
-          Source.POLL_SOURCE_OFFSET_KEY,
-          newOffset,
-          memoryConsumedByStage,
-          stageBatchMetrics
-        );
+      // Since the origin already run, the FullPipeBatch will have a new offset
+      String newOffset = pipeBatch.getNewOffset();
 
-        for (BatchListener batchListener : batchListenerList) {
-          batchListener.postBatch();
-        }
-      } catch (Throwable throwable) {
-        sendPipelineErrorNotificationRequest(throwable);
-        errorNotification(originPipe, pipes, throwable);
-        Throwables.propagateIfInstanceOf(throwable, StageException.class);
-        Throwables.propagateIfInstanceOf(throwable, PipelineRuntimeException.class);
-        Throwables.propagate(throwable);
+      // Run rest of the pipeline
+      runSourceLessBatch(
+        start,
+        pipeBatch,
+        Source.POLL_SOURCE_OFFSET_KEY,
+        newOffset,
+        memoryConsumedByStage,
+        stageBatchMetrics
+      );
+
+      for (BatchListener batchListener : batchListenerList) {
+        batchListener.postBatch();
       }
     }
   }

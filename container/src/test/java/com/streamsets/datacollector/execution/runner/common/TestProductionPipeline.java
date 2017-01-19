@@ -120,6 +120,12 @@ public class TestProductionPipeline {
     runtimeInfo.init();
     memoryLimit = new MemoryLimitConfiguration();
     MetricsConfigurator.registerJmxMetrics(runtimeInfoMetrics);
+
+    MockStages.setSourceCapture(null);
+    MockStages.setPushSourceCapture(null);
+    MockStages.setProcessorCapture(null);
+    MockStages.setExecutorCapture(null);
+    MockStages.setTargetCapture(null);
   }
 
   @Test
@@ -753,6 +759,25 @@ public class TestProductionPipeline {
     Assert.assertNotNull(errors);
     Assert.assertEquals(1, errors.size());
     Assert.assertTrue(Utils.format("Unexpected message: {}", errors.get(0)), errors.get(0).toString().contains("Cake is a lie"));
+  }
+
+  /**
+   * Validate that exception while pipeline is executing get's properly propagated up
+   */
+  @Test(expected = RuntimeException.class)
+  public void testPushSourcePropagatesExceptionFromExecution() throws Exception {
+    MPushSource source = new MPushSource();
+    MockStages.setPushSourceCapture(source);
+    MockStages.setTargetCapture(new BaseTarget() {
+      @Override
+      public void write(Batch batch) throws StageException {
+        throw new RuntimeException("End of the world!");
+      }
+    });
+
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, PipelineType.PUSH_SOURCE);
+    pipeline.registerStatusListener(new MyStateListener());
+    pipeline.run();
   }
 
 }
