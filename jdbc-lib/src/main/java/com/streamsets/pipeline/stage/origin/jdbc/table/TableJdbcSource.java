@@ -36,7 +36,6 @@ import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
-import com.streamsets.pipeline.stage.origin.jdbc.Groups;
 import com.streamsets.pipeline.stage.origin.jdbc.table.util.OffsetQueryUtil;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
@@ -153,7 +152,13 @@ public class TableJdbcSource extends BaseSource {
         try {
           tableOrderProvider.initialize(allTableContexts);
           if (tableOrderProvider.getNumberOfTables() == 0) {
-            issues.add(context.createConfigIssue(Groups.JDBC.name(), TableJdbcConfigBean.TABLE_CONFIG, JdbcErrors.JDBC_66));
+            issues.add(
+                context.createConfigIssue(
+                    Groups.TABLE.name(),
+                    TableJdbcConfigBean.TABLE_CONFIG,
+                    JdbcErrors.JDBC_66
+                )
+            );
           }
         } catch (ExecutionException e) {
           LOG.debug("Failure happened when fetching nextTable", e);

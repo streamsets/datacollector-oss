@@ -35,9 +35,9 @@ public class TableJdbcConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      label = "Table Configuration",
-      displayPosition  = 60,
-      group = "JDBC"
+      label = "Tables",
+      displayPosition  = 10,
+      group = "TABLE"
   )
   @ListBeanModel
   public List<TableConfigBean> tableConfigs;
@@ -92,7 +92,7 @@ public class TableJdbcConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      defaultValue = "-1",
+      defaultValue = "",
       label = "Fetch Size",
       description = "Fetch Size for the JDBC Statement. Should not be 0 and Should be less than or equal to batch size.",
       displayPosition = 200,

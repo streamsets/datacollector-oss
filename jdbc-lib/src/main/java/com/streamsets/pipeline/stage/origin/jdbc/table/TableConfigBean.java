@@ -33,10 +33,10 @@ public final class TableConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
-      label = "Schema Name",
+      label = "Schema",
       description = "Schema Name",
       displayPosition = 20,
-      group = "JDBC"
+      group = "TABLE"
   )
   public String schema;
 
@@ -44,10 +44,10 @@ public final class TableConfigBean {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Table Name Pattern",
-      description = "Table Name Pattern. Use a SQL Like Syntax",
+      description = "Pattern of the table names to read. Use a SQL like syntax.",
       displayPosition = 30,
       defaultValue = "%",
-      group = "JDBC"
+      group = "TABLE"
   )
   public String tablePattern;
 
@@ -55,9 +55,10 @@ public final class TableConfigBean {
       required = false,
       type = ConfigDef.Type.STRING,
       label = "Table Exclusion Pattern",
-      description = "Table Exclusion Pattern. Use a Java Regex Syntax. Leave empty if no exclusion needed.",
+      description = "Pattern of the table names to exclude from being read. Use a Java regex syntax." +
+          " Leave empty if no exclusion needed.",
       displayPosition = 40,
-      group = "JDBC"
+      group = "TABLE"
   )
   public String tableExclusionPattern;
 
@@ -68,7 +69,7 @@ public final class TableConfigBean {
       description = "Overrides the primary key(s) as the offset column(s).",
       displayPosition = 50,
       defaultValue = "false",
-      group = "JDBC"
+      group = "TABLE"
   )
   public boolean overrideDefaultOffsetColumns;
 
@@ -76,8 +77,9 @@ public final class TableConfigBean {
       required = true,
       type = ConfigDef.Type.LIST,
       label = "Offset Columns",
+      description = "Specify offset column(s) to override default offset column(s)",
       displayPosition  = 60,
-      group = "JDBC",
+      group = "TABLE",
       dependsOn = "overrideDefaultOffsetColumns",
       triggeredByValue = "true"
   )
@@ -90,16 +92,18 @@ public final class TableConfigBean {
       label = "Initial Offset",
       description = "Configure Initial Offset for each Offset Column.",
       displayPosition = 70,
-      group = "JDBC"
+      group = "TABLE"
   )
   public Map<String, String> offsetColumnToInitialOffsetValue = new LinkedHashMap<>();
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Extra Offset Column Conditions",
-      description = "Extra Conditions need to be applied for the offset column when a query is issued.",
+      label = "Offset Column Conditions",
+      description = "Additional conditions to apply for the offset column when a query is issued." +
+          " These conditions will be a logical AND with last offset value filter already applied by default.",
       displayPosition = 80,
+      group = "TABLE",
       elDefs = {OffsetColumnEL.class, TimeEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
   )

@@ -28,7 +28,6 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DSource;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
-import com.streamsets.pipeline.stage.origin.jdbc.Groups;
 
 @StageDef(
     version = 1,
