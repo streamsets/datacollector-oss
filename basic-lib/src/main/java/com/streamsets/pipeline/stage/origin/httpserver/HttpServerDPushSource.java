@@ -40,7 +40,7 @@ import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
     icon="httpserver.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
-    onlineHelpRefUrl = "index.html#Origins/HTTPPush.html#task_pgw_b3b_4y"
+    onlineHelpRefUrl = "index.html#Origins/HTTPServer.html#task_pgw_b3b_4y"
 )
 @ConfigGroups(Groups.class)
 @HideConfigs(value = {
