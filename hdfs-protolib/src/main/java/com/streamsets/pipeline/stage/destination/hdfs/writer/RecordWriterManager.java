@@ -438,7 +438,7 @@ public class RecordWriterManager {
   }
 
   private FsHelper getFsHelper(
-      final Stage.Context context,
+      final Target.Context context,
       final String fileNameEL,
       final WholeFileExistsAction wholeFileAlreadyExistsAction,
       final String permissionEL

@@ -20,19 +20,42 @@
 package com.streamsets.pipeline.stage.common;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ToErrorContext;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.List;
 
+import static com.streamsets.pipeline.api.OnRecordError.DISCARD;
+
 public class DefaultErrorRecordHandler implements ErrorRecordHandler {
+  private final ToErrorContext toError;
   private final Stage.Context context;
 
+  /**
+   * Deprecated constructor to keep backward compatibility.
+   *
+   * Given context must also implement ToErrorContext (and thus be one of Processor, Source or Target), otherwise
+   * a ClassCastException will be thrown.
+   */
+  @Deprecated
   public DefaultErrorRecordHandler(Stage.Context context) {
+    this(context, (ToErrorContext) context);
+  }
+
+  /**
+   * Proper constructor that separate configuration from error sink.
+   *
+   * @param context Context of the stage with configuration of what should happen when error record occur.
+   * @param toError Error sink into which records will be send if TO_ERROR is configured by user.
+   */
+  public DefaultErrorRecordHandler(Stage.Context context, ToErrorContext toError) {
     this.context = context;
+    this.toError = toError;
   }
 
   @Override
@@ -46,8 +69,7 @@ public class DefaultErrorRecordHandler implements ErrorRecordHandler {
       case STOP_PIPELINE:
         throw new StageException(errorCode, params);
       default:
-        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
-            context.getOnErrorRecord()));
+        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'", context.getOnErrorRecord()));
     }
   }
 
@@ -57,14 +79,12 @@ public class DefaultErrorRecordHandler implements ErrorRecordHandler {
       case DISCARD:
         break;
       case TO_ERROR:
-        context.toError(error.getRecord(), error);
+        toError.toError(error.getRecord(), error);
         break;
       case STOP_PIPELINE:
         throw error;
       default:
-        throw new IllegalStateException(
-            Utils.format("Unknown OnError value '{}'", context.getOnErrorRecord(), error)
-        );
+        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'", context.getOnErrorRecord()), error);
     }
   }
 
@@ -77,15 +97,13 @@ public class DefaultErrorRecordHandler implements ErrorRecordHandler {
         // Add all the records in batch to error since there is no way to figure out which record in batch
         // caused exception.
         for (Record record : batch) {
-          context.toError(record, error);
+          toError.toError(record, error);
         }
         break;
       case STOP_PIPELINE:
         throw error;
       default:
-        throw new IllegalStateException(
-            Utils.format("Unknown OnError value '{}'", context.getOnErrorRecord(), error)
-        );
+        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'", context.getOnErrorRecord()), error);
     }
   }
 }

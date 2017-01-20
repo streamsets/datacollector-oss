@@ -25,6 +25,7 @@ import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.ToEventContext;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.lang.StringUtils;
 
@@ -115,17 +116,40 @@ public class EventCreator {
   public class EventBuilder {
 
     /**
-     * Context that will be used to actually generate the event record (and optionally also send it).
+     * Context that will be used to actually generate the event record.
      */
     private Stage.Context context;
+
+    /**
+     * Event sink that will be used to send events out.
+     */
+    private ToEventContext toEvent;
 
     /**
      * Map that will be used as root field of the event record.
      */
     private Map<String, Field> rootMap;
 
+    /**
+     * Deprecated constructor to keep backward compatibility.
+     *
+     * Given context must also implement ToEventContext (and thus be one of Processor, Source or Target), otherwise
+     * a ClassCastException will be thrown.
+     */
+    @Deprecated
     private EventBuilder(Stage.Context context) {
+      this(context, (ToEventContext) context);
+    }
+
+    /**
+     * Proper constructor that separate configuration from error sink.
+     *
+     * @param context Context of the stage with configuration of what should happen when error record occur.
+     * @param toEvent Event sink into which records will be send if TO_ERROR is configured by user.
+     */
+    private EventBuilder(Stage.Context context, ToEventContext toEvent) {
       this.context = context;
+      this.toEvent = toEvent;
       this.rootMap = new HashMap<>();
     }
 
@@ -188,7 +212,7 @@ public class EventCreator {
      * This method will validate that all required field are present and that no "unknown" fields have been created.
      */
     public void createAndSend() {
-      context.toEvent(create());
+      toEvent.toEvent(create());
     }
   }
 }

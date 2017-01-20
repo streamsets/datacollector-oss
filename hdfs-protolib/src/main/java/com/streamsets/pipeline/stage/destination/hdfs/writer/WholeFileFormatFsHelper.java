@@ -22,8 +22,8 @@ package com.streamsets.pipeline.stage.destination.hdfs.writer;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
@@ -50,7 +50,7 @@ import java.util.Date;
 final class WholeFileFormatFsHelper implements FsHelper {
   private static final Logger LOG = LoggerFactory.getLogger(WholeFileFormatFsHelper.class);
 
-  private final Stage.Context context;
+  private final Target.Context context;
   private final String fileNameEL;
   private final WholeFileExistsAction wholeFileAlreadyExistsAction;
   private final String permissionEL;
@@ -62,7 +62,7 @@ final class WholeFileFormatFsHelper implements FsHelper {
 
 
   WholeFileFormatFsHelper(
-      Stage.Context context,
+      Target.Context context,
       String fileNameEL,
       WholeFileExistsAction wholeFileAlreadyExistsAction,
       String permissionEL,
