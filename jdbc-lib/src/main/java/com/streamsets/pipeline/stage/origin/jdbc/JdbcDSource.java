@@ -33,7 +33,7 @@ import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 
 @StageDef(
     version = 8,
-    label = "Query JDBC Consumer",
+    label = "JDBC Query Consumer",
     description = "Reads data from a JDBC source using a query.",
     icon = "rdbms.png",
     execution = ExecutionMode.STANDALONE,

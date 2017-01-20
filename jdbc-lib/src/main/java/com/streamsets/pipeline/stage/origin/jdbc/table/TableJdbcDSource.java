@@ -31,7 +31,7 @@ import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 
 @StageDef(
     version = 1,
-    label = "Multi table JDBC Consumer",
+    label = "JDBC Multitable Consumer",
     description = "Reads data from a JDBC source using table names.",
     icon = "rdbms.png",
     execution = ExecutionMode.STANDALONE,
