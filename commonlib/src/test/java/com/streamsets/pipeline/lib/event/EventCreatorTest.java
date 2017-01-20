@@ -23,6 +23,7 @@ import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.Target;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -95,12 +96,12 @@ public class EventCreatorTest {
 
   }
 
-  Stage.Context context;
+  Target.Context context;
   EventCreator creator;
 
   @Before
   public void setUp() {
-    context = mock(Stage.Context.class);
+    context = mock(Target.Context.class);
     when(context.createEventRecord(anyString(), anyInt(), anyString())).thenReturn(new CustomEventRecordImpl());
 
     creator = new EventCreator.Builder("custom-event", 1)

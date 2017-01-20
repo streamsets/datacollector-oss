@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
@@ -44,7 +45,7 @@ public class HBaseUtilTest {
 
   @Test
   public void handleHBaseException() throws Exception {
-    Stage.Context context = mock(Stage.Context.class);
+    Target.Context context = mock(Target.Context.class);
     when(context.getOnErrorRecord()).thenReturn(OnRecordError.DISCARD);
 
     ErrorRecordHandler errorRecordHandler = new DefaultErrorRecordHandler(context);
@@ -69,7 +70,7 @@ public class HBaseUtilTest {
 
   @Test
   public void handleHBaseExceptionWithNullPointer() throws Exception {
-    Stage.Context context = mock(Stage.Context.class);
+    Target.Context context = mock(Target.Context.class);
     when(context.getOnErrorRecord()).thenReturn(OnRecordError.DISCARD);
 
     ErrorRecordHandler errorRecordHandler = new DefaultErrorRecordHandler(context);
