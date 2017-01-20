@@ -359,6 +359,10 @@
           <groupId>org.apache.kafka</groupId>
           <artifactId>kafka_2.10</artifactId>
         </exclusion>
+        <exclusion>
+          <groupId>org.apache.kafka</groupId>
+          <artifactId>kafka-clients</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
