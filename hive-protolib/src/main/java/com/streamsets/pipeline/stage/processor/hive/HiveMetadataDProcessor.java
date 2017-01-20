@@ -32,7 +32,6 @@ import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.stage.lib.hive.HiveConfigBean;
-import com.streamsets.pipeline.stage.lib.hive.Groups;
 
 import java.util.List;
 import java.util.TimeZone;

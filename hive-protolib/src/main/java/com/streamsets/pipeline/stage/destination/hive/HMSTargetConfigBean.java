@@ -34,7 +34,6 @@ import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
-import com.streamsets.pipeline.stage.lib.hive.Groups;
 import com.streamsets.pipeline.stage.lib.hive.HiveConfigBean;
 import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
 import org.apache.hadoop.fs.FileSystem;

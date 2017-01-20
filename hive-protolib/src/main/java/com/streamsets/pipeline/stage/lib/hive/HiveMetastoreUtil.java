@@ -145,7 +145,7 @@ public final class HiveMetastoreUtil {
     File confFile = new File(hiveConfDir.getAbsolutePath(), fileName);
     if (!confFile.exists()) {
       issues.add(context.createConfigIssue(
-          Groups.HIVE.name(),
+          "HIVE",
           JOINER.join(CONF, HIVE_CONFIG_BEAN, CONF_DIR),
           Errors.HIVE_06,
           confFile.getName(),

@@ -156,7 +156,7 @@ public class HiveConfigBean {
       Class.forName(hiveJDBCDriver);
     } catch (ClassNotFoundException e) {
       issues.add(context.createConfigIssue(
-          Groups.HIVE.name(),
+          "HIVE",
           JOINER.join(prefix, "hiveJDBCDriver"),
           Errors.HIVE_15,
           hiveJDBCDriver
@@ -181,7 +181,7 @@ public class HiveConfigBean {
       hConf.addResource(new Path(confFile.getAbsolutePath()));
     } else {
       issues.add(context.createConfigIssue(
-          Groups.HIVE.name(),
+          "HIVE",
           JOINER.join(prefix, "confDir"),
           Errors.HIVE_07,
           confDir
@@ -203,7 +203,7 @@ public class HiveConfigBean {
       LOG.error("Failed to connect to Hive with JDBC URL:" + hiveJDBCUrl, e);
       issues.add(
           context.createConfigIssue(
-              Groups.HIVE.name(),
+              "HIVE",
               JOINER.join(prefix, HIVE_JDBC_URL),
               Errors.HIVE_22,
               hiveJDBCUrl,
@@ -218,7 +218,7 @@ public class HiveConfigBean {
         if (loginUgi.getAuthenticationMethod() != UserGroupInformation.AuthenticationMethod.KERBEROS) {
           issues.add(
               context.createConfigIssue(
-                  Groups.ADVANCED.name(),
+                  "ADVANCED",
                   JOINER.join(prefix, HIVE_JDBC_URL),
                   Errors.HIVE_01,
                   loginUgi.getAuthenticationMethod(),
@@ -235,7 +235,7 @@ public class HiveConfigBean {
       LOG.info("Validation Error: " + ex.toString(), ex);
       issues.add(
           context.createConfigIssue(
-              Groups.ADVANCED.name(),
+              "ADVANCED",
               JOINER.join(prefix, HIVE_JDBC_URL),
               Errors.HIVE_01,
               "Exception in configuring HDFS"
@@ -249,7 +249,7 @@ public class HiveConfigBean {
     } catch(Exception e) {
       LOG.error(Utils.format("Error Connecting to Hive Database with URL {}", hiveJDBCUrl), e);
       issues.add(context.createConfigIssue(
-          Groups.HIVE.name(),
+          "HIVE",
           JOINER.join(prefix, HIVE_JDBC_URL),
           Errors.HIVE_22,
           hiveJDBCUrl,
