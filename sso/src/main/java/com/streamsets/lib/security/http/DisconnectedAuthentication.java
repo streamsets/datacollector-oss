@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
 
@@ -84,7 +85,8 @@ public class DisconnectedAuthentication implements Authentication {
           principal.setOrganizationName("-");
           Set<String> roles = new ImmutableSet.Builder<String>().addAll(entry.getRoles()).add(DISCONNECTED_MODE_ROLE).build();
           principal.getRoles().addAll(roles);
-          principal.getGroups().addAll(entry.getGroups());
+          // Older versions of DPM don't have concept of groups
+          principal.getGroups().addAll(entry.getGroups() == null ? Collections.<String>emptyList() : entry.getGroups());
           principal.setTokenStr(UUID.randomUUID().toString());
           principal.setExpires(-1);
           principal.setRequestIpAddress(ipAddress);
