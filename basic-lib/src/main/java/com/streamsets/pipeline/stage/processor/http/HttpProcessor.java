@@ -19,7 +19,6 @@
  */
 package com.streamsets.pipeline.stage.processor.http;
 
-import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -29,8 +28,11 @@ import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.VaultEL;
+import com.streamsets.pipeline.lib.http.AuthenticationFailureException;
 import com.streamsets.pipeline.lib.http.AuthenticationType;
 import com.streamsets.pipeline.lib.http.Groups;
 import com.streamsets.pipeline.lib.http.HttpMethod;
@@ -50,6 +52,7 @@ import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.client.AsyncInvoker;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -68,6 +71,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
+import static com.streamsets.pipeline.stage.origin.http.Errors.HTTP_21;
+import static com.streamsets.pipeline.stage.origin.http.Errors.HTTP_22;
+import static com.streamsets.pipeline.stage.origin.http.Errors.HTTP_24;
 
 /**
  * Processor that makes HTTP requests and stores the parsed or unparsed result in a field on a per record basis.
@@ -98,6 +105,31 @@ public class HttpProcessor extends SingleLaneProcessor {
 
   private DataParserFactory parserFactory;
   private ErrorRecordHandler errorRecordHandler;
+
+  private class HeadersAndBody {
+    final MultivaluedMap<String, Object> resolvedHeaders;
+    final String requestBody;
+    final String contentType;
+    final HttpMethod method;
+    final WebTarget target;
+
+
+    public HeadersAndBody(
+        MultivaluedMap<String, Object> headers,
+        String requestBody,
+        String contentType,
+        HttpMethod method,
+        WebTarget target
+    ) {
+      this.resolvedHeaders = headers;
+      this.requestBody = requestBody;
+      this.contentType = contentType;
+      this.method = method;
+      this.target = target;
+    }
+  }
+
+  private final Map<Record, HeadersAndBody> resolvedRecords = new HashMap<>();
 
   /**
    * Creates a new HttpProcessor configured using the provided config instance.
@@ -142,7 +174,6 @@ public class HttpProcessor extends SingleLaneProcessor {
     headerEval = getContext().createELEval(HEADER_CONFIG_NAME);
 
     conf.client.init(getContext(), Groups.PROXY.name(), "conf.client.", issues);
-
     // Validation succeeded so configure the client.
     if (issues.isEmpty()) {
       ClientConfig clientConfig = new ClientConfig()
@@ -154,15 +185,13 @@ public class HttpProcessor extends SingleLaneProcessor {
 
       ClientBuilder clientBuilder = ClientBuilder.newBuilder().withConfig(clientConfig);
 
-      configureAuth(clientBuilder);
-
       if (conf.client.useProxy) {
         JerseyClientUtil.configureProxy(conf.client.proxy, clientBuilder);
       }
 
       JerseyClientUtil.configureSslContext(conf.client.sslConfig, clientBuilder);
 
-      client = clientBuilder.build();
+      configureAuthAndBuildClient(clientBuilder, issues);
 
       parserFactory = conf.dataFormatConfig.getParserFactory();
     }
@@ -183,6 +212,7 @@ public class HttpProcessor extends SingleLaneProcessor {
   @Override
   public void process(Batch batch, SingleLaneBatchMaker batchMaker) throws StageException {
     List<Future<Response>> responses = new ArrayList<>();
+    resolvedRecords.clear();
 
     Iterator<Record> records = batch.getRecords();
     while (records.hasNext()) {
@@ -207,11 +237,14 @@ public class HttpProcessor extends SingleLaneProcessor {
           .async();
 
       HttpMethod method = getHttpMethod(record);
+
       if (conf.requestBody != null && !conf.requestBody.isEmpty() && method != HttpMethod.GET) {
         RecordEL.setRecordInContext(bodyVars, record);
         final String requestBody = bodyEval.eval(bodyVars, conf.requestBody, String.class);
+        resolvedRecords.put(record, new HeadersAndBody(resolvedHeaders, requestBody, contentType, method, target));
         responses.add(asyncInvoker.method(method.getLabel(), Entity.entity(requestBody, contentType)));
       } else {
+        resolvedRecords.put(record, new HeadersAndBody(resolvedHeaders, null, null, method, target));
         responses.add(asyncInvoker.method(method.getLabel()));
       }
     }
@@ -220,12 +253,39 @@ public class HttpProcessor extends SingleLaneProcessor {
     int recordNum = 0;
     while (records.hasNext()) {
       try {
-        Record record = processResponse(records.next(), responses.get(recordNum), conf.maxRequestCompletionSecs);
-        batchMaker.addRecord(record);
+        Record record = processResponse(records.next(), responses.get(recordNum), conf.maxRequestCompletionSecs, false);
+        if (record != null) {
+          batchMaker.addRecord(record);
+        }
       } catch (OnRecordErrorException e) {
         errorRecordHandler.onError(e);
       } finally {
         ++recordNum;
+      }
+    }
+    if (!resolvedRecords.isEmpty()) {
+      reprocessIfRequired(batchMaker);
+    }
+  }
+
+  private void reprocessIfRequired(SingleLaneBatchMaker batchMaker) throws StageException {
+    Map<Record, Future<Response>> responses = new HashMap<>(resolvedRecords.size());
+    for(Map.Entry<Record, HeadersAndBody> entry : resolvedRecords.entrySet()) {
+      HeadersAndBody hb = entry.getValue();
+      Future<Response> responseFuture;
+      final AsyncInvoker asyncInvoker = hb.target.request()
+          .headers(hb.resolvedHeaders).async();
+      if (hb.requestBody != null) {
+        responseFuture = asyncInvoker.method(hb.method.getLabel(), Entity.entity(hb.requestBody, hb.contentType));
+      } else {
+        responseFuture = asyncInvoker.method(hb.method.getLabel());
+      }
+      responses.put(entry.getKey(), responseFuture);
+    }
+    for (Map.Entry<Record, Future<Response>> entry : responses.entrySet()) {
+      Record output = processResponse(entry.getKey(), entry.getValue(), conf.maxRequestCompletionSecs, true);
+      if (output != null) {
+        batchMaker.addRecord(output);
       }
     }
   }
@@ -262,8 +322,12 @@ public class HttpProcessor extends SingleLaneProcessor {
    * @return parsed record from the request
    * @throws StageException if the request fails, times out, or cannot be parsed
    */
-  private Record processResponse(Record record, Future<Response> responseFuture, long maxRequestCompletionSecs) throws
-      StageException {
+  private Record processResponse(
+      Record record,
+      Future<Response> responseFuture,
+      long maxRequestCompletionSecs,
+      boolean failOn403
+  ) throws StageException {
 
     Response response;
     try {
@@ -273,7 +337,10 @@ public class HttpProcessor extends SingleLaneProcessor {
         responseBody = response.readEntity(String.class);
       }
       response.close();
-      if (response.getStatus() < 200 || response.getStatus() >= 300) {
+      if (conf.client.useOAuth2 && response.getStatus() == 403 && !failOn403) {
+        HttpStageUtil.getNewOAuth2Token(conf.client.oauth2, client);
+        return null;
+      } else if (response.getStatus() < 200 || response.getStatus() >= 300) {
         throw new OnRecordErrorException(
             record,
             Errors.HTTP_01,
@@ -281,7 +348,7 @@ public class HttpProcessor extends SingleLaneProcessor {
             response.getStatusInfo().getReasonPhrase() + " " + responseBody
         );
       }
-
+      resolvedRecords.remove(record);
       Record parsedResponse = parseResponse(responseBody);
       if (parsedResponse != null) {
         record.set(conf.outputField, parsedResponse.get());
@@ -296,6 +363,7 @@ public class HttpProcessor extends SingleLaneProcessor {
       throw new OnRecordErrorException(record, Errors.HTTP_03, e.toString());
     }
   }
+
 
   /**
    * Parses the HTTP response text from a request into SDC Records
@@ -320,15 +388,35 @@ public class HttpProcessor extends SingleLaneProcessor {
   }
 
   /**
-   * Configures the Jersey client with the appropriate authentication mechanism
+   * Helper to apply authentication properties to Jersey client.
    *
-   * @param clientBuilder Jersey client builder to configure
+   * @param clientBuilder Jersey Client builder to configure
    */
-  private void configureAuth(ClientBuilder clientBuilder) {
+  private void configureAuthAndBuildClient(ClientBuilder clientBuilder, List<ConfigIssue> issues) {
     if (conf.client.authType == AuthenticationType.OAUTH) {
       authToken = JerseyClientUtil.configureOAuth1(conf.client.oauth, clientBuilder);
     } else if (conf.client.authType != AuthenticationType.NONE) {
       JerseyClientUtil.configurePasswordAuth(conf.client.authType, conf.client.basicAuth, clientBuilder);
+    }
+    client = clientBuilder.build();
+    if (conf.client.useOAuth2) {
+      try {
+        conf.client.oauth2.init(client);
+      } catch (AuthenticationFailureException ex) {
+        LOG.error("OAuth2 Authentication failed", ex);
+        issues.add(getContext().createConfigIssue(
+            "CREDENTIALS", "conf.client.oauth2.tokenUrl", HTTP_21));
+      } catch (IOException ex) {
+        LOG.error("OAuth2 Authentication Response does not contain access token", ex);
+        issues.add(getContext().createConfigIssue(
+            "CREDENTIALS", "conf.client.oauth2.tokenUrl", HTTP_22));
+      } catch (NotFoundException ex) {
+        LOG.error(Utils.format(
+            HTTP_24.getMessage(), conf.client.oauth2.tokenUrl, conf.client.oauth2.transferEncoding), ex);
+        issues.add(getContext().createConfigIssue("CREDENTIALS",
+            "conf.client.oauth2.tokenUrl",
+            HTTP_24, conf.client.oauth2.tokenUrl, conf.client.oauth2.transferEncoding));
+      }
     }
   }
 

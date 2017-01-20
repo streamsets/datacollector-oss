@@ -45,6 +45,10 @@ public enum Errors implements ErrorCode {
   HTTP_18("Failing stage as per configuration for read timeout"),
   HTTP_19("Failing stage because number of request retries exceeded configured maximum of {}"),
   HTTP_20("Content-Type header was present but was a {}, not a String"),
+  HTTP_21("OAuth2 authentication failed. Please make sure the credentials are valid."),
+  HTTP_22("OAuth2 authentication response does not contain access token"),
+  HTTP_23("Token returned by authorization service does not have the authority to access the service. Please verify the credentials provided."),
+  HTTP_24("Token URL was not found. Please verify that the URL: '{}' is correct, and the transfer encoding: '{}' is accepted"),
   ;
 
   private final String msg;

@@ -62,6 +62,11 @@ public class HttpProcessorUpgrader implements StageUpgrader {
         }
       case 4:
         upgradeV4ToV5(configs);
+        if (toVersion == 5) {
+          break;
+        }
+      case 5:
+        upgradeV5ToV6(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -97,4 +102,10 @@ public class HttpProcessorUpgrader implements StageUpgrader {
   private void upgradeV4ToV5(List<Config> configs) {
     DataFormatUpgradeHelper.upgradeAvroParserWithSchemaRegistrySupport(configs);
   }
+
+
+  private static void upgradeV5ToV6(List<Config> configs) {
+    configs.add(new Config(joiner.join(CONF, CLIENT,"useOAuth2"), false));
+  }
+
 }

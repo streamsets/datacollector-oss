@@ -20,11 +20,24 @@
 
 package com.streamsets.pipeline.stage.util.http;
 
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.http.AuthenticationFailureException;
+import com.streamsets.pipeline.lib.http.oauth2.OAuth2ConfigBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MultivaluedMap;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import static com.streamsets.pipeline.stage.origin.http.Errors.HTTP_21;
+import static com.streamsets.pipeline.stage.origin.http.Errors.HTTP_22;
+
 public abstract class HttpStageUtil {
+
+  private static final Logger LOG = LoggerFactory.getLogger(HttpStageUtil.class);
 
   public static final String CONTENT_TYPE_HEADER = "Content-Type";
   public static final String DEFAULT_CONTENT_TYPE = "application/json";
@@ -49,4 +62,19 @@ public abstract class HttpStageUtil {
       return defaultType;
     }
   }
+
+  public static boolean getNewOAuth2Token(OAuth2ConfigBean oauth2, Client client) throws StageException {
+    LOG.info("OAuth2 Authentication token has likely expired. Fetching new token.");
+    try {
+      oauth2.onAccessDenied(client);
+      return true;
+    } catch (AuthenticationFailureException ex) {
+      LOG.error("OAuth2 Authentication failed", ex);
+      throw new StageException(HTTP_21);
+    } catch (IOException ex) {
+      LOG.error("OAuth2 Authentication Response does not contain access token", ex);
+      throw new StageException(HTTP_22);
+    }
+  }
+
 }

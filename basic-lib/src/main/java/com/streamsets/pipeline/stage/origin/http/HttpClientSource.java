@@ -25,7 +25,6 @@ import com.google.common.base.Optional;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
-import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -34,6 +33,9 @@ import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.el.VaultEL;
+import com.streamsets.pipeline.lib.http.AuthenticationFailureException;
 import com.streamsets.pipeline.lib.http.AuthenticationType;
 import com.streamsets.pipeline.lib.http.Groups;
 import com.streamsets.pipeline.lib.http.HttpMethod;
@@ -54,6 +56,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -75,6 +78,9 @@ import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 import static com.streamsets.pipeline.lib.parser.json.Errors.JSON_PARSER_00;
+import static com.streamsets.pipeline.stage.origin.http.Errors.HTTP_21;
+import static com.streamsets.pipeline.stage.origin.http.Errors.HTTP_22;
+import static com.streamsets.pipeline.stage.origin.http.Errors.HTTP_24;
 
 /**
  * HTTP Client Origin implementation supporting streaming, polled, and paginated HTTP resources.
@@ -93,6 +99,7 @@ public class HttpClientSource extends BaseSource {
   private static final String BASIC_CONFIG_PREFIX = "conf.basic.";
   private static final String VAULT_EL_PREFIX = VaultEL.PREFIX + ":";
   private static final HashFunction HF = Hashing.sha256();
+  public static final String OAUTH2_GROUP = "OAUTH2";
 
   private final HttpClientConfigBean conf;
   private Hasher hasher;
@@ -210,16 +217,15 @@ public class HttpClientSource extends BaseSource {
 
     // Validation succeeded so configure the client.
     if (issues.isEmpty()) {
-      configureClient();
+      configureClient(issues);
     }
-
     return issues;
   }
 
   /**
    * Helper method to apply Jersey client configuration properties.
    */
-  private void configureClient() {
+  private void configureClient(List<ConfigIssue> issues) {
     ClientConfig clientConfig = new ClientConfig()
         .property(ClientProperties.CONNECT_TIMEOUT, conf.client.connectTimeoutMillis)
         .property(ClientProperties.READ_TIMEOUT, conf.client.readTimeoutMillis)
@@ -229,15 +235,13 @@ public class HttpClientSource extends BaseSource {
 
     clientBuilder = ClientBuilder.newBuilder().withConfig(clientConfig);
 
-    configureAuth(clientBuilder);
-
     if (conf.client.useProxy) {
       JerseyClientUtil.configureProxy(conf.client.proxy, clientBuilder);
     }
 
     JerseyClientUtil.configureSslContext(conf.client.sslConfig, clientBuilder);
 
-    client = clientBuilder.build();
+    configureAuthAndBuildClient(clientBuilder, issues);
 
     parserFactory = conf.dataFormatConfig.getParserFactory();
   }
@@ -247,17 +251,47 @@ public class HttpClientSource extends BaseSource {
    *
    * @param clientBuilder Jersey Client builder to configure
    */
-  private void configureAuth(ClientBuilder clientBuilder) {
+  private void configureAuthAndBuildClient(ClientBuilder clientBuilder, List<ConfigIssue> issues) {
     if (conf.client.authType == AuthenticationType.OAUTH) {
       authToken = JerseyClientUtil.configureOAuth1(conf.client.oauth, clientBuilder);
     } else if (conf.client.authType != AuthenticationType.NONE) {
       JerseyClientUtil.configurePasswordAuth(conf.client.authType, conf.client.basicAuth, clientBuilder);
     }
+    client = clientBuilder.build();
+    if (conf.client.useOAuth2) {
+      try {
+        conf.client.oauth2.init(client);
+      } catch (AuthenticationFailureException ex) {
+        LOG.error("OAuth2 Authentication failed", ex);
+        issues.add(getContext().createConfigIssue(OAUTH2_GROUP, "conf.client.oauth2.tokenUrl", HTTP_21));
+      } catch (IOException ex) {
+        LOG.error("OAuth2 Authentication Response does not contain access token", ex);
+        issues.add(getContext().createConfigIssue(OAUTH2_GROUP, "conf.client.oauth2.tokenUrl", HTTP_22));
+      } catch (NotFoundException ex) {
+        LOG.error(Utils.format(HTTP_24.getMessage(),
+            conf.client.oauth2.tokenUrl, conf.client.oauth2.transferEncoding), ex);
+        issues.add(getContext().createConfigIssue(OAUTH2_GROUP,
+            "conf.client.oauth2.tokenUrl", HTTP_24,
+            conf.client.oauth2.tokenUrl, conf.client.oauth2.transferEncoding));
+      }
+    }
   }
 
-  private void reconnectClient() {
+  private void reconnectClient() throws StageException {
     closeHttpResources();
     client = clientBuilder.build();
+    if (conf.client.useOAuth2) {
+      try {
+        conf.client.oauth2.init(client);
+        // NotFoundException won't be thrown because one authentication happened during init()
+      } catch (AuthenticationFailureException ex) {
+        LOG.error("OAuth2 Authentication failed", ex);
+        throw new StageException(HTTP_21);
+      } catch (IOException ex) {
+        LOG.error("OAuth2 Authentication Response does not contain access token", ex);
+        throw new StageException(HTTP_22);
+      }
+    }
   }
 
   /** {@inheritDoc} */
@@ -412,6 +446,7 @@ public class HttpClientSource extends BaseSource {
         .headers(resolvedHeaders);
 
     boolean keepRequesting = !getContext().isStopped();
+    boolean gotNewToken = false;
     while (keepRequesting) {
       try {
         if (conf.requestBody != null && !conf.requestBody.isEmpty() && conf.httpMethod != HttpMethod.GET) {
@@ -427,7 +462,12 @@ public class HttpClientSource extends BaseSource {
         lastRequestTimedOut = false;
         final int status = response.getStatus();
         final boolean statusOk = status >= 200 && status < 300;
-        if (!statusOk && this.statusToActionConfigs.containsKey(status)) {
+        if (conf.client.useOAuth2 && status == 403) { // Token may have expired
+          if (gotNewToken) {
+            throw new StageException(HTTP_21);
+          }
+          gotNewToken = HttpStageUtil.getNewOAuth2Token(conf.client.oauth2, client);
+        } else if (!statusOk && this.statusToActionConfigs.containsKey(status)) {
           final HttpResponseActionConfigBean actionConf = this.statusToActionConfigs.get(status);
           final boolean statusChanged = lastStatus != status || lastRequestTimedOut;
 

@@ -28,10 +28,11 @@ public enum Groups implements Label {
   HTTP("HTTP"),
   PAGINATION("Pagination"),
   CREDENTIALS("Credentials"),
+  OAUTH2("OAuth 2"),
   PROXY("Proxy"),
   SSL("SSL/TLS"),
-  DATA_FORMAT("Data Format"),
   TIMEOUT("Timeout Handling"),
+  DATA_FORMAT("Data Format"),
   ;
 
   private final String label;
