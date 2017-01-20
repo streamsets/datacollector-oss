@@ -158,6 +158,11 @@ then
   SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${SDC_HEAPDUMP_PATH}"
 fi
 
+if [ "${SDC_GC_LOGGING}" = "true" ]
+then
+  SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -XX:+PrintGCDetails -XX:+PrintGCDateStamps -Xloggc:${SDC_LOG}/gc.log"
+fi
+
 SDC_POLICY_FILE=""
 if [ "${SDC_SECURITY_MANAGER_ENABLED}" = "true" ]
 then

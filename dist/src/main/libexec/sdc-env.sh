@@ -73,3 +73,6 @@ export SDC_HEAPDUMP_ON_OOM=true
 
 # Optional path for the heap dump file, default is $SDC_LOG/heapdump
 #export SDC_HEAPDUMP_PATH=
+
+# Enable GC logging automatically
+export SDC_GC_LOGGING=true
