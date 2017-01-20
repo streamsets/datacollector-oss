@@ -327,7 +327,7 @@ public class TestJdbcSource {
   }
 
   @Test
-  public void testBadConnectionString() throws Exception {
+  public void testDriverNotFound() throws Exception {
     JdbcSource origin = new JdbcSource(
         true,
         query,
@@ -340,6 +340,34 @@ public class TestJdbcSource {
         false,
         "",
         createConfigBean("some bad connection string", username, password)
+    );
+
+    SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    assertEquals(1, issues.size());
+  }
+
+  @Test
+  public void testBadConnectionString() throws Exception {
+    // Want to get the H2 driver, but give it a bad connection string, testing fix for SDC-5025
+    HikariPoolConfigBean configBean = createConfigBean("some bad connection string", username, password);
+    configBean.driverClassName = "org.h2.Driver";
+
+    JdbcSource origin = new JdbcSource(
+        true,
+        query,
+        initialOffset,
+        "P_ID",
+        "",
+        1000,
+        JdbcRecordType.LIST_MAP,
+        new CommonSourceConfigBean(queryInterval, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        false,
+        "",
+        configBean
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)

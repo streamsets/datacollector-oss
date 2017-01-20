@@ -603,7 +603,7 @@ public class JdbcUtil {
       ));
     } catch (RuntimeException e) {
       LOG.error(JdbcErrors.JDBC_06.getMessage(), e);
-      throw new StageException(JdbcErrors.JDBC_06, e.getCause().toString());
+      throw new StageException(JdbcErrors.JDBC_06, e.toString(), e);
     }
 
     return dataSource;
