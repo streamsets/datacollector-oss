@@ -67,3 +67,9 @@ export SDC_JAVA8_OPTS=${SDC_JAVA8_OPTS:-"-XX:+UseConcMarkSweepGC -XX:+UseParNewG
 # Enables/disables the JVM security manager
 #
 export SDC_SECURITY_MANAGER_ENABLED=true
+
+# Produce heap dump when SDC will die on OutOfMemoryError
+export SDC_HEAPDUMP_ON_OOM=true
+
+# Optional path for the heap dump file, default is $SDC_LOG/heapdump
+#export SDC_HEAPDUMP_PATH=
