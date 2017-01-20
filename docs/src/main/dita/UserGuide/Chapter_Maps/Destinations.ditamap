@@ -223,6 +223,15 @@
    <topicref href="../Destinations/MapRDB-HBaseProperties.dita"/>
    <topicref href="../Destinations/MapRDB-Configuring.dita"/>
   </topicref>
+  <topicref href="../Destinations/MapRDBJSON.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Destinations/MapRDBJSON-RowKey.dita">
+    <topicref href="../Destinations/MapRDBJSON-RowKeyDataType.dita"/>
+   </topicref>
+   <topicref href="../Destinations/MapRDBJSON-Configuring.dita"/>
+  </topicref>
   <topicref href="../Destinations/MapRFS.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

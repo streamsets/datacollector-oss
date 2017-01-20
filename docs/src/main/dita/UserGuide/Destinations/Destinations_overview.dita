@@ -53,8 +53,10 @@
         <li><xref href="Kudu.dita#concept_chy_xxg_4v">Kudu</xref> - Writes data to Kudu.</li>
         <li><xref href="LocalFS.dita#concept_zvc_bv5_1r">Local FS</xref> - Writes data to a local
           file system. </li>
-        <li><xref href="MapRDB.dita#concept_vxg_w2z_yv">MapR DB</xref> - Writes data to MapR
-          DB.</li>
+        <li><xref href="MapRDB.dita#concept_vxg_w2z_yv">MapR DB</xref> - Writes data as text, binary
+          data, or JSON strings to MapR DB binary tables.</li>
+        <li><xref href="MapRDBJSON.dita#concept_i4h_2kj_dy"/> - Writes data as JSON documents to
+          MapR DB JSON tables.</li>
         <li><xref href="MapRFS.dita#concept_spv_xlc_fv">MapR FS</xref> - Writes data to MapR
           FS.</li>
         <li><xref href="MapRStreamsProd.dita#concept_cfj_qbn_2v">MapR Streams Producer</xref> -

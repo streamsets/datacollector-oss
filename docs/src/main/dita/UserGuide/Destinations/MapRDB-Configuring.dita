@@ -18,7 +18,8 @@
     <taskbody>
         <context>
             <p><indexterm>MapR DB destination<indexterm>configuring</indexterm></indexterm>Configure
-                a MapR DB destination to write data to MapR DB.</p>
+                a MapR DB destination to write data as text, binary data, or JSON strings to MapR DB
+                binary tables.</p>
         </context>
         <steps>
             <step
@@ -42,8 +43,8 @@
                             <tbody>
                                 <row>
                                     <entry>Table Name</entry>
-                                    <entry>Name of the MapR DB table to use. Enter a table name or a
-                                        namespace and table name as follows:
+                                    <entry>Name of the MapR DB binary table to use. Enter a table
+                                        name or a namespace and table name as follows:
                                         &lt;namespace>.&lt;tablename>. <p>If you do not enter a
                                             table name, MapR uses the default namespace.
                                         </p></entry>

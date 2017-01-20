@@ -15,11 +15,13 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_vxg_w2z_yv">
  <title>MapR DB</title>
- <shortdesc>The MapR DB destination writes data to MapR DB. The destination can write data to MapR
-        DB as text, binary data, or JSON strings. You can define the data format for each column
-        written to MapR DB.</shortdesc>
+ <shortdesc>The MapR DB destination writes data to MapR DB binary tables. The destination can write
+        data to MapR DB as text, binary data, or JSON strings. You can define the data format for
+        each column written to MapR DB.</shortdesc>
  <conbody>
-  <p><indexterm>MapR DB
+        <note>To write JSON documents to MapR DB JSON tables, use the MapR DB JSON destination. For
+            more information, see <xref href="MapRDBJSON.dita#concept_i4h_2kj_dy"/>.</note>
+        <p><indexterm>MapR DB
                     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>MapR
                     DB</indexterm></indexterm>When you configure the MapR DB destination, you
             specify the MapR DB configuration properties, including the table name. You specify the

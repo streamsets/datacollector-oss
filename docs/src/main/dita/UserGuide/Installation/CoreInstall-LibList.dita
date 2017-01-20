@@ -545,6 +545,7 @@
                                         <li>Hive Streaming destination using the MapR library</li>
                                         <li>MapR Streams Producer destination</li>
                                         <li>MapR DB destination</li>
+                                        <li>MapR DB JSON destination</li>
                                         <li>MapR FS destination</li>
                                     </ul>
                                 </p></entry>
@@ -565,6 +566,7 @@
                                         <li>Hive Streaming destination using the MapR library</li>
                                         <li>MapR Streams Producer destination</li>
                                         <li>MapR DB destination</li>
+                                        <li>MapR DB JSON destination</li>
                                         <li>MapR FS destination</li>
                                     </ul>
                                 </p></entry>
