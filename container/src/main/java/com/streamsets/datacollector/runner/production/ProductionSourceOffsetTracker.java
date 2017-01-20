@@ -98,7 +98,6 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
   }
 
   private void saveOffset(String pipelineName, String rev, Map<String, String> offset) {
-    LOG.debug("Saving offset {} for pipeline {}", offset, pipelineName);
     OffsetFileUtil.saveOffsets(runtimeInfo, pipelineName, rev, offset);
   }
 
