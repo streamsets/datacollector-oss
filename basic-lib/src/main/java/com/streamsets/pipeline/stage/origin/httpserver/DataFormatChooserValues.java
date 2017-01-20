@@ -26,7 +26,6 @@ public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
 
   public DataFormatChooserValues() {
     super(
-        DataFormat.AVRO,
         DataFormat.BINARY,
         DataFormat.DATAGRAM,
         DataFormat.DELIMITED,
