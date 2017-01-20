@@ -28,13 +28,18 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.lib.http.AuthenticationType;
 import com.streamsets.pipeline.lib.http.HttpMethod;
+import com.streamsets.pipeline.lib.http.oauth2.OAuth2ConfigBean;
+import com.streamsets.pipeline.lib.http.oauth2.OAuth2GrantTypes;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.util.http.HttpStageTestUtil;
 import com.streamsets.pipeline.stage.util.http.HttpStageUtil;
 import com.streamsets.testing.SingleForkNoReuseTest;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -42,12 +47,16 @@ import org.glassfish.jersey.test.TestProperties;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -56,11 +65,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import static com.streamsets.pipeline.lib.http.oauth2.OAuth2GrantTypes.CLIENT_CREDENTIALS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @Category(SingleForkNoReuseTest.class)
 public class HttpProcessorIT extends JerseyTest {
+  private static String token;
+  private static int tokenGetCount = 0;
+  private static final String CLIENT_ID = "streamsets";
+  private static final String CLIENT_SECRET = "awesomeness";
+  private static final String USERNAME = "streamsets";
+  private static final String PASSWORD = "live long and prosper";
 
   private static String getBody(String path) {
     try {
@@ -74,7 +90,10 @@ public class HttpProcessorIT extends JerseyTest {
   @Produces(MediaType.APPLICATION_JSON)
   public static class TestGet {
     @GET
-    public Response get() {
+    public Response get(@Context HttpHeaders headers) {
+      if (token != null && !headers.getRequestHeader(HttpHeaders.AUTHORIZATION).get(0).equals("Bearer " + token)) {
+        return Response.status(Response.Status.FORBIDDEN).build();
+      }
       return Response.ok(getBody("http/get_response.json"))
           .header("x-test-header", "StreamSets")
           .header("x-list-header", ImmutableList.of("a", "b"))
@@ -91,6 +110,128 @@ public class HttpProcessorIT extends JerseyTest {
 
     @JsonProperty("hello")
     public String hello;
+  }
+
+  @Path("/tokenresetstream")
+  @Produces("application/json")
+  public static class StreamTokenResetResource {
+
+    @GET
+    public Response getStream(@Context HttpHeaders headers) {
+      if (token != null) {
+        String auth = headers.getRequestHeader(HttpHeaders.AUTHORIZATION).get(0);
+        if (auth == null || !auth.equals("Bearer " + token)) {
+          return Response.status(Response.Status.FORBIDDEN).build();
+        }
+      }
+      if (tokenGetCount == 1) {
+        // Force the source to get a new token
+        token = RandomStringUtils.randomAlphanumeric(16);
+      }
+      return Response.ok(getBody("http/get_response.json"))
+          .header("x-test-header", "StreamSets")
+          .header("x-list-header", ImmutableList.of("a", "b"))
+          .build();
+    }
+  }
+
+  @Path("/credentialsToken")
+  @Singleton
+  public static class Auth2Resource {
+
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    @POST
+    public Response post(
+        @FormParam(OAuth2ConfigBean.GRANT_TYPE_KEY) String type,
+        @FormParam(OAuth2ConfigBean.CLIENT_ID_KEY) String clientId,
+        @FormParam(OAuth2ConfigBean.CLIENT_SECRET_KEY) String clientSecret,
+        @FormParam(OAuth2ConfigBean.RESOURCE_OWNER_KEY) String username,
+        @FormParam(OAuth2ConfigBean.PASSWORD_KEY) String password
+    ) {
+      if ((OAuth2ConfigBean.CLIENT_CREDENTIALS_GRANT.equals(type) && CLIENT_ID.equals(clientId) && CLIENT_SECRET.equals(clientSecret)) ||
+          (OAuth2ConfigBean.RESOURCE_OWNER_GRANT.equals(type) && USERNAME.equals(username) && PASSWORD.equals(password))) {
+        token = RandomStringUtils.randomAlphanumeric(16);
+        String tokenResponse = "{\n" +
+            "  \"token_type\": \"Bearer\",\n" +
+            "  \"expires_in\": \"3600\",\n" +
+            "  \"ext_expires_in\": \"0\",\n" +
+            "  \"expires_on\": \"1484788319\",\n" +
+            "  \"not_before\": \"1484784419\",\n" +
+            "  \"access_token\": \"" + token + "\"\n" +
+            "}";
+        tokenGetCount++;
+        return Response.ok().entity(tokenResponse).build();
+      }
+      return Response.status(Response.Status.FORBIDDEN).build();
+    }
+  }
+
+  @Path("/basicToken")
+  @Singleton
+  public static class Auth2BasicResource {
+
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    @POST
+    public Response post(
+        @Context HttpHeaders h,
+        @FormParam(OAuth2ConfigBean.GRANT_TYPE_KEY) String type
+    ) {
+      String[] creds = new String(
+          Base64.decodeBase64(h.getHeaderString(HttpHeaders.AUTHORIZATION).substring("Basic ".length())), org.apache.commons.codec.Charsets.UTF_8)
+          .split(":");
+      if (creds.length == 2 && creds[0].equals(CLIENT_ID) && creds[1].equals(CLIENT_SECRET)) {
+        token = RandomStringUtils.randomAlphanumeric(16);
+        String tokenResponse = "{\n" +
+            "  \"token_type\": \"Bearer\",\n" +
+            "  \"expires_in\": \"3600\",\n" +
+            "  \"ext_expires_in\": \"0\",\n" +
+            "  \"expires_on\": \"1484788319\",\n" +
+            "  \"not_before\": \"1484784419\",\n" +
+            "  \"access_token\": \"" + token + "\"\n" +
+            "}";
+        tokenGetCount++;
+        return Response.ok().entity(tokenResponse).build();
+      }
+      return Response.status(Response.Status.FORBIDDEN).build();
+    }
+  }
+
+  @Path("/resourceToken")
+  @Singleton
+  public static class Auth2ResourceOwnerWithIdResource {
+
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    @POST
+    public Response post(
+        @FormParam(OAuth2ConfigBean.GRANT_TYPE_KEY) String type,
+        @FormParam(OAuth2ConfigBean.CLIENT_ID_KEY) String clientId,
+        @FormParam(OAuth2ConfigBean.CLIENT_SECRET_KEY) String clientSecret,
+        @FormParam(OAuth2ConfigBean.RESOURCE_OWNER_KEY) String username,
+        @FormParam(OAuth2ConfigBean.PASSWORD_KEY) String password
+    ) {
+      token = RandomStringUtils.randomAlphanumeric(16);
+      String tokenResponse = "{\n" +
+          "  \"token_type\": \"Bearer\",\n" +
+          "  \"expires_in\": \"3600\",\n" +
+          "  \"ext_expires_in\": \"0\",\n" +
+          "  \"expires_on\": \"1484788319\",\n" +
+          "  \"not_before\": \"1484784419\",\n" +
+          "  \"access_token\": \"" + token + "\"\n" +
+          "}";
+      if ((OAuth2ConfigBean.RESOURCE_OWNER_GRANT.equals(type) &&
+          USERNAME.equals(username) &&
+          PASSWORD.equals(password) &&
+          CLIENT_ID.equals(clientId) &&
+          CLIENT_SECRET.equals(clientSecret)
+      )) {
+        tokenGetCount++;
+        return Response.ok().entity(tokenResponse).build();
+      }
+      return Response.status(Response.Status.FORBIDDEN).build();
+    }
   }
 
   @Path("/test/put")
@@ -122,7 +263,11 @@ public class HttpProcessorIT extends JerseyTest {
             TestGet.class,
             TestPut.class,
             HttpStageTestUtil.TestPostCustomType.class,
-            TestXmlGet.class
+            TestXmlGet.class,
+            StreamTokenResetResource.class,
+            Auth2Resource.class,
+            Auth2ResourceOwnerWithIdResource.class,
+            Auth2BasicResource.class
         )
     );
   }
@@ -392,4 +537,327 @@ public class HttpProcessorIT extends JerseyTest {
       runner.runDestroy();
     }
   }
+
+  @Test
+  public void testHttpGetJsonOAuth2() throws Exception {
+    try {
+      HttpProcessorConfig conf = new HttpProcessorConfig();
+      conf.httpMethod = HttpMethod.GET;
+      conf.outputField = "/output";
+      conf.dataFormat = DataFormat.JSON;
+      conf.resourceUrl = getBaseUri() + "test/get";
+      conf.client.authType = AuthenticationType.NONE;
+      conf.client.useOAuth2 = true;
+      conf.client.oauth2.clientSecret = CLIENT_SECRET;
+      conf.client.oauth2.clientId = CLIENT_ID;
+      conf.client.oauth2.tokenUrl = getBaseUri() + "credentialsToken";
+      conf.client.oauth2.credentialsGrantType = OAuth2GrantTypes.CLIENT_CREDENTIALS;
+
+      Record record = RecordCreator.create();
+      record.set("/", Field.create(new HashMap<String, Field>()));
+
+      List<Record> records = ImmutableList.of(record);
+      Processor processor = new HttpProcessor(conf);
+      ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
+          .addOutputLane("lane")
+          .build();
+      runner.runInit();
+      try {
+        StageRunner.Output output = runner.runProcess(records);
+        List<Record> outputRecords = output.getRecords().get("lane");
+        assertTrue(runner.getErrorRecords().isEmpty());
+        assertEquals(1, outputRecords.size());
+        assertTrue(outputRecords.get(0).has("/output"));
+        Map<String, Field> outputMap = outputRecords.get(0).get("/output").getValueAsMap();
+        assertTrue(!outputMap.isEmpty());
+        assertTrue(outputMap.containsKey("hello"));
+        assertEquals("world!", outputMap.get("hello").getValueAsString());
+
+      } finally {
+        runner.runDestroy();
+      }
+      assertEquals(1, tokenGetCount);
+    } finally {
+      token = null;
+      tokenGetCount = 0;
+    }
+  }
+
+  @Test
+  public void testHttpGetJsonOAuth2BasicAuth() throws Exception {
+    try {
+      HttpProcessorConfig conf = new HttpProcessorConfig();
+      conf.httpMethod = HttpMethod.GET;
+      conf.outputField = "/output";
+      conf.dataFormat = DataFormat.JSON;
+      conf.resourceUrl = getBaseUri() + "test/get";
+      conf.client.authType = AuthenticationType.BASIC;
+      conf.client.useOAuth2 = true;
+      conf.client.oauth2.credentialsGrantType = CLIENT_CREDENTIALS;
+      conf.client.basicAuth.password = CLIENT_SECRET;
+      conf.client.basicAuth.username = CLIENT_ID;
+      conf.client.oauth2.tokenUrl = getBaseUri() + "basicToken";
+      conf.client.oauth2.credentialsGrantType = OAuth2GrantTypes.CLIENT_CREDENTIALS;
+
+      Record record = RecordCreator.create();
+      record.set("/", Field.create(new HashMap<String, Field>()));
+
+      List<Record> records = ImmutableList.of(record);
+      Processor processor = new HttpProcessor(conf);
+      ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
+          .addOutputLane("lane")
+          .build();
+      runner.runInit();
+      try {
+        StageRunner.Output output = runner.runProcess(records);
+        List<Record> outputRecords = output.getRecords().get("lane");
+        assertTrue(runner.getErrorRecords().isEmpty());
+        assertEquals(1, outputRecords.size());
+        assertTrue(outputRecords.get(0).has("/output"));
+        Map<String, Field> outputMap = outputRecords.get(0).get("/output").getValueAsMap();
+        assertTrue(!outputMap.isEmpty());
+        assertTrue(outputMap.containsKey("hello"));
+        assertEquals("world!", outputMap.get("hello").getValueAsString());
+
+      } finally {
+        runner.runDestroy();
+      }
+      assertEquals(1, tokenGetCount);
+    } finally {
+      token = null;
+      tokenGetCount = 0;
+    }
+  }
+
+  @Test
+  public void testHttpGetJsonOAuth2MultipleTimes() throws Exception {
+    try {
+      HttpProcessorConfig conf = new HttpProcessorConfig();
+      conf.httpMethod = HttpMethod.GET;
+      conf.outputField = "/output";
+      conf.dataFormat = DataFormat.JSON;
+      conf.resourceUrl = getBaseUri() + "tokenresetstream";
+      conf.client.authType = AuthenticationType.NONE;
+      conf.client.useOAuth2 = true;
+      conf.client.oauth2.clientSecret = CLIENT_SECRET;
+      conf.client.oauth2.clientId = CLIENT_ID;
+      conf.client.oauth2.tokenUrl = getBaseUri() + "credentialsToken";
+      conf.client.oauth2.credentialsGrantType = OAuth2GrantTypes.CLIENT_CREDENTIALS;
+      Processor processor = new HttpProcessor(conf);
+      ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
+          .addOutputLane("lane")
+          .build();
+      runner.runInit();
+      try {
+        for (int i = 0; i < 3; i++) {
+          Record record = RecordCreator.create();
+          record.set("/", Field.create(new HashMap<String, Field>()));
+
+          List<Record> records = ImmutableList.of(record);
+          StageRunner.Output output = runner.runProcess(records);
+          List<Record> outputRecords = output.getRecords().get("lane");
+          assertTrue(runner.getErrorRecords().isEmpty());
+          assertEquals(1, outputRecords.size());
+          assertTrue(outputRecords.get(0).has("/output"));
+          Map<String, Field> outputMap = outputRecords.get(0).get("/output").getValueAsMap();
+          assertTrue(!outputMap.isEmpty());
+          assertTrue(outputMap.containsKey("hello"));
+          assertEquals("world!", outputMap.get("hello").getValueAsString());
+        }
+        assertEquals(2, tokenGetCount);
+      } finally {
+        runner.runDestroy();
+      }
+    } finally {
+      token = null;
+      tokenGetCount = 0;
+    }
+  }
+
+  @Test
+  public void testHttpGetJsonOAuth2ResourceOwner() throws Exception {
+    try {
+      HttpProcessorConfig conf = new HttpProcessorConfig();
+      conf.httpMethod = HttpMethod.GET;
+      conf.outputField = "/output";
+      conf.dataFormat = DataFormat.JSON;
+      conf.resourceUrl = getBaseUri() + "test/get";
+      conf.client.authType = AuthenticationType.NONE;
+      conf.client.useOAuth2 = true;
+      conf.client.oauth2.username = USERNAME;
+      conf.client.oauth2.password = PASSWORD;
+      conf.client.oauth2.tokenUrl = getBaseUri() + "credentialsToken";
+      conf.client.oauth2.credentialsGrantType = OAuth2GrantTypes.RESOURCE_OWNER;
+
+      Record record = RecordCreator.create();
+      record.set("/", Field.create(new HashMap<String, Field>()));
+
+      List<Record> records = ImmutableList.of(record);
+      Processor processor = new HttpProcessor(conf);
+      ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
+          .addOutputLane("lane")
+          .build();
+      runner.runInit();
+      try {
+        StageRunner.Output output = runner.runProcess(records);
+        List<Record> outputRecords = output.getRecords().get("lane");
+        assertTrue(runner.getErrorRecords().isEmpty());
+        assertEquals(1, outputRecords.size());
+        assertTrue(outputRecords.get(0).has("/output"));
+        Map<String, Field> outputMap = outputRecords.get(0).get("/output").getValueAsMap();
+        assertTrue(!outputMap.isEmpty());
+        assertTrue(outputMap.containsKey("hello"));
+        assertEquals("world!", outputMap.get("hello").getValueAsString());
+
+      } finally {
+        runner.runDestroy();
+      }
+      assertEquals(1, tokenGetCount);
+    } finally {
+      token = null;
+      tokenGetCount = 0;
+    }
+  }
+
+  @Test
+  public void testHttpGetJsonResourceOwnerOAuth2MultipleTimes() throws Exception {
+    try {
+      HttpProcessorConfig conf = new HttpProcessorConfig();
+      conf.httpMethod = HttpMethod.GET;
+      conf.outputField = "/output";
+      conf.dataFormat = DataFormat.JSON;
+      conf.resourceUrl = getBaseUri() + "tokenresetstream";
+      conf.client.authType = AuthenticationType.NONE;
+      conf.client.useOAuth2 = true;
+      conf.client.oauth2.username = USERNAME;
+      conf.client.oauth2.password = PASSWORD;
+      conf.client.oauth2.tokenUrl = getBaseUri() + "credentialsToken";
+      conf.client.oauth2.credentialsGrantType = OAuth2GrantTypes.RESOURCE_OWNER;
+
+      Processor processor = new HttpProcessor(conf);
+      ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
+          .addOutputLane("lane")
+          .build();
+      runner.runInit();
+      try {
+        for (int i = 0; i < 3; i++) {
+          Record record = RecordCreator.create();
+          record.set("/", Field.create(new HashMap<String, Field>()));
+
+          List<Record> records = ImmutableList.of(record);
+          StageRunner.Output output = runner.runProcess(records);
+          List<Record> outputRecords = output.getRecords().get("lane");
+          assertTrue(runner.getErrorRecords().isEmpty());
+          assertEquals(1, outputRecords.size());
+          assertTrue(outputRecords.get(0).has("/output"));
+          Map<String, Field> outputMap = outputRecords.get(0).get("/output").getValueAsMap();
+          assertTrue(!outputMap.isEmpty());
+          assertTrue(outputMap.containsKey("hello"));
+          assertEquals("world!", outputMap.get("hello").getValueAsString());
+        }
+        assertEquals(2, tokenGetCount);
+      } finally {
+        runner.runDestroy();
+      }
+    } finally {
+      token = null;
+      tokenGetCount = 0;
+    }
+  }
+
+  @Test
+  public void testHttpGetJsonOAuth2ResourceOwnerClientId() throws Exception {
+    try {
+      HttpProcessorConfig conf = new HttpProcessorConfig();
+      conf.httpMethod = HttpMethod.GET;
+      conf.outputField = "/output";
+      conf.dataFormat = DataFormat.JSON;
+      conf.resourceUrl = getBaseUri() + "test/get";
+      conf.client.authType = AuthenticationType.NONE;
+      conf.client.useOAuth2 = true;
+      conf.client.oauth2.username = USERNAME;
+      conf.client.oauth2.password = PASSWORD;
+      conf.client.oauth2.resourceOwnerClientSecret = CLIENT_SECRET;
+      conf.client.oauth2.resourceOwnerClientId = CLIENT_ID;
+      conf.client.oauth2.tokenUrl = getBaseUri() + "resourceToken";
+      conf.client.oauth2.credentialsGrantType = OAuth2GrantTypes.RESOURCE_OWNER;
+
+      Record record = RecordCreator.create();
+      record.set("/", Field.create(new HashMap<String, Field>()));
+
+      List<Record> records = ImmutableList.of(record);
+      Processor processor = new HttpProcessor(conf);
+      ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
+          .addOutputLane("lane")
+          .build();
+      runner.runInit();
+      try {
+        StageRunner.Output output = runner.runProcess(records);
+        List<Record> outputRecords = output.getRecords().get("lane");
+        assertTrue(runner.getErrorRecords().isEmpty());
+        assertEquals(1, outputRecords.size());
+        assertTrue(outputRecords.get(0).has("/output"));
+        Map<String, Field> outputMap = outputRecords.get(0).get("/output").getValueAsMap();
+        assertTrue(!outputMap.isEmpty());
+        assertTrue(outputMap.containsKey("hello"));
+        assertEquals("world!", outputMap.get("hello").getValueAsString());
+
+      } finally {
+        runner.runDestroy();
+      }
+      assertEquals(1, tokenGetCount);
+    } finally {
+      token = null;
+      tokenGetCount = 0;
+    }
+  }
+
+  @Test
+  public void testHttpGetJsonResourceOwnerClientIdOAuth2MultipleTimes() throws Exception {
+    try {
+      HttpProcessorConfig conf = new HttpProcessorConfig();
+      conf.httpMethod = HttpMethod.GET;
+      conf.outputField = "/output";
+      conf.dataFormat = DataFormat.JSON;
+      conf.resourceUrl = getBaseUri() + "tokenresetstream";
+      conf.client.authType = AuthenticationType.NONE;
+      conf.client.useOAuth2 = true;
+      conf.client.oauth2.username = USERNAME;
+      conf.client.oauth2.password = PASSWORD;
+      conf.client.oauth2.resourceOwnerClientSecret = CLIENT_SECRET;
+      conf.client.oauth2.resourceOwnerClientId = CLIENT_ID;
+      conf.client.oauth2.tokenUrl = getBaseUri() + "resourceToken";
+      conf.client.oauth2.credentialsGrantType = OAuth2GrantTypes.RESOURCE_OWNER;
+
+      Processor processor = new HttpProcessor(conf);
+      ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
+          .addOutputLane("lane")
+          .build();
+      runner.runInit();
+      try {
+        for (int i = 0; i < 3; i++) {
+          Record record = RecordCreator.create();
+          record.set("/", Field.create(new HashMap<String, Field>()));
+
+          List<Record> records = ImmutableList.of(record);
+          StageRunner.Output output = runner.runProcess(records);
+          List<Record> outputRecords = output.getRecords().get("lane");
+          assertTrue(runner.getErrorRecords().isEmpty());
+          assertEquals(1, outputRecords.size());
+          assertTrue(outputRecords.get(0).has("/output"));
+          Map<String, Field> outputMap = outputRecords.get(0).get("/output").getValueAsMap();
+          assertTrue(!outputMap.isEmpty());
+          assertTrue(outputMap.containsKey("hello"));
+          assertEquals("world!", outputMap.get("hello").getValueAsString());
+        }
+        assertEquals(2, tokenGetCount);
+      } finally {
+        runner.runDestroy();
+      }
+    } finally {
+      token = null;
+      tokenGetCount = 0;
+    }
+  }
+
 }

@@ -385,7 +385,6 @@ public class TestConfigDefinitionExtractor {
     Assert.assertEquals(4, g.getDependsOnMap().size());
     Assert.assertEquals(ImmutableSet.of("A"), new HashSet<>(g.getDependsOnMap().get("a")));
     Assert.assertEquals(ImmutableSet.of("B", "C"), new HashSet<>(g.getDependsOnMap().get("b")));
-    Assert.assertEquals(ImmutableSet.of("E", "F", "G"), new HashSet<>(g.getDependsOnMap().get("e")));
     Assert.assertEquals(ImmutableSet.of("F", "FF"), new HashSet<>(g.getDependsOnMap().get("f")));
     Assert.assertTrue(b.getDependsOnMap().isEmpty());
     Assert.assertTrue(e.getDependsOnMap().isEmpty());

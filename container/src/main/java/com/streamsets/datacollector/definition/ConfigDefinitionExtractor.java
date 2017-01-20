@@ -25,6 +25,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.ModelDefinition;
 import com.streamsets.datacollector.config.ModelType;
@@ -292,7 +293,11 @@ public abstract class ConfigDefinitionExtractor {
             Map<String, Set<Object>> depsOfChild = dependencyMap.get(child);
             for (Map.Entry<String, Set<Object>> depOfChild : depsOfChild.entrySet()) {
               if (currentDependencies.containsKey(depOfChild.getKey())) {
-                currentDependencies.get(depOfChild.getKey()).addAll(depOfChild.getValue());
+                // Add only the common trigger values,
+                // since it has to be one of those for both these to be triggered.
+                Set<Object> currentTriggers = currentDependencies.get(depOfChild.getKey());
+                Set<Object> childTriggers = depOfChild.getValue();
+                currentDependencies.put(depOfChild.getKey(), Sets.intersection(currentTriggers, childTriggers));
               } else {
                 currentDependencies.put(depOfChild.getKey(), new HashSet<>(depOfChild.getValue()));
               }

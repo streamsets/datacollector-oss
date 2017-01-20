@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.lib.http.oauth2.OAuth2ConfigBean;
 import com.streamsets.pipeline.stage.origin.http.AuthenticationTypeChooserValues;
 import com.streamsets.pipeline.stage.origin.http.Errors;
 import org.apache.commons.lang.StringUtils;
@@ -95,8 +96,23 @@ public class JerseyClientConfigBean {
   @ValueChooserModel(AuthenticationTypeChooserValues.class)
   public AuthenticationType authType = AuthenticationType.NONE;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Use OAuth 2 to get access tokens",
+      defaultValue = "false",
+      displayPosition = 155,
+      group = "HTTP",
+      dependsOn = "authType",
+      triggeredByValue = {"NONE", "BASIC", "DIGEST", "UNIVERSAL"}
+  )
+  public boolean useOAuth2 = false;
+
   @ConfigDefBean(groups = "CREDENTIALS")
   public OAuthConfigBean oauth = new OAuthConfigBean();
+
+  @ConfigDefBean(groups = "OAUTH2")
+  public OAuth2ConfigBean oauth2 = new OAuth2ConfigBean();
 
   @ConfigDefBean(groups = "CREDENTIALS")
   public PasswordAuthConfigBean basicAuth = new PasswordAuthConfigBean();
@@ -126,5 +142,15 @@ public class JerseyClientConfigBean {
         issues.add(context.createConfigIssue(groupName, prefix + "proxy.uri", Errors.HTTP_13, e.toString()));
       }
     }
+    // these could be non-null because:
+    // 1. User selects NONE as auth type, enters clientId and secret
+    // 2. User changes auth to basic, the config system hides these params, but the bean still has the values set
+    // 3. Set it to null, so these are not sent if the Auth type is not null,
+    //    since combo of basic/digest etc + clientId/secret is not valid
+    if (authType != AuthenticationType.NONE) {
+      oauth2.clientId = null;
+      oauth2.clientSecret = null;
+    }
   }
+
 }

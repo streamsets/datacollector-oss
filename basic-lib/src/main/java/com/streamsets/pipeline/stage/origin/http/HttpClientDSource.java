@@ -31,7 +31,7 @@ import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.configurablestage.DSource;
 
 @StageDef(
-    version = 10,
+    version = 11,
     label = "HTTP Client",
     description = "Uses an HTTP client to read records from an URL.",
     icon = "httpclient.png",

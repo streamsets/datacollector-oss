@@ -100,6 +100,11 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
         // fall through
       case 9:
         upgradeV9ToV10(configs);
+        if (toVersion == 10) {
+          break;
+        }
+      case 10:
+        upgradeV10ToV11(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -252,6 +257,10 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
     configs.addAll(configsToAdd);
 
     // Pagination config bean should be added automatically as its initialized.
+  }
+
+  private static void upgradeV10ToV11(List<Config> configs) {
+    configs.add(new Config(joiner.join(CONF, CLIENT,"useOAuth2"), false));
   }
 
 }

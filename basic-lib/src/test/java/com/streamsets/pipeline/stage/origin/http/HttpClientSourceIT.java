@@ -30,12 +30,16 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.http.AuthenticationType;
 import com.streamsets.pipeline.lib.http.HttpMethod;
+import com.streamsets.pipeline.lib.http.oauth2.OAuth2ConfigBean;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.util.http.HttpStageTestUtil;
 import com.streamsets.pipeline.stage.util.http.HttpStageUtil;
 import com.streamsets.testing.SingleForkNoReuseTest;
+import org.apache.commons.codec.Charsets;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
@@ -51,6 +55,8 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import javax.inject.Singleton;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -59,6 +65,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -66,6 +73,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import static com.streamsets.pipeline.lib.http.oauth2.OAuth2GrantTypes.CLIENT_CREDENTIALS;
+import static com.streamsets.pipeline.lib.http.oauth2.OAuth2GrantTypes.RESOURCE_OWNER;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -89,6 +98,13 @@ public class HttpClientSourceIT extends JerseyTest {
   private static final long SLOW_STREAM_UNIT_TIME = BASELINE_BACKOFF_MS;
   private static final int MAX_NUM_REQUEST_RETRIES = 100;
 
+  private static final String CLIENT_ID = "streamsets";
+  private static final String CLIENT_SECRET = "awesomeness";
+  private static final String USERNAME = "streamsets";
+  private static final String PASSWORD = "live long and prosper";
+  private static String token;
+  private static int tokenGetCount = 0;
+
   private static boolean generalStreamResponseSent = false;
 
   private static Response entityOnlyOnFirstRequest(Object entity) {
@@ -104,12 +120,38 @@ public class HttpClientSourceIT extends JerseyTest {
     }
   }
 
+  @Path("/tokenresetstream")
+  @Produces("application/json")
+  public static class StreamTokenResetResource {
+
+    @GET
+    public Response getStream(@Context HttpHeaders headers) {
+      if (token != null) {
+        String auth = headers.getRequestHeader(HttpHeaders.AUTHORIZATION).get(0);
+        if (auth == null || !auth.equals("Bearer " + token)) {
+          return Response.status(Response.Status.FORBIDDEN).build();
+        }
+      }
+      if (tokenGetCount == 1) {
+        // Force the source to get a new token
+        token = RandomStringUtils.randomAlphanumeric(16);
+      }
+      return entityOnlyOnFirstRequest(NAMES_JSON);
+    }
+  }
+
   @Path("/stream")
   @Produces("application/json")
   public static class StreamResource {
 
     @GET
-    public Response getStream() {
+    public Response getStream(@Context HttpHeaders headers) {
+      if (token != null) {
+        String auth = headers.getRequestHeader(HttpHeaders.AUTHORIZATION).get(0);
+        if (auth == null || !auth.equals("Bearer "  + token))  {
+          return Response.status(Response.Status.FORBIDDEN).build();
+        }
+      }
       return entityOnlyOnFirstRequest(NAMES_JSON);
     }
 
@@ -328,6 +370,106 @@ public class HttpClientSourceIT extends JerseyTest {
     }
   }
 
+  @Path("/credentialsToken")
+  @Singleton
+  public static class Auth2Resource {
+
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    @POST
+    public Response post(
+        @FormParam(OAuth2ConfigBean.GRANT_TYPE_KEY) String type,
+        @FormParam(OAuth2ConfigBean.CLIENT_ID_KEY) String clientId,
+        @FormParam(OAuth2ConfigBean.CLIENT_SECRET_KEY) String clientSecret,
+        @FormParam(OAuth2ConfigBean.RESOURCE_OWNER_KEY) String username,
+        @FormParam(OAuth2ConfigBean.PASSWORD_KEY) String password
+    ) {
+      if ((OAuth2ConfigBean.CLIENT_CREDENTIALS_GRANT.equals(type) && CLIENT_ID.equals(clientId) && CLIENT_SECRET.equals(clientSecret)) ||
+          (OAuth2ConfigBean.RESOURCE_OWNER_GRANT.equals(type) && USERNAME.equals(username) && PASSWORD.equals(password))) {
+        token = RandomStringUtils.randomAlphanumeric(16);
+        String tokenResponse = "{\n" +
+            "  \"token_type\": \"Bearer\",\n" +
+            "  \"expires_in\": \"3600\",\n" +
+            "  \"ext_expires_in\": \"0\",\n" +
+            "  \"expires_on\": \"1484788319\",\n" +
+            "  \"not_before\": \"1484784419\",\n" +
+            "  \"access_token\": \"" + token + "\"\n" +
+            "}";
+        tokenGetCount++;
+        return Response.ok().entity(tokenResponse).build();
+      }
+      return Response.status(Response.Status.FORBIDDEN).build();
+    }
+  }
+
+
+  @Path("/basicToken")
+  @Singleton
+  public static class Auth2BasicResource {
+
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    @POST
+    public Response post(
+        @Context HttpHeaders h,
+        @FormParam(OAuth2ConfigBean.GRANT_TYPE_KEY) String type
+    ) {
+      String[] creds = new String(
+          Base64.decodeBase64(h.getHeaderString(HttpHeaders.AUTHORIZATION).substring("Basic ".length())), Charsets.UTF_8)
+          .split(":");
+      if (creds.length == 2 && creds[0].equals(CLIENT_ID) && creds[1].equals(CLIENT_SECRET)) {
+        token = RandomStringUtils.randomAlphanumeric(16);
+        String tokenResponse = "{\n" +
+            "  \"token_type\": \"Bearer\",\n" +
+            "  \"expires_in\": \"3600\",\n" +
+            "  \"ext_expires_in\": \"0\",\n" +
+            "  \"expires_on\": \"1484788319\",\n" +
+            "  \"not_before\": \"1484784419\",\n" +
+            "  \"access_token\": \"" + token + "\"\n" +
+            "}";
+        tokenGetCount++;
+        return Response.ok().entity(tokenResponse).build();
+      }
+      return Response.status(Response.Status.FORBIDDEN).build();
+    }
+  }
+
+  @Path("/resourceToken")
+  @Singleton
+  public static class Auth2ResourceOwnerWithIdResource {
+
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    @POST
+    public Response post(
+        @FormParam(OAuth2ConfigBean.GRANT_TYPE_KEY) String type,
+        @FormParam(OAuth2ConfigBean.CLIENT_ID_KEY) String clientId,
+        @FormParam(OAuth2ConfigBean.CLIENT_SECRET_KEY) String clientSecret,
+        @FormParam(OAuth2ConfigBean.RESOURCE_OWNER_KEY) String username,
+        @FormParam(OAuth2ConfigBean.PASSWORD_KEY) String password
+    ) {
+      token = RandomStringUtils.randomAlphanumeric(16);
+      String tokenResponse = "{\n" +
+          "  \"token_type\": \"Bearer\",\n" +
+          "  \"expires_in\": \"3600\",\n" +
+          "  \"ext_expires_in\": \"0\",\n" +
+          "  \"expires_on\": \"1484788319\",\n" +
+          "  \"not_before\": \"1484784419\",\n" +
+          "  \"access_token\": \"" + token + "\"\n" +
+          "}";
+      if ((OAuth2ConfigBean.RESOURCE_OWNER_GRANT.equals(type) &&
+          USERNAME.equals(username) &&
+          PASSWORD.equals(password) &&
+          CLIENT_ID.equals(clientId) &&
+          CLIENT_SECRET.equals(clientSecret)
+      )) {
+        tokenGetCount++;
+        return Response.ok().entity(tokenResponse).build();
+      }
+      return Response.status(Response.Status.FORBIDDEN).build();
+    }
+  }
+
   @Path("/unauthorized")
   @Singleton
   public static class AlwaysUnauthorized {
@@ -354,7 +496,11 @@ public class HttpClientSourceIT extends JerseyTest {
             AuthResource.class,
             HeaderRequired.class,
             AlwaysUnauthorized.class,
-            HttpStageTestUtil.TestPostCustomType.class
+            HttpStageTestUtil.TestPostCustomType.class,
+            StreamTokenResetResource.class,
+            Auth2Resource.class,
+            Auth2ResourceOwnerWithIdResource.class,
+            Auth2BasicResource.class
         )
     );
   }
@@ -379,7 +525,11 @@ public class HttpClientSourceIT extends JerseyTest {
                     AuthResource.class,
                     HeaderRequired.class,
                     AlwaysUnauthorized.class,
-                    HttpStageTestUtil.TestPostCustomType.class
+                    HttpStageTestUtil.TestPostCustomType.class,
+                    StreamTokenResetResource.class,
+                    Auth2Resource.class,
+                    Auth2ResourceOwnerWithIdResource.class,
+                    Auth2BasicResource.class
                 )
             )
         )
@@ -607,7 +757,9 @@ public class HttpClientSourceIT extends JerseyTest {
     conf.client.authType = AuthenticationType.NONE;
     conf.httpMode = HttpClientMode.STREAMING;
     conf.resourceUrl = getBaseUri() + endpoint;
-    conf.client.readTimeoutMillis = 1000;
+    // Needs to be higher else grizzly with throw timeout exception, but waitTimeExpired will still return true,
+    // since that checks maxWaitTime parameter.
+    conf.client.readTimeoutMillis = 1200;
     conf.basic.maxBatchSize = 100;
     conf.basic.maxWaitTime = timeout;
     conf.pollingInterval = 1000;
@@ -999,4 +1151,236 @@ public class HttpClientSourceIT extends JerseyTest {
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
     assertEquals(0, issues.size());
   }
+
+  @Test
+  public void testOAuth2() throws Exception {
+    tokenGetCount = 0;
+    try {
+      DataFormat dataFormat = DataFormat.JSON;
+      HttpClientConfigBean conf = new HttpClientConfigBean();
+      conf.client.authType = AuthenticationType.NONE;
+      conf.client.useOAuth2 = true;
+      conf.client.oauth2.credentialsGrantType = CLIENT_CREDENTIALS;
+      conf.client.oauth2.clientId = CLIENT_ID;
+      conf.client.oauth2.clientSecret = CLIENT_SECRET;
+      conf.client.oauth2.tokenUrl = getBaseUri() + "credentialsToken";
+      conf.httpMode = HttpClientMode.STREAMING;
+      conf.resourceUrl = getBaseUri() + "stream";
+      conf.client.readTimeoutMillis = 1000;
+      conf.basic.maxBatchSize = 100;
+      conf.basic.maxWaitTime = 1000;
+      conf.pollingInterval = 1000;
+      conf.httpMethod = HttpMethod.GET;
+      conf.dataFormat = dataFormat;
+      conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
+
+      runBatchAndAssertNames(dataFormat, conf);
+      assertEquals(1, tokenGetCount);
+    } finally {
+      token = null;
+    }
+  }
+
+  @Test
+  public void testOAuth2ResourceOwner() throws Exception {
+    tokenGetCount = 0;
+    try {
+      DataFormat dataFormat = DataFormat.JSON;
+      HttpClientConfigBean conf = new HttpClientConfigBean();
+      conf.client.authType = AuthenticationType.NONE;
+      conf.client.useOAuth2 = true;
+      conf.client.oauth2.credentialsGrantType = RESOURCE_OWNER;
+      conf.client.oauth2.username = USERNAME;
+      conf.client.oauth2.password = PASSWORD;
+      conf.client.oauth2.tokenUrl = getBaseUri() + "credentialsToken";
+      conf.httpMode = HttpClientMode.STREAMING;
+      conf.resourceUrl = getBaseUri() + "stream";
+      conf.client.readTimeoutMillis = 1000;
+      conf.basic.maxBatchSize = 100;
+      conf.basic.maxWaitTime = 1000;
+      conf.pollingInterval = 1000;
+      conf.httpMethod = HttpMethod.GET;
+      conf.dataFormat = dataFormat;
+      conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
+
+      runBatchAndAssertNames(dataFormat, conf);
+      assertEquals(1, tokenGetCount);
+    } finally {
+      token = null;
+    }
+  }
+
+  @Test
+  public void testOAuth2MultipleBatches() throws Exception {
+    tokenGetCount = 0;
+    try {
+      DataFormat dataFormat = DataFormat.JSON;
+      HttpClientConfigBean conf = new HttpClientConfigBean();
+      conf.client.authType = AuthenticationType.NONE;
+      conf.client.useOAuth2 = true;
+      conf.client.oauth2.credentialsGrantType = CLIENT_CREDENTIALS;
+      conf.client.oauth2.clientId = CLIENT_ID;
+      conf.client.oauth2.clientSecret = CLIENT_SECRET;
+      conf.client.oauth2.tokenUrl = getBaseUri() + "credentialsToken";
+      conf.httpMode = HttpClientMode.STREAMING;
+      conf.resourceUrl = getBaseUri() + "tokenresetstream";
+      conf.client.readTimeoutMillis = 1000;
+      conf.basic.maxBatchSize = 100;
+      conf.basic.maxWaitTime = 1000;
+      conf.pollingInterval = 1000;
+      conf.httpMethod = HttpMethod.GET;
+      conf.dataFormat = dataFormat;
+      conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
+      HttpClientSource origin = new HttpClientSource(conf);
+
+      SourceRunner runner = new SourceRunner.Builder(HttpClientDSource.class, origin)
+          .addOutputLane("lane")
+          .build();
+
+      runner.runInit();
+      for (int i = 0; i < 3; i++) {
+        runner.runProduce(null, 1000);
+      }
+      assertEquals(2, tokenGetCount);
+    } finally {
+      token = null;
+    }
+  }
+
+  @Test
+  public void testOAuth2MultipleBatchesResourceOwner() throws Exception {
+    tokenGetCount = 0;
+    try {
+      DataFormat dataFormat = DataFormat.JSON;
+      HttpClientConfigBean conf = new HttpClientConfigBean();
+      conf.client.authType = AuthenticationType.NONE;
+      conf.client.useOAuth2 = true;
+      conf.client.oauth2.credentialsGrantType = RESOURCE_OWNER;
+      conf.client.oauth2.username = USERNAME;
+      conf.client.oauth2.password = PASSWORD;
+      conf.client.oauth2.tokenUrl = getBaseUri() + "credentialsToken";
+      conf.httpMode = HttpClientMode.STREAMING;
+      conf.resourceUrl = getBaseUri() + "tokenresetstream";
+      conf.client.readTimeoutMillis = 1000;
+      conf.basic.maxBatchSize = 100;
+      conf.basic.maxWaitTime = 1000;
+      conf.pollingInterval = 1000;
+      conf.httpMethod = HttpMethod.GET;
+      conf.dataFormat = dataFormat;
+      conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
+      HttpClientSource origin = new HttpClientSource(conf);
+
+      SourceRunner runner = new SourceRunner.Builder(HttpClientDSource.class, origin)
+          .addOutputLane("lane")
+          .build();
+
+      runner.runInit();
+      for (int i = 0; i < 3; i++) {
+        runner.runProduce(null, 1000);
+      }
+      assertEquals(2, tokenGetCount);
+    } finally {
+      token = null;
+    }
+  }
+
+  @Test
+  public void testOAuth2ResourceOwnerWithClientID() throws Exception {
+    tokenGetCount = 0;
+    try {
+      DataFormat dataFormat = DataFormat.JSON;
+      HttpClientConfigBean conf = new HttpClientConfigBean();
+      conf.client.authType = AuthenticationType.NONE;
+      conf.client.useOAuth2 = true;
+      conf.client.oauth2.credentialsGrantType = RESOURCE_OWNER;
+      conf.client.oauth2.username = USERNAME;
+      conf.client.oauth2.password = PASSWORD;
+      conf.client.oauth2.resourceOwnerClientId = CLIENT_ID;
+      conf.client.oauth2.resourceOwnerClientSecret = CLIENT_SECRET;
+      conf.client.oauth2.tokenUrl = getBaseUri() + "resourceToken";
+      conf.httpMode = HttpClientMode.STREAMING;
+      conf.resourceUrl = getBaseUri() + "stream";
+      conf.client.readTimeoutMillis = 1000;
+      conf.basic.maxBatchSize = 100;
+      conf.basic.maxWaitTime = 1000;
+      conf.pollingInterval = 1000;
+      conf.httpMethod = HttpMethod.GET;
+      conf.dataFormat = dataFormat;
+      conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
+
+      runBatchAndAssertNames(dataFormat, conf);
+      assertEquals(1, tokenGetCount);
+    } finally {
+      token = null;
+    }
+  }
+
+  @Test
+  public void testOAuth2MultipleBatchesResourceOwnerClientId() throws Exception {
+    tokenGetCount = 0;
+    try {
+      DataFormat dataFormat = DataFormat.JSON;
+      HttpClientConfigBean conf = new HttpClientConfigBean();
+      conf.client.authType = AuthenticationType.NONE;
+      conf.client.useOAuth2 = true;
+      conf.client.oauth2.credentialsGrantType = RESOURCE_OWNER;
+      conf.client.oauth2.username = USERNAME;
+      conf.client.oauth2.password = PASSWORD;
+      conf.client.oauth2.resourceOwnerClientId = CLIENT_ID;
+      conf.client.oauth2.resourceOwnerClientSecret = CLIENT_SECRET;
+      conf.client.oauth2.tokenUrl = getBaseUri() + "resourceToken";
+      conf.httpMode = HttpClientMode.STREAMING;
+      conf.resourceUrl = getBaseUri() + "tokenresetstream";
+      conf.client.readTimeoutMillis = 1000;
+      conf.basic.maxBatchSize = 100;
+      conf.basic.maxWaitTime = 1000;
+      conf.pollingInterval = 1000;
+      conf.httpMethod = HttpMethod.GET;
+      conf.dataFormat = dataFormat;
+      conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
+      HttpClientSource origin = new HttpClientSource(conf);
+
+      SourceRunner runner = new SourceRunner.Builder(HttpClientDSource.class, origin)
+          .addOutputLane("lane")
+          .build();
+
+      runner.runInit();
+      for (int i = 0; i < 3; i++) {
+        runner.runProduce(null, 1000);
+      }
+      assertEquals(2, tokenGetCount);
+    } finally {
+      token = null;
+    }
+  }
+
+  @Test
+  public void testOAuth2WithBasicAuth() throws Exception {
+    tokenGetCount = 0;
+    try {
+      DataFormat dataFormat = DataFormat.JSON;
+      HttpClientConfigBean conf = new HttpClientConfigBean();
+      conf.client.authType = AuthenticationType.BASIC;
+      conf.client.useOAuth2 = true;
+      conf.client.oauth2.credentialsGrantType = CLIENT_CREDENTIALS;
+      conf.client.basicAuth.password = CLIENT_SECRET;
+      conf.client.basicAuth.username = CLIENT_ID;
+      conf.client.oauth2.tokenUrl = getBaseUri() + "basicToken";
+      conf.httpMode = HttpClientMode.STREAMING;
+      conf.resourceUrl = getBaseUri() + "stream";
+      conf.client.readTimeoutMillis = 1000;
+      conf.basic.maxBatchSize = 100;
+      conf.basic.maxWaitTime = 1000;
+      conf.pollingInterval = 1000;
+      conf.httpMethod = HttpMethod.GET;
+      conf.dataFormat = dataFormat;
+      conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
+
+      runBatchAndAssertNames(dataFormat, conf);
+      assertEquals(1, tokenGetCount);
+    } finally {
+      token = null;
+    }
+  }
+
 }
