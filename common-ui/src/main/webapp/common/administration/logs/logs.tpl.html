@@ -77,8 +77,8 @@
 
           <li role="presentation" ng-repeat="pipeline in pipelines">
             <a role="menuitem" tabindex="-1" href="#"
-               ng-click="pipelineFilterChanged(pipeline.name);">
-              <span>{{pipeline.name}}</span>
+               ng-click="pipelineFilterChanged(pipeline.title + '/' + pipeline.name);">
+              <span>{{pipeline.title}}/{{pipeline.name}}</span>
             </a>
           </li>
 

@@ -29,4 +29,8 @@ public class RestAPIUtils {
   static void injectPipelineInMDC(String pipeline) {
     MDC.put(LogConstants.ENTITY, pipeline);
   }
+
+  static void injectPipelineInMDC(String title, String name) {
+    MDC.put(LogConstants.ENTITY, title + "/" + name);
+  }
 }

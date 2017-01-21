@@ -29,7 +29,9 @@ import com.streamsets.datacollector.restapi.bean.PreviewInfoJson;
 import com.streamsets.datacollector.restapi.bean.PreviewOutputJson;
 import com.streamsets.datacollector.restapi.bean.StageOutputJson;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
+import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
+import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
@@ -74,14 +76,16 @@ public class PreviewResource {
 
   //preview.maxBatchSize
   private final Manager manager;
+  private final PipelineStoreTask store;
   private final Configuration configuration;
   private final String user;
 
   @Inject
-  public PreviewResource(Manager manager, Configuration configuration, Principal principal) {
+  public PreviewResource(Manager manager, Configuration configuration, Principal principal, PipelineStoreTask store) {
     this.manager = manager;
     this.configuration = configuration;
     this.user = principal.getName();
+    this.store = store;
   }
 
   @Path("/pipeline/{pipelineName}/preview")
@@ -106,7 +110,8 @@ public class PreviewResource {
     if (stageOutputsToOverrideJson == null) {
       stageOutputsToOverrideJson = Collections.emptyList();
     }
-    RestAPIUtils.injectPipelineInMDC(pipelineName);
+    PipelineInfo pipelineInfo = store.getInfo(pipelineName);
+    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
     int maxBatchSize = configuration.get(MAX_BATCH_SIZE_KEY, MAX_BATCH_SIZE_DEFAULT);
     batchSize = Math.min(maxBatchSize, batchSize);
     int maxBatches = configuration.get(MAX_BATCHES_KEY, MAX_BATCHES_DEFAULT);
@@ -143,7 +148,8 @@ public class PreviewResource {
     if(previewer == null) {
       return Response.status(Response.Status.NOT_FOUND).entity("Cannot find previewer with id " + previewerId).build();
     }
-    RestAPIUtils.injectPipelineInMDC(previewer.getName());
+    PipelineInfo pipelineInfo = store.getInfo(previewer.getName());
+    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
     PreviewInfoJson previewInfoJson = new PreviewInfoJson(previewer.getId(), previewer.getStatus());
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewInfoJson).build();
   }
@@ -163,7 +169,8 @@ public class PreviewResource {
     if(previewer == null) {
       return Response.status(Response.Status.NOT_FOUND).entity("Cannot find previewer with id " + previewerId).build();
     }
-    RestAPIUtils.injectPipelineInMDC(previewer.getName());
+    PipelineInfo pipelineInfo = store.getInfo(previewer.getName());
+    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
     PreviewOutput previewOutput = previewer.getOutput();
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapPreviewOutput(previewOutput)).build();
   }
@@ -183,7 +190,8 @@ public class PreviewResource {
     if(previewer == null) {
       return Response.status(Response.Status.NOT_FOUND).entity("Cannot find previewer with id " + previewerId).build();
     }
-    RestAPIUtils.injectPipelineInMDC(previewer.getName());
+    PipelineInfo pipelineInfo = store.getInfo(previewer.getName());
+    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
     previewer.stop();
     PreviewInfoJson previewInfoJson = new PreviewInfoJson(previewer.getId(), previewer.getStatus());
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewInfoJson).build();
@@ -202,7 +210,8 @@ public class PreviewResource {
       @QueryParam("rev") String rev,
       @Context UriInfo uriInfo) throws PipelineStoreException,
       PipelineRuntimeException, IOException {
-    RestAPIUtils.injectPipelineInMDC(pipelineName);
+    PipelineInfo pipelineInfo = store.getInfo(pipelineName);
+    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
 
     MultivaluedMap<String, String> previewParams = uriInfo.getQueryParameters();
     Previewer previewer = manager.createPreviewer(this.user, pipelineName, rev);
@@ -228,7 +237,8 @@ public class PreviewResource {
       @QueryParam("rev") String rev,
       @QueryParam("timeout") @DefaultValue("2000") long timeout)
       throws PipelineException, StageException {
-    RestAPIUtils.injectPipelineInMDC(pipelineName);
+    PipelineInfo pipelineInfo = store.getInfo(pipelineName);
+    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
     try {
       Previewer previewer = manager.createPreviewer(this.user, pipelineName, rev);
       previewer.validateConfigs(timeout);

@@ -35,6 +35,7 @@ import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
 import com.streamsets.datacollector.runner.preview.StageConfigurationBuilder;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.pipeline.api.Batch;
@@ -47,7 +48,6 @@ import com.streamsets.pipeline.api.Executor;
 import com.streamsets.pipeline.api.OffsetCommitTrigger;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Processor;
-import com.streamsets.pipeline.api.ProtoSource;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.RawSourcePreviewer;
@@ -1354,6 +1354,21 @@ public class MockStages {
         null,
         getErrorStageConfig(),
         getStatsAggregatorStageConfig()
+    );
+
+    pipelineConfiguration.setPipelineInfo(
+        new PipelineInfo(
+            "label",
+            "label",
+            "xyz description",
+            new java.util.Date(0),
+            new java.util.Date(0),
+            "creator",
+            "lastModifier",
+            "1", UUID.randomUUID(),
+            true,
+            null
+        )
     );
 
     Map<String, Object> metadata = new HashMap<>();

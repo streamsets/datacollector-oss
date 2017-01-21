@@ -497,7 +497,8 @@ public class PipelineStoreResource {
       @QueryParam("get") @DefaultValue("pipeline") String get,
       @QueryParam("attachment") @DefaultValue("false") Boolean attachment)
       throws PipelineStoreException, URISyntaxException {
-    RestAPIUtils.injectPipelineInMDC(name);
+    PipelineInfo pipelineInfo = store.getInfo(name);
+    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
     Object data;
     if (get.equals("pipeline")) {
       PipelineConfiguration pipeline = store.load(name, rev);
@@ -544,7 +545,7 @@ public class PipelineStoreResource {
     if (autoGenerateName) {
       name = UUID.randomUUID().toString();
     }
-    RestAPIUtils.injectPipelineInMDC(name);
+    RestAPIUtils.injectPipelineInMDC(pipelineTitle + "/" + name);
     PipelineConfiguration pipeline = store.create(user, name, pipelineTitle, description, false);
 
     //Add predefined Metric Rules to the pipeline
@@ -596,7 +597,8 @@ public class PipelineStoreResource {
       @PathParam("pipelineName") String name,
       @Context SecurityContext context
   ) throws URISyntaxException, PipelineException {
-    RestAPIUtils.injectPipelineInMDC(name);
+    PipelineInfo pipelineInfo = store.getInfo(name);
+    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
     if (store.isRemotePipeline(name, "0") && !context.isUserInRole(AuthzRole.ADMIN) &&
         !context.isUserInRole(AuthzRole.ADMIN_REMOTE)) {
       throw new PipelineException(ContainerError.CONTAINER_01101, "DELETE_PIPELINE", name);
@@ -624,7 +626,8 @@ public class PipelineStoreResource {
     if (store.isRemotePipeline(name, rev)) {
       throw new PipelineException(ContainerError.CONTAINER_01101, "SAVE_PIPELINE", name);
     }
-    RestAPIUtils.injectPipelineInMDC(name);
+    PipelineInfo pipelineInfo = store.getInfo(name);
+    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
     PipelineConfiguration pipelineConfig = BeanHelper.unwrapPipelineConfiguration(pipeline);
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipelineConfig);
     pipelineConfig = validator.validate();
@@ -646,6 +649,8 @@ public class PipelineStoreResource {
       @QueryParam("rev") @DefaultValue("0") String rev,
       Map uiInfo)
       throws PipelineStoreException, URISyntaxException {
+    PipelineInfo pipelineInfo = store.getInfo(name);
+    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
     store.saveUiInfo(name, rev, uiInfo);
     return Response.ok().build();
   }
@@ -659,7 +664,8 @@ public class PipelineStoreResource {
   public Response getPipelineRules(
     @PathParam("pipelineName") String name,
     @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineStoreException {
-    RestAPIUtils.injectPipelineInMDC(name);
+    PipelineInfo pipelineInfo = store.getInfo(name);
+    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
     RuleDefinitions ruleDefinitions = store.retrieveRules(name, rev);
     if(ruleDefinitions != null) {
       RuleDefinitionValidator ruleDefinitionValidator = new RuleDefinitionValidator();
@@ -689,7 +695,8 @@ public class PipelineStoreResource {
     if (store.isRemotePipeline(name, rev)) {
       throw new PipelineException(ContainerError.CONTAINER_01101, "SAVE_RULES_PIPELINE", name);
     }
-    RestAPIUtils.injectPipelineInMDC(name);
+    PipelineInfo pipelineInfo = store.getInfo(name);
+    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
     RuleDefinitions ruleDefs = BeanHelper.unwrapRuleDefinitions(ruleDefinitionsJson);
     RuleDefinitionValidator ruleDefinitionValidator = new RuleDefinitionValidator();
     ruleDefinitionValidator.validateRuleDefinition(ruleDefs);
@@ -710,7 +717,8 @@ public class PipelineStoreResource {
       @QueryParam("attachment") @DefaultValue("false") Boolean attachment,
       @QueryParam("includeLibraryDefinitions") @DefaultValue("false") boolean includeLibraryDefinitions
   ) throws PipelineStoreException, URISyntaxException {
-    RestAPIUtils.injectPipelineInMDC(name);
+    PipelineInfo pipelineInfo = store.getInfo(name);
+    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
     PipelineConfiguration pipelineConfig = store.load(name, rev);
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipelineConfig);
     pipelineConfig = validator.validate();
@@ -803,7 +811,8 @@ public class PipelineStoreResource {
       @QueryParam("autoGenerateName") @DefaultValue("false") boolean autoGenerateName,
       @ApiParam(name="pipelineEnvelope", required = true) PipelineEnvelopeJson pipelineEnvelope
   ) throws PipelineStoreException, URISyntaxException {
-    RestAPIUtils.injectPipelineInMDC(name);
+    PipelineInfo pipelineInfo = store.getInfo(name);
+    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
 
     PipelineConfigurationJson pipelineConfigurationJson = pipelineEnvelope.getPipelineConfig();
     PipelineConfiguration pipelineConfig = BeanHelper.unwrapPipelineConfiguration(pipelineConfigurationJson);
@@ -879,7 +888,7 @@ public class PipelineStoreResource {
         }
 
         metadata.put("labels", metaLabels);
-        RestAPIUtils.injectPipelineInMDC(pipelineName);
+        RestAPIUtils.injectPipelineInMDC(pipelineConfig.getInfo().getTitle(), pipelineName);
         PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, pipelineName,
             pipelineConfig);
         pipelineConfig = validator.validate();
@@ -899,6 +908,6 @@ public class PipelineStoreResource {
 
   private boolean isRemotePipeline(PipelineState state) {
     Object isRemote = state.getAttributes().get(RemoteDataCollector.IS_REMOTE_PIPELINE);
-    return (isRemote == null) ? false : (boolean) isRemote;
+    return isRemote != null && (boolean) isRemote;
   }
 }

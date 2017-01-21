@@ -378,9 +378,20 @@ public class TestPipelineStoreResource extends JerseyTest {
 
         Mockito.when(pipelineStore.getPipelines()).thenReturn(ImmutableList.of(pipeline1, pipeline2, pipeline3));
 
-        Mockito.when(pipelineStore.getInfo("xyz")).thenReturn(
-            new PipelineInfo("xyz", "label","xyz description",new java.util.Date(0), new java.util.Date(0), "xyz creator",
-                "xyz lastModifier", "1", UUID.randomUUID(), true, null));
+        Mockito.when(pipelineStore.getInfo(Matchers.matches("xyz|myPipeline|newFromImport"))).thenReturn(
+            new PipelineInfo(
+                "xyz",
+                "label",
+                "xyz description",
+                new java.util.Date(0),
+                new java.util.Date(0),
+                "xyz creator",
+                "xyz lastModifier",
+                "1", UUID.randomUUID(),
+                true,
+                null
+            )
+        );
         Mockito.when(pipelineStore.getHistory("xyz")).thenReturn(ImmutableList.of(
           new com.streamsets.datacollector.store.PipelineRevInfo(new PipelineInfo("xyz","label",
             "xyz description", new java.util.Date(0), new java.util.Date(0), "xyz creator",
