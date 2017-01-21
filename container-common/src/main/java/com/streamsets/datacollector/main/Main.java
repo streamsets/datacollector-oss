@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.security.auth.Subject;
 
+import java.net.Authenticator;
 import java.security.PrivilegedExceptionAction;
 
 public class Main {
@@ -76,6 +77,9 @@ public class Main {
       }
       log.info("-----------------------------------------------------------------");
       log.info("Starting ...");
+
+      // Use proxy authenticator that supports username and password
+      Authenticator.setDefault(new UserPasswordAuthenticator());
 
       securityContext = new SecurityContext(dagger.get(RuntimeInfo.class), dagger.get(Configuration.class));
       securityContext.login();
