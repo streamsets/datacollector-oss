@@ -359,6 +359,10 @@ public class PipelineConfigurationValidator {
         validatedNumberConfig(config, confDef, pipelineConfs, issueCreator);
       }
     }
+
+    if (pipelineConfiguration.getTitle() != null && pipelineConfiguration.getTitle().isEmpty()) {
+      issues.add(IssueCreator.getPipeline().create(ValidationError.VALIDATION_0093));
+    }
     issues.addAll(errors);
     return errors.isEmpty();
   }
