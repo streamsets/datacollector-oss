@@ -20,19 +20,21 @@
 package com.streamsets.pipeline.stage.common;
 
 import com.streamsets.pipeline.api.ErrorCode;
-import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ToErrorContext;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import static com.streamsets.pipeline.api.OnRecordError.DISCARD;
-
 public class DefaultErrorRecordHandler implements ErrorRecordHandler {
+
+  private static final Logger LOG = LoggerFactory.getLogger(DefaultErrorRecordHandler.class);
+
   private final ToErrorContext toError;
   private final Stage.Context context;
 
@@ -60,6 +62,7 @@ public class DefaultErrorRecordHandler implements ErrorRecordHandler {
 
   @Override
   public void onError(ErrorCode errorCode, Object... params) throws StageException {
+    validateGetOnErrorRecord(null, errorCode, params);
     switch (context.getOnErrorRecord()) {
       case DISCARD:
         break;
@@ -75,6 +78,7 @@ public class DefaultErrorRecordHandler implements ErrorRecordHandler {
 
   @Override
   public void onError(OnRecordErrorException error) throws StageException {
+    validateGetOnErrorRecord(error, null, null);
     switch (context.getOnErrorRecord()) {
       case DISCARD:
         break;
@@ -90,6 +94,7 @@ public class DefaultErrorRecordHandler implements ErrorRecordHandler {
 
   @Override
   public void onError(List<Record> batch, StageException error) throws StageException {
+    validateGetOnErrorRecord(error, null, null);
     switch (context.getOnErrorRecord()) {
       case DISCARD:
         break;
@@ -106,4 +111,19 @@ public class DefaultErrorRecordHandler implements ErrorRecordHandler {
         throw new IllegalStateException(Utils.format("Unknown OnError value '{}'", context.getOnErrorRecord()), error);
     }
   }
+
+  private void validateGetOnErrorRecord(Exception ex, ErrorCode errorCode, Object ... params) {
+    if(context.getOnErrorRecord() == null) {
+      if(ex != null) {
+        LOG.error("Can't propagate exception to error stream", ex);
+      }
+      if(errorCode != null) {
+        LOG.error("Can't propagate error to error stream: {} with params {}", errorCode, params);
+      }
+
+      // SDC-5042 - Add way to Stage.Context to retrieve instance name; using the Context.toString for now
+      throw new IllegalStateException(Utils.format("Component {} doesn't have configured error record action.", context));
+    }
+  }
+
 }
