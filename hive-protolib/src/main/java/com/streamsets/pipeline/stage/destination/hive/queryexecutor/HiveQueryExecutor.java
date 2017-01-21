@@ -20,7 +20,6 @@
 package com.streamsets.pipeline.stage.destination.hive.queryexecutor;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -62,6 +61,22 @@ public class HiveQueryExecutor extends BaseExecutor {
   @Override
   public List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+
+    // Validate that queries are valid ELs
+    for(String query : config.queries) {
+      try {
+        getContext().parseEL(query);
+      } catch (ELEvalException e) {
+        issues.add(getContext().createConfigIssue(
+          Groups.QUERY.name(),
+          "config.queries",
+          QueryExecErrors.QUERY_EXECUTOR_002,
+          e.getMessage(),
+          e
+          ));
+      }
+    }
+
     config.init(getContext(), "config.hiveConfigBean", issues);
     queriesElEval = getContext().createELEval("queries");
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());

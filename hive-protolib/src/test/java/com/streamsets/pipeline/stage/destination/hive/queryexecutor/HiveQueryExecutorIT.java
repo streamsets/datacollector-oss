@@ -23,6 +23,8 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.sdk.ExecutorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.stage.BaseHiveIT;
@@ -157,33 +159,18 @@ public class HiveQueryExecutorIT extends BaseHiveIT {
         new HiveQueryExecutorTestBuilder()
             //missing end bracket } in recordEL
             .addQuery("CREATE TABLE ${record:value('/tabe')1 AS SELECT * FROM origin")
-            .addQuery("CREATE TABLE ${record:value('/tabe')2 AS SELECT * FROM origin")
             .build();
 
     ExecutorRunner runner = new ExecutorRunner.Builder(HiveQueryDExecutor.class, queryExecutor)
         .setOnRecordError(OnRecordError.TO_ERROR)
         .build();
-    runner.runInit();
 
-    try {
-      Map<String, Field> map = new HashMap<>();
-      map.put("table", Field.create("testWrongEL"));
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    assertNotNull(issues);
+    assertEquals(1, issues.size());
 
-      Record record = RecordCreator.create();
-      record.set(Field.create(map));
-
-      runner.runWrite(ImmutableList.of(record));
-
-      List<Record> errorRecords = runner.getErrorRecords();
-      assertEquals(1, errorRecords.size());
-      assertEquals(errorRecords.get(0).getHeader().getErrorCode(), QueryExecErrors.QUERY_EXECUTOR_002.getCode());
-
-      List<Record> events = runner.getEventRecords();
-      assertNotNull(events);
-      assertEquals(0, events.size());
-    } finally {
-      runner.runDestroy();
-    }
+    Stage.ConfigIssue issue = issues.get(0);
+    assertTrue(Utils.format("Unexpected message: {}", issue.toString()), issue.toString().contains("QUERY_EXECUTOR_002 - Failed to evaluate queries."));
   }
 
   @Test
