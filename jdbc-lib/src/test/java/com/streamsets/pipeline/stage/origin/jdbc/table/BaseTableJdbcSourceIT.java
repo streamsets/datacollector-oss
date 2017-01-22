@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import org.apache.commons.codec.binary.Hex;
@@ -32,10 +33,13 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -50,6 +54,26 @@ public abstract class BaseTableJdbcSourceIT {
   protected static final String INSERT_STATEMENT_TEMPLATE = "INSERT INTO %s.%s values ( %s )";
   protected static final String DROP_STATEMENT_TEMPLATE = "DROP TABLE %s.%s";
   protected static final Joiner COMMA_SPACE_JOINER = Joiner.on(", ");
+
+  protected static final Map<Field.Type, String> FIELD_TYPE_TO_SQL_TYPE_AND_STRING =
+      ImmutableMap.<Field.Type, String>builder()
+          .put(Field.Type.BOOLEAN, "BIT")
+          .put(Field.Type.CHAR, "CHAR")
+          .put(Field.Type.BYTE, "TINYINT")
+          .put(Field.Type.SHORT, "SMALLINT")
+          .put(Field.Type.INTEGER, "INTEGER")
+          .put(Field.Type.LONG, "BIGINT")
+          //TO please h2 to return a Types.REAL which can be converted to FLOAT
+          //Types.FLOAT gets returned as double.
+          .put(Field.Type.FLOAT, "REAL")
+          .put(Field.Type.DOUBLE, "DOUBLE")
+          .put(Field.Type.DECIMAL, "DECIMAL(20, 10)")
+          .put(Field.Type.STRING, "varchar(100)")
+          .put(Field.Type.BYTE_ARRAY, "BINARY")
+          .put(Field.Type.DATE, "DATE")
+          .put(Field.Type.TIME, "TIME")
+          .put(Field.Type.DATETIME, "TIMESTAMP")
+          .build();
 
   protected static Connection connection;
 
@@ -69,6 +93,27 @@ public abstract class BaseTableJdbcSourceIT {
       statement.execute("DROP SCHEMA TEST");
     }
     connection.close();
+  }
+
+  protected static void setParamsToPreparedStatement(
+      PreparedStatement ps,
+      int paramIdx,
+      int sqlType,
+      Object value
+  ) throws SQLException {
+    switch (sqlType) {
+      case Types.DATE:
+        ps.setDate(paramIdx, new java.sql.Date(((Date)value).getTime()));
+        break;
+      case Types.TIME:
+        ps.setTime(paramIdx, new java.sql.Time(((Date)value).getTime()));
+        break;
+      case Types.TIMESTAMP:
+        ps.setTimestamp(paramIdx, new java.sql.Timestamp(((Date)value).getTime()));
+        break;
+      default:
+        ps.setObject(paramIdx, value);
+    }
   }
 
   protected static String getStringRepOfFieldValueForInsert(Field field) {
@@ -98,7 +143,7 @@ public abstract class BaseTableJdbcSourceIT {
   ) {
     List<String> fieldFormats = new ArrayList<>();
     for (Map.Entry<String, String> offsetFieldEntry : offsetFields.entrySet()) {
-      fieldFormats.add(offsetFieldEntry.getKey() + " " + offsetFieldEntry.getValue());
+      fieldFormats.add(offsetFieldEntry.getKey() + " " + offsetFieldEntry.getValue() + " NOT NULL");
     }
 
     for (Map.Entry<String, String> otherFieldEntry : otherFields.entrySet()) {

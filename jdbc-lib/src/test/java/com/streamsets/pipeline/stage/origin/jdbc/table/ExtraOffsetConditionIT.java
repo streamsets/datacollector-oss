@@ -53,24 +53,6 @@ public class ExtraOffsetConditionIT extends BaseTableJdbcSourceIT {
   private static final int BATCHES = 5;
   private static final String RANDOM_STRING_COLUMN = "random_string";
 
-  private static final Map<Field.Type, String> FIELD_TYPE_TO_SQL_TYPE_AND_STRING =
-      ImmutableMap.<Field.Type, String>builder()
-          .put(Field.Type.BOOLEAN, "BIT")
-          .put(Field.Type.CHAR, "CHAR")
-          .put(Field.Type.BYTE, "TINYINT")
-          .put(Field.Type.SHORT, "SMALLINT")
-          .put(Field.Type.INTEGER, "INT")
-          .put(Field.Type.LONG, "BIGINT")
-          .put(Field.Type.FLOAT, "FLOAT")
-          .put(Field.Type.DOUBLE, "DOUBLE")
-          .put(Field.Type.DECIMAL, "DECIMAL(20, 10)")
-          .put(Field.Type.STRING, "varchar(100)")
-          .put(Field.Type.BYTE_ARRAY, "BINARY")
-          .put(Field.Type.DATE, "DATE")
-          .put(Field.Type.TIME, "TIME")
-          .put(Field.Type.DATETIME, "DATETIME")
-          .build();
-
   //This will basically hold different date times that can be used for
   //creating offset fields
   private static final Map<Field.Type, List<Object>> DATE_TIMES =

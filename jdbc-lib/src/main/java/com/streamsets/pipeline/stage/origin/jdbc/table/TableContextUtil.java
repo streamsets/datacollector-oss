@@ -20,10 +20,12 @@
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
+import com.streamsets.pipeline.stage.origin.jdbc.table.util.OffsetQueryUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.Connection;
@@ -45,9 +47,7 @@ public final class TableContextUtil {
   private static final String TABLE_METADATA_TABLE_NAME_CONSTANT = "TABLE_NAME";
   private static final String COLUMN_METADATA_COLUMN_NAME = "COLUMN_NAME";
   private static final String COLUMN_METADATA_COLUMN_TYPE = "DATA_TYPE";
-
   private static final Joiner COMMA_JOINER = Joiner.on(",");
-
 
   private TableContextUtil() {}
 
@@ -63,26 +63,13 @@ public final class TableContextUtil {
     return columnNameToType;
   }
 
-  private static void checkForUnsupportedOffsetColumns(LinkedHashMap<String, Integer> offsetColumnToType) throws StageException {
+  private static void checkForUnsupportedOffsetColumns(
+      LinkedHashMap<String, Integer> offsetColumnToType
+  ) throws StageException {
     //Validate if there are partition column types for offset maintenance
     List<String> unsupportedOffsetColumnAndType = new ArrayList<>();
     for (Map.Entry<String, Integer> offsetColumnToTypeEntry : offsetColumnToType.entrySet()) {
-      if (JdbcUtil.isSqlTypeOneOf(
-          offsetColumnToTypeEntry.getValue(),
-          Types.BLOB,
-          Types.BINARY,
-          Types.VARBINARY,
-          Types.LONGVARBINARY,
-          Types.ARRAY,
-          Types.DATALINK,
-          Types.DISTINCT,
-          Types.JAVA_OBJECT,
-          Types.NULL,
-          Types.OTHER,
-          Types.REF,
-          Types.SQLXML,
-          Types.STRUCT
-      )) {
+      if (OffsetQueryUtil.UNSUPPORTED_OFFSET_SQL_TYPES.contains(offsetColumnToTypeEntry.getValue())) {
         unsupportedOffsetColumnAndType.add(offsetColumnToTypeEntry.getKey() + " - " + offsetColumnToTypeEntry.getValue());
       }
     }
@@ -132,20 +119,24 @@ public final class TableContextUtil {
       }
     }
 
-
     checkForUnsupportedOffsetColumns(offsetColumnToType);
 
     //Initial offset should exist for all partition columns or none at all.
     if (!tableConfigBean.offsetColumnToInitialOffsetValue.isEmpty()) {
-      Set<String> missingColumns = Sets.difference(offsetColumnToType.keySet(), tableConfigBean.offsetColumnToInitialOffsetValue.keySet());
-      Set<String> extraColumns = Sets.difference(tableConfigBean.offsetColumnToInitialOffsetValue.keySet(), offsetColumnToType.keySet());
+      Set<String> missingColumns =
+          Sets.difference(offsetColumnToType.keySet(), tableConfigBean.offsetColumnToInitialOffsetValue.keySet());
+      Set<String> extraColumns =
+          Sets.difference(tableConfigBean.offsetColumnToInitialOffsetValue.keySet(), offsetColumnToType.keySet());
 
       if (!missingColumns.isEmpty() || !extraColumns.isEmpty()) {
         throw new StageException(JdbcErrors.JDBC_64, COMMA_JOINER.join(missingColumns), COMMA_JOINER.join(extraColumns));
       }
 
       for (Map.Entry<String, String> partitionColumnInitialOffsetEntry : tableConfigBean.offsetColumnToInitialOffsetValue.entrySet()) {
-        offsetColumnToStartOffset.put(partitionColumnInitialOffsetEntry.getKey(), partitionColumnInitialOffsetEntry.getValue());
+        offsetColumnToStartOffset.put(
+            partitionColumnInitialOffsetEntry.getKey(),
+            partitionColumnInitialOffsetEntry.getValue()
+        );
       }
     }
     return new TableContext(
@@ -170,8 +161,11 @@ public final class TableContextUtil {
       TableConfigBean tableConfigBean
   ) throws SQLException, StageException {
     Map<String, TableContext> tableContextMap = new LinkedHashMap<>();
-    Pattern p = (StringUtils.isEmpty(tableConfigBean.tableExclusionPattern))? null : Pattern.compile(tableConfigBean.tableExclusionPattern);
-    try (ResultSet rs = JdbcUtil.getTableMetadata(connection, null, tableConfigBean.schema, tableConfigBean.tablePattern)) {
+    Pattern p =
+        StringUtils.isEmpty(tableConfigBean.tableExclusionPattern)?
+            null : Pattern.compile(tableConfigBean.tableExclusionPattern);
+    try (ResultSet rs
+             = JdbcUtil.getTableMetadata(connection, null, tableConfigBean.schema, tableConfigBean.tablePattern)) {
       while (rs.next()) {
         String schemaName = rs.getString(TABLE_METADATA_TABLE_SCHEMA_CONSTANT);
         String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);

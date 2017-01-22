@@ -19,7 +19,6 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 
@@ -46,6 +45,7 @@ public class TableJdbcSourceTestBuilder {
   private int fetchSize;
   private BatchTableStrategy batchTableStrategy;
   private TableOrderStrategy tableOrderStrategy;
+  private int resultSetCacheSize;
 
 
   public TableJdbcSourceTestBuilder(String jdbcUrl, boolean useCredentials, String username, String password) {
@@ -66,6 +66,7 @@ public class TableJdbcSourceTestBuilder {
     this.fetchSize = -1;
     this.batchTableStrategy = BatchTableStrategy.SWITCH_TABLES;
     this.tableOrderStrategy = TableOrderStrategy.NONE;
+    this.resultSetCacheSize = -1;
   }
 
   public TableJdbcSourceTestBuilder() {
@@ -157,6 +158,11 @@ public class TableJdbcSourceTestBuilder {
     return this;
   }
 
+  public TableJdbcSourceTestBuilder resultSetCacheSize(int resultSetCacheSize) {
+    this.resultSetCacheSize = resultSetCacheSize;
+    return this;
+  }
+
   public TableJdbcSource build() {
     HikariPoolConfigBean hikariPoolConfigBean = new HikariPoolConfigBean();
     hikariPoolConfigBean.useCredentials = useCredentials;
@@ -174,6 +180,7 @@ public class TableJdbcSourceTestBuilder {
     tableJdbcConfigBean.tableOrderStrategy = tableOrderStrategy;
     tableJdbcConfigBean.timeZoneID = timeZoneID;
     tableJdbcConfigBean.batchTableStrategy = batchTableStrategy;
+    tableJdbcConfigBean.resultCacheSize = resultSetCacheSize;
 
     return new TableJdbcSource(
         hikariPoolConfigBean,

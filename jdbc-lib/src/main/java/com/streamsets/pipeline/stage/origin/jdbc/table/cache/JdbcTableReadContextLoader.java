@@ -25,8 +25,9 @@ import com.streamsets.pipeline.stage.origin.jdbc.table.TableContext;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcELEvalContext;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableReadContext;
 import com.streamsets.pipeline.stage.origin.jdbc.table.util.OffsetQueryUtil;
+import org.apache.commons.lang3.tuple.Pair;
 
-import java.sql.Statement;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -58,18 +59,22 @@ public class JdbcTableReadContextLoader extends CacheLoader<TableContext, TableR
 
   @Override
   public TableReadContext load(TableContext tableContext) throws Exception {
-    Statement st = connectionManager.getConnection().createStatement();
-    if (configureFetchSize) {
-      st.setFetchSize(fetchSize);
-    }
+    Pair<String, List<Pair<Integer, String>>> queryAndParamValToSet =
+        OffsetQueryUtil.buildAndReturnQueryAndParamValToSet(
+            tableContext,
+            offsets.get(tableContext.getTableName()),
+            tableJdbcELEvalContext
+        );
 
-    String query = OffsetQueryUtil.buildQuery(
-        tableContext,
-        offsets.get(tableContext.getTableName()),
-        tableJdbcELEvalContext
-    );
 
-    TableReadContext tableReadContext = new TableReadContext(st, query);
+    TableReadContext tableReadContext =
+        new TableReadContext(
+            connectionManager.getConnection(),
+            queryAndParamValToSet.getLeft(),
+            queryAndParamValToSet.getRight(),
+            configureFetchSize,
+            fetchSize
+        );
 
     //Clear the initial offset after the  query is build so we will not use the initial offset from the next
     //time the table is used.
