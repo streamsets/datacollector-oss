@@ -27,7 +27,6 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.TimeZoneChooserValues;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
-import com.streamsets.pipeline.stage.origin.jdbc.Groups;
 
 import java.util.List;
 
@@ -121,12 +120,17 @@ public class TableJdbcConfigBean {
   public static final String TABLE_CONFIG = TABLE_JDBC_CONFIG_BEAN_PREFIX + "tableConfigs";
   private static final String FETCH_SIZE = TABLE_JDBC_CONFIG_BEAN_PREFIX + "fetchSize";
 
-  public List<Stage.ConfigIssue> validateConfigs(Source.Context context, List<Stage.ConfigIssue> issues, CommonSourceConfigBean commonSourceConfigBean) {
+  public List<Stage.ConfigIssue> validateConfigs(
+      Source.Context context,
+      List<Stage.ConfigIssue> issues,
+      CommonSourceConfigBean commonSourceConfigBean
+  ) {
+
     if (configureFetchSize && fetchSize > commonSourceConfigBean.maxBatchSize) {
       issues.add(context.createConfigIssue(Groups.ADVANCED.name(), FETCH_SIZE, JdbcErrors.JDBC_65, fetchSize));
     }
     if (tableConfigs.isEmpty()) {
-      issues.add(context.createConfigIssue(Groups.JDBC.name(), TABLE_CONFIG, JdbcErrors.JDBC_66));
+      issues.add(context.createConfigIssue(Groups.TABLE.name(), TABLE_CONFIG, JdbcErrors.JDBC_66));
     }
     return issues;
   }

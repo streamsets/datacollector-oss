@@ -113,6 +113,9 @@ public final class TableContextUtil {
     Map<String, String> offsetColumnToStartOffset = new HashMap<>();
 
     if (tableConfigBean.overrideDefaultOffsetColumns) {
+      if (tableConfigBean.offsetColumns.isEmpty()) {
+        throw new StageException(JdbcErrors.JDBC_62, tableName);
+      }
       for (String overridenPartitionColumn : tableConfigBean.offsetColumns) {
         if (!columnNameToType.containsKey(overridenPartitionColumn)) {
           throw new StageException(JdbcErrors.JDBC_63, tableName, overridenPartitionColumn);
