@@ -126,7 +126,7 @@ public class ElasticSearchConfigBean {
       type = ConfigDef.Type.STRING,
       label = "Document ID",
       description = "An expression which evaluates to a document ID. Required for create/update/delete. " +
-          "Leave blank to use auto-generated IDs.",
+          "Optional for index, leave blank to use auto-generated IDs.",
       displayPosition = 80,
       group = "ELASTIC_SEARCH",
       elDefs = {RecordEL.class, DataUtilEL.class},
