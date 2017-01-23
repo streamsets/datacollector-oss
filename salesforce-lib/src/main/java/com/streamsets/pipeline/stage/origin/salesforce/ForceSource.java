@@ -69,6 +69,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ForceSource extends BaseSource {
+  public static final long EVENT_ID_FROM_NOW = -1;
+  public static final long EVENT_ID_FROM_START = -2;
+
   private static final Logger LOG = LoggerFactory.getLogger(ForceSource.class);
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
   private static final String HEADER_ATTRIBUTE_PREFIX = "salesforce.cdc.";
@@ -76,8 +79,8 @@ public class ForceSource extends BaseSource {
   private static final String REPLAY_ID = "replayId";
   private static final String RECORD_ID_OFFSET_PREFIX = "recordId:";
   private static final String EVENT_ID_OFFSET_PREFIX = "eventId:";
-  private static final String READ_EVENTS_FROM_NOW = EVENT_ID_OFFSET_PREFIX + "-1";
-  private static final String READ_EVENTS_FROM_START = EVENT_ID_OFFSET_PREFIX + "-2";
+  private static final String READ_EVENTS_FROM_NOW = EVENT_ID_OFFSET_PREFIX + EVENT_ID_FROM_NOW;
+  private static final String READ_EVENTS_FROM_START = EVENT_ID_OFFSET_PREFIX + EVENT_ID_FROM_START;
   private static final String SOBJECT_TYPE_FROM_QUERY = "^SELECT.*FROM\\s*(\\S*)\\b.*";
 
   private static final Map<String, Integer> SFDC_TO_SDC_OPERATION = new ImmutableMap.Builder<String, Integer>()

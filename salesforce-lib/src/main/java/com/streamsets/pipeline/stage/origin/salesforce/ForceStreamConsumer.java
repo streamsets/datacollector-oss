@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.salesforce.Errors;
 import org.cometd.bayeux.Channel;
 import org.cometd.bayeux.Message;
+import org.cometd.bayeux.client.ClientSession;
 import org.cometd.bayeux.client.ClientSessionChannel;
 import org.cometd.client.BayeuxClient;
 import org.cometd.client.transport.ClientTransport;
@@ -42,9 +43,13 @@ import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ForceStreamConsumer {
   private static final Logger LOG = LoggerFactory.getLogger(ForceSource.class);
+  private static final String REPLAY_ID_EXPIRED = "400::The replayId \\{\\d+} you provided was invalid.  "
+      + "Please provide a valid ID, -2 to replay all events, or -1 to replay only new events.";
   private final BlockingQueue<Object> entityQueue;
   // This URL is used only for logging in. The LoginResult
   // returns a serverUrl which is then used for constructing
@@ -64,7 +69,9 @@ public class ForceStreamConsumer {
   private HttpClient httpClient;
   private BayeuxClient client;
 
+  private Pattern replayIdExpiredPattern = Pattern.compile(REPLAY_ID_EXPIRED);
   private AtomicBoolean subscribed = new AtomicBoolean(false);
+  private ClientSession.Extension forceReplayExtension;
 
   public ForceStreamConsumer(
       BlockingQueue<Object> entityQueue,
@@ -81,15 +88,45 @@ public class ForceStreamConsumer {
     this.replayFrom = Long.valueOf(lastSourceOffset.substring(lastSourceOffset.indexOf(':') + 1));
   }
 
+  private boolean isReplayIdExpired(String message) {
+    Matcher matcher = replayIdExpiredPattern.matcher(message);
+    return matcher.find();
+  }
+
+  private ClientSession.Extension getForceReplayExtension(long replayId) {
+    Map<String, Long> replayMap = new HashMap<>();
+    replayMap.put(bayeuxChannel, replayId);
+    return new ForceReplayExtension<>(replayMap, entityQueue);
+  }
+
+  private void subscribeForNotifications() {
+    LOG.info("Subscribing for channel: " + bayeuxChannel);
+
+    client.getChannel(bayeuxChannel).subscribe(new ClientSessionChannel.MessageListener() {
+      @Override
+      public void onMessage(ClientSessionChannel channel, Message message) {
+        LOG.info("Received Message: " + message);
+        try {
+          boolean accepted = entityQueue.offer(message, 1000L, TimeUnit.MILLISECONDS);
+          if (!accepted) {
+            LOG.error("Response buffer full, dropped record.");
+          }
+        } catch (InterruptedException e) {
+          LOG.error(Errors.FORCE_10.getMessage(), e);
+        }
+      }
+    });
+  }
+
   public void start() throws StageException {
     LOG.info("Running streaming client");
 
     try {
       client = makeClient();
 
-      Map<String, Long> replayMap = new HashMap<>();
-      replayMap.put(bayeuxChannel, replayFrom);
-      client.addExtension(new ForceReplayExtension<>(replayMap, entityQueue));
+      forceReplayExtension = getForceReplayExtension(replayFrom);
+
+      client.addExtension(forceReplayExtension);
 
       client.getChannel(Channel.META_HANDSHAKE).addListener(new ClientSessionChannel.MessageListener() {
 
@@ -165,15 +202,25 @@ public class ForceStreamConsumer {
           if (!success) {
             String error = (String) message.get("error");
             if (error != null) {
-              LOG.info("Error during SUBSCRIBE: " + error);
-              try {
-                entityQueue.offer(
-                    new StageException(Errors.FORCE_09, error),
-                    1000L/* conf.requestTimeoutMillis */,
-                    TimeUnit.MILLISECONDS
-                );
-              } catch (InterruptedException e) {
-                LOG.error(Errors.FORCE_10.getMessage(), e);
+              if (isReplayIdExpired(error)) {
+                // Retry subscription for all available events
+                LOG.info("Event ID {} was not available. Subscribing for available events.", replayFrom);
+                client.removeExtension(forceReplayExtension);
+                forceReplayExtension = getForceReplayExtension(ForceSource.EVENT_ID_FROM_START);
+                client.addExtension(forceReplayExtension);
+                subscribeForNotifications();
+                return;
+              } else {
+                LOG.info("Error during SUBSCRIBE: " + error);
+                try {
+                  entityQueue.offer(
+                      new StageException(Errors.FORCE_09, error),
+                      1000L/* conf.requestTimeoutMillis */,
+                      TimeUnit.MILLISECONDS
+                  );
+                } catch (InterruptedException e) {
+                  LOG.error(Errors.FORCE_10.getMessage(), e);
+                }
               }
             }
           }
@@ -191,22 +238,7 @@ public class ForceStreamConsumer {
         throw new StageException(Errors.FORCE_09, "Timed out waiting for handshake");
       }
 
-      LOG.info("Subscribing for channel: " + bayeuxChannel);
-
-      client.getChannel(bayeuxChannel).subscribe(new ClientSessionChannel.MessageListener() {
-        @Override
-        public void onMessage(ClientSessionChannel channel, Message message) {
-          LOG.info("Received Message: " + message);
-          try {
-            boolean accepted = entityQueue.offer(message, 1000L/* conf.requestTimeoutMillis */, TimeUnit.MILLISECONDS);
-            if (!accepted) {
-              LOG.error("Response buffer full, dropped record.");
-            }
-          } catch (InterruptedException e) {
-            LOG.error(Errors.FORCE_10.getMessage(), e);
-          }
-        }
-      });
+      subscribeForNotifications();
 
       long start = System.currentTimeMillis();
       while (!subscribed.get() && System.currentTimeMillis() - start < SUBSCRIBE_TIMEOUT) {
