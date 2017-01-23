@@ -31,7 +31,7 @@ import javax.script.ScriptEngine;
 public class GroovyProcessor extends AbstractScriptingProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(GroovyProcessor.class);
 
-  public static final String GROOVY_ENGINE = "groovy";
+  public static final String GROOVY_ENGINE = "groovy-sdc";
 
   public GroovyProcessor(ProcessingMode processingMode, String script) {
     super(LOG, GROOVY_ENGINE, Groups.GROOVY.name(), "script", processingMode, script);
