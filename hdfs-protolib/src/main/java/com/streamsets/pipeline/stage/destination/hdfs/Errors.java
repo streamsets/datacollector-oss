@@ -87,13 +87,14 @@ public enum Errors implements ErrorCode {
   HADOOPFS_50("Directory template header '" + HdfsTarget.TARGET_DIRECTORY_HEADER + "' missing"),
   HADOOPFS_51("Missing roll header name"),
   HADOOPFS_52("Invalid setting for idle timeout"),
-  HADOOPFS_53("Invalid Setting {}, should be {} for Whole File Data Format."),
+  HADOOPFS_53("Invalid Setting for File Type {}, should be {} for Data Format {}."),
   HADOOPFS_54("The path {} already exists."),
   HADOOPFS_55("Invalid permission EL {} for the file"),
   HADOOPFS_56("Invalid permission value {} for the file"),
   HADOOPFS_57("Files Suffix contains '/' or starts with '.'"),
   HADOOPFS_58("Flush failed on file: '{}' due to '{}'"),
   HADOOPFS_59("Recovery failed to rename old _tmp_ files"),
+  HADOOPFS_60("Invalid Data Format {}, should be {} for File Type {}."),
 
   ;
 

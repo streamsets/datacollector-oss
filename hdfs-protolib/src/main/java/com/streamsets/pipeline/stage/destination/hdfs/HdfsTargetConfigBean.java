@@ -511,7 +511,7 @@ public class HdfsTargetConfigBean {
         issues
     );
 
-    if (dataFormat == DataFormat.WHOLE_FILE) {
+    if (dataFormat == DataFormat.WHOLE_FILE || fileType == HdfsFileType.WHOLE_FILE) {
       validateStageForWholeFileFormat(context, issues);
       fileNameEL = dataGeneratorFormatConfig.fileNameEL;
     }
@@ -981,6 +981,19 @@ public class HdfsTargetConfigBean {
               getTargetConfigBeanPrefix() + "fileType",
               Errors.HADOOPFS_53,
               fileType,
+              HdfsFileType.WHOLE_FILE.getLabel(),
+              DataFormat.WHOLE_FILE.getLabel()
+          )
+      );
+    }
+    if (dataFormat != DataFormat.WHOLE_FILE) {
+      issues.add(
+          context.createConfigIssue(
+              Groups.DATA_FORMAT.name(),
+              getTargetConfigBeanPrefix() + "dataFormat",
+              Errors.HADOOPFS_60,
+              dataFormat.name(),
+              DataFormat.WHOLE_FILE.getLabel(),
               HdfsFileType.WHOLE_FILE.getLabel()
           )
       );
