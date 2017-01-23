@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.io.fileref.FileRefTestUtil;
@@ -37,6 +38,7 @@ import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.sshd.common.NamedFactory;
 import org.apache.sshd.common.keyprovider.KeyPairProvider;
 import org.apache.sshd.common.session.Session;
@@ -62,6 +64,7 @@ import org.mockftpserver.fake.filesystem.UnixFakeFileSystem;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.net.ServerSocket;
@@ -76,14 +79,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import static java.lang.Thread.currentThread;
 import static org.awaitility.Awaitility.await;
 
 public class TestRemoteDownloadSource {
+  private final Random RANDOM = new Random();
+
   private SshServer sshd;
   private int port;
   private String path;
@@ -624,12 +632,15 @@ public class TestRemoteDownloadSource {
     runner.runInit();
     // Since we don't proactively close steams, we must hit at least one null event in a batch to close the current
     // stream and open the next one, else the next batch will be empty and the data comes in the batch following that.
-    op = runner.runProduce(offset, 1);
-    runner.runProduce(offset, 1); // Forces a new stream to be opened.
+    op =runner.runProduce(offset, 1); // Forces /sloth.txt file parse to return -1
+    op = runner.runProduce(op.getNewOffset(), 1);
     offset = op.getNewOffset();
     actual = op.getRecords().get("lane");
     Assert.assertEquals(1, actual.size());
     Assert.assertEquals(expected.get(1).get(), actual.get(0).get());
+
+    op =runner.runProduce(offset, 1); //Forces /panda.txt file parse to return -1
+    offset = op.getNewOffset();
     op = runner.runProduce(offset, 2);
     actual = op.getRecords().get("lane");
     Assert.assertEquals(1, actual.size());
@@ -1071,6 +1082,132 @@ public class TestRemoteDownloadSource {
       runner.runDestroy();
     }
   }
+
+
+  private Pair<String, List<Record>> runSourceAndReturnOffsetAndRecords(
+      String lastOffset,
+      int batchSize
+  ) throws Exception {
+    RemoteDownloadConfigBean configBean = getBean(
+        "sftp://localhost:" + String.valueOf(port) + "/",
+        true,
+        "testuser",
+        "pass",
+        null,
+        null,
+        null,
+        true,
+        DataFormat.TEXT,
+        null,
+        //Process subdirectories
+        false,
+        "*.zip"
+    );
+    configBean.dataFormatConfig.compression = Compression.ARCHIVE;
+    configBean.dataFormatConfig.filePatternInArchive = "testReadArchive/*.txt";
+    RemoteDownloadSource origin =
+        new RemoteDownloadSource(configBean);
+    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+    try {
+      StageRunner.Output op = runner.runProduce(lastOffset, batchSize);
+      List<Record> records = op.getRecords().get("lane");
+      return Pair.of(op.getNewOffset(), records);
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+
+  @Test
+  public void testReadArchive() throws Exception {
+    path = testFolder.getRoot().getAbsolutePath() + "/remote-download-source/testReadArchive";
+
+    Assert.assertTrue(new File(path).mkdirs());
+
+    String pathPrefixInsideTheArchive = "testReadArchive";
+
+    int numberOfFilesInArchive = 5;
+    int numberOfRecordsInAFile = 10;
+
+    List<String> internalArchiveFiles = new ArrayList<>();
+    //Zip archive file
+    //Writing 5 different files each with 10 records.
+    Path archiveFilePath = Paths.get(path + "/testReadArchive.zip");
+    try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(archiveFilePath.toFile()))) {
+      for (int i = 0; i < numberOfFilesInArchive; i++) {
+        StringBuilder sb = new StringBuilder();
+        for (int j = 0; j < numberOfRecordsInAFile; j++) {
+          if (j != 0) {
+            sb.append("\n");
+          }
+          sb.append(j);
+        }
+        String entry = pathPrefixInsideTheArchive + "/testReadArchive" + i + ".txt";
+        internalArchiveFiles.add(entry);
+        zos.putNextEntry(new ZipEntry(entry));
+        zos.write(sb.toString().getBytes());
+        zos.closeEntry();
+      }
+      zos.finish();
+      zos.flush();
+    }
+
+    //Write 10 records in each file
+    setupSSHD(path, true);
+
+    int expectedTotalNoOfRecords = numberOfFilesInArchive * numberOfRecordsInAFile;
+    int recordCount = 0;
+    String lastOffset = "";
+
+    //Run till all records are read.
+    while (recordCount < expectedTotalNoOfRecords) {
+      int randomBatchSize = RANDOM.nextInt(numberOfRecordsInAFile);
+      //This is like pipeline stop and start, because we create a new source and runner
+      //but use the old offset
+      Pair<String, List<Record>> output =
+          runSourceAndReturnOffsetAndRecords(lastOffset, randomBatchSize);
+
+      List<Record> currentBatchRecords = output.getRight();
+
+      for (Record record : currentBatchRecords) {
+        //Read record and check headers to see whether the files are read properly
+        int fileIdxInsideTheArchive = recordCount / numberOfRecordsInAFile;
+        String currentInnerArchiveFileEntryName =
+            internalArchiveFiles.get(fileIdxInsideTheArchive)
+                .replace(pathPrefixInsideTheArchive + "/", "");
+
+        Assert.assertNotNull(record.getHeader().getAttribute("fileNameInsideArchive"));
+        Assert.assertEquals(
+            currentInnerArchiveFileEntryName,
+            record.getHeader().getAttribute("fileNameInsideArchive")
+        );
+        Assert.assertNotNull(record.getHeader().getAttribute("filePathInsideArchive"));
+        Assert.assertEquals(
+            pathPrefixInsideTheArchive,
+            record.getHeader().getAttribute("filePathInsideArchive")
+        );
+        //Each record in a file two bytes (so multiply the result of the record idx in a file by 2)
+        long currentOffset = (recordCount - (fileIdxInsideTheArchive * numberOfRecordsInAFile)) * 2;
+
+        Assert.assertNotNull(record.getHeader().getAttribute("fileOffsetInsideArchive"));
+        Assert.assertEquals(
+            String.valueOf(currentOffset),
+            record.getHeader().getAttribute("fileOffsetInsideArchive")
+        );
+        recordCount++;
+      }
+      lastOffset = output.getLeft();
+    }
+    Assert.assertEquals(expectedTotalNoOfRecords, recordCount);
+
+    Pair<String, List<Record>> output =
+        runSourceAndReturnOffsetAndRecords(lastOffset, 5);
+    Assert.assertEquals(0, output.getRight().size());
+  }
+
 
   @Test
   public void testHeaderAttributes() throws Exception {

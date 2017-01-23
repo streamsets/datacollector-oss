@@ -82,8 +82,11 @@ public class RemoteDownloadSource extends BaseSource {
   private static final String OFFSET_DELIMITER = "::";
   private static final String CONF_PREFIX = "conf.";
   private static final String REMOTE_ADDRESS_CONF = CONF_PREFIX + "remoteAddress";
+  private static final String MINUS_ONE = "-1";
+  private static final String ZERO = "0";
 
   static final String NOTHING_READ = "null";
+
   static final String SIZE = "size";
   static final String LAST_MODIFIED_TIME = "lastModifiedTime";
   static final String REMOTE_URI = "remoteUri";
@@ -311,7 +314,7 @@ public class RemoteDownloadSource extends BaseSource {
           // -- or the next file picked up for reads is not the same as the one we left off at (because we may have completed that one).
           if (currentOffset == null || !currentOffset.fileName.equals(next.filename)) {
             currentOffset = new Offset(next.remoteObject.getName().getPath(),
-                next.remoteObject.getContent().getLastModifiedTime(), 0L);
+                next.remoteObject.getContent().getLastModifiedTime(), ZERO);
           }
           if (conf.dataFormat == DataFormat.WHOLE_FILE) {
             Map<String, Object> metadata = new HashMap<>(next.remoteObject.getContent().getAttributes());
@@ -337,7 +340,7 @@ public class RemoteDownloadSource extends BaseSource {
             currentStream = next.remoteObject.getContent().getInputStream();
             LOG.info("Started reading file: " + next.filename);
             parser = conf.dataFormatConfig.getParserFactory().getParser(
-                currentOffset.offsetStr, currentStream, String.valueOf(currentOffset.offset));
+                currentOffset.offsetStr, currentStream, currentOffset.offset);
           }
         } else {
           if (currentOffset == null) {
@@ -352,7 +355,7 @@ public class RemoteDownloadSource extends BaseSource {
       handleFatalException(ex, next);
     } finally {
       if (!NOTHING_READ.equals(offset) && currentOffset != null) {
-        currentOffset.setOffset(Long.parseLong(offset));
+        currentOffset.setOffset(offset);
       }
     }
     if (currentOffset != null) {
@@ -384,6 +387,9 @@ public class RemoteDownloadSource extends BaseSource {
             currentStream = null;
             next = null;
           }
+          //We will return -1 for finished files (It might happen where we are the last offset and another parse
+          // returns null, in that case empty batch is emitted)
+          offset = MINUS_ONE;
           break;
         }
       } catch (ObjectLengthException ex) {
@@ -403,7 +409,7 @@ public class RemoteDownloadSource extends BaseSource {
             " as another file of the same name exists");
       }
       try (InputStream is = fileToMove.remoteObject.getContent().getInputStream();
-          OutputStream os = new BufferedOutputStream(new FileOutputStream(errorFile))) {
+           OutputStream os = new BufferedOutputStream(new FileOutputStream(errorFile))) {
         while ((read = is.read(moveBuffer)) != -1) {
           os.write(moveBuffer, 0, read);
         }
@@ -532,7 +538,7 @@ public class RemoteDownloadSource extends BaseSource {
             // Case 3: The file has the same timestamp as the last one we read, but is lexicographically higher, and we have not queued it before.
             (remoteFile.lastModified == currentOffset.timestamp && remoteFile.filename.compareTo(currentOffset.fileName) > 0) ||
             // Case 4: It is the same file as we were reading, but we have not read the whole thing, so queue it again - recovering from a shutdown.
-            remoteFile.filename.equals(currentOffset.fileName) && currentOffset.offset != -1 && remoteFile.remoteObject.getContent().getSize() > currentOffset.offset);
+            remoteFile.filename.equals(currentOffset.fileName) && !currentOffset.offset.equals(MINUS_ONE));
   }
 
   @Override
@@ -565,7 +571,7 @@ public class RemoteDownloadSource extends BaseSource {
   private class Offset {
     final String fileName;
     final long timestamp;
-    private long offset;
+    private String offset;
     String offsetStr;
 
     Offset(String offsetStr) {
@@ -574,17 +580,17 @@ public class RemoteDownloadSource extends BaseSource {
       this.offsetStr = offsetStr;
       this.fileName = parts[0];
       this.timestamp = Long.parseLong(parts[1]);
-      this.offset = Long.parseLong(parts[2]);
+      this.offset = parts[2];
     }
 
-    Offset(String fileName, long timestamp, long offset) {
+    Offset(String fileName, long timestamp, String offset) {
       this.fileName = fileName;
       this.offset = offset;
       this.timestamp = timestamp;
       this.offsetStr = getOffsetStr();
     }
 
-    void setOffset(long offset) {
+    void setOffset(String offset) {
       this.offset = offset;
       this.offsetStr = getOffsetStr();
     }
