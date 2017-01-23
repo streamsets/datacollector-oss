@@ -16,9 +16,9 @@
 <task id="task_uns_gtv_4r">
     <title>Configuring an Elasticsearch Destination</title>
     <taskbody>
-        <context><indexterm>Elasticsearch
+        <context><p><indexterm>Elasticsearch
             destination<indexterm>configuring</indexterm></indexterm>Configure an Elasticsearch
-            destination to write data to an Elasticsearch cluster.</context>
+            destination to write data to an Elasticsearch cluster.</p></context>
         <steps id="steps_tgy_3tv_4r">
             <step
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-ErrorHandling">

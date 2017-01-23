@@ -343,53 +343,8 @@
                                     </ul></p></entry>
                         </row>
                         <row>
-                            <entry>streamsets-datacollector-elasticsearch_1_4-lib</entry>
-                            <entry>For Elasticsearch 1.4.<p>Includes the Elasticsearch
-                                    destination.</p></entry>
-                        </row>
-                        <row>
-                            <entry>streamsets-datacollector-elasticsearch_1_5-lib</entry>
-                            <entry>For Elasticsearch 1.5.<p>Includes the Elasticsearch
-                                    destination.</p></entry>
-                        </row>
-                        <row>
-                            <entry>streamsets-datacollector-elasticsearch_1_6-lib</entry>
-                            <entry>For Elasticsearch 1.6.<p>Includes the Elasticsearch
-                                    destination.</p></entry>
-                        </row>
-                        <row>
-                            <entry>streamsets-datacollector-elasticsearch_1_7-lib</entry>
-                            <entry>For Elasticsearch 1.7.<p>Includes the Elasticsearch
-                                    destination.</p></entry>
-                        </row>
-                        <row>
-                            <entry>streamsets-datacollector-elasticsearch_2_0-lib</entry>
-                            <entry>For Elasticsearch 2.0. <p>Includes the Elasticsearch
-                                    destination.</p></entry>
-                        </row>
-                        <row>
-                            <entry>streamsets-datacollector-elasticsearch_2_1-lib</entry>
-                            <entry>For Elasticsearch 2.1. <p>Includes the Elasticsearch
-                                    destination.</p></entry>
-                        </row>
-                        <row>
-                            <entry>streamsets-datacollector-elasticsearch_2_2-lib</entry>
-                            <entry>For Elasticsearch 2.2. <p>Includes the Elasticsearch
-                                    destination.</p></entry>
-                        </row>
-                        <row>
-                            <entry>streamsets-datacollector-elasticsearch_2_3-lib</entry>
-                            <entry>For Elasticsearch 2.3. <p>Includes the Elasticsearch
-                                    destination.</p></entry>
-                        </row>
-                        <row>
-                            <entry>streamsets-datacollector-elasticsearch_2_4-lib</entry>
-                            <entry>For Elasticsearch 2.4. <p>Includes the Elasticsearch
-                                    destination.</p></entry>
-                        </row>
-                        <row>
-                            <entry>streamsets-datacollector-elasticsearch_5_0-lib</entry>
-                            <entry>For Elasticsearch 5.0.x.<p>Includes the Elasticsearch
+                            <entry>streamsets-datacollector-elasticsearch_5-lib</entry>
+                            <entry>For Elasticsearch 1.x, 2.x, and 5.x.<p>Includes the Elasticsearch
                                     destination.</p></entry>
                         </row>
                         <row>

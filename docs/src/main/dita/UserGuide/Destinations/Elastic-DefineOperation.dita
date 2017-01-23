@@ -13,39 +13,39 @@
   limitations under the License.
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_dvg_vvj_wx">
+<concept id="concept_w2r_ktb_ry">
  <title>Define the Operation</title>
- <shortdesc>To write to Kudu, you configure the destination to perform one of the following write
-        operations: insert, update, delete, or upsert. You define the default operation for the
+ <shortdesc>To write to Elasticsearch, you configure the destination to perform one of the following
+        write operations: create, update, delete, or index. You define the default operation for the
         destination. You can also define the operation in a record header attribute.</shortdesc>
  <conbody>
-  <p><indexterm>Kudu destination<indexterm>write operation</indexterm></indexterm>You define the
-            write operation in the following ways:</p>
+        <p><indexterm>Elasticsearch destination<indexterm>write operation</indexterm></indexterm>You
+            define the write operation in the following ways:</p>
         <dl>
             <dlentry>
-                <dt>Default operation in the Kudu destination properties</dt>
+                <dt>Default operation in the Elasticsearch destination properties</dt>
                 <dd
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DefaultOperation"/>
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DefaultOperation"
+                />
             </dlentry>
             <dlentry>
-            <dt>Record header attribute</dt>
+                <dt>Record header attribute</dt>
                 <dd
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/RecordHeaderAtt"/>
                 <dd>The attribute can contain one of the following numeric values:<ul
                         id="ul_smy_qf3_1y">
-                        <li>1 - inserts records</li>
+                        <li>1 - creates records</li>
                         <li>2 - deletes records</li>
                         <li>3 - updates records</li>
-                        <li>4 - upserts records </li>
+                        <li>4 - indexes records </li>
                     </ul></dd>
                 <dd
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DefineRecordHeaderAtt"/>
-                <dd>In the Advanced tab for the Kudu destination, you can configure how the
-                    destination handles records that have an unsupported value for the
-                    sdc.operation.type record header attribute. Unsupported values include
-                    non-numeric values, negative numeric values, or zero. You can configure the
-                    destination to discard the record, send the record to error, or use the default
-                    operation. </dd>
+                <dd>You can also configure how the destination handles records that have an
+                    unsupported value for the sdc.operation.type record header attribute.
+                    Unsupported values include non-numeric values, negative numeric values, or zero.
+                    You can configure the destination to discard the record, send the record to
+                    error, or use the default operation. </dd>
             </dlentry>
         </dl>
  </conbody>

@@ -68,8 +68,10 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Destinations/Elasticsearch-Prereqs.dita"/>
    <topicref href="../Destinations/Elastic-TimeBasis.dita"/>
-   <topicref href="../Destinations/Elastic-DocIDandUpserts.dita"/>
+   <topicref href="../Destinations/Elastic-DocID.dita"/>
+   <topicref href="../Destinations/Elastic-DefineOperation.dita"/>
    <topicref href="../Destinations/Elasticsearch-Configuring.dita"/>
   </topicref>
   <topicref href="../Destinations/Flume.dita" chunk="to-content">

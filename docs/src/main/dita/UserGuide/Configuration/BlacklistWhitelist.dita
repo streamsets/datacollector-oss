@@ -31,12 +31,14 @@ user.stagelibs.blacklist</codeblock></p>
             both can cause <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
             fail to start.</note>
-        <p>The MapR and Apache Solr stage libraries are blacklisted by default. To use one of the
-            MapR stage libraries, run the MapR setup script. To use the Apache Solr stage library,
-            remove it from the <codeph>system.statelibs.blacklist</codeph> property. </p>
+        <p>The MapR, Apache Solr, and Elasticsearch stage libraries are blacklisted by default. To
+            use one of the MapR stage libraries, run the MapR setup script. To use the Apache Solr
+            or Elasticsearch stage library, remove it from the
+                <codeph>system.statelibs.blacklist</codeph> property. </p>
     </conbody>
     <related-links>
         <link href="../Installation/MapR-Prerequisites.dita#concept_jgs_qpg_2v"/>
         <link href="../Destinations/Solr-Prerequisites.dita#concept_gm2_y12_pw"/>
+        <link href="../Destinations/Elasticsearch-Prerequisites.dita#concept_z3t_1yw_qy"/>
     </related-links>
 </concept>

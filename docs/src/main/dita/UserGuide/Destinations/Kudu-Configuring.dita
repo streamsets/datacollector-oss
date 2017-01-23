@@ -75,9 +75,8 @@
                                             href="Kudu-DefineOperation.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_m6p_rfp_vv"/></xref></entry>
-                                    <entry>Default write operation to perform if the
-                                        sdc.operation.type record header attribute is not set or
-                                        contains a value that is not supported. </entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry_DefaultOperation"/>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -124,15 +123,8 @@
                                             href="Kudu-DefineOperation.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_m9p_rfp_ov"/></xref></entry>
-                                    <entry>Action to take when the operation type defined in the
-                                        sdc.operation.type record header attribute is not
-                                            supported:<ul id="ul_sgk_pg3_1y">
-                                            <li>Discard - Discards the record.</li>
-                                            <li>Send to Error - Sends the record to the pipeline for
-                                                error handling.</li>
-                                            <li>Use Default Operation - Writes the record to the
-                                                destination system using the default operation.</li>
-                                        </ul></entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry_UnsupportedOperation"/>
                                 </row>
                             </tbody>
                         </tgroup>

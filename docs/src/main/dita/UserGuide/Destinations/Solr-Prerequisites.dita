@@ -30,8 +30,18 @@
                     Apache Solr stage library from the
                         <uicontrol>system.stagelibs.blacklist</uicontrol> property.<p>For example,
                         the <uicontrol>system.stagelibs.blacklist</uicontrol> property is defined as
-                        follows:<codeblock>system.stagelibs.blacklist=streamsets-datacollector-mapr_5_0-lib,streamsets-datacollector-mapr_5_1-lib,streamsets-datacollector-apache-solr_6_1_0-lib</codeblock></p><p>Remove the Apache Solr stage library from the property as
-                        follows:<codeblock>system.stagelibs.blacklist=streamsets-datacollector-mapr_5_0-lib,streamsets-datacollector-mapr_5_1-lib</codeblock></p></li>
+                        follows:<codeblock>system.stagelibs.blacklist=\
+  streamsets-datacollector-mapr_5_0-lib,\
+  streamsets-datacollector-mapr_5_1-lib,\
+  streamsets-datacollector-mapr_5_2-lib,\
+  streamsets-datacollector-apache-solr_6_1_0-lib,\
+  streamsets-datacollector-elasticsearch_5-lib</codeblock></p><p>Remove
+                        the Apache Solr stage library from the property as
+                        follows:<codeblock>system.stagelibs.blacklist=\
+  streamsets-datacollector-mapr_5_0-lib,\
+  streamsets-datacollector-mapr_5_1-lib,\
+  streamsets-datacollector-mapr_5_2-lib,\
+  streamsets-datacollector-elasticsearch_5-lib</codeblock></p></li>
                 <li>Restart <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> and verify that the Solr destination lists Apache Solr 6.1.0 in the Stage

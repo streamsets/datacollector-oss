@@ -48,6 +48,7 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Upgrade/PostUpgrade-Elasticsearch.dita"/>
    <topicref href="../Upgrade/PostUpgrade-Kudu.dita"/>
    <topicref href="../Upgrade/PostUpgrade-Vault.dita"/>
   </topicref>

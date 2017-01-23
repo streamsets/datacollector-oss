@@ -2196,6 +2196,33 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   Java 7 in April 2015. StreamSets recommends migrating to Java 8, as Java 7 support
                   will be removed in a future <ph conref="#concept_vhs_5tz_xp/pName-long"/>
                   release.</note>
+            <draft-comment author="alisontaylor">Used in the Define the Operation topic for
+                  Elasticsearch and Kudu destinations</draft-comment>
+            <dl>
+                  <dlentry>
+                        <dt>Default operation</dt>
+                        <dd id="DefaultOperation">You must define a default write operation in the destination properties.
+                              The destination uses the default operation if the sdc.operation.type
+                              record header attribute is not set or contains a value that is not
+                              supported. If the write operation is defined in both the record header
+                              attribute and the destination properties, the value set in the record
+                              header attribute takes precedence.</dd>
+                  </dlentry>
+                  <dlentry>
+                        <dt>Record header attribute</dt>
+                        <dd id="RecordHeaderAtt">You can define the write operation in the sdc.operation.type record
+                              header attribute. The destination reads the value of the
+                              sdc.operation.type record header attribute to determine the operation
+                              to perform. </dd>
+                        <dd id="DefineRecordHeaderAtt">If your pipeline includes the MySQL Binary Log origin, the destination
+                              simply reads the operation type from the sdc.operation.type record
+                              header attribute that the origin generates. The MySQL Binary Log
+                              origin processes change data capture information from MySQL server
+                              binary logs. If your pipeline includes another origin, use the
+                              Expression Evaluator or a scripting processor to define the record
+                              header attribute.</dd>
+                  </dlentry>
+            </dl>
 
       </conbody>
 </concept>

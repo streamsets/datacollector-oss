@@ -3653,7 +3653,9 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta">Elasticsearch properties - used by Elasticsearch
-                        destination and Configuring a Pipeline > Error handling.</draft-comment>
+                        destination and Configuring a Pipeline > Error handling. Default Operation
+                        and Unsupported Operation Handling descriptions used by
+                        Kudu.</draft-comment>
                 </cmd>
             </step>
             <step id="ELASTICprops-Step">
@@ -3672,18 +3674,6 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Cluster Name</entry>
-                                    <entry>Elasticsearch cluster name.</entry>
-                                </row>
-                                <row>
-                                    <entry>Cluster URIs</entry>
-                                    <entry>URI of one or more nodes in the cluster. Use the
-                                        following format:
-                                            <codeblock>&lt;host>:&lt;port></codeblock><p>To ensure a
-                                            connection, enter a comma-separated list of
-                                        URIs.</p></entry>
-                                </row>
-                                <row>
                                     <entry>Cluster HTTP URI</entry>
                                     <entry>Use when the cluster uses a custom HTTP URI. Use the
                                         following format:
@@ -3693,35 +3683,15 @@
                                             destination libraries.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Use Shield</entry>
-                                    <entry>Enables access to a Shield-protected cluster.</entry>
+                                    <entry>Additional HTTP Params</entry>
+                                    <entry>Additional HTTP parameters that you want to send as
+                                        querystring parameters to Elasticsearch. Enter the exact
+                                        parameter name and value expected by Elasticsearch.</entry>
                                 </row>
                                 <row>
-                                    <entry>Elastic Cloud Cluster</entry>
-                                    <entry>Enables access to an Elastic Cloud cluster. <p>Selecting
-                                            this property is the equivalent to setting the
-                                            action.bulk.compress Elasticsearch property to false,
-                                            and the request.headers.X-Found-Cluster to the cluster
-                                            name. </p><p>Elastic Cloud requires Shield. When
-                                            enabling Elastic Cloud, enable Shield and configure the
-                                            additional Shield properties. </p></entry>
-                                </row>
-                                <row>
-                                    <entry>Detect Additional Nodes in Cluster</entry>
-                                    <entry><p>Detects additional nodes in the cluster based on the
-                                            configured Cluster URI. </p>Selecting this property is
-                                        the equivalent to setting the client.transport.sniff
-                                        Elasticsearch property to true.<p>Use only when the <ph
-                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                            /> shares the same network as the Elasticsearch cluster.
-                                            Do not use for Elastic Cloud or Docker
-                                        clusters.</p></entry>
-                                </row>
-                                <row>
-                                    <entry>Additional Configuration</entry>
-                                    <entry>Additional Elasticsearch properties that you want to use.
-                                        Enter the exact property name and value expected by
-                                        Elasticsearch.</entry>
+                                    <entry>Use Security</entry>
+                                    <entry>Specifies whether security is enabled on the
+                                        Elasticsearch cluster. </entry>
                                 </row>
                                 <row>
                                     <entry>Time Basis <xref href="../Destinations/Elastic-TimeBasis.dita">
@@ -3770,7 +3740,12 @@
                                         information. </entry>
                                 </row>
                                 <row>
-                                    <entry>Document ID</entry>
+                                    <entry>Document ID
+                                        <xref
+                                            href="../Destinations/Elastic-DocID.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_r1f_gfg_z3"/>
+                                        </xref></entry>
                                     <entry>ID for the record. Use to specify the ID for the
                                         generated documents. When you do not specify an ID,
                                         Elasticsearch creates an ID for each document.<p>By default,
@@ -3784,12 +3759,26 @@
                                     </entry>
                                 </row>
                                 <row>
-                                    <entry>Enable Upsert <xref href="../Destinations/Elastic-DocIDandUpserts.dita">
+                                    <entry>Default Operation <xref
+                                            href="../Destinations/Elastic-DefineOperation.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_r1f_ggg_z5"/>
                                         </xref></entry>
-                                    <entry>Enables upserts to the cluster. When enabled, configure
-                                        the Document ID property.</entry>
+                                    <entry id="entry_DefaultOperation">Default write operation to perform if the
+                                        sdc.operation.type record header attribute is not set or
+                                        contains a value that is not supported. </entry>
+                                </row>
+                                <row>
+                                    <entry>Unsupported Operation Handling</entry>
+                                    <entry id="entry_UnsupportedOperation">Action to take when the operation type defined in the
+                                        sdc.operation.type record header attribute is not
+                                            supported:<ul id="ul_sgk_pg3_1y">
+                                            <li>Discard - Discards the record.</li>
+                                            <li>Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+                                            <li>Use Default Operation - Writes the record to the
+                                                destination system using the default operation.</li>
+                                        </ul></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -3797,66 +3786,27 @@
                 </info>
             </step>
             <step id="ElasticSHIELD-step">
-                <cmd>When writing to a Shield-protected cluster, on the <wintitle>Shield</wintitle>
-                    tab, configure the following properties:</cmd>
+                <cmd>If you enabled security, on the <wintitle>Security</wintitle> tab, configure
+                    the following property:</cmd>
                 <info id="ElasticSHIELD-Info">
-                    <note conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"/>
                     <table frame="all" rowsep="1" colsep="1" id="table_jsk_fhg_z5">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
-                                    <entry>Shield Property</entry>
+                                    <entry>Security Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Shield Username/Password</entry>
-                                    <entry>Shield username and password. <p>Configuring this
-                                            property is the equivalent to configuring the
-                                            shield.user Elasticsearch property.</p></entry>
-                                </row>
-                                <row>
-                                    <entry>Enable SSL</entry>
-                                    <entry>Enables SSL/TLS between the <ph
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> and the Elasticsearch cluster.<p>Selecting this property
-                                            is the equivalent to setting the shield.transport.ssl
-                                            Elasticsearch property to true.</p></entry>
-                                </row>
-                                <row>
-                                    <entry>SSL Keystore Path</entry>
-                                    <entry>Location of the keystore file for SSL/TLS. <p>Configuring
-                                            this property is the equivalent to configuring the
-                                            shield.ssl.keystore.path Elasticsearch
-                                            property.</p><p>Not necessary for Elastic Cloud
-                                            clusters. </p></entry>
-                                </row>
-                                <row>
-                                    <entry>SSL Keystore Password</entry>
-                                    <entry>Password for the keystore file.<p>Configuring this
-                                            property is the equivalent to configuring the
-                                            shield.ssl.keystore.password Elasticsearch
-                                            property.</p><p>Not necessary for Elastic Cloud
-                                            clusters.</p></entry>
-                                </row>
-                                <row>
-                                    <entry>SSL Truststore Path</entry>
-                                    <entry>Location of the truststore file for
-                                            SSL/TLS.<p>Configuring this property is the equivalent
-                                            to configuring the shield.ssl.truststore.path
-                                            Elasticsearch property.</p><p>Not necessary for Elastic
-                                            Cloud clusters. </p></entry>
-                                </row>
-                                <row>
-                                    <entry>SSL Truststore Password</entry>
-                                    <entry>Password for the truststore file.<p>Configuring this
-                                            property is the equivalent to configuring the
-                                            shield.ssl.truststore.password Elasticsearch
-                                            property.</p><p>Not necessary for Elastic Cloud
-                                            clusters.</p></entry>
+                                    <entry>Security Username/Password</entry>
+                                    <entry>Elasticsearch username and password. <p>Enter the
+                                            username and password using the following
+                                            syntax:<codeblock>&lt;username>:&lt;password></codeblock></p><note
+                                            conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
+                                        /></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -4488,6 +4438,46 @@ grant codebase "file:///opt/sdc-extras/-" {
                         <li>Vault properties file</li>
                     </ul>
                 </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="alisontaylor">The following steps are used in the Post
+                        Upgrade Elasticsearch topic in the Upgrade chapter and in the Elasticsearch
+                        Prerequisites topic in the Destinations chapter.</draft-comment>
+                </cmd>
+            </step>
+            <step id="Java8">
+                <cmd>Verify that Java 8 is installed on the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> machine.</cmd>
+                <info>The minimum supported version of Java for the Elasticsearch destination is
+                    Java 8.</info>
+            </step>
+            <step id="stagelib">
+                <cmd>In the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>, remove the
+                    Elasticsearch stage library from the
+                        <uicontrol>system.stagelibs.blacklist</uicontrol> property.</cmd>
+                <info>For example, the <uicontrol>system.stagelibs.blacklist</uicontrol> property is
+                    defined as
+                    follows:<codeblock>system.stagelibs.blacklist=\
+  streamsets-datacollector-mapr_5_0-lib,\
+  streamsets-datacollector-mapr_5_1-lib,\
+  streamsets-datacollector-mapr_5_2-lib,\
+  streamsets-datacollector-apache-solr_6_1_0-lib,\
+  streamsets-datacollector-elasticsearch_5-lib</codeblock>Remove
+                    the Elasticsearch stage library from the property as
+                    follows:<codeblock>system.stagelibs.blacklist=\
+  streamsets-datacollector-mapr_5_0-lib,\
+  streamsets-datacollector-mapr_5_1-lib,\
+  streamsets-datacollector-mapr_5_2-lib,\
+  streamsets-datacollector-apache-solr_6_1_0-lib</codeblock></info>
+            </step>
+            <step id="restart">
+                <cmd>Restart <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> and verify that you can access the Elasticsearch destination.</cmd>
             </step>
         </steps>
     </taskbody>

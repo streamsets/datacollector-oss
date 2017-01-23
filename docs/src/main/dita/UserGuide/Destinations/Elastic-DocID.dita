@@ -14,15 +14,15 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_yr2_1tf_z5">
- <title>Document IDs and Upserts</title>
- <shortdesc>When appropriate, you can specify the expression that defines the document ID. When you
+ <title>Document IDs</title>
+ <shortdesc>When appropriate, you can specify an expression that defines the document ID. When you
         do not specify an expression, Elasticsearch generates IDs for each document.</shortdesc>
  <conbody>
-  <p><indexterm>Elasticsearch destination<indexterm>document IDs and
-            upserts</indexterm></indexterm>When you configure the destination to perform upserts,
-            you must define the document ID. </p>
-        <p>For example, to perform upserts for documents with IDs based on the EmployeeID field,
-            select the <uicontrol>Enable Upsert</uicontrol> property and define the Document ID as
-            follows: <codeph>${record:value('/EmployeeID')}</codeph>.</p>
+  <p><indexterm>Elasticsearch destination<indexterm>document IDs</indexterm></indexterm>When you
+            configure the destination to perform create, update, or delete operations, you must
+            define the document ID. </p>
+        <p>For example, to perform updates for documents with IDs based on the EmployeeID field,
+            define the write operation as update and define the Document ID as follows:
+                <codeph>${record:value('/EmployeeID')}</codeph>.</p>
  </conbody>
 </concept>

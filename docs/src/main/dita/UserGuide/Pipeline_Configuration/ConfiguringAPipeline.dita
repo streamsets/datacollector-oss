@@ -293,7 +293,7 @@
                     properties:</cmd>
                 <info
                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/ElasticProps-Info"/>
-                <info>If you enabled Shield, configure the following Shield properties:</info>
+                <info>If you enabled security, configure the following security property:</info>
                 <info
                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/ElasticSHIELD-Info"
                 />
