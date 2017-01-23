@@ -120,7 +120,7 @@ public final class HiveMetastoreUtil {
   private static final String UNSUPPORTED_PARTITION_VALUE_REGEX = "(.*)[\\\\\"\'/?*%?^=\\[\\]]+(.*)";
   private static final Pattern UNSUPPORTED_PARTITION_VALUE_PATTERN = Pattern.compile(UNSUPPORTED_PARTITION_VALUE_REGEX);
   //Letters followed by letters/numbers/underscore
-  private static final Pattern COLUMN_NAME_PATTERN = Pattern.compile("[A-Za-z][A-Za-z0-9_]*");
+  private static final Pattern COLUMN_NAME_PATTERN = Pattern.compile("[A-Za-z_][A-Za-z0-9_]*");
   private static final String HDFS_LOCATION_REGEX = "((hdfs://[^/]+(:[0-9]+)?)|(maprfs:))/";
 
   public enum MetadataRecordType {
