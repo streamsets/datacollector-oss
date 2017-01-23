@@ -141,6 +141,18 @@ public class RestClient {
     }
 
     public RestClient build() throws IOException {
+      return build(path, queryParams);
+    }
+
+    public RestClient build(String path) throws IOException {
+      return build(path, queryParams);
+    }
+
+    public RestClient build(Map<String, List<String>> queryParams) throws IOException {
+      return build(path, queryParams);
+    }
+
+    public RestClient build(String path, Map<String, List<String>> queryParams) throws IOException {
       return new RestClient(name,
           baseUrl,
           path,
