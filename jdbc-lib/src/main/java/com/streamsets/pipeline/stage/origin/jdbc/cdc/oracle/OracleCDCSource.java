@@ -889,13 +889,14 @@ public class OracleCDCSource extends BaseSource {
   public void destroy() {
 
     try {
+      if (endLogMnr != null && !endLogMnr.isClosed())
       endLogMnr.execute();
     } catch (SQLException ex) {
       LOG.warn("Error while stopping LogMiner", ex);
     }
 
     // Close all statements
-    closeStatements(dateStatement, startLogMnr, produceSelectChanges, getLatestSCN, getOldestSCN);
+    closeStatements(dateStatement, startLogMnr, produceSelectChanges, getLatestSCN, getOldestSCN, endLogMnr);
 
     // Connection if it exists
     try {
