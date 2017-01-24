@@ -18,6 +18,14 @@
         <ul class="dropdown-menu pull-right" role="menu">
 
           <li role="presentation"
+              ng-if="common.userName == activeConfigInfo.creator && common.authenticationType !== 'none' && !common.isSlaveNode">
+            <a href="#" dropdown-toggle ng-click="sharePipelineConfig(activeConfigInfo, $event)">
+              <i class="fa fa-share-alt"></i>
+              <span>{{'global.form.share' | translate}}</span>
+            </a>
+          </li>
+
+          <li role="presentation"
               ng-if="!isPipelineRunning && isAuthorized([userRoles.admin, userRoles.manager])"
               ng-class="{'disabled': !pipelineConfig.valid || activeConfigStatus.executionMode != pipelineConstant.STANDALONE}">
             <a href="#" dropdown-toggle ng-click="(!pipelineConfig.valid || activeConfigStatus.executionMode != pipelineConstant.STANDALONE) || resetOffset()">
@@ -393,8 +401,6 @@
            translate="global.messages.info.savingConfiguration">
       </div>
     </div>
-
-
 
   </div>
 

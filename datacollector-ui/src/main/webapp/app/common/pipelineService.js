@@ -272,6 +272,26 @@ angular.module('dataCollectorApp.common')
       });
     };
 
+    /**
+     * Share Pipeline Configuration Command Handler
+     */
+    this.sharePipelineConfigCommand = function(pipelineInfo, $event) {
+      $modal.open({
+        templateUrl: 'app/home/library/share/share.tpl.html',
+        controller: 'ShareModalInstanceController',
+        size: 'lg',
+        backdrop: 'static',
+        resolve: {
+          pipelineInfo: function () {
+            return pipelineInfo;
+          }
+        }
+      });
+
+      if ($event) {
+        $event.stopPropagation();
+      }
+    };
 
     /**
      * Delete Pipeline Configuration Command Handler

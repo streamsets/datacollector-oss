@@ -460,13 +460,7 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       getPipelineConfig: function(name) {
-        var url;
-
-        if (!name) {
-          name = 'xyz';
-        }
-
-        url = apiBase + '/pipeline/' + name;
+        var url = apiBase + '/pipeline/' + name;
         return $http({
           method: 'GET',
           url: url
@@ -480,13 +474,7 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       getPipelineConfigInfo: function(name) {
-        var url;
-
-        if (!name) {
-          name = 'xyz';
-        }
-
-        url = apiBase + '/pipeline/' + name + '?get=info';
+        var url = apiBase + '/pipeline/' + name + '?get=info';
         return $http({
           method: 'GET',
           url: url
@@ -771,6 +759,7 @@ angular.module('dataCollectorApp.common')
           url: url
         });
       },
+
 
       /**
        * Validate the Pipeline
@@ -1186,6 +1175,49 @@ angular.module('dataCollectorApp.common')
 
         return $http({
           method: 'DELETE',
+          url: url
+        });
+      },
+
+      /**
+       * Fetches Pipeline ACL Information
+       *
+       * @param name
+       * @returns {*}
+       */
+      getPipelineConfigAcl: function(name) {
+        var url = apiBase + '/acl/' + name;
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+      /**
+       * Sends updated Pipeline ACL to server for update.
+       *
+       * @param name - Pipeline Name
+       * @param acl - Modified ACL
+       * @returns Updated ACL
+       */
+      savePipelineAcl: function(name, acl) {
+        var url = apiBase + '/acl/' + name;
+        return $http({
+          method: 'POST',
+          url: url,
+          data: acl
+        });
+      },
+
+      /**
+       * Fetch the Pipeline Permissions for current user
+       *
+       * @returns {*}
+       */
+      getPipelinePermissions: function(pipelineName) {
+        var url = apiBase + '/acl/' + pipelineName + '/permissions';
+        return $http({
+          method: 'GET',
           url: url
         });
       }

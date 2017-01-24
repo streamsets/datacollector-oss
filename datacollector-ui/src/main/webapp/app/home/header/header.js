@@ -309,6 +309,14 @@ angular
       },
 
       /**
+       * Share Pipeline Configuration
+       */
+      sharePipelineConfig: function(pipelineInfo, $event) {
+        $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Share Pipeline', 1);
+        pipelineService.sharePipelineConfigCommand(pipelineInfo, $event);
+      },
+
+      /**
        * Delete Pipeline Configuration
        */
       deletePipelineConfig: function(pipelineInfo, $event) {

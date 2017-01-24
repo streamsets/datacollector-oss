@@ -103,6 +103,8 @@ angular
       selectedDetailPaneTabCache: {},
       selectedConfigGroupCache: {},
       existingPipelineLabels: [],
+      canWrite: false,
+      canExecute: false,
 
       /**
        * Add New Pipeline Configuration
@@ -729,7 +731,8 @@ angular
      * Fetch definitions for Pipeline and Stages, fetch all pipeline configuration info, status and metric.
      */
     $q.all([
-      api.pipelineAgent.getPipelineStatus(routeParamPipelineName, "0"),
+      api.pipelineAgent.getPipelineStatus(routeParamPipelineName, '0'),
+      api.pipelineAgent.getPipelinePermissions(routeParamPipelineName),
       pipelineService.init(),
       configuration.init()
     ])
@@ -737,7 +740,28 @@ angular
         var pipelineStatusMap = {};
         pipelineStatusMap[routeParamPipelineName] = results[0].data;
 
-        isWebSocketSupported = (typeof(WebSocket) === "function") && configuration.isWebSocketUseEnabled();
+        var permissions = results[1].data;
+        if ($rootScope.common.authenticationType === 'none' || authService.isAuthorized([userRoles.admin])) {
+          // If auth type is none or for admin user
+          $scope.canWrite = true;
+          $scope.canExecute = true;
+        } else if (permissions) {
+          angular.forEach(permissions, function (permission) {
+            if (permission.actions.indexOf('WRITE') !== -1) {
+              $scope.canWrite = true;
+            }
+
+            if (permission.actions.indexOf('EXECUTE') !== -1) {
+              $scope.canExecute = true;
+            }
+          });
+
+          if (!$scope.canWrite) {
+            $scope.isPipelineReadOnly = true;
+          }
+        }
+
+        isWebSocketSupported = (typeof(WebSocket) === 'function') && configuration.isWebSocketUseEnabled();
         undoLimit = configuration.getUndoLimit();
 
         if (configuration.isAnalyticsEnabled()) {
@@ -1409,7 +1433,7 @@ angular
         //WebSocket is not support use polling to get Pipeline Metrics
         pipelineMetricsTimer = $timeout(
           function() {
-            //console.log( "Pipeline Metrics Timeout executed", Date.now() );
+            //console.log( 'Pipeline Metrics Timeout executed', Date.now() );
           },
           configuration.getRefreshInterval()
         );
@@ -1434,7 +1458,7 @@ angular
               });
           },
           function() {
-            //console.log( "Timer rejected!" );
+            //console.log( 'Timer rejected!' );
           }
         );
 

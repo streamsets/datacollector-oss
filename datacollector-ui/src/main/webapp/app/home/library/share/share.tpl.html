@@ -1,0 +1,80 @@
+<form class="share-pipeline-modal-form" role="form" autocomplete="off">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title" translate="home.library.sharingSettings">Sharing Settings</h3>
+  </div>
+  <div class="modal-body">
+    <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th class="subject-col">{{'global.form.subject' | translate}}</th>
+        <th class="action-col">{{'global.form.read' | translate}}</th>
+        <th class="action-col">{{'global.form.write' | translate}}</th>
+        <th class="action-col">{{'global.form.execute' | translate}}</th>
+        <th class="delete-col"></th>
+      </tr>
+      </thead>
+      <tbody ng-hide="showLoading">
+      <tr ng-repeat="permission in acl.permissions track by $index">
+        <td>{{permission.subjectId}}</td>
+
+        <td>
+          <input type="checkbox" name="creatorReadValue"
+                 ng-click="onActionToggle(permission, 'READ', $event)"
+                 ng-checked="permission.actions.indexOf('READ') !== -1"
+                 ng-disabled="permission.subjectId === acl.resourceOwner">
+        </td>
+        <td>
+          <input type="checkbox" name="creatorWritwValue"
+                 ng-click="onActionToggle(permission, 'WRITE', $event)"
+                 ng-checked="permission.actions.indexOf('WRITE') !== -1"
+                 ng-disabled="permission.subjectId === acl.resourceOwner">
+        </td>
+        <td>
+          <input type="checkbox" name="creatorExecuteValue"
+                 ng-click="onActionToggle(permission, 'EXECUTE', $event)"
+                 ng-checked="permission.actions.indexOf('EXECUTE') !== -1"
+                 ng-disabled="permission.subjectId === acl.resourceOwner">
+        </td>
+        <td>
+          <div ng-if="permission.subjectId !== acl.resourceOwner">
+            <a href="javascript:;"
+               ng-click="removePermission(permission, $index)"><i class="fa fa-trash-o"></i> </a>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <div class="form-horizontal">
+      <div class="form-group">
+        <div class="controls col-lg-5">
+          <ui-select multiple
+                     tagging-label=" "
+                     tagging-tokens=",|ENTER"
+                     ng-model="newSubjectList.value">
+            <ui-select-match class="ui-select-match">{{$item}}</ui-select-match>
+            <ui-select-choices class="ui-select-choices"
+                               repeat="listValue in userList.concat(groupList) | filter:$select.search">
+              <div ng-bind-html="listValue | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+        </div>
+
+        <button type="button" class="btn btn-default" ng-click="inviteOthers()">Add</button>
+      </div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="reset" class="btn btn-default" ng-click="cancel()"
+            translate="global.form.cancel">Cancel</button>
+    <button ng-click="save()" class="btn btn-primary"
+            translate="global.form.save">Save</button>
+  </div>
+</form>
