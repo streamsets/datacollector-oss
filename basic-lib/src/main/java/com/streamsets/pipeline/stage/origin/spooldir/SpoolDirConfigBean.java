@@ -70,8 +70,7 @@ public class SpoolDirConfigBean {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "File Name Pattern",
-      description = "A glob or regular expression that defines the pattern of the file names in the directory. " +
-          "Files are processed in lexicographically increasing order.",
+      description = "A glob or regular expression that defines the pattern of the file names in the directory.",
       displayPosition = 20,
       group = "FILES"
   )
