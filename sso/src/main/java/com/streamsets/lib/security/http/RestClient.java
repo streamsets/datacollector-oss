@@ -20,6 +20,7 @@
 package com.streamsets.lib.security.http;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 
@@ -41,6 +42,10 @@ public class RestClient {
 
   @VisibleForTesting
   static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+  static {
+    OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+  }
 
   static final String CONTENT_TYPE = "content-type";
   static final String ACCEPT = "accept";

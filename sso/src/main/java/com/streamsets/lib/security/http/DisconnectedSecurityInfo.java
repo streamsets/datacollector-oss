@@ -19,6 +19,7 @@
  */
 package com.streamsets.lib.security.http;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -35,6 +36,7 @@ public class DisconnectedSecurityInfo {
 
   static {
     OBJECT_MAPPER.enable(SerializationFeature.INDENT_OUTPUT);
+    OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
   }
 
   public static class Entry {
