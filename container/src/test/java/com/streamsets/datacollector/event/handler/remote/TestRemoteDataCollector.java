@@ -719,8 +719,7 @@ public class TestRemoteDataCollector {
 
     @Override
     public PipelineInfo getInfo(String name) throws PipelineStoreException {
-      // TODO Auto-generated method stub
-      return null;
+      return new PipelineInfo(name, "title", null, null, null, null, null, null, null, false, null);
     }
 
     @Override
@@ -865,6 +864,7 @@ public class TestRemoteDataCollector {
             validationStatus.getName().equals(
             "ns:name2") || validationStatus.getName().equals("local"));
         if (validationStatus.getName().equals("ns:name")) {
+          assertEquals("title", validationStatus.getTitle());
           assertEquals("rev", validationStatus.getRev());
           assertEquals(PipelineStatus.EDITED, validationStatus.getPipelineStatus());
           assertEquals(ValidationStatus.VALID, validationStatus.getValidationStatus());
@@ -943,6 +943,7 @@ public class TestRemoteDataCollector {
     assertEquals(1, pipelineAndValidationStatuses.size());
     PipelineAndValidationStatus pipelineAndValidationStatus = pipelineAndValidationStatuses.get(0);
     assertEquals("name", pipelineAndValidationStatus.getName());
+    assertNull(pipelineAndValidationStatus.getTitle());
     assertEquals("rev", pipelineAndValidationStatus.getRev());
     assertEquals(PipelineStatus.RUNNING, pipelineAndValidationStatus.getPipelineStatus());
     assertEquals(false, pipelineAndValidationStatus.isClusterMode());

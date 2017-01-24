@@ -28,6 +28,7 @@ import com.streamsets.datacollector.validation.Issues;
 
 public class PipelineAndValidationStatus {
   private final String name;
+  private final String title;
   private final String rev;
   private final PipelineStatus pipelineStatus;
   private final boolean isRemote;
@@ -40,6 +41,7 @@ public class PipelineAndValidationStatus {
 
   public PipelineAndValidationStatus(
       String name,
+      String title,
       String rev,
       boolean isRemote,
       PipelineStatus pipelineStatus,
@@ -48,8 +50,8 @@ public class PipelineAndValidationStatus {
       boolean isClusterMode,
       String offset
   ) {
-
     this.name = name;
+    this.title = title;
     this.rev = rev;
     this.isRemote = isRemote;
     this.pipelineStatus = pipelineStatus;
@@ -89,6 +91,10 @@ public class PipelineAndValidationStatus {
 
   public String getName() {
     return name;
+  }
+
+  public String getTitle() {
+    return title;
   }
 
   public String getRev() {

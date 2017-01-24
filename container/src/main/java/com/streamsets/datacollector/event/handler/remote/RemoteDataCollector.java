@@ -38,6 +38,7 @@ import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.production.OffsetFileUtil;
 import com.streamsets.datacollector.store.PipelineInfo;
+import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
@@ -236,16 +237,21 @@ public class RemoteDataCollector implements DataCollector {
       PipelineState latestState;
       boolean isClusterMode = (pipelineState.getExecutionMode() != ExecutionMode.STANDALONE) ? true : false;
       List<WorkerInfo> workerInfos = new ArrayList<>();
+      String title;
       if (pipelineStore.hasPipeline(name)) {
+        title = pipelineStore.getInfo(name).getTitle();
         Runner runner = manager.getRunner(pipelineState.getUser(), name, rev);
         latestState = runner.getState();
         if (isClusterMode) {
           workerInfos = getWorkers(runner.getSlaveCallbackList(CallbackObjectType.METRICS));
         }
       } else {
+        title = null;
         latestState = pipelineState;
       }
-      pipelineAndValidationStatuses.add(new PipelineAndValidationStatus(name,
+      pipelineAndValidationStatuses.add(new PipelineAndValidationStatus(
+          name,
+          title,
           rev,
           true,
           latestState.getStatus(),
@@ -284,6 +290,7 @@ public class RemoteDataCollector implements DataCollector {
     for (PipelineState pipelineState : pipelineStates) {
       boolean isRemote = false;
       String name = pipelineState.getName();
+      String title = pipelineStore.getInfo(name).getTitle();
       String rev = pipelineState.getRev();
       String user = pipelineState.getUser();
       if (manager.isRemotePipeline(name, rev)) {
@@ -303,6 +310,7 @@ public class RemoteDataCollector implements DataCollector {
         }
         pipelineStatusMap.put(getNameAndRevString(name, rev), new PipelineAndValidationStatus(
             name,
+            title,
             rev,
             isRemote,
             pipelineState.getStatus(),

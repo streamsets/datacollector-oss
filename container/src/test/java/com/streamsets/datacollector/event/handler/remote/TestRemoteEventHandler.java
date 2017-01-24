@@ -435,7 +435,9 @@ public class TestRemoteEventHandler {
       getPipelinesCalled = true;
       List<PipelineAndValidationStatus> list = new ArrayList<PipelineAndValidationStatus>();
       if (putDummyPipelineStatus) {
-        list.add(new PipelineAndValidationStatus("name1",
+        list.add(new PipelineAndValidationStatus(
+            "name1",
+            "title1",
             "rev1",
             false,
             PipelineStatus.RUNNING,
@@ -444,7 +446,9 @@ public class TestRemoteEventHandler {
             false,
             null
         ));
-        list.add(new PipelineAndValidationStatus("name2",
+        list.add(new PipelineAndValidationStatus(
+            "name2",
+            "title2",
             "rev2",
             false,
             PipelineStatus.CONNECTING,
@@ -461,7 +465,9 @@ public class TestRemoteEventHandler {
     public List<PipelineAndValidationStatus> getRemotePipelinesWithChanges() throws PipelineException {
       List<PipelineAndValidationStatus> list = new ArrayList<PipelineAndValidationStatus>();
       if (putRemotePipelines) {
-        list.add(new PipelineAndValidationStatus("remote",
+        list.add(new PipelineAndValidationStatus(
+            "remote",
+            "title",
             "rev1",
             true,
             PipelineStatus.RUNNING,
@@ -703,10 +709,12 @@ public class TestRemoteEventHandler {
     );
     List<PipelineStatusEventJson> pipelineStateInfoList = pipelineStatusEventsJson.getPipelineStatusEventList();
     assertEquals("name1", pipelineStateInfoList.get(0).getName());
+    assertEquals("title1", pipelineStateInfoList.get(0).getTitle());
     assertEquals("rev1", pipelineStateInfoList.get(0).getRev());
     assertEquals(PipelineStatusJson.RUNNING, pipelineStateInfoList.get(0).getPipelineStatus());
 
     assertEquals("name2", pipelineStateInfoList.get(1).getName());
+    assertEquals("title2", pipelineStateInfoList.get(1).getTitle());
     assertEquals("rev2", pipelineStateInfoList.get(1).getRev());
     assertEquals(PipelineStatusJson.CONNECTING, pipelineStateInfoList.get(1).getPipelineStatus());
   }

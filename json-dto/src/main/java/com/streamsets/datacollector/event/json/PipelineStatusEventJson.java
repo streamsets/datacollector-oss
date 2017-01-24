@@ -27,6 +27,7 @@ import com.streamsets.datacollector.config.json.ValidationStatusJson;
 public class PipelineStatusEventJson implements EventJson {
 
   private String name;
+  private String title;
   private String rev;
   private PipelineStatusJson pipelineStatus;
   private String message;
@@ -83,6 +84,14 @@ public class PipelineStatusEventJson implements EventJson {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
   }
 
   public String getRev() {

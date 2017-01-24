@@ -26,6 +26,7 @@ import com.streamsets.datacollector.execution.PipelineStatus;
 public class PipelineStatusEvent implements Event {
 
   private String name;
+  private String title;
   private String rev;
   private PipelineStatus pipelineStatus;
   private String message;
@@ -41,6 +42,7 @@ public class PipelineStatusEvent implements Event {
 
   public PipelineStatusEvent(
       String name,
+      String title,
       String rev,
       boolean isRemote,
       PipelineStatus pipelineStatus,
@@ -52,6 +54,7 @@ public class PipelineStatusEvent implements Event {
       String offset
   ) {
     this.name = name;
+    this.title = title;
     this.rev = rev;
     this.pipelineStatus = pipelineStatus;
     this.message = message;
@@ -77,6 +80,14 @@ public class PipelineStatusEvent implements Event {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
   }
 
   public String getRev() {

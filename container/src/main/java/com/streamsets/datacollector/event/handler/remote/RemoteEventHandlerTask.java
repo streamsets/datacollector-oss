@@ -289,6 +289,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     ) throws JsonProcessingException {
       PipelineStatusEvent pipelineStatusEvent = new PipelineStatusEvent(
           pipelineAndValidationStatus.getName(),
+          pipelineAndValidationStatus.getTitle(),
           pipelineAndValidationStatus.getRev(),
           pipelineAndValidationStatus.isRemote(),
           pipelineAndValidationStatus.getPipelineStatus(),
