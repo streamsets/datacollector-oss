@@ -500,11 +500,13 @@ public class PipelineStoreResource {
     PipelineInfo pipelineInfo = store.getInfo(name);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
     Object data;
+    String title = name;
     if (get.equals("pipeline")) {
       PipelineConfiguration pipeline = store.load(name, rev);
       PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipeline);
       pipeline = validator.validate();
       data = BeanHelper.wrapPipelineConfiguration(pipeline);
+      title = pipeline.getTitle();
     } else if (get.equals("info")) {
       data = BeanHelper.wrapPipelineInfo(store.getInfo(name));
     } else if (get.equals("history")) {
@@ -517,15 +519,15 @@ public class PipelineStoreResource {
       Map<String, Object> envelope = new HashMap<String, Object>();
       envelope.put("pipelineConfig", data);
 
-      com.streamsets.datacollector.config.RuleDefinitions ruleDefinitions = store.retrieveRules(name, rev);
+      RuleDefinitions ruleDefinitions = store.retrieveRules(name, rev);
       envelope.put("pipelineRules", BeanHelper.wrapRuleDefinitions(ruleDefinitions));
 
       return Response.ok().
-        header("Content-Disposition", "attachment; filename=\"" + name + ".json\"").
-        type(MediaType.APPLICATION_JSON).entity(envelope).build();
-    } else
+          header("Content-Disposition", "attachment; filename=\"" + title + ".json\"").
+          type(MediaType.APPLICATION_JSON).entity(envelope).build();
+    } else {
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(data).build();
-
+    }
   }
 
   @Path("/pipeline/{pipelineTitle}")
@@ -765,7 +767,7 @@ public class PipelineStoreResource {
 
     if (attachment) {
       return Response.ok().
-          header("Content-Disposition", "attachment; filename=\"" + name + ".json\"").
+          header("Content-Disposition", "attachment; filename=\"" + pipelineConfig.getTitle() + ".json\"").
           type(MediaType.APPLICATION_JSON).entity(pipelineEnvelope).build();
     } else {
       return Response.ok().
