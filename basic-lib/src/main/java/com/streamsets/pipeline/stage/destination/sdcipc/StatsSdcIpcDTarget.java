@@ -32,21 +32,21 @@ import com.streamsets.pipeline.lib.el.VaultEL;
 
 import java.util.Arrays;
 
-@StageDef(
-    version = 1,
-    label = "Send to SDC RPC",
-    description = "Sends pipeline Statistic records over SDC RPC",
-    icon="sdcipc.png",
-    onlineHelpRefUrl = ""
-)
-@ConfigGroups(Groups.class)
-@StatsAggregatorStage
-@HideConfigs(
-    preconditions = true,
-    onErrorRecord = true,
-    value = {"config.hostPorts", "config.appId"}
-)
-@GenerateResourceBundle
+//@StageDef(
+//    version = 1,
+//    label = "Send to SDC RPC",
+//    description = "Sends pipeline Statistic records over SDC RPC",
+//    icon="sdcipc.png",
+//    onlineHelpRefUrl = ""
+//)
+//@ConfigGroups(Groups.class)
+//@StatsAggregatorStage
+//@HideConfigs(
+//    preconditions = true,
+//    onErrorRecord = true,
+//    value = {"config.hostPorts", "config.appId"}
+//)
+//@GenerateResourceBundle
 public class StatsSdcIpcDTarget extends DTarget {
 
   @ConfigDef(
