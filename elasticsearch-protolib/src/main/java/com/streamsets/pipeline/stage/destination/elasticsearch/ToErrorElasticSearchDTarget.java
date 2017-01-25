@@ -26,7 +26,7 @@ import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.StageDef;
 
 @StageDef(
-    version = 3,
+    version = 6,
     label = "Write to Elasticsearch",
     description = "",
     icon = "",
