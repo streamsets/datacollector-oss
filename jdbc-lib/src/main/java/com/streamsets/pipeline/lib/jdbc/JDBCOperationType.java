@@ -21,8 +21,7 @@ package com.streamsets.pipeline.lib.jdbc;
 
 import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.lib.operation.OperationType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.streamsets.pipeline.api.impl.Utils;
 
 public enum JDBCOperationType implements Label {
   // Define only the operations this JDBC producer supports.
@@ -63,7 +62,7 @@ public enum JDBCOperationType implements Label {
         case OperationType.DELETE_CODE:
           return intOp;
         default:
-          throw new UnsupportedOperationException("Operation code {} is not supported");
+          throw new UnsupportedOperationException(Utils.format("Operation code {} is not supported", op));
       }
     } catch (NumberFormatException ex) {
       throw new NumberFormatException("Operation code must be a numeric value. " + ex.getMessage());
