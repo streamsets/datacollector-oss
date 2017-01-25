@@ -31,7 +31,7 @@ public class MongoDBOplogSourceConfigBean {
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "-1",
-      label = "Initial Timestamp(seconds)",
+      label = "Initial Timestamp (secs)",
       description = "Specify the initial timestamp in seconds. Leave -1 to opt out.",
       displayPosition = 1003,
       group = "MONGODB",
@@ -55,9 +55,9 @@ public class MongoDBOplogSourceConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      label = "Filter Operation Types",
+      label = "Operation Types",
       defaultValue = "[\"INSERT\", \"UPDATE\", \"DELETE\"]",
-      description="Specify Operation types that needs to be filtered. Only oplog matching these operation types will be selected.",
+      description="Oplog Operation types to read",
       displayPosition = 1005,
       group = "MONGODB"
   )

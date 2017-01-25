@@ -67,7 +67,7 @@ public class MongoDBConfig {
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
       label = "Enable Single Mode",
-      description = "Connect to the first provided mongo server.",
+      description = "Connects to the first MongoDB server in the connection string",
       displayPosition = 11,
       group = "MONGODB"
   )
