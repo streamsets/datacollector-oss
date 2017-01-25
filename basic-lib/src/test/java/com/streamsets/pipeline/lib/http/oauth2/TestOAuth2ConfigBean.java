@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.lib.http.oauth2;
 
+import com.streamsets.pipeline.api.Stage;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,6 +31,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -90,7 +92,7 @@ public class TestOAuth2ConfigBean {
 
   @Test
   public void testInit() throws Exception {
-    configBean.init(client);
+    configBean.init(mock(Stage.Context.class), new ArrayList<Stage.ConfigIssue>(), client);
     verify(builder, times(1)).post(any(Entity.class));
     verify(target, times(1)).request();
     verify(client, times(1)).target(anyString());
@@ -100,7 +102,7 @@ public class TestOAuth2ConfigBean {
   @Test
   public void onAccessDenied() throws Exception {
     OAuth2ConfigBean spyConfig = spy(configBean);
-    spyConfig.init(client);
+    spyConfig.init(mock(Stage.Context.class), new ArrayList<Stage.ConfigIssue>(), client);
     Assert.assertEquals("Bearer " + OAuth2TestUtil.TOKEN, spyConfig.filter.authToken);
     String newToken = "NEW TOKEN";
     String newTokenResponse = "{\n" +
@@ -112,7 +114,7 @@ public class TestOAuth2ConfigBean {
         "  \"access_token\": \"" + newToken + "\"\n" +
         "}";
     when(response.readEntity(String.class)).thenReturn(newTokenResponse);
-    spyConfig.onAccessDenied(client);
+    spyConfig.reInit(client);
 
     verify(spyConfig, times(2)).obtainAccessToken(client);
     Assert.assertEquals("Bearer " + "NEW TOKEN", spyConfig.filter.authToken);

@@ -66,7 +66,7 @@ public abstract class HttpStageUtil {
   public static boolean getNewOAuth2Token(OAuth2ConfigBean oauth2, Client client) throws StageException {
     LOG.info("OAuth2 Authentication token has likely expired. Fetching new token.");
     try {
-      oauth2.onAccessDenied(client);
+      oauth2.reInit(client);
       return true;
     } catch (AuthenticationFailureException ex) {
       LOG.error("OAuth2 Authentication failed", ex);

@@ -31,6 +31,8 @@ import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.http.AuthenticationType;
 import com.streamsets.pipeline.lib.http.HttpMethod;
 import com.streamsets.pipeline.lib.http.oauth2.OAuth2ConfigBean;
+import com.streamsets.pipeline.lib.http.oauth2.OAuth2GrantTypes;
+import com.streamsets.pipeline.lib.http.oauth2.SigningAlgorithms;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -67,7 +69,12 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.net.URLDecoder;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.Signature;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -85,6 +92,7 @@ import static org.junit.Assert.assertTrue;
  */
 @Category(SingleForkNoReuseTest.class)
 public class HttpClientSourceIT extends JerseyTest {
+  public static final String JWT_BEARER_TOKEN = "urn:ietf:params:oauth:grant-type:jwt-bearer";
   static long DELAY = 1100;
 
   private static final String NAMES_JSON = "{\"name\": \"adam\"}\r\n" +
@@ -102,8 +110,19 @@ public class HttpClientSourceIT extends JerseyTest {
   private static final String CLIENT_SECRET = "awesomeness";
   private static final String USERNAME = "streamsets";
   private static final String PASSWORD = "live long and prosper";
+
+  private static final String ALGORITHM = "{\"alg\":\"RS256\",\"typ\":\"JWT\"}";
+  private static final String JWT = "{" +
+      "\"iss\":\"tester@testaccount.com\"," +
+      "\"scope\":\"https://www.sdc.com/pipelines/awesomeness\"," +
+      "\"aud\":\"https://www.sdc.com/token\"," +
+      "\"exp\":1328554385," +
+      "\"iat\":1328550785" +
+      "}";
   private static String token;
   private static int tokenGetCount = 0;
+
+  private static KeyPair keyPair;
 
   private static boolean generalStreamResponseSent = false;
 
@@ -434,6 +453,50 @@ public class HttpClientSourceIT extends JerseyTest {
     }
   }
 
+  @Path("/jwtToken")
+  @Singleton
+  public static class Auth2JWTResource {
+
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    @POST
+    public Response post(
+        @Context HttpHeaders h,
+        @FormParam(OAuth2ConfigBean.GRANT_TYPE_KEY) String type,
+        @FormParam(OAuth2ConfigBean.ASSERTION_KEY) String assertion
+    ) throws Exception {
+      type = URLDecoder.decode(type, "UTF-8");
+      if (!type.equals(JWT_BEARER_TOKEN)) {
+        return Response.status(Response.Status.FORBIDDEN).build();
+      }
+      String[] creds = assertion.split("\\.");
+      Signature sig = Signature.getInstance("SHA256WithRSA");
+      sig.initSign(keyPair.getPrivate());
+      sig.update((creds[0] + "." + creds[1]).getBytes());
+      byte[] signatureBytes = sig.sign();
+      if (!Arrays.equals(signatureBytes, Base64.decodeBase64(creds[2]))) {
+        return Response.status(Response.Status.FORBIDDEN).build();
+      }
+      String base64dAlg = new String(Base64.decodeBase64(creds[0]));
+      String base64dJWT = new String(Base64.decodeBase64(creds[1]));
+      if (base64dAlg.equals(ALGORITHM) &&
+          base64dJWT.equals(JWT)) {
+        token = RandomStringUtils.randomAlphanumeric(16);
+        String tokenResponse = "{\n" +
+            "  \"token_type\": \"Bearer\",\n" +
+            "  \"expires_in\": \"3600\",\n" +
+            "  \"ext_expires_in\": \"0\",\n" +
+            "  \"expires_on\": \"1484788319\",\n" +
+            "  \"not_before\": \"1484784419\",\n" +
+            "  \"access_token\": \"" + token + "\"\n" +
+            "}";
+        tokenGetCount++;
+        return Response.ok().entity(tokenResponse).build();
+      }
+      return Response.status(Response.Status.FORBIDDEN).build();
+    }
+  }
+
   @Path("/resourceToken")
   @Singleton
   public static class Auth2ResourceOwnerWithIdResource {
@@ -500,7 +563,8 @@ public class HttpClientSourceIT extends JerseyTest {
             StreamTokenResetResource.class,
             Auth2Resource.class,
             Auth2ResourceOwnerWithIdResource.class,
-            Auth2BasicResource.class
+            Auth2BasicResource.class,
+            Auth2JWTResource.class
         )
     );
   }
@@ -529,7 +593,8 @@ public class HttpClientSourceIT extends JerseyTest {
                     StreamTokenResetResource.class,
                     Auth2Resource.class,
                     Auth2ResourceOwnerWithIdResource.class,
-                    Auth2BasicResource.class
+                    Auth2BasicResource.class,
+                    Auth2JWTResource.class
                 )
             )
         )
@@ -1366,6 +1431,38 @@ public class HttpClientSourceIT extends JerseyTest {
       conf.client.basicAuth.password = CLIENT_SECRET;
       conf.client.basicAuth.username = CLIENT_ID;
       conf.client.oauth2.tokenUrl = getBaseUri() + "basicToken";
+      conf.httpMode = HttpClientMode.STREAMING;
+      conf.resourceUrl = getBaseUri() + "stream";
+      conf.client.readTimeoutMillis = 1000;
+      conf.basic.maxBatchSize = 100;
+      conf.basic.maxWaitTime = 1000;
+      conf.pollingInterval = 1000;
+      conf.httpMethod = HttpMethod.GET;
+      conf.dataFormat = dataFormat;
+      conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
+
+      runBatchAndAssertNames(dataFormat, conf);
+      assertEquals(1, tokenGetCount);
+    } finally {
+      token = null;
+    }
+  }
+
+
+  @Test
+  public void testOAuth2Jwt() throws Exception {
+    tokenGetCount = 0;
+    keyPair = KeyPairGenerator.getInstance("RSA").generateKeyPair();
+    try {
+      DataFormat dataFormat = DataFormat.JSON;
+      HttpClientConfigBean conf = new HttpClientConfigBean();
+      conf.client.authType = AuthenticationType.NONE;
+      conf.client.useOAuth2 = true;
+      conf.client.oauth2.credentialsGrantType = OAuth2GrantTypes.JWT;
+      conf.client.oauth2.algorithm = SigningAlgorithms.RS256;
+      conf.client.oauth2.jwtClaims = JWT;
+      conf.client.oauth2.key = Base64.encodeBase64String(keyPair.getPrivate().getEncoded());
+      conf.client.oauth2.tokenUrl = getBaseUri() + "jwtToken";
       conf.httpMode = HttpClientMode.STREAMING;
       conf.resourceUrl = getBaseUri() + "stream";
       conf.client.readTimeoutMillis = 1000;

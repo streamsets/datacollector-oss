@@ -100,6 +100,8 @@ public class HttpClientSource extends BaseSource {
   private static final String VAULT_EL_PREFIX = VaultEL.PREFIX + ":";
   private static final HashFunction HF = Hashing.sha256();
   public static final String OAUTH2_GROUP = "OAUTH2";
+  public static final String CONF_CLIENT_OAUTH2_TOKEN_URL = "conf.client.oauth2.tokenUrl";
+  public static final String NO_ACCESS_TOKEN = "Access Token was not found in the response from the authorization server";
 
   private final HttpClientConfigBean conf;
   private Hasher hasher;
@@ -151,7 +153,7 @@ public class HttpClientSource extends BaseSource {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
-    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext()); // NOSONAR
 
     conf.basic.init(getContext(), Groups.HTTP.name(), BASIC_CONFIG_PREFIX, issues);
     conf.dataFormatConfig.init(getContext(), conf.dataFormat, Groups.HTTP.name(), DATA_FORMAT_CONFIG_PREFIX, issues);
@@ -260,19 +262,18 @@ public class HttpClientSource extends BaseSource {
     client = clientBuilder.build();
     if (conf.client.useOAuth2) {
       try {
-        conf.client.oauth2.init(client);
+        conf.client.oauth2.init(getContext(), issues, client);
       } catch (AuthenticationFailureException ex) {
-        LOG.error("OAuth2 Authentication failed", ex);
-        issues.add(getContext().createConfigIssue(OAUTH2_GROUP, "conf.client.oauth2.tokenUrl", HTTP_21));
+        LOG.error("OAuth2 Authentication failed", ex); // NOSONAR
+        issues.add(getContext().createConfigIssue(OAUTH2_GROUP, CONF_CLIENT_OAUTH2_TOKEN_URL, HTTP_21));
       } catch (IOException ex) {
-        LOG.error("OAuth2 Authentication Response does not contain access token", ex);
-        issues.add(getContext().createConfigIssue(OAUTH2_GROUP, "conf.client.oauth2.tokenUrl", HTTP_22));
+        LOG.error(NO_ACCESS_TOKEN, ex);
+        issues.add(getContext().createConfigIssue(OAUTH2_GROUP, CONF_CLIENT_OAUTH2_TOKEN_URL, HTTP_22));
       } catch (NotFoundException ex) {
         LOG.error(Utils.format(HTTP_24.getMessage(),
             conf.client.oauth2.tokenUrl, conf.client.oauth2.transferEncoding), ex);
         issues.add(getContext().createConfigIssue(OAUTH2_GROUP,
-            "conf.client.oauth2.tokenUrl", HTTP_24,
-            conf.client.oauth2.tokenUrl, conf.client.oauth2.transferEncoding));
+            CONF_CLIENT_OAUTH2_TOKEN_URL, HTTP_24, conf.client.oauth2.tokenUrl, conf.client.oauth2.transferEncoding));
       }
     }
   }
@@ -282,13 +283,12 @@ public class HttpClientSource extends BaseSource {
     client = clientBuilder.build();
     if (conf.client.useOAuth2) {
       try {
-        conf.client.oauth2.init(client);
-        // NotFoundException won't be thrown because one authentication happened during init()
+        conf.client.oauth2.reInit(client); // NotFoundException won't be thrown because one authentication happened during init()
       } catch (AuthenticationFailureException ex) {
         LOG.error("OAuth2 Authentication failed", ex);
         throw new StageException(HTTP_21);
       } catch (IOException ex) {
-        LOG.error("OAuth2 Authentication Response does not contain access token", ex);
+        LOG.error(NO_ACCESS_TOKEN, ex);
         throw new StageException(HTTP_22);
       }
     }
@@ -623,7 +623,7 @@ public class HttpClientSource extends BaseSource {
     }
     try {
       int subRecordCount = 0;
-      Record record =  null;
+      Record record;
 
       do {
         record = parser.parse();

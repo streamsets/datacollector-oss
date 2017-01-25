@@ -24,14 +24,26 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Dependency;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.lib.http.AuthenticationFailureException;
 import com.streamsets.pipeline.lib.http.RequestEntityProcessingChooserValues;
+import io.jsonwebtoken.Header;
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.directory.api.util.Base64;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.RequestEntityProcessing;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.ProcessingException;
@@ -47,22 +59,41 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.nio.channels.UnresolvedAddressException;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import static com.streamsets.pipeline.stage.origin.http.Errors.HTTP_25;
+import static com.streamsets.pipeline.stage.origin.http.Errors.HTTP_26;
+
 public class OAuth2ConfigBean {
+
+  public static final String CONFIG_GROUP = "OAUTH2";
+  public static final String ASSERTION_KEY = "assertion";
+  private static final Logger LOG = LoggerFactory.getLogger(OAuth2ConfigBean.class);
 
   public static final String CLIENT_ID_KEY = "client_id";
   public static final String CLIENT_SECRET_KEY = "client_secret";
   public static final String GRANT_TYPE_KEY = "grant_type";
   public static final String CLIENT_CREDENTIALS_GRANT = "client_credentials";
+  public static final String JWT_GRANT_TYPE = "urn:ietf:params:oauth:grant-type:jwt-bearer";
 
   public static final String RESOURCE_OWNER_KEY = "username";
   public static final String PASSWORD_KEY = "password";// NOSONAR
   public static final String RESOURCE_OWNER_GRANT = "password";
 
   public static final String ACCESS_TOKEN_KEY = "access_token";
+  private static final String PREFIX = "conf.client.oauth2.";
+
+  public static final String RSA = "RSA";
 
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
@@ -95,7 +126,7 @@ public class OAuth2ConfigBean {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Client ID",
-      description = "OAuth2 Client ID",
+      description = "OAuth 2 Client ID",
       displayPosition = 30,
       elDefs = VaultEL.class,
       group = "#0",
@@ -133,7 +164,7 @@ public class OAuth2ConfigBean {
       required = false,
       type = ConfigDef.Type.STRING,
       label = "Client ID",
-      description = "OAuth2 Client ID",
+      description = "OAuth 2 Client ID",
       displayPosition = 30,
       elDefs = VaultEL.class,
       group = "#0",
@@ -148,7 +179,7 @@ public class OAuth2ConfigBean {
       required = false,
       type = ConfigDef.Type.STRING,
       label = "Client Secret",
-      description = "OAuth2 Client Secret",
+      description = "OAuth 2 Client Secret",
       displayPosition = 40,
       elDefs = VaultEL.class,
       group = "#0",
@@ -163,7 +194,7 @@ public class OAuth2ConfigBean {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "User Name",
-      description = "OAuth2 Resource Owner User Name",
+      description = "OAuth 2 Resource Owner Username",
       displayPosition = 30,
       elDefs = VaultEL.class,
       group = "#0",
@@ -178,7 +209,7 @@ public class OAuth2ConfigBean {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Password",
-      description = "OAuth2 Password",
+      description = "OAuth 2 Password",
       displayPosition = 40,
       elDefs = VaultEL.class,
       group = "#0",
@@ -188,6 +219,56 @@ public class OAuth2ConfigBean {
       }
   )
   public String password;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "JWT Signing Algorithm",
+      description = "The Algorithm to use to sign the JWT",
+      displayPosition = 30,
+      group = "#0",
+      defaultValue = "NONE",
+      dependencies = {
+          @Dependency(configName = "useOAuth2^", triggeredByValues = "true"),
+          @Dependency(configName = "credentialsGrantType", triggeredByValues = "JWT"),
+      }
+  )
+  @ValueChooserModel(SigningAlgorithmsChooserValues.class)
+  public SigningAlgorithms algorithm;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "JWT Signing Key (Base64-encoded)",
+      description = "Base64 encoded Key to sign the JWT",
+      displayPosition = 35,
+      elDefs = VaultEL.class,
+      group = "#0",
+      dependencies = {
+          @Dependency(configName = "useOAuth2^", triggeredByValues = "true"),
+          @Dependency(configName = "credentialsGrantType", triggeredByValues = "JWT"),
+          @Dependency(configName = "algorithm", triggeredByValues = {
+              "HS256", "HS384", "HS512", "RS256", "RS384", "RS512"
+          })
+      }
+  )
+  public String key;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.TEXT,
+      label = "JWT Claims",
+      description = "Claims to be used with JWT token request, represented as JSON",
+      displayPosition = 40,
+      elDefs = {TimeEL.class, VaultEL.class, TimeNowEL.class},
+      group = "#0",
+      dependencies = {
+          @Dependency(configName = "useOAuth2^", triggeredByValues = "true"),
+          @Dependency(configName = "credentialsGrantType", triggeredByValues = "JWT")
+      },
+      evaluation = ConfigDef.Evaluation.EXPLICIT
+  )
+  public String jwtClaims;
 
   @ConfigDef(
       required = false,
@@ -218,18 +299,82 @@ public class OAuth2ConfigBean {
   @VisibleForTesting
   OAuth2HeaderFilter filter;
 
-  public void init(Client webClient) throws AuthenticationFailureException, IOException { // NOSONAR
-    String accessToken = obtainAccessToken(webClient);
-    filter = new OAuth2HeaderFilter(parseAccessToken(accessToken));
-    webClient.register(filter);
+  private ELVars elVars;
+  private PrivateKey privateKey;
+  private ELEval timeEvaluator;
+
+  public void init(Stage.Context context, List<Stage.ConfigIssue> issues, Client webClient)  // NOSONAR
+      throws AuthenticationFailureException, IOException {
+
+    if (credentialsGrantType == OAuth2GrantTypes.JWT) {
+      prepareEL(context, issues);
+      if (isRSA()) {
+        privateKey = parseRSAKey(key, context, issues);
+      }
+    }
+
+    if (issues.isEmpty()) {
+      String accessToken = obtainAccessToken(webClient);
+      filter = new OAuth2HeaderFilter(parseAccessToken(accessToken));
+      webClient.register(filter);
+    }
+  }
+
+  private boolean isRSA() {
+    return algorithm == SigningAlgorithms.RS256 || algorithm == SigningAlgorithms.RS384 || algorithm == SigningAlgorithms.RS512;
+  }
+
+  private boolean isHMAC() {
+    return algorithm == SigningAlgorithms.HS256 || algorithm == SigningAlgorithms.HS384 || algorithm == SigningAlgorithms.HS512;
+  }
+
+  private void prepareEL(Stage.Context context, List<Stage.ConfigIssue> issues) {
+    try {
+      context.parseEL(jwtClaims);
+      timeEvaluator = context.createELEval("jwtClaims");
+      elVars = context.createELVars();
+      TimeNowEL.setTimeNowInContext(elVars, new Date());
+      TimeEL.setCalendarInContext(elVars, Calendar.getInstance());
+      timeEvaluator.eval(elVars, jwtClaims, String.class);
+    } catch (ELEvalException ex) {
+      LOG.warn("Invalid EL in JWT Claims", ex);
+      issues.add(context.createConfigIssue(CONFIG_GROUP, PREFIX + "jwtClaims", HTTP_25));
+    }
+  }
+
+  private static PrivateKey parseRSAKey(String key, Stage.Context context, List<Stage.ConfigIssue> issues) {
+    String privKeyPEM = key.replace("-----BEGIN PRIVATE KEY-----\n", "");
+    privKeyPEM = privKeyPEM.replace("-----END PRIVATE KEY-----", "");
+
+    // Base64 decode the data
+    byte [] encoded = Base64.decode(privKeyPEM.toCharArray());
+
+    // PKCS8 decode the encoded RSA private key
+    PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encoded);
+
+    try {
+      KeyFactory kf = KeyFactory.getInstance(RSA);
+      return kf.generatePrivate(keySpec);
+    } catch (NoSuchAlgorithmException ex) {
+      LOG.error(Utils.format("'{}' algorithm not available", RSA), ex);
+      issues.add(context.createConfigIssue(CONFIG_GROUP, PREFIX + "algorithm", HTTP_25));
+    } catch (InvalidKeySpecException ex) {
+      LOG.error(Utils.format("'{}' algorithm not available", RSA), ex);
+      issues.add(context.createConfigIssue(CONFIG_GROUP, PREFIX + "key", HTTP_26));
+    }
+    return null;
   }
 
   @VisibleForTesting
   String obtainAccessToken(Client webClient) throws AuthenticationFailureException, IOException { //NOSONAR
     WebTarget tokenTarget = webClient.target(tokenUrl);
-
     Invocation.Builder builder = tokenTarget.request();
-    Response response = null;
+    Response response = sendRequest(builder); // local var for debugging purposes
+    return processResponse(response);
+  }
+
+  private Response sendRequest(Invocation.Builder builder) throws IOException {
+    Response response;
     try {
       response =
           builder.property(ClientProperties.REQUEST_ENTITY_PROCESSING, transferEncoding)
@@ -241,6 +386,10 @@ public class OAuth2ConfigBean {
       }
       throw ex;
     }
+    return response;
+  }
+
+  private String processResponse(Response response) throws AuthenticationFailureException {
     final int status = response.getStatus();
     if (status == 404) {
       throw new NotFoundException();
@@ -260,7 +409,7 @@ public class OAuth2ConfigBean {
     return node.findValue(ACCESS_TOKEN_KEY).asText();
   }
 
-  private Entity generateRequestEntity() {
+  private Entity generateRequestEntity() throws IOException {
     MultivaluedMap<String, String> requestValues = new MultivaluedHashMap<>();
    switch (credentialsGrantType) {
       case CLIENT_CREDENTIALS:
@@ -269,6 +418,9 @@ public class OAuth2ConfigBean {
       case RESOURCE_OWNER:
         insertResourceOwnerFields(requestValues);
         break;
+     case JWT:
+       insertJWTFields(requestValues);
+       break;
       default:
     }
     for (Map.Entry<String, String> additionalValue : additionalValues.entrySet()) {
@@ -297,7 +449,35 @@ public class OAuth2ConfigBean {
     }
   }
 
-  public void onAccessDenied(Client webClient) throws AuthenticationFailureException, IOException { // NOSONAR
+  @SuppressWarnings("unchecked")
+  private void insertJWTFields(MultivaluedMap<String, String> requestValues) throws IOException {
+    String parsedJwt;
+    try {
+      parsedJwt = timeEvaluator.eval(elVars, jwtClaims, String.class);
+    } catch (Exception ex) { // NOSONAR
+      throw new RuntimeException(ex); // NOSONAR Unlikely to ever happen since init would have failed.
+    }
+    Map<String, Object> claims = (Map<String, Object>) OBJECT_MAPPER.readValue(parsedJwt, Map.class);
+    JwtBuilder builder = Jwts.builder().setClaims(claims);
+    try {
+
+      if (isRSA()) {
+        builder.signWith(JWTUtils.getSignatureAlgorithm(algorithm), privateKey);
+      } else if (isHMAC()) {
+        builder.signWith(JWTUtils.getSignatureAlgorithm(algorithm), key);
+      }
+      Map<String, Object> header = new HashMap<>(1);
+      header.put(Header.TYPE, Header.JWT_TYPE);
+      builder.setHeader(header);
+      String base64EncodedJWT = builder.compact();
+      requestValues.put(GRANT_TYPE_KEY, Collections.singletonList(JWT_GRANT_TYPE));
+      requestValues.put(ASSERTION_KEY, Collections.singletonList(base64EncodedJWT));
+    } catch (Exception ex) {
+      throw new IOException(ex);
+    }
+  }
+
+  public void reInit(Client webClient) throws AuthenticationFailureException, IOException { // NOSONAR
     filter.setShouldInsertHeader(false); // don't insert the header for requests to get new tokens.
     try {
       String newToken = obtainAccessToken(webClient);

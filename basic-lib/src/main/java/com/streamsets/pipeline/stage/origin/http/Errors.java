@@ -49,6 +49,9 @@ public enum Errors implements ErrorCode {
   HTTP_22("OAuth2 authentication response does not contain access token"),
   HTTP_23("Token returned by authorization service does not have the authority to access the service. Please verify the credentials provided."),
   HTTP_24("Token URL was not found. Please verify that the URL: '{}' is correct, and the transfer encoding: '{}' is accepted"),
+  HTTP_25("Unable to parse expression"), // Don't log expression as it could contain secure data
+  HTTP_26("Algorithm '{}' is unavailable"),
+  HTTP_27("Key is invalid for algorithm: '{}'")
   ;
 
   private final String msg;
