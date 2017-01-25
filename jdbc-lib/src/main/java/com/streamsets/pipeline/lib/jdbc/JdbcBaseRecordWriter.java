@@ -339,10 +339,11 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
                 PreparedStatement statement,
                 SortedMap<String, String> columnsToParameters,
                 Record record,
-                Connection connection) throws OnRecordErrorException {
+                Connection connection,
+                int opCode) throws OnRecordErrorException {
     // fill in parameters to existing statement
     for (String column : columnsToParameters.keySet()) {
-      Field field = record.get(recordReader.getFieldPath(column, getColumnsToFields(), OperationType.INSERT_CODE));
+      Field field = record.get(recordReader.getFieldPath(column, getColumnsToFields(), opCode));
       Field.Type fieldType = field.getType();
       Object value = field.getValue();
 

@@ -149,7 +149,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
           continue;
         }
         // Need to consider the number of columns in query. If different, process saved records in queue.
-        HashCode columnHash = getColumnHash(record);
+        HashCode columnHash = getColumnHash(record, opCode);
         if (prevOpCode == opCode && (opCode == OperationType.DELETE_CODE ||
               (opCode == OperationType.INSERT_CODE && columnHash.equals(prevColumnHash)))) {
           queue.add(record);
@@ -237,7 +237,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
         }
         Record r = queue.removeFirst();
         if (opCode != OperationType.DELETE_CODE) {
-          paramIdx = setParamsToStatement(paramIdx, statement, columnsToParameters, r, connection);
+          paramIdx = setParamsToStatement(paramIdx, statement, columnsToParameters, r, connection, opCode);
         }
         if (opCode != OperationType.INSERT_CODE) {
           paramIdx = setPrimaryKeys(paramIdx, r, statement, opCode);
@@ -270,6 +270,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       Connection connection) throws SQLException
   {
     try {
+      LOG.debug("Executing query: " + statement.toString());
       statement.addBatch();
       statement.executeBatch();
     } catch (SQLException ex) {
@@ -327,19 +328,6 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
     return query;
   }
 
-  private SortedMap<String, String> getFilteredColumnsToParameters(Map<String, String> parameters, Record record) {
-    SortedMap<String, String> filtered = new TreeMap<>();
-    for (Map.Entry<String, String> entry : getColumnsToFields().entrySet()) {
-      String columnName = entry.getKey();
-      String fieldPath = entry.getValue();
-
-      if (record.has(fieldPath)) {
-        filtered.put(columnName, parameters.get(columnName));
-      }
-    }
-    return filtered;
-  }
-
   /**
    * Generates a hash for the fields present in a record and their mappings.
    * A specific implementation of the hash function is not guaranteed.
@@ -347,9 +335,10 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
    * @param record The record to generate a hash for.
    * @return A Guava HashCode of the fields.
    */
-  private HashCode getColumnHash(Record record) throws OnRecordErrorException {
+  private HashCode getColumnHash(Record record, int op) throws OnRecordErrorException {
     Map<String, String> parameters = getColumnsToParameters();
-    SortedMap<String, String> columnsToParameters = getFilteredColumnsToParameters(parameters, record);
+    SortedMap<String, String> columnsToParameters
+        = recordReader.getColumnsToParameters(record, op, parameters, getColumnsToFields());
     if (columnsToParameters.isEmpty()){
       throw new OnRecordErrorException(JdbcErrors.JDBC_22);
     }
