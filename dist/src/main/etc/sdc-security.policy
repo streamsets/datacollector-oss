@@ -39,6 +39,10 @@ grant codebase "file://${sdc.dist.dir}/container-lib/*" {
 grant codebase "file://${sdc.dist.dir}/streamsets-libs/-" {
   permission java.security.AllPermission;
 };
+// Groovy will parse files in a different context, so we need to grant it additional privileges
+grant codebase "file:/groovy/script" {
+  permission java.lang.RuntimePermission "getClassLoader";
+};
 
 // For details on how to grant specific permissions, refer to the Java Permissions Documentation:
 //   http://docs.oracle.com/javase/7/docs/technotes/guides/security/permissions.html
