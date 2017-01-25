@@ -89,6 +89,8 @@ public class HttpProcessor extends SingleLaneProcessor {
   private static final String DATA_FORMAT_CONFIG_PREFIX = "conf.dataFormatConfig.";
   private static final String SSL_CONFIG_PREFIX = "conf.sslConfig.";
   private static final String VAULT_EL_PREFIX = VaultEL.PREFIX + ":read";
+  public static final String OAUTH2_GROUP = "OAUTH2";
+  public static final String CONF_CLIENT_OAUTH2_TOKEN_URL = "conf.client.oauth2.tokenUrl";
 
   private HttpProcessorConfig conf;
   private AccessToken authToken;
@@ -144,7 +146,7 @@ public class HttpProcessor extends SingleLaneProcessor {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
-    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext()); // NOSONAR
 
     conf.dataFormatConfig.init(
         getContext(),
@@ -401,21 +403,18 @@ public class HttpProcessor extends SingleLaneProcessor {
     client = clientBuilder.build();
     if (conf.client.useOAuth2) {
       try {
-        conf.client.oauth2.init(client);
+        conf.client.oauth2.init(getContext(), issues, client);
       } catch (AuthenticationFailureException ex) {
         LOG.error("OAuth2 Authentication failed", ex);
-        issues.add(getContext().createConfigIssue(
-            "CREDENTIALS", "conf.client.oauth2.tokenUrl", HTTP_21));
+        issues.add(getContext().createConfigIssue(OAUTH2_GROUP, CONF_CLIENT_OAUTH2_TOKEN_URL, HTTP_21));
       } catch (IOException ex) {
         LOG.error("OAuth2 Authentication Response does not contain access token", ex);
-        issues.add(getContext().createConfigIssue(
-            "CREDENTIALS", "conf.client.oauth2.tokenUrl", HTTP_22));
+        issues.add(getContext().createConfigIssue(OAUTH2_GROUP, CONF_CLIENT_OAUTH2_TOKEN_URL, HTTP_22));
       } catch (NotFoundException ex) {
         LOG.error(Utils.format(
             HTTP_24.getMessage(), conf.client.oauth2.tokenUrl, conf.client.oauth2.transferEncoding), ex);
-        issues.add(getContext().createConfigIssue("CREDENTIALS",
-            "conf.client.oauth2.tokenUrl",
-            HTTP_24, conf.client.oauth2.tokenUrl, conf.client.oauth2.transferEncoding));
+        issues.add(getContext().createConfigIssue(OAUTH2_GROUP,
+            CONF_CLIENT_OAUTH2_TOKEN_URL, HTTP_24, conf.client.oauth2.tokenUrl, conf.client.oauth2.transferEncoding));
       }
     }
   }

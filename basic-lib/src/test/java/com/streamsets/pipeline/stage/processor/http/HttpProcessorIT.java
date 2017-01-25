@@ -32,6 +32,7 @@ import com.streamsets.pipeline.lib.http.AuthenticationType;
 import com.streamsets.pipeline.lib.http.HttpMethod;
 import com.streamsets.pipeline.lib.http.oauth2.OAuth2ConfigBean;
 import com.streamsets.pipeline.lib.http.oauth2.OAuth2GrantTypes;
+import com.streamsets.pipeline.lib.http.oauth2.SigningAlgorithms;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -60,6 +61,11 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.Signature;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +83,18 @@ public class HttpProcessorIT extends JerseyTest {
   private static final String CLIENT_SECRET = "awesomeness";
   private static final String USERNAME = "streamsets";
   private static final String PASSWORD = "live long and prosper";
+
+  public static final String JWT_BEARER_TOKEN = "urn:ietf:params:oauth:grant-type:jwt-bearer";
+  private static final String ALGORITHM = "{\"alg\":\"RS256\",\"typ\":\"JWT\"}";
+  private static final String JWT = "{" +
+      "\"iss\":\"tester@testaccount.com\"," +
+      "\"scope\":\"https://www.sdc.com/pipelines/awesomeness\"," +
+      "\"aud\":\"https://www.sdc.com/token\"," +
+      "\"exp\":1328554385," +
+      "\"iat\":1328550785" +
+      "}";
+
+  private static KeyPair keyPair;
 
   private static String getBody(String path) {
     try {
@@ -198,6 +216,50 @@ public class HttpProcessorIT extends JerseyTest {
     }
   }
 
+  @Path("/jwtToken")
+  @Singleton
+  public static class Auth2JWTResource {
+
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    @POST
+    public Response post(
+        @Context HttpHeaders h,
+        @FormParam(OAuth2ConfigBean.GRANT_TYPE_KEY) String type,
+        @FormParam(OAuth2ConfigBean.ASSERTION_KEY) String assertion
+    ) throws Exception {
+      type = URLDecoder.decode(type, "UTF-8");
+      if (!type.equals(JWT_BEARER_TOKEN)) {
+        return Response.status(Response.Status.FORBIDDEN).build();
+      }
+      String[] creds = assertion.split("\\.");
+      Signature sig = Signature.getInstance("SHA256WithRSA");
+      sig.initSign(keyPair.getPrivate());
+      sig.update((creds[0] + "." + creds[1]).getBytes());
+      byte[] signatureBytes = sig.sign();
+      if (!Arrays.equals(signatureBytes, Base64.decodeBase64(creds[2]))) {
+        return Response.status(Response.Status.FORBIDDEN).build();
+      }
+      String base64dAlg = new String(Base64.decodeBase64(creds[0]));
+      String base64dJWT = new String(Base64.decodeBase64(creds[1]));
+      if (base64dAlg.equals(ALGORITHM) &&
+          base64dJWT.equals(JWT)) {
+        token = RandomStringUtils.randomAlphanumeric(16);
+        String tokenResponse = "{\n" +
+            "  \"token_type\": \"Bearer\",\n" +
+            "  \"expires_in\": \"3600\",\n" +
+            "  \"ext_expires_in\": \"0\",\n" +
+            "  \"expires_on\": \"1484788319\",\n" +
+            "  \"not_before\": \"1484784419\",\n" +
+            "  \"access_token\": \"" + token + "\"\n" +
+            "}";
+        tokenGetCount++;
+        return Response.ok().entity(tokenResponse).build();
+      }
+      return Response.status(Response.Status.FORBIDDEN).build();
+    }
+  }
+
   @Path("/resourceToken")
   @Singleton
   public static class Auth2ResourceOwnerWithIdResource {
@@ -267,7 +329,8 @@ public class HttpProcessorIT extends JerseyTest {
             StreamTokenResetResource.class,
             Auth2Resource.class,
             Auth2ResourceOwnerWithIdResource.class,
-            Auth2BasicResource.class
+            Auth2BasicResource.class,
+            Auth2JWTResource.class
         )
     );
   }
@@ -860,4 +923,50 @@ public class HttpProcessorIT extends JerseyTest {
     }
   }
 
+  @Test
+  public void testOAuth2Jwt() throws Exception {
+    tokenGetCount = 0;
+    keyPair = KeyPairGenerator.getInstance("RSA").generateKeyPair();
+    try {
+      HttpProcessorConfig conf = new HttpProcessorConfig();
+      conf.httpMethod = HttpMethod.GET;
+      conf.outputField = "/output";
+      conf.dataFormat = DataFormat.JSON;
+      conf.resourceUrl = getBaseUri() + "test/get";
+      conf.client.useOAuth2 = true;
+      conf.client.oauth2.credentialsGrantType = OAuth2GrantTypes.JWT;
+      conf.client.oauth2.algorithm = SigningAlgorithms.RS256;
+      conf.client.oauth2.jwtClaims = JWT;
+      conf.client.oauth2.key = Base64.encodeBase64String(keyPair.getPrivate().getEncoded());
+      conf.client.oauth2.tokenUrl = getBaseUri() + "jwtToken";
+
+      Record record = RecordCreator.create();
+      record.set("/", Field.create(new HashMap<String, Field>()));
+
+      List<Record> records = ImmutableList.of(record);
+      Processor processor = new HttpProcessor(conf);
+      ProcessorRunner runner = new ProcessorRunner.Builder(HttpDProcessor.class, processor)
+          .addOutputLane("lane")
+          .build();
+      runner.runInit();
+      try {
+        StageRunner.Output output = runner.runProcess(records);
+        List<Record> outputRecords = output.getRecords().get("lane");
+        assertTrue(runner.getErrorRecords().isEmpty());
+        assertEquals(1, outputRecords.size());
+        assertTrue(outputRecords.get(0).has("/output"));
+        Map<String, Field> outputMap = outputRecords.get(0).get("/output").getValueAsMap();
+        assertTrue(!outputMap.isEmpty());
+        assertTrue(outputMap.containsKey("hello"));
+        assertEquals("world!", outputMap.get("hello").getValueAsString());
+
+      } finally {
+        runner.runDestroy();
+      }
+      assertEquals(1, tokenGetCount);
+    } finally {
+      token = null;
+      tokenGetCount = 0;
+    }
+  }
 }

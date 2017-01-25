@@ -1,6 +1,6 @@
 /**
- * Copyright 2017 StreamSets Inc.
- *
+ * Copyright 2015 StreamSets Inc.
+ * <p>
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -8,9 +8,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,23 +19,11 @@
  */
 package com.streamsets.pipeline.lib.http.oauth2;
 
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public enum OAuth2GrantTypes implements Label{
+public class SigningAlgorithmsChooserValues extends BaseEnumChooserValues<SigningAlgorithms> {
 
-  CLIENT_CREDENTIALS("Client Credentials Grant"),
-  RESOURCE_OWNER("Resource Owner Password Credentials Grant"),
-  JWT("JSON Web Tokens"),
-  ;
-
-  private String label;
-
-  OAuth2GrantTypes(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return label;
+  public SigningAlgorithmsChooserValues() {
+    super(SigningAlgorithms.class);
   }
 }
