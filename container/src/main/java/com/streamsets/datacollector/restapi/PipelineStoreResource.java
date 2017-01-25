@@ -812,9 +812,8 @@ public class PipelineStoreResource {
       @QueryParam("overwrite") @DefaultValue("false") boolean overwrite,
       @QueryParam("autoGenerateName") @DefaultValue("false") boolean autoGenerateName,
       @ApiParam(name="pipelineEnvelope", required = true) PipelineEnvelopeJson pipelineEnvelope
-  ) throws PipelineStoreException, URISyntaxException {
-    PipelineInfo pipelineInfo = store.getInfo(name);
-    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
+  ) throws PipelineException, URISyntaxException {
+    RestAPIUtils.injectPipelineInMDC("*");
 
     PipelineConfigurationJson pipelineConfigurationJson = pipelineEnvelope.getPipelineConfig();
     PipelineConfiguration pipelineConfig = BeanHelper.unwrapPipelineConfiguration(pipelineConfigurationJson);
