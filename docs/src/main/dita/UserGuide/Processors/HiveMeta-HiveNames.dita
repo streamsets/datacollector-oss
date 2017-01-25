@@ -39,7 +39,7 @@
                         <row>
                             <entry>Column names</entry>
                             <entry>Alphanumeric characters and underscore, but must begin with a
-                                letter.</entry>
+                                letter or underscore.</entry>
                         </row>
                         <row>
                             <entry>Partition names</entry>
