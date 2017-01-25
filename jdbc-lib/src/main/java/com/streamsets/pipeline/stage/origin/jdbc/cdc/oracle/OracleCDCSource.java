@@ -34,6 +34,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
+import com.streamsets.pipeline.lib.jdbc.OracleCDCOperationCode;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
@@ -114,17 +115,11 @@ public class OracleCDCSource extends BaseSource {
   private static final String SCN = PREFIX + "scn";
   private static final String USER = PREFIX + "user";
   private static final String DDL_TEXT = PREFIX + "ddl";
-  private static final String OPERATION = PREFIX + "operation"; //this will be deprecated
   private static final String DATE = "DATE";
   private static final String TIME = "TIME";
   private static final String TIMESTAMP = "TIMESTAMP";
   private static final String TIMESTAMP_HEADER = PREFIX + TIMESTAMP.toLowerCase();
   private static final String TABLE = PREFIX + "table";
-  private static final int INSERT_CODE = 1;
-  private static final int DELETE_CODE = 2;
-  private static final int UPDATE_CODE = 3;
-  private static final int DDL_CODE = 5;
-  private static final int SELECT_FOR_UPDATE_CODE = 25;
   private static final String NULL = "NULL";
   private static final String VERSION_STR = "v2";
   private static final String UNKNOWN = "UNKNOWN";
@@ -367,29 +362,29 @@ public class OracleCDCSource extends BaseSource {
         ParserRuleContext ruleContext = null;
         int operationCode = -1;
         switch (op) {
-          case UPDATE_CODE:
+          case OracleCDCOperationCode.UPDATE_CODE:
             ruleContext = parser.update_statement();
             operationCode = OperationType.UPDATE_CODE;
             break;
-          case INSERT_CODE:
+          case OracleCDCOperationCode.INSERT_CODE:
             ruleContext = parser.insert_statement();
             operationCode = OperationType.INSERT_CODE;
             break;
-          case DELETE_CODE:
+          case OracleCDCOperationCode.DELETE_CODE:
             ruleContext = parser.delete_statement();
             operationCode = OperationType.DELETE_CODE;
             break;
-          case SELECT_FOR_UPDATE_CODE:
+          case OracleCDCOperationCode.SELECT_FOR_UPDATE_CODE:
             ruleContext = parser.update_statement();
             operationCode = OperationType.UPDATE_CODE;
             break;
-          case DDL_CODE:
+          case OracleCDCOperationCode.DDL_CODE:
             break;
           default:
             errorRecordHandler.onError(JDBC_43, redoSQL);
             continue;
         }
-        if (op != DDL_CODE) {
+        if (op != OracleCDCOperationCode.DDL_CODE) {
           operation = OperationType.getLabelFromIntCode(operationCode);
           scnSeq = commitSCN + OFFSET_DELIM + seq;
           // Walk it and attach our sqlListener
@@ -413,7 +408,7 @@ public class OracleCDCSource extends BaseSource {
           }
           recordHeader.setAttribute(SCN, scn);
           recordHeader.setAttribute(USER, username);
-          recordHeader.setAttribute(OPERATION, operation);
+          recordHeader.setAttribute(OracleCDCOperationCode.OPERATION, operation);
           recordHeader.setAttribute(TIMESTAMP_HEADER, timestamp);
           recordHeader.setAttribute(TABLE, table);
           recordHeader.setAttribute(OperationType.SDC_OPERATION_TYPE, String.valueOf(operationCode));
@@ -744,13 +739,13 @@ public class OracleCDCSource extends BaseSource {
   }
 
   private String getDDLOperationsClauseSCN() {
-    return shouldTrackDDL ? "OR (OPERATION_CODE = " + DDL_CODE + " AND SCN > ?)" : "";
+    return shouldTrackDDL ? "OR (OPERATION_CODE = " + OracleCDCOperationCode.DDL_CODE + " AND SCN > ?)" : "";
   }
 
 
   private String getDDLOperationsClauseDate() {
     return shouldTrackDDL ?
-        "OR (OPERATION_CODE = " + DDL_CODE + " AND TIMESTAMP >= TO_DATE('" + configBean.startDate + "', 'DD-MM-YYYY HH24:MI:SS'))" : "";
+        "OR (OPERATION_CODE = " + OracleCDCOperationCode.DDL_CODE + " AND TIMESTAMP >= TO_DATE('" + configBean.startDate + "', 'DD-MM-YYYY HH24:MI:SS'))" : "";
   }
 
 
@@ -789,16 +784,16 @@ public class OracleCDCSource extends BaseSource {
     for (ChangeTypeValues change : configBean.baseConfigBean.changeTypes) {
       switch (change) {
         case INSERT:
-          supportedOps.add(INSERT_CODE);
+          supportedOps.add(OracleCDCOperationCode.INSERT_CODE);
           break;
         case UPDATE:
-          supportedOps.add(UPDATE_CODE);
+          supportedOps.add(OracleCDCOperationCode.UPDATE_CODE);
           break;
         case DELETE:
-          supportedOps.add(DELETE_CODE);
+          supportedOps.add(OracleCDCOperationCode.DELETE_CODE);
           break;
         case SELECT_FOR_UPDATE:
-          supportedOps.add(SELECT_FOR_UPDATE_CODE);
+          supportedOps.add(OracleCDCOperationCode.SELECT_FOR_UPDATE_CODE);
           break;
         default:
       }

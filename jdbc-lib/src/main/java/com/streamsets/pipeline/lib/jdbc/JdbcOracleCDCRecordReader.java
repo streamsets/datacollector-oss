@@ -31,9 +31,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class JdbcMicrosoftRecordReader extends JdbcRecordReader {
+public class JdbcOracleCDCRecordReader extends JdbcRecordReader {
 
   private static final Logger LOG = LoggerFactory.getLogger(JdbcRecordReader.class);
+
 
   /**
    * Get an operation code from record.
@@ -60,17 +61,17 @@ public class JdbcMicrosoftRecordReader extends JdbcRecordReader {
     try {
       // Try sdc.operation.type first
       op = record.getHeader().getAttribute(OperationType.SDC_OPERATION_TYPE);
-      // If not set, look for "__$operation" in record.
+      // If not set, look for oracle.cdc.operation in record header.
       if (StringUtils.isBlank(op)) {
-        if (record.has(MSOperationCode.getOpField())) {
-          int intOp = record.get(MSOperationCode.getOpField()).getValueAsInteger();
-          // Convert the MS specific operation code to SDC standard operation code
-          opCode = MSOperationCode.convertToJDBCCode(intOp);
-        }
+          op = record.getHeader().getAttribute(OracleCDCOperationCode.OPERATION);
+          if (op != null) {
+            // Convert the Oracle specific operation code to SDC standard operation code
+            opCode = OracleCDCOperationCode.convertFromOracleToSDCCode(op);
+          }
       } else {
         opCode = JDBCOperationType.convertToIntCode(op);
       }
-      if (opCode == -1) { // Both MS code and sdc code are not set. Use default.
+      if (opCode == -1){
         opCode = defaultOp.getCode();
       }
     } catch (NumberFormatException | UnsupportedOperationException ex) {

@@ -115,6 +115,8 @@ public final class JdbcRecordReaderWriterFactory {
         recordReader = new JdbcMicrosoftRecordReader();
         break;
       case OracleCDC:
+        recordReader = new JdbcOracleCDCRecordReader();
+        break;
       case NONE:
         recordReader = new JdbcRecordReader();
         break;
