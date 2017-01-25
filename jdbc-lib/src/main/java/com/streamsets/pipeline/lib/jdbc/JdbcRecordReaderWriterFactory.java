@@ -123,6 +123,9 @@ public final class JdbcRecordReaderWriterFactory {
       case MySQLBinLog:
         recordReader = new JdbcMySqlBinLogRecordReader();
         break;
+      case MongoDBOpLog:
+        recordReader = new JdbcMongoDBOplogRecordReader();
+        break;
       default:
         throw new IllegalStateException("Unrecognized format specified: " + changeLogFormat);
     }

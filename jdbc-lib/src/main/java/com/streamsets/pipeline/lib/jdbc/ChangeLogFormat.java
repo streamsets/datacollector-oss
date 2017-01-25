@@ -26,6 +26,7 @@ public enum ChangeLogFormat implements Label {
   MSSQL("Microsoft SQL Server"),
   OracleCDC("Oracle CDC Client"),
   MySQLBinLog("MySQL Binary Log"),
+  MongoDBOpLog("MongoDB Oplog"),
   ;
 
   private final String label;

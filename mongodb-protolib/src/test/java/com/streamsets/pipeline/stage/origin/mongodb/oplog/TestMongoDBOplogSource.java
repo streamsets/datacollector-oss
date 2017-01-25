@@ -79,17 +79,17 @@ public class TestMongoDBOplogSource {
 
   @Test
   public void testGenericOpLogRecordFromTheDocumentInsert() throws Exception {
-    testGenericOpTypesWithPopulateGenericOpTypeInHeader(OplogOpType.INSERT.getOp(), OperationType.getLabelFromIntCode(OperationType.INSERT_CODE));
+    testGenericOpTypesWithPopulateGenericOpTypeInHeader(OplogOpType.INSERT.getOp(), String.valueOf(OperationType.INSERT_CODE));
   }
 
   @Test
   public void testGenericOpLogRecordFromTheDocumentUpdate() throws Exception {
-    testGenericOpTypesWithPopulateGenericOpTypeInHeader(OplogOpType.UPDATE.getOp(), OperationType.getLabelFromIntCode(OperationType.UPDATE_CODE));
+    testGenericOpTypesWithPopulateGenericOpTypeInHeader(OplogOpType.UPDATE.getOp(), String.valueOf(OperationType.UPDATE_CODE));
   }
 
   @Test
   public void testGenericOpLogRecordFromTheDocumentDelete() throws Exception {
-    testGenericOpTypesWithPopulateGenericOpTypeInHeader(OplogOpType.DELETE.getOp(), OperationType.getLabelFromIntCode(OperationType.DELETE_CODE));
+    testGenericOpTypesWithPopulateGenericOpTypeInHeader(OplogOpType.DELETE.getOp(), String.valueOf(OperationType.DELETE_CODE));
   }
 
   @Test

@@ -194,7 +194,7 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
 
     // Set columns and their value in query. No need to perform this for delete operation.
     if(opCode != OperationType.DELETE_CODE) {
-      paramIdx = setParamsToStatement(paramIdx, statement, columnsToParameters, record, connection);
+      paramIdx = setParamsToStatement(paramIdx, statement, columnsToParameters, record, connection, opCode);
     }
     // Set primary keys in WHERE clause for update and delete operations
     if(opCode != OperationType.INSERT_CODE){

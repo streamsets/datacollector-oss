@@ -237,7 +237,7 @@ public class MongoDBOplogSource extends AbstractMongoDBSource {
       default: throw new IllegalArgumentException(Utils.format("Unsupported Op Log Op type : {}", opType));
     }
     if (operationType != -1) {
-      record.getHeader().setAttribute(OperationType.SDC_OPERATION_TYPE, OperationType.getLabelFromIntCode(operationType));
+      record.getHeader().setAttribute(OperationType.SDC_OPERATION_TYPE, String.valueOf(operationType));
     }
   }
 
