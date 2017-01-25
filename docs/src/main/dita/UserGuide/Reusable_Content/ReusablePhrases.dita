@@ -893,8 +893,9 @@ web-0011.log</codeblock></dd>
                   <draft-comment author="Loretta">UDP Source and UDP to Kafka use the following ph
                         and ul:</draft-comment>
             </p>
-            <p><ph id="UDP-messagetypes">can read collectd messages, Netflow messages from NetFlow
-                        Version 5, and the following types of syslog messages:</ph><ul
+            <p><ph id="UDP-messagetypes">can read <xref href="https://collectd.org/" format="html"
+                              scope="external">collectd</xref> messages, Netflow messages from
+                        NetFlow Version 5, and the following types of syslog messages:</ph><ul
                         id="UDP-syslog">
                         <li>RFC 5424 (<xref href="https://tools.ietf.org/html/rfc5424" format="html"
                                     scope="external"

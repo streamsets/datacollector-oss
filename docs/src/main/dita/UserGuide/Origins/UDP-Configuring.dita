@@ -18,7 +18,7 @@
     <taskbody>
         <context>
             <p><indexterm>UDP Source origin<indexterm>configuring</indexterm></indexterm>Configure a
-                UDP Source origin to process messages from a UPD source.</p>
+                UDP Source origin to process messages from a UDP source.</p>
         </context>
         <steps id="steps_ejy_1dv_1s">
             <step
