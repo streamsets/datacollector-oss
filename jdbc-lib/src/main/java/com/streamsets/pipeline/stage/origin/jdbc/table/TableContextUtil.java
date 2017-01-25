@@ -129,7 +129,11 @@ public final class TableContextUtil {
           Sets.difference(tableConfigBean.offsetColumnToInitialOffsetValue.keySet(), offsetColumnToType.keySet());
 
       if (!missingColumns.isEmpty() || !extraColumns.isEmpty()) {
-        throw new StageException(JdbcErrors.JDBC_64, COMMA_JOINER.join(missingColumns), COMMA_JOINER.join(extraColumns));
+        throw new StageException(
+          JdbcErrors.JDBC_64,
+          missingColumns.isEmpty() ? "(none)" : COMMA_JOINER.join(missingColumns),
+          extraColumns.isEmpty() ? "(none)" : COMMA_JOINER.join(extraColumns)
+        );
       }
 
       for (Map.Entry<String, String> partitionColumnInitialOffsetEntry : tableConfigBean.offsetColumnToInitialOffsetValue.entrySet()) {

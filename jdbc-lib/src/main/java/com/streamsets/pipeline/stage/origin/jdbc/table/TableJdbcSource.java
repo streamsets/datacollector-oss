@@ -210,7 +210,7 @@ public class TableJdbcSource extends BaseSource {
       } catch (StageException e) {
         LOG.debug("Error when finding tables:", e);
         closeEverything();
-        issues.add(context.createConfigIssue(Groups.JDBC.name(), TableJdbcConfigBean.TABLE_CONFIG, e.getErrorCode(), e.getParams()));
+        issues.add(context.createConfigIssue(Groups.TABLE.name(), TableJdbcConfigBean.TABLE_CONFIG, e.getErrorCode(), e.getParams()));
       }
     }
   }
