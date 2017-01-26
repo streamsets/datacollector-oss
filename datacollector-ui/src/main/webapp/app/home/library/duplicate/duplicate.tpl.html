@@ -14,8 +14,6 @@
       <label class="control-label" translate="global.form.title">Title</label>
       <input type="text" class="form-control" required
              ng-disabled="operationInProgress"
-             pattern="{{$root.common.namePattern}}"
-             title="{{'home.library.nameValidation' | translate}}"
              placeholder="{{'home.library.namePlaceholder' | translate}}"
              ng-model="newConfig.name"
              focus-me="true">
