@@ -114,22 +114,23 @@ public class CompositeKeysIT extends BaseTableJdbcSourceIT {
 
   @Test
   public void testCompositePrimaryKeys() throws Exception {
-    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
-        .tablePattern("%")
-        .schema(database)
-        .build();
+    int recordsRead = 0, noOfBatches = 0, totalNoOfRecords = MULTIPLE_INT_COMPOSITE_RECORDS.size();
+    String offset = "";
+    while (recordsRead < totalNoOfRecords) {
+      TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+          .tablePattern("%")
+          .schema(database)
+          .build();
 
-    TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
-        .tableConfigBeans(ImmutableList.of(tableConfigBean))
-        .build();
+      TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
+          .tableConfigBeans(ImmutableList.of(tableConfigBean))
+          .build();
 
-    SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
-        .addOutputLane("a").build();
-    runner.runInit();
-    try {
-      int recordsRead = 0, noOfBatches = 0, totalNoOfRecords = MULTIPLE_INT_COMPOSITE_RECORDS.size();
-      String offset = "";
-      while (recordsRead < totalNoOfRecords) {
+      SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
+          .addOutputLane("a").build();
+      runner.runInit();
+
+      try {
         //Random batch size (Making sure at least batch size is 1)
         int bound = totalNoOfRecords - recordsRead - 1;
         int batchSize = (bound == 0)? 1: RANDOM.nextInt(bound) + 1;
@@ -145,10 +146,9 @@ public class CompositeKeysIT extends BaseTableJdbcSourceIT {
         noOfBatches++;
 
         LOGGER.info(LOG_TEMPLATE, noOfBatches, recordsRead, (totalNoOfRecords - recordsRead), batchSize, actualRecords.size());
+      } finally {
+        runner.runDestroy();
       }
-    } finally {
-      runner.runDestroy();
     }
   }
-
 }
