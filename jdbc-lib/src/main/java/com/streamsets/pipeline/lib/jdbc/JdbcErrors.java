@@ -94,6 +94,7 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_69("Unsupported Offset Column Types. {}"),
   JDBC_70("Unsupported operation in record header: {}"),
   JDBC_71("Invalid State. Mismatch in offset columns for table {}. Stored offset columns: {}, Specified Offset Columns: {}"),
+  JDBC_72("Invalid Start offset(s) for table '{}'. Invalid Offset Columns With Values '{}'"),
   ;
 
   private final String msg;

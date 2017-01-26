@@ -20,13 +20,16 @@
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.table.util.OffsetQueryUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -41,6 +44,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 public final class TableContextUtil {
+  private static final Logger LOG = LoggerFactory.getLogger(TableContext.class);
   //JDBC Result set constants
   private static final String TABLE_METADATA_TABLE_CATALOG_CONSTANT = "TABLE_CAT";
   private static final String TABLE_METADATA_TABLE_SCHEMA_CONSTANT = "TABLE_SCHEM";
@@ -130,9 +134,9 @@ public final class TableContextUtil {
 
       if (!missingColumns.isEmpty() || !extraColumns.isEmpty()) {
         throw new StageException(
-          JdbcErrors.JDBC_64,
-          missingColumns.isEmpty() ? "(none)" : COMMA_JOINER.join(missingColumns),
-          extraColumns.isEmpty() ? "(none)" : COMMA_JOINER.join(extraColumns)
+            JdbcErrors.JDBC_64,
+            missingColumns.isEmpty() ? "(none)" : COMMA_JOINER.join(missingColumns),
+            extraColumns.isEmpty() ? "(none)" : COMMA_JOINER.join(extraColumns)
         );
       }
 
@@ -142,6 +146,11 @@ public final class TableContextUtil {
             partitionColumnInitialOffsetEntry.getValue()
         );
       }
+      checkForInvalidInitialOffsetValues(
+          getQualifiedTableName(schemaName, tableName),
+          offsetColumnToType,
+          offsetColumnToStartOffset
+      );
     }
     return new TableContext(
         schemaName,
@@ -150,6 +159,50 @@ public final class TableContextUtil {
         offsetColumnToStartOffset,
         tableConfigBean.extraOffsetColumnConditions
     );
+  }
+
+  /**
+   * Determines if there are invalid values specified in the initial offset value
+   * for columns.
+   */
+  //@VisibleForTesting
+  static void checkForInvalidInitialOffsetValues(
+      String qualifiedTableName,
+      LinkedHashMap<String, Integer> offsetColumnToType,
+      Map<String, String> offsetColumnToStartOffset
+  ) throws StageException {
+    List<String> invalidInitialOffsetFieldAndValue =  new ArrayList<>();
+    for (Map.Entry<String, Integer> offsetColumnTypeEntry : offsetColumnToType.entrySet()) {
+      int offsetSqlType = offsetColumnTypeEntry.getValue();
+      String offsetColumn = offsetColumnTypeEntry.getKey();
+      String initialOffsetValue = offsetColumnToStartOffset.get(offsetColumn);
+      try {
+        if (JdbcUtil.isSqlTypeOneOf(offsetSqlType, Types.DATE, Types.TIME, Types.TIMESTAMP)) {
+          Long.valueOf(initialOffsetValue); //NOSONAR
+        } else {
+          //Use native field conversion strategy to conver string to specify type and get value
+          Field.create(OffsetQueryUtil.SQL_TYPE_TO_FIELD_TYPE.get(offsetSqlType), initialOffsetValue).getValue();
+        }
+      } catch (IllegalArgumentException e) {
+        LOG.error(
+            Utils.format(
+                "Invalid Initial Offset Value {} for column {} in table {}",
+                initialOffsetValue,
+                offsetColumn,
+                qualifiedTableName
+            ),
+            e
+        );
+        invalidInitialOffsetFieldAndValue.add(offsetColumn + " - " + initialOffsetValue);
+      }
+    }
+    if (!invalidInitialOffsetFieldAndValue.isEmpty()) {
+      throw new StageException(
+          JdbcErrors.JDBC_72,
+          qualifiedTableName,
+          COMMA_JOINER.join(invalidInitialOffsetFieldAndValue)
+      );
+    }
   }
 
   /**
