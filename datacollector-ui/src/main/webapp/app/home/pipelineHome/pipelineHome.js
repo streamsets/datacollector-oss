@@ -773,7 +773,7 @@ angular
 
         //Pipelines
 
-        $scope.existingPipelineLabels = pipelineService.existingPipelineLabels;
+        $scope.existingPipelineLabels = pipelineService.existingPipelineLabels || [];
 
         $rootScope.common.pipelineStatusMap = pipelineStatusMap;
 
