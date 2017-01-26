@@ -46,15 +46,12 @@ public final class TableReadContext {
       Connection connection,
       String query,
       List<Pair<Integer, String>> paramValuesToSet,
-      boolean configureFetchSize,
       int fetchSize
   ) throws SQLException, StageException {
     this.ps = connection.prepareStatement(query);
     this.query = query;
     LOGGER.info("Executing Query :{}", query);
-    if (configureFetchSize) {
-      ps.setFetchSize(fetchSize);
-    }
+    ps.setFetchSize(fetchSize);
     setPreparedStParameters(paramValuesToSet);
     rs = ps.executeQuery();
   }

@@ -41,7 +41,6 @@ public class TableJdbcSourceTestBuilder {
   private int maxBlobSize;
   private List<TableConfigBean> tableConfigBeanList;
   private String timeZoneID;
-  private boolean configureFetchSize;
   private int fetchSize;
   private BatchTableStrategy batchTableStrategy;
   private TableOrderStrategy tableOrderStrategy;
@@ -62,8 +61,7 @@ public class TableJdbcSourceTestBuilder {
     this.maxBlobSize = 1000;
     this.tableConfigBeanList = new ArrayList<>();
     this.timeZoneID = "UTC";
-    this.configureFetchSize = false;
-    this.fetchSize = -1;
+    this.fetchSize = 1000;
     this.batchTableStrategy = BatchTableStrategy.SWITCH_TABLES;
     this.tableOrderStrategy = TableOrderStrategy.NONE;
     this.resultSetCacheSize = -1;
@@ -133,16 +131,6 @@ public class TableJdbcSourceTestBuilder {
     return this;
   }
 
-  public TableJdbcSourceTestBuilder configureFetchSize(boolean configureFetchSize) {
-    this.configureFetchSize = configureFetchSize;
-    return this;
-  }
-
-  public TableJdbcSourceTestBuilder fetchSize(int fetchSize) {
-    this.fetchSize = fetchSize;
-    return this;
-  }
-
   public TableJdbcSourceTestBuilder timeZoneID(String timeZoneID) {
     this.timeZoneID = timeZoneID;
     return this;
@@ -175,7 +163,6 @@ public class TableJdbcSourceTestBuilder {
 
     TableJdbcConfigBean tableJdbcConfigBean = new TableJdbcConfigBean();
     tableJdbcConfigBean.tableConfigs = tableConfigBeanList;
-    tableJdbcConfigBean.configureFetchSize = configureFetchSize;
     tableJdbcConfigBean.fetchSize = fetchSize;
     tableJdbcConfigBean.tableOrderStrategy = tableOrderStrategy;
     tableJdbcConfigBean.timeZoneID = timeZoneID;

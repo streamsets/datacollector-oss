@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.Label;
 @GenerateResourceBundle
 public enum Groups implements Label {
   JDBC("JDBC"),
-  TABLE("TABLE"),
+  TABLE("Tables"),
   CREDENTIALS("Credentials"),
   LEGACY("Legacy Drivers"),
   ADVANCED("Advanced"),
@@ -33,7 +33,7 @@ public enum Groups implements Label {
 
   private final String label;
 
-  private Groups(String label) {
+  Groups(String label) {
     this.label = label;
   }
 

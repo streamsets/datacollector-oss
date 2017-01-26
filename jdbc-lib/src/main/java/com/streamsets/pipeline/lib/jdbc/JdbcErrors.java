@@ -87,7 +87,6 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_62("Table {} does not have a primary or no partition configuration defined."),
   JDBC_63("Table {} does not contain the specified partition column {}."),
   JDBC_64("Invalid intial Offset configuration. Missed Columns: {}, Non Existing Columns: {} ."),
-  JDBC_65("Invalid value {} for Fetch Size Configuration should not be more than maxBatchSize"),
   JDBC_66("No Tables matches the configuration in the origin."),
   JDBC_67("Internal Error : {}"),
   JDBC_68("Tables Referring to each other in cyclic fashion."),
