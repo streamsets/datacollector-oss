@@ -433,6 +433,17 @@ public class HdfsTargetConfigBean {
   )
   public String permissionEL = "";
 
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.BOOLEAN,
+    label = "Skip file recovery",
+    defaultValue = "false",
+    description = "Set to true to skip finding old temporary files that were written to and automatically recover them.",
+    displayPosition = 1000,
+    group = "OUTPUT_FILES"
+  )
+  public boolean skipOldTempFileRecovery = false;
+
   @ConfigDefBean()
   public DataGeneratorFormatConfig dataGeneratorFormatConfig;
 
@@ -724,19 +735,22 @@ public class HdfsTargetConfigBean {
 
     if (issues.isEmpty()) {
       try {
-        getUGI().doAs(new PrivilegedExceptionAction<Void>() {
-          @Override
-          public Void run() throws Exception {
-            if(!dirPathTemplateInHeader) {
-              // Run recovery only in the first runner
-              if(context.getRunnerId() == 0) {
-                getCurrentWriters().getWriterManager().handleAlreadyExistingFiles();
-              }
+        // Recover previously written files (promote all _tmp_ to their final form).
+        //
+        // We want to run the recovery only if
+        // * This is not a WHOLE_FILE since it doesn't make sense there (tmp files will be discarded instead)
+        // * User explicitly did not disabled the recovery in configuration
+        // * We do have the directory template available (e.g. it's not in header)
+        // * Only for the first runner, since it would be empty operation for the others
+        if(dataFormat != DataFormat.WHOLE_FILE && !skipOldTempFileRecovery && !dirPathTemplateInHeader && context.getRunnerId() == 0) {
+          getUGI().doAs(new PrivilegedExceptionAction<Void>() {
+            @Override
+            public Void run() throws Exception {
+              getCurrentWriters().getWriterManager().handleAlreadyExistingFiles();
+              return null;
             }
-
-            return null;
-          }
-        });
+          });
+        }
       } catch (Exception ex) {
         LOG.error(Errors.HADOOPFS_59.getMessage(), ex);
         issues.add(

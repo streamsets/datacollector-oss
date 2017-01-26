@@ -315,7 +315,7 @@ public class RecordWriterManager {
       globPath = globPath.replace(matcher.group(), expressionString);
     }
 
-    final String expReg = "\\$\\{[a-zA-Z0-9\\(\\)\\'\\:\\/]*\\}";
+    final String expReg = "\\$\\{[a-zA-Z0-9\\(\\)\\'\\:\\/\\, ]*\\}";
     pattern = Pattern.compile(expReg);
     matcher = pattern.matcher(globPath);
     while (matcher.find()) {
