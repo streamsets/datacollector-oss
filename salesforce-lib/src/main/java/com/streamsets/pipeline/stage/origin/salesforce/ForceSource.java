@@ -65,23 +65,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ForceSource extends BaseSource {
-  public static final long EVENT_ID_FROM_NOW = -1;
-  public static final long EVENT_ID_FROM_START = -2;
+  private static final long EVENT_ID_FROM_NOW = -1;
+  private static final long EVENT_ID_FROM_START = -2;
+  private static final String RECORD_ID_OFFSET_PREFIX = "recordId:";
+  private static final String EVENT_ID_OFFSET_PREFIX = "eventId:";
 
   private static final Logger LOG = LoggerFactory.getLogger(ForceSource.class);
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
   private static final String HEADER_ATTRIBUTE_PREFIX = "salesforce.cdc.";
   private static final String SOBJECT_TYPE_ATTRIBUTE = "salesforce.sobjectType";
   private static final String REPLAY_ID = "replayId";
-  private static final String RECORD_ID_OFFSET_PREFIX = "recordId:";
-  private static final String EVENT_ID_OFFSET_PREFIX = "eventId:";
-  private static final String READ_EVENTS_FROM_NOW = EVENT_ID_OFFSET_PREFIX + EVENT_ID_FROM_NOW;
-  private static final String READ_EVENTS_FROM_START = EVENT_ID_OFFSET_PREFIX + EVENT_ID_FROM_START;
   private static final String SOBJECT_TYPE_FROM_QUERY = "^SELECT.*FROM\\s*(\\S*)\\b.*";
+  private static final String AUTHENTICATION_INVALID = "401::Authentication invalid";
+  private static final String META = "/meta";
+  private static final String META_HANDSHAKE = "/meta/handshake";
+
+  public static final String READ_EVENTS_FROM_NOW = EVENT_ID_OFFSET_PREFIX + EVENT_ID_FROM_NOW;
+  public static final String READ_EVENTS_FROM_START = EVENT_ID_OFFSET_PREFIX + EVENT_ID_FROM_START;
 
   private static final Map<String, Integer> SFDC_TO_SDC_OPERATION = new ImmutableMap.Builder<String, Integer>()
       .put("created", OperationType.INSERT_CODE)
@@ -107,7 +112,7 @@ public class ForceSource extends BaseSource {
   private QueryResult queryResult;
   private int recordIndex;
 
-  private BlockingQueue<Object> entityQueue;
+  private BlockingQueue<Message> messageQueue;
   private ForceStreamConsumer forceConsumer;
 
   public ForceSource(
@@ -120,6 +125,8 @@ public class ForceSource extends BaseSource {
   public class ForceSessionRenewer implements SessionRenewer {
     @Override
     public SessionRenewalHeader renewSession(ConnectorConfig config) throws ConnectionException {
+      LOG.info("Renewing Salesforce session");
+
       partnerConnection = Connector.newConnection(ForceUtils.getPartnerConfig(conf, new ForceSessionRenewer()));
 
       SessionRenewalHeader header = new SessionRenewalHeader();
@@ -227,7 +234,7 @@ public class ForceSource extends BaseSource {
         );
       }
 
-      entityQueue = new ArrayBlockingQueue<>(2 * conf.basicConfig.maxBatchSize);
+      messageQueue = new ArrayBlockingQueue<>(2 * conf.basicConfig.maxBatchSize);
     }
     // If issues is not empty, the UI will inform the user of each configuration issue in the list.
     return issues;
@@ -256,8 +263,8 @@ public class ForceSource extends BaseSource {
         LOG.error("Exception while stopping ForceStreamConsumer.", e);
       }
 
-      if (!entityQueue.isEmpty()) {
-        LOG.error("Queue still had {} entities at shutdown.", entityQueue.size());
+      if (!messageQueue.isEmpty()) {
+        LOG.error("Queue still had {} entities at shutdown.", messageQueue.size());
       } else {
         LOG.info("Queue was empty at shutdown. No data lost.");
       }
@@ -513,7 +520,108 @@ public class ForceSource extends BaseSource {
     return nextSourceOffset;
   }
 
-  public String streamingProduce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+  private void processMetaMessage(Message message, String nextSourceOffset) throws StageException {
+    if (message.getChannel().startsWith(META_HANDSHAKE) && message.isSuccessful()) {
+      // Need to (re)subscribe after handshake - see
+      // https://developer.salesforce.com/docs/atlas.en-us.api_streaming.meta/api_streaming/using_streaming_api_client_connection.htm
+      try {
+        forceConsumer.subscribeForNotifications(nextSourceOffset);
+      } catch (InterruptedException e) {
+        LOG.error(Errors.FORCE_10.getMessage(), e);
+        throw new StageException(Errors.FORCE_10, e.getMessage(), e);
+      }
+    } else if (!message.isSuccessful()) {
+      String error = (String) message.get("error");
+      LOG.info("Bayeux error message: {}", error);
+
+      if (AUTHENTICATION_INVALID.equals(error)) {
+        // This happens when the session token, stored in the HttpClient as a cookie,
+        // has expired, and we try to use it in a handshake.
+        // Just kill the consumer and start all over again.
+        LOG.info("Reconnecting after {}", AUTHENTICATION_INVALID);
+        try {
+          forceConsumer.stop();
+        } catch (Exception ex) {
+          LOG.info("Exception stopping consumer", ex);
+        }
+        forceConsumer = null;
+      } else {
+        // Some other problem...
+        Exception exception = (Exception) message.get("exception");
+        LOG.info("Bayeux exception:", exception);
+        throw new StageException(Errors.FORCE_09, error, exception);
+      }
+    }
+  }
+
+  private String processDataMessage(Message message, BatchMaker batchMaker)
+      throws IOException, StageException {
+    String msgJson = message.getJSON();
+
+    // Message has the form
+    // {
+    //   "channel": "/topic/AccountUpdates",
+    //   "clientId": "j17ylcz9l0t0fyp0pze7uzpqlt",
+    //   "data": {
+    //     "event": {
+    //       "createdDate": "2016-09-15T06:01:40.000+0000",
+    //       "type": "updated"
+    //     },
+    //     "sobject": {
+    //       "AccountNumber": "3231321",
+    //       "Id": "0013600000dC5xLAAS",
+    //       "Name": "StreamSets",
+    //       ...
+    //     }
+    //   }
+    // }
+    LOG.info("Processing message: {}", msgJson);
+
+    Object json = OBJECT_MAPPER.readValue(msgJson, Object.class);
+    Map<String, Object> jsonMap = (Map<String, Object>) json;
+    Map<String, Object> data = (Map<String, Object>) jsonMap.get("data");
+    Map<String, Object> event = (Map<String, Object>) data.get("event");
+    Map<String, Object> sobject = (Map<String, Object>) data.get("sobject");
+
+    final String recordContext = event.get("createdDate") + "::" + sobject.get("Id");
+    Record rec = getContext().createRecord(recordContext);
+
+    // sobject data becomes fields
+    LinkedHashMap<String, Field> map = new LinkedHashMap<>();
+
+    for (String key : sobject.keySet()) {
+      Object val = sobject.get(key);
+      Field field = ForceUtils.createField(val);
+      if (field == null) {
+        throw new StageException(
+            Errors.FORCE_04,
+            "Key: " + key + ", unexpected type for val: " + ((val == null) ? val : val.getClass().toString())
+        );
+      }
+      map.put(key, field);
+    }
+
+    rec.set(Field.createListMap(map));
+
+    // event data becomes header attributes
+    // of the form salesforce.cdc.createdDate,
+    // salesforce.cdc.type
+    Record.Header recordHeader = rec.getHeader();
+    for (Map.Entry<String, Object> entry : event.entrySet()) {
+      recordHeader.setAttribute(HEADER_ATTRIBUTE_PREFIX + entry.getKey(), entry.getValue().toString());
+      if ("type".equals(entry.getKey())) {
+        int operationCode = SFDC_TO_SDC_OPERATION.get(entry.getValue().toString());
+        recordHeader.setAttribute(OperationType.SDC_OPERATION_TYPE, String.valueOf(operationCode));
+      }
+    }
+    recordHeader.setAttribute(SOBJECT_TYPE_ATTRIBUTE, sobjectType);
+
+    batchMaker.addRecord(rec);
+
+    return EVENT_ID_OFFSET_PREFIX + event.get(REPLAY_ID).toString();
+  }
+
+  private String streamingProduce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     String nextSourceOffset;
     if (getContext().isPreview()) {
       nextSourceOffset = READ_EVENTS_FROM_START;
@@ -524,8 +632,15 @@ public class ForceSource extends BaseSource {
     }
 
     if (forceConsumer == null) {
-      forceConsumer = new ForceStreamConsumer(entityQueue, partnerConnection, conf.apiVersion, conf.pushTopic, nextSourceOffset);
+      // Do a request so we ensure that the connection is renewed if necessary
+      try {
+        partnerConnection.getUserInfo();
+      } catch (ConnectionException e) {
+        LOG.error("Exception getting user info", e);
+        throw new StageException(Errors.FORCE_19, e.getMessage(), e);
+      }
 
+      forceConsumer = new ForceStreamConsumer(messageQueue, partnerConnection, conf.apiVersion, conf.pushTopic);
       forceConsumer.start();
     }
 
@@ -535,7 +650,7 @@ public class ForceSource extends BaseSource {
     }
 
     // We didn't receive any new data within the time allotted for this batch.
-    if (entityQueue.isEmpty()) {
+    if (messageQueue.isEmpty()) {
       // In preview, we already waited
       if (! getContext().isPreview()) {
         // Sleep for one second so we don't tie up the app.
@@ -545,77 +660,16 @@ public class ForceSource extends BaseSource {
       return nextSourceOffset;
     }
 
-    List<Object> messages = new ArrayList<>(maxBatchSize);
-    entityQueue.drainTo(messages, maxBatchSize);
+    List<Message> messages = new ArrayList<>(maxBatchSize);
+    messageQueue.drainTo(messages, maxBatchSize);
 
-    for (Object message : messages) {
+    for (Message message : messages) {
       try {
-        if (message instanceof StageException) {
-          throw (StageException)message;
+        if (message.getChannel().startsWith(META)) {
+          processMetaMessage(message, nextSourceOffset);
+        } else {
+          nextSourceOffset = processDataMessage(message, batchMaker);
         }
-
-        String msgJson = ((Message)message).getJSON();
-
-        // Message has the form
-        // {
-        //   "channel": "/topic/AccountUpdates",
-        //   "clientId": "j17ylcz9l0t0fyp0pze7uzpqlt",
-        //   "data": {
-        //     "event": {
-        //       "createdDate": "2016-09-15T06:01:40.000+0000",
-        //       "type": "updated"
-        //     },
-        //     "sobject": {
-        //       "AccountNumber": "3231321",
-        //       "Id": "0013600000dC5xLAAS",
-        //       "Name": "StreamSets",
-        //       ...
-        //     }
-        //   }
-        // }
-        LOG.info("Received message: {}", msgJson);
-
-        Object json = OBJECT_MAPPER.readValue(msgJson, Object.class);
-        Map<String, Object> jsonMap = (Map<String, Object>)json;
-        Map<String, Object> data = (Map<String, Object>)jsonMap.get("data");
-        Map<String, Object> event = (Map<String, Object>)data.get("event");
-        Map<String, Object> sobject = (Map<String, Object>)data.get("sobject");
-
-        final String recordContext = event.get("createdDate") + "::" + sobject.get("Id");
-        Record rec = getContext().createRecord(recordContext);
-
-        // sobject data becomes fields
-        LinkedHashMap<String, Field> map = new LinkedHashMap<>();
-
-        for (String key : sobject.keySet()) {
-          Object val = sobject.get(key);
-          Field field = ForceUtils.createField(val);
-          if (field == null) {
-            throw new StageException(Errors.FORCE_04,
-                "Key: "+key+", unexpected type for val: " + ((val == null) ? val : val.getClass().toString()));
-          }
-          map.put(key, field);
-        }
-
-        rec.set(Field.createListMap(map));
-
-        // event data becomes header attributes
-        // of the form salesforce.cdc.createdDate,
-        // salesforce.cdc.type
-        Record.Header recordHeader = rec.getHeader();
-        for (Map.Entry<String, Object> entry : event.entrySet()) {
-          recordHeader.setAttribute(HEADER_ATTRIBUTE_PREFIX + entry.getKey(), entry.getValue().toString());
-          if ("type".equals(entry.getKey())) {
-            int operationCode = SFDC_TO_SDC_OPERATION.get(entry.getValue().toString());
-            recordHeader.setAttribute(OperationType.SDC_OPERATION_TYPE, String.valueOf(operationCode));
-          }
-        }
-        recordHeader.setAttribute(SOBJECT_TYPE_ATTRIBUTE, sobjectType);
-
-        nextSourceOffset = EVENT_ID_OFFSET_PREFIX + event.get(REPLAY_ID).toString();
-
-        batchMaker.addRecord(rec);
-
       } catch (IOException e) {
         throw new StageException(Errors.FORCE_02, e);
       }

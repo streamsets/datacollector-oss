@@ -95,6 +95,10 @@ public class WaveAnalyticsTarget extends BaseTarget {
 
     connectorConfig.setUsername(conf.username);
     connectorConfig.setPassword(conf.password);
+    // This is required because version 38.0 Maven jar inexplicably sets auth endpoint to
+    // "https://login-blitz01.soma.salesforce.com/services/Soap/u/38.0"
+    // Longer term fix is to allow config of auth endpoint - see SDC-5090
+    connectorConfig.setAuthEndpoint("https://login.salesforce.com/services/Soap/u/38.0");
     connectorConfig.setCompression(true);
     connectorConfig.setSessionRenewer(new WaveSessionRenewer());
 
