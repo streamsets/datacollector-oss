@@ -506,7 +506,7 @@ public class PipelineStoreResource {
       PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipeline);
       pipeline = validator.validate();
       data = BeanHelper.wrapPipelineConfiguration(pipeline);
-      title = pipeline.getTitle();
+      title = pipeline.getTitle() != null ? pipeline.getTitle() : pipeline.getInfo().getName();
     } else if (get.equals("info")) {
       data = BeanHelper.wrapPipelineInfo(store.getInfo(name));
     } else if (get.equals("history")) {
@@ -766,8 +766,10 @@ public class PipelineStoreResource {
     }
 
     if (attachment) {
+      String fileName = pipelineConfig.getTitle() != null ?
+          pipelineConfig.getTitle() : pipelineConfig.getInfo().getName();
       return Response.ok().
-          header("Content-Disposition", "attachment; filename=\"" + pipelineConfig.getTitle() + ".json\"").
+          header("Content-Disposition", "attachment; filename=\"" + fileName + ".json\"").
           type(MediaType.APPLICATION_JSON).entity(pipelineEnvelope).build();
     } else {
       return Response.ok().
