@@ -147,7 +147,6 @@ public class TableJdbcSource extends BaseSource {
         new JdbcTableReadContextLoader(
             connectionManager,
             offsets,
-            tableJdbcConfigBean.configureFetchSize,
             tableJdbcConfigBean.fetchSize,
             tableJdbcELEvalContext
         )
@@ -227,7 +226,7 @@ public class TableJdbcSource extends BaseSource {
     errorRecordHandler = new DefaultErrorRecordHandler(context);
     issues = hikariConfigBean.validateConfigs(context, issues);
     issues = commonSourceConfigBean.validateConfigs(context, issues);
-    issues = tableJdbcConfigBean.validateConfigs(context, issues, commonSourceConfigBean);
+    issues = tableJdbcConfigBean.validateConfigs(context, issues);
     if (issues.isEmpty()) {
       checkConnectionAndBootstrap(context, issues);
     }

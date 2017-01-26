@@ -39,20 +39,16 @@ public class JdbcTableReadContextLoader extends CacheLoader<TableContext, TableR
   private final ConnectionManager connectionManager;
   private final TableJdbcELEvalContext tableJdbcELEvalContext;
   private final Map<String, String> offsets;
-
-  private final boolean configureFetchSize;
   private final int fetchSize;
 
   public JdbcTableReadContextLoader(
       ConnectionManager connectionManager,
       Map<String, String> offsets,
-      boolean configureFetchSize,
       int fetchSize,
       TableJdbcELEvalContext tableJdbcELEvalContext
   ) {
     this.connectionManager = connectionManager;
     this.offsets = offsets;
-    this.configureFetchSize = configureFetchSize;
     this.fetchSize = fetchSize;
     this.tableJdbcELEvalContext = tableJdbcELEvalContext;
   }
@@ -72,7 +68,6 @@ public class JdbcTableReadContextLoader extends CacheLoader<TableContext, TableR
             connectionManager.getConnection(),
             queryAndParamValToSet.getLeft(),
             queryAndParamValToSet.getRight(),
-            configureFetchSize,
             fetchSize
         );
 

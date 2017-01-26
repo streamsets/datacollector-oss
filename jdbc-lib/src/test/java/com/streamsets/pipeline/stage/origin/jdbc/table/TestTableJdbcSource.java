@@ -58,20 +58,6 @@ public class TestTableJdbcSource {
   }
 
   @Test
-  public void testFetchSizeGreaterThanBatchSize() throws Exception {
-    TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
-        .tableConfigBeans(
-            ImmutableList.of(
-                new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder().tablePattern("testTable").build()
-            )
-        )
-        .configureFetchSize(true)
-        .fetchSize(2000)
-        .build();
-    testWrongConfiguration(tableJdbcSource, true);
-  }
-
-  @Test
   public void testWrongSqlConnectionConfig() throws Exception {
     TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder( "jdbc:db://localhost:1000", true, USER_NAME, PASSWORD)
         .tableConfigBeans(

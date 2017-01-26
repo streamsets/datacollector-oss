@@ -26,7 +26,6 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.TimeZoneChooserValues;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
-import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 
 import java.util.List;
 
@@ -34,7 +33,7 @@ public class TableJdbcConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      label = "Tables",
+      label = "Table Configs",
       displayPosition  = 10,
       group = "TABLE"
   )
@@ -94,41 +93,19 @@ public class TableJdbcConfigBean {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
-      label = "Configure Fetch Size",
-      description = "Determines whether to configure fetch size for the JDBC Statement",
-      displayPosition = 200,
-      group = "ADVANCED"
-  )
-  public boolean configureFetchSize;
-
-  @ConfigDef(
-      required = true,
       type = ConfigDef.Type.NUMBER,
-      defaultValue = "",
+      defaultValue = "1000",
       label = "Fetch Size",
-      description = "Fetch Size for the JDBC Statement. Should not be 0 and Should be less than or equal to batch size.",
+      description = "Fetch Size for the JDBC Statement. Should not be 0",
       displayPosition = 210,
-      group = "ADVANCED",
-      dependsOn = "configureFetchSize",
-      triggeredByValue = "true"
+      group = "JDBC"
   )
   public int fetchSize;
 
   private static final String TABLE_JDBC_CONFIG_BEAN_PREFIX = "tableJdbcConfigBean.";
   public static final String TABLE_CONFIG = TABLE_JDBC_CONFIG_BEAN_PREFIX + "tableConfigs";
-  private static final String FETCH_SIZE = TABLE_JDBC_CONFIG_BEAN_PREFIX + "fetchSize";
 
-  public List<Stage.ConfigIssue> validateConfigs(
-      Source.Context context,
-      List<Stage.ConfigIssue> issues,
-      CommonSourceConfigBean commonSourceConfigBean
-  ) {
-
-    if (configureFetchSize && fetchSize > commonSourceConfigBean.maxBatchSize) {
-      issues.add(context.createConfigIssue(Groups.ADVANCED.name(), FETCH_SIZE, JdbcErrors.JDBC_65, fetchSize));
-    }
+  public List<Stage.ConfigIssue> validateConfigs(Source.Context context, List<Stage.ConfigIssue> issues) {
     if (tableConfigs.isEmpty()) {
       issues.add(context.createConfigIssue(Groups.TABLE.name(), TABLE_CONFIG, JdbcErrors.JDBC_66));
     }
