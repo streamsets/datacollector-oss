@@ -73,7 +73,7 @@
               <record-tree
                 record="record"
                 record-value="record.value"
-                field-name="('global.form.eventRecord' | translate)+($index+1)"
+                field-name="('global.form.eventRecord' | translate) + ($index+1) + ' (' + record.header.values['sdc.event.type'] + ')'"
                 is-root="true"
                 editable="previewMode"
                 show-header="snapshotMode || pipelineConfig.uiInfo.previewConfig.showHeader"
@@ -271,7 +271,7 @@
         <record-tree
           record="record"
           record-value="record.value"
-          field-name="('global.form.eventRecord' | translate)+($index+1)"
+          field-name="('global.form.eventRecord' | translate) + ($index+1) + ' (' + record.header.values['sdc.event.type'] + ')'"
           is-root="true"
           editable="previewMode"
           show-header="snapshotMode || pipelineConfig.uiInfo.previewConfig.showHeader"
