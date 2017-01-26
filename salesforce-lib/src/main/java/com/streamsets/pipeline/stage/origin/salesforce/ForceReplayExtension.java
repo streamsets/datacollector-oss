@@ -39,9 +39,9 @@ public class ForceReplayExtension<Type> extends Adapter {
   private static final String REPLAY = "replay";
 
   private final Map<String, Type> map;
-  private final BlockingQueue<Object> entityQueue;
+  private final BlockingQueue<Message> entityQueue;
 
-  public ForceReplayExtension(Map<String, Type> map, BlockingQueue<Object> entityQueue) {
+  public ForceReplayExtension(Map<String, Type> map, BlockingQueue<Message> entityQueue) {
     this.map = new HashMap<>(map);
     this.entityQueue = entityQueue;
   }
@@ -69,7 +69,7 @@ public class ForceReplayExtension<Type> extends Adapter {
           // Houston, we have a problem!
           try {
             entityQueue.offer(
-                new StageException(Errors.FORCE_09, "Replay not supported"),
+                message,
                 1000L/* conf.requestTimeoutMillis */,
                 TimeUnit.MILLISECONDS
             );
