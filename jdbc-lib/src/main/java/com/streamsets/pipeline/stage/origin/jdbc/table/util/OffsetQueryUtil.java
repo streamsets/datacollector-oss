@@ -147,6 +147,7 @@ public final class OffsetQueryUtil {
     if (offset != null && !offset.isEmpty()) {
       List<String> finalOrConditions = new ArrayList<>();
       List<String> preconditions = new ArrayList<>();
+      List<Pair<Integer, String>> preconditionParamVals = new ArrayList<>();
       //For partition columns p1, p2 and p3 with offsets o1, o2 and o3 respectively, the query will look something like
       //select * from tableName where (p1 > o1) or (p1 = o1 and p2 > o2) or (p1 = o1 and p2 = o2 and p3 > o3) order by p1, p2, p3.
       for (String partitionColumn : tableContext.getOffsetColumns()) {
@@ -159,9 +160,10 @@ public final class OffsetQueryUtil {
                 preconditions
             );
         //Add for preconditions (EX: composite keys)
-        paramValueToSet.addAll(new ArrayList<>(paramValueToSet));
+        paramValueToSet.addAll(new ArrayList<>(preconditionParamVals));
+        Pair<Integer, String> paramValForCurrentOffsetColumn = Pair.of(partitionSqlType, partitionOffset);
         //Add for current partition column
-        paramValueToSet.add(Pair.of(partitionSqlType, partitionOffset));
+        paramValueToSet.add(paramValForCurrentOffsetColumn);
         finalOrConditions.add(String.format(CONDITION_FORMAT, conditionForThisPartitionColumn));
         preconditions.add(
             getConditionForPartitionColumn(
@@ -170,6 +172,7 @@ public final class OffsetQueryUtil {
                 Collections.<String>emptyList()
             )
         );
+        preconditionParamVals.add(paramValForCurrentOffsetColumn);
       }
       finalAndConditions.add(String.format(CONDITION_FORMAT, OR_JOINER.join(finalOrConditions)));
     }
