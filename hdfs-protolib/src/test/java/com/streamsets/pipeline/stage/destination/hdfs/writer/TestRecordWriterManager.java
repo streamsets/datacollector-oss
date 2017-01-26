@@ -633,7 +633,7 @@ public class TestRecordWriterManager {
     File testDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
     Assert.assertTrue(testDir.mkdirs());
 
-    final String dirTemp = "/${YY()}_${MM()}_${DD()}_${hh()}/${sdc:hostname()}/${record:value('/y')}${record:value('/z')}/bar/";
+    final String dirTemp = "/${YY()}_${MM()}_${DD()}_${hh()}/${sdc:hostname()}/${record:value('/y')}${record:value('/z')}${str:concat('', '')}/bar/";
     // using 1 hour cutoff
     RecordWriterManager mgr = managerBuilder()
         .dirPathTemplate(testDir.getAbsolutePath() + dirTemp)
