@@ -31,7 +31,7 @@ public class MapRJsonOriginConfigBean {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Table Name",
-      description = "MapR DB JSON Source Table",
+      description = "MapR DB JSON source table name",
       displayPosition = 10,
       group = "MAPR_JSON_ORIGIN"
   )
@@ -40,9 +40,8 @@ public class MapRJsonOriginConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
-      label = "Starting Key Value",
-      description = "Optionally, specify starting value for the key column. "
-          + "Leave blank to start from the first record. ",
+      label = "Initial Offset",
+      description = "Optionally, specify the Initial Offset for the _id column. ",
       displayPosition = 20,
       group = "MAPR_JSON_ORIGIN"
   )
