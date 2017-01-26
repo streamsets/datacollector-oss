@@ -52,6 +52,10 @@ angular
                 pipelineRules: JSON.parse(remotePipeline.currentRules.rulesDefinition)
               };
 
+              if (!pipelineEnvelope.pipelineConfig.title) {
+                pipelineEnvelope.pipelineConfig.title = remotePipeline.name;
+              }
+
               api.pipelineAgent.importPipelineConfig(remotePipeline.name, pipelineEnvelope, $scope.overwrite)
                 .then(
                   function() {
