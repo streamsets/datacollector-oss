@@ -241,9 +241,17 @@ public class ReferentialConstraintOrderingIT extends BaseTableJdbcSourceIT {
     }
   }
 
-  private String runCheckAndReturnOffset(SourceRunner runner, String offset, String table) throws Exception {
-    StageRunner.Output output = runner.runProduce(offset, 1000);
-    List<Record> expectedRecords = TABLE_TO_TEMPLATE_AND_RECORDS_MAP.get(table).getRight();
+  private String runCheckAndReturnOffset(
+      SourceRunner runner,
+      String offset,
+      String table,
+      int batchSize,
+      int start,
+      int end
+  ) throws Exception {
+    StageRunner.Output output = runner.runProduce(offset, batchSize);
+    List<Record> expectedRecords =
+        TABLE_TO_TEMPLATE_AND_RECORDS_MAP.get(table).getRight().subList(start, end);
     List<Record> actualRecords =  output.getRecords().get("a");
     checkRecords(expectedRecords, actualRecords);
     return output.getNewOffset();
@@ -269,14 +277,16 @@ public class ReferentialConstraintOrderingIT extends BaseTableJdbcSourceIT {
     //because of the alphabetical ORDER_TBL, then USER_TABLE, then ORDER_TBL, then ITEM.
     String offset = "";
     try {
-      offset = runCheckAndReturnOffset(runner, offset, "PRODUCT");
-      offset = runCheckAndReturnOffset(runner, offset, "USER_TABLE");
-      offset = runCheckAndReturnOffset(runner, offset, "ORDER_TBL");
-      runCheckAndReturnOffset(runner, offset, "ITEMS");
+      offset = runCheckAndReturnOffset(runner, offset, "PRODUCT", 2, 0, 2); //Total - 4 rows (2 read, 2 remaining)
+      offset = runCheckAndReturnOffset(runner, offset, "USER_TABLE", 2, 0, 2); //Total - 3 rows(2 read, 1 remaining)
+      offset = runCheckAndReturnOffset(runner, offset, "ORDER_TBL", 2, 0 , 2); //Total - 2 rows (2 read, 0 remaining)
+      offset = runCheckAndReturnOffset(runner, offset, "ITEMS", 3, 0 , 3); //Total - 5 rows(3 read, 2 remaining)
+
+      offset = runCheckAndReturnOffset(runner, offset, "PRODUCT", 2, 2, 4); //Total - 4 rows (4 read, 0 remaining)
+      offset = runCheckAndReturnOffset(runner, offset, "USER_TABLE", 2, 2, 3); //Total - 3 rows(3 read, 0 remaining)
+      offset = runCheckAndReturnOffset(runner, offset, "ITEMS", 2, 3 , 5); //Total - 5 rows(5 read, 0 remaining)
     } finally {
       runner.runDestroy();
     }
   }
-
-
 }

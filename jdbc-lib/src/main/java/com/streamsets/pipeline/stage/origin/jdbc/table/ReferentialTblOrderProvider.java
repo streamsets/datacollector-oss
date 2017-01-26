@@ -110,7 +110,7 @@ public final class ReferentialTblOrderProvider extends TableOrderProvider.BaseTa
       }
     }
 
-    //Do the topological ordering and return the order.
-    return orderedTables;
+    //Return the saved topological order.
+    return new LinkedList<>(orderedTables);
   }
 }
