@@ -53,6 +53,10 @@ public final class TableContext {
     return tableName;
   }
 
+  public String getQualifiedName() {
+    return TableContextUtil.getQualifiedTableName(schema, tableName);
+  }
+
   public Collection<String> getOffsetColumns() {
     return offsetColumnToType.keySet();
   }

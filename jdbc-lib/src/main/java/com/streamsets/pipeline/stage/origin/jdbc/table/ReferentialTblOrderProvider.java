@@ -82,10 +82,10 @@ public final class ReferentialTblOrderProvider extends TableOrderProvider.BaseTa
         for (String referredTable : referredTableSetForThisContext) {
           TableContext referredTableContext = getTableContext(tableContext.getSchema(), referredTable);
           //Checking whether the referred table is used by the origin or has the table has a reference to itself.
-          if (referredTableContext != null && !referredTableContext.getTableName().equals(tableContext.getTableName())) {
+          if (referredTableContext != null && !referredTableContext.getQualifiedName().equals(tableContext.getQualifiedName())) {
             //This edge states referred table should be ingested first
             directedGraph.addDirectedEdge(
-                TableContextUtil.getQualifiedTableName(referredTableContext.getSchema(), referredTableContext.getTableName()),
+                referredTableContext.getQualifiedName(),
                 qualifiedTableName
             );
           }

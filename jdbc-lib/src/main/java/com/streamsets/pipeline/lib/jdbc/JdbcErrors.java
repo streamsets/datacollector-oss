@@ -93,6 +93,7 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_68("Tables Referring to each other in cyclic fashion."),
   JDBC_69("Unsupported Offset Column Types. {}"),
   JDBC_70("Unsupported operation in record header: {}"),
+  JDBC_71("Invalid State. Mismatch in offset columns for table {}. Stored offset columns: {}, Specified Offset Columns: {}"),
   ;
 
   private final String msg;

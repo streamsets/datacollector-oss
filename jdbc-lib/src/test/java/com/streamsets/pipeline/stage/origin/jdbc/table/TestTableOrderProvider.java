@@ -219,7 +219,7 @@ public class TestTableOrderProvider {
       List<String> actualOrder = new ArrayList<>();
       for (int i =0; i < totalNumberOfTables; i++) {
         TableContext nextTable = tableOrderProvider.nextTable();
-        actualOrder.add(nextTable.getTableName());
+        actualOrder.add(nextTable.getQualifiedName());
       }
 
       LOG.debug("Expected Order: {}", JOINER.join(expectedOrderOrNullIfError));

@@ -39,10 +39,7 @@ public class JdbcTableReadContextInvalidationListener implements RemovalListener
     TableContext tableContext = tableReadContextRemovalNotification.getKey();
     LOGGER.info(
         "Closing result set for : {}",
-        TableContextUtil.getQualifiedTableName(
-            tableContext.getSchema(),
-            tableContext.getTableName()
-        )
+        tableContext.getQualifiedName()
     );
     TableReadContext readContext = tableReadContextRemovalNotification.getValue();
     //Destroy and close statement/result set.
