@@ -56,7 +56,7 @@ public class OffsetColumnEL {
             "Position {} not in the range of offset column list : [0, {}) for table: {}",
             position,
             offsetColumns.size(),
-            TableContextUtil.getQualifiedTableName(tableContext.getSchema(), tableContext.getTableName())
+            tableContext.getQualifiedName()
         )
     );
     return offsetColumns.get(position);

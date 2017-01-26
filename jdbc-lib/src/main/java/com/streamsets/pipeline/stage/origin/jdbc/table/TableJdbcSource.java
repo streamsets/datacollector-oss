@@ -126,9 +126,8 @@ public class TableJdbcSource extends BaseSource {
   }
 
   private void updateGauge() {
-    String qualifiedTableName = TableContextUtil.getQualifiedTableName(tableContext.getSchema(), tableContext.getTableName());
-    gaugeMap.put(CURRENT_TABLE, qualifiedTableName);
-    LOG.info("Generating records from table : {}", qualifiedTableName);
+    gaugeMap.put(CURRENT_TABLE, tableContext.getQualifiedName());
+    LOG.info("Generating records from table : {}", tableContext.getQualifiedName());
   }
 
   @SuppressWarnings("unchecked")
@@ -235,6 +234,26 @@ public class TableJdbcSource extends BaseSource {
     return issues;
   }
 
+  /**
+   * Initialize and set the table context.
+   * NOTE: This sets the table context to null if there is any mismatch
+   * We will simply proceed to next table if that is the case
+   */
+  private void initTableContext() throws ExecutionException, SQLException, StageException {
+    tableContext = tableOrderProvider.nextTable();
+    //If the offset already does not contain the table (meaning it is the first start or a new table)
+    //We can skip validation
+    if (offsets.containsKey(tableContext.getQualifiedName())) {
+      try {
+        OffsetQueryUtil.validateStoredAndSpecifiedOffset(tableContext, offsets.get(tableContext.getQualifiedName()));
+      } catch (StageException e) {
+        LOG.error("Error when validating stored offset with configuration", e);
+        errorRecordHandler.onError(e.getErrorCode(), e.getParams());
+        tableContext = null;
+      }
+    }
+  }
+
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     int batchSize = Math.min(maxBatchSize, commonSourceConfigBean.maxBatchSize);
@@ -248,63 +267,64 @@ public class TableJdbcSource extends BaseSource {
       ResultSet rs;
       try {
         if (tableContext == null) {
-          tableContext = tableOrderProvider.nextTable();
+          initTableContext();
+        }
+        if (tableContext != null) {
           initTableEvalContextForProduce(tableContext);
-        }
-
-        //do get if present, if the result set is not valid the entry would have been evicted.
-        TableReadContext tableReadContext = resultSetCache.getIfPresent(tableContext);
-        //Meaning we will have to switch tables, execute a new query and get records.
-        if (tableReadContext == null) {
-          tableReadContext = resultSetCache.get(tableContext);
-        }
-
-        rs = tableReadContext.getResultSet();
-        query = tableReadContext.getQuery();
-        boolean evictTableReadContext = false;
-        try {
-          while (recordCount < batchSize) {
-            //Close ResultSet if there are no more rows
-            if (rs.isClosed() || !rs.next()) {
-              evictTableReadContext = true;
-              break;
-            }
-
-            ResultSetMetaData md = rs.getMetaData();
-
-            LinkedHashMap<String, Field> fields = JdbcUtil.resultSetToFields(
-                rs,
-                commonSourceConfigBean.maxClobSize,
-                commonSourceConfigBean.maxBlobSize,
-                errorRecordHandler
-            );
-
-            String offsetFormat = OffsetQueryUtil.getOffsetFormatFromColumns(tableContext, fields);
-            Record record = getContext().createRecord(tableContext.getTableName() + ":" + offsetFormat);
-            record.set(Field.createListMap(fields));
-
-            //Set Column Headers
-            JdbcUtil.setColumnSpecificHeaders(record, md, JDBC_NAMESPACE_HEADER);
-
-            batchMaker.addRecord(record);
-
-            offsets.put(tableContext.getTableName(), offsetFormat);
-
-            if (recordCount == 0) {
-              updateGauge();
-            }
-            recordCount++;
+          //do get if present, if the result set is not valid the entry would have been evicted.
+          TableReadContext tableReadContext = resultSetCache.getIfPresent(tableContext);
+          //Meaning we will have to switch tables, execute a new query and get records.
+          if (tableReadContext == null) {
+            tableReadContext = resultSetCache.get(tableContext);
           }
-        } finally {
-          //Make sure we close the result set only when there are no more rows in the result set
-          if (evictTableReadContext) {
-            //Invalidate so as to fetch a new result set
-            //We close the result set/statement in Removal Listener
-            resultSetCache.invalidate(tableContext);
-            //Allow the origin to move to the next table.
-            tableContext = null;
-          } else if (tableJdbcConfigBean.batchTableStrategy == BatchTableStrategy.SWITCH_TABLES) {
-            tableContext = null;
+
+          rs = tableReadContext.getResultSet();
+          query = tableReadContext.getQuery();
+          boolean evictTableReadContext = false;
+          try {
+            while (recordCount < batchSize) {
+              //Close ResultSet if there are no more rows
+              if (rs.isClosed() || !rs.next()) {
+                evictTableReadContext = true;
+                break;
+              }
+
+              ResultSetMetaData md = rs.getMetaData();
+
+              LinkedHashMap<String, Field> fields = JdbcUtil.resultSetToFields(
+                  rs,
+                  commonSourceConfigBean.maxClobSize,
+                  commonSourceConfigBean.maxBlobSize,
+                  errorRecordHandler
+              );
+
+              String offsetFormat = OffsetQueryUtil.getOffsetFormatFromColumns(tableContext, fields);
+              Record record = getContext().createRecord(tableContext.getQualifiedName() + ":" + offsetFormat);
+              record.set(Field.createListMap(fields));
+
+              //Set Column Headers
+              JdbcUtil.setColumnSpecificHeaders(record, md, JDBC_NAMESPACE_HEADER);
+
+              batchMaker.addRecord(record);
+
+              offsets.put(tableContext.getQualifiedName(), offsetFormat);
+
+              if (recordCount == 0) {
+                updateGauge();
+              }
+              recordCount++;
+            }
+          } finally {
+            //Make sure we close the result set only when there are no more rows in the result set
+            if (evictTableReadContext) {
+              //Invalidate so as to fetch a new result set
+              //We close the result set/statement in Removal Listener
+              resultSetCache.invalidate(tableContext);
+              //Allow the origin to move to the next table.
+              tableContext = null;
+            } else if (tableJdbcConfigBean.batchTableStrategy == BatchTableStrategy.SWITCH_TABLES) {
+              tableContext = null;
+            }
           }
         }
       } catch (SQLException e) {

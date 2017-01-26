@@ -62,7 +62,7 @@ public class JdbcTableReadContextLoader extends CacheLoader<TableContext, TableR
     Pair<String, List<Pair<Integer, String>>> queryAndParamValToSet =
         OffsetQueryUtil.buildAndReturnQueryAndParamValToSet(
             tableContext,
-            offsets.get(tableContext.getTableName()),
+            offsets.get(tableContext.getQualifiedName()),
             tableJdbcELEvalContext
         );
 

@@ -21,8 +21,10 @@ package com.streamsets.pipeline.stage.origin.jdbc.table;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -63,10 +65,10 @@ public class BasicIT extends BaseTableJdbcSourceIT {
   private static List<Record> createTransactionRecords(int noOfRecords) {
     List<Record> records = new ArrayList<>();
     long currentTime = (System.currentTimeMillis() / 1000) * 1000;
-    for (int i =0; i < noOfRecords; i++) {
+    for (int i = 0; i < noOfRecords; i++) {
       Record record = RecordCreator.create();
       LinkedHashMap<String, Field> fields = new LinkedHashMap<>();
-      fields.put("random_int", Field.create(RANDOM.nextInt(100)));
+      fields.put("unique_int", Field.create(i + 1));
       fields.put("t_date", Field.create(Field.Type.LONG, currentTime));
       fields.put("random_string", Field.create(UUID.randomUUID().toString()));
       record.set(Field.createListMap(fields));
@@ -152,7 +154,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
       //TRANSACTION
       statement.addBatch(
           "CREATE TABLE TEST.TRANSACTION_TABLE " +
-              "(random_int INT NOT NULL , t_date BIGINT, random_string VARCHAR(255))"
+              "(unique_int INT NOT NULL , t_date BIGINT, random_string VARCHAR(255))"
       );
 
       for (Record record : EXPECTED_TRANSACTION_RECORDS) {
@@ -160,7 +162,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
             String.format(
                 TRANSACTION_INSERT_TEMPLATE,
                 "TRANSACTION_TABLE",
-                record.get("/random_int").getValueAsInteger(),
+                record.get("/unique_int").getValueAsInteger(),
                 record.get("/t_date").getValueAsLong(),
                 record.get("/random_string").getValueAsString()
             )
@@ -454,5 +456,105 @@ public class BasicIT extends BaseTableJdbcSourceIT {
     } finally {
       runner.runDestroy();
     }
+  }
+
+  private String testChangeInOffsetColumns(
+      String table,
+      String offset,
+      List<String> offsetColumnsForThisRun,
+      boolean shouldFail
+  ) throws Exception {
+    TableConfigBean tableConfigBean =
+        new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+            .tablePattern(table)
+            .schema(database)
+            .overrideDefaultOffsetColumns(true)
+            .offsetColumns(offsetColumnsForThisRun)
+            .build();
+
+    TableJdbcSource tableJdbcSource =
+        new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
+            .tableConfigBeans(ImmutableList.of(tableConfigBean))
+            .build();
+
+    SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
+        .addOutputLane("a").setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+    runner.runInit();
+    try {
+      StageRunner.Output output = runner.runProduce(offset, 5);
+      List<Record>  outputRecords = output.getRecords().get("a");
+      if (shouldFail) {
+        Assert.assertEquals(0, outputRecords.size());
+        Assert.assertFalse(runner.getErrors().isEmpty());
+        Assert.assertTrue(runner.getErrors().get(0).contains(JdbcErrors.JDBC_71.name()));
+      } else {
+        Assert.assertEquals(5, outputRecords.size());
+        offset = output.getNewOffset();
+      }
+    } finally {
+      runner.runDestroy();
+    }
+    return offset;
+  }
+
+  @Test
+  public void testIncreaseNumberOfOffsetColumnsInConfig() throws Exception {
+    String offset = "";
+    String tableName = "TRANSACTION_TABLE";
+    offset = testChangeInOffsetColumns(
+        tableName,
+        offset,
+        ImmutableList.of("T_DATE"),
+        false
+    );
+
+    //Now we added one more column to offset configuration, should fail
+    testChangeInOffsetColumns(
+        tableName,
+        offset,
+        ImmutableList.of("T_DATE", "UNIQUE_INT"),
+        true
+    );
+  }
+
+  @Test
+  public void testDecreaseNumberOfOffsetColumnsInConfig() throws Exception {
+    String offset = "";
+    String tableName = "TRANSACTION_TABLE";
+    offset = testChangeInOffsetColumns(
+        tableName,
+        offset,
+        ImmutableList.of("T_DATE", "UNIQUE_INT"),
+        false
+    );
+
+    //Now we removed one column from offset configuration, should fail
+    testChangeInOffsetColumns(
+        tableName,
+        offset,
+        ImmutableList.of("T_DATE"),
+        true
+    );
+  }
+
+  @Test
+  public void testChangeInOffsetColumnNameInConfig() throws Exception {
+    String offset = "";
+    String tableName = "TRANSACTION_TABLE";
+    offset = testChangeInOffsetColumns(
+        tableName,
+        offset,
+        ImmutableList.of("UNIQUE_INT"),
+        false
+    );
+
+    //Now we changed one column from offset configuration, should fail
+    testChangeInOffsetColumns(
+        tableName,
+        offset,
+        ImmutableList.of("T_DATE"),
+        true
+    );
   }
 }

@@ -24,13 +24,12 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.el.ELEvalException;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableContext;
-import com.streamsets.pipeline.stage.origin.jdbc.table.TableContextUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcELEvalContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -131,7 +130,8 @@ public final class OffsetQueryUtil {
     queryBuilder.append(
         String.format(
             TABLE_QUERY_SELECT,
-            TableContextUtil.getQualifiedTableName(tableContext.getSchema(), tableContext.getTableName()))
+            tableContext.getQualifiedName()
+        )
     );
 
     Map<String, String> offset = tableContext.isOffsetOverriden()?
@@ -222,7 +222,7 @@ public final class OffsetQueryUtil {
    * @param lastOffset the last offset for the current table.
    * @return Map of columns to values
    */
-  private static Map<String, String> getColumnsToOffsetMapFromOffsetFormat(String lastOffset) {
+  public static Map<String, String> getColumnsToOffsetMapFromOffsetFormat(String lastOffset) {
     Map<String, String> offsetColumnsToOffsetMap = new HashMap<>();
     if (lastOffset != null) {
       Iterator<String> offsetColumnsAndOffsetIterator = OFFSET_COLUMN_SPLITTER.split(lastOffset).iterator();
@@ -294,4 +294,26 @@ public final class OffsetQueryUtil {
     return offsetMap;
   }
 
+  /**
+   * Validates whether offset names match in the stored offset with respect to table configuration
+   * @param tableContext {@link TableContext} for table
+   * @param offset Stored offset from the previous stage run
+   * @throws StageException if columns mismatch
+   */
+  public static void validateStoredAndSpecifiedOffset(TableContext tableContext, String offset) throws StageException {
+    Set<String> expectedColumns = Sets.newHashSet(tableContext.getOffsetColumns());
+    Set<String> actualColumns = getColumnsToOffsetMapFromOffsetFormat(offset).keySet();
+
+    Set<String> expectedSetDifference = Sets.difference(expectedColumns, actualColumns);
+    Set<String> actualSetDifference = Sets.difference(actualColumns, expectedColumns);
+
+    if (expectedSetDifference.size() > 0 || actualSetDifference.size() >  0) {
+      throw new StageException(
+          JdbcErrors.JDBC_71,
+          tableContext.getQualifiedName(),
+          COMMA_SPACE_JOINER.join(actualColumns),
+          COMMA_SPACE_JOINER.join(expectedColumns)
+      );
+    }
+  }
 }
