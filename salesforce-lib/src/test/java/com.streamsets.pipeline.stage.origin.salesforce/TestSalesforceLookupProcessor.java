@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.origin.salesforce;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.salesforce.DataType;
@@ -310,7 +311,7 @@ public class TestSalesforceLookupProcessor {
   }
 
   @Test
-  public void testBadDataTypeForDefaultValue() throws Exception {
+  public void testValidationForDefaultValue() throws Exception {
     ForceLookupDProcessor processor = new ForceLookupDProcessor();
     processor.forceConfig = createConfigBean();
 
@@ -328,6 +329,42 @@ public class TestSalesforceLookupProcessor {
       LOG.info(issue.toString());
     }
     assertEquals(1, issues.size());
+  }
+
+  @Test
+  public void testWrongDataTypeForDefaultValue() throws Exception {
+    mockServer.sforceApi().query().returnResults(); // return empty result
+
+    ForceLookupDProcessor processor = new ForceLookupDProcessor();
+    processor.forceConfig = createConfigBean();
+
+    processor.forceConfig.fieldMappings = ImmutableList.of(
+        new ForceSDCFieldMapping("Name", "[2]", "Bob", DataType.INTEGER)
+    );
+    processor.forceConfig.soqlQuery = listQuery;
+
+    ProcessorRunner processorRunner = new ProcessorRunner.Builder(ForceLookupDProcessor.class, processor)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .addOutputLane("lane")
+        .build();
+
+    Record record = RecordCreator.create();
+    List<Field> fields = new ArrayList<>();
+    fields.add(Field.create("001000000000001"));
+    fields.add(Field.create("abcd"));
+    record.set(Field.create(fields));
+
+    List<Record> singleRecord = ImmutableList.of(record);
+    processorRunner.runInit();
+    try {
+      StageRunner.Output output = processorRunner.runProcess(singleRecord);
+      Assert.assertEquals(0, output.getRecords().get("lane").size());
+
+      List<Record> errors = processorRunner.getErrorRecords();
+      Assert.assertEquals(1, errors.size());
+    } finally {
+      processorRunner.runDestroy();
+    }
   }
 
   @Test

@@ -91,23 +91,29 @@ class ForceLookupLoader extends CacheLoader<String, Map<String, Field>> {
             // Get a null Id if you don't include it in the SELECT
             continue;
           }
-          DataType dataType = columnsToTypes.get(key.toLowerCase());
-          Field field = ForceUtils.createField(val, dataType == null ? DataType.USE_SALESFORCE_TYPE : dataType);
-          if (field == null) {
-            throw new StageException(Errors.FORCE_04,
-                "Key: "+key+", unexpected type for val: " + val.getClass().toString());
+          try {
+            DataType dataType = columnsToTypes.get(key.toLowerCase());
+            Field field = ForceUtils.createField(val, dataType == null ? DataType.USE_SALESFORCE_TYPE : dataType);
+            if (field == null) {
+              throw new StageException(Errors.FORCE_04,
+                  "Key: " + key + ", unexpected type for val: " + val.getClass().toString());
+            }
+            values.put(key, field);
+          } catch (IllegalArgumentException e) {
+            throw new OnRecordErrorException(Errors.FORCE_20, key, val, e);
           }
-          values.put(key, field);
         }
       } else {
         // Salesforce returns no row. Use default values.
         for (String key : columnsToFields.keySet()) {
-          if (columnsToTypes.get(key) != DataType.USE_SALESFORCE_TYPE) {
-            Field field = Field.create(
-                Field.Type.valueOf(columnsToTypes.get(key).getLabel()),
-                columnsToDefaults.get(key)
-            );
-            values.put(key, field);
+          String val = columnsToDefaults.get(key);
+          try {
+            if (columnsToTypes.get(key) != DataType.USE_SALESFORCE_TYPE) {
+              Field field = Field.create(Field.Type.valueOf(columnsToTypes.get(key).getLabel()), val);
+              values.put(key, field);
+            }
+          } catch (IllegalArgumentException e) {
+            throw new OnRecordErrorException(Errors.FORCE_20, key, val, e);
           }
         }
       }
