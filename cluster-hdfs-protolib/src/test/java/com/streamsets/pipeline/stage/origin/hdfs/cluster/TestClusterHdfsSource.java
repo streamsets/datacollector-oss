@@ -24,12 +24,15 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
+import org.apache.hadoop.fs.FileStatus;
+import org.apache.hadoop.security.UserGroupInformation;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -39,19 +42,8 @@ import static com.streamsets.pipeline.stage.origin.hdfs.cluster.ClusterHDFSSourc
 public class TestClusterHdfsSource {
   @Test
   public void testTextCustomDelimiterConfiguration() throws Exception {
-    ClusterHdfsConfigBean conf = new ClusterHdfsConfigBean();
     List<String> dirPaths = Arrays.asList("dummy");
-
-
-    conf.hdfsUri = "";
-    conf.hdfsDirLocations = dirPaths;
-    conf.hdfsConfigs = new HashMap<>();
-    conf.hdfsConfigs.put("x", "X");
-    conf.dataFormat = DataFormat.TEXT;
-    conf.dataFormatConfig.textMaxLineLen = 1024;
-    conf.dataFormatConfig.useCustomDelimiter = true;
-    conf.dataFormatConfig.customDelimiter = "CUSTOM";
-
+    ClusterHdfsConfigBean conf = getConfigBean(dirPaths);
     ClusterHdfsSource clusterHdfsSource = Mockito.spy(createSource(conf));
     Mockito.doNothing().when(clusterHdfsSource).validateHadoopFS(Mockito.anyListOf(Stage.ConfigIssue.class));
     Mockito.doAnswer(new Answer() {
@@ -60,17 +52,48 @@ public class TestClusterHdfsSource {
         return null;
       }
     }).when(clusterHdfsSource).getFileSystemForInitDestroy();
-    Mockito.doReturn(dirPaths).when(clusterHdfsSource).validateAndGetHdfsDirPaths(Mockito.anyListOf(Stage.ConfigIssue.class));
+    Mockito.doReturn(dirPaths).when(clusterHdfsSource).validateAndGetHdfsDirPaths(Mockito.anyListOf(Stage.ConfigIssue
+        .class));
     try {
-      clusterHdfsSource.init(null, ContextInfoCreator.createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
-          ImmutableList.of("lane")));
-      Assert.assertNotNull(clusterHdfsSource.getConfiguration().get(ClusterHdfsSource.TEXTINPUTFORMAT_RECORD_DELIMITER));
-      Assert.assertEquals(
-          conf.dataFormatConfig.customDelimiter,
+      clusterHdfsSource.init(
+          null,
+          ContextInfoCreator.createSourceContext("myInstance", false, OnRecordError.TO_ERROR, ImmutableList.of("lane"))
+      );
+      Assert.assertNotNull(clusterHdfsSource.getConfiguration().get(ClusterHdfsSource
+          .TEXTINPUTFORMAT_RECORD_DELIMITER));
+      Assert.assertEquals(conf.dataFormatConfig.customDelimiter,
           clusterHdfsSource.getConfiguration().get(ClusterHdfsSource.TEXTINPUTFORMAT_RECORD_DELIMITER)
       );
     } finally {
       clusterHdfsSource.destroy();
     }
   }
+
+  @Test
+  public void testPreviewUnderDoAs() throws Exception {
+    ClusterHdfsConfigBean conf = getConfigBean(Arrays.asList("dummy"));
+    ClusterHdfsSource clusterHdfsSource = Mockito.spy(createSource(conf));
+    Mockito.doNothing().when(clusterHdfsSource).readInPreview(Mockito.any(FileStatus.class),
+        Mockito.anyListOf(Stage.ConfigIssue.class)
+    );
+    Mockito.doReturn(UserGroupInformation.createRemoteUser("foo")).when(clusterHdfsSource).getUGI();
+    FileStatus[] fileStatuses = new FileStatus[1];
+    fileStatuses[0] = new FileStatus();
+    clusterHdfsSource.readInPreview(fileStatuses, new ArrayList<Stage.ConfigIssue>());
+    Mockito.verify(clusterHdfsSource, Mockito.times(1)).getUGI();
+  }
+
+  private ClusterHdfsConfigBean getConfigBean(List<String> dirPaths) {
+    ClusterHdfsConfigBean conf = new ClusterHdfsConfigBean();
+    conf.hdfsUri = "";
+    conf.hdfsDirLocations = dirPaths;
+    conf.hdfsConfigs = new HashMap<>();
+    conf.hdfsConfigs.put("x", "X");
+    conf.dataFormat = DataFormat.TEXT;
+    conf.dataFormatConfig.textMaxLineLen = 1024;
+    conf.dataFormatConfig.useCustomDelimiter = true;
+    conf.dataFormatConfig.customDelimiter = "CUSTOM";
+    return conf;
+  }
+
 }
