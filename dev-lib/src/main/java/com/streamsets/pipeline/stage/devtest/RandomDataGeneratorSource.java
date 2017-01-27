@@ -165,6 +165,10 @@ public class RandomDataGeneratorSource extends BasePushSource {
         LOG.error("Interrupted data generation thread", e);
       }
     }
+
+    // Terminate executor that will also clear up threads that were created
+    LOG.info("Shutting down executor service");
+    executor.shutdownNow();
   }
 
   public class GeneratorRunnable implements Runnable {
