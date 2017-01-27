@@ -170,6 +170,9 @@
   </topicref>
   <topicref href="../Origins/MongoDBOplog.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/MongoDBOplog-TimestampOrdinal.dita"/>
+   <topicref href="../Origins/MongoDBOplog-ReadPreference.dita"/>
+   <topicref href="../Origins/MongoDBOplog-EnableSSL.dita"/>
    <topicref href="../Origins/MongoDBOplog-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/MySQLBinaryLog.dita" chunk="to-content">

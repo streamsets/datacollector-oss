@@ -45,6 +45,8 @@
           Reads messages from MapR Streams.</li>
         <li><xref href="MongoDB.dita#concept_bk4_2rs_ns">MongoDB</xref> - Reads documents from
           MongoDB.</li>
+        <li><xref href="MongoDBOplog.dita#concept_mjn_yqw_4y">MongoDB Oplog</xref> - Reads entries
+          from a MongoDB Oplog.</li>
         <li><xref href="MySQLBinaryLog.dita#concept_kqg_1yh_xx">MySQL Binary Log</xref> - Reads
           MySQL binary logs to generate change data capture records. </li>
         <li><xref href="Omniture.dita#concept_dsr_xmw_1s">Omniture</xref> - Reads web usage reports

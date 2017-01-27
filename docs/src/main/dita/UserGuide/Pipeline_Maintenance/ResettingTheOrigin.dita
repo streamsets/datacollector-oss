@@ -30,6 +30,7 @@
                 <li>File Tail</li>
                 <li>JDBC Consumer</li>
                 <li>MongoDB</li>
+                <li>MongoDB Oplog</li>
                 <li>MySQL Binary Log</li>
                 <li>Salesforce</li>
                 <li>SFTP/FTP Client</li>

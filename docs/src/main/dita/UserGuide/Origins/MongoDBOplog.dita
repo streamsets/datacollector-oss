@@ -15,8 +15,22 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_mjn_yqw_4y">
  <title>MongoDB Oplog</title>
- <shortdesc>The MongoDB Oplog origin reads Oplog records from MongoDB.</shortdesc>
  <conbody>
-  <p></p>
+  <p><indexterm>MongoDB Oplog
+                    origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>MongoDB
+                    Oplog</indexterm></indexterm>The MongoDB Oplog origin reads entries from MongoDB
+            Oplog.</p>
+        <p>MongoDB stores information about changes to the database in a local capped collection
+            called an Oplog. The Oplog contains information about changes in data as well as changes
+            in the database. The MongoDB Oplog origin can read any operation written to the
+            Oplog.</p>
+        <p>Use the MongoDB Oplog origin to capture changes in data or the database. To process
+            MongoDB data written to a standard capped or uncapped collection, use the <xref
+                href="MongoDB.dita#concept_bk4_2rs_ns">MongoDB origin</xref>.</p>
+        <p>When you configure the MongoDB Oplog origin, you configure connection information, an
+            optional timestamp and ordinal to specify where to start the read, the operations that
+            you want to process, and the read preference.</p>
+        <p>You can optionally configure advanced options that determine how the origin connects to
+            MongoDB, including enabling SSL/TLS. </p>
  </conbody>
 </concept>
