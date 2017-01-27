@@ -274,8 +274,10 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
 
   private boolean removeRunnerIfNotActive(Runner runner) throws PipelineStoreException {
     if (!runner.getState().getStatus().isActive()) {
-      runner.close();
+      // first invalidate the cache and then close the runner, so a closed runner can never
+      // sit in cache
       runnerCache.invalidate(getNameAndRevString(runner.getName(), runner.getRev()));
+      runner.close();
       LOG.info("Removing runner for pipeline '{}::'{}'", runner.getName(), runner.getRev());
       return true;
     } else {
