@@ -369,7 +369,7 @@ public class TestPipelineStoreResource extends JerseyTest {
       try {
         Map<String, Object> metadata = new HashMap<>();
         metadata.put("labels", ImmutableList.of("label1"));
-        PipelineInfo pipeline1 = new PipelineInfo("name1", "label","description", new java.util.Date(0), new java.util.Date(0),
+        PipelineInfo pipeline1 = new PipelineInfo("name1", "name1","description", new java.util.Date(0), new java.util.Date(0),
             "creator", "lastModifier", "1", UUID.randomUUID(), true, metadata);
         PipelineInfo pipeline2 = new PipelineInfo("name2", "label","description", new java.util.Date(0), new java.util.Date(0),
             "creator", "lastModifier", "1", UUID.randomUUID(), true, metadata);
