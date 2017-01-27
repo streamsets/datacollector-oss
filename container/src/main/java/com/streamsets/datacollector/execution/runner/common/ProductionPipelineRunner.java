@@ -315,6 +315,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
         runPollSource();
       }
     } catch (Throwable throwable) {
+      LOG.error("Pipeline execution failed", throwable);
       sendPipelineErrorNotificationRequest(throwable);
       errorNotification(originPipe, pipes, throwable);
       Throwables.propagateIfInstanceOf(throwable, StageException.class);
