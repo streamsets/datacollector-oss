@@ -258,7 +258,8 @@ public class PipelineStoreResource {
     Collection<PipelineInfo> filteredCollection = Collections2.filter(pipelineInfoList, new Predicate<PipelineInfo>() {
       @Override
       public boolean apply(PipelineInfo pipelineInfo) {
-        if (filterText != null && !pipelineInfo.getName().toLowerCase().contains(filterText.toLowerCase())) {
+        String title = pipelineInfo.getTitle() != null ? pipelineInfo.getTitle() : pipelineInfo.getName();
+        if (filterText != null && !title.toLowerCase().contains(filterText.toLowerCase())) {
           return false;
         }
         if (label != null) {
