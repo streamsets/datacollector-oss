@@ -76,6 +76,8 @@ angular
               if (pipelineInfo && !$scope.createNewPipeline) { //If pipeline config already exists
                 jsonConfigObj.uuid = pipelineInfo.uuid;
                 jsonConfigObj.metadata = pipelineInfo.metadata;
+                jsonConfigObj.title = pipelineInfo.title;
+
                 api.pipelineAgent.savePipelineConfig(pipelineInfo.name, jsonConfigObj).
                   then(function(res) {
                     if (jsonRulesObj && jsonRulesObj.uuid) {
