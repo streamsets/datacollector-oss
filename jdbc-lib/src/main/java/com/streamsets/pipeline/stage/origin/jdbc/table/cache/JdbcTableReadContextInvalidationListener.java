@@ -22,7 +22,6 @@ package com.streamsets.pipeline.stage.origin.jdbc.table.cache;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableContext;
-import com.streamsets.pipeline.stage.origin.jdbc.table.TableContextUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableReadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,10 +36,7 @@ public class JdbcTableReadContextInvalidationListener implements RemovalListener
   @Override
   public void onRemoval(RemovalNotification<TableContext, TableReadContext> tableReadContextRemovalNotification) {
     TableContext tableContext = tableReadContextRemovalNotification.getKey();
-    LOGGER.info(
-        "Closing result set for : {}",
-        tableContext.getQualifiedName()
-    );
+    LOGGER.info("Closing statement and result set for : {}", tableContext.getQualifiedName());
     TableReadContext readContext = tableReadContextRemovalNotification.getValue();
     //Destroy and close statement/result set.
     readContext.destroy();

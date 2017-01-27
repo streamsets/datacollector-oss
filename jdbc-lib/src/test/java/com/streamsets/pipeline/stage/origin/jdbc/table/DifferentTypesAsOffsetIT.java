@@ -20,9 +20,11 @@
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -285,5 +287,35 @@ public class DifferentTypesAsOffsetIT extends BaseTableJdbcSourceIT {
       totalNoOfRecordsRead = offsetAndRecordsRead.getRight();
     }
     Assert.assertEquals(totalNoOfRecordsRead, expectedRecords.size());
+  }
+
+  @Test
+  public void testInitialOffset() throws Exception {
+    int batchSize = NUMBER_OF_RECORDS/2;
+    String initialOffset;
+    if (JdbcUtil.isSqlTypeOneOf(offsetSqlType, Types.DATE, Types.TIME, Types.TIMESTAMP)) {
+      initialOffset = String.valueOf(expectedRecords.get(batchSize-1).get("/" + offsetFieldName).getValueAsLong());
+    } else {
+      initialOffset = expectedRecords.get(batchSize-1).get("/" + offsetFieldName).getValueAsString();
+    }
+    TableConfigBean tableConfigBean = new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+        .tablePattern(TABLE_NAME)
+        .offsetColumnToInitialOffsetValue(ImmutableMap.of(offsetFieldName.toUpperCase(), initialOffset))
+        .schema(database)
+        .build();
+    TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
+        .tableConfigBeans(ImmutableList.of(tableConfigBean))
+        .maxBatchSize(batchSize)
+        .build();
+    SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
+        .addOutputLane("a").build();
+    runner.runInit();
+    try {
+      StageRunner.Output op = runner.runProduce("", batchSize);
+      List<Record> actualRecords = op.getRecords().get("a");
+      checkRecords(expectedRecords.subList(batchSize, expectedRecords.size()), actualRecords);
+    } finally {
+      runner.runDestroy();
+    }
   }
 }

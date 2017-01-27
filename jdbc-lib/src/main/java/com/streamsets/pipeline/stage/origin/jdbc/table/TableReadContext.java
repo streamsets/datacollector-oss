@@ -40,7 +40,7 @@ public final class TableReadContext {
 
   private final PreparedStatement ps;
   private final String query;
-  private ResultSet rs;
+  private final ResultSet rs;
 
   public TableReadContext(
       Connection connection,
@@ -48,11 +48,12 @@ public final class TableReadContext {
       List<Pair<Integer, String>> paramValuesToSet,
       int fetchSize
   ) throws SQLException, StageException {
-    this.ps = connection.prepareStatement(query);
     this.query = query;
-    LOGGER.info("Executing Query :{}", query);
+    ps = connection.prepareStatement(query);
     ps.setFetchSize(fetchSize);
     setPreparedStParameters(paramValuesToSet);
+    LOGGER.info("Executing Query :{}", query);
+    LOGGER.debug("Parameter Types And Values {}", paramValuesToSet);
     rs = ps.executeQuery();
   }
 
