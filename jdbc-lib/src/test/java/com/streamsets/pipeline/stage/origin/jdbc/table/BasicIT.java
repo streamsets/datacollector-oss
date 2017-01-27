@@ -39,14 +39,13 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 
 public class BasicIT extends BaseTableJdbcSourceIT {
   private static final String STARS_INSERT_TEMPLATE = "INSERT into TEST.%s values (%s, '%s', '%s')";
   private static final String TRANSACTION_INSERT_TEMPLATE = "INSERT into TEST.%s values (%s, %s, '%s')";
+  private static final String STREAMING_TABLE_INSERT_TEMPLATE = "INSERT into TEST.%s values (%s, '%s')";
 
-  private static final Random RANDOM = new Random();
 
   private static List<Record> EXPECTED_CRICKET_STARS_RECORDS;
   private static List<Record> EXPECTED_TENNIS_STARS_RECORDS;
@@ -77,6 +76,15 @@ public class BasicIT extends BaseTableJdbcSourceIT {
       currentTime = currentTime + 1000;
     }
     return records;
+  }
+
+  private static Record createStreamingTableRecord(int index) {
+    Record record = RecordCreator.create();
+    LinkedHashMap<String, Field> fields = new LinkedHashMap<>();
+    fields.put("unique_int", Field.create(Field.Type.INTEGER, index + 1));
+    fields.put("random_string", Field.create(UUID.randomUUID().toString()));
+    record.set(Field.createListMap(fields));
+    return record;
   }
 
   @BeforeClass
@@ -169,6 +177,11 @@ public class BasicIT extends BaseTableJdbcSourceIT {
         );
       }
 
+      statement.addBatch(
+          "CREATE TABLE TEST.STREAMING_TABLE " +
+              "(unique_int INT NOT NULL PRIMARY KEY, random_string VARCHAR(255))"
+      );
+
       statement.executeBatch();
     }
   }
@@ -176,7 +189,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
   @AfterClass
   public static void tearDown() throws SQLException {
     try (Statement statement = connection.createStatement()) {
-      for (String table : ImmutableList.of("CRICKET_STARS", "TENNIS_STARS", "TRANSACTION_TABLE")) {
+      for (String table : ImmutableList.of("CRICKET_STARS", "TENNIS_STARS", "TRANSACTION_TABLE", "STREAMING_TABLE")) {
         statement.addBatch(String.format(DROP_STATEMENT_TEMPLATE, database, table));
       }
       statement.executeBatch();
@@ -556,5 +569,50 @@ public class BasicIT extends BaseTableJdbcSourceIT {
         ImmutableList.of("T_DATE"),
         true
     );
+  }
+
+  @Test
+  public void testStreamingInsertDuringSourceRun() throws Exception {
+    TableConfigBean tableConfigBean =
+        new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+            .tablePattern("STREAMING_TABLE")
+            .schema(database)
+            .build();
+    TableJdbcSource tableJdbcSource =
+        new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
+            .tableConfigBeans(ImmutableList.of(tableConfigBean))
+            .build();
+
+    SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
+        .addOutputLane("a").build();
+    runner.runInit();
+    String offset = "";
+    try {
+      for (int i = 0 ; i < 10; i++) {
+        Record record = createStreamingTableRecord(i);
+        try (Statement statement = connection.createStatement()) {
+          statement.execute(
+              String.format(
+                  STREAMING_TABLE_INSERT_TEMPLATE,
+                  "STREAMING_TABLE",
+                  record.get("/unique_int").getValueAsInteger(),
+                  record.get("/random_string").getValueAsString()
+              )
+          );
+        }
+        StageRunner.Output output = runner.runProduce(offset, 1);
+        List<Record> records = output.getRecords().get("a");
+        Assert.assertEquals(1, records.size());
+        checkRecords(ImmutableList.of(record), records);
+
+        //Will close the old result set and generate an empty batch
+        output = runner.runProduce(output.getNewOffset(), 1);
+        Assert.assertTrue(output.getRecords().get("a").isEmpty());
+
+        offset = output.getNewOffset();
+      }
+    } finally {
+      runner.runDestroy();
+    }
   }
 }
