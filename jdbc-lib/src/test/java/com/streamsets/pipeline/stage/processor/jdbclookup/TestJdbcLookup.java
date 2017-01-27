@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.processor.jdbclookup;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
@@ -412,7 +413,7 @@ public class TestJdbcLookup {
   }
 
   @Test
-  public void testBadDataTypeForDefaultValue() throws Exception {
+  public void testValidationForDefaultValue() throws Exception {
     List<JdbcFieldColumnMapping> columnMappings = ImmutableList.of(
         new JdbcFieldColumnMapping("P_ID", "[2]", "100", DataType.USE_COLUMN_TYPE)
     );
@@ -431,6 +432,44 @@ public class TestJdbcLookup {
     // Data type must be explicitly set if default value is not empty.
     List<Stage.ConfigIssue> issues = processorRunner.runValidateConfigs();
     assertEquals(1, issues.size());
+  }
+
+  @Test
+  public void testWrongDataTypeDefaultValue() throws Exception {
+    List<JdbcFieldColumnMapping> columnMappings = ImmutableList.of(
+        new JdbcFieldColumnMapping("P_ID", "[2]", "HUNDRED", DataType.INTEGER)
+    );
+
+    JdbcLookupDProcessor processor = new JdbcLookupDProcessor();
+    processor.hikariConfigBean = createConfigBean(h2ConnectionString, username, password);
+
+    ProcessorRunner processorRunner = new ProcessorRunner.Builder(JdbcLookupDProcessor.class, processor)
+        .addConfiguration("query", queryReturnsNoRow)
+        .addConfiguration("columnMappings", columnMappings)
+        .addConfiguration("maxClobSize", 1000)
+        .addConfiguration("maxBlobSize", 1000)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .addOutputLane("lane")
+        .build();
+
+    Record record = RecordCreator.create();
+    List<Field> fields = new ArrayList<>();
+    fields.add(Field.create("Adam"));
+    fields.add(Field.create("Kunicki"));
+    record.set(Field.create(fields));
+
+    List<Record> singleRecord = ImmutableList.of(record);
+    processorRunner.runInit();
+    try {
+      StageRunner.Output output = processorRunner.runProcess(singleRecord);
+      Assert.assertEquals(0, output.getRecords().get("lane").size());
+
+      // Make sure record is sent to error.
+      List<Record> errors = processorRunner.getErrorRecords();
+      Assert.assertEquals(1, errors.size());
+    } finally {
+      processorRunner.runDestroy();
+    }
   }
 
   @Test

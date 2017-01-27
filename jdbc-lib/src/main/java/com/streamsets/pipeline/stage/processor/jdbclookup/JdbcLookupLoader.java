@@ -99,12 +99,14 @@ public class JdbcLookupLoader extends CacheLoader<String, Map<String, Field>> {
           } else {
             // Database returns no row. Use default values.
             for (String column : columnsToFields.keySet()) {
+              String defaultValue = columnsToDefaults.get(column);
               if (columnsToTypes.get(column) != DataType.USE_COLUMN_TYPE) {
-                Field field = Field.create(
-                    Field.Type.valueOf(columnsToTypes.get(column).getLabel()),
-                    columnsToDefaults.get(column)
-                );
-                defaultValues.put(column, field);
+                try {
+                  Field field = Field.create(Field.Type.valueOf(columnsToTypes.get(column).getLabel()), defaultValue);
+                  defaultValues.put(column, field);
+                } catch (IllegalArgumentException e) {
+                  throw new OnRecordErrorException(JdbcErrors.JDBC_03, column, defaultValue, e);
+                }
               }
             }
           }
