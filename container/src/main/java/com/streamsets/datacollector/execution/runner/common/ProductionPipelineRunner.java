@@ -330,6 +330,11 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     // Configured maximal batch size
     int batchSize = configuration.get(Constants.MAX_BATCH_SIZE_KEY, Constants.MAX_BATCH_SIZE_DEFAULT);
 
+    // During Snapshot capture use Snapshot batch size
+    if (batchesToCapture > 0) {
+      batchSize = snapshotBatchSize;
+    }
+
     // Push origin will block on the call until the either all data have been consumed or the pipeline stopped
     originPipe.process(offsetTracker.getOffsets(), batchSize, this);
 
