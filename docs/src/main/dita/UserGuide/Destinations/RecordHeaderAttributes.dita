@@ -37,8 +37,8 @@
         <p>You can use the following record header attributes in destinations:
             <dl>
                 <dlentry>
-                    <dt>targetDirectory attribute in the Hadoop FS, Local FS, and MapR FS
-                        destinations</dt>
+                    <dt>targetDirectory attribute in the Azure Data Lake Store, Hadoop FS, Local FS,
+                        and MapR FS destinations</dt>
                     <dd>The targetDirectory record header attribute defines the directory where the
                         record is written. If the directory does not exist, the destination creates
                         the directory. The targetDirectory header attribute replaces the Directory
@@ -62,7 +62,8 @@
                         property, select <uicontrol>In Record Header</uicontrol>.</dd>
                 </dlentry>
                 <dlentry>
-                    <dt>roll attribute in the Hadoop FS, Local FS, and MapR FS destinations</dt>
+                    <dt>roll attribute in the Azure Data Lake Store, Hadoop FS, Local FS, and MapR
+                        FS destinations</dt>
                     <dd>The roll attribute, when present in the record header, triggers a roll of
                         the file. </dd>
                     <dd>You can define the name of the roll header attribute. When you use the Hive

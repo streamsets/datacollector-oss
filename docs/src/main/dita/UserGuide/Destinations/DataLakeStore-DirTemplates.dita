@@ -22,6 +22,8 @@
             Store destination uses directory templates to create output directories. The destination
             writes records to the directories based on the configured time basis. </p>
         <p
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-HLM-Dirtemp-targetDir"/>
+        <p
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DirectoryTemplate_Intro"/>
         <p
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DirectoryTemplate_Example"/>
