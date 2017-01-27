@@ -82,15 +82,44 @@
                                                 >Step 2. Retrieve Details from
                                         Azure</xref>.</p></entry>
                                 </row>
+                           
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Output Files</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_tdz_3z4_sy">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Output Files Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-FilePrefix">
                                     <entry/>
                                 </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-FileSuffix">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-DirectoryinHeader">
+                                    <entry/>
+                                </row>
                                 <row>
                                     <entry>Directory Template <xref
-                                            href="DataLakeStore-DirTemplates.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_dpb_pyn_lw"/></xref></entry>
+                                        href="DataLakeStore-DirTemplates.dita">
+                                        <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            id="image_dpb_pyn_lw"/></xref></entry>
                                     <entry
                                         conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-DirectoryTemplate"/>
                                 </row><row
@@ -99,11 +128,23 @@
                                 </row>
                                 <row>
                                     <entry>Time Basis <xref
-                                            href="DataLakeStore-TimeBasis.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_jwd_mxw_zx"/></xref></entry>
+                                        href="DataLakeStore-TimeBasis.dita">
+                                        <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            id="image_jwd_mxw_zx"/></xref></entry>
                                     <entry
                                         conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-TimeBasis"/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-MaxRecords">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-RollAttri">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-RollAttrName">
+                                    <entry/>
                                 </row>
                                 <row>
                                     <entry>Validate Directory Permissions</entry>
@@ -140,8 +181,10 @@
                                     <entry>Format of data to be written. Use one of the following
                                             options:<ul id="ul_ffs_xxw_zx">
                                             <li>Avro</li>
+                                            <li>Binary</li>
                                             <li>Delimited</li>
                                             <li>JSON</li>
+                                            <li>Protobuf</li>
                                             <li>Text</li>
                                             <li>Whole File</li>
                                         </ul></entry>
@@ -155,10 +198,16 @@
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-AVRO-File">
                 <cmd/>
             </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-Binary">
+                <cmd/>
+            </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/DelimProps">
                 <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JSONProps">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-PROTO-props">
                 <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TextProps">
