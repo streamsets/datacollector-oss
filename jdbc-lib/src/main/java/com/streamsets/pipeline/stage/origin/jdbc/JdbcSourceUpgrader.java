@@ -55,6 +55,9 @@ public class JdbcSourceUpgrader extends JdbcBaseUpgrader {
         // fall through
       case 7:
         upgradeV7toV8(configs);
+        // fall through
+      case 8:
+        upgradeV8toV9(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -102,4 +105,7 @@ public class JdbcSourceUpgrader extends JdbcBaseUpgrader {
     configs.addAll(configsToAdd);
   }
 
+  private void upgradeV8toV9(List<Config> configs) {
+    configs.add(new Config("disableValidation", false));
+  }
 }

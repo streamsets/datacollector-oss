@@ -32,7 +32,7 @@ import com.streamsets.pipeline.lib.el.OffsetEL;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 
 @StageDef(
-    version = 8,
+    version = 9,
     label = "JDBC Query Consumer",
     description = "Reads data from a JDBC source using a query.",
     icon = "rdbms.png",
@@ -138,7 +138,8 @@ public class JdbcDSource extends DSource {
       description = "Generates record header attributes that provide additional details about source data, such as the original data type or source table name.",
       defaultValue = "true",
       displayPosition = 200,
-      group = "ADVANCED")
+      group = "ADVANCED"
+  )
   public boolean createJDBCNsHeaders = true;
 
   @ConfigDef(
@@ -147,12 +148,24 @@ public class JdbcDSource extends DSource {
       label = "JDBC Header Prefix",
       description = "Prefix for the header attributes, used as follows: <prefix>.<field name>.<type of information>. For example: jdbc.<field name>.precision and jdbc.<field name>.scale",
       defaultValue = "jdbc.",
-      displayPosition = 200,
+      displayPosition = 210,
       group = "ADVANCED",
       dependsOn = "createJDBCNsHeaders",
       triggeredByValue = "true"
   )
   public String jdbcNsHeaderPrefix = "jdbc.";
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Disable Query Validation",
+      description = "Disables the validation query and does not validate query formatting such as " +
+          "presence of ${OFFSET} or ORDER BY clause.",
+      defaultValue = "false",
+      displayPosition = 220,
+      group = "ADVANCED"
+  )
+  public boolean disableValidation = false;
 
   @Override
   protected Source createSource() {
@@ -161,6 +174,7 @@ public class JdbcDSource extends DSource {
         query,
         initialOffset,
         offsetColumn,
+        disableValidation,
         txnIdColumnName,
         txnMaxSize,
         jdbcRecordType,
