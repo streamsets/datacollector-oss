@@ -230,13 +230,9 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
                     )
                 );
               } else if (getContext().isPreview()) {
-                for (FileStatus fileStatus : files) {
-                  if (previewBuffer.size() < PREVIEW_SIZE && fileStatus.isFile()) {
-                    readInPreview(fileStatus, issues);
-                  }
-                }
+                readInPreview(files, issues);
               }
-            } catch (IOException ex) {
+            } catch (IOException | InterruptedException ex) {
               issues.add(
                   getContext().createConfigIssue(
                       Groups.HADOOP_FS.name(),
@@ -273,6 +269,21 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
       }
     }
     return hdfsDirPaths;
+  }
+
+  @VisibleForTesting
+  void readInPreview(final FileStatus[] files, final List<ConfigIssue> issues) throws IOException,InterruptedException {
+    getUGI().doAs(new PrivilegedExceptionAction<Void>() {
+      @Override
+      public Void run() throws Exception {
+        for (FileStatus fileStatus : files) {
+          if (previewBuffer.size() < PREVIEW_SIZE && fileStatus.isFile()) {
+            readInPreview(fileStatus, issues);
+          }
+        }
+        return null;
+      }
+    });
   }
 
   @VisibleForTesting
@@ -696,7 +707,8 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     }
   }
 
-  private UserGroupInformation getUGI() {
+  @VisibleForTesting
+  UserGroupInformation getUGI() {
     return (conf.hdfsUser == null || conf.hdfsUser.isEmpty()) ?
         loginUgi : HadoopSecurityUtil.getProxyUser(conf.hdfsUser, loginUgi);
   }
