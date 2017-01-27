@@ -1228,6 +1228,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
         buildDatagramParser(builder);
         break;
       case WHOLE_FILE:
+        builder.setCompression(Compression.NONE);
         builder.setMaxDataLen(wholeFileMaxObjectLen);
         break;
       default:
