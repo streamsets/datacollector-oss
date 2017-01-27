@@ -270,11 +270,14 @@ public class MapRJsonTarget extends BaseTarget {
 
   @Override
   public void destroy() {
-    try {
-      table.close();
+    if (table != null) {
+      try {
+        table.close();
+        table = null;
 
-    } catch (DBException ex) {
-      LOG.error(Errors.MAPR_JSON_05.getMessage(), conf.tableName, ex);
+      } catch (DBException ex) {
+        LOG.error(Errors.MAPR_JSON_05.getMessage(), conf.tableName, ex);
+      }
     }
   }
 
