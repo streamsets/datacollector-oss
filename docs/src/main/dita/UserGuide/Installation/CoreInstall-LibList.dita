@@ -528,8 +528,8 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-mongodb_3-lib</entry>
-                            <entry>For MongoDB 3.0.<p>Includes the MongoDB origin and
-                                    destination.</p></entry>
+                            <entry>For MongoDB 3.0.<p>Includes the MongoDB and MongoDB Oplog origin,
+                                    and the MongoDB destination.</p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-mysql-binlog-lib</entry>
