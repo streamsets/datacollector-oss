@@ -23,6 +23,7 @@ import com.streamsets.datacollector.el.PipelineEL;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.runner.standalone.StandaloneRunner;
 import com.streamsets.datacollector.util.PipelineException;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -160,9 +161,15 @@ public class ProductionPipelineRunnable implements Runnable {
       try {
         Map<String, String> offset = pipeline.getCommittedOffsets();
         String offsetStatus = "";
+
         if (!offset.isEmpty()) {
-          offsetStatus = Utils.format("The last committed source offset is {}.", offset);
+          if(offset.size() == 1 && offset.containsKey(Source.POLL_SOURCE_OFFSET_KEY)) {
+            offsetStatus = Utils.format("The last committed source offset is '{}'.", offset.get(Source.POLL_SOURCE_OFFSET_KEY));
+          } else {
+            offsetStatus = Utils.format("The last committed source offset is {}.", offset);
+          }
         }
+
         if (this.nodeProcessShutdown) {
           LOG.info("Changing state of pipeline '{}', '{}' to '{}'", name, rev, PipelineStatus.DISCONNECTED);
           pipeline.getStatusListener().stateChanged(
