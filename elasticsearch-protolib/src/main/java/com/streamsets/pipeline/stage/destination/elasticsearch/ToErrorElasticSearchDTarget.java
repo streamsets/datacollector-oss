@@ -34,7 +34,11 @@ import com.streamsets.pipeline.api.StageDef;
     upgrader = ElasticSearchDTargetUpgrader.class
 )
 @ErrorStage
-@HideConfigs(preconditions = true, onErrorRecord = true)
+@HideConfigs(
+    preconditions = true,
+    onErrorRecord = true,
+    value = {"elasticSearchConfigBean.defaultOperation", "elasticSearchConfigBean.unsupportedAction"}
+)
 @GenerateResourceBundle
 public class ToErrorElasticSearchDTarget extends ElasticSearchDTarget {
 
