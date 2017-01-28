@@ -17,7 +17,7 @@
   <p ng-hide="isOffsetResetSucceed || showLoading">
     <div ng-show="isList">
       <div translate="home.resetOffset.confirmationMessageBulk"></div>
-      <div ng-repeat="pipeline in pipelineInfo">{{pipeline.name}}</div>
+      <div ng-repeat="pipeline in pipelineInfo">{{pipeline.title}}</div>
     </div>
     <div ng-hide="isList" translate="home.resetOffset.confirmationMessage"></div>
   </p>

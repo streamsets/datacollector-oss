@@ -11,10 +11,10 @@
 
   <div ng-if="!isList && (!common.errors || common.errors.length == 0)">
     <p ng-if="!stopping && !forceStop"
-       translate="home.header.stopConfirmationMessage" translate-values="{name: pipelineInfo.name}"></p>
+       translate="home.header.stopConfirmationMessage" translate-values="{name: pipelineInfo.title}"></p>
 
     <p ng-if="!stopping && forceStop"
-       translate="home.header.forceStopConfirmationMessage" translate-values="{name: pipelineInfo.name}"></p>
+       translate="home.header.forceStopConfirmationMessage" translate-values="{name: pipelineInfo.title}"></p>
 
     <p translate="home.header.stoppingPipeline" ng-if="stopping"></p>
   </div>
@@ -22,7 +22,7 @@
   <div ng-if="isList && (!common.errors || common.errors.length == 0)">
     <p ng-if="!stopping && !forceStop" translate="home.header.stopPipelinesConfirmationMessage"></p>
     <p ng-if="!stopping && forceStop" translate="home.header.forceStopPipelinesConfirmationMessage"></p>
-    <p ng-if="!stopping" ng-repeat="pipeline in pipelineInfo">{{pipeline.name}}</p>
+    <p ng-if="!stopping" ng-repeat="pipeline in pipelineInfo">{{pipeline.title}}</p>
     <p translate="home.header.stoppingPipelines" ng-if="stopping"></p>
   </div>
 
