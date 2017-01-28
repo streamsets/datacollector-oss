@@ -39,6 +39,8 @@
           from Kafka.</li>
         <li><xref href="KinConsumer.dita#concept_anh_4y3_yr">Kinesis Consumer</xref> - Reads data
           from Kinesis Streams.</li>
+        <li><xref href="MapRDBJSON.dita#concept_ywh_k15_3y"/> - Reads JSON documents from MapR DB
+          JSON tables.</li>
         <li><xref href="MapRFS.dita#concept_psz_db4_lx">MapR FS</xref> - Reads files from MapR
           FS.</li>
         <li><xref href="MapRStreamsCons.dita#concept_cvy_xsf_2v">MapR Streams Consumer</xref> -

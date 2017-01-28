@@ -224,6 +224,10 @@
                 /></entry>
             </row>
             <row>
+              <entry>MapR DB JSON</entry>
+              <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
+            </row>
+            <row>
               <entry>MapR FS</entry>
               <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_ihy_lvt_lx"
                 /></entry>

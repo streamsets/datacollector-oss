@@ -29,6 +29,7 @@
                 <li>Directory</li>
                 <li>File Tail</li>
                 <li>JDBC Consumer</li>
+                <li>MapR DB JSON</li>
                 <li>MongoDB</li>
                 <li>MongoDB Oplog</li>
                 <li>MySQL Binary Log</li>

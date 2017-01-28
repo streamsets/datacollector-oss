@@ -39,6 +39,6 @@ user.stagelibs.blacklist</codeblock></p>
     <related-links>
         <link href="../Installation/MapR-Prerequisites.dita#concept_jgs_qpg_2v"/>
         <link href="../Destinations/Solr-Prerequisites.dita#concept_gm2_y12_pw"/>
-        <link href="../Destinations/Elasticsearch-Prerequisites.dita#concept_z3t_1yw_qy"/>
+        <link href="../Destinations/Elasticsearch-Prereqs.dita#task_m4q_hzd_ry"/>
     </related-links>
 </concept>
