@@ -95,6 +95,7 @@ public enum Errors implements ErrorCode {
   HADOOPFS_58("Flush failed on file: '{}' due to '{}'"),
   HADOOPFS_59("Recovery failed to rename old _tmp_ files"),
   HADOOPFS_60("Invalid Data Format {}, should be {} for File Type {}."),
+  HADOOPFS_61("You must specify at least one of Hadoop FS URI, Hadoop FS Configuration Directory or fs.defaultFS"),
 
   ;
 

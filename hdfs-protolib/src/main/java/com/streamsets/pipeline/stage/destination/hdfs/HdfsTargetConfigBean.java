@@ -45,6 +45,7 @@ import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.ActiveRecordWriters;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.RecordWriterManager;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
+import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
@@ -976,6 +977,19 @@ public class HdfsTargetConfigBean {
             conf.addResource(new Path(hdfsSite.getAbsolutePath()));
           }
         }
+      }
+    } else {
+      String fsDefaultFS = hdfsConfigs.get(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY);
+      if (StringUtils.isEmpty(hdfsUri) && StringUtils.isEmpty(fsDefaultFS)) {
+        // No URI, no config dir, and no fs.defaultFS config param
+        // Avoid defaulting to writing to file:/// (SDC-5143)
+        issues.add(
+            context.createConfigIssue(
+                Groups.HADOOP_FS.name(),
+                getTargetConfigBeanPrefix() + "hdfsUri",
+                Errors.HADOOPFS_61
+            )
+        );
       }
     }
     for (Map.Entry<String, String> config : hdfsConfigs.entrySet()) {
