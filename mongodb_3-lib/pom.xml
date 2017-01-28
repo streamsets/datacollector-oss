@@ -32,7 +32,9 @@
   <packaging>jar</packaging>
 
   <properties>
-    <mongodb-driver.version>3.0.2</mongodb-driver.version>
+    <!--https://docs.mongodb.com/ecosystem/drivers/driver-compatibility-reference/#reference-compatibility-mongodb-java-->
+    <!-- Version 3.4.1 seems to be compatible with all the lower versions  so i upgraded the version -->
+    <mongodb-driver.version>3.4.1</mongodb-driver.version>
   </properties>
 
   <dependencies>
