@@ -86,6 +86,7 @@ public class StageLibraryResource {
   private static final String TARBALL_PATH = "/tarball/";
   private static final String TGZ_FILE_EXTENSION = ".tgz";
   private static final String STREAMSETS_LIBS_PATH = "/streamsets-libs/";
+  private static final String STREAMSETS_ROOT_DIR_PREFIX = "streamsets-datacollector-";
 
   @VisibleForTesting
   static final String STAGES = "stages";
@@ -283,6 +284,9 @@ public class StageLibraryResource {
             .get();
 
         String directory = runtimeDir + "/..";
+        String [] runtimeDirStrSplitArr = runtimeDir.split("/");
+        String installDirName = runtimeDirStrSplitArr[runtimeDirStrSplitArr.length - 1];
+        String tarDirRootName = STREAMSETS_ROOT_DIR_PREFIX + version;
 
         InputStream inputStream =  response.readEntity(InputStream.class);
 
@@ -294,7 +298,7 @@ public class StageLibraryResource {
             entry = myTarFile.getNextTarEntry();
             continue;
           }
-          File curFile = new File(directory, entry.getName());
+          File curFile = new File(directory, entry.getName().replace(tarDirRootName, installDirName));
           File parent = curFile.getParentFile();
           if (!parent.exists()) {
             parent.mkdirs();
