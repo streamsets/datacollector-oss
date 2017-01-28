@@ -166,6 +166,22 @@ public class TestHdfsTarget {
   }
 
   @Test
+  public void testNoUriOrConfDirectory() throws Exception {
+    HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
+        .hdfsUri("")
+        .hdfsConfDir("")
+        .build();
+
+    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .build();
+
+    List<Stage.ConfigIssue> configIssues = runner.runValidateConfigs();
+    Assert.assertEquals(1, configIssues.size());
+    Assert.assertTrue(configIssues.get(0).toString().contains(Errors.HADOOPFS_61.name()));
+  }
+
+  @Test
   public void testCutoffLimitUnitConversion() throws Exception {
     HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
       .maxFileSize(1)
