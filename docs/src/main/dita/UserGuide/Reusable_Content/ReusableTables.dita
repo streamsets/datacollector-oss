@@ -1257,5 +1257,33 @@
     </tbody>
    </tgroup>
   </table>
+  <draft-comment author="alisontaylor">Descriptions are used in MapR DB JSON origin and
+   destination</draft-comment>
+  <table frame="all" rowsep="1" colsep="1" id="table_rcs_gcd_ty">
+   <tgroup cols="2">
+    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+    <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+    <thead>
+     <row>
+      <entry>MapR DB JSON Property</entry>
+      <entry>Description</entry>
+     </row>
+    </thead>
+    <tbody>
+     <row>
+      <entry>Table Name</entry>
+      <entry>
+       <p id="MapRDBJSON_Table1">Enter the name of a table. If you do not include a path to the table, the destination
+        assumes that the table exists in the user's home directory. For example,
+         <codeph>/user/&lt;user name>/&lt;table name></codeph>.</p>
+       <p id="MapRDBJSON_Table2">You can include a path relative to the user's home directory or an absolute path when you
+        enter the table name. For tables in a default cluster, specify the absolute path as
+         <codeph>/&lt;table path></codeph>. For tables in a specific cluster, specify the absolute
+        path as <codeph>/mapr/&lt;cluster name>/&lt;table path></codeph>.</p>
+      </entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
  </conbody>
 </concept>

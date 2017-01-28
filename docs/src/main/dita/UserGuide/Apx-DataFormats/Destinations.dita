@@ -245,6 +245,12 @@
                                                   Applicable * * *</entry>
                                                   <entry/>
                                                 </row>
+                                          <row>
+                                            <entry>MapR DB JSON</entry>
+                                            <entry namest="c2" nameend="c9">* * * Not
+                                              Applicable * * *</entry>
+                                            <entry/>
+                                          </row>
                                                 <row>
                                                   <entry>MapR FS</entry>
                                                   <entry><image href="../Graphics/CheckIcon.png"
