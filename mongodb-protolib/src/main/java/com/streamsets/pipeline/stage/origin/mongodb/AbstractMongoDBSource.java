@@ -100,29 +100,33 @@ public abstract class AbstractMongoDBSource extends BaseSource {
   }
 
   private void checkCursor(List<ConfigIssue> issues) {
+    //According to MongoDB Oplog: https://docs.mongodb.com/manual/reference/method/cursor.batchSize/
+    //We should not use batch size of 1, and in mongo db world batch size of 1 is special
+    //and equal to specifying limit 1, so the below queries will simply use limit 1
+    //rather than batchsize and limit both 1.
     if (configBean.isCapped) {
       try {
-        mongoCollection.find().cursorType(CursorType.TailableAwait).batchSize(1).limit(1).iterator().close();
+        mongoCollection.find().cursorType(CursorType.TailableAwait).limit(1).iterator().close();
       } catch (MongoQueryException e) {
         LOG.error("Error during Mongo Query in checkCursor: {}", e);
         issues.add(getContext().createConfigIssue(
             Groups.MONGODB.name(),
             MongoDBConfig.MONGO_CONFIG_PREFIX + "collection",
             Errors.MONGODB_04,
-            configBean.mongoConfig.database,
+            configBean.mongoConfig.collection,
             e.toString()
         ));
       }
     } else {
       try {
-        mongoCollection.find().cursorType(CursorType.NonTailable).batchSize(1).limit(1).iterator().close();
+        mongoCollection.find().cursorType(CursorType.NonTailable).limit(1).iterator().close();
       } catch (MongoQueryException e) {
         LOG.error("Error during Mongo Query in checkCursor: {}", e);
         issues.add(getContext().createConfigIssue(
             Groups.MONGODB.name(),
             MongoDBConfig.MONGO_CONFIG_PREFIX + "collection",
             Errors.MONGODB_06,
-            configBean.mongoConfig.database,
+            configBean.mongoConfig.collection,
             e.toString()
         ));
       }
