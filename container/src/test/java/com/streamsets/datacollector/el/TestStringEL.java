@@ -110,6 +110,9 @@ public class TestStringEL {
 
     Assert.assertEquals("The.Streamsets.Inc", eval.eval(variables,
       "${str:replace(\"The Streamsets Inc\", ' ', '.')}", String.class));
+
+    // SDC-5165
+    Assert.assertEquals("12345", eval.eval(variables, "${str:replace(\"_12345_\",\"_\",\"\")}", String.class));
   }
 
   @Test
