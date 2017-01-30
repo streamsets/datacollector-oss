@@ -180,6 +180,9 @@ public class Pipeline {
   @SuppressWarnings("unchecked")
   public List<Issue> init() {
     PipeContext pipeContext = new PipeContext();
+    this.runner.setPipelineConfiguration(pipelineConf);
+    this.runner.setPipeContext(pipeContext);
+
     List<Issue> issues = new ArrayList<>();
 
     // Error and stats aggregation first
@@ -249,7 +252,6 @@ public class Pipeline {
         issues.addAll(initPipe(pipe, pipeContext));
       }
     }
-    this.runner.setPipeContext(pipeContext);
     return issues;
   }
 

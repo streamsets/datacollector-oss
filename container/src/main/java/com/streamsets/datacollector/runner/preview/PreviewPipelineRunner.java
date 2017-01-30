@@ -21,7 +21,9 @@ package com.streamsets.datacollector.runner.preview;
 
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
+import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageType;
+import com.streamsets.datacollector.el.PipelineEL;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
@@ -85,6 +87,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
   private StatsAggregationHandler statsAggregationHandler;
   private Map<String, StageOutput> stagesToSkip;
   private AtomicInteger batchesProcessed;
+  private PipelineConfiguration pipelineConfiguration;
 
   public PreviewPipelineRunner(String name, String rev, RuntimeInfo runtimeInfo, SourceOffsetTracker offsetTracker,
                                int batchSize, int batches, boolean skipTargets) {
@@ -184,6 +187,9 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
 
     originPipe.prepareBatchContext(batchContext);
 
+    // Since the origin owns the threads in PushSource, need to re-populate the PipelineEL on every batch
+    PipelineEL.setConstantsInContext(pipelineConfiguration);
+
     return batchContext;
   }
 
@@ -214,6 +220,8 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
     } catch (StageException|PipelineRuntimeException e) {
       LOG.error("Error while executing preview", e);
       return  false;
+    } finally {
+      PipelineEL.unsetConstantsInContext();
     }
   }
 
@@ -326,6 +334,11 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
 
   public void setPipeContext(PipeContext pipeContext) {
 
+  }
+
+  @Override
+  public void setPipelineConfiguration(PipelineConfiguration pipelineConfiguration) {
+    this.pipelineConfiguration = pipelineConfiguration;
   }
 
   @Override
