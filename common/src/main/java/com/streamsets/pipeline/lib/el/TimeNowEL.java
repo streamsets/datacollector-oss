@@ -28,6 +28,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
@@ -127,6 +128,23 @@ public class TimeNowEL {
 
     String value = str.replaceAll("[^0-9]","");
     return Long.parseLong(value);
+  }
+
+  @ElFunction(prefix = TIME_CONTEXT_VAR, name = "extractDateFromString", description = "Format a String date into a date.")
+  public static Date extractDateFromString(
+      @ElParam("dateTimeString") String dateTimeString,
+      @ElParam("string") String dateFormat
+  ) throws ParseException{
+    if (StringUtils.isEmpty(dateTimeString)) {
+      LOG.error(Utils.format("Invalid parameter - Date String is null/empty"));
+      return null;
+    }
+    if (StringUtils.isEmpty(dateFormat)) {
+      LOG.error(Utils.format("Invalid parameter - Date Format is null/empty"));
+      return null;
+    }
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
+    return simpleDateFormat.parse(dateTimeString);
   }
 
   @ElFunction(prefix = TIME_CONTEXT_VAR, name = "extractStringFromDateTZ", description = "Format a Date into a " +

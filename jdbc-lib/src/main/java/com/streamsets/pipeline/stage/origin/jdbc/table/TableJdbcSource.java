@@ -180,7 +180,13 @@ public class TableJdbcSource extends BaseSource {
         Map<String, TableContext> allTableContexts = new LinkedHashMap<>();
         for (TableConfigBean tableConfigBean : tableJdbcConfigBean.tableConfigs) {
           //No duplicates even though a table matches multiple configurations, we will add it only once.
-          allTableContexts.putAll(TableContextUtil.listTablesForConfig(connectionManager.getConnection(), tableConfigBean));
+          allTableContexts.putAll(
+              TableContextUtil.listTablesForConfig(
+                  connectionManager.getConnection(),
+                  tableConfigBean,
+                  tableJdbcELEvalContext
+              )
+          );
         }
 
         LOG.info("Selected Tables: \n {}", NEW_LINE_JOINER.join(allTableContexts.keySet()));

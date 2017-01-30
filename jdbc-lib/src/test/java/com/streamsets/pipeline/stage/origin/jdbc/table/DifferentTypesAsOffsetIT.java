@@ -44,6 +44,7 @@ import java.math.BigInteger;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Types;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -289,12 +290,34 @@ public class DifferentTypesAsOffsetIT extends BaseTableJdbcSourceIT {
     Assert.assertEquals(totalNoOfRecordsRead, expectedRecords.size());
   }
 
+  private String getTimeELForInitialOffsetForDateTimeTypes(Date date) {
+    String initialOffset;
+    switch (offsetSqlType) {
+      case Types.DATE:
+        String dateString = new SimpleDateFormat("yyyy-MM-dd").format(date);
+        initialOffset = "${time:dateTimeToMilliseconds(time:extractDateFromString('"+ dateString+"','yyyy-MM-dd'))}";
+        break;
+      case Types.TIME:
+        String timeString = new SimpleDateFormat("HH:mm:ss.SSS").format(date);
+        initialOffset = "${time:dateTimeToMilliseconds(time:extractDateFromString('"+ timeString+"','HH:mm:ss.SSS'))}";
+        break;
+      case Types.TIMESTAMP:
+        String dateTimeString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(date);
+        initialOffset = "${time:dateTimeToMilliseconds(time:extractDateFromString('"+ dateTimeString+"','yyyy-MM-dd HH:mm:ss.SSS'))}";
+        break;
+      default:
+        throw new IllegalArgumentException("Unknown sql Type : " + offsetSqlType);
+    }
+    return initialOffset;
+  }
+
   @Test
   public void testInitialOffset() throws Exception {
     int batchSize = NUMBER_OF_RECORDS/2;
     String initialOffset;
     if (JdbcUtil.isSqlTypeOneOf(offsetSqlType, Types.DATE, Types.TIME, Types.TIMESTAMP)) {
-      initialOffset = String.valueOf(expectedRecords.get(batchSize-1).get("/" + offsetFieldName).getValueAsLong());
+      Date date = new Date(expectedRecords.get(batchSize-1).get("/" + offsetFieldName).getValueAsLong());
+      initialOffset = getTimeELForInitialOffsetForDateTimeTypes(date);
     } else {
       initialOffset = expectedRecords.get(batchSize-1).get("/" + offsetFieldName).getValueAsString();
     }

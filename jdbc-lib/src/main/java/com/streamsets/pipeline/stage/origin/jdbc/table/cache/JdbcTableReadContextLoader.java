@@ -62,7 +62,6 @@ public class JdbcTableReadContextLoader extends CacheLoader<TableContext, TableR
             tableJdbcELEvalContext
         );
 
-
     TableReadContext tableReadContext =
         new TableReadContext(
             connectionManager.getConnection(),

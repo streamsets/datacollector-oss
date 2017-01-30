@@ -92,7 +92,9 @@ public final class TableConfigBean {
       label = "Initial Offset",
       description = "Configure Initial Offset for each Offset Column.",
       displayPosition = 70,
-      group = "TABLE"
+      group = "TABLE",
+      elDefs = {TimeNowEL.class, TimeEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public Map<String, String> offsetColumnToInitialOffsetValue = new LinkedHashMap<>();
 

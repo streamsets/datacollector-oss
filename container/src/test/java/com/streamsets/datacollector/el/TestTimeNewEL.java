@@ -29,6 +29,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class TestTimeNewEL {
@@ -124,6 +125,45 @@ public class TestTimeNewEL {
 
     Assert.assertEquals(ans, eval.eval(variables,
         "${time:extractStringFromDate(record:value('/theDate'), record:value('/format'))}", String.class));
+  }
+
+  private void checkExtractDateFromString(Date date, String dateString, String format) throws Exception {
+    Assert.assertEquals(date, TimeNowEL.extractDateFromString(dateString, format));
+  }
+
+  @Test
+  public void testExtractDateFromString() throws Exception {
+    Calendar calendar = Calendar.getInstance();
+    calendar.set(Calendar.MILLISECOND, 915);
+    calendar.set(Calendar.SECOND, 30);
+    calendar.set(Calendar.MINUTE, 15);
+    calendar.set(Calendar.HOUR_OF_DAY, 20);
+    calendar.set(Calendar.DAY_OF_MONTH, 1);
+    calendar.set(Calendar.MONTH, 4);
+    calendar.set(Calendar.YEAR, 2017);
+
+    date = calendar.getTime();
+    TimeNowEL.setTimeNowInContext(variables, date);
+
+    checkExtractDateFromString(date,"2017/05/01 20:15:30.915", "yyyy/MM/dd HH:mm:ss.SSS");
+    checkExtractDateFromString(new Date((date.getTime()/1000) * 1000),"2017/05/01 20:15:30", "yy/MM/dd HH:mm:ss");
+    checkExtractDateFromString(
+        new SimpleDateFormat("HH:mm:ss.SSS").parse("20:15:30.915"),
+        "20:15:30.915",
+        "HH:mm:ss.SSS"
+    );
+
+    checkExtractDateFromString(
+        new SimpleDateFormat("yyyy-MM-dd").parse("2017-05-01"),
+        "01-May-2017",
+        "dd-MMM-yyyy"
+    );
+
+    checkExtractDateFromString(
+        new SimpleDateFormat("yyyy/MMM/dd HH:mm:ss.SSS Z").parse("2017/May/01 20:15:30.915 PDT"),
+        "2017-05-01 20:15:30.915 PDT",
+        "yyyy-MM-dd HH:mm:ss.SSS Z"
+    );
   }
 
 

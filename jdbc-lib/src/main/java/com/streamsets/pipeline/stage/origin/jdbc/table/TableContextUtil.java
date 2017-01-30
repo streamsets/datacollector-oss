@@ -23,6 +23,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
@@ -96,7 +97,8 @@ public final class TableContextUtil {
       Connection connection,
       String schemaName,
       String tableName,
-      TableConfigBean tableConfigBean
+      TableConfigBean tableConfigBean,
+      TableJdbcELEvalContext tableJdbcELEvalContext
   ) throws SQLException, StageException {
     LinkedHashMap<String, Integer> offsetColumnToType = new LinkedHashMap<>();
     //Even though we are using this only find partition column's type, we could cache it if need arises.
@@ -140,12 +142,11 @@ public final class TableContextUtil {
         );
       }
 
-      for (Map.Entry<String, String> partitionColumnInitialOffsetEntry : tableConfigBean.offsetColumnToInitialOffsetValue.entrySet()) {
-        offsetColumnToStartOffset.put(
-            partitionColumnInitialOffsetEntry.getKey(),
-            partitionColumnInitialOffsetEntry.getValue()
-        );
-      }
+      populateInitialOffset(
+          tableConfigBean.offsetColumnToInitialOffsetValue,
+          tableJdbcELEvalContext,
+          offsetColumnToStartOffset
+      );
       checkForInvalidInitialOffsetValues(
           getQualifiedTableName(schemaName, tableName),
           offsetColumnToType,
@@ -159,6 +160,39 @@ public final class TableContextUtil {
         offsetColumnToStartOffset,
         tableConfigBean.extraOffsetColumnConditions
     );
+  }
+
+  /**
+   * Evaluate ELs in Initial offsets as needed and populate the final String representation of initial offsets
+   * in {@param offsetColumnToStartOffset}
+   */
+  private static void populateInitialOffset(
+      Map<String, String> configuredColumnToInitialOffset,
+      TableJdbcELEvalContext tableJdbcELEvalContext,
+      Map<String, String> offsetColumnToStartOffset
+  ) throws StageException {
+    for (Map.Entry<String, String> partitionColumnInitialOffsetEntry : configuredColumnToInitialOffset.entrySet()) {
+      String value;
+      try {
+        value = tableJdbcELEvalContext.evaluateAsString(
+            "offsetColumnToInitialOffsetValue",
+            partitionColumnInitialOffsetEntry.getValue()
+        );
+        if (value == null) {
+          throw new StageException(
+              JdbcErrors.JDBC_73,
+              partitionColumnInitialOffsetEntry.getValue(),
+              Utils.format("Expression returned date as null. Check Expression")
+          );
+        }
+      } catch (ELEvalException e) {
+        throw new StageException(JdbcErrors.JDBC_73, partitionColumnInitialOffsetEntry.getValue(), e);
+      }
+      offsetColumnToStartOffset.put(
+          partitionColumnInitialOffsetEntry.getKey(),
+          value
+      );
+    }
   }
 
   /**
@@ -215,7 +249,8 @@ public final class TableContextUtil {
    */
   public static Map<String, TableContext> listTablesForConfig(
       Connection connection,
-      TableConfigBean tableConfigBean
+      TableConfigBean tableConfigBean,
+      TableJdbcELEvalContext tableJdbcELEvalContext
   ) throws SQLException, StageException {
     Map<String, TableContext> tableContextMap = new LinkedHashMap<>();
     Pattern p =
@@ -229,7 +264,7 @@ public final class TableContextUtil {
         if (p == null || !p.matcher(tableName).matches()) {
           tableContextMap.put(
               getQualifiedTableName(schemaName, tableName),
-              createTableContext(connection, schemaName, tableName, tableConfigBean)
+              createTableContext(connection, schemaName, tableName, tableConfigBean, tableJdbcELEvalContext)
           );
         }
       }
