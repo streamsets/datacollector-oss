@@ -53,6 +53,7 @@
                         <li>Directory</li>
                         <li>File Tail</li>
                         <li>HTTP Client</li>
+                        <li>HTTP Server</li>
                         <li>SDC RPC</li>
                         <li>SFTP/FTP Client</li>
                         <li>UDP Source</li>
@@ -256,11 +257,11 @@
                         </dlentry>
                   </dl>
             </p>
+            <p/>
             <p>
-                  <draft-comment author="Loretta">AVRO-Files - used by Directory and Amazon S3 and
-                        other file origins except Hadoop FS</draft-comment>
-            </p>
-            <p>
+                  <draft-comment author="Loretta">AVRO-Files - used by Amazon S3 and other file
+                        origins except Hadoop FS, and Directory and HTTP Server. Directory and HTTP
+                        Server each have standalone content.</draft-comment>
                   <dl>
                         <dlentry id="OriginDF-AVROfiles">
                               <dt>Avro</dt>
@@ -806,6 +807,18 @@ web-0011.log</codeblock></dd>
                         </dlentry>
                   </dl>
             </p>
+            <p>
+                  <draft-comment author="Loretta"><uicontrol>TIP-CompareHTTPOrigins</uicontrol> used
+                        in all HTTP origin overviews. </draft-comment>
+            </p>
+            <p>
+                  <note type="tip" id="Tip-CompareHTTPOrigins"><ph
+                              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> provides several HTTP origins to address different needs. For a quick
+                        comparison chart to help you choose the right one, see <xref
+                              href="../Origins/Origins-HTTPComparison.dita#concept_rsz_cnw_qy"
+                        />.</note>
+            </p>
             
             <p>
                   <draft-comment author="Loretta"><uicontrol>O-EventHandling-overview</uicontrol> -
@@ -858,6 +871,32 @@ web-0011.log</codeblock></dd>
                   </ul>
             </p>
             <p/>
+            <draft-comment author="Loretta">Used in Pipeline Concepts &amp; Design > Single &amp;
+                  Multithreaded Pipes, and Multithreaded > Overview.</draft-comment>
+            <p><ph id="ph-MultiThread-def1">When you start the pipeline, the origin creates the
+                        specified number of threads and <ph
+                              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> creates a matching number of <term>pipeline runners</term> to perform
+                        pipeline processing. The origin creates batches and passes each batch to a
+                        pipeline runner. Each pipeline runner runs a <term>sourceless pipeline
+                              instance</term> - an instance of the pipeline that includes all of the
+                        processors and destinations in the pipeline and performs all pipeline
+                        processing after the origin.</ph></p>
+            <p><ph id="ph-MultiThread-def2"> Each pipeline runner can process one batch at a time,
+                        just like a pipeline that runs on a single thread. When the flow of data
+                        slows, the pipeline runners wait idly until they are needed.</ph></p>
+            <p>
+                  <draft-comment author="Loretta">Used in Multithreaded > How it works and origins >
+                        HTTP Server > Multithreaded Processing</draft-comment>
+            </p>
+            <p><ph id="HTTPServer-process-ph">the origin creates five threads, and <ph
+                              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> creates five pipeline runners. Upon receiving data, the origin passes a
+                        batch to each of the pipeline runners for processing. </ph></p>
+            <p id="HTTPServer-process-p">At any given moment, the five pipeline runners can each
+                  process a batch, so this multithreaded pipeline processes up to five batches at a
+                  time. When incoming data slows, the pipeline runners sit idle, available for use
+                  as soon as the data flow increases.</p>
             <p>
                   <draft-comment author="Loretta">JDBC Consumer,  Oracle CDC Client origin, and JDBC
                         Query executor use these in the overview:</draft-comment>

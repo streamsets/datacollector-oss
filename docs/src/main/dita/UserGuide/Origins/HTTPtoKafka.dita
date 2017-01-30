@@ -33,6 +33,8 @@
         <p>When you configure HTTP to Kafka, you specify the listening port, Kafka configuration
             information, maximum message size, and the application ID. You can optionally enable
             HTTPS. </p>
-        <p>You can add Kafka configuration properties and enable Kafka security as needed. </p>
+        <p>You can add Kafka configuration properties and enable Kafka security as needed. <note
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Tip-CompareHTTPOrigins"
+            /></p>
  </conbody>
 </concept>

@@ -18,6 +18,7 @@
  <topicref href="../Origins/Origins_title.dita">
   <topicref href="../Origins/Origins_overview.dita" chunk="to-content">
     <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/Origins-HTTPComparison.dita"/>
    <topicref href="../Origins/BatchSizeWaitTime.dita"/>
    <topicref href="../Origins/FileCompressionFormats.dita"/>
    <topicref href="../Origins/FilePath_Offset.dita"/>
@@ -86,6 +87,13 @@
    <topicref href="../Origins/HTTPClient-DataFormats.dita"/>
    <topicref href="../Origins/HTTPClient-ResponseHeaderFields.dita"/>
    <topicref href="../Origins/HTTPClient-Configuring.dita"/>
+  </topicref>
+  <topicref href="../Origins/HTTPServer.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/HTTPServer-Prerequisites.dita"/>
+   <topicref href="../Origins/HTTPServer-MultithreadProcessing.dita"/>
+   <topicref href="../Origins/HTTPServer-DataFormat.dita"/>
+   <topicref href="../Origins/HTTPServer-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/HTTPtoKafka.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
