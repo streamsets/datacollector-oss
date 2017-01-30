@@ -20,10 +20,12 @@
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.SourceRunner;
@@ -32,6 +34,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.internal.util.reflection.Whitebox;
 
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -614,5 +617,38 @@ public class BasicIT extends BaseTableJdbcSourceIT {
     } finally {
       runner.runDestroy();
     }
+  }
+
+  @Test
+  public void testWrongInitialOffsetError() throws Exception {
+    TableConfigBean tableConfigBean =
+        new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+            .tablePattern("TRANSACTION_TABLE")
+            .schema(database)
+            .overrideDefaultOffsetColumns(true)
+            .offsetColumns(ImmutableList.of("T_DATE"))
+            .offsetColumnToInitialOffsetValue(
+                ImmutableMap.of(
+                    "T_DATE",
+                    "${time:dateTimeToMilliseconds(time:extractDateFromString('abc', 'yyyy-mm-dd'))}"
+                )
+            )
+            .build();
+
+    TableJdbcSource tableJdbcSource =
+        new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
+            .tableConfigBeans(ImmutableList.of(tableConfigBean))
+            .build();
+
+    SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
+        .addOutputLane("a")
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+    List<Stage.ConfigIssue> configIssues = runner.runValidateConfigs();
+    Assert.assertEquals(1, configIssues.size());
+    Assert.assertEquals(
+        JdbcErrors.JDBC_73.getCode(),
+        ((ErrorMessage)Whitebox.getInternalState(configIssues.get(0), "message")).getErrorCode()
+    );
   }
 }
