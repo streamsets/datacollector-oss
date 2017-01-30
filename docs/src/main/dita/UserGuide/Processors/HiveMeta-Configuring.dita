@@ -129,9 +129,10 @@
                                             /><p>The default expression determines the precision
                                             based on information in the JDBC header attribute.
                                             </p><p>Use the default only when processing data from a
-                                            JDBC Consumer with JDBC header attributes enabled.
-                                            Replace "jdbc" with the configured JDBC header prefix
-                                            when necessary. </p></entry>
+                                            JDBC Query Consumer or a JDBC Multitable Consumer with
+                                            JDBC header attributes enabled. Replace "jdbc" with the
+                                            configured JDBC header prefix when necessary.
+                                        </p></entry>
                                 </row>
                                 <row>
                                     <entry>Decimal Scale Expression <xref
@@ -146,10 +147,10 @@
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/P-HM-MaxHivePS"
                                             /><p>The default expression determines the scale based
                                             on information in the JDBC header attribute. </p><p>Use
-                                            the default only when processing data from a JDBC
-                                            Consumer with JDBC header attributes enabled. Replace
-                                            "jdbc" with the configured JDBC header prefix when
-                                            necessary. </p></entry>
+                                            the default only when processing data from a JDBC Query
+                                            Consumer or a JDBC Multitable Consumer with JDBC header
+                                            attributes enabled. Replace "jdbc" with the configured
+                                            JDBC header prefix when necessary. </p></entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/P-D_HiveConfigDir">

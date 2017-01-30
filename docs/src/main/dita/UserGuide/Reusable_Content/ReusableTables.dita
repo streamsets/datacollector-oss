@@ -674,9 +674,9 @@
    </table>
   </p>
   <p>
-   <draft-comment author="alisontaylor"><b>table-JDBCProps</b> - JDBC Consumer, Lookup, Producer,
-    and Tee use most rows in this table. Oracle CDC is using a couple too. JDBC Query executor also
-    uses some.</draft-comment>
+   <draft-comment author="alisontaylor"><b>table-JDBCProps</b> - JDBC Query Consumer, Multi Table
+    JDBC Consumer, JDBC Lookup, JDBC Producer, and JDBC Tee use most rows in this table. Oracle CDC
+    is using a couple too. JDBC Query executor also uses some.</draft-comment>
    <table frame="all" rowsep="1" colsep="1" id="table_vwl_qcq_tw">
     <tgroup cols="2">
      <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -705,15 +705,31 @@
          function.</p><p>Use the <uicontrol>Add</uicontrol> icon to create additional field to
          column mappings.</p></entry>
       </row>
+      <row id="JDBCQueryInterval">
+       <entry>Query Interval</entry>
+       <entry>Amount of time to wait between queries. Enter an expression based on a unit of time.
+        You can use SECONDS, MINUTES, or HOURS.<p>Default is 10 seconds: ${10 * SECONDS}.
+        </p></entry>
+      </row>
       <row id="JDBCUseCredentials_row">
        <entry>Use Credentials</entry>
        <entry>Enables entering credentials on the Credentials tab. Use when you do not include
         credentials in the JDBC connection string.</entry>
       </row>
+      <row id="JDBCMaxBatch_row">
+       <entry>Max Batch Size (records)</entry>
+       <entry>Maximum number of records to include in a batch.</entry>
+      </row>
       <row id="JDBCMaxClob_row">
        <entry>Max Clob Size (characters)</entry>
        <entry>Maximum number of characters to be read in a Clob field. Larger data is
         truncated.</entry>
+      </row>
+      <row id="JDBCMaxBlob_row">
+       <entry>Max Blob Size (bytes)</entry>
+       <entry>
+        <p>Maximum number of bytes to be read in a Blob field. </p>
+       </entry>
       </row>
       <row id="LogFormat_row">
        <entry>Change Log Format</entry>

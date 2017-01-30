@@ -32,8 +32,11 @@
         <li><xref href="HTTPtoKafka.dita#concept_izh_mqd_dy">HTTP to Kafka</xref> -  Listens on a
           HTTP endpoint and writes the contents of all authorized HTTP POST requests directly to
           Kafka.</li>
-        <li><xref href="JDBCConsumer.dita#concept_qhf_hjr_bs">JDBC Consumer</xref> - Reads database
-          data through a JDBC connection.</li>
+        <li><xref href="MultiTableJDBCConsumer.dita#concept_zp3_wnw_4y">JDBC Multitable
+            Consumer</xref> - Reads database data from multiple tables through a JDBC
+          connection.</li>
+        <li><xref href="JDBCConsumer.dita#concept_qhf_hjr_bs">JDBC Query Consumer</xref> - Reads
+          database data using a user-defined SQL query through a JDBC connection. </li>
         <li><xref href="JMS.dita#concept_rhh_4nj_dt">JMS Consumer</xref> - Reads messages from JMS. </li>
         <li><xref href="KConsumer.dita#concept_msz_wnr_5q">Kafka Consumer</xref> - Reads messages
           from Kafka.</li>

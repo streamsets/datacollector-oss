@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_nff_2hx_4y">
+ <title>Table Order Strategy</title>
+ <shortdesc>You can define the order that the origin uses to read the tables.</shortdesc>
+ <conbody>
+  <p><indexterm>JDBC Multitable Consumer origin<indexterm>table order
+                strategy</indexterm></indexterm><indexterm>table order strategy<indexterm>JDBC
+                    Multitable Consumer origin</indexterm></indexterm>Define one of the following
+            table order strategies: </p>
+        <dl>
+            <dlentry>
+                <dt>None</dt>
+                <dd>Reads the tables in the order that they are listed in the database.</dd>
+            </dlentry>
+            <dlentry>
+                <dt>Alphabetical</dt>
+                <dd>Reads the tables in alphabetical order.</dd>
+            </dlentry>
+            <dlentry>
+                <dt>Referential Constraints</dt>
+                <dd>Reads the tables based on the dependencies between the tables. The origin reads
+                    the parent table first, and then reads the child tables that refer to the parent
+                    table with a foreign key.</dd>
+                <dd>You cannot use the referential constraints order when the tables to be read have
+                    a cyclic dependency. When the origin detects a cyclic dependency, the pipeline
+                    fails to validate with the following
+                    error:<codeblock>JDBC_68 Tables referring to each other in a cyclic fashion.</codeblock></dd>
+                <dd>Note that the referential constraints order can cause pipeline validation or
+                    initialization to slow down because the origin has to sort the tables before
+                    reading them.</dd>
+            </dlentry>
+        </dl>
+ </conbody>
+</concept>

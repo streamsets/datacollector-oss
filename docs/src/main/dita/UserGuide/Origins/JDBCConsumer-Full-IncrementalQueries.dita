@@ -16,25 +16,25 @@
 <concept id="concept_ets_gnr_bs">
  <title>Full and Incremental Mode</title>
  <conbody>
-  <p><indexterm>JDBC Consumer origin<indexterm>full or incremental modes for
-    queries</indexterm></indexterm>JDBC Consumer can perform queries in two modes:  </p>
+  <p><indexterm>JDBC Query Consumer origin<indexterm>full or incremental modes for
+          queries</indexterm></indexterm>JDBC Query Consumer can perform queries in two modes: </p>
   <p>
    <dl>
     <dlentry>
      <dt>Incremental mode</dt>
-     <dd>When the JDBC Consumer performs an incremental query, it uses the initial offset as the
-      offset value in the first SQL query. As JDBC Consumer completes processing the results of the
-      first query, it saves the last offset value that it processes. When it requests a subsequent
-      query, it returns data after the last-saved offset. You can reset the origin to use the
-      initial offset value. </dd>
+     <dd>When the JDBC Query Consumer performs an incremental query, it uses the initial offset as
+            the offset value in the first SQL query. As JDBC Query Consumer completes processing the
+            results of the first query, it saves the last offset value that it processes. When it
+            requests a subsequent query, it returns data after the last-saved offset. You can reset
+            the origin to use the initial offset value. </dd>
      <dd>Use incremental mode for append-only tables or when you do not need to capture changes to
-      older rows. By default, JDBC Consumer uses incremental mode. </dd>
+            older rows. By default, JDBC Query Consumer uses incremental mode. </dd>
     </dlentry>
     <dlentry>
      <dt>Full mode</dt>
-     <dd>When the JDBC Consumer performs a full query, it runs the defined SQL query. If you
-            optionally configure the offset column and initial offset value, the origin uses the
-            initial offset as the offset value in the SQL query each time it requests data.</dd>
+     <dd>When the JDBC Query Consumer origin performs a full query, it runs the defined SQL query.
+            If you optionally configure the offset column and initial offset value, the origin uses
+            the initial offset as the offset value in the SQL query each time it requests data.</dd>
      <dd>Use full mode to capture all row updates. You might use a Record Deduplicator in the
             pipeline to minimize repeated rows. Not ideal for large tables.</dd>
     </dlentry>

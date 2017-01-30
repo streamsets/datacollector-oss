@@ -194,13 +194,13 @@
                                 the last-modified timestamp for the read order. </li>
                             <li><xref
                                     href="../Origins/JDBCConsumer-Configuring.dita#task_ryz_tkr_bs"
-                                    >JDBC Consumer</xref> and <xref
+                                    >JDBC Query Consumer</xref> and <xref
                                     href="../Origins/OracleCDC-Configuring.dita#task_ehh_mjj_tw"
                                     >Oracle CDC Client</xref> origin enhancement - You can now
-                                configure the transaction isolation level that the JDBC Consumer and
-                                Oracle CDC Client origins use to connect to the database.
-                                Previously, the origins used the default transaction isolation level
-                                configured for the database.</li>
+                                configure the transaction isolation level that the JDBC Query
+                                Consumer and Oracle CDC Client origins use to connect to the
+                                database. Previously, the origins used the default transaction
+                                isolation level configured for the database.</li>
                         </ul>
                     </dd>
                 </dlentry>

@@ -2129,17 +2129,18 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   Cloudera Manager install</draft-comment>
             <p id="AdditionalDrivers_list">Before you use the following stages, you need to install drivers for the implementation that
                   you want to use: <ul id="ul_k3t_mrw_jx">
-                        <li>JDBC Consumer origin</li>
                         <li>JMS Consumer origin</li>
+                        <li>JDBC Multitable Consumer origin</li>
                         <li>MySQL Binary Log origin</li>
                         <li>Oracle CDC Client origin</li>
+                        <li>JDBC Query Consumer origin</li>
                         <li>JDBC Lookup processor</li>
                         <li>JDBC Tee processor</li>
                         <li>JDBC Producer destination</li>
                         <li>JDBC Query executor</li>
                   </ul></p>
-            <p id="AdditionalDrivers_example">For example, to use the JDBC Consumer or JDBC Producer with Oracle, install the Oracle JDBC
-                  drivers.</p>
+            <p id="AdditionalDrivers_example">For example, to use the JDBC Query Consumer or the
+                  JDBC Producer with Oracle, install the Oracle JDBC drivers.</p>
             <p id="AdditionalDrivers_optional">Additional drivers for other stages are optional. For example, you can install custom classes
                   for the JavaScript or Jython Evaluators. </p>
             <draft-comment author="alisontaylor"><uicontrol>Tip_Usernames</uicontrol> Used in

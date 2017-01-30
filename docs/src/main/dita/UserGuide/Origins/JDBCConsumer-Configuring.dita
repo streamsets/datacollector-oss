@@ -14,12 +14,13 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_ryz_tkr_bs">
-    <title>Configuring a JDBC Consumer</title>
+    <title>Configuring a JDBC Query Consumer</title>
     <taskbody>
         <context>
-            <p><indexterm>JDBC Consumer
-                origin<indexterm>configuring</indexterm></indexterm>Configure a JDBC Consumer origin
-                to use a JDBC connection to read database data. </p>
+            <p><indexterm>JDBC Query Consumer
+                origin<indexterm>configuring</indexterm></indexterm>Configure a JDBC Query Consumer
+                origin to use a single configured SQL query to read database data through a JDBC
+                connection. </p>
         </context>
         <steps id="steps_hhn_vkr_bs">
             <step
@@ -50,9 +51,9 @@
                                                 href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_mm5_tvg_cs"/>
                                         </xref></entry>
-                                    <entry>Defines how JDBC Consumer queries the database. Select to
-                                        perform incremental queries. Clear to perform full queries.
-                                            <p>Default is incremental mode. </p></entry>
+                                    <entry>Defines how JDBC Query Consumer queries the database.
+                                        Select to perform incremental queries. Clear to perform full
+                                        queries. <p>Default is incremental mode. </p></entry>
                                 </row>
                                 <row>
                                     <entry>SQL Query <xref href="JDBC-SQLQuery.dita"><image
@@ -76,12 +77,9 @@
                                     <entry>Column to use for the offset value.<p>Required in
                                             incremental mode.</p></entry>
                                 </row>
-                                <row>
-                                    <entry>Query Interval</entry>
-                                    <entry>Amount of time to wait between queries. Enter an
-                                        expression based on a unit of time. You can use SECONDS,
-                                        MINUTES, or HOURS.<p>Default is 10 seconds: ${10 * SECONDS}.
-                                        </p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCQueryInterval">
+                                    <entry/>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCUseCredentials_row">
@@ -95,12 +93,16 @@
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> version 1.1.0 or earlier.</entry>
                                 </row>
-                                <row>
-                                    <entry>Max Batch Size (records)</entry>
-                                    <entry>Maximum number of records to include in a batch.</entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCMaxBatch_row">
+                                    <entry/>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCMaxClob_row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCMaxBlob_row">
                                     <entry/>
                                 </row>
                                 <row
