@@ -96,12 +96,12 @@ public class StringEL {
   @ElFunction(
     prefix = "str",
     name = "replace",
-    description = "Returns a new string resulting from replacing all occurrences of oldChar in this string with newChar")
+    description = "Returns a new string resulting from replacing all occurrences of oldString in this string with newString")
   public static String replace(
     @ElParam("string") String string,
-    @ElParam("oldChar") char oldChar,
-    @ElParam("newChar") char newChar) {
-    return string.replace(oldChar, newChar);
+    @ElParam("oldString") String oldString,
+    @ElParam("newString") String newString) {
+    return string.replace(oldString, newString);
   }
 
   @ElFunction(
