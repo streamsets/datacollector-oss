@@ -99,6 +99,22 @@
    </topicref>
    <topicref href="../Origins/HTTPtoKafka-Configuring.dita"/>
   </topicref>
+  <topicref href="../Origins/MultiTableJDBCConsumer.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Origins/MultiTableJDBCConsumer-DriverInstall.dita">
+    <topicref href="../Origins/MultiTableJDBCConsumer-MySQLDriver.dita"/>
+   </topicref>
+   <topicref href="../Origins/MultiTableJDBCConsumer-BatchStrategy.dita"/>
+   <topicref href="../Origins/MultiTableJDBCConsumer-TableConfiguration.dita">
+    <topicref href="../Origins/MultiTableJDBCConsumer-TableName.dita"/>
+    <topicref href="../Origins/MultiTableJDBCConsumer-Offsets.dita"/>
+   </topicref>
+   <topicref href="../Origins/MultiTableJDBCConsumer-TableOrder.dita"/>
+   <topicref href="../Origins/MultiTableJDBCConsumer-HeaderAtts.dita"/>
+   <topicref href="../Origins/MultiTableJDBCConsumer-Configuring.dita"/>
+  </topicref>
   <topicref href="../Origins/JDBCConsumer.dita" chunk="to-content"> <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/JDBCConsumer-DriverInstall.dita"/>
    <topicref href="../Origins/JDBCConsumer-OffsetColumn_Value.dita"/>

@@ -15,8 +15,8 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_cbn_pbw_zw">
  <title>SQL Query for Incremental Mode</title>
- <shortdesc>When you define the SQL query for incremental mode, JDBC Consumer requires a WHERE and
-        ORDER BY clause in the query. </shortdesc>
+ <shortdesc>When you define the SQL query for incremental mode, JDBC Query Consumer requires a WHERE
+        and ORDER BY clause in the query. </shortdesc>
  <conbody>
   <p>Use the following guidelines when you define the WHERE and ORDER BY clauses in the query:</p>
      <dl>

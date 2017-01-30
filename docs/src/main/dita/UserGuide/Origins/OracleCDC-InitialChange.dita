@@ -23,8 +23,8 @@
             Client starts processing from the specified initial change and continues until you stop
             the pipeline.</p>
         <p>Note that Oracle CDC Client processes only change capture data. If you need existing
-            data, you might use a JDBC Consumer in a separate pipeline to read table data before you
-            start an Oracle CDC Client pipeline. </p>
+            data, you might use a JDBC Query Consumer or a JDBC Multitable Consumer in a separate
+            pipeline to read table data before you start an Oracle CDC Client pipeline. </p>
         <p>Oracle CDC Client provides several ways to configure the initial change:<dl>
                 <dlentry>
                     <dt>From the latest change</dt>
@@ -47,14 +47,14 @@
             <title>Example</title>
             <p>You want to process all existing data in the Orders table and then capture changed
                 data, writing all data to Amazon S3. To read the existing data, you use a pipeline
-                with the JDBC Consumer and Amazon S3 destination as follows: </p>
+                with the JDBC Query Consumer and Amazon S3 destination as follows: </p>
             <p><image href="../Graphics/OracleCDC-JDBCpipe.png" id="image_yzc_ks3_fx" scale="40"
                 /></p>
-            <p>Once all existing data is read, you stop the JDBC Consumer pipeline and start the
-                following Oracle CDC Client pipeline. This pipeline is configured to pick up changes
-                that occur after you start the pipeline, but if you wanted to prevent any chance of
-                data loss, you could configure the initial change for an exact datetime or earlier
-                SCN: </p>
+            <p>Once all existing data is read, you stop the JDBC Query Consumer pipeline and start
+                the following Oracle CDC Client pipeline. This pipeline is configured to pick up
+                changes that occur after you start the pipeline, but if you wanted to prevent any
+                chance of data loss, you could configure the initial change for an exact datetime or
+                earlier SCN: </p>
             <p><image href="../Graphics/OracleCDC-pipeline.png" id="image_yrq_lx3_fx" scale="40"
                 /></p>
         </section>

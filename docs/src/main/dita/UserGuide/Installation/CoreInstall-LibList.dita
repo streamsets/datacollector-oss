@@ -460,8 +460,9 @@
                             <entry>
                                 <p>For JDBC access to databases.</p>
                                 <p>Includes:<ul id="ul_apd_qbj_jx">
-                                        <li>JDBC Consumer origin</li>
+                                        <li>JDBC Multitable Consumer origin</li>
                                         <li>Oracle CDC Client origin</li>
+                                        <li>JDBC Query Consumer origin</li>
                                         <li>JDBC Lookup processor</li>
                                         <li>JDBC Tee processor</li>
                                         <li>JDBC Producer destination</li>

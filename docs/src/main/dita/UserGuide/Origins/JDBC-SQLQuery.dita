@@ -16,9 +16,10 @@
 <concept id="concept_uj4_mxy_bs">
   <title>SQL Query</title>
   <conbody>
-    <p><indexterm>JDBC Consumer origin<indexterm>SQL query</indexterm></indexterm><indexterm>SQL
-          query<indexterm>JDBC Consumer</indexterm></indexterm>The SQL query defines the data
-      returned from the database. The SQL query guidelines depend on whether you configure the
-      origin to perform an incremental or full query.</p>
+    <p><indexterm>JDBC Query Consumer origin<indexterm>SQL
+        query</indexterm></indexterm><indexterm>SQL query<indexterm>JDBC Query
+        Consumer</indexterm></indexterm>The SQL query defines the data returned from the database.
+      The SQL query guidelines depend on whether you configure the origin to perform an incremental
+      or full query.</p>
   </conbody>
 </concept>

@@ -16,8 +16,8 @@
 <concept id="concept_aq1_lxp_fs">
   <title>Installing the JDBC Driver</title>
   <conbody>
-    <p><indexterm>JDBC Consumer origin<indexterm>driver installation</indexterm></indexterm>Before
-      you use the JDBC Consumer, <ph
+    <p><indexterm>JDBC Query Consumer origin<indexterm>driver
+      installation</indexterm></indexterm>Before you use the JDBC Query Consumer, <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-JDBCdriver"/></p>
     <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/p-JDBCdriver-link"/>
   </conbody>

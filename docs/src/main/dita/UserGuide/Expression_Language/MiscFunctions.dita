@@ -85,6 +85,17 @@
           expression is the default memory limit for a pipeline:
           <codeblock>${jvm:maxMemoryMB() * 0.65}</codeblock></dd>
       </dlentry>
+      <dlentry>
+        <dt>offset:column(&lt;position>)</dt>
+        <dd>Returns the value of the positioned offset column for the current table. Available only
+          in the additional offset column conditions of the JDBC Multitable Consumer origin. </dd>
+        <dd>Uses the following argument:<ul id="ul_zfx_jjr_qy">
+            <li>position - Position of the offset column. For example, enter 0 for the first offset
+              column defined in the table configuration. Enter 1 for the second defined offset
+              column.</li>
+          </ul></dd>
+        <dd>Return type: String.</dd>
+      </dlentry>
    <dlentry>
     <dt>runtime:conf(&lt;runtime property>)</dt>
     <dd>Returns the value for the specified runtime configuration. Use to call a runtime property. </dd>

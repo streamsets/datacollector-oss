@@ -2,18 +2,18 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_e1j_jwv_ht">
  <title>Change Data Capture</title>
- <shortdesc>When reading from Microsoft SQL Server, JDBC Consumer can group row updates from the
-  same transaction when reading from a change log table. This maintains consistency when performing
-  change data capture.</shortdesc>
+ <shortdesc>When reading from Microsoft SQL Server, JDBC Query Consumer can group row updates from
+  the same transaction when reading from a change log table. This maintains consistency when
+  performing change data capture.</shortdesc>
  <conbody>
-  <p><indexterm>JDBC Consumer origin<indexterm>change data capture</indexterm></indexterm>To enable
-   this feature, specify the transaction ID column and maximum transaction size. When these
-   properties are defined, JDBC Consumer processes data as a batch up to the maximum transaction
-   size, overriding the <ph
+  <p><indexterm>JDBC Query Consumer origin<indexterm>change data capture</indexterm></indexterm>To
+   enable this feature, specify the transaction ID column and maximum transaction size. When these
+   properties are defined, JDBC Query Consumer processes data as a batch up to the maximum
+   transaction size, overriding the <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> maximum batch
    size.</p>
-  <p>When the transaction is larger than the maximum transaction size, JDBC Consumer uses multiple
-   batches as needed.</p>
+  <p>When the transaction is larger than the maximum transaction size, JDBC Query Consumer uses
+   multiple batches as needed.</p>
   <p>To preserve transactional integrity, increase the maximum transaction size as necessary. Note
    that setting this property too high can cause out of memory errors. </p>
  </conbody>
