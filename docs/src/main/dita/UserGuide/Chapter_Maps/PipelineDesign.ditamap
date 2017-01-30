@@ -20,6 +20,7 @@
    <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
   <topicref href="../Pipeline_Design/DatainMotion.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Pipeline_Design/SingleMultithreadedPipes.dita"/>
    <topicref href="../Pipeline_Design/DeliveryGuarantee.dita"/>
   </topicref>
   <topicref href="../Pipeline_Design/DesigningDataFlow.dita" chunk="to-content">

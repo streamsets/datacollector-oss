@@ -29,7 +29,10 @@
           from an active file after reading related archived files in the directory. </li>
         <li><xref href="HTTPClient.dita#concept_wk4_bjz_5r">HTTP Client</xref> - Reads data from a
           streaming HTTP resource URL.</li>
-        <li><xref href="HTTPtoKafka.dita#concept_izh_mqd_dy">HTTP to Kafka</xref> -  Listens on a
+        <li><xref href="HTTPServer.dita#concept_s2p_5hb_4y">HTTP Server</xref> - Listens on an HTTP
+          endpoint and processes the contents of all authorized HTTP POST requests. Creates multiple
+          threads to enable parallel processing in a multithreaded pipeline.</li>
+        <li><xref href="HTTPtoKafka.dita#concept_izh_mqd_dy">HTTP to Kafka</xref> - Listens on a
           HTTP endpoint and writes the contents of all authorized HTTP POST requests directly to
           Kafka.</li>
         <li><xref href="MultiTableJDBCConsumer.dita#concept_zp3_wnw_4y">JDBC Multitable

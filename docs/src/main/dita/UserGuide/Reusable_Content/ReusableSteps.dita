@@ -629,7 +629,7 @@
                                     <entry/>
                                 </row>
                                 <row id="O-row-Bin-MaxDataSize">
-                                    <entry>Max Data Size</entry>
+                                    <entry>Max Data Size (bytes)</entry>
                                     <entry>Maximum number of bytes in the message. Larger messages
                                         cannot be processed or written to error. </entry>
                                 </row>

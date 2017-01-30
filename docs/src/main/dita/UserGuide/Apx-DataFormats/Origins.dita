@@ -147,6 +147,29 @@
                 /></entry>
             </row>
             <row>
+              <entry>HTTP Server</entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_d5n_nqg_sy"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_cjs_nqg_sy"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_lqt_nqg_sy"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_ocx_nqg_sy"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_lk1_4qg_sy"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_hsb_4qg_sy"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_ds2_4qg_sy"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_uqj_4qg_sy"
+                /></entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_kwk_4qg_sy"
+                /></entry>
+            </row>
+            <row>
               <entry>HTTP to Kafka</entry>
               <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
             </row>

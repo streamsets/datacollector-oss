@@ -33,12 +33,18 @@
           <dt>Dev Data Generator origin</dt>
           <dd>Generates records with the configured number of fields with the selected data types.
             You can use a Map or List-Map root field type. </dd>
-          <dd>The origin can also generate events to test event handling functionality. To generate
-            event records, select the <uicontrol>Produce Events</uicontrol> property. </dd>
+          <dd>The origin can generate events to test event handling functionality. To generate event
+            records, select the <uicontrol>Produce Events</uicontrol> property. </dd>
           <dd>When generating events, the origin uses the configured fields as the body of the event
             record and adds event record header attributes. For more information about the event
             framework and event record header attributes, see <xref
               href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"/>.</dd>
+          <dd>The origin can also generate multiple threads for testing for a multithreaded
+            pipeline. To generate multiple threads, enter a number larger than 1 for the
+              <uicontrol>Number of Threads</uicontrol> property. For more information about
+            multithreaded pipelines, see <xref
+              href="../Multithreaded_Pipelines/MultithreadedPipelines_Overview.dita#concept_zpp_2xc_py"
+            />.</dd>
           <dd>The On Record Error property has no effect in this stage.</dd>
         </dlentry>
         <dlentry>

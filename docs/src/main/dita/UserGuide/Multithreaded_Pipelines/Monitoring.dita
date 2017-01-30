@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_tdn_vwy_ry">
+ <title>Monitoring</title>
+ <conbody>
+        <p><indexterm>multithreaded
+                    pipeline<indexterm>monitoring</indexterm></indexterm><indexterm>monitoring<indexterm>multithreaded
+                    pipelines</indexterm></indexterm>When you monitor a multithreaded pipeline, the
+            pipeline and stage statistics that display are for the entire pipeline, aggregated
+            across all pipeline runners.</p>
+        <p>You can view the number of pipeline runners associated with a pipeline and the number of
+            idle runners that are available for use. The number of pipeline runners is based on the
+            number of threads that you configured for the origin.</p>
+        <p>The pipeline runner information displays in the Runtime Statistics, as shown below:</p>
+        <p><image href="../Graphics/Multithreaded-Stats.png" id="image_bzb_yxf_sy" scale="70"/></p>
+    </conbody>
+</concept>

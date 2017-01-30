@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_xl3_ncd_py">
+    <title>How It Works</title>
+    <conbody>
+        <p><indexterm>multithreaded pipelines<indexterm>how it works</indexterm></indexterm>When you
+            configure a multithreaded origin, you specify the amount of concurrency or number of
+            threads that the origin should use. </p>
+        <p><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MultiThread-def1"
+            /></p>
+        <p><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MultiThread-def2"
+            /></p>
+        <p>Multithreaded pipelines preserve the order of records within each batch, just like a
+            single-threaded pipeline. But since batches are processed by different pipeline
+            instances, the order that batches are written to destinations is not ensured.</p>
+        <p>For example, take the following multithreaded pipeline. The HTTP Server origin processes
+            HTTP POST requests passed from HTTP clients. When you configure the origin, you specify
+            the number of threads to use - in this case, the Max Concurrent Requests property:</p>
+        <p><image href="../Graphics/Multithread-HTTPPipeline.png" id="image_mxx_5sd_ry" scale="45"
+            /></p>
+        <p>With Max Concurrent Requests set to 5, when you start the pipeline <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HTTPServer-process-ph"
+            /></p>
+        <p>Conceptually, the multithreaded pipeline looks like this:</p>
+        <p><image href="../Graphics/Multithread-HTTPThreads.png" id="image_r5x_532_ry" scale="70"
+            /></p>
+        <p>Each pipeline runner performs the processing associated with the rest of the pipeline.
+            After a batch is written to pipeline destinations - in this case, Azure Data Lake Store
+            1 and 2 - the pipeline runner becomes available for another batch of data. Each batch is
+            processed and written as quickly as possible, independently from batches processed by
+            other pipeline runners, so the write-order of the batches can differ from the
+            read-order.</p>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HTTPServer-process-p"/>
+    </conbody>
+</concept>

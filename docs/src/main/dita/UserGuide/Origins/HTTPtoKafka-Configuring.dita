@@ -73,6 +73,8 @@
                 <cmd>On the <uicontrol>HTTP</uicontrol> tab, configure the following
                     properties:</cmd>
                 <info>
+                    <draft-comment author="Loretta">These properties are very similar to the ones in
+                        HTTP Server, but could not conref entirely, so didn't.</draft-comment>
                     <table frame="all" rowsep="1" colsep="1" id="table_ugj_my3_4y">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1.5*"/>

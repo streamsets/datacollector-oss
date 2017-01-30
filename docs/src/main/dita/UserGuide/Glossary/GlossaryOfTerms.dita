@@ -126,6 +126,11 @@
         <dd>Monitoring or email alerts based on stage or pipeline metrics. </dd>
       </dlentry>
       <dlentry>
+        <dt>mulitithreaded pipelines</dt>
+        <dd>A pipeline with an origin that generates multiple threads, enabling the processing of
+          high volumes of data in a single pipeline on one Data Collector.</dd>
+      </dlentry>
+      <dlentry>
         <dt>origin</dt>
         <dd>A stage type used in a pipeline to represent the source of data in a pipeline.</dd>
       </dlentry>
@@ -138,6 +143,10 @@
         <dt>pipeline constant</dt>
         <dd>A constant that you define for the pipeline and that you can use in any stage in the
           pipeline. </dd>
+      </dlentry>
+      <dlentry>
+        <dt>pipeline runner</dt>
+        <dd>Used in multithreaded pipelines to run a sourceless instance of a pipeline. </dd>
       </dlentry>
       <dlentry>
         <dt>preconditions</dt>
