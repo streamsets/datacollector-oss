@@ -561,7 +561,7 @@
       "emptyPipelineList": "No Pipeline to view.",
       "newPipelineDefinition": "New Pipeline",
       "namePlaceholder": "Pipeline Definition Title",
-      "nameRequiredValidation": "Please enter label of the pipeline.",
+      "nameRequiredValidation": "Please enter title of the pipeline.",
       "nameValidation": "Enter alphanumeric characters, spaces and underscores.",
       "processorPlaceholder": "Select Processor...",
       "sourcePlaceholder":"Select Origin...",
