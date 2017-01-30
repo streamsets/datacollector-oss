@@ -104,7 +104,7 @@ public class JdbcTeeDProcessor extends DProcessor {
       label = "Change Log Format",
       defaultValue = "NONE",
       description = "If input is a change data capture log, specify the format.",
-      displayPosition = 50,
+      displayPosition = 40,
       group = "JDBC"
   )
   @ValueChooserModel(ChangeLogFormatChooserValues.class)
@@ -128,23 +128,11 @@ public class JdbcTeeDProcessor extends DProcessor {
       defaultValue= "DISCARD",
       label = "Unsupported Operation Handling",
       description = "Action to take when operation type is not supported",
-      displayPosition = 30,
+      displayPosition = 50,
       group = "JDBC"
   )
   @ValueChooserModel(UnsupportedOperationActionChooserValues.class)
   public UnsupportedOperationAction unsupportedAction;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
-      label = "Rollback Batch on Error",
-      description = "Whether or not to rollback the entire batch on error. Some JDBC drivers provide information" +
-          "about individual failed rows, and can insert partial batches.",
-      displayPosition = 50,
-      group = "JDBC"
-  )
-  public boolean rollbackOnError;
 
   @ConfigDef(
       required = true,
@@ -184,6 +172,18 @@ public class JdbcTeeDProcessor extends DProcessor {
       group = "JDBC"
   )
   public int maxPrepStmtCache = -1;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Rollback Batch on Error",
+      description = "Whether or not to rollback the entire batch on error. Some JDBC drivers provide information" +
+          "about individual failed rows, and can insert partial batches.",
+      displayPosition = 70,
+      group = "JDBC"
+  )
+  public boolean rollbackOnError;
 
   @ConfigDefBean()
   public HikariPoolConfigBean hikariConfigBean;
