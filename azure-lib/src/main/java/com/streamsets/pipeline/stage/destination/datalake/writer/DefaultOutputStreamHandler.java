@@ -43,13 +43,13 @@ final class DefaultOutputStreamHandler implements OutputStreamHelper {
   private final Map<String, Long> filePathCount;
   private final long maxRecordsPerFile;
   private final String tempFileName;
-  private final int uniqueId;
+  private final String uniqueId;
 
   public DefaultOutputStreamHandler(
       ADLStoreClient client,
       String uniquePrefix,
       String fileNameSuffix,
-      int uniqueId,
+      String uniqueId,
       long maxRecordsPerFile
   ) {
     filePathCount = new HashMap<>();
