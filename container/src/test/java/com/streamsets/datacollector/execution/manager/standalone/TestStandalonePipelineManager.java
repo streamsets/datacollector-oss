@@ -96,8 +96,10 @@ public class TestStandalonePipelineManager {
   public static class TestPipelineManagerModule {
     private static Logger LOG = LoggerFactory.getLogger(TestPipelineManagerModule.class);
     private final long expiry;
+    private final long initialExpiryDelay;
 
-    public TestPipelineManagerModule(long expiry) {
+    public TestPipelineManagerModule(long expiry, long initialExpiryDelay) {
+      this.initialExpiryDelay = initialExpiryDelay;
       this.expiry = expiry;
     }
 
@@ -124,6 +126,7 @@ public class TestStandalonePipelineManager {
     public Configuration provideConfiguration() {
       Configuration configuration = new Configuration();
       configuration.set(StandaloneAndClusterPipelineManager.RUNNER_EXPIRY_INTERVAL, expiry);
+      configuration.set(StandaloneAndClusterPipelineManager.RUNNER_EXPIRY_INITIAL_DELAY, initialExpiryDelay);
       return configuration;
     }
 
@@ -195,8 +198,8 @@ public class TestStandalonePipelineManager {
 
   }
 
-  private void setUpManager(long expiry, boolean isDPMEnabled) {
-    ObjectGraph objectGraph = ObjectGraph.create(new TestPipelineManagerModule(expiry));
+  private void setUpManager(long expiry, long initialThreadExpiryDelay, boolean isDPMEnabled) {
+    ObjectGraph objectGraph = ObjectGraph.create(new TestPipelineManagerModule(expiry, initialThreadExpiryDelay));
     RuntimeInfo info = objectGraph.get(RuntimeInfo.class);
     info.setDPMEnabled(isDPMEnabled);
     pipelineStoreTask = objectGraph.get(PipelineStoreTask.class);
@@ -211,7 +214,9 @@ public class TestStandalonePipelineManager {
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR, "./target/var");
     File f = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR));
     FileUtils.deleteDirectory(f);
-    setUpManager(StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INTERVAL, false);
+    setUpManager(StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INTERVAL,
+        StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INITIAL_DELAY,
+        false);
   }
 
   @After
@@ -278,7 +283,9 @@ public class TestStandalonePipelineManager {
     pipelineManager.stop();
     pipelineStoreTask.stop();
 
-    setUpManager(StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INTERVAL, true);
+    setUpManager(StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INTERVAL,
+        StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INITIAL_DELAY,
+        true);
 
     await().atMost(Duration.FIVE_SECONDS).until(numPipelinesEqualTo(pipelineManager, 1));
     List<PipelineState> pipelineStates = pipelineManager.getPipelines();
@@ -290,7 +297,9 @@ public class TestStandalonePipelineManager {
     pipelineStateStore.saveState("user", "remote", "0", PipelineStatus.CONNECTING, "blah", null, ExecutionMode
         .STANDALONE, null, 0, 0);
 
-    setUpManager(StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INTERVAL, false);
+    setUpManager(StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INTERVAL,
+        StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INITIAL_DELAY,
+        false);
     await().atMost(Duration.FIVE_SECONDS).until(numPipelinesEqualTo(pipelineManager, 1));
 
     pipelineStates = pipelineManager.getPipelines();
@@ -307,7 +316,9 @@ public class TestStandalonePipelineManager {
     pipelineManager.stop();
     pipelineStoreTask.stop();
 
-    setUpManager(StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INTERVAL, false);
+    setUpManager(StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INTERVAL,
+        StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INITIAL_DELAY,
+        false);
 
     await().atMost(Duration.FIVE_SECONDS).until(numPipelinesEqualTo(pipelineManager, 1));
 
@@ -319,7 +330,9 @@ public class TestStandalonePipelineManager {
     pipelineStoreTask.stop();
     pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.FINISHING, "blah", null, ExecutionMode.STANDALONE, null, 0, 0);
 
-    setUpManager(StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INTERVAL, false);
+    setUpManager(StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INTERVAL,
+        StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INITIAL_DELAY,
+        false);
     await().atMost(Duration.FIVE_SECONDS).until(numPipelinesEqualTo(pipelineManager, 1));
 
     pipelineStates = pipelineManager.getPipelines();
@@ -339,9 +352,10 @@ public class TestStandalonePipelineManager {
     pipelineManager.stop();
     pipelineStoreTask.stop();
 
-    pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.RUNNING_ERROR, "blah", null, ExecutionMode.STANDALONE, null, 0, 0);
+    pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.RUNNING_ERROR, "blah", null, ExecutionMode
+        .STANDALONE, null, 0, 0);
     pipelineManager = null;
-    setUpManager(100, false);
+    setUpManager(100, 0, false);
     await().atMost(Duration.FIVE_SECONDS).until(new Callable<Boolean>() {
       @Override
       public Boolean call() throws Exception {
@@ -355,7 +369,7 @@ public class TestStandalonePipelineManager {
   public void testPipelineRunnersAtDifferentTimesExpiry() throws Exception {
     pipelineStoreTask.create("user", "aaaa", "label","blah", false);
     pipelineStoreTask.create("user", "bbbb", "label","blah", false);
-    setUpManager(100, false);
+    setUpManager(100, 0, false);
 
     pipelineManager.getRunner("user1", "aaaa", "0");
     pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.STOPPED, "blah", null, ExecutionMode.STANDALONE, null, 0, 0);
