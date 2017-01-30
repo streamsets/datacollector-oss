@@ -92,7 +92,10 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
   private Cache<String, Previewer> previewerCache;
   static final long DEFAULT_RUNNER_EXPIRY_INTERVAL = 60*60*1000;
   static final String RUNNER_EXPIRY_INTERVAL = "runner.expiry.interval";
+  static final long DEFAULT_RUNNER_EXPIRY_INITIAL_DELAY = 30*60*1000;
+  static final String RUNNER_EXPIRY_INITIAL_DELAY = "runner.expiry.initial.delay";
   private final long runnerExpiryInterval;
+  private final long runnerExpiryInitialDelay;
   private ScheduledFuture<?> runnerExpiryFuture;
   private static final String NAME_AND_REV_SEPARATOR = "::";
 
@@ -101,6 +104,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
     this.objectGraph = objectGraph;
     this.objectGraph.inject(this);
     runnerExpiryInterval = this.configuration.get(RUNNER_EXPIRY_INTERVAL, DEFAULT_RUNNER_EXPIRY_INTERVAL);
+    runnerExpiryInitialDelay = configuration.get(RUNNER_EXPIRY_INITIAL_DELAY, DEFAULT_RUNNER_EXPIRY_INITIAL_DELAY);
     eventListenerManager.addStateEventListener(resourceManager);
     MetricsConfigurator.registerJmxMetrics(runtimeInfo.getMetrics());
   }
@@ -263,7 +267,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
           }
         }
       }
-    }, 0, runnerExpiryInterval, TimeUnit.MILLISECONDS);
+    }, runnerExpiryInitialDelay, runnerExpiryInterval, TimeUnit.MILLISECONDS);
   }
 
   @VisibleForTesting
