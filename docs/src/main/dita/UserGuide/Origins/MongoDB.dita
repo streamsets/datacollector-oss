@@ -15,12 +15,16 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_bk4_2rs_ns">
  <title>MongoDB</title>
- <shortdesc>The MongoDB origin reads data from MongoDB. <ph
-      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> generates a
-    record for every MongoDB document.</shortdesc>
  <conbody>
+    <p><indexterm>MongoDB
+          origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>MongoDB
+          origin</indexterm></indexterm>The MongoDB origin reads data from MongoDB. <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> generates
+      a record for every MongoDB document. To read change data capture information from the MongoDB
+      Oplog, use the <xref href="#concept_bk4_2rs_ns" format="dita">MongoDB Oplog</xref> origin. </p>
   <p>The MongoDB origin reads from capped and uncapped collections. When you configure MongoDB, you
-      define the offset field, start timestamp, and the collection type. These properties determine
+      define connection information, such as the connection string and MongoDB credentials. You also
+      configure the offset field, collection type, and start timestamp. These properties determine
       how the origin queries the database. </p>
     <p>You can optionally configure advanced options that determine how the origin connects to
       MongoDB, including enabling SSL/TLS for the origin.</p>

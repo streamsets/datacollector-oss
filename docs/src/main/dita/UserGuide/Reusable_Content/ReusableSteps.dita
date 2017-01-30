@@ -1742,7 +1742,102 @@
                 </info>
             </step>
             <step>
-                <cmd/>
+                <cmd>
+                    <draft-comment author="Loretta">The following
+                            <uicontrol>O-MongodBconfigs</uicontrol> step is used in the MongoDB
+                        origin and rows/entries used by MongoDB Oplog. MongoDB destination might use
+                        some too, when I get to it.</draft-comment>
+                </cmd>
+            </step>
+            <step id="O-MongoDBconfigs">
+                <cmd>On the <wintitle>MongoDB</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_mh4_bxs_ns">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3*"/>
+                            <thead>
+                                <row>
+                                    <entry>MongoDB Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row id="row-MongoConnectString">
+                                    <entry>Connection String</entry>
+                                    <entry>Connection string for the MongoDB instance. Use the
+                                        following
+                                        format:<codeblock>mongodb://host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]</codeblock>When
+                                        connecting to a cluster, enter additional node information
+                                        to ensure a connection.</entry>
+                                </row>
+                                <row id="row-MongoSingleMode">
+                                    <entry>Enable Single Mode</entry>
+                                    <entry>Select to connect to a single MongoDB server or node. If
+                                        multiple nodes are defined in the connection string, the
+                                        origin connects only to the first node. <p>Use this option
+                                            with care. If the origin cannot connect or the
+                                            connection fails, the pipeline stops. </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Database</entry>
+                                    <entry>Name of the MongoDB database.</entry>
+                                </row>
+                                <row>
+                                    <entry>Collection</entry>
+                                    <entry>Name of the MongoDB collection to use.</entry>
+                                </row>
+                                <row>
+                                    <entry>Capped Collection</entry>
+                                    <entry>The collection is capped. Clear this option to read an
+                                        uncapped collection.</entry>
+                                </row>
+                                <row>
+                                    <entry>Start Timestamp</entry>
+                                    <entry>Timestamp to begin reading data based on the timestamp in
+                                        the offset field. Use the following format:
+                                            <codeph>YYYY-MM-DD hh:mm:ss</codeph>.</entry>
+                                </row>
+                                <row>
+                                    <entry>Offset Field <xref
+                                            href="../Origins/MongoDB-OffsetField.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_k2w_rsd_3t"/></xref>
+                                    </entry>
+                                    <entry>Field to use to track reads. Default is the _id field.
+                                            <p>You can use a nested offset field, such as o._id, or
+                                            any Object ID field, but results are not
+                                        guaranteed.</p></entry>
+                                </row>
+                                <row id="row-Mongo-BatchSize">
+                                    <entry>Batch Size (records)</entry>
+                                    <entry>Maximum number of records allowed in a batch.</entry>
+                                </row>
+                                <row>
+                                    <entry>Max Batch Wait Time <xref
+                                            href="../Origins/BatchSizeWaitTime.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            /></xref>
+                                    </entry>
+                                    <entry id="entry-Mongo-BatchWaitTime">Amount of time the origin
+                                        will wait to fill a batch before sending an empty batch.
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Read Preference <xref
+                                            href="../Origins/MongoDB-ReadPreference.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_o23_1rd_ww"/></xref>
+                                    </entry>
+                                    <entry id="entry-Mongo-ReadPref">Determines how the origin reads
+                                        data from different members of the MongoDB replica
+                                        set.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
             <step>
                 <cmd>
@@ -4325,7 +4420,7 @@ chmod 644 /opt/cloudera/csd/STREAMSETS*.jar</codeblock></info>
                 </cmd>
             </step>
             <step id="MongoDB_Credentials_step">
-                <cmd>To use credentials, click the <uicontrol>Credentials</uicontrol> tab and
+                <cmd>To enter credentials, click the <uicontrol>Credentials</uicontrol> tab and
                     configure the following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_bdl_csd_3t">
