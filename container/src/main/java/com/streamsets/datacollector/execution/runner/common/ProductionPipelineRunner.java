@@ -34,7 +34,9 @@ import com.google.common.util.concurrent.RateLimiter;
 import com.streamsets.datacollector.config.DeliveryGuarantee;
 import com.streamsets.datacollector.config.MemoryLimitConfiguration;
 import com.streamsets.datacollector.config.MemoryLimitExceeded;
+import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageType;
+import com.streamsets.datacollector.el.PipelineEL;
 import com.streamsets.datacollector.execution.SnapshotStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
@@ -161,6 +163,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   private ThreadHealthReporter threadHealthReporter;
   private final List<List<StageOutput>> capturedBatches = new ArrayList<>();
   private PipeContext pipeContext = null;
+  private PipelineConfiguration pipelineConfiguration = null;
 
   @Inject
   public ProductionPipelineRunner(@Named("name") String pipelineName, @Named("rev") String revision,
@@ -371,6 +374,9 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
 
     originPipe.prepareBatchContext(batchContext);
 
+    // Since the origin owns the threads in PushSource, need to re-populate the PipelineEL on every batch
+    PipelineEL.setConstantsInContext(pipelineConfiguration);
+
     return batchContext;
   }
 
@@ -411,6 +417,8 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
 
       // Returning false so that origin can properly communicate back that this request wasn't processed
       return false;
+    } finally {
+      PipelineEL.unsetConstantsInContext();
     }
 
     return true;
@@ -943,8 +951,14 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     return null;
   }
 
+  @Override
   public void setPipeContext(PipeContext pipeContext) {
     this.pipeContext = pipeContext;
+  }
+
+  @Override
+  public void setPipelineConfiguration(PipelineConfiguration pipelineConfiguration) {
+    this.pipelineConfiguration = pipelineConfiguration;
   }
 
 }

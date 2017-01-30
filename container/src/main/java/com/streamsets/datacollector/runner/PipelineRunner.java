@@ -20,6 +20,7 @@
 package com.streamsets.datacollector.runner;
 
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
@@ -73,5 +74,7 @@ public interface PipelineRunner {
   );
 
   public void setPipeContext(PipeContext pipeContext);
+
+  public void setPipelineConfiguration(PipelineConfiguration pipelineConfiguration);
 
 }
