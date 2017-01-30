@@ -85,12 +85,24 @@ public class JdbcDTarget extends DTarget {
   public List<JdbcFieldColumnParamMapping> columnNames;
 
   @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MODEL,
+      label = "Change Log Format",
+      defaultValue = "NONE",
+      description = "If input is a change data capture log, specify the format.",
+      displayPosition = 40,
+      group = "JDBC"
+  )
+  @ValueChooserModel(ChangeLogFormatChooserValues.class)
+  public ChangeLogFormat changeLogFormat;
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "",
       label = "Default Operation",
       description = "Default operation to perform if sdc.operation.type is not set in record header.",
-      displayPosition = 40,
+      displayPosition = 50,
       group = "JDBC"
   )
   @ValueChooserModel(JDBCOperationChooserValues.class)
@@ -102,35 +114,11 @@ public class JdbcDTarget extends DTarget {
       defaultValue= "DISCARD",
       label = "Unsupported Operation Handling",
       description = "Action to take when operation type is not supported",
-      displayPosition = 30,
+      displayPosition = 60,
       group = "JDBC"
   )
   @ValueChooserModel(UnsupportedOperationActionChooserValues.class)
   public UnsupportedOperationAction unsupportedAction;
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.MODEL,
-      label = "Change Log Format",
-      defaultValue = "NONE",
-      description = "If input is a change data capture log, specify the format.",
-      displayPosition = 50,
-      group = "JDBC"
-  )
-  @ValueChooserModel(ChangeLogFormatChooserValues.class)
-  public ChangeLogFormat changeLogFormat;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
-      label = "Rollback Batch on Error",
-      description = "Whether or not to rollback the entire batch on error. Some JDBC drivers provide information" +
-          "about individual failed rows, and can insert partial batches.",
-      displayPosition = 50,
-      group = "JDBC"
-  )
-  public boolean rollbackOnError;
 
   @ConfigDef(
       required = true,
@@ -170,6 +158,18 @@ public class JdbcDTarget extends DTarget {
       group = "JDBC"
   )
   public int maxPrepStmtCache;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Rollback Batch on Error",
+      description = "Whether or not to rollback the entire batch on error. Some JDBC drivers provide information" +
+          "about individual failed rows, and can insert partial batches.",
+      displayPosition = 70,
+      group = "JDBC"
+  )
+  public boolean rollbackOnError;
 
   @ConfigDefBean()
   public HikariPoolConfigBean hikariConfigBean;
