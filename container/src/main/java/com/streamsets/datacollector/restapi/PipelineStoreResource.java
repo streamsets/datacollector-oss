@@ -329,6 +329,12 @@ public class PipelineStoreResource {
           return p1.getName().compareTo(p2.getName());
         }
 
+        if (orderBy.equals(PipelineOrderByFields.TITLE)) {
+          String p1Title = p1.getTitle() != null ? p1.getTitle() : p1.getName();
+          String p2Title = p2.getTitle() != null ? p2.getTitle() : p2.getName();
+          return p1Title.compareTo(p2Title);
+        }
+
         if (orderBy.equals(PipelineOrderByFields.LAST_MODIFIED)) {
           return p2.getLastModified().compareTo(p1.getLastModified());
         }
