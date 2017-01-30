@@ -3747,9 +3747,10 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta">Elasticsearch properties - used by Elasticsearch
-                        destination and Configuring a Pipeline > Error handling. Default Operation
-                        and Unsupported Operation Handling descriptions used by
+                    <draft-comment author="Loretta">Elasticsearch properties - all used by
+                        Elasticsearch destination. All but Default Operation and Unsupported
+                        Operation Handling used by Configuring a Pipeline > Error handling. Default
+                        Operation and Unsupported Operation Handling descriptions used by
                         Kudu.</draft-comment>
                 </cmd>
             </step>
@@ -3768,7 +3769,7 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row>
+                                <row id="row_ElasticCluster">
                                     <entry>Cluster HTTP URI</entry>
                                     <entry>Use when the cluster uses a custom HTTP URI. Use the
                                         following format:
@@ -3777,18 +3778,18 @@
                                             verify that the cluster version is compatible with the
                                             destination libraries.</p></entry>
                                 </row>
-                                <row>
+                                <row id="row_ElasticHTTP">
                                     <entry>Additional HTTP Params</entry>
                                     <entry>Additional HTTP parameters that you want to send as
                                         querystring parameters to Elasticsearch. Enter the exact
                                         parameter name and value expected by Elasticsearch.</entry>
                                 </row>
-                                <row>
+                                <row id="row_ElasticSecurity">
                                     <entry>Use Security</entry>
                                     <entry>Specifies whether security is enabled on the
                                         Elasticsearch cluster. </entry>
                                 </row>
-                                <row>
+                                <row id="row_ElasticTime">
                                     <entry>Time Basis <xref href="../Destinations/Elastic-TimeBasis.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_w4w_q3p_ht"/>
@@ -3812,12 +3813,12 @@
                                         <p>Default is <codeph>${time:now()}</codeph>.</p>
                                     </entry>
                                 </row>
-                                <row>
+                                <row id="row_ElasticZone">
                                     <entry>Data Time Zone</entry>
                                     <entry>Time zone for the destination system. Used to resolve
                                         datetimes in time-based indexes. </entry>
                                 </row>
-                                <row>
+                                <row id="row_ElasticIndex">
                                     <entry>Index</entry>
                                     <entry>Index information for the generated documents. You can
                                         use a constant, datetime variables, a field that includes
@@ -3828,13 +3829,13 @@
                                                 href="../Expression_Language/DateTimeVariables.dita#concept_gh4_qd2_sv"
                                             />.</p></entry>
                                 </row>
-                                <row>
+                                <row id="row_ElasticMapping">
                                     <entry>Mapping</entry>
                                     <entry>Mapping information for the generated documents. You can
                                         use a constant or a field that includes the mapping
                                         information. </entry>
                                 </row>
-                                <row>
+                                <row id="row_ElasticDocID">
                                     <entry>Document ID
                                         <xref
                                             href="../Destinations/Elastic-DocID.dita">
@@ -3847,7 +3848,7 @@
                                             the destination allows Elasticsearch to create the
                                             ID.</p></entry>
                                 </row>
-                                <row>
+                                <row id="row_ElasticCharset">
                                     <entry>Data Charset</entry>
                                     <entry>
                                         <p>Character encoding of the data to be processed. </p>
