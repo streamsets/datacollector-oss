@@ -41,22 +41,13 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row>
-                                    <entry>Connection String</entry>
-                                    <entry>Connection string for the MongoDB instance. Use the
-                                        following format:
-                                        <codeblock>mongodb://host1[:port1][,host2[:port2],
-...[,hostN[:portN]]][/[database][?options]]</codeblock>When
-                                        connecting to a cluster, enter additional node information
-                                        to ensure a connection. </entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-MongoConnectString">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>Enable Single Mode</entry>
-                                    <entry>Select to connect to a single MongoDB server or node. If
-                                        multiple nodes are defined in the connection string, the
-                                        origin connects to only the first node.<p>Use this option
-                                            with care. If the origin cannot connect or the
-                                            connection fails, the pipeline stops. </p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-MongoSingleMode">
+                                    <entry/>
                                 </row>
                                 <row>
                                     <entry>Collection</entry>
@@ -104,25 +95,26 @@
                                             operation types, see the MongoDB documentation.
                                         </p></entry>
                                 </row>
-                                <row>
-                                    <entry>Batch Size (records)</entry>
-                                    <entry>Maximum number of records allowed in a batch.</entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-Mongo-BatchSize">
+                                    <entry/>
                                 </row>
                                 <row>
                                     <entry>Max Batch Wait Time <xref href="BatchSizeWaitTime.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_mwv_b52_zq"/></xref>
                                     </entry>
-                                    <entry>Amount of time the origin will wait to fill a batch
-                                        before sending an empty batch. </entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-Mongo-BatchWaitTime"
+                                    />
                                 </row>
                                 <row>
                                     <entry>Read Preference <xref href="MongoDBOplog-ReadPreference.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_o23_1rd_ww"/></xref>
                                     </entry>
-                                    <entry>Determines how the origin reads data from different
-                                        members of the MongoDB replica set.</entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-Mongo-ReadPref"/>
                                 </row>
                             </tbody>
                         </tgroup>

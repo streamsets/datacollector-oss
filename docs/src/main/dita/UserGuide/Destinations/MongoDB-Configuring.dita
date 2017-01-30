@@ -37,11 +37,9 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row>
-                                    <entry>Connection String </entry>
-                                    <entry>MongoDB connection string. You can include any valid
-                                        MongoDB component in the connection string. <p>For more
-                                            information, see the MongoDB documentation.</p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-MongoConnectString">
+                                    <entry/>
                                 </row>
                                 <row>
                                     <entry>Database</entry>

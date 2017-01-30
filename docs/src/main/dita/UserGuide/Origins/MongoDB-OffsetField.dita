@@ -15,13 +15,14 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_kx3_zrs_ns">
  <title>Offset Field</title>
- <shortdesc>MongoDB uses the offset field to track the data to read. By default, the MongoDB origin
-  uses the _id field as the offset field. </shortdesc>
  <conbody>
-  <p><indexterm>MongoDB origin<indexterm>offset field</indexterm></indexterm>You can use any Object
-   ID field as the offset field, but the results for other fields are not guaranteed. </p>
-  <p>Object ID fields include an embedded timestamp. The origin uses the embedded timestamp to
-      determine where in the collection to begin reading based on the start timestamp that you
-      provide. </p>
+  <p><indexterm>MongoDB origin<indexterm>offset field</indexterm></indexterm>MongoDB uses the offset
+            field to track the data to read. By default, the MongoDB origin uses the _id field as
+            the offset field. </p>
+        <p>You can use a nested offset field, such as o._id. Or, you can use any Object ID field as
+            the offset field. Object ID fields include an embedded timestamp. The origin uses the
+            embedded timestamp to determine where in the collection to begin reading based on the
+            start timestamp that you provide. </p>
+        <p>The results for using any field besides the default _id field are not guaranteed.</p>
  </conbody>
 </concept>
