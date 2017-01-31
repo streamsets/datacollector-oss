@@ -19,13 +19,17 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc;
 
+import com.google.common.base.Charsets;
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hasher;
+import com.google.common.hash.Hashing;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.lib.event.EventCreator;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
@@ -61,12 +65,30 @@ public class JdbcSource extends BaseSource {
   private static final String HIKARI_CONFIG_PREFIX = "hikariConfigBean.";
   private static final String CONNECTION_STRING = HIKARI_CONFIG_PREFIX + "connectionString";
   private static final String QUERY = "query";
+  private static final String TIMESTAMP = "timestamp";
+  private static final String ERROR = "error";
+  private static final String ROW_COUNT = "rows";
+  private static final String SOURCE_OFFSET = "offset";
   private static final String OFFSET_COLUMN = "offsetColumn";
   private static final String INITIAL_OFFSET = "initialOffset";
   private static final String QUERY_INTERVAL_EL = "queryInterval";
   private static final String TXN_ID_COLUMN_NAME = "txnIdColumnName";
   private static final String TXN_MAX_SIZE = "txnMaxSize";
   private static final String JDBC_NS_HEADER_PREFIX = "jdbcNsHeaderPrefix";
+  private static final HashFunction HF = Hashing.sha256();
+  private static final EventCreator QUERY_SUCCESS = new EventCreator.Builder("jdbc-query-success", 1)
+      .withRequiredField(QUERY)
+      .withRequiredField(TIMESTAMP)
+      .withRequiredField(ROW_COUNT)
+      .withRequiredField(SOURCE_OFFSET)
+      .build();
+  private static final EventCreator QUERY_FAILURE = new EventCreator.Builder("jdbc-query-failure", 1)
+      .withRequiredField(QUERY)
+      .withRequiredField(TIMESTAMP)
+      .withRequiredField(ROW_COUNT)
+      .withRequiredField(SOURCE_OFFSET)
+      .withOptionalField(ERROR)
+      .build();
 
   private final boolean isIncrementalMode;
   private final String query;
@@ -82,13 +104,15 @@ public class JdbcSource extends BaseSource {
   private final String jdbcNsHeaderPrefix;
   private final boolean disableValidation;
 
-
   private ErrorRecordHandler errorRecordHandler;
   private long queryIntervalMillis = Long.MIN_VALUE;
   private HikariDataSource dataSource = null;
   private Connection connection = null;
   private ResultSet resultSet = null;
   private long lastQueryCompletedTime = 0L;
+  private String preparedQuery;
+  private String hashedQuery;
+  private int queryRowCount = 0;
 
   public JdbcSource(
       boolean isIncrementalMode,
@@ -281,6 +305,7 @@ public class JdbcSource extends BaseSource {
       ThreadUtil.sleep(Math.min(delay, 1000));
     } else {
       Statement statement;
+      Hasher hasher = HF.newHasher();
       try {
         if (null == resultSet || resultSet.isClosed()) {
           connection = dataSource.getConnection();
@@ -304,9 +329,12 @@ public class JdbcSource extends BaseSource {
           if (getContext().isPreview()) {
             statement.setMaxRows(batchSize);
           }
-          String preparedQuery = prepareQuery(query, lastSourceOffset);
-          LOG.debug("Executing query: " + preparedQuery);
+          preparedQuery = prepareQuery(query, lastSourceOffset);
+          LOG.trace("Executing query: " + preparedQuery);
+          hashedQuery = hasher.putString(preparedQuery, Charsets.UTF_8).hash().toString();
+          LOG.debug("Executing query: " + hashedQuery);
           resultSet = statement.executeQuery(preparedQuery);
+          queryRowCount = 0;
         }
         // Read Data and track last offset
         int rowCount = 0;
@@ -341,6 +369,7 @@ public class JdbcSource extends BaseSource {
             nextSourceOffset = initialOffset;
           }
           ++rowCount;
+          ++queryRowCount;
         }
         LOG.debug("Processed rows: " + rowCount);
 
@@ -349,6 +378,12 @@ public class JdbcSource extends BaseSource {
           closeQuietly(connection);
           lastQueryCompletedTime = System.currentTimeMillis();
           LOG.debug("Query completed at: {}", lastQueryCompletedTime);
+          QUERY_SUCCESS.create(getContext())
+              .with(QUERY, preparedQuery)
+              .with(TIMESTAMP, lastQueryCompletedTime)
+              .with(ROW_COUNT, queryRowCount)
+              .with(SOURCE_OFFSET, nextSourceOffset)
+              .createAndSend();
         }
       } catch (SQLException e) {
         String formattedError = JdbcUtil.formatSqlException(e);
@@ -357,7 +392,14 @@ public class JdbcSource extends BaseSource {
         closeQuietly(connection);
         lastQueryCompletedTime = System.currentTimeMillis();
         LOG.debug("Query failed at: {}", lastQueryCompletedTime);
-        errorRecordHandler.onError(JdbcErrors.JDBC_34, prepareQuery(query, lastSourceOffset), formattedError);
+        QUERY_FAILURE.create(getContext())
+            .with(QUERY, preparedQuery)
+            .with(TIMESTAMP, lastQueryCompletedTime)
+            .with(ERROR, formattedError)
+            .with(ROW_COUNT, queryRowCount)
+            .with(SOURCE_OFFSET, nextSourceOffset)
+            .createAndSend();
+        errorRecordHandler.onError(JdbcErrors.JDBC_34, hashedQuery, formattedError);
       }
     }
     return nextSourceOffset;

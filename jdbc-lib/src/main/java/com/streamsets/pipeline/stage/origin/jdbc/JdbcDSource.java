@@ -40,6 +40,7 @@ import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
     upgrader = JdbcSourceUpgrader.class,
     recordsByRef = true,
     resetOffset = true,
+    producesEvents = true,
     onlineHelpRefUrl = "index.html#Origins/JDBCConsumer.html#task_ryz_tkr_bs"
 )
 @ConfigGroups(value = Groups.class)
