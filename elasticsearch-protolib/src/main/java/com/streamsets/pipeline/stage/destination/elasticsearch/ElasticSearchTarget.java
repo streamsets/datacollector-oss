@@ -51,16 +51,29 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.message.BasicHeader;
+import org.apache.http.ssl.SSLContexts;
 import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestClientBuilder;
+import org.elasticsearch.common.io.PathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.net.ssl.SSLContext;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -209,10 +222,66 @@ public class ElasticSearchTarget extends BaseTarget {
       for (int i = 0; i < numHosts; i++) {
         hosts[i] = HttpHost.create(conf.httpUris.get(i));
       }
-      restClient = RestClient.builder(hosts).build();
+      RestClientBuilder restClientBuilder = RestClient.builder(hosts);
+
       if (conf.useSecurity) {
+        try {
+          final SSLContext sslcontext;
+          String keystorePath = conf.securityConfigBean.sslTruststorePath;
+          if (StringUtils.isEmpty(keystorePath)) {
+            sslcontext = SSLContext.getDefault();
+          } else {
+            final String keystorePass = conf.securityConfigBean.sslTruststorePassword;
+            if (StringUtils.isEmpty(keystorePass)) {
+              issues.add(
+                  getContext().createConfigIssue(
+                      Groups.ELASTIC_SEARCH.name(),
+                      SecurityConfigBean.CONF_PREFIX + "sslTruststorePassword",
+                      Errors.ELASTICSEARCH_10
+                  )
+              );
+            }
+            Path path = PathUtils.get(keystorePath);
+            if (!Files.exists(path)) {
+              issues.add(
+                  getContext().createConfigIssue(
+                      Groups.ELASTIC_SEARCH.name(),
+                      SecurityConfigBean.CONF_PREFIX + "sslTruststorePath",
+                      Errors.ELASTICSEARCH_11,
+                      keystorePath
+                  )
+              );
+            }
+            KeyStore keyStore = KeyStore.getInstance("jks");
+            try (InputStream is = Files.newInputStream(path)) {
+              keyStore.load(is, keystorePass.toCharArray());
+            }
+            sslcontext = SSLContexts.custom().loadTrustMaterial(keyStore, null).build();
+          }
+          restClientBuilder.setHttpClientConfigCallback(
+            new RestClientBuilder.HttpClientConfigCallback() {
+              @Override
+              public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpClientBuilder) {
+                return httpClientBuilder.setSSLContext(sslcontext);
+              }
+            }
+          );
+        } catch (KeyStoreException | NoSuchAlgorithmException | KeyManagementException | CertificateException e) {
+          issues.add(
+              getContext().createConfigIssue(
+                  Groups.ELASTIC_SEARCH.name(),
+                  SecurityConfigBean.CONF_PREFIX + "sslTruststorePath",
+                  Errors.ELASTICSEARCH_12,
+                  e.toString(),
+                  e
+              )
+          );
+        }
+
+        restClient = restClientBuilder.build();
         restClient.performRequest("GET", "/", getAuthenticationHeader());
       } else {
+        restClient = restClientBuilder.build();
         restClient.performRequest("GET", "/");
       }
     } catch (IOException e) {

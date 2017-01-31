@@ -156,12 +156,14 @@ public class ElasticSearchDTargetUpgrader implements StageUpgrader {
       if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "shieldConfigBean.sslKeystorePassword")) {
         configsToRemove.add(config);
       }
-      // Remove sslTruststorePath.
+      // Rename shieldConfigBean to securityConfigBean.
       if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "shieldConfigBean.sslTruststorePath")) {
+        configsToAdd.add(new Config(config.getName().replace("shield", "security"), config.getValue()));
         configsToRemove.add(config);
       }
-      // Remove sslTruststorePassword.
+      // Rename shieldConfigBean to securityConfigBean.
       if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "shieldConfigBean.sslTruststorePassword")) {
+        configsToAdd.add(new Config(config.getName().replace("shield", "security"), config.getValue()));
         configsToRemove.add(config);
       }
       // Remove clusterName.
