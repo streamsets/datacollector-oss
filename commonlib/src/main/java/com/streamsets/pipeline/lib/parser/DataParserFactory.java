@@ -23,6 +23,8 @@ import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.io.OverrunReader;
+import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -36,6 +38,8 @@ import java.io.StringReader;
 import java.util.Map;
 
 public abstract class DataParserFactory extends DataFactory {
+
+  private static final int DEFAULT_MAX_RECORD_LENGTH = 1024;
 
   protected DataParserFactory(Settings settings) {
     super(settings);
@@ -93,6 +97,20 @@ public abstract class DataParserFactory extends DataFactory {
     OverrunReader overrunReader = new OverrunReader(reader, getSettings().getOverRunLimit(), false,
                                                     getSettings().getRemoveCtrlChars());
     return overrunReader;
+  }
+
+  protected GenericObjectPool<StringBuilder> getStringBuilderPool(Settings settings) {
+    int maxRecordLen = getSettings().getMaxRecordLen();
+    int poolSize = getSettings().getStringBuilderPoolSize();
+    GenericObjectPoolConfig stringBuilderPoolConfig = new GenericObjectPoolConfig();
+    stringBuilderPoolConfig.setMaxTotal(poolSize);
+    stringBuilderPoolConfig.setMinIdle(poolSize);
+    stringBuilderPoolConfig.setMaxIdle(poolSize);
+    stringBuilderPoolConfig.setBlockWhenExhausted(false);
+    return new GenericObjectPool<>(
+      new StringBuilderPoolFactory(maxRecordLen > 0 ? maxRecordLen : DEFAULT_MAX_RECORD_LENGTH),
+      stringBuilderPoolConfig
+    );
   }
 
 }

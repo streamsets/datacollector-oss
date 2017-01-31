@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.shaded.org.aicer.grok.util.Grok;
+import org.apache.commons.pool2.impl.GenericObjectPool;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -43,10 +44,10 @@ public class GrokParser extends LogCharDataParser {
                     int maxStackTraceLines,
                     Grok compiledPattern,
                     String formatName,
-                    StringBuilder currentLine,
-                    StringBuilder previousLine
+                    GenericObjectPool<StringBuilder> currentLineBuilderPool,
+                    GenericObjectPool<StringBuilder> previousLineBuilderPool
   ) throws IOException {
-    super(context, readerId, reader, readerOffset, maxObjectLen, retainOriginalText, maxStackTraceLines, currentLine, previousLine);
+    super(context, readerId, reader, readerOffset, maxObjectLen, retainOriginalText, maxStackTraceLines, currentLineBuilderPool, previousLineBuilderPool);
     this.compiledPattern = compiledPattern;
     this.formatName = formatName;
   }

@@ -30,6 +30,7 @@ import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.compressors.CompressorException;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
+import org.apache.commons.io.input.ProxyInputStream;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -90,7 +91,7 @@ public class CompressionDataParser extends AbstractDataParser {
       if (parser == null) {
         InputStream nextInputStream = compressionInput.getNextInputStream();
         if (nextInputStream != null) {
-          parser = dataParserFactory.getParser(id, nextInputStream, offset);
+          parser = dataParserFactory.getParser(id, new NonClosingProxyInputStream(nextInputStream), offset);
         } else {
           //reached end of compression/archive stream
           eof = true;
@@ -100,7 +101,7 @@ public class CompressionDataParser extends AbstractDataParser {
         String offsetBeforeRead = compressionInput.getStreamPosition(getOffset());
         record = parser.parse();
         if (record == null) {
-          // closing the parser will close the underlying stream. Do not close.
+          parser.close();
           parser = null;
           // for subsequent entries offset always starts at ZERO
           offset = ZERO;
@@ -134,6 +135,21 @@ public class CompressionDataParser extends AbstractDataParser {
       compressionInput = null;
     }
     is.close();
+  }
+
+  /**
+   * Wrapper Input Stream that does nothing on calling close().
+   */
+  static class NonClosingProxyInputStream extends ProxyInputStream {
+
+    public NonClosingProxyInputStream(InputStream proxy) {
+      super(proxy);
+    }
+
+    @Override
+    public void close() throws IOException {
+      // NO-OP
+    }
   }
 
   interface CompressionInput {

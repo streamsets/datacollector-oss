@@ -28,7 +28,9 @@ import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.DataParserFormat;
+import com.streamsets.pipeline.lib.parser.WrapperDataParserFactory;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
+import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -38,6 +40,7 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 public class TestLogDataParserFactory {
 
@@ -559,6 +562,153 @@ public class TestLogDataParserFactory {
 
     Assert.assertEquals(82, Long.parseLong(parser.getOffset()));
     parser.close();
+  }
+
+  @Test
+  public void testParserFactoryCurrentLineStringBuilderPool() throws Exception {
+
+    // Parser with default string builder pool config
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
+    WrapperDataParserFactory factory = (WrapperDataParserFactory) dataParserFactoryBuilder
+      .setMaxDataLen(1000)
+      .setMaxDataLen(100)
+      .setMode(LogMode.COMMON_LOG_FORMAT)
+      .build();
+
+    LogDataParserFactory logDataParserFactory = (LogDataParserFactory) factory.getFactory();
+    GenericObjectPool<StringBuilder> stringBuilderPool = logDataParserFactory.getCurrentLineBuilderPool();
+
+    testDefaultStringBuilderPool(stringBuilderPool, logDataParserFactory, 1);
+
+    // Parser with non default string builder pool config
+
+    dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
+    factory = (WrapperDataParserFactory) dataParserFactoryBuilder
+      .setMaxDataLen(1000)
+      .setStringBuilderPoolSize(5)
+      .setMaxDataLen(100)
+      .setMode(LogMode.COMMON_LOG_FORMAT)
+      .build();
+
+    logDataParserFactory = (LogDataParserFactory) factory.getFactory();
+    stringBuilderPool = logDataParserFactory.getCurrentLineBuilderPool();
+    testNonDefaultStringBuilderPool(stringBuilderPool, logDataParserFactory, 5);
+  }
+
+  @Test
+  public void testParserFactoryPreviousLineStringBuilderPool() throws Exception {
+
+    // Parser with default string builder pool config
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
+    WrapperDataParserFactory factory = (WrapperDataParserFactory) dataParserFactoryBuilder
+      .setMaxDataLen(1000)
+      .setMaxDataLen(100)
+      .setMode(LogMode.COMMON_LOG_FORMAT)
+      .build();
+
+    LogDataParserFactory logDataParserFactory = (LogDataParserFactory) factory.getFactory();
+    GenericObjectPool<StringBuilder> stringBuilderPool = logDataParserFactory.getPreviousLineBuilderPool();
+    testDefaultStringBuilderPool(stringBuilderPool, logDataParserFactory, 1);
+
+    // Parser with non default string builder pool config
+
+    dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
+    factory = (WrapperDataParserFactory) dataParserFactoryBuilder
+      .setMaxDataLen(1000)
+      .setStringBuilderPoolSize(5)
+      .setMaxDataLen(100)
+      .setMode(LogMode.COMMON_LOG_FORMAT)
+      .build();
+
+    logDataParserFactory = (LogDataParserFactory) factory.getFactory();
+    stringBuilderPool = logDataParserFactory.getPreviousLineBuilderPool();
+    testNonDefaultStringBuilderPool(stringBuilderPool, logDataParserFactory, 5);
+  }
+
+  @Test
+  public void testStringBuilderPoolException() throws Exception {
+
+    // Parser with default string builder pool config
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
+    WrapperDataParserFactory factory = (WrapperDataParserFactory) dataParserFactoryBuilder
+      .setMaxDataLen(1000)
+      .setMaxDataLen(100)
+      .setMode(LogMode.COMMON_LOG_FORMAT)
+      .build();
+
+    LogDataParserFactory logDataParserFactory = (LogDataParserFactory) factory.getFactory();
+    GenericObjectPool<StringBuilder> stringBuilderPool = logDataParserFactory.getPreviousLineBuilderPool();
+    Assert.assertNotNull(stringBuilderPool);
+    Assert.assertEquals(1, stringBuilderPool.getMaxIdle());
+    Assert.assertEquals(1, stringBuilderPool.getMinIdle());
+    Assert.assertEquals(1, stringBuilderPool.getMaxTotal());
+    Assert.assertEquals(0, stringBuilderPool.getNumIdle());
+    Assert.assertEquals(0, stringBuilderPool.getNumActive());
+
+    factory.getParser("id", "Hello\\r\\nBye");
+
+    Assert.assertEquals(0, stringBuilderPool.getNumIdle());
+    Assert.assertEquals(1, stringBuilderPool.getNumActive());
+
+    try {
+      factory.getParser("id", "Hello\\r\\nBye");
+      Assert.fail("Expected IOException which wraps NoSuchElementException since pool is empty");
+    } catch (DataParserException e) {
+      Assert.assertTrue(e.getCause() instanceof IOException);
+      Assert.assertTrue(e.getCause().getCause() instanceof NoSuchElementException);
+    }
+
+  }
+
+  private void testDefaultStringBuilderPool(
+      GenericObjectPool<StringBuilder> stringBuilderPool,
+      LogDataParserFactory factory,
+      int poolSize
+  ) throws Exception {
+    Assert.assertNotNull(stringBuilderPool);
+    Assert.assertEquals(poolSize, stringBuilderPool.getMaxIdle());
+    Assert.assertEquals(poolSize, stringBuilderPool.getMinIdle());
+    Assert.assertEquals(poolSize, stringBuilderPool.getMaxTotal());
+    Assert.assertEquals(0, stringBuilderPool.getNumIdle());
+    Assert.assertEquals(0, stringBuilderPool.getNumActive());
+
+    DataParser parser = factory.getParser("id", "Hello\\r\\nBye");
+
+    Assert.assertEquals(0, stringBuilderPool.getNumIdle());
+    Assert.assertEquals(1, stringBuilderPool.getNumActive());
+
+    parser.close();
+
+    Assert.assertEquals(1, stringBuilderPool.getNumIdle());
+    Assert.assertEquals(0, stringBuilderPool.getNumActive());
+  }
+
+  private void testNonDefaultStringBuilderPool(
+    GenericObjectPool<StringBuilder> stringBuilderPool,
+    LogDataParserFactory factory,
+    int poolSize
+  ) throws Exception {
+    Assert.assertNotNull(stringBuilderPool);
+    Assert.assertEquals(poolSize, stringBuilderPool.getMaxIdle());
+    Assert.assertEquals(poolSize, stringBuilderPool.getMinIdle());
+    Assert.assertEquals(poolSize, stringBuilderPool.getMaxTotal());
+
+    Assert.assertEquals(0, stringBuilderPool.getNumIdle());
+    Assert.assertEquals(0, stringBuilderPool.getNumActive());
+
+    DataParser parser1 = factory.getParser("id", "Hello\\r\\nBye");
+    DataParser parser2 = factory.getParser("id", "Hello\\r\\nBye");
+    DataParser parser3 = factory.getParser("id", "Hello\\r\\nBye");
+
+    Assert.assertEquals(0, stringBuilderPool.getNumIdle());
+    Assert.assertEquals(3, stringBuilderPool.getNumActive());
+
+    parser1.close();
+    parser2.close();
+    parser3.close();
+
+    Assert.assertEquals(3, stringBuilderPool.getNumIdle());
+    Assert.assertEquals(0, stringBuilderPool.getNumActive());
   }
 
 }

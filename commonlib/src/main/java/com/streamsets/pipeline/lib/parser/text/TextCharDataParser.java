@@ -22,6 +22,7 @@ package com.streamsets.pipeline.lib.parser.text;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.io.AbstractOverrunDelimitedReader;
 import com.streamsets.pipeline.lib.io.OverrunCustomDelimiterReader;
 import com.streamsets.pipeline.lib.io.OverrunLineReader;
@@ -29,12 +30,18 @@ import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.AbstractDataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class TextCharDataParser extends AbstractDataParser {
+
+  private static final Logger LOG = LoggerFactory.getLogger(TextCharDataParser.class);
+
   private final Stage.Context context;
   private final String readerId;
   private final boolean collapseAllLines;
@@ -44,6 +51,7 @@ public class TextCharDataParser extends AbstractDataParser {
   private final String fieldTruncatedName;
   private final StringBuilder recordIdSb;
   private final int recordIdOffset;
+  private final GenericObjectPool<StringBuilder> stringBuilderPool;
   private final StringBuilder stringBuilder;
 
   private boolean eof;
@@ -60,7 +68,7 @@ public class TextCharDataParser extends AbstractDataParser {
         int maxObjectLen,
         String fieldTextName,
         String fieldTruncatedName,
-        StringBuilder stringBuilder
+        GenericObjectPool<StringBuilder> stringBuilderPool
   ) throws IOException {
     this.context = context;
     this.readerId = readerId;
@@ -74,7 +82,15 @@ public class TextCharDataParser extends AbstractDataParser {
     reader.setEnabled(false);
     IOUtils.skipFully(reader, readerOffset);
     reader.setEnabled(true);
-    this.stringBuilder = stringBuilder;
+
+    this.stringBuilderPool = stringBuilderPool;
+    try {
+      this.stringBuilder = stringBuilderPool.borrowObject();
+      LOG.debug("Borrowed string builder from pool. Num Active {}, Num Idle {}", this.stringBuilderPool.getNumActive(), this.stringBuilderPool.getNumIdle());
+    } catch (Exception e) {
+      throw new IOException(Utils.format("Error borrowing string builder object from pool : {}", e.toString()), e);
+    }
+
     recordIdSb = new StringBuilder(readerId.length() + 15);
     recordIdSb.append(readerId).append("::");
     recordIdOffset = recordIdSb.length();
@@ -149,6 +165,9 @@ public class TextCharDataParser extends AbstractDataParser {
 
   @Override
   public void close() throws IOException {
+    stringBuilderPool.returnObject(this.stringBuilder);
+    LOG.debug("Returned string builder to pool. Num Active {}, Num Idle {}", this.stringBuilderPool.getNumActive(), this.stringBuilderPool.getNumIdle());
     reader.close();
   }
+
 }

@@ -19,12 +19,14 @@
  */
 package com.streamsets.pipeline.lib.parser.text;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.pool2.impl.GenericObjectPool;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,18 +39,15 @@ import java.util.Set;
 public class TextDataParserFactory extends DataParserFactory {
   public static final String MULTI_LINE_KEY = "multiLines";
   public static final boolean MULTI_LINE_DEFAULT = false;
-
   public static final String USE_CUSTOM_DELIMITER_KEY = "useCustomDelimiter";
   public static final boolean USE_CUSTOM_DELIMITER_DEFAULT = false;
-
   public static final String CUSTOM_DELIMITER_KEY = "customDelimiter";
   public static final String CUSTOM_DELIMITER_DEFAULT = "\\r\\n";
-
   public static final String INCLUDE_CUSTOM_DELIMITER_IN_TEXT_KEY = "includeCustomDelimiterInText";
   public static final boolean INCLUDE_CUSTOM_DELIMITER_IN_TEXT_DEFAULT = false;
 
-  public static final Map<String, Object> CONFIGS = new HashMap<>();
 
+  public static final Map<String, Object> CONFIGS = new HashMap<>();
 
   static {
     CONFIGS.put(MULTI_LINE_KEY, MULTI_LINE_DEFAULT);
@@ -57,19 +56,16 @@ public class TextDataParserFactory extends DataParserFactory {
     CONFIGS.put(INCLUDE_CUSTOM_DELIMITER_IN_TEXT_KEY, INCLUDE_CUSTOM_DELIMITER_IN_TEXT_DEFAULT);
   }
 
-
   public static final Set<Class<? extends Enum>> MODES = Collections.emptySet();
 
   static final String TEXT_FIELD_NAME = "text";
   static final String TRUNCATED_FIELD_NAME = "truncated";
-  public static final int DEFAULT_MAX_RECORD_LENGTH = 1024;
 
-  private StringBuilder stringBuilder = null;
+  private final GenericObjectPool<StringBuilder> stringBuilderPool;
 
   public TextDataParserFactory(Settings settings) {
     super(settings);
-    int maxRecordLen = getSettings().getMaxRecordLen();
-    stringBuilder = new StringBuilder(maxRecordLen > 0 ? maxRecordLen : DEFAULT_MAX_RECORD_LENGTH);
+    stringBuilderPool = getStringBuilderPool(settings);
   }
 
   @Override
@@ -99,11 +95,15 @@ public class TextDataParserFactory extends DataParserFactory {
           getSettings().getMaxRecordLen(),
           TEXT_FIELD_NAME,
           TRUNCATED_FIELD_NAME,
-          stringBuilder
+          stringBuilderPool
       );
     } catch (IOException ex) {
       throw new DataParserException(Errors.TEXT_PARSER_00, id, offset, ex.toString(), ex);
     }
   }
 
+  @VisibleForTesting
+  GenericObjectPool<StringBuilder> getStringBuilderPool() {
+    return stringBuilderPool;
+  }
 }

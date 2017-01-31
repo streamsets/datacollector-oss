@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.DataParserException;
+import org.apache.commons.pool2.impl.GenericObjectPool;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -43,10 +44,10 @@ public class RegexParser extends LogCharDataParser {
                      boolean retainOriginalText,
                      Pattern pattern,
                      Map<String, Integer> fieldToGroupMap,
-                     StringBuilder currentLine,
-                     StringBuilder previousLine
+                     GenericObjectPool<StringBuilder> currentLineBuilderPool,
+                     GenericObjectPool<StringBuilder> previousLineBuilderPool
   ) throws IOException {
-    super(context, readerId, reader, readerOffset, maxObjectLen, retainOriginalText, -1, currentLine, previousLine);
+    super(context, readerId, reader, readerOffset, maxObjectLen, retainOriginalText, -1, currentLineBuilderPool, previousLineBuilderPool);
     this.fieldToGroupMap = fieldToGroupMap;
     this.pattern = pattern;
   }

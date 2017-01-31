@@ -22,10 +22,14 @@ package com.streamsets.pipeline.lib.parser.log;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.AbstractDataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -33,6 +37,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public abstract class LogCharDataParser extends AbstractDataParser {
+
+  private static final Logger LOG = LoggerFactory.getLogger(LogCharDataParser.class);
 
   static final String TEXT_FIELD_NAME = "originalLine";
   static final String TRUNCATED_FIELD_NAME = "truncated";
@@ -48,6 +54,8 @@ public abstract class LogCharDataParser extends AbstractDataParser {
   private final int maxStackTraceLines;
   private int previousRead;
   private long currentOffset;
+  private final GenericObjectPool<StringBuilder> currentLineBuilderPool;
+  private final GenericObjectPool<StringBuilder> previousLineBuilderPool;
 
   public LogCharDataParser(Stage.Context context,
                            String readerId,
@@ -56,8 +64,8 @@ public abstract class LogCharDataParser extends AbstractDataParser {
                            int maxObjectLen,
                            boolean retainOriginalText,
                            int maxStackTraceLines,
-                           StringBuilder currentLine,
-                           StringBuilder previousLine
+                           GenericObjectPool<StringBuilder> currentLineBuilderPool,
+                           GenericObjectPool<StringBuilder> previousLineBuilderPool
   ) throws IOException {
     this.context = context;
     this.readerId = readerId;
@@ -67,11 +75,45 @@ public abstract class LogCharDataParser extends AbstractDataParser {
     reader.setEnabled(false);
     IOUtils.skipFully(reader, readerOffset);
     reader.setEnabled(true);
-    this.currentLine = currentLine;
-    this.previousLine = previousLine;
     fieldsFromPrevLine = new LinkedHashMap<>();
     currentOffset = readerOffset;
     this.maxStackTraceLines = maxStackTraceLines;
+
+    this.currentLineBuilderPool = currentLineBuilderPool;
+    try {
+      this.currentLine = currentLineBuilderPool.borrowObject();
+      LOG.debug(
+          "Borrowed current line string builder from pool. Num Active {}, Num Idle {}",
+          this.currentLineBuilderPool.getNumActive(),
+          this.currentLineBuilderPool.getNumIdle()
+      );
+    } catch (Exception e) {
+      throw new IOException(
+          Utils.format(
+              "Error borrowing current line string builder object from pool : {}",
+              e.toString()
+          ),
+          e
+      );
+    }
+
+    this.previousLineBuilderPool = previousLineBuilderPool;
+    try {
+      this.previousLine = previousLineBuilderPool.borrowObject();
+      LOG.debug(
+        "Borrowed previous line string builder from pool. Num Active {}, Num Idle {}",
+        this.previousLineBuilderPool.getNumActive(),
+        this.previousLineBuilderPool.getNumIdle()
+      );
+    } catch (Exception e) {
+      throw new IOException(
+        Utils.format(
+          "Error borrowing previous line string builder object from pool : {}",
+          e.toString()
+        ),
+        e
+      );
+    }
   }
 
   private boolean isOverMaxObjectLen(int len) {
@@ -243,6 +285,18 @@ public abstract class LogCharDataParser extends AbstractDataParser {
 
   @Override
   public void close() throws IOException {
+    currentLineBuilderPool.returnObject(this.currentLine);
+    LOG.debug(
+        "Returned current line string builder to pool. Num Active {}, Num Idle {}",
+        this.currentLineBuilderPool.getNumActive(),
+        this.currentLineBuilderPool.getNumIdle()
+    );
+    previousLineBuilderPool.returnObject(this.previousLine);
+    LOG.debug(
+      "Returned previous line string builder to pool. Num Active {}, Num Idle {}",
+      this.previousLineBuilderPool.getNumActive(),
+      this.previousLineBuilderPool.getNumIdle()
+    );
     reader.close();
   }
 

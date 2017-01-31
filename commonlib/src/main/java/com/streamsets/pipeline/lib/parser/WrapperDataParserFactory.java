@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.lib.parser;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -82,6 +83,10 @@ public class WrapperDataParserFactory extends DataParserFactory {
     return new WrapperDataParser(factory.getParser(id, metadata, fileRef));
   }
 
+  @VisibleForTesting
+  public DataParserFactory getFactory() {
+    return factory;
+  }
 
   private static class WrapperDataParser implements DataParser {
     private final DataParser dataParser;
