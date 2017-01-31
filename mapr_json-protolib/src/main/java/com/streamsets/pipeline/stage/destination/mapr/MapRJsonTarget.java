@@ -55,50 +55,59 @@ import java.util.List;
 public class MapRJsonTarget extends BaseTarget {
 
   private static final Logger LOG = LoggerFactory.getLogger(MapRJsonTarget.class);
-  private static final String TABLE_SETUP = "table setup";
 
   private Table table;
-  private MapRJsonConfigBean conf;
+  private MapRJsonConfigBean mapRJsonConfigBean;
   private ErrorRecordHandler errorRecordHandler;
   private DataGeneratorFactory generatorFactory;
 
   public MapRJsonTarget(MapRJsonConfigBean mapRJsonConfigBean) {
-    conf = mapRJsonConfigBean;
+    this.mapRJsonConfigBean = mapRJsonConfigBean;
   }
 
   @Override
   protected List<ConfigIssue> init() {
 
     List<ConfigIssue> issues = super.init();
-    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
+    errorRecordHandler = new    DefaultErrorRecordHandler(getContext());
 
-    if (StringUtils.isEmpty(conf.tableName)) {
-      issues.add(getContext().createConfigIssue(Groups.MAPR_JSON.name(), TABLE_SETUP, Errors.MAPR_JSON_01));
+    if (StringUtils.isEmpty(mapRJsonConfigBean.tableName)) {
+      issues.add(getContext().createConfigIssue(
+          Groups.MAPR_JSON.getLabel(),
+          "mapRJsonConfigBean.tableName",
+          Errors.MAPR_JSON_01
+          ));
     }
 
-    if (StringUtils.isEmpty(conf.keyField)) {
-      issues.add(getContext().createConfigIssue(Groups.MAPR_JSON.name(), "key field", Errors.MAPR_JSON_08));
+    if (StringUtils.isEmpty(mapRJsonConfigBean.keyField)) {
+      issues.add(getContext().createConfigIssue(
+          Groups.MAPR_JSON.getLabel(),
+          "mapRJsonConfigBean.keyField",
+          Errors.MAPR_JSON_08
+      ));
     }
 
     try {
-      table = MapRDB.getTable(conf.tableName);
+      table = MapRDB.getTable(mapRJsonConfigBean.tableName);
     } catch (DBException ex) {
-      if (conf.createTable) {
+      if (mapRJsonConfigBean.createTable) {
         try {
-          table = MapRDB.createTable(conf.tableName);
+          table = MapRDB.createTable(mapRJsonConfigBean.tableName);
         } catch (DBException ee) {
-          issues.add(getContext().createConfigIssue(Groups.MAPR_JSON.name(),
-              TABLE_SETUP,
+          issues.add(getContext().createConfigIssue(
+              Groups.MAPR_JSON.getLabel(),
+              "mapRJsonConfigBean.tableName",
               Errors.MAPR_JSON_03,
-              conf.tableName,
+              mapRJsonConfigBean.tableName,
               ee
           ));
         }
       } else {
-        issues.add(getContext().createConfigIssue(Groups.MAPR_JSON.name(),
-            TABLE_SETUP,
+        issues.add(getContext().createConfigIssue(
+            Groups.MAPR_JSON.getLabel(),
+            "mapRJsonConfigBean.tableName",
             Errors.MAPR_JSON_02,
-            conf.tableName,
+            mapRJsonConfigBean.tableName,
             ex
         ));
       }
@@ -152,35 +161,35 @@ public class MapRJsonTarget extends BaseTarget {
     // check if the key column exists...
     Field field;
     try {
-      field = rec.get(conf.keyField);
+      field = rec.get(mapRJsonConfigBean.keyField);
 
     } catch (IllegalArgumentException ex) {
-      LOG.info(Errors.MAPR_JSON_11.getMessage(), conf.keyField, ex);
-      throw new OnRecordErrorException(rec, Errors.MAPR_JSON_11, conf.keyField, ex);
+      LOG.info(Errors.MAPR_JSON_11.getMessage(), mapRJsonConfigBean.keyField, ex);
+      throw new OnRecordErrorException(rec, Errors.MAPR_JSON_11, mapRJsonConfigBean.keyField, ex);
     }
 
-    if(conf.isBinaryRowKey || field.getType() == Field.Type.BYTE_ARRAY) {
+    if(mapRJsonConfigBean.isBinaryRowKey || field.getType() == Field.Type.BYTE_ARRAY) {
       try {
         byte [] bArr = convertToByteArray(field, rec);
         document.setId(ByteBuffer.wrap(bArr));
 
       } catch (IllegalArgumentException ex) {
-        LOG.error(Errors.MAPR_JSON_12.getMessage(), conf.keyField, field.getType().name(), ex);
-        throw new OnRecordErrorException(rec, Errors.MAPR_JSON_12, conf.keyField, field.getType().name(), ex);
+        LOG.error(Errors.MAPR_JSON_12.getMessage(), mapRJsonConfigBean.keyField, field.getType().name(), ex);
+        throw new OnRecordErrorException(rec, Errors.MAPR_JSON_12, mapRJsonConfigBean.keyField, field.getType().name(), ex);
       }
 
     } else {
       try {
         String str = field.getValueAsString();
         if (StringUtils.isEmpty(str)) {
-          LOG.error(Errors.MAPR_JSON_11.getMessage(), conf.keyField);
-          throw new OnRecordErrorException(rec, Errors.MAPR_JSON_11, conf.keyField);
+          LOG.error(Errors.MAPR_JSON_11.getMessage(), mapRJsonConfigBean.keyField);
+          throw new OnRecordErrorException(rec, Errors.MAPR_JSON_11, mapRJsonConfigBean.keyField);
         }
         document.setId(str);
 
       } catch (IllegalArgumentException ex) {
-        LOG.error(Errors.MAPR_JSON_13.getMessage(), conf.keyField, ex);
-        throw new OnRecordErrorException(rec, Errors.MAPR_JSON_13, conf.keyField, ex);
+        LOG.error(Errors.MAPR_JSON_13.getMessage(), mapRJsonConfigBean.keyField, ex);
+        throw new OnRecordErrorException(rec, Errors.MAPR_JSON_13, mapRJsonConfigBean.keyField, ex);
       }
     }
 
@@ -216,7 +225,7 @@ public class MapRJsonTarget extends BaseTarget {
       case CHAR:
       case BYTE:
       default:
-        throw new OnRecordErrorException(rec, Errors.MAPR_JSON_15, field.getType().name());
+        throw new OnRecordErrorException(rec, Errors.MAPR_JSON_14, field.getType().name());
     }
   }
 
@@ -235,7 +244,7 @@ public class MapRJsonTarget extends BaseTarget {
 
   private void doInsert(Document document, Record record) throws StageException {
 
-    if (conf.insertOrReplace == InsertOrReplace.REPLACE) {
+    if (mapRJsonConfigBean.insertOrReplace == InsertOrReplace.REPLACE) {
       try {
         table.insertOrReplace(document);
       } catch (DBException ex) {
@@ -262,8 +271,8 @@ public class MapRJsonTarget extends BaseTarget {
       table.flush();
 
     } catch (DBException ex) {
-      LOG.error(Errors.MAPR_JSON_04.getMessage(), conf.tableName, ex);
-      throw new StageException(Errors.MAPR_JSON_04, conf.tableName, ex);
+      LOG.error(Errors.MAPR_JSON_04.getMessage(), mapRJsonConfigBean.tableName, ex);
+      throw new StageException(Errors.MAPR_JSON_04, mapRJsonConfigBean.tableName, ex);
     }
 
   }
@@ -276,7 +285,7 @@ public class MapRJsonTarget extends BaseTarget {
         table = null;
 
       } catch (DBException ex) {
-        LOG.error(Errors.MAPR_JSON_05.getMessage(), conf.tableName, ex);
+        LOG.error(Errors.MAPR_JSON_05.getMessage(), mapRJsonConfigBean.tableName, ex);
       }
     }
   }
