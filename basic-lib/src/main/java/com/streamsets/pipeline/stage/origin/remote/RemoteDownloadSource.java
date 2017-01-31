@@ -548,6 +548,9 @@ public class RemoteDownloadSource extends BaseSource {
       if (currentStream != null) {
         currentStream.close();
       }
+      if (null != parser) {
+        parser.close();
+      }
       if (remoteDir != null) {
         remoteDir.close();
         FileSystem fs = remoteDir.getFileSystem();
