@@ -51,6 +51,7 @@ public class HttpServerPushSource extends AbstractHttpServerPushSource<HttpRecei
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = getHttpConfigs().init(getContext());
+    dataFormatConfig.stringBuilderPoolSize = httpConfigs.getMaxConcurrentRequests();
     dataFormatConfig.init(
         getContext(),
         dataFormat,

@@ -38,7 +38,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class PushHttpReceiver implements HttpReceiver {
@@ -124,9 +123,8 @@ public class PushHttpReceiver implements HttpReceiver {
 
     // parse request into records
     List<Record> records = new ArrayList<>();
-    try {
-      String requestId = System.currentTimeMillis() + "." + counter.getAndIncrement();
-      DataParser parser = getParserFactory().getParser(requestId, is, "0");
+    String requestId = System.currentTimeMillis() + "." + counter.getAndIncrement();
+    try (DataParser parser = getParserFactory().getParser(requestId, is, "0")) {
       Record record = parser.parse();
       while (record != null) {
         records.add(record);
