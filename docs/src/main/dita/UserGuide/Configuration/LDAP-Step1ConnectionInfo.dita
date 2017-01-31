@@ -31,6 +31,21 @@
                         <uicontrol>ldap</uicontrol>.</cmd>
             </step>
             <step>
+                <cmd>In the <codeph>$SDC_CONF/sdc.properties</codeph> file, define the HTTP
+                    authentication type by setting the <uicontrol>http.authentication</uicontrol>
+                    property to <uicontrol>basic</uicontrol>, <uicontrol>digest</uicontrol>, or
+                        <uicontrol>form</uicontrol>.</cmd>
+                <info><p>The HTTP authentication type determines how passwords are transferred from the
+                    browser to <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> over HTTP.</p> <p>Digest authentication encrypts user credentials. Basic and form authentication transfer user
+                        credentials as is. To ensure that user credentials are safely transmitted
+                        for basic and form authentication, configure <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> to use HTTPS and configure secure connections to LDAP using LDAPS or
+                        StartTLS.</p></info>
+            </step>
+            <step>
                 <cmd>In  the <codeph>$SDC_CONF/ldap-login.conf</codeph> file, configure the
                     connection information for the LDAP server.</cmd>
                 <info>In the file, configure the following properties: <table frame="all" rowsep="1"
@@ -51,7 +66,22 @@
                                 </row>
                                 <row>
                                     <entry>useLdaps</entry>
-                                    <entry>Enables using LDAP over SSL/TLS. Default is false. </entry>
+                                    <entry>Secure LDAP connections using the LDAPS (LDAP over SSL)
+                                        protocol. Default is false. <p>You must complete additional
+                                            steps to use LDAPS, see <xref
+                                                href="LDAP-Step2Secure.dita#task_wyf_kkw_ty"
+                                        />.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>useStartTLS</entry>
+                                    <entry>Secure LDAP connections using the StartTLS protocol.
+                                        Default is false.<p>You must complete additional steps to
+                                            use StartTLS, see <xref
+                                                href="LDAP-Step2Secure.dita#task_wyf_kkw_ty"/>.
+                                                <note>StartTLS and LDAPS cannot be used at the same
+                                                time. If both useStartTLS and useLdaps are set to
+                                                true, useStartTLS takes
+                                        precedence.</note></p></entry>
                                 </row>
                                 <row>
                                     <entry>contextFactory</entry>
@@ -64,8 +94,11 @@
                                 </row>
                                 <row>
                                     <entry>port</entry>
-                                    <entry>LDAP server port. Typically 389 for LDAP and 636 for
-                                        LDAPS.</entry>
+                                    <entry>LDAP server port. <p>To use unencrypted connections or to
+                                            use connections secured with StartTLS, enter the LDAP
+                                            port number, typically 389. To use connections secured
+                                            with LDAPS, enter the port number for secure
+                                            connections, typically 636. </p></entry>
                                 </row>
                                 <row>
                                     <entry>bindDn</entry>
@@ -86,10 +119,6 @@
                                             password.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>authenticationMethod</entry>
-                                    <entry>Authentication method. Default is simple. </entry>
-                                </row>
-                                <row>
                                     <entry>forceBindingLogin</entry>
                                     <entry>Determines if binding login checks are performed. Use one
                                         of the following options:<ul id="ul_dpb_z2z_s5">
@@ -99,25 +128,21 @@
                                                 received from the LDAP server. <p>When set to false,
                                                   the bindDn user must have permission to access the
                                                   details, password, and group information for
-                                                  users.</p><p>Use for Digest
-                                                authentication.</p></li>
+                                                  users. Use for Digest authentication.</p></li>
                                             <li>true - <ph
                                                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                                 /> passes the user credentials to the LDAP server
                                                 for authentication. <p>When set to true, the bindDn
                                                   user must have permission to access the group
-                                                  information for users.</p><p>Use for Basic or Form
+                                                  information for users. Use for Basic or Form
                                                   authentication, or when the password stored in the
-                                                  LDAP server is encrypted.</p></li>
+                                                  LDAP server is encrypted. Do not use for Digest
+                                                  authentication.</p></li>
                                         </ul><p>Default is false. </p></entry>
                                 </row>
                                 <row>
                                     <entry>userBaseDn</entry>
                                     <entry>Base DN under which user accounts are located. </entry>
-                                </row>
-                                <row>
-                                    <entry>userRdnAttribute</entry>
-                                    <entry>Name of the username attribute. Default is uid.</entry>
                                 </row>
                                 <row>
                                     <entry>userIdAttribute</entry>
@@ -132,6 +157,14 @@
                                     <entry>userObjectClass</entry>
                                     <entry>Name of the user object class. Default is
                                         inetOrgPerson.</entry>
+                                </row>
+                                <row>
+                                    <entry>userFilter</entry>
+                                    <entry>Name of the user attribute used to log in to <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        />. For example, LDAP users can log in using a username,
+                                        uid, or email address. Default is
+                                            <codeph>uid={user}</codeph>.</entry>
                                 </row>
                                 <row>
                                     <entry>roleBaseDn</entry>
@@ -167,76 +200,5 @@
                     </table></info>
             </step>
         </steps>
-        <result>
-           
-            <p>Let's look at an example <codeph>ldap-login.conf</codeph> file and see how <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> uses the LDAP connection information to authenticate LDAP users.</p>
-            <p>The following example shows a configured <codeph>ldap-login.conf</codeph> file:</p>
-            <codeblock>ldap {
-  com.streamsets.datacollector.http.LdapLoginModule required
-  debug="true"
-  useLdaps="true"
-  contextFactory="com.sun.jndi.ldap.LdapCtxFactory"
-  hostname="server1"
-  port="636"
-  bindDn="cn=admin,dc=example,dc=net"
-  bindPassword="@ldap-bind-password.txt@"
-  authenticationMethod="simple"
-  forceBindingLogin="true"
-  userBaseDn="ou=users,dc=example,dc=net"
-  userRdnAttribute="cn"
-  userIdAttribute="uid"
-  userPasswordAttribute="userPassword"
-  userObjectClass="inetOrgPerson"
-  roleBaseDn="ou=groups,dc=example,dc=net"
-  roleNameAttribute="cn"
-  roleMemberAttribute="member"
-  roleObjectClass="groupOfNames"
-  roleFilter="member={dn}";
-}; </codeblock>
-            <p>When an LDAP user logs into <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                />, <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> uses the connection information in the <codeph>ldap-login.conf</codeph> file to
-                authenticate the user. <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                />  completes the following steps to authenticate the LDAP user:</p>
-            <ol id="ol_bwq_bl1_vx">
-                <li>Checks if the user account is registered in the configured LDAP server by
-                    sending the following query to the LDAP
-                        server:<codeblock>ldapsearch -LLL -H ldap://&lt;hostname>:&lt;port> -x -D &lt;bindDn> -w &lt;bindPassword> -b &lt;userBaseDn> (&amp;(objectClass=&lt;userObjectClass>)(&lt;userIdAttribute>=username)</codeblock><p>For
-                        example, let's use the sample <codeph>ldap-login.conf</codeph> file
-                        configured above, assume that the password defined in
-                            <codeph>ldap-bind-password.txt</codeph> is "password", and assume that a
-                        user logs in to <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> with the username of <codeph>jdoe</codeph>. <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> sends the following query to the LDAP
-                        server:</p><codeblock>ldapsearch -LLL -H ldap://server1:636 -x -D "cn=admin,dc=example,dc=net" -w password -b "ou=users,dc=example,dc=net" (&amp;(objectClass=inetOrgPerson)(uid=jdoe)</codeblock><p>If
-                        the user account doesn't exist, <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> fails the authentication. If the user account exists, <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> continues with the next authentication step.</p></li>
-                <li>Checks which LDAP group the user account belongs to by sending the following
-                    query to the LDAP
-                        server:<codeblock>ldapsearch -LLL -H ldap://&lt;hostname>:&lt;port> -x -D &lt;bindDn> -w &lt;bindPassword> -b &lt;roleBaseDn> (&amp;(objectClass=&lt;roleObjectClass>)(member={dn})</codeblock><p>For
-                        example, using the sample <codeph>ldap-login.conf</codeph> file configured
-                        above, <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> sends the following query to the LDAP
-                        server:</p><codeblock>ldapsearch -LLL -H ldap://server1:636 -x -D "cn=admin,dc=example,dc=net" -w password -b "ou=groups,dc=example,dc=net" (&amp;(objectClass=groupOfNames)(member="cn=jdoe, ou=users,dc=example,dc=net")</codeblock><p>The
-                        LDAP server returns the names of the LDAP groups that the user belongs to.
-                            <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> uses the group names to determine the <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> roles mapped to the LDAP groups, as explained in our next configuration
-                        step.</p></li>
-            </ol>
-        </result>
     </taskbody>
 </task>

@@ -4386,7 +4386,9 @@ chmod 644 /opt/cloudera/csd/STREAMSETS*.jar</codeblock></info>
             <step>
                 <cmd>
                     <draft-comment author="alisontaylor">The following steps are used for the
-                        Enabling SSL topics for the MongoDB origin and destination</draft-comment>
+                        Enabling SSL topics for the MongoDB origin and destination, and for the
+                        Configuring Secure Connections to LDAP topic in Configuration
+                        chapter</draft-comment>
                 </cmd>
             </step>
             <step id="MongoDBEnableSSL_step1">
@@ -4407,6 +4409,10 @@ chmod 644 /opt/cloudera/csd/STREAMSETS*.jar</codeblock></info>
                     <p>For example, define the options as
                         follows:<codeblock>export SDC_JAVA_OPTS="<b class="+ topic/ph hi-d/b ">-Djavax.net.ssl.trustStore=&lt;path to truststore file> -Djavax.net.ssl.trustStorePassword=&lt;password></b> 
 -Xmx1024m  -Xms1024m -server ${SDC_JAVA_OPTS}"                   </codeblock></p>
+                    <p>Or to secure the password, save the password in a text file and then define
+                        the truststore password option as follows:
+                            <codeph>-Djavax.net.ssl.trustStorePassword=$(cat
+                            passwordfile.txt)</codeph></p>
                 </info>
             </step>
             <step id="MongoDBEnableSSL_step3">

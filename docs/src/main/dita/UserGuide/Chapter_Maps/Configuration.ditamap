@@ -9,9 +9,12 @@
    </topicmeta>
    <topicref href="../Configuration/LDAP-Configuring.dita">
     <topicref href="../Configuration/LDAP-Step1ConnectionInfo.dita"/>
-    <topicref href="../Configuration/LDAP-Step2GroupsRoles.dita"/>
-    <topicref href="../Configuration/LDAP-Step3MultipleServers.dita"/>
-    <topicref href="../Configuration/LDAP-Step4MapR.dita"/>
+    <topicref href="../Configuration/LDAP-OpenLDAPExample.dita"/>
+    <topicref href="../Configuration/LDAP-ADExample.dita"/>
+    <topicref href="../Configuration/LDAP-Step2Secure.dita"/>
+    <topicref href="../Configuration/LDAP-Step3GroupsRoles.dita"/>
+    <topicref href="../Configuration/LDAP-Step4MultipleServers.dita"/>
+    <topicref href="../Configuration/LDAP-Step5MapR.dita"/>
    </topicref>
    <topicref href="../Configuration/FileAuth-Configuring.dita">
     <topicref href="../Configuration/FileAuth-Step1Type.dita"/>

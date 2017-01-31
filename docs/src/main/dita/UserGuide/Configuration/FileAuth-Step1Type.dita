@@ -33,9 +33,9 @@
                         <uicontrol>file</uicontrol>.</cmd>
             </step>
             <step>
-                <cmd>Define the file authentication type by setting the
-                        <uicontrol>http.authentication</uicontrol> property to
-                        <uicontrol>basic</uicontrol>, <uicontrol>digest</uicontrol>, or
+                <cmd>In the <codeph>$SDC_CONF/sdc.properties</codeph> file, define the HTTP
+                    authentication type by setting the <uicontrol>http.authentication</uicontrol>
+                    property to <uicontrol>basic</uicontrol>, <uicontrol>digest</uicontrol>, or
                         <uicontrol>form</uicontrol>.</cmd>
             </step>
             <step>
