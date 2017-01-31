@@ -99,7 +99,8 @@ public class JerseyClientConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Use OAuth 2 to get access tokens",
+      label = "Use OAuth 2",
+      description = "Use OAuth 2 to get access tokens",
       defaultValue = "false",
       displayPosition = 155,
       group = "HTTP",
