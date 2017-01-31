@@ -854,6 +854,10 @@ public class DataParserFormatConfig implements DataFormatConfig {
   )
   public boolean verifyChecksum = false;
 
+  // Size of StringBuilder pool maintained by Text and Log Data Parser Factories.
+  // The default value is 1 for regular origins. Multithreaded origins should override this value as required.
+  public int stringBuilderPoolSize = DataFormatConstants.STRING_BUILDER_POOL_SIZE;
+
   @Override
   public boolean init(
       Stage.Context context,
@@ -1191,12 +1195,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
 
     switch (dataFormat) {
       case TEXT:
-        builder
-            .setMaxDataLen(textMaxLineLen)
-            .setConfig(TextDataParserFactory.MULTI_LINE_KEY, multiLines)
-            .setConfig(TextDataParserFactory.USE_CUSTOM_DELIMITER_KEY, useCustomDelimiter)
-            .setConfig(TextDataParserFactory.CUSTOM_DELIMITER_KEY, customDelimiter)
-            .setConfig(TextDataParserFactory.INCLUDE_CUSTOM_DELIMITER_IN_TEXT_KEY, includeCustomDelimiterInTheText);
+        buildTextParser(builder, multiLines);
         break;
       case JSON:
         builder.setMaxDataLen(jsonMaxObjectLen).setMode(jsonContent);
@@ -1215,8 +1214,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
         builder.setMaxDataLen(binaryMaxObjectLen);
         break;
       case LOG:
-        builder.setConfig(LogDataParserFactory.MULTI_LINES_KEY, multiLines);
-        logDataFormatValidator.populateBuilder(builder);
+        buildLogParser(builder, multiLines);
         break;
       case AVRO:
         buildAvroParser(builder);
@@ -1288,6 +1286,23 @@ public class DataParserFormatConfig implements DataFormatConfig {
       .setConfig(DatagramParserFactory.TYPES_DB_PATH_KEY, typesDbPath)
       .setMode(datagramMode)
       .setMaxDataLen(-1);
+  }
+
+  private void buildTextParser(DataParserFactoryBuilder builder, boolean multiLines) {
+    builder
+      .setMaxDataLen(textMaxLineLen)
+      .setStringBuilderPoolSize(stringBuilderPoolSize)
+      .setConfig(TextDataParserFactory.MULTI_LINE_KEY, multiLines)
+      .setConfig(TextDataParserFactory.USE_CUSTOM_DELIMITER_KEY, useCustomDelimiter)
+      .setConfig(TextDataParserFactory.CUSTOM_DELIMITER_KEY, customDelimiter)
+      .setConfig(TextDataParserFactory.INCLUDE_CUSTOM_DELIMITER_IN_TEXT_KEY, includeCustomDelimiterInTheText);
+  }
+
+  private void buildLogParser(DataParserFactoryBuilder builder, boolean multiLines) {
+    builder
+      .setStringBuilderPoolSize(stringBuilderPoolSize)
+      .setConfig(LogDataParserFactory.MULTI_LINES_KEY, multiLines);
+    logDataFormatValidator.populateBuilder(builder);
   }
 
   /**

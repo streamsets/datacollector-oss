@@ -42,6 +42,7 @@ public class DataFactoryBuilder<B extends DataFactoryBuilder, DF extends DataFac
   private int maxDataLen;
   private int overRunLimit = DataFormatConstants.MAX_OVERRUN_LIMIT;
   private String filePatternInArchive = DataFormatConstants.FILE_PATTERN_IN_ARCHIVE;
+  private int stringBuilderPoolSize = DataFormatConstants.STRING_BUILDER_POOL_SIZE;
 
   public DataFactoryBuilder(Stage.Context context, F format) {
     this.context = Utils.checkNotNull(context, "context");
@@ -108,6 +109,13 @@ public class DataFactoryBuilder<B extends DataFactoryBuilder, DF extends DataFac
     return (B) this;
   }
 
+  public B setStringBuilderPoolSize(int stringBuilderPoolSize) {
+    Utils.checkArgument(stringBuilderPoolSize > 0, Utils.formatL(
+      "stringBuilderPoolSize '{}' cannot be less than 1", stringBuilderPoolSize));
+    this.stringBuilderPoolSize = stringBuilderPoolSize;
+    return (B) this;
+  }
+
   public B setOverRunLimit(int overRunLimit) {
     Utils.checkArgument(overRunLimit > 0 && overRunLimit <= DataFormatConstants.MAX_OVERRUN_LIMIT, Utils.formatL(
       "overRunLimit '{}' must be greater than 0 and less than or equal to " + DataFormatConstants.MAX_OVERRUN_LIMIT, overRunLimit));
@@ -119,7 +127,7 @@ public class DataFactoryBuilder<B extends DataFactoryBuilder, DF extends DataFac
     Utils.checkState(modes.size() == expectedModes.size(),
                      Utils.formatL("Format '{}', all required modes have not been set", format));
     DataFactory.Settings settings = new DataFactory.Settings(context, format, compression, filePatternInArchive,
-        charset, maxDataLen, modes, configs, overRunLimit, removeCtrlChars);
+        charset, maxDataLen, modes, configs, overRunLimit, removeCtrlChars, stringBuilderPoolSize);
     return format.create(settings);
   }
 

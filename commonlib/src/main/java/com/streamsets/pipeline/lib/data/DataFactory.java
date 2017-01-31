@@ -39,10 +39,11 @@ public abstract class DataFactory {
     private final Map<Class<? extends Enum>, Enum> modes;
     private final Map<String, Object> configs;
     private final int overRunLimit;
+    private final int stringBuilderPoolSize;
 
     Settings(Stage.Context context, DataFormat format, Compression compression, String filePatternInArchive,
              Charset charset, int maxRecordLen, Map<Class<? extends Enum>, Enum> modes, Map<String, Object> configs,
-             int overRunLimit, boolean removeCtrlChars) {
+             int overRunLimit, boolean removeCtrlChars, int stringBuilderPoolSize) {
       this.context = context;
       this.format = format;
       this.compression = compression;
@@ -53,6 +54,7 @@ public abstract class DataFactory {
       this.modes = ImmutableMap.copyOf(modes);
       this.configs = ImmutableMap.copyOf(configs);
       this.overRunLimit = overRunLimit;
+      this.stringBuilderPoolSize = stringBuilderPoolSize;
     }
 
     public Stage.Context getContext() {
@@ -81,6 +83,10 @@ public abstract class DataFactory {
 
     public boolean getRemoveCtrlChars() {
       return removeCtrlChars;
+    }
+
+    public int getStringBuilderPoolSize() {
+      return stringBuilderPoolSize;
     }
 
     @SuppressWarnings("unchecked")
