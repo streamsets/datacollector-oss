@@ -22,10 +22,10 @@ package com.streamsets.datacollector.execution.runner.common;
 import com.streamsets.datacollector.el.PipelineEL;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.runner.standalone.StandaloneRunner;
+import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.impl.Utils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,7 +68,8 @@ public class ProductionPipelineRunnable implements Runnable {
     }
     String originalThreadName = Thread.currentThread().getName();
     try {
-      Thread.currentThread().setName(RUNNABLE_NAME + "-" + name);
+      PipelineInfo info = pipeline.getPipelineConf().getInfo();
+      Thread.currentThread().setName(Utils.format("{}-{}-{}", RUNNABLE_NAME, info.getUuid(), info.getTitle()));
       try {
         runningThread = Thread.currentThread();
         pipeline.run();
