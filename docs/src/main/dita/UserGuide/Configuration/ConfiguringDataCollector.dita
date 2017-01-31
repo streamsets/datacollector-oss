@@ -176,12 +176,17 @@
                             </row>
                             <row>
                                 <entry>http.authentication</entry>
-                                <entry>HTTP authentication. Use none, basic, digest, form.<p>When
-                                        using basic, digest, or form, use the associated
-                                        realm.properties file to define user accounts. The
-                                        realm.properties files are located in the
-                                            <codeph>$SDC_CONF</codeph> directory.</p><p>Default is
-                                        form. </p></entry>
+                                <entry>HTTP authentication. Use none, basic, digest, or form.<p>The
+                                        HTTP authentication type determines how passwords are
+                                        transferred from the browser to <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> over HTTP. Digest authentication encrypts the passwords.
+                                        Basic and form authentication do not encrypt the passwords.
+                                        </p><p>When using basic, digest, or form, with file-based
+                                        authentication, use the associated realm.properties file to
+                                        define user accounts. The realm.properties files are located
+                                        in the <codeph>$SDC_CONF</codeph> directory.</p><p>Default
+                                        is form. </p></entry>
                             </row>
                             <row>
                                 <entry>http.authentication.login.module</entry>

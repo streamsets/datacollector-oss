@@ -24,6 +24,7 @@
         <p><indexterm>LDAP authentication<indexterm>configuring</indexterm></indexterm>To configure
             LDAP authentication, perform the following tasks:<ol id="ol_dqf_dts_5x">
                 <li>Configure LDAP connection information.</li>
+                <li>Optionally, configure secure connections to the LDAP server.</li>
                 <li>Map LDAP groups to <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> roles.</li>

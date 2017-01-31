@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_o4n_gvs_5x">
- <title>Step 3. Configure Multiple LDAP Servers (Optional)</title>
+ <title>Step 4. Configure Multiple LDAP Servers (Optional)</title>
  <shortdesc>If your organization has multiple LDAP servers, you can configure <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
         connect to each of the servers.</shortdesc>
@@ -73,23 +73,23 @@
             log file to include login failure error messages. You can ignore these error
             messages.</note>
         <p>The following example shows an <cmdname>ldap-login.conf</cmdname> file configured to
-            connect to two LDAP servers, server1 and server2. Each server uses the same password for
-            bindDN:</p><codeblock>ldap {
+            connect to two OpenLDAP servers, server1 and server2. Each server uses the same password
+            for bindDN:</p><codeblock>ldap {
   com.streamsets.datacollector.http.LdapLoginModule required
   debug="true"
   useLdaps="false"
+  useStartTLS="false"
   contextFactory="com.sun.jndi.ldap.LdapCtxFactory"
   hostname="server1" 
   port="389"                 
   bindDn="*******"
   bindPassword="@ldap-bind-password.txt@"  
-  authenticationMethod="simple"
   forceBindingLogin="true"
   userBaseDn="ou=People,dc=example,dc=org"
-  userRdnAttribute="uid"
   userIdAttribute="uid"
   userPasswordAttribute="userPassword"
   userObjectClass="inetOrgPerson"
+  userFilter="uid={user}"
   roleBaseDn="ou=Groups,dc=example,dc=org"
   roleNameAttribute="cn"
   roleMemberAttribute="member"
@@ -100,18 +100,18 @@
   com.streamsets.datacollector.http.LdapLoginModule required
   debug="true"
   useLdaps="false"
+  useStartTLS="false"
   contextFactory="com.sun.jndi.ldap.LdapCtxFactory"
   hostname="server2" 
   port="389"                
   bindDn="*******"
   bindPassword="@ldap-bind-password.txt@"  
-  authenticationMethod="simple"
   forceBindingLogin="true"
   userBaseDn="ou=People,dc=example,dc=org"
-  userRdnAttribute="uid"
   userIdAttribute="uid"
   userPasswordAttribute="userPassword"
   userObjectClass="inetOrgPerson"
+  userFilter="uid={user}"
   roleBaseDn="ou=Groups,dc=example,dc=org"
   roleNameAttribute="cn"
   roleMemberAttribute="member"

@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_x3x_lts_5x">
- <title>Step 2. Map LDAP Groups to Data Collector Roles</title>
+ <title>Step 3. Map LDAP Groups to Data Collector Roles</title>
  <shortdesc><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         roles determine the tasks that a user can perform. You map LDAP groups to <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> roles.
