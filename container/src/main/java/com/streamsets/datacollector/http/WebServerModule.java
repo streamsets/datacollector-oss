@@ -28,6 +28,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.publicrestapi.PublicRestAPI;
 import com.streamsets.datacollector.restapi.RestAPI;
+import com.streamsets.datacollector.restapi.configuration.AclStoreInjector;
 import com.streamsets.datacollector.restapi.configuration.BuildInfoInjector;
 import com.streamsets.datacollector.restapi.configuration.ConfigurationInjector;
 import com.streamsets.datacollector.restapi.configuration.PipelineStoreInjector;
@@ -37,6 +38,7 @@ import com.streamsets.datacollector.restapi.configuration.StageLibraryInjector;
 import com.streamsets.datacollector.restapi.configuration.StandAndClusterManagerInjector;
 import com.streamsets.datacollector.restapi.configuration.UserGroupManagerInjector;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.task.TaskWrapper;
 import com.streamsets.datacollector.util.Configuration;
@@ -275,7 +277,17 @@ public class WebServerModule {
   }
 
   @Provides(type = Type.SET)
-  ContextConfigurator providePipelineStore(final StageLibraryTask stageLibrary) {
+  ContextConfigurator provideAclStore(final AclStoreTask aclStore) {
+    return new ContextConfigurator() {
+      @Override
+      public void init(ServletContextHandler context) {
+        context.setAttribute(AclStoreInjector.ACL_STORE, aclStore);
+      }
+    };
+  }
+
+  @Provides(type = Type.SET)
+  ContextConfigurator provideStageLibrary(final StageLibraryTask stageLibrary) {
     return new ContextConfigurator() {
       @Override
       public void init(ServletContextHandler context) {
@@ -285,7 +297,7 @@ public class WebServerModule {
   }
 
   @Provides(type = Type.SET)
-  ContextConfigurator providePipelineStore(final Configuration configuration) {
+  ContextConfigurator provideConfiguration(final Configuration configuration) {
     return new ContextConfigurator() {
       @Override
       public void init(ServletContextHandler context) {

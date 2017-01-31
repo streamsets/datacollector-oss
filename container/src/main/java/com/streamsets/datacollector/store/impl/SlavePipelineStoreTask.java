@@ -26,6 +26,7 @@ import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineRevInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
+import com.streamsets.datacollector.util.PipelineException;
 
 import java.util.List;
 import java.util.Map;
@@ -60,12 +61,12 @@ public class SlavePipelineStoreTask  implements PipelineStoreTask {
   }
 
   @Override
-  public PipelineInfo getInfo(String name) throws PipelineStoreException {
+  public PipelineInfo getInfo(String name) throws PipelineException {
     return pipelineStore.getInfo(name);
   }
 
   @Override
-  public List<PipelineRevInfo> getHistory(String name) throws PipelineStoreException {
+  public List<PipelineRevInfo> getHistory(String name) throws PipelineException {
     return pipelineStore.getHistory(name);
   }
 
@@ -76,28 +77,28 @@ public class SlavePipelineStoreTask  implements PipelineStoreTask {
   }
 
   @Override
-  public PipelineConfiguration load(String name, String tagOrRev) throws PipelineStoreException {
+  public PipelineConfiguration load(String name, String tagOrRev) throws PipelineException {
     return pipelineStore.load(name, tagOrRev);
   }
 
   @Override
-  public boolean hasPipeline(String name) {
+  public boolean hasPipeline(String name) throws PipelineException {
     return pipelineStore.hasPipeline(name);
   }
 
   @Override
-  public RuleDefinitions retrieveRules(String name, String tagOrRev) throws PipelineStoreException {
+  public RuleDefinitions retrieveRules(String name, String tagOrRev) throws PipelineException {
     return pipelineStore.retrieveRules(name, tagOrRev);
   }
 
   @Override
   public RuleDefinitions storeRules(String pipelineName, String tag, RuleDefinitions ruleDefinitions)
-    throws PipelineStoreException {
+    throws PipelineException {
     return pipelineStore.storeRules(pipelineName, tag, ruleDefinitions);
   }
 
   @Override
-  public boolean deleteRules(String name) throws PipelineStoreException {
+  public boolean deleteRules(String name) throws PipelineException {
     return pipelineStore.deleteRules(name);
   }
 

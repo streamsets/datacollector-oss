@@ -27,13 +27,11 @@ import com.streamsets.datacollector.execution.preview.common.PreviewError;
 import com.streamsets.datacollector.execution.preview.sync.SyncPreviewer;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.StageOutput;
-import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.MultivaluedMap;
-
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -82,8 +80,7 @@ public class AsyncPreviewer implements Previewer {
   }
 
   @Override
-  public RawPreview getRawSource(int maxLength, MultivaluedMap<String, String> previewParams)
-    throws PipelineRuntimeException, PipelineStoreException {
+  public RawPreview getRawSource(int maxLength, MultivaluedMap<String, String> previewParams) throws PipelineException {
     return syncPreviewer.getRawSource(maxLength, previewParams);
   }
 

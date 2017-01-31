@@ -22,6 +22,7 @@ package com.streamsets.datacollector.main;
 import com.streamsets.datacollector.restapi.bean.UserJson;
 import org.eclipse.jetty.security.LoginService;
 
+import java.security.Principal;
 import java.util.List;
 
 public interface UserGroupManager {
@@ -31,5 +32,5 @@ public interface UserGroupManager {
 
   List<String> getGroups();
 
-  UserJson getUser(String userName);
+  UserJson getUser(Principal principal);
 }

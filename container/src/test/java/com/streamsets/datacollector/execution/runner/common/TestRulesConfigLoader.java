@@ -27,9 +27,9 @@ import com.streamsets.datacollector.config.ThresholdType;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.runner.production.RulesConfigurationChangeRequest;
-import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.util.TestUtil;
 import dagger.ObjectGraph;
 import org.apache.commons.io.FileUtils;
@@ -80,7 +80,7 @@ public class TestRulesConfigLoader {
   }
 
   @Test
-  public void testRulesConfigLoader() throws PipelineStoreException, InterruptedException {
+  public void testRulesConfigLoader() throws PipelineException, InterruptedException {
     RulesConfigLoader rulesConfigLoader = new RulesConfigLoader(
         TestUtil.MY_PIPELINE,
         TestUtil.PIPELINE_REV,
@@ -94,7 +94,7 @@ public class TestRulesConfigLoader {
   }
 
   @Test
-  public void testRulesConfigLoaderWithPreviousConfiguration() throws PipelineStoreException, InterruptedException {
+  public void testRulesConfigLoaderWithPreviousConfiguration() throws PipelineException, InterruptedException {
     RulesConfigLoader rulesConfigLoader = new RulesConfigLoader(
         TestUtil.MY_PIPELINE,
         TestUtil.PIPELINE_REV,

@@ -148,8 +148,7 @@ public class SyncPreviewer implements Previewer {
   }
 
   @Override
-  public RawPreview getRawSource(int maxLength, MultivaluedMap<String, String> previewParams)
-    throws PipelineRuntimeException, PipelineStoreException {
+  public RawPreview getRawSource(int maxLength, MultivaluedMap<String, String> previewParams) throws PipelineException {
     changeState(PreviewStatus.RUNNING, null);
     int bytesToRead = configuration.get(MAX_SOURCE_PREVIEW_SIZE_KEY, MAX_SOURCE_PREVIEW_SIZE_DEFAULT);
     bytesToRead = Math.min(bytesToRead, maxLength);
@@ -267,10 +266,12 @@ public class SyncPreviewer implements Previewer {
   }
 
   @VisibleForTesting
-  PreviewPipeline buildPreviewPipeline(int batches, int batchSize, String endStageInstanceName,
-                                               boolean skipTargets)
-    throws PipelineStoreException, StageException, PipelineRuntimeException {
-
+  PreviewPipeline buildPreviewPipeline(
+      int batches,
+      int batchSize,
+      String endStageInstanceName,
+      boolean skipTargets
+  ) throws PipelineException, StageException {
     int maxBatchSize = configuration.get(MAX_BATCH_SIZE_KEY, MAX_BATCH_SIZE_DEFAULT);
     batchSize = Math.min(maxBatchSize, batchSize);
     int maxBatches = configuration.get(MAX_BATCHES_KEY, MAX_BATCHES_DEFAULT);

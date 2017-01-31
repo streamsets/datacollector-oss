@@ -23,6 +23,7 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.execution.StateEventListener;
 import com.streamsets.datacollector.task.Task;
+import com.streamsets.datacollector.util.PipelineException;
 
 import java.util.List;
 import java.util.Map;
@@ -37,33 +38,33 @@ public interface PipelineStoreTask extends Task {
       String label,
       String description,
       boolean isRemote
-  ) throws PipelineStoreException;
+  ) throws PipelineException;
 
-  public void delete(String name) throws PipelineStoreException;
+  public void delete(String name) throws PipelineException;
 
   public List<PipelineInfo> getPipelines() throws PipelineStoreException;
 
-  public PipelineInfo getInfo(String name) throws PipelineStoreException;
+  public PipelineInfo getInfo(String name) throws PipelineException;
 
-  public List<PipelineRevInfo> getHistory(String name) throws PipelineStoreException;
+  public List<PipelineRevInfo> getHistory(String name) throws PipelineException;
 
   public PipelineConfiguration save(String user, String name, String tag, String tagDescription,
-      PipelineConfiguration pipeline) throws PipelineStoreException;
+      PipelineConfiguration pipeline) throws PipelineException;
 
-  public PipelineConfiguration load(String name, String tagOrRev) throws PipelineStoreException;
+  public PipelineConfiguration load(String name, String tagOrRev) throws PipelineException;
 
-  public boolean hasPipeline(String name);
+  public boolean hasPipeline(String name) throws PipelineException;
 
-  public RuleDefinitions retrieveRules(String name, String tagOrRev) throws PipelineStoreException;
+  public RuleDefinitions retrieveRules(String name, String tagOrRev) throws PipelineException;
 
   public RuleDefinitions storeRules(String pipelineName, String tag, RuleDefinitions ruleDefinitions)
-    throws PipelineStoreException;
+      throws PipelineException;
 
-  public boolean deleteRules(String name) throws PipelineStoreException;
+  public boolean deleteRules(String name) throws PipelineException;
 
   public boolean isRemotePipeline(String name, String rev) throws PipelineStoreException;
 
-  public void saveUiInfo(String name, String rev, Map<String, Object> uiInfo) throws PipelineStoreException;
+  public void saveUiInfo(String name, String rev, Map<String, Object> uiInfo) throws PipelineException;
 
   void registerStateListener(StateEventListener stateListener);
 

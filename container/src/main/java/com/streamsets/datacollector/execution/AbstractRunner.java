@@ -36,12 +36,10 @@ import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.util.ValidationUtil;
 import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.api.StageException;
-
-import javax.inject.Inject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -59,8 +57,7 @@ public abstract  class AbstractRunner implements Runner {
   @Inject protected RuntimeInfo runtimeInfo;
   @Inject protected Configuration configuration;
 
-  protected PipelineConfiguration getPipelineConf(String name, String rev) throws PipelineStoreException,
-    PipelineRunnerException {
+  protected PipelineConfiguration getPipelineConf(String name, String rev) throws PipelineException {
     PipelineConfiguration load = pipelineStore.load(name, rev);
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, load);
     PipelineConfiguration validate = validator.validate();

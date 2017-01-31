@@ -36,7 +36,6 @@ import com.streamsets.lib.security.http.SSOConstants;
 import com.streamsets.lib.security.http.SSOService;
 import com.streamsets.lib.security.http.SSOUtils;
 import com.streamsets.pipeline.api.impl.Utils;
-
 import org.eclipse.jetty.jaas.JAASLoginService;
 import org.eclipse.jetty.rewrite.handler.RewriteHandler;
 import org.eclipse.jetty.rewrite.handler.RewriteRegexRule;
@@ -74,12 +73,10 @@ import org.slf4j.LoggerFactory;
 
 import javax.security.auth.Subject;
 import javax.security.auth.login.AppConfigurationEntry;
-import javax.security.auth.login.LoginContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -158,13 +155,13 @@ public abstract class WebServerTask extends AbstractTask {
 
   private static final Set<String> AUTHENTICATION_MODES = ImmutableSet.of("none", "digest", "basic", "form");
 
-  private static final Set<String> LOGIN_MODULES = ImmutableSet.of("file", "ldap");
-
   private static final Logger LOG = LoggerFactory.getLogger(WebServerTask.class);
   public static final String LDAP_LOGIN_CONF = "ldap-login.conf";
   public static final String JAVA_SECURITY_AUTH_LOGIN_CONFIG = "java.security.auth.login.config";
   public static final String LDAP = "ldap";
   public static final String LDAP_LOGIN_MODULE_NAME = "ldap.login.module.name";
+
+  public static final Set<String> LOGIN_MODULES = ImmutableSet.of(FILE, LDAP);
 
   public static final String SSO_SERVICES_ATTR = "ssoServices";
 

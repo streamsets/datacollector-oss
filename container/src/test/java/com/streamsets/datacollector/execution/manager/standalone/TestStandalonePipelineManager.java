@@ -47,6 +47,7 @@ import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.LockCacheModule;
+import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import dagger.Module;
@@ -227,7 +228,7 @@ public class TestStandalonePipelineManager {
   }
 
   @Test
-  public void testPreviewer() throws PipelineStoreException {
+  public void testPreviewer() throws PipelineException {
     pipelineStoreTask.create("user", "abcd", "label","blah", false);
     Previewer previewer = pipelineManager.createPreviewer("user", "abcd", "0");
     assertEquals(previewer, pipelineManager.getPreviewer(previewer.getId()));

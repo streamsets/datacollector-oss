@@ -192,7 +192,15 @@
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
-
+    <dependency>
+      <groupId>fr.xebia.extras</groupId>
+      <artifactId>selma-processor</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>fr.xebia.extras</groupId>
+      <artifactId>selma</artifactId>
+    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

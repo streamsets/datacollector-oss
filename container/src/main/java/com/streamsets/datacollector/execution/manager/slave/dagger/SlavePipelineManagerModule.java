@@ -24,6 +24,7 @@ import com.streamsets.datacollector.execution.manager.slave.SlavePipelineManager
 import com.streamsets.datacollector.execution.runner.provider.dagger.SlaveRunnerProviderModule;
 import com.streamsets.datacollector.execution.snapshot.cache.dagger.SlaveCacheSnapshotStoreModule;
 import com.streamsets.datacollector.execution.store.SlavePipelineStateStoreModule;
+import com.streamsets.datacollector.store.SlaveAclStoreModule;
 import com.streamsets.datacollector.store.SlavePipelineStoreModule;
 
 import dagger.Module;
@@ -32,8 +33,8 @@ import dagger.Module;
  * Provides a singleton instance of Manager.
  */
 @Module(library = true, injects = {SlavePipelineManager.class},
-  includes = {SlavePipelineStateStoreModule.class, SlavePipelineStoreModule.class, SlaveExecutorModule.class,
-      SlaveRunnerProviderModule.class, SlaveCacheSnapshotStoreModule.class})
+  includes = {SlavePipelineStateStoreModule.class, SlavePipelineStoreModule.class, SlaveAclStoreModule.class,
+      SlaveExecutorModule.class, SlaveRunnerProviderModule.class, SlaveCacheSnapshotStoreModule.class})
 public class SlavePipelineManagerModule {
 
 }

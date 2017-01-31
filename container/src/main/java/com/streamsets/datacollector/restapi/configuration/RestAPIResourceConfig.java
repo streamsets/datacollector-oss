@@ -25,6 +25,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.RestAPI;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
 
@@ -48,6 +49,7 @@ public class RestAPIResourceConfig extends ResourceConfig {
       @Override
       protected void configure() {
         bindFactory(PipelineStoreInjector.class).to(PipelineStoreTask.class);
+        bindFactory(AclStoreInjector.class).to(AclStoreTask.class);
         bindFactory(StageLibraryInjector.class).to(StageLibraryTask.class);
         bindFactory(PrincipalInjector.class).to(Principal.class);
         bindFactory(URIInjector.class).to(URI.class);

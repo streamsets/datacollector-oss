@@ -20,12 +20,24 @@
 
 package com.streamsets.datacollector.restapi.bean;
 
+import com.streamsets.lib.security.http.SSOPrincipal;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserJson {
   private String name;
   private List<String> roles;
   private List<String> groups;
+
+  public UserJson() {
+  }
+
+  public UserJson(SSOPrincipal ssoPrincipal) {
+    this.name = ssoPrincipal.getName();
+    this.roles = new ArrayList<>(ssoPrincipal.getRoles());
+    this.groups = new ArrayList<>(ssoPrincipal.getGroups());
+  }
 
   public String getName() {
     return name;

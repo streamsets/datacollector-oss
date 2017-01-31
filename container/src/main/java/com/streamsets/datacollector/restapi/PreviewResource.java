@@ -19,25 +19,29 @@
  */
 package com.streamsets.datacollector.restapi;
 
+import com.streamsets.datacollector.execution.AclManager;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PreviewOutput;
 import com.streamsets.datacollector.execution.PreviewStatus;
 import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.execution.RawPreview;
+import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.PreviewInfoJson;
 import com.streamsets.datacollector.restapi.bean.PreviewOutputJson;
 import com.streamsets.datacollector.restapi.bean.StageOutputJson;
+import com.streamsets.datacollector.restapi.bean.UserJson;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
+import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineInfo;
-import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
+import com.streamsets.lib.security.http.SSOPrincipal;
 import com.streamsets.pipeline.api.StageException;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -59,7 +63,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-
 import java.io.IOException;
 import java.security.Principal;
 import java.util.Collections;
@@ -81,11 +84,26 @@ public class PreviewResource {
   private final String user;
 
   @Inject
-  public PreviewResource(Manager manager, Configuration configuration, Principal principal, PipelineStoreTask store) {
-    this.manager = manager;
+  public PreviewResource(
+      Manager manager,
+      Configuration configuration,
+      Principal principal,
+      PipelineStoreTask store,
+      AclStoreTask aclStore,
+      RuntimeInfo runtimeInfo,
+      UserGroupManager userGroupManager
+  ) {
     this.configuration = configuration;
     this.user = principal.getName();
     this.store = store;
+
+    UserJson currentUser;
+    if (runtimeInfo.isDPMEnabled()) {
+      currentUser = new UserJson((SSOPrincipal)principal);
+    } else {
+      currentUser = userGroupManager.getUser(principal);
+    }
+    this.manager = new AclManager(manager, aclStore, currentUser);
   }
 
   @Path("/pipeline/{pipelineName}/preview")
@@ -104,8 +122,8 @@ public class PreviewResource {
       @QueryParam("skipTargets") @DefaultValue("true") boolean skipTargets,
       @QueryParam("endStage") String endStageInstanceName,
       @QueryParam("timeout") @DefaultValue("2000") long timeout,
-      @ApiParam(name="stageOutputsToOverrideJson", required = true)  List<StageOutputJson> stageOutputsToOverrideJson)
-      throws PipelineException, StageException {
+      @ApiParam(name="stageOutputsToOverrideJson", required = true)  List<StageOutputJson> stageOutputsToOverrideJson
+  ) throws PipelineException, StageException {
 
     if (stageOutputsToOverrideJson == null) {
       stageOutputsToOverrideJson = Collections.emptyList();
@@ -141,9 +159,10 @@ public class PreviewResource {
   @RolesAllowed({
       AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
   })
-  public Response getPreviewStatus(@PathParam("pipelineName") String pipelineName,
-                                   @PathParam("previewerId") String previewerId)
-    throws PipelineException, StageException {
+  public Response getPreviewStatus(
+      @PathParam("pipelineName") String pipelineName,
+      @PathParam("previewerId") String previewerId
+  ) throws PipelineException, StageException {
     Previewer previewer = manager.getPreviewer(previewerId);
     if(previewer == null) {
       return Response.status(Response.Status.NOT_FOUND).entity("Cannot find previewer with id " + previewerId).build();
@@ -162,9 +181,10 @@ public class PreviewResource {
   @RolesAllowed({
       AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
   })
-  public Response getPreviewData(@PathParam("pipelineName") String pipelineName,
-                                 @PathParam("previewerId") String previewerId)
-    throws PipelineException, StageException {
+  public Response getPreviewData(
+      @PathParam("pipelineName") String pipelineName,
+      @PathParam("previewerId") String previewerId
+  ) throws PipelineException, StageException {
     Previewer previewer = manager.getPreviewer(previewerId);
     if(previewer == null) {
       return Response.status(Response.Status.NOT_FOUND).entity("Cannot find previewer with id " + previewerId).build();
@@ -183,9 +203,10 @@ public class PreviewResource {
   @RolesAllowed({
       AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
   })
-  public Response stopPreview(@PathParam("pipelineName") String pipelineName,
-                              @PathParam("previewerId") String previewerId)
-    throws PipelineException, StageException {
+  public Response stopPreview(
+      @PathParam("pipelineName") String pipelineName,
+      @PathParam("previewerId") String previewerId
+  ) throws PipelineException, StageException {
     Previewer previewer = manager.getPreviewer(previewerId);
     if(previewer == null) {
       return Response.status(Response.Status.NOT_FOUND).entity("Cannot find previewer with id " + previewerId).build();
@@ -208,11 +229,10 @@ public class PreviewResource {
   public Response rawSourcePreview(
       @PathParam("pipelineName") String pipelineName,
       @QueryParam("rev") String rev,
-      @Context UriInfo uriInfo) throws PipelineStoreException,
-      PipelineRuntimeException, IOException {
+      @Context UriInfo uriInfo
+  ) throws PipelineException, IOException {
     PipelineInfo pipelineInfo = store.getInfo(pipelineName);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
-
     MultivaluedMap<String, String> previewParams = uriInfo.getQueryParameters();
     Previewer previewer = manager.createPreviewer(this.user, pipelineName, rev);
     RawPreview rawPreview = previewer.getRawSource(4 * 1024, previewParams);
@@ -235,8 +255,8 @@ public class PreviewResource {
   public Response validateConfigs(
       @PathParam("pipelineName") String pipelineName,
       @QueryParam("rev") String rev,
-      @QueryParam("timeout") @DefaultValue("2000") long timeout)
-      throws PipelineException, StageException {
+      @QueryParam("timeout") @DefaultValue("2000") long timeout
+  ) throws PipelineException, StageException {
     PipelineInfo pipelineInfo = store.getInfo(pipelineName);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
     try {

@@ -24,9 +24,8 @@ import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.Runner;
-import com.streamsets.datacollector.execution.manager.PipelineManagerException;
-import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.util.AuthzRole;
+import com.streamsets.datacollector.util.PipelineException;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
@@ -39,7 +38,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-
 import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -67,7 +65,7 @@ public class ClusterResource {
     @QueryParam("rev") @DefaultValue("0") String rev,
     @QueryParam("sdcURL") String sdcURL,
     @Context final HttpServletResponse response,
-    @Context SecurityContext context) throws IOException, PipelineStoreException, PipelineManagerException {
+    @Context SecurityContext context) throws IOException, PipelineException {
     Runner runner = manager.getRunner(user, name, rev);
     Collection<CallbackInfo> callbackInfoCollection = runner.getSlaveCallbackList(CallbackObjectType.METRICS);
     CallbackInfo slaveCallbackInfo = null;

@@ -205,8 +205,8 @@ public class TestRestApiAuthorization {
     list.add(new RestApi("/rest/v1/system/info", Method.GET, AuthzRole.ALL_ROLES));
     list.add(new RestApi("/rest/v1/system/info/currentUser", Method.GET, AuthzRole.ALL_ROLES));
 
-    list.add(new RestApi("/rest/v1/system/users", Method.GET, AuthzRole.ADMIN));
-    list.add(new RestApi("/rest/v1/system/groups", Method.GET, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/system/users", Method.GET, AuthzRole.ADMIN, AuthzRole.CREATOR));
+    list.add(new RestApi("/rest/v1/system/groups", Method.GET, AuthzRole.ADMIN, AuthzRole.CREATOR));
 
     list.add(new RestApi("/rest/v1/logout", Method.POST, AuthzRole.ALL_ROLES));
 
@@ -273,6 +273,10 @@ public class TestRestApiAuthorization {
         AuthzRole.ADMIN, AuthzRole.CREATOR, AuthzRole.MANAGER));
     list.add(new RestApi("/rest/v1/system/log/config", Method.POST,
         AuthzRole.ADMIN, AuthzRole.CREATOR, AuthzRole.MANAGER));
+
+    list.add(new RestApi("/rest/v1/acl/foo", Method.GET, AuthzRole.CREATOR, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/acl/foo", Method.POST, AuthzRole.CREATOR, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/acl/foo/permissions", Method.GET, AuthzRole.ALL_ROLES));
 
     return list;
   }

@@ -21,9 +21,8 @@ package com.streamsets.datacollector.publicrestapi;
 
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.Runner;
-import com.streamsets.datacollector.execution.manager.PipelineManagerException;
 import com.streamsets.datacollector.restapi.bean.CallbackInfoJson;
-import com.streamsets.datacollector.store.PipelineStoreException;
+import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import javax.annotation.security.DenyAll;
@@ -47,7 +46,7 @@ public class PublicClusterResource {
   @POST
   @Path("/callback")
   @PermitAll
-  public Response callback(CallbackInfoJson callbackInfoJson) throws PipelineStoreException, PipelineManagerException {
+  public Response callback(CallbackInfoJson callbackInfoJson) throws PipelineException {
     Runner runner = manager.getRunner(callbackInfoJson.getUser(), callbackInfoJson.getName(), callbackInfoJson.getRev());
     if (!runner.getState().getStatus().isActive()) {
       throw new RuntimeException(Utils.format("Pipeline '{}::{}' is not active, but is '{}'",

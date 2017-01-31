@@ -22,9 +22,11 @@ package com.streamsets.datacollector.main;
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.execution.EventListenerManager;
+import com.streamsets.datacollector.http.WebServerTask;
 import com.streamsets.datacollector.metrics.MetricsModule;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.RemoteSSOService;
+import com.streamsets.pipeline.api.impl.Utils;
 import dagger.Module;
 import dagger.Provides;
 import org.slf4j.Logger;
@@ -95,8 +97,20 @@ public class RuntimeModule {
   }
 
   @Provides @Singleton
-  public UserGroupManager provideUserGroupManager() {
-    return new FileUserGroupManager();
+  public UserGroupManager provideUserGroupManager(Configuration configuration) {
+    String loginModule = configuration.get(
+        WebServerTask.HTTP_AUTHENTICATION_LOGIN_MODULE,
+        WebServerTask.HTTP_AUTHENTICATION_LOGIN_MODULE_DEFAULT
+    );
+    switch (loginModule) {
+      case WebServerTask.FILE:
+        return new FileUserGroupManager();
+      case WebServerTask.LDAP:
+        return new LdapUserGroupManager();
+      default:
+        throw new RuntimeException(Utils.format("Invalid Authentication Login Module '{}', must be one of '{}'",
+            loginModule, WebServerTask.LOGIN_MODULES));
+    }
   }
 
 }

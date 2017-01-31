@@ -109,7 +109,7 @@ public class InfoResource {
       roles.add(AuthzRole.ADMIN);
     }
 
-    UserJson userJson = userGroupManager.getUser(user);
+    UserJson userJson = userGroupManager.getUser(principal);
 
     map.put("user", user);
     map.put("roles", roles);

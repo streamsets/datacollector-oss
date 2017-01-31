@@ -61,9 +61,9 @@ public class FileUserGroupManager implements UserGroupManager {
   }
 
   @Override
-  public UserJson getUser(final String userName) {
+  public UserJson getUser(Principal principal) {
     initialize();
-    return usersMap.get(userName);
+    return usersMap.get(principal.getName());
   }
 
   private void initialize() {
@@ -113,6 +113,4 @@ public class FileUserGroupManager implements UserGroupManager {
       }
     }
   }
-
-
 }

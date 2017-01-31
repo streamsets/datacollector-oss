@@ -195,7 +195,7 @@ public class TestPipelineStoreResourceForSlaveMode extends JerseyTest {
           LOG.debug("Ignoring exception", e);
         }
 
-      } catch (PipelineStoreException e) {
+      } catch (com.streamsets.datacollector.util.PipelineException e) {
         LOG.debug("Ignoring exception", e);
       }
       return new SlavePipelineStoreTask(pipelineStore);

@@ -29,10 +29,10 @@ import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.LockCache;
+import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import javax.inject.Inject;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -93,7 +93,7 @@ public class CachePipelineStoreTask implements PipelineStoreTask {
 
   @Override
   public PipelineConfiguration create(String user, String name, String label, String description, boolean isRemote)
-      throws PipelineStoreException {
+      throws PipelineException {
     synchronized (lockCache.getLock(name)) {
       PipelineConfiguration pipelineConf = pipelineStore.create(user, name, label, description, isRemote);
       pipelineInfoMap.put(pipelineConf.getInfo().getName(), pipelineConf.getInfo());
@@ -102,7 +102,7 @@ public class CachePipelineStoreTask implements PipelineStoreTask {
   }
 
   @Override
-  public void delete(String name) throws PipelineStoreException {
+  public void delete(String name) throws PipelineException {
     synchronized (lockCache.getLock(name)) {
       pipelineStore.delete(name);
       pipelineInfoMap.remove(name);
@@ -125,13 +125,13 @@ public class CachePipelineStoreTask implements PipelineStoreTask {
   }
 
   @Override
-  public List<PipelineRevInfo> getHistory(String name) throws PipelineStoreException {
+  public List<PipelineRevInfo> getHistory(String name) throws PipelineException {
     return pipelineStore.getHistory(name);
   }
 
   @Override
   public PipelineConfiguration save(String user, String name, String tag, String tagDescription,
-    PipelineConfiguration pipeline) throws PipelineStoreException {
+    PipelineConfiguration pipeline) throws PipelineException {
     synchronized (lockCache.getLock(name)) {
       PipelineConfiguration pipelineConf = pipelineStore.save(user, name, tag, tagDescription, pipeline);
       pipelineInfoMap.put(name, pipelineConf.getInfo());
@@ -140,7 +140,7 @@ public class CachePipelineStoreTask implements PipelineStoreTask {
   }
 
   @Override
-  public PipelineConfiguration load(String name, String tagOrRev) throws PipelineStoreException {
+  public PipelineConfiguration load(String name, String tagOrRev) throws PipelineException {
     return pipelineStore.load(name, tagOrRev);
   }
 
@@ -150,18 +150,18 @@ public class CachePipelineStoreTask implements PipelineStoreTask {
   }
 
   @Override
-  public RuleDefinitions retrieveRules(String name, String tagOrRev) throws PipelineStoreException {
+  public RuleDefinitions retrieveRules(String name, String tagOrRev) throws PipelineException {
     return pipelineStore.retrieveRules(name, tagOrRev);
   }
 
   @Override
   public RuleDefinitions storeRules(String pipelineName, String tag, RuleDefinitions ruleDefinitions)
-    throws PipelineStoreException {
+    throws PipelineException {
     return pipelineStore.storeRules(pipelineName, tag, ruleDefinitions);
   }
 
   @Override
-  public boolean deleteRules(String name) throws PipelineStoreException {
+  public boolean deleteRules(String name) throws PipelineException {
     return pipelineStore.deleteRules(name);
   }
 
@@ -171,7 +171,7 @@ public class CachePipelineStoreTask implements PipelineStoreTask {
   }
 
   @Override
-  public void saveUiInfo(String name, String rev, Map<String, Object> uiInfo) throws PipelineStoreException {
+  public void saveUiInfo(String name, String rev, Map<String, Object> uiInfo) throws PipelineException {
     pipelineStore.saveUiInfo(name, rev, uiInfo);
   }
 
@@ -184,5 +184,4 @@ public class CachePipelineStoreTask implements PipelineStoreTask {
   public boolean isRemotePipeline(String name, String rev) throws PipelineStoreException {
     return pipelineStore.isRemotePipeline(name, rev);
   }
-
 }

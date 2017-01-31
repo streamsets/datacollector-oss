@@ -267,8 +267,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     }
   }
 
-  private void retryOrStart() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException,
-      StageException {
+  private void retryOrStart() throws PipelineException, StageException {
     PipelineState pipelineState = getState();
     if (pipelineState.getRetryAttempt() == 0) {
       prepareForStart();
@@ -451,7 +450,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
 
   @Override
   @SuppressWarnings("unchecked")
-  public List<AlertInfo> getAlerts() throws PipelineStoreException {
+  public List<AlertInfo> getAlerts() throws PipelineException {
     List<AlertInfo> alertInfoList = new ArrayList<>();
     MetricRegistry metrics = (MetricRegistry)getMetrics();
 
@@ -613,7 +612,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
 
 
   @Override
-  public void start() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException, StageException {
+  public void start() throws PipelineException, StageException {
     Utils.checkState(!isClosed,
       Utils.formatL("Cannot start the pipeline '{}::{}' as the runner is already closed", name, rev));
 

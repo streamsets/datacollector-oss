@@ -33,13 +33,13 @@ import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.runner.MockStages;
-import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
+import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.BatchMaker;
@@ -52,11 +52,9 @@ import com.streamsets.pipeline.api.base.BasePushSource;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
-
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -65,7 +63,6 @@ import org.mockito.Mockito;
 import javax.inject.Singleton;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
-
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -635,7 +632,7 @@ public abstract class TestPreviewer {
   }
 
   @Test
-  public void testRawSourcePreview() throws PipelineStoreException, PipelineRuntimeException, IOException {
+  public void testRawSourcePreview() throws PipelineException, IOException {
     Mockito.when(pipelineStore.load(Mockito.anyString(),
       Mockito.anyString())).thenReturn(MockStages.createPipelineConfigurationSourceProcessorTarget());
     Previewer previewer  = createPreviewer();

@@ -24,7 +24,6 @@ import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.execution.Runner;
-import com.streamsets.datacollector.execution.manager.PipelineManagerException;
 import com.streamsets.datacollector.execution.manager.slave.SlavePipelineManager;
 import com.streamsets.datacollector.execution.manager.standalone.StandaloneAndClusterPipelineManager;
 import com.streamsets.datacollector.execution.runner.common.AsyncRunner;
@@ -35,15 +34,11 @@ import com.streamsets.datacollector.main.PipelineTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.SlavePipelineTask;
-import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.store.impl.SlavePipelineStoreTask;
 import com.streamsets.datacollector.task.TaskWrapper;
 import com.streamsets.datacollector.util.PipelineException;
-
-
 import dagger.ObjectGraph;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -111,7 +106,7 @@ public class TestPipelineManagerModule {
   }
 
   @Test
-  public void testSlavePipelineManagerModule() throws PipelineStoreException, PipelineManagerException {
+  public void testSlavePipelineManagerModule() throws PipelineException {
     ObjectGraph objectGraph = ObjectGraph.create(MainSlavePipelineManagerModule.class);
     TaskWrapper taskWrapper = objectGraph.get(TaskWrapper.class);
     taskWrapper.init();

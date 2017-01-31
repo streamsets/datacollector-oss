@@ -26,6 +26,7 @@ import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.manager.PipelineStateImpl;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.DataRuleDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.DriftRuleDefinitionJson;
@@ -43,12 +44,21 @@ import com.streamsets.datacollector.restapi.bean.StageConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.ThresholdTypeJson;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
+import com.streamsets.datacollector.store.impl.FileAclStoreTask;
 import com.streamsets.datacollector.util.ContainerError;
+import com.streamsets.datacollector.util.LockCache;
+import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.RuleIssue;
 import com.streamsets.datacollector.validation.ValidationError;
+import com.streamsets.lib.security.acl.dto.Acl;
+import com.streamsets.lib.security.acl.dto.Action;
+import com.streamsets.lib.security.acl.dto.Permission;
+import com.streamsets.lib.security.acl.dto.ResourceType;
+import com.streamsets.lib.security.acl.dto.SubjectType;
 import com.streamsets.pipeline.api.ExecutionMode;
 import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
@@ -90,7 +100,7 @@ public class TestPipelineStoreResource extends JerseyTest {
     Response response = target("/v1/pipelines/count").request().get();
     Map<String, Object> countRes = (Map<String, Object>)response.readEntity(Map.class);
     Assert.assertNotNull(countRes);
-    Assert.assertEquals(3, countRes.get("count"));
+    Assert.assertEquals(6, countRes.get("count"));
   }
 
   @Test
@@ -115,7 +125,7 @@ public class TestPipelineStoreResource extends JerseyTest {
     Response response = target("/v1/pipelines").request().get();
     List<PipelineInfoJson> pipelineInfoJsons = response.readEntity(new GenericType<List<PipelineInfoJson>>() {});
     Assert.assertNotNull(pipelineInfoJsons);
-    Assert.assertEquals(3, pipelineInfoJsons.size());
+    Assert.assertEquals(6, pipelineInfoJsons.size());
   }
 
   @Test
@@ -149,7 +159,7 @@ public class TestPipelineStoreResource extends JerseyTest {
         .get();
     List<PipelineInfoJson> pipelineInfoJsons = response.readEntity(new GenericType<List<PipelineInfoJson>>() {});
     Assert.assertNotNull(pipelineInfoJsons);
-    Assert.assertEquals(3, pipelineInfoJsons.size());
+    Assert.assertEquals(6, pipelineInfoJsons.size());
     Assert.assertEquals("name1", pipelineInfoJsons.get(0).getName());
     Assert.assertEquals("name2", pipelineInfoJsons.get(1).getName());
     Assert.assertEquals("name3", pipelineInfoJsons.get(2).getName());
@@ -161,10 +171,10 @@ public class TestPipelineStoreResource extends JerseyTest {
         .get();
     pipelineInfoJsons = response.readEntity(new GenericType<List<PipelineInfoJson>>() {});
     Assert.assertNotNull(pipelineInfoJsons);
-    Assert.assertEquals(3, pipelineInfoJsons.size());
-    Assert.assertEquals("name3", pipelineInfoJsons.get(0).getName());
-    Assert.assertEquals("name2", pipelineInfoJsons.get(1).getName());
-    Assert.assertEquals("name1", pipelineInfoJsons.get(2).getName());
+    Assert.assertEquals(6, pipelineInfoJsons.size());
+    Assert.assertEquals("readWriteOnly", pipelineInfoJsons.get(0).getName());
+    Assert.assertEquals("readWriteExecute", pipelineInfoJsons.get(1).getName());
+    Assert.assertEquals("readOnly", pipelineInfoJsons.get(2).getName());
 
     response = target("/v1/pipelines")
         .queryParam("orderBy", "STATUS")
@@ -173,7 +183,7 @@ public class TestPipelineStoreResource extends JerseyTest {
         .get();
     pipelineInfoJsons = response.readEntity(new GenericType<List<PipelineInfoJson>>() {});
     Assert.assertNotNull(pipelineInfoJsons);
-    Assert.assertEquals(3, pipelineInfoJsons.size());
+    Assert.assertEquals(6, pipelineInfoJsons.size());
     Assert.assertEquals("name2", pipelineInfoJsons.get(0).getName());
     Assert.assertEquals("name1", pipelineInfoJsons.get(1).getName());
     Assert.assertEquals("name3", pipelineInfoJsons.get(2).getName());
@@ -194,7 +204,7 @@ public class TestPipelineStoreResource extends JerseyTest {
     Assert.assertEquals("name2", pipelineInfoJsons.get(0).getName());
     Assert.assertEquals("name3", pipelineInfoJsons.get(1).getName());
     Assert.assertNotNull(response.getHeaders().get("TOTAL_COUNT"));
-    Assert.assertEquals("3", response.getHeaders().get("TOTAL_COUNT").get(0));
+    Assert.assertEquals("6", response.getHeaders().get("TOTAL_COUNT").get(0));
   }
 
 
@@ -211,7 +221,7 @@ public class TestPipelineStoreResource extends JerseyTest {
 
     List<PipelineInfoJson> pipelineInfoJsons = (List<PipelineInfoJson>) responseObj.get(0);
     Assert.assertNotNull(pipelineInfoJsons);
-    Assert.assertEquals(3, pipelineInfoJsons.size());
+    Assert.assertEquals(6, pipelineInfoJsons.size());
 
     Assert.assertNotNull(responseObj.get(1));
     List<PipelineStateJson> pipelineStateJsons = (List<PipelineStateJson>) responseObj.get(1);
@@ -225,6 +235,20 @@ public class TestPipelineStoreResource extends JerseyTest {
         request().get();
     PipelineConfigurationJson pipelineConfig = response.readEntity(PipelineConfigurationJson.class);
     Assert.assertNotNull(pipelineConfig);
+
+    // test get Info on pipeline for which user doesn't have read permission
+    boolean exceptionTriggered = false;
+    try {
+      response = target("/v1/pipeline/noPerm")
+          .queryParam("get", "pipeline")
+          .request()
+          .get();
+    } catch (Exception ex) {
+      exceptionTriggered = true;
+      Assert.assertTrue(ex.getCause().getMessage().contains("CONTAINER_01200"));
+    }
+    Assert.assertTrue(exceptionTriggered);
+
   }
 
   @Test
@@ -241,6 +265,19 @@ public class TestPipelineStoreResource extends JerseyTest {
         request().get();
     List<PipelineRevInfoJson> pipelineRevInfoJson = response.readEntity(new GenericType<List<PipelineRevInfoJson>>() {});
     Assert.assertNotNull(pipelineRevInfoJson);
+
+    // test get Info on pipeline for which user doesn't have read permission
+    boolean exceptionTriggered = false;
+    try {
+      response = target("/v1/pipeline/noPerm")
+          .queryParam("get", "history")
+          .request()
+          .get();
+    } catch (Exception ex) {
+      exceptionTriggered = true;
+      Assert.assertTrue(ex.getCause().getMessage().contains("CONTAINER_01200"));
+    }
+    Assert.assertTrue(exceptionTriggered);
   }
 
   @Test
@@ -265,6 +302,29 @@ public class TestPipelineStoreResource extends JerseyTest {
   public void testDelete() {
     Response response = target("/v1/pipeline/myPipeline").request().delete();
     Assert.assertEquals(200, response.getStatus());
+
+    // test delete on pipeline for which user doesn't have write permission
+    boolean exceptionTriggered = false;
+    try {
+      response = target("/v1/pipeline/noPerm")
+          .request()
+          .delete();
+    } catch (Exception ex) {
+      exceptionTriggered = true;
+      Assert.assertTrue(ex.getCause().getMessage().contains("CONTAINER_01200"));
+    }
+    Assert.assertTrue(exceptionTriggered);
+
+    exceptionTriggered = false;
+    try {
+      response = target("/v1/pipeline/readOnly")
+          .request()
+          .delete();
+    } catch (Exception ex) {
+      exceptionTriggered = true;
+      Assert.assertTrue(ex.getCause().getMessage().contains("CONTAINER_01200"));
+    }
+    Assert.assertTrue(exceptionTriggered);
   }
 
   @Test
@@ -276,7 +336,7 @@ public class TestPipelineStoreResource extends JerseyTest {
 
   @Test
   public void testSave() {
-    com.streamsets.datacollector.config.PipelineConfiguration toSave = MockStages.createPipelineConfigurationSourceProcessorTarget();
+    PipelineConfiguration toSave = MockStages.createPipelineConfigurationSourceProcessorTarget();
     Response response = target("/v1/pipeline/myPipeline")
         .queryParam("tag", "tag")
         .queryParam("tagDescription", "tagDescription").request()
@@ -288,6 +348,29 @@ public class TestPipelineStoreResource extends JerseyTest {
     Assert.assertEquals(toSave.getDescription(), returned.getDescription());
     //Assert.assertEquals("A", returned.getMetadata().get("a"));
 
+
+    // test save on pipeline for which user doesn't have write permission
+    boolean exceptionTriggered = false;
+    try {
+      response = target("/v1/pipeline/readOnly")
+          .queryParam("tag", "tag")
+          .queryParam("tagDescription", "tagDescription").request()
+          .post(Entity.json(BeanHelper.wrapPipelineConfiguration(toSave)));
+    } catch (Exception ex) {
+      exceptionTriggered = true;
+      Assert.assertTrue(ex.getCause().getMessage().contains("CONTAINER_01200"));
+    }
+    Assert.assertTrue(exceptionTriggered);
+
+    // test save on pipeline created by other user and with write permission
+    response = target("/v1/pipeline/readWriteOnly")
+        .queryParam("tag", "tag")
+        .queryParam("tagDescription", "tagDescription").request()
+        .post(Entity.json(BeanHelper.wrapPipelineConfiguration(toSave)));
+    returned = response.readEntity(PipelineConfigurationJson.class);
+    Assert.assertNotNull(returned);
+    Assert.assertEquals(200, response.getStatus());
+    Assert.assertEquals(toSave.getDescription(), returned.getDescription());
   }
 
   @Test
@@ -318,6 +401,18 @@ public class TestPipelineStoreResource extends JerseyTest {
 
     Assert.assertEquals(3, result.getMetricsRuleDefinitions().size());
     Assert.assertEquals(3, result.getDataRuleDefinitions().size());
+
+    // test save on pipeline rules for which user doesn't have write permission
+    boolean exceptionTriggered = false;
+    try {
+      r = target("/v1/pipeline/readOnly/rules")
+          .queryParam("rev", "tag").request()
+          .post(Entity.json(ruleDefinitionsJson));
+    } catch (Exception ex) {
+      exceptionTriggered = true;
+      Assert.assertTrue(ex.getCause().getMessage().contains("CONTAINER_01200"));
+    }
+    Assert.assertTrue(exceptionTriggered);
   }
 
   @Test
@@ -328,6 +423,18 @@ public class TestPipelineStoreResource extends JerseyTest {
     RuleDefinitionsJson result = r.readEntity(RuleDefinitionsJson.class);
     Assert.assertEquals(3, result.getMetricsRuleDefinitions().size());
     Assert.assertEquals(3, result.getDataRuleDefinitions().size());
+
+    // test get pipeline rules for which user doesn't have read permission
+    boolean exceptionTriggered = false;
+    try {
+      r = target("/v1/pipeline/noPerm/rules")
+          .queryParam("rev", "tag")
+          .request().get();
+    } catch (Exception ex) {
+      exceptionTriggered = true;
+      Assert.assertTrue(ex.getCause().getMessage().contains("CONTAINER_01200"));
+    }
+    Assert.assertTrue(exceptionTriggered);
   }
 
   @Override
@@ -344,11 +451,13 @@ public class TestPipelineStoreResource extends JerseyTest {
     @Override
     protected void configure() {
       bindFactory(PipelineStoreTestInjector.class).to(PipelineStoreTask.class);
+      bindFactory(AclStoreTestInjector.class).to(AclStoreTask.class);
       bindFactory(TestUtil.StageLibraryTestInjector.class).to(StageLibraryTask.class);
       bindFactory(TestUtil.PrincipalTestInjector.class).to(Principal.class);
       bindFactory(TestUtil.URITestInjector.class).to(URI.class);
       bindFactory(TestUtil.RuntimeInfoTestInjector.class).to(RuntimeInfo.class);
       bindFactory(ManagerTestInjector.class).to(Manager.class);
+      bindFactory(TestUtil.UserGroupManagerTestInjector.class).to(UserGroupManager.class);
     }
   }
 
@@ -369,14 +478,111 @@ public class TestPipelineStoreResource extends JerseyTest {
       try {
         Map<String, Object> metadata = new HashMap<>();
         metadata.put("labels", ImmutableList.of("label1"));
-        PipelineInfo pipeline1 = new PipelineInfo("name1", "name1","description", new java.util.Date(0), new java.util.Date(0),
-            "creator", "lastModifier", "1", UUID.randomUUID(), true, metadata);
-        PipelineInfo pipeline2 = new PipelineInfo("name2", "label","description", new java.util.Date(0), new java.util.Date(0),
-            "creator", "lastModifier", "1", UUID.randomUUID(), true, metadata);
-        PipelineInfo pipeline3 = new PipelineInfo("name3", "label", "description", new java.util.Date(0), new java.util.Date(0),
-            "creator", "lastModifier", "1", UUID.randomUUID(), true, null);
 
-        Mockito.when(pipelineStore.getPipelines()).thenReturn(ImmutableList.of(pipeline1, pipeline2, pipeline3));
+        PipelineInfo pipeline1 = new PipelineInfo(
+            "name1",
+            "name1",
+            "description",
+            new java.util.Date(0),
+            new java.util.Date(0),
+            "user1",
+            "lastModifier",
+            "1", UUID.randomUUID(),
+            true,
+            metadata
+        );
+        PipelineInfo pipeline2 = new PipelineInfo(
+            "name2",
+            "label",
+            "description",
+            new java.util.Date(0),
+            new java.util.Date(0),
+            "user1",
+            "lastModifier",
+            "1", UUID.randomUUID(),
+            true,
+            metadata
+        );
+        PipelineInfo pipeline3 = new PipelineInfo(
+            "name3",
+            "label",
+            "description",
+            new java.util.Date(0),
+            new java.util.Date(0),
+            "user1",
+            "lastModifier",
+            "1",
+            UUID.randomUUID(),
+            true,
+            null
+        );
+
+        PipelineInfo readOnly = new PipelineInfo(
+            "readOnly",
+            "label",
+            "description",
+            new java.util.Date(0),
+            new java.util.Date(0),
+            "user2",
+            "lastModifier",
+            "1",
+            UUID.randomUUID(),
+            true,
+            null
+        );
+
+        PipelineInfo readWriteOnly = new PipelineInfo(
+            "readWriteOnly",
+            "label",
+            "description",
+            new java.util.Date(0),
+            new java.util.Date(0),
+            "user2",
+            "lastModifier",
+            "1",
+            UUID.randomUUID(),
+            true,
+            null
+        );
+
+        PipelineInfo readWriteExecute = new PipelineInfo(
+            "readWriteExecute",
+            "label",
+            "description",
+            new java.util.Date(0),
+            new java.util.Date(0),
+            "user2",
+            "lastModifier",
+            "1",
+            UUID.randomUUID(),
+            true,
+            null
+        );
+
+        PipelineInfo noPerm = new PipelineInfo(
+            "noPerm",
+            "label",
+            "description",
+            new java.util.Date(0),
+            new java.util.Date(0),
+            "user2",
+            "lastModifier",
+            "1",
+            UUID.randomUUID(),
+            true,
+            null
+        );
+
+        Mockito.when(pipelineStore.getPipelines())
+            .thenReturn(ImmutableList.of(
+                pipeline1,
+                pipeline2,
+                pipeline3,
+                readOnly,
+                readWriteOnly,
+                readWriteExecute,
+                noPerm
+            ));
 
         Mockito.when(pipelineStore.getInfo(Matchers.matches("xyz|myPipeline|newFromImport"))).thenReturn(
             new PipelineInfo(
@@ -392,6 +598,14 @@ public class TestPipelineStoreResource extends JerseyTest {
                 null
             )
         );
+        Mockito.when(pipelineStore.getInfo("name1")).thenReturn(pipeline1);
+        Mockito.when(pipelineStore.getInfo("name2")).thenReturn(pipeline2);
+        Mockito.when(pipelineStore.getInfo("name3")).thenReturn(pipeline3);
+        Mockito.when(pipelineStore.getInfo("readOnly")).thenReturn(readOnly);
+        Mockito.when(pipelineStore.getInfo("readWriteOnly")).thenReturn(readWriteOnly);
+        Mockito.when(pipelineStore.getInfo("readWriteExecute")).thenReturn(readWriteExecute);
+        Mockito.when(pipelineStore.getInfo("noPerm")).thenReturn(noPerm);
+
         Mockito.when(pipelineStore.getHistory("xyz")).thenReturn(ImmutableList.of(
           new com.streamsets.datacollector.store.PipelineRevInfo(new PipelineInfo("xyz","label",
             "xyz description", new java.util.Date(0), new java.util.Date(0), "xyz creator",
@@ -400,7 +614,7 @@ public class TestPipelineStoreResource extends JerseyTest {
             MockStages.createPipelineConfigurationSourceProcessorTarget());
         Mockito.when(pipelineStore.load(Matchers.matches("abc|def"), Matchers.matches("0"))).thenReturn(
             MockStages.createPipelineConfigurationWithLabels(new ArrayList<String>()));
-        Mockito.when(pipelineStore.create("nobody", "myPipeline", "myPipeline", "my description", false)).thenReturn(
+        Mockito.when(pipelineStore.create("user1", "myPipeline", "myPipeline", "my description", false)).thenReturn(
           MockStages.createPipelineConfigurationSourceProcessorTarget());
         Mockito.doNothing().when(pipelineStore).delete("myPipeline");
         Mockito.doThrow(new PipelineStoreException(ContainerError.CONTAINER_0200, "xyz"))
@@ -453,10 +667,10 @@ public class TestPipelineStoreResource extends JerseyTest {
           LOG.debug("Ignoring exception", e);
         }
 
-        Mockito.when(pipelineStore.create("nobody", "newFromImport", "newFromImport",null, false)).thenReturn(
+        Mockito.when(pipelineStore.create("user1", "newFromImport", "newFromImport",null, false)).thenReturn(
             MockStages.createPipelineConfigurationSourceProcessorTarget());
 
-      } catch (PipelineStoreException e) {
+      } catch (com.streamsets.datacollector.util.PipelineException e) {
         LOG.debug("Ignoring exception", e);
       }
       return pipelineStore;
@@ -467,6 +681,124 @@ public class TestPipelineStoreResource extends JerseyTest {
     }
   }
 
+
+  static AclStoreTask aclStore;
+
+  static class AclStoreTestInjector implements Factory<AclStoreTask> {
+
+    public AclStoreTestInjector() {
+    }
+
+    @Singleton
+    @Override
+    public AclStoreTask provide() {
+      aclStore = new FileAclStoreTask (Mockito.mock(RuntimeInfo.class), pipelineStore, Mockito.mock(LockCache.class))  {
+
+        @Override
+        public Acl saveAcl(String pipelineName, Acl acl) throws PipelineStoreException {
+          return null;
+        }
+
+        @Override
+        public Acl getAcl(String pipelineName) throws PipelineException {
+          Acl user1Acl = createAcl(
+              "pipelineId",
+              ResourceType.PIPELINE,
+              System.currentTimeMillis(),
+              "user1"
+          );
+
+          Acl readOnlyAcl = createAcl(
+              "pipelineId",
+              ResourceType.PIPELINE,
+              System.currentTimeMillis(),
+              "user2"
+          );
+          readOnlyAcl.getPermissions().add(
+              new Permission(
+                  "pipelineId",
+                  "user1",
+                  SubjectType.USER,
+                  "user2",
+                  System.currentTimeMillis(),
+                  ImmutableList.of(Action.READ)
+              )
+          );
+
+          Acl readWriteOnlyAcl = createAcl(
+              "pipelineId",
+              ResourceType.PIPELINE,
+              System.currentTimeMillis(),
+              "user2"
+          );
+          readWriteOnlyAcl.getPermissions().add(
+              new Permission(
+                  "pipelineId",
+                  "user1",
+                  SubjectType.USER,
+                  "user2",
+                  System.currentTimeMillis(),
+                  ImmutableList.of(Action.READ, Action.WRITE)
+              )
+          );
+
+          Acl readWriteExecuteAcl = createAcl(
+              "pipelineId",
+              ResourceType.PIPELINE,
+              System.currentTimeMillis(),
+              "user2"
+          );
+          readWriteExecuteAcl.getPermissions().add(
+              new Permission(
+                  "pipelineId",
+                  "user1",
+                  SubjectType.USER,
+                  "user2",
+                  System.currentTimeMillis(),
+                  ImmutableList.of(Action.READ, Action.WRITE, Action.EXECUTE)
+              )
+          );
+
+          Acl noPermAcl = createAcl(
+              "pipelineId",
+              ResourceType.PIPELINE,
+              System.currentTimeMillis(),
+              "user2"
+          );
+
+          switch (pipelineName) {
+            case "readOnly":
+              return readOnlyAcl;
+            case "readWriteOnly":
+              return readWriteOnlyAcl;
+            case "readWriteExecute":
+              return readWriteExecuteAcl;
+            case "noPermAcl":
+              return noPermAcl;
+            case "name1":
+            case "name2":
+            case "name3":
+            case "xyz":
+            case "myPipeline":
+            case "newFromImport":
+            case "myPipeline1":
+            case "myPipeline2":
+            case "abc":
+            case "def":
+              return user1Acl;
+          }
+
+          return null;
+        }
+      };
+
+      return aclStore;
+    }
+
+    @Override
+    public void dispose(AclStoreTask aclStoreTask) {
+    }
+  }
 
   static Manager manager;
 

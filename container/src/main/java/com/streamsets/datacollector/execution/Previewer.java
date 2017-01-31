@@ -48,7 +48,7 @@ public interface Previewer {
   public void validateConfigs(long timeoutMillis) throws PipelineException;
 
   public RawPreview getRawSource(int maxLength, MultivaluedMap<String, String> previewParams)
-    throws PipelineRuntimeException, PipelineStoreException;
+      throws PipelineException;
 
   public void start(int batches, int batchSize, boolean skipTargets, String stopStage, List<StageOutput> stagesOverride,
                     long timeoutMillis) throws PipelineException;

@@ -271,7 +271,7 @@ public class ClusterRunner extends AbstractRunner {
   }
 
   @Override
-  public void onDataCollectorStart() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException, StageException {
+  public void onDataCollectorStart() throws PipelineException, StageException {
     PipelineStatus status = getState().getStatus();
     LOG.info("Pipeline '{}::{}' has status: '{}'", name, rev, status);
     switch (status) {
@@ -348,8 +348,8 @@ public class ClusterRunner extends AbstractRunner {
   }
 
   @SuppressWarnings("unchecked")
-  private void connectOrStart() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException,
-    StageException {
+  private void connectOrStart() throws PipelineException,
+      StageException {
     final Map<String, Object> attributes = new HashMap<>();
     attributes.putAll(getAttributes());
     ApplicationState appState = new ApplicationState((Map) attributes.get(APPLICATION_STATE));
@@ -370,8 +370,7 @@ public class ClusterRunner extends AbstractRunner {
     }
   }
 
-  private void retryOrStart() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException,
-      StageException {
+  private void retryOrStart() throws PipelineException, StageException {
     PipelineState pipelineState = getState();
     if (pipelineState.getRetryAttempt() == 0) {
       prepareForStart();
@@ -407,8 +406,7 @@ public class ClusterRunner extends AbstractRunner {
   }
 
   @Override
-  public synchronized void start() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException,
-    StageException {
+  public synchronized void start() throws PipelineException, StageException {
     try {
       Utils.checkState(!isClosed,
         Utils.formatL("Cannot start the pipeline '{}::{}' as the runner is already closed", name, rev));
@@ -910,7 +908,7 @@ public class ClusterRunner extends AbstractRunner {
     return updateChecker.getUpdateInfo();
   }
 
-  RuleDefinitions getRules() throws PipelineStoreException {
+  RuleDefinitions getRules() throws PipelineException {
     return pipelineStore.retrieveRules(name, rev);
   }
 

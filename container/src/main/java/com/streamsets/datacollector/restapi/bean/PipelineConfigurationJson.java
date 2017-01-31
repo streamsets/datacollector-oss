@@ -22,6 +22,7 @@ package com.streamsets.datacollector.restapi.bean;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.io.Serializable;
@@ -30,9 +31,9 @@ import java.util.Map;
 import java.util.UUID;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PipelineConfigurationJson implements Serializable{
+public class PipelineConfigurationJson implements Serializable {
 
-  private final com.streamsets.datacollector.config.PipelineConfiguration pipelineConfiguration;
+  private final PipelineConfiguration pipelineConfiguration;
 
   @SuppressWarnings("unchecked")
   public PipelineConfigurationJson(
@@ -47,9 +48,10 @@ public class PipelineConfigurationJson implements Serializable{
     @JsonProperty("errorStage") StageConfigurationJson errorStage,
     @JsonProperty("info") PipelineInfoJson pipelineInfo,
     @JsonProperty("metadata") Map<String, Object> metadata,
-    @JsonProperty("statsAggregatorStage") StageConfigurationJson statsAggregatorStage) {
+    @JsonProperty("statsAggregatorStage") StageConfigurationJson statsAggregatorStage
+  ) {
     version = (version == 0) ? 1 : version;
-    this.pipelineConfiguration = new com.streamsets.datacollector.config.PipelineConfiguration(
+    this.pipelineConfiguration = new PipelineConfiguration(
         schemaVersion,
         version,
         uuid,
@@ -65,7 +67,7 @@ public class PipelineConfigurationJson implements Serializable{
     this.pipelineConfiguration.setMetadata(metadata);
   }
 
-  public PipelineConfigurationJson(com.streamsets.datacollector.config.PipelineConfiguration pipelineConfiguration) {
+  public PipelineConfigurationJson(PipelineConfiguration pipelineConfiguration) {
     Utils.checkNotNull(pipelineConfiguration, "pipelineConfiguration");
     this.pipelineConfiguration = pipelineConfiguration;
   }
@@ -134,7 +136,7 @@ public class PipelineConfigurationJson implements Serializable{
   }
 
   @JsonIgnore
-  public com.streamsets.datacollector.config.PipelineConfiguration getPipelineConfiguration() {
+  public PipelineConfiguration getPipelineConfiguration() {
     return pipelineConfiguration;
   }
 }

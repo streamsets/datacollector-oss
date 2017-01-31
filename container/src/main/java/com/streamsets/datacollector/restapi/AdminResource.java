@@ -426,7 +426,12 @@ public class AdminResource {
       authorizations = @Authorization(value = "basic")
   )
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
+  @RolesAllowed({
+      AuthzRole.ADMIN,
+      AuthzRole.ADMIN_REMOTE,
+      AuthzRole.CREATOR,
+      AuthzRole.CREATOR_REMOTE
+  })
   public Response getUsers() throws IOException {
     return Response.ok(userGroupManager.getUsers()).build();
   }
@@ -440,7 +445,12 @@ public class AdminResource {
       authorizations = @Authorization(value = "basic")
   )
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
+  @RolesAllowed({
+      AuthzRole.ADMIN,
+      AuthzRole.ADMIN_REMOTE,
+      AuthzRole.CREATOR,
+      AuthzRole.CREATOR_REMOTE
+  })
   public Response getGroups() throws IOException {
     return Response.ok(userGroupManager.getGroups()).build();
   }

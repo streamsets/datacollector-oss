@@ -26,14 +26,13 @@ import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.runner.LaneResolver;
 import com.streamsets.datacollector.runner.Observer;
 import com.streamsets.datacollector.runner.production.RulesConfigurationChangeRequest;
-import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.AggregatorUtil;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.pipeline.api.Record;
 
 import javax.inject.Named;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -66,7 +65,7 @@ public class RulesConfigLoader {
     this.statsQueue = statsQueue;
   }
 
-  public RuleDefinitions load(Observer observer) throws InterruptedException, PipelineStoreException {
+  public RuleDefinitions load(Observer observer) throws InterruptedException, PipelineException {
     RuleDefinitions newRuleDefinitions = pipelineStoreTask.retrieveRules(pipelineName, revision);
     if (newRuleDefinitions != previousRuleDefinitions) {
       RulesConfigurationChangeRequest rulesConfigurationChangeRequest = detectChanges(previousRuleDefinitions,

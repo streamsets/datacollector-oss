@@ -114,6 +114,7 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0403("Cannot load rule definitions for pipeline '{}': {}"),
   CONTAINER_0404("Cannot store rule definitions for pipeline '{}': {}"),
   CONTAINER_0405("Cannot store UI info for pipeline '{}': {}"),
+  CONTAINER_0406("Cannot store ACL for pipeline '{}': {}"),
 
   CONTAINER_0500("EmailSender error: {}"),
 
@@ -146,7 +147,10 @@ public enum ContainerError implements ErrorCode {
 
   // Remote Control pipelines
   CONTAINER_01100("Cannot perform operation: '{}' on local pipeline '{}'"),
-  CONTAINER_01101("Cannot perform operation: '{}' on remote pipeline '{}'")
+  CONTAINER_01101("Cannot perform operation: '{}' on remote pipeline '{}'"),
+
+  // ACL
+  CONTAINER_01200("{} '{}' doesn't have permissions {} on pipeline {}"),
 
   ;
 

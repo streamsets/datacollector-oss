@@ -47,6 +47,7 @@ import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
+import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.ValidationError;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.dc.execution.manager.standalone.ResourceManager;
@@ -115,7 +116,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
   }
 
   @Override
-  public Previewer createPreviewer(String user, String name, String rev) throws PipelineStoreException {
+  public Previewer createPreviewer(String user, String name, String rev) throws PipelineException {
     if (!pipelineStore.hasPipeline(name)) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
     }
@@ -136,7 +137,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
 
   @Override
   @SuppressWarnings("deprecation")
-  public Runner getRunner(final String user, final String name, final String rev) throws PipelineStoreException, PipelineManagerException {
+  public Runner getRunner(final String user, final String name, final String rev) throws PipelineException {
     if (!pipelineStore.hasPipeline(name)) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
     }
@@ -200,12 +201,12 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
   }
 
   @Override
-  public boolean isPipelineActive(String name, String rev) throws PipelineStoreException {
+  public boolean isPipelineActive(String name, String rev) throws PipelineException {
     if (!pipelineStore.hasPipeline(name)) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
     }
     RunnerInfo runnerInfo = runnerCache.getIfPresent(getNameAndRevString(name, rev));
-    return (runnerInfo == null) ? false : runnerInfo.runner.getState().getStatus().isActive();
+    return runnerInfo != null && runnerInfo.runner.getState().getStatus().isActive();
   }
 
   @Override

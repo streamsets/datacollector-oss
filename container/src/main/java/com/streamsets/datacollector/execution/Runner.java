@@ -64,7 +64,7 @@ public interface Runner {
 
   // resets the pipeline offset, only if the pipeline is not running
   // it must assert the current status
-  public void resetOffset() throws PipelineStoreException, PipelineRunnerException;
+  public void resetOffset() throws PipelineException;
 
   // pipeline status
   public PipelineState getState() throws PipelineStoreException;
@@ -94,7 +94,7 @@ public interface Runner {
   public void prepareForStop() throws PipelineStoreException, PipelineRunnerException;
 
   // starts the pipeline
-  public void start() throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException, StageException;
+  public void start() throws PipelineException, StageException;
 
   // triggers a snapshot request
   // delegates to SnapshotStore
@@ -121,7 +121,7 @@ public interface Runner {
   // delegates to the the PipelineStateStore
   public List<PipelineState> getHistory() throws PipelineStoreException;
 
-  public void deleteHistory();
+  public void deleteHistory() throws PipelineException;
 
   // gets the current pipeline metrics
   public Object getMetrics() throws PipelineStoreException;
@@ -136,9 +136,9 @@ public interface Runner {
 
   public List<SampledRecord> getSampledRecords(String sampleId, int max) throws PipelineRunnerException, PipelineStoreException;
 
-  public List<AlertInfo> getAlerts() throws PipelineStoreException;
+  public List<AlertInfo> getAlerts() throws PipelineException;
 
-  public boolean deleteAlert(String alertId) throws PipelineRunnerException, PipelineStoreException;
+  public boolean deleteAlert(String alertId) throws PipelineException;
 
   Collection<CallbackInfo> getSlaveCallbackList(CallbackObjectType callbackObjectType);
 
