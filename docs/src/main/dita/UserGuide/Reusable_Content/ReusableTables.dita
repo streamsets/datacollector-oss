@@ -801,10 +801,15 @@
         time increment. <p>Use 0 to avoid removing any idle connections.</p><p>Default is 30
          seconds, defined as follows: <codeblock>${30 * SECONDS}</codeblock></p></entry>
       </row>
+      <row id="row-AutoCommit">
+       <entry>Auto Commit</entry>
+       <entry>Determines whether auto-commit mode is enabled or disabled for the
+         connection.<p>Disabled by default.</p></entry>
+      </row>
       <row id="row-EnReadOnly">
        <entry>Enforce Read-only Connection</entry>
-       <entry>Creates read-only connections to avoid any type of write. <p>Selected by default.
-         Clearing this property is not recommended. </p></entry>
+       <entry>Creates read-only connections to avoid any type of write. <p>Enabled by default.
+         Disabling this property is not recommended. </p></entry>
       </row>
       <row id="row-TransactionIsolation">
        <entry>Transaction Isolation</entry>

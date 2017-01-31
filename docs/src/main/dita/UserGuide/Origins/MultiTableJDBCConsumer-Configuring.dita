@@ -257,6 +257,10 @@
                                     <entry/>
                                 </row>
                                 <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-AutoCommit">
+                                    <entry/>
+                                </row>
+                                <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-EnReadOnly">
                                     <entry/>
                                 </row>
