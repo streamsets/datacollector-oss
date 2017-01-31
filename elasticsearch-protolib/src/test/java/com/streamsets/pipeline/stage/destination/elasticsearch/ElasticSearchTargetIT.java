@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -113,7 +114,7 @@ public class ElasticSearchTargetIT {
   @Test
   public void testValidations() throws Exception {
     ElasticSearchConfigBean conf = new ElasticSearchConfigBean();
-    conf.httpUri = "";
+    conf.httpUris = Collections.EMPTY_LIST;
     conf.timeDriver = "${time:now()}";
     conf.timeZoneID = "UTC";
     conf.indexTemplate = "${record:value('/index')x}";
@@ -132,7 +133,7 @@ public class ElasticSearchTargetIT {
     Assert.assertTrue(issues.get(1).toString().contains(Errors.ELASTICSEARCH_03.name()));
     Assert.assertTrue(issues.get(2).toString().contains(Errors.ELASTICSEARCH_06.name()));
 
-    conf.httpUri = "x";
+    conf.httpUris = Arrays.asList("x");
     conf.timeDriver = "${time:now()}";
     conf.timeZoneID = "UTC";
     conf.indexTemplate = "x";
@@ -149,7 +150,7 @@ public class ElasticSearchTargetIT {
     Assert.assertEquals(1, issues.size());
     Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_07.name()));
 
-    conf.httpUri = "localhost:0";
+    conf.httpUris = Arrays.asList("localhost:0");
     conf.timeDriver = "${time:now()}";
     conf.timeZoneID = "UTC";
     conf.indexTemplate = "x";
@@ -178,7 +179,7 @@ public class ElasticSearchTargetIT {
 
   private ElasticSearchTarget createTarget(String timeDriver, String indexEL, String docIdEL, ElasticSearchOperationType op) {
     ElasticSearchConfigBean conf = new ElasticSearchConfigBean();
-    conf.httpUri = "127.0.0.1:" + esHttpPort;
+    conf.httpUris = Arrays.asList("127.0.0.1:" + esHttpPort);
     conf.timeDriver = timeDriver;
     conf.timeZoneID = "UTC";
     conf.indexTemplate = indexEL;
@@ -336,7 +337,7 @@ public class ElasticSearchTargetIT {
   @Test
   public void testTimeDriverNow() throws Exception {
     ElasticSearchConfigBean conf = new ElasticSearchConfigBean();
-    conf.httpUri = "127.0.0.1:" + esHttpPort;
+    conf.httpUris = Arrays.asList("127.0.0.1:" + esHttpPort);
     conf.timeDriver = "${time:now()}";
     conf.timeZoneID = "UTC";
     conf.indexTemplate = "${YYYY()}";
@@ -459,7 +460,7 @@ public class ElasticSearchTargetIT {
     conf.securityConfigBean = new SecurityConfigBean();
 
     // Invalid url
-    conf.httpUri = "127.0.0.1:" + "NOT_A_NUMBER";
+    conf.httpUris = Arrays.asList("127.0.0.1:" + "NOT_A_NUMBER");
 
     ElasticSearchTarget target = new ElasticSearchTarget(conf);
     TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
@@ -468,7 +469,7 @@ public class ElasticSearchTargetIT {
     Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_07.name()));
 
     // Invalid port number
-    conf.httpUri = "127.0.0.1:" + Integer.MAX_VALUE;
+    conf.httpUris = Arrays.asList("127.0.0.1:" + Integer.MAX_VALUE);
 
     target = new ElasticSearchTarget(conf);
     runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
@@ -477,7 +478,7 @@ public class ElasticSearchTargetIT {
     Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_08.name()));
 
     // Invalid shield user
-    conf.httpUri = "127.0.0.1:" + esHttpPort;
+    conf.httpUris = Arrays.asList("127.0.0.1:" + esHttpPort);
     conf.useSecurity = true;
     conf.securityConfigBean.securityUser = "INVALID_SHIELD_USER";
 
@@ -491,7 +492,7 @@ public class ElasticSearchTargetIT {
   @Test
   public void testNonIndexOperationWithoutDocId() throws Exception {
     ElasticSearchConfigBean conf = new ElasticSearchConfigBean();
-    conf.httpUri = "127.0.0.1:" + esHttpPort;
+    conf.httpUris = Arrays.asList("127.0.0.1:" + esHttpPort);
     conf.timeDriver = "${time:now()}";
     conf.timeZoneID = "UTC";
     conf.indexTemplate = "${YYYY()}";

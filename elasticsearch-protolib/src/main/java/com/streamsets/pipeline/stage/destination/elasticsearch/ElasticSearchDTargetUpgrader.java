@@ -19,12 +19,14 @@
  */
 package com.streamsets.pipeline.stage.destination.elasticsearch;
 
+import com.google.common.base.Optional;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -112,7 +114,7 @@ public class ElasticSearchDTargetUpgrader implements StageUpgrader {
   }
 
   private static void upgradeV3ToV4(List<Config> configs) {
-    configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "httpUri", "hostname:port"));
+    configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "httpUri", ElasticSearchConfigBean.DEFAULT_HTTP_URI));
   }
 
   private static void upgradeV4ToV5(List<Config> configs) {
@@ -168,6 +170,14 @@ public class ElasticSearchDTargetUpgrader implements StageUpgrader {
       }
       // Remove uris.
       if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "uris")) {
+        configsToRemove.add(config);
+      }
+      // Rename httpUri to httpUris.
+      if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "httpUri")) {
+        String configValue = Optional.fromNullable((String)config.getValue()).or(ElasticSearchConfigBean.DEFAULT_HTTP_URI);
+        if (!configValue.isEmpty() && !configValue.equals(ElasticSearchConfigBean.DEFAULT_HTTP_URI)) {
+          configsToAdd.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "httpUris", Arrays.asList(configValue)));
+        }
         configsToRemove.add(config);
       }
       // Rename useShield to useSecurity.

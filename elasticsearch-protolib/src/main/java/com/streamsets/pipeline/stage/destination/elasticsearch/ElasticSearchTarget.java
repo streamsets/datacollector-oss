@@ -172,16 +172,18 @@ public class ElasticSearchTarget extends BaseTarget {
       }
     }
 
-    if (StringUtils.isEmpty(conf.httpUri)) {
+    if (conf.httpUris.isEmpty()) {
       issues.add(
           getContext().createConfigIssue(
               Groups.ELASTIC_SEARCH.name(),
-              ElasticSearchConfigBean.CONF_PREFIX + "httpUri",
+              ElasticSearchConfigBean.CONF_PREFIX + "httpUris",
               Errors.ELASTICSEARCH_06
           )
       );
     } else {
-      validateUri(conf.httpUri, issues, ElasticSearchConfigBean.CONF_PREFIX + "httpUri");
+      for (String uri : conf.httpUris) {
+        validateUri(uri, issues, ElasticSearchConfigBean.CONF_PREFIX + "httpUris");
+      }
     }
 
     if (conf.useSecurity) {
@@ -202,7 +204,12 @@ public class ElasticSearchTarget extends BaseTarget {
     }
 
     try {
-      restClient = RestClient.builder(HttpHost.create(conf.httpUri)).build();
+      int numHosts = conf.httpUris.size();
+      HttpHost[] hosts = new HttpHost[numHosts];
+      for (int i = 0; i < numHosts; i++) {
+        hosts[i] = HttpHost.create(conf.httpUris.get(i));
+      }
+      restClient = RestClient.builder(hosts).build();
       if (conf.useSecurity) {
         restClient.performRequest("GET", "/", getAuthenticationHeader());
       } else {
@@ -212,7 +219,7 @@ public class ElasticSearchTarget extends BaseTarget {
       issues.add(
           getContext().createConfigIssue(
               Groups.ELASTIC_SEARCH.name(),
-              ElasticSearchConfigBean.CONF_PREFIX + "httpUri",
+              ElasticSearchConfigBean.CONF_PREFIX + "httpUris",
               Errors.ELASTICSEARCH_09,
               e.toString(),
               e

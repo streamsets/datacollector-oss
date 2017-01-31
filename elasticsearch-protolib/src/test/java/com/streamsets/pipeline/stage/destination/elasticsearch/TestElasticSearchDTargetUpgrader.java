@@ -37,6 +37,7 @@ public class TestElasticSearchDTargetUpgrader {
     List<Config> configs = new ArrayList<>();
     configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "clusterName", "MyCluster"));
     configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "uris", Collections.EMPTY_LIST));
+    configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "httpUri", "http://localhost:9300"));
     configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "useShield", false));
     configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "useFound", false));
     configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "clientSniff", false));
@@ -48,7 +49,8 @@ public class TestElasticSearchDTargetUpgrader {
     Assert.assertEquals(6, configs.size());
     Assert.assertEquals("elasticSearchConfigBean.timeDriver", configs.get(0).getName());
     Assert.assertEquals("elasticSearchConfigBean.timeZoneID", configs.get(1).getName());
-    Assert.assertEquals("elasticSearchConfigBean.httpUri", configs.get(2).getName());
+    Assert.assertEquals("elasticSearchConfigBean.httpUris", configs.get(2).getName());
+    Assert.assertEquals("http://localhost:9300", ((List<String>)configs.get(2).getValue()).get(0));
     Assert.assertEquals("elasticSearchConfigBean.useSecurity", configs.get(3).getName());
     Assert.assertEquals("elasticSearchConfigBean.params", configs.get(4).getName());
     Assert.assertEquals("elasticSearchConfigBean.defaultOperation", configs.get(5).getName());

@@ -29,25 +29,27 @@ import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 
+import java.util.List;
 import java.util.Map;
 
 public class ElasticSearchConfigBean {
 
   public static final String CONF_PREFIX = "elasticSearchConfigBean.";
+  public static final String DEFAULT_HTTP_URI = "hostname:port";
 
   @ConfigDefBean
   public SecurityConfigBean securityConfigBean;
 
   @ConfigDef(
       required = false,
-      type = ConfigDef.Type.STRING,
-      label = "Cluster HTTP URI",
-      defaultValue = "https://hostname:port",
-      description = "Elasticsearch HTTP Endpoint.",
+      type = ConfigDef.Type.LIST,
+      label = "Cluster HTTP URIs",
+      defaultValue = "[\"" + DEFAULT_HTTP_URI + "\"]",
+      description = "Elasticsearch HTTP Endpoints.",
       displayPosition = 10,
       group = "ELASTIC_SEARCH"
   )
-  public String httpUri;
+  public List<String> httpUris;
 
   @ConfigDef(
       required = false,
