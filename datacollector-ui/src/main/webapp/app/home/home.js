@@ -66,7 +66,6 @@ angular
     angular.extend($scope, {
       loaded: false,
       totalPipelinesCount: 0,
-      selectedPipelineLabel: 'system:allPipelines',
       filteredPipelines: [],
       header: {
         pipelineGridView: $rootScope.$storage.pipelineListState.gridView,
@@ -781,14 +780,24 @@ angular
         var showNameColumn = !$scope.header.showNameColumn;
         $scope.$storage.pipelineListState.showNameColumn = showNameColumn;
         $scope.header.showNameColumn = showNameColumn;
-      }
+      },
 
+      /**
+       * Register callback function to be called once all labels have been loaded
+       * The callback is called with two params (system labels and custom labels)
+       * @param callback
+       */
+      onLabelsLoaded: function(callback) {
+        $scope.onLabelsLoadedCallback = callback;
+      }
 
     });
 
     $q.all([
       api.pipelineAgent.getPipelinesCount(),
-      configuration.init()
+      configuration.init(),
+      api.pipelineAgent.getSystemPipelineLabels(),
+      api.pipelineAgent.getPipelineLabels()
     ]).then(
       function (results) {
         $scope.loaded = true;
@@ -796,6 +805,23 @@ angular
 
         if (configuration.isAnalyticsEnabled()) {
           Analytics.trackPage('/');
+        }
+
+        /**
+         * Labels are loaded only once so they're sent to library.js
+         */
+        if (_.isFunction($scope.onLabelsLoadedCallback)) {
+          $scope.onLabelsLoadedCallback(results[2].data, results[3].data);
+        }
+
+        /**
+         * Make sure we only keep selection of still-existing labels
+         */
+        var labels = results[2].data.concat(results[3].data);
+        if (labels.indexOf($scope.$storage.pipelineListState.selectedLabel) !== -1) {
+          $scope.selectedPipelineLabel = $scope.$storage.pipelineListState.selectedLabel;
+        } else {
+          $scope.selectedPipelineLabel = 'system:allPipelines';
         }
 
         /**
@@ -808,10 +834,6 @@ angular
             $scope.header.sortColumn = $scope.$storage.pipelineListState.sortColumn;
             $scope.header.sortReverse = $scope.$storage.pipelineListState.sortReverse;
           }
-
-          if ($scope.$storage.pipelineListState.selectedLabel) {
-            $scope.selectedPipelineLabel = $scope.$storage.pipelineListState.selectedLabel;
-          }
         }
 
         if ($scope.$storage.pipelineListState.searchInput) {
@@ -822,6 +844,7 @@ angular
       },
       function () {
         $scope.loaded = true;
+        $scope.selectedPipelineLabel = 'system:allPipelines';
       }
     );
 

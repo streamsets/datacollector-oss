@@ -40,18 +40,16 @@ angular
       }
     });
 
-    $q.all([
-      api.pipelineAgent.getSystemPipelineLabels(),
-      api.pipelineAgent.getPipelineLabels()
-    ]).then(
-      function (results) {
-        $scope.systemPipelineLabels = results[0].data;
-        $scope.pipelineLabels = results[1].data;
-        if ($scope.pipelineLabels && $scope.pipelineLabels.length) {
-          $scope.pipelineLabels.sort();
-        }
-      },
-      function (results) {
-      }
-    );
+    /**
+     * Labels are loaded only once in home.js so we get notified with them here
+     */
+    $scope.onLabelsLoaded(function(systemPipelineLabels, rawPipelineLabels) {
+      $scope.systemPipelineLabels = systemPipelineLabels;
+      $scope.rawPipelineLabels = rawPipelineLabels;
+
+      $scope.pipelineLabels = {
+        children: buildLabelTreeNode(rawPipelineLabels, $scope.$storage.pipelineListState.selectedLabel)
+      };
+    });
+
   });
