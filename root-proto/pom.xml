@@ -62,7 +62,7 @@
     <hikaricp.version>2.4.1</hikaricp.version>
     <!-- Sets the VM argument line used when unit and integration tests are run. -->
     <argLine>-Xmx2G -XX:MaxPermSize=256M</argLine>
-    <testcontainers.version>1.1.6</testcontainers.version>
+    <testcontainers.version>1.1.8</testcontainers.version>
 
     <!-- Platform encoding override -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
