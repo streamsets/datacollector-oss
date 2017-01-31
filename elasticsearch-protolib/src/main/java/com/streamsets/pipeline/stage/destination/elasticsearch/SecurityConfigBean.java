@@ -39,4 +39,31 @@ public class SecurityConfigBean {
       group = "SECURITY"
   )
   public String securityUser;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "",
+      label = "SSL Truststore Path",
+      description = "",
+      dependsOn = "useSecurity^",
+      triggeredByValue = "true",
+      displayPosition = 20,
+      group = "SECURITY"
+  )
+  public String sslTruststorePath;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "",
+      label = "SSL Truststore Password",
+      description = "",
+      dependsOn = "useSecurity^",
+      triggeredByValue = "true",
+      displayPosition = 30,
+      elDefs = VaultEL.class,
+      group = "SECURITY"
+  )
+  public String sslTruststorePassword;
 }

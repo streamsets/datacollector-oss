@@ -34,7 +34,9 @@ public enum Errors implements ErrorCode {
   ELASTICSEARCH_07("Invalid URI, it must be <HOSTNAME>:<PORT>: '{}'"),
   ELASTICSEARCH_08("Port value out of range: '{}'"),
   ELASTICSEARCH_09("Could not connect to the cluster HTTP endpoint: {}"),
-
+  ELASTICSEARCH_10("Truststore path is provided but not truststore pass"),
+  ELASTICSEARCH_11("Truststore path is set but points to a non-existing file: {}"),
+  ELASTICSEARCH_12("Could not configure SSL: {}"),
   ELASTICSEARCH_13("Operation not supported: {}"),
   ELASTICSEARCH_14("Unknown action for unsupported operation: {}"),
   ELASTICSEARCH_15("Could not write record '{}': {}"),
