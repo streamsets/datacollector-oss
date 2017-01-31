@@ -114,7 +114,6 @@ public class OAuth2ConfigBean {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Token URL",
-      description = "URL for token can be obtained using Client ID and Client Secret",
       displayPosition = 20,
       group = "#0",
       dependsOn = "useOAuth2^",
@@ -126,7 +125,6 @@ public class OAuth2ConfigBean {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Client ID",
-      description = "OAuth 2 Client ID",
       displayPosition = 30,
       elDefs = VaultEL.class,
       group = "#0",
@@ -142,7 +140,6 @@ public class OAuth2ConfigBean {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Client Secret",
-      description = "OAuth 2 Client Secret",
       displayPosition = 40,
       elDefs = VaultEL.class,
       group = "#0",
@@ -154,47 +151,10 @@ public class OAuth2ConfigBean {
   )
   public String clientSecret;
 
-  /*
-   * The next two are not required according to the protocol, but servers like IdentityServer 3 and Getty Images
-   * require this even for resource owner credentials grant. So we have them with same labels, but they are not
-   * required.
-   */
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.STRING,
-      label = "Client ID",
-      description = "OAuth 2 Client ID",
-      displayPosition = 30,
-      elDefs = VaultEL.class,
-      group = "#0",
-      dependencies = {
-          @Dependency(configName = "useOAuth2^", triggeredByValues = "true"),
-          @Dependency(configName = "credentialsGrantType", triggeredByValues = "RESOURCE_OWNER")
-      }
-  )
-  public String resourceOwnerClientId;
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.STRING,
-      label = "Client Secret",
-      description = "OAuth 2 Client Secret",
-      displayPosition = 40,
-      elDefs = VaultEL.class,
-      group = "#0",
-      dependencies = {
-          @Dependency(configName = "useOAuth2^", triggeredByValues = "true"),
-          @Dependency(configName = "credentialsGrantType", triggeredByValues = "RESOURCE_OWNER")
-      }
-  )
-  public String resourceOwnerClientSecret;
-
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "User Name",
-      description = "OAuth 2 Resource Owner Username",
+      label = "Username",
       displayPosition = 30,
       elDefs = VaultEL.class,
       group = "#0",
@@ -209,7 +169,6 @@ public class OAuth2ConfigBean {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Password",
-      description = "OAuth 2 Password",
       displayPosition = 40,
       elDefs = VaultEL.class,
       group = "#0",
@@ -220,11 +179,44 @@ public class OAuth2ConfigBean {
   )
   public String password;
 
+  /*
+   * The next two are not required according to the protocol, but servers like IdentityServer 3 and Getty Images
+   * require this even for resource owner credentials grant. So we have them with same labels, but they are not
+   * required.
+   */
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Client ID",
+      displayPosition = 50,
+      elDefs = VaultEL.class,
+      group = "#0",
+      dependencies = {
+          @Dependency(configName = "useOAuth2^", triggeredByValues = "true"),
+          @Dependency(configName = "credentialsGrantType", triggeredByValues = "RESOURCE_OWNER")
+      }
+  )
+  public String resourceOwnerClientId;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Client Secret",
+      displayPosition = 60,
+      elDefs = VaultEL.class,
+      group = "#0",
+      dependencies = {
+          @Dependency(configName = "useOAuth2^", triggeredByValues = "true"),
+          @Dependency(configName = "credentialsGrantType", triggeredByValues = "RESOURCE_OWNER")
+      }
+  )
+  public String resourceOwnerClientSecret;
+
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "JWT Signing Algorithm",
-      description = "The Algorithm to use to sign the JWT",
+      description = "The algorithm to use for signing the JWT",
       displayPosition = 30,
       group = "#0",
       defaultValue = "NONE",
@@ -240,7 +232,7 @@ public class OAuth2ConfigBean {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "JWT Signing Key (Base64-encoded)",
-      description = "Base64 encoded Key to sign the JWT",
+      description = "Base64 encoded key for signing the JWT",
       displayPosition = 35,
       elDefs = VaultEL.class,
       group = "#0",
@@ -275,7 +267,7 @@ public class OAuth2ConfigBean {
       type = ConfigDef.Type.MODEL,
       label = "Request Transfer Encoding",
       defaultValue = "BUFFERED",
-      displayPosition = 50,
+      displayPosition = 70,
       group = "#0",
       dependsOn = "useOAuth2^",
       triggeredByValue = "true"
@@ -287,8 +279,8 @@ public class OAuth2ConfigBean {
       required = false,
       type = ConfigDef.Type.MAP,
       label = "Additional Key-Value pairs in token request body",
-      description = "Additional Key-Value pairs to be sent to the token URL while requesting for a token",
-      displayPosition = 60,
+      description = "Additional key-value pairs to be sent to the token URL while requesting for a token",
+      displayPosition = 80,
       elDefs = VaultEL.class,
       group = "#0",
       dependsOn = "useOAuth2^",
