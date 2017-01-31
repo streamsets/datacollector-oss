@@ -27,7 +27,6 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.configurablestage.DTarget;
 
-@GenerateResourceBundle
 @StageDef(
     version = 1,
     label = "MapR DB JSON",
@@ -37,6 +36,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
     onlineHelpRefUrl = "docs/index.html#Destinations/MapRDBJSON.html#task_wq3_wkj_dy"
 )
 
+@GenerateResourceBundle
 @ConfigGroups(Groups.class)
 
 public class MapRJsonDTarget extends DTarget {
@@ -46,6 +46,7 @@ public class MapRJsonDTarget extends DTarget {
 
   @Override
   protected Target createTarget() {
+
     return new MapRJsonTarget(mapRJsonConfigBean);
   }
 
