@@ -152,6 +152,9 @@ public enum ContainerError implements ErrorCode {
   // ACL
   CONTAINER_01200("{} '{}' doesn't have permissions {} on pipeline {}"),
 
+  // misc
+  CONTAINER_01300("Environment variable 'STREAMSETS_LIBRARIES_EXTRA_DIR' is not set"),
+
   ;
 
   private final String msg;

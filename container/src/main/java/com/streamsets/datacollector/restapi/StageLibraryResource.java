@@ -31,9 +31,11 @@ import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.DefinitionsJson;
 import com.streamsets.datacollector.restapi.bean.PipelineDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.StageDefinitionJson;
+import com.streamsets.datacollector.restapi.bean.StageLibraryExtrasJson;
 import com.streamsets.datacollector.restapi.bean.StageLibraryJson;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.AuthzRole;
+import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.pipeline.api.impl.Utils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -43,11 +45,15 @@ import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -87,6 +93,8 @@ public class StageLibraryResource {
   private static final String TGZ_FILE_EXTENSION = ".tgz";
   private static final String STREAMSETS_LIBS_PATH = "/streamsets-libs/";
   private static final String STREAMSETS_ROOT_DIR_PREFIX = "streamsets-datacollector-";
+  private static final String STAGE_LIB_JARS_DIR = "lib";
+  private static final String STAGE_LIB_CONF_DIR = "etc";
 
   @VisibleForTesting
   static final String STAGES = "stages";
@@ -324,7 +332,6 @@ public class StageLibraryResource {
   @Path("/stageLibraries/uninstall")
   @ApiOperation(value = "Uninstall Stage libraries", response = Object.class,
       authorizations = @Authorization(value = "basic"))
-  @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
   public Response uninstallLibraries(
       List<String> libraryList
@@ -338,4 +345,109 @@ public class StageLibraryResource {
     }
     return Response.ok().build();
   }
+
+  @GET
+  @Path("/stageLibraries/extras/list")
+  @ApiOperation(value = "Return list of additional drivers", response = Object.class,
+      authorizations = @Authorization(value = "basic"))
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
+  public Response getExtras() throws IOException {
+    String libsExtraDir = runtimeInfo.getLibsExtraDir();
+    if (StringUtils.isEmpty(libsExtraDir)) {
+      throw new RuntimeException(ContainerError.CONTAINER_01300.getMessage());
+    }
+
+    List<StageLibraryExtrasJson> extrasList = new ArrayList<>();
+    List<StageDefinition> stageDefinitions = stageLibrary.getStages();
+    Map<String, Boolean> installedLibrariesMap = new HashMap<>();
+    for(StageDefinition stageDefinition: stageDefinitions) {
+      if (!installedLibrariesMap.containsKey(stageDefinition.getLibrary())) {
+        installedLibrariesMap.put(stageDefinition.getLibrary(), true);
+        File stageLibExtraDir = new File(libsExtraDir, stageDefinition.getLibrary());
+        if (stageLibExtraDir.exists()) {
+          File extraJarsDir = new File(stageLibExtraDir, STAGE_LIB_JARS_DIR);
+          addExtras(extraJarsDir, stageDefinition.getLibrary(), extrasList);
+          File extraEtc = new File(stageLibExtraDir, STAGE_LIB_CONF_DIR);
+          addExtras(extraEtc, stageDefinition.getLibrary(), extrasList);
+        }
+      }
+    }
+    return Response.ok()
+        .type(MediaType.APPLICATION_JSON)
+        .entity(extrasList)
+        .build();
+  }
+
+  private void addExtras(File extraJarsDir, String libraryId, List<StageLibraryExtrasJson> extrasList)
+      throws IOException {
+    if (extraJarsDir != null && extraJarsDir.exists()) {
+      File[] files = extraJarsDir.listFiles();
+      if (files != null ) {
+        for( File f : files){
+          extrasList.add(new StageLibraryExtrasJson(f.getAbsolutePath(), libraryId, f.getName()));
+        }
+      }
+    }
+  }
+
+  @POST
+  @Path("/stageLibraries/extras/{library}/upload")
+  @Consumes(MediaType.MULTIPART_FORM_DATA)
+  @Produces(MediaType.TEXT_PLAIN)
+  @ApiOperation(value = "Install additional drivers", response = Object.class,
+      authorizations = @Authorization(value = "basic"))
+  @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
+  public Response installExtras(
+      @PathParam("library") String library,
+      @FormDataParam("file") InputStream uploadedInputStream,
+      @FormDataParam("file") FormDataContentDisposition fileDetail
+  ) throws IOException {
+    String libsExtraDir = runtimeInfo.getLibsExtraDir();
+    if (StringUtils.isEmpty(libsExtraDir)) {
+      throw new RuntimeException(ContainerError.CONTAINER_01300.getMessage());
+    }
+
+    File additionalLibraryFile = new File(
+        libsExtraDir + "/"	+ library + "/" + STAGE_LIB_JARS_DIR,
+        fileDetail.getFileName()
+    );
+    File parent = additionalLibraryFile.getParentFile();
+    if (!parent.exists()) {
+      if (!parent.mkdirs()) {
+        throw new RuntimeException(Utils.format("Failed to create directory: {}", parent.getName()));
+      }
+    }
+    saveFile(uploadedInputStream, additionalLibraryFile);
+    return Response.ok().build();
+  }
+
+  private void saveFile(InputStream uploadedInputStream, File additionalLibraryFile) throws IOException {
+    try (OutputStream outputStream = new FileOutputStream(additionalLibraryFile)) {
+      IOUtils.copy(uploadedInputStream, outputStream);
+    }
+  }
+
+  @POST
+  @Path("/stageLibraries/extras/delete")
+  @ApiOperation(value = "Delete additional drivers", response = Object.class,
+      authorizations = @Authorization(value = "basic"))
+  @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
+  public Response deleteExtras(
+      List<StageLibraryExtrasJson> extrasList
+  ) throws IOException {
+    String libsExtraDir = runtimeInfo.getLibsExtraDir();
+    if (StringUtils.isEmpty(libsExtraDir)) {
+      throw new RuntimeException(ContainerError.CONTAINER_01300.getMessage());
+    }
+    for (StageLibraryExtrasJson extrasJson : extrasList) {
+      File additionalLibraryFile = new File(libsExtraDir + "/"	+
+          extrasJson.getLibraryId() + "/" + STAGE_LIB_JARS_DIR, extrasJson.getFileName());
+      if (additionalLibraryFile.exists()) {
+        FileUtils.forceDelete(additionalLibraryFile);
+      }
+    }
+    return Response.ok().build();
+  }
+
 }

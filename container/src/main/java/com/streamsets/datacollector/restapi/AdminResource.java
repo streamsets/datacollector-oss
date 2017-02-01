@@ -414,6 +414,7 @@ public class AdminResource {
     map.put("dataDir", runtimeInfo.getDataDir());
     map.put("logDir", runtimeInfo.getLogDir());
     map.put("resourcesDir", runtimeInfo.getResourcesDir());
+    map.put("libsExtraDir", runtimeInfo.getLibsExtraDir());
     return Response.ok(map).build();
   }
 

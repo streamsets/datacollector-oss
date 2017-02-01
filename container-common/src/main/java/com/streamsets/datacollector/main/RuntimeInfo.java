@@ -54,6 +54,8 @@ public abstract class RuntimeInfo {
   public static final String LOG4J_CONFIGURATION_URL_ATTR = "log4j.configuration.url";
   public static final String LOG4J_PROPERTIES = "-log4j.properties";
 
+  private static final String STREAMSETS_LIBRARIES_EXTRA_DIR_SYS_PROP = "STREAMSETS_LIBRARIES_EXTRA_DIR";
+
   private final MetricRegistry metrics;
   private final List<? extends ClassLoader> stageLibraryClassLoaders;
   private String httpUrl;
@@ -136,6 +138,9 @@ public abstract class RuntimeInfo {
     return System.getProperty(propertyPrefix + RESOURCES_DIR, getRuntimeDir() + "/resources");
   }
 
+  public String getLibsExtraDir() {
+    return System.getProperty(STREAMSETS_LIBRARIES_EXTRA_DIR_SYS_PROP, null);
+  }
 
   public boolean hasAttribute(String key) {
     Utils.checkNotNull(key, "key");

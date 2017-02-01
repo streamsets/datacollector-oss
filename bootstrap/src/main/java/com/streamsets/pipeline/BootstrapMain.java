@@ -39,6 +39,7 @@ import java.util.Set;
 public class BootstrapMain {
   private static final String PIPELINE_BOOTSTRAP_DEBUG_SYS_PROP = "streamsets.bootstrap.debug";
   public static final String PIPELINE_BOOTSTRAP_CLASSLOADER_SYS_PROP = "streamsets.classloader.debug";
+  private static final String STREAMSETS_LIBRARIES_EXTRA_DIR_SYS_PROP = "STREAMSETS_LIBRARIES_EXTRA_DIR";
 
   private static final String MAIN_CLASS_OPTION = "-mainClass";
   private static final String API_CLASSPATH_OPTION = "-apiClasspath";
@@ -464,6 +465,7 @@ public class BootstrapMain {
 
         // add extralibs if avail
         if (librariesExtraDir != null) {
+          System.setProperty(STREAMSETS_LIBRARIES_EXTRA_DIR_SYS_PROP, librariesExtraDir);
           File libExtraDir = new File(librariesExtraDir, libDir.getName());
           if (libExtraDir.exists()) {
             File extraJarsDir = new File(libExtraDir, STAGE_LIB_JARS_DIR);

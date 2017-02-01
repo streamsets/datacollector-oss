@@ -80,4 +80,9 @@ public class SlaveRuntimeInfo extends RuntimeInfo {
   public boolean isClusterSlave() {
     return true;
   }
+
+  @Override
+  public String getLibsExtraDir() {
+    throw new UnsupportedOperationException();
+  }
 }

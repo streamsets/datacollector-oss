@@ -34,7 +34,9 @@ grant codebase "file://${sdc.dist.dir}/api-lib/*" {
 grant codebase "file://${sdc.dist.dir}/container-lib/*" {
   permission java.security.AllPermission;
 };
-
+grant codebase "file://${sdc.dist.dir}/streamsets-libs-extras/-" {
+  permission java.security.AllPermission;
+};
 // StreamSets stage libraries code base:
 grant codebase "file://${sdc.dist.dir}/streamsets-libs/-" {
   permission java.security.AllPermission;

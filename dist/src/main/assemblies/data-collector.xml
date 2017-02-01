@@ -154,6 +154,12 @@
       <outputDirectory>/user-libs</outputDirectory>
     </fileSet>
 
+    <!-- Create an empty streamsets-libs-extras -->
+    <fileSet>
+      <directory>${basedir}/src/main/emptydir</directory>
+      <outputDirectory>/streamsets-libs-extras</outputDirectory>
+    </fileSet>
+
     <!-- basic-lib -->
     <fileSet>
       <directory>${basedir}/../basic-lib/target/streamsets-libs/</directory>

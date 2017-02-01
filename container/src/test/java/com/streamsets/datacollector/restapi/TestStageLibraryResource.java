@@ -24,6 +24,7 @@ import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Assert;
@@ -44,6 +45,7 @@ public class TestStageLibraryResource extends JerseyTest {
       {
         register(new StageLibraryResourceConfig());
         register(StageLibraryResource.class);
+        register(MultiPartFeature.class);
       }
     };
   }
