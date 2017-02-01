@@ -157,6 +157,8 @@
       "undo": "Undo",
       "uninstall": "Uninstall",
       "uninstalling": "Uninstalling...",
+      "upload": "Upload",
+      "uploading": "Uploading...",
       "username": "Login",
       "username.placeholder": "Your login",
       "value": "Value",
@@ -746,6 +748,11 @@
       "repoUrl": "Custom Repo URL",
       "urlValidation": ""
     },
+    "deleteExtras": {
+      "confirmationMessage": "Are you sure you want to delete below additional drivers?",
+      "successMessage": "Successfully deleted additional driver. Restart the Data Collector for the changes to take effect. If you started the Data Collector manually, click Restart Data Collector. If you started the Data Collector as a service, click Cancel and then run the following command: sdc service restart",
+      "title": "Delete Additional Drivers"
+    },
     "header": {
       "customRepoUrl": "Custom Repo Url",
       "install": "Install",
@@ -753,17 +760,23 @@
     },
     "install": {
       "confirmationMessage": "Are you sure you want to install below stage libraries?",
-      "title": "Install Stage Library",
-      "successMessage": "Successfully installed stage libraries. Restart the Data Collector for the changes to take effect. If you started the Data Collector manually, click Restart Data Collector. If you started the Data Collector as a service, click Cancel and then run the following command: sdc service restart"
-    },
-    "uninstall": {
-      "confirmationMessage": "Are you sure you want to uninstall below stage libraries?",
-      "title": "Uninstall Stage Library",
-      "successMessage": "Successfully uninstalled stage libraries. Restart the Data Collector for the changes to take effect. If you started the Data Collector manually, click Restart Data Collector. If you started the Data Collector as a service, click Cancel and then run the following command: sdc service restart"
+      "successMessage": "Successfully installed stage libraries. Restart the Data Collector for the changes to take effect. If you started the Data Collector manually, click Restart Data Collector. If you started the Data Collector as a service, click Cancel and then run the following command: sdc service restart",
+      "title": "Install Stage Library"
     },
     "manifestURL": "Manifest URL",
     "noStageLibrary": "No Stage Library Found",
-    "title": "Package Manager"
+    "noStageLibrariesExtras": "No Additional Drivers Found",
+    "title": "Package Manager",
+    "uninstall": {
+      "confirmationMessage": "Are you sure you want to uninstall below stage libraries?",
+      "successMessage": "Successfully uninstalled stage libraries. Restart the Data Collector for the changes to take effect. If you started the Data Collector manually, click Restart Data Collector. If you started the Data Collector as a service, click Cancel and then run the following command: sdc service restart",
+      "title": "Uninstall Stage Library"
+    },
+    "uploadExtras": {
+      "library": "Library",
+      "successMessage": "Successfully installed additional driver. Restart the Data Collector for the changes to take effect. If you started the Data Collector manually, click Restart Data Collector. If you started the Data Collector as a service, click Cancel and then run the following command: sdc service restart",
+      "title": "Install Additional Drivers"
+    }
   },
   "restapi": {
     "title": "Data Collector RESTful API"
@@ -784,6 +797,7 @@
     "title": "SDC Directories",
     "configDir": "Configuration Directory",
     "dataDir": "Data Directory",
+    "libsExtraDir": "SDC Libraries Extra Directory",
     "logDir": "Log Directory",
     "resourcesDir": "Resources Directory",
     "runtimeDir": "Runtime Directory",

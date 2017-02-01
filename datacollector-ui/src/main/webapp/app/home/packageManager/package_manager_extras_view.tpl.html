@@ -1,0 +1,65 @@
+<section class="pipeline-list-view">
+
+  <div class="list-content">
+    <ul class="list-group checked-list-box">
+
+      <li class="list-group-item header-list-group-item">
+        <i ng-if="allSelected"
+           ng-click="unSelectAll()"
+           class="glyphicon glyphicon-check fa-12x header-check-box"></i>
+
+        <i ng-if="!allSelected"
+           ng-click="selectAll()"
+           class="glyphicon glyphicon-unchecked fa-12x header-check-box"></i>
+
+        <div class="stage-library-name header">
+          <a ng-click="onSortColumnHeaderClick('label')">
+            <span>File Name</span>
+            <i ng-if="header.sortColumn !== 'label'" class="fa fa-sort" aria-hidden="true"></i>
+            <i ng-if="header.sortColumn === 'label' && !header.sortReverse" class="fa fa-arrow-down"></i>
+            <i ng-if="header.sortColumn === 'label' && header.sortReverse" class="fa fa-arrow-up"></i>
+          </a>
+        </div>
+
+        <div class="stage-library-id header">
+          <a ng-click="onSortColumnHeaderClick('libraryId')">
+            <span>Library ID</span>
+            <i ng-if="header.sortColumn !== 'libraryId'" class="fa fa-sort" aria-hidden="true"></i>
+            <i ng-if="header.sortColumn === 'libraryId' && !header.sortReverse" class="fa fa-arrow-down"></i>
+            <i ng-if="header.sortColumn === 'libraryId' && header.sortReverse" class="fa fa-arrow-up"></i>
+          </a>
+        </div>
+      </li>
+
+      <li class="list-group-item"
+          ng-class="{'active-info': selectedStageLibraryMap[stageLibrary.id]}"
+          ng-repeat="stageLibrary in stageLibrariesExtras | orderBy: customStageLibrarySortFunction: header.sortReverse | limitTo: limit">
+
+        <i ng-if="selectedStageLibraryMap[stageLibrary.id]"
+           ng-click="unSelectStageLibrary(stageLibrary)"
+           class="glyphicon glyphicon-check fa-12x"></i>
+
+        <i ng-if="!selectedStageLibraryMap[stageLibrary.id]"
+           ng-click="selectStageLibrary(stageLibrary)"
+           class="glyphicon glyphicon-unchecked fa-12x"></i>
+
+        <div class="stage-library-name">
+          <span>{{stageLibrary.fileName}}</span>
+        </div>
+
+        <div class="stage-library-id">
+          <span>{{stageLibrary.libraryId}}</span>
+        </div>
+
+      </li>
+
+      <li class="list-group-item center-align" ng-if="stageLibrariesExtras.length === 0 && !fetching">
+        <span translate="packageManager.noStageLibrariesExtras"></span>
+      </li>
+
+      <div class="stage-libraries-loading">
+        <div class="pipeline-home-loading" show-loading="fetching"></div>
+      </div>
+    </ul>
+  </div>
+</section>

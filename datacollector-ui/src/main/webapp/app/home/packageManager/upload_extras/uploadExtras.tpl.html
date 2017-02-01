@@ -1,0 +1,62 @@
+<form class="import-modal-form" role="form" ng-submit="uploadExtras()">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title" translate="packageManager.uploadExtras.title">Install Additional Drivers</h3>
+  </div>
+  <div class="modal-body">
+
+    <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+
+    <div ng-if="operationStatus === 'incomplete'">
+      <div class="form-group">
+        <label class="control-label" translate="packageManager.uploadExtras.library">Library</label>
+        <select class="form-control"
+                name="libraryId"
+                ng-model="libraryInfo.library"
+                ng-options="stageLibrary.label for stageLibrary in installedLibraries track by stageLibrary.id">
+        </select>
+      </div>
+
+      <div class="input-group">
+      <span class="input-group-btn">
+          <span class="btn btn-primary btn-file">
+              {{'home.import.browse' | translate}}&hellip; <input type="file" fileread="libraryInfo.uploadFile">
+          </span>
+      </span>
+        <input type="text" class="form-control" readonly ng-model="libraryInfo.uploadFile.name"
+               placeholder="{{'home.import.fileUploadPlaceholder' | translate}}">
+      </div>
+    </div>
+
+    <div ng-if="operationStatus === 'complete'"
+         class="alert alert-success alert-dismissible" role="alert"
+         translate="packageManager.uploadExtras.successMessage">
+    </div>
+
+    <div ng-if="operationStatus === 'restarting'"
+         class="alert alert-success alert-dismissible" role="alert"
+         translate="home.restart.successMessage">
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="reset" class="btn btn-default" ng-click="cancel()"
+            translate="global.form.cancel">Cancel</button>
+
+    <button type="submit" class="btn btn-primary"
+            ng-if="operationStatus === 'incomplete'"
+            translate="global.form.upload">Upload</button>
+
+    <button type="button" class="btn btn-primary" disabled
+            ng-if="operationStatus === 'uploading'"
+            translate="global.form.uploading">Uploading...</button>
+
+    <button ng-click="restart()" class="btn btn-primary"
+            ng-if="operationStatus === 'complete'"
+            translate="global.form.restart">Restart</button>
+
+  </div>
+</form>

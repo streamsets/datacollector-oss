@@ -48,6 +48,7 @@ angular
     var pipelinesLimit = 60;
 
     angular.extend($scope, {
+      uploadFile: {},
       navigationItems: [
         'All Stage Libraries',
         'Installed Stage Libraries',
@@ -59,9 +60,11 @@ angular
         'HDP',
         'MapR'
       ],
+      extrasNavigationItem: 'EXTRAS',
       selectedNavigationItem: 'All Stage Libraries',
       stageLibraries: [],
       filteredStageLibraries: [],
+      stageLibrariesExtras: [],
       header: {
         customRepoUrl: $rootScope.$storage.customPackageManagerRepoUrl,
         sortColumn: 'label',
@@ -115,7 +118,11 @@ angular
       selectAll: function () {
         $scope.selectedStageLibraryList = [];
         $scope.selectedStageLibraryMap = {};
-        angular.forEach($scope.filteredStageLibraries, function(stageLibrary) {
+        var list = $scope.filteredStageLibraries;
+        if ($scope.selectedNavigationItem === $scope.extrasNavigationItem) {
+          list = $scope.stageLibrariesExtras;
+        }
+        angular.forEach(list, function(stageLibrary) {
           $scope.selectedStageLibraryList.push(stageLibrary.id);
           $scope.selectedStageLibraryMap[stageLibrary.id] = true;
         });
@@ -261,6 +268,72 @@ angular
        */
       onCustomRepoURLClick: function() {
         updateCustomRepoUrl();
+      },
+
+      onUploadExtrasClick: function () {
+        $rootScope.common.trackEvent(
+          pipelineConstant.BUTTON_CATEGORY,
+          pipelineConstant.CLICK_ACTION,
+          'Install Additional Drivers',
+          1
+        );
+
+        var installedLibraries = _.filter($scope.stageLibraries, function(stageLibrary) {
+          return stageLibrary.installed;
+        });
+
+        var modalInstance = $modal.open({
+          templateUrl: 'app/home/packageManager/upload_extras/uploadExtras.tpl.html',
+          controller: 'UploadExtrasModalInstanceController',
+          size: '',
+          backdrop: 'static',
+          resolve: {
+            installedLibraries: function () {
+              return installedLibraries;
+            }
+          }
+        });
+
+        modalInstance.result.then(function() {
+          getStageLibrariesExtras();
+        }, function() {
+          getStageLibrariesExtras();
+        });
+      },
+
+      onDeleteExtrasClick: function () {
+        $rootScope.common.trackEvent(
+          pipelineConstant.BUTTON_CATEGORY,
+          pipelineConstant.CLICK_ACTION,
+          'Delete Additional Drivers',
+          1
+        );
+
+        var selectedList = _.filter($scope.stageLibrariesExtras, function(lib) {
+          return  $scope.selectedStageLibraryList.indexOf(lib.id) !== -1;
+        });
+
+        var modalInstance = $modal.open({
+          templateUrl: 'app/home/packageManager/delete_extras/deleteExtras.tpl.html',
+          controller: 'DeleteExtrasModalInstanceController',
+          size: '',
+          backdrop: 'static',
+          resolve: {
+            stageLibrariesExtras: function () {
+              return selectedList;
+            }
+          }
+        });
+
+        modalInstance.result.then(function() {
+          getStageLibrariesExtras();
+        }, function() {
+          getStageLibrariesExtras();
+        });
+      },
+
+      uploadFileBtn: function(uploadFile) {
+        api.pipelineAgent.installExtras('libraryId', uploadFile);
       }
 
     });
@@ -309,12 +382,27 @@ angular
         );
     };
 
+
+    var getStageLibrariesExtras = function() {
+      $scope.stageLibrariesExtras = [];
+      api.pipelineAgent.getStageLibrariesExtras()
+        .then(
+          function (res) {
+            $scope.stageLibrariesExtras = res.data;
+          },
+          function (res) {
+            $rootScope.common.errors = [res.data];
+          }
+        );
+    };
+
     if (window.navigator.onLine) {
       getLibraries($scope.header.customRepoUrl, false);
     } else {
       $rootScope.common.errors = ['Unable to connect to the Internet'];
       getLibraries(null, true);
     }
+    getStageLibrariesExtras();
 
     var pipelineGridViewWatchListener = $scope.$watch('header.pipelineGridView', function() {
       $rootScope.$storage.pipelineListState.gridView = $scope.header.pipelineGridView;

@@ -373,6 +373,52 @@ angular.module('dataCollectorApp.common')
       },
 
       /**
+       * Fetches all installed additional drivers
+       *
+       * @returns {*}
+       */
+      getStageLibrariesExtras: function() {
+        var url = apiBase + '/stageLibraries/extras/list';
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+      /**
+       * Update Stage Libraries extras
+       *
+       * @param libraryId
+       * @param file
+       * @returns {*}
+       */
+      installExtras: function (libraryId, file) {
+        var url = apiBase + '/stageLibraries/extras/' + libraryId + '/upload';
+        var formData = new FormData();
+        formData.append('file', file);
+        return $http.post(url, formData, {
+          transformRequest: angular.identity,
+          headers: {'Content-Type': undefined}
+        });
+      },
+
+
+      /**
+       * Delete Stage Libraries extras
+       *
+       * @param extrasList
+       * @returns {*}
+       */
+      deleteExtras: function (extrasList) {
+        var url = apiBase + '/stageLibraries/extras/delete';
+        return $http({
+          method: 'POST',
+          url: url,
+          data: extrasList
+        });
+      },
+
+      /**
        * Return total pipelines count.
        *
        * @returns {*}

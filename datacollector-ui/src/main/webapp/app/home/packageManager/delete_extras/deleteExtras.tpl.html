@@ -1,0 +1,31 @@
+<div class="modal-header">
+  <h3 class="modal-title" translate="packageManager.deleteExtras.title">Delete Additional Libraries</h3>
+</div>
+<div class="modal-body package-manager-modal-body">
+  <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+
+  <div ng-if="!libraryUninstalled">
+    <p translate="packageManager.deleteExtras.confirmationMessage"></p>
+    <p class="stage-library-label" ng-repeat="library in stageLibrariesExtras">{{library.id}}</p>
+  </div>
+
+  <div ng-if="libraryUninstalled && !isRestartInProgress" class="alert alert-success alert-dismissible" role="alert"
+       translate="packageManager.uninstall.successMessage">
+  </div>
+
+  <div class="alert alert-success alert-dismissible" role="alert"
+       ng-show="isRestartInProgress"
+       translate="home.restart.successMessage">
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" ng-click="cancel()" ng-if="!operationInProgress"
+          translate="global.form.cancel">Cancel</button>
+  <button type="button" class="btn btn-primary" ng-click="deleteExtras()" ng-if="!operationInProgress && !libraryUninstalled"
+          translate="global.form.delete">Delete</button>
+  <button type="submit" class="btn btn-primary" ng-if="operationInProgress" disabled
+          translate="global.form.deleting">Deleting...</button>
+  <button ng-if="!operationInProgress && libraryUninstalled && !isRestartInProgress"
+          ng-click="restart()"
+          class="btn btn-primary" translate="global.form.restart">Restart</button>
+</div>
