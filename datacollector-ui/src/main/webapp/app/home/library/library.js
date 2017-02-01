@@ -43,13 +43,9 @@ angular
     /**
      * Labels are loaded only once in home.js so we get notified with them here
      */
-    $scope.onLabelsLoaded(function(systemPipelineLabels, rawPipelineLabels) {
+    $scope.onLabelsLoaded(function(systemPipelineLabels, pipelineLabels) {
       $scope.systemPipelineLabels = systemPipelineLabels;
-      $scope.rawPipelineLabels = rawPipelineLabels;
-
-      $scope.pipelineLabels = {
-        children: buildLabelTreeNode(rawPipelineLabels, $scope.$storage.pipelineListState.selectedLabel)
-      };
+      $scope.pipelineLabels = pipelineLabels.sort();
     });
 
   });
