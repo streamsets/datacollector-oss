@@ -138,4 +138,28 @@ public class FakeRecordEL {
     return "*";
   }
 
+  @ElFunction(
+    prefix = RECORD_EL_PREFIX,
+    name = "eventType",
+    description = "Returns type of the event for event records and null for non-event records.")
+  public static String getEventType() {
+    return "*";
+  }
+
+  @ElFunction(
+    prefix = RECORD_EL_PREFIX,
+    name = "eventVersion",
+    description = "Returns version of the event for event records and null for non-event records.")
+  public static String getEventVersion() {
+    return "*";
+  }
+
+  @ElFunction(
+    prefix = RECORD_EL_PREFIX,
+    name = "eventCreation",
+    description = "Returns creation time of the event for event records and null for non-event records.")
+  public static String getEventCreationTime() {
+    return "*";
+  }
+
 }

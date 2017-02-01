@@ -19,6 +19,9 @@
  */
 package com.streamsets.datacollector.el;
 
+import com.streamsets.datacollector.record.EventRecordImpl;
+import com.streamsets.datacollector.record.RecordImpl;
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.lib.el.RecordEL;
@@ -33,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TestRecordEL {
 
@@ -227,5 +231,26 @@ public class TestRecordEL {
         eval.eval(vars, "${record:fieldAttributeOrDefault('/XYZ', 'attr21', 'default2')}",
         String.class)
     );
+  }
+
+  @Test
+  public void testEventMethods() throws Exception {
+    ELEvaluator eval = new ELEvaluator("testEventMethods", RecordEL.class);
+    ELVariables vars = new ELVariables();
+
+    EventRecord event = new EventRecordImpl("custom-type", 1, "stage", "id", null, null);
+    RecordEL.setRecordInContext(vars, event);
+
+    assertEquals("custom-type", eval.eval(vars, "${record:eventType()}", String.class));
+    assertEquals("1", eval.eval(vars, "${record:eventVersion()}", String.class));
+    assertTrue(eval.eval(vars, "${record:eventType() == 'custom-type'}", Boolean.class));
+    assertTrue(eval.eval(vars, "${record:eventVersion() == '1'}", Boolean.class));
+
+    Record record = new RecordImpl("stage", "id", null, null);
+    RecordEL.setRecordInContext(vars, record);
+    assertEquals("", eval.eval(vars, "${record:eventType()}", String.class));
+    assertEquals("", eval.eval(vars, "${record:eventVersion()}", String.class));
+    assertTrue(eval.eval(vars, "${record:eventType() == NULL}", Boolean.class));
+    assertTrue(eval.eval(vars, "${record:eventVersion() == NULL}", Boolean.class));
   }
 }
