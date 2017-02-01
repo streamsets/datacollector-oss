@@ -300,7 +300,12 @@ public class HiveMetastoreTarget extends BaseTarget {
       if (cachedPartitionInfo != null) {
         cachedPartitionInfo.updateState(partitionInfoDiff);
       } else {
-        hmsCache.put(hmsCacheType, qualifiedTableName, new PartitionInfoCacheSupport.PartitionInfo(partitionInfoDiff));
+        hmsCache.put(
+            hmsCacheType,
+            qualifiedTableName,
+            new PartitionInfoCacheSupport.PartitionInfo(partitionInfoDiff,
+                new HiveQueryExecutor(conf.hiveConfigBean), qualifiedTableName)
+        );
       }
 
       HiveMetastoreEvents.NEW_PARTITION.create(getContext())

@@ -95,7 +95,7 @@ public class TestHMSCache {
           } else if (proxy.getClass() == TypeInfoCacheSupport.TypeInfoCacheLoader.class) {
             returnVal = new TypeInfoCacheSupport.TypeInfo(columnTypeInfo, partitionTypeInfo);
           } else if (proxy.getClass() == PartitionInfoCacheSupport.PartitionInfoCacheLoader.class) {
-            returnVal = new PartitionInfoCacheSupport.PartitionInfo(partitionInfo);
+            returnVal = new PartitionInfoCacheSupport.PartitionInfo(partitionInfo, PowerMockito.mock(HiveQueryExecutor.class), "");
           } else if (proxy.getClass() == AvroSchemaInfoCacheSupport.AvroSchemaInfoCacheLoader.class) {
             Method avroLoadHMSCacheInfoMethod = proxy.getClass().getDeclaredMethod("loadHMSCacheInfo", String.class);
             returnVal = avroLoadHMSCacheInfoMethod.invoke(proxy, args);
@@ -374,14 +374,19 @@ public class TestHMSCache {
     );
 
     PartitionInfoCacheSupport.PartitionInfo partitionInfo =
-        new PartitionInfoCacheSupport.PartitionInfo(new HashMap<PartitionInfoCacheSupport.PartitionValues, String>());
+        new PartitionInfoCacheSupport.PartitionInfo(
+            new HashMap<PartitionInfoCacheSupport.PartitionValues, String>(),
+            PowerMockito.mock(HiveQueryExecutor.class),
+            ""
+        );
     hmsCache.put(cacheType, qualifiedTableName, partitionInfo);
     checkCacheType(PartitionInfoCacheSupport.PartitionInfo.class, hmsCache.getIfPresent(cacheType, qualifiedTableName));
     hmsCache.invalidate(cacheType, qualifiedTableName);
 
     Map<PartitionInfoCacheSupport.PartitionValues, String> defaultPartitionValues = getDefaultPartitionValuesInfo();
 
-    partitionInfo = new PartitionInfoCacheSupport.PartitionInfo(defaultPartitionValues);
+    //These are null but given that we are populating the cache we do not need this
+    partitionInfo = new PartitionInfoCacheSupport.PartitionInfo(defaultPartitionValues, null, null);
     hmsCache.put(cacheType, qualifiedTableName, partitionInfo);
 
     //Check defaults

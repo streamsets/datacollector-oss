@@ -36,6 +36,8 @@ public class PartitionInfoCacheSupport
     implements HMSCacheSupport<PartitionInfoCacheSupport.PartitionInfo,
     PartitionInfoCacheSupport.PartitionInfoCacheLoader> {
 
+  private static final String LOCATION_NOT_LOADED = "LOCATION_NOT_LOADED";
+
   @Override
   public PartitionInfoCacheLoader newHMSCacheLoader(HiveQueryExecutor executor) {
     return new PartitionInfoCacheLoader(executor);
@@ -70,8 +72,17 @@ public class PartitionInfoCacheSupport
   }
 
   public static class PartitionInfo extends HMSCacheSupport.HMSCacheInfo<Map<PartitionValues, String>>{
-    public PartitionInfo(Map<PartitionValues, String> partitionInfo) {
+    private final HiveQueryExecutor hiveQueryExecutor;
+    private String qualifiedTableName;
+
+    public PartitionInfo(
+        Map<PartitionValues, String> partitionInfo,
+        final HiveQueryExecutor hiveQueryExecutor,
+        final String qualfiedTableName
+    ) {
       super(partitionInfo);
+      this.hiveQueryExecutor = hiveQueryExecutor;
+      this.qualifiedTableName = qualfiedTableName;
     }
 
     public Map<PartitionValues, String> getPartitions() {
@@ -82,10 +93,24 @@ public class PartitionInfoCacheSupport
     public Map<PartitionValues, String> getDiff(Map<PartitionValues, String> newState) throws StageException {
       Map<PartitionValues, String> diff = new HashMap<>();
       for (Map.Entry<PartitionValues, String> newEntry : newState.entrySet()) {
-        if (!state.containsKey(newEntry.getKey())) {
-          diff.put(newEntry.getKey(), newEntry.getValue());
-        } else if(!state.get(newEntry.getKey()).equals(newEntry.getValue())) {
-          throw new HiveStageCheckedException(Errors.HIVE_31, newEntry.getValue(), state.get(newEntry.getKey()));
+        PartitionValues partitionVals = newEntry.getKey();
+        String locationFromTheRecord = newEntry.getValue();
+        if (!state.containsKey(partitionVals)) {
+          diff.put(partitionVals, locationFromTheRecord);
+        } else  {
+          String fetchedLocationFromHive = state.get(partitionVals);
+          //NOT LOADED, let's load it
+          if (LOCATION_NOT_LOADED.equals(fetchedLocationFromHive)) {
+            fetchedLocationFromHive =
+                hiveQueryExecutor.executeDescFormattedPartitionAndGetLocation(
+                    qualifiedTableName,
+                    partitionVals.getPartitionValues()
+                );
+            state.put(partitionVals, fetchedLocationFromHive);
+          }
+          if(!locationFromTheRecord.equals(fetchedLocationFromHive)) {
+            throw new HiveStageCheckedException(Errors.HIVE_31, locationFromTheRecord, fetchedLocationFromHive);
+          }
         }
       }
       return diff;
@@ -105,17 +130,10 @@ public class PartitionInfoCacheSupport
     protected PartitionInfo loadHMSCacheInfo(String qualifiedTableName) throws StageException{
       Set<PartitionValues> partitionValSet = executor.executeShowPartitionsQuery(qualifiedTableName);
       Map<PartitionValues, String> partitionValuesToLocationMap = new HashMap<>();
-      //As Per http://docs.oracle.com/javase/7/docs/api/java/sql/Statement.html#executeBatch%28%29
-      //Can't executeBatch for queries with result set so has to live with serial execute for now.
       for (PartitionValues partitionVals : partitionValSet) {
-        String location =
-            executor.executeDescFormattedPartitionAndGetLocation(
-                qualifiedTableName,
-                partitionVals.getPartitionValues()
-            );
-        partitionValuesToLocationMap.put(partitionVals, location);
+        partitionValuesToLocationMap.put(partitionVals, LOCATION_NOT_LOADED);
       }
-      return new PartitionInfo(partitionValuesToLocationMap);
+      return new PartitionInfo(partitionValuesToLocationMap, executor, qualifiedTableName);
     }
   }
 }
