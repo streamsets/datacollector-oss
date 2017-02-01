@@ -460,22 +460,22 @@ public class RecordImpl implements Record, Cloneable {
   }
 
   private String escapeName(String name, boolean includeSingleQuotes) {
-    StringBuilder sb = new StringBuilder(name.length() * 2);
-    char[] chars = name.toCharArray();
-    for (char c : chars) {
-      if (c == '/') {
-        sb.append("//");
-      } else if (c == '[') {
-        sb.append("[[");
-      } else if (c == ']') {
-        sb.append("]]");
-      } else {
-        sb.append(c);
-      }
-    }
-    if (includeSingleQuotes) {
-      return EscapeUtil.singleQuoteEscape(sb.toString());
+    if(includeSingleQuotes) {
+      return EscapeUtil.singleQuoteEscape(name);
     } else {
+      StringBuilder sb = new StringBuilder(name.length() * 2);
+      char[] chars = name.toCharArray();
+      for (char c : chars) {
+        if (c == '/') {
+          sb.append("//");
+        } else if (c == '[') {
+          sb.append("[[");
+        } else if (c == ']') {
+          sb.append("]]");
+        } else {
+          sb.append(c);
+        }
+      }
       return sb.toString();
     }
   }
