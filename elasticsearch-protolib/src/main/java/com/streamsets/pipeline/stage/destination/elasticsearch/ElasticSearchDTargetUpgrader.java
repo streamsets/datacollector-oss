@@ -191,10 +191,6 @@ public class ElasticSearchDTargetUpgrader implements StageUpgrader {
       if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "useElasticCloud")) {
         configsToRemove.add(config);
       }
-      // Remove clientSniff.
-      if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "clientSniff")) {
-        configsToRemove.add(config);
-      }
       // Rename configs to params.
       if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "configs")) {
         configsToAdd.add(new Config(config.getName().replace("configs", "params"), config.getValue()));
