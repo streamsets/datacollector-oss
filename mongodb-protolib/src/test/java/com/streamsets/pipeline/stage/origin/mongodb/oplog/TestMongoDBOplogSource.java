@@ -71,12 +71,6 @@ public class TestMongoDBOplogSource {
     Assert.assertEquals(expectedOperationTypeLabel, record.getHeader().getAttribute(OperationType.SDC_OPERATION_TYPE));
   }
 
-  public void testNonGenericOpTypesWithPopulateGenericOpTypeInHeader(String op) throws Exception {
-    Record record = RecordCreator.create();
-    MongoDBOplogSource.populateGenericOperationTypeInHeader(record, op);
-    Assert.assertNull(record.getHeader().getAttribute(OperationType.SDC_OPERATION_TYPE));
-  }
-
   @Test
   public void testGenericOpLogRecordFromTheDocumentInsert() throws Exception {
     testGenericOpTypesWithPopulateGenericOpTypeInHeader(OplogOpType.INSERT.getOp(), String.valueOf(OperationType.INSERT_CODE));
@@ -94,17 +88,17 @@ public class TestMongoDBOplogSource {
 
   @Test
   public void testGenericOpLogRecordFromTheDocumentCMD() throws Exception {
-    testNonGenericOpTypesWithPopulateGenericOpTypeInHeader(OplogOpType.CMD.getOp());
+    testGenericOpTypesWithPopulateGenericOpTypeInHeader(OplogOpType.CMD.getOp(), String.valueOf(OperationType.UNSUPPORTED_CODE));
   }
 
   @Test
   public void testGenericOpLogRecordFromTheDocumentNOOP() throws Exception {
-    testNonGenericOpTypesWithPopulateGenericOpTypeInHeader(OplogOpType.NOOP.getOp());
+    testGenericOpTypesWithPopulateGenericOpTypeInHeader(OplogOpType.NOOP.getOp(), String.valueOf(OperationType.UNSUPPORTED_CODE));
   }
 
   @Test
   public void testGenericOpLogRecordFromTheDocumentDB() throws Exception {
-    testNonGenericOpTypesWithPopulateGenericOpTypeInHeader(OplogOpType.DB.getOp());
+    testGenericOpTypesWithPopulateGenericOpTypeInHeader(OplogOpType.DB.getOp(), String.valueOf(OperationType.UNSUPPORTED_CODE));
   }
 
   @Test

@@ -233,6 +233,7 @@ public class MongoDBOplogSource extends AbstractMongoDBSource {
       case CMD:
       case DB:
       case NOOP:
+        operationType = OperationType.UNSUPPORTED_CODE;
         break;
       default: throw new IllegalArgumentException(Utils.format("Unsupported Op Log Op type : {}", opType));
     }
