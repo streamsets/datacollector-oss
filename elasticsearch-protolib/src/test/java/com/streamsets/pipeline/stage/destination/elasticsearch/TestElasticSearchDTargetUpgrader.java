@@ -40,7 +40,6 @@ public class TestElasticSearchDTargetUpgrader {
     configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "httpUri", "http://localhost:9300"));
     configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "useShield", false));
     configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "useFound", false));
-    configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "clientSniff", false));
     configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "configs", Collections.EMPTY_MAP));
     configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "upsert", false));
 

@@ -57,6 +57,9 @@ import org.apache.http.ssl.SSLContexts;
 import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
+import org.elasticsearch.client.sniff.ElasticsearchHostsSniffer;
+import org.elasticsearch.client.sniff.HostsSniffer;
+import org.elasticsearch.client.sniff.Sniffer;
 import org.elasticsearch.common.io.PathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,6 +101,7 @@ public class ElasticSearchTarget extends BaseTarget {
   private DataGeneratorFactory generatorFactory;
   private ErrorRecordHandler errorRecordHandler;
   private RestClient restClient;
+  private Sniffer sniffer;
 
   public ElasticSearchTarget(ElasticSearchConfigBean conf) {
     this.conf = conf;
@@ -216,18 +220,18 @@ public class ElasticSearchTarget extends BaseTarget {
       return issues;
     }
 
-    try {
-      int numHosts = conf.httpUris.size();
-      HttpHost[] hosts = new HttpHost[numHosts];
-      for (int i = 0; i < numHosts; i++) {
-        hosts[i] = HttpHost.create(conf.httpUris.get(i));
-      }
-      RestClientBuilder restClientBuilder = RestClient.builder(hosts);
+    int numHosts = conf.httpUris.size();
+    HttpHost[] hosts = new HttpHost[numHosts];
+    for (int i = 0; i < numHosts; i++) {
+      hosts[i] = HttpHost.create(conf.httpUris.get(i));
+    }
+    RestClientBuilder restClientBuilder = RestClient.builder(hosts);
 
+    try {
       if (conf.useSecurity) {
         try {
           final SSLContext sslcontext;
-          String keystorePath = conf.securityConfigBean.sslTruststorePath;
+          final String keystorePath = conf.securityConfigBean.sslTruststorePath;
           if (StringUtils.isEmpty(keystorePath)) {
             sslcontext = SSLContext.getDefault();
           } else {
@@ -300,6 +304,24 @@ public class ElasticSearchTarget extends BaseTarget {
       return issues;
     }
 
+    if (conf.clientSniff) {
+      switch (hosts[0].getSchemeName()) {
+        case "http": {
+          sniffer = Sniffer.builder(restClient).build();
+          break;
+        }
+        case "https": {
+          HostsSniffer hostsSniffer = new ElasticsearchHostsSniffer(restClient,
+              ElasticsearchHostsSniffer.DEFAULT_SNIFF_REQUEST_TIMEOUT,
+              ElasticsearchHostsSniffer.Scheme.HTTPS);
+          sniffer = Sniffer.builder(restClient).setHostsSniffer(hostsSniffer).build();
+          break;
+        }
+        default:
+          // unsupported scheme. do nothing.
+      }
+    }
+
     generatorFactory = new DataGeneratorFactoryBuilder(getContext(), DataGeneratorFormat.JSON)
         .setMode(JsonMode.MULTIPLE_OBJECTS)
         .setCharset(Charset.forName(conf.charset))
@@ -310,12 +332,15 @@ public class ElasticSearchTarget extends BaseTarget {
 
   @Override
   public void destroy() {
-    if (restClient != null) {
-      try {
-        restClient.close();
-      } catch (IOException e) {
-        LOG.warn("Exception thrown while closing REST client: " + e);
+    try {
+      if (sniffer != null) {
+        sniffer.close();
       }
+      if (restClient != null) {
+        restClient.close();
+      }
+    } catch (IOException e) {
+      LOG.warn("Exception thrown while closing REST client: " + e);
     }
     super.destroy();
   }

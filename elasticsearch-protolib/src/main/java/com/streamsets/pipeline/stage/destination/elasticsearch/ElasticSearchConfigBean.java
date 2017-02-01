@@ -52,6 +52,18 @@ public class ElasticSearchConfigBean {
   public List<String> httpUris;
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Detect Additional Nodes in Cluster",
+      defaultValue = "false",
+      description = "Select to automatically discover additional Elasticsearch nodes in the cluster. " +
+          "Do not use if the Data Collector is on a different network from the cluster.",
+      displayPosition = 15,
+      group = "ELASTIC_SEARCH"
+  )
+  public boolean clientSniff;
+
+  @ConfigDef(
       required = false,
       type = ConfigDef.Type.MAP,
       defaultValue = "",
