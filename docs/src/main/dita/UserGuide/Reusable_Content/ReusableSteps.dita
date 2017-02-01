@@ -43,9 +43,9 @@
             <step id="CreatePipeline2">
                 <cmd>In the <wintitle>New Pipeline</wintitle> window, enter a pipeline name and
                     optional description, and click <uicontrol>Save</uicontrol>.</cmd>
-                <stepresult>The pipeline canvas displays the pipeline name and an error icon. The error
-                    icon indicates that you need to configure error handling for the pipeline. The
-                    Properties panel displays the pipeline properties. </stepresult>
+                <stepresult>The pipeline canvas displays the pipeline name and an error icon. The
+                    error icon indicates that you need to configure error handling for the pipeline.
+                    The Properties panel displays the pipeline properties. </stepresult>
             </step>
             <step>
                 <cmd>
@@ -418,7 +418,7 @@
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>O-AVRO-Mess</uicontrol> - The
                         following step is used by origins that read Avro data from messages and have
-                        compression. Kinesis Consumer.  Origins without compression uses rows - JMS,
+                        compression. Kinesis Consumer. Origins without compression uses rows - JMS,
                         Kafka.</draft-comment>
                 </cmd>
             </step>
@@ -579,10 +579,10 @@
                                         Registry.</entry>
                                 </row>
                                 <row>
-                                    <entry>Key Deserializer <xref href="../Origins/KConsumer-DataFormats.dita">
+                                    <entry>Key Deserializer <xref
+                                            href="../Origins/KConsumer-DataFormats.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                placement="inline"
-                                        /></xref></entry>
+                                                placement="inline"/></xref></entry>
                                     <entry>Method used to deserialize the Kafka message key.<p>Set
                                             to Confluent when the Avro schema ID is embedded in each
                                             Kafka message. </p></entry>
@@ -601,7 +601,7 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>O-Binary </uicontrol>. Used by
-                        message reading origins that have compression -  Kinesis Consumer, Redis
+                        message reading origins that have compression - Kinesis Consumer, Redis
                         Consumer. Non-compressed origins use rows - JMS, Kafka </draft-comment>
                 </cmd>
             </step>
@@ -1180,10 +1180,12 @@
                 </info>
             </step>
             <step>
-                <cmd>                    <draft-comment author="alisontaylor"><uicontrol>TEXT_Hadoop data</uicontrol> -
+                <cmd>
+                    <draft-comment author="alisontaylor"><uicontrol>TEXT_Hadoop data</uicontrol> -
                         Hadoop FS and MapR FS origins (Include Custom Delimiter is not applicable) –
-                        should this go in Local FS too? </draft-comment></cmd>
-            </step>        
+                        should this go in Local FS too? </draft-comment>
+                </cmd>
+            </step>
             <step id="Text_Hadoop">
                 <cmd>For text data, on the <wintitle>Data Format</wintitle> tab, configure the
                     following properties:</cmd>
@@ -1232,13 +1234,14 @@
                     </table>
                 </info>
             </step>
-            <step > <cmd>
+            <step>
+                <cmd>
                     <draft-comment author="Loretta"><uicontrol>TEXT data</uicontrol> - Amazon S3,
-                        Directory, Kafka Consumer, Kinesis Consumer, JMS Consumer. HTTP Client.  Non
-                        compression origins  using rows - JMS</draft-comment>
+                        Directory, Kafka Consumer, Kinesis Consumer, JMS Consumer. HTTP Client. Non
+                        compression origins using rows - JMS</draft-comment>
                 </cmd>
-            </step>        
-                <step id="Text">
+            </step>
+            <step id="Text">
                 <cmd>For text data, on the <wintitle>Data Format</wintitle> tab, configure the
                     following properties:</cmd>
                 <info>
@@ -1327,8 +1330,7 @@
                                     <entry>Rate per Second <xref
                                             href="../Pipeline_Design/WholeFile-TransferRate.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                placement="inline" 
-                                        /></xref></entry>
+                                                placement="inline"/></xref></entry>
                                     <entry>Transfer rate to use. <p>Enter a number to specify a rate
                                             in bytes per second. Use an expression to specify a rate
                                             that uses a different unit of measure per second, e.g.
@@ -1388,28 +1390,30 @@
                     </table>
                 </info>
             </step>
-            
-            
-            <step><cmd>
-                <draft-comment author="Loretta"><uicontrol>XML data </uicontrol>- step used by
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta"><uicontrol>XML data </uicontrol>- step used by
                         message and file based origins: Kafka Consumer, Hadoop FS, Kinesis Consumer,
                         Directory, S3, HTTP Client, maybe more. Origins without compression uses
                         rows - JMS Consumer</draft-comment>
-                    </cmd></step>
-            
+                </cmd>
+            </step>
             <step id="XMLprops">
                 <cmd>For XML data, on the <wintitle>XML</wintitle> tab, configure the following
-                    properties:</cmd>      
-            <info>
-                <table frame="all" rowsep="1" colsep="1" id="table_pmz_mcj_45">
-                    <tgroup cols="2">
-                        <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                        <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                        <thead> <row>                         
-                            <entry>XML Property</entry>
-                            <entry>Description</entry></row>  
-                        </thead>
-       <tbody><row
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_pmz_mcj_45">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>XML Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FileCompression">
                                     <entry/>
                                 </row>
@@ -1473,9 +1477,7 @@
                     </table>
                 </info>
             </step>
-                
-                
-           <step>     
+            <step>
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>ORIGIN-MIXED REUSE - </uicontrol>The
                         following handful of steps are for origin/origin, origin/processor or
@@ -1502,8 +1504,7 @@
                             <tbody>
                                 <row>
                                     <entry>Username</entry>
-                                    <entry>User name for basic, digest, or universal authentication.
-                                            </entry>
+                                    <entry>User name for basic, digest, or universal authentication. </entry>
                                 </row>
                                 <row>
                                     <entry>Password</entry>
@@ -1514,19 +1515,19 @@
                                 </row>
                                 <row>
                                     <entry>Consumer Key</entry>
-                                    <entry>Consumer key for OAuth authentication.</entry>
+                                    <entry>Consumer key for OAuth 1.0 authentication.</entry>
                                 </row>
                                 <row>
                                     <entry>Consumer Secret</entry>
-                                    <entry>Consumer secret for OAuth authentication.</entry>
+                                    <entry>Consumer secret for OAuth 1.0 authentication.</entry>
                                 </row>
                                 <row>
                                     <entry>Token</entry>
-                                    <entry>Consumer token for OAuth authentication.</entry>
+                                    <entry>Consumer token for OAuth 1.0 authentication.</entry>
                                 </row>
                                 <row>
                                     <entry>Token Secret</entry>
-                                    <entry>Token secret for OAuth authentication.</entry>
+                                    <entry>Token secret for OAuth 1.0 authentication.</entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -1535,7 +1536,7 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta"><uicontrol>HTTPClient-Proxy</uicontrol> -  - The
+                    <draft-comment author="Loretta"><uicontrol>HTTPClient-Proxy</uicontrol> - - The
                         following steps are used in HTTP Client origin and processor Configuring
                         topics:</draft-comment>
                 </cmd>
@@ -1656,7 +1657,6 @@
                     </table>
                 </info>
             </step>
-            
             <step id="JDBC-Legacy">
                 <cmd>When using JDBC versions older than 4.0, on the <uicontrol>Legacy
                         Drivers</uicontrol> tab, optionally configure the following
@@ -1668,7 +1668,8 @@
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
-                                    <entry>Legacy Driver Property</entry>                                                               <entry>Description</entry>
+                                    <entry>Legacy Driver Property</entry>
+                                    <entry>Description</entry>
                                 </row>
                             </thead>
                             <tbody>
@@ -1682,7 +1683,6 @@
                                     <entry>Optional query to test the health of a connection.
                                         Recommended only when the JDBC version is older than 4.0.
                                     </entry>
-                                    
                                 </row>
                             </tbody>
                         </tgroup>
@@ -1857,9 +1857,10 @@
                                 <row>
                                     <entry>RabbitMQ Property</entry>
                                     <entry>Description</entry>
-                                </row></thead>
+                                </row>
+                            </thead>
                             <tbody>
-                              <row id="Rabbit-URI">
+                                <row id="Rabbit-URI">
                                     <entry>URI</entry>
                                     <entry>RabbitMQ URI. <p>Typically uses the following format:
                                                 <codeph>amqp:&lt;host>:&lt;port>/&lt;virtualhost></codeph>.</p></entry>
@@ -2381,36 +2382,36 @@
                                 </row>
                                 <row>
                                     <entry>Required Fields <xref
-                                        href="../Pipeline_Design/RequiredFields.dita#concept_dnj_bkm_vq">
-                                        <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                            id="image_h2p_p1v_yq"/></xref></entry>
+                                            href="../Pipeline_Design/RequiredFields.dita#concept_dnj_bkm_vq">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_h2p_p1v_yq"/></xref></entry>
                                     <entry>Fields that must include data to be passed into the
                                         stage. <note outputclass="" type="tip">You might include
                                             fields that the stage uses.</note></entry>
                                 </row>
                                 <row>
                                     <entry>Preconditions <xref
-                                        href="../Pipeline_Design/Preconditions.dita">
-                                        <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                            id="image_f6b_kjp_fs"/></xref></entry>
+                                            href="../Pipeline_Design/Preconditions.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_f6b_kjp_fs"/></xref></entry>
                                     <entry>Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
-                                        <uicontrol>Add</uicontrol> to create additional
+                                            <uicontrol>Add</uicontrol> to create additional
                                         preconditions. </entry>
                                 </row>
                                 <row>
                                     <entry>On Record Error <xref
-                                        href="../Pipeline_Design/ErrorHandling-Stage.dita">
-                                        <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                            id="image_w32_8yn_lw"/></xref></entry>
+                                            href="../Pipeline_Design/ErrorHandling-Stage.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_w32_8yn_lw"/></xref></entry>
                                     <entry>Error record handling for the stage: <ul
-                                        id="ul_swr_ofh_hr">
-                                        <li>Discard - Discards the record.</li>
-                                        <li>Send to Error - Sends the record to the pipeline for
-                                            error handling.</li>
-                                        <li>Stop Pipeline - Stops the pipeline. Not valid for
-                                            cluster pipelines.</li>
-                                    </ul></entry>
+                                            id="ul_swr_ofh_hr">
+                                            <li>Discard - Discards the record.</li>
+                                            <li>Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+                                            <li>Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+                                        </ul></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -3643,10 +3644,11 @@
                                             href="../Destinations/HadoopFS-DirectoryTemplates.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_c1q_dd1_s5"/></xref></entry>
-                                    <entry id="entry-DirectoryTemplate">Template for creating output directories. You can use
-                                        constants, field values, and datetime variables. <p>Output
-                                            directories are created based on the smallest datetime
-                                            variable in the template.</p></entry>
+                                    <entry id="entry-DirectoryTemplate">Template for creating output
+                                        directories. You can use constants, field values, and
+                                        datetime variables. <p>Output directories are created based
+                                            on the smallest datetime variable in the
+                                        template.</p></entry>
                                 </row>
                                 <row id="row-DataTimeZone">
                                     <entry>Data Time Zone</entry>
@@ -3659,9 +3661,9 @@
                                             href="../Destinations/HadoopFS-TimeBasis.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_f1q_dd1_s5"/></xref></entry>
-                                    <entry id="entry-TimeBasis">Time basis to use for creating output directories and
-                                        writing records to the directories. Use one of the following
-                                            expressions:<ul id="ul_h1q_dd1_s5">
+                                    <entry id="entry-TimeBasis">Time basis to use for creating
+                                        output directories and writing records to the directories.
+                                        Use one of the following expressions:<ul id="ul_h1q_dd1_s5">
                                             <li>${time:now()} - Uses the processing time as the time
                                                 basis. </li>
                                             <li>${record:value(&lt;date field path>)} - Uses the
@@ -3790,7 +3792,8 @@
                                         Elasticsearch cluster. </entry>
                                 </row>
                                 <row id="row_ElasticTime">
-                                    <entry>Time Basis <xref href="../Destinations/Elastic-TimeBasis.dita">
+                                    <entry>Time Basis <xref
+                                            href="../Destinations/Elastic-TimeBasis.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_w4w_q3p_ht"/>
                                         </xref></entry>
@@ -3836,8 +3839,7 @@
                                         information. </entry>
                                 </row>
                                 <row id="row_ElasticDocID">
-                                    <entry>Document ID
-                                        <xref
+                                    <entry>Document ID <xref
                                             href="../Destinations/Elastic-DocID.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_r1f_gfg_z3"/>
@@ -3860,15 +3862,15 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_r1f_ggg_z5"/>
                                         </xref></entry>
-                                    <entry id="entry_DefaultOperation">Default write operation to perform if the
-                                        sdc.operation.type record header attribute is not set or
-                                        contains a value that is not supported. </entry>
+                                    <entry id="entry_DefaultOperation">Default write operation to
+                                        perform if the sdc.operation.type record header attribute is
+                                        not set or contains a value that is not supported. </entry>
                                 </row>
                                 <row>
                                     <entry>Unsupported Operation Handling</entry>
-                                    <entry id="entry_UnsupportedOperation">Action to take when the operation type defined in the
-                                        sdc.operation.type record header attribute is not
-                                            supported:<ul id="ul_sgk_pg3_1y">
+                                    <entry id="entry_UnsupportedOperation">Action to take when the
+                                        operation type defined in the sdc.operation.type record
+                                        header attribute is not supported:<ul id="ul_sgk_pg3_1y">
                                             <li>Discard - Discards the record.</li>
                                             <li>Send to Error - Sends the record to the pipeline for
                                                 error handling.</li>
@@ -3979,7 +3981,6 @@
                         Aggregated Statistics > Configuring a Pipeline to Aggregate Statistics. --
                         Message per Batch also used by RabbitMQ Producer. Some rows also used by
                         MapR Streams Producer.</draft-comment>
-                   
                 </cmd>
             </step>
             <step id="KafkaConfig">
@@ -4012,8 +4013,9 @@
                                                   ><image href="../Graphics/icon_moreInfo.png"
                                                   scale="10" id="image_ekt_x5g_cs"/>
                                             </xref></entry>
-                                        <entry id="KPRuntimeTopicEntry">Evaluates an expression at runtime to determine the
-                                            topic to use for each record.</entry>
+                                        <entry id="KPRuntimeTopicEntry">Evaluates an expression at
+                                            runtime to determine the topic to use for each
+                                            record.</entry>
                                     </row>
                                     <row id="KPTopic">
                                         <entry>Topic</entry>
@@ -4078,11 +4080,10 @@
                                                 />.</p></entry>
                                     </row>
                                     <row>
-                                        <entry>Key Serializer
-                                            <xref
+                                        <entry>Key Serializer <xref
                                                 href="../Destinations/KProducer-DataFormat.dita">
                                                 <image href="../Graphics/icon_moreInfo.png"
-                                                    scale="10" id="image_as8_sc7_ft"/></xref></entry>
+                                                  scale="10" id="image_as8_sc7_ft"/></xref></entry>
                                         <entry>Method used to serialize the Kafka message key when
                                             the configured data format is Avro. <p>Set to Confluent
                                                 to embed the Avro schema ID in each message that
@@ -4301,11 +4302,10 @@
                                             milliseconds.</p></entry>
                                 </row>
                                 <row id="row-UseCompression">
-                                    <entry>Use Compression  <xref
+                                    <entry>Use Compression <xref
                                             href="../Destinations/RPC-Compression.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                placement="inline"
-                                        /></xref></entry>
+                                                placement="inline"/></xref></entry>
                                     <entry>Enables the destination to use compression to pass data
                                         to the SDC RPC origin. Enabled by default. </entry>
                                 </row>
@@ -4365,7 +4365,8 @@ chmod 644 /opt/cloudera/csd/STREAMSETS*.jar</codeblock></info>
                         Manually Install the Parcel and Checksum Files (Optional)" used in the
                         Installation and Upgrade chapters.</draft-comment>
                 </cmd>
-            </step><step id="ParcelDownload">
+            </step>
+            <step id="ParcelDownload">
                 <cmd>Download the StreamSets parcel and related checksum file for the Cloudera
                     Manager Server operating system from the following location:</cmd>
                 <info><xref href="https://archives.streamsets.com/index.html" format="html"
@@ -4509,7 +4510,7 @@ grant codebase "file:///opt/sdc-extras/-" {
                 </substeps>
             </step>
             <step id="InstallDrivers_Restart_step">
-                <cmd>Restart  <ph
+                <cmd>Restart <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> to enable the changes.</cmd>
             </step>

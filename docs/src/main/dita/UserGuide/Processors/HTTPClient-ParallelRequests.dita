@@ -16,11 +16,11 @@
 <concept id="concept_d3m_yrn_jw">
  <title>Parallel Requests</title>
  <shortdesc>The HTTP Client processor sends multiple requests at a time. To preserve record order,
-        the processor waits until it receives a response for each request before sending the next
-        set of requests.</shortdesc>
+        the processor waits until all requests for the entire batch are completed before processing
+        the next batch.</shortdesc>
  <conbody>
-  <p>You can specify the maximum number of parallel requests. Default is 10. Increasing the number
-            of parallel requests can improve performance but increases the load on the server.
-            Network latency can also significantly impact the performance of this processor.</p>
+  <p>You can specify the maximum number of parallel requests. Default is 1. Increasing the number of
+            parallel requests can improve performance but increases the load on the server. Network
+            latency can also significantly impact the performance of this processor.</p>
  </conbody>
 </concept>

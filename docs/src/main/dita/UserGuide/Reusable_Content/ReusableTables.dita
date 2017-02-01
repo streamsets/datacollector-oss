@@ -429,6 +429,11 @@
          <li>OAuth - Uses OAuth 1.0 authentication. Requires OAuth credentials.</li>
         </ul></entry>
       </row>
+      <row id="HTTP-OAuth2">
+       <entry>Use OAuth 2</entry>
+       <entry>Enables using OAuth 2 authorization to request access tokens. <p>You can use OAuth 2
+         authorization with none, basic, digest, or universal authentication.</p></entry>
+      </row>
       <row id="HTTP-UseProxy">
        <entry>Use Proxy</entry>
        <entry>
@@ -439,6 +444,94 @@
     </tgroup>
    </table>
   </p>
+  <draft-comment author="alisontaylor">OAuth 2 table for HTTP Client origin and
+   processor</draft-comment>
+  <table frame="all" rowsep="1" colsep="1" id="HTTP_OAuth2">
+   <tgroup cols="2">
+    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+    <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+    <thead>
+     <row>
+      <entry>OAuth 2 Property</entry>
+      <entry>Description</entry>
+     </row>
+    </thead>
+    <tbody>
+     <row>
+      <entry>Credentials Grant Type</entry>
+      <entry>Type of client credentials grant type required by the HTTP service:<ul
+        id="ul_m3c_t1f_5y">
+        <li>Client credentials grant</li>
+        <li>Resource owner password credentials grant</li>
+        <li>JSON Web Tokens (JWT)</li>
+       </ul></entry>
+     </row>
+     <row>
+      <entry>Token URL</entry>
+      <entry>URL to request the access token.</entry>
+     </row>
+     <row>
+      <entry>Client ID</entry>
+      <entry>Client ID that the HTTP service uses to identify the HTTP client.<p>For client
+        credentials grant that uses a client ID and secret for authentication. Or, for resource
+        owner password credentials grant that requires a client ID and secret.</p></entry>
+     </row>
+     <row>
+      <entry>Client Secret</entry>
+      <entry>Client secret that the HTTP service uses to authenticate the HTTP client.<p>For client
+        credentials grant that uses a client ID and secret for authentication. Or, for resource
+        owner password credentials grant that requires a client ID and secret.</p><note
+        conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_ClientID"/></entry>
+     </row>
+     <row>
+      <entry>User Name</entry>
+      <entry>Resource owner user name.<p>For resource owner password credentials grant.</p></entry>
+     </row>
+     <row>
+      <entry>Password</entry>
+      <entry>Resource owner password.<p>For resource owner password credentials grant.</p><note
+        conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"/></entry>
+     </row>
+     <row>
+      <entry>JWT Signing Algorithm</entry>
+      <entry>Algorithm used to sign the JSON Web Token (JWT).<p>Default is none. For JSON Web Tokens
+        grant.</p></entry>
+     </row>
+     <row>
+      <entry>JWT Signing Key</entry>
+      <entry>Base64 encoded key used to sign the JSON Web Token, if you selected a signing
+        algorithm.<note conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_JWTKey"/><p>For JSON Web
+        Tokens grant.</p></entry>
+     </row>
+     <row>
+      <entry>JWT Claims</entry>
+      <entry>Claims to use in the JSON Web Token request, entered in JSON format. Enter each claim
+       required by the HTTP service. You can include the expression language in the JWT
+        claims.<p>For example, to read from Google service accounts, enter the following claims with
+        the appropriate
+        values:</p><codeblock>{
+  "iss":"my_name@my_account.iam.gserviceaccount.com",
+  "scope":"https://www.googleapis.com/auth/drive",
+  "aud":"https://www.googleapis.com/oauth2/v4/token",
+  "exp":${(time:dateTimeToMilliseconds(time:now())/1000) + 50 * 60},
+  "iat":${time:dateTimeToMilliseconds(time:now())/1000}
+}</codeblock><p>For
+        JSON Web Tokens grant.</p></entry>
+     </row>
+     <row>
+      <entry>Request Transfer Encoding</entry>
+      <entry>Form of encoding to use when the stage requests an access token: buffered or
+        chunked.<p>Default is buffered.</p></entry>
+     </row>
+     <row>
+      <entry>Additional Key-Value Pairs</entry>
+      <entry>Optional key-value pairs to send to the token URL when requesting an access token. For
+       example, you can define the OAuth 2 <codeph>scope</codeph> request parameter.<p>Use the
+         <uicontrol>Add</uicontrol> icon to add additional key-value pairs.</p></entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
   <p>
    <draft-comment author="Loretta">PROCESSOR rows</draft-comment>
    <table frame="all" rowsep="1" colsep="1" id="table_u2r_4x5_lv">

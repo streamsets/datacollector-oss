@@ -27,7 +27,8 @@
       information in the pipeline when needed.</p>
     <p>The origin also provides several different authentication types to access data. You can enter
       credentials in the origin or you can secure the credentials in runtime resource files and
-      reference the files in the origin.</p>
+      reference the files in the origin. You can also configure the origin to use the OAuth 2
+      protocol to connect to an HTTP service.</p>
     <p>You can optionally use a truststore and keystore, and proxy.<note
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Tip-CompareHTTPOrigins"
       /></p>

@@ -2199,7 +2199,19 @@ ${YY()}_${MM()}_${DD()}</codeblock>
             <note type="tip" id="Tip_Passwords">To secure sensitive information such as passwords,
                   you can use runtime resources or Hashicorp Vault secrets. For more information,
                   see <xref href="../Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/> or
-                        <xref href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note><p>
+                        <xref href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
+            <note type="tip" id="Tip_ConsumerKey">To secure sensitive information such as the consumer key and secret,
+                  you can use runtime resources or Hashicorp Vault secrets. For more information,
+                  see <xref href="../Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/> or
+                  <xref href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
+            <note type="tip" id="Tip_ClientID">To secure sensitive information such as the client ID and secret,
+                  you can use runtime resources or Hashicorp Vault secrets. For more information,
+                  see <xref href="../Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/> or
+                  <xref href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
+            <note type="tip" id="Tip_JWTKey">To secure sensitive information such as the JWT signing key,
+                  you can use runtime resources or Hashicorp Vault secrets. For more information,
+                  see <xref href="../Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/> or
+                  <xref href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note><p>
                         <draft-comment author="Loretta">Cluster mode: MapR Streaming mode and Kafka
                               (Yarn) requirements:</draft-comment>
                   </p><p>
@@ -2264,6 +2276,59 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                               header attribute.</dd>
                   </dlentry>
             </dl>
+            <draft-comment author="alisontaylor">Used in the OAuth 2 Authorization topic for HTTP
+                  Client origin and processor</draft-comment>
+            <p id="OAuth2_Credentials">The credentials that you enter to request an access token
+                  depend on the credentials grant type required by the HTTP service. You can define
+                  the following OAuth 2 credentials grant types for HTTP Client: <dl>
+                        <dlentry>
+                              <dt>Client credentials grant</dt>
+                              <dd>
+                                    <p>HTTP Client sends its own credentials - the client ID and
+                                          client secret or the basic, digest, or universal
+                                          authentication credentials - to the HTTP service. For
+                                          example, use the client credentials grant to read from the
+                                          Twitter API or from the Microsoft Azure Active Directory
+                                          (Azure AD) API.</p>
+                                    <p>For more information about the client credentials grant, see
+                                                <xref
+                                                href="https://tools.ietf.org/html/rfc6749#section-4.4"
+                                                format="html" scope="external"/>.</p>
+                              </dd>
+                        </dlentry>
+                        <dlentry>
+                              <dt>Resource owner password credentials grant</dt>
+                              <dd>
+                                    <p>HTTP Client sends the credentials for the resource owner -
+                                          the resource owner username and password - to the HTTP
+                                          service. Or, you can use this grant type to migrate
+                                          existing clients using basic, digest, or universal
+                                          authentication to OAuth 2 by converting the stored
+                                          credentials to an access token.</p>
+                                    <p>For example, use the resource owner password credentials
+                                          grant to read from the Getty Images API. For more
+                                          information about using OAuth 2 to connect to the Getty
+                                          Images API, see <xref
+                                                href="http://developers.gettyimages.com/api/docs/v3/oauth2.html"
+                                                format="html" scope="external"
+                                                >http://developers.gettyimages.com/api/docs/v3/oauth2.html</xref>.</p>
+                                    <p>For more information about the resource owner password
+                                          credentials grant, see <xref
+                                                href="https://tools.ietf.org/html/rfc6749#section-4.3"
+                                                format="html" scope="external"/>.</p>
+                              </dd>
+                        </dlentry>
+                        <dlentry>
+                              <dt>JSON Web Tokens (JWT)</dt>
+                              <dd>
+                                    <p>HTTP Client sends a JSON-based security token encoding to the
+                                          HTTP service. For example, use JSON Web Tokens to read
+                                          from the Google API.</p>
+                              </dd>
+                        </dlentry>
+                  </dl></p>
+            <p id="OAuth2_Examples">Let’s look at some examples of how to configure authentication and OAuth 2 authorization
+                  to read Twitter, Microsoft Azure AD, and Google APIs.</p>
 
       </conbody>
 </concept>

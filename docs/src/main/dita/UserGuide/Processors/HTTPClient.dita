@@ -30,5 +30,7 @@
         <p>You can also configure the timeout, request transfer encoding, maximum number of parallel
             requests, and authentication type. You can optionally use a truststore and keystore, and
             proxy.</p>
+        <p>You can also configure the processor to use the OAuth 2 protocol to connect to an HTTP
+            service.</p>
     </conbody>
 </concept>
