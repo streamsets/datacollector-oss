@@ -153,6 +153,11 @@
    </topicref>
    <topicref href="../Processors/HTTPClient-ParallelRequests.dita"/>
    <topicref href="../Processors/HTTPClient-ResponseHeaderFields.dita"/>
+   <topicref href="../Processors/HTTPClient-ProcessorOAuth2.dita">
+    <topicref href="../Processors/HTTPClient-ProcessorOAuth2Twitter.dita"/>
+    <topicref href="../Processors/HTTPClient-ProcessorOAuth2AzureAD.dita"/>
+    <topicref href="../Processors/HTTPClient-ProcessorOAuth2Google.dita"/>
+   </topicref>
    <topicref href="../Processors/HTTPClient-DataFormats.dita"/>
    <topicref href="../Processors/HTTPClient-Configuring.dita"/>
   </topicref>

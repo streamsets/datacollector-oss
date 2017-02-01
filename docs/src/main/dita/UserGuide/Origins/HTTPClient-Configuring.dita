@@ -60,6 +60,14 @@
                                         </ul></entry>
                                 </row>
                                 <row>
+                                    <entry>Per-Status Actions</entry>
+                                    <entry>Actions to take for specific response statuses. For
+                                        example, you can configure the origin to retry the request
+                                        with an exponential backoff when it receives a 500 HTTP
+                                        status code.<p>Click <uicontrol>Add</uicontrol> to add an
+                                            action for an additional status code.</p></entry>
+                                </row>
+                                <row>
                                     <entry>Polling Interval (ms) </entry>
                                     <entry>Milliseconds to wait before checking for new data. Used
                                         in the polling mode only. </entry>
@@ -83,6 +91,10 @@
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/HTTP-AuthType">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/HTTP-OAuth2">
                                     <entry/>
                                 </row>
                                 <row
@@ -161,11 +173,61 @@
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/HTTPClient-Credentials">
                 <cmd/>
             </step>
+            <step>
+                <cmd>When using OAuth 2
+                        authorization, on the <wintitle>OAuth 2</wintitle> tab, configure the
+                    following properties.</cmd>
+                <info>For more information about OAuth 2 and for example OAuth 2 configurations to
+                    read from Twitter, Microsoft Azure AD, or Google APIs, see <xref
+                        href="HTTPClient-OAuth2.dita#concept_c13_zz1_5y"/>.<table
+                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/HTTP_OAuth2"
+                        id="table_fgt_dw2_5y">
+                        <tgroup cols="1">
+                            <tbody>
+                                <row>
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table></info>
+            </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/HTTPClient-Proxy">
                 <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/HTTPClient-SSLTLS">
                 <cmd/>
+            </step>
+            <step>
+                <cmd>On the <uicontrol>Timeout Handling</uicontrol> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_cym_gsh_5y">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Timeout Handling Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Action for Timeout</entry>
+                                    <entry>Action to take when the request times out because the
+                                        HTTP service did not respond within the read timeout
+                                        period.</entry>
+                                </row>
+                                <row>
+                                    <entry>Max Retries</entry>
+                                    <entry>Maximum number of times to retry the request before
+                                        failing the stage. A negative value allows an infinite
+                                        number of retries.<p>Default is 10.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
             <step>
                 <cmd>On the <wintitle>Data Format</wintitle> tab, configure the following

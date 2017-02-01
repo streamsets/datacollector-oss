@@ -118,8 +118,19 @@
                                     <entry/>
                                 </row>
                                 <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/HTTP-OAuth2">
+                                    <entry/>
+                                </row>
+                                <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/HTTP-UseProxy">
                                     <entry/>
+                                </row>
+                                <row>
+                                    <entry>Rate Limit</entry>
+                                    <entry>Maximum number of requests to make per second. Set a rate
+                                        limit when sending requests to a rate-limited API.
+                                            <p>Default is 0, which means there is no delay between
+                                            requests.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Maximum Request Time</entry>
@@ -134,6 +145,23 @@
             <step
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/HTTPClient-Credentials">
                 <cmd/>
+            </step>
+            <step>
+                <cmd>When using OAuth 2 authorization, on the <wintitle>OAuth 2</wintitle> tab,
+                    configure the following properties.</cmd>
+                <info>For more information about OAuth 2 and for example OAuth 2 configurations to
+                    read from Twitter, Microsoft Azure AD, or Google APIs, see <xref
+                        href="HTTPClient-ProcessorOAuth2.dita#concept_s4p_15f_5y"/>. <table
+                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/HTTP_OAuth2"
+                        id="table_xwp_3w2_5y">
+                        <tgroup cols="1">
+                            <tbody>
+                                <row>
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table></info>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/HTTPClient-Proxy">
                 <cmd/>

@@ -36,7 +36,7 @@
      userIdAttribute="sAMAccountName"
      userPasswordAttribute="userPassword"
      userObjectClass="person"
-     userFilter="uid={user}"
+     userFilter="sAMAccountName={user}"
      roleBaseDn="ou=Department,dc=Company,dc=net"
      roleNameAttribute=“cn"
      roleMemberAttribute="member"
