@@ -621,7 +621,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       cache.put(
           HMSCacheType.PARTITION_VALUE_INFO,
           qualifiedName,
-          new PartitionInfoCacheSupport.PartitionInfo(diff)
+          new PartitionInfoCacheSupport.PartitionInfo(diff, new HiveQueryExecutor(hiveConfigBean), qualifiedName)
       );
     }
   }
