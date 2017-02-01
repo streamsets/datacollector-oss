@@ -23,6 +23,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.impl.Utils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -31,6 +32,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class TestRecordImpl {
 
@@ -345,21 +347,6 @@ public class TestRecordImpl {
   }
 
   @Test
-  public void testEscapingSlash() {
-    testEscaping('/');
-  }
-
-  @Test
-  public void testEscapingOpenBracket() {
-    testEscaping('[');
-  }
-
-  @Test
-  public void testEscapingCloseBracket() {
-    testEscaping(']');
-  }
-
-  @Test
   public void testSetInMap() {
     // Root field is the list
     // "[0]" is the map containing a boolean "true" with key a
@@ -570,4 +557,28 @@ public class TestRecordImpl {
     Assert.assertEquals("GAMMA", r.get("[2]").getValue());
   }
 
+  // Validate that all paths returned by getEscapedFieldPaths are in fact reachable
+  @Test
+  public void testEscapeAndRetrieveSpecialChars() {
+    RecordImpl r = new RecordImpl("stage", "source", null, null);
+    LinkedHashMap<String, Field> listMap = new LinkedHashMap<>();
+    listMap.put("a/b", Field.create("value"));
+    listMap.put("a[b", Field.create("value"));
+    listMap.put("a]b", Field.create("value"));
+    Field listMapField = Field.createListMap(listMap);
+    r.set(listMapField);
+
+    Set<String> paths = r.getEscapedFieldPaths();
+    for(String path : paths) {
+      // Skip implied root
+      if("".equals(path)) {
+        continue;
+      }
+
+      Assert.assertTrue(r.has(path));
+      Field f = r.get(path);
+      Assert.assertEquals(Utils.format("Different type for {}", path), Field.Type.STRING, f.getType());
+      Assert.assertEquals("value", f.getValueAsString());
+    }
+  }
 }
