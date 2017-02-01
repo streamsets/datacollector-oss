@@ -21,6 +21,7 @@ package com.streamsets.datacollector.runner.preview;
 
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
+import com.google.common.base.Throwables;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.el.PipelineEL;
@@ -79,6 +80,9 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
   private final String name;
   private final String rev;
   private final Timer processingTimer;
+
+  // Exception thrown while executing the pipeline
+  private volatile Throwable exceptionFromExecution = null;
 
   private SourcePipe originPipe;
   private List<List<Pipe>> pipes;
@@ -178,6 +182,13 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
       // Push origin will block on the call until the either all data have been consumed or the pipeline stopped
       originPipe.process(offsetTracker.getOffsets(), batchSize, this);
     }
+
+    // If execution failed on exception, we should propagate it up
+    if(exceptionFromExecution != null) {
+      Throwables.propagateIfInstanceOf(exceptionFromExecution, StageException.class);
+      Throwables.propagateIfInstanceOf(exceptionFromExecution, PipelineRuntimeException.class);
+      Throwables.propagate(exceptionFromExecution);
+    }
   }
 
   @Override
@@ -217,8 +228,18 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
 
       // Not doing any commits in the preview
       return true;
-    } catch (StageException|PipelineRuntimeException e) {
+    } catch (Throwable e) {
       LOG.error("Error while executing preview", e);
+      // Remember the exception so that we can re-throw it later
+      synchronized (this) {
+        if(exceptionFromExecution == null) {
+          exceptionFromExecution = e;
+        }
+      }
+
+      // We got exception while executing pipeline which is a signal that we should stop processing
+      ((StageContext)originPipe.getStage().getContext()).setStop(true);
+
       return  false;
     } finally {
       PipelineEL.unsetConstantsInContext();
