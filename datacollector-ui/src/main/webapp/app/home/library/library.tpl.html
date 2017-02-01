@@ -27,24 +27,48 @@
       </ul>
     </div>
 
-    <ul class="list-group predefined-labels">
-      <li class="list-group-item pointer clearfix"
-          ng-repeat="systemLabel in systemPipelineLabels"
-          ng-class="{'active' : selectedPipelineLabel === systemLabel}"
-          ng-click="onSelectLabel(systemLabel)">
-        <span class="pipeline-details-name">{{'home.library.' + systemLabel | translate}}</span>
+    <script type="text/ng-template" id="nested-label-template">
+
+      <li ng-repeat="label in sortedKeys(node.children)"
+          ng-init="node = node.children[label]"
+          class="list-group-item pointer clearfix">
+
+        <div ng-click="onSelectNode(node)"
+             ng-class="{'active' : selectedPipelineLabel === node.raw}"
+             class="list-group-item-wrapper"
+             style="padding-left: {{level * 10}}px; margin-left: -{{level * 10}}px;">
+
+          <span class="list-group-icon-wrapper">
+            <i ng-if="hasChildren(node) && node.isExpanded" class="fa fa-caret-down"></i>
+            <i ng-if="hasChildren(node) && !node.isExpanded" class="fa fa-caret-right"></i>
+          </span>
+
+          <span>{{label}}</span>
+        </div>
+
+        <ul class="list-group-children" ng-if="hasChildren(node) && node.isExpanded">
+          <ng-include ng-init="level = level + 1" src="'nested-label-template'"></ng-include>
+        </ul>
       </li>
 
-      <li class="border-list-group-item" ng-if="pipelineLabels.length > 0">
+    </script>
+
+    <ul class="list-group predefined-labels">
+      <li ng-repeat="systemLabel in systemPipelineLabels"
+          class="list-group-item pointer clearfix">
+
+        <div ng-click="onSelectLabel(systemLabel)"
+             ng-class="{'active' : selectedPipelineLabel === systemLabel}"
+             class="list-group-item-wrapper">{{'home.library.' + systemLabel | translate}}
+        </div>
+      </li>
+
+      <li class="border-list-group-item" ng-if="hasPipelineLabels()">
         <span translate="global.form.labels">LABELS</span>
       </li>
 
-      <li class="list-group-item pointer clearfix"
-          ng-repeat="pipelineLabel in pipelineLabels"
-          ng-class="{'active' : selectedPipelineLabel === pipelineLabel}"
-          ng-click="onSelectLabel(pipelineLabel)">
-        <span class="pipeline-details-name">{{pipelineLabel}}</span>
-      </li>
+      <ng-include ng-init="level = 1" ng-repeat="node in [pipelineLabels]" src="'nested-label-template'"></ng-include>
+
     </ul>
   </div>
  </div>
