@@ -37,12 +37,13 @@ import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.production.OffsetFileUtil;
+import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineInfo;
-import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.Issues;
+import com.streamsets.lib.security.acl.dto.Acl;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
@@ -70,17 +71,25 @@ public class RemoteDataCollector implements DataCollector {
   private final List<String> validatorIdList;
   private final PipelineStateStore pipelineStateStore;
   private final RemoteStateEventListener stateEventListener;
+  private final AclStoreTask aclStoreTask;
   private final RuntimeInfo runtimeInfo;
 
   @Inject
-  public RemoteDataCollector(Manager manager, PipelineStoreTask pipelineStore, PipelineStateStore pipelineStateStore,
-                             RemoteStateEventListener stateEventListener, RuntimeInfo runtimeInfo) {
+  public RemoteDataCollector(
+      Manager manager,
+      PipelineStoreTask pipelineStore,
+      PipelineStateStore pipelineStateStore,
+      AclStoreTask aclStoreTask,
+      RemoteStateEventListener stateEventListener,
+      RuntimeInfo runtimeInfo
+  ) {
     this.manager = manager;
     this.pipelineStore = pipelineStore;
     this.pipelineStateStore = pipelineStateStore;
     this.validatorIdList = new ArrayList<>();
     this.stateEventListener = stateEventListener;
     this.runtimeInfo = runtimeInfo;
+    this.aclStoreTask = aclStoreTask;
   }
 
   public void init() {
@@ -134,7 +143,8 @@ public class RemoteDataCollector implements DataCollector {
       String description,
       String offset,
       PipelineConfiguration pipelineConfiguration,
-      RuleDefinitions ruleDefinitions
+      RuleDefinitions ruleDefinitions,
+      Acl acl
   ) throws PipelineException {
 
     List<PipelineState> pipelineInfoList = manager.getPipelines();
@@ -157,12 +167,15 @@ public class RemoteDataCollector implements DataCollector {
     pipelineConfiguration.setUuid(uuid);
     pipelineStore.save(user, name, rev, description, pipelineConfiguration);
     pipelineStore.storeRules(name, rev, ruleDefinitions);
+    aclStoreTask.saveAcl(name, acl);
     LOG.info("Offset for remote pipeline '{}:{}' is {}", name, rev, offset);
     if (offset != null) {
       // TODO(SDC-4920): DPM Doesn't support two dimensional offset
       OffsetFileUtil.saveOffsets(runtimeInfo, name, rev, Collections.singletonMap(Source.POLL_SOURCE_OFFSET_KEY, offset));
     }
   }
+
+
 
   @Override
   public void savePipelineRules(String name, String rev, RuleDefinitions ruleDefinitions) throws PipelineException {
@@ -209,7 +222,8 @@ public class RemoteDataCollector implements DataCollector {
       }
       // If still active, force stop of this pipeline as we are deleting this anyways
       if (pipelineState.getStatus().isActive()) {
-        pipelineStateStore.saveState(user,
+        pipelineStateStore.saveState(
+            user,
             name,
             rev,
             PipelineStatus.STOPPED,

@@ -41,7 +41,6 @@ import com.streamsets.datacollector.event.json.PipelineStatusEventJson;
 import com.streamsets.datacollector.event.json.PipelineStatusEventsJson;
 import com.streamsets.datacollector.event.json.SDCInfoEventJson;
 import com.streamsets.datacollector.event.json.ServerEventJson;
-
 import fr.xebia.extras.selma.Mapper;
 import fr.xebia.extras.selma.Maps;
 import fr.xebia.extras.selma.Selma;

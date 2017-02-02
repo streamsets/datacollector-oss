@@ -20,21 +20,16 @@
 package com.streamsets.datacollector.event.dto;
 
 import com.streamsets.datacollector.config.dto.PipelineConfigAndRules;
+import com.streamsets.lib.security.acl.dto.Acl;
 
 public class PipelineSaveEvent extends PipelineBaseEvent {
 
   private PipelineConfigAndRules pipelineConfigurationAndRules;
   private String description;
   private String offset;
+  private Acl acl;
 
   public PipelineSaveEvent() {
-  }
-
-  public PipelineSaveEvent(String name, String rev, String user, String pipelineDescription,
-    PipelineConfigAndRules pipelineConfigurationAndRules) {
-    super(name, rev, user);
-    this.description = pipelineDescription;
-    this.pipelineConfigurationAndRules = pipelineConfigurationAndRules;
   }
 
   public PipelineConfigAndRules getPipelineConfigurationAndRules() {
@@ -59,5 +54,13 @@ public class PipelineSaveEvent extends PipelineBaseEvent {
 
   public void setOffset(String offset) {
     this.offset = offset;
+  }
+
+  public Acl getAcl() {
+    return acl;
+  }
+
+  public void setAcl(Acl acl) {
+    this.acl = acl;
   }
 }

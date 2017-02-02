@@ -46,6 +46,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.runner.production.OffsetFileUtil;
+import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineRevInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
@@ -53,6 +54,7 @@ import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.Issues;
+import com.streamsets.lib.security.acl.dto.Acl;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
@@ -805,9 +807,11 @@ public class TestRemoteDataCollector {
   @Test
   public void testValidateConfigs() throws Exception {
     try {
+      AclStoreTask aclStoreTask = Mockito.mock(AclStoreTask.class);
       RemoteDataCollector dataCollector = new RemoteDataCollector(new MockManager(),
           new MockPipelineStoreTask(),
           new MockPipelineStateStore(),
+          aclStoreTask,
           new RemoteStateEventListener(new Configuration()),
           null
       );
@@ -824,9 +828,11 @@ public class TestRemoteDataCollector {
   @Test
   public void testStopAndDelete() throws Exception {
     try {
+      AclStoreTask aclStoreTask = Mockito.mock(AclStoreTask.class);
       RemoteDataCollector dataCollector = new RemoteDataCollector(new MockManager(),
           new MockPipelineStoreTask(),
           new MockPipelineStateStore(),
+          aclStoreTask,
           new RemoteStateEventListener(new Configuration()),
           null
       );
@@ -848,6 +854,7 @@ public class TestRemoteDataCollector {
   public void testGetPipelineStatus() throws Exception {
     try {
       RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+      AclStoreTask aclStoreTask = Mockito.mock(AclStoreTask.class);
       File testFolder = tempFolder.newFolder();
       Mockito.when(runtimeInfo.getDataDir()).thenReturn(testFolder.getAbsolutePath());
       OffsetFileUtil.saveOffsets(runtimeInfo, "ns:name", "rev", Collections.singletonMap(Source.POLL_SOURCE_OFFSET_KEY, "offset:100"));
@@ -857,6 +864,7 @@ public class TestRemoteDataCollector {
       RemoteDataCollector dataCollector = new RemoteDataCollector(new MockManager(),
           new MockPipelineStoreTask(),
           new MockPipelineStateStore(),
+          aclStoreTask,
           new RemoteStateEventListener(new Configuration()),
           runtimeInfo
       );
@@ -900,17 +908,39 @@ public class TestRemoteDataCollector {
   }
 
   @Test
-  public void testSavePipelineOffset() throws Exception {
+  public void testAclOnSavePipeline() throws Exception {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    AclStoreTask aclStoreTask = Mockito.mock(AclStoreTask.class);
     RemoteDataCollector dataCollector = new RemoteDataCollector(new MockManager(),
         new MockPipelineStoreTask(),
         new MockPipelineStateStore(),
+        aclStoreTask,
         new RemoteStateEventListener(new Configuration()),
         runtimeInfo
     );
     File testFolder = tempFolder.newFolder();
     Mockito.when(runtimeInfo.getDataDir()).thenReturn(testFolder.getAbsolutePath());
-    dataCollector.savePipeline("user", "foo", "0", "", "offset:1000", Mockito.mock(PipelineConfiguration.class), null);
+    Acl acl = new Acl();
+    dataCollector.savePipeline("user", "foo", "0", "", "offset:1000", Mockito.mock(PipelineConfiguration.class), null,
+        acl);
+    Mockito.verify(aclStoreTask, Mockito.times(1)).saveAcl(Mockito.eq("foo"), Mockito.eq(acl));
+  }
+
+  @Test
+  public void testSavePipelineOffset() throws Exception {
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    AclStoreTask aclStoreTask = Mockito.mock(AclStoreTask.class);
+    RemoteDataCollector dataCollector = new RemoteDataCollector(new MockManager(),
+        new MockPipelineStoreTask(),
+        new MockPipelineStateStore(),
+        aclStoreTask,
+        new RemoteStateEventListener(new Configuration()),
+        runtimeInfo
+    );
+    File testFolder = tempFolder.newFolder();
+    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testFolder.getAbsolutePath());
+    dataCollector.savePipeline("user", "foo", "0", "", "offset:1000", Mockito.mock(PipelineConfiguration.class), null,
+        new Acl());
     assertTrue("Offset File doesn't exist", OffsetFileUtil.getPipelineOffsetFile(runtimeInfo, "foo", "0").exists());
     assertEquals("offset:1000", OffsetFileUtil.getOffsets(runtimeInfo, "foo", "0").get(Source.POLL_SOURCE_OFFSET_KEY));
   }
@@ -918,11 +948,13 @@ public class TestRemoteDataCollector {
   @Test
   public void testRemotePipelines() throws Exception {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    AclStoreTask aclStoreTask = Mockito.mock(AclStoreTask.class);
     RemoteStateEventListener remoteStateEventListener = Mockito.mock(RemoteStateEventListener.class);
     PipelineStoreTask pipelineStoreTask = Mockito.mock(MockPipelineStoreTask.class);
     RemoteDataCollector dataCollector = new RemoteDataCollector(new MockManager(),
         pipelineStoreTask,
         new MockPipelineStateStore(),
+        aclStoreTask,
         remoteStateEventListener,
         runtimeInfo
     );

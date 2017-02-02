@@ -20,6 +20,7 @@
 package com.streamsets.datacollector.event.json;
 
 import com.streamsets.datacollector.config.json.PipelineConfigAndRulesJson;
+import com.streamsets.lib.security.acl.json.AclJson;
 
 public class PipelineSaveEventJson extends PipelineBaseEventJson {
 
@@ -27,6 +28,7 @@ public class PipelineSaveEventJson extends PipelineBaseEventJson {
   private String description;
   private String user;
   private String offset;
+  private AclJson acl;
 
   public PipelineConfigAndRulesJson getPipelineConfigurationAndRules() {
     return pipelineConfigurationAndRules;
@@ -62,4 +64,11 @@ public class PipelineSaveEventJson extends PipelineBaseEventJson {
     this.offset = offset;
   }
 
+  public AclJson getAcl() {
+    return acl;
+  }
+
+  public void setAcl(AclJson acl) {
+    this.acl = acl;
+  }
 }

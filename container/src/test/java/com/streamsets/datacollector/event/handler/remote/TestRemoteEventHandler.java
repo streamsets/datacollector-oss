@@ -68,6 +68,7 @@ import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
+import com.streamsets.lib.security.acl.dto.Acl;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
@@ -402,7 +403,7 @@ public class TestRemoteEventHandler {
         String description,
         String offset,
         PipelineConfiguration pipelineConfiguration,
-        RuleDefinitions ruleDefinitions
+        RuleDefinitions ruleDefinitions, Acl acl
     ) throws PipelineStoreException {
       savePipelineCalled = true;
     }

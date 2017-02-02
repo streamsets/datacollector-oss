@@ -408,7 +408,8 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
                 pipelineSaveEvent.getDescription(),
                 pipelineSaveEvent.getOffset(),
                 BeanHelper.unwrapPipelineConfiguration(pipelineConfigJson),
-                BeanHelper.unwrapRuleDefinitions(ruleDefinitionsJson)
+                BeanHelper.unwrapRuleDefinitions(ruleDefinitionsJson),
+                pipelineSaveEvent.getAcl()
             );
             break;
           }
