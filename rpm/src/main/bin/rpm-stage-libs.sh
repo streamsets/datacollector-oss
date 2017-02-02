@@ -52,4 +52,4 @@ done
 cp -Rf ${TARGET}/streamsets-datacollector-streamsets-datacollector/RPMS/noarch/streamsets-datacollector-*.noarch.rpm ${RPM_ALL_DIST}
 
 # additional step to compress all stage-libs into tar file
-tar -cf ${RPM_ALL_DIST}/streamsets-datacollector-${VERSION}-all-rpms.tar ${RPM_ALL_DIST}/streamsets-datacollector-*.noarch.rpm
+tar -czf ${RPM_ALL_DIST}/streamsets-datacollector-${VERSION}-all-rpms.tgz ${RPM_ALL_DIST}/streamsets-datacollector-*.noarch.rpm
