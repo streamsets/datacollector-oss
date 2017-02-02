@@ -130,6 +130,11 @@ public final class HashingUtil {
     public void funnel(Record record, PrimitiveSink sink) {
       for (String path : getFieldsToHash(record)) {
         Field field = record.get(path);
+        if (field == null) {
+          throw new IllegalArgumentException(
+              Utils.format("Field Path {}  does not exist in the record", path)
+          );
+        }
         if (field.getValue() != null) {
           switch (field.getType()) {
             case BOOLEAN:

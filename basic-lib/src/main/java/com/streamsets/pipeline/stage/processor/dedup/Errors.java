@@ -34,6 +34,7 @@ public enum Errors implements ErrorCode {
   DEDUP_02("Specify at least one field for comparison"),
   DEDUP_03("The estimated required memory for '{}' records is '{}'. The current maximum heap is '{}'. The " +
            "required memory must not exceed the maximum heap."),
+  DEDUP_04("Error processing record. Reason: {}"),
   ;
 
 

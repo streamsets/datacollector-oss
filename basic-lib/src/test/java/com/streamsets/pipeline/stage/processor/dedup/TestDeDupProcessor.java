@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.processor.dedup;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -91,7 +92,7 @@ public class TestDeDupProcessor {
   @Test(expected = StageException.class)
   public void testValidateConfigs5() throws Exception {
     Processor processor = new DeDupProcessor((int) ( getDefaultMemoryLimitMiB() * 1000 * 1000 / 85 + 1), 0,
-                                             SelectFields.ALL_FIELDS, Collections.EMPTY_LIST);
+        SelectFields.ALL_FIELDS, Collections.EMPTY_LIST);
     ProcessorRunner runner = new ProcessorRunner.Builder(DeDupDProcessor.class, processor)
         .addOutputLane("unique")
         .addOutputLane("duplicate")
@@ -103,7 +104,7 @@ public class TestDeDupProcessor {
   public void testValidateConfigs6() throws Exception {
 
     Processor processor = new DeDupProcessor((int) (getDefaultMemoryLimitMiB() * 1000 * 1000 / 85 - 1), 0,
-                                             SelectFields.ALL_FIELDS, Collections.EMPTY_LIST);
+        SelectFields.ALL_FIELDS, Collections.EMPTY_LIST);
     ProcessorRunner runner = new ProcessorRunner.Builder(DeDupDProcessor.class, processor)
         .addOutputLane("unique")
         .addOutputLane("duplicate")
@@ -138,9 +139,9 @@ public class TestDeDupProcessor {
   public void testUniqueSingleBatchSpecifiedFields() throws Exception {
     Processor processor = new DeDupProcessor(4, 1, SelectFields.SPECIFIED_FIELDS, Arrays.asList("/value"));
     ProcessorRunner runner = new ProcessorRunner.Builder(DeDupDProcessor.class, processor)
-      .addOutputLane("unique")
-      .addOutputLane("duplicate")
-      .build();
+        .addOutputLane("unique")
+        .addOutputLane("duplicate")
+        .build();
     runner.runInit();
     try {
 
@@ -158,9 +159,9 @@ public class TestDeDupProcessor {
 
     processor = new DeDupProcessor(4, 1, SelectFields.SPECIFIED_FIELDS, Arrays.asList("/value"));
     runner = new ProcessorRunner.Builder(DeDupDProcessor.class, processor)
-      .addOutputLane("unique")
-      .addOutputLane("duplicate")
-      .build();
+        .addOutputLane("unique")
+        .addOutputLane("duplicate")
+        .build();
     runner.runInit();
     try {
 
@@ -391,11 +392,11 @@ public class TestDeDupProcessor {
   @Test
   public void testWildCardDedup() throws Exception {
     Processor processor = new DeDupProcessor(4, 1, SelectFields.SPECIFIED_FIELDS,
-      ImmutableList.of("/USA[*]/SanFrancisco/*/streets[*][*]/name"));
+        ImmutableList.of("/USA[*]/SanFrancisco/*/streets[*][*]/name"));
     ProcessorRunner runner = new ProcessorRunner.Builder(DeDupDProcessor.class, processor)
-      .addOutputLane("unique")
-      .addOutputLane("duplicate")
-      .build();
+        .addOutputLane("unique")
+        .addOutputLane("duplicate")
+        .build();
     runner.runInit();
     try {
 
@@ -407,6 +408,34 @@ public class TestDeDupProcessor {
       StageRunner.Output output = runner.runProcess(input);
       Assert.assertEquals(3, output.getRecords().get("unique").size());
       Assert.assertEquals(1, output.getRecords().get("duplicate").size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testNonExistentField() throws Exception {
+    Processor processor =
+        new DeDupProcessor(
+            4,
+            1,
+            SelectFields.SPECIFIED_FIELDS,
+            ImmutableList.of("/nonExistentField")
+        );
+    ProcessorRunner runner = new ProcessorRunner.Builder(DeDupDProcessor.class, processor)
+        .addOutputLane("unique")
+        .addOutputLane("duplicate")
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+    runner.runInit();
+    try {
+      Record r = createRecord("a", "b");
+      StageRunner.Output output = runner.runProcess(Collections.singletonList(r));
+      Assert.assertEquals(0, output.getRecords().get("unique").size());
+      Assert.assertEquals(0, output.getRecords().get("duplicate").size());
+      Assert.assertEquals(1, runner.getErrorRecords().size());
+      Record errorRecord = runner.getErrorRecords().get(0);
+      Assert.assertEquals(Errors.DEDUP_04.name(), errorRecord.getHeader().getErrorCode());
     } finally {
       runner.runDestroy();
     }
@@ -460,7 +489,7 @@ public class TestDeDupProcessor {
 
     Map<String, Field> map = new LinkedHashMap<>();
     map.put("USA", Field.create(Field.Type.LIST,
-      ImmutableList.of(Field.create(california), Field.create(utah))));
+        ImmutableList.of(Field.create(california), Field.create(utah))));
 
     Record record = RecordCreator.create("s", "s:1");
     record.set(Field.create(map));

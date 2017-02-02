@@ -27,9 +27,15 @@ import com.google.common.hash.HashFunction;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ToErrorContext;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.RecordProcessor;
 import com.streamsets.pipeline.lib.hashing.HashingUtil;
 import com.streamsets.pipeline.lib.queue.XEvictingQueue;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,6 +43,7 @@ import java.util.concurrent.TimeUnit;
 
 public class DeDupProcessor extends RecordProcessor {
   private static final long MEMORY_USAGE_PER_HASH = 85;
+  private static final Logger LOG = LoggerFactory.getLogger(DeDupProcessor.class);
 
   private final  int recordCountWindow;
   private final  int timeWindowSecs;
@@ -124,10 +131,15 @@ public class DeDupProcessor extends RecordProcessor {
 
   @Override
   protected void process(Record record, BatchMaker batchMaker) throws StageException {
-    if (duplicateCheck(record)) {
-      batchMaker.addRecord(record, duplicateLane);
-    } else {
-      batchMaker.addRecord(record, uniqueLane);
+    try {
+      if (duplicateCheck(record)) {
+        batchMaker.addRecord(record, duplicateLane);
+      } else {
+        batchMaker.addRecord(record, uniqueLane);
+      }
+    } catch (IllegalArgumentException e) {
+      LOG.error("Error processing Record", e);
+      throw new OnRecordErrorException(Errors.DEDUP_04, e.toString());
     }
   }
 
