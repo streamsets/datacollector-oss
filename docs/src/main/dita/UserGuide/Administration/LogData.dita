@@ -19,13 +19,11 @@
    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> log data. </shortdesc>
  <conbody>
   <p><indexterm>Data Collector<indexterm>log data</indexterm></indexterm><indexterm>log
-     files<indexterm>Data Collector</indexterm></indexterm>Log data includes information about the
-    <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, such as
-   the build information, the time the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> started, and
-   the time the pipeline started or stopped. The type of log information that displays is based on
-   the &lt;xxx?> property in the logj4.properties file.<draft-comment author="Loretta">is this last
-    sentence true, or delete. emailed Tucu 4/10.</draft-comment></p>
+          files<indexterm>Data Collector</indexterm></indexterm>Log data includes information about
+      the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
+      such as the build information, the time the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> started,
+      and the time the pipeline started or stopped. </p>
   <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
    writes log information to a log file and appends new information to the file. When the log file
    reaches a defined limit, it creates another file and continues writing to the file. The file name

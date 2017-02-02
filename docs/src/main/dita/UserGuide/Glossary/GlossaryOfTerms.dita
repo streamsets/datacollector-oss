@@ -136,7 +136,7 @@
         <dd>Monitoring or email alerts based on stage or pipeline metrics. </dd>
       </dlentry>
       <dlentry>
-        <dt>mulitithreaded pipelines</dt>
+        <dt>multithreaded pipelines</dt>
         <dd>A pipeline with an origin that generates multiple threads, enabling the processing of
           high volumes of data in a single pipeline on one Data Collector.</dd>
       </dlentry>

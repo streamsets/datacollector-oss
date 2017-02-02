@@ -74,7 +74,7 @@
                                                 id="image_kbd_r1n_sy"/></xref>
                                     </entry>
                                     <entry>Integer ordinal to specify the entry to use within a set
-                                        of idential timestamps. <p>Required when you specify an
+                                        of identical timestamps. <p>Required when you specify an
                                             initial timestamp. Use -1 to opt out of this property.
                                         </p></entry>
                                 </row>
