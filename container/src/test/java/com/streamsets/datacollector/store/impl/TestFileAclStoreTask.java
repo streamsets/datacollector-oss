@@ -104,7 +104,7 @@ public class TestFileAclStoreTask {
     store = new CachePipelineStoreTask(filePipelineStoreTask, new LockCache<String>());
 
     FileAclStoreTask fileAclStoreTask = dagger.get(FileAclStoreTask.class);
-    aclStore = new CacheAclStoreTask(fileAclStoreTask, filePipelineStoreTask);
+    aclStore = new CacheAclStoreTask(fileAclStoreTask, filePipelineStoreTask, new LockCache<String>());
 
   }
 

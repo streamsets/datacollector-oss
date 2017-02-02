@@ -21,18 +21,25 @@ package com.streamsets.datacollector.store;
 
 import com.streamsets.datacollector.store.impl.CacheAclStoreTask;
 import com.streamsets.datacollector.store.impl.FileAclStoreTask;
+import com.streamsets.datacollector.util.LockCache;
+import com.streamsets.datacollector.util.LockCacheModule;
 import dagger.Module;
 import dagger.Provides;
 
 import javax.inject.Singleton;
 
-@Module(injects = AclStoreTask.class, library = true, includes = {CachePipelineStoreModule.class})
+@Module(injects = AclStoreTask.class, library = true, includes = {CachePipelineStoreModule.class,
+    LockCacheModule.class})
 public class CacheAclStoreModule {
 
   @Provides
   @Singleton
-  public AclStoreTask provideAclStore(FileAclStoreTask aclStore, PipelineStoreTask pipelineStore) {
-    return new CacheAclStoreTask(aclStore, pipelineStore);
+  public AclStoreTask provideAclStore(
+      FileAclStoreTask aclStore,
+      PipelineStoreTask pipelineStore,
+      LockCache<String> lockCache
+  ) {
+    return new CacheAclStoreTask(aclStore, pipelineStore, lockCache);
   }
 
 }

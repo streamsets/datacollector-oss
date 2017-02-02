@@ -40,6 +40,8 @@ public interface AclStoreTask extends Task {
 
   Acl getAcl(String name) throws PipelineException;
 
+  void deleteAcl(String name);
+
   void validateReadPermission(String pipelineName, UserJson currentUser) throws PipelineException;
 
   void validateWritePermission(String pipelineName, UserJson currentUser) throws PipelineException;

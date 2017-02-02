@@ -83,39 +83,43 @@ public class FileAclStoreTask extends AbstractAclStoreTask {
       long resourceCreateTime,
       String resourceOwner
   ) throws PipelineStoreException {
-    Acl acl = new Acl();
-    acl.setResourceId(pipelineName);
-    acl.setResourceOwner(resourceOwner);
-    acl.setResourceType(resourceType);
-    acl.setResourceCreatedTime(resourceCreateTime);
-    acl.setLastModifiedBy(resourceOwner);
-    acl.setLastModifiedOn(resourceCreateTime);
+    synchronized (lockCache.getLock(pipelineName)) {
+      Acl acl = new Acl();
+      acl.setResourceId(pipelineName);
+      acl.setResourceOwner(resourceOwner);
+      acl.setResourceType(resourceType);
+      acl.setResourceCreatedTime(resourceCreateTime);
+      acl.setLastModifiedBy(resourceOwner);
+      acl.setLastModifiedOn(resourceCreateTime);
 
-    Permission ownerPermission = new Permission();
-    ownerPermission.setResourceId(pipelineName);
-    ownerPermission.setSubjectId(resourceOwner);
-    ownerPermission.setSubjectType(SubjectType.USER);
-    ownerPermission.setLastModifiedOn(resourceCreateTime);
-    ownerPermission.setLastModifiedBy(resourceOwner);
-    ownerPermission.getActions().addAll(resourceType.getActions());
+      Permission ownerPermission = new Permission();
+      ownerPermission.setResourceId(pipelineName);
+      ownerPermission.setSubjectId(resourceOwner);
+      ownerPermission.setSubjectType(SubjectType.USER);
+      ownerPermission.setLastModifiedOn(resourceCreateTime);
+      ownerPermission.setLastModifiedBy(resourceOwner);
+      ownerPermission.getActions().addAll(resourceType.getActions());
 
-    acl.getPermissions().add(ownerPermission);
-    saveAcl(pipelineName, acl);
-    return acl;
+      acl.getPermissions().add(ownerPermission);
+      saveAcl(pipelineName, acl);
+      return acl;
+    }
   }
 
   @Override
   public Acl saveAcl(String pipelineName, Acl acl) throws PipelineStoreException {
-    DataStore dataStore = new DataStore(getPipelineAclFile(pipelineName).toFile());
-    try (OutputStream os = dataStore.getOutputStream()) {
-      ObjectMapperFactory.get().writeValue(os, AclDtoJsonMapper.INSTANCE.toAclJson(acl));
-      dataStore.commit(os);
-    } catch (IOException ex) {
-      throw new PipelineStoreException(ContainerError.CONTAINER_0406, pipelineName, ex.toString(), ex);
-    } finally {
-      dataStore.release();
+    synchronized (lockCache.getLock(pipelineName)) {
+      DataStore dataStore = new DataStore(getPipelineAclFile(pipelineName).toFile());
+      try (OutputStream os = dataStore.getOutputStream()) {
+        ObjectMapperFactory.get().writeValue(os, AclDtoJsonMapper.INSTANCE.toAclJson(acl));
+        dataStore.commit(os);
+      } catch (IOException ex) {
+        throw new PipelineStoreException(ContainerError.CONTAINER_0406, pipelineName, ex.toString(), ex);
+      } finally {
+        dataStore.release();
+      }
+      return acl;
     }
-    return acl;
   }
 
   @Override
@@ -139,6 +143,11 @@ public class FileAclStoreTask extends AbstractAclStoreTask {
       }
       return null;
     }
+  }
+
+  @Override
+  public void deleteAcl(String name) {
+    // no op, deleting pipeline takes care of deleting pipeline acl file too
   }
 
 }

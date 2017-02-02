@@ -104,6 +104,7 @@ public class AclPipelineStoreTask implements PipelineStoreTask {
   public void delete(String name) throws PipelineException {
     aclStore.validateWritePermission(name, currentUser);
     pipelineStore.delete(name);
+    aclStore.deleteAcl(name);
   }
 
   @Override

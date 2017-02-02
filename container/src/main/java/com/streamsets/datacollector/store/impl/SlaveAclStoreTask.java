@@ -89,6 +89,11 @@ public class SlaveAclStoreTask implements AclStoreTask {
   }
 
   @Override
+  public void deleteAcl(String name) {
+    aclStore.deleteAcl(name);
+  }
+
+  @Override
   public void validateReadPermission(String pipelineName, UserJson currentUser) throws PipelineException {
     aclStore.validateReadPermission(pipelineName, currentUser);
   }

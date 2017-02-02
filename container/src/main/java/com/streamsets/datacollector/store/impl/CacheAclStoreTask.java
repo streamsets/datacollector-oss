@@ -22,6 +22,7 @@ package com.streamsets.datacollector.store.impl;
 import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
+import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.lib.security.acl.dto.Acl;
 import com.streamsets.lib.security.acl.dto.ResourceType;
@@ -33,12 +34,14 @@ import java.util.concurrent.ConcurrentMap;
 public class CacheAclStoreTask extends AbstractAclStoreTask {
   private final AclStoreTask aclStore;
   private final ConcurrentMap<String, Acl> pipelineAclMap;
+  private final LockCache<String> lockCache;
 
   @Inject
-  public CacheAclStoreTask(AclStoreTask aclStore, PipelineStoreTask pipelineStore) {
+  public CacheAclStoreTask(AclStoreTask aclStore, PipelineStoreTask pipelineStore, LockCache<String> lockCache) {
     super(pipelineStore);
     this.aclStore = aclStore;
     pipelineAclMap = new ConcurrentHashMap<>();
+    this.lockCache = lockCache;
   }
 
   @Override
@@ -64,26 +67,39 @@ public class CacheAclStoreTask extends AbstractAclStoreTask {
       long resourceCreateTime,
       String resourceOwner
   ) throws PipelineStoreException {
-    Acl acl = aclStore.createAcl(name, resourceType, resourceCreateTime, resourceOwner);
-    pipelineAclMap.put(name, acl);
-    return acl;
+    synchronized (lockCache.getLock(name)) {
+      Acl acl = aclStore.createAcl(name, resourceType, resourceCreateTime, resourceOwner);
+      pipelineAclMap.put(name, acl);
+      return acl;
+    }
   }
 
   @Override
   public Acl saveAcl(String name, Acl acl) throws PipelineException {
-    aclStore.saveAcl(name, acl);
-    pipelineAclMap.put(name, acl);
-    return acl;
+    synchronized (lockCache.getLock(name)) {
+      aclStore.saveAcl(name, acl);
+      pipelineAclMap.put(name, acl);
+      return acl;
+    }
   }
 
   @Override
   public Acl getAcl(String name) throws PipelineException {
-    if (!pipelineAclMap.containsKey(name)) {
-      Acl acl = aclStore.getAcl(name);
-      if (acl != null) {
-        pipelineAclMap.put(name, acl);
+    synchronized (lockCache.getLock(name)) {
+      if (!pipelineAclMap.containsKey(name)) {
+        Acl acl = aclStore.getAcl(name);
+        if (acl != null) {
+          pipelineAclMap.put(name, acl);
+        }
       }
+      return pipelineAclMap.get(name);
     }
-    return pipelineAclMap.get(name);
+  }
+
+  @Override
+  public void deleteAcl(String name) {
+    synchronized (lockCache.getLock(name)) {
+      pipelineAclMap.remove(name);
+    }
   }
 }
