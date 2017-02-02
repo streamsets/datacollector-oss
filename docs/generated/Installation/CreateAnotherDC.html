@@ -1,0 +1,185 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Creating Another Data Collector Instance" /><meta name="abstract" content="You can create another instance of a Data Collector tarball or RPM installation on the same machine with the create-dc command. The additional Data Collector instance uses the same configuration as the original Data Collector instance. You can modify the configuration properties as needed." /><meta name="description" content="You can create another instance of a Data Collector tarball or RPM installation on the same machine with the create-dc command. The additional Data Collector instance uses the same configuration as the original Data Collector instance. You can modify the configuration properties as needed." /><meta name="DC.Relation" scheme="URI" content="../Installation/Install_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_p2w_x3z_yx" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Creating Another Data Collector Instance</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+            
+            var prefix = "../index.html";
+            
+            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../Installation/Install_title.html" title="Installation">Installation</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../Installation/Install_title.html" title="Installation"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Installation</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_p2w_x3z_yx">
+ <h1 class="title topictitle1">Creating Another Data Collector Instance</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can create another instance of a <span class="ph">Data
+                  Collector</span>
+        tarball or RPM installation on the same machine with the <samp class="ph codeph">create-dc</samp> command.
+        The additional <span class="ph">Data
+                  Collector</span>
+        instance uses the same configuration as the original <span class="ph">Data
+                  Collector</span>
+        instance. You can modify the configuration properties as needed. </p>
+
+        <p class="p">When
+            you want to run another <span class="ph">Data
+                  Collector</span>
+            instance with the same configuration, using the <samp class="ph codeph">create-dc</samp> command is
+            simpler than downloading and installing another <span class="ph">Data
+                  Collector</span>.
+            If you install a new instance, you then must manually make the same modifications to the
+            configuration files.</p>
+
+        <p class="p"><span class="ph">Data
+                  Collector</span>
+            does not need to be running to use the <samp class="ph codeph">create-dc</samp> command. Call the
+            command from the following location:</p>
+
+        <div class="p">
+            <pre class="pre codeblock">$SDC_DIST/bin/</pre>
+
+        </div>
+
+        <div class="note note"><span class="notetitle">Note:</span> The <samp class="ph codeph">create-dc</samp> command copies the original <span class="ph">Data
+                  Collector</span>
+            configuration directory inside the base runtime directory of the additional <span class="ph">Data
+                  Collector</span>
+            instance. However, StreamSets recommends that you use directories outside of the runtime
+            directory to enable use of the directories after <span class="ph">Data
+                  Collector</span>
+            upgrades. For information on modifying <span class="ph">Data
+                  Collector</span>
+            directories, see <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_mnx_j3r_3v" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.">Data Collector Directories</a>.</div>
+
+        <p class="p">The <samp class="ph codeph">create-dc</samp> command uses the following syntax:</p>
+
+        <pre class="pre codeblock">create-dc \
+-home=&lt;SDC_HOME_DIR&gt; (-httpPort=&lt;SDC_HTTP_PORT&gt; | -httpsPort=&lt;SDC_HTTPS_PORT&gt;) \
+[-conf=&lt;SDC_CONF_DIR&gt;]</pre>
+
+        <p class="p">Use the <samp class="ph codeph">-help</samp> option to view additional information for the command, for
+            example: <samp class="ph codeph">create-dc -help</samp>.</p>
+
+        
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_p2w_x3z_yx__table_hsh_vjz_yx" class="table" frame="border" border="1" rules="all">
+                
+                
+                <thead class="thead" align="left">
+                    <tr>
+                        <th class="entry" valign="top" width="33.33333333333333%" id="d133695e120">Create-dc Option</th>
+
+                        <th class="entry" valign="top" width="66.66666666666666%" id="d133695e123">Description</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody class="tbody">
+                    <tr>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d133695e120 ">-home=&lt;SDC_HOME_DIR&gt;</td>
+
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d133695e123 ">Required. Home directory for the additional <span class="ph">Data
+                  Collector</span> instance. <div class="p">The root of the specified home directory must exist.
+                                However, the home subdirectory cannot exist because the command
+                                creates that directory. For example, say you enter the following for
+                                the home directory
+                                option:<pre class="pre codeblock">-home="/sdcs/sdc2"</pre>
+</div>
+<p class="p">The directory
+                                    <samp class="ph codeph">/sdcs</samp> must exist and must not contain a
+                                subdirectory named <samp class="ph codeph">/sdc2</samp>.</p>
+</td>
+
+                    </tr>
+
+                    <tr>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d133695e120 ">-httpPort=&lt;SDC_HTTP_PORT&gt;<p class="p">or</p>
+<p class="p">-httpsPort=&lt;SDC_HTTPS_PORT&gt;</p>
+</td>
+
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d133695e123 ">Required. HTTP or HTTPS port for the additional <span class="ph">Data
+                  Collector</span> instance. Enter a port number that is not in use. </td>
+
+                    </tr>
+
+                    <tr>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d133695e120 ">-conf=&lt;SDC_CONF_DIR&gt;</td>
+
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d133695e123 ">Optional for tarball installations with a manual start. Required for
+                            tarball and RPM installations with a service start. The configuration
+                            directory of the original <span class="ph">Data
+                  Collector</span> instance. <p class="p">For a tarball installation with a manual start, you must
+                                use this option if you changed the default location of the <span class="ph">Data
+                  Collector</span> configuration directory, <samp class="ph codeph">$SDC_DIST/etc</samp>. For
+                                example, you must use this option if you followed our recommendation
+                                to use a configuration directory outside of the base runtime
+                                directory, <samp class="ph systemoutput">$SDC_DIST</samp>.</p>
+<p class="p">For a
+                                tarball or RPM installation with a service start, you must use this
+                                option. The default location for the <span class="ph">Data
+                  Collector</span> configuration directory for a service start is
+                                    <samp class="ph codeph">/etc/sdc</samp>.</p>
+<p class="p">Default is
+                                    <samp class="ph codeph">$SDC_DIST/etc</samp>.</p>
+</td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+</div>
+
+        <div class="p">For example, the following command creates an additional <span class="ph">Data
+                  Collector</span>
+            instance with a home directory of <samp class="ph codeph">/sdcs/sdc2</samp> and an HTTP port of 19001.
+            The original <span class="ph">Data
+                  Collector</span>
+            instance is an RPM installation, and so the command specifies the location of the
+            original <span class="ph">Data
+                  Collector</span>
+            configuration directory as <samp class="ph codeph">/etc/sdc</samp>:
+            <pre class="pre codeblock">bin/streamsets create-dc -home="/sdcs/sdc2" -httpPort=19001 -conf="/etc/sdc"</pre>
+</div>
+
+        <p class="p">The command copies the configuration directory of the original <span class="ph">Data
+                  Collector</span>
+            instance inside the home directory of the additional <span class="ph">Data
+                  Collector</span>
+            instance, so that the configuration directory for the additional <span class="ph">Data
+                  Collector</span>
+            instance is: <samp class="ph codeph">/sdcs/sdc2/etc/sdc</samp>. </p>
+
+    </div>
+
+<div class="related-links"></div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Installation/Install_title.html" title="Installation"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Installation</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

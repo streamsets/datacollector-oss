@@ -105,7 +105,7 @@
      <dd class="dd">By default, <span class="ph">Data
                   Collector</span> logs
       messages at the INFO severity level. You can modify the log level to display messages at
-      another severity level. For more information, see <a class="xref" href="../Install_Config/LogLevel.html#concept_yrv_ck2_px" title="If the Data Collector logs do not provide enough troubleshooting information, you can modify the log level to display messages at another severity level.">Modifying the Log Level</a>.</dd>
+      another severity level. For more information, see <a class="xref" href="../Configuration/LogLevel.html#concept_yrv_ck2_px" title="If the Data Collector logs do not provide enough troubleshooting information, you can modify the log level to display messages at another severity level.">Modifying the Log Level</a>.</dd>
 
     
    </dl>
@@ -276,8 +276,8 @@ name &lt;stage name&gt;, version &lt;version&gt;</pre>
                   Collector</span>. </dd>
 
                     <dd class="dd">If you need to use a stage that is not installed on the <span class="ph">Data
-                  Collector</span>, install the related stage library. For an RPM installation, see <a class="xref" href="../Install_Config/CoreInstall_Overview.html#concept_amc_cf3_dx">Install Additional RPM Libraries</a>.
-                        For a tarball installation, see <a class="xref" href="../Install_Config/CoreInstall_Overview.html#concept_h5k_jbl_nx">Install Additional Libraries Using the Package Manager</a> or <a class="xref" href="../Install_Config/CoreInstall_Overview.html#concept_bnl_n3n_s5">Install Additional Libraries Using the Command Line</a>.</dd>
+                  Collector</span>, install the related stage library. For an RPM installation, see <a class="xref" href="../Installation/CoreInstall_Overview.html#concept_amc_cf3_dx">Install Additional RPM Libraries</a>.
+                        For a tarball installation, see <a class="xref" href="../Installation/CoreInstall_Overview.html#concept_h5k_jbl_nx">Install Additional Libraries Using the Package Manager</a> or <a class="xref" href="../Installation/CoreInstall_Overview.html#concept_bnl_n3n_s5">Install Additional Libraries Using the Command Line</a>.</dd>
 
                 
             </dl>
@@ -529,7 +529,7 @@ Integer provided`</pre>
  </div>
 
 </div>
-<div class="topic concept nested2" id="unique_659447862">
+<div class="topic concept nested2" id="unique_809981083">
  <h3 class="title topictitle3">Hadoop FS</h3>
 
  <div class="body conbody">
@@ -671,9 +671,13 @@ java.net.ConnectException: Connection refused]</pre>
             tips for help with stages that use JDBC connections to connect to databases. </p>
 
         <div class="p">The following stages use a JDBC connection: <ul class="ul" id="concept_vrq_qh1_hy__ul_t1w_h31_hy">
-                <li class="li">JDBC Consumer origin</li>
+                <li class="li">JDBC Multitable Consumer origin</li>
+
+                <li class="li">MySQL Binary Log origin</li>
 
                 <li class="li">Oracle CDC Client origin</li>
+
+                <li class="li">JDBC Query Consumer origin</li>
 
                 <li class="li">JDBC Lookup processor</li>
 
@@ -700,7 +704,7 @@ JDBC_06 - Failed to initialize connection pool: java.sql.SQLException: No suitab
 </div>
 
         <p class="p">Verify that you have followed the instructions to install additional drivers, as
-            explained in <a class="xref" href="../Install_Config/AdditionalDrivers.html#task_idl_hqw_ft">Installing Additional Drivers</a>. </p>
+            explained in <a class="xref" href="../Configuration/AdditionalDrivers.html#task_idl_hqw_ft">Installing Additional Drivers</a>. </p>
 
         <p class="p">You can also use these additional tips to help resolve the issue:</p>
 
@@ -828,6 +832,19 @@ nc: connectx to 1.2.3.4 port 1234 (tcp) failed: Connection refused</pre>
     </div>
 
 </div>
+<div class="topic concept nested2" id="concept_hnf_wkt_sy">
+ <h3 class="title topictitle3">MySQL JDBC Driver and Time Values</h3>
+
+ <div class="body conbody">
+  <p class="p">Due to a MySQL JDBC driver issue, the driver cannot return time values to the millisecond.
+            Instead, the driver returns the values to the second.</p>
+
+        <p class="p">For example, if a column has a value of 20:12:50.581, the driver reads the value as
+            20:12:50.000.</p>
+
+ </div>
+
+</div>
 </div>
 <div class="topic concept nested1" id="concept_ay2_w1l_2s">
  <h2 class="title topictitle2">Performance</h2>
@@ -884,7 +901,7 @@ nc: connectx to 1.2.3.4 port 1234 (tcp) failed: Connection refused</pre>
                   Collector</span>
             configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>.</dd>
 
-          <dd class="dd">For more information, see <a class="xref" href="../Install_Config/DCConfig.html#task_nkc_ydl_bw" title="By default, Data Collector can run approximately 22 standalone pipelines concurrently. If you plan to run a larger number of pipelines at the same time, increase the thread pool size.">Running Multiple Concurrent Pipelines</a>.</dd>
+          <dd class="dd">For more information, see <a class="xref" href="../Configuration/DCConfig.html#task_nkc_ydl_bw" title="By default, Data Collector can run approximately 22 standalone pipelines concurrently. If you plan to run a larger number of pipelines at the same time, increase the thread pool size.">Running Multiple Concurrent Pipelines</a>.</dd>
 
         
     
@@ -1015,7 +1032,7 @@ Kerberos Error: No valid credentials provided (Mechanism level: Failed to find a
 
           <dd class="dd">It's likely that the cluster is configured to use Kerberos, but the <span class="ph">Data
                   Collector</span> is
-            not configured to use Kerberos. For more information see <a class="xref" href="../Install_Config/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Enabling Kerberos Authentication</a>.</dd>
+            not configured to use Kerberos. For more information see <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Enabling Kerberos Authentication</a>.</dd>
 
         
         

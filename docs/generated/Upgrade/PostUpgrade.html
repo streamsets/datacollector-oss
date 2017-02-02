@@ -33,6 +33,60 @@
         you upgrade.</p>
 
 <div class="related-links"></div>
+<div class="topic task nested1" id="task_afy_k12_ry">
+    <h2 class="title topictitle2">Update Elasticsearch Pipelines</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc"><span class="ph">Data
+                  Collector</span>
+        version 2.3.0.0 includes an enhanced Elasticsearch destination that uses the Elasticsearch
+        HTTP API. To upgrade pipelines that use the Elasticsearch destination, you must verify that
+        Java 8 is installed and remove the Elasticsearch stage library from the blacklist property
+        for stage libraries.</p>
+
+        <div class="section context">
+            <div class="note note"><span class="notetitle">Note:</span> The Elasticsearch version 5 stage library is compatible with all versions of
+                Elasticsearch. Earlier stage library versions have been removed.</div>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">Verify that Java 8 is installed on the <span class="ph">Data
+                  Collector</span> machine.</span>
+                <div class="itemgroup info">The minimum supported version of Java for the Elasticsearch destination is
+                    Java 8.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the <span class="ph">Data
+                  Collector</span> configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>, remove the
+                    Elasticsearch stage library from the
+                        <span class="ph uicontrol">system.stagelibs.blacklist</span> property.</span>
+                <div class="itemgroup info">For example, the <span class="ph uicontrol">system.stagelibs.blacklist</span> property is
+                    defined as
+                    follows:<pre class="pre codeblock">system.stagelibs.blacklist=\
+  streamsets-datacollector-mapr_5_0-lib,\
+  streamsets-datacollector-mapr_5_1-lib,\
+  streamsets-datacollector-mapr_5_2-lib,\
+  streamsets-datacollector-apache-solr_6_1_0-lib,\
+  streamsets-datacollector-elasticsearch_5-lib</pre>
+Remove
+                    the Elasticsearch stage library from the property as
+                    follows:<pre class="pre codeblock">system.stagelibs.blacklist=\
+  streamsets-datacollector-mapr_5_0-lib,\
+  streamsets-datacollector-mapr_5_1-lib,\
+  streamsets-datacollector-mapr_5_2-lib,\
+  streamsets-datacollector-apache-solr_6_1_0-lib</pre>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Restart <span class="ph">Data
+                  Collector</span> and verify that you can access the Elasticsearch destination.</span>
+            </li>
+</ol>
+
+    </div>
+
+</div>
 <div class="topic concept nested1" id="concept_epj_gqd_rx">
  <h2 class="title topictitle2">Update Kudu Pipelines</h2>
 

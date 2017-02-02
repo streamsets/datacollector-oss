@@ -41,12 +41,17 @@
           <dd class="dd">Generates records with the configured number of fields with the selected data types.
             You can use a Map or List-Map root field type. </dd>
 
-          <dd class="dd">The origin can also generate events to test event handling functionality. To generate
-            event records, select the <span class="ph uicontrol">Produce Events</span> property. </dd>
+          <dd class="dd">The origin can generate events to test event handling functionality. To generate event
+            records, select the <span class="ph uicontrol">Produce Events</span> property. </dd>
 
           <dd class="dd">When generating events, the origin uses the configured fields as the body of the event
             record and adds event record header attributes. For more information about the event
             framework and event record header attributes, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Event Framework Overview</a>.</dd>
+
+          <dd class="dd">The origin can also generate multiple threads for testing for a multithreaded
+            pipeline. To generate multiple threads, enter a number larger than 1 for the
+              <span class="ph uicontrol">Number of Threads</span> property. For more information about
+            multithreaded pipelines, see <a class="xref" href="../Multithreaded_Pipelines/MultithreadedPipelines.html#concept_zpp_2xc_py">Multithreaded Pipeline Overview</a>.</dd>
 
           <dd class="dd">The On Record Error property has no effect in this stage.</dd>
 

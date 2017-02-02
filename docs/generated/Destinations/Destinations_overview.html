@@ -43,7 +43,7 @@
         <li class="li"><a class="xref" href="Cassandra.html#concept_hfy_mfd_sr" title="The Cassandra destination writes data to a Cassandra cluster.">Cassandra</a> - Writes data to a
           Cassandra cluster.</li>
 
-        <li class="li"><a class="xref" href="Elasticsearch.html#concept_u5t_vpv_4r" title="The Elasticsearch destination writes data to an Elasticsearch cluster. It can also write to Elastic Cloud clusters (formerly Found clusters) and Shield-enabled clusters. The Elasticsearch destination writes each record to Elasticsearch as a document.">Elasticsearch</a> - Writes data to
+        <li class="li"><a class="xref" href="Elasticsearch.html#concept_u5t_vpv_4r" title="The Elasticsearch destination writes data to an Elasticsearch cluster, including Elastic Cloud clusters (formerly Found clusters) and Shield-enabled clusters. The destination uses the Elasticsearch HTTP API to write each record to Elasticsearch as a document.">Elasticsearch</a> - Writes data to
           an Elasticsearch cluster.</li>
 
         <li class="li"><a class="xref" href="Flume.html#concept_pzn_hl4_yr" title="The Flume destination writes data to a Flume source. When you write data to Flume, you pass data to a Flume client. The Flume client passes data to hosts based on client configuration properties.">Flume</a> - Writes data to a Flume
@@ -84,8 +84,11 @@
         <li class="li"><a class="xref" href="LocalFS.html#concept_zvc_bv5_1r">Local FS</a> - Writes data to a local
           file system. </li>
 
-        <li class="li"><a class="xref" href="MapRDB.html#concept_vxg_w2z_yv" title="The MapR DB destination writes data to MapR DB. The destination can write data to MapR DB as text, binary data, or JSON strings. You can define the data format for each column written to MapR DB.">MapR DB</a> - Writes data to MapR
-          DB.</li>
+        <li class="li"><a class="xref" href="MapRDB.html#concept_vxg_w2z_yv" title="The MapR DB destination writes data to MapR DB binary tables. The destination can write data to MapR DB as text, binary data, or JSON strings. You can define the data format for each column written to MapR DB.">MapR DB</a> - Writes data as text, binary
+          data, or JSON strings to MapR DB binary tables.</li>
+
+        <li class="li"><a class="xref" href="MapRDBJSON.html#concept_i4h_2kj_dy" title="The MapR DB JSON destination writes data as JSON documents to MapR DB JSON tables. The destination converts each record into a JSON document and writes the document to the JSON table that you specify.">MapR DB JSON</a> - Writes data as JSON documents to
+          MapR DB JSON tables.</li>
 
         <li class="li"><a class="xref" href="MapRFS.html#concept_spv_xlc_fv" title="The MapR FS destination writes files to MapR FS. You can write the data to MapR as flat files or Hadoop sequence files.">MapR FS</a> - Writes data to MapR
           FS.</li>
@@ -93,10 +96,10 @@
         <li class="li"><a class="xref" href="MapRStreamsProd.html#concept_cfj_qbn_2v" title="The MapR Streams Producer destination writes messages to MapR Streams.">MapR Streams Producer</a> -
           Writes data to MapR Streams.</li>
 
-        <li class="li"><a class="xref" href="MongoDB.html#concept_eth_k5n_4v" title="The MongoDB destination writes data to MongoDB. To write data to MongoDB, you must define an operation record header attribute in the pipeline. The operation header attribute indicates the operation to perform for each record: insert, upsert, or delete.">MongoDB</a> - Writes data to
+        <li class="li"><a class="xref" href="MongoDB.html#concept_eth_k5n_4v">MongoDB</a> - Writes data to
           MongoDB.</li>
 
-        <li class="li"><a class="xref" href="MongoDB.html#concept_eth_k5n_4v" title="The MongoDB destination writes data to MongoDB. To write data to MongoDB, you must define an operation record header attribute in the pipeline. The operation header attribute indicates the operation to perform for each record: insert, upsert, or delete.">Rabbit MQ Producer</a> - Writes data to
+        <li class="li"><a class="xref" href="MongoDB.html#concept_eth_k5n_4v">Rabbit MQ Producer</a> - Writes data to
           RabbitMQ.</li>
 
         <li class="li"><a class="xref" href="Redis.html#concept_ktc_gw2_gw" title="The Redis destination writes data to Redis.">Redis</a> - Writes data to Redis.</li>
@@ -153,8 +156,8 @@ To help create or test pipelines, you can use the following development destinat
         <div class="p">You can use the following record header attributes in destinations:
             <dl class="dl">
                 
-                    <dt class="dt dlterm">targetDirectory attribute in the Hadoop FS, Local FS, and MapR FS
-                        destinations</dt>
+                    <dt class="dt dlterm">targetDirectory attribute in the Azure Data Lake Store, Hadoop FS, Local FS,
+                        and MapR FS destinations</dt>
 
                     <dd class="dd">The targetDirectory record header attribute defines the directory where the
                         record is written. If the directory does not exist, the destination creates
@@ -185,7 +188,8 @@ To help create or test pipelines, you can use the following development destinat
 
                 
                 
-                    <dt class="dt dlterm">roll attribute in the Hadoop FS, Local FS, and MapR FS destinations</dt>
+                    <dt class="dt dlterm">roll attribute in the Azure Data Lake Store, Hadoop FS, Local FS, and MapR
+                        FS destinations</dt>
 
                     <dd class="dd">The roll attribute, when present in the record header, triggers a roll of
                         the file. </dd>

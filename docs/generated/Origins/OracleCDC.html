@@ -34,13 +34,14 @@
             attributes with CDC information. Use Oracle CDC Client to process data from Oracle
             version 12c.</p>
 
-        <p class="p">When needed, you can use a separate pipeline with the JDBC Consumer origin to read
-            existing data before you start a pipeline with Oracle CDC Client.</p>
+        <p class="p">When needed, you can use a separate pipeline with the JDBC Query Consumer or JDBC
+            Multitable  Consumer origin to read existing data before you start a pipeline with
+            Oracle CDC Client.</p>
 
         <p class="p">Oracle CDC Client processes data based on the commit number, in ascending order. </p>
 
-        <p class="p">The Oracle CDC Client origin can create records for insert, update, select-for-update,
-            and delete operations for one or more tables in a database. You can select the
+        <p class="p">The Oracle CDC Client origin can create records for INSERT, UPDATE, SELECT FOR UPDATE,
+            and DELETE operations for one or more tables in a database. You can select the
             operations that you want to use.</p>
 
         <div class="p">
@@ -141,7 +142,7 @@ alter database open;</pre>
             logging at a table or database level. Full supplemental logging provides data from all
             columns, those with unchanged data as well as the primary key and changed columns. For
             details on the data included in records based on the supplemental logging type, see
-                <a class="xref" href="OracleCDC.html#concept_db1_3sj_fx">Generated Records</a>.<ol class="ol" id="concept_gvh_3c2_3y__ol_nrv_ds1_jx">
+                <a class="xref" href="OracleCDC.html#concept_vfw_bjz_ty">Generated Records</a>.<ol class="ol" id="concept_gvh_3c2_3y__ol_nrv_ds1_jx">
                 <li class="li">To verify if supplemental logging is enabled for the database, run the following
                         command:<pre class="pre codeblock">SELECT supplemental_log_data_min, supplemental_log_data_pk, supplemental_log_data_all FROM v$database;</pre>
 <p class="p">If
@@ -316,7 +317,7 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
             until you install the required driver. </p>
 
         <p class="p">Install the Oracle JDBC driver for the Oracle database version that you use. For more
-            information, see <a class="xref" href="../Install_Config/AdditionalDrivers.html#concept_pdv_qlw_ft">Additional Drivers</a>.</p>
+            information, see <a class="xref" href="../Configuration/AdditionalDrivers.html#concept_pdv_qlw_ft">Additional Drivers</a>.</p>
 
  </div>
 
@@ -359,8 +360,8 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
             the pipeline.</p>
 
         <p class="p">Note that Oracle CDC Client processes only change capture data. If you need existing
-            data, you might use a JDBC Consumer in a separate pipeline to read table data before you
-            start an Oracle CDC Client pipeline. </p>
+            data, you might use a JDBC Query Consumer or a JDBC Multitable Consumer in a separate
+            pipeline to read table data before you start an Oracle CDC Client pipeline. </p>
 
         <div class="p">Oracle CDC Client provides several ways to configure the initial change:<dl class="dl">
                 
@@ -391,15 +392,15 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
             
             <p class="p">You want to process all existing data in the Orders table and then capture changed
                 data, writing all data to Amazon S3. To read the existing data, you use a pipeline
-                with the JDBC Consumer and Amazon S3 destination as follows: </p>
+                with the JDBC Query Consumer and Amazon S3 destination as follows: </p>
 
             <p class="p"><img class="image" id="concept_zrc_pyj_dx__image_yzc_ks3_fx" src="../Graphics/OracleCDC-JDBCpipe.png" height="212" width="324" /></p>
 
-            <p class="p">Once all existing data is read, you stop the JDBC Consumer pipeline and start the
-                following Oracle CDC Client pipeline. This pipeline is configured to pick up changes
-                that occur after you start the pipeline, but if you wanted to prevent any chance of
-                data loss, you could configure the initial change for an exact datetime or earlier
-                SCN: </p>
+            <p class="p">Once all existing data is read, you stop the JDBC Query Consumer pipeline and start
+                the following Oracle CDC Client pipeline. This pipeline is configured to pick up
+                changes that occur after you start the pipeline, but if you wanted to prevent any
+                chance of data loss, you could configure the initial change for an exact datetime or
+                earlier SCN: </p>
 
             <p class="p"><img class="image" id="concept_zrc_pyj_dx__image_yrq_lx3_fx" src="../Graphics/OracleCDC-pipeline.png" height="236" width="338" /></p>
 
@@ -408,27 +409,23 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
  </div>
 
 </div>
-<div class="topic concept nested1" id="concept_db1_3sj_fx">
+<div class="topic concept nested1" id="concept_vfw_bjz_ty">
  <h2 class="title topictitle2">Generated Records</h2>
 
  <div class="body conbody">
-  <p class="p">When
-            generating records, the Oracle CDC Client origin specifies the operation type in the
-            operation record header attribute, <samp class="ph codeph">oracle.cdc.operation</samp>.</p>
-
-        <div class="p">The origin generates record differently based on the operation type and the logging
-            enabled for the database and tables. 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_db1_3sj_fx__table_zpr_2j5_gx" class="table" frame="border" border="1" rules="all">
+        <div class="p">The origin generates records differently based on the
+            Oplog operation type and the logging enabled for the database and tables. 
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_vfw_bjz_ty__table_zpr_2j5_gx" class="table" frame="border" border="1" rules="all">
                     
                     
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="15.384615384615385%" id="d180396e551">Operation</th>
+                            <th class="entry" valign="top" width="23.076923076923077%" id="d197428e545">Oplog Operation</th>
 
-                            <th class="entry" valign="top" width="53.84615384615385%" id="d180396e554">Identification/Primary Key Logging Only</th>
+                            <th class="entry" valign="top" width="53.84615384615385%" id="d197428e548">Identification/Primary Key Logging Only</th>
 
-                            <th class="entry" valign="top" width="30.76923076923077%" id="d180396e557">Full Supplemental Logging</th>
+                            <th class="entry" valign="top" width="23.076923076923077%" id="d197428e551">Full Supplemental Logging</th>
 
                         </tr>
 
@@ -436,38 +433,38 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="15.384615384615385%" headers="d180396e551 ">INSERT</td>
+                            <td class="entry" valign="top" width="23.076923076923077%" headers="d197428e545 ">INSERT</td>
 
-                            <td class="entry" valign="top" width="53.84615384615385%" headers="d180396e554 ">All fields that contain data, ignoring fields with null values. </td>
+                            <td class="entry" valign="top" width="53.84615384615385%" headers="d197428e548 ">All fields that contain data, ignoring fields with null values. </td>
 
-                            <td class="entry" valign="top" width="30.76923076923077%" headers="d180396e557 ">All fields.</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="15.384615384615385%" headers="d180396e551 ">UPDATE</td>
-
-                            <td class="entry" valign="top" width="53.84615384615385%" headers="d180396e554 ">Primary key field and fields with updated values.</td>
-
-                            <td class="entry" valign="top" width="30.76923076923077%" headers="d180396e557 ">All fields.</td>
+                            <td class="entry" valign="top" width="23.076923076923077%" headers="d197428e551 ">All fields.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="15.384615384615385%" headers="d180396e551 ">SELECT_FOR_ UPDATE</td>
+                            <td class="entry" valign="top" width="23.076923076923077%" headers="d197428e545 ">UPDATE</td>
 
-                            <td class="entry" valign="top" width="53.84615384615385%" headers="d180396e554 ">Primary key field and fields with updated values.</td>
+                            <td class="entry" valign="top" width="53.84615384615385%" headers="d197428e548 ">Primary key field and fields with updated values.</td>
 
-                            <td class="entry" valign="top" width="30.76923076923077%" headers="d180396e557 ">All fields.</td>
+                            <td class="entry" valign="top" width="23.076923076923077%" headers="d197428e551 ">All fields.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="15.384615384615385%" headers="d180396e551 ">DELETE</td>
+                            <td class="entry" valign="top" width="23.076923076923077%" headers="d197428e545 ">SELECT_FOR_ UPDATE</td>
 
-                            <td class="entry" valign="top" width="53.84615384615385%" headers="d180396e554 ">Primary key field.</td>
+                            <td class="entry" valign="top" width="53.84615384615385%" headers="d197428e548 ">Primary key field and fields with updated values.</td>
 
-                            <td class="entry" valign="top" width="30.76923076923077%" headers="d180396e557 ">All fields.</td>
+                            <td class="entry" valign="top" width="23.076923076923077%" headers="d197428e551 ">All fields.</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="23.076923076923077%" headers="d197428e545 ">DELETE</td>
+
+                            <td class="entry" valign="top" width="53.84615384615385%" headers="d197428e548 ">Primary key field.</td>
+
+                            <td class="entry" valign="top" width="23.076923076923077%" headers="d197428e551 ">All fields.</td>
 
                         </tr>
 
@@ -477,21 +474,82 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
 </div>
 </div>
 
- </div>
+    </div>
 
-<div class="topic concept nested2" id="concept_nn1_lxd_dx">
- <h3 class="title topictitle3">CDC Record Header Attributes</h3>
+<div class="topic concept nested2" id="concept_x4h_m42_5y">
+ <h3 class="title topictitle3">CRUD Operation Header Attributes</h3>
 
  <div class="body conbody">
-        <p class="p">Oracle CDC Client includes change data capture
-            information in record header attributes. You can use these attributes in the pipeline as
-            needed. </p>
+        <div class="p">When generating records, the Oracle CDC Client
+            origin specifies the operation type in both of the following record header attributes:<dl class="dl">
+                
+                    <dt class="dt dlterm">sdc.operation.type</dt>
 
-        <p class="p">For example, if you want to route records to different destinations based on the
-            operation, you can use the oracle.cdc.operation header attribute in a Stream
-            Selector.</p>
+                    <dd class="dd">The Oracle CDC Client evaluates the Oplog operation type associated with
+                        each entry that it processes and, when appropriate, it writes the operation
+                        type to the sdc.operation.type record header attribute. </dd>
 
-        <div class="p">The origin provides the following record header attributes for each record:<ul class="ul" id="concept_nn1_lxd_dx__ul_j3y_yxd_dx">
+                    <dd class="dd">The origin uses the following values in the sdc.operation.type record header
+                        attribute to represent the operation type: <ul class="ul" id="concept_x4h_m42_5y__ul_dkt_g5l_dy">
+                            <li class="li">1 for INSERT</li>
+
+                            <li class="li">2 for DELETE</li>
+
+                            <li class="li">3 for UPDATE and SELECT_FOR_UPDATE</li>
+
+                        </ul>
+</dd>
+
+                    <dd class="dd">
+                        <p class="p">If you use a CRUD-enabled destination in the pipeline such as
+                  JDBC Producer or Kudu, the destination can use the operation type when writing to
+                  destination systems. When necessary, you can use an Expression Evaluator or
+                  scripting processors to manipulate the value in the sdc.operation.type header
+                  attribute. For an overview of <span class="ph">Data
+                  Collector</span>
+                  changed data processing and a list of CRUD-enabled destinations, see <a class="xref" href="../Pipeline_Design/CDC-Overview.html#concept_apw_l2c_ty">Processing Changed Data</a>.</p>
+
+                    </dd>
+
+                    <dd class="dd">When using CRUD-enabled destinations, the destination looks for the
+                        operation type in the sdc.operation.type attribute before checking the
+                        oracle.cdc.operation attribute.</dd>
+
+                
+                
+                    <dt class="dt dlterm">oracle.cdc.operation</dt>
+
+                    <dd class="dd">The Oracle CDC Client also writes the Oplog CRUD operation type to the
+                        oracle.cdc.operation record header attribute. This attribute was implemented
+                        in an earlier release and is supported for backward compatibility.</dd>
+
+                    <dd class="dd">The origin writes the Oplog operation type to the oracle.cdc.operation
+                        attribute as the following strings:<ul class="ul" id="concept_x4h_m42_5y__ul_mpx_s13_5y">
+                            <li class="li">INSERT</li>
+
+                            <li class="li">UPDATE</li>
+
+                            <li class="li">SELECT_FOR_ UPDATE</li>
+
+                            <li class="li">DELETE</li>
+
+                        </ul>
+CRUD-enabled destinations check for this attribute for the operation
+                        type after checking the sdc.operation.type attribute.</dd>
+
+                
+            </dl>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested2" id="concept_nn1_lxd_dx">
+ <h3 class="title topictitle3">CDC Header Attributes</h3>
+
+ <div class="body conbody">
+        <div class="p">The Oracle CDC Client origin provides the
+            following CDC record header attributes for each record:<ul class="ul" id="concept_nn1_lxd_dx__ul_j3y_yxd_dx">
                 <li class="li">oracle.cdc.user</li>
 
                 <li class="li">oracle.cdc.operation</li>
@@ -505,7 +563,7 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
             </ul>
 </div>
 
-        <div class="p">It also includes the following record header attributes for each decimal field in the
+        <div class="p">And it includes the following record header attributes for each decimal field in the
                 record:<ul class="ul" id="concept_nn1_lxd_dx__ul_jvj_p1j_fx">
                 <li class="li">oracle.cdc.&lt;fieldname&gt;.precision</li>
 
@@ -567,8 +625,9 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
 
     <div class="body taskbody">
         <div class="section context">
-            <p class="p">Configure an Oracle CDC Client origin to process LogMiner change data capture
-                information from an Oracle database. </p>
+            <p class="p">Configure
+                an Oracle CDC Client origin to process LogMiner change data capture information from
+                an Oracle database. </p>
 
             <p class="p">Before you use the origin, complete the prerequisite tasks. For more information, see
                     <a class="xref" href="OracleCDC.html#concept_xwg_33w_cx">Oracle CDC Client Prerequisites</a>.</p>
@@ -580,14 +639,14 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ehh_mjj_tw__d22071e519" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ehh_mjj_tw__d23532e519" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d180396e783">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d197428e862">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d180396e786">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d197428e865">Description</th>
 
                                 </tr>
 
@@ -595,31 +654,31 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d180396e783 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d197428e862 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d180396e786 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d180396e783 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d180396e786 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d197428e865 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d180396e783 ">Stage Library</td>
+                                    <td class="entry" valign="top" width="30%" headers="d197428e862 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d180396e786 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d197428e865 ">Optional description.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d180396e783 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_ehh_mjj_tw__d22071e574" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d197428e862 ">Stage Library</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d180396e786 ">Error record handling for the stage: <ul class="ul" id="task_ehh_mjj_tw__d22071e578">
+                                    <td class="entry" valign="top" width="70%" headers="d197428e865 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d197428e862 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_ehh_mjj_tw__d23532e574" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d197428e865 ">Error record handling for the stage: <ul class="ul" id="task_ehh_mjj_tw__d23532e578">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -650,9 +709,9 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d180396e877">Change Data Capture Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d197428e956">Change Data Capture Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d180396e880">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d197428e959">Description</th>
 
                                 </tr>
 
@@ -660,23 +719,23 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d180396e877 ">Schema Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d197428e956 ">Schema Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d180396e880 ">Name of the schema to use.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d180396e877 ">Tables</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d180396e880 ">Tables to use.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d197428e959 ">Name of the schema to use.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d180396e877 ">Case-Sensitive Names</td>
+                                    <td class="entry" valign="top" width="30%" headers="d197428e956 ">Tables</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d180396e880 ">Enables case-sensitive schema, table, and column names.
+                                    <td class="entry" valign="top" width="70%" headers="d197428e959 ">Tables to use.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d197428e956 ">Case-Sensitive Names</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d197428e959 ">Enables case-sensitive schema, table, and column names.
                                         Use when the schema, tables, or columns were created with
                                         quotation marks surrounding the names.<p class="p">By default, the
                                             origin uses all caps for the names. </p>
@@ -685,10 +744,10 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d180396e877 ">Initial Change <a class="xref" href="OracleCDC.html#concept_zrc_pyj_dx">
+                                    <td class="entry" valign="top" width="30%" headers="d197428e956 ">Initial Change <a class="xref" href="OracleCDC.html#concept_zrc_pyj_dx">
                                             <img class="image" id="task_ehh_mjj_tw__image_cwg_hrk_dx" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d180396e880 ">The starting point for the read. Use one of the following
+                                    <td class="entry" valign="top" width="70%" headers="d197428e959 ">The starting point for the read. Use one of the following
                                             options:<ul class="ul" id="task_ehh_mjj_tw__ul_nty_bnk_dx">
                                             <li class="li">From Latest Change - Processes changes that arrive
                                                 after you start the pipeline.</li>
@@ -705,9 +764,9 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d180396e877 ">Start Date</td>
+                                    <td class="entry" valign="top" width="30%" headers="d197428e956 ">Start Date</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d180396e880 ">The datetime to read from when you start the pipeline.
+                                    <td class="entry" valign="top" width="70%" headers="d197428e959 ">The datetime to read from when you start the pipeline.
                                         For a date-based initial change. <p class="p"><span class="ph">Use the following format: <samp class="ph codeph">DD-MM-YYYY
                               HH24:MI:SS</samp>.</span></p>
 </td>
@@ -715,26 +774,26 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d180396e877 ">Start SCN</td>
+                                    <td class="entry" valign="top" width="30%" headers="d197428e956 ">Start SCN</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d180396e880 ">The system change number to read from when you start the
+                                    <td class="entry" valign="top" width="70%" headers="d197428e959 ">The system change number to read from when you start the
                                         pipeline. For an SCN-based initial change.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d180396e877 ">Operations</td>
+                                    <td class="entry" valign="top" width="30%" headers="d197428e956 ">Operations</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d180396e880 ">Operations to include when creating records. All unlisted
+                                    <td class="entry" valign="top" width="70%" headers="d197428e959 ">Operations to include when creating records. All unlisted
                                         operations are ignored. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d180396e877 ">Dictionary Source <a class="xref" href="OracleCDC.html#concept_eq5_wh2_dx">
+                                    <td class="entry" valign="top" width="30%" headers="d197428e956 ">Dictionary Source <a class="xref" href="OracleCDC.html#concept_eq5_wh2_dx">
                                             <img class="image" id="task_ehh_mjj_tw__image_ur4_4yn_lw" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d180396e880 ">Location of the LogMiner dictionary:<ul class="ul" id="task_ehh_mjj_tw__ul_s5d_mqk_dx">
+                                    <td class="entry" valign="top" width="70%" headers="d197428e959 ">Location of the LogMiner dictionary:<ul class="ul" id="task_ehh_mjj_tw__ul_s5d_mqk_dx">
                                             <li class="li">Redo logs</li>
 
                                             <li class="li">Online catalog</li>
@@ -761,9 +820,9 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d180396e1022">JDBC Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d197428e1101">JDBC Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d180396e1025">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d197428e1104">Description</th>
 
                                 </tr>
 
@@ -771,9 +830,9 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d180396e1022 ">JDBC Connection String</td>
+                                    <td class="entry" valign="top" width="30%" headers="d197428e1101 ">JDBC Connection String</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d180396e1025 ">
+                                    <td class="entry" valign="top" width="70%" headers="d197428e1104 ">
                                         <div class="p">Connection string to use to connect to the database.
                                                 <div class="note note"><span class="notetitle">Note:</span> If you include the JDBC credentials in the
                                                 connection string, use the user account created for
@@ -787,9 +846,9 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d180396e1022 ">Max Batch Size (records)</td>
+       <td class="entry" valign="top" width="30%" headers="d197428e1101 ">Max Batch Size (records)</td>
 
-       <td class="entry" valign="top" width="70%" headers="d180396e1025 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data
+       <td class="entry" valign="top" width="70%" headers="d197428e1104 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data
                   Collector</span> maximum
         batch size. <p class="p">Default is 1000. The <span class="ph">Data
                   Collector</span> default
@@ -799,9 +858,9 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d180396e1022 ">PDB</td>
+                                    <td class="entry" valign="top" width="30%" headers="d197428e1101 ">PDB</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d180396e1025 ">Name of the pluggable database that contains the schema
+                                    <td class="entry" valign="top" width="70%" headers="d197428e1104 ">Name of the pluggable database that contains the schema
                                         you want to use. Use only when the schema was created in a
                                         pluggable database. <p class="p">Required for schemas created in
                                             pluggable databases. </p>
@@ -810,17 +869,17 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d180396e1022 ">Use Credentials</td>
+       <td class="entry" valign="top" width="30%" headers="d197428e1101 ">Use Credentials</td>
 
-       <td class="entry" valign="top" width="70%" headers="d180396e1025 ">Enables entering credentials on the Credentials tab. Use when you do not include
+       <td class="entry" valign="top" width="70%" headers="d197428e1104 ">Enables entering credentials on the Credentials tab. Use when you do not include
         credentials in the JDBC connection string.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d180396e1022 ">Additional JDBC Configuration Properties</td>
+       <td class="entry" valign="top" width="30%" headers="d197428e1101 ">Additional JDBC Configuration Properties</td>
 
-       <td class="entry" valign="top" width="70%" headers="d180396e1025 ">Additional JDBC configuration properties to use. To add properties, click
+       <td class="entry" valign="top" width="70%" headers="d197428e1104 ">Additional JDBC configuration properties to use. To add properties, click
          <span class="ph uicontrol">Add</span> and define the JDBC property name and value. <p class="p">Use the property
          names and values as expected by JDBC. </p>
 </td>
@@ -845,9 +904,9 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d180396e1128">Credentials Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d197428e1207">Credentials Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d180396e1131">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d197428e1210">Description</th>
 
                                 </tr>
 
@@ -855,9 +914,9 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d180396e1128 ">Username</td>
+                                    <td class="entry" valign="top" width="30%" headers="d197428e1207 ">Username</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d180396e1131 ">
+                                    <td class="entry" valign="top" width="70%" headers="d197428e1210 ">
                                         <p class="p">User name for the JDBC connection. Use the user account
                                             created for the origin. Common user accounts for Oracle
                                             12c multitenant databases start with "c##".</p>
@@ -869,11 +928,11 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d180396e1128 ">Password</td>
+                                    <td class="entry" valign="top" width="30%" headers="d197428e1207 ">Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d180396e1131 ">Password for the account.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
+                                    <td class="entry" valign="top" width="70%" headers="d197428e1210 ">Password for the account.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
                   and passwords, you can use runtime resources or Hashicorp Vault secrets. For more
-                  information, see <a class="xref" href="../Install_Config/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Install_Config/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
+                  information, see <a class="xref" href="../Configuration/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
 </td>
 
                                 </tr>
@@ -891,13 +950,14 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ehh_mjj_tw__d22071e2825" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ehh_mjj_tw__d23532e2863" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d180396e1217">Legacy Driver Property</th>
-                                                               <th class="entry" valign="top" width="70%" id="d180396e1220">Description</th>
+                                    <th class="entry" valign="top" width="30%" id="d197428e1296">Legacy Driver Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d197428e1299">Description</th>
 
                                 </tr>
 
@@ -905,21 +965,20 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d180396e1217 ">JDBC Class Driver Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d197428e1296 ">JDBC Class Driver Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d180396e1220 ">Class name for the JDBC driver. Required for JDBC
+                                    <td class="entry" valign="top" width="70%" headers="d197428e1299 ">Class name for the JDBC driver. Required for JDBC
                                         versions older than version 4.0.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d180396e1217 ">Connection Health Test Query</td>
+                                    <td class="entry" valign="top" width="30%" headers="d197428e1296 ">Connection Health Test Query</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d180396e1220 ">Optional query to test the health of a connection.
+                                    <td class="entry" valign="top" width="70%" headers="d197428e1299 ">Optional query to test the health of a connection.
                                         Recommended only when the JDBC version is older than 4.0.
                                     </td>
 
-                                    
                                 </tr>
 
                             </tbody>
@@ -938,37 +997,37 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
      
      <thead class="thead" align="left">
       <tr>
-       <th class="entry" valign="top" width="30%" id="d180396e1273">Advanced Property</th>
+       <th class="entry" valign="top" width="30%" id="d197428e1352">Advanced Property</th>
 
-       <th class="entry" valign="top" width="70%" id="d180396e1276">Description</th>
+       <th class="entry" valign="top" width="70%" id="d197428e1355">Description</th>
 
       </tr>
 
      </thead>
 
      <tbody class="tbody">
-      <tr id="task_ehh_mjj_tw__d22084e1438">
-       <td class="entry" valign="top" width="30%" headers="d180396e1273 ">Maximum Pool Size </td>
+      <tr id="task_ehh_mjj_tw__d23545e1671">
+       <td class="entry" valign="top" width="30%" headers="d197428e1352 ">Maximum Pool Size </td>
 
-       <td class="entry" valign="top" width="70%" headers="d180396e1276 ">The maximum number of connections to create. <p class="p">Default is 1. The recommended value is
+       <td class="entry" valign="top" width="70%" headers="d197428e1355 ">The maximum number of connections to create. <p class="p">Default is 1. The recommended value is
          1.</p>
 </td>
 
       </tr>
 
-      <tr id="task_ehh_mjj_tw__d22084e1449">
-       <td class="entry" valign="top" width="30%" headers="d180396e1273 ">Minimum Idle Connections</td>
+      <tr id="task_ehh_mjj_tw__d23545e1682">
+       <td class="entry" valign="top" width="30%" headers="d197428e1352 ">Minimum Idle Connections</td>
 
-       <td class="entry" valign="top" width="70%" headers="d180396e1276 ">The minimum number of connections to create and maintain. To define a fixed connection
+       <td class="entry" valign="top" width="70%" headers="d197428e1355 ">The minimum number of connections to create and maintain. To define a fixed connection
         pool, set to the same value as Maximum Pool Size. <p class="p">Default is 1. </p>
 </td>
 
       </tr>
 
-      <tr id="task_ehh_mjj_tw__d22084e1460">
-       <td class="entry" valign="top" width="30%" headers="d180396e1273 ">Connection Timeout</td>
+      <tr id="task_ehh_mjj_tw__d23545e1693">
+       <td class="entry" valign="top" width="30%" headers="d197428e1352 ">Connection Timeout</td>
 
-       <td class="entry" valign="top" width="70%" headers="d180396e1276 ">Maximum time to wait for a connection. Use a time constant in an expression to define
+       <td class="entry" valign="top" width="70%" headers="d197428e1355 ">Maximum time to wait for a connection. Use a time constant in an expression to define
         the time increment. <div class="p">Default is 30 seconds, defined as follows:
          <pre class="pre codeblock">${30 * SECONDS}</pre>
 </div>
@@ -976,10 +1035,10 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
 
       </tr>
 
-      <tr id="task_ehh_mjj_tw__d22084e1473">
-       <td class="entry" valign="top" width="30%" headers="d180396e1273 ">Idle Timeout</td>
+      <tr id="task_ehh_mjj_tw__d23545e1706">
+       <td class="entry" valign="top" width="30%" headers="d197428e1352 ">Idle Timeout</td>
 
-       <td class="entry" valign="top" width="70%" headers="d180396e1276 ">Maximum time to allow a connection to idle. Use a time constant in an expression to
+       <td class="entry" valign="top" width="70%" headers="d197428e1355 ">Maximum time to allow a connection to idle. Use a time constant in an expression to
         define the time increment. <p class="p">Use 0 to avoid removing any idle connections.</p>
 <div class="p">Default is
          30 minutes, defined as follows: <pre class="pre codeblock">${30 * MINUTES}</pre>
@@ -988,10 +1047,10 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
 
       </tr>
 
-      <tr id="task_ehh_mjj_tw__d22084e1488">
-       <td class="entry" valign="top" width="30%" headers="d180396e1273 ">Max Connection Lifetime</td>
+      <tr id="task_ehh_mjj_tw__d23545e1721">
+       <td class="entry" valign="top" width="30%" headers="d197428e1352 ">Max Connection Lifetime</td>
 
-       <td class="entry" valign="top" width="70%" headers="d180396e1276 ">Maximum lifetime for a connection. Use a time constant in an expression to define the
+       <td class="entry" valign="top" width="70%" headers="d197428e1355 ">Maximum lifetime for a connection. Use a time constant in an expression to define the
         time increment. <p class="p">Use 0 to avoid removing any idle connections.</p>
 <div class="p">Default is 30
          seconds, defined as follows: <pre class="pre codeblock">${30 * SECONDS}</pre>
@@ -1000,22 +1059,31 @@ GRANT select on &lt;db&gt;.&lt;table&gt; TO &lt;user name&gt;;</pre>
 
       </tr>
 
-      <tr id="task_ehh_mjj_tw__d22084e1504">
-       <td class="entry" valign="top" width="30%" headers="d180396e1273 ">Enforce Read-only Connection</td>
+      <tr id="task_ehh_mjj_tw__d23545e1737">
+       <td class="entry" valign="top" width="30%" headers="d197428e1352 ">Auto Commit</td>
 
-       <td class="entry" valign="top" width="70%" headers="d180396e1276 ">Creates read-only connections to avoid any type of write. <p class="p">Selected by default.
-         Clearing this property is not recommended. </p>
+       <td class="entry" valign="top" width="70%" headers="d197428e1355 ">Determines whether auto-commit mode is enabled or disabled for the
+         connection.<p class="p">Disabled by default.</p>
 </td>
 
       </tr>
 
-      <tr id="task_ehh_mjj_tw__d22084e1515">
-       <td class="entry" valign="top" width="30%" headers="d180396e1273 ">Transaction Isolation</td>
+      <tr id="task_ehh_mjj_tw__d23545e1748">
+       <td class="entry" valign="top" width="30%" headers="d197428e1352 ">Enforce Read-only Connection</td>
 
-       <td class="entry" valign="top" width="70%" headers="d180396e1276 ">Transaction isolation level used to connect to the database. <p class="p">Default is the
+       <td class="entry" valign="top" width="70%" headers="d197428e1355 ">Creates read-only connections to avoid any type of write. <p class="p">Enabled by default.
+         Disabling this property is not recommended. </p>
+</td>
+
+      </tr>
+
+      <tr id="task_ehh_mjj_tw__d23545e1759">
+       <td class="entry" valign="top" width="30%" headers="d197428e1352 ">Transaction Isolation</td>
+
+       <td class="entry" valign="top" width="70%" headers="d197428e1355 ">Transaction isolation level used to connect to the database. <p class="p">Default is the
         default transaction isolation level set for the database. You can override the database
         default by setting the level to any of the following:</p>
-<ul class="ul" id="task_ehh_mjj_tw__d22084e1524">
+<ul class="ul" id="task_ehh_mjj_tw__d23545e1768">
          <li class="li">Read committed </li>
 
          <li class="li">Read uncommitted </li>

@@ -1,0 +1,256 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="A multithreaded pipeline is a pipeline with an origin that supports parallel execution, enabling one pipeline to run in multiple threads. Multithreaded pipelines enable processing high volumes of data ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Multithreaded Pipelines" /><meta name="DC.Relation" scheme="URI" content="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w" /><meta name="DC.Relation" scheme="URI" content="../RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_wwq_gxc_py" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Multithreaded Pipelines</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+            
+            var prefix = "../index.html";
+            
+            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navprev"><a class="link" href="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w" title="Hive Drift Solution"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Hive Drift Solution</span></a></span>  
+<span class="navnext"><a class="link" href="../RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt" title="SDC RPC Pipelines"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">SDC RPC Pipelines</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_wwq_gxc_py">
+ <h1 class="title topictitle1">Multithreaded Pipelines</h1>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_zpp_2xc_py">
+ <h2 class="title topictitle2">Multithreaded Pipeline Overview</h2>
+
+ <div class="body conbody">
+        <p class="p">A
+                <dfn class="term">multithreaded pipeline</dfn> is a pipeline with an origin that supports
+            parallel execution, enabling one pipeline to run in multiple threads. </p>
+
+        <p class="p">Multithreaded pipelines enable processing high volumes of data in a single pipeline on
+            one <span class="ph">Data
+                  Collector</span>, thus taking full advantage of all available CPUs on the <span class="ph">Data
+                  Collector</span>
+            machine. When using multitheaded pipelines, make sure to allocate sufficient resources
+            to the pipeline and <span class="ph">Data
+                  Collector</span>.</p>
+
+        <p class="p">At this time, you can use the HTTP Server origin to create a multithreaded pipeline. You
+            can also use the Dev Data Generator development origin to test a multithreaded pipeline. </p>
+
+        <p class="p">A multithreaded pipeline honors the configured delivery guarantee for the pipeline, but
+            does not guarantee the order in which batches of data are processed. </p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_xl3_ncd_py">
+    <h2 class="title topictitle2">How It Works</h2>
+
+    <div class="body conbody">
+        <p class="p">When you
+            configure a multithreaded origin, you specify the amount of concurrency or number of
+            threads that the origin should use. </p>
+
+        <p class="p"><span class="ph">When you start the pipeline, the origin creates the
+                        specified number of threads and <span class="ph">Data
+                  Collector</span> creates a matching number of <dfn class="term">pipeline runners</dfn> to perform
+                        pipeline processing. The origin creates batches and passes each batch to a
+                        pipeline runner. Each pipeline runner runs a <dfn class="term">sourceless pipeline
+                              instance</dfn> - an instance of the pipeline that includes all of the
+                        processors and destinations in the pipeline and performs all pipeline
+                        processing after the origin.</span></p>
+
+        <p class="p"><span class="ph"> Each pipeline runner can process one batch at a time,
+                        just like a pipeline that runs on a single thread. When the flow of data
+                        slows, the pipeline runners wait idly until they are needed.</span></p>
+
+        <p class="p">Multithreaded pipelines preserve the order of records within each batch, just like a
+            single-threaded pipeline. But since batches are processed by different pipeline
+            instances, the order that batches are written to destinations is not ensured.</p>
+
+        <p class="p">For example, take the following multithreaded pipeline. The HTTP Server origin processes
+            HTTP POST requests passed from HTTP clients. When you configure the origin, you specify
+            the number of threads to use - in this case, the Max Concurrent Requests property:</p>
+
+        <p class="p"><img class="image" id="concept_xl3_ncd_py__image_mxx_5sd_ry" src="../Graphics/Multithread-HTTPPipeline.png" height="263" width="470" /></p>
+
+        <p class="p">With Max Concurrent Requests set to 5, when you start the pipeline <span class="ph">the origin creates five threads, and <span class="ph">Data
+                  Collector</span> creates five pipeline runners. Upon receiving data, the origin passes a
+                        batch to each of the pipeline runners for processing. </span></p>
+
+        <p class="p">Conceptually, the multithreaded pipeline looks like this:</p>
+
+        <p class="p"><img class="image" id="concept_xl3_ncd_py__image_r5x_532_ry" src="../Graphics/Multithread-HTTPThreads.png" height="487" width="585" /></p>
+
+        <p class="p">Each pipeline runner performs the processing associated with the rest of the pipeline.
+            After a batch is written to pipeline destinations - in this case, Azure Data Lake Store
+            1 and 2 - the pipeline runner becomes available for another batch of data. Each batch is
+            processed and written as quickly as possible, independently from batches processed by
+            other pipeline runners, so the write-order of the batches can differ from the
+            read-order.</p>
+
+        <p class="p">At any given moment, the five pipeline runners can each
+                  process a batch, so this multithreaded pipeline processes up to five batches at a
+                  time. When incoming data slows, the pipeline runners sit idle, available for use
+                  as soon as the data flow increases.</p>
+
+    </div>
+
+<div class="topic concept nested2" id="concept_wcz_tpd_py">
+    <h3 class="title topictitle3">Origins for Multithreaded Pipelines</h3>
+
+    <div class="body conbody">
+        <div class="p">You can use the following origins
+            to create multithreaded pipelines:<ul class="ul" id="concept_wcz_tpd_py__ul_d2v_vpd_py">
+                <li class="li"><a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y">HTTP Server</a> -
+                    Listens on a HTTP endpoint and processes the contents of all authorized HTTP
+                    POST requests. </li>
+
+                <li class="li"><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Dev Data
+                        Generator</a> - Generates random data for development and testing.</li>
+
+            </ul>
+</div>
+
+        <p class="p">Note that <span class="ph">Data
+                  Collector</span>
+            provides several "to Kafka" multithreaded origins: <a class="xref" href="../Origins/HTTPtoKafka.html#concept_izh_mqd_dy">HTTP to Kafka</a>, <a class="xref" href="../Origins/SDCRPCtoKafka.html#concept_tdk_slk_pw" title="The SDC RPC to Kafka origin reads data from one or more SDC RPC destinations and writes it immediately to Kafka. Use the SDC RPC to Kafka origin in an SDC RPC destination pipeline.">SDC RPC to Kafka</a>, and
+                <a class="xref" href="../Origins/UDPtoKafka.html#concept_jzq_jcz_pw" title="When you use a UDP to Kafka origin in a pipeline, connect the origin to a Trash destination.">UDP to Kafka</a>.
+            These origins write incoming data directly to Kafka with no additional processing. They
+            do not create full multithreaded pipelines. </p>
+
+    </div>
+
+</div>
+<div class="topic concept nested2" id="concept_np1_pkz_ry">
+ <h3 class="title topictitle3">Processor Caching</h3>
+
+ <div class="body conbody">
+  <p class="p">Since multithreaded pipelines use multiple
+            pipeline runners to run different instances of the pipeline, processor caching in a
+            multithreaded pipeline differs from a pipeline that runs on a single thread.</p>
+
+        <p class="p">When a processor caches record data, each instance of the processor keeps a separate
+            cache. Each processor instance can only cache the data that passes through that
+            particular pipeline runner. Be sure to consider this behavior when configuring
+            multithreaded pipelines. </p>
+
+        <p class="p">For example, if you configure a lookup processor to create a local cache, each instance
+            of the lookup processor creates its own local cache. This should not be a problem since
+            the cache is generally used to improve pipeline performance. </p>
+
+        <p class="p">However, if you use the Record Deduplicator processor to remove duplicate records, the
+            processor can only remove duplicate records from within a pipeline instance. The
+            processor cannot locate records with duplicates in other pipeline instances. </p>
+
+        <p class="p">The ability for a processor to share a cache across all pipeline instances is planned for
+            future releases. </p>
+
+ </div>
+
+</div>
+<div class="topic concept nested2" id="concept_tdn_vwy_ry">
+ <h3 class="title topictitle3">Monitoring</h3>
+
+ <div class="body conbody">
+        <p class="p">When you monitor a multithreaded pipeline, the
+            pipeline and stage statistics that display are for the entire pipeline, aggregated
+            across all pipeline runners.</p>
+
+        <p class="p">You can view the number of pipeline runners associated with a pipeline and the number of
+            idle runners that are available for use. The number of pipeline runners is based on the
+            number of threads that you configured for the origin.</p>
+
+        <p class="p">The pipeline runner information displays in the Runtime Statistics, as shown below:</p>
+
+        <p class="p"><img class="image" id="concept_tdn_vwy_ry__image_bzb_yxf_sy" src="../Graphics/Multithreaded-Stats.png" height="385" width="320" /></p>
+
+    </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_z25_ltd_ry">
+ <h2 class="title topictitle2">Resource Usage</h2>
+
+ <div class="body conbody">
+        <p class="p">Since each pipeline runner performs all
+            processing associated with the pipeline after the origin, each thread in a multithreaded
+            pipeline requires roughly the same resources as the same pipeline running on a single
+            thread. </p>
+
+        <p class="p">When working with multithreaded pipelines, review the resource usage of the pipeline and
+            increase the Max Pipeline Memory pipeline property as needed. </p>
+
+        <p class="p">You should also monitor the <span class="ph">Data
+                  Collector</span>
+            resource usage and increase the <span class="ph">Data
+                  Collector</span>
+            Java heap size when appropriate. </p>
+
+        <p class="p"> </p>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_sfp_1nd_py">
+ <h2 class="title topictitle2">Multithreaded Pipeline Summary</h2>
+
+ <div class="body conbody">
+        <p class="p">The following
+            points attempt to summarize the key details about multithreaded pipelines: </p>
+
+  <div class="p">
+            <ul class="ul" id="concept_sfp_1nd_py__ul_igl_q4d_py">
+                <li class="li">Use multithreaded origins to create a multithreaded pipeline. You can use the
+                        <a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y">HTTP
+                        Server</a> origin or the <a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht"> Dev Data
+                        Generator</a> origin at this time. </li>
+
+                <li class="li">Unlike a basic, single-threaded pipeline, a multithreaded pipeline cannot
+                    guarantee the order of data. <p class="p">Data within a batch is processed in order, but
+                        since batches are created quickly and passed to different threads, the order
+                        of batches can change as they are written to pipeline destinations.
+                    </p>
+</li>
+
+                <li class="li">Processors that cache information have a separate cache for each instance of the
+                    pipeline at this time.</li>
+
+                <li class="li">The pipeline and stage statistics that display during monitoring are aggregated
+                    across all threads. </li>
+
+                <li class="li">We recommend monitoring the resource usage of the pipeline and the <span class="ph">Data
+                  Collector</span> heap usage, increasing them as needed.</li>
+
+            </ul>
+
+        </div>
+
+ </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navprev"><a class="link" href="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w" title="Hive Drift Solution"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Hive Drift Solution</span></a></span>  
+<span class="navnext"><a class="link" href="../RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt" title="SDC RPC Pipelines"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">SDC RPC Pipelines</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

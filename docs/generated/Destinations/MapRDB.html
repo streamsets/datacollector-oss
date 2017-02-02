@@ -3,7 +3,7 @@
   SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
 <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
-      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="MapR DB" /><meta name="abstract" content="The MapR DB destination writes data to MapR DB. The destination can write data to MapR DB as text, binary data, or JSON strings. You can define the data format for each column written to MapR DB." /><meta name="description" content="The MapR DB destination writes data to MapR DB. The destination can write data to MapR DB as text, binary data, or JSON strings. You can define the data format for each column written to MapR DB." /><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_vxg_w2z_yv" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>MapR DB</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="MapR DB" /><meta name="abstract" content="The MapR DB destination writes data to MapR DB binary tables. The destination can write data to MapR DB as text, binary data, or JSON strings. You can define the data format for each column written to MapR DB." /><meta name="description" content="The MapR DB destination writes data to MapR DB binary tables. The destination can write data to MapR DB as text, binary data, or JSON strings. You can define the data format for each column written to MapR DB." /><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_vxg_w2z_yv" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>MapR DB</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
             
             var prefix = "../index.html";
             
@@ -29,18 +29,21 @@
  <h1 class="title topictitle1">MapR DB</h1>
 
  
- <div class="body conbody"><p class="shortdesc">The MapR DB destination writes data to MapR DB. The destination can write data to MapR
-        DB as text, binary data, or JSON strings. You can define the data format for each column
-        written to MapR DB.</p>
+ <div class="body conbody"><p class="shortdesc">The MapR DB destination writes data to MapR DB binary tables. The destination can write
+        data to MapR DB as text, binary data, or JSON strings. You can define the data format for
+        each column written to MapR DB.</p>
 
-  <p class="p">When you configure the MapR DB destination, you
+        <div class="note note"><span class="notetitle">Note:</span> To write JSON documents to MapR DB JSON tables, use the MapR DB JSON destination. For
+            more information, see <a class="xref" href="MapRDBJSON.html#concept_i4h_2kj_dy" title="The MapR DB JSON destination writes data as JSON documents to MapR DB JSON tables. The destination converts each record into a JSON document and writes the document to the JSON table that you specify.">MapR DB JSON</a>.</div>
+
+        <p class="p">When you configure the MapR DB destination, you
             specify the MapR DB configuration properties, including the table name. You specify the
             row key for the table, and then map fields from the pipeline to MapR DB columns.</p>
 
      <p class="p">Before you use any MapR stage in a pipeline, you must perform
                   additional steps to enable <span class="ph">Data
                   Collector</span> to
-                  process MapR data. For more information, see <a class="xref" href="../Install_Config/MapR-Prerequisites.html#concept_jgs_qpg_2v" title="Due to licensing restrictions, StreamSets cannot distribute MapR libraries with Data Collector. As a result, you must perform additional steps to enable the Data Collector machine to connect to MapR.">MapR Prerequisites</a>.</p>
+                  process MapR data. For more information, see <a class="xref" href="../Installation/MapR-Prerequisites.html#concept_jgs_qpg_2v" title="Due to licensing restrictions, StreamSets cannot distribute MapR libraries with Data Collector. As a result, you must perform additional steps to enable the Data Collector machine to connect to MapR.">MapR Prerequisites</a>.</p>
 
         <div class="note note"><span class="notetitle">Note:</span> The MapR DB destination currently supports the HBase APIs only.</div>
 
@@ -177,7 +180,7 @@
  </div>
 
     <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Install_Config/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Enabling Kerberos Authentication</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Enabling Kerberos Authentication</a></div>
 </div>
 </div>
 </div>
@@ -262,7 +265,8 @@
     <div class="body taskbody">
         <div class="section context">
             <p class="p">Configure
-                a MapR DB destination to write data to MapR DB.</p>
+                a MapR DB destination to write data as text, binary data, or JSON strings to MapR DB
+                binary tables.</p>
 
         </div>
 
@@ -271,46 +275,46 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pgk_p2z_yv__d6331e4379" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pgk_p2z_yv__d9760e4576" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d75215e428">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d88223e438">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d75215e431">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d88223e441">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr id="task_pgk_p2z_yv__d6331e4401">
-                                    <td class="entry" valign="top" width="30%" headers="d75215e428 ">Name</td>
+                                <tr id="task_pgk_p2z_yv__d9760e4598">
+                                    <td class="entry" valign="top" width="30%" headers="d88223e438 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d75215e431 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr id="task_pgk_p2z_yv__d6331e4410">
-                                    <td class="entry" valign="top" width="30%" headers="d75215e428 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d75215e431 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d88223e441 ">Stage name.</td>
 
                                 </tr>
 
-                                <tr id="task_pgk_p2z_yv__d6331e4419">
-                                    <td class="entry" valign="top" width="30%" headers="d75215e428 ">Stage Library</td>
+                                <tr id="task_pgk_p2z_yv__d9760e4607">
+                                    <td class="entry" valign="top" width="30%" headers="d88223e438 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d75215e431 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d88223e441 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr id="task_pgk_p2z_yv__d9760e4616">
+                                    <td class="entry" valign="top" width="30%" headers="d88223e438 ">Stage Library</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d88223e441 ">Library version that you want to use. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d75215e428 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_pgk_p2z_yv__d6331e4434" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d88223e438 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_pgk_p2z_yv__d9760e4631" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d75215e431 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d88223e441 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -318,21 +322,21 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d75215e428 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_pgk_p2z_yv__d6331e4448" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d88223e438 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_pgk_p2z_yv__d9760e4645" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d75215e431 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d88223e441 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
 
                                 </tr>
 
-                                <tr id="task_pgk_p2z_yv__d6331e4458">
-                                    <td class="entry" valign="top" width="30%" headers="d75215e428 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_pgk_p2z_yv__d6331e4464" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                <tr id="task_pgk_p2z_yv__d9760e4655">
+                                    <td class="entry" valign="top" width="30%" headers="d88223e438 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_pgk_p2z_yv__d9760e4661" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d75215e431 ">Error record handling for the stage: <ul class="ul" id="task_pgk_p2z_yv__d6331e4468">
+                                    <td class="entry" valign="top" width="70%" headers="d88223e441 ">Error record handling for the stage: <ul class="ul" id="task_pgk_p2z_yv__d9760e4665">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -362,9 +366,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d75215e560">HBase Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d88223e570">HBase Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d75215e563">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d88223e573">Description</th>
 
                                 </tr>
 
@@ -372,10 +376,10 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d75215e560 ">Table Name</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d88223e570 ">Table Name</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d75215e563 ">Name of the MapR DB table to use. Enter a table name or a
-                                        namespace and table name as follows:
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d88223e573 ">Name of the MapR DB binary table to use. Enter a table
+                                        name or a namespace and table name as follows:
                                         &lt;namespace&gt;.&lt;tablename&gt;. <p class="p">If you do not enter a
                                             table name, MapR uses the default namespace.
                                         </p>
@@ -384,24 +388,24 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d75215e560 ">Row Key</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d88223e570 ">Row Key</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d75215e563 ">Row key for the table. </td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d75215e560 ">Storage Type</td>
-
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d75215e563 ">Storage type of the row key.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d88223e573 ">Row key for the table. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d75215e560 ">Fields <a class="xref" href="HBase.html#concept_vn5_cr5_4v" title="When you configure the HBase destination, you map fields from records to HBase columns.">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d88223e570 ">Storage Type</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d88223e573 ">Storage type of the row key.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d88223e570 ">Fields <a class="xref" href="HBase.html#concept_vn5_cr5_4v" title="When you configure the HBase destination, you map fields from records to HBase columns.">
                                             <img class="image" id="task_pgk_p2z_yv__image_a3h_bfn_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d75215e563 ">Explicitly map fields from records to MapR DB columns,
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d88223e573 ">Explicitly map fields from records to MapR DB columns,
                                         and then define the storage type for the column in MapR DB.
                                             <p class="p">Use the <span class="ph uicontrol">Add</span> icon to create
                                             additional explicit field mappings. </p>
@@ -410,9 +414,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d75215e560 ">Ignore Missing Field Path</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d88223e570 ">Ignore Missing Field Path</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d75215e563 ">Ignores missing field paths. Used when you define
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d88223e573 ">Ignores missing field paths. Used when you define
                                         explicit field mappings.<p class="p">If selected and the destination
                                             encounters a mapped field path that doesn’t exist in the
                                             record, the destination ignores the missing field path
@@ -425,10 +429,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d75215e560 ">Implicit Field Mapping <a class="xref" href="HBase.html#concept_vn5_cr5_4v" title="When you configure the HBase destination, you map fields from records to HBase columns.">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d88223e570 ">Implicit Field Mapping <a class="xref" href="HBase.html#concept_vn5_cr5_4v" title="When you configure the HBase destination, you map fields from records to HBase columns.">
                                             <img class="image" id="task_pgk_p2z_yv__image_a7z_jfn_ws" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d75215e563 ">Uses implicit field mappings so that the destination
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d88223e573 ">Uses implicit field mappings so that the destination
                                         writes data to MapR DB columns based on the matching field
                                         names. The field paths must use the following
                                         format:<pre class="pre codeblock">&lt;column-family&gt;:&lt;qualifier&gt;</pre>
@@ -437,9 +441,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d75215e560 ">Ignore Invalid Column</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d88223e570 ">Ignore Invalid Column</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d75215e563 ">Ignores invalid columns. Used when you configure implicit
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d88223e573 ">Ignores invalid columns. Used when you configure implicit
                                         field mappings.<p class="p">If selected and the destination encounters
                                             a field path that cannot be mapped to a valid MapR DB
                                             column, the destination ignores the invalid column and
@@ -452,10 +456,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d75215e560 ">Kerberos Authentication <a class="xref" href="HBase.html#concept_xy5_4tm_vs" title="You can use Kerberos authentication to connect to HBase. When you use Kerberos authentication, Data Collector uses the Kerberos principal and keytab to connect to HBase.">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d88223e570 ">Kerberos Authentication <a class="xref" href="HBase.html#concept_xy5_4tm_vs" title="You can use Kerberos authentication to connect to HBase. When you use Kerberos authentication, Data Collector uses the Kerberos principal and keytab to connect to HBase.">
                                             <img class="image" id="task_pgk_p2z_yv__image_a5x_jzn_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d75215e563 ">Uses Kerberos credentials to connect to MapR DB.<p class="p">When
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d88223e573 ">Uses Kerberos credentials to connect to MapR DB.<p class="p">When
                                             selected, uses the Kerberos principal and keytab defined
                                             in the <span class="ph">Data
                   Collector</span> configuration file,
@@ -466,10 +470,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d75215e560 ">HBase User <a class="xref" href="HBase.html#concept_gbt_fpt_ls" title="You can configure the destination to use an HBase user to write data to HBase.">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d88223e570 ">HBase User <a class="xref" href="HBase.html#concept_gbt_fpt_ls" title="You can configure the destination to use an HBase user to write data to HBase.">
                                             <img class="image" id="task_pgk_p2z_yv__image_ytm_zzx_kt" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d75215e563 ">The HBase user to use to connect to MapR DB. When using
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d88223e573 ">The HBase user to use to connect to MapR DB. When using
                                         this property, make sure MapR DB is configured
                                             appropriately.<p class="p">By default, the pipeline uses the <span class="ph">Data
                   Collector</span> user to connect to MapR DB.</p>
@@ -478,11 +482,11 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d75215e560 ">Time Basis <a class="xref" href="HBase.html#concept_t4g_vc2_wv" title="The time basis determines the timestamp value added for each column written to HBase.">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d88223e570 ">Time Basis <a class="xref" href="HBase.html#concept_t4g_vc2_wv" title="The time basis determines the timestamp value added for each column written to HBase.">
                                             <img class="image" id="task_pgk_p2z_yv__image_kr3_fgs_7r" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d75215e563 ">Time basis to use for the timestamp value added to each
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d88223e573 ">Time basis to use for the timestamp value added to each
                                         column written to MapR DB. Use one of the following
                                             expressions:<ul class="ul" id="task_pgk_p2z_yv__ul_oc5_zb2_wv">
                                             <li class="li"><samp class="ph codeph">${time:now()}</samp> - Uses the <span class="ph">Data
@@ -500,10 +504,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d75215e560 ">HBase Configuration Directory <a class="xref" href="HBase.html#concept_tjp_v5l_zq">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d88223e570 ">HBase Configuration Directory <a class="xref" href="HBase.html#concept_tjp_v5l_zq">
                                             <img class="image" id="task_pgk_p2z_yv__image_br4_fgs_5r" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d75215e563 ">Location of the HDFS configuration files. Use a directory
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d88223e573 ">Location of the HDFS configuration files. Use a directory
                                         or symlink within the <span class="ph">Data
                   Collector</span> resources directory.<div class="p">You can use the following file
                                             with the MapR DB destination:<ul class="ul" id="task_pgk_p2z_yv__ul_ezj_cvr_bt">
@@ -519,9 +523,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d75215e560 ">HBase Configuration</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d88223e570 ">HBase Configuration</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d75215e563 ">
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d88223e573 ">
                                         <p class="p">Additional HBase configuration properties to use. </p>
 
                                         <p class="p">To add properties, click <span class="ph uicontrol">Add</span> and

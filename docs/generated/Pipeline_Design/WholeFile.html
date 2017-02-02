@@ -39,6 +39,9 @@
                 <span class="ph">Data
                   Collector</span> writes the files based on the directory and file name defined in the destination. </p>
 
+        <p class="p">You can limit the resources used to transfer data by specifying a transfer rate. By
+            default, whole file transfers use available resources as needed.</p>
+
         <p class="p">When the origin system provides checksum metadata, you can configure the origin to verify
             the checksum. Destinations that generate events can include checksum information in
             event records.</p>
@@ -129,7 +132,7 @@
             pipeline to read the file data in the fileref field or to modify file information in the
             fileInfo field, such as the file owner or permissions.</p>
 
-        <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="concept_kgs_msy_yw__d33791e2182">You can use
+        <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="concept_kgs_msy_yw__d37782e2253">You can use
                               data preview to determine the information and field names that are
                               included in the fileInfo field.</span> The information and field names
                         can differ based on the origin system.</div>
@@ -183,6 +186,31 @@
                 
             </dl>
 </div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_prp_jzd_py">
+ <h2 class="title topictitle2">Defining the Transfer Rate</h2>
+
+ <div class="body conbody">
+  <p class="p">By
+            default, the pipeline uses all available resources to transfer whole file data. Define a
+            transfer rate to limit the resources that a whole file pipeline uses. For example, you
+            might specify a transfer rate to enable running multiple whole file pipelines
+            simultaneously or to reserve resources for other processing.</p>
+
+        <p class="p">Specify a transfer rate by configuring the <span class="ph uicontrol">Rate per Second</span>
+            property in the origin, in the whole file data format properties.</p>
+
+        <p class="p">The Rate per Second property is not used by default, allowing the pipeline to use all
+            available resources. If you specify a transfer rate, the unit of measure is bytes per
+            second by default. You can use a different unit of measure per second by using the unit
+            of measure in an expression. </p>
+
+        <p class="p">For example, if you enter 1000, then the pipeline uses a transfer rate of 1000
+            bytes/second. To specify a rate of 10 MB/second, you can use the following expression:
+                <samp class="ph codeph">${10 * MB}</samp>.</p>
 
  </div>
 

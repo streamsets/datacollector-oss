@@ -125,7 +125,7 @@
         </div>
 
         <div class="p">
-            <div class="note note"><span class="notetitle">Note:</span> <span class="ph" id="concept_f23_cqy_dw__d6121e1498">The destination can
+            <div class="note note"><span class="notetitle">Note:</span> <span class="ph" id="concept_f23_cqy_dw__d9550e1569">The destination can
                         create tables and partitions. It can add columns to tables and ignore
                         existing columns. It does not drop existing columns from tables.</span></div>
 
@@ -218,7 +218,7 @@
                 change or delete existing structures. </div>
 Hive Metastore events can be used as
             follows: <ul class="ul" id="concept_drg_lwc_rx__ul_ohl_4pg_zx">
-                <li class="li">With the Hive Query executor to run a Hive or Impala query after updating the
+                <li class="li">With the Hive Query executor to run Hive or Impala queries after updating the
                     Hive metastore.<p class="p">For an example, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_szz_xwm_lx">Case Study: Impala Metadata Updates for HDS</a>.</p>
 </li>
 
@@ -248,9 +248,9 @@ Hive Metastore events can be used as
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d58121e356">Record Header Attribute</th>
+                            <th class="entry" valign="top" width="30%" id="d70731e356">Record Header Attribute</th>
 
-                            <th class="entry" valign="top" width="70%" id="d58121e359">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d70731e359">Description</th>
 
                         </tr>
 
@@ -258,9 +258,9 @@ Hive Metastore events can be used as
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d58121e356 ">sdc.event.type</td>
+                            <td class="entry" valign="top" width="30%" headers="d70731e356 ">sdc.event.type</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d58121e359 ">Event type. Uses one of the following types:<ul class="ul" id="concept_x4p_fyc_rx__ul_m12_mgp_qx">
+                            <td class="entry" valign="top" width="70%" headers="d70731e359 ">Event type. Uses one of the following types:<ul class="ul" id="concept_x4p_fyc_rx__ul_m12_mgp_qx">
                                     <li class="li">new-table - Generated when the destination creates a new
                                         table. </li>
 
@@ -276,16 +276,16 @@ Hive Metastore events can be used as
                         </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d58121e356 ">sdc.event.version</td>
+       <td class="entry" valign="top" width="30%" headers="d70731e356 ">sdc.event.version</td>
 
-       <td class="entry" valign="top" width="70%" headers="d58121e359 ">An integer that indicates the version of the event record type.</td>
+       <td class="entry" valign="top" width="70%" headers="d70731e359 ">An integer that indicates the version of the event record type.</td>
 
       </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d58121e356 ">sdc.event.creation_timestamp</td>
+       <td class="entry" valign="top" width="30%" headers="d70731e356 ">sdc.event.creation_timestamp</td>
 
-       <td class="entry" id="concept_x4p_fyc_rx__d6193e1203" valign="top" width="70%" headers="d58121e359 ">Epoch timestamp when the stage created the event.
+       <td class="entry" id="concept_x4p_fyc_rx__d9622e1385" valign="top" width="70%" headers="d70731e359 ">Epoch timestamp when the stage created the event.
        </td>
 
       </tr>
@@ -313,9 +313,9 @@ Hive Metastore events can be used as
                                     
                                     <thead class="thead" align="left">
                                         <tr>
-                                            <th class="entry" valign="top" width="30%" id="d58121e442">Field</th>
+                                            <th class="entry" valign="top" width="30%" id="d70731e442">Field</th>
 
-                                            <th class="entry" valign="top" width="70%" id="d58121e445">Description</th>
+                                            <th class="entry" valign="top" width="70%" id="d70731e445">Description</th>
 
                                         </tr>
 
@@ -323,11 +323,75 @@ Hive Metastore events can be used as
 
                                     <tbody class="tbody">
                                         <tr>
-                                            <td class="entry" valign="top" width="30%" headers="d58121e442 ">table</td>
+                                            <td class="entry" valign="top" width="30%" headers="d70731e442 ">table</td>
 
-                                            <td class="entry" valign="top" width="70%" headers="d58121e445 ">Fully qualified table name using the following
+                                            <td class="entry" valign="top" width="70%" headers="d70731e445 ">Fully qualified table name using the following
                                                 format:
                                                 <samp class="ph codeph">'&lt;DB&gt;'.'&lt;table&gt;'</samp>.</td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td class="entry" valign="top" width="30%" headers="d70731e442 ">columns</td>
+
+                                            <td class="entry" valign="top" width="70%" headers="d70731e445 ">A list-map field with the following information
+                                                for each new column:<ul class="ul" id="concept_x4p_fyc_rx__ul_wky_yky_my">
+                                                  <li class="li">Column name</li>
+
+                                                  <li class="li">Hive data type, precision and scale</li>
+
+                                                </ul>
+<div class="p">For example: <ol class="ol" id="concept_x4p_fyc_rx__ol_ktz_tlj_4y">
+                                                  <li class="li">
+                                                  <ul class="ul" id="concept_x4p_fyc_rx__ul_kkj_vlj_4y">
+                                                  <li class="li">key: `id`</li>
+
+                                                  <li class="li">value: INT</li>
+
+                                                  </ul>
+
+                                                  </li>
+
+                                                  <li class="li">
+                                                  <ul class="ul" id="concept_x4p_fyc_rx__ul_tkm_srq_4y">
+                                                  <li class="li">key: `desc`</li>
+
+                                                  <li class="li">value: STRING</li>
+
+                                                  </ul>
+
+                                                  </li>
+
+                                                  </ol>
+</div>
+</td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td class="entry" valign="top" width="30%" headers="d70731e442 ">partitions</td>
+
+                                            <td class="entry" valign="top" width="70%" headers="d70731e445 ">A list-map field with the following information:
+                                                  <ul class="ul" id="concept_x4p_fyc_rx__ul_sck_zky_my">
+                                                  <li class="li">Partition name</li>
+
+                                                  <li class="li">Partition value</li>
+
+                                                </ul>
+<div class="p">For example: <ol class="ol" id="concept_x4p_fyc_rx__ol_un4_zlj_4y">
+                                                  <li class="li">
+                                                  <ul class="ul" id="concept_x4p_fyc_rx__ul_r3y_zlj_4y">
+                                                  <li class="li">name: `dt`</li>
+
+                                                  <li class="li">value: 2017-01-01</li>
+
+                                                  </ul>
+
+                                                  </li>
+
+                                                  </ol>
+</div>
+</td>
 
                                         </tr>
 
@@ -355,9 +419,9 @@ Hive Metastore events can be used as
                                     
                                     <thead class="thead" align="left">
                                         <tr>
-                                            <th class="entry" valign="top" width="30%" id="d58121e499">Field</th>
+                                            <th class="entry" valign="top" width="30%" id="d70731e577">Field</th>
 
-                                            <th class="entry" valign="top" width="70%" id="d58121e502">Description</th>
+                                            <th class="entry" valign="top" width="70%" id="d70731e580">Description</th>
 
                                         </tr>
 
@@ -365,17 +429,17 @@ Hive Metastore events can be used as
 
                                     <tbody class="tbody">
                                         <tr>
-                                            <td class="entry" valign="top" width="30%" headers="d58121e499 ">table</td>
+                                            <td class="entry" valign="top" width="30%" headers="d70731e577 ">table</td>
 
-                                            <td class="entry" valign="top" width="70%" headers="d58121e502 ">Fully qualified table name using the following
+                                            <td class="entry" valign="top" width="70%" headers="d70731e580 ">Fully qualified table name using the following
                                                 format: <samp class="ph codeph">&lt;db&gt;.&lt;table&gt;</samp>.</td>
 
                                         </tr>
 
                                         <tr>
-                                            <td class="entry" valign="top" width="30%" headers="d58121e499 ">columns</td>
+                                            <td class="entry" valign="top" width="30%" headers="d70731e577 ">columns</td>
 
-                                            <td class="entry" valign="top" width="70%" headers="d58121e502 ">A list-map field with the following information
+                                            <td class="entry" valign="top" width="70%" headers="d70731e580 ">A list-map field with the following information
                                                 for each new column:<ul class="ul" id="concept_x4p_fyc_rx__ul_q3z_s5g_zx">
                                                   <li class="li">Column name</li>
 
@@ -410,9 +474,9 @@ Hive Metastore events can be used as
                                     
                                     <thead class="thead" align="left">
                                         <tr>
-                                            <th class="entry" valign="top" width="30%" id="d58121e573">Field</th>
+                                            <th class="entry" valign="top" width="30%" id="d70731e651">Field</th>
 
-                                            <th class="entry" valign="top" width="70%" id="d58121e576">Description</th>
+                                            <th class="entry" valign="top" width="70%" id="d70731e654">Description</th>
 
                                         </tr>
 
@@ -420,17 +484,17 @@ Hive Metastore events can be used as
 
                                     <tbody class="tbody">
                                         <tr>
-                                            <td class="entry" valign="top" width="30%" headers="d58121e573 ">table</td>
+                                            <td class="entry" valign="top" width="30%" headers="d70731e651 ">table</td>
 
-                                            <td class="entry" valign="top" width="70%" headers="d58121e576 ">Fully qualified table name using the following
+                                            <td class="entry" valign="top" width="70%" headers="d70731e654 ">Fully qualified table name using the following
                                                 format: <samp class="ph codeph">&lt;db&gt;.&lt;table&gt;</samp>.</td>
 
                                         </tr>
 
                                         <tr>
-                                            <td class="entry" valign="top" width="30%" headers="d58121e573 ">partitions</td>
+                                            <td class="entry" valign="top" width="30%" headers="d70731e651 ">partitions</td>
 
-                                            <td class="entry" valign="top" width="70%" headers="d58121e576 ">A list-map field with the following information:
+                                            <td class="entry" valign="top" width="70%" headers="d70731e654 ">A list-map field with the following information:
                                                   <ul class="ul" id="concept_x4p_fyc_rx__ul_brd_w5g_zx">
                                                   <li class="li">Partition name</li>
 
@@ -475,7 +539,7 @@ Hive Metastore events can be used as
  </div>
 
     <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Install_Config/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Enabling Kerberos Authentication</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Enabling Kerberos Authentication</a></div>
 </div>
 </div>
 </div>
@@ -545,9 +609,9 @@ Hive Metastore events can be used as
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d58121e764">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d70731e842">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d58121e767">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d70731e845">Description</th>
 
                                 </tr>
 
@@ -555,57 +619,57 @@ Hive Metastore events can be used as
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d58121e764 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d70731e842 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d58121e767 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d58121e764 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d58121e767 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d70731e845 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d58121e764 ">Stage Library</td>
+                                    <td class="entry" valign="top" width="30%" headers="d70731e842 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d58121e767 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d70731e845 ">Optional description.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d58121e764 ">Produce Events <a class="xref" href="HiveMetastore.html#concept_drg_lwc_rx">
+                                    <td class="entry" valign="top" width="30%" headers="d70731e842 ">Stage Library</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d70731e845 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d70731e842 ">Produce Events <a class="xref" href="HiveMetastore.html#concept_drg_lwc_rx">
                                             <img class="image" id="task_a4n_1ft_zv__image_xsl_2rx_mx" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d58121e767 ">Generates event records when events occur. Use for event
+                                    <td class="entry" valign="top" width="70%" headers="d70731e845 ">Generates event records when events occur. Use for event
         handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
-         <img class="image" id="task_a4n_1ft_zv__d6193e1076" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+         <img class="image" id="task_a4n_1ft_zv__d9622e1258" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d58121e764 ">Required Fields</td>
+                                    <td class="entry" valign="top" width="30%" headers="d70731e842 ">Required Fields</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d58121e767 ">Since the destination processes only metadata records,
+                                    <td class="entry" valign="top" width="70%" headers="d70731e845 ">Since the destination processes only metadata records,
                                         this property is not relevant.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d58121e764 ">Preconditions</td>
+                                    <td class="entry" valign="top" width="30%" headers="d70731e842 ">Preconditions</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d58121e767 ">Since the destination processes only metadata records,
+                                    <td class="entry" valign="top" width="70%" headers="d70731e845 ">Since the destination processes only metadata records,
                                         this property is not relevant.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d58121e764 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_a4n_1ft_zv__d6331e4464" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d70731e842 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_a4n_1ft_zv__d9760e4661" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d58121e767 ">Error record handling for the stage: <ul class="ul" id="task_a4n_1ft_zv__d6331e4468">
+                                    <td class="entry" valign="top" width="70%" headers="d70731e845 ">Error record handling for the stage: <ul class="ul" id="task_a4n_1ft_zv__d9760e4665">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -634,9 +698,9 @@ Hive Metastore events can be used as
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d58121e894">Hive Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d70731e972">Hive Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d58121e897">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d70731e975">Description</th>
 
                                 </tr>
 
@@ -644,32 +708,32 @@ Hive Metastore events can be used as
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d58121e894 ">JDBC URL</td>
+       <td class="entry" valign="top" width="30%" headers="d70731e972 ">JDBC URL</td>
 
-       <td class="entry" valign="top" width="70%" headers="d58121e897 ">JDBC URL for Hive. You can use the default, or replace the expression for the database
+       <td class="entry" valign="top" width="70%" headers="d70731e975 ">JDBC URL for Hive. You can use the default, or replace the expression for the database
         name with a specific database name when appropriate.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d58121e894 ">JDBC Driver Name</td>
+       <td class="entry" valign="top" width="30%" headers="d70731e972 ">JDBC Driver Name</td>
 
-       <td class="entry" valign="top" width="70%" headers="d58121e897 ">The fully-qualified JDBC driver name.</td>
+       <td class="entry" valign="top" width="70%" headers="d70731e975 ">The fully-qualified JDBC driver name.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d58121e894 ">Data Format</td>
+                                    <td class="entry" valign="top" width="30%" headers="d70731e972 ">Data Format</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d58121e897 ">The destination processes only Avro schemas at this
+                                    <td class="entry" valign="top" width="70%" headers="d70731e975 ">The destination processes only Avro schemas at this
                                         time.</td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d58121e894 ">Hadoop Configuration Directory</td>
+       <td class="entry" valign="top" width="30%" headers="d70731e972 ">Hadoop Configuration Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d58121e897 ">
+       <td class="entry" valign="top" width="70%" headers="d70731e975 ">
         <p class="p">Absolute path to the directory containing the Hive and Hadoop configuration files. For a
          Cloudera Manager installation, enter hive-conf. </p>
 
@@ -691,9 +755,9 @@ Hive Metastore events can be used as
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d58121e894 ">Additional Hadoop Configuration</td>
+       <td class="entry" valign="top" width="30%" headers="d70731e972 ">Additional Hadoop Configuration</td>
 
-       <td class="entry" valign="top" width="70%" headers="d58121e897 ">
+       <td class="entry" valign="top" width="70%" headers="d70731e975 ">
         <p class="p">Additional properties to use. </p>
 
         <p class="p">To add properties, click <span class="ph uicontrol">Add</span> and define the property name and
@@ -720,9 +784,9 @@ Hive Metastore events can be used as
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d58121e1005">Advanced Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d70731e1083">Advanced Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d58121e1008">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d70731e1086">Description</th>
 
                                 </tr>
 
@@ -730,19 +794,19 @@ Hive Metastore events can be used as
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d58121e1005 ">Stored as Avro <a class="xref" href="HiveMetastore.html#concept_wyr_5jv_hw">
+                                    <td class="entry" valign="top" width="30%" headers="d70731e1083 ">Stored as Avro <a class="xref" href="HiveMetastore.html#concept_wyr_5jv_hw">
                                             <img class="image" id="task_a4n_1ft_zv__image_lqj_pyn_lw" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d58121e1008 ">Uses the Stored As Avro clause in the SQL commands that
+                                    <td class="entry" valign="top" width="70%" headers="d70731e1086 ">Uses the Stored As Avro clause in the SQL commands that
                                         generate Hive tables. When selected, the Avro schema URL is
                                         not included in the query.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d58121e1005 ">Schema Folder Location</td>
+                                    <td class="entry" valign="top" width="30%" headers="d70731e1083 ">Schema Folder Location</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d58121e1008 ">Location to store the Avro schemas when Stored as Avro is
+                                    <td class="entry" valign="top" width="70%" headers="d70731e1086 ">Location to store the Avro schemas when Stored as Avro is
                                         not selected. <p class="p">Use a leading slash ( / ) to specify a
                                             fully-qualified path. Omit the slash to specify a path
                                             relative to the table directory. </p>
@@ -754,18 +818,18 @@ Hive Metastore events can be used as
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d58121e1005 ">HDFS User</td>
+                                    <td class="entry" valign="top" width="30%" headers="d70731e1083 ">HDFS User</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d58121e1008 ">Optional HDFS user for the destination to use when
+                                    <td class="entry" valign="top" width="70%" headers="d70731e1086 ">Optional HDFS user for the destination to use when
                                         generating schemas.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d58121e1005 ">Max Cache Size (entries) <a class="xref" href="HiveMetastore.html#concept_f4y_spy_dw" title="The Hive Metastore destination queries Hive for information and caches the results. When possible, it uses the cache to avoid unnecessary Hive queries.">
+                                    <td class="entry" valign="top" width="30%" headers="d70731e1083 ">Max Cache Size (entries) <a class="xref" href="HiveMetastore.html#concept_f4y_spy_dw" title="The Hive Metastore destination queries Hive for information and caches the results. When possible, it uses the cache to avoid unnecessary Hive queries.">
                                             <img class="image" id="task_a4n_1ft_zv__image_mfn_hwx_5r" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d58121e1008 ">Maximum number of entries in the cache. <p class="p">When the cache
+                                    <td class="entry" valign="top" width="70%" headers="d70731e1086 ">Maximum number of entries in the cache. <p class="p">When the cache
          reaches the maximum size, the oldest cached entries are evicted to allow for new
          data.</p>
 <p class="p">Default is -1, an unlimited cache size.</p>
