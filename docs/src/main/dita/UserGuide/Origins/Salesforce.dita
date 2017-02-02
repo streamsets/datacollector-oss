@@ -30,6 +30,8 @@
                 Salesforce data.</li>
         </ul>
         <p>The origin creates Salesforce header attributes to provide information about the source
-            data in record headers.</p>
+            data in record headers. The origin also <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-CDCoverview"
+            /></p>
  </conbody>
 </concept>

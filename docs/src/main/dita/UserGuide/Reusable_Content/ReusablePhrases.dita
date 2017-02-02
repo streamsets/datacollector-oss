@@ -2250,6 +2250,16 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   will be removed in a future <ph conref="#concept_vhs_5tz_xp/pName-long"/>
                   release.</note>
             <p>
+                  <draft-comment author="Loretta">Using CDCoverview in CDC origin
+                        overviews.</draft-comment>
+            </p>
+            <p><ph id="ph-CDCoverview">includes the CRUD operation type in a record header attribute
+                        so generated records can be easily processed by CRUD-enabled destinations.
+                        For an overview of <ph conref="#concept_vhs_5tz_xp/pName-long"/> changed
+                        data processing and a list of CRUD-enabled destinations, see <xref
+                              href="../Pipeline_Design/CDC-Overview.dita#concept_apw_l2c_ty"
+                  />.</ph></p>
+            <p>
                   <draft-comment author="Loretta">CDC reusable content.
                               <uicontrol>CDC-useCDCdest</uicontrol> used in MongoDBOplog > CDC
                         header, JDBC Query Consumer > CDC header, </draft-comment>
