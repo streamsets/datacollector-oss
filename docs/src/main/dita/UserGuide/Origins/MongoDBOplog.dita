@@ -27,9 +27,9 @@
         <p>Use the MongoDB Oplog origin to capture changes in data or the database. To process
             MongoDB data written to a standard capped or uncapped collection, use the <xref
                 href="MongoDB.dita#concept_bk4_2rs_ns">MongoDB origin</xref>.</p>
-        <p>The MongoDB Oplog origin includes the CDC operation type in a record header attribute so
-            generated records can be easily processed by CDC-enabled destinations. <draft-comment
-                author="Loretta">check back on this language</draft-comment></p>
+        <p>The MongoDB Oplog origin <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-CDCoverview"
+            /></p>
         <p>When you configure the MongoDB Oplog origin, you configure connection information, an
             optional timestamp and ordinal to specify where to start the read, the operations that
             you want to process, and the read preference.</p>

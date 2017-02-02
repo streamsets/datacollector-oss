@@ -36,7 +36,9 @@
             your driver requires. </p>
         <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/JDBC-legacyInfo"/>
         <p>By default, the origin creates JDBC header attributes to provide information about source
-            data in record headers. When reading data from Microsoft SQL Server, the origin includes
-            CDC operation information in a record header attribute.</p>
+            data in record headers. </p>
+        <p>When reading changed data from Microsoft SQL Server, the origin <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-CDCoverview"
+            /></p>
     </conbody>
 </concept>

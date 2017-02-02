@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_isy_thx_ty">
- <title>Record Header Attributes</title>
+ <title>CRUD Operation and CDC Header Attributes</title>
  <conbody>
   <p><indexterm>MongoDB Oplog origin<indexterm>record header attributes</indexterm></indexterm>The
             MongoDB Oplog origin includes the CRUD operation type in the sdc.operation.type record
@@ -28,14 +28,14 @@
                 <li>5 for unsupported operations, such as CMD, NOOP, or DB, which are available
                     MongoDB operation types but not applicable to record data.</li>
             </ul></p>
-        <p>The MongoDB Oplog origin can also include the following CDC-related header attributes
-            when the information is relevant:<ul id="ul_rm2_35x_ty">
-                <li>op - The CDC operation using the following values:<ul id="ul_ucp_l5x_ty">
+        <p>The MongoDB Oplog origin can also include the following header attributes when the
+            information is relevant:<ul id="ul_rm2_35x_ty">
+                <li>op - The CRUD operation using the following values:<ul id="ul_ucp_l5x_ty">
                         <li>i for INSERT</li>
                         <li>u for UPDATE</li>
                         <li>d for DELETE</li>
                     </ul></li>
-                <li>ns -  The namespace, using the following format:
+                <li>ns - The namespace, using the following format:
                         <codeph>&lt;database>:&lt;tablename></codeph>.</li>
             </ul></p>
  </conbody>
