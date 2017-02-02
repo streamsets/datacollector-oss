@@ -120,13 +120,11 @@
                                             <li>Datagram</li>
                                             <li>Delimited</li>
                                             <li>JSON</li>
-                                            <li>Log</li>
                                             <li>Protobuf </li>
                                             <li>SDC Record <xref
                                                   href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
                                                   <image href="../Graphics/icon_moreInfo.png"
                                                   scale="11" id="image_drz_1nf_qw"/></xref></li>
-                                            <li>Text</li>
                                             <li>XML</li>
                                         </ul></entry>
                                 </row>
@@ -147,16 +145,10 @@
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JSON-2props">
                 <cmd/>
             </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/LogData_Log4j">
-                <cmd/>
-            </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-PROTO-File">
                 <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-SDCRecord">
-                <cmd/>
-            </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Text">
                 <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/XMLprops">
