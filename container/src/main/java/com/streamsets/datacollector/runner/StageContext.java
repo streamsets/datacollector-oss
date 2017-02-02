@@ -21,6 +21,7 @@ package com.streamsets.datacollector.runner;
 
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Gauge;
+import com.codahale.metrics.Histogram;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
@@ -33,6 +34,7 @@ import com.streamsets.datacollector.el.ELEvaluator;
 import com.streamsets.datacollector.el.ELVariables;
 import com.streamsets.datacollector.email.EmailException;
 import com.streamsets.datacollector.email.EmailSender;
+import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.record.EventRecordImpl;
 import com.streamsets.datacollector.record.HeaderImpl;
@@ -89,7 +91,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   private final StageType stageType;
   private final boolean isPreview;
   private final MetricRegistry metrics;
-  private final String instanceName;
+  private final Stage.Info stageInfo;
   private final List<String> outputLanes;
   private final OnRecordError onRecordError;
   private ErrorSink errorSink;
@@ -100,6 +102,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   private final long pipelineMaxMemory;
   private final ExecutionMode executionMode;
   private final String resourcesDir;
+  private final String sdcId;
   private final String pipelineName;
   private final String rev;
   private volatile boolean stop;
@@ -108,7 +111,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
 
   //for SDK
   public StageContext(
-      String instanceName,
+      final String instanceName,
       StageType stageType,
       int runnerId,
       boolean isPreview,
@@ -121,9 +124,10 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
       EmailSender emailSender
   ) {
     this.pipelineName = "myPipeline";
+    this.sdcId = "mySDC";
     this.rev = "0";
     // create dummy info for Stage Runners. This is required for stages that expose custom metrics
-    Stage.Info info = new Stage.Info() {
+    this.stageInfo = new Stage.Info() {
       @Override
       public String getName() {
         return "x";
@@ -136,15 +140,14 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
 
       @Override
       public String getInstanceName() {
-        return "x";
+        return instanceName;
       }
     };
-    pipelineInfo = ImmutableList.of(info);
+    pipelineInfo = ImmutableList.of(stageInfo);
     this.stageType = stageType;
     this.runnerId = runnerId;
     this.isPreview = isPreview;
     metrics = new MetricRegistry();
-    this.instanceName = instanceName;
     this.outputLanes = ImmutableList.copyOf(outputLanes);
     this.onRecordError = onRecordError;
     errorSink = new ErrorSink();
@@ -173,7 +176,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
       StageRuntime stageRuntime,
       long pipelineMaxMemory,
       ExecutionMode executionMode,
-      String resourcesDir,
+      RuntimeInfo runtimeInfo,
       EmailSender emailSender,
       Configuration configuration
   ) {
@@ -184,14 +187,15 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
     this.runnerId = runnerId;
     this.isPreview = isPreview;
     this.metrics = metrics;
-    this.instanceName = stageRuntime.getConfiguration().getInstanceName();
+    this.stageInfo = stageRuntime.getInfo();
     this.outputLanes = ImmutableList.copyOf(stageRuntime.getConfiguration().getOutputLanes());
     onRecordError = stageRuntime.getOnRecordError();
     this.configToElDefMap = getConfigToElDefMap(stageRuntime);
     this.constants = stageRuntime.getConstants();
     this.pipelineMaxMemory = pipelineMaxMemory;
     this.executionMode = executionMode;
-    this.resourcesDir = resourcesDir;
+    this.resourcesDir = runtimeInfo.getResourcesDir();
+    this.sdcId = runtimeInfo.getId();
     this.emailSender = emailSender;
     int sampleSize = configuration.get(SDC_RECORD_SAMPLING_SAMPLE_SIZE, 1);
     int populationSize = configuration.get(SDC_RECORD_SAMPLING_POPULATION_SIZE, 10000);
@@ -256,7 +260,12 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
       Object... args) {
     Preconditions.checkNotNull(errorCode, "errorCode cannot be null");
     args = (args != null) ? args.clone() : NULL_ONE_ARG;
-    return new ConfigIssueImpl(instanceName, configGroup, configName, errorCode, args);
+    return new ConfigIssueImpl(stageInfo.getInstanceName(), configGroup, configName, errorCode, args);
+  }
+
+  @Override
+  public Stage.Info getStageInfo() {
+    return stageInfo;
   }
 
   @Override
@@ -317,42 +326,52 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
 
   @Override
   public Timer createTimer(String name) {
-    return MetricsConfigurator.createStageTimer(getMetrics(), CUSTOM_METRICS_PREFIX + instanceName + "." + name, pipelineName,
+    return MetricsConfigurator.createStageTimer(getMetrics(), CUSTOM_METRICS_PREFIX + stageInfo.getInstanceName() + "." + name, pipelineName,
       rev);
   }
 
   public Timer getTimer(String name) {
-    return MetricsConfigurator.getTimer(getMetrics(), CUSTOM_METRICS_PREFIX + instanceName + "." + name);
+    return MetricsConfigurator.getTimer(getMetrics(), CUSTOM_METRICS_PREFIX + stageInfo.getInstanceName() + "." + name);
   }
 
   @Override
   public Meter createMeter(String name) {
-    return MetricsConfigurator.createStageMeter(getMetrics(), CUSTOM_METRICS_PREFIX + instanceName + "." + name, pipelineName,
+    return MetricsConfigurator.createStageMeter(getMetrics(), CUSTOM_METRICS_PREFIX + stageInfo.getInstanceName() + "." + name, pipelineName,
       rev);
   }
 
   public Meter getMeter(String name) {
-    return MetricsConfigurator.getMeter(getMetrics(), CUSTOM_METRICS_PREFIX + instanceName + "." + name);
+    return MetricsConfigurator.getMeter(getMetrics(), CUSTOM_METRICS_PREFIX + stageInfo.getInstanceName() + "." + name);
   }
 
   @Override
   public Counter createCounter(String name) {
-    return MetricsConfigurator.createStageCounter(getMetrics(), CUSTOM_METRICS_PREFIX +instanceName + "." + name, pipelineName,
+    return MetricsConfigurator.createStageCounter(getMetrics(), CUSTOM_METRICS_PREFIX +stageInfo.getInstanceName() + "." + name, pipelineName,
       rev);
   }
 
   public Counter getCounter(String name) {
-    return MetricsConfigurator.getCounter(getMetrics(), CUSTOM_METRICS_PREFIX + instanceName + "." + name);
+    return MetricsConfigurator.getCounter(getMetrics(), CUSTOM_METRICS_PREFIX + stageInfo.getInstanceName() + "." + name);
+  }
+
+  @Override
+  public Histogram createHistogram(String name) {
+    return MetricsConfigurator.createStageHistogram5Min(getMetrics(), CUSTOM_METRICS_PREFIX +stageInfo.getInstanceName() + "." + name, pipelineName, rev);
+  }
+
+  @Override
+  public Histogram getHistogram(String name) {
+    return MetricsConfigurator.getHistogram(getMetrics(), CUSTOM_METRICS_PREFIX + stageInfo.getInstanceName() + "." + name);
   }
 
   @SuppressWarnings("unchecked")
   public <T> Gauge<T> createGauge(String name, Gauge<T> gauge) {
-    return MetricsConfigurator.createGauge(getMetrics(), CUSTOM_METRICS_PREFIX + instanceName + "." + name, gauge, name, rev);
+    return MetricsConfigurator.createGauge(getMetrics(), CUSTOM_METRICS_PREFIX + stageInfo.getInstanceName() + "." + name, gauge, name, rev);
   }
 
   @SuppressWarnings("unchecked")
   public <T> Gauge<T> getGauge(String name) {
-    return MetricsConfigurator.getGauge(getMetrics(), CUSTOM_METRICS_PREFIX + instanceName + "." + name);
+    return MetricsConfigurator.getGauge(getMetrics(), CUSTOM_METRICS_PREFIX + stageInfo.getInstanceName() + "." + name);
   }
 
   // for SDK
@@ -384,22 +403,22 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
     Preconditions.checkNotNull(exception, "exception cannot be null");
     if (exception instanceof StageException) {
       StageException stageException = (StageException)exception;
-      reportErrorDelegate.reportError(instanceName, new ErrorMessage(stageException.getErrorCode(), stageException.getParams()));
+      reportErrorDelegate.reportError(stageInfo.getInstanceName(), new ErrorMessage(stageException.getErrorCode(), stageException.getParams()));
     } else {
-      reportErrorDelegate.reportError(instanceName, new ErrorMessage(ContainerError.CONTAINER_0001, exception.toString()));
+      reportErrorDelegate.reportError(stageInfo.getInstanceName(), new ErrorMessage(ContainerError.CONTAINER_0001, exception.toString()));
     }
   }
 
   @Override
   public void reportError(String errorMessage) {
     Preconditions.checkNotNull(errorMessage, "errorMessage cannot be null");
-    reportErrorDelegate.reportError(instanceName, new ErrorMessage(ContainerError.CONTAINER_0002, errorMessage));
+    reportErrorDelegate.reportError(stageInfo.getInstanceName(), new ErrorMessage(ContainerError.CONTAINER_0002, errorMessage));
   }
 
   @Override
   public void reportError(ErrorCode errorCode, Object... args) {
     Preconditions.checkNotNull(errorCode, "errorId cannot be null");
-    reportErrorDelegate.reportError(instanceName, new ErrorMessage(errorCode, args));
+    reportErrorDelegate.reportError(stageInfo.getInstanceName(), new ErrorMessage(errorCode, args));
   }
 
   @Override
@@ -440,8 +459,8 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
       recordImpl.getHeader().setSourceRecord(recordImpl);
       recordImpl.setInitialRecord(false);
     }
-    recordImpl.getHeader().setError(instanceName, errorMessage);
-    errorSink.addRecord(instanceName, recordImpl);
+    recordImpl.getHeader().setError(stageInfo.getInstanceName(), errorMessage);
+    errorSink.addRecord(stageInfo.getInstanceName(), recordImpl);
   }
 
   @Override
@@ -452,13 +471,13 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   //Stage.Context
   @Override
   public Record createRecord(String recordSourceId) {
-    return new RecordImpl(instanceName, recordSourceId, null, null);
+    return new RecordImpl(stageInfo.getInstanceName(), recordSourceId, null, null);
   }
 
   //Stage.Context
   @Override
   public Record createRecord(String recordSourceId, byte[] raw, String rawMime) {
-    return new RecordImpl(instanceName, recordSourceId, raw, rawMime);
+    return new RecordImpl(stageInfo.getInstanceName(), recordSourceId, raw, rawMime);
   }
 
   @Override
@@ -478,7 +497,17 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
 
   @Override
   public EventRecord createEventRecord(String type, int version, String recordSourceId) {
-    return new EventRecordImpl(type, version, instanceName, recordSourceId, null, null);
+    return new EventRecordImpl(type, version, stageInfo.getInstanceName(), recordSourceId, null, null);
+  }
+
+  @Override
+  public String getSdcId() {
+    return sdcId;
+  }
+
+  @Override
+  public String getPipelineId() {
+    return pipelineName;
   }
 
   @Override
@@ -488,7 +517,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
       recordImpl.getHeader().setSourceRecord(recordImpl);
       recordImpl.setInitialRecord(false);
     }
-    eventSink.addEvent(instanceName, recordImpl);
+    eventSink.addEvent(stageInfo.getInstanceName(), recordImpl);
   }
 
   public void setStop(boolean stop) {
@@ -503,7 +532,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   @Override
   public Record createRecord(Record originatorRecord) {
     Preconditions.checkNotNull(originatorRecord, "originatorRecord cannot be null");
-    RecordImpl record = new RecordImpl(instanceName, originatorRecord, null, null);
+    RecordImpl record = new RecordImpl(stageInfo.getInstanceName(), originatorRecord, null, null);
     HeaderImpl header = record.getHeader();
     header.setStagesPath("");
     return record;
@@ -513,7 +542,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   @Override
   public Record createRecord(Record originatorRecord, String sourceIdPostfix) {
     Preconditions.checkNotNull(originatorRecord, "originatorRecord cannot be null");
-    RecordImpl record = new RecordImpl(instanceName, originatorRecord, null, null);
+    RecordImpl record = new RecordImpl(stageInfo.getInstanceName(), originatorRecord, null, null);
     HeaderImpl header = record.getHeader();
     header.setSourceId(header.getSourceId() + "_" + sourceIdPostfix);
     header.setStagesPath("");
@@ -523,7 +552,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   //Processor.Context
   @Override
   public Record createRecord(Record originatorRecord, byte[] raw, String rawMime) {
-    return new RecordImpl(instanceName, originatorRecord, raw, rawMime);
+    return new RecordImpl(stageInfo.getInstanceName(), originatorRecord, raw, rawMime);
   }
 
   //Processor.Context
@@ -547,7 +576,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
 
   @Override
   public String toString() {
-    return Utils.format("StageContext[instance='{}']", instanceName);
+    return Utils.format("StageContext[instance='{}']", stageInfo.getInstanceName());
   }
 
   //ElProvider interface implementation

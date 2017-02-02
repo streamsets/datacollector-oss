@@ -645,7 +645,7 @@ public class Pipeline {
         stageRuntime,
         pipelineConfiguration.getMemoryLimitConfiguration().getMemoryLimit(),
         getExecutionMode(pipelineConfiguration),
-        pipelineRunner.getRuntimeInfo().getResourcesDir(),
+        pipelineRunner.getRuntimeInfo(),
         new EmailSender(configuration),
         configuration
       )
