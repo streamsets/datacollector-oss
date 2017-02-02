@@ -138,9 +138,12 @@
     <topicref href="../Origins/JDBC-SQLQueryFull.dita"/>
     <topicref href="../Origins/JDBCConsumer-StoredProcedures.dita"/>
    </topicref>
-   <topicref href="../Origins/JDBCConsumer-CDC.dita"/>
    <topicref href="../Origins/JDBCConsumer-HeaderAttributes.dita">
     <topicref href="../Origins/JDBCConsumer-HeaderHDS.dita"/>
+   </topicref>
+   <topicref href="../Origins/JDBCConsumer-CDCMSSQLOverview.dita">
+    <topicref href="../Origins/JDBCConsumer-CRUDRecordHeader.dita"/>
+    <topicref href="../Origins/JDBCConsumer-CDCGroupTransactions.dita"/>
    </topicref>
    <topicref href="../Origins/JDBCConsumer-Configuring.dita"/>
   </topicref>
@@ -207,6 +210,9 @@
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/MongoDBOplog-TimestampOrdinal.dita"/>
    <topicref href="../Origins/MongoDBOplog-ReadPreference.dita"/>
+   <topicref href="../Origins/MongoDBOplog-GeneratedRecords.dita">
+    <topicref href="../Origins/MongoDBOplog-CDCHeader.dita"/>
+   </topicref>
    <topicref href="../Origins/MongoDBOplog-EnableSSL.dita"/>
    <topicref href="../Origins/MongoDBOplog-Configuring.dita"/>
   </topicref>
@@ -214,7 +220,9 @@
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/MySQLBinaryLog-DriverInstall.dita"/>
    <topicref href="../Origins/MySQLBinaryLog-Offset.dita"/>
-   <topicref href="../Origins/MySQLBinaryLog-Record.dita"/>
+   <topicref href="../Origins/MySQLBinaryLog-Record.dita">
+    <topicref href="../Origins/MySQLBinaryLog-ProcessingGR.dita"/>
+   </topicref>
    <topicref href="../Origins/MySQLBinaryLog-Tables.dita"/>
    <topicref href="../Origins/MySQLBinaryLog-Configuring.dita"/>
   </topicref>
@@ -233,7 +241,8 @@
    <topicref href="../Origins/OracleCDC-Dictionary.dita"/>
    <topicref href="../Origins/OracleCDC-InitialChange.dita"/>
    <topicref href="../Origins/OracleCDC-GeneratedRecords.dita">
-    <topicref href="../Origins/OracleCDC-CDCAttributes.dita"/>
+    <topicref href="../Origins/OracleCDC-CDCOpHeaderAtt.dita"/>
+    <topicref href="../Origins/OracleCDC-CDCAdditionalAtts.dita"/>
    </topicref>
    <topicref href="../Origins/OracleCDC-HiveDriftSolution.dita"/>
    <topicref href="../Origins/OracleCDC-Preview.dita"/>
@@ -264,6 +273,7 @@
    </topicref>
    <topicref href="../Origins/Salesforce-CustomFields.dita"/>
    <topicref href="../Origins/Salesforce-HeaderAttributes.dita"/>
+   <topicref href="../Origins/Salesforce-CRUDHeaderAttribute.dita"/>
    <topicref href="../Origins/Salesforce-APIVersion.dita"/>
    <topicref href="../Origins/Salesforce-Configuring.dita"/>
   </topicref>

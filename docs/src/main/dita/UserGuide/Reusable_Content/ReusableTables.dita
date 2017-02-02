@@ -769,7 +769,8 @@
   <p>
    <draft-comment author="alisontaylor"><b>table-JDBCProps</b> - JDBC Query Consumer, Multi Table
     JDBC Consumer, JDBC Lookup, JDBC Producer, and JDBC Tee use most rows in this table. Oracle CDC
-    is using a couple too. JDBC Query executor also uses some.</draft-comment>
+    is using a couple too. JDBC Query executor also uses some. – no one uses the whole table AFAI
+    can tell.&lt;lc></draft-comment>
    <table frame="all" rowsep="1" colsep="1" id="table_vwl_qcq_tw">
     <tgroup cols="2">
      <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -826,8 +827,15 @@
       </row>
       <row id="LogFormat_row">
        <entry>Change Log Format</entry>
-       <entry>Format of the change capture log. Use to specify the log format of origin data when
-        processing change capture data.</entry>
+       <entry>Format of change capture data. Use when processing change capture data. </entry>
+      </row>
+      <row>
+       <entry>Default Operation </entry>
+       <entry>&lt;&lt; using conref to elasticsearch>></entry>
+      </row>
+      <row>
+       <entry>Unsupported Operation Handling  </entry>
+       <entry>&lt;&lt; using conref to elasticsearch>></entry>
       </row>
       <row id="RollbackBatch_row">
        <entry>Rollback Batch On Error</entry>
@@ -1309,8 +1317,7 @@
      <row id="SalesforcePassword">
       <entry>Password</entry>
       <entry>Salesforce password. <note
-       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
-      /></entry>
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"/></entry>
      </row>
      <row id="SalesforceEndpoint">
       <entry>Auth Endpoint</entry>
@@ -1346,8 +1353,7 @@
      <row>
       <entry>admin</entry>
       <entry id="entry_adminRole">Perform any <ph
-       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-      /> task. </entry>
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> task. </entry>
      </row>
      <row>
       <entry>manager</entry>

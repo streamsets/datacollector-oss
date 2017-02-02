@@ -24,7 +24,9 @@
           destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Elasticsearch</indexterm></indexterm>When
       you configure the Elasticsearch destination, you configure the cluster name, the HTTP URI, and
       document-related information.</p>
-    <p>You configure the destination to perform one of the following write operations:  create,
-      update, delete, or index. You can also add advanced Elasticsearch properties as needed. </p>
+    <p>The Elasticsearch destination <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Dest-CRUDoverview"/><ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/CDC-xref"/></p>
+    <p>You can also add advanced Elasticsearch properties as needed. </p>
  </conbody>
 </concept>

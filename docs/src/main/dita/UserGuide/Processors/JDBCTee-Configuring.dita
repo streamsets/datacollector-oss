@@ -82,6 +82,18 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/LogFormat_row">
                                     <entry/>
                                 </row>
+                                <row>
+                                    <entry>Default Operation <xref href="JDBCTee-CRUDOperation.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_m6p_rfp_vv"/></xref></entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry_DefaultOperation"/>
+                                </row>
+                                <row>
+                                    <entry>Unsupported Operation Handling </entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry_UnsupportedOperation"/>
+                                </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/RollbackBatch_row">
                                     <entry/>

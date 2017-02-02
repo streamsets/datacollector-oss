@@ -22,8 +22,11 @@
             you configure the Kudu destination, you specify the connection information for one or
             more Kudu masters, define the table to use, and optionally define field mappings. By
             default, the destination writes field data to columns with matching names. </p>
-        <p>You configure the destination to perform one of the following write operations: insert,
-            update, delete, or upsert.</p>
-        <p>You can also configure the external consistency mode and the operation timeout to use. </p>
+        <p>The Kudu destination <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Dest-CRUDoverview"
+                /><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/CDC-xref"
+            /></p>
+        <p>You can also configure the external consistency mode and the operation timeout for the
+            destination.</p>
  </conbody>
 </concept>

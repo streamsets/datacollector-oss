@@ -53,7 +53,11 @@
                                         </xref></entry>
                                     <entry>Defines how JDBC Query Consumer queries the database.
                                         Select to perform incremental queries. Clear to perform full
-                                        queries. <p>Default is incremental mode. </p></entry>
+                                        queries. <p>To process CDC data from Microsoft SQL Server,
+                                            select this option. For more information about CDC for
+                                            Microsoft SQL Server, see <xref
+                                                href="JDBCConsumer-CDCMSSQLOverview.dita#concept_tyd_gbf_5y"
+                                            />.</p><p>Default is incremental mode. </p></entry>
                                 </row>
                                 <row>
                                     <entry>SQL Query <xref href="JDBC-SQLQuery.dita"><image
@@ -119,8 +123,8 @@
             </step>
             <step>
                 <cmd>To process change capture data from Microsoft SQL Server, on the
-                        <uicontrol>Change Data Capture</uicontrol> tab, configure the following
-                    properties:</cmd>
+                        <uicontrol>Change Data Capture</uicontrol> tab, optionally configure the
+                    following properties to group rows by transaction:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_vnz_v1w_ht">
                         <tgroup cols="2">
@@ -135,11 +139,12 @@
                             <tbody>
                                 <row>
                                     <entry>Transaction ID Column Name</entry>
-                                    <entry>Transaction ID column name.</entry>
+                                    <entry>Transaction ID column name, typically __$start_lsn.
+                                    </entry>
                                 </row>
                                 <row>
                                     <entry>Max Transaction Size (rows) <xref
-                                            href="JDBCConsumer-CDC.dita"><image
+                                            href="JDBCConsumer-CDCGroupTransactions.dita"><image
                                                 href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_gsf_kdw_ht"/>
                                         </xref></entry>

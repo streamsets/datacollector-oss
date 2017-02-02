@@ -26,8 +26,8 @@
             Multitable  Consumer origin to read existing data before you start a pipeline with
             Oracle CDC Client.</p>
         <p>Oracle CDC Client processes data based on the commit number, in ascending order. </p>
-        <p>The Oracle CDC Client origin can create records for insert, update, select-for-update,
-            and delete operations for one or more tables in a database. You can select the
+        <p>The Oracle CDC Client origin can create records for INSERT, UPDATE, SELECT FOR UPDATE,
+            and DELETE operations for one or more tables in a database. You can select the
             operations that you want to use.</p>
         <p>
             <note>To use Oracle CDC Client, you must enable LogMiner for the database that you want

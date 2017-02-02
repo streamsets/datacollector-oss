@@ -14,38 +14,43 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_dvg_vvj_wx">
- <title>Define the Operation</title>
- <shortdesc>To write to Kudu, you configure the destination to perform one of the following write
-        operations: insert, update, delete, or upsert. You define the default operation for the
-        destination. You can also define the operation in a record header attribute.</shortdesc>
+ <title>Define the CRUD Operation</title>
  <conbody>
-  <p><indexterm>Kudu destination<indexterm>write operation</indexterm></indexterm>You define the
-            write operation in the following ways:</p>
+  <p><indexterm>Kudu destination<indexterm>CRUD operation</indexterm></indexterm>The Kudu
+            destination can insert, update, delete, or upsert data. The destination writes the
+            records based on the CRUD operation defined in a CRUD operation header attribute or in
+            operation-related stage properties. </p>
+        <p>You define the CRUD operation in the following ways:</p>
         <dl>
             <dlentry>
-                <dt>Default operation in the Kudu destination properties</dt>
-                <dd
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DefaultOperation"/>
-            </dlentry>
-            <dlentry>
-            <dt>Record header attribute</dt>
+                <dt>CRUD record header attribute</dt>
                 <dd
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/RecordHeaderAtt"/>
                 <dd>The attribute can contain one of the following numeric values:<ul
                         id="ul_smy_qf3_1y">
-                        <li>1 - inserts records</li>
-                        <li>2 - deletes records</li>
-                        <li>3 - updates records</li>
-                        <li>4 - upserts records </li>
+                        <li>1 for INSERT</li>
+                        <li>2 for DELETE</li>
+                        <li>3 for UPDATE</li>
+                        <li>4 for UPSERT </li>
                     </ul></dd>
                 <dd
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DefineRecordHeaderAtt"/>
-                <dd>In the Advanced tab for the Kudu destination, you can configure how the
-                    destination handles records that have an unsupported value for the
-                    sdc.operation.type record header attribute. Unsupported values include
-                    non-numeric values, negative numeric values, or zero. You can configure the
-                    destination to discard the record, send the record to error, or use the default
-                    operation. </dd>
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DefineRecordHeaderAtt"
+                />
+            </dlentry>
+            <dlentry>
+                <dt>Operation stage properties</dt>
+                <dd
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DefaultOperation"/>
+                <dd
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/UnsupportedOp"/>
+                <dd>
+                    <draft-comment author="Loretta">Alison: some old info I'm dropping, unless you
+                        think we should add it to the conref. "Unsupported values include
+                        non-numeric values, negative numeric values, or zero." – because it also
+                        applies to any integer that's not supported? figured I'd rather skip the
+                        whole thing since we list what's valid above? Also the fact that it's on the
+                        Advanced tab –  I was thinking of logging a bug for that?</draft-comment>
+                </dd>
             </dlentry>
         </dl>
  </conbody>

@@ -15,37 +15,36 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_rfd_15l_dy">
  <title>Generated Records</title>
- <shortdesc>The MySQL Binary Log origin generates one record for each transaction recorded in the
-        binary logs. The record includes fields and record header attributes that contain the
-        operation type, change data capture information, and the changed data.</shortdesc>
  <conbody>
-        <note>If a transaction recorded in the binary logs is rolled back in the MySQL database,
-            MySQL retains the original transaction in the log and then also records the rolled back
-            transaction. As a result, the MySQL Binary Log origin can process the changes recorded
-            in the original transaction and in the rolled back transaction. </note>
-        <p><indexterm>MySQL Binary Log origin<indexterm>generated
-            records</indexterm></indexterm>Each generated record includes the following
-            information:</p>
+        <p><indexterm>MySQL Binary Log origin<indexterm>generated records</indexterm></indexterm>The
+            MySQL Binary Log origin generates one record for each transaction recorded in the binary
+            logs. The record includes fields and record header attributes that contain the operation
+            type, change data capture information, and the changed data.<note>If a transaction
+                recorded in the binary logs is rolled back in the MySQL database, MySQL retains the
+                original transaction in the log and then also records the rolled back transaction.
+                As a result, the MySQL Binary Log origin can process the changes recorded in the
+                original transaction and in the rolled back transaction. </note></p>
+        <p>Each generated record includes the following information:</p>
         <dl>
             <dlentry>
-                <dt>Operation type</dt>
-                <dd>The operation type is stored in the Type record field and also in the
+                <dt>CRUD operation type</dt>
+                <dd>The CRUD operation type is stored in the Type record field and also in the
                         <codeph>sdc.operation.type</codeph> record header attribute. </dd>
                 <dd>The Type field contains one of the following string values: INSERT, DELETE, or
                     UPDATE.</dd>
                 <dd>The <codeph>sdc.operation.type</codeph> record header attribute contains one of
                     the following numeric values:<ul id="ul_dkt_g5l_dy">
-                        <li>1 - insert data</li>
-                        <li>2 - delete data</li>
-                        <li>3 - update data</li>
+                        <li>1 for insert data</li>
+                        <li>2 for delete data</li>
+                        <li>3 for update data</li>
                     </ul></dd>
-                <dd>You can use either the Type record field or the record header attribute when the
-                    pipeline writes the record to the destination system. For example, the Kudu
-                    destination by default reads the value of the
-                        <codeph>sdc.operation.type</codeph> record header attribute to determine the
-                    operation to perform. If your MySQL Binary Log pipeline writes to a Kudu
-                    destination, the destination automatically reads the operation from the record
-                    header attribute. </dd>
+                <dd>You can use either the Type record field or the sdc.operation.type record header
+                    attribute to write records to the destination system. CRUD-enabled destinations
+                    such as JDBC Producer and Kudu use the sdc.operation.type header attribute. For
+                    an overview of <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> CDC and a list of CRUD-enabled destinations, see <xref
+                        href="../Pipeline_Design/CDC-Overview.dita#concept_apw_l2c_ty"/>.</dd>
             </dlentry>
             <dlentry>
                 <dt>Change data capture information</dt>
@@ -63,12 +62,16 @@
                     </ul></dd>
             </dlentry>
             <dlentry>
-                <dt>Changed data</dt>
+                <dt>New data</dt>
                 <dd>
-                    <p>The data to be inserted, deleted, or updated is stored in the root Data map
-                        field. Each column of changed data is another field within the root
-                        field.</p>
+                    <p>Fields that contain new data to be inserted or updated appears in a Data map
+                        field. </p>
                 </dd>
+            </dlentry>
+            <dlentry>
+                <dt>Changed data</dt>
+                <dd>Fields that contain old data to be updated, or fields in a delete record appear
+                    in an OldData map field. </dd>
             </dlentry>
         </dl>
         <p>For example, the origin generates the following record when it reads from binary log

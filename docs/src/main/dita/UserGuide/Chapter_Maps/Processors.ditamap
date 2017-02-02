@@ -183,6 +183,7 @@
   <topicref href="../Processors/JDBCTee.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/JDBCTee-DriverInstall.dita"/>
+   <topicref href="../Processors/JDBCTee-CRUDOperation.dita"/>
    <topicref href="../Processors/JDBCTee-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/JSONParser.dita" chunk="to-content">

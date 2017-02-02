@@ -13,22 +13,20 @@
   limitations under the License.
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_db1_3sj_fx">
+<concept id="concept_vfw_bjz_ty">
  <title>Generated Records</title>
  <conbody>
-  <p><indexterm>Oracle CDC Client origin<indexterm>generated records</indexterm></indexterm>When
-            generating records, the Oracle CDC Client origin specifies the operation type in the
-            operation record header attribute, <codeph>oracle.cdc.operation</codeph>.</p>
-        <p>The origin generates record differently based on the operation type and the logging
-            enabled for the database and tables. <table frame="all" rowsep="1" colsep="1"
-                id="table_zpr_2j5_gx">
+        <p><indexterm>Oracle CDC Client origin<indexterm>generated
+            records</indexterm></indexterm>The origin generates records differently based on the
+            Oplog operation type and the logging enabled for the database and tables. <table
+                frame="all" rowsep="1" colsep="1" id="table_zpr_2j5_gx">
                 <tgroup cols="3">
-                    <colspec colname="c1" colnum="1" colwidth="1.0*"/>
+                    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                     <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                    <colspec colname="c3" colnum="3" colwidth="2.0*"/>
+                    <colspec colname="c3" colnum="3" colwidth="1.5*"/>
                     <thead>
                         <row>
-                            <entry>Operation</entry>
+                            <entry>Oplog Operation</entry>
                             <entry>Identification/Primary Key Logging Only</entry>
                             <entry>Full Supplemental Logging</entry>
                         </row>
@@ -57,5 +55,5 @@
                     </tbody>
                 </tgroup>
             </table></p>
- </conbody>
+    </conbody>
 </concept>

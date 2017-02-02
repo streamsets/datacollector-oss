@@ -3752,8 +3752,8 @@
                     <draft-comment author="Loretta">Elasticsearch properties - all used by
                         Elasticsearch destination. All but Default Operation and Unsupported
                         Operation Handling used by Configuring a Pipeline > Error handling. Default
-                        Operation and Unsupported Operation Handling descriptions used by
-                        Kudu.</draft-comment>
+                        Operation and Unsupported Operation Handling descriptions used by Kudu, JDBC
+                        Producer and JDBC Tee</draft-comment>
                 </cmd>
             </step>
             <step id="ELASTICprops-Step">
@@ -3862,14 +3862,14 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_r1f_ggg_z5"/>
                                         </xref></entry>
-                                    <entry id="entry_DefaultOperation">Default write operation to
+                                    <entry id="entry_DefaultOperation">Default CRUD operation to
                                         perform if the sdc.operation.type record header attribute is
-                                        not set or contains a value that is not supported. </entry>
+                                        not set. </entry>
                                 </row>
                                 <row>
                                     <entry>Unsupported Operation Handling</entry>
                                     <entry id="entry_UnsupportedOperation">Action to take when the
-                                        operation type defined in the sdc.operation.type record
+                                        CRUD operation type defined in the sdc.operation.type record
                                         header attribute is not supported:<ul id="ul_sgk_pg3_1y">
                                             <li>Discard - Discards the record.</li>
                                             <li>Send to Error - Sends the record to the pipeline for
