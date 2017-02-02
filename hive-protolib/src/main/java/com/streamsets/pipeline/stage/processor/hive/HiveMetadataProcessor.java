@@ -104,6 +104,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
   private HMSCache cache;
   private ErrorRecordHandler errorRecordHandler;
   private HiveMetadataProcessorELEvals elEvals = new HiveMetadataProcessorELEvals();
+  private HiveQueryExecutor queryExecutor;
 
   private static class HiveMetadataProcessorELEvals {
     private ELEval dbNameELEval;
@@ -229,6 +230,9 @@ public class HiveMetadataProcessor extends RecordProcessor {
       hmsLane = getContext().getOutputLanes().get(1);
       // load cache
       try {
+        // We have exactly one instance of the query executor per stage to calculate it's metrics
+        queryExecutor = new HiveQueryExecutor(hiveConfigBean, getContext());
+
         cache = HMSCache.newCacheBuilder()
             .addCacheTypeSupport(
                 Arrays.asList(
@@ -239,7 +243,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
                 )
             )
             .maxCacheSize(hiveConfigBean.maxCacheSize)
-            .build(new HiveQueryExecutor(hiveConfigBean));
+            .build(queryExecutor);
       } catch (StageException e) {
         issues.add(getContext().createConfigIssue(
             Groups.HIVE.name(),
@@ -626,7 +630,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       cache.put(
           HMSCacheType.PARTITION_VALUE_INFO,
           qualifiedName,
-          new PartitionInfoCacheSupport.PartitionInfo(diff, new HiveQueryExecutor(hiveConfigBean), qualifiedName)
+          new PartitionInfoCacheSupport.PartitionInfo(diff, queryExecutor, qualifiedName)
       );
     }
   }
