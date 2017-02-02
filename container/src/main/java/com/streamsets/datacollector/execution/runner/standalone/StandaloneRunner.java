@@ -339,6 +339,15 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     offsetTracker.resetOffset(name, rev);
   }
 
+  public Map<String, String> getCommittedOffsets() throws PipelineException {
+    PipelineStatus status = getState().getStatus();
+    if (status.isActive()) {
+      return prodPipeline.getCommittedOffsets();
+    }
+    ProductionSourceOffsetTracker offsetTracker = new ProductionSourceOffsetTracker(name, rev, runtimeInfo);
+    return offsetTracker.getOffsets();
+  }
+
   @Override
   public PipelineState getState() throws PipelineStoreException {
     return pipelineStateStore.getState(name, rev);

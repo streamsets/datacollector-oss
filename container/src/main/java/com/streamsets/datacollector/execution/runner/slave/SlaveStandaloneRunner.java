@@ -90,6 +90,11 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
   }
 
   @Override
+  public Map<String, String> getCommittedOffsets() throws PipelineException {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
   public PipelineState getState() throws PipelineStoreException {
     return standaloneRunner.getState();
   }

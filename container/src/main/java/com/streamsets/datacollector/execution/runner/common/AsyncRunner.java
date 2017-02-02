@@ -78,6 +78,11 @@ public class AsyncRunner implements Runner, PipelineInfo {
   }
 
   @Override
+  public Map<String, String> getCommittedOffsets() throws PipelineException {
+    return runner.getCommittedOffsets();
+  }
+
+  @Override
   public PipelineState getState() throws PipelineStoreException {
     return runner.getState();
   }

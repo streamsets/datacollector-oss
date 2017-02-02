@@ -273,6 +273,12 @@ public class TestRemoteDataCollector {
     }
 
     @Override
+    public Map<String, String> getCommittedOffsets() throws PipelineException {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
     public PipelineState getState() throws PipelineStoreException {
       // TODO Auto-generated method stub
       return null;

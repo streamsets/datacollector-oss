@@ -70,6 +70,12 @@ public class AclRunner implements Runner {
   }
 
   @Override
+  public Map<String, String> getCommittedOffsets() throws PipelineException {
+    aclStore.validateExecutePermission(this.getName(), currentUser);
+    return runner.getCommittedOffsets();
+  }
+
+  @Override
   public PipelineState getState() throws PipelineStoreException {
     return runner.getState();
   }

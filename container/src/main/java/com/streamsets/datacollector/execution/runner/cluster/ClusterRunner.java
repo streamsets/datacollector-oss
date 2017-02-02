@@ -307,6 +307,11 @@ public class ClusterRunner extends AbstractRunner {
   }
 
   @Override
+  public Map<String, String> getCommittedOffsets() throws PipelineException {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
   public void onDataCollectorStop() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException {
     stopPipeline(true);
   }

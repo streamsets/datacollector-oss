@@ -66,6 +66,8 @@ public interface Runner {
   // it must assert the current status
   public void resetOffset() throws PipelineException;
 
+  public Map<String, String> getCommittedOffsets() throws PipelineException;
+
   // pipeline status
   public PipelineState getState() throws PipelineStoreException;
 

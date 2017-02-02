@@ -386,6 +386,27 @@ public class ManagerResource {
         .entity(new MultiStatusResponseJson<>(successEntities, errorMessages)).build();
   }
 
+  @Path("/pipeline/{pipelineName}/committedOffsets")
+  @GET
+  @ApiOperation(value = "Return Committed Offsets. Note: Returned offset format will change between releases.",
+      authorizations = @Authorization(value = "basic"))
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({
+      AuthzRole.MANAGER,
+      AuthzRole.ADMIN,
+      AuthzRole.MANAGER_REMOTE,
+      AuthzRole.ADMIN_REMOTE
+  })
+  public Response getCommittedOffsets(
+      @PathParam("pipelineName") String name,
+      @QueryParam("rev") @DefaultValue("0") String rev
+  ) throws PipelineException {
+    PipelineInfo pipelineInfo = store.getInfo(name);
+    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
+    Runner runner = manager.getRunner(user, name, rev);
+    return Response.ok(runner.getCommittedOffsets()).build();
+  }
+
   @Path("/pipeline/{pipelineName}/resetOffset")
   @POST
   @ApiOperation(value = "Reset Origin Offset", authorizations = @Authorization(value = "basic"))
@@ -398,8 +419,10 @@ public class ManagerResource {
   })
   public Response resetOffset(
       @PathParam("pipelineName") String name,
-      @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineException {
-    RestAPIUtils.injectPipelineInMDC(name);
+      @QueryParam("rev") @DefaultValue("0") String rev
+  ) throws PipelineException {
+    PipelineInfo pipelineInfo = store.getInfo(name);
+    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
     if (manager.isRemotePipeline(name, rev)) {
       throw new PipelineException(ContainerError.CONTAINER_01101, "RESET_OFFSET", name);
     }
