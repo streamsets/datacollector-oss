@@ -121,7 +121,7 @@
           </a>
         </li>
 
-        <li>
+        <li ng-if="!common.isSlaveNode">
           <a href="/collector/packageManager"
              tooltip-placement="bottom"
              tooltip="{{'global.menu.packageManager' | translate}}"
