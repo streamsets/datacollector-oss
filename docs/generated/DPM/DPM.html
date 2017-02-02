@@ -44,9 +44,11 @@
             individual pipelines in a development <span class="ph">Data
                   Collector</span>.
             The data engineer then publishes the finished pipelines to <span class="ph">DPM</span>. A
-            DevOps or site reliability engineer adds published pipelines to jobs and then runs the
+            DevOps or site reliability engineer adds published pipelines to jobs and then starts the
             jobs across multiple <span class="ph">Data
-                  Collector</span>s.
+                  Collector</span>s,
+            running a remote pipeline instance on each <span class="ph">Data
+                  Collector</span>.
             Data architects map the related jobs into a single visual topology, and then use the
             topology to monitor and measure the complete dataflow.</p>
 
@@ -130,7 +132,7 @@
 
 </div>
 <div class="topic concept nested1" id="concept_inh_ccs_bx">
- <h2 class="title topictitle2">Manage the Orchestration of Running Jobs</h2>
+ <h2 class="title topictitle2">Manage the Orchestration of Jobs</h2>
 
  
  <div class="body conbody"><p class="shortdesc">In <span class="ph">DPM</span>,
@@ -140,14 +142,14 @@
         <p class="p">As a DevOps or site reliability
             engineer - the person responsible for ensuring that all services and systems are
             scalable and reliable - you create <span class="ph">DPM</span>
-            jobs to run pipelines and to determine the <span class="ph">Data
-                  Collector</span>s
-            that run the jobs. When you run a job on a group of <span class="ph">Data
+            jobs to run pipelines on groups of <span class="ph">Data
+                  Collector</span>s.
+            When you start a job on a group of <span class="ph">Data
                   Collector</span>s,
                 <span class="ph">DPM</span>
             remotely runs the pipeline on all <span class="ph">Data
                   Collector</span>s
-            in the group. This enables you to manage and orchestrate large scale dataflow jobs run
+            in the group. This enables you to manage and orchestrate large scale dataflows run
             across multiple <span class="ph">Data
                   Collector</span>s.</p>
 
@@ -164,11 +166,11 @@
         <p class="p">The following image displays how the WebLog Collection job runs a remote pipeline
             instance on each <span class="ph">Data
                   Collector</span> in
-            the web server group. The job does not run on <span class="ph">Data
+            the web server group. The job does not run pipelines on <span class="ph">Data
                   Collector</span>s
             in the data warehouse group, which are <span class="ph">Data
                   Collector</span>s
-            that are reserved for jobs that read from the enterprise data warehouse.</p>
+            that are reserved for pipelines that read from the enterprise data warehouse.</p>
 
         <p class="p"><img class="image" id="concept_inh_ccs_bx__image_dtc_h21_cx" src="../Graphics/DPM_ManageOrchestration.png" height="189" width="544" /></p>
 
@@ -216,17 +218,17 @@
             measure the health of the topology and the performance of all jobs and connecting
             systems included in the topology. <span class="ph">DPM</span>
             monitoring provides real-time statistics, error information, and alerts about the
-            running jobs. </p>
+            running pipelines. </p>
 
         <p class="p">For example, the Summary tab of the Customer 360 topology provides a single view into the
-            record count and throughput for all running jobs in the topology:</p>
+            record count and throughput for all running pipelines in the topology:</p>
 
         <p class="p"><img class="image" id="concept_sx5_zds_bx__image_hv1_ctq_fx" src="../Graphics/DPM_MeasureQualityTopology.png" height="487" width="744" /></p>
 
         <p class="p">You can select a job or a connecting system within the topology to discover more detailed
             monitoring about the job or system. </p>
 
-        <p class="p">When a job runs on a group of <span class="ph">Data
+        <p class="p">When you start a job on a group of <span class="ph">Data
                   Collector</span>s,
                 <span class="ph">DPM</span>
             provides a single view of the statistics for the complete job. From a job, you can view

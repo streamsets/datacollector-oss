@@ -38,10 +38,109 @@
         <div class="section context">To view <span class="ph">Data
                   Collector</span>
             configuration properties, click <span class="ph menucascade"><span class="ph uicontrol">Administration</span> &gt; <span class="ph uicontrol">Configuration</span></span>.<p class="p">For details about the configuration properties or to edit the
-                configuration file, see <a class="xref" href="../Install_Config/DCConfig.html#task_lxk_kjw_1r" title="You can customize Data Collector by editing the Data Collector configuration file, sdc.properties.">Configuring Data Collector</a>.</p>
+                configuration file, see <a class="xref" href="../Configuration/DCConfig.html#task_lxk_kjw_1r" title="You can customize Data Collector by editing the Data Collector configuration file, sdc.properties.">Configuring Data Collector</a>.</p>
 </div>
 
     </div>
+
+</div>
+<div class="topic concept nested1" id="concept_gwn_wf4_yr">
+ <h2 class="title topictitle2">Viewing Data Collector Directories</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can view the directories that the <span class="ph">Data
+                  Collector</span> uses. You might
+  check the directories being used to access a file in the directory or to increase the amount of
+  available space for a directory. </p>
+
+  <p class="p"><span class="ph">Data
+                  Collector</span>
+   directories are defined in environment variables. For more information, see <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. To enable remote debugging, define debugging options in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file.You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.When you use Data Collector with Java 7, Data Collector is configured to use TLS versions 1.1 and 1.2. To connect to a system that uses an earlier version of TLS, modify the Dhttps.protocols option in the SDC_JAVA7_OPTS environment variable in the Data Collector environment configuration file.When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>.</p>
+
+  <p class="p">To view <span class="ph">Data
+                  Collector</span>
+   directories, click <span class="ph menucascade"><span class="ph uicontrol">Administration</span> &gt; <span class="ph uicontrol">SDC Directories</span></span>. </p>
+
+  <div class="p">The following table describes the <span class="ph">Data
+                  Collector</span> directories
+   that display:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_gwn_wf4_yr__table_zfp_qg4_yr" class="table" frame="border" border="1" rules="all">
+     
+     
+     
+     <thead class="thead" align="left">
+      <tr>
+       <th class="entry" valign="top" width="26.666666666666668%" id="d60e208">Directory </th>
+
+       <th class="entry" valign="top" width="40%" id="d60e211">Includes</th>
+
+       <th class="entry" valign="top" width="33.33333333333333%" id="d60e214">Environment Variable</th>
+
+      </tr>
+
+     </thead>
+
+     <tbody class="tbody">
+      <tr>
+       <td class="entry" valign="top" width="26.666666666666668%" headers="d60e208 ">Run Time</td>
+
+       <td class="entry" valign="top" width="40%" headers="d60e211 ">Base directory for <span class="ph">Data
+                  Collector</span>
+        executables and related files.</td>
+
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d60e214 ">SDC_DIST</td>
+
+      </tr>
+
+      <tr>
+       <td class="entry" valign="top" width="26.666666666666668%" headers="d60e208 ">Configuration</td>
+
+       <td class="entry" valign="top" width="40%" headers="d60e211 ">The <span class="ph">Data
+                  Collector</span>
+        configuration file, <samp class="ph codeph">sdc.properties</samp>, and related realm properties files and
+        keystore files. <p class="p">Also includes the logj4 properties file.</p>
+</td>
+
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d60e214 ">SDC_CONF</td>
+
+      </tr>
+
+      <tr>
+       <td class="entry" valign="top" width="26.666666666666668%" headers="d60e208 ">Data</td>
+
+       <td class="entry" valign="top" width="40%" headers="d60e211 ">Pipeline configuration and run details. </td>
+
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d60e214 ">SDC_DATA</td>
+
+      </tr>
+
+      <tr>
+       <td class="entry" valign="top" width="26.666666666666668%" headers="d60e208 ">Log</td>
+
+       <td class="entry" valign="top" width="40%" headers="d60e211 "><span class="ph">Data
+                  Collector</span>
+        log file, <samp class="ph codeph">sdc.log</samp>.</td>
+
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d60e214 ">SDC_LOG</td>
+
+      </tr>
+
+      <tr>
+       <td class="entry" valign="top" width="26.666666666666668%" headers="d60e208 ">Resources</td>
+
+       <td class="entry" valign="top" width="40%" headers="d60e211 ">Directory for runtime resource files. </td>
+
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d60e214 ">SDC_RESOURCES</td>
+
+      </tr>
+
+     </tbody>
+
+    </table>
+</div>
+</div>
+
+ </div>
 
 </div>
 <div class="topic task nested1" id="task_wvx_4hk_br">
@@ -69,105 +168,6 @@
     </div>
 
 </div>
-<div class="topic concept nested1" id="concept_gwn_wf4_yr">
- <h2 class="title topictitle2">Viewing Data Collector Directories</h2>
-
- 
- <div class="body conbody"><p class="shortdesc">You can view the directories that the <span class="ph">Data
-                  Collector</span> uses. You might
-  check the directories being used to access a file in the directory or to increase the amount of
-  available space for a directory. </p>
-
-  <p class="p"><span class="ph">Data
-                  Collector</span>
-   directories are defined in environment variables. For more information, see <a class="xref" href="../Install_Config/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. To enable remote debugging, define debugging options in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file.You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.When you use Data Collector with Java 7, Data Collector is configured to use TLS versions 1.1 and 1.2. To connect to a system that uses an earlier version of TLS, modify the Dhttps.protocols option in the SDC_JAVA7_OPTS environment variable in the Data Collector environment configuration file.When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>.</p>
-
-  <p class="p">To view <span class="ph">Data
-                  Collector</span>
-   directories, click <span class="ph menucascade"><span class="ph uicontrol">Administration</span> &gt; <span class="ph uicontrol">SDC Directories</span></span>. </p>
-
-  <div class="p">The following table describes the <span class="ph">Data
-                  Collector</span> directories
-   that display:
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_gwn_wf4_yr__table_zfp_qg4_yr" class="table" frame="border" border="1" rules="all">
-     
-     
-     
-     <thead class="thead" align="left">
-      <tr>
-       <th class="entry" valign="top" width="26.666666666666668%" id="d60e267">Directory </th>
-
-       <th class="entry" valign="top" width="40%" id="d60e270">Includes</th>
-
-       <th class="entry" valign="top" width="33.33333333333333%" id="d60e273">Environment Variable</th>
-
-      </tr>
-
-     </thead>
-
-     <tbody class="tbody">
-      <tr>
-       <td class="entry" valign="top" width="26.666666666666668%" headers="d60e267 ">Run Time</td>
-
-       <td class="entry" valign="top" width="40%" headers="d60e270 ">Base directory for <span class="ph">Data
-                  Collector</span>
-        executables and related files.</td>
-
-       <td class="entry" valign="top" width="33.33333333333333%" headers="d60e273 ">SDC_DIST</td>
-
-      </tr>
-
-      <tr>
-       <td class="entry" valign="top" width="26.666666666666668%" headers="d60e267 ">Configuration</td>
-
-       <td class="entry" valign="top" width="40%" headers="d60e270 ">The <span class="ph">Data
-                  Collector</span>
-        configuration file, <samp class="ph codeph">sdc.properties</samp>, and related realm properties files and
-        keystore files. <p class="p">Also includes the logj4 properties file.</p>
-</td>
-
-       <td class="entry" valign="top" width="33.33333333333333%" headers="d60e273 ">SDC_CONF</td>
-
-      </tr>
-
-      <tr>
-       <td class="entry" valign="top" width="26.666666666666668%" headers="d60e267 ">Data</td>
-
-       <td class="entry" valign="top" width="40%" headers="d60e270 ">Pipeline configuration and run details. </td>
-
-       <td class="entry" valign="top" width="33.33333333333333%" headers="d60e273 ">SDC_DATA</td>
-
-      </tr>
-
-      <tr>
-       <td class="entry" valign="top" width="26.666666666666668%" headers="d60e267 ">Log</td>
-
-       <td class="entry" valign="top" width="40%" headers="d60e270 "><span class="ph">Data
-                  Collector</span>
-        log file, <samp class="ph codeph">sdc.log</samp>.</td>
-
-       <td class="entry" valign="top" width="33.33333333333333%" headers="d60e273 ">SDC_LOG</td>
-
-      </tr>
-
-      <tr>
-       <td class="entry" valign="top" width="26.666666666666668%" headers="d60e267 ">Resources</td>
-
-       <td class="entry" valign="top" width="40%" headers="d60e270 ">Directory for runtime resource files. </td>
-
-       <td class="entry" valign="top" width="33.33333333333333%" headers="d60e273 ">SDC_RESOURCES</td>
-
-      </tr>
-
-     </tbody>
-
-    </table>
-</div>
-</div>
-
- </div>
-
-</div>
 <div class="topic task nested1" id="task_gbm_s3k_br">
     <h2 class="title topictitle2">Viewing Data Collector Logs</h2>
 
@@ -178,7 +178,7 @@
         <div class="section context">
             <p class="p">By default, <span class="ph">Data
                   Collector</span> logs messages at the INFO severity level. You can modify the log level to display
-                messages at another severity level. For more information, see <a class="xref" href="../Install_Config/LogLevel.html#concept_yrv_ck2_px" title="If the Data Collector logs do not provide enough troubleshooting information, you can modify the log level to display messages at another severity level.">Modifying the Log Level</a>.</p>
+                messages at another severity level. For more information, see <a class="xref" href="../Configuration/LogLevel.html#concept_yrv_ck2_px" title="If the Data Collector logs do not provide enough troubleshooting information, you can modify the log level to display messages at another severity level.">Modifying the Log Level</a>.</p>
 
         </div>
 
@@ -268,6 +268,39 @@
                     to log in again.</div>
             </li>
 </ol>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_lxg_qlr_my">
+ <h2 class="title topictitle2">Viewing Users and Groups</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">If you use file-based authentication, you can view all user accounts granted access to
+        this <span class="ph">Data
+                  Collector</span>
+        instance, including the roles and groups assigned to each user.</p>
+
+        <p class="p">To
+            view users and groups, click <span class="ph menucascade"><span class="ph uicontrol">Administration</span> &gt; <span class="ph uicontrol">Users and Groups</span></span>. <span class="ph">Data
+                  Collector</span>
+            displays a read-only view of the users, groups, and roles.</p>
+
+        <p class="p">You configure users, groups, and roles for file-based authentication in the associated
+                <samp class="ph codeph">realm.properties</samp> file located in the <span class="ph">Data
+                  Collector</span>
+            configuration directory, <samp class="ph codeph">$SDC_CONF</samp>. For more information, see <a class="xref" href="../Configuration/Authentication.html#concept_wgy_rxt_5x" title="If your organization does not use LDAP, configure Data Collector to use the default file-based authentication.">Configuring File-Based Authentication</a>.</p>
+
+        <div class="p">
+            <div class="note note"><span class="notetitle">Note:</span> If the <span class="ph">Data
+                  Collector</span> is registered with <span class="ph">DPM</span>
+                and you click <span class="ph menucascade"><span class="ph uicontrol">Administration</span> &gt; <span class="ph uicontrol">Users and Groups</span></span>, the <span class="ph">Data
+                  Collector</span> logs you into <span class="ph">DPM</span>
+                and displays the Users view within <span class="ph">DPM</span>. Registered <span class="ph">Data
+                  Collector</span>s  use <span class="ph">DPM</span>
+                user authorization. For more information, see <a class="xref" href="../DPM/RegisterSDCwithDPM.html#concept_kc4_xyf_xw" title="You must register a Data Collector to work with DPM. When you register a Data Collector, Data Collector generates an authentication token that it uses to issue authenticated requests to DPM.">Register Data Collector with DPM</a>.</div>
+
+        </div>
 
     </div>
 
@@ -512,9 +545,9 @@
           
           <thead class="thead" align="left">
             <tr>
-              <th class="entry" valign="top" width="30%" id="d60e1044">Option</th>
+              <th class="entry" valign="top" width="30%" id="d60e1169">Option</th>
 
-              <th class="entry" valign="top" width="70%" id="d60e1047">Description</th>
+              <th class="entry" valign="top" width="70%" id="d60e1172">Description</th>
 
             </tr>
 
@@ -522,10 +555,10 @@
 
           <tbody class="tbody">
             <tr>
-              <td class="entry" valign="top" width="30%" headers="d60e1044 ">-U &lt;sdcURL&gt; <p class="p">or</p>
+              <td class="entry" valign="top" width="30%" headers="d60e1169 ">-U &lt;sdcURL&gt; <p class="p">or</p>
 --url &lt;sdcURL&gt;</td>
 
-              <td class="entry" valign="top" width="70%" headers="d60e1047 ">URL of the <span class="ph">Data
+              <td class="entry" valign="top" width="70%" headers="d60e1172 ">URL of the <span class="ph">Data
                   Collector</span>.
                   <p class="p">The default URL is <samp class="ph codeph">http://localhost:18630/</samp>.</p>
 </td>
@@ -533,21 +566,21 @@
             </tr>
 
             <tr>
-              <td class="entry" valign="top" width="30%" headers="d60e1044 ">-a &lt;sdcAuthType&gt;<p class="p">or</p>
+              <td class="entry" valign="top" width="30%" headers="d60e1169 ">-a &lt;sdcAuthType&gt;<p class="p">or</p>
 --auth-type &lt;sdcAuthType&gt;</td>
 
-              <td class="entry" valign="top" width="70%" headers="d60e1047 ">Optional. HTTP authentication type used by the <span class="ph">Data
+              <td class="entry" valign="top" width="70%" headers="d60e1172 ">Optional. HTTP authentication type used by the <span class="ph">Data
                   Collector</span>.
               </td>
 
             </tr>
 
             <tr>
-              <td class="entry" valign="top" width="30%" headers="d60e1044 ">-u &lt;sdcUser&gt;<p class="p">or</p>
+              <td class="entry" valign="top" width="30%" headers="d60e1169 ">-u &lt;sdcUser&gt;<p class="p">or</p>
 <p class="p">--user &lt;sdcUser&gt;</p>
 </td>
 
-              <td class="entry" valign="top" width="70%" headers="d60e1047 ">Optional. User name to use to log in. The roles assigned to the user account
+              <td class="entry" valign="top" width="70%" headers="d60e1172 ">Optional. User name to use to log in. The roles assigned to the user account
                 determine the tasks that you can perform.<p class="p">If you omit this option, the <span class="ph">Data
                   Collector</span> allows admin access.</p>
 </td>
@@ -555,26 +588,26 @@
             </tr>
 
             <tr>
-              <td class="entry" valign="top" width="30%" headers="d60e1044 ">-p &lt;sdcPassword&gt;<p class="p">or</p>
+              <td class="entry" valign="top" width="30%" headers="d60e1169 ">-p &lt;sdcPassword&gt;<p class="p">or</p>
 <p class="p">--password &lt;sdcPassword&gt;</p>
 </td>
 
-              <td class="entry" valign="top" width="70%" headers="d60e1047 ">Optional. Required when you enter a user name. Password for the user
+              <td class="entry" valign="top" width="70%" headers="d60e1172 ">Optional. Required when you enter a user name. Password for the user
                 account.</td>
 
             </tr>
 
             <tr>
-              <td class="entry" valign="top" width="30%" headers="d60e1044 ">&lt;command&gt; </td>
+              <td class="entry" valign="top" width="30%" headers="d60e1169 ">&lt;command&gt; </td>
 
-              <td class="entry" valign="top" width="70%" headers="d60e1047 ">Required. Command to perform.</td>
+              <td class="entry" valign="top" width="70%" headers="d60e1172 ">Required. Command to perform.</td>
 
             </tr>
 
             <tr>
-              <td class="entry" valign="top" width="30%" headers="d60e1044 ">&lt;args&gt;</td>
+              <td class="entry" valign="top" width="30%" headers="d60e1169 ">&lt;args&gt;</td>
 
-              <td class="entry" valign="top" width="70%" headers="d60e1047 ">Optional. Include arguments and options as needed.</td>
+              <td class="entry" valign="top" width="70%" headers="d60e1172 ">Optional. Include arguments and options as needed.</td>
 
             </tr>
 
@@ -662,9 +695,9 @@
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="30%" id="d60e1244">Start Option</th>
+                                        <th class="entry" valign="top" width="30%" id="d60e1369">Start Option</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d60e1247">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d60e1372">Description</th>
 
                                     </tr>
 
@@ -672,12 +705,12 @@
 
                                 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e1244 ">-n &lt;pipelineName&gt;<p class="p">or </p>
+                                        <td class="entry" valign="top" width="30%" headers="d60e1369 ">-n &lt;pipelineName&gt;<p class="p">or </p>
 <p class="p">-name
                                                 &lt;pipelineName&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e1247 ">Required. Name of the pipeline to start. <div class="p">
+                                        <td class="entry" valign="top" width="70%" headers="d60e1372 ">Required. Name of the pipeline to start. <div class="p">
                                                 <div class="note note"><span class="notetitle">Note:</span> If the name includes spaces, surround the name
                                                   in quotation marks.</div>
 
@@ -687,9 +720,9 @@
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e1244 ">--stack</td>
+                                        <td class="entry" valign="top" width="30%" headers="d60e1369 ">--stack</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e1247 ">Optional. Returns additional information when the <span class="ph">Data
+                                        <td class="entry" valign="top" width="70%" headers="d60e1372 ">Optional. Returns additional information when the <span class="ph">Data
                   Collector</span> cannot start the pipeline. <p class="p">Use to debug the
                                                 problem or pass to StreamSets for help.</p>
 </td>
@@ -697,12 +730,12 @@
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e1244 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
+                                        <td class="entry" valign="top" width="30%" headers="d60e1369 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
 <p class="p">-- revision
                                                 &lt;pipelineRev&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e1247 ">Optional. The revision of the pipeline. Use to start
+                                        <td class="entry" valign="top" width="70%" headers="d60e1372 ">Optional. The revision of the pipeline. Use to start
                                             an older version of the pipeline. <p class="p">By default, the <span class="ph">Data
                   Collector</span> starts the most recent version.</p>
 </td>
@@ -743,9 +776,9 @@
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="30%" id="d60e1350">Stop Option</th>
+                                        <th class="entry" valign="top" width="30%" id="d60e1475">Stop Option</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d60e1353">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d60e1478">Description</th>
 
                                     </tr>
 
@@ -753,12 +786,12 @@
 
                                 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e1350 ">-n &lt;pipelineName&gt;<p class="p">or </p>
+                                        <td class="entry" valign="top" width="30%" headers="d60e1475 ">-n &lt;pipelineName&gt;<p class="p">or </p>
 <p class="p">-name
                                                 &lt;pipelineName&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e1353 ">Required. Name of the pipeline to stop. <div class="p">
+                                        <td class="entry" valign="top" width="70%" headers="d60e1478 ">Required. Name of the pipeline to stop. <div class="p">
                                                 <div class="note note"><span class="notetitle">Note:</span> If the name includes spaces, surround the name
                                                   in quotation marks.</div>
 
@@ -768,9 +801,9 @@
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e1350 ">--stack</td>
+                                        <td class="entry" valign="top" width="30%" headers="d60e1475 ">--stack</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e1353 ">Optional. Returns additional information when the <span class="ph">Data
+                                        <td class="entry" valign="top" width="70%" headers="d60e1478 ">Optional. Returns additional information when the <span class="ph">Data
                   Collector</span> cannot stop the pipeline. <p class="p">Use to debug the problem
                                                 or pass to StreamSets for help.</p>
 </td>
@@ -778,12 +811,12 @@
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e1350 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
+                                        <td class="entry" valign="top" width="30%" headers="d60e1475 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
 <p class="p">-- revision
                                                 &lt;pipelineRev&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e1353 ">Optional. The revision of the pipeline. Use to stop
+                                        <td class="entry" valign="top" width="70%" headers="d60e1478 ">Optional. The revision of the pipeline. Use to stop
                                             an older version of the pipeline. <p class="p">By default, the <span class="ph">Data
                   Collector</span> stops the most recent version.</p>
 </td>
@@ -827,9 +860,9 @@
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="30%" id="d60e1459">Status Option</th>
+                                        <th class="entry" valign="top" width="30%" id="d60e1584">Status Option</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d60e1462">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d60e1587">Description</th>
 
                                     </tr>
 
@@ -837,12 +870,12 @@
 
                                 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e1459 ">-n &lt;pipelineName&gt;<p class="p">or </p>
+                                        <td class="entry" valign="top" width="30%" headers="d60e1584 ">-n &lt;pipelineName&gt;<p class="p">or </p>
 <p class="p">-name
                                                 &lt;pipelineName&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e1462 ">Required. Name of the pipeline. <div class="note note"><span class="notetitle">Note:</span> If the name
+                                        <td class="entry" valign="top" width="70%" headers="d60e1587 ">Required. Name of the pipeline. <div class="note note"><span class="notetitle">Note:</span> If the name
                                                 includes spaces, surround the name in quotation
                                                 marks.</div>
 </td>
@@ -850,9 +883,9 @@
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e1459 ">--stack</td>
+                                        <td class="entry" valign="top" width="30%" headers="d60e1584 ">--stack</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e1462 ">Optional. Returns additional information when the <span class="ph">Data
+                                        <td class="entry" valign="top" width="70%" headers="d60e1587 ">Optional. Returns additional information when the <span class="ph">Data
                   Collector</span> cannot return the status of the pipeline. <p class="p">Use to
                                                 debug the problem or pass to StreamSets for
                                                 help.</p>
@@ -861,12 +894,12 @@
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e1459 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
+                                        <td class="entry" valign="top" width="30%" headers="d60e1584 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
 <p class="p">-- revision
                                                 &lt;pipelineRev&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e1462 ">Optional. The revision of the pipeline. Use for older
+                                        <td class="entry" valign="top" width="70%" headers="d60e1587 ">Optional. The revision of the pipeline. Use for older
                                             versions of the pipeline. <p class="p">By default, the <span class="ph">Data
                   Collector</span> returns information for the most recent
                                                 version.</p>
@@ -912,9 +945,9 @@
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="30%" id="d60e1562">Reset Origin Option</th>
+                                        <th class="entry" valign="top" width="30%" id="d60e1687">Reset Origin Option</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d60e1565">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d60e1690">Description</th>
 
                                     </tr>
 
@@ -922,12 +955,12 @@
 
                                 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e1562 ">-n &lt;pipelineName&gt;<p class="p">or </p>
+                                        <td class="entry" valign="top" width="30%" headers="d60e1687 ">-n &lt;pipelineName&gt;<p class="p">or </p>
 <p class="p">-name
                                                 &lt;pipelineName&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e1565 ">Required. Name of the pipeline. <div class="p">
+                                        <td class="entry" valign="top" width="70%" headers="d60e1690 ">Required. Name of the pipeline. <div class="p">
                                                 <div class="note note"><span class="notetitle">Note:</span> If the name includes spaces, surround the name
                                                   in quotation marks.</div>
 
@@ -937,9 +970,9 @@
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e1562 ">--stack</td>
+                                        <td class="entry" valign="top" width="30%" headers="d60e1687 ">--stack</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e1565 ">Optional. Returns additional information when the <span class="ph">Data
+                                        <td class="entry" valign="top" width="70%" headers="d60e1690 ">Optional. Returns additional information when the <span class="ph">Data
                   Collector</span> cannot reset the origin. <p class="p">Use to debug the problem
                                                 or pass to StreamSets for help.</p>
 </td>
@@ -947,12 +980,12 @@
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e1562 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
+                                        <td class="entry" valign="top" width="30%" headers="d60e1687 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
 <p class="p">-- revision
                                                 &lt;pipelineRev&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e1565 ">Optional. The revision of the pipeline. Use to reset
+                                        <td class="entry" valign="top" width="70%" headers="d60e1690 ">Optional. The revision of the pipeline. Use to reset
                                             the origin for an older version of the pipeline. <p class="p">By
                                                 default, the <span class="ph">Data
                   Collector</span> resets the origin for the most recent
@@ -1040,9 +1073,9 @@
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="30%" id="d60e1727">Import Option</th>
+                                        <th class="entry" valign="top" width="30%" id="d60e1852">Import Option</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d60e1730">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d60e1855">Description</th>
 
                                     </tr>
 
@@ -1050,12 +1083,12 @@
 
                                 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e1727 ">-n &lt;pipelineName&gt;<p class="p">or </p>
+                                        <td class="entry" valign="top" width="30%" headers="d60e1852 ">-n &lt;pipelineName&gt;<p class="p">or </p>
 <p class="p">-name
                                                 &lt;pipelineName&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e1730 ">Required. Name for the imported pipeline. <p class="p">If the
+                                        <td class="entry" valign="top" width="70%" headers="d60e1855 ">Required. Name for the imported pipeline. <p class="p">If the
                                                 name includes spaces, surround the name in quotation
                                                 marks.</p>
 </td>
@@ -1063,9 +1096,9 @@
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e1727 ">--stack</td>
+                                        <td class="entry" valign="top" width="30%" headers="d60e1852 ">--stack</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e1730 ">Optional. Returns additional information when the <span class="ph">Data
+                                        <td class="entry" valign="top" width="70%" headers="d60e1855 ">Optional. Returns additional information when the <span class="ph">Data
                   Collector</span> cannot import the pipeline. <p class="p">Use to debug the
                                                 problem or pass to StreamSets for help.</p>
 </td>
@@ -1073,12 +1106,12 @@
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e1727 ">-f &lt;fileName&gt;<p class="p">or</p>
+                                        <td class="entry" valign="top" width="30%" headers="d60e1852 ">-f &lt;fileName&gt;<p class="p">or</p>
 <p class="p">--file
                                             &lt;fileName&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e1730 ">Optional. The location and name of the file to
+                                        <td class="entry" valign="top" width="70%" headers="d60e1855 ">Optional. The location and name of the file to
                                             import. <p class="p">Enter a path relative to the <span class="ph">Data
                   Collector</span> installation directory.</p>
 </td>

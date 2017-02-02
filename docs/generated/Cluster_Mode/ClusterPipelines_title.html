@@ -152,8 +152,8 @@
  <div class="body conbody"><p class="shortdesc">You can configure Data Collector to use HTTP or HTTPS when you run cluster pipelines. By
         default Data Collector uses HTTP.</p>
 
-  <p class="p">To configure HTTPS when you run cluster pipelines, you must generate an SSL certificate for the
-            gateway node and the worker nodes. You then specify the generated keystore file and
+  <p class="p">To configure HTTPS when you run cluster pipelines, you must generate an SSL/TLS certificate for
+            the gateway node and the worker nodes. You then specify the generated keystore file and
             keystore password file for the gateway and worker nodes in the <span class="ph">Data
                   Collector</span>
             configuration file, <samp class="ph codeph">sdc.properties</samp>. You can optionally generate a
@@ -162,7 +162,7 @@
  </div>
 
     <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Install_Config/DCConfig.html#concept_rdt_h54_cw" title="To configure HTTPS when you run cluster pipelines, you can use a self-signed certificate. Or, you can generate an SSL certificate for the gateway node and the worker nodes. You specify the generated keystore file and keystore password file for the gateway and worker nodes in the Data Collector configuration file, sdc.properties. You can optionally generate a truststore file for the gateway and worker nodes.">Configuring HTTPS for Cluster Pipelines</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCConfig.html#concept_rdt_h54_cw" title="Configuring HTTPS for Cluster Pipelines">Configuring HTTPS for Cluster Pipelines</a></div>
 </div>
 </div>
 </div>
@@ -281,9 +281,9 @@
                         
                         <thead class="thead" align="left">
                             <tr>
-                                <th class="entry" valign="top" width="33.33333333333333%" id="d21617e481">Component</th>
+                                <th class="entry" valign="top" width="33.33333333333333%" id="d22521e472">Component</th>
 
-                                <th class="entry" valign="top" width="66.66666666666666%" id="d21617e484">Minimum Requirement</th>
+                                <th class="entry" valign="top" width="66.66666666666666%" id="d22521e475">Minimum Requirement</th>
 
                             </tr>
 
@@ -291,16 +291,16 @@
 
                         <tbody class="tbody">
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d21617e481 ">Spark Streaming</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d22521e472 ">Spark Streaming</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d21617e484 ">Spark version 1.3 through 1.6</td>
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d22521e475 ">Spark version 1.3 through 1.6</td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d21617e481 ">Apache Kafka</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d22521e472 ">Apache Kafka</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d21617e484 ">Spark Streaming on YARN requires a Cloudera or Hortonworks
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d22521e475 ">Spark Streaming on YARN requires a Cloudera or Hortonworks
                                     distribution of an Apache Kafka cluster. <p class="p">Spark Streaming on
                                         Mesos requires Apache Kafka on Apache Mesos.</p>
 </td>
@@ -393,7 +393,7 @@ If the script is not in this
                   Collector</span>, <span class="ph">Data
                   Collector</span> automatically uses the Kerberos principal and keytab to connect to any
                         YARN cluster that uses Kerberos. </p>
-<p class="p">For more information, see <a class="xref" href="../Install_Config/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Enabling Kerberos Authentication</a>.</p>
+<p class="p">For more information, see <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Enabling Kerberos Authentication</a>.</p>
 </div>
             </li>
 <li class="li step stepexpand">
@@ -486,9 +486,9 @@ If the script is not in this
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d21617e863">Component</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d22521e854">Component</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d21617e866">Minimum Requirement</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d22521e857">Minimum Requirement</th>
 
                         </tr>
 
@@ -496,16 +496,16 @@ If the script is not in this
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d21617e863 ">Spark Streaming (for cluster streaming mode)</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d22521e854 ">Spark Streaming (for cluster streaming mode)</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d21617e866 ">Spark version 1.5.2 through 1.6</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d22521e857 ">Spark version 1.5.2 through 1.6</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d21617e863 ">MapR</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d22521e854 ">MapR</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d21617e866 ">MapR version 5.1 or 5.2</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d22521e857 ">MapR version 5.1 or 5.2</td>
 
                         </tr>
 
@@ -588,7 +588,7 @@ If the script is not in this
                   Collector</span>, <span class="ph">Data
                   Collector</span> automatically uses the Kerberos principal and keytab to connect to any
                         YARN cluster that uses Kerberos. </p>
-<p class="p">For more information, see <a class="xref" href="../Install_Config/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Enabling Kerberos Authentication</a>.</p>
+<p class="p">For more information, see <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Enabling Kerberos Authentication</a>.</p>
 </div>
             </li>
 <li class="li step stepexpand">
@@ -691,7 +691,7 @@ If the script is not in this
                   Collector</span>, <span class="ph">Data
                   Collector</span> automatically uses the Kerberos principal and keytab to connect to any
                         YARN cluster that uses Kerberos. </p>
-<p class="p">For more information, see <a class="xref" href="../Install_Config/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Enabling Kerberos Authentication</a>.</p>
+<p class="p">For more information, see <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Enabling Kerberos Authentication</a>.</p>
 </div>
             </li>
 <li class="li step stepexpand">
@@ -788,7 +788,7 @@ If the script is not in this
                   Collector</span>, <span class="ph">Data
                   Collector</span> automatically uses the Kerberos principal and keytab to connect to any
                         YARN cluster that uses Kerberos. </p>
-<p class="p">For more information, see <a class="xref" href="../Install_Config/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Enabling Kerberos Authentication</a>.</p>
+<p class="p">For more information, see <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Enabling Kerberos Authentication</a>.</p>
 </div>
             </li>
 <li class="li step stepexpand">

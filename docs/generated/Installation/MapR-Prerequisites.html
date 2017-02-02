@@ -1,0 +1,142 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="MapR Prerequisites" /><meta name="abstract" content="Due to licensing restrictions, StreamSets cannot distribute MapR libraries with Data Collector. As a result, you must perform additional steps to enable the Data Collector machine to connect to MapR." /><meta name="description" content="Due to licensing restrictions, StreamSets cannot distribute MapR libraries with Data Collector. As a result, you must perform additional steps to enable the Data Collector machine to connect to MapR." /><meta name="DC.Relation" scheme="URI" content="../Installation/Install_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_jgs_qpg_2v" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>MapR Prerequisites</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+            
+            var prefix = "../index.html";
+            
+            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody" id="concept_jgs_qpg_2v">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../Installation/Install_title.html" title="Installation">Installation</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../Installation/Install_title.html" title="Installation"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Installation</span></a></span>  </span></td></tr></tbody></table>
+
+ <h1 class="title topictitle1">MapR Prerequisites</h1>
+
+    
+ <div class="body conbody"><p class="shortdesc">Due to licensing restrictions, StreamSets cannot distribute MapR libraries with <span class="ph">Data
+                  Collector</span>. As a
+        result, you must perform additional steps to enable the <span class="ph">Data
+                  Collector</span>
+        machine to connect to MapR.</p>
+
+        <p class="p">You must install the
+            required client libraries and then run the <samp class="ph codeph">setup-mapr</samp> command. The
+            command modifies configuration files and creates the required symbolic links. If the
+            MapR cluster uses username/password login authentication, you must enable <span class="ph">Data
+                  Collector</span> to
+            use username/password authentication.</p>
+
+       <div class="p"><div class="note note"><span class="notetitle">Note:</span> The MapR FS destination supports MapR versions 5.0.0, 5.1.0 and 5.2.0. All other stages that
+                use the MapR library currently only support MapR versions 5.1.0 and 5.2.0.</div>
+</div>
+
+        <div class="p">
+            <ol class="ol" id="concept_jgs_qpg_2v__ol_o2r_nq4_vw">
+                <li class="li">Install <span class="ph">Data
+                  Collector</span> on a node in the MapR cluster or on a client machine.<div class="p">To run <span class="ph">Data
+                  Collector</span> on a client machine - outside the cluster or on your local machine - the
+                        MapR client package must be installed and configured on the machine. If the
+                        MapR client package is not installed on the machine, download and install
+                        the following files:<ul class="ul" id="concept_jgs_qpg_2v__ul_qcz_x1m_gv">
+                            <li class="li">MapR client library - Typically named
+                                    <samp class="ph codeph">mapr-client_&lt;version&gt;.&lt;ext&gt;</samp>.<div class="p">You can
+                                    download the files for your operating system
+                                    here:<pre class="pre codeblock"><a class="xref" href="http://package.mapr.com/releases/" target="_blank">http://package.mapr.com/releases/</a>&lt;version&gt;/</pre>
+</div>
+</li>
+
+                            <li class="li">Kafka client library - Typically named
+                                    <samp class="ph codeph">mapr-kafka-&lt;version&gt;.&lt;ext&gt;</samp>. <div class="p">You can
+                                    download the files for your operating system here:
+                                    <pre class="pre codeblock"><a class="xref" href="http://package.mapr.com/releases/" target="_blank">http://package.mapr.com/releases/</a>ecosystem-&lt;version&gt;/</pre>
+</div>
+</li>
+
+                        </ul>
+</div>
+</li>
+
+                <li class="li">Use the following command to set the <samp class="ph codeph">$SDC_HOME</samp> environment
+                    variable to the location where you installed <span class="ph">Data
+                  Collector</span>:<pre class="pre codeblock">export SDC_HOME=&lt;installation directory&gt;</pre>
+<div class="p">For
+                        example:<pre class="pre codeblock">export SDC_HOME=/opt/streamsets-datacollector</pre>
+</div>
+<div class="note note"><span class="notetitle">Note:</span> The
+                        default installation directory for an RPM installation is
+                            <samp class="ph codeph">/opt/streamsets-datacollector</samp>. The tarball installation
+                        directory is the location where you extracted the file.</div>
+</li>
+
+                <li class="li">Use the following command to set the <samp class="ph codeph">$SDC_CONF</samp> environment
+                    variable to the <span class="ph">Data
+                  Collector</span> configuration
+                        directory:<pre class="pre codeblock">export SDC_CONF=&lt;configuration directory&gt;</pre>
+<div class="p">For
+                        example:<pre class="pre codeblock">export SDC_CONF=/etc/sdc</pre>
+</div>
+<div class="note note"><span class="notetitle">Note:</span> The default
+                        configuration directory for an RPM installation is
+                        <samp class="ph codeph">/etc/sdc</samp>. If you followed the instructions for a tarball
+                        installation for a service start, the default configuration directory is
+                            <samp class="ph codeph">/etc/sdc</samp>. The default configuration directory for a
+                        tarball installation for a manual start is <samp class="ph codeph">$SDC_DIST/etc</samp>.
+                        However, as a best practice, you should modify the configuration directory
+                        so that it is outside of the installation directory.</div>
+</li>
+
+                <li class="li">Use the following command to set up
+                    MapR:<pre class="pre codeblock">$SDC_DIST/bin/streamsets setup-mapr</pre>
+</li>
+
+                <li class="li">When prompted, enter 5.0.0, 5.1.0, or 5.2.0 for the MapR version.</li>
+
+                <li class="li">When prompted, enter the absolute path to the MapR home directory, usually
+                    /opt/mapr.</li>
+
+                <li class="li">If the MapR cluster uses username/password login authentication, uncomment the
+                    following line in the environment configuration file,
+                        <samp class="ph codeph">sdc-env.sh</samp> or <samp class="ph codeph">sdcd-env.sh</samp>, located in the
+                        <samp class="ph codeph">$SDC_DIST/libexec</samp> directory:
+                    <pre class="pre codeblock">#export SDC_JAVA_OPTS="-Dmaprlogin.password.enabled=true"</pre>
+</li>
+
+                <li class="li">Restart <span class="ph">Data
+                  Collector</span> and verify that you can see the MapR origins and destinations in the stage
+                    library.</li>
+
+            </ol>
+
+        </div>
+
+ </div>
+
+
+<div class="related-links"></div><div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Installation/Install_title.html" title="Installation"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Installation</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

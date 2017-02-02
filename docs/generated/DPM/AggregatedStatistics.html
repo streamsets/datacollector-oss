@@ -43,7 +43,7 @@
                   Collector</span> to configure the pipeline to write the statistics to a Kafka cluster or to Amazon
             Kinesis Streams.</p>
 
-        <p class="p">When you run a job that includes a pipeline configured to aggregate statistics, <span class="ph">DPM</span>
+        <p class="p">When you start a job that includes a pipeline configured to aggregate statistics, <span class="ph">DPM</span>
             automatically generates and runs a system pipeline for the job. The system pipeline
             reads the statistics written by each running pipeline instance to Kafka or Kinesis.
             Then, the system pipeline aggregates and sends the statistics to <span class="ph">DPM</span>.
@@ -71,7 +71,7 @@
             pipeline passes data to partitions in the Kafka topic based on the partition strategy
             that you choose. You can add additional Kafka configuration properties as needed. </p>
 
-        <div class="note note"><span class="notetitle">Note:</span> At this time, you cannot configure the pipeline to connect securely through SSL or
+        <div class="note note"><span class="notetitle">Note:</span> At this time, you cannot configure the pipeline to connect securely through SSL/TLS or
             Kerberos when using Kafka.</div>
 
     </div>
@@ -267,9 +267,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d23813e404">Kafka Properties</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d35915e404">Kafka Properties</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d23813e407">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d35915e407">Description</th>
 
                                 </tr>
 
@@ -277,9 +277,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                        <td class="entry" valign="top" width="33.33333333333333%" headers="d23813e404 ">Broker URI</td>
+                                        <td class="entry" valign="top" width="33.33333333333333%" headers="d35915e404 ">Broker URI</td>
 
-                                        <td class="entry" valign="top" width="66.66666666666666%" headers="d23813e407 ">Connection string for the Kafka broker. Use the
+                                        <td class="entry" valign="top" width="66.66666666666666%" headers="d35915e407 ">Connection string for the Kafka broker. Use the
                                             following format:
                                                 <samp class="ph codeph">&lt;host&gt;:&lt;port&gt;</samp>.<p class="p">To ensure a
                                                 connection, enter a comma-separated list of
@@ -289,16 +289,16 @@
                                     </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d23813e404 ">Runtime Topic Resolution </td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d35915e404 ">Runtime Topic Resolution </td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d23813e407 ">Do not use at this time. </td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d35915e407 ">Do not use at this time. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d23813e404 ">Topic</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d35915e404 ">Topic</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d23813e407 ">Topic to use.  To avoid mixing statistics from different
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d35915e407 ">Topic to use.  To avoid mixing statistics from different
                                         jobs, use a unique topic name for each job.<div class="p">You can define
                                             an expression that evaluates to the topic name. For
                                             example, you can use the following expression to define
@@ -314,9 +314,9 @@
                                 </tr>
 
                                 <tr>
-                                        <td class="entry" valign="top" width="33.33333333333333%" headers="d23813e404 ">Partition Strategy </td>
+                                        <td class="entry" valign="top" width="33.33333333333333%" headers="d35915e404 ">Partition Strategy </td>
 
-                                        <td class="entry" valign="top" width="66.66666666666666%" headers="d23813e407 ">Strategy to use to write to partitions:<ul class="ul" id="task_lcd_ng5_xw__d2024e6851">
+                                        <td class="entry" valign="top" width="66.66666666666666%" headers="d35915e407 ">Strategy to use to write to partitions:<ul class="ul" id="task_lcd_ng5_xw__d5443e6955">
                                                 <li class="li">Round Robin - Takes turns writing to different
                                                   partitions.</li>
 
@@ -334,9 +334,9 @@
                                     </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d23813e404 ">Partition Expression </td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d35915e404 ">Partition Expression </td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d23813e407 ">Expression to use when using the expression partition
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d35915e407 ">Expression to use when using the expression partition
                                             strategy.<p class="p">Define the expression to evaluate to the
                                             partition where you want statistics written. Partition
                                             numbers start with 0.</p>
@@ -348,9 +348,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d23813e404 ">Kafka Configuration</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d35915e404 ">Kafka Configuration</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d23813e407 ">Additional Kafka properties to use. Click the
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d35915e407 ">Additional Kafka properties to use. Click the
                                             <span class="ph uicontrol">Add</span> icon and define the Kafka
                                         property name and value.<p class="p">Use the property names and values
                                             as expected by Kafka. Do not use the broker.list
@@ -360,9 +360,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d23813e404 ">ZooKeeper URI</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d35915e404 ">ZooKeeper URI</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d23813e407 ">Connection string for the ZooKeeper of the Kafka cluster.
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d35915e407 ">Connection string for the ZooKeeper of the Kafka cluster.
                                         Use the following format:
                                             <samp class="ph codeph">&lt;host&gt;:&lt;port&gt;</samp>. <p class="p">To use a
                                             ZooKeeper quorum, enter a comma-separated list.
@@ -393,9 +393,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d23813e554">Kinesis Properties</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d35915e554">Kinesis Properties</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d23813e557">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d35915e557">Description</th>
 
                                 </tr>
 
@@ -403,11 +403,11 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d23813e554 ">Access Key ID
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d35915e554 ">Access Key ID
                                         <a class="xref" href="AggregatedStatistics.html#concept_m3j_2kb_fx" title="When the pipeline writes aggregated statistics to Amazon Kinesis Streams, it must pass credentials to Amazon Web Services."><img class="image" id="task_lcd_ng5_xw__image_ekt_x9g_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d23813e557 ">
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d35915e557 ">
         <p class="p">AWS access key ID.</p>
 
         <p class="p">Required when not using IAM roles with IAM instance profile credentials.</p>
@@ -417,11 +417,11 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d23813e554 ">Secret Access Key
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d35915e554 ">Secret Access Key
                                         <a class="xref" href="AggregatedStatistics.html#concept_m3j_2kb_fx" title="When the pipeline writes aggregated statistics to Amazon Kinesis Streams, it must pass credentials to Amazon Web Services."><img class="image" id="task_lcd_ng5_xw__image_ekt_x6g_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d23813e557 ">
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d35915e557 ">
         <p class="p">AWS secret access key. </p>
 
         <p class="p">Required when not using IAM roles with IAM instance profile credentials. </p>
@@ -431,24 +431,24 @@
                                 </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d23813e554 ">Region</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d35915e554 ">Region</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d23813e557 ">Amazon Web Services region that hosts the Kinesis cluster.</td>
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d35915e557 ">Amazon Web Services region that hosts the Kinesis cluster.</td>
 
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d23813e554 ">Endpoint</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d35915e554 ">Endpoint</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d23813e557 ">Endpoint to connect to when you select Other for the region. Enter the endpoint
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d35915e557 ">Endpoint to connect to when you select Other for the region. Enter the endpoint
        name.</td>
 
      </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d23813e554 ">Stream Name</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d35915e554 ">Stream Name</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d23813e557 ">Kinesis stream name. To avoid mixing statistics from
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d35915e557 ">Kinesis stream name. To avoid mixing statistics from
                                         different jobs, use a unique stream name for each job.<p class="p">You
                                             can define an expression that evaluates to the stream
                                             name. For example, you can use the following expression
@@ -464,9 +464,9 @@
                                 </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d23813e554 ">Partitioning Strategy</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d35915e554 ">Partitioning Strategy</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d23813e557 ">Strategy to write data to Kinesis shards:<ul class="ul" id="task_lcd_ng5_xw__d2064e673">
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d35915e557 ">Strategy to write data to Kinesis shards:<ul class="ul" id="task_lcd_ng5_xw__d5483e673">
         <li class="li">Random - Generates a random partition key.</li>
 
         <li class="li">
@@ -480,9 +480,9 @@
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d23813e554 ">Partition Expression</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d35915e554 ">Partition Expression</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d23813e557 ">Expression to generate the partition key used to pass data to different shards. <p class="p">Use
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d35915e557 ">Expression to generate the partition key used to pass data to different shards. <p class="p">Use
         for the expression partition strategy. </p>
 </td>
 
@@ -490,9 +490,9 @@
 
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d23813e554 ">Kinesis Producer Configuration</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d35915e554 ">Kinesis Producer Configuration</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d23813e557 ">Additional Kinesis properties.<p class="p">When you add a
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d35915e557 ">Additional Kinesis properties.<p class="p">When you add a
                                             configuration property, enter the exact property name
                                             and the value. The pipeline does not validate the
                                             property names or values.</p>

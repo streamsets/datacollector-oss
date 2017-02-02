@@ -58,6 +58,40 @@
  </div>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_njg_4mx_4y">
+    <h2 class="title topictitle2">Single and Multithreaded Pipelines</h2>
+
+    <div class="body conbody">
+        <p class="p">The
+            information above describes a standard <span class="ph">Data
+                  Collector</span>
+            single-threaded pipeline - the origin creates a batch and passes it through the
+            pipeline, creating a new batch only after processing the previous batch.</p>
+
+        <p class="p">Some origins can generate multiple threads to enable parallel processing in
+                <dfn class="term">multithreaded pipelines</dfn>. In a multithreaded pipeline, you configure the
+            origin to create the number of threads or amount of concurrency that you want to use.
+                <span class="ph">When you start the pipeline, the origin creates the
+                        specified number of threads and <span class="ph">Data
+                  Collector</span> creates a matching number of <dfn class="term">pipeline runners</dfn> to perform
+                        pipeline processing. The origin creates batches and passes each batch to a
+                        pipeline runner. Each pipeline runner runs a <dfn class="term">sourceless pipeline
+                              instance</dfn> - an instance of the pipeline that includes all of the
+                        processors and destinations in the pipeline and performs all pipeline
+                        processing after the origin.</span></p>
+
+        <p class="p"><span class="ph"> Each pipeline runner can process one batch at a time,
+                        just like a pipeline that runs on a single thread. When the flow of data
+                        slows, the pipeline runners wait idly until they are needed.</span></p>
+
+        <p class="p">All general references to pipelines in this guide describe single-threaded pipelines, but
+            this information generally applies to multithreaded pipelines. For more details specific
+            to multithreaded pipelines, see <a class="xref" href="../Multithreaded_Pipelines/MultithreadedPipelines.html#concept_zpp_2xc_py">Multithreaded Pipeline Overview</a>.</p>
+
+        
+    </div>
+
+</div>
 <div class="topic concept nested1" id="concept_ffz_hhw_kq">
  <h2 class="title topictitle2">Delivery Guarantee</h2>
 

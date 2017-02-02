@@ -38,9 +38,9 @@
                   Collector</span>,
             and then publish or import them to <span class="ph">DPM</span>.
             Within <span class="ph">DPM</span>,
-            you create jobs to run pipelines and to determine the <span class="ph">Data
+            you create jobs to determine the <span class="ph">Data
                   Collector</span>s
-            that run the jobs. When you run a job on a group of <span class="ph">Data
+            that run the pipelines. When you start a job on a group of <span class="ph">Data
                   Collector</span>s,
                 <span class="ph">DPM</span>
             remotely runs a pipeline instance on each <span class="ph">Data
@@ -111,8 +111,8 @@
                   Collector</span> displays DPM controlled pipelines when they are running. </dd>
 
                     <dd class="dd">DPM controlled pipelines include the following:<ul class="ul" id="concept_cqr_v3d_fx__ul_llz_yth_hx">
-                            <li class="li">Published pipelines run from <span class="ph">DPM</span> jobs. <p class="p">After you publish or import pipelines to <span class="ph">DPM</span>, you add them to a job, and then run the job. When you run a
-                                    job on a group of <span class="ph">Data
+                            <li class="li">Published pipelines run from <span class="ph">DPM</span> jobs. <p class="p">After you publish or import pipelines to <span class="ph">DPM</span>, you add them to a job, and then start the job. When you
+                                    start a job on a group of <span class="ph">Data
                   Collector</span>s, <span class="ph">DPM</span> remotely runs an instance of the published pipeline on each
                                         <span class="ph">Data
                   Collector</span>. When the <span class="ph">DPM</span> job stops, the running published pipeline also stops, and can
@@ -124,7 +124,7 @@
                             <li class="li">System pipelines run from <span class="ph">DPM</span> jobs.<p class="p"><span class="ph">DPM</span> automatically generates and runs system pipelines to
                                     aggregate statistics for jobs. System pipelines collect,
                                     aggregate, and push metrics for all of the remote pipeline
-                                    instances run from a job. When you run a job on a group of <span class="ph">Data
+                                    instances run from a job. When you start a job on a group of <span class="ph">Data
                   Collector</span>s, <span class="ph">DPM</span> picks one <span class="ph">Data
                   Collector</span> to run the system pipeline. When the <span class="ph">DPM</span> job stops, the running system pipeline also stops, and can no
                                     longer be viewed in the <span class="ph">Data
@@ -189,9 +189,9 @@
 
         </ul>
 
-        <div class="note tip"><span class="tiptitle">Tip:</span> In the image above, a job is running on a <span class="ph">Data
+        <div class="note tip"><span class="tiptitle">Tip:</span> In the image above, the job was started on a <span class="ph">Data
                   Collector</span>
-            that is being used to design pipelines. As a best practice, use labels within <span class="ph">DPM</span> to
+            used to design pipelines. As a best practice, use labels within <span class="ph">DPM</span> to
             separate development <span class="ph">Data
                   Collector</span>s
             from production <span class="ph">Data
