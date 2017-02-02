@@ -41,8 +41,8 @@
                   Collector</span>
         version 2.3.0.0 includes an enhanced Elasticsearch destination that uses the Elasticsearch
         HTTP API. To upgrade pipelines that use the Elasticsearch destination, you must verify that
-        Java 8 is installed and remove the Elasticsearch stage library from the blacklist property
-        for stage libraries.</p>
+        Java 8 is installed, remove the Elasticsearch stage library from the blacklist property for
+        stage libraries, and review the value of the Default Operation property.</p>
 
         <div class="section context">
             <div class="note note"><span class="notetitle">Note:</span> The Elasticsearch version 5 stage library is compatible with all versions of
@@ -81,6 +81,23 @@ Remove
 <li class="li step stepexpand">
                 <span class="ph cmd">Restart <span class="ph">Data
                   Collector</span> and verify that you can access the Elasticsearch destination.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Review all upgraded Elasticsearch destinations to ensure that the
+                        <span class="ph uicontrol">Default Operation</span> property is set to the correct
+                    operation.</span>
+                <div class="itemgroup info">
+                    <div class="p">Upgraded Elasticsearch destinations have the Default Operation property set
+                        based on the configuration for the Enable Upsert property:<ul class="ul" id="task_afy_k12_ry__ul_hyw_pvt_5y">
+                            <li class="li">With upsert enabled, the default operation is set to INDEX.</li>
+
+                            <li class="li">With upsert not enabled, the default operation is set to CREATE
+                                which requires a DocumentId.</li>
+
+                        </ul>
+</div>
+
+                </div>
             </li>
 </ol>
 

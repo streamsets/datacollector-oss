@@ -2278,7 +2278,8 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   operation type in the sdc.operation.type header attribute when writing records,
                   enabling the external system to perform the appropriate operation. </p>
             <draft-comment author="alisontaylor">dd's are used in the Define the Operation topic for
-                  Elasticsearch and Kudu destinations</draft-comment>
+                  Elasticsearch and Kudu destinations – Also in JDBC Producer - - make all changes
+                  here to JDBC Tee > Define the CRUD Operation</draft-comment>
             <dl>
                   <dlentry>
                         <dt>Record header attribute ** dlentries not used ** </dt>

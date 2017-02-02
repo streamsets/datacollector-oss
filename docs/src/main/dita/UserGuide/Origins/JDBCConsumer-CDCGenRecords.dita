@@ -16,8 +16,8 @@
 <concept id="concept_mpz_vwf_5y">
  <title>Generated Records</title>
  <conbody>
-  <p>When processing Microsoft SQL Server CDC data, JDBC Query Consumer the record that the origin
-            generates includes the folling information:<ul id="ul_gtz_ywf_5y">
+  <p>When processing Microsoft SQL Server CDC data, the record that the origin generates includes
+            the following information:<ul id="ul_gtz_ywf_5y">
                 <li>Microsoft SQL Server CDC fields:<p>The CDC fields begin with __$&lt;field name>.
                         These fields include:<ul id="ul_i45_1xf_5y">
                             <li>__$start_lsn</li>
@@ -31,7 +31,7 @@
                         that stores the CDC operation type of the record.</p><p>By default, each
                         record also includes a set of JDBC record header attributes named
                         jdbc.&lt;header attribute>. You can configure the origin to omit these
-                        header attributes and you can change the header prefix on the Advanced tabe
+                        header attributes and you can change the header prefix on the Advanced tab
                         of the origin. </p></li>
             </ul></p>
  </conbody>

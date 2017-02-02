@@ -14,42 +14,43 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_qfd_tpm_5y">
- <title>Define the CRUD Operation</title>
- <conbody>
-  <p><indexterm>JDBC Tee processor<indexterm>CRUD operation</indexterm></indexterm>The JDBC Tee
-            processor can insert, update, or delete data. The processor writes the records based on
-            the CRUD operation defined in a CRUD operation header attribute or in operation-related
-            stage properties. </p>
-        <p>You can define the CRUD operation in the following ways:<draft-comment author="Loretta">I
-                either need to change the reusable content below (x4) so "destination"=> "stage", or
-                when the content is finalized, put a different version here with "processor".
-                Waiting until text finalized to probably do processor. What do you
-                think?</draft-comment><dl>
+    <title>Define the CRUD Operation</title>
+    <conbody>
+        <p><indexterm>JDBC Tee processor<indexterm>CRUD operation</indexterm></indexterm>The JDBC
+            Tee processor can insert, update, or delete data. The processor writes the records based
+            on the CRUD operation defined in a CRUD operation header attribute or in
+            operation-related stage properties. </p>
+        <p>You can define the CRUD operation in the following ways:<dl>
                 <dlentry>
                     <dt>CRUD operation header attribute</dt>
-                    <dd
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/RecordHeaderAtt"/>
+                    <dd id="RecordHeaderAtt">You can define the CRUD operation in a CRUD operation
+                        record header attribute. The processor looks for the CRUD operation to use
+                        in the sdc.operation.type record header attribute. </dd>
                     <dd>The attribute can contain one of the following numeric values:<ul
                             id="ul_smy_qf3_1y">
                             <li>1 for INSERT</li>
                             <li>2 for DELETE</li>
                             <li>3 for UPDATE</li>
-                        </ul><draft-comment author="Loretta">I either need to change the reusable
-                            content below (x3) so "destination"=> "stage", or when the content is
-                            finalized, put a different version in JDBC Tee with
-                            "processor".</draft-comment></dd>
-                    <dd
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DefineRecordHeaderAtt"
-                    />
+                        </ul></dd>
+                    <dd>If your pipeline includes a CRUD-enabled origin that processes changed data,
+                        the processor simply reads the operation type from the sdc.operation.type
+                        header attribute that the origin generates. If your pipeline uses a non-CDC
+                        origin, you can use the Expression Evaluator or a scripting processor to
+                        define the record header attribute. For more information about <ph
+                            conref="#concept_vhs_5tz_xp/pName-long"/> changed data processing and a
+                        list of CDC-enabled origins, see <xref
+                            href="../Pipeline_Design/CDC-Overview.dita#concept_apw_l2c_ty"/>.</dd>
                 </dlentry>
                 <dlentry>
                     <dt>Operation stage properties</dt>
-                    <dd
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DefaultOperation"/>
-                    <dd
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/UnsupportedOp"
-                    />
+                    <dd id="DefaultOperation">You define a default operation in the processor
+                        properties. The processor uses the default operation when the
+                        sdc.operation.type record header attribute is not set.</dd>
+                    <dd id="UnsupportedOp">You can also define how to handle records with
+                        unsupported operations defined in the sdc.operation.type header attribute.
+                        The processor can discard them, send them to error, or use the default
+                        operation. </dd>
                 </dlentry>
             </dl></p>
- </conbody>
+    </conbody>
 </concept>

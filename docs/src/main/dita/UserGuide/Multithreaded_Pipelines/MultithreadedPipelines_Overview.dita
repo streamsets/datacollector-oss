@@ -23,7 +23,7 @@
             one <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
             />, thus taking full advantage of all available CPUs on the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            machine. When using multitheaded pipelines, make sure to allocate sufficient resources
+            machine. When using multithreaded pipelines, make sure to allocate sufficient resources
             to the pipeline and <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
             />.</p>
