@@ -28,7 +28,7 @@
             logging at a table or database level. Full supplemental logging provides data from all
             columns, those with unchanged data as well as the primary key and changed columns. For
             details on the data included in records based on the supplemental logging type, see
-                <xref href="OracleCDC-GeneratedRecords.dita#concept_db1_3sj_fx"/>.<ol
+                <xref href="OracleCDC-GeneratedRecords.dita#concept_vfw_bjz_ty"/>.<ol
                 id="ol_nrv_ds1_jx">
                 <li>To verify if supplemental logging is enabled for the database, run the following
                         command:<codeblock>SELECT supplemental_log_data_min, supplemental_log_data_pk, supplemental_log_data_all FROM v$database;</codeblock><p>If

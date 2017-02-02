@@ -17,8 +17,9 @@
     <title>Configuring an Oracle CDC Client</title>
     <taskbody>
         <context>
-            <p>Configure an Oracle CDC Client origin to process LogMiner change data capture
-                information from an Oracle database. </p>
+            <p><indexterm>Oracle CDC Client<indexterm>configuring</indexterm></indexterm>Configure
+                an Oracle CDC Client origin to process LogMiner change data capture information from
+                an Oracle database. </p>
             <p>Before you use the origin, complete the prerequisite tasks. For more information, see
                     <xref href="OracleCDC-Prerequisites.dita#concept_xwg_33w_cx"/>.</p>
         </context>

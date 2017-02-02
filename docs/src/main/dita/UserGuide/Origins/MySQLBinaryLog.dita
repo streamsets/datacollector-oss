@@ -15,16 +15,15 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_kqg_1yh_xx">
  <title>MySQL Binary Log</title>
- <shortdesc>The MySQL Binary Log origin processes change data capture (CDC) information provided by
-        MySQL server in binary logs. The origin produces records with a map of fields of CDC
-        information. </shortdesc>
  <conbody>
   <p><indexterm>origins<indexterm>MySQL Binary Log</indexterm></indexterm><indexterm>MySQL Binary
                 Log origin<indexterm>overview</indexterm></indexterm>The MySQL Binary Log origin
-            acts as a MySQL replication slave. MySQL replication allows you to maintain multiple
-            copies of MySQL data by copying the data from a master to a slave server. The origin
-            uses the replication process to capture changes from the MySQL master database and then
-            pass the changed data to a <ph
+            processes change data capture (CDC) information provided by MySQL server in binary logs.
+            The origin produces records with a map of fields of CDC information. </p>
+        <p>The MySQL Binary Log origin acts as a MySQL replication slave. MySQL replication allows
+            you to maintain multiple copies of MySQL data by copying the data from a master to a
+            slave server. The origin uses the replication process to capture changes from the MySQL
+            master database and then pass the changed data to a <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             pipeline. </p>
         <p>The origin can process binary logs from a MySQL server that has Global Transaction

@@ -25,6 +25,11 @@
           processes data in batches.</dd>
       </dlentry>
       <dlentry>
+        <dt>CDC-enabled origin</dt>
+        <dd>An origin that can process changed data and place CRUD operation information in the
+          sdc.operation.type record header attribute. </dd>
+      </dlentry>
+      <dlentry>
         <dt>cluster execution mode</dt>
         <dd>Pipeline execution mode that allows you to process large volumes of data from Kafka or
           HDFS.</dd>
@@ -37,6 +42,11 @@
         <dt>control character</dt>
         <dd>A non-printing character in a character set, such as the acknowledgement or escape
           characters.</dd>
+      </dlentry>
+      <dlentry>
+        <dt>CRUD-enabled stage</dt>
+        <dd>A processor or destination that can use the CRUD operation written in the
+          sdc.operation.type header attribute to write changed data. </dd>
       </dlentry>
       <dlentry>
         <dt>data alerts</dt>

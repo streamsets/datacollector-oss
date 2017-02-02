@@ -15,9 +15,12 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_mrc_k5n_4v">
     <title>Configuring a MongoDB Destination</title>
-    <shortdesc>Configure a MongoDB destination to write to MongoDB.</shortdesc>
     <taskbody>
-        <context/>
+        <context><indexterm>MongoDB
+            destination<indexterm>configuring</indexterm></indexterm>Configure a MongoDB destination
+            to write to MongoDB. <note type="important">Ensure that all records routed to the
+                destination include a CDC record header attribute. For more information, see <xref
+                    href="MongoDB-CRUDOperation.dita#concept_bkc_m24_4v"/>.</note></context>
         <steps>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-NoStageLib">
                 <cmd/>

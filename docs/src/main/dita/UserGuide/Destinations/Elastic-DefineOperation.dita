@@ -14,38 +14,34 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_w2r_ktb_ry">
- <title>Define the Operation</title>
- <shortdesc>To write to Elasticsearch, you configure the destination to perform one of the following
-        write operations: create, update, delete, or index. You define the default operation for the
-        destination. You can also define the operation in a record header attribute.</shortdesc>
+ <title>Define the CRUD Operation</title>
  <conbody>
-        <p><indexterm>Elasticsearch destination<indexterm>write operation</indexterm></indexterm>You
-            define the write operation in the following ways:</p>
+        <p><indexterm>Elasticsearch destination<indexterm>CRUD operation</indexterm></indexterm>The
+            Elasticsearch destination can create, update, delete, or index data. The destination
+            writes the records based on the CRUD operation defined in a CRUD operation header
+            attribute or in operation-related stage properties. </p>
+        <p>You define the CRUD operation in the following ways:</p>
         <dl>
             <dlentry>
-                <dt>Default operation in the Elasticsearch destination properties</dt>
-                <dd
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DefaultOperation"
-                />
-            </dlentry>
-            <dlentry>
-                <dt>Record header attribute</dt>
+                <dt>CRUD record header attribute</dt>
                 <dd
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/RecordHeaderAtt"/>
                 <dd>The attribute can contain one of the following numeric values:<ul
                         id="ul_smy_qf3_1y">
-                        <li>1 - creates records</li>
-                        <li>2 - deletes records</li>
-                        <li>3 - updates records</li>
-                        <li>4 - indexes records </li>
+                        <li>1 for CREATE, the equivalent of INSERT</li>
+                        <li>2 for DELETE</li>
+                        <li>3 for UPDATE</li>
+                        <li>4 for INDEX, the equivalent of UPSERT</li>
                     </ul></dd>
                 <dd
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DefineRecordHeaderAtt"/>
-                <dd>You can also configure how the destination handles records that have an
-                    unsupported value for the sdc.operation.type record header attribute.
-                    Unsupported values include non-numeric values, negative numeric values, or zero.
-                    You can configure the destination to discard the record, send the record to
-                    error, or use the default operation. </dd>
+            </dlentry>
+            <dlentry>
+                <dt>Operation stage properties</dt>
+                <dd
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DefaultOperation"/>
+                <dd
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/UnsupportedOp"/>
             </dlentry>
         </dl>
  </conbody>

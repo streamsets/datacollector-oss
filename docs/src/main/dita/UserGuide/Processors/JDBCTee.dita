@@ -15,10 +15,13 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_qbx_lcy_hw">
  <title>JDBC Tee</title>
- <shortdesc>The JDBC Tee processor uses a JDBC connection to write data to a database table, and
-        then pass generated database column values to fields. Use the JDBC Tee to write some or all
-        record fields to a database table and then enrich records with additional data. </shortdesc>
  <conbody>
+        <p><indexterm>JDBC Tee
+                    processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>JDBC
+                    Tee</indexterm></indexterm>The JDBC Tee processor uses a JDBC connection to
+            write data to a database table, and then pass generated database column values to
+            fields. Use the JDBC Tee to write some or all record fields to a database table and then
+            enrich records with additional data. </p>
         <p>To use JDBC Tee, the database table must be configured to generate column values as data
             is inserted.</p>
         <p>When you configure JDBC Tee, you specify connection information, table name, and
@@ -27,8 +30,14 @@
             specific mappings.</p>
         <p>You define generated column mappings to specify the output fields to pass the generated
             database column values to.</p>
-        <p>You can also configure the stage to rollback an entire batch if an error occurs while
-            writing part of the batch.</p>
+        <p>You can configure the stage to rollback an entire batch if an error occurs while writing
+            part of the batch. You can also configure custom properties that your driver requires. </p>
+        <p>The JDBC Tee processor <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Dest-CRUDoverview"
+            /></p>
+        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Dest-ChangeLog"
+                /><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/CDC-xref"
+            /></p>
         <p>To use a JDBC version older than 4.0, you can specify the driver class name and define a
             health check query.</p>
 

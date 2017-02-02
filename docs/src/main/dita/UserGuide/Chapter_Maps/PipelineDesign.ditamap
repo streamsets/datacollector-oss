@@ -40,6 +40,18 @@
    <topicref href="../Pipeline_Design/ErrorHandling-Stage.dita"/>
    <topicref href="../Pipeline_Design/ErrorHandling-Example.dita"/>
   </topicref>
+  <topicref href="../Pipeline_Design/CDC-Overview.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Pipeline_Design/CDC-CRUDOpAtt.dita">
+    <topicref href="../Pipeline_Design/CDC-EarlyCDCImpl.dita"/>
+   </topicref>
+   <topicref href="../Pipeline_Design/CDC-Origins.dita"/>
+   <topicref href="../Pipeline_Design/CRUDDestinations.dita"/>
+   <topicref href="../Pipeline_Design/CDC-ProcessingRecords.dita"/>
+   <topicref href="../Pipeline_Design/CDC-UseCases.dita"/>
+  </topicref>
   <topicref href="../Pipeline_Design/DelimitedDataRootFieldTypes.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

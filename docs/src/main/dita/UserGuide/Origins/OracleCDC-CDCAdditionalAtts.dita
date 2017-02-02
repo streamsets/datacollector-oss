@@ -14,24 +14,18 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_nn1_lxd_dx">
- <title>CDC Record Header Attributes</title>
+ <title>CDC Header Attributes</title>
  <conbody>
-        <p><indexterm>Oracle CDC Client origin<indexterm>CDC record header
-                attributes</indexterm></indexterm>Oracle CDC Client includes change data capture
-            information in record header attributes. You can use these attributes in the pipeline as
-            needed. </p>
-        <p>For example, if you want to route records to different destinations based on the
-            operation, you can use the oracle.cdc.operation header attribute in a Stream
-            Selector.</p>
-        <p>The origin provides the following record header attributes for each record:<ul
-                id="ul_j3y_yxd_dx">
+        <p><indexterm>Oracle CDC Client origin<indexterm>CDC header
+                attributes</indexterm></indexterm>The Oracle CDC Client origin provides the
+            following CDC record header attributes for each record:<ul id="ul_j3y_yxd_dx">
                 <li>oracle.cdc.user</li>
                 <li>oracle.cdc.operation</li>
                 <li>oracle.cdc.timestamp</li>
                 <li>oracle.cdc.table</li>
                 <li>oracle.cdc.scn</li>
             </ul></p>
-        <p>It also includes the following record header attributes for each decimal field in the
+        <p>And it includes the following record header attributes for each decimal field in the
                 record:<ul id="ul_jvj_p1j_fx">
                 <li>oracle.cdc.&lt;fieldname>.precision</li>
                 <li>oracle.cdc.&lt;fieldname>.scale</li>

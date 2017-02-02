@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_e1j_jwv_ht">
- <title>Change Data Capture</title>
- <shortdesc>When reading from Microsoft SQL Server, JDBC Query Consumer can group row updates from
-  the same transaction when reading from a change log table. This maintains consistency when
-  performing change data capture.</shortdesc>
+ <title>Group Rows by Transaction</title>
  <conbody>
-  <p><indexterm>JDBC Query Consumer origin<indexterm>change data capture</indexterm></indexterm>To
-   enable this feature, specify the transaction ID column and maximum transaction size. When these
-   properties are defined, JDBC Query Consumer processes data as a batch up to the maximum
+  <p><indexterm>JDBC Query Consumer origin<indexterm>grouping CDC rows for Microsoft SQL Server
+     CDC</indexterm></indexterm>When reading from Microsoft SQL Server, JDBC Query Consumer can
+   group row updates from the same transaction when reading from a change log table. This maintains
+   consistency when performing change data capture.</p>
+  <p>To enable this feature, specify the transaction ID column and maximum transaction size. When
+   these properties are defined, JDBC Query Consumer processes data as a batch up to the maximum
    transaction size, overriding the <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> maximum batch
    size.</p>

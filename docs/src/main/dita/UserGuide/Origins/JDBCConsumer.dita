@@ -15,10 +15,11 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_qhf_hjr_bs">
  <title>JDBC Query Consumer</title>
- <shortdesc>The JDBC Query Consumer origin reads database data using a user-defined SQL query
-        through a JDBC connection. The origin returns data as a map with column names and field
-        values.</shortdesc>
  <conbody>
+        <p><indexterm>origins<indexterm>JDBC Query Consumer</indexterm></indexterm><indexterm>JDBC
+                Query Consumer origin<indexterm>overview</indexterm></indexterm>The JDBC Query
+            Consumer origin reads database data using a user-defined SQL query through a JDBC
+            connection. The origin returns data as a map with column names and field values.</p>
         <p>When you configure the origin, you define the SQL query that the origin uses to read data
             from a single table or from a join of tables.</p>
         <note>To read from multiple tables in the same database, use the JDBC Multitable Consumer
@@ -26,17 +27,16 @@
             define. You might want to use the <xref
                 href="MultiTableJDBCConsumer.dita#concept_zp3_wnw_4y"/> origin for database
             replication.</note>
-        <p><indexterm>origins<indexterm>JDBC Query Consumer</indexterm></indexterm><indexterm>JDBC
-                Query Consumer origin<indexterm>overview</indexterm></indexterm>When you configure
-            JDBC Query Consumer, you specify connection information, query interval, and custom JDBC
-            configuration properties to determine how the origin connects to the database. You
-            configure the query mode and SQL query to define the data returned by the database. You
-            can also call stored procedures from the SQL query.</p>
+        <p>When you configure JDBC Query Consumer, you specify connection information, query
+            interval, and custom JDBC configuration properties to determine how the origin connects
+            to the database. You configure the query mode and SQL query to define the data returned
+            by the database. You can also call stored procedures from the SQL query.</p>
         <p>You can configure the JDBC Query Consumer to perform change data capture for databases
             that store the information in a table. You can also configure custom properties that
             your driver requires. </p>
         <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/JDBC-legacyInfo"/>
         <p>By default, the origin creates JDBC header attributes to provide information about source
-            data in record headers.</p>
+            data in record headers. When reading data from Microsoft SQL Server, the origin includes
+            CDC operation information in a record header attribute.</p>
     </conbody>
 </concept>
