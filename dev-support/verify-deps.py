@@ -108,9 +108,13 @@ def parse_dep_name(name):
 #
 # For things like netty (3 & 4) or jackson (1 & 2)
 def is_duplicate_dual(versions, first, second):
-  # This check make sense only for pair of versions
-  if len(versions) != 2:
-     return False
+  # Ignore single value
+  if len(versions) == 1:
+      return False
+
+  # We're validating only pairs, so anything more is a problem
+  if len(versions) > 2:
+     return True
 
   one = False
   two = False
