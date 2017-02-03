@@ -54,6 +54,11 @@
             uses the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
             disconnected mode.</p>
+        <p>You can optionally configure each registered <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
+            use an authenticated HTTP proxy server to access <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+            />.</p>
 
  </conbody>
 </concept>
