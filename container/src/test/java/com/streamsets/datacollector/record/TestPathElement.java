@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.record;
 
+import com.streamsets.pipeline.api.impl.Utils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -95,4 +96,52 @@ public class TestPathElement {
     Assert.assertEquals("Bejing", parse.get(3).getName());
     Assert.assertEquals(PathElement.Type.MAP,  parse.get(3).getType());
   }
+
+  @Test
+  public void testTrailingSlash() {
+    try {
+      PathElement.parse("/a/b/c/d/", false);
+      Assert.fail("Should fail.");
+    } catch (IllegalArgumentException e) {
+      Assert.assertTrue(Utils.format("Message: {}", e.getMessage()), e.getMessage().contains(PathElement.REASON_EMPTY_FIELD_NAME));
+    }
+  }
+
+  @Test
+  public void testInvalidStart() {
+    try {
+      PathElement.parse("a/b/c/d", false);
+      Assert.fail("Should fail.");
+    } catch (IllegalArgumentException e) {
+      Assert.assertTrue(Utils.format("Message: {}", e.getMessage()), e.getMessage().contains(PathElement.REASON_INVALID_START));
+    }
+  }
+
+  @Test
+  public void testInvalidNumber() {
+    try {
+      PathElement.parse("[0*8]", false);
+      Assert.fail("Should fail.");
+    } catch (IllegalArgumentException e) {
+      Assert.assertTrue(Utils.format("Message: {}", e.getMessage()), e.getMessage().contains("'0*8' needs to be a number"));
+    }
+
+    try {
+      PathElement.parse("[Nan]", false);
+      Assert.fail("Should fail.");
+    } catch (IllegalArgumentException e) {
+      Assert.assertTrue(Utils.format("Message: {}", e.getMessage()), e.getMessage().contains(PathElement.REASON_NOT_A_NUMBER));
+    }
+  }
+
+  @Test
+  public void testOpenQuotes() {
+    try {
+      PathElement.parse("/'not-closed", false);
+      Assert.fail("Should fail.");
+    } catch (IllegalArgumentException e) {
+      Assert.assertTrue(Utils.format("Message: {}", e.getMessage()), e.getMessage().contains(PathElement.REASON_QUOTES));
+    }
+  }
+
 }
