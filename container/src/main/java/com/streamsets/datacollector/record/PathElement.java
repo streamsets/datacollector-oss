@@ -76,6 +76,12 @@ public class PathElement {
   }
 
   public static final String INVALID_FIELD_PATH = "Invalid fieldPath '{}' at char '{}'";
+  public static final String INVALID_FIELD_PATH_REASON = "Invalid fieldPath '{}' at char '{}' ({})";
+  public static final String REASON_EMPTY_FIELD_NAME = "field name can't be empty";
+  public static final String REASON_INVALID_START = "field path needs to start with '[' or '/'";
+  public static final String REASON_NOT_A_NUMBER = "only numbers and '*' allowed between '[' and ']'";
+  public static final String REASON_QUOTES = "quotes are not properly closed";
+  public static final String INVALID_FIELD_PATH_NUMBER = "Invalid fieldPath '{}' at char '{}' ('{}' needs to be a number or '*')";
 
   public static List<PathElement> parse(String fieldPath, boolean add) {
     Preconditions.checkNotNull(fieldPath, "fieldPath cannot be null");
@@ -105,7 +111,7 @@ public class PathElement {
               requiresIndex = true;
               break;
             default:
-              throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH, fieldPath, 0));
+              throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH_REASON, fieldPath, 0, REASON_INVALID_START));
           }
         } else {
           if (requiresName) {
@@ -141,7 +147,7 @@ public class PathElement {
                   collector.append(chars[pos]);
                 } else {
                   if (chars.length <= pos + 1) {
-                    throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH, fieldPath, pos));
+                    throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH_REASON, fieldPath, pos, REASON_EMPTY_FIELD_NAME));
                   }
                   if (chars[pos] == chars[pos + 1]) {
                     collector.append(chars[pos]);
@@ -174,9 +180,9 @@ public class PathElement {
                 collector.append(chars[pos]);
                 break;
               case ']':
+                String indexString = collector.toString();
                 try {
                   int index = 0;
-                  String indexString = collector.toString();
                   if(!"*".equals(indexString)) {
                     index = Integer.parseInt(indexString);
                   }
@@ -188,12 +194,11 @@ public class PathElement {
                     throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH, fieldPath, pos));
                   }
                 } catch (NumberFormatException ex) {
-                  throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH, fieldPath, pos) + ", " +
-                    ex.toString(), ex);
+                  throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH_NUMBER, fieldPath, pos, indexString), ex);
                 }
                 break;
               default:
-                throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH, fieldPath, pos));
+                throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH_REASON, fieldPath, pos, REASON_NOT_A_NUMBER));
             }
           }
         }
@@ -201,7 +206,7 @@ public class PathElement {
 
       if(singleQuote || doubleQuote) {
         //If there is no matching quote
-        throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH, fieldPath, 0));
+        throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH_REASON, fieldPath, 0, REASON_QUOTES));
       } else if (pos < chars.length) {
         throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH, fieldPath, pos));
       } else if (collector.length() > 0) {
