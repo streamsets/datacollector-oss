@@ -27,38 +27,16 @@
       </ul>
     </div>
 
-    <script type="text/ng-template" id="nested-label-template">
+    <div show-loading="fetchingSystemLabels"></div>
 
-      <li ng-repeat="label in sortedKeys(node.children)"
-          ng-init="node = node.children[label]"
-          class="list-group-item pointer clearfix">
+    <ul class="list-group predefined-labels" mutation-callback="treeElementChange">
+      <li class="hidden">{{treeElementTimestamp}}</li>
 
-        <div ng-click="onSelectNode(node)"
-             ng-class="{'active' : selectedPipelineLabel === node.raw}"
-             class="list-group-item-wrapper"
-             style="padding-left: {{level * 10}}px; margin-left: -{{level * 10}}px;">
-
-          <span class="list-group-icon-wrapper">
-            <i ng-if="hasChildren(node) && node.isExpanded" class="fa fa-caret-down"></i>
-            <i ng-if="hasChildren(node) && !node.isExpanded" class="fa fa-caret-right"></i>
-          </span>
-
-          <span>{{label}}</span>
-        </div>
-
-        <ul class="list-group-children" ng-if="hasChildren(node) && node.isExpanded">
-          <ng-include ng-init="level = level + 1" src="'nested-label-template'"></ng-include>
-        </ul>
-      </li>
-
-    </script>
-
-    <ul class="list-group predefined-labels">
       <li ng-repeat="systemLabel in systemPipelineLabels"
           class="list-group-item pointer clearfix">
 
         <div ng-click="onSelectLabel(systemLabel)"
-             ng-class="{'active' : selectedPipelineLabel === systemLabel}"
+             ng-class="{'active': selectedPipelineLabel === systemLabel}"
              class="list-group-item-wrapper">{{'home.library.' + systemLabel | translate}}
         </div>
       </li>
@@ -67,7 +45,39 @@
         <span translate="global.form.labels">LABELS</span>
       </li>
 
-      <ng-include ng-init="level = 1" ng-repeat="node in [pipelineLabels]" src="'nested-label-template'"></ng-include>
+      <li ng-if="hasPipelineLabels()">
+        <div class="btn-group label-filter-wrapper">
+
+          <input ng-model="labelFilter.value"
+                 ng-model-options="{debounce: getDebounce()}"
+                 ng-class="{'loading-labels': getDebounce() > 0 && loadingLabels}"
+                 ng-change="filterLabels()"
+                 type="search"
+                 class="form-control label-filter-input"
+                 placeholder="Filter Labels">
+
+          <span ng-hide="getDebounce() > 0 && loadingLabels" ng-click="clearLabelFilter()" class="glyphicon glyphicon-remove-circle label-filter-icon"></span>
+          <i ng-show="getDebounce() > 0 && loadingLabels" class="fa fa-circle-o-notch fa-spin fa-fw label-filter-icon"></i>
+        </div>
+      </li>
+
+      <li ng-repeat="node in pipelineLabels track by node.vPath"
+          ng-show="node.isVisible"
+          class="list-group-item pointer clearfix">
+
+        <div ng-click="onSelectNode(node)"
+             ng-class="{'active': selectedPipelineLabel === node.vPath}"
+             class="list-group-item-wrapper"
+             style="padding-left: {{::node.level * 10}}px;">
+
+          <span class="list-group-icon-wrapper">
+            <i ng-show="hasChildren(node) && node.isExpanded" class="fa fa-caret-down"></i>
+            <i ng-show="hasChildren(node) && !node.isExpanded" class="fa fa-caret-right"></i>
+          </span>
+
+          <span class="label-display">{{::node.label}}</span>
+        </div>
+      </li>
 
     </ul>
   </div>

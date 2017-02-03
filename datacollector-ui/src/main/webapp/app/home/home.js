@@ -805,9 +805,7 @@ angular
 
     $q.all([
       api.pipelineAgent.getPipelinesCount(),
-      configuration.init(),
-      api.pipelineAgent.getSystemPipelineLabels(),
-      api.pipelineAgent.getPipelineLabels()
+      configuration.init()
     ]).then(
       function (results) {
         $scope.loaded = true;
@@ -815,23 +813,6 @@ angular
 
         if (configuration.isAnalyticsEnabled()) {
           Analytics.trackPage('/');
-        }
-
-        /**
-         * Labels are loaded only once so they're sent to library.js
-         */
-        if (_.isFunction($scope.onLabelsLoadedCallback)) {
-          $scope.onLabelsLoadedCallback(results[2].data, results[3].data);
-        }
-
-        /**
-         * Make sure we only keep selection of still-existing labels
-         */
-        var labels = results[2].data.concat(results[3].data);
-        if (labels.indexOf($scope.$storage.pipelineListState.selectedLabel) !== -1) {
-          $scope.selectedPipelineLabel = $scope.$storage.pipelineListState.selectedLabel;
-        } else {
-          $scope.selectedPipelineLabel = 'system:allPipelines';
         }
 
         /**
@@ -854,6 +835,33 @@ angular
       },
       function () {
         $scope.loaded = true;
+      }
+    );
+
+    $q.all([
+      api.pipelineAgent.getSystemPipelineLabels(),
+      api.pipelineAgent.getPipelineLabels()
+    ]).then(
+      function (results) {
+
+        /**
+         * Labels are loaded only once so they're sent to library.js
+         */
+        if (_.isFunction($scope.onLabelsLoadedCallback)) {
+          $scope.onLabelsLoadedCallback(results[0].data, results[1].data);
+        }
+
+        /**
+         * Make sure we only keep selection of still-existing labels
+         */
+        var labels = results[0].data.concat(results[1].data);
+        if (labels.indexOf($scope.$storage.pipelineListState.selectedLabel) !== -1) {
+          $scope.selectedPipelineLabel = $scope.$storage.pipelineListState.selectedLabel;
+        } else {
+          $scope.selectedPipelineLabel = 'system:allPipelines';
+        }
+      },
+      function () {
         $scope.selectedPipelineLabel = 'system:allPipelines';
       }
     );
