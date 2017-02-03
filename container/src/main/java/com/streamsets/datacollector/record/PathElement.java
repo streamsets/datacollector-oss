@@ -20,6 +20,7 @@
 package com.streamsets.datacollector.record;
 
 import com.google.common.base.Preconditions;
+import com.streamsets.datacollector.util.EscapeUtil;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.ArrayList;
@@ -83,8 +84,12 @@ public class PathElement {
   public static final String REASON_QUOTES = "quotes are not properly closed";
   public static final String INVALID_FIELD_PATH_NUMBER = "Invalid fieldPath '{}' at char '{}' ('{}' needs to be a number or '*')";
 
-  public static List<PathElement> parse(String fieldPath, boolean add) {
-    Preconditions.checkNotNull(fieldPath, "fieldPath cannot be null");
+  public static List<PathElement> parse(String fieldPath, boolean isSingleQuoteEscaped) {
+    fieldPath =
+        EscapeUtil.standardizePathForParse(
+            Preconditions.checkNotNull(fieldPath, "fieldPath cannot be null"),
+            isSingleQuoteEscaped
+        );
     List<PathElement> elements = new ArrayList<>();
     elements.add(PathElement.ROOT);
     if (!fieldPath.isEmpty()) {

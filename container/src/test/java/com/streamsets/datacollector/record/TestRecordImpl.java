@@ -561,12 +561,52 @@ public class TestRecordImpl {
   @Test
   public void testEscapeAndRetrieveSpecialChars() {
     RecordImpl r = new RecordImpl("stage", "source", null, null);
-    LinkedHashMap<String, Field> listMap = new LinkedHashMap<>();
-    listMap.put("a/b", Field.create("value"));
-    listMap.put("a[b", Field.create("value"));
-    listMap.put("a]b", Field.create("value"));
-    Field listMapField = Field.createListMap(listMap);
-    r.set(listMapField);
+    LinkedHashMap<String, Field> rootMap = new LinkedHashMap<>();
+
+    LinkedHashMap<String, Field> innerNonNesterMap = new LinkedHashMap<>();
+    innerNonNesterMap.put("a/b", Field.create("value"));
+    innerNonNesterMap.put("a[b", Field.create("value"));
+    innerNonNesterMap.put("a]b", Field.create("value"));
+    innerNonNesterMap.put("a'b", Field.create("value"));
+    innerNonNesterMap.put("a\\b", Field.create("value"));
+    innerNonNesterMap.put("a\"b", Field.create("value"));
+
+    //backslash and quotes combined
+    innerNonNesterMap.put("a\\\"b", Field.create("value"));
+    innerNonNesterMap.put("a\\'b", Field.create("value"));
+
+    innerNonNesterMap.put("a\"\\b", Field.create("value"));
+    innerNonNesterMap.put("a'\\b", Field.create("value"));
+
+    innerNonNesterMap.put("a\\\'b", Field.create("value"));
+    innerNonNesterMap.put("a\'\\b", Field.create("value"));
+
+    innerNonNesterMap.put("a\\\"'b", Field.create("value"));
+    innerNonNesterMap.put("a\\'\"b", Field.create("value"));
+
+    innerNonNesterMap.put("a\\\'\"b", Field.create("value"));
+    innerNonNesterMap.put("a\\'\"b", Field.create("value"));
+
+    //multiple quotes and backslash combined
+    innerNonNesterMap.put("a\\\\'\\\"\"\\\\b", Field.create("value"));
+
+    //Single level map (ex: /innerNonNesterMap/'a\'b')
+    rootMap.put("innerNonNesterMap", Field.createListMap(innerNonNesterMap));
+
+    //Nested map (ex: /innerNestedMap/'a\'b'/'a\'b')
+    LinkedHashMap<String, Field> innerNestedMap = new LinkedHashMap<>();
+    for (String key : innerNonNesterMap.keySet()) {
+      innerNestedMap.put(key, Field.createListMap(innerNonNesterMap));
+    }
+    rootMap.put("innerNestedListMap", Field.createListMap(innerNestedMap));
+
+    //Two map fields in a list (one single level and one nested from above)
+    List<Field> innerList = new ArrayList<>();
+    innerList.add(Field.createListMap(innerNonNesterMap));
+    innerList.add(Field.createListMap(innerNestedMap));
+    rootMap.put("innerList", Field.create(innerList));
+
+    r.set(Field.createListMap(rootMap));
 
     Set<String> paths = r.getEscapedFieldPaths();
     for(String path : paths) {
@@ -575,10 +615,11 @@ public class TestRecordImpl {
         continue;
       }
 
-      Assert.assertTrue(r.has(path));
+      Assert.assertTrue("Path " + path + " does not exist", r.has(path));
       Field f = r.get(path);
-      Assert.assertEquals(Utils.format("Different type for {}", path), Field.Type.STRING, f.getType());
-      Assert.assertEquals("value", f.getValueAsString());
+      if (f.getType() == Field.Type.STRING) {
+        Assert.assertEquals("value", f.getValueAsString());
+      }
     }
   }
 }

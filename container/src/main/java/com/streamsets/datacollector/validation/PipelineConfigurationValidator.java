@@ -929,7 +929,7 @@ public class PipelineConfigurationValidator {
           List<String> fieldPaths = (List<String>) conf.getValue();
           for (String fieldPath : fieldPaths) {
             try {
-              PathElement.parse(fieldPath, false);
+              PathElement.parse(fieldPath, true);
             } catch (IllegalArgumentException e) {
               issues.add(
                   issueCreator.create(

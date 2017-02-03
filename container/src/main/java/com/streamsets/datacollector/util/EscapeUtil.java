@@ -28,41 +28,20 @@ public class EscapeUtil {
   private EscapeUtil() {}
 
   public static String singleQuoteEscape(String path) {
-    if (path == null) {
-      return null;
-    }
-
     // Skip escaping if no non-word chars are found
     // This is likely slower than just escaping it anyway
     // but currently left as-is for compatibility
-    Matcher matcher = pattern.matcher(path);
-    if(!matcher.find()) {
+    if (path == null || !pattern.matcher(path).find()) {
       return path;
     }
-
-    StringBuilder sb = new StringBuilder(path.length() * 2).append("'");
-    char[] chars = path.toCharArray();
-    for (char c : chars) {
-      if (c == '\\') {
-        sb.append("\\\\");
-      } else if (c == '"') {
-        sb.append("\\\"");
-      } else if (c == '\'') {
-        sb.append("\\\\\'");
-      } else {
-        sb.append(c);
-      }
-    }
-    return sb.append("'").toString();
+    return escapeQuotesAndBackSlash(path, true);
   }
 
   public static String singleQuoteUnescape(String path) {
     if(path != null) {
       Matcher matcher = pattern.matcher(path);
       if(matcher.find() && path.length() > 2) {
-        path = path.replace("\\\"", "\"")
-          .replace("\\\\\'", "'")
-          .replace("\\\\", "\\");
+        path = unescapeQuotesAndBackSlash(path, true);
         return path.substring(1, path.length() - 1);
       }
     }
@@ -70,25 +49,17 @@ public class EscapeUtil {
   }
 
   public static String doubleQuoteEscape(String path) {
-    if(path != null) {
-      Matcher matcher = pattern.matcher(path);
-      if(matcher.find()) {
-        path = path.replace("\\", "\\\\")
-          .replace("\"", "\\\\\"")
-          .replace("'", "\\\'");
-        return "\"" + path + "\"";
-      }
+    if(path == null || !pattern.matcher(path).find()) {
+      return path;
     }
-    return path;
+    return escapeQuotesAndBackSlash(path, false);
   }
 
   public static String doubleQuoteUnescape(String path) {
     if(path != null) {
       Matcher matcher = pattern.matcher(path);
       if(matcher.find() && path.length() > 2) {
-        path = path.replace("\\\\\"", "\"")
-          .replace("\\\'", "'")
-          .replace("\\\\", "\\");
+        path = unescapeQuotesAndBackSlash(path, false);
         return path.substring(1, path.length() - 1);
       }
     }
@@ -117,5 +88,48 @@ public class EscapeUtil {
       return EscapeUtil.singleQuoteUnescape(lastFieldName);
     }
     return path;
+  }
+
+  /**
+   * This method escapes backslash, double quotes and single quotes (keeping replacement of ' to \\\\\'
+   * as is so as to maintain backward compatibility any serialization/deserialization)
+   */
+  private static String escapeQuotesAndBackSlash(String path, boolean isSingleQuoteEscape) {
+    String quoteChar = isSingleQuoteEscape? "'" : "\"";
+    StringBuilder sb = new StringBuilder(path.length() * 2).append(quoteChar);
+    char[] chars = path.toCharArray();
+    for (char c : chars) {
+      if (c == '\\') {
+        sb.append("\\\\");
+      } else if (c == '"') {
+        sb.append(isSingleQuoteEscape? "\\\"" : "\\\\\"");
+      } else if (c == '\'') {
+        sb.append(isSingleQuoteEscape? "\\\\\'" : "\\\'");
+      } else {
+        sb.append(c);
+      }
+    }
+    return sb.append(quoteChar).toString();
+  }
+
+
+  /**
+   * This method un escapes backslash, double quotes and single quotes (keeping replacement of \\\\\' to '
+   * as is so as to maintain backward compatibility any serialization/deserialization)
+   */
+  private static String unescapeQuotesAndBackSlash(String path, boolean isSingleQuoteUnescape) {
+    path = (isSingleQuoteUnescape)? path.replace("\\\"", "\"").replace("\\\\\'", "'")
+        : path.replace("\\\\\"", "\"").replace("\\\'", "'");
+    return path.replace("\\\\", "\\");
+  }
+
+  /**
+   * This method un escapes backslash and un escapes extra escapes before double quotes and single quotes
+   * (appended by {@link #escapeQuotesAndBackSlash(String, boolean)}).
+   * This method should be used internally and not during for any serialization/deserialization
+   */
+  public static String standardizePathForParse(String path, boolean isSingleQuoteEscape) {
+    path = isSingleQuoteEscape? path.replace("\\\\\'", "\\'") : path.replace("\\\\\"", "\\\"");
+    return path.replace("\\\\", "\\");
   }
 }

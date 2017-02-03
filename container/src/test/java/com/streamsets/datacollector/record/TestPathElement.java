@@ -45,7 +45,7 @@ public class TestPathElement {
 
   @Test
   public void testParseMap() {
-    List<PathElement> parse = PathElement.parse("/Asia/China/Bejing", false);
+    List<PathElement> parse = PathElement.parse("/Asia/China/Bejing", true);
     Assert.assertEquals(4, parse.size());
     Assert.assertEquals(PathElement.ROOT, parse.get(0));
     Assert.assertEquals("Asia", parse.get(1).getName());
@@ -58,7 +58,7 @@ public class TestPathElement {
 
   @Test
   public void testParseMapWithWildCard() {
-    List<PathElement> parse = PathElement.parse("/Asia/*/Bejing", false);
+    List<PathElement> parse = PathElement.parse("/Asia/*/Bejing", true);
     Assert.assertEquals(4, parse.size());
     Assert.assertEquals(PathElement.ROOT, parse.get(0));
     Assert.assertEquals("Asia", parse.get(1).getName());
@@ -71,7 +71,7 @@ public class TestPathElement {
 
   @Test
   public void testParseList() {
-    List<PathElement> parse = PathElement.parse("[5]/China/Bejing", false);
+    List<PathElement> parse = PathElement.parse("[5]/China/Bejing", true);
     Assert.assertEquals(4, parse.size());
     Assert.assertEquals(PathElement.ROOT, parse.get(0));
     Assert.assertEquals(null, parse.get(1).getName());
@@ -85,7 +85,7 @@ public class TestPathElement {
 
   @Test
   public void testParseListWildCard() {
-    List<PathElement> parse = PathElement.parse("[*]/China/Bejing", false);
+    List<PathElement> parse = PathElement.parse("[*]/China/Bejing", true);
     Assert.assertEquals(4, parse.size());
     Assert.assertEquals(PathElement.ROOT, parse.get(0));
     Assert.assertEquals(null, parse.get(1).getName());
@@ -100,7 +100,7 @@ public class TestPathElement {
   @Test
   public void testTrailingSlash() {
     try {
-      PathElement.parse("/a/b/c/d/", false);
+      PathElement.parse("/a/b/c/d/", true);
       Assert.fail("Should fail.");
     } catch (IllegalArgumentException e) {
       Assert.assertTrue(Utils.format("Message: {}", e.getMessage()), e.getMessage().contains(PathElement.REASON_EMPTY_FIELD_NAME));
@@ -110,7 +110,7 @@ public class TestPathElement {
   @Test
   public void testInvalidStart() {
     try {
-      PathElement.parse("a/b/c/d", false);
+      PathElement.parse("a/b/c/d", true);
       Assert.fail("Should fail.");
     } catch (IllegalArgumentException e) {
       Assert.assertTrue(Utils.format("Message: {}", e.getMessage()), e.getMessage().contains(PathElement.REASON_INVALID_START));
@@ -120,14 +120,14 @@ public class TestPathElement {
   @Test
   public void testInvalidNumber() {
     try {
-      PathElement.parse("[0*8]", false);
+      PathElement.parse("[0*8]", true);
       Assert.fail("Should fail.");
     } catch (IllegalArgumentException e) {
       Assert.assertTrue(Utils.format("Message: {}", e.getMessage()), e.getMessage().contains("'0*8' needs to be a number"));
     }
 
     try {
-      PathElement.parse("[Nan]", false);
+      PathElement.parse("[Nan]", true);
       Assert.fail("Should fail.");
     } catch (IllegalArgumentException e) {
       Assert.assertTrue(Utils.format("Message: {}", e.getMessage()), e.getMessage().contains(PathElement.REASON_NOT_A_NUMBER));
@@ -137,7 +137,7 @@ public class TestPathElement {
   @Test
   public void testOpenQuotes() {
     try {
-      PathElement.parse("/'not-closed", false);
+      PathElement.parse("/'not-closed", true);
       Assert.fail("Should fail.");
     } catch (IllegalArgumentException e) {
       Assert.assertTrue(Utils.format("Message: {}", e.getMessage()), e.getMessage().contains(PathElement.REASON_QUOTES));
