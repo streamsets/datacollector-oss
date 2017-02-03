@@ -376,7 +376,35 @@ public class TestFieldHasherProcessor {
   @Test
   public void testStringFieldWithToError() throws StageException {
     HasherConfig hasherConfig = createInPlaceHasherProcessor(ImmutableList.of("/name"), HashType.SHA2);
-    FieldHasherProcessor processor = new FieldHasherProcessor(hasherConfig, OnStagePreConditionFailure.CONTINUE);
+    FieldHasherProcessor processor = new FieldHasherProcessor(hasherConfig, OnStagePreConditionFailure.TO_ERROR);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class, processor)
+      .setOnRecordError(OnRecordError.TO_ERROR)
+      .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      runner.runProcess(ImmutableList.of(record));
+
+      Assert.assertEquals(1, runner.getErrorRecords().size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  // SDC-5160
+  @Test
+  public void testMissingFieldOnContinue() throws StageException {
+    HasherConfig hasherConfig = createTargetFieldHasherProcessor(ImmutableList.of("/name"), HashType.MURMUR3_128, "/target", "");
+    FieldHasherProcessor processor =
+        new FieldHasherProcessor(
+            hasherConfig,
+            OnStagePreConditionFailure.CONTINUE
+        );
 
     ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class, processor)
         .addOutputLane("a").build();
@@ -384,23 +412,18 @@ public class TestFieldHasherProcessor {
 
     try {
       Map<String, Field> map = new LinkedHashMap<>();
-      map.put("name", Field.create("streamsets"));
       Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
 
-      //No error records
+      // Should be no error record
       Assert.assertEquals(0, runner.getErrorRecords().size());
 
+      // With one output record
       Assert.assertEquals(1, output.getRecords().get("a").size());
-      Field field = output.getRecords().get("a").get(0).get();
-      Assert.assertTrue(field.getValue() instanceof Map);
-      Map<String, Field> result = field.getValueAsMap();
-      Assert.assertTrue(result.size() == 1);
-      Assert.assertTrue(result.containsKey("name"));
-      Assert.assertEquals(computeHash(Field.Type.STRING, "streamsets", HashType.SHA2),
-          result.get("name").getValue());
+      Record outputRecord = output.getRecords().get("a").get(0);
+      Assert.assertFalse("Field /target should not exist", outputRecord.has("/target"));
     } finally {
       runner.runDestroy();
     }

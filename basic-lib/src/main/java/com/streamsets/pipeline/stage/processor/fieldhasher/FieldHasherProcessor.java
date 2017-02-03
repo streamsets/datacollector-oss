@@ -299,6 +299,11 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
       String headerAttribute,
       boolean includeRecordHeader
   ) throws StageException {
+    // If there is nothing to hash, don't create bogus output hash
+    if(fieldsToHashForThisConfig.isEmpty()) {
+      return;
+    }
+
     String hashVal = generateHash(record, hashType, fieldsToHashForThisConfig, includeRecordHeader);
     if (!targetField.isEmpty()) {
       Field newField = Field.create(hashVal);
