@@ -38,9 +38,11 @@ public class MongoDBSourceUpgrader implements StageUpgrader {
       int toVersion,
       List<Config> configs
   ) throws StageException {
-    switch(fromVersion) {
+    switch (fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+      case 2:
+        upgradeV2ToV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -130,5 +132,9 @@ public class MongoDBSourceUpgrader implements StageUpgrader {
 
     configs.addAll(configsToAdd);
     configs.removeAll(configsToRemove);
+  }
+
+  private void upgradeV2ToV3(List<Config> configs) {
+    configs.add(new Config(MongoDBConfig.CONFIG_PREFIX + "offsetType", OffsetFieldType.OBJECTID));
   }
 }

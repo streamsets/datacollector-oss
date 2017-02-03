@@ -29,7 +29,7 @@ public enum Errors implements ErrorCode {
   MONGODB_02("Failed to get database: '{}'. {}"),
   MONGODB_03("Failed to get collection: '{}'. {}"),
   MONGODB_04("Collection isn't tailable because '{}' is not a capped collection."),
-  MONGODB_05("Offset Field '{}' must be an instance of ObjectId"),
+  MONGODB_05("Offset Field '{}' must be an instance of {}"),
   MONGODB_06("Error retrieving documents from collection: '{}'. {}"),
   MONGODB_07("Failed to get <host:port> for '{}'"),
   MONGODB_08("Failed to parse port: '{}'"),
@@ -43,6 +43,7 @@ public enum Errors implements ErrorCode {
   MONGODB_16("Record {} does not contain the expected unique key field {}"),
   MONGODB_17("Error writing records to Mongo : {}"),
   MONGODB_18("Operation '{}' requires unique key to be configured"),
+  MONGODB_19("Initial Offset is required when the offset field is ObjectId type"),
 
   MONGODB_30("Oplog Document Missing the follow mandatory fields '{}'"),
   MONGODB_31("Oplog Offset Invalid, Cannot parse offset '{}'," +

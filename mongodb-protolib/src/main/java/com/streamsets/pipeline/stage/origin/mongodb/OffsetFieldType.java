@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,35 +19,23 @@
  */
 package com.streamsets.pipeline.stage.origin.mongodb;
 
-import com.streamsets.pipeline.api.ConfigDefBean;
-import com.streamsets.pipeline.api.ConfigGroups;
-import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Source;
-import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.configurablestage.DSource;
-import com.streamsets.pipeline.stage.common.mongodb.Groups;
+import com.streamsets.pipeline.api.Label;
 
-@StageDef(
-    version = 3,
-    label = "MongoDB",
-    description = "Reads records from a MongoDB collection",
-    icon="mongodb.png",
-    execution = ExecutionMode.STANDALONE,
-    recordsByRef = true,
-    onlineHelpRefUrl = "index.html#Origins/MongoDB.html#task_mdf_2rs_ns",
-    upgrader = MongoDBSourceUpgrader.class,
-    resetOffset = true
-)
-@ConfigGroups(Groups.class)
 @GenerateResourceBundle
-public class MongoDBDSource extends DSource {
+public enum OffsetFieldType implements Label {
+  OBJECTID("ObjectId"),
+  STRING("String"),
+  ;
 
-  @ConfigDefBean()
-  public MongoSourceConfigBean configBean;
+  private final String label;
+
+  OffsetFieldType(String label) {
+      this.label = label;
+    }
 
   @Override
-  protected Source createSource() {
-    return new MongoDBSource(configBean);
-  }
+  public String getLabel() {
+      return label;
+    }
 }
