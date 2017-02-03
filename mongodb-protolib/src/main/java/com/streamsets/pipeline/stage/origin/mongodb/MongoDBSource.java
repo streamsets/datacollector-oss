@@ -101,6 +101,14 @@ public class MongoDBSource extends AbstractMongoDBSource {
           continue;
         }
 
+        // validate the date type of offset field is ObjectId
+        Object offsetFieldObject = doc.get(configBean.offsetField);
+        if (offsetFieldObject == null || !(offsetFieldObject instanceof ObjectId)) {
+          LOG.debug(Errors.MONGODB_05.getMessage(), doc.toString());
+          errorRecordHandler.onError(Errors.MONGODB_05, doc);
+          continue;
+        }
+
         Map<String, Field> fields;
         try {
           fields = MongoDBSourceUtil.createFieldFromDocument(doc);
