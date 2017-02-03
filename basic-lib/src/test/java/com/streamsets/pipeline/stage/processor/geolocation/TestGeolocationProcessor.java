@@ -358,7 +358,7 @@ public class TestGeolocationProcessor {
         .addConfiguration("fieldTypeConverterConfigs", configs)
         .addConfiguration("dbConfigs", dbConfigs)
         .addConfiguration("missingAddressAction", GeolocationMissingAddressAction.REPLACE_WITH_NULLS)
-        .setOnRecordError(OnRecordError.TO_ERROR)
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
         .addOutputLane("a").build();
     runner.runInit();
 
@@ -370,9 +370,9 @@ public class TestGeolocationProcessor {
       map.put("ipAsString", Field.create(ip));
       Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
-      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
-    } catch(RuntimeException ex) {
-      Assert.assertTrue(ex.getCause().getMessage().contains("GEOIP_13"));
+      runner.runProcess(ImmutableList.of(record));
+    } catch(OnRecordErrorException ex) {
+      Assert.assertTrue(ex.getMessage().contains("GEOIP_13"));
       exceptionTriggered = true;
     } finally {
       runner.runDestroy();
@@ -444,6 +444,52 @@ public class TestGeolocationProcessor {
     record.set(Field.create(map));
     StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
     Assert.assertEquals(output.getRecords().get("a").get(0).get("/ipCountry").getValue(), null);
+
+    runner = new ProcessorRunner.Builder(GeolocationDProcessor.class)
+        .addConfiguration("fieldTypeConverterConfigs", configs)
+        .addConfiguration("dbConfigs", dbConfigs)
+        .addConfiguration("missingAddressAction", GeolocationMissingAddressAction.TO_ERROR)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+    runner.runProcess(ImmutableList.of(record));
+    Assert.assertEquals(1, runner.getErrorRecords().size());
+  }
+
+  // SDC-4990
+  @Test
+  public void testIncorrectIPAddress() throws Exception {
+    String ip = "127.0"; // ... 0.1
+    List<GeolocationFieldConfig> configs = new ArrayList<>();
+    GeolocationFieldConfig config;
+    config = new GeolocationFieldConfig();
+    config.inputFieldName = "/ipAsString";
+    config.outputFieldName = "/ipCountry";
+    config.targetType = GeolocationField.COUNTRY_NAME;
+    configs.add(config);
+
+    List<GeolocationDatabaseConfig> dbConfigs = new ArrayList<>();
+    GeolocationDatabaseConfig dbConfig = new GeolocationDatabaseConfig();
+    dbConfig.geoIP2DBFile = countryDb.getAbsolutePath();
+    dbConfig.geoIP2DBType = GeolocationDBType.COUNTRY;
+    dbConfigs.add(dbConfig);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(GeolocationDProcessor.class)
+        .addConfiguration("fieldTypeConverterConfigs", configs)
+        .addConfiguration("dbConfigs", dbConfigs)
+        .addConfiguration("missingAddressAction", GeolocationMissingAddressAction.REPLACE_WITH_NULLS)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("ipAsString", Field.create(ip));
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+    StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
 
     runner = new ProcessorRunner.Builder(GeolocationDProcessor.class)
         .addConfiguration("fieldTypeConverterConfigs", configs)
