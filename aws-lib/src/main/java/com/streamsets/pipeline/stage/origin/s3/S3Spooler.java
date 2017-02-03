@@ -39,9 +39,6 @@ public class S3Spooler {
 
   private static final Logger LOG = LoggerFactory.getLogger(S3Spooler.class);
 
-  private static final int MAX_SPOOL_SIZE = 1000;
-  private static final int SPOOLER_QUEUE_SIZE = 100;
-
   private final Source.Context context;
   private final S3ConfigBean s3ConfigBean;
   private final AmazonS3Client s3Client;
@@ -59,7 +56,7 @@ public class S3Spooler {
 
   public void init() {
     try {
-      objectQueue = new ArrayBlockingQueue<>(SPOOLER_QUEUE_SIZE);
+      objectQueue = new ArrayBlockingQueue<>(s3ConfigBean.s3FileConfig.poolSize);
       spoolQueueMeter = context.createMeter("spoolQueue");
       pathMatcher = new AntPathMatcher(s3ConfigBean.s3Config.delimiter);
     } catch (Exception ex) {
@@ -115,9 +112,6 @@ public class S3Spooler {
         currentObject.getLastModified().compareTo(objectSummary.getLastModified()) < 0);
     }
     if (!objectQueue.contains(objectSummary)) {
-      if (objectQueue.size() >= MAX_SPOOL_SIZE) {
-        LOG.warn("Exceeded '{}' of queued files", objectQueue.size());
-      }
       objectQueue.add(objectSummary);
       spoolQueueMeter.mark(objectQueue.size());
     } else {

@@ -60,6 +60,20 @@ public class S3FileConfig {
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.NUMBER,
+    label = "File pool size",
+    defaultValue = "100",
+    description = "When listing and sorting files for processing, this property controls how many files will be sorted and persisted." +
+      " SDC will perform new file listing only after all the files in the pool have been transferred.",
+    displayPosition = 115,
+    group = "#0",
+    min = 1,
+    max = Integer.MAX_VALUE
+  )
+  public int poolSize;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.NUMBER,
     label = "Buffer Limit (KB)",
     defaultValue = "128",
     description = "Low level reader buffer limit to avoid out of Memory errors",
