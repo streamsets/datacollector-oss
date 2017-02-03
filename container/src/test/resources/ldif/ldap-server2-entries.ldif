@@ -29,6 +29,17 @@ dn: ou=employees,dc=example,dc=org
 ObjectClass: organizationalunit
 ou: employees
 
+dn: ou=internal,ou=employees,dc=example,dc=org
+ObjectClass: organizationalUnit
+ou: internal
+
+dn: uid=internalUser1,ou=internal,ou=employees,dc=example,dc=org
+ObjectClass: inetOrgPerson
+uid: internalUser1
+cn: internalUser1
+sn: internalUser1
+userPassword: internalUser1Password
+
 dn: uid=user1,ou=employees,dc=example,dc=org
 ObjectClass: inetOrgPerson
 uid: user1
@@ -83,6 +94,7 @@ member: uid=user2,ou=employees,dc=example,dc=org
 member: uid=user3,ou=employees,dc=example,dc=org
 member: uid=user4,ou=employees,dc=example,dc=org
 member: uid=user5,ou=employees,dc=example,dc=org
+member: uid=internalUser1,ou=internal,ou=employees,dc=example,dc=org
 
 dn: cn=test,ou=departments,dc=example,dc=org
 objectClass: posixGroup

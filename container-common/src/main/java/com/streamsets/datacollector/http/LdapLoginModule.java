@@ -271,7 +271,7 @@ public class LdapLoginModule extends AbstractLoginModule
       SearchOperation search = new SearchOperation(conn);
       org.ldaptive.SearchResult result = search.execute(request).getResult();
       LdapEntry entry = result.getEntry();
-      LOG.info("Found user?: {}", (entry == null)? false : true);
+      LOG.info("Found user?: {}", entry != null);
       return entry;
     } catch (LdapException ex) {
       LOG.error("{}", ex.toString(), ex);
@@ -335,17 +335,20 @@ public class LdapLoginModule extends AbstractLoginModule
     LOG.debug("Searching roles using the filter {} on role baseDn {}", roleFilter, _roleBaseDn);
     // Get the group names from each group, which is obtained from roleNameAttribute attribute.
     SearchRequest request = new SearchRequest(_roleBaseDn, roleFilter, _roleNameAttribute);
+    request.setSearchScope(SearchScope.SUBTREE);
 
     try {
       SearchOperation search = new SearchOperation(conn);
       org.ldaptive.SearchResult result = search.execute(request).getResult();
       Collection<LdapEntry> entries = result.getEntries();
-      LOG.info("Found roles?: {}", (entries == null || entries.isEmpty())? false : true);
-      for(LdapEntry entry : entries){
-        roleList.add(entry.getAttribute().getStringValue());
+      LOG.info("Found roles?: {}", !(entries == null || entries.isEmpty()));
+      if (entries != null) {
+        for (LdapEntry entry : entries) {
+          roleList.add(entry.getAttribute().getStringValue());
+        }
       }
     } catch (LdapException ex) {
-      LOG.error(ex.getMessage());
+      LOG.error(ex.getMessage(), ex);
     }
     LOG.info("Found roles: {}", roleList);
     return roleList;
@@ -526,6 +529,7 @@ public class LdapLoginModule extends AbstractLoginModule
       SearchDnResolver dnResolver = new SearchDnResolver(new DefaultConnectionFactory(connConfig));
 
       dnResolver.setBaseDn(_userBaseDn);
+      dnResolver.setSubtreeSearch(true);
       String userFilter = buildFilter(_userFilter, _userObjectClass, _userIdAttribute);
       LOG.debug("Searching a user with filter {} where user is {}", userFilter, username);
       dnResolver.setUserFilter(userFilter);

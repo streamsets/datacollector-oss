@@ -84,8 +84,8 @@ public class LDAPAuthenticationFallbackIT extends LdapAuthenticationBaseIT {
   public static void setUpClass() throws Exception {
     // create conf dir
     new File(confDir).mkdirs();
-    connection1 = setupLdapServer(server1, "ldap-server1-entries.ldif");
-    connection2 = setupLdapServer(server2, "ldap-server2-entries.ldif");
+    connection1 = setupLdapServer(server1, "ldif/ldap-server1-entries.ldif");
+    connection2 = setupLdapServer(server2, "ldif/ldap-server2-entries.ldif");
     String multipleLdapConf = "ldap {\n" + // information for server 1
         "  com.streamsets.datacollector.http.LdapLoginModule required\n" +
         "  debug=\"false\"\n" +
