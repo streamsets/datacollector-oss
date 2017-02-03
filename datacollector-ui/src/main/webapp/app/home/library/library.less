@@ -18,13 +18,28 @@
  * limitations under the License.
  */
 
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: rgba(0,0,0,.4);
+  box-shadow: 0 0 1px rgba(255,255,255,.4);
+}
+
 .library-pane {
-  height: calc(~"100% - 20px");
+  height: calc(~"100% - 2px");
   box-sizing: border-box;
   border: 0;
   -webkit-box-shadow: none;
   box-shadow: none;
   margin-bottom: 0;
+
+  .loading-screen-display-box {
+    position: static;
+  }
 
   .panel-heading {
     padding: @smallPadding @smallPadding*3;
@@ -41,18 +56,43 @@
   }
 
   .panel-body {
-    padding: @defaultPadding 0 0 0;
-    height: calc(~"100% - 45px");
     box-sizing: border-box;
+    height: calc(~"100% + 20px");
+    overflow: scroll;
+    padding: @defaultPadding 0 0 0;
 
     .create-pipeline-btn-group {
       margin: @defaultPadding 0 @defaultPadding @defaultPadding*3.5;
     }
 
     .list-group {
-      height: 100%;
-      overflow: auto;
       box-sizing: border-box;
+      margin-bottom: 0;
+
+      .label-filter-wrapper {
+        padding: 5px 10px;
+        position: relative;
+        width: 100%;
+      }
+
+      .label-filter-input {
+        &.loading-labels {
+          opacity: .5;
+          pointer-events: none;
+        }
+      }
+
+      .label-filter-icon {
+        color: #ccc;
+        position: absolute;
+        right: 20px;
+        top: 15px;
+
+        &.glyphicon-remove-circle:hover {
+          color: @streamsets-icon-btn-hover-color;
+          cursor: pointer;
+        }
+      }
 
       .border-list-group-item {
         border-top: 1px solid #ddd;
@@ -67,6 +107,10 @@
         border: 0;
         border-radius: 0;
         padding: 0 0 0 10px;
+
+        .highlight {
+          background: yellow;
+        }
 
         .list-group-children {
           padding: 0;

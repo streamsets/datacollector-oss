@@ -1,9 +1,8 @@
 <section class="tile-list" ng-if="header.pipelineGridView">
 
-  <section class="pipeline-container new-pipeline" ng-if="filteredPipelines.length === 0">
+  <section class="pipeline-container new-pipeline" ng-if="filteredPipelines.length === 0 && !fetching">
     <div class="centering-container">
-      <span ng-if="!fetching" translate="home.noPipelines"></span>
-      <div show-loading="fetching"></div>
+      <span translate="home.noPipelines"></span>
     </div>
   </section>
 
@@ -140,7 +139,7 @@
     </footer>
   </section>
 
-  <section class="pipeline-container new-pipeline" ng-if="showLoadMore">
+  <section class="pipeline-container new-pipeline" ng-if="showLoadMore || fetching">
     <div class="centering-container">
       <a class="btn btn-link"
          ng-if="!fetching"
