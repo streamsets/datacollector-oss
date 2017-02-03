@@ -28,8 +28,6 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
-import com.streamsets.pipeline.stage.common.mongodb.AuthenticationType;
-import com.streamsets.pipeline.stage.common.mongodb.MongoDBConfig;
 import org.bson.BsonTimestamp;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -58,6 +56,9 @@ public class MongoDBSourceIT {
   private static final String COLLECTION = "uncapped";
   private static final String UUID_COLLECTION = "uuid";
   private static final String BSON_COLLECTION = "bson";
+  private static final String STRING_ID_COLLECTION = "stringId";
+  private static final String CAPPED_STRING_ID_COLLECTION = "cappedStringId";
+
   private static final int TEST_COLLECTION_SIZE = 4;
   private static final int ONE_MB = 1000 * 1000;
 
@@ -86,6 +87,9 @@ public class MongoDBSourceIT {
     db.createCollection(COLLECTION);
     db.createCollection(UUID_COLLECTION);
     db.createCollection(BSON_COLLECTION);
+    db.createCollection(STRING_ID_COLLECTION);
+    db.createCollection(CAPPED_STRING_ID_COLLECTION, new CreateCollectionOptions().capped(true).sizeInBytes(ONE_MB));
+
 
     MongoCollection<Document> capped = db.getCollection(CAPPED_COLLECTION);
     MongoCollection<Document> uncapped = db.getCollection(COLLECTION);
@@ -381,6 +385,93 @@ public class MongoDBSourceIT {
     parsedRecords = output.getRecords().get("lane");
 
     assertEquals(TEST_COLLECTION_SIZE, parsedRecords.size());
+  }
+
+  @Test
+  public void testStringOffset() throws Exception {
+
+    MongoDBSource origin = new MongoDBSourceBuilder()
+        .connectionString("mongodb://" + mongoContainerIp + ":"  + mongoContainerMappedPort)
+        .database(DATABASE_NAME)
+        .collection(STRING_ID_COLLECTION)
+        .offsetField("_id")
+        .isCapped(false)
+        .setOffsetType(OffsetFieldType.STRING)
+        .maxBatchWaitTime(100)
+        .readPreference(ReadPreferenceLabel.NEAREST)
+        .build();
+
+    SourceRunner runner = new SourceRunner.Builder(MongoDBSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    assertEquals(0, issues.size());
+
+    runner.runInit();
+    insertDocsWithStringID(STRING_ID_COLLECTION);
+
+    final int maxBatchSize = 2;
+    StageRunner.Output output = runner.runProduce(null, maxBatchSize);
+    List<Record> parsedRecords = output.getRecords().get("lane");
+    assertEquals("First batch should contain 2 records",2, parsedRecords.size());
+
+    output = runner.runProduce(output.getNewOffset(), maxBatchSize);
+    parsedRecords = output.getRecords().get("lane");
+    assertEquals("Second batch should contain 2 records",1, parsedRecords.size());
+
+    output = runner.runProduce(output.getNewOffset(), maxBatchSize);
+    parsedRecords = output.getRecords().get("lane");
+    assertEquals("Last batch should have 0 records",0, parsedRecords.size());
+  }
+
+  @Test
+  public void testStringOffsetCappedCollection() throws Exception {
+
+    MongoDBSource origin = new MongoDBSourceBuilder()
+        .connectionString("mongodb://" + mongoContainerIp + ":"  + mongoContainerMappedPort)
+        .database(DATABASE_NAME)
+        .collection(CAPPED_STRING_ID_COLLECTION)
+        .offsetField("_id")
+        .isCapped(false)
+        .setOffsetType(OffsetFieldType.STRING)
+        .maxBatchWaitTime(100)
+        .readPreference(ReadPreferenceLabel.NEAREST)
+        .build();
+
+    SourceRunner runner = new SourceRunner.Builder(MongoDBSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    assertEquals(0, issues.size());
+
+    runner.runInit();
+    insertDocsWithStringID(CAPPED_STRING_ID_COLLECTION);
+
+    final int maxBatchSize = 2;
+    StageRunner.Output output = runner.runProduce(null, maxBatchSize);
+    List<Record> parsedRecords = output.getRecords().get("lane");
+    assertEquals("First batch should contain 2 records",2, parsedRecords.size());
+
+    output = runner.runProduce(output.getNewOffset(), maxBatchSize);
+    parsedRecords = output.getRecords().get("lane");
+    assertEquals("Second batch should contain 2 records",1, parsedRecords.size());
+
+    output = runner.runProduce(output.getNewOffset(), maxBatchSize);
+    parsedRecords = output.getRecords().get("lane");
+    assertEquals("Last batch should have 0 records",0, parsedRecords.size());
+  }
+
+  private void insertDocsWithStringID(String collectionname){
+    MongoClient mongo = new MongoClient(mongoContainerIp, mongoContainerMappedPort);
+    MongoDatabase db = mongo.getDatabase(DATABASE_NAME);
+
+    MongoCollection<Document> collection = db.getCollection(collectionname);
+    collection.insertOne(new Document("_id", "12345"));
+    collection.insertOne(new Document("_id", "45679"));
+    collection.insertOne(new Document("_id", "56789"));
+    mongo.close();
   }
 
   private void insertNewDocs(String collectionName) {

@@ -27,6 +27,7 @@ public class MongoDBSourceBuilder extends AbstractMongoDBSourceBuilder<MongoDBSo
     config.offsetField = "_id";
     config.initialOffset = "0";
     config.mongoConfig.database = "database";
+    config.offsetType = OffsetFieldType.OBJECTID;
   }
 
   public MongoDBSourceBuilder database(String database) {
@@ -46,6 +47,11 @@ public class MongoDBSourceBuilder extends AbstractMongoDBSourceBuilder<MongoDBSo
 
   public MongoDBSourceBuilder initialOffset(String initialOffset) {
     config.initialOffset = initialOffset;
+    return this;
+  }
+
+  public MongoDBSourceBuilder setOffsetType(OffsetFieldType type) {
+    config.offsetType = type;
     return this;
   }
 
