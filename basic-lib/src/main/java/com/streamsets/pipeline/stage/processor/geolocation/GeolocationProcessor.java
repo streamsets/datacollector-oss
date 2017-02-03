@@ -375,6 +375,7 @@ public class  GeolocationProcessor extends SingleLaneRecordProcessor {
                 throw new IllegalStateException(Utils.format("Unknown configuration value: ", missingAddressAction));
             }
           }
+          Throwables.propagateIfPossible(cause, OnRecordErrorException.class);
           Throwables.propagateIfInstanceOf(cause, GeoIp2Exception.class);
           Throwables.propagateIfInstanceOf(cause, IOException.class);
           Throwables.propagate(cause);
