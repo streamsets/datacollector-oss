@@ -37,8 +37,8 @@
                         header attribute that the origin generates. If your pipeline uses a non-CDC
                         origin, you can use the Expression Evaluator or a scripting processor to
                         define the record header attribute. For more information about <ph
-                            conref="#concept_vhs_5tz_xp/pName-long"/> changed data processing and a
-                        list of CDC-enabled origins, see <xref
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> changed data processing and a list of CDC-enabled origins, see <xref
                             href="../Pipeline_Design/CDC-Overview.dita#concept_apw_l2c_ty"/>.</dd>
                 </dlentry>
                 <dlentry>
