@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DSource;
@@ -39,6 +40,9 @@ import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 )
 @GenerateResourceBundle
 @ConfigGroups(Groups.class)
+@HideConfigs({
+  "hikariConf.autoCommit"
+})
 public class OracleCDCDSource extends DSource {
 
   @ConfigDefBean
