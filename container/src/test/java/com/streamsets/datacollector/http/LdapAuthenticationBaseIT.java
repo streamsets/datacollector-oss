@@ -47,7 +47,7 @@ public class LdapAuthenticationBaseIT {
 
   static final int LDAP_PORT = 389;
 
-  private static Logger LOG = LoggerFactory.getLogger(LDAPAuthenticationFallbackIT.class);
+  private static Logger LOG = LoggerFactory.getLogger(LdapAuthenticationBaseIT.class);
 
   // default bindDn and password for the docker osixia/openldap
   static final String BIND_DN = "cn=admin,dc=example,dc=org";
