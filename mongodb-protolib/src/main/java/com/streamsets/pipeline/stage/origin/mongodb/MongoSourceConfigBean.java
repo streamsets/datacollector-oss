@@ -42,11 +42,12 @@ public class MongoSourceConfigBean {
   public boolean isCapped;
 
   @ConfigDef(
-      required = true,
+      required = false,
       type = ConfigDef.Type.STRING,
       defaultValue = "2015-01-01 00:00:00",
-      label = "Start Timestamp",
-      description = "Provide in format: YYYY-MM-DD HH:mm:ss. Oldest data to be retrieved.",
+      label = "Initial Offset",
+      description = "Must be provided in timestamp format: YYYY-MM-DD HH:mm:ss if offset field is ObjectId type. " +
+                    "If offset field is String type, provide an initial string. Oldest data to be retrieved.",
       displayPosition = 1002,
       group = "MONGODB"
   )
@@ -57,11 +58,23 @@ public class MongoSourceConfigBean {
       type = ConfigDef.Type.STRING,
       defaultValue = "_id",
       label = "Offset Field",
-      description = "Field checked to track current offset. Must be an ObjectId.",
+      description = "Field checked to track current offset.",
       displayPosition = 1010,
       group = "MONGODB"
   )
   public String offsetField;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "OBJECTID",
+      label = "Offset Field Type",
+      description = "Offset field type. Currently ObjectId and String types are supported.",
+      displayPosition = 1010,
+      group = "MONGODB"
+  )
+  @ValueChooserModel(OffsetFieldTypeChooserValues.class)
+  public OffsetFieldType offsetType;
 
   @ConfigDef(
       type = ConfigDef.Type.NUMBER,

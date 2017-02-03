@@ -24,32 +24,19 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoQueryException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
-import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.lib.util.JsonUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.mongodb.Errors;
 import com.streamsets.pipeline.stage.common.mongodb.Groups;
 import com.streamsets.pipeline.stage.common.mongodb.MongoDBConfig;
 import org.apache.commons.io.IOUtils;
-import org.bson.BsonTimestamp;
 import org.bson.Document;
-import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public abstract class AbstractMongoDBSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(MongoDBSource.class);
