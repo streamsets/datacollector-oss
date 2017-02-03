@@ -170,13 +170,13 @@ def verify_dir(path):
 
   # Filter dependencies with multiple versions
   return {name: versions
-          for name, versions in dependencies.iteritems()
+          for name, versions in dependencies.items()
           if is_duplicate(name, versions)}
 
 # Filter "allowed" duplicates out
 def filter_allowed(stage_lib, errors):
   return {name: version
-          for name, version in errors.iteritems()
+          for name, version in errors.items()
           if not(stage_lib in EXCEPTIONS and name in EXCEPTIONS[stage_lib] and set(version) == EXCEPTIONS[stage_lib][name])}
 
 # User printable result of a scan for given directory
@@ -189,7 +189,7 @@ def print_errors(directory, errors):
     filtered = filter_allowed(stage_lib, errors)
 
     logging.info("Stage lib %s have duplicate dependencies (total of %s from which %s are white listed)", stage_lib, len(errors), len(errors) -  len(filtered))
-    for name,versions in filtered.iteritems():
+    for name, versions in filtered.items():
       logging.info("\t Dependency %s have versions %s", name, ', '.join(versions))
 
 # Run the script for single directory
