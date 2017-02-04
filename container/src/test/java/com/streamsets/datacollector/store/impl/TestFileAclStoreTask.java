@@ -25,6 +25,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.AclStoreTask;
+import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.LockCacheModule;
@@ -44,6 +45,12 @@ import org.mockito.Mockito;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableList;
 
 import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 public class TestFileAclStoreTask {
@@ -150,6 +157,91 @@ public class TestFileAclStoreTask {
     } finally {
       store.stop();
     }
+  }
+
+  @Test
+  public void testUpdateSubjectsInAcl() throws Exception {
+    store.init();
+    List<String> users = new ArrayList<>();
+    int numberOfPipelines = 10, numberOfUsers = 7, numberOfUsersInPipeline = 4;
+    Map<String, String> oldUsersToNewUsers = new HashMap<>();
+    for (int u = 0; u < numberOfUsers; u++) {
+      String userName = "user" + u;
+      String newUserName = "newUser" + u;
+      users.add(userName);
+      //Some users will not have mapping
+      if (u < 5) {
+        oldUsersToNewUsers.put(userName, newUserName);
+      }
+    }
+
+    for (int p = 0; p < numberOfPipelines; p++) {
+      String pipelineName = TestCachePipelineStoreTask.DEFAULT_PIPELINE_NAME + p;
+      //To randomly select some users for the pipeline acl
+      Collections.shuffle(users);
+      List<String> usersWithAclForThisPipeline = users.subList(0, numberOfUsersInPipeline);
+      String owner = users.get(0);
+      createPipeline(store, pipelineName, owner);
+      usersWithAclForThisPipeline = usersWithAclForThisPipeline.subList(1, usersWithAclForThisPipeline.size());
+      Acl acl = aclStore.createAcl(
+          pipelineName,
+          ResourceType.PIPELINE,
+          System.currentTimeMillis(),
+          owner
+      );
+      for (String userWithAclForThisPipeline : usersWithAclForThisPipeline) {
+        Permission permission = new Permission();
+        permission.setLastModifiedBy(owner);
+        permission.setSubjectId(userWithAclForThisPipeline);
+        permission.setSubjectType(SubjectType.USER);
+        permission.setActions(ImmutableList.of(Action.READ, Action.WRITE));
+        permission.setLastModifiedOn(System.currentTimeMillis());
+        acl.getPermissions().add(permission);
+      }
+      aclStore.saveAcl(pipelineName, acl);
+    }
+
+    // a pipeline without acl.
+    createDefaultPipeline(store);
+
+
+    aclStore.updateSubjectsInAcls(store.getPipelines(), oldUsersToNewUsers);
+
+    for (PipelineInfo pipelineInfo : store.getPipelines()) {
+      Acl acl = aclStore.getAcl(pipelineInfo.getName());
+      //Pipeline with no acl
+      if (pipelineInfo.getName().equals(TestFilePipelineStoreTask.DEFAULT_PIPELINE_NAME)) {
+        Assert.assertNull(acl);
+      } else {
+        //pipelines with acl
+        String owner = acl.getResourceOwner();
+        Assert.assertEquals(
+            (oldUsersToNewUsers.containsKey(owner)) ? oldUsersToNewUsers.get(owner) : owner,
+            owner
+        );
+        for (Permission permission : acl.getPermissions()) {
+          Assert.assertEquals(
+              (oldUsersToNewUsers.containsKey(owner)) ? oldUsersToNewUsers.get(owner) : owner,
+              permission.getLastModifiedBy()
+          );
+          String user = permission.getSubjectId();
+          Assert.assertEquals(
+              (oldUsersToNewUsers.containsKey(user)) ? oldUsersToNewUsers.get(user) : user,
+              user
+          );
+        }
+      }
+    }
+  }
+
+  private void createPipeline(PipelineStoreTask store, String pipelineName, String user) throws PipelineException {
+    store.create(
+        user,
+        pipelineName,
+        "label",
+        TestCachePipelineStoreTask.DEFAULT_PIPELINE_DESCRIPTION,
+        false
+    );
   }
 
   private void createDefaultPipeline(PipelineStoreTask store) throws PipelineException {

@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.datacollector.io.DataStore;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.ContainerError;
@@ -46,6 +47,8 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
+import java.util.Map;
 
 public class FileAclStoreTask extends AbstractAclStoreTask {
   private static final Logger LOG = LoggerFactory.getLogger(FileAclStoreTask.class);
@@ -142,6 +145,19 @@ public class FileAclStoreTask extends AbstractAclStoreTask {
         }
       }
       return null;
+    }
+  }
+
+  @Override
+  public void updateSubjectsInAcls(
+      Collection<PipelineInfo> pipelineInfos,
+      final Map<String, String> subjectToSubjectMapping
+  ) throws PipelineException {
+    for (PipelineInfo pipelineInfo : pipelineInfos) {
+      String pipelineName = pipelineInfo.getName();
+      synchronized (lockCache.getLock(pipelineName)) {
+        super.updateSubjectsInAcls(pipelineName, subjectToSubjectMapping);
+      }
     }
   }
 

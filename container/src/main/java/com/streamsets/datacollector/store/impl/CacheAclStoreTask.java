@@ -20,6 +20,7 @@
 package com.streamsets.datacollector.store.impl;
 
 import com.streamsets.datacollector.store.AclStoreTask;
+import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.LockCache;
@@ -28,6 +29,8 @@ import com.streamsets.lib.security.acl.dto.Acl;
 import com.streamsets.lib.security.acl.dto.ResourceType;
 
 import javax.inject.Inject;
+import java.util.Collection;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -93,6 +96,19 @@ public class CacheAclStoreTask extends AbstractAclStoreTask {
         }
       }
       return pipelineAclMap.get(name);
+    }
+  }
+
+  @Override
+  public void updateSubjectsInAcls(
+      Collection<PipelineInfo> pipelineInfos,
+      final Map<String, String> subjectToSubjectMapping
+  ) throws PipelineException {
+    for (PipelineInfo pipelineInfo : pipelineInfos) {
+      String pipelineName = pipelineInfo.getName();
+      synchronized (lockCache.getLock(pipelineName)) {
+        updateSubjectsInAcls(pipelineName, subjectToSubjectMapping);
+      }
     }
   }
 

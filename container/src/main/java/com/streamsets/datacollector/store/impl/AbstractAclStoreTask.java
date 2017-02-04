@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public abstract class AbstractAclStoreTask extends AbstractTask implements AclStoreTask {
@@ -100,6 +101,38 @@ public abstract class AbstractAclStoreTask extends AbstractTask implements AclSt
       return pipelineInfo.getCreator().equals(currentUser.getName());
     }
     return isPermissionGranted(acl, actions, currentUser);
+  }
+
+  protected void updateSubjectsInAcls(
+      String pipelineName,
+      Map<String, String> subjectToSubjectMapping
+  ) throws PipelineException {
+    Acl acl = getAcl(pipelineName);
+    if (acl != null) {
+      String resourceOwner = acl.getResourceOwner();
+      String newResourceOwner = subjectToSubjectMapping.get(resourceOwner);
+      //No mapping defined
+      if (newResourceOwner != null) {
+        acl.setResourceOwner(newResourceOwner);
+      }
+      for (Permission permission : acl.getPermissions()) {
+        if (permission != null) {
+          String lastModifiedBy = permission.getLastModifiedBy();
+          String newModifiedBy = subjectToSubjectMapping.get(lastModifiedBy);
+          //No mapping defined
+          if (newModifiedBy != null) {
+            permission.setLastModifiedBy(newModifiedBy);
+          }
+          String subjectId = permission.getSubjectId();
+          String newSubjectId = subjectToSubjectMapping.get(subjectId);
+          //No mapping defined
+          if (newSubjectId != null) {
+            permission.setSubjectId(newSubjectId);
+          }
+        }
+      }
+      saveAcl(pipelineName, acl);
+    }
   }
 
   private boolean isPermissionGranted(Acl acl, Set<Action> actions, UserJson currentUser) {

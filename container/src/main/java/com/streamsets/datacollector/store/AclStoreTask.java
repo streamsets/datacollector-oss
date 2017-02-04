@@ -26,6 +26,8 @@ import com.streamsets.lib.security.acl.dto.Acl;
 import com.streamsets.lib.security.acl.dto.Action;
 import com.streamsets.lib.security.acl.dto.ResourceType;
 
+import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 public interface AclStoreTask extends Task {
@@ -49,4 +51,6 @@ public interface AclStoreTask extends Task {
   void validateExecutePermission(String pipelineName, UserJson currentUser) throws PipelineException;
 
   boolean isPermissionGranted(String pipelineName, Set<Action> actions, UserJson currentUser) throws PipelineException;
+
+  void updateSubjectsInAcls(Collection<PipelineInfo> pipelineInfos, Map<String, String> subjectToSubjectMapping) throws PipelineException;
 }

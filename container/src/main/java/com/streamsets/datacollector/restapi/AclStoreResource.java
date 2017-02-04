@@ -61,6 +61,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 @Path("/v1/acl")
 @Api(value = "store")
@@ -196,5 +197,16 @@ public class AclStoreResource {
       }
     }
     return Response.ok(AclDtoJsonMapper.INSTANCE.toPermissionsJson(permissionList)).build();
+  }
+
+  @Path("/pipelines/updateSubjectsInAcls")
+  @POST
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
+  public Response updateSubjectsInAcls(Map<String, String> subjectMapping) throws PipelineException, URISyntaxException {
+    RestAPIUtils.injectPipelineInMDC("*");
+    aclStore.updateSubjectsInAcls(store.getPipelines(), subjectMapping);
+    return Response.ok().build();
   }
 }
