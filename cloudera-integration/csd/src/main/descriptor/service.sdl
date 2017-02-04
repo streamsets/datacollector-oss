@@ -986,7 +986,7 @@
           "label": "Pipeline Access Control (ACL)",
           "description": "Pipeline Access Control (ACL)",
           "required": "false"
-        },
+        }
       ]
     }
   ]
