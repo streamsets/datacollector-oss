@@ -495,6 +495,7 @@ angular.module('dataCollectorApp')
 
         $rootScope.common.authenticationType = configuration.getAuthenticationType();
         $rootScope.common.isDPMEnabled = configuration.isDPMEnabled();
+        $rootScope.common.isACLEnabled = configuration.isACLEnabled();
         $rootScope.common.dpmBaseURL = configuration.getRemoteBaseUrl();
         $rootScope.common.isSlaveNode = configuration.isSlaveNode();
         $rootScope.common.sdcClusterManagerURL = configuration.getSDCClusterManagerURL();

@@ -169,7 +169,6 @@ public class PipelineStoreResource {
   private final RuntimeInfo runtimeInfo;
   private final Manager manager;
   private final PipelineStoreTask store;
-  private final AclStoreTask aclStore;
   private final StageLibraryTask stageLibrary;
   private final URI uri;
   private final String user;
@@ -190,7 +189,6 @@ public class PipelineStoreResource {
     this.stageLibrary = stageLibrary;
     this.runtimeInfo = runtimeInfo;
     this.manager = manager;
-    this.aclStore = aclStore;
 
     UserJson currentUser;
     if (runtimeInfo.isDPMEnabled()) {
@@ -198,8 +196,12 @@ public class PipelineStoreResource {
     } else {
       currentUser = userGroupManager.getUser(principal);
     }
-    this.store = new AclPipelineStoreTask(store, aclStore, currentUser);
 
+    if (runtimeInfo.isAclEnabled()) {
+      this.store = new AclPipelineStoreTask(store, aclStore, currentUser);
+    } else {
+      this.store = store;
+    }
   }
 
   @Path("/pipelines/count")

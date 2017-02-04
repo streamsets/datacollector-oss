@@ -97,8 +97,17 @@ public class TestPipelineStoreResource extends JerseyTest {
 
   @Test
   public void testGetPipelinesCount() {
+    // when ACL is disabled
+    isACLEnabled = false;
     Response response = target("/v1/pipelines/count").request().get();
     Map<String, Object> countRes = (Map<String, Object>)response.readEntity(Map.class);
+    Assert.assertNotNull(countRes);
+    Assert.assertEquals(7, countRes.get("count"));
+
+    // when ACL is enabled
+    isACLEnabled = true;
+    response = target("/v1/pipelines/count").request().get();
+    countRes = (Map<String, Object>)response.readEntity(Map.class);
     Assert.assertNotNull(countRes);
     Assert.assertEquals(6, countRes.get("count"));
   }
@@ -122,8 +131,17 @@ public class TestPipelineStoreResource extends JerseyTest {
 
   @Test
   public void testGetPipelines() {
+    // when ACL is disabled
+    isACLEnabled = false;
     Response response = target("/v1/pipelines").request().get();
     List<PipelineInfoJson> pipelineInfoJsons = response.readEntity(new GenericType<List<PipelineInfoJson>>() {});
+    Assert.assertNotNull(pipelineInfoJsons);
+    Assert.assertEquals(7, pipelineInfoJsons.size());
+
+    // when ACL is enabled
+    isACLEnabled = true;
+    response = target("/v1/pipelines").request().get();
+    pipelineInfoJsons = response.readEntity(new GenericType<List<PipelineInfoJson>>() {});
     Assert.assertNotNull(pipelineInfoJsons);
     Assert.assertEquals(6, pipelineInfoJsons.size());
   }
@@ -455,7 +473,7 @@ public class TestPipelineStoreResource extends JerseyTest {
       bindFactory(TestUtil.StageLibraryTestInjector.class).to(StageLibraryTask.class);
       bindFactory(TestUtil.PrincipalTestInjector.class).to(Principal.class);
       bindFactory(TestUtil.URITestInjector.class).to(URI.class);
-      bindFactory(TestUtil.RuntimeInfoTestInjector.class).to(RuntimeInfo.class);
+      bindFactory(RuntimeInfoTestInjector.class).to(RuntimeInfo.class);
       bindFactory(ManagerTestInjector.class).to(Manager.class);
       bindFactory(TestUtil.UserGroupManagerTestInjector.class).to(UserGroupManager.class);
     }
@@ -799,6 +817,23 @@ public class TestPipelineStoreResource extends JerseyTest {
     public void dispose(AclStoreTask aclStoreTask) {
     }
   }
+
+  static boolean isACLEnabled = true;
+
+  public static class RuntimeInfoTestInjector implements Factory<RuntimeInfo> {
+    @Singleton
+    @Override
+    public RuntimeInfo provide() {
+      RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+      Mockito.when(runtimeInfo.isAclEnabled()).thenReturn(isACLEnabled);
+      return runtimeInfo;
+    }
+
+    @Override
+    public void dispose(RuntimeInfo runtimeInfo) {
+    }
+  }
+
 
   static Manager manager;
 

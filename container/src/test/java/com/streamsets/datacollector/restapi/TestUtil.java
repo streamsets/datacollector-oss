@@ -206,6 +206,7 @@ public class TestUtil {
     @Override
     public RuntimeInfo provide() {
       RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+      Mockito.when(runtimeInfo.isAclEnabled()).thenReturn(true);
       return runtimeInfo;
     }
 

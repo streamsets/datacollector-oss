@@ -78,12 +78,17 @@ public class AclStoreResource {
       RuntimeInfo runtimeInfo,
       UserGroupManager userGroupManager
   ) {
-    if (runtimeInfo.isDPMEnabled() && principal instanceof SSOPrincipal) {
+    if (runtimeInfo.isDPMEnabled()) {
       currentUser = new UserJson((SSOPrincipal)principal);
     } else {
       currentUser = userGroupManager.getUser(principal);
     }
-    this.store = new AclPipelineStoreTask(store, aclStore, currentUser);
+
+    if (runtimeInfo.isAclEnabled()) {
+      this.store = new AclPipelineStoreTask(store, aclStore, currentUser);
+    } else {
+      this.store = store;
+    }
     this.aclStore = aclStore;
   }
 

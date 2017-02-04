@@ -185,7 +185,8 @@
               "dpm.base.url",
               "dpm.remote.control.job.labels",
               "dpm.remote.control.ping.frequency",
-              "dpm.remote.control.events.recipient"
+              "dpm.remote.control.events.recipient",
+              "pipeline.access.control.enabled"
             ],
             "excludedParams": [
               "datacollector.users",
@@ -977,7 +978,15 @@
           "label": "Curl options",
           "description": "Additional arguments that should be passed to curl when registering data collectors with DPM.",
           "required": "false"
-        }
+        },
+        {
+          "name": "pipeline.access.control.enabled",
+          "type": "boolean",
+          "default": "true",
+          "label": "Pipeline Access Control (ACL)",
+          "description": "Pipeline Access Control (ACL)",
+          "required": "false"
+        },
       ]
     }
   ]

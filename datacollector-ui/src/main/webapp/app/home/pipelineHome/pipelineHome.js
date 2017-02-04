@@ -741,8 +741,10 @@ angular
         pipelineStatusMap[routeParamPipelineName] = results[0].data;
 
         var permissions = results[1].data;
-        if ($rootScope.common.authenticationType === 'none' || authService.isAuthorized([userRoles.admin])) {
-          // If auth type is none or for admin user
+        var isACLEnabled = configuration.isACLEnabled();
+        if ($rootScope.common.authenticationType === 'none' || authService.isAuthorized([userRoles.admin]) ||
+          !isACLEnabled) {
+          // If auth type is none or for admin user or if ACL is disabled
           $scope.canWrite = true;
           $scope.canExecute = true;
         } else if (permissions) {

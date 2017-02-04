@@ -18,14 +18,6 @@
         <ul class="dropdown-menu pull-right" role="menu">
 
           <li role="presentation"
-              ng-if="common.userName == activeConfigInfo.creator && common.authenticationType !== 'none' && !common.isSlaveNode">
-            <a href="#" dropdown-toggle ng-click="sharePipelineConfig(activeConfigInfo, $event)">
-              <i class="fa fa-share-alt"></i>
-              <span>{{'global.form.share' | translate}}</span>
-            </a>
-          </li>
-
-          <li role="presentation"
               ng-if="!isPipelineRunning && isAuthorized([userRoles.admin, userRoles.manager])"
               ng-class="{'disabled': !pipelineConfig.valid || activeConfigStatus.executionMode != pipelineConstant.STANDALONE}">
             <a href="#" dropdown-toggle ng-click="(!pipelineConfig.valid || activeConfigStatus.executionMode != pipelineConstant.STANDALONE) || resetOffset()">
@@ -284,6 +276,16 @@
       </a>
 
       <a class="btn btn-link icon-button"
+         tooltip-placement="bottom" tooltip="{{'global.form.share' | translate}}"
+         tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
+         tooltip-popup-delay="500"
+         ng-if="common.userName == activeConfigInfo.creator && common.authenticationType !== 'none' && !common.isSlaveNode"
+         ng-click="sharePipelineConfig(activeConfigInfo, $event)"
+         ng-show="!snapshotMode && activeConfigStatus.status != 'STARTING'">
+        <span class="fa fa-share-alt fa-14x"></span>
+      </a>
+
+      <a class="btn btn-link icon-button"
          tooltip-placement="bottom" tooltip="{{'home.header.stageLibrary' | translate}}"
          tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
          tooltip-popup-delay="500"
@@ -293,9 +295,7 @@
          ng-click="$storage.hideStageLibraryPanel = !$storage.hideStageLibraryPanel">
         <span class="fa fa-th fa-14x"></span>
       </a>
-
     </div>
-
 
     <div class="pull-right" ng-if="pipelineConfig && activeConfigStatus.status === 'STOPPING'">
       <a class="btn btn-link icon-button-danger"

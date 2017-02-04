@@ -47,7 +47,7 @@ public abstract class RuntimeInfo {
   public static final String UNDEF = "UNDEF";
   public static final String CALLBACK_URL = "/public-rest/v1/cluster/callback";
   private boolean DPMEnabled;
-
+  private boolean aclEnabled;
 
   private final static String USER_ROLE = "user";
 
@@ -264,5 +264,13 @@ public abstract class RuntimeInfo {
 
   public boolean isDPMEnabled() {
     return DPMEnabled;
+  }
+
+  public boolean isAclEnabled() {
+    return aclEnabled;
+  }
+
+  public void setAclEnabled(boolean aclEnabled) {
+    this.aclEnabled = aclEnabled;
   }
 }

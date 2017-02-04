@@ -103,7 +103,12 @@ public class PreviewResource {
     } else {
       currentUser = userGroupManager.getUser(principal);
     }
-    this.manager = new AclManager(manager, aclStore, currentUser);
+
+    if (runtimeInfo.isAclEnabled()) {
+      this.manager = new AclManager(manager, aclStore, currentUser);
+    } else {
+      this.manager = manager;
+    }
   }
 
   @Path("/pipeline/{pipelineName}/preview")

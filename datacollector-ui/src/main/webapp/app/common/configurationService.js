@@ -41,6 +41,7 @@ angular.module('dataCollectorApp.common')
     var DPM_BASE_URL = 'dpm.base.url';
     var CLOUDERA_MANAGER_MANAGED = 'clouderaManager.managed';
     var DPM_LABELS ='dpm.remote.control.job.labels';
+    var PIPELINE_ACCESS_CONTROL_ENABLED = 'pipeline.access.control.enabled';
 
     this.initializeDefer = undefined;
     this.config = undefined;
@@ -256,5 +257,16 @@ angular.module('dataCollectorApp.common')
         return self.config[CLOUDERA_MANAGER_MANAGED] === 'true';
       }
       return false;
+    };
+
+    /*
+     * Returns pipeline.access.control.enabled flag value
+     * @returns {*}
+     */
+    this.isACLEnabled = function() {
+      if (self.config && self.config[PIPELINE_ACCESS_CONTROL_ENABLED] !== undefined) {
+        return self.config[PIPELINE_ACCESS_CONTROL_ENABLED] === 'true';
+      }
+      return true;
     };
   });
