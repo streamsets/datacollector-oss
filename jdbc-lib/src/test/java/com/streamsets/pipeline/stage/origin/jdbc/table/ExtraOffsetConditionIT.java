@@ -23,17 +23,13 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
-import com.streamsets.pipeline.sdk.SourceRunner;
-import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
 
 import java.sql.Statement;
@@ -311,7 +307,6 @@ public class ExtraOffsetConditionIT extends BaseTableJdbcSourceIT {
     for (String partitionColumn : transactionOffsetFields.keySet()) {
       offsetColumns.add(partitionColumn.toUpperCase());
     }
-
     TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern(tableName)
         .schema(database)
@@ -323,22 +318,22 @@ public class ExtraOffsetConditionIT extends BaseTableJdbcSourceIT {
     TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
         .tableConfigBeans(ImmutableList.of(tableConfigBean))
         .build();
-
-    SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
-        .addOutputLane("a").build();
-    runner.runInit();
-    String lastOffset = "";
-    try {
-      for (int i = 0; i < BATCHES; i++) {
-        List<Record> expectedRecords = batchRecords.get(i);
+    Map<String, String> offsets = Collections.emptyMap();
+    for (int i = 0; i < BATCHES; i++) {
+      PushSourceRunner runner = new PushSourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
+          .addOutputLane("a").build();
+      runner.runInit();
+      JdbcPushSourceTestCallback callback = new JdbcPushSourceTestCallback(runner, 1);
+      try {
+        final List<Record> expectedRecords = batchRecords.get(i);
         setTimeContextForProduce(tableJdbcSource, i);
-        StageRunner.Output op = runner.runProduce(lastOffset, 1000);
-        List<Record> actualRecords = op.getRecords().get("a");
+        runner.runProduce(offsets, 1000, callback);
+        List<Record> actualRecords = callback.waitForAllBatchesAndReset().get(0);
         checkRecords(expectedRecords, actualRecords);
-        lastOffset = op.getNewOffset();
+        offsets = runner.getOffsets();
+      } finally {
+        runner.runDestroy();
       }
-    } finally {
-      runner.runDestroy();
     }
   }
 }

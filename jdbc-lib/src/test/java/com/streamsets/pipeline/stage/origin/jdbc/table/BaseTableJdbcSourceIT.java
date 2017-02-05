@@ -20,9 +20,13 @@
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.sdk.PushSourceRunner;
+import com.streamsets.pipeline.sdk.StageRunner;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.junit.AfterClass;
@@ -42,6 +46,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class BaseTableJdbcSourceIT {
   private static final Logger LOG = LoggerFactory.getLogger(BaseTableJdbcSourceIT.class);
@@ -76,6 +81,42 @@ public abstract class BaseTableJdbcSourceIT {
           .build();
 
   protected static Connection connection;
+
+
+  static class JdbcPushSourceTestCallback implements PushSourceRunner.Callback {
+    private final PushSourceRunner pushSourceRunner;
+    private final List<List<Record>> batchRecords;
+    private final AtomicInteger batchesProduced;
+    private final int numberOfBatches;
+
+    JdbcPushSourceTestCallback(PushSourceRunner pushSourceRunner, int numberOfBatches) {
+      this.pushSourceRunner = pushSourceRunner;
+      this.batchRecords = new ArrayList<>(numberOfBatches);
+      this.numberOfBatches = numberOfBatches;
+      this.batchesProduced = new AtomicInteger(0);
+    }
+
+    synchronized List<List<Record>> waitForAllBatchesAndReset() {
+      try {
+        pushSourceRunner.waitOnProduce();
+      } catch (Exception e) {
+        Throwables.propagate(e);
+      }
+      List<List<Record>> records = ImmutableList.copyOf(batchRecords);
+      Assert.assertEquals(numberOfBatches, records.size());
+      batchRecords.clear();
+      batchesProduced.set(0);
+      return records;
+    }
+
+    @Override
+    public void processBatch(StageRunner.Output output) {
+      batchRecords.add(batchesProduced.get(), output.getRecords().get("a"));
+      if (batchesProduced.incrementAndGet() == numberOfBatches) {
+        pushSourceRunner.setStop();
+      }
+    }
+  }
 
   @BeforeClass
   public static void setup() throws SQLException {
@@ -199,7 +240,7 @@ public abstract class BaseTableJdbcSourceIT {
   }
 
 
-  private static void checkField(String fieldPath, Field expectedField, Field actualField) throws Exception {
+  private static void checkField(String fieldPath, Field expectedField, Field actualField) {
     String errorString = String.format("Error in Field Path: %s", fieldPath);
     Assert.assertEquals(errorString, expectedField.getType(), actualField.getType());
     errorString = errorString + " of type: " + expectedField.getType().name();
@@ -231,7 +272,7 @@ public abstract class BaseTableJdbcSourceIT {
     }
   }
 
-  static void checkRecords(List<Record> expectedRecords, List<Record> actualRecords) throws Exception {
+  static void checkRecords(List<Record> expectedRecords, List<Record> actualRecords) {
     Assert.assertEquals("Record Size Does not match.", expectedRecords.size(), actualRecords.size());
     for (int i = 0; i < actualRecords.size(); i++) {
       Record actualRecord = actualRecords.get(i);

@@ -23,9 +23,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
-import com.streamsets.pipeline.sdk.SourceRunner;
-import com.streamsets.pipeline.sdk.StageRunner;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -40,6 +39,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -283,18 +283,19 @@ public class AllTypesIT extends BaseTableJdbcSourceIT {
         .tableConfigBeans(ImmutableList.of(tableConfigBean))
         .build();
 
-    SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
+    PushSourceRunner runner = new PushSourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
         .addOutputLane("a").build();
     runner.runInit();
+    JdbcPushSourceTestCallback callback = new JdbcPushSourceTestCallback(runner, 1);
     try {
-      StageRunner.Output output = runner.runProduce("", 1000);
+      runner.runProduce(Collections.emptyMap(), 1000, callback);
+      List<List<Record>> batchRecords = callback.waitForAllBatchesAndReset();
+
       List<Record> expectedRecords = TABLE_TO_TEMPLATE_AND_RECORDS_MAP.get(table).getRight();
-      List<Record> actualRecords =  output.getRecords().get("a");
+      List<Record> actualRecords = batchRecords.get(0);
       checkRecords(expectedRecords, actualRecords);
-      Assert.assertEquals(0, runner.runProduce(output.getNewOffset(), 1000).getRecords().get("a").size());
     } finally {
       runner.runDestroy();
     }
   }
-
 }

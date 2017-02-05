@@ -98,6 +98,8 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_71("Invalid State. Mismatch in offset columns for table {}. Stored offset columns: {}, Specified Offset Columns: {}"),
   JDBC_72("Invalid Start offset(s) for table '{}'. Invalid Offset Columns With Values '{}'"),
   JDBC_73("Error Evaluating Expression {}. Reason : {}"),
+  JDBC_74("Max Pool Size '{}' should be at least one more than the Number Of Threads '{}'"),
+  JDBC_75("Jdbc Runner Failed. Reason {}"),
   ;
 
   private final String msg;

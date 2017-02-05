@@ -20,8 +20,10 @@
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
 import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,10 +42,10 @@ public class TestTableJdbcSource {
     if (isMockNeeded) {
       tableJdbcSource = Mockito.spy(tableJdbcSource);
       Mockito.doNothing().when(tableJdbcSource).checkConnectionAndBootstrap(
-          Mockito.any(Source.Context.class), Mockito.anyListOf(Stage.ConfigIssue.class)
+          Mockito.any(PushSource.Context.class), Mockito.anyListOf(Stage.ConfigIssue.class)
       );
     }
-    SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
+    PushSourceRunner runner = new PushSourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
         .addOutputLane("a").build();
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
     Assert.assertEquals(1, issues.size());
@@ -52,7 +54,7 @@ public class TestTableJdbcSource {
   @Test
   public void testNoTableConfiguration() throws Exception {
     TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
-        .tableConfigBeans(Collections.<TableConfigBean>emptyList())
+        .tableConfigBeans(Collections.emptyList())
         .build();
     testWrongConfiguration(tableJdbcSource, true);
   }

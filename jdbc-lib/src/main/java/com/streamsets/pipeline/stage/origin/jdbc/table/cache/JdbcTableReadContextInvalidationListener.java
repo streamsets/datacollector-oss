@@ -31,12 +31,12 @@ import org.slf4j.LoggerFactory;
  */
 public class JdbcTableReadContextInvalidationListener implements RemovalListener<TableContext, TableReadContext> {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(JdbcTableReadContextInvalidationListener.class);
+  private static final Logger LOG = LoggerFactory.getLogger(JdbcTableReadContextInvalidationListener.class);
 
   @Override
   public void onRemoval(RemovalNotification<TableContext, TableReadContext> tableReadContextRemovalNotification) {
     TableContext tableContext = tableReadContextRemovalNotification.getKey();
-    LOGGER.info("Closing statement and result set for : {}", tableContext.getQualifiedName());
+    LOG.debug("Closing statement and result set for : {}", tableContext.getQualifiedName());
     TableReadContext readContext = tableReadContextRemovalNotification.getValue();
     //Destroy and close statement/result set.
     readContext.destroy();

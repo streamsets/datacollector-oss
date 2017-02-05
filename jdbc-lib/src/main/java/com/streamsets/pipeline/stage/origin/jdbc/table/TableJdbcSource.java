@@ -19,38 +19,29 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
-import com.codahale.metrics.Gauge;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.LoadingCache;
-import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.Record;
+import com.google.common.base.Throwables;
+import com.google.common.cache.Cache;
+import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.api.base.BasePushSource;
+import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
-import com.streamsets.pipeline.lib.util.ThreadUtil;
-import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
-import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
-import com.streamsets.pipeline.stage.origin.jdbc.table.cache.JdbcTableReadContextInvalidationListener;
-import com.streamsets.pipeline.stage.origin.jdbc.table.cache.JdbcTableReadContextLoader;
 import com.streamsets.pipeline.stage.origin.jdbc.table.util.OffsetQueryUtil;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -59,38 +50,33 @@ import java.util.Properties;
 import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class TableJdbcSource extends BaseSource {
+public class TableJdbcSource extends BasePushSource {
   private static final Logger LOG = LoggerFactory.getLogger(TableJdbcSource.class);
   private static final Joiner NEW_LINE_JOINER = Joiner.on("\n");
-
   private static final String HIKARI_CONFIG_PREFIX = "hikariConfigBean.";
   private static final String CONNECTION_STRING = HIKARI_CONFIG_PREFIX + "connectionString";
-
-  private static final String JDBC_NAMESPACE_HEADER = "jdbc.";
-
-  static final String CURRENT_TABLE = "Current Table";
-  static final String TABLE_COUNT = "Table Count";
-  static final String TABLE_METRICS = "Table Metrics";
+  private static final String OFFSET_VERSION = "$com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcSource.offset.version$";
+  private static final String OFFSET_VERSION_1 = "1";
 
   private final HikariPoolConfigBean hikariConfigBean;
   private final CommonSourceConfigBean commonSourceConfigBean;
   private final TableJdbcConfigBean tableJdbcConfigBean;
   private final Properties driverProperties = new Properties();
-  private final ConcurrentHashMap<String, Object> gaugeMap;
+  //If we have more state to clean up, we can introduce a state manager to do that which
+  //can keep track of different closeables from different threads
+  private final Collection<Cache<TableContext, TableReadContext>> toBeInvalidatedThreadCaches;
 
-  private ErrorRecordHandler errorRecordHandler;
-  private TableOrderProvider tableOrderProvider;
-  private TableContext tableContext;
   private Calendar calendar;
-  private long lastQueryIntervalTime;
-  private Map<String, String> offsets;
-  private TableJdbcELEvalContext tableJdbcELEvalContext;
-  private LoadingCache<TableContext, TableReadContext> resultSetCache;
-
   private HikariDataSource hikariDataSource;
   private ConnectionManager connectionManager;
-  private String query = null;
+  private Map<String, String> offsets;
+  private Map<String, TableContext> allTableContexts;
+  private ExecutorService executorService;
+  private int numberOfThreads;
 
   public TableJdbcSource(
       HikariPoolConfigBean hikariConfigBean,
@@ -100,9 +86,8 @@ public class TableJdbcSource extends BaseSource {
     this.hikariConfigBean = hikariConfigBean;
     this.commonSourceConfigBean = commonSourceConfigBean;
     this.tableJdbcConfigBean = tableJdbcConfigBean;
-    lastQueryIntervalTime = -1;
     driverProperties.putAll(hikariConfigBean.driverProperties);
-    gaugeMap = new ConcurrentHashMap<>();
+    toBeInvalidatedThreadCaches = new ArrayList<>();
   }
 
   private static String logError(SQLException e) {
@@ -111,51 +96,8 @@ public class TableJdbcSource extends BaseSource {
     return formattedError;
   }
 
-  private boolean shouldMoveToNextTable(int recordCount, int noOfTablesVisited) {
-    return recordCount == 0 && noOfTablesVisited < tableOrderProvider.getNumberOfTables();
-  }
-
-  private void initGauge(Source.Context context) {
-    gaugeMap.put(TABLE_COUNT, tableOrderProvider.getNumberOfTables());
-    gaugeMap.put(CURRENT_TABLE, "");
-    context.createGauge(TABLE_METRICS, new Gauge<Map<String, Object>>() {
-      @Override
-      public Map<String, Object> getValue() {
-        return gaugeMap;
-      }
-    });
-  }
-
-  private void updateGauge() {
-    gaugeMap.put(CURRENT_TABLE, tableContext.getQualifiedName());
-    LOG.info("Generating records from table : {}", tableContext.getQualifiedName());
-  }
-
-  @SuppressWarnings("unchecked")
-  private void initTableReadContextCache() {
-    CacheBuilder resultSetCacheBuilder = CacheBuilder.newBuilder()
-        .removalListener(new JdbcTableReadContextInvalidationListener());
-
-    if (tableJdbcConfigBean.batchTableStrategy == BatchTableStrategy.SWITCH_TABLES) {
-      if (tableJdbcConfigBean.resultCacheSize > 0) {
-        resultSetCacheBuilder = resultSetCacheBuilder.maximumSize(tableJdbcConfigBean.resultCacheSize);
-      }
-    } else {
-      resultSetCacheBuilder = resultSetCacheBuilder.maximumSize(1);
-    }
-
-    resultSetCache = resultSetCacheBuilder.build(
-        new JdbcTableReadContextLoader(
-            connectionManager,
-            offsets,
-            tableJdbcConfigBean.fetchSize,
-            tableJdbcELEvalContext
-        )
-    );
-  }
-
   @VisibleForTesting
-  void checkConnectionAndBootstrap(Source.Context context, List<ConfigIssue> issues) {
+  void checkConnectionAndBootstrap(Stage.Context context, List<ConfigIssue> issues) {
     try {
       hikariDataSource = JdbcUtil.createDataSourceForRead(hikariConfigBean, driverProperties);
     } catch (StageException e) {
@@ -165,72 +107,78 @@ public class TableJdbcSource extends BaseSource {
       try {
         calendar = Calendar.getInstance(TimeZone.getTimeZone(tableJdbcConfigBean.timeZoneID));
 
-        tableJdbcELEvalContext = new TableJdbcELEvalContext(getContext(), context.createELVars());
-
-        offsets = new HashMap<>();
-
         connectionManager = new ConnectionManager(hikariDataSource);
 
-        initTableReadContextCache();
+        allTableContexts = new LinkedHashMap<>();
 
-        tableOrderProvider = new TableOrderProviderFactory(
-            connectionManager.getConnection(),
-            tableJdbcConfigBean.tableOrderStrategy
-        ).create();
-
-        Map<String, TableContext> allTableContexts = new LinkedHashMap<>();
         for (TableConfigBean tableConfigBean : tableJdbcConfigBean.tableConfigs) {
           //No duplicates even though a table matches multiple configurations, we will add it only once.
           allTableContexts.putAll(
               TableContextUtil.listTablesForConfig(
                   connectionManager.getConnection(),
                   tableConfigBean,
-                  tableJdbcELEvalContext
+                  new TableJdbcELEvalContext(context, context.createELVars())
               )
           );
         }
 
         LOG.info("Selected Tables: \n {}", NEW_LINE_JOINER.join(allTableContexts.keySet()));
 
-        try {
-          tableOrderProvider.initialize(allTableContexts);
-          if (tableOrderProvider.getNumberOfTables() == 0) {
-            issues.add(
-                context.createConfigIssue(
-                    Groups.TABLE.name(),
-                    TableJdbcConfigBean.TABLE_CONFIG,
-                    JdbcErrors.JDBC_66
-                )
-            );
-          }
-        } catch (ExecutionException e) {
-          LOG.debug("Failure happened when fetching nextTable", e);
-          throw new StageException(JdbcErrors.JDBC_67, e);
+        if (allTableContexts.isEmpty()) {
+          issues.add(
+              context.createConfigIssue(
+                  Groups.TABLE.name(),
+                  TableJdbcConfigBean.TABLE_CONFIG,
+                  JdbcErrors.JDBC_66
+              )
+          );
         }
-        initGauge(context);
+
+        //Max pool size should be at least one greater than number of threads
+        //The main thread needs one connection and each individual data threads needs
+        //one connection
+        if (tableJdbcConfigBean.numberOfThreads >= hikariConfigBean.maximumPoolSize) {
+          issues.add(
+              getContext().createConfigIssue(
+                  Groups.ADVANCED.name(),
+                  "hikariConfigBean." + HikariPoolConfigBean.MAX_POOL_SIZE_NAME,
+                  JdbcErrors.JDBC_74,
+                  hikariConfigBean.maximumPoolSize,
+                  tableJdbcConfigBean.numberOfThreads
+              )
+          );
+        }
+
+        numberOfThreads = tableJdbcConfigBean.numberOfThreads;
+
+        if (tableJdbcConfigBean.numberOfThreads > allTableContexts.size()) {
+          numberOfThreads = Math.min(tableJdbcConfigBean.numberOfThreads, allTableContexts.size());
+          LOG.info(
+              "Number of threads configured '{}'is more than number of tables '{}'. Will be Using '{}' number of threads.",
+              tableJdbcConfigBean.numberOfThreads,
+              allTableContexts.size(),
+              Math.min(tableJdbcConfigBean.numberOfThreads, allTableContexts.size())
+          );
+        }
+
+        //Accessed by all runner threads
+        offsets = new ConcurrentHashMap<>();
       } catch (SQLException e) {
         logError(e);
-        closeEverything();
+        connectionManager.closeConnection();
         issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, e.toString()));
       } catch (StageException e) {
         LOG.debug("Error when finding tables:", e);
-        closeEverything();
+        connectionManager.closeConnection();
         issues.add(context.createConfigIssue(Groups.TABLE.name(), TableJdbcConfigBean.TABLE_CONFIG, e.getErrorCode(), e.getParams()));
       }
     }
   }
 
-  private void initTableEvalContextForProduce(TableContext tableContext) {
-    tableJdbcELEvalContext.setCalendar(calendar);
-    tableJdbcELEvalContext.setTime(calendar.getTime());
-    tableJdbcELEvalContext.setTableContext(tableContext);
-  }
-
   @Override
   protected List<Stage.ConfigIssue> init() {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
-    Source.Context context = getContext();
-    errorRecordHandler = new DefaultErrorRecordHandler(context);
+    PushSource.Context context = getContext();
     issues = hikariConfigBean.validateConfigs(context, issues);
     issues = commonSourceConfigBean.validateConfigs(context, issues);
     issues = tableJdbcConfigBean.validateConfigs(context, issues);
@@ -240,135 +188,128 @@ public class TableJdbcSource extends BaseSource {
     return issues;
   }
 
-  /**
-   * Initialize and set the table context.
-   * NOTE: This sets the table context to null if there is any mismatch
-   * We will simply proceed to next table if that is the case
-   */
-  private void initTableContext() throws ExecutionException, SQLException, StageException {
-    tableContext = tableOrderProvider.nextTable();
-    //If the offset already does not contain the table (meaning it is the first start or a new table)
-    //We can skip validation
-    if (offsets.containsKey(tableContext.getQualifiedName())) {
-      try {
-        OffsetQueryUtil.validateStoredAndSpecifiedOffset(tableContext, offsets.get(tableContext.getQualifiedName()));
-      } catch (StageException e) {
-        LOG.error("Error when validating stored offset with configuration", e);
-        errorRecordHandler.onError(e.getErrorCode(), e.getParams());
-        tableContext = null;
-      }
-    }
+  @Override
+  public int getNumberOfThreads() {
+    return numberOfThreads;
   }
 
   @Override
-  public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+  public void produce(Map<String, String> lastOffsets, int maxBatchSize) throws StageException {
     int batchSize = Math.min(maxBatchSize, commonSourceConfigBean.maxBatchSize);
-    offsets.putAll(OffsetQueryUtil.deserializeOffsetMap(lastSourceOffset));
+    handleLastOffset(lastOffsets);
+    try {
+      executorService = new SafeScheduledExecutorService(
+          numberOfThreads,
+          TableJdbcRunnable.TABLE_JDBC_THREAD_PREFIX
+      );
 
-    long delayBeforeQuery = (commonSourceConfigBean.queryInterval * 1000) - (System.currentTimeMillis() - lastQueryIntervalTime);
-    ThreadUtil.sleep((lastQueryIntervalTime < 0 || delayBeforeQuery < 0) ? 0 : delayBeforeQuery);
+      List<Future> futures = new ArrayList<>();
 
-    int recordCount = 0, noOfTablesVisited = 0;
-    do {
-      ResultSet rs;
-      try {
-        if (tableContext == null) {
-          initTableContext();
-        }
-        if (tableContext != null) {
-          initTableEvalContextForProduce(tableContext);
-          //do get if present, if the result set is not valid the entry would have been evicted.
-          TableReadContext tableReadContext = resultSetCache.getIfPresent(tableContext);
-          //Meaning we will have to switch tables, execute a new query and get records.
-          if (tableReadContext == null) {
-            tableReadContext = resultSetCache.get(tableContext);
-          }
+      Map<Integer, Map<String, TableContext>> partitionedTableContexts = partitionTableContextForRunners();
 
-          rs = tableReadContext.getResultSet();
-          query = tableReadContext.getQuery();
-          boolean evictTableReadContext = false;
-          try {
-            while (recordCount < batchSize) {
-              //Close ResultSet if there are no more rows
-              if (rs.isClosed() || !rs.next()) {
-                evictTableReadContext = true;
-                break;
-              }
-
-              ResultSetMetaData md = rs.getMetaData();
-
-              LinkedHashMap<String, Field> fields = JdbcUtil.resultSetToFields(
-                  rs,
-                  commonSourceConfigBean.maxClobSize,
-                  commonSourceConfigBean.maxBlobSize,
-                  errorRecordHandler
-              );
-
-              String offsetFormat = OffsetQueryUtil.getOffsetFormatFromColumns(tableContext, fields);
-              Record record = getContext().createRecord(tableContext.getQualifiedName() + ":" + offsetFormat);
-              record.set(Field.createListMap(fields));
-
-              //Set Column Headers
-              JdbcUtil.setColumnSpecificHeaders(
-                  record,
-                  Collections.singleton(tableContext.getQualifiedName()),
-                  md,
-                  JDBC_NAMESPACE_HEADER
-              );
-
-              batchMaker.addRecord(record);
-
-              offsets.put(tableContext.getQualifiedName(), offsetFormat);
-
-              if (recordCount == 0) {
-                updateGauge();
-              }
-              recordCount++;
-            }
-          } finally {
-            //Make sure we close the result set only when there are no more rows in the result set
-            if (evictTableReadContext) {
-              //Invalidate so as to fetch a new result set
-              //We close the result set/statement in Removal Listener
-              resultSetCache.invalidate(tableContext);
-              //Allow the origin to move to the next table.
-              tableContext = null;
-            } else if (tableJdbcConfigBean.batchTableStrategy == BatchTableStrategy.SWITCH_TABLES) {
-              tableContext = null;
-            }
-          }
-        }
-      } catch (SQLException e) {
-        String formattedError = logError(e);
-        closeEverything();
-        LOG.debug("Query failed at: {}", lastQueryIntervalTime);
-        //Throw Stage Errors
-        errorRecordHandler.onError(JdbcErrors.JDBC_34, query, formattedError);
-      } catch (ExecutionException e) {
-        LOG.debug("Failure happened when fetching nextTable", e);
-        errorRecordHandler.onError(JdbcErrors.JDBC_67, e);
-      } finally {
-        //Update lastQuery Time
-        lastQueryIntervalTime = System.currentTimeMillis();
+      // Run all the threads (Have to think of optimization to figure out whether some threads are idle)
+      for (int i = 0; i < numberOfThreads; i++) {
+        Map<String, TableContext> tableContextMapForThread = partitionedTableContexts.get(i);
+        TableJdbcRunnable runnable = new TableJdbcRunnable.Builder()
+            .context(getContext())
+            .threadNumber(i)
+            .calendar(calendar)
+            .batchSize(batchSize)
+            .connectionManager(connectionManager)
+            .offsets(offsets)
+            .tableContexts(tableContextMapForThread)
+            .commonSourceConfigBean(commonSourceConfigBean)
+            .tableJdbcConfigBean(tableJdbcConfigBean)
+            .build();
+        toBeInvalidatedThreadCaches.add(runnable.getTableReadContextCache());
+        futures.add(executorService.submit(runnable));
       }
-      noOfTablesVisited++;
-    } while(shouldMoveToNextTable(recordCount, noOfTablesVisited)); //If the current table has no records and if we haven't cycled through all tables.
-    return OffsetQueryUtil.serializeOffsetMap(offsets);
+
+      while (!getContext().isStopped()) {
+        for (Future future : futures) {
+          if (future.isDone()) {
+            try {
+              future.get();
+            } catch (InterruptedException e) {
+              LOG.error("Thread interrupted", e);
+            } catch (ExecutionException e) {
+              Throwable cause = Throwables.getRootCause(e);
+              if (cause != null && cause instanceof StageException) {
+                throw (StageException) cause;
+              } else {
+                LOG.error("Internal Error. {}", e);
+                throw new StageException(JdbcErrors.JDBC_75, e.toString());
+              }
+            }
+          }
+        }
+      }
+    } catch (SQLException | ExecutionException e) {
+      connectionManager.closeConnection();
+    } finally {
+      shutdownExecutorIfNeeded();
+    }
   }
 
   @Override
   public void destroy() {
-    closeEverything();
+    shutdownExecutorIfNeeded();
+    executorService = null;
+    //Invalidate all the thread cache so that all statements/result sets are properly closed.
+    toBeInvalidatedThreadCaches.forEach(Cache::invalidateAll);
+    //Closes all connections
+    if (connectionManager != null) {
+      connectionManager.closeAll();
+    }
     JdbcUtil.closeQuietly(hikariDataSource);
   }
 
-  private void closeEverything() {
-    if (resultSetCache != null) {
-      resultSetCache.invalidateAll();
+  //TODO: Initial implementation for partition - https://issues.streamsets.com/browse/SDC-5247 for more robust
+  private Map<Integer, Map<String, TableContext>> partitionTableContextForRunners() {
+    Map<Integer, Map<String, TableContext>> partitionedTableContexts = new HashMap<>();
+    List<TableContext> tableContexts = new ArrayList<>(allTableContexts.values());
+
+    AtomicInteger counter = new AtomicInteger(0);
+    tableContexts.forEach(tableContext -> {
+      int threadNum = (counter.getAndIncrement()) % numberOfThreads;
+      Map<String, TableContext> tableContextMapForCurrentThread =
+          partitionedTableContexts.computeIfAbsent(threadNum, k -> new LinkedHashMap<>());
+      tableContextMapForCurrentThread.put(tableContext.getQualifiedName(), tableContext);
+    });
+
+    return partitionedTableContexts;
+  }
+
+  private void shutdownExecutorIfNeeded() {
+    if (executorService != null && !executorService.isTerminated()) {
+      LOG.info("Shutting down executor service");
+      executorService.shutdown();
     }
-    if (connectionManager != null) {
-      connectionManager.closeConnection();
+  }
+
+  private void handleLastOffset(Map<String, String> lastOffsets) throws StageException {
+    if (lastOffsets != null) {
+      if (lastOffsets.containsKey(Source.POLL_SOURCE_OFFSET_KEY)) {
+        String innerTableOffsetsAsString = lastOffsets.get(Source.POLL_SOURCE_OFFSET_KEY);
+
+        if (innerTableOffsetsAsString != null) {
+          offsets.putAll(OffsetQueryUtil.deserializeOffsetMap(innerTableOffsetsAsString));
+        }
+
+        offsets.forEach((tableName, tableOffset) -> {
+          getContext().commitOffset(tableName, tableOffset);
+        });
+
+        //Remove Poll Source Offset key from the offset.
+        //Do this at last so as not to lose the offsets if there is failure in the middle
+        //when we call commitOffset above
+        getContext().commitOffset(Source.POLL_SOURCE_OFFSET_KEY, null);
+
+        //Version the offset so as to allow for future evolution.
+        getContext().commitOffset(OFFSET_VERSION, OFFSET_VERSION_1);
+      } else {
+        offsets.putAll(lastOffsets);
+      }
     }
-    query = null;
   }
 }

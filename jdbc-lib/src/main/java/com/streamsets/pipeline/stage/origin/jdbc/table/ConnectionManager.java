@@ -26,6 +26,8 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Connection Manager to fetch connections as needed.
@@ -33,31 +35,54 @@ import java.sql.SQLException;
 public final class ConnectionManager {
   private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionManager.class);
 
-  private HikariDataSource hikariDataSource;
-  private Connection connection = null;
+  private final HikariDataSource hikariDataSource;
+  private final ThreadLocal<Connection> threadLocalConnection;
+  private final Set<Connection> connectionsToCloseDuringDestroy;
 
   public ConnectionManager(HikariDataSource hikariDataSource) {
     this.hikariDataSource = hikariDataSource;
+    this.connectionsToCloseDuringDestroy = new HashSet<>();
+    this.threadLocalConnection = new ThreadLocal<>();
+  }
+
+  private synchronized Connection getNewConnection() throws SQLException{
+    Connection newConnection = hikariDataSource.getConnection();
+    connectionsToCloseDuringDestroy.add(newConnection);
+    return newConnection;
   }
 
   /**
-   * Get {@link Connection} if the cached connection is null fetch a connection from {@link HikariDataSource}
+   * Get {@link Connection} if cached connection is null fetch a connection from {@link HikariDataSource}
    * @return {@link Connection}
    * @throws SQLException
    */
   public Connection getConnection() throws SQLException {
-    if (connection == null) {
-      connection = hikariDataSource.getConnection();
+    if (threadLocalConnection.get() == null) {
+      threadLocalConnection.set(getNewConnection());
     }
-    return connection;
+    return threadLocalConnection.get();
   }
 
   /**
-   * Close the cached connection
+   * Close the current thread's connection
    */
   public void closeConnection() {
     LOGGER.debug("Closing connection");
-    JdbcUtil.closeQuietly(connection);
-    connection = null;
+    Connection connectionToRemove = threadLocalConnection.get();
+    JdbcUtil.closeQuietly(connectionToRemove);
+    if (connectionToRemove != null) {
+      synchronized (this) {
+        connectionsToCloseDuringDestroy.remove(connectionToRemove);
+      }
+    }
+    threadLocalConnection.set(null);
+  }
+
+  /**
+   * Closes all connections
+   */
+  public synchronized void closeAll() {
+    LOGGER.debug("Closing all connections");
+    connectionsToCloseDuringDestroy.forEach(JdbcUtil::closeQuietly);
   }
 }

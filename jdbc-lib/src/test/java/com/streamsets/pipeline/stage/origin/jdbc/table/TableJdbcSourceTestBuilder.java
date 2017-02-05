@@ -45,6 +45,7 @@ public class TableJdbcSourceTestBuilder {
   private BatchTableStrategy batchTableStrategy;
   private TableOrderStrategy tableOrderStrategy;
   private int resultSetCacheSize;
+  private int numberOfThreads;
 
 
   public TableJdbcSourceTestBuilder(String jdbcUrl, boolean useCredentials, String username, String password) {
@@ -65,6 +66,7 @@ public class TableJdbcSourceTestBuilder {
     this.batchTableStrategy = BatchTableStrategy.SWITCH_TABLES;
     this.tableOrderStrategy = TableOrderStrategy.NONE;
     this.resultSetCacheSize = -1;
+    this.numberOfThreads = 1;
   }
 
   public TableJdbcSourceTestBuilder() {
@@ -151,6 +153,11 @@ public class TableJdbcSourceTestBuilder {
     return this;
   }
 
+  public TableJdbcSourceTestBuilder numberOfThreads(int numberOfThreads) {
+    this.numberOfThreads = numberOfThreads;
+    return this;
+  }
+
   public TableJdbcSource build() {
     HikariPoolConfigBean hikariPoolConfigBean = new HikariPoolConfigBean();
     hikariPoolConfigBean.useCredentials = useCredentials;
@@ -160,6 +167,7 @@ public class TableJdbcSourceTestBuilder {
     hikariPoolConfigBean.driverClassName = driverClassName;
     hikariPoolConfigBean.driverProperties = driverProperties;
     hikariPoolConfigBean.connectionTestQuery = connectionTestQuery;
+    hikariPoolConfigBean.maximumPoolSize = numberOfThreads + 1;
 
     TableJdbcConfigBean tableJdbcConfigBean = new TableJdbcConfigBean();
     tableJdbcConfigBean.tableConfigs = tableConfigBeanList;
@@ -168,6 +176,7 @@ public class TableJdbcSourceTestBuilder {
     tableJdbcConfigBean.timeZoneID = timeZoneID;
     tableJdbcConfigBean.batchTableStrategy = batchTableStrategy;
     tableJdbcConfigBean.resultCacheSize = resultSetCacheSize;
+    tableJdbcConfigBean.numberOfThreads = numberOfThreads;
 
     return new TableJdbcSource(
         hikariPoolConfigBean,

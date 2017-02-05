@@ -25,11 +25,9 @@ import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
+import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
-import com.streamsets.pipeline.sdk.SourceRunner;
-import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.origin.jdbc.table.util.OffsetQueryUtil;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -54,10 +52,13 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @RunWith(Parameterized.class)
 public class DifferentTypesAsOffsetIT extends BaseTableJdbcSourceIT {
@@ -241,9 +242,9 @@ public class DifferentTypesAsOffsetIT extends BaseTableJdbcSourceIT {
     }
   }
 
-  private Pair<String, Integer> runSourceAndReturnOffsetAndRecordsRead(
-      String lastOffset,
-      int totalNoOfRecordsRead
+  private void runSourceAndUpdateOffset(
+      final Map<String, String> lastOffset,
+      final AtomicInteger totalNoOfRecordsRead
   ) throws Exception {
     int batchSize = (RANDOM.nextInt(5) + 1) * 10;
     TableConfigBean tableConfigBean = new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
@@ -254,40 +255,39 @@ public class DifferentTypesAsOffsetIT extends BaseTableJdbcSourceIT {
         .tableConfigBeans(ImmutableList.of(tableConfigBean))
         .maxBatchSize(batchSize)
         .build();
-    SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
+    PushSourceRunner runner = new PushSourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
         .addOutputLane("a").build();
+    JdbcPushSourceTestCallback callback = new JdbcPushSourceTestCallback(runner, 1);
     runner.runInit();
     try {
-      StageRunner.Output op = runner.runProduce(lastOffset, batchSize);
-      List<Record> actualRecords = op.getRecords().get("a");
+      runner.runProduce(lastOffset, batchSize, callback);
+      List<Record> actualRecords = callback.waitForAllBatchesAndReset().get(0);
       LOGGER.info("Read {} records", actualRecords.size());
-      if (totalNoOfRecordsRead >= expectedRecords.size()) {
+      if (totalNoOfRecordsRead.get() >= expectedRecords.size()) {
         Assert.assertEquals(0, actualRecords.size());
       } else {
         checkRecords(
-            expectedRecords.subList(totalNoOfRecordsRead, totalNoOfRecordsRead + actualRecords.size()),
+            expectedRecords.subList(totalNoOfRecordsRead.get(), totalNoOfRecordsRead.get() + actualRecords.size()),
             actualRecords
         );
-        totalNoOfRecordsRead += actualRecords.size();
+        totalNoOfRecordsRead.getAndAdd(actualRecords.size());
       }
-      lastOffset = op.getNewOffset();
+      lastOffset.clear();
+      lastOffset.putAll(runner.getOffsets());
     } finally {
+      runner.setStop();
       runner.runDestroy();
     }
-    return Pair.of(lastOffset, totalNoOfRecordsRead);
   }
 
   @Test
   public void testCorrectOffsetRead() throws Exception {
-    String lastOffset = "";
-    int totalNoOfRecordsRead = 0;
-    while (totalNoOfRecordsRead < NUMBER_OF_RECORDS) {
-      Pair<String, Integer> offsetAndRecordsRead =
-          runSourceAndReturnOffsetAndRecordsRead(lastOffset, totalNoOfRecordsRead);
-      lastOffset = offsetAndRecordsRead.getLeft();
-      totalNoOfRecordsRead = offsetAndRecordsRead.getRight();
+    Map<String, String> offsets = new ConcurrentHashMap<>();
+    final AtomicInteger totalNoOfRecordsRead = new AtomicInteger(0);
+    while (totalNoOfRecordsRead.get() < NUMBER_OF_RECORDS) {
+      runSourceAndUpdateOffset(offsets, totalNoOfRecordsRead);
     }
-    Assert.assertEquals(totalNoOfRecordsRead, expectedRecords.size());
+    Assert.assertEquals(totalNoOfRecordsRead.get(), expectedRecords.size());
   }
 
   private String getTimeELForInitialOffsetForDateTimeTypes(Date date) {
@@ -313,7 +313,7 @@ public class DifferentTypesAsOffsetIT extends BaseTableJdbcSourceIT {
 
   @Test
   public void testInitialOffset() throws Exception {
-    int batchSize = NUMBER_OF_RECORDS/2;
+    final int batchSize = NUMBER_OF_RECORDS / 2;
     String initialOffset;
     if (JdbcUtil.isSqlTypeOneOf(offsetSqlType, Types.DATE, Types.TIME, Types.TIMESTAMP)) {
       Date date = new Date(expectedRecords.get(batchSize-1).get("/" + offsetFieldName).getValueAsLong());
@@ -330,12 +330,13 @@ public class DifferentTypesAsOffsetIT extends BaseTableJdbcSourceIT {
         .tableConfigBeans(ImmutableList.of(tableConfigBean))
         .maxBatchSize(batchSize)
         .build();
-    SourceRunner runner = new SourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
+    PushSourceRunner runner = new PushSourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
         .addOutputLane("a").build();
+    JdbcPushSourceTestCallback callback = new JdbcPushSourceTestCallback(runner, 1);
     runner.runInit();
     try {
-      StageRunner.Output op = runner.runProduce("", batchSize);
-      List<Record> actualRecords = op.getRecords().get("a");
+      runner.runProduce(Collections.emptyMap(), batchSize, callback);
+      List<Record> actualRecords = callback.waitForAllBatchesAndReset().get(0);
       checkRecords(expectedRecords.subList(batchSize, expectedRecords.size()), actualRecords);
     } finally {
       runner.runDestroy();

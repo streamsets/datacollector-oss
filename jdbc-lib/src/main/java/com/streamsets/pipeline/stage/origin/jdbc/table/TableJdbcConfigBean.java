@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.origin.jdbc.table;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ListBeanModel;
+import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
@@ -102,10 +103,21 @@ public class TableJdbcConfigBean {
   )
   public int fetchSize;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "1",
+      label = "Number of Threads",
+      description = "Number of threads to parallely read data from",
+      displayPosition = 220,
+      group = "JDBC"
+  )
+  public int numberOfThreads;
+
   private static final String TABLE_JDBC_CONFIG_BEAN_PREFIX = "tableJdbcConfigBean.";
   public static final String TABLE_CONFIG = TABLE_JDBC_CONFIG_BEAN_PREFIX + "tableConfigs";
 
-  public List<Stage.ConfigIssue> validateConfigs(Source.Context context, List<Stage.ConfigIssue> issues) {
+  public List<Stage.ConfigIssue> validateConfigs(PushSource.Context context, List<Stage.ConfigIssue> issues) {
     if (tableConfigs.isEmpty()) {
       issues.add(context.createConfigIssue(Groups.TABLE.name(), TABLE_CONFIG, JdbcErrors.JDBC_66));
     }
