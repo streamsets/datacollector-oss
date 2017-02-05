@@ -33,7 +33,7 @@ angular
        * @returns {boolean}
        */
       hasPipelineLabels: function() {
-        return !_.isEmpty($scope.pipelineLabels);
+        return !_.isEmpty($scope.rawPipelineLabels);
       },
 
       /**

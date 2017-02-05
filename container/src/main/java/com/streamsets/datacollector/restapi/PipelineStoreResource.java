@@ -144,13 +144,15 @@ public class PipelineStoreResource {
   private static final String SYSTEM_NON_RUNNING_PIPELINES = "system:nonRunningPipelines";
   private static final String SYSTEM_INVALID_PIPELINES = "system:invalidPipelines";
   private static final String SYSTEM_ERROR_PIPELINES = "system:errorPipelines";
+  private static final String SHARED_WITH_ME_PIPELINES = "system:sharedWithMePipelines";
 
   private static final List<String> SYSTEM_PIPELINE_LABELS = ImmutableList.of(
       SYSTEM_ALL_PIPELINES,
       SYSTEM_RUNNING_PIPELINES,
       SYSTEM_NON_RUNNING_PIPELINES,
       SYSTEM_INVALID_PIPELINES,
-      SYSTEM_ERROR_PIPELINES
+      SYSTEM_ERROR_PIPELINES,
+      SHARED_WITH_ME_PIPELINES
   );
 
   private static final List<String> DPM_ENABLED_SYSTEM_PIPELINE_LABELS = ImmutableList.of(
@@ -161,7 +163,8 @@ public class PipelineStoreResource {
       SYSTEM_RUNNING_PIPELINES,
       SYSTEM_NON_RUNNING_PIPELINES,
       SYSTEM_INVALID_PIPELINES,
-      SYSTEM_ERROR_PIPELINES
+      SYSTEM_ERROR_PIPELINES,
+      SHARED_WITH_ME_PIPELINES
   );
 
   private static final Logger LOG = LoggerFactory.getLogger(PipelineStoreResource.class);
@@ -313,6 +316,8 @@ public class PipelineStoreResource {
                 return isRemotePipeline(state);
               case SYSTEM_LOCAL_PIPELINES:
                 return metadata == null || !metadata.containsKey(DPM_PIPELINE_ID);
+              case SHARED_WITH_ME_PIPELINES:
+                return !pipelineInfo.getCreator().equals(user);
               default:
                 if (metadata != null && metadata.containsKey("labels")) {
                   List<String> labels = (List<String>) metadata.get("labels");

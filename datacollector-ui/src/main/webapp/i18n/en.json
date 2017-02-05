@@ -581,6 +581,7 @@
       "system:nonRunningPipelines": "Non Running Pipelines",
       "system:invalidPipelines": "Invalid Pipelines",
       "system:errorPipelines": "Error Pipelines",
+      "system:sharedWithMePipelines": "Shared with Me",
       "targetPlaceholder": "Select Destination..."
     },
     "noPipelines": "No Pipeline Found",
