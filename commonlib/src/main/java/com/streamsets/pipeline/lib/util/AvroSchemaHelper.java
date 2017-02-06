@@ -206,7 +206,7 @@ public class AvroSchemaHelper {
     ByteBuffer wrapped = ByteBuffer.wrap(data);
     // 5 == MAGIC_BYTE + ID_SIZE
     if (wrapped.get() != MAGIC_BYTE) {
-      Optional.absent();
+      return Optional.absent();
     }
 
     return Optional.of(wrapped.getInt());

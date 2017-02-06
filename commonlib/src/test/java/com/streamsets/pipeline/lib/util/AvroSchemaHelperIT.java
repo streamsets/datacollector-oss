@@ -225,8 +225,20 @@ public class AvroSchemaHelperIT {
     out.write(ByteBuffer.allocate(ID_SIZE).putInt(12345).array());
 
     AvroSchemaHelper helper = new AvroSchemaHelper(getSettings(null));
-    int schemaId = helper.detectSchemaId(out.toByteArray()).get();
-    assertEquals(12345, schemaId);
+    Optional<Integer> schemaId = helper.detectSchemaId(out.toByteArray());
+    assertTrue(schemaId.isPresent());
+    assertEquals(12345, (int) schemaId.get());
+  }
+
+  @Test
+  public void detectSchemaIdNoMagicByte() throws Exception {
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    out.write(0x01);
+    out.write(ByteBuffer.allocate(ID_SIZE).putInt(12345).array());
+
+    AvroSchemaHelper helper = new AvroSchemaHelper(getSettings(null));
+    Optional<Integer> schemaId = helper.detectSchemaId(out.toByteArray());
+    assertFalse(schemaId.isPresent());
   }
 
   @Test
