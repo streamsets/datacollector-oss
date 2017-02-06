@@ -182,26 +182,14 @@ public class RecordWriter {
   }
 
   OutputStreamHelper getOutputStreamHelper() {
-    StringBuilder uniqueId = new StringBuilder();
-    uniqueId.append(Utils.getSdcId());
-
-    final String uniqueEl = "-${pipeline:id()}";
-    try {
-      uniqueId.append(fileNameEval.eval(fileNameVars, uniqueEl, String.class));
-    } catch (ELEvalException ex) {
-      // no-op
-      LOG.debug("Failed to evaluate expression '{}' for temp file name : {}", uniqueEl, ex.toString(), ex);
-    }
-
-    uniqueId.append("-");
-    uniqueId.append(Integer.toString(context.getRunnerId()));
+    final String uniqueId = context.getSdcId() + "-" + context.getPipelineId() + "-" + context.getRunnerId();
 
     if (dataFormat != DataFormat.WHOLE_FILE) {
       return new DefaultOutputStreamHandler(
           client,
           uniquePrefix,
           fileNameSuffix,
-          uniqueId.toString(),
+          uniqueId,
           maxRecordsPerFile
       );
     } else {
