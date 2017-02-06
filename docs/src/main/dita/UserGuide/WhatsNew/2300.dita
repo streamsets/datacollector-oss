@@ -295,10 +295,15 @@
                                     the table.</p>
                             </li>
                             <li dir="ltr">
-                                <p>Hadoop FS destination enhancement - To minimize the chance of
-                                    data loss when a pipeline unexpectedly stops, the Hadoop FS
-                                    destination gathers and re-processes temporary files by
-                                    default.</p>
+                                <p><xref
+                                        href="../Destinations/HadoopFS-Recovery.dita#concept_uv2_vfb_vy"
+                                        >Hadoop FS</xref>, <xref
+                                        href="../Destinations/LocalFS-Recovery.dita#concept_s5n_ggc_vy"
+                                        >Local FS</xref>, and <xref
+                                        href="../Destinations/MapRFS-Recovery.dita#concept_vvr_ngc_vy"
+                                        >MapR FS</xref> destination enhancement - The destinations
+                                    now support recovery after an unexpected stop of the pipeline by
+                                    renaming temporary files when the pipeline restarts.</p>
                             </li>
                             <li dir="ltr">Redis destination enhancement - You can now configure a
                                 timeout for each key that the destination writes to Redis.</li>

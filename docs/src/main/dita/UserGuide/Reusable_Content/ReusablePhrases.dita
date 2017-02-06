@@ -1788,7 +1788,58 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   </ul></p>
             <p id="IdleTimeoutSummary">In either situation, configure an idle timeout so that other
                   systems can process the files sooner, instead of waiting for the configured
-                  maximum records, maximum file size, or late records conditions to occur. </p>
+                  maximum records, maximum file size, or late records conditions to occur.
+                        <draft-comment author="alisontaylor">Recovery - used for Hadoop FS, Local
+                        FS, and MapR FS destinations</draft-comment></p>
+            <p id="RecoveryIntro">The destination names temporary open output files using the
+                  following format:<codeblock>_tmp_&lt;prefix>_&lt;runnerId></codeblock>Where
+                        <codeph>&lt;prefix></codeph> is the file prefix defined for the destination
+                  and <codeph>&lt;runnerId></codeph> is the ID of the pipeline runner performing the
+                  pipeline processing. For example, when the destination prefix is defined as
+                        <codeph>sdc</codeph> and the destination runs from a single-threaded
+                  pipeline, the temporary file is named like so: <codeph>_tmp_sdc_0</codeph>. </p>
+            <p id="RecoveryClose">When the destination closes the file, either after it is fully
+                  written, after the idle timeout expires, or when you deliberately stop the
+                  pipeline, it renames the file to remove the <codeph>_tmp_</codeph> string and to
+                  replace the pipeline runner ID with a random unique identifier like
+                  so:<codeblock>&lt;prefix>_e7ce67c5-013d-47a7-9496-8c882ddb28a0</codeblock></p>
+            <p id="RecoveryUnexpected">However, when the pipeline stops unexpectedly, the temporary
+                  files remain. When the pipeline restarts, the destination scans all subdirectories
+                  of the defined directory template to rename any temporary files that match the
+                  defined prefix for the destination. After the destination renames the temporary
+                  files, it continues writing to new output files.</p>
+            <note id="RecoveryRename">The destination renames all temporary files that match the
+                  defined prefix in all subdirectories of the defined directory template, even if
+                  those files were not written by that pipeline. So if you happen to have another
+                  file whose name begins with the same pattern - <codeph>_tmp_&lt;prefix></codeph> -
+                  the destination renames that file also.</note>
+            <p id="RecoveryExceptions">The destination might not rename all temporary files in the following situations:<dl>
+                        <dlentry>
+                              <dt>The directory template includes an expression with the
+                                    record:value or record:valueOrDefault function.</dt>
+                              <dd>If the record:value or record:valueOrDefault function evaluates to
+                                    an empty string or to a subdirectory, the destination cannot
+                                    determine those locations when the pipeline restarts. As a
+                                    result, the destination cannot rename any temporary files
+                                    written to those locations.</dd>
+                              <dd>For example, let’s assume that the directory template is defined
+                                    as
+                                    follows:<codeblock>/tmp/out/${YY()}-${MM()}-${DD()}/${sdc:hostname()}/${record:value('/a')}/${record:value('/b')}</codeblock></dd>
+                              <dd>If the expression <codeph>${record:value('/b')}</codeph> evaluates
+                                    to an empty string or to a subdirectory such as
+                                          <codeph>/folder1/folder2</codeph>, then the destination
+                                    cannot determine those locations when the pipeline restarts. </dd>
+                        </dlentry>
+                        <dlentry>
+                              <dt>The directory is defined in the targetDirectory record header
+                                    attribute.</dt>
+                              <dd>When the directory is defined in the targetDirectory record header
+                                    attribute, the destination cannot determine where to look for
+                                    temporary files when the pipeline restarts. As a result, it
+                                    cannot rename the temporary files.</dd>
+                        </dlentry>
+                  </dl></p>
+            <p id="RecoveryManual">In either of these situations, you must manually rename the temporary files.</p>
             <p>
                   <draft-comment author="Loretta">Record Header Attributes - Hadoop FS, Local FS,
                         MapR FS. But Local and MapR FS don't have full functionality yet

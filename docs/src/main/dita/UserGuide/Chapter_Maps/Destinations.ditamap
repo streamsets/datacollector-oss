@@ -103,6 +103,7 @@
    <topicref href="../Destinations/HadoopFS-TimeBasis.dita"/>
    <topicref href="../Destinations/HadoopFS-LateRecordHandling.dita"/>
    <topicref href="../Destinations/HadoopFS-IdleTimeout.dita"/>
+   <topicref href="../Destinations/HadoopFS-Recovery.dita"/>
    <topicref href="../Destinations/HadoopFS-DataFormat.dita"/>
    <topicref href="../Destinations/HadoopFS-AzureHDInsight.dita"/>
    <topicref href="../Destinations/HadoopFS-EventGeneration.dita">
@@ -209,6 +210,7 @@
    <topicref href="../Destinations/LocalFS-TimeBasis.dita"/>
    <topicref href="../Destinations/LocalFS-LateRecordHandling.dita"/>
    <topicref href="../Destinations/LocalFS-IdleTimeout.dita"/>
+   <topicref href="../Destinations/LocalFS-Recovery.dita"/>
    <topicref href="../Destinations/LocalFS-EventGeneration.dita">
     <topicref href="../Destinations/LocalFS-EventRecords.dita"/>
    </topicref>
@@ -243,6 +245,7 @@
    <topicref href="../Destinations/MapRFS-TimeBasis.dita"/>
    <topicref href="../Destinations/MapRFS-LateRecordHandling.dita"/>
    <topicref href="../Destinations/MapRFS-IdleTimeout.dita"/>
+   <topicref href="../Destinations/MapRFS-Recovery.dita"/>
    <topicref href="../Destinations/MapRFS-EventGeneration.dita">
     <topicref href="../Destinations/MapRFS-EventRecords.dita"/>
    </topicref>
