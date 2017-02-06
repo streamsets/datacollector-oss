@@ -23,6 +23,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Record;
@@ -554,11 +555,15 @@ public class ElasticSearchTarget extends BaseTarget {
       JsonObject item = items.get(i).getAsJsonObject().entrySet().iterator().next().getValue().getAsJsonObject();
       int status = item.get("status").getAsInt();
       if (status >= 400) {
+        Object error = item.get("error");
         // In some old versions, "error" is a simple string not a json object.
-        if (item.get("error") instanceof JsonObject) {
+        if (error instanceof JsonObject) {
           errorItems.add(new ErrorItem(i, item.getAsJsonObject("error").get("reason").getAsString()));
-        } else {
+        } else if (error instanceof JsonPrimitive) {
           errorItems.add(new ErrorItem(i, item.getAsJsonPrimitive("error").getAsString()));
+        } else {
+          // Error would be null if json has no "error" field.
+          errorItems.add(new ErrorItem(i, ""));
         }
       }
     }
