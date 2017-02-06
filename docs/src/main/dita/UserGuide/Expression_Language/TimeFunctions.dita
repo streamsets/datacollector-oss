@@ -27,12 +27,30 @@
         <p>The expression language provides the following time functions:</p>
         <dl>
             <dlentry>
-                <dt>time:extractLongFromDate(&lt;Date object>, &lt;string>)</dt>
+                <dt>time:extractDateFromString(&lt;string>, &lt;format string>)</dt>
+                <dd>
+                    <p>Extracts a Date object from a String, based on the specified date format.</p>
+                    <p>Uses the following arguments:<ul id="ul_nzc_ybq_vy">
+                            <li>string - String to extract the Date object from.</li>
+                            <li>format string - String that specifies the date format of the data in
+                                the &lt;string> argument. For information about creating a date
+                                format, see <xref
+                                    href="https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html"
+                                    format="html" scope="external"/>.</li>
+                        </ul></p>
+                </dd>
+                <dd>For example, the following expression converts the string '2017-05-01
+                    20:15:30.915' to a Date
+                    object:<codeblock>${time:extractDateFromString('2017-05-01 20:15:30.915','yyyy-MM-dd HH:mm:ss.SSS')}</codeblock></dd>
+                <dd>Return type: Date object.</dd>
+            </dlentry>
+            <dlentry>
+                <dt>time:extractLongFromDate(&lt;Date object>, &lt;format string>)</dt>
                 <dd>Extracts a long value from a Date object, based on the specified date
                     format.</dd>
                 <dd>Uses the following arguments:<ul id="ul_wcq_nhr_wx">
                         <li>Date object - Date object to extract the long value from.</li>
-                        <li>string - String that specifies the format of the Date data to be
+                        <li>format string - String that specifies the format of the Date data to be
                             extracted. For information about creating a date format, see <xref
                                 href="https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html"
                                 format="html" scope="external"/>.</li>
@@ -49,14 +67,14 @@
                 </dd>
             </dlentry>
             <dlentry>
-                <dt>time:extractStringFromDate(&lt;Date object>, &lt;string>)</dt>
+                <dt>time:extractStringFromDate(&lt;Date object>, &lt;format string>)</dt>
                 <dd>Extracts a string value from a Date object based on the specified date
                     format.</dd>
                 <dd>Uses the following arguments:</dd>
                 <dd>
                     <ul>
                         <li>Date object - Date object to extract the string value from.</li>
-                        <li>string - String that specifies the format of the Date data to be
+                        <li>format string - String that specifies the format of the Date data to be
                             extracted. For information about creating a date format, see <xref
                                 href="https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html"
                                 format="html" scope="external"/>.</li>
@@ -87,7 +105,7 @@
                 <dd>Return type: Datetime.</dd>
             </dlentry>
             <dlentry>
-                <dt>time.trimDate(&lt;datetime>)</dt>
+                <dt>time:trimDate(&lt;datetime>)</dt>
                 <dd>Trims the date portion of a datetime value by setting the date portion to
                     January 1, 1970.</dd>
                 <dd>For example, if the current time of the <ph
@@ -97,7 +115,7 @@
                 <dd>Return type: Datetime. </dd>
             </dlentry>
             <dlentry>
-                <dt>time.trimTime(&lt;datetime>)</dt>
+                <dt>time:trimTime(&lt;datetime>)</dt>
                 <dd>Trims the time portion of a datetime value by setting the time portion to
                     00:00:00.</dd>
                 <dd>For example, if the value of the pickup_datetime field is Jul 22, 2016 11:16:10
