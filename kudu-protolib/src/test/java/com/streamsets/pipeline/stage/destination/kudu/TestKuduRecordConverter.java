@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.Assert;
 import org.junit.Before;
@@ -165,6 +166,6 @@ public class TestKuduRecordConverter {
     record.set("/long", Field.create((long)10));
     record.set("/short1", Field.create(Field.Type.SHORT, null));
     kuduRecordConverter.convert(record, partialRow, KuduOperationType.DELETE.code); // must not throw NPE
-    Assert.assertEquals("(string str=primary key)", partialRow.stringifyRowKey());
+    Assert.assertTrue(Utils.format("Message: {}", partialRow.stringifyRowKey()), partialRow.stringifyRowKey().contains("primary key"));
   }
 }
