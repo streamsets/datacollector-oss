@@ -41,6 +41,9 @@ grant codebase "file://${sdc.dist.dir}/streamsets-libs-extras/-" {
 grant codebase "file://${sdc.dist.dir}/streamsets-libs/-" {
   permission java.security.AllPermission;
 };
+grant codebase "file://${sdc.dist.dir}/user-libs/streamsets-datacollector-dev-lib/-" {
+  permission java.security.AllPermission;
+};
 // Groovy will parse files in a different context, so we need to grant it additional privileges
 grant codebase "file:/groovy/script" {
   permission java.lang.RuntimePermission "getClassLoader";
@@ -52,7 +55,6 @@ grant codebase "file:/groovy/script" {
 // User stage libraries code base:
 grant codebase "file://${sdc.dist.dir}/user-libs/-" {
   permission java.util.PropertyPermission "*", "read";
-  permission java.lang.RuntimePermission "modifyThread";
   permission java.lang.RuntimePermission "accessDeclaredMembers";
   permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
   permission java.io.FilePermission "${sdc.dist.dir}/user-libs/streamsets-datacollector-dev-lib/lib/*", "read";
