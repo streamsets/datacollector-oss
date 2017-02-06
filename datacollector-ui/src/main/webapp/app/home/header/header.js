@@ -28,9 +28,9 @@ angular
   .controller('HeaderController', function ($scope, $rootScope, $timeout, _, api, $translate, $location, authService,
                                            pipelineService, pipelineConstant, $modal, $q, $route) {
 
-    var pipelineValidationInProgress,
-      pipelineValidationSuccess,
-      validateConfigStatusTimer;
+    var pipelineValidationInProgress;
+    var pipelineValidationSuccess;
+    var validateConfigStatusTimer;
 
     $translate('global.messages.validate.pipelineValidationInProgress').then(function(translation) {
       pipelineValidationInProgress = translation;

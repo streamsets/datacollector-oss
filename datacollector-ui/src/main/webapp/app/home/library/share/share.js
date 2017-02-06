@@ -84,6 +84,10 @@ angular
 
       removePermission: function (permission, index) {
         $scope.acl.permissions.splice(index, 1);
+      },
+
+      changeOwner: function (permission) {
+        $scope.acl.resourceOwner = permission.subjectId;
       }
     });
 

@@ -492,6 +492,9 @@ angular.module('dataCollectorApp')
         $rootScope.common.userGroups = authService.getUserGroups().join(', ');
         $rootScope.userRoles = userRoles;
         $rootScope.isAuthorized = authService.isAuthorized;
+        $rootScope.common.isUserAdmin = authService.isUserAdmin();
+
+
 
         $rootScope.common.authenticationType = configuration.getAuthenticationType();
         $rootScope.common.isDPMEnabled = configuration.isDPMEnabled();

@@ -151,4 +151,12 @@ angular.module('dataCollectorApp.common')
     this.isRemoteUserOrgAdmin = function() {
       return self.remoteUserInfo && self.remoteUserInfo.roles && self.remoteUserInfo.roles.indexOf('org-admin') !== -1;
     };
+
+    /**
+     * Returns true if remote user contains admin role otherwise false
+     * @returns {*|string|boolean}
+     */
+    this.isUserAdmin = function() {
+      return self.userInfo && self.userInfo.roles && self.userInfo.roles.indexOf('admin') !== -1;
+    };
   });

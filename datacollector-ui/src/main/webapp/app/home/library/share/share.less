@@ -23,7 +23,32 @@
     width: 120px;
   }
 
-  .delete-col {
-    width: 50px;
+  .is-owner {
+    opacity: 0.4;
   }
+
+  .action-menu-col {
+    width: 50px;
+    padding: 0;
+
+    .action-menu {
+      position: relative;
+      cursor: pointer;
+      .dropdown-toggle {
+        display: inline-block;
+        width: 100%;
+        padding: @defaultPadding;
+
+        .fa {
+          color: #a2a1a1;
+
+          &:hover {
+            color: @streamsets-icon-btn-hover-color;
+          }
+        }
+      }
+    }
+  }
+
+
 }

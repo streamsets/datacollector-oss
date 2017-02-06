@@ -16,12 +16,16 @@
         <th class="action-col">{{'global.form.read' | translate}}</th>
         <th class="action-col">{{'global.form.write' | translate}}</th>
         <th class="action-col">{{'global.form.execute' | translate}}</th>
-        <th class="delete-col"></th>
+        <th class="action-menu-col"></th>
       </tr>
       </thead>
       <tbody ng-hide="showLoading">
       <tr ng-repeat="permission in acl.permissions track by $index">
-        <td>{{permission.subjectId}}</td>
+        <td>
+          <span class="subject-id">{{permission.subjectId}}</span>
+          <span class="is-owner"
+                ng-if="permission.subjectId === acl.resourceOwner"> ({{'global.form.owner' | translate}})</span>
+        </td>
 
         <td>
           <input type="checkbox" name="creatorReadValue"
@@ -41,11 +45,29 @@
                  ng-checked="permission.actions.indexOf('EXECUTE') !== -1"
                  ng-disabled="permission.subjectId === acl.resourceOwner">
         </td>
-        <td>
-          <div ng-if="permission.subjectId !== acl.resourceOwner">
-            <a href="javascript:;"
-               ng-click="removePermission(permission, $index)"><i class="fa fa-trash-o"></i> </a>
+        <td class="action-menu-col">
+          <div class="action-menu pull-right" dropdown
+               ng-if="permission.subjectId !== acl.resourceOwner">
+              <span class="dropdown-toggle" dropdown-toggle
+                    ng-click="$event.stopPropagation();">
+                <i class="fa fa-ellipsis-v"></i>
+              </span>
+            <ul class="dropdown-menu" role="menu">
+              <li role="presentation"
+                  ng-if="permission.subjectId !== acl.resourceOwner && permission.subjectType === 'USER'">
+                <a href="#" dropdown-toggle ng-click="changeOwner(permission, $index)">
+                  <span>{{'global.form.isOwner' | translate}}</span>
+                </a>
+              </li>
+              <li role="presentation"
+                  ng-if="permission.subjectId !== acl.resourceOwner">
+                <a href="#" dropdown-toggle ng-click="removePermission(permission, $index)">
+                  <span>{{'global.form.delete' | translate}}</span>
+                </a>
+              </li>
+            </ul>
           </div>
+
         </td>
       </tr>
       </tbody>
