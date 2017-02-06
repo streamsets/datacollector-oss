@@ -225,6 +225,17 @@
                                     <entry>JDBC Header Prefix</entry>
                                     <entry>Prefix for JDBC header attributes. </entry>
                                 </row>
+                                <row>
+                                    <entry>Disable Query Validation</entry>
+                                    <entry>Disables the query validation that occurs by default. Use
+                                        to avoid time consuming query validation situations, like
+                                        when querying Hive, which requires using a MapReduce job to
+                                        perform the validation. <p>
+                                            <note type="warning">Query validation prevents running a
+                                                pipeline with invalid queries. Use this option with
+                                                care. </note>
+                                        </p></entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table></info>
