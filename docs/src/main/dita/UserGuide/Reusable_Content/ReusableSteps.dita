@@ -3786,6 +3786,18 @@
                                         querystring parameters to Elasticsearch. Enter the exact
                                         parameter name and value expected by Elasticsearch.</entry>
                                 </row>
+                                <row>
+                                    <entry>Detect Additional Nodes in Cluster</entry>
+                                    <entry>
+                                        <p>Detects additional nodes in the cluster based on the
+                                            configured Cluster URI. </p>
+                                        <p>Selecting this property is the equivalent to setting the
+                                            client.transport.sniff Elasticsearch property to true. </p>
+                                        <p>Use only when the Data Collector shares the same network
+                                            as the Elasticsearch cluster. Do not use for Elastic
+                                            Cloud or Docker clusters. </p>
+                                    </entry>
+                                </row>
                                 <row id="row_ElasticSecurity">
                                     <entry>Use Security</entry>
                                     <entry>Specifies whether security is enabled on the
@@ -3905,6 +3917,26 @@
                                             syntax:<codeblock>&lt;username>:&lt;password></codeblock></p><note
                                             conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
                                         /></entry>
+                                </row>
+                                <row>
+                                    <entry>SSL Truststore Path</entry>
+                                    <entry>
+                                        <p>Location of the truststore file. </p>
+                                        <p>Configuring this property is the equivalent to
+                                            configuring the shield.ssl.truststore.path Elasticsearch
+                                            property. </p>
+                                        <p>Not necessary for Elastic Cloud clusters. </p>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>SSL Truststore Password</entry>
+                                    <entry>
+                                        <p>Password for the truststore file. </p>
+                                        <p>Configuring this property is the equivalent to
+                                            configuring the shield.ssl.truststore.password
+                                            Elasticsearch property. </p>
+                                        <p>Not necessary for Elastic Cloud clusters. </p>
+                                    </entry>
                                 </row>
                             </tbody>
                         </tgroup>
