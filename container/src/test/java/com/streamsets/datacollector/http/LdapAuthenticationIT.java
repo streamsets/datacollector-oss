@@ -23,10 +23,11 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import org.apache.directory.ldap.client.api.LdapConnection;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.testcontainers.containers.GenericContainer;
 
@@ -36,7 +37,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-
+@Ignore
 
 public class LdapAuthenticationIT extends LdapAuthenticationBaseIT  {
   // Connection to Ldap Server
