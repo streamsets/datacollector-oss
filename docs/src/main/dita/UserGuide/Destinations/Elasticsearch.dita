@@ -24,6 +24,9 @@
           destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Elasticsearch</indexterm></indexterm>When
       you configure the Elasticsearch destination, you configure the cluster name, the HTTP URI, and
       document-related information.</p>
+        <p>When the Data Collector shares the same network as the Elasticsearch cluster, you can
+            enter one or more node URI and automatically detect additional Elasticsearch nodes on
+            the cluster. </p>
     <p>The Elasticsearch destination <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Dest-CRUDoverview"/><ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/CDC-xref"/></p>
