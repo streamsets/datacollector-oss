@@ -46,6 +46,7 @@ import com.streamsets.datacollector.event.dto.SDCBuildInfo;
 import com.streamsets.datacollector.event.dto.SDCInfoEvent;
 import com.streamsets.datacollector.event.dto.ServerEvent;
 import com.streamsets.datacollector.event.dto.StageInfo;
+import com.streamsets.datacollector.event.dto.SyncAclEvent;
 import com.streamsets.datacollector.event.handler.DataCollector;
 import com.streamsets.datacollector.event.handler.EventHandlerTask;
 import com.streamsets.datacollector.event.json.ClientEventJson;
@@ -453,6 +454,9 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
             PipelineBaseEvent pipelineStopDeleteEvent = (PipelineBaseEvent) event;
             remoteDataCollector.stopAndDelete(pipelineStopDeleteEvent.getUser(), pipelineStopDeleteEvent.getName(),
               pipelineStopDeleteEvent.getRev());
+            break;
+          case SYNC_ACL:
+            remoteDataCollector.syncAcl(((SyncAclEvent)event).getAcl());
             break;
           case SSO_DISCONNECTED_MODE_CREDENTIALS:
             DisconnectedSsoCredentialsEvent disconectedSsoCredentialsEvent = (DisconnectedSsoCredentialsEvent) event;

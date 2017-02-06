@@ -927,6 +927,28 @@ public class TestRemoteDataCollector {
   }
 
   @Test
+  public void testSyncAcl() throws Exception {
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    AclStoreTask aclStoreTask = Mockito.mock(AclStoreTask.class);
+    PipelineStoreTask pipelineStoreTask = Mockito.mock(MockPipelineStoreTask.class);
+    RemoteDataCollector dataCollector = new RemoteDataCollector(new MockManager(),
+        pipelineStoreTask,
+        new MockPipelineStateStore(),
+        aclStoreTask,
+        new RemoteStateEventListener(new Configuration()),
+        runtimeInfo
+    );
+    File testFolder = tempFolder.newFolder();
+    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testFolder.getAbsolutePath());
+    Mockito.when(pipelineStoreTask.hasPipeline(Mockito.anyString())).thenReturn(true);
+    Acl acl = new Acl();
+    String name = "remote:pipeline";
+    acl.setResourceId(name);
+    dataCollector.syncAcl(acl);
+    Mockito.verify(aclStoreTask, Mockito.times(1)).saveAcl(Mockito.eq(name), Mockito.eq(acl));
+  }
+
+  @Test
   public void testSavePipelineOffset() throws Exception {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     AclStoreTask aclStoreTask = Mockito.mock(AclStoreTask.class);

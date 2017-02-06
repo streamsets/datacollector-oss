@@ -43,6 +43,7 @@ import com.streamsets.datacollector.event.dto.PipelineStatusEvent;
 import com.streamsets.datacollector.event.dto.PipelineStatusEvents;
 import com.streamsets.datacollector.event.dto.SDCInfoEvent;
 import com.streamsets.datacollector.event.dto.ServerEvent;
+import com.streamsets.datacollector.event.dto.SyncAclEvent;
 import com.streamsets.datacollector.event.json.AckEventJson;
 import com.streamsets.datacollector.event.json.ClientEventJson;
 import com.streamsets.datacollector.event.json.DisconnectedSsoCredentialsEventJson;
@@ -55,6 +56,7 @@ import com.streamsets.datacollector.event.json.PipelineStatusEventJson;
 import com.streamsets.datacollector.event.json.PipelineStatusEventsJson;
 import com.streamsets.datacollector.event.json.SDCInfoEventJson;
 import com.streamsets.datacollector.event.json.ServerEventJson;
+import com.streamsets.datacollector.event.json.SyncAclEventJson;
 
 
 public class MessagingJsonToFromDto {
@@ -107,6 +109,9 @@ public class MessagingJsonToFromDto {
         break;
       case SDC_INFO_EVENT:
         eventJson = MessagingDtoJsonMapper.INSTANCE.toSDCInfoEventJson((SDCInfoEvent) event);
+        break;
+      case SYNC_ACL:
+        eventJson = MessagingDtoJsonMapper.INSTANCE.toSyncAclEventJson((SyncAclEvent)event);
         break;
       case START_PIPELINE:
       case STOP_PIPELINE:
@@ -191,6 +196,13 @@ public class MessagingJsonToFromDto {
         };
         PipelineStatusEventsJson pipelineStatusEventsJson = deserialize(serverEventJson.getPayload(), typeRef);
         serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asPipelineStatusEventsDto(pipelineStatusEventsJson));
+        break;
+      }
+      case SYNC_ACL: {
+        TypeReference<SyncAclEventJson> typeRef = new TypeReference<SyncAclEventJson>() {
+        };
+        SyncAclEventJson syncAclEventJson = deserialize(serverEventJson.getPayload(), typeRef);
+        serverEvent.setEvent(MessagingDtoJsonMapper.INSTANCE.asSyncAclEventDto(syncAclEventJson));
         break;
       }
       case DELETE_HISTORY_PIPELINE:

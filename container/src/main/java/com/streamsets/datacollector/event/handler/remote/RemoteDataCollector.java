@@ -25,6 +25,7 @@ import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.dto.ValidationStatus;
+import com.streamsets.datacollector.event.dto.SyncAclEvent;
 import com.streamsets.datacollector.event.dto.WorkerInfo;
 import com.streamsets.datacollector.event.handler.DataCollector;
 import com.streamsets.datacollector.execution.Manager;
@@ -39,6 +40,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.production.OffsetFileUtil;
 import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineInfo;
+import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
@@ -277,6 +279,16 @@ public class RemoteDataCollector implements DataCollector {
       ));
     }
     return pipelineAndValidationStatuses;
+  }
+
+  @Override
+  public void syncAcl(Acl acl) throws PipelineException {
+    if (pipelineStore.hasPipeline(acl.getResourceId())) {
+      validateIfRemote(acl.getResourceId(), "0", "SYNC_ACL");
+      aclStoreTask.saveAcl(acl.getResourceId(), acl);
+    } else {
+      LOG.warn(ContainerError.CONTAINER_0200.getMessage(), acl.getResourceId());
+    }
   }
 
   private List<WorkerInfo> getWorkers(Collection<CallbackInfo> callbackInfos) {

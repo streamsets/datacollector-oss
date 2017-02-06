@@ -24,6 +24,7 @@ import java.util.List;
 
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
+import com.streamsets.datacollector.event.dto.SyncAclEvent;
 import com.streamsets.datacollector.event.handler.remote.PipelineAndValidationStatus;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.lib.security.acl.dto.Acl;
@@ -61,5 +62,7 @@ public interface DataCollector {
   Collection<PipelineAndValidationStatus> getPipelines() throws PipelineException;
 
   List<PipelineAndValidationStatus> getRemotePipelinesWithChanges() throws PipelineException;
+
+  void syncAcl(Acl acl) throws PipelineException;
 
 }

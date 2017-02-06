@@ -30,6 +30,7 @@ import com.streamsets.datacollector.event.dto.PipelineStatusEvent;
 import com.streamsets.datacollector.event.dto.PipelineStatusEvents;
 import com.streamsets.datacollector.event.dto.SDCInfoEvent;
 import com.streamsets.datacollector.event.dto.ServerEvent;
+import com.streamsets.datacollector.event.dto.SyncAclEvent;
 import com.streamsets.datacollector.event.json.AckEventJson;
 import com.streamsets.datacollector.event.json.ClientEventJson;
 import com.streamsets.datacollector.event.json.DisconnectedSsoCredentialsEventJson;
@@ -41,6 +42,7 @@ import com.streamsets.datacollector.event.json.PipelineStatusEventJson;
 import com.streamsets.datacollector.event.json.PipelineStatusEventsJson;
 import com.streamsets.datacollector.event.json.SDCInfoEventJson;
 import com.streamsets.datacollector.event.json.ServerEventJson;
+import com.streamsets.datacollector.event.json.SyncAclEventJson;
 import fr.xebia.extras.selma.Mapper;
 import fr.xebia.extras.selma.Maps;
 import fr.xebia.extras.selma.Selma;
@@ -95,6 +97,10 @@ public abstract class MessagingDtoJsonMapper {
   public abstract SDCInfoEvent asSDCInfoEventDto(SDCInfoEventJson sdcInfoEventJson);
 
   public abstract SDCInfoEventJson toSDCInfoEventJson(SDCInfoEvent sdcInfoEvent);
+
+  public abstract SyncAclEventJson toSyncAclEventJson(SyncAclEvent syncAclEvent);
+
+  public abstract SyncAclEvent asSyncAclEventDto(SyncAclEventJson syncAclEvent);
 
   @Maps(withIgnoreFields = {"payload", "event"})
   public abstract ServerEvent asServerEventDto(ServerEventJson serverEventJson);

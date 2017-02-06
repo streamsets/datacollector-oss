@@ -57,6 +57,7 @@ import com.streamsets.datacollector.event.json.PipelineStatusEventsJson;
 import com.streamsets.datacollector.event.json.SDCInfoEventJson;
 import com.streamsets.datacollector.event.json.ServerEventJson;
 import com.streamsets.datacollector.event.json.StageInfoJson;
+import com.streamsets.datacollector.event.json.SyncAclEventJson;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.manager.PipelineManagerException;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
@@ -69,6 +70,7 @@ import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.lib.security.acl.dto.Acl;
+import com.streamsets.lib.security.acl.json.AclJson;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
@@ -131,6 +133,7 @@ public class TestRemoteEventHandler {
         ServerEventJson serverEventJson5 = new ServerEventJson();
         ServerEventJson serverEventJson6 = new ServerEventJson();
         ServerEventJson serverEventJson7 = new ServerEventJson();
+        ServerEventJson serverEventJson8 = new ServerEventJson();
         setServerEvent(
             serverEventJson1,
             id1.toString(),
@@ -185,6 +188,18 @@ public class TestRemoteEventHandler {
             true,
             jsonDto.serialize(pipelineBaseEventJson)
         );
+        SyncAclEventJson syncAclEventJson = new SyncAclEventJson();
+        AclJson aclJson = new AclJson();
+        aclJson.setResourceId("remote:name");
+        syncAclEventJson.setAcl(aclJson);
+        setServerEvent(
+            serverEventJson8,
+            id8.toString(),
+            EventType.SYNC_ACL,
+            false,
+            false,
+            jsonDto.serialize(syncAclEventJson)
+        );
 
         serverEventJsonList.addAll(Arrays.asList(serverEventJson1,
             serverEventJson2,
@@ -192,7 +207,8 @@ public class TestRemoteEventHandler {
             serverEventJson4,
             serverEventJson5,
             serverEventJson6,
-            serverEventJson7
+            serverEventJson7,
+            serverEventJson8
         ));
 
       } catch (JsonProcessingException e) {
@@ -363,6 +379,7 @@ public class TestRemoteEventHandler {
     public boolean putDummyPipelineStatus;
     public boolean stopDeletePipelineCalled;
     public boolean putRemotePipelines;
+    public boolean syncAclCalled;
 
     @Override
     public void start(String user, String name, String rev) throws PipelineException, StageException {
@@ -464,7 +481,7 @@ public class TestRemoteEventHandler {
 
     @Override
     public List<PipelineAndValidationStatus> getRemotePipelinesWithChanges() throws PipelineException {
-      List<PipelineAndValidationStatus> list = new ArrayList<PipelineAndValidationStatus>();
+      List<PipelineAndValidationStatus> list = new ArrayList<>();
       if (putRemotePipelines) {
         list.add(new PipelineAndValidationStatus(
             "remote",
@@ -479,6 +496,11 @@ public class TestRemoteEventHandler {
         ));
       }
       return list;
+    }
+
+    @Override
+    public void syncAcl(Acl acl) throws PipelineException {
+      syncAclCalled = true;
     }
 
     @Override
@@ -554,6 +576,7 @@ public class TestRemoteEventHandler {
     assertTrue(mockRemoteDataCollector.deleteCalled);
     assertTrue(mockRemoteDataCollector.deleteHistoryCalled);
     assertTrue(mockRemoteDataCollector.getPipelinesCalled);
+    assertTrue(mockRemoteDataCollector.syncAclCalled);
     assertFalse(mockRemoteDataCollector.savePipelineCalled);
     assertFalse(mockRemoteDataCollector.savePipelineRulesCalled);
   }
@@ -819,5 +842,4 @@ public class TestRemoteEventHandler {
         new ObjectMapper().readValue(baos.toByteArray(), Map.class)
     );
   }
-
 }
