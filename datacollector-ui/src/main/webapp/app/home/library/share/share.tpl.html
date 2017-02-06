@@ -22,6 +22,8 @@
       <tbody ng-hide="showLoading">
       <tr ng-repeat="permission in acl.permissions track by $index">
         <td>
+          <span class="fa fa-user user-icon"
+                ng-class="{'fa-user': permission.subjectType === 'USER', 'fa-users': permission.subjectType === 'GROUP'}"></span>
           <span class="subject-id">{{permission.subjectId}}</span>
           <span class="is-owner"
                 ng-if="permission.subjectId === acl.resourceOwner"> ({{'global.form.owner' | translate}})</span>
@@ -73,14 +75,15 @@
       </tbody>
     </table>
 
-    <div class="form-horizontal">
+    <div class="add-users-groups form-horizontal">
       <div class="form-group">
         <div class="controls col-lg-5">
           <ui-select multiple
+                     tagging
                      tagging-label=" "
                      tagging-tokens=",|ENTER"
                      ng-model="newSubjectList.value">
-            <ui-select-match class="ui-select-match">{{$item}}</ui-select-match>
+            <ui-select-match placeholder="{{'home.library.selectUsersAndGroupsPlaceholder' | translate}}" class="ui-select-match">{{$item}}</ui-select-match>
             <ui-select-choices class="ui-select-choices"
                                repeat="listValue in userList.concat(groupList) | filter:$select.search">
               <div ng-bind-html="listValue | highlight: $select.search"></div>

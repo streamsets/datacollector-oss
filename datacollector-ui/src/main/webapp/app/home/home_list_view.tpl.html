@@ -138,6 +138,13 @@
             </li>
 
             <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && !common.isSlaveNode">
+              <a href="#" dropdown-toggle ng-click="sharePipelineConfig(pipeline, $event)">
+                <i class="fa fa-share-alt"></i>
+                <span>{{'global.form.share' | translate}}</span>
+              </a>
+            </li>
+
+            <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && !common.isSlaveNode">
               <a href="#" dropdown-toggle ng-click="importPipelineConfig(pipeline, $event)">
                 <i class="glyphicon glyphicon-import"></i>
                 <span>{{'global.form.import' | translate}}</span>

@@ -143,6 +143,15 @@
         <i class="fa fa-files-o fa-14x"></i>
       </a>
 
+      <a ng-disabled="selectedPipelineList.length !== 1 || common.isSlaveNode"
+         ng-click="selectedPipelineList.length !== 1 || shareSelectedPipelineConfig()"
+         tooltip-placement="bottom"
+         tooltip="{{'global.form.share' | translate}}"
+         tooltip-popup-delay="500"
+         class="btn btn-link icon-button">
+        <i class="fa fa-share-alt fa-14x"></i>
+      </a>
+
       <a ng-disabled="selectedPipelineList.length === 0 || common.isSlaveNode"
          ng-click="selectedPipelineList.length === 0 || startSelectedPipelines()"
          tooltip-placement="bottom"

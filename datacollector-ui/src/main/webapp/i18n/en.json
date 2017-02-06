@@ -574,6 +574,7 @@
       "nameValidation": "Enter alphanumeric characters, spaces and underscores.",
       "processorPlaceholder": "Select Processor...",
       "sharingSettings": "Sharing Settings",
+      "selectUsersAndGroupsPlaceholder": "Select users and groups...",
       "sourcePlaceholder":"Select Origin...",
       "system:allPipelines" : "All Pipelines",
       "system:publishedPipelines": "Published Pipelines",

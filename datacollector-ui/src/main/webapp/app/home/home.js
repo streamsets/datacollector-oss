@@ -234,6 +234,25 @@ angular
       },
 
       /**
+       * Share Pipeline Configuration
+       */
+      sharePipelineConfig: function(pipelineInfo, $event) {
+        pipelineService.sharePipelineConfigCommand(pipelineInfo, $event);
+      },
+
+      /**
+       * Share Selected Pipeline
+       */
+      shareSelectedPipelineConfig: function () {
+        if ($scope.selectedPipelineList && $scope.selectedPipelineList.length > 0) {
+          var selectedPipeline = _.find($scope.filteredPipelines, function(pipeline) {
+            return $scope.selectedPipelineList[0] === pipeline.name
+          });
+          pipelineService.sharePipelineConfigCommand(selectedPipeline);
+        }
+      },
+
+      /**
        * Reset Offset to Origin for selected pipelines
        */
       resetOffsetForSelectedPipelines: function() {
