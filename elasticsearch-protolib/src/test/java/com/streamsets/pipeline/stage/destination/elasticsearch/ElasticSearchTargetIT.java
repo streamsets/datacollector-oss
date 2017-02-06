@@ -169,10 +169,14 @@ public class ElasticSearchTargetIT {
   }
 
   private Target createTarget() {
+    return createTarget("");
+  }
+
+  private Target createTarget(String docId) {
     return createTarget(
         "${time:now()}",
         "${record:value('/index')}",
-        "",
+        docId,
         ElasticSearchOperationType.INDEX
     );
   }
@@ -329,6 +333,37 @@ public class ElasticSearchTargetIT {
       records.add(record1);
       records.add(record2);
       runner.runWrite(records);
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testJsonParseError() throws Exception {
+    Target target = createTarget("${record:value('/index')}");
+    TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+
+    try {
+      runner.runInit();
+      List<Record> records = new ArrayList<>();
+      Record record1 = RecordCreator.create();
+      // The backslash should cause a JsonParseException which in turn makes Elasticsearch RestClient
+      // throw a ResponseException. Since the HTTP request entirely failed, the entire batch should be
+      // sent to error.
+      record1.set(Field.create(ImmutableMap.of("a", Field.create("Hello"),
+          "index", Field.create("\\01234"), "type", Field.create("t"))));
+      Record record2 = RecordCreator.create();
+      record2.set(Field.create(ImmutableMap.of("a", Field.create("Bye"),
+          "index", Field.create("iii"), "type", Field.create("t"))));
+      records.add(record1);
+      records.add(record2);
+      runner.runWrite(records);
+      Assert.assertEquals(2, runner.getErrorRecords().size());
+      Assert.assertEquals("Hello", runner.getErrorRecords().get(0).get("/a").getValueAsString());
+      Assert.assertEquals("Bye", runner.getErrorRecords().get(1).get("/a").getValueAsString());
+      Assert.assertTrue(runner.getErrors().isEmpty());
     } finally {
       runner.runDestroy();
     }

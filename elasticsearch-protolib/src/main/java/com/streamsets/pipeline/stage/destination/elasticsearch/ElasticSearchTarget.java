@@ -450,6 +450,7 @@ public class ElasticSearchTarget extends BaseTarget {
         JsonObject json = new JsonParser().parse(baos.toString()).getAsJsonObject();
         baos.close();
 
+        // Handle errors in bulk requests individually.
         boolean errors = json.get("errors").getAsBoolean();
         if (errors) {
           List<ErrorItem> errorItems;
@@ -473,7 +474,7 @@ public class ElasticSearchTarget extends BaseTarget {
           }
         }
       } catch (IOException ex) {
-        throw new StageException(Errors.ELASTICSEARCH_17, records.size(), ex.toString(), ex);
+        errorRecordHandler.onError(records, new StageException(Errors.ELASTICSEARCH_17, records.size(), ex.toString(), ex));
       }
     }
   }
