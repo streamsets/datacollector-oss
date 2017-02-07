@@ -27,6 +27,8 @@ import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.RemoteSSOService;
+import org.eclipse.jetty.server.ForwardedRequestCustomizer;
+import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.thread.ThreadPool;
@@ -39,6 +41,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class TestWebServerTask {
 
@@ -158,7 +164,7 @@ public class TestWebServerTask {
     try {
       webServerTask.initTask();
       Server server = webServerTask.getServer();
-      Assert.assertEquals(100, ((ThreadPool.SizedThreadPool)server.getThreadPool()).getMaxThreads());
+      assertEquals(100, ((ThreadPool.SizedThreadPool)server.getThreadPool()).getMaxThreads());
     } finally {
       webServerTask.stopTask();
     }
@@ -192,7 +198,7 @@ public class TestWebServerTask {
     Assert.assertNotNull(runtimeInfo.getAttribute(WebServerTask.SSO_SERVICES_ATTR));
 
     Object attr = runtimeInfo.getAttribute(WebServerTask.SSO_SERVICES_ATTR);
-    Assert.assertEquals(1, ((List)attr).size());
+    assertEquals(1, ((List)attr).size());
 
     webServerTask = createWebServerTask(runtimeInfo, conf, Collections.<WebAppProvider>emptySet());
     try {
@@ -201,9 +207,82 @@ public class TestWebServerTask {
       webServerTask.stopTask();
     }
 
-    Assert.assertEquals(attr, runtimeInfo.getAttribute(WebServerTask.SSO_SERVICES_ATTR));
-    Assert.assertEquals(2, ((List)attr).size());
+    assertEquals(attr, runtimeInfo.getAttribute(WebServerTask.SSO_SERVICES_ATTR));
+    assertEquals(2, ((List)attr).size());
 
+  }
+
+  @Test
+  public void testForwardRequestCustomizerConfiguration() throws Exception {
+    final Configuration appConf = new Configuration();
+
+    WebAppProvider webAppProvider = new WebAppProvider() {
+      @Override
+      public Configuration getAppConfiguration() {
+        return appConf;
+      }
+
+      @Override
+      public ServletContextHandler get() {
+        ServletContextHandler handler = new ServletContextHandler();
+        handler.setContextPath("/bar");
+        return handler;
+      }
+
+      @Override
+      public void postStart() {
+
+      }
+    };
+
+    Configuration taskConf = new Configuration();
+    WebServerTask webServerTask = createWebServerTask(
+        new File("target").getAbsolutePath(),
+        taskConf,
+        ImmutableSet.of(webAppProvider),
+        false
+    );
+    webServerTask = Mockito.spy(webServerTask);
+
+    try {
+      webServerTask.initTask();
+      Mockito.verify(webServerTask, Mockito.times(1))
+          .configureForwardRequestCustomizer(Mockito.<HttpConfiguration>any());
+
+      assertFalse(hasForwardedRequestCustomizer(webServerTask.getHttpConf()));
+    } finally {
+      webServerTask.stopTask();
+    }
+
+    taskConf.set(WebServerTask.HTTP_ENABLE_FORWARDED_REQUESTS_KEY, true);
+    webServerTask = createWebServerTask(
+        new File("target").getAbsolutePath(),
+        taskConf,
+        ImmutableSet.of(webAppProvider),
+        false
+    );
+    webServerTask = Mockito.spy(webServerTask);
+    try {
+      webServerTask.initTask();
+      Mockito.verify(webServerTask, Mockito.times(1))
+          .configureForwardRequestCustomizer(Mockito.<HttpConfiguration>any());
+
+      assertTrue(hasForwardedRequestCustomizer(webServerTask.getHttpConf()));
+    } finally {
+      webServerTask.stopTask();
+    }
+
+  }
+
+  private boolean hasForwardedRequestCustomizer(HttpConfiguration conf) {
+    boolean hasForwardedRequestCustomizer = false;
+    for (HttpConfiguration.Customizer customizer : conf.getCustomizers()) {
+      if (customizer instanceof ForwardedRequestCustomizer) {
+        hasForwardedRequestCustomizer = true;
+        break;
+      }
+    }
+    return hasForwardedRequestCustomizer;
   }
 
 }

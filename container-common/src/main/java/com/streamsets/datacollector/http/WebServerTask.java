@@ -51,6 +51,7 @@ import org.eclipse.jetty.security.authentication.DigestAuthenticator;
 import org.eclipse.jetty.security.authentication.FormAuthenticator;
 import org.eclipse.jetty.server.ConnectionFactory;
 import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.ForwardedRequestCustomizer;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
@@ -134,9 +135,11 @@ public abstract class WebServerTask extends AbstractTask {
 
   public static final String HTTP_SESSION_MAX_INACTIVE_INTERVAL_CONFIG = "http.session.max.inactive.interval";
   public static final int HTTP_SESSION_MAX_INACTIVE_INTERVAL_DEFAULT = 86400;  // in seconds = 24 hours
+  public static final String HTTP_ENABLE_FORWARDED_REQUESTS_KEY = "http.enable.forwarded.requests";
+  private static final boolean HTTP_ENABLE_FORWARDED_REQUESTS_DEFAULT = false;
 
   public static final String AUTHENTICATION_KEY = "http.authentication";
-  public static final String AUTHENTICATION_DEFAULT = "none"; //"form";
+  public static final String AUTHENTICATION_DEFAULT = "none";
 
   private static final String DIGEST_REALM_KEY = "http.digest.realm";
   private static final String REALM_POSIX_DEFAULT = "-realm";
@@ -173,6 +176,7 @@ public abstract class WebServerTask extends AbstractTask {
   private final Set<ContextConfigurator> contextConfigurators;
   private int port;
   private Server server;
+  private HttpConfiguration httpConf = new HttpConfiguration();
   private Server redirector;
   private HashSessionManager hashSessionManager;
   private Map<String, Set<String>> roleMapping;
@@ -570,21 +574,22 @@ public abstract class WebServerTask extends AbstractTask {
     qtp.setDaemon(true);
     Server server = new Server(qtp);
 
+    httpConf = configureForwardRequestCustomizer(httpConf);
+
     if (!isSSLEnabled()) {
       InetSocketAddress addr = new InetSocketAddress(hostname, port);
-      ServerConnector connector = new ServerConnector(server);
+      ServerConnector connector = new ServerConnector(server, new HttpConnectionFactory(httpConf));
       connector.setHost(addr.getHostName());
       connector.setPort(addr.getPort());
       server.setConnectors(new Connector[]{connector});
     } else {
       //Create a connector for HTTPS
-      HttpConfiguration httpsConf = new HttpConfiguration();
-      httpsConf.addCustomizer(new SecureRequestCustomizer());
+      httpConf.addCustomizer(new SecureRequestCustomizer());
 
       SslContextFactory sslContextFactory = createSslContextFactory();
       ServerConnector httpsConnector = new ServerConnector(server,
                                                            new SslConnectionFactory(sslContextFactory, "http/1.1"),
-                                                           new HttpConnectionFactory(httpsConf));
+                                                           new HttpConnectionFactory(httpConf));
       httpsConnector.setPort(port);
       httpsConnector.setHost(hostname);
       server.setConnectors(new Connector[]{httpsConnector});
@@ -913,4 +918,17 @@ public abstract class WebServerTask extends AbstractTask {
     return ImmutableMap.of(SSOConstants.SERVICE_BASE_URL_ATTR, this.runtimeInfo.getBaseHttpUrl());
   }
 
+  @VisibleForTesting
+  HttpConfiguration configureForwardRequestCustomizer(HttpConfiguration httpConf) {
+    if (conf.get(HTTP_ENABLE_FORWARDED_REQUESTS_KEY, HTTP_ENABLE_FORWARDED_REQUESTS_DEFAULT)) {
+      httpConf.addCustomizer(new ForwardedRequestCustomizer());
+    }
+
+    return httpConf;
+  }
+
+  @VisibleForTesting
+  HttpConfiguration getHttpConf() {
+    return httpConf;
+  }
 }
