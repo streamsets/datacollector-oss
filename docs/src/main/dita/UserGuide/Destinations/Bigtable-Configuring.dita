@@ -164,6 +164,12 @@
                                         column written to Cloud Bigtable.</entry>
                                 </row>
                                 <row>
+                                    <entry>Time Stamp Field Name</entry>
+                                    <entry>Field in the record that contains the timestamp value to
+                                        use for the time basis. The field must contain a Long
+                                        value.</entry>
+                                </row>
+                                <row>
                                     <entry>Number of Records to Buffer</entry>
                                     <entry>Number of records to buffer in each commit to Cloud
                                             Bigtable.<p>Enter a number between 1 and 1000. You might
