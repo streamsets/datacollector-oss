@@ -298,8 +298,6 @@ angular
             }
           }
         });
-
-        $scope.unSelectAll();
       },
 
       /**
@@ -353,8 +351,6 @@ angular
             pipeline.metadata.labels = _(mergedLabels).uniq();
           });
         }, function () {});
-
-        $scope.unSelectAll();
       },
 
       /**
@@ -386,7 +382,6 @@ angular
           $rootScope.common.errors = [];
         }
         api.pipelineAgent.exportSelectedPipelines(selectedPipelineList, includeDefinitions);
-        $scope.unSelectAll();
       },
 
       /**
@@ -499,8 +494,6 @@ angular
         }).error(function(data) {
           $rootScope.common.errors = [data];
         });
-
-        $scope.unSelectAll();
       },
 
       /**
@@ -610,8 +603,6 @@ angular
             }
           });
         }, function () {});
-
-        $scope.unSelectAll();
       },
 
       /**
