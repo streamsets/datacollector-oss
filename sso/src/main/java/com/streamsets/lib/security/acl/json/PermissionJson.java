@@ -25,20 +25,11 @@ import java.util.List;
 
 public class PermissionJson {
 
-  private String resourceId;
   private String subjectId;
   private SubjectTypeJson subjectType;
   private String lastModifiedBy;
   private long lastModifiedOn;
   private List<ActionJson> actions = new ArrayList<>();
-
-  public String getResourceId() {
-    return resourceId;
-  }
-
-  public void setResourceId(String resourceId) {
-    this.resourceId = resourceId;
-  }
 
   public String getSubjectId() {
     return subjectId;

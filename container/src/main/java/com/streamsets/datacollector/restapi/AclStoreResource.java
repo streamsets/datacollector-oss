@@ -121,7 +121,6 @@ public class AclStoreResource {
       acl.setLastModifiedOn(System.currentTimeMillis());
 
       Permission ownerPermission = new Permission();
-      ownerPermission.setResourceId(name);
       ownerPermission.setSubjectId(pipelineInfo.getCreator());
       ownerPermission.setSubjectType(SubjectType.USER);
       ownerPermission.setLastModifiedOn(pipelineInfo.getCreated().getTime());
@@ -206,7 +205,6 @@ public class AclStoreResource {
       // If no acl, only owner of the pipeline will have all permission
       if (pipelineInfo.getCreator().equals(currentUser.getName())) {
         Permission ownerPermission = new Permission();
-        ownerPermission.setResourceId(name);
         ownerPermission.setSubjectId(pipelineInfo.getCreator());
         ownerPermission.setSubjectType(SubjectType.USER);
         ownerPermission.getActions().addAll(ResourceType.PIPELINE.getActions());

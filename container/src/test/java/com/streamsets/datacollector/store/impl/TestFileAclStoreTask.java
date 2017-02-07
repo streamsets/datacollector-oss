@@ -141,7 +141,6 @@ public class TestFileAclStoreTask {
       Assert.assertEquals("testUser", acl.getPermissions().get(0).getSubjectId());
 
       Permission newUserPermission = new Permission();
-      newUserPermission.setResourceId(acl.getResourceId());
       newUserPermission.setSubjectId("user1");
       newUserPermission.setSubjectType(SubjectType.USER);
       newUserPermission.setLastModifiedBy("testUser");

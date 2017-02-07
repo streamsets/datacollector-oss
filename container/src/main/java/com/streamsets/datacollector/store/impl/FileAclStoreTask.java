@@ -96,7 +96,6 @@ public class FileAclStoreTask extends AbstractAclStoreTask {
       acl.setLastModifiedOn(resourceCreateTime);
 
       Permission ownerPermission = new Permission();
-      ownerPermission.setResourceId(pipelineName);
       ownerPermission.setSubjectId(resourceOwner);
       ownerPermission.setSubjectType(SubjectType.USER);
       ownerPermission.setLastModifiedOn(resourceCreateTime);

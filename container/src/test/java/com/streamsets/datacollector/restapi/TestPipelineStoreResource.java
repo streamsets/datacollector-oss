@@ -734,7 +734,6 @@ public class TestPipelineStoreResource extends JerseyTest {
           );
           readOnlyAcl.getPermissions().add(
               new Permission(
-                  "pipelineId",
                   "user1",
                   SubjectType.USER,
                   "user2",
@@ -751,7 +750,6 @@ public class TestPipelineStoreResource extends JerseyTest {
           );
           readWriteOnlyAcl.getPermissions().add(
               new Permission(
-                  "pipelineId",
                   "user1",
                   SubjectType.USER,
                   "user2",
@@ -768,7 +766,6 @@ public class TestPipelineStoreResource extends JerseyTest {
           );
           readWriteExecuteAcl.getPermissions().add(
               new Permission(
-                  "pipelineId",
                   "user1",
                   SubjectType.USER,
                   "user2",

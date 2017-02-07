@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Permission {
-  private String resourceId;
   private String subjectId;
   private SubjectType subjectType;
   private String lastModifiedBy;
@@ -32,14 +31,8 @@ public class Permission {
   private List<Action> actions;
 
   public Permission(
-      String resourceId,
-      String subjectId,
-      SubjectType subjectType,
-      String lastModifiedBy,
-      long lastModifiedOn,
-      List<Action> actions
+      String subjectId, SubjectType subjectType, String lastModifiedBy, long lastModifiedOn, List<Action> actions
   ) {
-    this.resourceId = resourceId;
     this.subjectId = subjectId;
     this.subjectType = subjectType;
     this.lastModifiedBy = lastModifiedBy;
@@ -49,14 +42,6 @@ public class Permission {
 
   public Permission() {
     this.actions = new ArrayList<>();
-  }
-
-  public String getResourceId() {
-    return resourceId;
-  }
-
-  public void setResourceId(String resourceId) {
-    this.resourceId = resourceId;
   }
 
   public String getSubjectId() {
