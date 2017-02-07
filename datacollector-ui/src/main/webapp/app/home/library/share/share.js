@@ -24,7 +24,9 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('ShareModalInstanceController', function ($scope, $modalInstance, $translate, api, pipelineInfo) {
+  .controller('ShareModalInstanceController', function (
+    $rootScope, $scope, $modalInstance, $translate, api, configuration, pipelineInfo
+  ) {
     angular.extend($scope, {
       pipelineInfo: pipelineInfo,
       common: {
@@ -36,6 +38,8 @@ angular
       },
       userList: [],
       groupList: [],
+      isACLReadyOnly: true,
+      isACLEnabled: configuration.isACLEnabled(),
 
       save : function () {
         api.pipelineAgent.savePipelineAcl(pipelineInfo.name, $scope.acl)
@@ -101,6 +105,10 @@ angular
               angular.forEach($scope.acl.permissions, function(permission) {
                 alreadyAddedSubjects.push(permission.subjectId);
               });
+            }
+
+            if ($rootScope.common.isUserAdmin || $rootScope.common.userName === $scope.acl.resourceOwner) {
+              $scope.isACLReadyOnly = false;
             }
 
             fetchUsersAndGroups();

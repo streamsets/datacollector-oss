@@ -983,8 +983,8 @@
           "name": "pipeline.access.control.enabled",
           "type": "boolean",
           "default": "true",
-          "label": "Pipeline Access Control (ACL)",
-          "description": "Pipeline Access Control (ACL)",
+          "label": "Pipeline Sharing / ACLs",
+          "description": "Pipeline Sharing / ACLs",
           "required": "false"
         }
       ]

@@ -151,6 +151,7 @@ public enum ContainerError implements ErrorCode {
 
   // ACL
   CONTAINER_01200("{} '{}' doesn't have permissions {} on pipeline {}"),
+  CONTAINER_01201("Only owner of the pipeline {} or admin is allowed to updated the ACL information"),
 
   // misc
   CONTAINER_01300("Environment variable 'STREAMSETS_LIBRARIES_EXTRA_DIR' is not set"),

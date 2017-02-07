@@ -29,6 +29,7 @@ import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.store.impl.AclPipelineStoreTask;
 import com.streamsets.datacollector.util.AuthzRole;
+import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.lib.security.acl.AclDtoJsonMapper;
 import com.streamsets.lib.security.acl.dto.Acl;
@@ -148,6 +149,22 @@ public class AclStoreResource {
   ) throws PipelineException, URISyntaxException {
     PipelineInfo pipelineInfo = store.getInfo(name);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
+
+    Acl existingAcl = aclStore.getAcl(name);
+    if (existingAcl != null) {
+      // Only owner of the resource and admin is allowed to save the ACL
+      if (!existingAcl.getResourceOwner().equals(currentUser.getName()) && !context.isUserInRole(AuthzRole.ADMIN) &&
+          !context.isUserInRole(AuthzRole.ADMIN_REMOTE)) {
+        throw new PipelineException(ContainerError.CONTAINER_01201, name);
+      }
+    } else {
+      // If there is no ACL info stored, only owner of pipeline and admin is allowed save ACL
+      if (!pipelineInfo.getCreator().equals(currentUser.getName()) && !context.isUserInRole(AuthzRole.ADMIN) &&
+          !context.isUserInRole(AuthzRole.ADMIN_REMOTE)) {
+        throw new PipelineException(ContainerError.CONTAINER_01201, name);
+      }
+    }
+
     aclStore.saveAcl(name, AclDtoJsonMapper.INSTANCE.asAclDto(aclJson));
     return Response.ok().build();
   }

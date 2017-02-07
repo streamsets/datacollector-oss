@@ -33,23 +33,23 @@
           <input type="checkbox" name="creatorReadValue"
                  ng-click="onActionToggle(permission, 'READ', $event)"
                  ng-checked="permission.actions.indexOf('READ') !== -1"
-                 ng-disabled="permission.subjectId === acl.resourceOwner">
+                 disabled>
         </td>
         <td>
           <input type="checkbox" name="creatorWritwValue"
                  ng-click="onActionToggle(permission, 'WRITE', $event)"
                  ng-checked="permission.actions.indexOf('WRITE') !== -1"
-                 ng-disabled="permission.subjectId === acl.resourceOwner">
+                 ng-disabled="permission.subjectId === acl.resourceOwner || isACLReadyOnly">
         </td>
         <td>
           <input type="checkbox" name="creatorExecuteValue"
                  ng-click="onActionToggle(permission, 'EXECUTE', $event)"
                  ng-checked="permission.actions.indexOf('EXECUTE') !== -1"
-                 ng-disabled="permission.subjectId === acl.resourceOwner">
+                 ng-disabled="permission.subjectId === acl.resourceOwner || isACLReadyOnly">
         </td>
         <td class="action-menu-col">
           <div class="action-menu pull-right" dropdown
-               ng-if="permission.subjectId !== acl.resourceOwner">
+               ng-if="permission.subjectId !== acl.resourceOwner && !isACLReadyOnly">
               <span class="dropdown-toggle" dropdown-toggle
                     ng-click="$event.stopPropagation();">
                 <i class="fa fa-ellipsis-v"></i>
@@ -75,7 +75,7 @@
       </tbody>
     </table>
 
-    <div class="add-users-groups form-horizontal">
+    <div class="add-users-groups form-horizontal" ng-if="!isACLReadyOnly">
       <div class="form-group">
         <div class="controls col-lg-5">
           <ui-select multiple
@@ -95,11 +95,17 @@
       </div>
     </div>
 
+
+
+    <div ng-if="!isACLEnabled" class="alert alert-info" role="alert">
+      Note: Data Collector pipeline sharing (ACLs) are not enabled. Update the Data Collector configuration file to enable pipeline sharing.
+    </div>
+
   </div>
   <div class="modal-footer">
     <button type="reset" class="btn btn-default" ng-click="cancel()"
             translate="global.form.cancel">Cancel</button>
-    <button ng-click="save()" class="btn btn-primary"
+    <button ng-if="!isACLReadyOnly" ng-click="save()" class="btn btn-primary"
             translate="global.form.save">Save</button>
   </div>
 </form>
