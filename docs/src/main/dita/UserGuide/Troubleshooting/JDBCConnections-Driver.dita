@@ -38,11 +38,11 @@ JDBC_06 - Failed to initialize connection pool: java.sql.SQLException: No suitab
             <dlentry>
                 <dt>The JDBC driver is not stored in the correct directory.</dt>
                 <dd>You must store the JDBC driver in the following directory: <codeph>&lt;external
-                    directory>/streamsets-datacollector-jdbc-lib/lib/</codeph>.</dd>
+                        directory>/streamsets-datacollector-jdbc-lib/lib/</codeph>.</dd>
                 <dd>
                     <p>For example, assuming that you defined the external directory as
-                        <codeph>/opt/sdc-extras</codeph>, store the JDBC JAR files in
-                        <codeph>/opt/sdc-extras/streamsets-datacollector-jdbc-lib/lib/</codeph>.</p>
+                            <codeph>/opt/sdc-extras</codeph>, store the JDBC JAR files in
+                            <codeph>/opt/sdc-extras/streamsets-datacollector-jdbc-lib/lib/</codeph>.</p>
                 </dd>
             </dlentry>
             <dlentry>
@@ -91,6 +91,35 @@ grant codebase "file:///opt/sdc-extras/-" {
                     driver" error message, add the class name for the driver in the <uicontrol>JDBC
                         Class Driver Name</uicontrol> property in the <uicontrol>Legacy
                         Drivers</uicontrol> tab for the stage. </dd>
+            </dlentry>
+            <dlentry>
+                <dt>The sdc user does not have correct permissions on the JDBC driver.</dt>
+                <dd>When you run <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> as a service, the default system user named <codeph>sdc</codeph> is used to
+                    start the service. The user must have read access to the JDBC driver and all
+                    directories in its path.</dd>
+                <dd>To verify the permissions, run the following
+                    command:<codeblock>sudo -u sdc file &lt;external directory>/streamsets-datacollector-jdbc-lib/lib/&lt;driver jar file></codeblock></dd>
+                <dd>For example, let's assume that you are using an external directory of
+                        <codeph>/opt/sdc-extras</codeph> and the MySQL JDBC driver. If you receive
+                    the following output when you run the command, then the <codeph>sdc</codeph>
+                    user does not have read or execute access on one or more of the directories in
+                    the
+                    path:<codeblock>/opt/sdc-extras/streamsets-datacollector-jdbc-lib/lib/mysql-connector-java-5.1.40-bin.jar: cannot open `/opt/sdc-extras/streamsets-datacollector-jdbc-lib/lib/mysql-connector-java-5.1.40-bin.jar' (Permission denied)</codeblock></dd>
+                <dd>
+                    <p>To resolve this issue, identify the relevant directories and grant the
+                            <codeph>sdc</codeph> user read and execute access on those directories.
+                        For example, run the following command to grant the user access on the root
+                        of the external
+                        directory:<codeblock>chmod 755 /opt/sdc-extras</codeblock></p>
+                </dd>
+                <dd>If you receive the following output when you run the command, then the
+                        <codeph>sdc</codeph> user does not have read permission on the JDBC
+                    driver:<codeblock>/opt/sdc-extras/streamsets-datacollector-jdbc-lib/lib/mysql-connector-java-5.1.40-bin.jar: regular file, no read permission</codeblock></dd>
+                <dd>To resolve this issue, run the following command to grant the user read access
+                    to the
+                    driver:<codeblock>chmod 644 /opt/sdc-extras/streamsets-datacollector-jdbc-lib/lib/mysql-connector-java-5.1.40-bin.jar</codeblock></dd>
             </dlentry>
         </dl>
  </conbody>

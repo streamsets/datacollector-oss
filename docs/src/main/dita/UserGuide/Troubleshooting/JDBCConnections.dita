@@ -22,9 +22,9 @@
             tips for help with stages that use JDBC connections to connect to databases. </p>
         <p>The following stages use a JDBC connection: <ul id="ul_t1w_h31_hy">
                 <li>JDBC Multitable Consumer origin</li>
+                <li>JDBC Query Consumer origin</li>
                 <li>MySQL Binary Log origin</li>
                 <li>Oracle CDC Client origin</li>
-                <li>JDBC Query Consumer origin</li>
                 <li>JDBC Lookup processor</li>
                 <li>JDBC Tee processor</li>
                 <li>JDBC Producer destination</li>
