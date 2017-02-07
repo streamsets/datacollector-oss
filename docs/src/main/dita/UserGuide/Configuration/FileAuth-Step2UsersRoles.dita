@@ -38,7 +38,7 @@
             <p>You can also create groups and assign the groups to user accounts to group related
                 users. <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> does not provide any default groups.</p>
+                /> provides a default All group that includes every user.</p>
             <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
                 provides the following roles and default user accounts: </p>
             <table frame="all" rowsep="1" colsep="1" id="table_x3c_kwy_7x">
