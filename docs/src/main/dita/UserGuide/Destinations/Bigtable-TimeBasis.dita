@@ -47,13 +47,15 @@
                 <dd>This is the default time basis. </dd>
             </dlentry>
             <dlentry>
-                <dt>Time value from field in the record</dt>
+                <dt>Long value from field in the record</dt>
                 <dd>When you use the time associated with the record as the time basis, you specify
                     a field in the record that contains a Long value with an epoch or UNIX time in
-                    milliseconds. The destination uses the field value as the timestamp value. <note
-                        type="tip">You can use the time function, time:extractLongFromDate, in a
-                        processor earlier in the pipeline to convert a Datetime value to the Long
-                        data type.</note>
+                    milliseconds. The destination uses the field value as the timestamp value. If
+                    the field value is not a Long, then the destination sends the record to the
+                    pipeline for error handling.<note type="tip">You can use a time function, such
+                        as time:dateTimeToMilliseconds or time:extractLongFromDate, in a processor
+                        earlier in the pipeline to convert a Datetime value to the Long data
+                        type.</note>
                 </dd>
             </dlentry>
         </dl>
