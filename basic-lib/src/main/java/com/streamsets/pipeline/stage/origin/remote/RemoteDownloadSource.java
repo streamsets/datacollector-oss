@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -35,6 +36,7 @@ import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.parser.RecoverableDataParserException;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
@@ -372,7 +374,9 @@ public class RemoteDownloadSource extends BaseSource {
         if (record != null) {
           record.getHeader().setAttribute(REMOTE_URI, remoteURI.toString());
           record.getHeader().setAttribute(HeaderAttributeConstants.FILE, remoteFile.filename);
-          record.getHeader().setAttribute(HeaderAttributeConstants.FILE_NAME, FilenameUtils.getName(remoteFile.filename));
+          record.getHeader().setAttribute(HeaderAttributeConstants.FILE_NAME,
+              FilenameUtils.getName(remoteFile.filename)
+          );
           record.getHeader().setAttribute(HeaderAttributeConstants.OFFSET, offset == null ? "0" : offset);
           batchMaker.addRecord(record);
           offset = parser.getOffset();
@@ -392,6 +396,10 @@ public class RemoteDownloadSource extends BaseSource {
           offset = MINUS_ONE;
           break;
         }
+      } catch (RecoverableDataParserException ex) {
+        // Propagate partially parsed record to error stream
+        Record record = ex.getUnparsedRecord();
+        errorRecordHandler.onError(new OnRecordErrorException(record, ex.getErrorCode(), ex.getParams()));
       } catch (ObjectLengthException ex) {
         errorRecordHandler.onError(Errors.REMOTE_02, currentOffset.fileName, offset, ex);
       }
