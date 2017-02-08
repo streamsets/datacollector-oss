@@ -25,8 +25,11 @@
 angular
   .module('dataCollectorApp.home')
   .controller('ShareModalInstanceController', function (
-    $rootScope, $scope, $modalInstance, $translate, api, configuration, pipelineInfo
+    $rootScope, $scope, $modalInstance, $translate, $q, api, authService, configuration, pipelineInfo
   ) {
+    var userList = [];
+    var groupList = [];
+
     angular.extend($scope, {
       pipelineInfo: pipelineInfo,
       common: {
@@ -36,8 +39,7 @@ angular
       newSubjectList: {
         value: []
       },
-      userList: [],
-      groupList: [],
+      filteredSubjects: [],
       isACLReadyOnly: true,
       isACLEnabled: configuration.isACLEnabled(),
 
@@ -61,7 +63,7 @@ angular
         if ($scope.newSubjectList.value && $scope.newSubjectList.value.length) {
           angular.forEach($scope.newSubjectList.value, function(newSubject) {
             var subjectType = 'USER';
-            if ($scope.groupList.indexOf(newSubject) !== -1) {
+            if (groupList.indexOf(newSubject) !== -1) {
               subjectType = 'GROUP';
             }
             $scope.acl.permissions.push({
@@ -71,6 +73,7 @@ angular
             });
           });
           $scope.newSubjectList.value = [];
+          filterUsersAndGroups();
         }
       },
 
@@ -87,6 +90,7 @@ angular
 
       removePermission: function (permission, index) {
         $scope.acl.permissions.splice(index, 1);
+        filterUsersAndGroups();
       },
 
       changeOwner: function (permission) {
@@ -94,23 +98,20 @@ angular
       }
     });
 
-    var alreadyAddedSubjects = [];
     var fetchAcl = function() {
       api.pipelineAgent.getPipelineConfigAcl(pipelineInfo.name)
         .then(
           function(res) {
             $scope.acl = res.data;
-            if ($scope.acl && $scope.acl.permissions) {
-              angular.forEach($scope.acl.permissions, function(permission) {
-                alreadyAddedSubjects.push(permission.subjectId);
-              });
-            }
-
             if ($rootScope.common.isUserAdmin || $rootScope.common.userName === $scope.acl.resourceOwner) {
               $scope.isACLReadyOnly = false;
             }
 
-            fetchUsersAndGroups();
+            if (configuration.isDPMEnabled()) {
+              fetchRemoteUsersAndGroups();
+            } else {
+              fetchUsersAndGroups();
+            }
           },
           function(res) {
             $scope.common.errors = [res.data];
@@ -125,27 +126,65 @@ angular
           function (res) {
             $scope.fetching = false;
             var users = _.sortBy(res.data, 'name');
-            var userList = [];
-            var groupList = [];
             angular.forEach(users, function(user) {
-              if (alreadyAddedSubjects.indexOf(user.name) === -1) {
-                userList.push(user.name);
-              }
+              userList.push(user.name);
               if (user.groups && user.groups.length) {
                 angular.forEach(user.groups, function (group) {
-                  if (groupList.indexOf(group) === -1 && alreadyAddedSubjects.indexOf(group) === -1) {
+                  if (groupList.indexOf(group) === -1) {
                     groupList.push(group);
                   }
                 });
               }
             });
-            $scope.userList = userList;
-            $scope.groupList = groupList;
+            filterUsersAndGroups();
           },
           function (res) {
             $rootScope.common.errors = [res.data];
           }
         );
+    };
+
+    var fetchRemoteUsersAndGroups = function () {
+      $scope.fetching = true;
+
+      $q.all([
+        api.remote.getRemoteGroups(
+          authService.getRemoteBaseUrl(),
+          authService.getSSOToken(),
+          authService.getRemoteOrgId(),
+          0,
+          50
+        ),
+        api.remote.getRemoteUsers(
+          authService.getRemoteBaseUrl(),
+          authService.getSSOToken(),
+          authService.getRemoteOrgId(),
+          0,
+          50
+        )
+      ]).then(
+        function (results) {
+          $scope.fetching = false;
+          groupList = _.pluck(results[0].data, 'id');
+          userList = _.pluck(results[1].data, 'id');
+          filterUsersAndGroups();
+        },
+        function (res) {
+          $rootScope.common.errors = [res.data];
+        }
+      );
+    };
+
+    var filterUsersAndGroups = function () {
+      var alreadyAddedSubjects = [];
+      if ($scope.acl && $scope.acl.permissions) {
+        angular.forEach($scope.acl.permissions, function(permission) {
+          alreadyAddedSubjects.push(permission.subjectId);
+        });
+      }
+      $scope.filteredSubjects = _.filter(groupList.concat(userList), function(subject) {
+        return alreadyAddedSubjects.indexOf(subject) === -1;
+      });
     };
 
     fetchAcl();

@@ -1405,8 +1405,64 @@ angular.module('dataCollectorApp.common')
             'X-SS-User-Auth-Token': ssoToken
           }
         });
-      }
+      },
 
+      getRemoteUsers: function(remoteBaseURL, ssoToken, orgId, offset, len, orderBy, order, active, filterText) {
+        if (offset === undefined) {
+          offset = 0;
+        }
+        if (len === undefined) {
+          len = -1;
+        }
+        var url = remoteBaseURL + 'security/rest/v1/organization/' + orgId + '/users?offset=' + offset + '&len=' + len;
+        if (orderBy) {
+          url += '&orderBy=' + orderBy;
+        }
+        if (order) {
+          url += '&order=' + order;
+        }
+        if (active !== undefined) {
+          url += '&active=' + active;
+        }
+        if (filterText && filterText.trim().length) {
+          url += '&filterText=' + filterText;
+        }
+        return $http({
+          method: 'GET',
+          url: url,
+          headers:  {
+            'Content-Type': 'application/json; charset=utf-8',
+            'X-SS-User-Auth-Token': ssoToken
+          }
+        });
+      },
+
+      getRemoteGroups: function(remoteBaseURL, ssoToken, orgId, offset, len, orderBy, order, filterText) {
+        if (offset === undefined) {
+          offset = 0;
+        }
+        if (len === undefined) {
+          len = -1;
+        }
+        var url = remoteBaseURL + 'security/rest/v1/organization/' + orgId + '/groups?offset=' + offset + '&len=' + len;
+        if (orderBy) {
+          url += '&orderBy=' + orderBy;
+        }
+        if (order) {
+          url += '&order=' + order;
+        }
+        if (filterText && filterText.trim().length) {
+          url += '&filterText=' + filterText;
+        }
+        return $http({
+          method: 'GET',
+          url: url,
+          headers:  {
+            'Content-Type': 'application/json; charset=utf-8',
+            'X-SS-User-Auth-Token': ssoToken
+          }
+        });
+      }
     };
 
     return api;

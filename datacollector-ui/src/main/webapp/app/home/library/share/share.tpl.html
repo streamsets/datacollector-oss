@@ -85,7 +85,7 @@
                      ng-model="newSubjectList.value">
             <ui-select-match placeholder="{{'home.library.selectUsersAndGroupsPlaceholder' | translate}}" class="ui-select-match">{{$item}}</ui-select-match>
             <ui-select-choices class="ui-select-choices"
-                               repeat="listValue in userList.concat(groupList) | filter:$select.search">
+                               repeat="listValue in filteredSubjects | filter:$select.search">
               <div ng-bind-html="listValue | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
