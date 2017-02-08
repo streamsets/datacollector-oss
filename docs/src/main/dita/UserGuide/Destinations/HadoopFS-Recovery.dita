@@ -22,6 +22,6 @@
             unexpected stop of the pipeline by renaming temporary files when the pipeline
             restarts.</p>
         <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/RecoveryIntro"
-            conrefend="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/RecoveryManual"/>
+            conrefend="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/RecoveryDisable"/>
  </conbody>
 </concept>
