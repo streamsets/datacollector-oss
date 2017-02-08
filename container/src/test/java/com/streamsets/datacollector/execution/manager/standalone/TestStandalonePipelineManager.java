@@ -41,8 +41,10 @@ import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
+import com.streamsets.datacollector.store.impl.FileAclStoreTask;
 import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.LockCache;
@@ -138,6 +140,17 @@ public class TestStandalonePipelineManager {
         pipelineStateStore, lockCache);
       filePipelineStoreTask.init();
       return filePipelineStoreTask;
+    }
+
+    @Provides @Singleton
+    public AclStoreTask provideAclStoreTask(
+        RuntimeInfo runtimeInfo,
+        PipelineStoreTask pipelineStoreTask,
+        LockCache<String> lockCache
+    ) {
+      AclStoreTask aclStoreTask = new FileAclStoreTask(runtimeInfo, pipelineStoreTask, lockCache);
+      aclStoreTask.init();
+      return aclStoreTask;
     }
 
     @Provides @Singleton

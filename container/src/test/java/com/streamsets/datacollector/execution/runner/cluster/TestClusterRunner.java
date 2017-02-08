@@ -45,8 +45,10 @@ import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
+import com.streamsets.datacollector.store.impl.FileAclStoreTask;
 import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
@@ -104,6 +106,7 @@ public class TestClusterRunner {
   private Configuration conf;
   private EventListenerManager eventListenerManager;
   private PipelineStoreTask pipelineStoreTask;
+  private AclStoreTask aclStoreTask;
   private PipelineStateStore pipelineStateStore;
   private StageLibraryTask stageLibraryTask;
   private ClusterHelper clusterHelper;
@@ -150,6 +153,7 @@ public class TestClusterRunner {
     clusterHelper = new ClusterHelper(new MockSystemProcessFactory(), clusterProvider, tempDir, sparkManagerShell,
       emptyCL, emptyCL, null);
     setExecModeAndRetries(ExecutionMode.CLUSTER_BATCH);
+    aclStoreTask = new FileAclStoreTask(runtimeInfo, pipelineStoreTask, new LockCache<String>());
   }
 
   @After
@@ -213,7 +217,8 @@ public class TestClusterRunner {
           clusterHelper,
           resourceManager,
           eventListenerManager,
-          sdcToken
+          sdcToken,
+          new FileAclStoreTask(runtimeInfo, pipelineStore, new LockCache<String>())
       );
     }
 
@@ -699,7 +704,8 @@ public class TestClusterRunner {
   private Runner createClusterRunner() {
     eventListenerManager = new EventListenerManager();
     return new ClusterRunner(NAME, "0", "admin", runtimeInfo, conf, pipelineStoreTask, pipelineStateStore,
-      stageLibraryTask, executorService, clusterHelper, new ResourceManager(conf), eventListenerManager, "myToken");
+      stageLibraryTask, executorService, clusterHelper, new ResourceManager(conf), eventListenerManager, "myToken",
+      aclStoreTask);
   }
 
   private Runner createRunnerForRetryTest(PipelineStateStore pipelineStateStore) {
@@ -713,7 +719,7 @@ public class TestClusterRunner {
   private Runner createClusterRunner(String name, PipelineStoreTask pipelineStoreTask, ResourceManager resourceManager) {
     eventListenerManager = new EventListenerManager();
     Runner runner = new ClusterRunner(name, "0", "a", runtimeInfo, conf, pipelineStoreTask, pipelineStateStore,
-      stageLibraryTask, executorService, clusterHelper, resourceManager, eventListenerManager, "myToken");
+      stageLibraryTask, executorService, clusterHelper, resourceManager, eventListenerManager, "myToken", aclStoreTask);
     eventListenerManager.addStateEventListener(resourceManager);
     return runner;
   }
@@ -722,7 +728,7 @@ public class TestClusterRunner {
     eventListenerManager = new EventListenerManager();
     return new AsyncRunner(new ClusterRunner(TestUtil.HIGHER_VERSION_PIPELINE, "0", "admin", runtimeInfo, conf,
       pipelineStoreTask, pipelineStateStore, stageLibraryTask, executorService, clusterHelper,
-      new ResourceManager(conf), eventListenerManager, "myToken"), new SafeScheduledExecutorService(1, "runner"));
+      new ResourceManager(conf), eventListenerManager, "myToken", aclStoreTask), new SafeScheduledExecutorService(1, "runner"));
   }
 
   static class MyClusterRunner extends ClusterRunner {
@@ -734,7 +740,8 @@ public class TestClusterRunner {
       SafeScheduledExecutorService executorService, ClusterHelper clusterHelper, ResourceManager resourceManager, EventListenerManager
       eventListenerManager) {
       super(name, rev, user, runtimeInfo, configuration, pipelineStore, pipelineStateStore, stageLibrary, executorService,
-        clusterHelper, resourceManager, eventListenerManager, "myToken");
+        clusterHelper, resourceManager, eventListenerManager, "myToken",
+        new FileAclStoreTask(runtimeInfo, pipelineStore, new LockCache<String>()));
     }
 
     @Override

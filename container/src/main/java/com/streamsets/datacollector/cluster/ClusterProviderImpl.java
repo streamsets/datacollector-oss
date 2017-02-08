@@ -19,8 +19,6 @@
  */
 package com.streamsets.datacollector.cluster;
 
-import static com.streamsets.datacollector.definition.StageLibraryDefinitionExtractor.DATA_COLLECTOR_LIBRARY_PROPERTIES;
-
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
@@ -45,12 +43,15 @@ import com.streamsets.datacollector.security.SecurityConfiguration;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.stagelibrary.StageLibraryUtils;
 import com.streamsets.datacollector.store.PipelineInfo;
+import com.streamsets.datacollector.store.impl.FileAclStoreTask;
 import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.PipelineConfigurationUtil;
 import com.streamsets.datacollector.util.PipelineDirectoryUtil;
 import com.streamsets.datacollector.util.SystemProcessFactory;
 import com.streamsets.datacollector.validation.Issue;
+import com.streamsets.lib.security.acl.AclDtoJsonMapper;
+import com.streamsets.lib.security.acl.dto.Acl;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -58,7 +59,6 @@ import com.streamsets.pipeline.api.impl.PipelineUtils;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.util.SystemProcess;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -67,7 +67,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -97,6 +96,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.streamsets.datacollector.definition.StageLibraryDefinitionExtractor.DATA_COLLECTOR_LIBRARY_PROPERTIES;
 
 public class ClusterProviderImpl implements ClusterProvider {
   static final Pattern YARN_APPLICATION_ID_REGEX = Pattern.compile("\\s(application_[0-9]+_[0-9]+)(\\s|$)");
@@ -480,7 +481,8 @@ public class ClusterProviderImpl implements ClusterProvider {
       URLClassLoader apiCL,
       URLClassLoader containerCL,
       long timeToWaitForFailure,
-      RuleDefinitions ruleDefinitions
+      RuleDefinitions ruleDefinitions,
+      Acl acl
   ) throws IOException, TimeoutException {
     File stagingDir = new File(outputDir, "staging");
     if (!stagingDir.mkdirs() || !stagingDir.isDirectory()) {
@@ -504,7 +506,8 @@ public class ClusterProviderImpl implements ClusterProvider {
           containerCL,
           timeToWaitForFailure,
           stagingDir,
-          ruleDefinitions
+          ruleDefinitions,
+          acl
       );
     } finally {
       // in testing mode the staging dir is used by yarn
@@ -533,7 +536,8 @@ public class ClusterProviderImpl implements ClusterProvider {
       URLClassLoader containerCL,
       long timeToWaitForFailure,
       File stagingDir,
-      RuleDefinitions ruleDefinitions
+      RuleDefinitions ruleDefinitions,
+      Acl acl
   ) throws IOException, TimeoutException {
     environment = Maps.newHashMap(environment);
     // create libs.tar.gz file for pipeline
@@ -709,6 +713,11 @@ public class ClusterProviderImpl implements ClusterProvider {
       Utils.checkNotNull(ruleDefinitions, "ruleDefinitions");
       File rulesFile = new File(pipelineDir, FilePipelineStoreTask.RULES_FILE);
       ObjectMapperFactory.getOneLine().writeValue(rulesFile, BeanHelper.wrapRuleDefinitions(ruleDefinitions));
+      if (null != acl) {
+        // acl could be null if permissions is not enabled
+        File aclFile = new File(pipelineDir, FileAclStoreTask.ACL_FILE);
+        ObjectMapperFactory.getOneLine().writeValue(aclFile, AclDtoJsonMapper.INSTANCE.toAclJson(acl));
+      }
       sdcPropertiesFile = new File(etcDir, "sdc.properties");
       if (executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
         String hdfsS3ConfDirValue = PipelineBeanCreator.get().getHdfsS3ConfDirectory(pipelineConfiguration);

@@ -30,6 +30,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.security.SecurityConfiguration;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.SystemProcessFactory;
+import com.streamsets.lib.security.acl.dto.Acl;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.io.File;
@@ -83,11 +84,11 @@ public class ClusterHelper {
   public ApplicationState submit(final PipelineConfiguration pipelineConfiguration,
     final StageLibraryTask stageLibrary, final File etcDir, final File resourcesDir, final File staticWebDir,
     final File bootstrapDir, final Map<String, String> environment, final Map<String, String> sourceInfo,
-    final long timeout, RuleDefinitions ruleDefinitions) throws TimeoutException, IOException {
+    final long timeout, RuleDefinitions ruleDefinitions, Acl acl) throws TimeoutException, IOException {
 
     return clusterProvider.startPipeline(systemProcessFactory, clusterManagerFile, tempDir, environment, sourceInfo,
       pipelineConfiguration, stageLibrary, etcDir, resourcesDir, staticWebDir, bootstrapDir, apiCL, containerCL,
-      timeout, ruleDefinitions);
+      timeout, ruleDefinitions, acl);
   }
 
   public void kill(final ApplicationState applicationState, final PipelineConfiguration pipelineConfiguration)

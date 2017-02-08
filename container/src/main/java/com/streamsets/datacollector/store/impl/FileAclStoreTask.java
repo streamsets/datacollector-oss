@@ -54,7 +54,7 @@ public class FileAclStoreTask extends AbstractAclStoreTask {
   private static final Logger LOG = LoggerFactory.getLogger(FileAclStoreTask.class);
   private final PipelineStoreTask pipelineStore;
   private final LockCache<String> lockCache;
-  private static final String ACL_FILE = "acl.json";
+  public static final String ACL_FILE = "acl.json";
   private Path storeDir;
   private final ObjectMapper json;
 

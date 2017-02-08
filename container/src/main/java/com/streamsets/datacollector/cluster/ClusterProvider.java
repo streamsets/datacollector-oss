@@ -23,6 +23,7 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.SystemProcessFactory;
+import com.streamsets.lib.security.acl.dto.Acl;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,10 +41,23 @@ public interface ClusterProvider {
                                    String appId, PipelineConfiguration pipelineConfiguration) throws TimeoutException, IOException;
 
 
-  ApplicationState startPipeline(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
-                                      Map<String, String> environment, Map<String, String> sourceInfo,
-                                      PipelineConfiguration pipelineConfiguration, StageLibraryTask stageLibrary,
-                                      File etcDir, File resourcesDir, File staticWebDir, File bootstrapDir,
-                                      URLClassLoader apiCL, URLClassLoader containerCL, long timeToWaitForFailure, RuleDefinitions ruleDefinitions)
+  ApplicationState startPipeline(
+      SystemProcessFactory systemProcessFactory,
+      File sparkManager,
+      File tempDir,
+      Map<String, String> environment,
+      Map<String, String> sourceInfo,
+      PipelineConfiguration pipelineConfiguration,
+      StageLibraryTask stageLibrary,
+      File etcDir,
+      File resourcesDir,
+      File staticWebDir,
+      File bootstrapDir,
+      URLClassLoader apiCL,
+      URLClassLoader containerCL,
+      long timeToWaitForFailure,
+      RuleDefinitions ruleDefinitions,
+      Acl acl
+  )
     throws TimeoutException, IOException;
 }

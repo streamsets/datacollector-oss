@@ -61,6 +61,7 @@ import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.production.OffsetFileUtil;
 import com.streamsets.datacollector.security.SecurityConfiguration;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.updatechecker.UpdateChecker;
@@ -72,6 +73,7 @@ import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.datacollector.validation.ValidationError;
 import com.streamsets.dc.execution.manager.standalone.ResourceManager;
 import com.streamsets.dc.execution.manager.standalone.ThreadUsage;
+import com.streamsets.lib.security.acl.dto.Acl;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.ProtoSource;
 import com.streamsets.pipeline.api.Record;
@@ -163,7 +165,7 @@ public class ClusterRunner extends AbstractRunner {
   ClusterRunner(String name, String rev, String user, RuntimeInfo runtimeInfo, Configuration configuration,
     PipelineStoreTask pipelineStore, PipelineStateStore pipelineStateStore, StageLibraryTask stageLibrary,
     SafeScheduledExecutorService executorService, ClusterHelper clusterHelper, ResourceManager resourceManager,
-    EventListenerManager eventListenerManager, String sdcToken) {
+    EventListenerManager eventListenerManager, String sdcToken, AclStoreTask aclStoreTask) {
     this.runtimeInfo = runtimeInfo;
     this.configuration = configuration;
     this.pipelineStateStore = pipelineStateStore;
@@ -183,6 +185,7 @@ public class ClusterRunner extends AbstractRunner {
     this.eventListenerManager = eventListenerManager;
     this.slaveCallbackManager = new SlaveCallbackManager();
     this.slaveCallbackManager.setClusterToken(sdcToken);
+    this.aclStoreTask = aclStoreTask;
   }
 
   @SuppressWarnings("deprecation")
@@ -422,7 +425,7 @@ public class ClusterRunner extends AbstractRunner {
       }
       LOG.debug("State of pipeline for '{}::{}' is '{}' ", name, rev, getState());
       pipelineConf = getPipelineConf(name, rev);
-      doStart(pipelineConf, getClusterSourceInfo(name, rev, pipelineConf));
+      doStart(pipelineConf, getClusterSourceInfo(name, rev, pipelineConf), getAcl(name));
     } catch (Exception e) {
       validateAndSetStateTransition(PipelineStatus.START_ERROR, e.toString(), getAttributes());
       throw e;
@@ -785,8 +788,11 @@ public class ClusterRunner extends AbstractRunner {
     FileUtils.deleteQuietly(hostingDir);
   }
 
-  private synchronized void doStart(PipelineConfiguration pipelineConf, ClusterSourceInfo clusterSourceInfo) throws PipelineStoreException,
-    PipelineRunnerException {
+  private synchronized void doStart(
+      PipelineConfiguration pipelineConf,
+      ClusterSourceInfo clusterSourceInfo,
+      Acl acl
+  ) throws PipelineStoreException, PipelineRunnerException {
     String msg;
     try {
       Utils.checkNotNull(pipelineConf, "PipelineConfiguration cannot be null");
@@ -824,7 +830,7 @@ public class ClusterRunner extends AbstractRunner {
       slaveCallbackManager.clearSlaveList();
       ApplicationState applicationState = clusterHelper.submit(pipelineConf, stageLibrary, new File(runtimeInfo.getConfigDir()),
           new File(runtimeInfo.getResourcesDir()), new File(runtimeInfo.getStaticWebDir()), bootstrapDir, environment,
-          sourceInfo, SUBMIT_TIMEOUT_SECS, getRules());
+          sourceInfo, SUBMIT_TIMEOUT_SECS, getRules(), acl);
       // set state of running before adding callback which modified attributes
       Map<String, Object> attributes = new HashMap<>();
       attributes.putAll(getAttributes());

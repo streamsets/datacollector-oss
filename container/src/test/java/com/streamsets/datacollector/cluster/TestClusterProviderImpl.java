@@ -231,7 +231,7 @@ public class TestClusterProviderImpl {
       providerTemp, env, sourceInfo, pipelineConf, stageLibrary, etcDir, resourcesDir, webDir,
       bootstrapLibDir, classLoader, classLoader,  60, new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(),
         new ArrayList<DataRuleDefinition>(), new ArrayList<DriftRuleDefinition>(), new ArrayList<String>(),
-            UUID.randomUUID())).getId());
+            UUID.randomUUID()), null).getId());
   }
 
   @Test
@@ -257,7 +257,7 @@ public class TestClusterProviderImpl {
       providerTemp, env, sourceInfo, pipelineConf, MockStages.createClusterStreamingStageLibrary(classLoader), etcDir, resourcesDir,
       webDir, bootstrapLibDir, classLoader, classLoader,  60,
       new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(), new ArrayList<DataRuleDefinition>(),
-          new ArrayList<DriftRuleDefinition>(), new ArrayList<String>(), UUID.randomUUID())).getId());
+          new ArrayList<DriftRuleDefinition>(), new ArrayList<String>(), UUID.randomUUID()), null).getId());
     Assert.assertEquals(ClusterProviderImpl.CLUSTER_TYPE_YARN,
       MockSystemProcess.env.get(ClusterProviderImpl.CLUSTER_TYPE));
     Assert.assertTrue(MockSystemProcess.args.contains(
@@ -290,7 +290,7 @@ public class TestClusterProviderImpl {
       providerTemp, env, sourceInfo, pipelineConf, MockStages.createClusterStreamingStageLibrary(classLoader), etcDir, resourcesDir,
       webDir, bootstrapLibDir, classLoader, classLoader,  60,
       new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(), new ArrayList<DataRuleDefinition>(),
-          new ArrayList<DriftRuleDefinition>(), new ArrayList<String>(), UUID.randomUUID()));
+          new ArrayList<DriftRuleDefinition>(), new ArrayList<String>(), UUID.randomUUID()), null);
     Assert.assertNotNull(appState.getId());
     Assert.assertNotNull(appState.getDirId());
     Assert.assertEquals(ClusterProviderImpl.CLUSTER_TYPE_MESOS,
@@ -341,7 +341,8 @@ public class TestClusterProviderImpl {
             new ArrayList<DriftRuleDefinition>(),
             new ArrayList<String>(),
             UUID.randomUUID()
-        )
+        ),
+        null
     ).getId());
     Assert.assertEquals(ClusterProviderImpl.CLUSTER_TYPE_YARN,
         MockSystemProcess.env.get(ClusterProviderImpl.CLUSTER_TYPE)
@@ -385,7 +386,7 @@ public class TestClusterProviderImpl {
       providerTemp, env, sourceInfo, pipelineConf, MockStages.createClusterBatchStageLibrary(classLoader), etcDir, resourcesDir, webDir,
       bootstrapLibDir, classLoader, classLoader,  60, new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(),
         new ArrayList<DataRuleDefinition>(), new ArrayList<DriftRuleDefinition>(), new ArrayList<String>(),
-            UUID.randomUUID())).getId());
+            UUID.randomUUID()), null).getId());
     Assert.assertEquals(ClusterProviderImpl.CLUSTER_TYPE_MAPREDUCE, MockSystemProcess.env.get(ClusterProviderImpl.CLUSTER_TYPE));
     Assert.assertTrue(MockSystemProcess.args.contains(
         "<masked>/bootstrap-lib/main/streamsets-datacollector-bootstrap-1.7.0.0-SNAPSHOT.jar," + "<masked>/avro-1.7.7" +
@@ -405,7 +406,7 @@ public class TestClusterProviderImpl {
       providerTemp, env, sourceInfo, pipelineConf, stageLibrary, etcDir, resourcesDir, webDir,
       bootstrapLibDir, classLoader, classLoader,  60, new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(),
         new ArrayList<DataRuleDefinition>(), new ArrayList<DriftRuleDefinition>(), new ArrayList<String>(),
-              UUID.randomUUID())).getId();
+              UUID.randomUUID()), null).getId();
       Assert.fail("Expected IO Exception");
     } catch (IOException ex) {
       Assert.assertTrue("Incorrect message: " + ex, ex.getMessage().contains("No valid credentials provided"));
@@ -421,7 +422,7 @@ public class TestClusterProviderImpl {
       providerTemp, env, sourceInfo, pipelineConf, stageLibrary, etcDir, resourcesDir, webDir,
       bootstrapLibDir, classLoader, classLoader, 60, new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(),
         new ArrayList<DataRuleDefinition>(), new ArrayList<DriftRuleDefinition>(), new ArrayList<String>(),
-            UUID.randomUUID())).getId());
+            UUID.randomUUID()), null).getId());
       Assert.assertArrayEquals(
         new String[]{"<masked>/_cluster-manager", "start", "--master", "yarn-cluster", "--executor-memory", "512m",
             "--executor-cores", "1", "--num-executors", "64", "--archives", "<masked>/provider-temp/staging/libs.tar" +

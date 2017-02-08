@@ -61,8 +61,10 @@ import com.streamsets.datacollector.runner.SourceOffsetTracker;
 import com.streamsets.datacollector.runner.production.ProductionSourceOffsetTracker;
 import com.streamsets.datacollector.runner.production.RulesConfigLoaderRunnable;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
+import com.streamsets.datacollector.store.impl.FileAclStoreTask;
 import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
@@ -407,6 +409,23 @@ public class TestUtil {
     }
   }
 
+  @Module(
+      injects = {AclStoreTask.class},
+      library = true,
+      includes = {TestRuntimeModule.class, TestPipelineStoreModuleNew.class}
+  )
+  public static class TestAclStoreModule {
+    public TestAclStoreModule() {
+    }
+
+    @Provides @Singleton
+    public AclStoreTask provideAclStore(RuntimeInfo info, PipelineStoreTask pipelineStoreTask) {
+      AclStoreTask aclStoreTask = new FileAclStoreTask(info, pipelineStoreTask,  new LockCache<String>());
+      aclStoreTask.init();
+      return aclStoreTask;
+    }
+  }
+
   /*************** RuntimeInfo ***************/
 
   @Module(library = true)
@@ -635,7 +654,7 @@ public class TestUtil {
   /*************** PipelineManager ***************/
 
   @Module(injects = {StandaloneAndClusterPipelineManager.class, StandaloneRunner.class}, library = true,
-    includes = {TestPipelineStoreModuleNew.class, TestExecutorModule.class, TestSnapshotStoreModule.class})
+    includes = {TestPipelineStoreModuleNew.class, TestExecutorModule.class, TestSnapshotStoreModule.class, TestAclStoreModule.class})
   public static class TestPipelineManagerModule {
 
     public TestPipelineManagerModule() {

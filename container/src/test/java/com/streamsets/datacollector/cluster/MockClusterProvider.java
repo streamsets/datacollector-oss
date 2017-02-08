@@ -19,14 +19,11 @@
  */
 package com.streamsets.datacollector.cluster;
 
-import com.streamsets.datacollector.cluster.ApplicationState;
-import com.streamsets.datacollector.cluster.ClusterPipelineStatus;
-import com.streamsets.datacollector.cluster.ClusterProvider;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.SystemProcessFactory;
-
+import com.streamsets.lib.security.acl.dto.Acl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,7 +77,7 @@ public class MockClusterProvider implements ClusterProvider {
                               Map<String, String> environment, Map<String, String> sourceInfo,
                               PipelineConfiguration pipelineConfiguration, StageLibraryTask stageLibrary,
                               File etcDir, File resourcesDir, File staticWebDir, File bootstrapDir, URLClassLoader apiCL,
-                              URLClassLoader containerCL, long timeout, RuleDefinitions ruleDefinitions)
+                              URLClassLoader containerCL, long timeout, RuleDefinitions ruleDefinitions, Acl acl)
   throws TimeoutException {
     LOG.info("startPipeline");
     if (submitTimesOut) {

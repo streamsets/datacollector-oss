@@ -28,6 +28,7 @@ import com.streamsets.datacollector.execution.alerts.EmailNotifier;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
@@ -35,6 +36,7 @@ import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.util.ValidationUtil;
 import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
+import com.streamsets.lib.security.acl.dto.Acl;
 import com.streamsets.pipeline.api.StageException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,11 +53,13 @@ import java.util.concurrent.TimeUnit;
 public abstract  class AbstractRunner implements Runner {
   private static final Logger LOG = LoggerFactory.getLogger(AbstractRunner.class);
 
+  @Inject protected AclStoreTask aclStoreTask;
   @Inject protected EventListenerManager eventListenerManager;
   @Inject protected PipelineStoreTask pipelineStore;
   @Inject protected StageLibraryTask stageLibrary;
   @Inject protected RuntimeInfo runtimeInfo;
   @Inject protected Configuration configuration;
+
 
   protected PipelineConfiguration getPipelineConf(String name, String rev) throws PipelineException {
     PipelineConfiguration load = pipelineStore.load(name, rev);
@@ -66,6 +70,10 @@ public abstract  class AbstractRunner implements Runner {
         validator.getIssues()));
     }
     return validate;
+  }
+
+  protected Acl getAcl(String name) throws PipelineException {
+    return aclStoreTask.getAcl(name);
   }
 
   protected void registerEmailNotifierIfRequired(PipelineConfigBean pipelineConfigBean, String name, String rev) {

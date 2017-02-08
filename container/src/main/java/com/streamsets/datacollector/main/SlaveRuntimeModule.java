@@ -46,6 +46,8 @@ import java.util.List;
 public class SlaveRuntimeModule {
   private static final Logger LOG = LoggerFactory.getLogger(SlaveRuntimeModule.class);
   public static final String SDC_PROPERTY_PREFIX = "sdc";
+  public static final String PIPELINE_ACCESS_CONTROL_ENABLED = "pipeline.access.control.enabled";
+  public static final boolean PIPELINE_ACCESS_CONTROL_ENABLED_DEFAULT = true;
   private static List<ClassLoader> stageLibraryClassLoaders = Collections.emptyList();
 
   // Called by BootstrapCluster through reflection
@@ -87,6 +89,8 @@ public class SlaveRuntimeModule {
         runtimeInfo.setAppAuthToken(appAuthToken);
         boolean isDPMEnabled = conf.get(RemoteSSOService.DPM_ENABLED, RemoteSSOService.DPM_ENABLED_DEFAULT);
         runtimeInfo.setDPMEnabled(isDPMEnabled);
+        boolean aclEnabled = conf.get(PIPELINE_ACCESS_CONTROL_ENABLED, PIPELINE_ACCESS_CONTROL_ENABLED_DEFAULT);
+        runtimeInfo.setAclEnabled(aclEnabled);
       } catch (IOException ex) {
         throw new RuntimeException(ex);
       }

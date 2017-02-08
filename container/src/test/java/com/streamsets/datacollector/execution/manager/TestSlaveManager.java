@@ -35,9 +35,12 @@ import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.SlaveRuntimeInfo;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
+import com.streamsets.datacollector.store.impl.FileAclStoreTask;
 import com.streamsets.datacollector.store.impl.SlavePipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.TestUtil;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 
@@ -68,7 +71,13 @@ public class TestSlaveManager {
   private Manager manager;
 
   @Module(
-    injects = { SlavePipelineManager.class, PipelineStoreTask.class, PipelineStateStore.class, EventListenerManager.class},
+    injects = {
+        SlavePipelineManager.class,
+        PipelineStoreTask.class,
+        PipelineStateStore.class,
+        EventListenerManager.class,
+        AclStoreTask.class
+    },
     library = true)
   public static class TestSlaveManagerModule {
 
@@ -99,6 +108,14 @@ public class TestSlaveManager {
         new SlavePipelineStoreTask(new TestUtil.TestPipelineStoreModuleNew().providePipelineStore(runtimeInfo,
           stageLibraryTask, new FilePipelineStateStore(runtimeInfo, provideConfiguration())));
       return pipelineStoreTask;
+    }
+
+    @Provides
+    @Singleton
+    public AclStoreTask provideAclStoreTask(RuntimeInfo runtimeInfo, PipelineStoreTask pipelineStoreTask) {
+      AclStoreTask aclStoreTask = new FileAclStoreTask(runtimeInfo, pipelineStoreTask, new LockCache<String>());
+      aclStoreTask.init();
+      return aclStoreTask;
     }
 
     @Provides
