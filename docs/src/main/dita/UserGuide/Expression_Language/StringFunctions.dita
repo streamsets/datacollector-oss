@@ -167,6 +167,37 @@
             ${str:truncate(record:value('/phone'),3)} returns the area code of the phone
             number.</dd>
     </dlentry>
+        <dlentry>
+          <dt>str:urlDecode(&lt;URL>, &lt;charset>)</dt>
+          <dd>Converts characters from a URL to the specified character set, such as UTF-8. </dd>
+          <dd>Uses the following arguments:<ul id="ul_m2g_hdc_vy">
+              <li>URL - The URL or field of URLs to decode.</li>
+              <li>charset - The character set to apply to the URL. For information about valid
+                encodings, see <xref
+                  href="https://docs.oracle.com/javase/8/docs/api/java/nio/charset/Charset.html"
+                  format="html" scope="external"/>.</li>
+            </ul></dd>
+          <dd>Return value: String.</dd>
+          <dd>For example, to convert a URL to UTF-8, use the following
+            expression:<codeblock>${str:urlDecode(record:value('/URL'), 'UTF-8')}</codeblock></dd>
+        </dlentry>
+        <dlentry>
+          <dt>str:urlEncode(&lt;infoforURL>, &lt;charset>)</dt>
+          <dd>Converts invalid characters to help create a valid URL based on the specified
+            character set, such as UTF-8. You might use this function when using record data to add
+            additional information, like a fragment, to a URL.</dd>
+          <dd>Uses the following arguments:<ul id="ul_s2v_rtv_vy">
+              <li>infoforURL - The information to encode for a URL.</li>
+              <li>charset - The character set to convert to, such as UTF-8. For information about
+                valid encodings, see <xref
+                  href="https://docs.oracle.com/javase/8/docs/api/java/nio/charset/Charset.html"
+                  format="html" scope="external"/>.</li>
+            </ul></dd>
+          <dd>Return value: String.</dd>
+          <dd>For example, to encode a search result for use in a URL, converting spaces to valid
+            characters, you might use the following expression:
+            <codeblock>${str:urlEncode(record:value('/result'), 'UTF-8')}</codeblock></dd>
+        </dlentry>
    </dl>
   </p>
  </conbody>

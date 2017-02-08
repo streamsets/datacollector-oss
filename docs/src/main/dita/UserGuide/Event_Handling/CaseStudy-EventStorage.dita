@@ -45,9 +45,10 @@
                             scale="60"/></p><p>Note that event creation time is expressed as an
                         epoch or Unix timestamp, such as 1477698601031. And record header attributes
                         provide data as strings.</p><p>
-                        <note type="tip">You can use the time functions, time:extractLongFromDate
-                            and time:extractStringFromDate, to convert the timestamp to the long or
-                            string data types, respectively.</note>
+                        <note type="tip">You can use time functions to convert timestamps to
+                            different data types. For more information, see <xref
+                                href="../Expression_Language/Functions.dita#concept_lhz_pyp_1r"
+                            />.</note>
                     </p></li>
             </ol></p>
  </conbody>
