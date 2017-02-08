@@ -170,6 +170,7 @@
          <li>time:extractDateFromString(&lt;string>, &lt;format string>)</li>
          <li>time:extractLongFromDate(&lt;Date object>, &lt;format string>)</li>
          <li>time:extractStringFromDate(&lt;Date object>, &lt;format string>)</li>
+         <li>time:extractStringFromDateTZ(&lt;Date object>, &lt;time zone>, &lt;format string>)</li>
          <li>time:millisecondsToDateTime(&lt;long>)</li>
          <li>time:now()</li>
          <li>time:trimDate(&lt;datetime>)</li>
