@@ -24,6 +24,7 @@ import com.streamsets.datacollector.log.LogStreamer;
 import com.streamsets.datacollector.log.LogUtils;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.AuthzRole;
+import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.shaded.org.aicer.grok.util.Grok;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -64,21 +65,13 @@ import java.util.Map;
 @Api(value = "system")
 @DenyAll
 public class LogResource {
-  public static final String X_SDC_LOG_PREVIOUS_OFFSET_HEADER = "X-SDC-LOG-PREVIOUS-OFFSET";
+  private static final String X_SDC_LOG_PREVIOUS_OFFSET_HEADER = "X-SDC-LOG-PREVIOUS-OFFSET";
   private static final String EXCEPTION = "exception";
-  private final String logFile;
-  private final Grok logFileGrok;
   private final RuntimeInfo runtimeInfo;
 
   @Inject
   public LogResource(RuntimeInfo runtimeInfo) {
     this.runtimeInfo = runtimeInfo;
-    try {
-      logFile = LogUtils.getLogFile(runtimeInfo);
-      logFileGrok = LogUtils.getLogGrok(runtimeInfo);
-    } catch (Exception ex) {
-      throw new IllegalStateException("Can't load logging infrastructure", ex);
-    }
   }
 
   @GET
@@ -93,10 +86,13 @@ public class LogResource {
       AuthzRole.CREATOR_REMOTE,
       AuthzRole.MANAGER_REMOTE
   })
-  public Response currentLog(@QueryParam("endingOffset") @DefaultValue("-1") long startOffset,
-                             @QueryParam("extraMessage") String extraMessage,
-                             @QueryParam("pipeline") String pipeline,
-                             @QueryParam("severity") String severity) throws IOException {
+  public Response currentLog(
+      @QueryParam("endingOffset") @DefaultValue("-1") long startOffset,
+      @QueryParam("extraMessage") String extraMessage,
+      @QueryParam("pipeline") String pipeline,
+      @QueryParam("severity") String severity
+  ) throws IOException, DataParserException {
+    String logFile = LogUtils.getLogFile(runtimeInfo);
 
     List<Map<String, String>> logData = new ArrayList<>();
     long offset = startOffset;
@@ -153,6 +149,7 @@ public class LogResource {
   }
 
   private File[] getLogFiles() throws IOException {
+    String logFile = LogUtils.getLogFile(runtimeInfo);
     File log = new File(logFile);
     File logDir = log.getParentFile();
     final String logName = log.getName();
@@ -227,8 +224,13 @@ public class LogResource {
     return response;
   }
 
-  private void fetchLogData(BufferedReader bufferedReader, List<Map<String, String>> logData, String pipeline,
-                            String severity) throws IOException {
+  private void fetchLogData(
+      BufferedReader bufferedReader,
+      List<Map<String, String>> logData,
+      String pipeline,
+      String severity
+  ) throws IOException, DataParserException {
+    Grok logFileGrok = LogUtils.getLogGrok(runtimeInfo);
     String thisLine;
     boolean lastMessageFiltered = false;
     while ((thisLine = bufferedReader.readLine()) != null) {

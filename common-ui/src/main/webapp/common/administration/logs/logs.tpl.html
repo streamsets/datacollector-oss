@@ -5,7 +5,6 @@
       <h3 translate="logs.title">Logs</h3>
     </div>
 
-
     <div class="pull-left filter-toolbar">
 
       <span class="sort-by-label">Severity:</span>
@@ -124,8 +123,12 @@
 
   </div>
 
+  <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+  <ng-include src="'app/home/alerts/error/errorModal.tpl.html'"></ng-include>
+
   <div class="panel-body"
        ng-style="{'height': (windowHeight - 60 - 51) + 'px', 'width': (windowWidth) + 'px'}" resize>
+
     <table class="table log-table">
       <thead>
       <tr>

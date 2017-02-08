@@ -171,9 +171,14 @@ angular
 
     }, 2000);
 
-    api.log.getFilesList().then(function(res) {
-      $scope.logFiles = res.data;
-    });
+    api.log.getFilesList().then(
+      function(res) {
+        $scope.logFiles = res.data;
+      },
+      function (res) {
+        $rootScope.common.errors = [res.data];
+      }
+    );
 
     api.pipelineAgent.getPipelines(null, null, 0, 50, 'NAME', 'ASC', false).then(
       function (res) {
@@ -189,7 +194,9 @@ angular
         $interval.cancel(intervalPromise);
       }
 
-      logWebSocket.close();
+      if (logWebSocket) {
+        logWebSocket.close();
+      }
     });
 
     $timeout(function() {

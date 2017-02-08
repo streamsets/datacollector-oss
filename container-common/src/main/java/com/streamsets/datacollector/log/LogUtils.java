@@ -82,9 +82,11 @@ public class LogUtils {
           if (logFile != null) {
             logFile = resolveValue(logFile);
           } else {
-            throw new IOException(Utils.format("Could not determine the log file, '{}' does not define property '{}'",
-                                               logFile,
-                                               LOG4J_APPENDER_STREAMSETS_FILE_PROPERTY));
+            throw new IOException(Utils.format(
+                "Property '{}' is not defined in {}. No log file is configured for display.",
+                LOG4J_APPENDER_STREAMSETS_FILE_PROPERTY,
+                log4jConfig
+            ));
           }
           if (!logFile.endsWith(".log")) {
             throw new IOException(Utils.format("Log file '{}' must end with '.log',", logFile));
