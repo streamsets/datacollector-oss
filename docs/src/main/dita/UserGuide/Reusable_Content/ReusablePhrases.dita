@@ -1840,6 +1840,8 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                         </dlentry>
                   </dl></p>
             <p id="RecoveryManual">In either of these situations, you must manually rename the temporary files.</p>
+            <p id="RecoveryDisable">File recovery can slow down the pipeline as it restarts. If needed, you can configure
+                  the destination to skip file recovery.</p>
             <p>
                   <draft-comment author="Loretta">Record Header Attributes - Hadoop FS, Local FS,
                         MapR FS. But Local and MapR FS don't have full functionality yet

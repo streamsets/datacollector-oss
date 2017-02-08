@@ -144,6 +144,14 @@
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-ValidateHDFSPerms">
                                     <entry/>
                                 </row>
+                                <row>
+                                    <entry>Skip File Recovery <xref href="LocalFS-Recovery.dita">
+                                        <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            id="image_br4_fgs_2r"/></xref></entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-SkipRecovery"
+                                    />
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>
@@ -174,8 +182,7 @@
                                                 id="image_ohs_4fj_vx"/>
                                         </xref></entry>
                                     <entry
-                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-HDFSdataformat"
-                                    />
+                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-HDFSdataformat"/>
                                 </row>
                             </tbody>
                         </tgroup>

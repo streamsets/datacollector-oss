@@ -3742,6 +3742,12 @@
                                             option when the directory template uses expressions to
                                             represent the entire directory.</note></entry>
                                 </row>
+                                <row>
+                                    <entry>Skip File Recovery</entry>
+                                    <entry id="entry-SkipRecovery">Determines whether the
+                                        destination performs file recovery after an unexpected stop
+                                        of the pipeline. </entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>
