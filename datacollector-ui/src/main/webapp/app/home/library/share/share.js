@@ -65,7 +65,6 @@ angular
               subjectType = 'GROUP';
             }
             $scope.acl.permissions.push({
-              resourceId: $scope.acl.resourceId,
               subjectId: newSubject,
               subjectType: subjectType,
               actions: ['READ', 'WRITE', 'EXECUTE']
