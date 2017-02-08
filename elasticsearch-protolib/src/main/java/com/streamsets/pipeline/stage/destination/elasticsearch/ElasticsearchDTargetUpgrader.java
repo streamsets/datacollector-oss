@@ -9,7 +9,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,44 +19,59 @@
  */
 package com.streamsets.pipeline.stage.destination.elasticsearch;
 
-import com.google.common.base.Optional;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchConfig;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-public class ElasticSearchDTargetUpgrader implements StageUpgrader {
+public class ElasticsearchDTargetUpgrader implements StageUpgrader {
+  static final String OLD_CONFIG_PREFIX = "elasticSearchConfigBean.";
 
   @Override
   public List<Config> upgrade(
-      String library,
-      String stageName,
-      String stageInstance,
-      int fromVersion,
-      int toVersion,
-      List<Config> configs
+      String library, String stageName, String stageInstance, int fromVersion, int toVersion, List<Config> configs
   ) throws StageException {
-    switch(fromVersion) {
+    switch (fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+        if (toVersion == 2) {
+          break;
+        }
         // fall through
       case 2:
         upgradeV2ToV3(configs);
+        if (toVersion == 3) {
+          break;
+        }
         // fall through
       case 3:
         upgradeV3ToV4(configs);
+        if (toVersion == 4) {
+          break;
+        }
         // fall through
       case 4:
         upgradeV4ToV5(configs);
+        if (toVersion == 5) {
+          break;
+        }
         // fall through
       case 5:
         upgradeV5ToV6(configs);
-        break;
+        if (toVersion == 6) {
+          break;
+        }
+        // fall through
+      case 6:
+        return upgradeV6ToV7(configs);
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
@@ -83,7 +98,7 @@ public class ElasticSearchDTargetUpgrader implements StageUpgrader {
         case "typeTemplate":
         case "docIdTemplate":
         case "charset":
-          configsToAdd.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + config.getName(), config.getValue()));
+          configsToAdd.add(new Config(OLD_CONFIG_PREFIX + config.getName(), config.getValue()));
           configsToRemove.add(config);
           break;
         case "configs":
@@ -102,7 +117,7 @@ public class ElasticSearchDTargetUpgrader implements StageUpgrader {
           if (clientSniffKeyValue != null) {
             keyValues.remove(clientSniffKeyValue);
           }
-          configsToAdd.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + config.getName(), keyValues));
+          configsToAdd.add(new Config(OLD_CONFIG_PREFIX + config.getName(), keyValues));
           configsToRemove.add(config);
           break;
         default:
@@ -114,7 +129,7 @@ public class ElasticSearchDTargetUpgrader implements StageUpgrader {
   }
 
   private static void upgradeV3ToV4(List<Config> configs) {
-    configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "httpUri", ElasticSearchConfigBean.DEFAULT_HTTP_URI));
+    configs.add(new Config(OLD_CONFIG_PREFIX + "httpUri", ElasticsearchConfig.DEFAULT_HTTP_URI));
   }
 
   private static void upgradeV4ToV5(List<Config> configs) {
@@ -123,7 +138,7 @@ public class ElasticSearchDTargetUpgrader implements StageUpgrader {
 
     // Rename useFound to useElasticCloud.
     for (Config config : configs) {
-      if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "useFound")) {
+      if (config.getName().equals(OLD_CONFIG_PREFIX + "useFound")) {
         configsToAdd.add(new Config(config.getName().replace("useFound", "useElasticCloud"), config.getValue()));
         configsToRemove.add(config);
         break;
@@ -139,69 +154,70 @@ public class ElasticSearchDTargetUpgrader implements StageUpgrader {
     List<Config> configsToAdd = new ArrayList<>();
 
     for (Config config : configs) {
-      // Rename shieldConfigBean to securityConfigBean.
-      if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "shieldConfigBean.shieldUser")) {
+      // Rename shieldConfigBean to securityConfig.
+      if (config.getName().equals(OLD_CONFIG_PREFIX + "shieldConfigBean.shieldUser")) {
         configsToAdd.add(new Config(config.getName().replace("shield", "security"), config.getValue()));
         configsToRemove.add(config);
       }
       // Remove shieldTransportSsl.
-      if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "shieldConfigBean.shieldTransportSsl")) {
+      if (config.getName().equals(OLD_CONFIG_PREFIX + "shieldConfigBean.shieldTransportSsl")) {
         configsToRemove.add(config);
       }
       // Remove sslKeystorePath.
-      if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "shieldConfigBean.sslKeystorePath")) {
+      if (config.getName().equals(OLD_CONFIG_PREFIX + "shieldConfigBean.sslKeystorePath")) {
         configsToRemove.add(config);
       }
       // Remove sslKeystorePassword.
-      if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "shieldConfigBean.sslKeystorePassword")) {
+      if (config.getName().equals(OLD_CONFIG_PREFIX + "shieldConfigBean.sslKeystorePassword")) {
         configsToRemove.add(config);
       }
-      // Rename shieldConfigBean to securityConfigBean.
-      if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "shieldConfigBean.sslTruststorePath")) {
+      // Rename shieldConfigBean to securityConfig.
+      if (config.getName().equals(OLD_CONFIG_PREFIX + "shieldConfigBean.sslTrustStorePath")) {
         configsToAdd.add(new Config(config.getName().replace("shield", "security"), config.getValue()));
         configsToRemove.add(config);
       }
-      // Rename shieldConfigBean to securityConfigBean.
-      if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "shieldConfigBean.sslTruststorePassword")) {
+      // Rename shieldConfigBean to securityConfig.
+      if (config.getName().equals(OLD_CONFIG_PREFIX + "shieldConfigBean.sslTrustStorePassword")) {
         configsToAdd.add(new Config(config.getName().replace("shield", "security"), config.getValue()));
         configsToRemove.add(config);
       }
       // Remove clusterName.
-      if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "clusterName")) {
+      if (config.getName().equals(OLD_CONFIG_PREFIX + "clusterName")) {
         configsToRemove.add(config);
       }
       // Remove uris.
-      if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "uris")) {
+      if (config.getName().equals(OLD_CONFIG_PREFIX + "uris")) {
         configsToRemove.add(config);
       }
       // Rename httpUri to httpUris.
-      if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "httpUri")) {
-        String configValue = Optional.fromNullable((String)config.getValue()).or(ElasticSearchConfigBean.DEFAULT_HTTP_URI);
-        if (!configValue.isEmpty() && !configValue.equals(ElasticSearchConfigBean.DEFAULT_HTTP_URI)) {
-          configsToAdd.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "httpUris", Arrays.asList(configValue)));
+      if (config.getName().equals(OLD_CONFIG_PREFIX + "httpUri")) {
+        String configValue = Optional.ofNullable((String) config.getValue())
+            .orElse(ElasticsearchConfig.DEFAULT_HTTP_URI);
+        if (!configValue.isEmpty() && !configValue.equals(ElasticsearchConfig.DEFAULT_HTTP_URI)) {
+          configsToAdd.add(new Config(OLD_CONFIG_PREFIX + "httpUris", Arrays.asList(configValue)));
         }
         configsToRemove.add(config);
       }
       // Rename useShield to useSecurity.
-      if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "useShield")) {
+      if (config.getName().equals(OLD_CONFIG_PREFIX + "useShield")) {
         configsToAdd.add(new Config(config.getName().replace("Shield", "Security"), config.getValue()));
         configsToRemove.add(config);
       }
       // Remove useElasticCloud.
-      if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "useElasticCloud")) {
+      if (config.getName().equals(OLD_CONFIG_PREFIX + "useElasticCloud")) {
         configsToRemove.add(config);
       }
       // Rename configs to params.
-      if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "configs")) {
+      if (config.getName().equals(OLD_CONFIG_PREFIX + "configs")) {
         configsToAdd.add(new Config(config.getName().replace("configs", "params"), config.getValue()));
         configsToRemove.add(config);
       }
       // Remove upsert.
-      if (config.getName().equals(ElasticSearchConfigBean.CONF_PREFIX + "upsert")) {
-        if ((Boolean)config.getValue()) {
-          configsToAdd.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "defaultOperation", "INDEX"));
+      if (config.getName().equals(OLD_CONFIG_PREFIX + "upsert")) {
+        if ((Boolean) config.getValue()) {
+          configsToAdd.add(new Config(OLD_CONFIG_PREFIX + "defaultOperation", "INDEX"));
         } else {
-          configsToAdd.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "defaultOperation", "CREATE"));
+          configsToAdd.add(new Config(OLD_CONFIG_PREFIX + "defaultOperation", "CREATE"));
         }
         configsToRemove.add(config);
       }
@@ -209,6 +225,23 @@ public class ElasticSearchDTargetUpgrader implements StageUpgrader {
 
     configs.addAll(configsToAdd);
     configs.removeAll(configsToRemove);
+  }
+
+  private List<Config> upgradeV6ToV7(List<Config> configs) {
+    List<Config> newConfigs = configs
+        .stream()
+        .map(config -> {
+          if (config.getName().startsWith(OLD_CONFIG_PREFIX)) {
+            return new Config(
+                config.getName().replace(OLD_CONFIG_PREFIX, ElasticsearchConfig.CONF_PREFIX),
+                config.getValue()
+            );
+          } else {
+            return config;
+          }
+        })
+        .collect(Collectors.toList());
+    return newConfigs;
   }
 
 }

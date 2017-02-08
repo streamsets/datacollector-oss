@@ -1,5 +1,5 @@
-/**
- * Copyright 2015 StreamSets Inc.
+/*
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -9,7 +9,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,10 +17,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.elasticsearch;
+package com.streamsets.pipeline.stage.config.elasticsearch;
 
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.CharsetChooserValues;
 import com.streamsets.pipeline.config.TimeZoneChooserValues;
@@ -28,62 +27,12 @@ import com.streamsets.pipeline.lib.el.DataUtilEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.stage.destination.elasticsearch.ElasticsearchOperationChooserValues;
+import com.streamsets.pipeline.stage.destination.elasticsearch.ElasticsearchOperationType;
+import com.streamsets.pipeline.stage.destination.elasticsearch.UnsupportedOperationAction;
+import com.streamsets.pipeline.stage.destination.elasticsearch.UnsupportedOperationActionChooserValues;
 
-import java.util.List;
-import java.util.Map;
-
-public class ElasticSearchConfigBean {
-
-  public static final String CONF_PREFIX = "elasticSearchConfigBean.";
-  public static final String DEFAULT_HTTP_URI = "hostname:port";
-
-  @ConfigDefBean
-  public SecurityConfigBean securityConfigBean;
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.LIST,
-      label = "Cluster HTTP URIs",
-      defaultValue = "[\"" + DEFAULT_HTTP_URI + "\"]",
-      description = "Elasticsearch HTTP Endpoints.",
-      displayPosition = 10,
-      group = "ELASTIC_SEARCH"
-  )
-  public List<String> httpUris;
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.MAP,
-      defaultValue = "",
-      label = "Additional HTTP Params",
-      description = "Additional HTTP Params.",
-      displayPosition = 20,
-      group = "ELASTIC_SEARCH"
-  )
-  public Map<String, String> params;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      label = "Detect Additional Nodes in Cluster",
-      defaultValue = "false",
-      description = "Select to automatically discover additional Elasticsearch nodes in the cluster. " +
-          "Do not use if the Data Collector is on a different network from the cluster.",
-      displayPosition = 25,
-      group = "ELASTIC_SEARCH"
-  )
-  public boolean clientSniff;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      label = "Use Security",
-      defaultValue = "false",
-      description = "Use Security",
-      displayPosition = 30,
-      group = "ELASTIC_SEARCH"
-  )
-  public boolean useSecurity;
+public class ElasticsearchTargetConfig extends ElasticsearchConfig {
 
   @ConfigDef(
       required = true,
@@ -168,8 +117,8 @@ public class ElasticSearchConfigBean {
       displayPosition = 100,
       group = "ELASTIC_SEARCH"
   )
-  @ValueChooserModel(ElasticSearchOperationChooserValues.class)
-  public ElasticSearchOperationType defaultOperation;
+  @ValueChooserModel(ElasticsearchOperationChooserValues.class)
+  public ElasticsearchOperationType defaultOperation;
 
   @ConfigDef(
       required = true,

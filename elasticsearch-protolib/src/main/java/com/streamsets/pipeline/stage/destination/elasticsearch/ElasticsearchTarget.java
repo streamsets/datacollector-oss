@@ -38,6 +38,7 @@ import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.lib.elasticsearch.ElasticsearchStageDelegate;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
@@ -45,39 +46,22 @@ import com.streamsets.pipeline.lib.generator.DataGeneratorFormat;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
-import org.apache.commons.codec.binary.Base64;
+import com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchConfig;
+import com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchTargetConfig;
+import com.streamsets.pipeline.stage.config.elasticsearch.Errors;
+import com.streamsets.pipeline.stage.config.elasticsearch.Groups;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.Header;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.ssl.SSLContexts;
 import org.elasticsearch.client.Response;
-import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestClientBuilder;
-import org.elasticsearch.client.sniff.ElasticsearchHostsSniffer;
-import org.elasticsearch.client.sniff.HostsSniffer;
-import org.elasticsearch.client.sniff.Sniffer;
-import org.elasticsearch.common.io.PathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.net.ssl.SSLContext;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.security.KeyManagementException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -85,14 +69,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-public class ElasticSearchTarget extends BaseTarget {
-  private static final Logger LOG = LoggerFactory.getLogger(ElasticSearchTarget.class);
-  private static final Pattern URI_PATTERN = Pattern.compile("\\S+:(\\d+)");
-  private static final Pattern SECURITY_USER_PATTERN = Pattern.compile("\\S+:\\S+");
-  private final ElasticSearchConfigBean conf;
+public class ElasticsearchTarget extends BaseTarget {
+  private static final Logger LOG = LoggerFactory.getLogger(ElasticsearchTarget.class);
+  private final ElasticsearchTargetConfig conf;
   private ELEval timeDriverEval;
   private TimeZone timeZone;
   private Date batchTime;
@@ -101,10 +81,9 @@ public class ElasticSearchTarget extends BaseTarget {
   private ELEval docIdEval;
   private DataGeneratorFactory generatorFactory;
   private ErrorRecordHandler errorRecordHandler;
-  private RestClient restClient;
-  private Sniffer sniffer;
+  private ElasticsearchStageDelegate delegate;
 
-  public ElasticSearchTarget(ElasticSearchConfigBean conf) {
+  public ElasticsearchTarget(ElasticsearchTargetConfig conf) {
     this.conf = conf;
     if (this.conf.params == null) {
       this.conf.params = new HashMap<>();
@@ -133,7 +112,7 @@ public class ElasticSearchTarget extends BaseTarget {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
-    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext(), getContext());
 
     indexEval = getContext().createELEval("indexTemplate");
     typeEval = getContext().createELEval("typeTemplate");
@@ -155,7 +134,7 @@ public class ElasticSearchTarget extends BaseTarget {
     validateEL(
         indexEval,
         conf.indexTemplate,
-        ElasticSearchConfigBean.CONF_PREFIX + "indexTemplate",
+        ElasticsearchConfig.CONF_PREFIX + "indexTemplate",
         Errors.ELASTICSEARCH_00,
         Errors.ELASTICSEARCH_01,
         issues
@@ -163,7 +142,7 @@ public class ElasticSearchTarget extends BaseTarget {
     validateEL(
         typeEval,
         conf.typeTemplate,
-        ElasticSearchConfigBean.CONF_PREFIX + "typeTemplate",
+        ElasticsearchConfig.CONF_PREFIX + "typeTemplate",
         Errors.ELASTICSEARCH_02,
         Errors.ELASTICSEARCH_03,
         issues
@@ -172,17 +151,17 @@ public class ElasticSearchTarget extends BaseTarget {
       validateEL(
           typeEval,
           conf.docIdTemplate,
-          ElasticSearchConfigBean.CONF_PREFIX + "docIdTemplate",
+          ElasticsearchConfig.CONF_PREFIX + "docIdTemplate",
           Errors.ELASTICSEARCH_04,
           Errors.ELASTICSEARCH_05,
           issues
       );
     } else {
-      if (conf.defaultOperation != ElasticSearchOperationType.INDEX) {
+      if (conf.defaultOperation != ElasticsearchOperationType.INDEX) {
         issues.add(
             getContext().createConfigIssue(
                 Groups.ELASTIC_SEARCH.name(),
-                ElasticSearchConfigBean.CONF_PREFIX + "docIdTemplate",
+                ElasticsearchConfig.CONF_PREFIX + "docIdTemplate",
                 Errors.ELASTICSEARCH_19,
                 conf.defaultOperation.getLabel()
             )
@@ -190,138 +169,9 @@ public class ElasticSearchTarget extends BaseTarget {
       }
     }
 
-    if (conf.httpUris.isEmpty()) {
-      issues.add(
-          getContext().createConfigIssue(
-              Groups.ELASTIC_SEARCH.name(),
-              ElasticSearchConfigBean.CONF_PREFIX + "httpUris",
-              Errors.ELASTICSEARCH_06
-          )
-      );
-    } else {
-      for (String uri : conf.httpUris) {
-        validateUri(uri, issues, ElasticSearchConfigBean.CONF_PREFIX + "httpUris");
-      }
-    }
+    delegate = new ElasticsearchStageDelegate(getContext(), conf);
 
-    if (conf.useSecurity) {
-      if (!SECURITY_USER_PATTERN.matcher(conf.securityConfigBean.securityUser).matches()) {
-        issues.add(
-            getContext().createConfigIssue(
-                Groups.SECURITY.name(),
-                SecurityConfigBean.CONF_PREFIX + "securityUser",
-                Errors.ELASTICSEARCH_20,
-                conf.securityConfigBean.securityUser
-            )
-        );
-      }
-    }
-
-    if (!issues.isEmpty()) {
-      return issues;
-    }
-
-    int numHosts = conf.httpUris.size();
-    HttpHost[] hosts = new HttpHost[numHosts];
-    for (int i = 0; i < numHosts; i++) {
-      hosts[i] = HttpHost.create(conf.httpUris.get(i));
-    }
-    RestClientBuilder restClientBuilder = RestClient.builder(hosts);
-
-    try {
-      if (conf.useSecurity) {
-        try {
-          final SSLContext sslcontext;
-          final String keystorePath = conf.securityConfigBean.sslTruststorePath;
-          if (StringUtils.isEmpty(keystorePath)) {
-            sslcontext = SSLContext.getDefault();
-          } else {
-            final String keystorePass = conf.securityConfigBean.sslTruststorePassword;
-            if (StringUtils.isEmpty(keystorePass)) {
-              issues.add(
-                  getContext().createConfigIssue(
-                      Groups.ELASTIC_SEARCH.name(),
-                      SecurityConfigBean.CONF_PREFIX + "sslTruststorePassword",
-                      Errors.ELASTICSEARCH_10
-                  )
-              );
-            }
-            Path path = PathUtils.get(keystorePath);
-            if (!Files.exists(path)) {
-              issues.add(
-                  getContext().createConfigIssue(
-                      Groups.ELASTIC_SEARCH.name(),
-                      SecurityConfigBean.CONF_PREFIX + "sslTruststorePath",
-                      Errors.ELASTICSEARCH_11,
-                      keystorePath
-                  )
-              );
-            }
-            KeyStore keyStore = KeyStore.getInstance("jks");
-            try (InputStream is = Files.newInputStream(path)) {
-              keyStore.load(is, keystorePass.toCharArray());
-            }
-            sslcontext = SSLContexts.custom().loadTrustMaterial(keyStore, null).build();
-          }
-          restClientBuilder.setHttpClientConfigCallback(
-            new RestClientBuilder.HttpClientConfigCallback() {
-              @Override
-              public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpClientBuilder) {
-                return httpClientBuilder.setSSLContext(sslcontext);
-              }
-            }
-          );
-        } catch (KeyStoreException | NoSuchAlgorithmException | KeyManagementException | CertificateException e) {
-          issues.add(
-              getContext().createConfigIssue(
-                  Groups.ELASTIC_SEARCH.name(),
-                  SecurityConfigBean.CONF_PREFIX + "sslTruststorePath",
-                  Errors.ELASTICSEARCH_12,
-                  e.toString(),
-                  e
-              )
-          );
-        }
-
-        restClient = restClientBuilder.build();
-        restClient.performRequest("GET", "/", getAuthenticationHeader());
-      } else {
-        restClient = restClientBuilder.build();
-        restClient.performRequest("GET", "/");
-      }
-    } catch (IOException e) {
-      issues.add(
-          getContext().createConfigIssue(
-              Groups.ELASTIC_SEARCH.name(),
-              ElasticSearchConfigBean.CONF_PREFIX + "httpUris",
-              Errors.ELASTICSEARCH_09,
-              e.toString(),
-              e
-          )
-      );
-    }
-
-    if (!issues.isEmpty()) {
-      return issues;
-    }
-
-    if (conf.clientSniff) {
-      switch (hosts[0].getSchemeName()) {
-        case "http": {
-          sniffer = Sniffer.builder(restClient).build();
-          break;
-        }
-        case "https": {
-          HostsSniffer hostsSniffer = new ElasticsearchHostsSniffer(restClient,
-              ElasticsearchHostsSniffer.DEFAULT_SNIFF_REQUEST_TIMEOUT,
-              ElasticsearchHostsSniffer.Scheme.HTTPS);
-          sniffer = Sniffer.builder(restClient).setHostsSniffer(hostsSniffer).build();
-          break;
-        }
-        default:
-          // unsupported scheme. do nothing.
-      }
-    }
+    issues = delegate.init(issues);
 
     generatorFactory = new DataGeneratorFactoryBuilder(getContext(), DataGeneratorFormat.JSON)
         .setMode(JsonMode.MULTIPLE_OBJECTS)
@@ -333,16 +183,7 @@ public class ElasticSearchTarget extends BaseTarget {
 
   @Override
   public void destroy() {
-    try {
-      if (sniffer != null) {
-        sniffer.close();
-      }
-      if (restClient != null) {
-        restClient.close();
-      }
-    } catch (IOException e) {
-      LOG.warn("Exception thrown while closing REST client: " + e);
-    }
+    delegate.destroy();
     super.destroy();
   }
 
@@ -401,7 +242,7 @@ public class ElasticSearchTarget extends BaseTarget {
         // Check if the operation code from header attribute is valid
         if (!StringUtils.isEmpty(opType)) {
           try {
-            opCode = ElasticSearchOperationType.convertToIntCode(opType);
+            opCode = ElasticsearchOperationType.convertToIntCode(opType);
           } catch (NumberFormatException | UnsupportedOperationException ex) {
             // Operation obtained from header is not supported. Handle accordingly
             switch (conf.unsupportedAction) {
@@ -440,11 +281,13 @@ public class ElasticSearchTarget extends BaseTarget {
       try {
         HttpEntity entity = new StringEntity(bulkRequest.toString(), ContentType.APPLICATION_JSON);
         Response response;
-        if (conf.useSecurity) {
-          response = restClient.performRequest("POST", "/_bulk", conf.params, entity, getAuthenticationHeader());
-        } else {
-          response = restClient.performRequest("POST", "/_bulk", conf.params, entity);
-        }
+        response = delegate.performRequest(
+            "POST",
+            "/_bulk",
+            conf.params,
+            entity,
+            delegate.getAuthenticationHeader()
+        );
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         response.getEntity().writeTo(baos);
         JsonObject json = new JsonParser().parse(baos.toString()).getAsJsonObject();
@@ -488,32 +331,6 @@ public class ElasticSearchTarget extends BaseTarget {
     return batchTime;
   }
 
-  private void validateUri(String uri, List<ConfigIssue> issues, String configName) {
-    Matcher matcher = URI_PATTERN.matcher(uri);
-    if (!matcher.matches()) {
-      issues.add(
-          getContext().createConfigIssue(
-              Groups.ELASTIC_SEARCH.name(),
-              configName,
-              Errors.ELASTICSEARCH_07,
-              uri
-          )
-      );
-    } else {
-      int port = Integer.parseInt(matcher.group(1));
-      if (port < 0 || port > 65535) {
-        issues.add(
-            getContext().createConfigIssue(
-                Groups.ELASTIC_SEARCH.name(),
-                configName,
-                Errors.ELASTICSEARCH_08,
-                port
-            )
-        );
-      }
-    }
-  }
-
   private String getOperation(String index, String type, String id, String record, int opCode) {
     StringBuilder op = new StringBuilder();
     switch (opCode) {
@@ -541,12 +358,6 @@ public class ElasticSearchTarget extends BaseTarget {
         throw new UnsupportedOperationException(String.format("Unsupported Operation: %s", opCode));
     }
     return op.toString();
-  }
-
-  private Header getAuthenticationHeader() {
-    // Credentials are in form of "username:password".
-    byte[] credentials = conf.securityConfigBean.securityUser.getBytes();
-    return new BasicHeader("Authorization", "Basic " + Base64.encodeBase64String(credentials));
   }
 
   private List<ErrorItem> extractErrorItems(JsonObject json) {

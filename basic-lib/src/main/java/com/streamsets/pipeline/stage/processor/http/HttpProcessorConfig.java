@@ -192,7 +192,7 @@ public class HttpProcessorConfig {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.NUMBER,
-      label = "Rate Limit (Requests/sec)",
+      label = "Rate Limit (requests/sec)",
       defaultValue = "0",
       description = "Maximum requests per second (0 for unlimited). Useful for rate-limited APIs.",
       displayPosition = 160,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -9,7 +9,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,35 +17,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.elasticsearch;
+package com.streamsets.pipeline.stage.origin.elasticsearch;
 
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.configurablestage.DTarget;
-import com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchTargetConfig;
+import com.streamsets.pipeline.configurablestage.DPushSource;
+import com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchSourceConfig;
 import com.streamsets.pipeline.stage.config.elasticsearch.Groups;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 7,
+    version = 1,
     label = "Elasticsearch",
-    description = "Upload data to an Elasticsearch cluster",
+    description = "Read data from an Elasticsearch cluster",
     icon = "elasticsearch.png",
-    onlineHelpRefUrl = "index.html#Destinations/Elasticsearch.html#task_uns_gtv_4r",
-    upgrader = ElasticsearchDTargetUpgrader.class
+    resetOffset = true,
+    producesEvents = true,
+    onlineHelpRefUrl = "index.html#Origins/Elasticsearch.html#task_pmh_xpm_2z"
 )
 @ConfigGroups(Groups.class)
-public class ElasticSearchDTarget extends DTarget {
+public class ElasticsearchDSource extends DPushSource {
 
   @ConfigDefBean
-  public ElasticsearchTargetConfig elasticSearchConfig;
+  public ElasticsearchSourceConfig conf;
 
   @Override
-  protected Target createTarget() {
-    return new ElasticsearchTarget(elasticSearchConfig);
+  protected PushSource createPushSource() {
+    return new ElasticsearchSource(conf);
   }
-
 }

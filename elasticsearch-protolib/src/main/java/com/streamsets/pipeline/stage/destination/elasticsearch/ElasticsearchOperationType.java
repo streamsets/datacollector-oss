@@ -24,7 +24,7 @@ import com.streamsets.pipeline.lib.operation.OperationType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public enum ElasticSearchOperationType implements Label {
+public enum ElasticsearchOperationType implements Label {
   INDEX(OperationType.UPSERT_CODE),
   CREATE(OperationType.INSERT_CODE),
   UPDATE(OperationType.UPDATE_CODE),
@@ -32,9 +32,9 @@ public enum ElasticSearchOperationType implements Label {
   ;
 
   final int code;
-  private static final Logger LOG = LoggerFactory.getLogger(ElasticSearchTarget.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ElasticsearchTarget.class);
 
-  ElasticSearchOperationType(int code) {
+  ElasticsearchOperationType(int code) {
     this.code = code;
   }
 
@@ -64,7 +64,7 @@ public enum ElasticSearchOperationType implements Label {
   static int convertToIntCode(String op)  {
     try {
       int intOp = Integer.parseInt(op);
-      for (ElasticSearchOperationType type : ElasticSearchOperationType.values()) {
+      for (ElasticsearchOperationType type : ElasticsearchOperationType.values()) {
         if (type.code == intOp) {
           return type.code;
         }

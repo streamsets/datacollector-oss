@@ -1,5 +1,5 @@
-/**
- * Copyright 2015 StreamSets Inc.
+/*
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -9,7 +9,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.elasticsearch;
+package com.streamsets.pipeline.stage.config.elasticsearch;
 
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
@@ -34,8 +34,8 @@ public enum Errors implements ErrorCode {
   ELASTICSEARCH_07("Invalid URI, it must be <HOSTNAME>:<PORT>: '{}'"),
   ELASTICSEARCH_08("Port value out of range: '{}'"),
   ELASTICSEARCH_09("Could not connect to the cluster HTTP endpoint: {}"),
-  ELASTICSEARCH_10("Truststore path is provided but not truststore pass"),
-  ELASTICSEARCH_11("Truststore path is set but points to a non-existing file: {}"),
+  ELASTICSEARCH_10("TrustStore path is provided but not TrustStore password"),
+  ELASTICSEARCH_11("TrustStore path is set but points to a non-existing file: {}"),
   ELASTICSEARCH_12("Could not configure SSL: {}"),
   ELASTICSEARCH_13("Operation not supported: {}"),
   ELASTICSEARCH_14("Unknown action for unsupported operation: {}"),
@@ -45,6 +45,13 @@ public enum Errors implements ErrorCode {
   ELASTICSEARCH_18("Could not evaluate the time driver expression: {}"),
   ELASTICSEARCH_19("Document ID expression must be provided to use {} operation"),
   ELASTICSEARCH_20("Invalid Security user, it must be <USERNAME>:<PASSWORD>: '{}'"),
+  // Origin
+  ELASTICSEARCH_21("Could not find _scroll_id field in response to query."),
+  ELASTICSEARCH_22("Failed to fetch batch: '{}'"),
+  ELASTICSEARCH_23("Cursor expired, please Reset Origin and restart the pipeline."),
+  ELASTICSEARCH_24("Offset field '{}' not found in parsed record."),
+  ELASTICSEARCH_25("Incremental mode requires the query to contain ${OFFSET} in at least one field"),
+  ELASTICSEARCH_26("Changing the parallelism from '{}' to '{}' slices requires resetting the origin as it recomputes shards."),
   ;
   private final String msg;
 

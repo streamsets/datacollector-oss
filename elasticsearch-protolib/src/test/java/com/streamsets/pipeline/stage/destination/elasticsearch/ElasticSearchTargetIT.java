@@ -30,102 +30,55 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
-import com.streamsets.testing.NetworkUtils;
+import com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchTargetConfig;
+import com.streamsets.pipeline.stage.config.elasticsearch.Errors;
+import com.streamsets.pipeline.stage.config.elasticsearch.SecurityConfig;
+import com.streamsets.pipeline.stage.elasticsearch.common.ElasticsearchBaseIT;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.node.Node;
-import org.elasticsearch.node.internal.InternalSettingsPreparer;
 import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.transport.Netty4Plugin;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
-import java.util.UUID;
 
-public class ElasticSearchTargetIT {
-  private static String esName = UUID.randomUUID().toString();
-  private static Node esServer;
-  private static int esHttpPort;
+public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
 
   @BeforeClass
   public static void setUp() throws Exception {
-    File esDir = new File("target", UUID.randomUUID().toString());
-    esHttpPort = NetworkUtils.getRandomPort();
-    Assert.assertTrue(esDir.mkdirs());
-    Map<String, Object> configs = new HashMap<>();
-    configs.put("cluster.name", esName);
-    configs.put("http.enabled", true);
-    configs.put("http.port", esHttpPort);
-    configs.put("path.home", esDir.getAbsolutePath());
-    configs.put("path.conf", esDir.getAbsolutePath());
-    configs.put("path.data", esDir.getAbsolutePath());
-    configs.put("path.logs", esDir.getAbsolutePath());
-    esServer = createTestNode(configs);
-    esServer.start();
+    ElasticsearchBaseIT.setUp();
   }
 
   @AfterClass
   public static void cleanUp() throws Exception {
-    if (esServer != null) {
-      esServer.close();
-    }
-  }
-
-  // this is needed in embedded mode.
-  private static void prepareElasticSearchServerForQueries() {
-    esServer.client().admin().indices().prepareRefresh().execute().actionGet();
-  }
-
-  private static Node createTestNode(Map<String, Object> configs) {
-    Settings.Builder settings = Settings.builder();
-    for (Map.Entry<String, Object> config : configs.entrySet()) {
-      settings.put(config.getKey(), config.getValue());
-    }
-    return new TestNode(settings.build());
-  }
-
-  @SuppressWarnings("unchecked")
-  private static class TestNode extends Node {
-    TestNode(Settings settings) {
-      super(
-          InternalSettingsPreparer.prepareEnvironment(settings, null),
-          // To enable an http port in integration tests, the following plugin must be loaded.
-          (Collection) Arrays.asList(Netty4Plugin.class)
-      );
-    }
+    ElasticsearchBaseIT.cleanUp();
   }
 
   @Test
   public void testValidations() throws Exception {
-    ElasticSearchConfigBean conf = new ElasticSearchConfigBean();
-    conf.httpUris = Collections.EMPTY_LIST;
+    ElasticsearchTargetConfig conf = new ElasticsearchTargetConfig();
+    conf.httpUris = Collections.emptyList();
     conf.timeDriver = "${time:now()}";
     conf.timeZoneID = "UTC";
     conf.indexTemplate = "${record:value('/index')x}";
     conf.typeTemplate = "${record:nonExistentFunction()}";
     conf.docIdTemplate = "";
     conf.charset = "UTF-8";
-    conf.defaultOperation = ElasticSearchOperationType.INDEX;
+    conf.defaultOperation = ElasticsearchOperationType.INDEX;
     conf.useSecurity= false;
-    conf.securityConfigBean = new SecurityConfigBean();
+    conf.securityConfig = new SecurityConfig();
 
-    Target target = new ElasticSearchTarget(conf);
+    Target target = new ElasticsearchTarget(conf);
     TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
     Assert.assertEquals(3, issues.size());
@@ -133,35 +86,35 @@ public class ElasticSearchTargetIT {
     Assert.assertTrue(issues.get(1).toString().contains(Errors.ELASTICSEARCH_03.name()));
     Assert.assertTrue(issues.get(2).toString().contains(Errors.ELASTICSEARCH_06.name()));
 
-    conf.httpUris = Arrays.asList("x");
+    conf.httpUris = Collections.singletonList("x");
     conf.timeDriver = "${time:now()}";
     conf.timeZoneID = "UTC";
     conf.indexTemplate = "x";
     conf.typeTemplate = "x";
     conf.docIdTemplate = "";
     conf.charset = "UTF-8";
-    conf.defaultOperation = ElasticSearchOperationType.INDEX;
+    conf.defaultOperation = ElasticsearchOperationType.INDEX;
     conf.useSecurity = false;
-    conf.securityConfigBean = new SecurityConfigBean();
+    conf.securityConfig = new SecurityConfig();
 
-    target = new ElasticSearchTarget(conf);
+    target = new ElasticsearchTarget(conf);
     runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
     issues = runner.runValidateConfigs();
     Assert.assertEquals(1, issues.size());
     Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_07.name()));
 
-    conf.httpUris = Arrays.asList("localhost:0");
+    conf.httpUris = Collections.singletonList("localhost:0");
     conf.timeDriver = "${time:now()}";
     conf.timeZoneID = "UTC";
     conf.indexTemplate = "x";
     conf.typeTemplate = "x";
     conf.docIdTemplate = "";
     conf.charset = "UTF-8";
-    conf.defaultOperation = ElasticSearchOperationType.INDEX;
+    conf.defaultOperation = ElasticsearchOperationType.INDEX;
     conf.useSecurity = false;
-    conf.securityConfigBean = new SecurityConfigBean();
+    conf.securityConfig = new SecurityConfig();
 
-    target = new ElasticSearchTarget(conf);
+    target = new ElasticsearchTarget(conf);
     runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
     issues = runner.runValidateConfigs();
     Assert.assertEquals(1, issues.size());
@@ -177,13 +130,13 @@ public class ElasticSearchTargetIT {
         "${time:now()}",
         "${record:value('/index')}",
         docId,
-        ElasticSearchOperationType.INDEX
+        ElasticsearchOperationType.INDEX
     );
   }
 
-  private ElasticSearchTarget createTarget(String timeDriver, String indexEL, String docIdEL, ElasticSearchOperationType op) {
-    ElasticSearchConfigBean conf = new ElasticSearchConfigBean();
-    conf.httpUris = Arrays.asList("127.0.0.1:" + esHttpPort);
+  private ElasticsearchTarget createTarget(String timeDriver, String indexEL, String docIdEL, ElasticsearchOperationType op) {
+    ElasticsearchTargetConfig conf = new ElasticsearchTargetConfig();
+    conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
     conf.timeDriver = timeDriver;
     conf.timeZoneID = "UTC";
     conf.indexTemplate = indexEL;
@@ -192,9 +145,9 @@ public class ElasticSearchTargetIT {
     conf.charset = "UTF-8";
     conf.defaultOperation = op;
     conf.useSecurity = false;
-    conf.securityConfigBean = new SecurityConfigBean();
+    conf.securityConfig = new SecurityConfig();
 
-    return new ElasticSearchTarget(conf);
+    return new ElasticsearchTarget(conf);
   }
 
   @Test
@@ -371,19 +324,19 @@ public class ElasticSearchTargetIT {
 
   @Test
   public void testTimeDriverNow() throws Exception {
-    ElasticSearchConfigBean conf = new ElasticSearchConfigBean();
-    conf.httpUris = Arrays.asList("127.0.0.1:" + esHttpPort);
+    ElasticsearchTargetConfig conf = new ElasticsearchTargetConfig();
+    conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
     conf.timeDriver = "${time:now()}";
     conf.timeZoneID = "UTC";
     conf.indexTemplate = "${YYYY()}";
     conf.typeTemplate = "${record:value('/type')}";
     conf.docIdTemplate = "";
     conf.charset = "UTF-8";
-    conf.defaultOperation = ElasticSearchOperationType.INDEX;
+    conf.defaultOperation = ElasticsearchOperationType.INDEX;
     conf.useSecurity = false;
-    conf.securityConfigBean = new SecurityConfigBean();
+    conf.securityConfig = new SecurityConfig();
 
-    ElasticSearchTarget target = new ElasticSearchTarget(conf);
+    ElasticsearchTarget target = new ElasticsearchTarget(conf);
     TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
     runner.runInit();
     try {
@@ -404,11 +357,11 @@ public class ElasticSearchTargetIT {
 
   @Test
   public void testTimeDriverValue() throws Exception {
-    ElasticSearchTarget target = createTarget(
+    ElasticsearchTarget target = createTarget(
         "${record:value('/')}",
         "${YYYY()}",
         "",
-        ElasticSearchOperationType.INDEX
+        ElasticsearchOperationType.INDEX
     );
     TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
     runner.runInit();
@@ -433,11 +386,11 @@ public class ElasticSearchTargetIT {
 
   @Test
   public void testWriteRecordsNow() throws Exception {
-    ElasticSearchTarget target = createTarget(
+    ElasticsearchTarget target = createTarget(
         "${time:now()}",
         "${YYYY()}",
         "",
-        ElasticSearchOperationType.INDEX
+        ElasticsearchOperationType.INDEX
     );
     TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
     try {
@@ -483,41 +436,41 @@ public class ElasticSearchTargetIT {
 
   @Test
   public void testInvalidUrisAndSecurityUser() throws Exception {
-    ElasticSearchConfigBean conf = new ElasticSearchConfigBean();
+    ElasticsearchTargetConfig conf = new ElasticsearchTargetConfig();
     conf.timeDriver = "${time:now()}";
     conf.timeZoneID = "UTC";
     conf.indexTemplate = "${YYYY()}";
     conf.typeTemplate = "${record:value('/type')}";
     conf.docIdTemplate = "";
     conf.charset = "UTF-8";
-    conf.defaultOperation = ElasticSearchOperationType.INDEX;
+    conf.defaultOperation = ElasticsearchOperationType.INDEX;
     conf.useSecurity = false;
-    conf.securityConfigBean = new SecurityConfigBean();
+    conf.securityConfig = new SecurityConfig();
 
     // Invalid url
-    conf.httpUris = Arrays.asList("127.0.0.1:" + "NOT_A_NUMBER");
+    conf.httpUris = Collections.singletonList("127.0.0.1:" + "NOT_A_NUMBER");
 
-    ElasticSearchTarget target = new ElasticSearchTarget(conf);
+    ElasticsearchTarget target = new ElasticsearchTarget(conf);
     TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
     Assert.assertEquals(1, issues.size());
     Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_07.name()));
 
     // Invalid port number
-    conf.httpUris = Arrays.asList("127.0.0.1:" + Integer.MAX_VALUE);
+    conf.httpUris = Collections.singletonList("127.0.0.1:" + Integer.MAX_VALUE);
 
-    target = new ElasticSearchTarget(conf);
+    target = new ElasticsearchTarget(conf);
     runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
     issues = runner.runValidateConfigs();
     Assert.assertEquals(1, issues.size());
     Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_08.name()));
 
     // Invalid shield user
-    conf.httpUris = Arrays.asList("127.0.0.1:" + esHttpPort);
+    conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
     conf.useSecurity = true;
-    conf.securityConfigBean.securityUser = "INVALID_SHIELD_USER";
+    conf.securityConfig.securityUser = "INVALID_SHIELD_USER";
 
-    target = new ElasticSearchTarget(conf);
+    target = new ElasticsearchTarget(conf);
     runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
     issues = runner.runValidateConfigs();
     Assert.assertEquals(1, issues.size());
@@ -526,19 +479,19 @@ public class ElasticSearchTargetIT {
 
   @Test
   public void testNonIndexOperationWithoutDocId() throws Exception {
-    ElasticSearchConfigBean conf = new ElasticSearchConfigBean();
-    conf.httpUris = Arrays.asList("127.0.0.1:" + esHttpPort);
+    ElasticsearchTargetConfig conf = new ElasticsearchTargetConfig();
+    conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
     conf.timeDriver = "${time:now()}";
     conf.timeZoneID = "UTC";
     conf.indexTemplate = "${YYYY()}";
     conf.typeTemplate = "${record:value('/type')}";
     conf.docIdTemplate = ""; // empty document ID expression
     conf.charset = "UTF-8";
-    conf.defaultOperation = ElasticSearchOperationType.CREATE;
+    conf.defaultOperation = ElasticsearchOperationType.CREATE;
     conf.useSecurity = false;
-    conf.securityConfigBean = new SecurityConfigBean();
+    conf.securityConfig = new SecurityConfig();
 
-    ElasticSearchTarget target = new ElasticSearchTarget(conf);
+    ElasticsearchTarget target = new ElasticsearchTarget(conf);
     TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
     Assert.assertEquals(1, issues.size());
@@ -552,7 +505,7 @@ public class ElasticSearchTargetIT {
         "${time:now()}",
         "${record:value('/index')}",
         "docId",
-        ElasticSearchOperationType.INDEX
+        ElasticsearchOperationType.INDEX
     );
     TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
     try {

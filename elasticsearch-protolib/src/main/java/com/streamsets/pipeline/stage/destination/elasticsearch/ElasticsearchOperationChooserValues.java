@@ -21,9 +21,9 @@ package com.streamsets.pipeline.stage.destination.elasticsearch;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public class ElasticSearchOperationChooserValues extends BaseEnumChooserValues {
+public class ElasticsearchOperationChooserValues extends BaseEnumChooserValues {
 
-  public ElasticSearchOperationChooserValues() {
-    super(ElasticSearchOperationType.class);
+  public ElasticsearchOperationChooserValues() {
+    super(ElasticsearchOperationType.class);
   }
 }

@@ -1,5 +1,5 @@
-/**
- * Copyright 2016 StreamSets Inc.
+/*
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -9,7 +9,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,14 +17,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.elasticsearch;
+package com.streamsets.pipeline.stage.config.elasticsearch;
 
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 
-public class SecurityConfigBean {
+public class SecurityConfig {
 
-  public static final String CONF_PREFIX = ElasticSearchConfigBean.CONF_PREFIX + "securityConfigBean.";
+  public static final String CONF_PREFIX = "conf.securityConfig.";
 
   @ConfigDef(
       required = false,
@@ -44,20 +44,20 @@ public class SecurityConfigBean {
       required = false,
       type = ConfigDef.Type.STRING,
       defaultValue = "",
-      label = "SSL Truststore Path",
+      label = "SSL TrustStore Path",
       description = "",
       dependsOn = "useSecurity^",
       triggeredByValue = "true",
       displayPosition = 20,
       group = "SECURITY"
   )
-  public String sslTruststorePath;
+  public String sslTrustStorePath;
 
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
       defaultValue = "",
-      label = "SSL Truststore Password",
+      label = "SSL TrustStore Password",
       description = "",
       dependsOn = "useSecurity^",
       triggeredByValue = "true",
@@ -65,5 +65,5 @@ public class SecurityConfigBean {
       elDefs = VaultEL.class,
       group = "SECURITY"
   )
-  public String sslTruststorePassword;
+  public String sslTrustStorePassword;
 }

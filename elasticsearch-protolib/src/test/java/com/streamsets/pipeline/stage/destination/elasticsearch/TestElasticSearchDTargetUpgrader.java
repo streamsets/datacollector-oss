@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2015 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
@@ -21,38 +21,58 @@ package com.streamsets.pipeline.stage.destination.elasticsearch;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageUpgrader;
-import org.junit.Assert;
+import com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchConfig;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 public class TestElasticSearchDTargetUpgrader {
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testUpgrader() throws Exception {
-    StageUpgrader upgrader = new ElasticSearchDTargetUpgrader();
+    StageUpgrader upgrader = new ElasticsearchDTargetUpgrader();
 
+    List<Config> configs = createConfigs();
+
+    List<Config> newConfigs = upgrader.upgrade("l", "s", "i", 1, 6, configs);
+
+    assertEquals(6, configs.size());
+    assertEquals("elasticSearchConfigBean.timeDriver", newConfigs.get(0).getName());
+    assertEquals("elasticSearchConfigBean.timeZoneID", newConfigs.get(1).getName());
+    assertEquals("elasticSearchConfigBean.httpUris", newConfigs.get(2).getName());
+    assertEquals("http://localhost:9300", ((List<String>)newConfigs.get(2).getValue()).get(0));
+    assertEquals("elasticSearchConfigBean.useSecurity", newConfigs.get(3).getName());
+    assertEquals("elasticSearchConfigBean.params", newConfigs.get(4).getName());
+    assertEquals("elasticSearchConfigBean.defaultOperation", newConfigs.get(5).getName());
+  }
+
+  @Test
+  public void testV6ToV7Upgrade() throws Exception {
+    StageUpgrader upgrader = new ElasticsearchDTargetUpgrader();
+    List<Config> configs = createConfigs();
+
+    List<Config> newConfigs = upgrader.upgrade("l", "s", "i", 1, 7, configs);
+    assertEquals(6, configs.size());
+    newConfigs.forEach(config -> assertTrue(config.getName().startsWith(ElasticsearchConfig.CONF_PREFIX)));
+  }
+
+  private List<Config> createConfigs() {
     List<Config> configs = new ArrayList<>();
-    configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "clusterName", "MyCluster"));
-    configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "uris", Collections.EMPTY_LIST));
-    configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "httpUri", "http://localhost:9300"));
-    configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "useShield", false));
-    configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "useFound", false));
-    configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "configs", Collections.EMPTY_MAP));
-    configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "upsert", false));
+    configs.add(new Config(ElasticsearchDTargetUpgrader.OLD_CONFIG_PREFIX + "clusterName", "MyCluster"));
+    configs.add(new Config(ElasticsearchDTargetUpgrader.OLD_CONFIG_PREFIX + "uris", Collections.EMPTY_LIST));
+    configs.add(new Config(ElasticsearchDTargetUpgrader.OLD_CONFIG_PREFIX + "httpUri", "http://localhost:9300"));
+    configs.add(new Config(ElasticsearchDTargetUpgrader.OLD_CONFIG_PREFIX + "useShield", false));
+    configs.add(new Config(ElasticsearchDTargetUpgrader.OLD_CONFIG_PREFIX + "useFound", false));
+    configs.add(new Config(ElasticsearchDTargetUpgrader.OLD_CONFIG_PREFIX + "configs", Collections.EMPTY_MAP));
+    configs.add(new Config(ElasticsearchDTargetUpgrader.OLD_CONFIG_PREFIX + "upsert", false));
 
-    upgrader.upgrade("l", "s", "i", 1, 6, configs);
-
-    Assert.assertEquals(6, configs.size());
-    Assert.assertEquals("elasticSearchConfigBean.timeDriver", configs.get(0).getName());
-    Assert.assertEquals("elasticSearchConfigBean.timeZoneID", configs.get(1).getName());
-    Assert.assertEquals("elasticSearchConfigBean.httpUris", configs.get(2).getName());
-    Assert.assertEquals("http://localhost:9300", ((List<String>)configs.get(2).getValue()).get(0));
-    Assert.assertEquals("elasticSearchConfigBean.useSecurity", configs.get(3).getName());
-    Assert.assertEquals("elasticSearchConfigBean.params", configs.get(4).getName());
-    Assert.assertEquals("elasticSearchConfigBean.defaultOperation", configs.get(5).getName());
+    return configs;
   }
 
 }
