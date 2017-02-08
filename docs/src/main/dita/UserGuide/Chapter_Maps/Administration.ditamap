@@ -35,6 +35,7 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Administration/ModifyingLogLevel.dita"/>
   </topicref>
   <topicref href="../Administration/ShuttingDown.dita">
    <topicmeta>

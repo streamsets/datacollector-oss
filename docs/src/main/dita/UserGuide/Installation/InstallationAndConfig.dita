@@ -23,21 +23,14 @@
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> that
       includes all stage libraries. Or, you can install a core version of <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to install
-      only the stage libraries that you want to use. The core installation allows Data Collector to
-      use less disk space.</p>
+      only the stage libraries that you want to use. The core installation allows <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use
+      less disk space.</p>
     <p>If you use Docker, you can also run the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> image from
       Docker Hub. </p>
     <p>If you use Cloudera Manager, you can install and administer <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> through
       Cloudera Manager. </p>
-    <p>After installation, you can install additional drivers for stages, create additional users,
-      customize <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-      />, and configure the environment. You can configure <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use
-      runtime properties or runtime resources to define values in a file and then call those values
-      from within a pipeline. You can also modify the <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> log level
-      to display messages at another severity level.</p>
   </conbody>
 </concept>

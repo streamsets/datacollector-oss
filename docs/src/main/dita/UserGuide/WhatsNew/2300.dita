@@ -124,21 +124,26 @@
                                     address.</p>
                             </li>
                             <li dir="ltr">
-                                <p>Proxy configuration for outbound requests - You can now configure
-                                    Data Collector to use an authenticated HTTP proxy for outbound
-                                    requests.</p>
+                                <p><xref href="../DPM/HTTPProxy.dita#concept_dmr_df5_5y">Proxy
+                                        configuration for outbound requests</xref> - You can now
+                                    configure Data Collector to use an authenticated HTTP proxy for
+                                    outbound requests to Dataflow Performance Manager (DPM).</p>
                             </li>
                             <li dir="ltr">
-                                <p>Java garbage collector logging - Data Collector now enables
-                                    logging for the Java garbage collector by default. Logs are
-                                    written to $SDC_LOG/gc.log. You can disable the logging if
+                                <p><xref
+                                        href="../Configuration/JavaConfig_GarbageCollector.dita#concept_kqh_lj3_vx"
+                                        >Java garbage collector logging</xref> - Data Collector now
+                                    enables logging for the Java garbage collector by default. Logs
+                                    are written to $SDC_LOG/gc.log. You can disable the logging if
                                     needed. </p>
                             </li>
                             <li dir="ltr">Heap dump for out of memory errors - Data Collector now
                                 produces a heap dump file by default if it encounters an out of
                                 memory error. You can configure the location of the heap dump file
                                 or you can disable this default behavior. </li>
-                            <li dir="ltr">Modifying the log level - You can now use the Data
+                            <li dir="ltr"><xref
+                                    href="../Administration/ModifyingLogLevel.dita#task_lkv_g2f_wy"
+                                    >Modifying the log level</xref> - You can now use the Data
                                 Collector UI to modify the log level to display messages at another
                                 severity level.</li>
                         </ul>

@@ -15,17 +15,12 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_gbm_s3k_br">
     <title>Viewing Data Collector Logs</title>
-    <shortdesc>You can view and download log data. When you download log data, you can select the
-        file to download.</shortdesc>
     <taskbody>
         <context>
             <p><indexterm>Data Collector<indexterm>viewing and downloading log
                     data</indexterm></indexterm><indexterm>log files<indexterm>viewing and
-                        downloading</indexterm></indexterm>By default, <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> logs messages at the INFO severity level. You can modify the log level to display
-                messages at another severity level. For more information, see <xref
-                    href="../Configuration/LogLevel.dita#concept_yrv_ck2_px"/>.</p>
+                        downloading</indexterm></indexterm>You can view and download log data. When
+                you download log data, you can select the file to download.</p>
         </context>
         <steps id="steps_pvc_5bb_rr">
             <step>
