@@ -68,8 +68,8 @@
      <dd>By default, <ph
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> logs
       messages at the INFO severity level. You can modify the log level to display messages at
-      another severity level. For more information, see <xref
-       href="../Configuration/LogLevel.dita#concept_yrv_ck2_px"/>.</dd>
+      another severity level. For details, see <xref
+       href="../Administration/ModifyingLogLevel.dita#task_lkv_g2f_wy"/>.</dd>
     </dlentry>
    </dl>
   </p>

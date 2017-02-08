@@ -95,10 +95,5 @@
    <topicref href="../Configuration/JMXMetrics-ViewExternalTools.dita"/>
    <topicref href="../Configuration/JMXMetrics-Custom.dita"/>
   </topicref>
-  <topicref href="../Configuration/LogLevel.dita" chunk="to-content">
-   <topicmeta>
-    <shortdesc/>
-   </topicmeta>
-  </topicref>
  </topicref>
 </map>
