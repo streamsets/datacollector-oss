@@ -152,6 +152,11 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jul-to-slf4j</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>com.squareup.dagger</groupId>
       <artifactId>dagger</artifactId>
       <scope>compile</scope>

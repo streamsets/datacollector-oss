@@ -45,6 +45,17 @@
       <artifactId>streamsets-datacollector-api</artifactId>
       <scope>compile</scope>
     </dependency>
+
+    <!--
+      This needs to be loaded by api classloader, (since slf4j classes are blacklisted by BlacklistClassloader)
+      but not really required for the api project, so add it in the api-lib directory during assembly
+    -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jul-to-slf4j</artifactId>
+      <version>${slf4j.version}</version>
+      <scope>compile</scope>
+    </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-cli</artifactId>

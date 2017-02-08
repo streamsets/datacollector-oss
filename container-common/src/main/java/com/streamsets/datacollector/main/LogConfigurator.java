@@ -22,12 +22,14 @@ package com.streamsets.datacollector.main;
 import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import javax.inject.Inject;
-
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
 
 public class LogConfigurator {
   private final RuntimeInfo runtimeInfo;
@@ -72,6 +74,15 @@ public class LogConfigurator {
       if (log4fConfigUrl != null) {
         runtimeInfo.setAttribute(RuntimeInfo.LOG4J_CONFIGURATION_URL_ATTR, log4fConfigUrl);
       }
+
+      // Make sure any j.u.l logging is redirected to slf4j logs.
+      LogManager.getLogManager().reset();
+      SLF4JBridgeHandler.removeHandlersForRootLogger();
+      SLF4JBridgeHandler.install();
+      // Set j.u.l log level to INFO if root logger has info enabled, else enable WARN.
+      Level julLogLevel =
+          LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME).isInfoEnabled() ? Level.INFO : Level.WARNING;
+      java.util.logging.Logger.getLogger("global").setLevel(julLogLevel);
       Logger log = LoggerFactory.getLogger(this.getClass());
       log.debug("Log starting, from configuration: {}", log4jConf.getAbsoluteFile());
       if (!foundConfig) {

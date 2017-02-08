@@ -17,31 +17,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.processor.spark;
+package com.streamsets.datacollector.pipeline.executor.spark;
 
-import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.Label;
 
-public enum Errors implements ErrorCode {
-  SPARK_00("Specified class: '{}' does not implement SparkTransformer interface"),
-  SPARK_01("Specified class: '{}' was not found in classpath"),
-  SPARK_02("Instantiating SparkTransformer class: '{}' with error: '{}'"),
-  SPARK_03("Error accessing Streamsets directories"),
-  SPARK_04("{}"),
-  SPARK_05("Init method for SparkTransformer class: '{}' failed with error: '{}'"),
-  SPARK_06("Error while transforming batch: {}"),
-  SPARK_07("Spark job failed with error: {}")
+public enum Groups implements Label {
+  SPARK ("Spark"),
+  APPLICATION ("Application Details"),
   ;
 
-  private final String message;
+  private String label;
 
-  Errors(String message) {
-    this.message = message;
-  }
-  public String getCode() {
-    return name();
+  Groups(String label) {
+    this.label = label;
   }
 
-  public String getMessage() {
-    return message;
+  @Override
+  public String getLabel() {
+    return label;
   }
 }

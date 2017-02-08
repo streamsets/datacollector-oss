@@ -145,9 +145,23 @@
             <scope>compile</scope>
         </dependency>
 
+
+        <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-spark-executor-protolib</artifactId>
+          <version>${project.version}</version>
+          <scope>compile</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-core_2.10</artifactId>
+            <version>${spark.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-launcher_2.10</artifactId>
             <version>${spark.version}</version>
         </dependency>
 
@@ -556,6 +570,7 @@
                                 <source>${basedir}/../flume-protolib/src/test/java</source>
                                 <source>${basedir}/../cluster-hdfs-protolib/src/test/java</source>
                                 <source>${basedir}/../spark-processor-protolib/src/test/java</source>
+                                <source>${basedir}/../spark-executor-protolib/src/test/java</source>
                             </sources>
                         </configuration>
                     </execution>
@@ -590,6 +605,9 @@
                                 </resource>
                                 <resource>
                                     <directory>${basedir}/../spark-processor-protolib/src/test/resources</directory>
+                                </resource>
+                                <resource>
+                                    <directory>${basedir}/../spark-executor-protolib/src/test/resources</directory>
                                 </resource>
                             </resources>
                         </configuration>

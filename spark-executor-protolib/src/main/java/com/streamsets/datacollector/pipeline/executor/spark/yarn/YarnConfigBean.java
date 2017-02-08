@@ -1,0 +1,300 @@
+/**
+ *
+ *  Copyright 2017 StreamSets Inc.
+ *
+ *  Licensed under the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+package com.streamsets.datacollector.pipeline.executor.spark.yarn;
+
+import com.streamsets.datacollector.pipeline.executor.spark.DeployMode;
+import com.streamsets.datacollector.pipeline.executor.spark.DeployModeChooserValues;
+import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeEL;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class YarnConfigBean {
+  @ConfigDef(
+      type = ConfigDef.Type.MODEL,
+      required = true,
+      label = "Deploy Mode",
+      dependsOn = "clusterManager^",
+      triggeredByValue = "YARN", // Applies only to YARN, not Databricks
+      group = "SPARK",
+      displayPosition = 20
+  )
+  @ValueChooserModel(DeployModeChooserValues.class)
+  public DeployMode deployMode;
+
+  @ConfigDef(
+      type = ConfigDef.Type.STRING,
+      required = true,
+      label = "Driver Memory",
+      group = "SPARK",
+      dependsOn = "clusterManager^",
+      triggeredByValue = "YARN",
+      displayPosition = 30
+  )
+  public String driverMemory = "";
+
+  @ConfigDef(
+      type = ConfigDef.Type.STRING,
+      required = true,
+      label = "Executor Memory",
+      group = "SPARK",
+      dependsOn = "clusterManager^",
+      triggeredByValue = "YARN",
+      displayPosition = 40
+
+  )
+  public String executorMemory = "";
+
+  @ConfigDef(
+      type = ConfigDef.Type.BOOLEAN,
+      required = true,
+      defaultValue = "true",
+      label = "Dynamic Allocation",
+      group = "SPARK",
+      dependsOn = "clusterManager^",
+      triggeredByValue = "YARN",
+      displayPosition = 50
+  )
+  public boolean dynamicAllocation = true;
+
+  @ConfigDef(
+      type = ConfigDef.Type.NUMBER,
+      required = true,
+      min = 0,
+      label = "Initial/Minimum Number of Executors",
+      group = "SPARK",
+      dependsOn = "dynamicAllocation",
+      triggeredByValue = "true",
+      displayPosition = 60
+
+  )
+  public int minExecutors;
+
+  @ConfigDef(
+      type = ConfigDef.Type.NUMBER,
+      required = true,
+      min = 0,
+      label = "Maximum Number of Executors",
+      group = "SPARK",
+      dependsOn = "dynamicAllocation",
+      triggeredByValue = "true",
+      displayPosition = 70
+  )
+  public int maxExecutors;
+
+  @ConfigDef(
+      type = ConfigDef.Type.NUMBER,
+      required = true,
+      min = 1,
+      label = "Number of Executors",
+      elDefs = RecordEL.class,
+      group = "SPARK",
+      dependsOn = "dynamicAllocation",
+      triggeredByValue = "false",
+      displayPosition = 80
+  )
+  public int numExecutors;
+
+  @ConfigDef(
+      type = ConfigDef.Type.STRING,
+      required = false,
+      label = "Kerberos Principal",
+      group = "SPARK",
+      dependsOn = "clusterManager^",
+      triggeredByValue = "YARN",
+      displayPosition = 90
+  )
+  public String principal = "";
+
+  @ConfigDef(
+      type = ConfigDef.Type.STRING,
+      required = false,
+      label = "Kerberos Keytab",
+      group = "SPARK",
+      dependsOn = "clusterManager^",
+      triggeredByValue = "YARN",
+      displayPosition = 100
+  )
+  public String keytab = "";
+
+  @ConfigDef(
+      type = ConfigDef.Type.STRING,
+      required = false,
+      label = "Proxy User",
+      group = "SPARK",
+      dependsOn = "clusterManager^",
+      triggeredByValue = "YARN",
+      displayPosition = 110
+  )
+  public String proxyUser = "";
+
+  @ConfigDef(
+      type = ConfigDef.Type.LIST,
+      required = false,
+      label = "Arguments to Pass to Spark",
+      description = "Use this to pass any additional arguments to Spark Launcher/Spark Submit. Overrides other parameters",
+      group = "SPARK",
+      dependsOn = "clusterManager^",
+      triggeredByValue = "YARN",
+      displayPosition = 140
+  )
+  public List<String> noValueArgs = new ArrayList<>();
+
+  @ConfigDef(
+      type = ConfigDef.Type.MAP,
+      required = false,
+      label = "Arguments with Values to Pass to Spark",
+      description = "Use this to pass any additional arguments to Spark Launcher/Spark Submit. Overrides other parameters",
+      group = "SPARK",
+      dependsOn = "clusterManager^",
+      triggeredByValue = "YARN",
+      displayPosition = 150
+  )
+  public Map<String, String> args = new HashMap<>();
+
+  @ConfigDef(
+      type = ConfigDef.Type.MAP,
+      required = false,
+      label = "Environment Variables to Set",
+      group = "SPARK",
+      dependsOn = "clusterManager^",
+      triggeredByValue = "YARN",
+      displayPosition = 160
+  )
+  public Map<String, String> env = new HashMap<>();
+
+  /*
+   * APPLICATION group.
+   */
+  @ConfigDef(
+      type = ConfigDef.Type.STRING,
+      required = false,
+      label = "Main Class for the Spark Application",
+      group = "APPLICATION",
+      dependsOn = "clusterManager^",
+      triggeredByValue = "YARN",
+      displayPosition = 20
+  )
+  public String mainClass = "";
+
+  @ConfigDef(
+      type = ConfigDef.Type.STRING,
+      required = true,
+      label = "App Resource",
+      group = "APPLICATION",
+      dependsOn = "clusterManager^",
+      triggeredByValue = "YARN",
+      displayPosition = 30
+  )
+  public String appResource = "";
+
+  @ConfigDef(
+      type = ConfigDef.Type.STRING,
+      required = true,
+      label = "App Name",
+      group = "APPLICATION",
+      dependsOn = "clusterManager^",
+      triggeredByValue = "YARN",
+      displayPosition = 40
+  )
+  public String appName = "";
+
+  // App args here.
+
+  @ConfigDef(
+      type = ConfigDef.Type.LIST,
+      required = false,
+      label = "Additional Jars",
+      group = "APPLICATION",
+      dependsOn = "clusterManager^",
+      triggeredByValue = "YARN",
+      displayPosition = 60
+  )
+  public List<String> additionalJars = new ArrayList<>();
+
+  @ConfigDef(
+      type = ConfigDef.Type.LIST,
+      required = false,
+      label = "Additional File(s) for the Spark Application",
+      group = "APPLICATION",
+      dependsOn = "clusterManager^",
+      triggeredByValue = "YARN",
+      displayPosition = 70
+  )
+  public List<String> additionalFiles = new ArrayList<>();
+
+  @ConfigDef(
+      type = ConfigDef.Type.LIST,
+      required = false,
+      label = "Python File(s) for the Spark Application",
+      group = "APPLICATION",
+      dependsOn = "clusterManager^",
+      triggeredByValue = "YARN",
+      displayPosition = 80
+  )
+  public List<String> pyFiles = new ArrayList<>();
+
+  @ConfigDef(
+      type = ConfigDef.Type.BOOLEAN,
+      required = true,
+      defaultValue = "false",
+      label = "Wait for Completion",
+      dependsOn = "deployMode",
+      triggeredByValue = "CLUSTER",
+      group = "APPLICATION",
+      displayPosition = 90
+  )
+  public boolean waitForCompletion;
+
+  @ConfigDef(
+      type = ConfigDef.Type.NUMBER,
+      required = true,
+      defaultValue = "0",
+      min = 0,
+      label = "Maximum Time to Wait (ms).",
+      description = "Time to wait for the app to complete. 0 to wait forever.",
+      elDefs = TimeEL.class,
+      dependsOn = "waitForCompletion",
+      triggeredByValue = "true",
+      displayPosition = 100
+  )
+  public long waitTimeout;
+
+  @ConfigDef(
+      type = ConfigDef.Type.BOOLEAN,
+      required = true,
+      defaultValue = "false",
+      label = "Enable Verbose Logging",
+      description = "Enable only for testing, as a lot of additional log data is written to sdc.log",
+      group = "APPLICATION",
+      dependsOn = "clusterManager^",
+      triggeredByValue = "YARN",
+      displayPosition = 110
+  )
+  public boolean verbose;
+
+}
