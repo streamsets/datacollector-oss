@@ -122,12 +122,16 @@ public class OracleCDCSource extends BaseSource {
   private static final String TABLE = PREFIX + "table";
   private static final String NULL = "NULL";
   private static final String VERSION_STR = "v2";
-  private static final String UNKNOWN = "UNKNOWN";
+  private static final String ZERO = "0";
+  private boolean sentInitialSchemaEvent = false;
+
   private enum DDL_EVENT {
     CREATE,
     ALTER,
     DROP,
-    TRUNCATE
+    TRUNCATE,
+    STARTUP, // Represents event sent at startup.
+    UNKNOWN
   }
   private static final Map<Integer, String> JDBCTypeNames = new HashMap<>();
 
@@ -197,6 +201,13 @@ public class OracleCDCSource extends BaseSource {
 
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, final BatchMaker batchMaker) throws StageException {
+    if (!sentInitialSchemaEvent) {
+      for (String table : tableSchemas.keySet()) {
+        getContext().toEvent(
+            createEventRecord(DDL_EVENT.STARTUP, null, table, ZERO, true));
+      }
+      sentInitialSchemaEvent = true;
+    }
     final int batchSize = Math.min(configBean.baseConfigBean.maxBatchSize, maxBatchSize);
     // Sometimes even though the SCN number has been updated, the select won't return the latest changes for a bit,
     // because the view gets materialized only on calling the SELECT - so the executeQuery may not return anything.
@@ -363,6 +374,7 @@ public class OracleCDCSource extends BaseSource {
         int operationCode = -1;
         switch (op) {
           case OracleCDCOperationCode.UPDATE_CODE:
+          case OracleCDCOperationCode.SELECT_FOR_UPDATE_CODE:
             ruleContext = parser.update_statement();
             operationCode = OperationType.UPDATE_CODE;
             break;
@@ -373,10 +385,6 @@ public class OracleCDCSource extends BaseSource {
           case OracleCDCOperationCode.DELETE_CODE:
             ruleContext = parser.delete_statement();
             operationCode = OperationType.DELETE_CODE;
-            break;
-          case OracleCDCOperationCode.SELECT_FOR_UPDATE_CODE:
-            ruleContext = parser.update_statement();
-            operationCode = OperationType.UPDATE_CODE;
             break;
           case OracleCDCOperationCode.DDL_CODE:
             break;
@@ -418,10 +426,18 @@ public class OracleCDCSource extends BaseSource {
           }
           batchMaker.addRecord(record);
         } else {
-          scnSeq = scn + OFFSET_DELIM + "0";
-          if(refreshSchema(scnDecimal, table)) {
-            getContext().toEvent(createEventRecord(redoSQL, table, scnSeq));
+          scnSeq = scn + OFFSET_DELIM + ZERO;
+          boolean sendSchema = false;
+          // Event is sent on every DDL, but schema is not always sent.
+          // Schema sending logic:
+          // CREATE/ALTER: Schema is sent if the schema after the ALTER is newer than the cached schema
+          // (which we would have sent as an event earlier, at the last alter)
+          // DROP/TRUNCATE: Schema is not sent, since they don't change schema.
+          DDL_EVENT type = getDdlType(redoSQL);
+          if (type == DDL_EVENT.ALTER || type == DDL_EVENT.CREATE) {
+            sendSchema = refreshSchema(scnDecimal, table);
           }
+          getContext().toEvent(createEventRecord(type, redoSQL, table, scnSeq, sendSchema));
         }
         this.nextOffsetReference.set(scnSeq);
       }
@@ -433,39 +449,52 @@ public class OracleCDCSource extends BaseSource {
 
   }
 
-  private EventRecord createEventRecord(String redoSQL, String table, String scnSeq) {
-    String ddlType;
-    try {
-      Matcher ddlMatcher = DDL_PATTERN.matcher(redoSQL.toUpperCase());
-      if (!ddlMatcher.find()) {
-        ddlType = UNKNOWN;
-      } else {
-        ddlType = DDL_EVENT.valueOf(ddlMatcher.group(1)).name();
-      }
-    } catch (IllegalArgumentException e) {
-      LOG.warn("Unknown DDL Type for statement: " + redoSQL, e);
-      ddlType = UNKNOWN;
-    }
-    // Note that the schema inserted is the *current* schema and not the result of the DDL.
-    // Getting the schema as a result of the DDL is not possible.
-    // We actually don't know the schema at table creation ever, but just the schema when we started. So
-    // trying to figure out the schema at the time of the DDL is not really possible since this DDL could have occured
-    // before the source started. Since we allow only types to be bigger and no column drops, this is ok.
-    EventRecord event = getContext().createEventRecord(ddlType, 1, scnSeq);
+  private EventRecord createEventRecord(
+      DDL_EVENT type,
+      String redoSQL,
+      String table,
+      String scnSeq,
+      boolean sendSchema
+  ) {
+    EventRecord event = getContext().createEventRecord(type.name(), 1, scnSeq);
     event.getHeader().setAttribute(TABLE, table);
-    event.getHeader().setAttribute(DDL_TEXT, redoSQL);
-    LOG.info("Headers = " + event.getHeader().getAllAttributes().toString());
-    Map<String, Integer> schema = tableSchemas.get(table);
-    Map<String, Field> fields = new HashMap<>();
-    for (Map.Entry<String, Integer> column : schema.entrySet()) {
-      fields.put(column.getKey(), Field.create(JDBCTypeNames.get(column.getValue())));
+    if (redoSQL != null) {
+      event.getHeader().setAttribute(DDL_TEXT, redoSQL);
     }
-    event.set(Field.create(fields));
+    if (sendSchema) {
+      // Note that the schema inserted is the *current* schema and not the result of the DDL.
+      // Getting the schema as a result of the DDL is not possible.
+      // We actually don't know the schema at table creation ever, but just the schema when we started. So
+      // trying to figure out the schema at the time of the DDL is not really possible since this DDL could have occured
+      // before the source started. Since we allow only types to be bigger and no column drops, this is ok.
+      Map<String, Integer> schema = tableSchemas.get(table);
+      Map<String, Field> fields = new HashMap<>();
+      for (Map.Entry<String, Integer> column : schema.entrySet()) {
+        fields.put(column.getKey(), Field.create(JDBCTypeNames.get(column.getValue())));
+      }
+      event.set(Field.create(fields));
+    }
 
     if (LOG.isDebugEnabled()) {
       LOG.debug("Event produced: " + event);
     }
     return event;
+  }
+
+  private DDL_EVENT getDdlType(String redoSQL) {
+    DDL_EVENT ddlType;
+    try {
+      Matcher ddlMatcher = DDL_PATTERN.matcher(redoSQL.toUpperCase());
+      if (!ddlMatcher.find()) {
+        ddlType = DDL_EVENT.UNKNOWN;
+      } else {
+        ddlType = DDL_EVENT.valueOf(ddlMatcher.group(1));
+      }
+    } catch (IllegalArgumentException e) {
+      LOG.warn("Unknown DDL Type for statement: " + redoSQL, e);
+      ddlType = DDL_EVENT.UNKNOWN;
+    }
+    return ddlType;
   }
 
   /**
