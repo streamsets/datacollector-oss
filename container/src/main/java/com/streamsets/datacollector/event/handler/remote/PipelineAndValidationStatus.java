@@ -25,6 +25,7 @@ import com.streamsets.datacollector.config.dto.ValidationStatus;
 import com.streamsets.datacollector.event.dto.WorkerInfo;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.validation.Issues;
+import com.streamsets.lib.security.acl.dto.Acl;
 
 public class PipelineAndValidationStatus {
   private final String name;
@@ -38,6 +39,7 @@ public class PipelineAndValidationStatus {
   private Collection<WorkerInfo> workerInfos;
   private boolean isClusterMode;
   private String offset;
+  private Acl acl;
 
   public PipelineAndValidationStatus(
       String name,
@@ -48,7 +50,8 @@ public class PipelineAndValidationStatus {
       String message,
       Collection<WorkerInfo> workerInfos,
       boolean isClusterMode,
-      String offset
+      String offset,
+      Acl acl
   ) {
     this.name = name;
     this.title = title;
@@ -59,6 +62,7 @@ public class PipelineAndValidationStatus {
     this.workerInfos = workerInfos;
     this.isClusterMode = isClusterMode;
     this.offset = offset;
+    this.acl = acl;
   }
 
   public void setValidationStatus(ValidationStatus validationStatus) {
@@ -115,6 +119,10 @@ public class PipelineAndValidationStatus {
 
   public String getOffset() {
     return offset;
+  }
+
+  public Acl getAcl() {
+    return acl;
   }
 }
 

@@ -299,7 +299,8 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
           pipelineAndValidationStatus.getValidationStatus(),
           jsonToFromDto.serialize(BeanHelper.wrapIssues(pipelineAndValidationStatus.getIssues())),
           pipelineAndValidationStatus.isClusterMode(),
-          pipelineAndValidationStatus.getOffset()
+          pipelineAndValidationStatus.getOffset(),
+          pipelineAndValidationStatus.getAcl()
       );
       return pipelineStatusEvent;
     }

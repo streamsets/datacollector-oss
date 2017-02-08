@@ -462,6 +462,7 @@ public class TestRemoteEventHandler {
             "message",
             null,
             false,
+            null,
             null
         ));
         list.add(new PipelineAndValidationStatus(
@@ -473,6 +474,7 @@ public class TestRemoteEventHandler {
             "message",
             null,
             false,
+            null,
             null
         ));
       }
@@ -492,6 +494,7 @@ public class TestRemoteEventHandler {
             "message",
             null,
             false,
+            null,
             null
         ));
       }

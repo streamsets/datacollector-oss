@@ -23,6 +23,7 @@ import java.util.Collection;
 
 import com.streamsets.datacollector.config.json.PipelineStatusJson;
 import com.streamsets.datacollector.config.json.ValidationStatusJson;
+import com.streamsets.lib.security.acl.json.AclJson;
 
 public class PipelineStatusEventJson implements EventJson {
 
@@ -37,6 +38,7 @@ public class PipelineStatusEventJson implements EventJson {
   private Collection<WorkerInfoJson> workerInfos;
   private boolean isClusterMode;
   private String offset;
+  private AclJson acl;
 
   public PipelineStatusJson getPipelineStatus() {
     return pipelineStatus;
@@ -124,5 +126,13 @@ public class PipelineStatusEventJson implements EventJson {
 
   public void setOffset(String offset) {
     this.offset = offset;
+  }
+
+  public AclJson getAcl() {
+    return acl;
+  }
+
+  public void setAcl(AclJson acl) {
+    this.acl = acl;
   }
 }

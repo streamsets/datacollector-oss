@@ -42,6 +42,8 @@ public abstract class AclDtoJsonMapper {
 
   public abstract Acl asAclDto(AclJson aclJson);
 
+  public abstract Acl cloneAcl(Acl acl);
+
   public abstract ActionJson toActionJson(Action action);
 
   public abstract Action asActionDto(ActionJson actionJson);

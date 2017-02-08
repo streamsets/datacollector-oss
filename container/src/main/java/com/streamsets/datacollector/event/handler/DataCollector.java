@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.event.handler;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -59,7 +60,7 @@ public interface DataCollector {
 
   void stopAndDelete(String user, String name, String rev) throws PipelineException, StageException;
 
-  Collection<PipelineAndValidationStatus> getPipelines() throws PipelineException;
+  Collection<PipelineAndValidationStatus> getPipelines() throws PipelineException, IOException;
 
   List<PipelineAndValidationStatus> getRemotePipelinesWithChanges() throws PipelineException;
 
