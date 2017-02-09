@@ -212,19 +212,22 @@
             </li>
 
             <li>
-              <a href="javascript:;" ng-click="common.showSDCDirectories()">
+              <a href="javascript:;"
+                 ng-if="common.userName && isAuthorized([userRoles.admin])"
+                 ng-click="common.showSDCDirectories()">
                 <i class="fa fa-folder"></i>
                 <span translate="sdcDirectories.title">SDC Directories</span>
               </a>
             </li>
 
-            <li>
+            <li ng-if="common.userName && isAuthorized([userRoles.admin])">
               <a href="collector/jvmMetrics">
                 <i class="fa fa-dashboard"></i>
                 <span translate="global.menu.admin.jvmMetrics">JVM Metrics</span>
               </a>
             </li>
-            <li>
+
+            <li ng-if="common.userName && isAuthorized([userRoles.admin])">
               <a href="collector/logs">
                 <i class="fa fa-tasks"></i>
                 <span translate="global.menu.admin.logs">Logs</span>
@@ -235,6 +238,13 @@
               <a href="javascript:;" ng-click="common.onEnableDPMClick()">
                 <i class="fa fa-file-text"></i>
                 <span translate="global.menu.admin.enableDPM">Enable DPM</span>
+              </a>
+            </li>
+
+            <li ng-if="isAuthorized([userRoles.admin]) && common.remoteServerInfo.registrationStatus">
+              <a href="javascript:;" ng-click="common.onCreateDPMUsersClick()">
+                <i class="glyphicon glyphicon-user"></i>
+                <span translate="home.createDPMUsers.title">Create DPM Users</span>
               </a>
             </li>
 
