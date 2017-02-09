@@ -35,14 +35,14 @@ angular
           }
         },
         data: {
-          authorizedRoles: ['admin', 'creator', 'manager']
+          authorizedRoles: ['admin']
         }
       }
     );
   }])
-  .controller('LogsController', function ($rootScope, $scope, $interval, api, configuration, Analytics,
-                                          $timeout, $modal) {
-
+  .controller('LogsController', function (
+    $rootScope, $scope, $interval, api, configuration, Analytics, $timeout, $modal
+  ) {
     var webSocketLogURL = $rootScope.common.webSocketBaseURL + 'rest/v1/webSocket?type=log';
     var logWebSocket;
     var logWebSocketMessages = [];
