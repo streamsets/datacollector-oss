@@ -116,7 +116,7 @@
                             <li dir="ltr">
                                 <p><xref
                                         href="../Configuration/Authentication.dita#concept_dns_dvg_h5"
-                                        >LDAP authentication</xref> enhancements - You can now
+                                        >LDAP authentication enhancements</xref> - You can now
                                     configure Data Collector to use StartTLS to make secure
                                     connections to an LDAP server. You can also configure the
                                     userFilter property to define the LDAP user attribute used to
@@ -205,14 +205,14 @@
                             </li>
                             <li dir="ltr"><xref
                                     href="../Origins/JDBCConsumer.dita#concept_qhf_hjr_bs">JDBC
-                                    Query Consumer origin</xref> enhancements - The JDBC Consumer
+                                    Query Consumer origin enhancements</xref> - The JDBC Consumer
                                 origin has been renamed to the JDBC Query Consumer origin. The
                                 origin functions the same as in previous releases. It reads database
                                 data using a user-defined SQL query through a JDBC connection. You
                                 can also now configure the origin to enable auto-commit mode for the
                                 JDBC connection and to disable validation of the SQL query.</li>
                             <li><xref href="../Origins/MongoDB.dita#concept_bk4_2rs_ns">MongoDB
-                                    origin</xref> enhancements - You can now use a nested field as
+                                    origin enhancements</xref> - You can now use a nested field as
                                 the offset field. The origin supports reading the MongoDB BSON
                                 timestamp for MongoDB versions 2.6 and later. And you can configure
                                 the origin to connect to a single MongoDB server or node. </li>
@@ -233,22 +233,26 @@
                                 another processor to convert the Datetime field to a String.</li>
                             <li dir="ltr">
                                 <p><xref href="../Processors/HTTPClient.dita#concept_ghx_ypr_fw"
-                                        >HTTP Client processor</xref> enhancements - You can now
+                                        >HTTP Client processor enhancements</xref>  - You can now
                                     configure the processor to use the OAuth 2 protocol to connect
                                     to an HTTP service. You can also configure a rate limit for the
                                     processor, which defines the maximum number of requests to make
                                     per second.</p>
                             </li>
                             <li dir="ltr">
-                                <p>JDBC Lookup processor enhancements - You can now configure the
-                                    processor to enable auto-commit mode for the JDBC connection.
-                                    You can also configure the processor to use a default value if
-                                    the database does not return a lookup value for a column.</p>
+                                <p><xref href="../Processors/JDBCLookup.dita#concept_ysc_ccy_hw"
+                                        >JDBC Lookup processor enhancements</xref> - You can now
+                                    configure the processor to enable auto-commit mode for the JDBC
+                                    connection. You can also configure the processor to use a
+                                    default value if the database does not return a lookup value for
+                                    a column.</p>
                             </li>
                             <li dir="ltr">
-                                <p>Salesforce Lookup processor enhancement - You can now configure
-                                    the processor to use a default value if Salesforce does not
-                                    return a lookup value for a field.</p>
+                                <p><xref
+                                        href="../Processors/SalesforceLookup.dita#concept_k23_3rk_yx"
+                                        >Salesforce Lookup processor enhancement</xref> - You can
+                                    now configure the processor to use a default value if Salesforce
+                                    does not return a lookup value for a field.</p>
                             </li>
                             <li dir="ltr">
                                 <p dir="ltr">XML Parser enhancement - A new Multiple Values Behavior
@@ -281,7 +285,7 @@
                             <li dir="ltr">
                                 <p><xref
                                         href="../Destinations/Elasticsearch.dita#concept_u5t_vpv_4r"
-                                        >Elasticsearch destination</xref> enhancement - The
+                                        >Elasticsearch destination enhancement</xref> - The
                                     destination now uses the Elasticsearch HTTP API. With this API,
                                     the Elasticsearch version 5 stage library is compatible with all
                                     versions of Elasticsearch. Earlier stage library versions have
@@ -322,7 +326,7 @@
                             <li dir="ltr">
                                 <p dir="ltr"><xref
                                         href="../Executors/HiveQuery.dita#concept_kjw_llk_fx">Hive
-                                        Query executor</xref> enhancements: <ul id="ul_gf2_qwt_5y">
+                                        Query executor enhancements</xref>: <ul id="ul_gf2_qwt_5y">
                                         <li>The executor can now execute multiple queries for each
                                             event that it receives.</li>
                                         <li>It can also generate event records each time it
@@ -334,7 +338,7 @@
                             <li dir="ltr">
                                 <p dir="ltr"><xref
                                         href="../Executors/JDBCQuery.dita#concept_j3r_gcv_sx">JDBC
-                                        Query executor</xref> enhancement - You can now configure
+                                        Query executor enhancement</xref> - You can now configure
                                     the executor to enable auto-commit mode for the JDBC
                                     connection.</p>
                             </li>
@@ -345,11 +349,12 @@
                     <dt>Data Formats</dt>
                     <dd>
                         <ul id="ul_hpw_zwt_5y">
-                            <li>Whole File <xref
+                            <li><xref
                                     href="../Pipeline_Design/WholeFile-TransferRate.dita#concept_prp_jzd_py"
-                                    >enhancement</xref> - You can now specify a transfer rate to
-                                help control the resources used to process whole files. You can
-                                specify the rate limit in all origins that process whole files.</li>
+                                    >Whole File enhancement</xref> - You can now specify a transfer
+                                rate to help control the resources used to process whole files. You
+                                can specify the rate limit in all origins that process whole
+                                files.</li>
                         </ul>
                     </dd>
                 </dlentry>
@@ -372,7 +377,9 @@
                                     </ul></p>
                             </li>
                             <li dir="ltr">
-                                <p dir="ltr">New string functions - You can use the following new
+                                <p dir="ltr"><xref
+                                        href="../Expression_Language/StringFunctions.dita#concept_ahp_f4v_1r"
+                                        >New string functions</xref> - You can use the following new
                                     string functions to transform string data: <ul
                                         id="ul_knh_mxt_5y">
                                         <li>str:urlEncode (&lt;string>, &lt;encoding>) - Returns a
@@ -384,8 +391,11 @@
                                     </ul></p>
                             </li>
                             <li dir="ltr">
-                                <p dir="ltr">New time functions - You can use the following new time
-                                    functions to transform datetime data: <ul id="ul_yk5_pxt_5y">
+                                <p dir="ltr"><xref
+                                        href="../Expression_Language/TimeFunctions.dita#concept_qkr_trf_sw"
+                                        >New time functions</xref> - You can use the following new
+                                    time functions to transform datetime data: <ul
+                                        id="ul_yk5_pxt_5y">
                                         <li>time:dateTimeToMilliseconds (&lt;Date object>) -
                                             Converts a Date object to an epoch or UNIX time in
                                             milliseconds. </li>
@@ -399,8 +409,10 @@
                                     </ul></p>
                             </li>
                             <li dir="ltr">
-                                <p dir="ltr">New and enhanced miscellaneous functions - You can use
-                                    the following new and enhanced miscellaneous functions: <ul
+                                <p dir="ltr"><xref
+                                        href="../Expression_Language/MiscFunctions.dita#concept_ddw_ld1_1s"
+                                        >New and enhanced miscellaneous functions</xref> - You can
+                                    use the following new and enhanced miscellaneous functions: <ul
                                         id="ul_m2x_nxt_5y">
                                         <li>offset:column(&lt;position>) - Returns the value of the
                                             positioned offset column for the current table.
