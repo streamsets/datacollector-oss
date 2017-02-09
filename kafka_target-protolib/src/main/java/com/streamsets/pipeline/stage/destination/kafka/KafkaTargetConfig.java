@@ -55,6 +55,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static com.streamsets.pipeline.config.AvroSchemaLookupMode.ID;
+import static com.streamsets.pipeline.config.AvroSchemaLookupMode.SUBJECT;
 import static com.streamsets.pipeline.config.DestinationAvroSchemaSource.REGISTRY;
 import static com.streamsets.pipeline.stage.destination.kafka.Serializer.CONFLUENT;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -403,7 +404,8 @@ public class KafkaTargetConfig {
             "conf.dataGeneratorFormatConfig.schemaId",
             KafkaErrors.KAFKA_72
         ));
-      } else if (isEmpty(dataGeneratorFormatConfig.subject)) {
+      }
+      if (dataGeneratorFormatConfig.schemaLookupMode == SUBJECT && isEmpty(dataGeneratorFormatConfig.subject)) {
         issues.add(context.createConfigIssue(KafkaDestinationGroups.DATA_FORMAT.name(),
             "conf.dataGeneratorFormatConfig.subject",
             KafkaErrors.KAFKA_72
