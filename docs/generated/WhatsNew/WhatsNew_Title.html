@@ -154,7 +154,7 @@
 </li>
 
                             <li dir="ltr" class="li">
-                                <p class="p"><a class="xref" href="../Configuration/Authentication.html#concept_dns_dvg_h5" title="Data Collector can authenticate user accounts based on LDAP or files. Best practice is to use LDAP if your organization has it. By default, Data Collector uses file-based authentication.">LDAP authentication</a> enhancements - You can now
+                                <p class="p"><a class="xref" href="../Configuration/Authentication.html#concept_dns_dvg_h5" title="Data Collector can authenticate user accounts based on LDAP or files. Best practice is to use LDAP if your organization has it. By default, Data Collector uses file-based authentication.">LDAP authentication enhancements</a> - You can now
                                     configure Data Collector to use StartTLS to make secure
                                     connections to an LDAP server. You can also configure the
                                     userFilter property to define the LDAP user attribute used to
@@ -164,16 +164,17 @@
                             </li>
 
                             <li dir="ltr" class="li">
-                                <p class="p">Proxy configuration for outbound requests - You can now configure
-                                    Data Collector to use an authenticated HTTP proxy for outbound
-                                    requests.</p>
+                                <p class="p"><a class="xref" href="../DPM/RegisterSDCwithDPM.html#concept_dmr_df5_5y" title="You can configure each registered Data Collector to use an authenticated HTTP or HTTPS proxy server for outbound requests made to DPM. Define the proxy properties in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file, sdc-env.sh or sdcd-env.sh, located in the $SDC_DIST/libexec directory.">Proxy
+                                        configuration for outbound requests</a> - You can now
+                                    configure Data Collector to use an authenticated HTTP proxy for
+                                    outbound requests to Dataflow Performance Manager (DPM).</p>
 
                             </li>
 
                             <li dir="ltr" class="li">
-                                <p class="p">Java garbage collector logging - Data Collector now enables
-                                    logging for the Java garbage collector by default. Logs are
-                                    written to $SDC_LOG/gc.log. You can disable the logging if
+                                <p class="p"><a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_kqh_lj3_vx" title="You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.">Java garbage collector logging</a> - Data Collector now
+                                    enables logging for the Java garbage collector by default. Logs
+                                    are written to $SDC_LOG/gc.log. You can disable the logging if
                                     needed. </p>
 
                             </li>
@@ -183,7 +184,7 @@
                                 memory error. You can configure the location of the heap dump file
                                 or you can disable this default behavior. </li>
 
-                            <li dir="ltr" class="li">Modifying the log level - You can now use the Data
+                            <li dir="ltr" class="li"><a class="xref" href="../Administration/Administration_title.html#task_lkv_g2f_wy" title="If the Data Collector logs do not provide enough troubleshooting information, you can modify the log level to display messages at another severity level.">Modifying the log level</a> - You can now use the Data
                                 Collector UI to modify the log level to display messages at another
                                 severity level.</li>
 
@@ -261,7 +262,7 @@
                             </li>
 
                             <li dir="ltr" class="li"><a class="xref" href="../Origins/JDBCConsumer.html#concept_qhf_hjr_bs" title="JDBC Query Consumer uses an offset column and initial offset value to determine where to start reading data within a table. Include both the offset column and the offset value in the WHERE clause of the SQL query. JDBC Query Consumer supports recovery after a deliberate or unexpected stop when it performs incremental queries. Recovery is not supported for full queries.When you define the SQL query for incremental mode, JDBC Query Consumer requires a WHERE and ORDER BY clause in the query. You can define any type of SQL query for full mode.">JDBC
-                                    Query Consumer origin</a> enhancements - The JDBC Consumer
+                                    Query Consumer origin enhancements</a> - The JDBC Consumer
                                 origin has been renamed to the JDBC Query Consumer origin. The
                                 origin functions the same as in previous releases. It reads database
                                 data using a user-defined SQL query through a JDBC connection. You
@@ -269,7 +270,7 @@
                                 JDBC connection and to disable validation of the SQL query.</li>
 
                             <li class="li"><a class="xref" href="../Origins/MongoDB.html#concept_bk4_2rs_ns">MongoDB
-                                    origin</a> enhancements - You can now use a nested field as
+                                    origin enhancements</a> - You can now use a nested field as
                                 the offset field. The origin supports reading the MongoDB BSON
                                 timestamp for MongoDB versions 2.6 and later. And you can configure
                                 the origin to connect to a single MongoDB server or node. </li>
@@ -295,7 +296,7 @@
                                 another processor to convert the Datetime field to a String.</li>
 
                             <li dir="ltr" class="li">
-                                <p class="p"><a class="xref" href="../Processors/HTTPClient.html#concept_ghx_ypr_fw" title="The HTTP Client processor sends requests to an HTTP resource URL and writes the results to a field in the record. You can use the HTTP Client processor to perform a range of standard requests or you can use an expression to determine the request for each record.">HTTP Client processor</a> enhancements - You can now
+                                <p class="p"><a class="xref" href="../Processors/HTTPClient.html#concept_ghx_ypr_fw" title="The HTTP Client processor sends requests to an HTTP resource URL and writes the results to a field in the record. You can use the HTTP Client processor to perform a range of standard requests or you can use an expression to determine the request for each record.">HTTP Client processor enhancements</a>  - You can now
                                     configure the processor to use the OAuth 2 protocol to connect
                                     to an HTTP service. You can also configure a rate limit for the
                                     processor, which defines the maximum number of requests to make
@@ -304,17 +305,18 @@
                             </li>
 
                             <li dir="ltr" class="li">
-                                <p class="p">JDBC Lookup processor enhancements - You can now configure the
-                                    processor to enable auto-commit mode for the JDBC connection.
-                                    You can also configure the processor to use a default value if
-                                    the database does not return a lookup value for a column.</p>
+                                <p class="p"><a class="xref" href="../Processors/JDBCLookup.html#concept_ysc_ccy_hw" title="The JDBC Lookup processor uses a JDBC connection to perform lookups in a database table and pass the lookup values to fields. Use the JDBC Lookup to enrich records with additional data.">JDBC Lookup processor enhancements</a> - You can now
+                                    configure the processor to enable auto-commit mode for the JDBC
+                                    connection. You can also configure the processor to use a
+                                    default value if the database does not return a lookup value for
+                                    a column.</p>
 
                             </li>
 
                             <li dir="ltr" class="li">
-                                <p class="p">Salesforce Lookup processor enhancement - You can now configure
-                                    the processor to use a default value if Salesforce does not
-                                    return a lookup value for a field.</p>
+                                <p class="p"><a class="xref" href="../Processors/SalesforceLookup.html#concept_k23_3rk_yx" title="The Salesforce Lookup processor performs lookups in a Salesforce object and passes the lookup values to fields. Use the Salesforce Lookup to enrich records with additional data.">Salesforce Lookup processor enhancement</a> - You can
+                                    now configure the processor to use a default value if Salesforce
+                                    does not return a lookup value for a field.</p>
 
                             </li>
 
@@ -352,7 +354,7 @@
                             </li>
 
                             <li dir="ltr" class="li">
-                                <p class="p"><a class="xref" href="../Destinations/Elasticsearch.html#concept_u5t_vpv_4r" title="The Elasticsearch destination writes data to an Elasticsearch cluster, including Elastic Cloud clusters (formerly Found clusters) and Shield-enabled clusters. The destination uses the Elasticsearch HTTP API to write each record to Elasticsearch as a document.">Elasticsearch destination</a> enhancement - The
+                                <p class="p"><a class="xref" href="../Destinations/Elasticsearch.html#concept_u5t_vpv_4r" title="The Elasticsearch destination writes data to an Elasticsearch cluster, including Elastic Cloud clusters (formerly Found clusters) and Shield-enabled clusters. The destination uses the Elasticsearch HTTP API to write each record to Elasticsearch as a document.">Elasticsearch destination enhancement</a> - The
                                     destination now uses the Elasticsearch HTTP API. With this API,
                                     the Elasticsearch version 5 stage library is compatible with all
                                     versions of Elasticsearch. Earlier stage library versions have
@@ -374,10 +376,9 @@
                             </li>
 
                             <li dir="ltr" class="li">
-                                <p class="p">Hadoop FS destination enhancement - To minimize the chance of
-                                    data loss when a pipeline unexpectedly stops, the Hadoop FS
-                                    destination gathers and re-processes temporary files by
-                                    default.</p>
+                                <p class="p"><a class="xref" href="../Destinations/HadoopFS-destination.html#concept_uv2_vfb_vy">Hadoop FS</a>, <a class="xref" href="../Destinations/LocalFS.html#concept_s5n_ggc_vy">Local FS</a>, and <a class="xref" href="../Destinations/MapRFS.html#concept_vvr_ngc_vy">MapR FS</a> destination enhancement - The destinations
+                                    now support recovery after an unexpected stop of the pipeline by
+                                    renaming temporary files when the pipeline restarts.</p>
 
                             </li>
 
@@ -396,7 +397,7 @@
                         <ul class="ul" id="concept_yym_xqt_5y__ul_zqk_4wt_5y">
                             <li dir="ltr" class="li">
                                 <div class="p" dir="ltr"><a class="xref" href="../Executors/HiveQuery.html#concept_kjw_llk_fx">Hive
-                                        Query executor</a> enhancements: <ul class="ul" id="concept_yym_xqt_5y__ul_gf2_qwt_5y">
+                                        Query executor enhancements</a>: <ul class="ul" id="concept_yym_xqt_5y__ul_gf2_qwt_5y">
                                         <li class="li">The executor can now execute multiple queries for each
                                             event that it receives.</li>
 
@@ -413,7 +414,7 @@
                         <ul class="ul" id="concept_yym_xqt_5y__ul_brk_4wt_5y">
                             <li dir="ltr" class="li">
                                 <p dir="ltr" class="p"><a class="xref" href="../Executors/JDBCQuery.html#concept_j3r_gcv_sx">JDBC
-                                        Query executor</a> enhancement - You can now configure
+                                        Query executor enhancement</a> - You can now configure
                                     the executor to enable auto-commit mode for the JDBC
                                     connection.</p>
 
@@ -429,9 +430,10 @@
 
                     <dd class="dd">
                         <ul class="ul" id="concept_yym_xqt_5y__ul_hpw_zwt_5y">
-                            <li class="li">Whole File <a class="xref" href="../Pipeline_Design/WholeFile.html#concept_prp_jzd_py">enhancement</a> - You can now specify a transfer rate to
-                                help control the resources used to process whole files. You can
-                                specify the rate limit in all origins that process whole files.</li>
+                            <li class="li"><a class="xref" href="../Pipeline_Design/WholeFile.html#concept_prp_jzd_py">Whole File enhancement</a> - You can now specify a transfer
+                                rate to help control the resources used to process whole files. You
+                                can specify the rate limit in all origins that process whole
+                                files.</li>
 
                         </ul>
 
@@ -462,7 +464,7 @@
                             </li>
 
                             <li dir="ltr" class="li">
-                                <div class="p" dir="ltr">New string functions - You can use the following new
+                                <div class="p" dir="ltr"><a class="xref" href="../Expression_Language/Functions.html#concept_ahp_f4v_1r">New string functions</a> - You can use the following new
                                     string functions to transform string data: <ul class="ul" id="concept_yym_xqt_5y__ul_knh_mxt_5y">
                                         <li class="li">str:urlEncode (&lt;string&gt;, &lt;encoding&gt;) - Returns a
                                             URL encoded string from a decoded string using the
@@ -478,8 +480,8 @@
                             </li>
 
                             <li dir="ltr" class="li">
-                                <div class="p" dir="ltr">New time functions - You can use the following new time
-                                    functions to transform datetime data: <ul class="ul" id="concept_yym_xqt_5y__ul_yk5_pxt_5y">
+                                <div class="p" dir="ltr"><a class="xref" href="../Expression_Language/Functions.html#concept_qkr_trf_sw" title="Use time functions to return the current time or to transform datetime data.">New time functions</a> - You can use the following new
+                                    time functions to transform datetime data: <ul class="ul" id="concept_yym_xqt_5y__ul_yk5_pxt_5y">
                                         <li class="li">time:dateTimeToMilliseconds (&lt;Date object&gt;) -
                                             Converts a Date object to an epoch or UNIX time in
                                             milliseconds. </li>
@@ -499,8 +501,8 @@
                             </li>
 
                             <li dir="ltr" class="li">
-                                <div class="p" dir="ltr">New and enhanced miscellaneous functions - You can use
-                                    the following new and enhanced miscellaneous functions: <ul class="ul" id="concept_yym_xqt_5y__ul_m2x_nxt_5y">
+                                <div class="p" dir="ltr"><a class="xref" href="../Expression_Language/Functions.html#concept_ddw_ld1_1s">New and enhanced miscellaneous functions</a> - You can
+                                    use the following new and enhanced miscellaneous functions: <ul class="ul" id="concept_yym_xqt_5y__ul_m2x_nxt_5y">
                                         <li class="li">offset:column(&lt;position&gt;) - Returns the value of the
                                             positioned offset column for the current table.
                                             Available only in the additional offset column

@@ -39,6 +39,10 @@ When
       you configure the Elasticsearch destination, you configure the cluster name, the HTTP URI, and
       document-related information.</div>
 
+        <p class="p">When the Data Collector shares the same network as the Elasticsearch cluster, you can
+            enter one or more node URI and automatically detect additional Elasticsearch nodes on
+            the cluster. </p>
+
     <p class="p">The Elasticsearch destination <span class="ph">can use CRUD operations defined in the sdc.operation.type
                         record header attribute to write data. You can define a default operation
                         for records without the header attribute or value. You can also configure
@@ -234,14 +238,14 @@ This is the default time basis. </dd>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_uns_gtv_4r__d9760e3980" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_uns_gtv_4r__d9866e3980" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d58332e326">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d58573e329">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d58332e329">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d58573e332">Description</th>
 
                                 </tr>
 
@@ -249,24 +253,24 @@ This is the default time basis. </dd>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d58332e326 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d58573e329 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d58332e329 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d58332e326 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d58332e329 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d58573e332 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d58332e326 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_uns_gtv_4r__d9760e4026" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d58573e329 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d58332e329 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d58573e332 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d58573e329 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_uns_gtv_4r__d9866e4026" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d58573e332 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -274,10 +278,10 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d58332e326 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_uns_gtv_4r__d9760e4040" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d58573e329 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_uns_gtv_4r__d9866e4040" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d58332e329 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d58573e332 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -285,10 +289,10 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d58332e326 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_uns_gtv_4r__d9760e4055" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d58573e329 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_uns_gtv_4r__d9866e4055" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d58332e329 ">Error record handling for the stage: <ul class="ul" id="task_uns_gtv_4r__d9760e4059">
+                                    <td class="entry" valign="top" width="70%" headers="d58573e332 ">Error record handling for the stage: <ul class="ul" id="task_uns_gtv_4r__d9866e4059">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -312,26 +316,26 @@ This is the default time basis. </dd>
 <li class="li step stepexpand">
                 <span class="ph cmd">On the <span class="keyword wintitle">Elasticsearch</span> tab, configure the following
                     properties:</span>
-                <div class="itemgroup info" id="task_uns_gtv_4r__d9760e6504">
+                <div class="itemgroup info" id="task_uns_gtv_4r__d9866e6513">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_uns_gtv_4r__d9760e6506" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_uns_gtv_4r__d9866e6515" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d58332e448">Elasticsearch Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d58573e451">Elasticsearch Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d58332e451">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d58573e454">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr id="task_uns_gtv_4r__d9760e6528">
-                                    <td class="entry" valign="top" width="30%" headers="d58332e448 ">Cluster HTTP URI</td>
+                                <tr id="task_uns_gtv_4r__d9866e6537">
+                                    <td class="entry" valign="top" width="30%" headers="d58573e451 ">Cluster HTTP URI</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d58332e451 ">Use when the cluster uses a custom HTTP URI. Use the
+                                    <td class="entry" valign="top" width="70%" headers="d58573e454 ">Use when the cluster uses a custom HTTP URI. Use the
                                         following format:
                                             <pre class="pre codeblock">&lt;host&gt;:&lt;port&gt;</pre>
 <p class="p">Unless
@@ -342,31 +346,49 @@ This is the default time basis. </dd>
 
                                 </tr>
 
-                                <tr id="task_uns_gtv_4r__d9760e6541">
-                                    <td class="entry" valign="top" width="30%" headers="d58332e448 ">Additional HTTP Params</td>
+                                <tr id="task_uns_gtv_4r__d9866e6550">
+                                    <td class="entry" valign="top" width="30%" headers="d58573e451 ">Additional HTTP Params</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d58332e451 ">Additional HTTP parameters that you want to send as
+                                    <td class="entry" valign="top" width="70%" headers="d58573e454 ">Additional HTTP parameters that you want to send as
                                         querystring parameters to Elasticsearch. Enter the exact
                                         parameter name and value expected by Elasticsearch.</td>
 
                                 </tr>
 
-                                <tr id="task_uns_gtv_4r__d9760e6550">
-                                    <td class="entry" valign="top" width="30%" headers="d58332e448 ">Use Security</td>
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d58573e451 ">Detect Additional Nodes in Cluster</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d58332e451 ">Specifies whether security is enabled on the
+                                    <td class="entry" valign="top" width="70%" headers="d58573e454 ">
+                                        <p class="p">Detects additional nodes in the cluster based on the
+                                            configured Cluster URI. </p>
+
+                                        <p class="p">Selecting this property is the equivalent to setting the
+                                            client.transport.sniff Elasticsearch property to true. </p>
+
+                                        <p class="p">Use only when the Data Collector shares the same network
+                                            as the Elasticsearch cluster. Do not use for Elastic
+                                            Cloud or Docker clusters. </p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr id="task_uns_gtv_4r__d9866e6577">
+                                    <td class="entry" valign="top" width="30%" headers="d58573e451 ">Use Security</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d58573e454 ">Specifies whether security is enabled on the
                                         Elasticsearch cluster. </td>
 
                                 </tr>
 
-                                <tr id="task_uns_gtv_4r__d9760e6559">
-                                    <td class="entry" valign="top" width="30%" headers="d58332e448 ">Time Basis <a class="xref" href="Elasticsearch.html#concept_dd3_vhk_r5" title="The time basis is the time used by the Elasticsearch destination to write records to time-based indexes. When indexes have no time component, you can ignore the time basis property.">
-                                            <img class="image" id="task_uns_gtv_4r__d9760e6565" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                <tr id="task_uns_gtv_4r__d9866e6586">
+                                    <td class="entry" valign="top" width="30%" headers="d58573e451 ">Time Basis <a class="xref" href="Elasticsearch.html#concept_dd3_vhk_r5" title="The time basis is the time used by the Elasticsearch destination to write records to time-based indexes. When indexes have no time component, you can ignore the time basis property.">
+                                            <img class="image" id="task_uns_gtv_4r__d9866e6592" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d58332e451 ">
+                                    <td class="entry" valign="top" width="70%" headers="d58573e454 ">
                                         <div class="p">Time basis to use for writing to time-based indexes. Use
-                                            one of the following expressions:<ul class="ul" id="task_uns_gtv_4r__d9760e6572">
+                                            one of the following expressions:<ul class="ul" id="task_uns_gtv_4r__d9866e6599">
                                                 <li class="li"><samp class="ph codeph">${time:now()}</samp> - Uses the
                                                   processing time as the time basis. The processing
                                                   time is the time associated with the <span class="ph">Data
@@ -390,18 +412,18 @@ This is the default time basis. </dd>
 
                                 </tr>
 
-                                <tr id="task_uns_gtv_4r__d9760e6599">
-                                    <td class="entry" valign="top" width="30%" headers="d58332e448 ">Data Time Zone</td>
+                                <tr id="task_uns_gtv_4r__d9866e6627">
+                                    <td class="entry" valign="top" width="30%" headers="d58573e451 ">Data Time Zone</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d58332e451 ">Time zone for the destination system. Used to resolve
+                                    <td class="entry" valign="top" width="70%" headers="d58573e454 ">Time zone for the destination system. Used to resolve
                                         datetimes in time-based indexes. </td>
 
                                 </tr>
 
-                                <tr id="task_uns_gtv_4r__d9760e6609">
-                                    <td class="entry" valign="top" width="30%" headers="d58332e448 ">Index</td>
+                                <tr id="task_uns_gtv_4r__d9866e6636">
+                                    <td class="entry" valign="top" width="30%" headers="d58573e451 ">Index</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d58332e451 ">Index information for the generated documents. You can
+                                    <td class="entry" valign="top" width="70%" headers="d58573e454 ">Index information for the generated documents. You can
                                         use a constant, datetime variables, a field that includes
                                         the index information, or any valid combination. <p class="p">When
                                             using datetime variables, make sure to configure the
@@ -411,21 +433,21 @@ This is the default time basis. </dd>
 
                                 </tr>
 
-                                <tr id="task_uns_gtv_4r__d9760e6622">
-                                    <td class="entry" valign="top" width="30%" headers="d58332e448 ">Mapping</td>
+                                <tr id="task_uns_gtv_4r__d9866e6649">
+                                    <td class="entry" valign="top" width="30%" headers="d58573e451 ">Mapping</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d58332e451 ">Mapping information for the generated documents. You can
+                                    <td class="entry" valign="top" width="70%" headers="d58573e454 ">Mapping information for the generated documents. You can
                                         use a constant or a field that includes the mapping
                                         information. </td>
 
                                 </tr>
 
-                                <tr id="task_uns_gtv_4r__d9760e6631">
-                                    <td class="entry" valign="top" width="30%" headers="d58332e448 ">Document ID <a class="xref" href="Elasticsearch.html#concept_yr2_1tf_z5" title="When appropriate, you can specify an expression that defines the document ID. When you do not specify an expression, Elasticsearch generates IDs for each document.">
-                                            <img class="image" id="task_uns_gtv_4r__d9760e6637" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                <tr id="task_uns_gtv_4r__d9866e6658">
+                                    <td class="entry" valign="top" width="30%" headers="d58573e451 ">Document ID <a class="xref" href="Elasticsearch.html#concept_yr2_1tf_z5" title="When appropriate, you can specify an expression that defines the document ID. When you do not specify an expression, Elasticsearch generates IDs for each document.">
+                                            <img class="image" id="task_uns_gtv_4r__d9866e6664" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d58332e451 ">ID for the record. Use to specify the ID for the
+                                    <td class="entry" valign="top" width="70%" headers="d58573e454 ">ID for the record. Use to specify the ID for the
                                         generated documents. When you do not specify an ID,
                                         Elasticsearch creates an ID for each document.<p class="p">By default,
                                             the destination allows Elasticsearch to create the
@@ -434,10 +456,10 @@ This is the default time basis. </dd>
 
                                 </tr>
 
-                                <tr id="task_uns_gtv_4r__d9760e6646">
-                                    <td class="entry" valign="top" width="30%" headers="d58332e448 ">Data Charset</td>
+                                <tr id="task_uns_gtv_4r__d9866e6673">
+                                    <td class="entry" valign="top" width="30%" headers="d58573e451 ">Data Charset</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d58332e451 ">
+                                    <td class="entry" valign="top" width="70%" headers="d58573e454 ">
                                         <p class="p">Character encoding of the data to be processed. </p>
 
                                     </td>
@@ -445,22 +467,22 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d58332e448 ">Default Operation <a class="xref" href="Elasticsearch.html#concept_w2r_ktb_ry">
-                                            <img class="image" id="task_uns_gtv_4r__d9760e6664" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="30%" headers="d58573e451 ">Default Operation <a class="xref" href="Elasticsearch.html#concept_w2r_ktb_ry">
+                                            <img class="image" id="task_uns_gtv_4r__d9866e6691" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" id="task_uns_gtv_4r__d9760e6667" valign="top" width="70%" headers="d58332e451 ">Default CRUD operation to
+                                    <td class="entry" id="task_uns_gtv_4r__d9866e6694" valign="top" width="70%" headers="d58573e454 ">Default CRUD operation to
                                         perform if the sdc.operation.type record header attribute is
                                         not set. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d58332e448 ">Unsupported Operation Handling</td>
+                                    <td class="entry" valign="top" width="30%" headers="d58573e451 ">Unsupported Operation Handling</td>
 
-                                    <td class="entry" id="task_uns_gtv_4r__d9760e6676" valign="top" width="70%" headers="d58332e451 ">Action to take when the
+                                    <td class="entry" id="task_uns_gtv_4r__d9866e6704" valign="top" width="70%" headers="d58573e454 ">Action to take when the
                                         CRUD operation type defined in the sdc.operation.type record
-                                        header attribute is not supported:<ul class="ul" id="task_uns_gtv_4r__d9760e6678">
+                                        header attribute is not supported:<ul class="ul" id="task_uns_gtv_4r__d9866e6706">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -484,16 +506,16 @@ This is the default time basis. </dd>
 <li class="li step stepexpand">
                 <span class="ph cmd">If you enabled security, on the <span class="keyword wintitle">Security</span> tab, configure
                     the following property:</span>
-                <div class="itemgroup info" id="task_uns_gtv_4r__d9760e6704">
+                <div class="itemgroup info" id="task_uns_gtv_4r__d9866e6732">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_uns_gtv_4r__d9760e6706" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_uns_gtv_4r__d9866e6734" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d58332e663">Security Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d58573e685">Security Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d58332e666">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d58573e688">Description</th>
 
                                 </tr>
 
@@ -501,9 +523,9 @@ This is the default time basis. </dd>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d58332e663 ">Security Username/Password</td>
+                                    <td class="entry" valign="top" width="30%" headers="d58573e685 ">Security Username/Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d58332e666 ">Elasticsearch username and password. <div class="p">Enter the
+                                    <td class="entry" valign="top" width="70%" headers="d58573e688 ">Elasticsearch username and password. <div class="p">Enter the
                                             username and password using the following
                                             syntax:<pre class="pre codeblock">&lt;username&gt;:&lt;password&gt;</pre>
 </div>
@@ -511,6 +533,38 @@ This is the default time basis. </dd>
                   and passwords, you can use runtime resources or Hashicorp Vault secrets. For more
                   information, see <a class="xref" href="../Configuration/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
 </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d58573e685 ">SSL Truststore Path</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d58573e688 ">
+                                        <p class="p">Location of the truststore file. </p>
+
+                                        <p class="p">Configuring this property is the equivalent to
+                                            configuring the shield.ssl.truststore.path Elasticsearch
+                                            property. </p>
+
+                                        <p class="p">Not necessary for Elastic Cloud clusters. </p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d58573e685 ">SSL Truststore Password</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d58573e688 ">
+                                        <p class="p">Password for the truststore file. </p>
+
+                                        <p class="p">Configuring this property is the equivalent to
+                                            configuring the shield.ssl.truststore.password
+                                            Elasticsearch property. </p>
+
+                                        <p class="p">Not necessary for Elastic Cloud clusters. </p>
+
+                                    </td>
 
                                 </tr>
 
