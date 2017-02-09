@@ -190,6 +190,46 @@ public class TestSpoolDirSourceOnErrorHandling {
     return new SpoolDirSource(conf);
   }
 
+  private SpoolDirSource createSourceDelimitedEx() throws Exception {
+    String dir = createTestDir();
+    File file = new File(dir, "file-0.csv").getAbsoluteFile();
+    Writer writer = new FileWriter(file);
+    IOUtils.write("|header1|header2|\n", writer);
+    final int sizeOfRecords = 20;
+    for (int i = 0; i < sizeOfRecords; i++) {
+      IOUtils.write("|value" + i + "1|value" + i + "2|value" + i + "3|\n", writer);
+    }
+    writer.close();
+
+    SpoolDirConfigBean conf = new SpoolDirConfigBean();
+    conf.dataFormat = DataFormat.DELIMITED;
+
+    conf.dataFormatConfig.useCustomDelimiter = true;
+    conf.dataFormatConfig.csvFileFormat = CsvMode.CUSTOM;
+    conf.dataFormatConfig.csvHeader = CsvHeader.WITH_HEADER;
+
+
+    conf.spoolDir = dir;
+    conf.batchSize = 10;
+    conf.overrunLimit = 100;
+    conf.poolingTimeoutSecs = 1;
+    conf.filePattern = "file-[0-9].csv";
+    conf.pathMatcherMode = PathMatcherMode.GLOB;
+    conf.maxSpoolFiles = 10;
+    conf.initialFileToProcess = null;
+    conf.errorArchiveDir = null;
+    conf.postProcessing = PostProcessingOptions.ARCHIVE;
+    conf.archiveDir = dir;
+    conf.retentionTimeMins = 10;
+    /*conf.dataFormatConfig.jsonContent = JsonMode.ARRAY_OBJECTS;
+    conf.dataFormatConfig.jsonMaxObjectLen = 100;
+    */
+    conf.dataFormatConfig.onParseError = OnParseError.ERROR;
+    conf.dataFormatConfig.maxStackTraceLines = 0;
+
+    return new SpoolDirSource(conf);
+  }
+
   @Test
   public void testOnErrorDiscardIOEx() throws Exception {
     SpoolDirSource source = createSourceIOEx();
@@ -249,6 +289,27 @@ public class TestSpoolDirSourceOnErrorHandling {
     runner.runInit();
     try {
       runner.runProduce(source.createSourceOffset("file-0.json", "0"), 10);
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testOnObjectLengthException() throws Exception {
+    SpoolDirSource source = createSourceDelimitedEx();
+    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane")
+        .setOnRecordError(OnRecordError.TO_ERROR).build();
+    runner.runInit();
+
+    StageRunner.Output output;
+    try {
+      final int maxBatchSize = 1;
+      output = runner.runProduce(source.createSourceOffset("file-0.csv", "0"), maxBatchSize);
+      Assert.assertEquals(0, output.getRecords().get("lane").size());
+      Assert.assertEquals(maxBatchSize, runner.getErrorRecords().size());
+      Assert.assertEquals(0, runner.getErrors().size());
+    } catch (Exception ex) {
+      ex.getStackTrace();
     } finally {
       runner.runDestroy();
     }
