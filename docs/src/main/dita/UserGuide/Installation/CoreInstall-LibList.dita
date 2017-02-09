@@ -493,8 +493,6 @@
                                         <li>MapR FS origin for cluster mode pipelines</li>
                                         <li>MapR Streams Consumer origin for standalone and cluster
                                             mode pipelines</li>
-                                        <li>SDC RPC to Kafka origin</li>
-                                        <li>UDP to Kafka origin</li>
                                         <li>HBase Lookup processor</li>
                                         <li>Hive Metadata processor</li>
                                         <li>HBase destination</li>
@@ -515,8 +513,6 @@
                                         <li>MapR FS origin for cluster mode pipelines</li>
                                         <li>MapR Streams Consumer origin for standalone and cluster
                                             mode pipelines</li>
-                                        <li>SDC RPC to Kafka origin</li>
-                                        <li>UDP to Kafka origin</li>
                                         <li>HBase Lookup processor</li>
                                         <li>Hive Metadata processor</li>
                                         <li>HBase destination</li>
