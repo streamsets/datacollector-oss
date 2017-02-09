@@ -94,6 +94,9 @@ public abstract class AbstractAclStoreTask extends AbstractTask implements AclSt
       Set<Action> actions,
       UserJson currentUser
   ) throws PipelineException {
+    if (currentUser == null || isUserAdmin(currentUser)) {
+      return true;
+    }
     Acl acl = getAcl(pipelineName);
     if (acl == null) {
       // For old pipelines for which there is no acl.json return true for pipeline owner
@@ -137,20 +140,16 @@ public abstract class AbstractAclStoreTask extends AbstractTask implements AclSt
 
   private boolean isPermissionGranted(Acl acl, Set<Action> actions, UserJson currentUser) {
     boolean permissionGranted = false;
-    if (currentUser == null || isUserAdmin(currentUser)) {
-      permissionGranted = true;
-    } else {
-      List<String> subjectIds = new ArrayList<>();
-      subjectIds.add(currentUser.getName());
-      if (currentUser.getGroups() != null) {
-        subjectIds.addAll(currentUser.getGroups());
-      }
-      Collection<Permission> permissions = filterPermission(acl, subjectIds);
-      for (Permission permission: permissions) {
-        permissionGranted = permission != null && permission.getActions().containsAll(actions);
-        if (permissionGranted) {
-          break;
-        }
+    List<String> subjectIds = new ArrayList<>();
+    subjectIds.add(currentUser.getName());
+    if (currentUser.getGroups() != null) {
+      subjectIds.addAll(currentUser.getGroups());
+    }
+    Collection<Permission> permissions = filterPermission(acl, subjectIds);
+    for (Permission permission : permissions) {
+      permissionGranted = permission != null && permission.getActions().containsAll(actions);
+      if (permissionGranted) {
+        break;
       }
     }
     return permissionGranted;
