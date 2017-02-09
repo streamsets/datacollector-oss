@@ -93,6 +93,15 @@
                                         bounces to the HTTPS port.</p><p>Default is -1.</p></entry>
                             </row>
                             <row>
+                                <entry>http.enable.forwarded.requests</entry>
+                                <entry>Enables handling X-Forwarded-For, X-Forwarded-Proto,
+                                    X-Forwarded-Port HTTP request headers issued by a reverse proxy
+                                    such as HAProxy, ELB, or NGINX. <p>Set to true when hosting <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> behind a reverse proxy or load balancer.</p><p>Default is
+                                        false.</p></entry>
+                            </row>
+                            <row>
                                 <entry>https.keystore.path</entry>
                                 <entry>Keystore path and file name. Enter an absolute path or a path
                                     relative to the <codeph>$SDC_CONF</codeph> directory. For
