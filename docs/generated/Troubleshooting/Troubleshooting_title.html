@@ -100,12 +100,12 @@
                   Collector</span> log. You
       can view or download the logs from the <span class="ph">Data
                   Collector</span> console.
-      For details, see <a class="xref" href="../Administration/Administration_title.html#task_gbm_s3k_br" title="You can view and download log data. When you download log data, you can select the file to download.">Viewing Data Collector Logs</a>.</dd>
+      For details, see <a class="xref" href="../Administration/Administration_title.html#task_gbm_s3k_br" title="If the Data Collector logs do not provide enough troubleshooting information, you can modify the log level to display messages at another severity level.">Viewing Data Collector Logs</a>.</dd>
 
      <dd class="dd">By default, <span class="ph">Data
                   Collector</span> logs
       messages at the INFO severity level. You can modify the log level to display messages at
-      another severity level. For more information, see <a class="xref" href="../Configuration/LogLevel.html#concept_yrv_ck2_px" title="If the Data Collector logs do not provide enough troubleshooting information, you can modify the log level to display messages at another severity level.">Modifying the Log Level</a>.</dd>
+      another severity level. For details, see <a class="xref" href="../Administration/Administration_title.html#task_lkv_g2f_wy" title="If the Data Collector logs do not provide enough troubleshooting information, you can modify the log level to display messages at another severity level.">Modifying the Log Level</a>.</dd>
 
     
    </dl>
@@ -529,7 +529,7 @@ Integer provided`</pre>
  </div>
 
 </div>
-<div class="topic concept nested2" id="unique_589112174">
+<div class="topic concept nested2" id="unique_837219599">
  <h3 class="title topictitle3">Hadoop FS</h3>
 
  <div class="body conbody">
@@ -673,11 +673,11 @@ java.net.ConnectException: Connection refused]</pre>
         <div class="p">The following stages use a JDBC connection: <ul class="ul" id="concept_vrq_qh1_hy__ul_t1w_h31_hy">
                 <li class="li">JDBC Multitable Consumer origin</li>
 
+                <li class="li">JDBC Query Consumer origin</li>
+
                 <li class="li">MySQL Binary Log origin</li>
 
                 <li class="li">Oracle CDC Client origin</li>
-
-                <li class="li">JDBC Query Consumer origin</li>
 
                 <li class="li">JDBC Lookup processor</li>
 
@@ -726,12 +726,12 @@ JDBC_06 - Failed to initialize connection pool: java.sql.SQLException: No suitab
                 <dt class="dt dlterm">The JDBC driver is not stored in the correct directory.</dt>
 
                 <dd class="dd">You must store the JDBC driver in the following directory: <samp class="ph codeph">&lt;external
-                    directory&gt;/streamsets-datacollector-jdbc-lib/lib/</samp>.</dd>
+                        directory&gt;/streamsets-datacollector-jdbc-lib/lib/</samp>.</dd>
 
                 <dd class="dd">
                     <p class="p">For example, assuming that you defined the external directory as
-                        <samp class="ph codeph">/opt/sdc-extras</samp>, store the JDBC JAR files in
-                        <samp class="ph codeph">/opt/sdc-extras/streamsets-datacollector-jdbc-lib/lib/</samp>.</p>
+                            <samp class="ph codeph">/opt/sdc-extras</samp>, store the JDBC JAR files in
+                            <samp class="ph codeph">/opt/sdc-extras/streamsets-datacollector-jdbc-lib/lib/</samp>.</p>
 
                 </dd>
 
@@ -789,6 +789,47 @@ grant codebase "file:///opt/sdc-extras/-" {
                     driver" error message, add the class name for the driver in the <span class="ph uicontrol">JDBC
                         Class Driver Name</span> property in the <span class="ph uicontrol">Legacy
                         Drivers</span> tab for the stage. </dd>
+
+            
+            
+                <dt class="dt dlterm">The sdc user does not have correct permissions on the JDBC driver.</dt>
+
+                <dd class="dd">When you run <span class="ph">Data
+                  Collector</span> as a service, the default system user named <samp class="ph codeph">sdc</samp> is used to
+                    start the service. The user must have read access to the JDBC driver and all
+                    directories in its path.</dd>
+
+                <dd class="dd">To verify the permissions, run the following
+                    command:<pre class="pre codeblock">sudo -u sdc file &lt;external directory&gt;/streamsets-datacollector-jdbc-lib/lib/&lt;driver jar file&gt;</pre>
+</dd>
+
+                <dd class="dd">For example, let's assume that you are using an external directory of
+                        <samp class="ph codeph">/opt/sdc-extras</samp> and the MySQL JDBC driver. If you receive
+                    the following output when you run the command, then the <samp class="ph codeph">sdc</samp>
+                    user does not have read or execute access on one or more of the directories in
+                    the
+                    path:<pre class="pre codeblock">/opt/sdc-extras/streamsets-datacollector-jdbc-lib/lib/mysql-connector-java-5.1.40-bin.jar: cannot open `/opt/sdc-extras/streamsets-datacollector-jdbc-lib/lib/mysql-connector-java-5.1.40-bin.jar' (Permission denied)</pre>
+</dd>
+
+                <dd class="dd">
+                    <div class="p">To resolve this issue, identify the relevant directories and grant the
+                            <samp class="ph codeph">sdc</samp> user read and execute access on those directories.
+                        For example, run the following command to grant the user access on the root
+                        of the external
+                        directory:<pre class="pre codeblock">chmod 755 /opt/sdc-extras</pre>
+</div>
+
+                </dd>
+
+                <dd class="dd">If you receive the following output when you run the command, then the
+                        <samp class="ph codeph">sdc</samp> user does not have read permission on the JDBC
+                    driver:<pre class="pre codeblock">/opt/sdc-extras/streamsets-datacollector-jdbc-lib/lib/mysql-connector-java-5.1.40-bin.jar: regular file, no read permission</pre>
+</dd>
+
+                <dd class="dd">To resolve this issue, run the following command to grant the user read access
+                    to the
+                    driver:<pre class="pre codeblock">chmod 644 /opt/sdc-extras/streamsets-datacollector-jdbc-lib/lib/mysql-connector-java-5.1.40-bin.jar</pre>
+</dd>
 
             
         </dl>
