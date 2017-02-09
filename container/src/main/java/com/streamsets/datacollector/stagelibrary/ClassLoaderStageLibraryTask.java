@@ -44,6 +44,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.DataCollectorServices;
 import com.streamsets.pipeline.api.impl.LocaleInContext;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.pool2.BaseKeyedPooledObjectFactory;
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.PooledObject;
@@ -73,6 +74,9 @@ import java.util.concurrent.ExecutionException;
 public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLibraryTask {
   public static final String MAX_PRIVATE_STAGE_CLASS_LOADERS_KEY = "max.stage.private.classloaders";
   public static final int MAX_PRIVATE_STAGE_CLASS_LOADERS_DEFAULT = 50;
+
+  public static final String IGNORE_STAGE_DEFINITIONS = "ignore.stage.definitions";
+  public static final String JAVA_UNSUPPORTED_REGEXP = "java.unsupported.regexp";
 
   private static final String CONFIG_LIBRARY_ALIAS_PREFIX = "library.alias.";
   private static final String CONFIG_STAGE_ALIAS_PREFIX = "stage.alias.";
@@ -228,21 +232,26 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     super.stopTask();
   }
 
-  public static final String IGNORE_STAGE_DEFINITIONS = "ignore.stage.definitions";
-
-  Set<String> loadIgnoreStagesList(StageLibraryDefinition libDef) throws IOException {
-    Set<String> ignoreStages = new HashSet<>();
-    try (InputStream is = libDef.getClassLoader()
-        .getResourceAsStream(StageLibraryDefinitionExtractor.DATA_COLLECTOR_LIBRARY_PROPERTIES)) {
+  String getPropertyFromLibraryProperties(ClassLoader cl, String property, String defaultValue) throws IOException {
+   try (InputStream is = cl.getResourceAsStream(StageLibraryDefinitionExtractor.DATA_COLLECTOR_LIBRARY_PROPERTIES)) {
       if (is != null) {
         Properties props = new Properties();
         props.load(is);
-        String ignore = props.getProperty(IGNORE_STAGE_DEFINITIONS, "");
-        if (!ignore.isEmpty()) {
-          ignoreStages.addAll(Splitter.on(",").trimResults().splitToList(ignore));
-        }
+        return props.getProperty(property, defaultValue);
       }
     }
+
+    return null;
+  }
+
+  Set<String> loadIgnoreStagesList(StageLibraryDefinition libDef) throws IOException {
+    Set<String> ignoreStages = new HashSet<>();
+
+    String ignore = getPropertyFromLibraryProperties(libDef.getClassLoader(), IGNORE_STAGE_DEFINITIONS, "");
+    if(!StringUtils.isEmpty(ignore)) {
+      ignoreStages.addAll(Splitter.on(",").trimResults().splitToList(ignore));
+    }
+
     return ignoreStages;
   }
 
@@ -264,6 +273,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   @VisibleForTesting
   @SuppressWarnings("unchecked")
   void loadStages() {
+    String javaVersion = System.getProperty("java.version");
+
     if (LOG.isDebugEnabled()) {
       for (ClassLoader cl : stageClassLoaders) {
         LOG.debug("About to load stages from library '{}'", StageLibraryUtils.getLibraryName(cl));
@@ -285,10 +296,22 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       long start = System.currentTimeMillis();
       LocaleInContext.set(Locale.getDefault());
       for (ClassLoader cl : stageClassLoaders) {
-        libs++;
-        StageLibraryDefinition libDef = StageLibraryDefinitionExtractor.get().extract(cl);
-        LOG.debug("Loading stages from library '{}'", libDef.getName());
         try {
+          // Before loading any stages, let's verify that given stage library is compatible with our current JVM version
+          String unsupportedJvmVersion = getPropertyFromLibraryProperties(cl, JAVA_UNSUPPORTED_REGEXP, null);
+          if(!StringUtils.isEmpty(unsupportedJvmVersion)) {
+            if(javaVersion.matches(unsupportedJvmVersion)) {
+              LOG.warn("Can't load stages from {} since they are not compatible with current JVM version", StageLibraryUtils.getLibraryName(cl));
+              continue;
+            } else {
+              LOG.debug("Stage lib {} passed java compatibility test for '{}'", StageLibraryUtils.getLibraryName(cl), unsupportedJvmVersion);
+            }
+          }
+
+          // Load stages from the stage library
+          StageLibraryDefinition libDef = StageLibraryDefinitionExtractor.get().extract(cl);
+          LOG.debug("Loading stages from library '{}'", libDef.getName());
+          libs++;
           Enumeration<URL> resources = cl.getResources(STAGES_DEFINITION_RESOURCE);
           while (resources.hasMoreElements()) {
             Map<String, String> stagesInLibrary = new HashMap<>();
