@@ -68,14 +68,23 @@
                                     <entry>Use to override the default column to field mappings. By
                                         default, columns are written to fields of the same name.
                                             <p>Enter the following:<ul id="ul_jvy_5mm_xw">
-                                                <li>Column Name. Name of the database column that
+                                                <li>Column Name - Name of the database column that
                                                   contains the lookup value. Enter a column name or
                                                   enter an expression that defines the column
                                                   name.</li>
-                                                <li>SDC Field. Name of the field in the record that
+                                                <li>SDC Field - Name of the field in the record that
                                                   receives the lookup value. You can specify an
                                                   existing field or a new field. If the field does
                                                   not exist, JDBC Lookup creates the field. </li>
+                                                <li>Default Value - Optional default value to use
+                                                  when the query does not return a value for the
+                                                  field. If the query returns no value and this
+                                                  property is not defined, the processor sends the
+                                                  record to error.</li>
+                                                <li>Data Type - Data type to use for SDC Field.
+                                                  Required when you specify a default value. The
+                                                  processor uses the database column data type by
+                                                  default. </li>
                                             </ul></p><p>Use the <uicontrol>Add</uicontrol> icon to
                                             create additional column mappings.</p></entry>
                                 </row>

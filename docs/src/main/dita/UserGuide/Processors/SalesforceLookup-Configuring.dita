@@ -80,14 +80,23 @@
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> fields of the same name. <p>Enter the following:<ul
                                                 id="ul_jvy_5mm_xw">
-                                                <li>Salesforce Field. Name of the Salesforce field
+                                                <li>Salesforce Field - Name of the Salesforce field
                                                   that contains the lookup value. Enter a field name
                                                   or enter an expression that defines the field
                                                   name.</li>
-                                                <li>SDC Field. Name of the field in the record that
+                                                <li>SDC Field - Name of the field in the record that
                                                   receives the lookup value. You can specify an
                                                   existing field or a new field. If the field does
                                                   not exist, Salesforce Lookup creates the field. </li>
+                                                <li>Default Value - Optional default value to use
+                                                  when the query does not return a value for the
+                                                  field. If the query returns no value and this
+                                                  property is not defined, the processor sends the
+                                                  record to error.</li>
+                                                <li>Data Type - Data type to use for SDC Field.
+                                                  Required when you specify a default value. The
+                                                  processor uses the Salesforce data type by
+                                                  default. </li>
                                             </ul></p><p>Use the <uicontrol>Add</uicontrol> icon to
                                             create additional field mappings.</p></entry>
                                 </row>
