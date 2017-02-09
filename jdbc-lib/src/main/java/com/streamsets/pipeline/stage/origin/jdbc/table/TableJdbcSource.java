@@ -50,6 +50,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -308,7 +309,12 @@ public class TableJdbcSource extends BaseSource {
               record.set(Field.createListMap(fields));
 
               //Set Column Headers
-              JdbcUtil.setColumnSpecificHeaders(record, md, JDBC_NAMESPACE_HEADER);
+              JdbcUtil.setColumnSpecificHeaders(
+                  record,
+                  Collections.singleton(tableContext.getQualifiedName()),
+                  md,
+                  JDBC_NAMESPACE_HEADER
+              );
 
               batchMaker.addRecord(record);
 

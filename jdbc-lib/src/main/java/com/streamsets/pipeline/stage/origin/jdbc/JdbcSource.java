@@ -45,6 +45,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -420,7 +421,7 @@ public class JdbcSource extends BaseSource {
       record.set(Field.create(row));
     }
     if (createJDBCNsHeaders) {
-      JdbcUtil.setColumnSpecificHeaders(record, md, jdbcNsHeaderPrefix);
+      JdbcUtil.setColumnSpecificHeaders(record, Collections.<String>emptySet(), md, jdbcNsHeaderPrefix);
     }
     // We will add cdc operation type to record header even if createJDBCNsHeaders is false
     // we currently support CDC on only MS SQL.

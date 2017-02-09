@@ -288,11 +288,12 @@ public class JdbcUtil {
 
   public static void setColumnSpecificHeaders(
       Record record,
+      Set<String> knownTableNames,
       ResultSetMetaData metaData,
       String jdbcNameSpacePrefix
   ) throws SQLException {
     Record.Header header = record.getHeader();
-    Set<String> tableNames = new HashSet<>();
+    Set<String> tableNames = new HashSet<>(knownTableNames);
     for (int i=1; i<=metaData.getColumnCount(); i++) {
       header.setAttribute(jdbcNameSpacePrefix + metaData.getColumnLabel(i) + ".jdbcType", String.valueOf(metaData.getColumnType(i)));
 
