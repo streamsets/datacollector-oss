@@ -527,8 +527,8 @@ public class SpoolDirSource extends BaseSource {
             parser = parserFactory.getParser(file.getName(), new FileInputStream(file), offset);
         }
       }
-      int i = 0;
-      while(i < maxBatchSize) {
+
+      for (int i = 0; i < maxBatchSize; i++) {
         try {
           Record record;
 
@@ -547,7 +547,6 @@ public class SpoolDirSource extends BaseSource {
           if (record != null) {
             setHeaders(record, file, offset);
             batchMaker.addRecord(record);
-            i++;
             offset = parser.getOffset();
           } else {
             parser.close();

@@ -350,10 +350,10 @@ public class TestCsvSpoolDirSource {
   @Test
   public void testRecordOverrunOnBatchBoundary() throws Exception {
     final File csvFile = createSomeRecordsTooLongFile();
-    runRecordOverrunOnBatchBoundaryHelper(csvFile, 3, new int[] {3, 2}, new int[] {1, 4});
-    runRecordOverrunOnBatchBoundaryHelper(csvFile, 4, new int[] {4, 1}, new int[] {3, 2});
-    runRecordOverrunOnBatchBoundaryHelper(csvFile, 5, new int[] {5, 0}, new int[] {3, 2});
-    runRecordOverrunOnBatchBoundaryHelper(csvFile, 6, new int[] {5, 0}, new int[] {5, 0});
+    runRecordOverrunOnBatchBoundaryHelper(csvFile, 3, new int[] {2, 0}, new int[] {1, 3});
+    runRecordOverrunOnBatchBoundaryHelper(csvFile, 4, new int[] {3, 2}, new int[] {1, 2});
+    runRecordOverrunOnBatchBoundaryHelper(csvFile, 5, new int[] {3, 0}, new int[] {2, 2});
+    runRecordOverrunOnBatchBoundaryHelper(csvFile, 6, new int[] {3, 0}, new int[] {3, 0});
   }
 
   private void runRecordOverrunOnBatchBoundaryHelper(File sourceFile, int batchSize, int[] recordCounts,
@@ -365,11 +365,12 @@ public class TestCsvSpoolDirSource {
 
     String offset = "0";
     int produceNum = 0;
-    while (!"-1".equals(offset)) {
+    while (!"-1".equals(offset) && produceNum < recordCounts.length) {
       final int recordCount = recordCounts[produceNum];
       final int errorCount = errorCounts[produceNum];
 
-      SpoolDirSource source = createSource(CsvMode.CUSTOM, CsvHeader.NO_HEADER, '|', '\\', '"', false, ' ', true, 8, CsvRecordType.LIST);
+      final int maxLen = 8;
+      SpoolDirSource source = createSource(CsvMode.CUSTOM, CsvHeader.NO_HEADER, '|', '\\', '"', false, ' ', true, maxLen, CsvRecordType.LIST);
       SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane")
           .setOnRecordError(OnRecordError.TO_ERROR).build();
       runner.runInit();
