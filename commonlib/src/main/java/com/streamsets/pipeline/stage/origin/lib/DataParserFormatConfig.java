@@ -326,6 +326,43 @@ public class DataParserFormatConfig implements DataFormatConfig {
   public char csvCustomQuote = '\"';
 
   @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "false",
+    label = "Enable comments",
+    displayPosition = 425,
+    group = "DATA_FORMAT",
+    dependsOn = "csvFileFormat",
+    triggeredByValue = "CUSTOM"
+  )
+  public boolean csvEnableComments = false;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.CHARACTER,
+    defaultValue = "#",
+    label = "Comment marker",
+    displayPosition = 426,
+    group = "DATA_FORMAT",
+    dependsOn = "csvEnableComments",
+    triggeredByValue = "true"
+  )
+  public char csvCommentMarker;
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "true",
+    label = "Ignore empty lines",
+    displayPosition = 427,
+    group = "DATA_FORMAT",
+    dependencies = {
+      @Dependency(configName = "csvFileFormat", triggeredByValues = {"CUSTOM"})
+    }
+  )
+  public boolean csvIgnoreEmptyLines = true;
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "LIST_MAP",
@@ -1267,7 +1304,11 @@ public class DataParserFormatConfig implements DataFormatConfig {
         .setConfig(DelimitedDataConstants.ESCAPE_CONFIG, csvCustomEscape)
         .setConfig(DelimitedDataConstants.QUOTE_CONFIG, csvCustomQuote)
         .setConfig(DelimitedDataConstants.PARSE_NULL, parseNull)
-        .setConfig(DelimitedDataConstants.NULL_CONSTANT, nullConstant);
+        .setConfig(DelimitedDataConstants.NULL_CONSTANT, nullConstant)
+        .setConfig(DelimitedDataConstants.COMMENT_ALLOWED_CONFIG, csvEnableComments)
+        .setConfig(DelimitedDataConstants.COMMENT_MARKER_CONFIG, csvCommentMarker)
+        .setConfig(DelimitedDataConstants.IGNORE_EMPTY_LINES_CONFIG, csvIgnoreEmptyLines)
+    ;
   }
 
   private void buildProtobufParser(DataParserFactoryBuilder builder) {

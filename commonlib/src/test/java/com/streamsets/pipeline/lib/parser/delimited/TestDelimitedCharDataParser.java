@@ -312,4 +312,60 @@ public class TestDelimitedCharDataParser {
     }
   }
 
+  @Test
+  public void testClRfEndOfLines() throws Exception {
+    OverrunReader reader = new OverrunReader(new StringReader("A,B\r\na,b"), 1000, true, false);
+    DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, 0, CSVFormat.DEFAULT,
+      CsvHeader.NO_HEADER, -1, CsvRecordType.LIST, false, null);
+    Assert.assertEquals("0", parser.getOffset());
+    Record record = parser.parse();
+    Assert.assertNotNull(record);
+    Assert.assertEquals("id::0", record.getHeader().getSourceId());
+    Assert.assertEquals("A", record.get().getValueAsList().get(0).getValueAsMap().get("value").getValueAsString());
+    Assert.assertFalse(record.has("[0]/header"));
+    Assert.assertEquals("B", record.get().getValueAsList().get(1).getValueAsMap().get("value").getValueAsString());
+    Assert.assertFalse(record.has("[1]/header"));
+    Assert.assertEquals("5", parser.getOffset());
+    record = parser.parse();
+    Assert.assertNotNull(record);
+    Assert.assertEquals("id::5", record.getHeader().getSourceId());
+    Assert.assertEquals("a", record.get().getValueAsList().get(0).getValueAsMap().get("value").getValueAsString());
+    Assert.assertFalse(record.has("[0]/header"));
+    Assert.assertEquals("b", record.get().getValueAsList().get(1).getValueAsMap().get("value").getValueAsString());
+    Assert.assertFalse(record.has("[1]/header"));
+    Assert.assertEquals("8", parser.getOffset());
+    record = parser.parse();
+    Assert.assertNull(record);
+    Assert.assertEquals("-1", parser.getOffset());
+    parser.close();
+  }
+
+  @Test
+  public void testClEndOfLines() throws Exception {
+    OverrunReader reader = new OverrunReader(new StringReader("A,B\ra,b"), 1000, true, false);
+    DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, 0, CSVFormat.DEFAULT,
+      CsvHeader.NO_HEADER, -1, CsvRecordType.LIST, false, null);
+    Assert.assertEquals("0", parser.getOffset());
+    Record record = parser.parse();
+    Assert.assertNotNull(record);
+    Assert.assertEquals("id::0", record.getHeader().getSourceId());
+    Assert.assertEquals("A", record.get().getValueAsList().get(0).getValueAsMap().get("value").getValueAsString());
+    Assert.assertFalse(record.has("[0]/header"));
+    Assert.assertEquals("B", record.get().getValueAsList().get(1).getValueAsMap().get("value").getValueAsString());
+    Assert.assertFalse(record.has("[1]/header"));
+    Assert.assertEquals("4", parser.getOffset());
+    record = parser.parse();
+    Assert.assertNotNull(record);
+    Assert.assertEquals("id::4", record.getHeader().getSourceId());
+    Assert.assertEquals("a", record.get().getValueAsList().get(0).getValueAsMap().get("value").getValueAsString());
+    Assert.assertFalse(record.has("[0]/header"));
+    Assert.assertEquals("b", record.get().getValueAsList().get(1).getValueAsMap().get("value").getValueAsString());
+    Assert.assertFalse(record.has("[1]/header"));
+    Assert.assertEquals("7", parser.getOffset());
+    record = parser.parse();
+    Assert.assertNull(record);
+    Assert.assertEquals("-1", parser.getOffset());
+    parser.close();
+  }
+
 }

@@ -25,6 +25,9 @@ public class DelimitedDataConstants {
   public static final String ESCAPE_CONFIG = "escapeChar";
   public static final String QUOTE_CONFIG = "quoteChar";
   public static final String SKIP_START_LINES = "skipStartLines";
+  public static final String COMMENT_ALLOWED_CONFIG = "commentAllowed";
+  public static final String COMMENT_MARKER_CONFIG = "commentMarker";
+  public static final String IGNORE_EMPTY_LINES_CONFIG = "ignoreEmptyLines";
   public static final String PARSE_NULL = "parseNull";
   public static final String NULL_CONSTANT = "nullConstant";
 

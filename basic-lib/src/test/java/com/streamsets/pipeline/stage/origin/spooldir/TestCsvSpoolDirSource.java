@@ -91,12 +91,35 @@ public class TestCsvSpoolDirSource {
     return f;
   }
 
+  private File createCommentFile() throws Exception {
+    File f = new File(createTestDir(), "test.log");
+    Writer writer = new FileWriter(f);
+    writer.write("a,b\n");
+    writer.write("# This is comment\n");
+    writer.write("c,d\n");
+    writer.close();
+    return f;
+  }
+
+  private File createEmptyLineFile() throws Exception {
+    File f = new File(createTestDir(), "test.log");
+    Writer writer = new FileWriter(f);
+    writer.write("a,b\n");
+    writer.write("\n");
+    writer.write("c,d\n");
+    writer.close();
+    return f;
+  }
+
   private SpoolDirSource createSource(
       CsvMode mode,
       CsvHeader header,
       char delimiter,
       char escape,
       char quote,
+      boolean commentsAllowed,
+      char comment,
+      boolean ignoreEmptyLines,
       int maxLen,
       CsvRecordType csvRecordType) {
 
@@ -125,6 +148,9 @@ public class TestCsvSpoolDirSource {
     conf.dataFormatConfig.csvCustomEscape = escape;
     conf.dataFormatConfig.csvCustomQuote = quote;
     conf.dataFormatConfig.csvRecordType = csvRecordType;
+    conf.dataFormatConfig.csvEnableComments = commentsAllowed;
+    conf.dataFormatConfig.csvCommentMarker = comment;
+    conf.dataFormatConfig.csvIgnoreEmptyLines = ignoreEmptyLines;
     conf.dataFormatConfig.onParseError = OnParseError.ERROR;
     conf.dataFormatConfig.maxStackTraceLines = 0;
 
@@ -134,7 +160,7 @@ public class TestCsvSpoolDirSource {
 
   @Test
   public void testProduceFullFile() throws Exception {
-    SpoolDirSource source = createSource(CsvMode.RFC4180, CsvHeader.NO_HEADER, '|', '\\', '"', 5, CsvRecordType.LIST);
+    SpoolDirSource source = createSource(CsvMode.RFC4180, CsvHeader.NO_HEADER, '|', '\\', '"', false, ' ', true, 5, CsvRecordType.LIST);
     SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
     runner.runInit();
     try {
@@ -160,7 +186,7 @@ public class TestCsvSpoolDirSource {
 
   @Test
   public void testProduceFullFileWithListMap() throws Exception {
-    SpoolDirSource source = createSource(CsvMode.RFC4180, CsvHeader.NO_HEADER, '|', '\\', '"', 5, CsvRecordType.LIST_MAP);
+    SpoolDirSource source = createSource(CsvMode.RFC4180, CsvHeader.NO_HEADER, '|', '\\', '"', false, ' ', true, 5, CsvRecordType.LIST_MAP);
     SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
     runner.runInit();
     try {
@@ -194,7 +220,7 @@ public class TestCsvSpoolDirSource {
   private void testProduceLessThanFile(boolean ignoreHeader) throws Exception {
     SpoolDirSource source = createSource(CsvMode.RFC4180,
                                          (ignoreHeader) ? CsvHeader.IGNORE_HEADER : CsvHeader.WITH_HEADER, '|', '\\',
-                                         '"', 5, CsvRecordType.LIST);
+                                         '"', false, ' ', true, 5, CsvRecordType.LIST);
     SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
     runner.runInit();
     try {
@@ -247,7 +273,7 @@ public class TestCsvSpoolDirSource {
   private void testProduceLessThanFileWithListMap(boolean ignoreHeader) throws Exception {
     SpoolDirSource source = createSource(CsvMode.RFC4180,
       (ignoreHeader) ? CsvHeader.IGNORE_HEADER : CsvHeader.WITH_HEADER, '|', '\\',
-      '"', 5, CsvRecordType.LIST_MAP);
+      '"', false, ' ', true, 5, CsvRecordType.LIST_MAP);
     SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
     runner.runInit();
     try {
@@ -303,7 +329,7 @@ public class TestCsvSpoolDirSource {
 
   @Test
   public void testDelimitedCustom() throws Exception {
-    SpoolDirSource source = createSource(CsvMode.CUSTOM, CsvHeader.NO_HEADER, '^', '$', '!', 20, CsvRecordType.LIST);
+    SpoolDirSource source = createSource(CsvMode.CUSTOM, CsvHeader.NO_HEADER, '^', '$', '!', false, ' ', true,20, CsvRecordType.LIST);
     SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
     runner.runInit();
     try {
@@ -343,7 +369,7 @@ public class TestCsvSpoolDirSource {
       final int recordCount = recordCounts[produceNum];
       final int errorCount = errorCounts[produceNum];
 
-      SpoolDirSource source = createSource(CsvMode.CUSTOM, CsvHeader.NO_HEADER, '|', '\\', '"', 8, CsvRecordType.LIST);
+      SpoolDirSource source = createSource(CsvMode.CUSTOM, CsvHeader.NO_HEADER, '|', '\\', '"', false, ' ', true, 8, CsvRecordType.LIST);
       SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane")
           .setOnRecordError(OnRecordError.TO_ERROR).build();
       runner.runInit();
@@ -371,7 +397,7 @@ public class TestCsvSpoolDirSource {
 
   @Test
   public void testDelimitedCustomWithListMap() throws Exception {
-    SpoolDirSource source = createSource(CsvMode.CUSTOM, CsvHeader.NO_HEADER, '^', '$', '!', 20, CsvRecordType.LIST_MAP);
+    SpoolDirSource source = createSource(CsvMode.CUSTOM, CsvHeader.NO_HEADER, '^', '$', '!', true, ' ', false, 20, CsvRecordType.LIST_MAP);
     SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
     runner.runInit();
     try {
@@ -402,7 +428,7 @@ public class TestCsvSpoolDirSource {
 
   @Test //this test works for all formats as we are using a WrapperDataParser
   public void testInvalidData() throws Exception {
-    SpoolDirSource source = createSource(CsvMode.EXCEL, CsvHeader.NO_HEADER, '^', '$', '!', 20, CsvRecordType.LIST);
+    SpoolDirSource source = createSource(CsvMode.EXCEL, CsvHeader.NO_HEADER, '^', '$', '!', false, ' ', true, 20, CsvRecordType.LIST);
     SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").
         setOnRecordError(OnRecordError.TO_ERROR).build();
     createInvalidDataFile(spoolDir + "/file-0.log");
@@ -411,6 +437,70 @@ public class TestCsvSpoolDirSource {
       StageRunner.Output output = runner.runProduce(null, 10);
       Assert.assertTrue(output.getRecords().get("lane").isEmpty());
       Assert.assertFalse(runner.getErrors().isEmpty());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testComment() throws Exception {
+    SpoolDirSource source = createSource(CsvMode.CUSTOM, CsvHeader.NO_HEADER, ',', '\\', '"', true, '#', true, 50, CsvRecordType.LIST);
+    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
+    runner.runInit();
+    try {
+      BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
+      Assert.assertEquals("-1", source.produce(createCommentFile(), "0", 10, batchMaker));
+      StageRunner.Output output = SourceRunner.getOutput(batchMaker);
+      List<Record> records = output.getRecords().get("lane");
+      Assert.assertNotNull(records);
+      Assert.assertEquals(2, records.size());
+      Assert.assertEquals("a", records.get(0).get("[0]/value").getValueAsString());
+      Assert.assertEquals("b", records.get(0).get("[1]/value").getValueAsString());
+      Assert.assertEquals("c", records.get(1).get("[0]/value").getValueAsString());
+      Assert.assertEquals("d", records.get(1).get("[1]/value").getValueAsString());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testEmptyLineIgnore() throws Exception {
+    SpoolDirSource source = createSource(CsvMode.CUSTOM, CsvHeader.NO_HEADER, ',', '\\', '"', true, '#', true, 50, CsvRecordType.LIST);
+    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
+    runner.runInit();
+    try {
+      BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
+      Assert.assertEquals("-1", source.produce(createEmptyLineFile(), "0", 10, batchMaker));
+      StageRunner.Output output = SourceRunner.getOutput(batchMaker);
+      List<Record> records = output.getRecords().get("lane");
+      Assert.assertNotNull(records);
+      Assert.assertEquals(2, records.size());
+      Assert.assertEquals("a", records.get(0).get("[0]/value").getValueAsString());
+      Assert.assertEquals("b", records.get(0).get("[1]/value").getValueAsString());
+      Assert.assertEquals("c", records.get(1).get("[0]/value").getValueAsString());
+      Assert.assertEquals("d", records.get(1).get("[1]/value").getValueAsString());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testEmptyLineNotIgnore() throws Exception {
+    SpoolDirSource source = createSource(CsvMode.CUSTOM, CsvHeader.NO_HEADER, ',', '\\', '"', true, '#', false, 50, CsvRecordType.LIST);
+    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
+    runner.runInit();
+    try {
+      BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
+      Assert.assertEquals("-1", source.produce(createEmptyLineFile(), "0", 10, batchMaker));
+      StageRunner.Output output = SourceRunner.getOutput(batchMaker);
+      List<Record> records = output.getRecords().get("lane");
+      Assert.assertNotNull(records);
+      Assert.assertEquals(3, records.size());
+      Assert.assertEquals("a", records.get(0).get("[0]/value").getValueAsString());
+      Assert.assertEquals("b", records.get(0).get("[1]/value").getValueAsString());
+      Assert.assertEquals("", records.get(1).get("[0]/value").getValueAsString());
+      Assert.assertEquals("c", records.get(2).get("[0]/value").getValueAsString());
+      Assert.assertEquals("d", records.get(2).get("[1]/value").getValueAsString());
     } finally {
       runner.runDestroy();
     }

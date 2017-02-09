@@ -47,6 +47,9 @@ public class DelimitedDataParserFactory extends DataParserFactory {
     put(DelimitedDataConstants.SKIP_START_LINES, 0);
     put(DelimitedDataConstants.PARSE_NULL, false);
     put(DelimitedDataConstants.NULL_CONSTANT, "\\\\N");
+    put(DelimitedDataConstants.COMMENT_ALLOWED_CONFIG, false);
+    put(DelimitedDataConstants.COMMENT_MARKER_CONFIG, '#');
+    put(DelimitedDataConstants.IGNORE_EMPTY_LINES_CONFIG, true);
   }};
 
   public static final Set<Class<? extends Enum>> MODES =
@@ -73,8 +76,13 @@ public class DelimitedDataParserFactory extends DataParserFactory {
     if (getSettings().getMode(CsvMode.class) == CsvMode.CUSTOM) {
       csvFormat = CSVFormat.DEFAULT.withDelimiter((char)getSettings().getConfig(DelimitedDataConstants.DELIMITER_CONFIG))
                                    .withEscape((char) getSettings().getConfig(DelimitedDataConstants.ESCAPE_CONFIG))
-                                   .withQuote((char)getSettings().getConfig(DelimitedDataConstants.QUOTE_CONFIG));
+                                   .withQuote((char)getSettings().getConfig(DelimitedDataConstants.QUOTE_CONFIG))
+                                   .withIgnoreEmptyLines((boolean)getSettings().getConfig(DelimitedDataConstants.IGNORE_EMPTY_LINES_CONFIG));
+      if(getSettings().getConfig(DelimitedDataConstants.COMMENT_ALLOWED_CONFIG)) {
+        csvFormat = csvFormat.withCommentMarker((char)getSettings().getConfig(DelimitedDataConstants.COMMENT_MARKER_CONFIG));
+      }
     }
+
     try {
       return new DelimitedCharDataParser(
         getSettings().getContext(),
