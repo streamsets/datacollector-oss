@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import static com.streamsets.pipeline.config.DestinationAvroSchemaSource.INLINE;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.COMPRESSION_CODEC_DEFAULT;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.COMPRESSION_CODEC_KEY;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.DEFAULT_VALUES_KEY;
@@ -52,7 +53,7 @@ import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SUBJECT_KEY;
 
 public class AvroDataGeneratorFactory extends DataGeneratorFactory {
   public static final Map<String, Object> CONFIGS;
-  private static final DestinationAvroSchemaSource SCHEMA_SOURCE_DEFAULT = DestinationAvroSchemaSource.INLINE;
+  private static final DestinationAvroSchemaSource SCHEMA_SOURCE_DEFAULT = INLINE;
 
   static {
     Map<String, Object> configs = new HashMap<>();
@@ -73,10 +74,10 @@ public class AvroDataGeneratorFactory extends DataGeneratorFactory {
   private final AvroSchemaHelper schemaHelper;
   private final DestinationAvroSchemaSource schemaSource;
   private final boolean includeSchema;
-  private final Map<String, Object> defaultValuesFromSchema;
   private final String compressionCodec;
 
   private Schema schema;
+  private Map<String, Object> defaultValuesFromSchema;
   private int schemaId = 0;
 
   public AvroDataGeneratorFactory(Settings settings) throws SchemaRegistryException {
@@ -86,7 +87,7 @@ public class AvroDataGeneratorFactory extends DataGeneratorFactory {
 
     includeSchema = settings.getConfig(INCLUDE_SCHEMA_KEY);
     schemaSource = settings.getConfig(SCHEMA_SOURCE_KEY);
-
+    defaultValuesFromSchema = settings.getConfig(DEFAULT_VALUES_KEY);
     schemaId = settings.getConfig(SCHEMA_ID_KEY);
     final String subject = settings.getConfig(SUBJECT_KEY);
 
@@ -95,24 +96,32 @@ public class AvroDataGeneratorFactory extends DataGeneratorFactory {
         schema = null;
         break;
       case REGISTRY:
-        schema = schemaHelper.loadFromRegistry(subject, schemaId);
-        // If subject configuration is specified, figure out schemaId
-        if (!subject.isEmpty()) {
-          schemaId = schemaHelper.getSchemaIdFromSubject(subject);
-        }
+        initFromRegistry(subject);
         break;
       case INLINE:
-        schema = schemaHelper.loadFromString((String) settings.getConfig(SCHEMA_KEY));
-        if (schemaHelper.hasRegistryClient()) {
-          schemaId = schemaHelper.registerSchema(schema, subject);
-        }
-        Utils.checkNotNull(schema, "Avro Schema");
+        initFromInline(settings, subject);
         break;
       default:
         throw new UnsupportedOperationException("Unsupported Avro Schema source: " + schemaSource.getLabel());
     }
-    defaultValuesFromSchema = settings.getConfig(DEFAULT_VALUES_KEY);
     compressionCodec = settings.getConfig(COMPRESSION_CODEC_KEY);
+  }
+
+  private void initFromInline(Settings settings, String subject) throws SchemaRegistryException {
+    schema = schemaHelper.loadFromString((String) settings.getConfig(SCHEMA_KEY));
+    if (schemaHelper.hasRegistryClient()) {
+      schemaId = schemaHelper.registerSchema(schema, subject);
+    }
+    Utils.checkNotNull(schema, "Avro Schema");
+  }
+
+  private void initFromRegistry(String subject) throws SchemaRegistryException {
+    schema = schemaHelper.loadFromRegistry(subject, schemaId);
+    defaultValuesFromSchema = AvroSchemaHelper.getDefaultValues(schema);
+    // If subject configuration is specified, figure out schemaId
+    if (!subject.isEmpty()) {
+      schemaId = schemaHelper.getSchemaIdFromSubject(subject);
+    }
   }
 
   @Override

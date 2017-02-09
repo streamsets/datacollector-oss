@@ -30,7 +30,10 @@ import org.apache.avro.Schema;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
@@ -210,5 +213,23 @@ public class AvroSchemaHelper {
     }
 
     return Optional.of(wrapped.getInt());
+  }
+
+  /**
+   * Helper method to extract default values from a Schema. This is normally done
+   * in DataGeneratorFormat validation, however we have to do it at runtime for
+   * Schema Registry.
+   * @param schema schema to extract default values from
+   * @return map of default value
+   * @throws SchemaRegistryException
+   */
+  public static Map<String, Object> getDefaultValues(Schema schema) throws SchemaRegistryException {
+    Map<String, Object> defaultValues = new HashMap<>();
+    try {
+      defaultValues.putAll(AvroTypeUtil.getDefaultValuesFromSchema(schema, new HashSet<String>()));
+    } catch (IOException e) {
+      throw new SchemaRegistryException(e);
+    }
+    return defaultValues;
   }
 }

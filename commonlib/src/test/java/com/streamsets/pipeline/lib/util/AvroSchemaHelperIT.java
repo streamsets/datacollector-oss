@@ -34,7 +34,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.ID_SIZE;
 import static org.junit.Assert.assertEquals;
@@ -88,6 +90,13 @@ public class AvroSchemaHelperIT {
           .parse(getBody("schema-registry/schema_1.json"));
 
       assertEquals(schema, helper.loadFromRegistry(1));
+
+      Map<String, Object> expectedDefaultValues = new HashMap<>();
+      expectedDefaultValues.put("TestRecord.a", "");
+      expectedDefaultValues.put("TestRecord.b", 0L);
+      expectedDefaultValues.put("TestRecord.c", false);
+
+      assertEquals(expectedDefaultValues, AvroSchemaHelper.getDefaultValues(schema));
   }
 
   @Test
