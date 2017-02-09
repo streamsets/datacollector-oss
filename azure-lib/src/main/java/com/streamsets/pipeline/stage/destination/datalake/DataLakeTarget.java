@@ -167,11 +167,16 @@ public class DataLakeTarget extends BaseTarget {
       } catch (IOException ex1) {
         String errorMessage = ex1.toString();
         if (ex1 instanceof ADLException) {
-          errorMessage = ((ADLException) ex1).remoteExceptionMessage;
+          errorMessage = ex1.getMessage();
+          if (errorMessage == null) {
+            errorMessage = ((ADLException) ex1).remoteExceptionMessage;
+          }
         }
+
+        LOG.error(Errors.ADLS_02.getMessage(), errorMessage, ex1);
         issues.add(getContext().createConfigIssue(
             Groups.DATALAKE.name(),
-            DataLakeConfigBean.ADLS_CONFIG_BEAN_PREFIX + "clientId",
+            DataLakeConfigBean.ADLS_CONFIG_BEAN_PREFIX,
             Errors.ADLS_02,
             errorMessage
         ));
@@ -223,7 +228,10 @@ public class DataLakeTarget extends BaseTarget {
     } catch (IOException ex) {
       String errorMessage = ex.toString();
       if (ex instanceof ADLException) {
-        errorMessage = ((ADLException) ex).remoteExceptionMessage;
+        errorMessage = ex.getMessage();
+        if (errorMessage == null) {
+          errorMessage = ((ADLException) ex).remoteExceptionMessage;
+        }
       }
       LOG.error(Errors.ADLS_04.getMessage(), errorMessage, ex);
     } catch (InterruptedException ex) {
