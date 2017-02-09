@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.ElFunction;
 import com.streamsets.pipeline.api.ElParam;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -262,6 +263,33 @@ public class StringEL {
     }
 
     return URLDecoder.decode(string, encoding);
+  }
+
+  @ElFunction(
+      prefix = "str",
+      name = "escapeXML10",
+      description = "Returns a string safe to embed in an XML 1.0 or 1.1 document."
+  )
+  public static String escapeXml10(@ElParam("string") String string) {
+    return StringEscapeUtils.escapeXml10(string);
+  }
+
+  @ElFunction(
+      prefix = "str",
+      name = "escapeXML11",
+      description = "Returns a string safe to embed in an XML 1.1 document."
+  )
+  public static String escapeXml11(@ElParam("string") String string) {
+    return StringEscapeUtils.escapeXml11(string);
+  }
+
+  @ElFunction(
+      prefix = "str",
+      name = "unescapeXML",
+      description = "Returns an unescaped string from a string with XML special characters escaped."
+  )
+  public static String unescapeXml(@ElParam("string") String string) {
+    return StringEscapeUtils.unescapeXml(string);
   }
 
 }
