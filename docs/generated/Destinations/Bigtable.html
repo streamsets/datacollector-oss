@@ -32,10 +32,8 @@
  <div class="body conbody"><p class="shortdesc">The Google Bigtable destination writes data to Google Cloud Bigtable.</p>
 
   <p class="p">Before you configure the destination, you must
-            complete several prerequisites including verifying that Java 8 is installed on the <span class="ph">Data
-                  Collector</span>
-            machine, installing the BoringSSL library, and configuring the Google Application
-            Default Credentials.</p>
+            complete several prerequisites including installing the BoringSSL library and
+            configuring the Google Application Default Credentials.</p>
 
         <p class="p">When you configure the destination, you define the instance ID, project ID, and the table
             that you want to write to. The destination can write to an existing table or can create
@@ -44,6 +42,11 @@
 
         <p class="p">When necessary, you can configure a time basis and specify the number of records to
             buffer in each commit to Cloud Bigtable.</p>
+
+        <div class="note important"><span class="importanttitle">Important:</span> Verify that Java 8 is installed on the <span class="ph">Data
+                  Collector</span>
+            machine. The minimum supported version of Java for the Google Bigtable destination is
+            Java 8.</div>
 
  </div>
 
@@ -56,10 +59,6 @@
             you can write to Cloud Bigtable, you must complete the following prerequisites:</p>
 
         <ul class="ul" id="concept_f5v_11l_1y__ul_i4s_d1l_1y">
-            <li class="li">Verify that Java 8 is installed on the <span class="ph">Data
-                  Collector</span> machine. The minimum supported version of Java for the Google Bigtable
-                destination is Java 8.</li>
-
             <li class="li">Download and install the BoringSSL library.</li>
 
             <li class="li">Configure the Google Application Default Credentials that the destination uses to
@@ -126,7 +125,7 @@
                 <span class="ph cmd">When using the Java Security Manager, which is enabled by default, update the
                         <span class="ph">Data
                   Collector</span> security policy to include the external directory as follows:</span>
-                <ol type="a" class="ol substeps" id="task_jcl_z1l_1y__d9866e7796">
+                <ol type="a" class="ol substeps" id="task_jcl_z1l_1y__d9875e7796">
                     <li class="li substep substepexpand">
                         <span class="ph cmd">In the <span class="ph">Data
                   Collector</span> configuration directory, open the security policy file,
@@ -301,9 +300,9 @@ grant codebase "file:///opt/sdc-extras/-" {
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d50031e430">Data Collector Data Type</th>
+                            <th class="entry" valign="top" width="30%" id="d50046e427">Data Collector Data Type</th>
 
-                            <th class="entry" valign="top" width="70%" id="d50031e433">Cloud Bigtable Storage Type</th>
+                            <th class="entry" valign="top" width="70%" id="d50046e430">Cloud Bigtable Storage Type</th>
 
                         </tr>
 
@@ -311,100 +310,100 @@ grant codebase "file:///opt/sdc-extras/-" {
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d50031e430 ">Boolean</td>
+                            <td class="entry" valign="top" width="30%" headers="d50046e427 ">Boolean</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d50031e433 ">Text, Binary </td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="30%" headers="d50031e430 ">Byte</td>
-
-                            <td class="entry" valign="top" width="70%" headers="d50031e433 ">Text, Binary </td>
+                            <td class="entry" valign="top" width="70%" headers="d50046e430 ">Text, Binary </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d50031e430 ">Byte Array</td>
+                            <td class="entry" valign="top" width="30%" headers="d50046e427 ">Byte</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d50031e433 ">Text, Binary </td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="30%" headers="d50031e430 ">Character</td>
-
-                            <td class="entry" valign="top" width="70%" headers="d50031e433 ">Text, Binary </td>
+                            <td class="entry" valign="top" width="70%" headers="d50046e430 ">Text, Binary </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d50031e430 ">Date</td>
+                            <td class="entry" valign="top" width="30%" headers="d50046e427 ">Byte Array</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d50031e433 ">Text</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="30%" headers="d50031e430 ">Datetime</td>
-
-                            <td class="entry" valign="top" width="70%" headers="d50031e433 ">Text</td>
+                            <td class="entry" valign="top" width="70%" headers="d50046e430 ">Text, Binary </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d50031e430 ">Decimal</td>
+                            <td class="entry" valign="top" width="30%" headers="d50046e427 ">Character</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d50031e433 ">Text, Binary </td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="30%" headers="d50031e430 ">Double</td>
-
-                            <td class="entry" valign="top" width="70%" headers="d50031e433 ">Text, Binary </td>
+                            <td class="entry" valign="top" width="70%" headers="d50046e430 ">Text, Binary </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d50031e430 ">Float</td>
+                            <td class="entry" valign="top" width="30%" headers="d50046e427 ">Date</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d50031e433 ">Text, Binary </td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="30%" headers="d50031e430 ">Integer</td>
-
-                            <td class="entry" valign="top" width="70%" headers="d50031e433 ">Text, Binary </td>
+                            <td class="entry" valign="top" width="70%" headers="d50046e430 ">Text</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d50031e430 ">Long</td>
+                            <td class="entry" valign="top" width="30%" headers="d50046e427 ">Datetime</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d50031e433 ">Text, Binary </td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="30%" headers="d50031e430 ">Short</td>
-
-                            <td class="entry" valign="top" width="70%" headers="d50031e433 ">Text, Binary </td>
+                            <td class="entry" valign="top" width="70%" headers="d50046e430 ">Text</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d50031e430 ">String</td>
+                            <td class="entry" valign="top" width="30%" headers="d50046e427 ">Decimal</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d50031e433 ">Text</td>
+                            <td class="entry" valign="top" width="70%" headers="d50046e430 ">Text, Binary </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d50031e430 ">Time</td>
+                            <td class="entry" valign="top" width="30%" headers="d50046e427 ">Double</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d50031e433 ">Text</td>
+                            <td class="entry" valign="top" width="70%" headers="d50046e430 ">Text, Binary </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d50046e427 ">Float</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d50046e430 ">Text, Binary </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d50046e427 ">Integer</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d50046e430 ">Text, Binary </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d50046e427 ">Long</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d50046e430 ">Text, Binary </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d50046e427 ">Short</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d50046e430 ">Text, Binary </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d50046e427 ">String</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d50046e430 ">Text</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d50046e427 ">Time</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d50046e430 ">Text</td>
 
                         </tr>
 
@@ -587,14 +586,14 @@ grant codebase "file:///opt/sdc-extras/-" {
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_op4_zmq_tx__d9866e4457" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_op4_zmq_tx__d9875e4457" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d50031e876">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d50046e873">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d50031e879">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d50046e876">Description</th>
 
                                 </tr>
 
@@ -602,24 +601,24 @@ grant codebase "file:///opt/sdc-extras/-" {
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d50031e876 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d50046e873 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d50031e879 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d50031e876 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d50031e879 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d50046e876 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d50031e876 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_op4_zmq_tx__d9866e4503" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d50046e873 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d50031e879 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d50046e876 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d50046e873 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_op4_zmq_tx__d9875e4503" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d50046e876 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -627,10 +626,10 @@ grant codebase "file:///opt/sdc-extras/-" {
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d50031e876 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_op4_zmq_tx__d9866e4517" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d50046e873 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_op4_zmq_tx__d9875e4517" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d50031e879 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d50046e876 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -638,10 +637,10 @@ grant codebase "file:///opt/sdc-extras/-" {
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d50031e876 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_op4_zmq_tx__d9866e4532" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d50046e873 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_op4_zmq_tx__d9875e4532" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d50031e879 ">Error record handling for the stage: <ul class="ul" id="task_op4_zmq_tx__d9866e4536">
+                                    <td class="entry" valign="top" width="70%" headers="d50046e876 ">Error record handling for the stage: <ul class="ul" id="task_op4_zmq_tx__d9875e4536">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -671,9 +670,9 @@ grant codebase "file:///opt/sdc-extras/-" {
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d50031e998">Bigtable Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d50046e995">Bigtable Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d50031e1001">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d50046e998">Description</th>
 
                                 </tr>
 
@@ -681,23 +680,23 @@ grant codebase "file:///opt/sdc-extras/-" {
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d50031e998 ">Instance ID</td>
+                                    <td class="entry" valign="top" width="30%" headers="d50046e995 ">Instance ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d50031e1001 ">Cloud Bigtable instance ID.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d50031e998 ">Project ID</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d50031e1001 ">Cloud Bigtable project ID.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d50046e998 ">Cloud Bigtable instance ID.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d50031e998 ">Table Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d50046e995 ">Project ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d50031e1001 ">Cloud Bigtable table to write to.<p class="p">Enter the name of a
+                                    <td class="entry" valign="top" width="70%" headers="d50046e998 ">Cloud Bigtable project ID.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d50046e995 ">Table Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d50046e998 ">Cloud Bigtable table to write to.<p class="p">Enter the name of a
                                             table. Or define an expression that evaluates to the
                                             table name.</p>
 <div class="p">For example, you can use an Expression
@@ -712,11 +711,11 @@ grant codebase "file:///opt/sdc-extras/-" {
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d50031e998 ">Default Column Family Name
+                                    <td class="entry" valign="top" width="30%" headers="d50046e995 ">Default Column Family Name
                                         <a class="xref" href="Bigtable.html#concept_sbp_vz4_1y" title="When you configure the Google Bigtable destination, you map record fields to Google Cloud Bigtable columns. You define the Cloud Bigtable columns to write to by defining the column family and column qualifier.">
                                             <img class="image" id="task_op4_zmq_tx__image_a2h_bfn_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d50031e1001 ">Default column family to use when mapping fields in the
+                                    <td class="entry" valign="top" width="70%" headers="d50046e998 ">Default column family to use when mapping fields in the
                                         record to Cloud Bigtable columns. <div class="p">The default column
                                             family is used in the field to column mapping in the
                                             following situations: <ul class="ul" id="task_op4_zmq_tx__ul_kvf_cjq_1y">
@@ -734,11 +733,11 @@ grant codebase "file:///opt/sdc-extras/-" {
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d50031e998 ">Row Key is Composite
+                                    <td class="entry" valign="top" width="30%" headers="d50046e995 ">Row Key is Composite
                                         <a class="xref" href="Bigtable.html#concept_asz_2gl_1y" title="Each Google Cloud Bigtable table has one index, the row key. When you configure the Google Bigtable destination, you define which field or fields in the record to use as the row key.">
                                             <img class="image" id="task_op4_zmq_tx__image_a6h_bhn_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d50031e1001 ">Determines whether the row key is defined from a single
+                                    <td class="entry" valign="top" width="70%" headers="d50046e998 ">Determines whether the row key is defined from a single
                                         field in the record or from multiple fields in the record.
                                         Clear to use a single field. Select to concatenate the
                                         values from multiple fields.</td>
@@ -746,22 +745,22 @@ grant codebase "file:///opt/sdc-extras/-" {
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d50031e998 ">Row Key
+                                    <td class="entry" valign="top" width="30%" headers="d50046e995 ">Row Key
                                         <a class="xref" href="Bigtable.html#concept_asz_2gl_1y" title="Each Google Cloud Bigtable table has one index, the row key. When you configure the Google Bigtable destination, you define which field or fields in the record to use as the row key.">
                                             <img class="image" id="task_op4_zmq_tx__image_a8u_whn_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d50031e1001 ">Field in the record to use as the row key for the
+                                    <td class="entry" valign="top" width="70%" headers="d50046e998 ">Field in the record to use as the row key for the
                                             table.<p class="p">Enter the path to the field.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d50031e998 ">Row Key Fields
+                                    <td class="entry" valign="top" width="30%" headers="d50046e995 ">Row Key Fields
                                         <a class="xref" href="Bigtable.html#concept_asz_2gl_1y" title="Each Google Cloud Bigtable table has one index, the row key. When you configure the Google Bigtable destination, you define which field or fields in the record to use as the row key.">
                                             <img class="image" id="task_op4_zmq_tx__image_r5h_khn_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d50031e1001 ">Fields in the record to use as the row key for the table
+                                    <td class="entry" valign="top" width="70%" headers="d50046e998 ">Fields in the record to use as the row key for the table
                                         when you configure a composite row key. The destination
                                         concatenates the values of the fields into the row key.
                                             <p class="p">Enter the path to each field and define the column
@@ -771,9 +770,9 @@ grant codebase "file:///opt/sdc-extras/-" {
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d50031e998 ">Create Table and Column Families</td>
+                                    <td class="entry" valign="top" width="30%" headers="d50046e995 ">Create Table and Column Families</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d50031e1001 ">Determines whether the destination creates tables and
+                                    <td class="entry" valign="top" width="70%" headers="d50046e998 ">Determines whether the destination creates tables and
                                         column families if they do not exist.<p class="p">When cleared, the
                                             destination produces an error when it attempts to write
                                             to a table or column family that does not exist. When
@@ -784,9 +783,9 @@ grant codebase "file:///opt/sdc-extras/-" {
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d50031e998 ">Ignore Missing Data Values</td>
+                                    <td class="entry" valign="top" width="30%" headers="d50046e995 ">Ignore Missing Data Values</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d50031e1001 ">Determines whether the destination ignores missing data
+                                    <td class="entry" valign="top" width="70%" headers="d50046e998 ">Determines whether the destination ignores missing data
                                         in the record. <p class="p">When cleared, records that include missing
                                             fields are sent to the pipeline for error handling. When
                                             selected, records that include missing fields are still
@@ -800,21 +799,21 @@ grant codebase "file:///opt/sdc-extras/-" {
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d50031e998 ">Explicit Column Family Mapping
+                                    <td class="entry" valign="top" width="30%" headers="d50046e995 ">Explicit Column Family Mapping
                                         <a class="xref" href="Bigtable.html#concept_sbp_vz4_1y" title="When you configure the Google Bigtable destination, you map record fields to Google Cloud Bigtable columns. You define the Cloud Bigtable columns to write to by defining the column family and column qualifier.">
                                             <img class="image" id="task_op4_zmq_tx__image_a9h_bkl_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d50031e1001 ">Determines whether column families are explicitly defined
+                                    <td class="entry" valign="top" width="70%" headers="d50046e998 ">Determines whether column families are explicitly defined
                                         in the field to column mappings.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d50031e998 ">Fields
+                                    <td class="entry" valign="top" width="30%" headers="d50046e995 ">Fields
                                         <a class="xref" href="Bigtable.html#concept_sbp_vz4_1y" title="When you configure the Google Bigtable destination, you map record fields to Google Cloud Bigtable columns. You define the Cloud Bigtable columns to write to by defining the column family and column qualifier.">
                                             <img class="image" id="task_op4_zmq_tx__image_y4h_mkl_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d50031e1001 ">Map fields from records to Cloud Bigtable columns, and
+                                    <td class="entry" valign="top" width="70%" headers="d50046e998 ">Map fields from records to Cloud Bigtable columns, and
                                         then define the storage type for the column in Cloud
                                             Bigtable.<p class="p">Use the <span class="ph uicontrol">Add</span> icon to
                                             create additional field mappings.</p>
@@ -823,28 +822,28 @@ grant codebase "file:///opt/sdc-extras/-" {
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d50031e998 ">Time Basis
+                                    <td class="entry" valign="top" width="30%" headers="d50046e995 ">Time Basis
                                         <a class="xref" href="Bigtable.html#concept_vwy_334_1y" title="The time basis determines the timestamp value added for each column written to Google Cloud Bigtable.">
                                             <img class="image" id="task_op4_zmq_tx__image_g2h_hkl_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d50031e1001 ">Time basis to use for the timestamp value added to each
+                                    <td class="entry" valign="top" width="70%" headers="d50046e998 ">Time basis to use for the timestamp value added to each
                                         column written to Cloud Bigtable.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d50031e998 ">Time Stamp Field Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d50046e995 ">Time Stamp Field Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d50031e1001 ">Field in the record that contains the timestamp value to
+                                    <td class="entry" valign="top" width="70%" headers="d50046e998 ">Field in the record that contains the timestamp value to
                                         use for the time basis. The field must contain a Long
                                         value.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d50031e998 ">Number of Records to Buffer</td>
+                                    <td class="entry" valign="top" width="30%" headers="d50046e995 ">Number of Records to Buffer</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d50031e1001 ">Number of records to buffer in each commit to Cloud
+                                    <td class="entry" valign="top" width="70%" headers="d50046e998 ">Number of records to buffer in each commit to Cloud
                                             Bigtable.<p class="p">Enter a number between 1 and 1000. You might
                                             want to decrease the number if the destination is
                                             writing large columns of data. Default is
