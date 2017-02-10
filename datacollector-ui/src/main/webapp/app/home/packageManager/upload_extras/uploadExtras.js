@@ -70,4 +70,8 @@ angular
       }
     });
 
+    $scope.libraryInfo.library = _.find(installedLibraries, function (library) {
+      return library.id === 'streamsets-datacollector-jdbc-lib';
+    })
+
   });

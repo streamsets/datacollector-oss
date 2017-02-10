@@ -25,6 +25,7 @@ import com.streamsets.datacollector.io.DataStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.bean.DPMInfoJson;
+import com.streamsets.datacollector.restapi.bean.MultiStatusResponseJson;
 import com.streamsets.datacollector.restapi.bean.UserJson;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.util.AuthzRole;
@@ -45,6 +46,8 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
@@ -76,7 +79,7 @@ import java.util.Map;
 @Api(value = "system")
 @DenyAll
 public class AdminResource {
-
+  private static final Logger LOG = LoggerFactory.getLogger(AdminResource.class);
   private static final String APP_TOKEN_FILE = "application-token.txt";
   private static final String APP_TOKEN_FILE_PROP_VAL = "@application-token.txt@";
 
@@ -380,6 +383,123 @@ public class AdminResource {
       throw new RuntimeException(Utils.format("Updating dpm.properties file failed: {}", e.getMessage()), e);
     }
     return Response.ok().build();
+  }
+
+  @POST
+  @Path("/createDPMUsers")
+  @ApiOperation(
+      value = "Create Users & Groups in DPM",
+      authorizations = @Authorization(value = "basic")
+  )
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
+  public Response createDPMUsers(DPMInfoJson dpmInfo) throws IOException {
+    Utils.checkNotNull(dpmInfo, "DPMInfo");
+
+    List<String> successEntities = new ArrayList<>();
+    List<String> errorMessages = new ArrayList<>();
+
+    String dpmBaseURL = dpmInfo.getBaseURL();
+    if (dpmBaseURL.endsWith("/")) {
+      dpmBaseURL = dpmBaseURL.substring(0, dpmBaseURL.length() - 1);
+    }
+
+    // 1. Login to DPM to get user auth token
+    Response response = null;
+    try {
+      Map<String, String> loginJson = new HashMap<>();
+      loginJson.put("userName", dpmInfo.getUserID());
+      loginJson.put("password", dpmInfo.getUserPassword());
+      response = ClientBuilder.newClient()
+          .target(dpmBaseURL + "/security/public-rest/v1/authentication/login")
+          .register(new CsrfProtectionFilter("CSRF"))
+          .request()
+          .post(Entity.json(loginJson));
+      if (response.getStatus() != Response.Status.OK.getStatusCode()) {
+        throw new RuntimeException(Utils.format("DPM Login failed, status code '{}': {}",
+            response.getStatus(),
+            response.readEntity(String.class)
+        ));
+      }
+    } finally {
+      if (response != null) {
+        response.close();
+      }
+    }
+
+    String userAuthToken = response.getHeaderString(SSOConstants.X_USER_AUTH_TOKEN);
+    String appAuthToken = null;
+
+    // 2. Create Groups
+    for (Map<String, Object> group: dpmInfo.getDpmGroupList()) {
+      try {
+        response = ClientBuilder.newClient()
+            .target(dpmBaseURL + "/security/rest/v1/organization/" + dpmInfo.getOrganization() + "/groups")
+            .register(new CsrfProtectionFilter("CSRF"))
+            .request()
+            .header(SSOConstants.X_USER_AUTH_TOKEN, userAuthToken)
+            .put(Entity.json(group));
+
+        if (response.getStatus() != Response.Status.CREATED.getStatusCode()) {
+          errorMessages.add(Utils.format("DPM Create Group '{}' failed, status code '{}': {}",
+              group.get("id"),
+              response.getStatus(),
+              response.readEntity(String.class)
+          ));
+        } else {
+          successEntities.add(Utils.format("Created DPM Group '{}' successfully", group.get("id")));
+        }
+      } finally {
+        if (response != null) {
+          response.close();
+        }
+      }
+    }
+
+    // 3. Create Users
+    for (Map<String, Object> user: dpmInfo.getDpmUserList()) {
+      try {
+        response = ClientBuilder.newClient()
+            .target(dpmBaseURL + "/security/rest/v1/organization/" + dpmInfo.getOrganization() + "/users")
+            .register(new CsrfProtectionFilter("CSRF"))
+            .request()
+            .header(SSOConstants.X_USER_AUTH_TOKEN, userAuthToken)
+            .put(Entity.json(user));
+
+        if (response.getStatus() != Response.Status.CREATED.getStatusCode()) {
+          errorMessages.add(Utils.format("DPM Create User '{}' failed, status code '{}': {}",
+              user.get("id"),
+              response.getStatus(),
+              response.readEntity(String.class)
+          ));
+        } else {
+          successEntities.add(Utils.format("Created DPM User '{}' successfully", user.get("id")));
+        }
+      } finally {
+        if (response != null) {
+          response.close();
+        }
+      }
+    }
+
+    // 4. Logout from DPM
+    try {
+      response = ClientBuilder.newClient()
+          .target(dpmBaseURL + "/security/_logout")
+          .register(new CsrfProtectionFilter("CSRF"))
+          .request()
+          .header(SSOConstants.X_USER_AUTH_TOKEN, userAuthToken)
+          .cookie(SSOConstants.AUTHENTICATION_COOKIE_PREFIX + "LOGIN", userAuthToken)
+          .get();
+    } finally {
+      if (response != null) {
+        response.close();
+      }
+    }
+
+    return Response.status(207)
+        .type(MediaType.APPLICATION_JSON)
+        .entity(new MultiStatusResponseJson<>(successEntities, errorMessages)).build();
   }
 
   @GET

@@ -14,10 +14,11 @@
 
       <li class="border-list-group-item"></li>
 
-      <li class="list-group-item pointer clearfix"
-          ng-class="{'active' : selectedNavigationItem === extrasNavigationItem}"
-          ng-click="onNavigationItemClick(extrasNavigationItem)">
-        <span class="pipeline-details-name">Additional Drivers</span>
+      <li class="list-group-item pointer clearfix">
+        <div ng-class="{'active' : selectedNavigationItem === extrasNavigationItem}"
+             ng-click="onNavigationItemClick(extrasNavigationItem)"
+             class="pipeline-details-name list-group-item-wrapper">{{'packageManager.additionalDrivers' | translate}}
+        </div>
       </li>
     </ul>
   </div>

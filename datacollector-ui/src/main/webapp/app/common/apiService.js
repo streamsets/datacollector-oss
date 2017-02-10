@@ -226,6 +226,20 @@ angular.module('dataCollectorApp.common')
       },
 
       /**
+       * Create DPM Groups & Users
+       * @param dpmInfo
+       * @returns {*}
+       */
+      createDPMGroupsAndUsers: function(dpmInfo) {
+        var url = apiBase + '/system/createDPMUsers';
+        return $http({
+          method: 'POST',
+          url: url,
+          data: dpmInfo
+        });
+      },
+
+      /**
        * logout
        */
       logout: function(authenticationType, isDPMEnabled) {

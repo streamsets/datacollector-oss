@@ -9,6 +9,26 @@
   <div class="modal-body">
     <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
 
+    <div class="add-users-groups form-horizontal" ng-if="!isACLReadyOnly">
+      <div class="form-group">
+        <div class="controls col-lg-offset-6 col-lg-5">
+          <ui-select multiple
+                     tagging
+                     tagging-label=" "
+                     tagging-tokens=",|ENTER"
+                     ng-model="newSubjectList.value">
+            <ui-select-match placeholder="{{'home.library.selectUsersAndGroupsPlaceholder' | translate}}" class="ui-select-match">{{$item}}</ui-select-match>
+            <ui-select-choices class="ui-select-choices"
+                               repeat="listValue in filteredSubjects | filter:$select.search">
+              <div ng-bind-html="listValue | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+        </div>
+
+        <button type="button" class="btn btn-default" ng-click="inviteOthers()">Add</button>
+      </div>
+    </div>
+
     <table class="table table-hover">
       <thead>
       <tr>
@@ -74,28 +94,6 @@
       </tr>
       </tbody>
     </table>
-
-    <div class="add-users-groups form-horizontal" ng-if="!isACLReadyOnly">
-      <div class="form-group">
-        <div class="controls col-lg-5">
-          <ui-select multiple
-                     tagging
-                     tagging-label=" "
-                     tagging-tokens=",|ENTER"
-                     ng-model="newSubjectList.value">
-            <ui-select-match placeholder="{{'home.library.selectUsersAndGroupsPlaceholder' | translate}}" class="ui-select-match">{{$item}}</ui-select-match>
-            <ui-select-choices class="ui-select-choices"
-                               repeat="listValue in filteredSubjects | filter:$select.search">
-              <div ng-bind-html="listValue | highlight: $select.search"></div>
-            </ui-select-choices>
-          </ui-select>
-        </div>
-
-        <button type="button" class="btn btn-default" ng-click="inviteOthers()">Add</button>
-      </div>
-    </div>
-
-
 
     <div ng-if="!isACLEnabled" class="alert alert-info" role="alert">
       Note: Data Collector pipeline sharing (ACLs) are not enabled. Update the Data Collector configuration file to enable pipeline sharing.

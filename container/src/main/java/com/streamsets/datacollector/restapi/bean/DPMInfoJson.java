@@ -20,6 +20,7 @@
 package com.streamsets.datacollector.restapi.bean;
 
 import java.util.List;
+import java.util.Map;
 
 public class DPMInfoJson {
   private String baseURL;
@@ -27,6 +28,8 @@ public class DPMInfoJson {
   private String userPassword;
   private String organization;
   private List<String> labels;
+  private List<Map<String, Object>> dpmUserList;
+  private List<Map<String, Object>> dpmGroupList;
 
   public String getBaseURL() {
     return baseURL;
@@ -66,5 +69,21 @@ public class DPMInfoJson {
 
   public void setLabels(List<String> labels) {
     this.labels = labels;
+  }
+
+  public List<Map<String, Object>> getDpmUserList() {
+    return dpmUserList;
+  }
+
+  public void setDpmUserList(List<Map<String, Object>> dpmUserList) {
+    this.dpmUserList = dpmUserList;
+  }
+
+  public List<Map<String, Object>> getDpmGroupList() {
+    return dpmGroupList;
+  }
+
+  public void setDpmGroupList(List<Map<String, Object>> dpmGroupList) {
+    this.dpmGroupList = dpmGroupList;
   }
 }
