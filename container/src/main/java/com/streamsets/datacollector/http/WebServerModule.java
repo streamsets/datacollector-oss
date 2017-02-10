@@ -160,7 +160,7 @@ public class WebServerModule {
       public void init(ServletContextHandler context) {
         context.setAttribute("com.codahale.metrics.servlets.MetricsServlet.registry", metrics);
         ServletHolder servlet = new ServletHolder(new JMXJsonServlet());
-        context.addServlet(servlet, "/jmx");
+        context.addServlet(servlet, "/rest/v1/system/jmx");
       }
 
       @Override

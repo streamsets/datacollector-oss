@@ -112,7 +112,7 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       getJMX : function() {
-        var url = 'jmx';
+        var url = apiBase + '/system/jmx';
         return $http({
           method: 'GET',
           url: url
