@@ -242,13 +242,6 @@
             </li>
 
             <li ng-if="isAuthorized([userRoles.admin]) && common.remoteServerInfo.registrationStatus">
-              <a href="javascript:;" ng-click="common.onCreateDPMUsersClick()">
-                <i class="glyphicon glyphicon-user"></i>
-                <span translate="home.createDPMUsers.title">Create DPM Users</span>
-              </a>
-            </li>
-
-            <li ng-if="isAuthorized([userRoles.admin]) && common.remoteServerInfo.registrationStatus">
               <a href="javascript:;" ng-click="common.onDisableDPMClick()">
                 <i class="fa fa-file-text"></i>
                 <span translate="global.menu.admin.disableDPM">Disable DPM</span>

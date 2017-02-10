@@ -18,21 +18,16 @@
  * limitations under the License.
  */
 
-package com.streamsets.lib.security.acl.dto;
+.create-dpm-users-form {
+  .modal-body {
+    height: 550px;
+    overflow: auto;
 
-import java.util.EnumSet;
-import java.util.Set;
-
-public enum ResourceType {
-  PIPELINE (EnumSet.of(Action.READ, Action.WRITE, Action.EXECUTE));
-
-  ResourceType(Set<Action> actions){
-    this.actions = actions;
-  }
-
-  private final Set<Action> actions;
-
-  public Set<Action> getActions(){
-    return actions;
+    .group-users-list-pane {
+      border: 1px solid lightgrey;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+    }
   }
 }

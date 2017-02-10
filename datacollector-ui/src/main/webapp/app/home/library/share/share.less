@@ -19,43 +19,49 @@
  */
 
 .share-pipeline-modal-form {
-  .user-icon {
-    opacity: 0.4;
-    padding-right: 5px;
+  .add-users-groups {
+
   }
 
-  .action-col {
-    width: 120px;
-  }
+  table {
+    margin-bottom: 50px;
+    .user-icon {
+      opacity: 0.4;
+      padding-right: 5px;
+    }
 
-  .is-owner {
-    opacity: 0.4;
-  }
+    .action-col {
+      width: 120px;
+    }
 
-  .action-menu-col {
-    width: 50px;
-    padding: 0;
+    .is-owner {
+      opacity: 0.4;
+    }
 
-    .action-menu {
-      position: relative;
-      cursor: pointer;
-      .dropdown-toggle {
-        display: inline-block;
-        width: 100%;
-        padding: @defaultPadding;
+    .action-menu-col {
+      width: 50px;
+      padding: 0;
 
-        .fa {
-          color: #a2a1a1;
+      .action-menu {
+        position: relative;
+        cursor: pointer;
+        .dropdown-toggle {
+          display: inline-block;
+          width: 100%;
+          padding: @defaultPadding;
 
-          &:hover {
-            color: @streamsets-icon-btn-hover-color;
+          .fa {
+            color: #a2a1a1;
+
+            &:hover {
+              color: @streamsets-icon-btn-hover-color;
+            }
           }
         }
       }
     }
   }
 
-  .add-users-groups {
-    margin-top: 100px;
-  }
+
+
 }

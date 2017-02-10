@@ -53,6 +53,8 @@
       "captured": "Captured",
       "close": "Close",
       "condition": "Condition",
+      "create": "Create",
+      "creating": "Creating...",
       "createdBy": "Created By",
       "createdOn": "Created On",
       "delete": "Delete",
@@ -68,6 +70,8 @@
       "download": "Download",
       "downloading": "Downloading...",
       "edit": "Edit",
+      "email": "Email Address",
+      "emailPlaceholder": "Enter Email Address",
       "error": "Error",
       "errorCode": "Error Code",
       "errorMessage": "Error Message",
@@ -87,6 +91,9 @@
       "generate": "Generate",
       "getThisVersion": "Get",
       "gridView": "Grid View",
+      "groups": "Groups",
+      "groupId": "Group ID",
+      "groupIdPlaceholder": "Enter Group ID",
       "help": "Help",
       "hideNameColumn": "Hide ID Column",
       "histogram": "Records Per Batch Histogram (5 minutes decay)",
@@ -156,11 +163,16 @@
       "title": "Title",
       "toStage": "To Stage",
       "type": "Type",
+      "userId": "User ID",
+      "userIdPlaceholder": "Enter User ID",
+      "userName": "Display Name",
+      "userNamePlaceholder": "Enter Display Name",
       "undo": "Undo",
       "uninstall": "Uninstall",
       "uninstalling": "Uninstalling...",
       "upload": "Upload",
       "uploading": "Uploading...",
+      "users": "Users",
       "username": "Login",
       "username.placeholder": "Your login",
       "value": "Value",
@@ -192,6 +204,9 @@
   },
   "home": {
     "ago": "ago",
+    "createDPMUsers": {
+      "title": "Create DPM Groups & Users"
+    },
     "enableDPM": {
       "alreadyEnabledMsg": "DPM is already enabled",
       "contactMessage": "Contact <a href=\"mailto:enteprise@streamsets.com\" target=\"_top\">enteprise@streamsets.com</a> for a StreamSets Enterprise account",
@@ -206,7 +221,8 @@
       "installStatsLibraryMessage": "Important: DPM requires that the statistics stage library be installed on each registered Data Collector. DPM requires the library to run system pipelines on the Data Collector.",
       "isEnableInProgress": "Enabling DPM...",
       "isManagedByClouderaManager": "For an installation with Cloudera Manager, you must use the Cloudera Manager to enable Data Collector to work with DPM. <a href=\"https://streamsets.com/documentation/datacollector/latest/help//index.html#DPM/RegisterSDCwithDPM.html\" target=\"_blank\">Learn More...</a>",
-      "successMessage": "Successfully generated the authentication token and updated the files 'etc/application-token.txt' and 'etc/dpm.properties'. Restart the Data Collector for the changes to take effect. If you started the Data Collector manually, click Restart Data Collector. If you started the Data Collector as a service, click Cancel and then run the following command: sdc service restart"
+      "restartMessage": "Restart the Data Collector for the changes to take effect. If you started the Data Collector manually, click Restart Data Collector. If you started the Data Collector as a service, click Cancel and then run the following command: sdc service restart",
+      "successMessage": "Successfully generated the authentication token and updated the files 'etc/application-token.txt' and 'etc/dpm.properties'."
     },
     "createPipeline": "Create New Pipeline",
     "commitPipelineHistory": {
@@ -747,6 +763,7 @@
     "TIMER_MEAN_RATE" : "Mean Rate"
   },
   "packageManager": {
+    "additionalDrivers": "Additional Drivers",
     "customRepoUrl": {
       "title": "Configure Custom Repo URL",
       "repoUrl": "Custom Repo URL",

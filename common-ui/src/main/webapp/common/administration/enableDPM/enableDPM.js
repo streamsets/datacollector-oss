@@ -89,6 +89,21 @@ angular
             }
           }
         });
+      },
+
+      onCreateDPMUsersClick: function () {
+        $modalStack.dismissAll();
+        $modal.open({
+          templateUrl: 'common/administration/createDPMUsers/createDPMUsers.tpl.html',
+          controller: 'CreateDPMUsersModalInstanceController',
+          size: 'lg',
+          backdrop: 'static',
+          resolve: {
+            dpmInfoModel: function () {
+              return $scope.dpmInfoModel;
+            }
+          }
+        });
       }
     });
 

@@ -254,6 +254,24 @@ angular.module('dataCollectorApp')
           });
         },
 
+        onCreateDPMUsersClick: function() {
+          $modal.open({
+            templateUrl: 'common/administration/createDPMUsers/createDPMUsers.tpl.html',
+            controller: 'CreateDPMUsersModalInstanceController',
+            size: 'lg',
+            backdrop: 'static',
+            resolve: {
+              dpmInfoModel: function () {
+                return {
+                  baseURL: 'https://cloud.streamsets.com',
+                  userID: '',
+                  userPassword: ''
+                };
+              }
+            }
+          });
+        },
+
         /**
          * Open the Shutdown Modal Dialog
          */

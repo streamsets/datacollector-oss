@@ -74,16 +74,24 @@
 
       </div>
 
-      <ul class="properties clearfix">
-        <li class="pull-right">
-          <span class="properties-label">Before registering this Data Collector, create a DPM user account for each Data Collector user account.</span>
-        </li>
-      </ul>
-
     </div>
 
-    <div ng-if="dpmEnabled && !isRestartInProgress" class="alert alert-success alert-dismissible" role="alert"
-         translate="home.enableDPM.successMessage">
+    <div ng-if="(dpmEnabled && !isRestartInProgress)" class="alert alert-success alert-dismissible" role="alert">
+
+      <ul class="clearfix">
+        <li>
+          <span translate="home.enableDPM.successMessage"></span>
+        </li>
+
+        <li>
+          <span><a href="javascript:;" ng-click="onCreateDPMUsersClick()">Click here</a> for creating DPM user account for each Data Collector user account.</span>
+        </li>
+
+        <li>
+          <span>Restart the Data Collector for the changes to take effect. If you started the Data Collector manually, click Restart Data Collector. If you started the Data Collector as a service, click Cancel and then run the following command: sdc service restart</span>
+        </li>
+
+      </ul>
     </div>
 
     <div ng-if="dpmEnabled && !isRestartInProgress && !isStatsLibraryInstalled"

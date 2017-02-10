@@ -1,0 +1,201 @@
+<form class="create-dpm-users-form" role="form" autocomplete="off" ng-submit="onCreateSubjectsSubmit()">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title" translate="home.createDPMUsers.title">Create DPM Users</h3>
+  </div>
+  <div class="modal-body">
+
+    <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+
+    <div ng-if="!createResponse">
+
+      <div class="form-group">
+        <label class="control-label" translate="home.enableDPM.dpmBaseURL">DPM URL</label>
+        <input type="text"
+               autocomplete="new-password"
+               ng-disabled="isCreateInProgress"
+               name="name"
+               class="form-control"
+               ng-required
+               placeholder="{{'home.enableDPM.dpmBaseURLPlaceholder' | translate}}"
+               ng-model="dpmInfoModel.baseURL">
+      </div>
+
+      <div class="form-group">
+        <label class="control-label" translate="home.enableDPM.dpmUserName">DPM User Name</label>
+        <input type="text"
+               autocomplete="new-password"
+               ng-disabled="isCreateInProgress"
+               autofocus
+               name="dpmUserID"
+               class="form-control"
+               required
+               pattern="[a-zA-Z_0-9\.]+@[a-zA-Z_0-9\.]+$"
+               title="User ID must be <ID>@<Organization ID>, IDs must be a alphanumeric characters, underscores and dots"
+               placeholder="{{'home.enableDPM.dpmUserNamePlaceholder' | translate}}"
+               ng-model="dpmInfoModel.userID">
+      </div>
+
+      <div class="form-group">
+        <label class="control-label" translate="home.enableDPM.dpmUserPassword">DPM User Password</label>
+        <input type="password"
+               autocomplete="new-password"
+               ng-disabled="isCreateInProgress"
+               name="dpmUserPassword"
+               class="form-control"
+               required
+               placeholder="{{'home.enableDPM.dpmUserPasswordPlaceholder' | translate}}"
+               ng-model="dpmInfoModel.userPassword">
+      </div>
+
+
+
+      <table class="table table-hover">
+        <caption>{{'global.form.groups' | translate}}</caption>
+        <thead>
+        <tr>
+          <th>{{'global.form.groupId' | translate}}</th>
+          <th>{{'global.form.userName' | translate}}</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody ng-hide="showLoading">
+        <tr ng-repeat="dpmGroup in dpmGroupList track by $index">
+          <td>
+            <input type="text"
+                   ng-disabled="isCreateInProgress"
+                   name="dpmGroupID"
+                   class="form-control"
+                   ng-required
+                   placeholder="{{'global.form.groupIdPlaceholder' | translate}}"
+                   ng-model="dpmGroup.id">
+          </td>
+
+          <td>
+            <input type="text"
+                   ng-disabled="isCreateInProgress"
+                   autofocus
+                   name="dpmGroupName"
+                   class="form-control"
+                   required
+                   placeholder="{{'global.form.userNamePlaceholder' | translate}}"
+                   ng-model="dpmGroup.name">
+          </td>
+
+          <td>
+            <button type="button" class="btn btn-default btn-sm"
+                    ng-click="removeFromList(dpmGroupList, $index)">
+              <i class="fa fa-minus pointer"></i>
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+
+      <table class="table table-hover">
+        <caption>{{'global.form.users' | translate}}</caption>
+        <thead>
+        <tr>
+          <th class="subject-col">{{'global.form.userId' | translate}}</th>
+          <th class="action-col">{{'global.form.userName' | translate}}</th>
+          <th class="action-col">{{'global.form.email' | translate}}</th>
+          <th class="action-col">{{'global.form.groups' | translate}}</th>
+          <th class="action-menu-col"></th>
+        </tr>
+        </thead>
+        <tbody ng-hide="showLoading">
+        <tr ng-repeat="dpmUser in dpmUserList track by $index">
+          <td>
+            <input type="text"
+                   ng-disabled="isCreateInProgress"
+                   name="dpmUserID"
+                   class="form-control"
+                   ng-required
+                   placeholder="{{'global.form.userIdPlaceholder' | translate}}"
+                   ng-model="dpmUser.id">
+          </td>
+
+          <td>
+            <input type="text"
+                   ng-disabled="isCreateInProgress"
+                   autofocus
+                   name="dpmUserName"
+                   class="form-control"
+                   required
+                   placeholder="{{'global.form.userNamePlaceholder' | translate}}"
+                   ng-model="dpmUser.name">
+          </td>
+
+          <td>
+            <input type="text"
+                   ng-disabled="isCreateInProgress"
+                   autofocus
+                   name="dpmUserEmailAddress"
+                   class="form-control"
+                   required
+                   placeholder="{{'global.form.emailPlaceholder' | translate}}"
+                   ng-model="dpmUser.email">
+          </td>
+
+          <td>
+            <ui-select multiple
+                       tagging
+                       tagging-label=" - new label"
+                       ng-disabled="isEnableInProgress"
+                       tagging-tokens=",|ENTER"
+                       ng-model="dpmUser.groups">
+              <ui-select-match class="ui-select-match">{{$item}}</ui-select-match>
+              <ui-select-choices class="ui-select-choices"
+                                 repeat="listValue in dpmInfoModel.groups | filter:$select.search">
+                <div ng-bind-html="listValue | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+          </td>
+
+          <td>
+            <button type="button" class="btn btn-default btn-sm"
+                    ng-click="removeFromList(dpmUserList, $index)">
+              <i class="fa fa-minus pointer"></i>
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+    <div ng-if="createResponse && !isRestartInProgress">
+      <div ng-repeat="successEntity in createResponse.successEntities" class="alert alert-success alert-dismissible" role="alert">
+        {{successEntity}}
+      </div>
+
+      <div ng-repeat="errorMessage in createResponse.errorMessages" class="alert alert-danger alert-dismissible" role="alert">
+        {{errorMessage}}
+      </div>
+    </div>
+
+    <div class="alert alert-success alert-dismissible" role="alert"
+         ng-show="isRestartInProgress"
+         translate="home.restart.successMessage">
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="reset" class="btn btn-default" ng-click="cancel()" ng-if="!isCreateInProgress"
+            translate="global.form.cancel">Cancel</button>
+
+    <button type="submit" class="btn btn-primary" ng-if="!isCreateInProgress && !createResponse"
+            translate="global.form.create">Create</button>
+
+    <button class="btn btn-primary" ng-if="isCreateInProgress && !createResponse" disabled
+            translate="global.form.creating">Creating...</button>
+
+    <button ng-if="!isCreateInProgress && createResponse && !isRestartInProgress"
+            ng-click="restart()"
+            class="btn btn-primary" translate="global.form.restart">Restart</button>
+  </div>
+</form>
