@@ -29,15 +29,15 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 import com.streamsets.pipeline.stage.processor.spark.Groups;
 import com.streamsets.pipeline.stage.processor.spark.SparkProcessorConfigBean;
 
-@StageDef(
-    version = 1,
-    label = "Spark Evaluator",
-    description = "Process Records in Spark in Cluster Mode",
-    icon = "spark-logo-hd.png",
-    execution = {ExecutionMode.CLUSTER_MESOS_STREAMING, ExecutionMode.CLUSTER_YARN_STREAMING},
-    onlineHelpRefUrl = "", // New URI
-    privateClassLoader = true
-)
+//@StageDef(
+//    version = 1,
+//    label = "Spark Evaluator",
+//    description = "Process Records in Spark in Cluster Mode",
+//    icon = "spark-logo-hd.png",
+//    execution = {ExecutionMode.CLUSTER_MESOS_STREAMING, ExecutionMode.CLUSTER_YARN_STREAMING},
+//    onlineHelpRefUrl = "", // New URI
+//    privateClassLoader = true
+//)
 @GenerateResourceBundle
 @ConfigGroups(Groups.class)
 public class ClusterExecutorSparkDProcessor extends DProcessor {
