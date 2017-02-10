@@ -22,16 +22,20 @@
             process redo logs. LogMiner can store dictionaries in several locations. </p>
         <p>The Oracle CDC Client can use the following dictionary source locations:<ul
                 id="ul_dn5_qyc_fx">
-                <li>Online catalog - Oracle recommends using the online catalog when table
-                    structures are not expected to change.</li>
-                <li>Redo logs - Oracle recommends using redo logs when table structures are expected
-                    to change. <note type="important">When using dictionaries stored in redo logs,
-                        make sure to extract the latest dictionary to the redo logs each time table
-                        structures change. For more information, see <xref
-                            href="https://docs.oracle.com/cd/B19306_01/server.102/b14215/logminer.htm#i1014735"
-                            format="html" scope="external">Extracting a LogMiner Dictionary to the
-                            Redo Log Files</xref>.</note></li>
+                <li>Online catalog - Use the online catalog when table structures are not expected
+                    to change.</li>
+                <li>Redo logs - Use redo logs when table structures are expected to change. When
+                    reading the dictionary from redo logs, the Oracle CDC Client origin determines
+                    when schema changes occur and refreshes the schema that it uses to create
+                    records. The origin can also generate events for each DDL it reads in the redo
+                    logs. <note type="important">When using the dictionary in redo logs, make sure
+                        to extract the latest dictionary to the redo logs each time table structures
+                        change. For more information, see <xref
+                            href="OracleCDC-T4-ExtractDict.dita#concept_ypm_fv1_vy"/> .</note></li>
             </ul></p>
+        <p>Note that using the dictionary in redo logs can have significantly higher latency than
+            using the dictionary in the online catalog. But using the online catalog does not allow
+            for schema changes. </p>
         <p>For more information about dictionary options and configuring LogMiner, see the Oracle
             LogMiner documentation. </p>
  </conbody>

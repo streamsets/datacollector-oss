@@ -52,6 +52,14 @@
                             </entry>
                         </row>
                         <row>
+                            <entry>Oracle CDC Client origin</entry>
+                            <entry>
+                                <ul id="ul_brj_zv1_vy">
+                                    <li>Reads DDL statements in the redo log. </li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
                             <entry>Amazon S3 destination</entry>
                             <entry>
                                 <ul id="ul_lb3_zck_px">

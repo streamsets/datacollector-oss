@@ -24,9 +24,48 @@
                     <xref href="OracleCDC-Prerequisites.dita#concept_xwg_33w_cx"/>.</p>
         </context>
         <steps>
-            <step
-                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-StageLib-EHandling">
-                <cmd/>
+            <step>
+                <cmd>In the Properties panel, on the <uicontrol>General</uicontrol> tab, configure
+                    the following properties: </cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_j2h_qvk_wy">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>General Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/O-1stStep-Name">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/O-1stStep-Desc">
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Produce Events <xref
+                                            href="OracleCDC-EventGeneration.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"/></xref></entry>
+                                    <entry>When the origin uses redo logs as the dictionary source,
+                                        can generate event records when the origin reads DDL
+                                        statements. Use for event handling. <xref
+                                            href="../Event_Handling/EventFramework-Overview.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_plp_tp2_px"/></xref></entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/O-1stStep-Error">
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
             <step>
                 <cmd>On the <wintitle>Oracle CDC</wintitle> tab, configure the following change data
@@ -95,8 +134,11 @@
                                                 id="image_ur4_4yn_lw"/></xref></entry>
                                     <entry>Location of the LogMiner dictionary:<ul
                                             id="ul_s5d_mqk_dx">
-                                            <li>Redo logs</li>
-                                            <li>Online catalog</li>
+                                            <li>Redo logs - Use when schemas can change. Allows the
+                                                origin to adapt to schema changes and to generate
+                                                events for DDL statements.</li>
+                                            <li>Online catalog - Use for better performance when
+                                                schemas are not expected to change. </li>
                                         </ul></entry>
                                 </row>
                             </tbody>
@@ -200,12 +242,44 @@
             <step>
                 <cmd>On the <wintitle>Advanced</wintitle> tab, optionally configure advanced
                     properties.</cmd>
-                <info>The defaults for these properties should work in most cases:<table
-                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/table-JDBCAdvProps"
-                        id="table_y35_3tj_dx">
-                        <tgroup cols="1">
-                            <tbody>
+                <info>The defaults for these properties should work in most cases:<table frame="all"
+                        rowsep="1" colsep="1" id="table_z1c_hjj_kw">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
                                 <row>
+                                    <entry>Advanced Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-MaxPoolSize">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-MaxIdleConn">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-ConTimeout">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-IdleTimeout">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-MaxConLife">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-EnReadOnly">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-TransactionIsolation">
                                     <entry/>
                                 </row>
                             </tbody>

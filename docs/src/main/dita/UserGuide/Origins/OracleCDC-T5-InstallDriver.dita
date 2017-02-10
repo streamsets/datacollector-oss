@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_jqt_qd2_3y">
- <title>Task 4. Install the Driver</title>
+ <title>Task 5. Install the Driver</title>
  <conbody>
   <p><indexterm>Oracle CDC Client<indexterm>prereq - driver installation</indexterm></indexterm>The
             Oracle CDC Client origin connects to Oracle through JDBC. You cannot access the database
