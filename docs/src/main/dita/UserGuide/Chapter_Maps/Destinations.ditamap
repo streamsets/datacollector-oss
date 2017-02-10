@@ -68,7 +68,6 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Destinations/Elasticsearch-Prereqs.dita"/>
    <topicref href="../Destinations/Elastic-TimeBasis.dita"/>
    <topicref href="../Destinations/Elastic-DocID.dita"/>
    <topicref href="../Destinations/Elastic-DefineOperation.dita"/>
@@ -309,7 +308,6 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Destinations/Solr-Prerequisites.dita"/>
    <topicref href="../Destinations/Solr-IndexMode.dita"/>
    <topicref href="../Destinations/Solr-Kerberos.dita"/>
    <topicref href="../Destinations/Solr-configuring.dita"/>

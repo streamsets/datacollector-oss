@@ -45,9 +45,11 @@
         <codeblock>export SDC_JAVA_OPTS="-Xmx1024m -Xms1024m <uicontrol>-Dhttps.proxyUser=MyName -Dhttps.proxyPassword=MyPsswrd -Dhttps.proxyHost=138.0.0.1 -Dhttps.proxyPort=3138</uicontrol> -server ${SDC_JAVA_OPTS}" </codeblock>
         <note>Oracle JDK disabled HTTP proxy authentication for HTTPS URLs in JDK 8 update 111. If
                 <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-            /> runs on a machine with Java 8u111 or later, you might need to re-enable proxy
-            authentication by adding the following Java property to the SDC_JAVA_OPTS environment
-            variable, setting the property to an empty
-            string:<codeblock>-Djdk.http.auth.tunneling.disabledSchemes=''</codeblock></note>
+            /> runs on a machine with Java 8u111 or later, consider using an HTTPS proxy server. Or
+            as a workaround, consider adding the following Java property to the SDC_JAVA_OPTS
+            environment variable, setting the property to an empty
+                string:<codeblock>-Djdk.http.auth.tunneling.disabledSchemes=''</codeblock><p>However,
+                use this workaround with caution since it exposes credentials by sending them
+                through an unencrypted proxy.</p></note>
     </conbody>
 </concept>
