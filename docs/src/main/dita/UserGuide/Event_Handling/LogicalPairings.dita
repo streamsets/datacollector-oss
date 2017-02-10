@@ -50,6 +50,14 @@
                                 </ul>
                             </entry>
                         </row>
+                        <row>
+                            <entry>Oracle CDC Client</entry>
+                            <entry>
+                                <ul id="ul_xdj_1x1_vy">
+                                    <li>Any destination for event storage.</li>
+                                </ul>
+                            </entry>
+                        </row>
                     </tbody>
                 </tgroup>
             </table><table frame="all" rowsep="1" colsep="1" id="table_r5m_b3h_tx">

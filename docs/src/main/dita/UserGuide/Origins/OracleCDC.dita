@@ -19,18 +19,23 @@
         <p><indexterm>origins<indexterm>Oracle CDC Client</indexterm></indexterm><indexterm>Oracle
                 CDC Client origin<indexterm>overview</indexterm></indexterm>The Oracle CDC Client
             processes change data capture (CDC) information provided by Oracle LogMiner redo logs.
-            The Oracle CDC Client origin produces records with a map of fields and record header
-            attributes with CDC information. Use Oracle CDC Client to process data from Oracle
-            version 12c.</p>
+            Use Oracle CDC Client to process data from Oracle version 12c.</p>
         <p>When needed, you can use a separate pipeline with the JDBC Query Consumer or JDBC
             Multitable  Consumer origin to read existing data before you start a pipeline with
             Oracle CDC Client.</p>
         <p>Oracle CDC Client processes data based on the commit number, in ascending order. </p>
-        <p>The Oracle CDC Client origin can create records for the INSERT, UPDATE,
-            SELECT_FOR_UPDATE, and DELETE operations for one or more tables in a database. You can
-            select the operations that you want to use. The origin also <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-CDCoverview"
-            /></p>
+        <p>To read the redo logs, Oracle CDC Client requires the LogMiner dictionary. The origin can
+            use the dictionary in redo logs or in an online catalog. When using the dictionary in
+            redo logs, the origin captures and adjusts to schema changes. The origin can also
+            generate events when using redo log dictionaries. </p>
+        <p>The origin can create records for the INSERT, UPDATE, SELECT_FOR_UPDATE, and DELETE
+            operations for one or more tables in a database. You can select the operations that you
+            want to use. The origin also includes CDC and CRUD information in record header
+            attributes so generated records can be easily processed by CRUD-enabled destinations.
+            For an overview of <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            changed data processing and a list of CRUD-enabled destinations, see <xref
+                href="../Pipeline_Design/CDC-Overview.dita#concept_apw_l2c_ty"/>.</p>
         <p>
             <note>To use Oracle CDC Client, you must enable LogMiner for the database that you want
                 to use and complete the necessary prerequisite tasks. The origin uses JDBC to access

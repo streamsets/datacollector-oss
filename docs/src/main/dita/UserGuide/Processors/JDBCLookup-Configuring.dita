@@ -134,53 +134,62 @@
             <step id="JDBC-Advanced">
                 <cmd>On the <wintitle>Advanced</wintitle> tab, optionally configure advanced
                     properties.</cmd>
-                <info>The defaults for these properties should work in most cases:<table frame="all"
-                    rowsep="1" colsep="1" id="table_z1c_hjj_kw">
-                    <tgroup cols="2">
-                        <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                        <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                        <thead>
-                            <row>
-                                <entry>Advanced Property</entry>
-                                <entry>Description</entry>
-                            </row>
-                        </thead>
-                        <tbody>
-                            <row
-                                conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-MaxPoolSize">
-                                <entry/>
-                            </row>
-                            <row
-                                conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-MaxIdleConn">
-                                <entry/>
-                            </row>
-                            <row
-                                conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-ConTimeout">
-                                <entry/>
-                            </row>
-                            <row
-                                conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-IdleTimeout">
-                                <entry/>
-                            </row>
-                            <row
-                                conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-MaxConLife">
-                                <entry/>
-                            </row>
-                            <row
-                                conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-AutoCommit">
-                                <entry/>
-                            </row>
-                            <row
-                                conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-EnReadOnly">
-                                <entry/>
-                            </row>
+                <info>The defaults for these properties should work in most cases: <table
+                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/table-JDBCAdvProps"
+                        id="table_y35_3tj_dx">
+                        <tgroup cols="1">
+                            <tbody>
+                                <row>
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table><table frame="all" rowsep="1" colsep="1" id="table_z1c_hjj_kw">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Advanced Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-MaxPoolSize">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-MaxIdleConn">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-ConTimeout">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-IdleTimeout">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-MaxConLife">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-AutoCommit">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-EnReadOnly">
+                                    <entry/>
+                                </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-TransactionIsolation">
                                     <entry/>
                                 </row>
-                        </tbody>
-                    </tgroup>
-                </table></info>
+                            </tbody>
+                        </tgroup>
+                    </table></info>
             </step>
         </steps>
     </taskbody>
