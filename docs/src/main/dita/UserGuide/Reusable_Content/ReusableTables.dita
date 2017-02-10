@@ -860,9 +860,9 @@
      </tbody>
     </tgroup>
    </table>
-   <draft-comment author="Loretta"><b>table-JDBCAdvProps</b> - JDBC Consumer, JDBC Lookup, and JDBC
-    Tee use the whole table, row by row. Producer uses all rows but last. Oracle CDC uses the whole
-    table. </draft-comment>
+   <draft-comment author="Loretta"><b>table-JDBCAdvProps</b> - JDBC Lookup uses the whole table.
+    JDBC Consumer uses rows but has its own. JDBC Tee uses some rows. Producer uses a bunch of rows.
+    Oracle CDC uses all rows but Auto Commit. – note updated LC 2/9/17</draft-comment>
    <table frame="all" rowsep="1" colsep="1" id="table-JDBCAdvProps">
     <tgroup cols="2">
      <colspec colname="c1" colnum="1" colwidth="1.5*"/>

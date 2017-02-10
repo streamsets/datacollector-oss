@@ -23,6 +23,7 @@
                 <li>Enable LogMiner.</li>
                 <li>Enable supplemental logging for the database or tables.</li>
                 <li>Create a user account with the required roles and privileges.</li>
+                <li>To use the dictionary in redo logs, extract the Log Miner dictionary.</li>
                 <li>Install the Oracle JDBC driver.</li>
             </ol></p>
  </conbody>

@@ -216,9 +216,6 @@
                                 the offset field. The origin supports reading the MongoDB BSON
                                 timestamp for MongoDB versions 2.6 and later. And you can configure
                                 the origin to connect to a single MongoDB server or node. </li>
-                            <li>Oracle CDC Client origin enhancement - The origin can now track
-                                changes from a table whose schema has changed, and may continue to
-                                change. </li>
                         </ul>
                     </dd>
                 </dlentry>
