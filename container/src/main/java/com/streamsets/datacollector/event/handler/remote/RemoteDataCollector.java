@@ -20,7 +20,6 @@
 package com.streamsets.datacollector.event.handler.remote;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.config.PipelineConfiguration;
@@ -45,9 +44,6 @@ import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.lib.security.acl.dto.Acl;
-import com.streamsets.lib.security.acl.dto.Action;
-import com.streamsets.lib.security.acl.dto.Permission;
-import com.streamsets.lib.security.acl.dto.SubjectType;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
@@ -177,7 +173,9 @@ public class RemoteDataCollector implements DataCollector {
     pipelineConfiguration.setUuid(uuid);
     pipelineStore.save(user, name, rev, description, pipelineConfiguration);
     pipelineStore.storeRules(name, rev, ruleDefinitions);
-    aclStoreTask.saveAcl(name, acl);
+    if (acl != null) { // can be null for old dpm or when DPM jobs have no acl
+      aclStoreTask.saveAcl(name, acl);
+    }
     LOG.info("Offset for remote pipeline '{}:{}' is {}", name, rev, offset);
     if (offset != null) {
       // TODO(SDC-4920): DPM Doesn't support two dimensional offset
@@ -292,6 +290,9 @@ public class RemoteDataCollector implements DataCollector {
 
   @Override
   public void syncAcl(Acl acl) throws PipelineException {
+    if (acl == null) {
+      return;
+    }
     if (pipelineStore.hasPipeline(acl.getResourceId())) {
       validateIfRemote(acl.getResourceId(), "0", "SYNC_ACL");
       aclStoreTask.saveAcl(acl.getResourceId(), acl);
