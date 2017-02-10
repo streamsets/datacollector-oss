@@ -361,6 +361,7 @@
       },
       "configuration": "Configuration",
       "configurationTab": {
+        "changeStageLibrary": "Change Stage Library",
         "linkInformation": "Stream Information",
         "enterKey": "Enter Name",
         "enterPredicate": "Enter Condition",
