@@ -133,7 +133,7 @@ public class TimeNowEL {
   @ElFunction(prefix = TIME_CONTEXT_VAR, name = "extractDateFromString", description = "Format a String date into a date.")
   public static Date extractDateFromString(
       @ElParam("dateTimeString") String dateTimeString,
-      @ElParam("string") String dateFormat
+      @ElParam("dateFormat") String dateFormat
   ) throws ParseException{
     if (StringUtils.isEmpty(dateTimeString)) {
       LOG.error(Utils.format("Invalid parameter - Date String is null/empty"));
@@ -150,7 +150,7 @@ public class TimeNowEL {
   @ElFunction(prefix = TIME_CONTEXT_VAR, name = "extractStringFromDateTZ", description = "Format a Date into a " +
       "string" + " date, adjusting for time zone.")
   public static String extractStringFromDateTZ(
-      @ElParam("datetime") Date in, @ElParam("string") String timeZone, @ElParam("string") String outputFormat
+      @ElParam("datetime") Date in, @ElParam("timezone") String timeZone, @ElParam("dateFormat") String outputFormat
   ) {
     if (in == null) {
       LOG.error(Utils.format("Invalid parameter - Date is null"));
