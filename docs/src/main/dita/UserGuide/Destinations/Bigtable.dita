@@ -20,15 +20,17 @@
   <p><indexterm>Google Bigtable
                     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Google
                     Bigtable</indexterm></indexterm>Before you configure the destination, you must
-            complete several prerequisites including verifying that Java 8 is installed on the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            machine, installing the BoringSSL library, and configuring the Google Application
-            Default Credentials.</p>
+            complete several prerequisites including installing the BoringSSL library and
+            configuring the Google Application Default Credentials.</p>
         <p>When you configure the destination, you define the instance ID, project ID, and the table
             that you want to write to. The destination can write to an existing table or can create
             and write to a new table. You specify the row key for the table, and then map fields
             from the pipeline to Cloud Bigtable columns.</p>
         <p>When necessary, you can configure a time basis and specify the number of records to
             buffer in each commit to Cloud Bigtable.</p>
+        <note type="important">Verify that Java 8 is installed on the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            machine. The minimum supported version of Java for the Google Bigtable destination is
+            Java 8.</note>
  </conbody>
 </concept>

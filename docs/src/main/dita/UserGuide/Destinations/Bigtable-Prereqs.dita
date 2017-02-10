@@ -19,10 +19,6 @@
   <p><indexterm>Google Bigtable destination<indexterm>prerequisites</indexterm></indexterm>Before
             you can write to Cloud Bigtable, you must complete the following prerequisites:</p>
         <ul id="ul_i4s_d1l_1y">
-            <li>Verify that Java 8 is installed on the <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> machine. The minimum supported version of Java for the Google Bigtable
-                destination is Java 8.</li>
             <li>Download and install the BoringSSL library.</li>
             <li>Configure the Google Application Default Credentials that the destination uses to
                 connect to Cloud Bigtable.</li>

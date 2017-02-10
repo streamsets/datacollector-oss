@@ -19,11 +19,10 @@
     Cloud clusters (formerly Found clusters) and Shield-enabled clusters. The destination uses the
     Elasticsearch HTTP API to write each record to Elasticsearch as a document.</shortdesc>
  <conbody>
-  <p><note>To use the Elasticsearch destination, you must perform prerequisite
-        steps.</note><indexterm>Elasticsearch
-          destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Elasticsearch</indexterm></indexterm>When
-      you configure the Elasticsearch destination, you configure the cluster name, the HTTP URI, and
-      document-related information.</p>
+  <p><indexterm>Elasticsearch
+                    destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Elasticsearch</indexterm></indexterm>When
+            you configure the Elasticsearch destination, you configure the cluster name, the HTTP
+            URI, and document-related information.</p>
         <p>When the Data Collector shares the same network as the Elasticsearch cluster, you can
             enter one or more node URI and automatically detect additional Elasticsearch nodes on
             the cluster. </p>
@@ -31,5 +30,9 @@
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Dest-CRUDoverview"/><ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/CDC-xref"/></p>
     <p>You can also add advanced Elasticsearch properties as needed. </p>
+        <note type="important">Verify that Java 8 is installed on the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            machine. The minimum supported version of Java for the Elasticsearch destination is Java
+            8.</note>
  </conbody>
 </concept>
