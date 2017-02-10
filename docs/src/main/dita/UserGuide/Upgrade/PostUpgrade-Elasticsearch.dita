@@ -18,18 +18,21 @@
     <shortdesc><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         version 2.3.0.0 includes an enhanced Elasticsearch destination that uses the Elasticsearch
         HTTP API. To upgrade pipelines that use the Elasticsearch destination, you must verify that
-        Java 8 is installed, remove the Elasticsearch stage library from the blacklist property for
-        stage libraries, and review the value of the Default Operation property.</shortdesc>
+        Java 8 is installed and review the value of the Default Operation property.</shortdesc>
     <taskbody>
         <context>
             <note>The Elasticsearch version 5 stage library is compatible with all versions of
                 Elasticsearch. Earlier stage library versions have been removed.</note>
         </context>
         <steps>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Java8"
-                conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/restart">
-                <cmd/>
+            <step>
+                <cmd>Verify that Java 8 is installed on the Data Collector machine.</cmd>
+                <info>
+                    <p>The minimum supported version of Java for the Elasticsearch destination is
+                        Java 8.</p>
+                </info>
             </step>
+            
             <step>
                 <cmd>Review all upgraded Elasticsearch destinations to ensure that the
                         <uicontrol>Default Operation</uicontrol> property is set to the correct

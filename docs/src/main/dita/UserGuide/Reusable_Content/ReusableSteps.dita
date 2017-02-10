@@ -4581,44 +4581,7 @@ grant codebase "file:///opt/sdc-extras/-" {
                 </info>
             </step>
             <step>
-                <cmd>
-                    <draft-comment author="alisontaylor">The following steps are used in the Post
-                        Upgrade Elasticsearch topic in the Upgrade chapter and in the Elasticsearch
-                        Prerequisites topic in the Destinations chapter.</draft-comment>
-                </cmd>
-            </step>
-            <step id="Java8">
-                <cmd>Verify that Java 8 is installed on the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> machine.</cmd>
-                <info>The minimum supported version of Java for the Elasticsearch destination is
-                    Java 8.</info>
-            </step>
-            <step id="stagelib">
-                <cmd>In the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>, remove the
-                    Elasticsearch stage library from the
-                        <uicontrol>system.stagelibs.blacklist</uicontrol> property.</cmd>
-                <info>For example, the <uicontrol>system.stagelibs.blacklist</uicontrol> property is
-                    defined as
-                    follows:<codeblock>system.stagelibs.blacklist=\
-  streamsets-datacollector-mapr_5_0-lib,\
-  streamsets-datacollector-mapr_5_1-lib,\
-  streamsets-datacollector-mapr_5_2-lib,\
-  streamsets-datacollector-apache-solr_6_1_0-lib,\
-  streamsets-datacollector-elasticsearch_5-lib</codeblock>Remove
-                    the Elasticsearch stage library from the property as
-                    follows:<codeblock>system.stagelibs.blacklist=\
-  streamsets-datacollector-mapr_5_0-lib,\
-  streamsets-datacollector-mapr_5_1-lib,\
-  streamsets-datacollector-mapr_5_2-lib,\
-  streamsets-datacollector-apache-solr_6_1_0-lib</codeblock></info>
-            </step>
-            <step id="restart">
-                <cmd>Restart <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> and verify that you can access the Elasticsearch destination.</cmd>
+                <cmd> </cmd>
             </step>
         </steps>
     </taskbody>
