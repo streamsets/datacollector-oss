@@ -160,13 +160,12 @@ public class MapRJsonTarget extends BaseTarget {
 
     // check if the key column exists...
     Field field;
-    try {
-      field = rec.get(mapRJsonConfigBean.keyField);
-
-    } catch (IllegalArgumentException ex) {
-      LOG.info(Errors.MAPR_JSON_11.getMessage(), mapRJsonConfigBean.keyField, ex);
-      throw new OnRecordErrorException(rec, Errors.MAPR_JSON_11, mapRJsonConfigBean.keyField, ex);
+    if(!rec.has(mapRJsonConfigBean.keyField)) {
+      LOG.info(Errors.MAPR_JSON_15.getMessage(), mapRJsonConfigBean.keyField);
+      throw new OnRecordErrorException(rec, Errors.MAPR_JSON_15, mapRJsonConfigBean.keyField);
     }
+
+    field = rec.get(mapRJsonConfigBean.keyField);
 
     if(mapRJsonConfigBean.isBinaryRowKey || field.getType() == Field.Type.BYTE_ARRAY) {
       try {
