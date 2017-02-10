@@ -16,6 +16,8 @@
                path="Getting_Started/GettingStarted_Title.html#task_r3q_fnx_pr"/>
    <appContext helpID="concept_hz3_5fk_fy"
                path="WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy"/>
+   <appContext helpID="concept_bml_dbt_wy"
+               path="WhatsNew/WhatsNew_Title.html#concept_bml_dbt_wy"/>
    <appContext helpID="concept_yym_xqt_5y"
                path="WhatsNew/WhatsNew_Title.html#concept_yym_xqt_5y"/>
    <appContext helpID="concept_wbf_dgk_fy"
@@ -62,7 +64,7 @@
    <appContext helpID="task_opg_yrm_25"
                path="Installation/CMInstall-Overview.html#task_opg_yrm_25"/>
    <appContext helpID="task_opg_yrm_25"
-               path="Installation/CMInstall-Overview.html#unique_726332337"/>
+               path="Installation/CMInstall-Overview.html#unique_406228742"/>
    <appContext helpID="task_u1v_nkt_25"
                path="Installation/CMInstall-Overview.html#task_u1v_nkt_25"/>
    <appContext helpID="task_zn4_qrn_25"
@@ -654,6 +656,8 @@
    <appContext helpID="task_of4_wpw_1s" path="Origins/Omniture.html#task_of4_wpw_1s"/>
    <appContext helpID="concept_rs5_hjj_tw"
                path="Origins/OracleCDC.html#concept_rs5_hjj_tw"/>
+   <appContext helpID="concept_eq5_wh2_dx"
+               path="Origins/OracleCDC.html#concept_eq5_wh2_dx"/>
    <appContext helpID="concept_xwg_33w_cx"
                path="Origins/OracleCDC.html#concept_xwg_33w_cx"/>
    <appContext helpID="concept_gt5_xb2_3y"
@@ -662,10 +666,10 @@
                path="Origins/OracleCDC.html#concept_gvh_3c2_3y"/>
    <appContext helpID="concept_jnz_bd2_3y"
                path="Origins/OracleCDC.html#concept_jnz_bd2_3y"/>
+   <appContext helpID="concept_ypm_fv1_vy"
+               path="Origins/OracleCDC.html#concept_ypm_fv1_vy"/>
    <appContext helpID="concept_jqt_qd2_3y"
                path="Origins/OracleCDC.html#concept_jqt_qd2_3y"/>
-   <appContext helpID="concept_eq5_wh2_dx"
-               path="Origins/OracleCDC.html#concept_eq5_wh2_dx"/>
    <appContext helpID="concept_zrc_pyj_dx"
                path="Origins/OracleCDC.html#concept_zrc_pyj_dx"/>
    <appContext helpID="concept_vfw_bjz_ty"
@@ -674,6 +678,10 @@
                path="Origins/OracleCDC.html#concept_x4h_m42_5y"/>
    <appContext helpID="concept_nn1_lxd_dx"
                path="Origins/OracleCDC.html#concept_nn1_lxd_dx"/>
+   <appContext helpID="concept_h2t_hx1_vy"
+               path="Origins/OracleCDC.html#concept_h2t_hx1_vy"/>
+   <appContext helpID="concept_cbz_sz1_vy"
+               path="Origins/OracleCDC.html#concept_cbz_sz1_vy"/>
    <appContext helpID="concept_q4t_b32_dx"
                path="Origins/OracleCDC.html#concept_q4t_b32_dx"/>
    <appContext helpID="concept_idl_bl3_jx"
@@ -1095,7 +1103,7 @@
    <appContext helpID="concept_adm_kn1_mw"
                path="Destinations/AmazonS3.html#concept_adm_kn1_mw"/>
    <appContext helpID="concept_k2z_ncx_rt"
-               path="Destinations/AmazonS3.html#unique_432377498"/>
+               path="Destinations/AmazonS3.html#unique_1056587864"/>
    <appContext helpID="task_pxb_j3r_rt"
                path="Destinations/AmazonS3.html#task_pxb_j3r_rt"/>
    <appContext helpID="concept_jzm_kf4_zx"
@@ -1124,8 +1132,6 @@
                path="Destinations/Cassandra.html#task_t1d_z3l_sr"/>
    <appContext helpID="concept_u5t_vpv_4r"
                path="Destinations/Elasticsearch.html#concept_u5t_vpv_4r"/>
-   <appContext helpID="task_m4q_hzd_ry"
-               path="Destinations/Elasticsearch.html#task_m4q_hzd_ry"/>
    <appContext helpID="concept_dd3_vhk_r5"
                path="Destinations/Elasticsearch.html#concept_dd3_vhk_r5"/>
    <appContext helpID="concept_yr2_1tf_z5"
@@ -1399,8 +1405,6 @@
                path="Destinations/SDC_RPCdest.html#task_nbl_r2x_dt"/>
    <appContext helpID="concept_z2g_q1r_wr"
                path="Destinations/Solr.html#concept_z2g_q1r_wr"/>
-   <appContext helpID="concept_gm2_y12_pw"
-               path="Destinations/Solr.html#concept_gm2_y12_pw"/>
    <appContext helpID="concept_z4y_bgr_wr"
                path="Destinations/Solr.html#concept_z4y_bgr_wr"/>
    <appContext helpID="concept_npl_fss_zw"
@@ -1868,7 +1872,7 @@
    <appContext helpID="concept_a3w_z3m_js"
                path="Troubleshooting/Troubleshooting_title.html#concept_a3w_z3m_js"/>
    <appContext helpID="concept_a3w_z3m_js"
-               path="Troubleshooting/Troubleshooting_title.html#unique_837219599"/>
+               path="Troubleshooting/Troubleshooting_title.html#unique_2124745341"/>
    <appContext helpID="concept_rp1_ghd_zs"
                path="Troubleshooting/Troubleshooting_title.html#concept_rp1_ghd_zs"/>
    <appContext helpID="concept_mth_cjm_js"
