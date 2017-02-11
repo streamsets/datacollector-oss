@@ -283,6 +283,18 @@ angular.module('dataCollectorApp.common')
       },
 
       /**
+       * Returns Groups
+       * @returns {*}
+       */
+      getGroups: function() {
+        var url = apiBase + '/system/groups';
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+      /**
        * Returns Users
        * @returns {*}
        */

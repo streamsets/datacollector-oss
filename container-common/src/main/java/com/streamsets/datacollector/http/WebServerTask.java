@@ -179,7 +179,7 @@ public abstract class WebServerTask extends AbstractTask {
   private HttpConfiguration httpConf = new HttpConfiguration();
   private Server redirector;
   private HashSessionManager hashSessionManager;
-  private Map<String, Set<String>> roleMapping;
+  Map<String, Set<String>> roleMapping;
 
   public WebServerTask(
       BuildInfo buildInfo,

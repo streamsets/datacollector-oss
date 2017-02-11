@@ -36,7 +36,6 @@ import java.util.concurrent.ConcurrentMap;
 public class FileUserGroupManager implements UserGroupManager {
   private static final String GROUP_PREFIX = "group:";
   private static final String USER_ROLE = "user";
-  private static final String ALL_GROUP = "all";
   private HashLoginService hashLoginService;
   private Map<String, UserJson> usersMap;
   private List<UserJson> userList;
@@ -47,6 +46,9 @@ public class FileUserGroupManager implements UserGroupManager {
   public void setLoginService(LoginService loginService) {
     hashLoginService = (HashLoginService) loginService;
   }
+
+  @Override
+  public void setRoleMapping(Map<String, Set<String>> roleMapping) {}
 
   @Override
   public List<UserJson> getUsers() {
@@ -81,6 +83,7 @@ public class FileUserGroupManager implements UserGroupManager {
     userList = new ArrayList<>();
     usersMap = new HashMap<>();
     groupList = new ArrayList<>();
+    groupList.add(ALL_GROUP);
     if (hashLoginService != null) {
       ConcurrentMap<String, UserIdentity> userIdentityMap = hashLoginService.getUsers();
       for (String userName: userIdentityMap.keySet()) {

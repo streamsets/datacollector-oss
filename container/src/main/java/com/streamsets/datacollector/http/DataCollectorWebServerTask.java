@@ -81,6 +81,8 @@ public class DataCollectorWebServerTask extends WebServerTask {
     String loginModule = this.conf.get(HTTP_AUTHENTICATION_LOGIN_MODULE, HTTP_AUTHENTICATION_LOGIN_MODULE_DEFAULT);
     if (loginModule.equals(FILE)) {
       this.userGroupManager.setLoginService(loginService);
+    } else if (loginModule.equals(LDAP)) {
+      this.userGroupManager.setRoleMapping(roleMapping);
     }
     return loginService;
   }
