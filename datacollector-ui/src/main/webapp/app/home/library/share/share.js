@@ -128,27 +128,22 @@ angular
 
     var fetchUsersAndGroups = function() {
       $scope.fetching = true;
-      api.admin.getUsers()
-        .then(
-          function (res) {
-            $scope.fetching = false;
-            var users = _.sortBy(res.data, 'name');
-            angular.forEach(users, function(user) {
-              userList.push(user.name);
-              if (user.groups && user.groups.length) {
-                angular.forEach(user.groups, function (group) {
-                  if (groupList.indexOf(group) === -1) {
-                    groupList.push(group);
-                  }
-                });
-              }
-            });
-            filterUsersAndGroups();
-          },
-          function (res) {
-            $rootScope.common.errors = [res.data];
-          }
-        );
+
+      $q.all([
+        api.admin.getGroups(),
+        api.admin.getUsers()
+      ]).then(
+        function (results) {
+          $scope.fetching = false;
+          groupList = results[0].data;
+          userList = _.pluck(results[1].data, 'name');
+          userList.sort();
+          filterUsersAndGroups();
+        },
+        function (res) {
+          $rootScope.common.errors = [res.data];
+        }
+      );
     };
 
     var fetchRemoteUsersAndGroups = function () {

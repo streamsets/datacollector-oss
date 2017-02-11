@@ -20,40 +20,59 @@
 package com.streamsets.datacollector.main;
 
 import com.streamsets.datacollector.restapi.bean.UserJson;
+import org.eclipse.jetty.jaas.JAASRole;
+import org.eclipse.jetty.jaas.JAASUserPrincipal;
 import org.eclipse.jetty.security.LoginService;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-/**
- * Placeholder class for LDAP Login Module
- * // TODO: Fetch users and groups from LDAP server
- */
 public class LdapUserGroupManager implements UserGroupManager {
+  private Map<String, Set<String>> roleMapping;
+  private List<String> groupList = new ArrayList<>();
 
   @Override
   public void setLoginService(LoginService loginService) {
   }
 
   @Override
+  public void setRoleMapping(Map<String, Set<String>> roleMapping) {
+    this.roleMapping = roleMapping;
+    this.groupList = new ArrayList<>();
+    this.groupList.add(ALL_GROUP);
+    this.groupList.addAll(roleMapping.keySet());
+  }
+
+  @Override
   public List<UserJson> getUsers() {
-    // TODO: retrieve from LDAP only users belonging to a specified group  (ie sdc-users) for this.
-    // this specified group will set in the sdc.properties.
     return Collections.emptyList();
   }
 
   @Override
   public List<String> getGroups() {
-    return Collections.emptyList();
+    return groupList;
   }
 
   @Override
-  public UserJson getUser(Principal principal) {
+  public UserJson getUser(Principal userPrincipal) {
+    JAASUserPrincipal jaasPrincipal = (JAASUserPrincipal) userPrincipal;
+    Set<Principal> principals = jaasPrincipal.getSubject().getPrincipals();
+    List<String> roles = new ArrayList<>();
+    List<String> groups = new ArrayList<>();
+    groups.add(ALL_GROUP);
+    for (Principal principal: principals) {
+      if (principal instanceof JAASRole) {
+        groups.add(principal.getName());
+      }
+    }
     UserJson userJson = new UserJson();
-    userJson.setName(principal.getName());
-    userJson.setGroups(Collections.<String>emptyList());
-    userJson.setRoles(Collections.<String>emptyList());
+    userJson.setName(userPrincipal.getName());
+    userJson.setGroups(groups);
+    userJson.setRoles(roles);
     return userJson;
   }
 

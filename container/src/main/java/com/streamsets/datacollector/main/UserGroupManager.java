@@ -24,9 +24,15 @@ import org.eclipse.jetty.security.LoginService;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public interface UserGroupManager {
+  public static final String ALL_GROUP = "all";
+
   void setLoginService(LoginService hashLoginService);
+
+  void setRoleMapping(Map<String, Set<String>> roleMapping);
 
   List<UserJson> getUsers();
 
