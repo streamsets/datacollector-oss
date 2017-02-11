@@ -22,6 +22,7 @@ package com.streamsets.pipeline.lib.generator.json;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.JsonMode;
@@ -39,6 +40,10 @@ public class JsonCharDataGenerator implements DataGenerator {
   final static String EOL = System.getProperty("line.separator");
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
   private static final JsonFactory JSON_FACTORY = OBJECT_MAPPER.getFactory();
+
+  static {
+    OBJECT_MAPPER.disable(SerializationFeature.FLUSH_AFTER_WRITE_VALUE);
+  }
 
   private final boolean isArray;
   private final JsonGenerator generator;

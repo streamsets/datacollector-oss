@@ -182,6 +182,7 @@ public class TestJsonDataGenerator {
     StringWriter writer = new StringWriter();
     DataGenerator gen = new JsonCharDataGenerator(writer, JsonMode.MULTIPLE_OBJECTS);
     gen.write(record);
+    gen.close();
 
     JsonParser parser = new ObjectMapper().getFactory().createParser(writer.toString());
     Iterator<Object> it = parser.readValuesAs(Object.class);
