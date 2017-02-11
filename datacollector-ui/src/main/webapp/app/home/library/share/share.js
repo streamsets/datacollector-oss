@@ -77,6 +77,13 @@ angular
         }
       },
 
+      groupSubjectsFn: function(item) {
+        if (groupList.indexOf(item) !== -1) {
+          return 'Groups';
+        }
+        return 'Users';
+      },
+
       onActionToggle: function (permission, action, $event) {
         var checkbox = $event.target;
         if (checkbox.checked && permission.actions.indexOf(action) === -1) {
