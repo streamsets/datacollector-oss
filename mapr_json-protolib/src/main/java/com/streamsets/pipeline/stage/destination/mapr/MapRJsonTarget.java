@@ -197,6 +197,12 @@ public class MapRJsonTarget extends BaseTarget {
   private byte [] convertToByteArray(Field field, Record rec) throws OnRecordErrorException {
 
     switch (field.getType()) {
+      case DOUBLE:
+        return Bytes.toBytes(field.getValueAsDouble());
+
+      case FLOAT:
+        return Bytes.toBytes(field.getValueAsFloat());
+
       case INTEGER:
         return Bytes.toBytes(field.getValueAsInteger());
 
@@ -219,8 +225,6 @@ public class MapRJsonTarget extends BaseTarget {
       case MAP:
       case LIST:
       case LIST_MAP:
-      case DOUBLE:
-      case FLOAT:
       case CHAR:
       case BYTE:
       default:
