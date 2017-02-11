@@ -27,6 +27,8 @@ import com.streamsets.pipeline.lib.jdbc.DataType;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +44,10 @@ import java.util.Map;
 
 public class JdbcLookupLoader extends CacheLoader<String, Map<String, Field>> {
   private static final Logger LOG = LoggerFactory.getLogger(JdbcLookupLoader.class);
+  public static final String DATE_FORMAT = "yyyy/MM/dd";
+  public static final String DATETIME_FORMAT = "yyyy/MM/dd HH:mm:ss";
+  static final DateTimeFormatter DATE_FORMATTER = DateTimeFormat.forPattern(DATE_FORMAT);
+  static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormat.forPattern(DATETIME_FORMAT);
 
   private final int maxClobSize;
   private final int maxBlobSize;
@@ -100,9 +106,17 @@ public class JdbcLookupLoader extends CacheLoader<String, Map<String, Field>> {
             // Database returns no row. Use default values.
             for (String column : columnsToFields.keySet()) {
               String defaultValue = columnsToDefaults.get(column);
-              if (columnsToTypes.get(column) != DataType.USE_COLUMN_TYPE) {
+              DataType dataType = columnsToTypes.get(column);
+              if (dataType != DataType.USE_COLUMN_TYPE) {
+                Field field;
                 try {
-                  Field field = Field.create(Field.Type.valueOf(columnsToTypes.get(column).getLabel()), defaultValue);
+                  if (dataType == DataType.DATE) {
+                    field = Field.createDate(DATE_FORMATTER.parseDateTime(defaultValue).toDate());
+                  } else if (dataType == DataType.DATETIME) {
+                    field = Field.createDatetime(DATETIME_FORMATTER.parseDateTime(defaultValue).toDate());
+                  } else {
+                    field = Field.create(Field.Type.valueOf(columnsToTypes.get(column).getLabel()), defaultValue);
+                  }
                   defaultValues.put(column, field);
                 } catch (IllegalArgumentException e) {
                   throw new OnRecordErrorException(JdbcErrors.JDBC_03, column, defaultValue, e);

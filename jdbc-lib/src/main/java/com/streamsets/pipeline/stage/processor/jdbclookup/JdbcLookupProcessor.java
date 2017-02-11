@@ -125,6 +125,31 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
       }
       columnsToDefaults.put(mapping.columnName, mapping.defaultValue);
       columnsToTypes.put(mapping.columnName, mapping.dataType);
+      if (mapping.dataType == DataType.DATE) {
+        try {
+          JdbcLookupLoader.DATE_FORMATTER.parseDateTime(mapping.defaultValue);
+        } catch (IllegalArgumentException e) {
+          issues.add(context.createConfigIssue(
+              Groups.JDBC.name(),
+              COLUMN_MAPPINGS,
+              JdbcErrors.JDBC_55,
+              mapping.field,
+              e.toString()
+          ));
+        }
+      } else if (mapping.dataType == DataType.DATETIME) {
+        try {
+          JdbcLookupLoader.DATETIME_FORMATTER.parseDateTime(mapping.defaultValue);
+        } catch (IllegalArgumentException e) {
+          issues.add(context.createConfigIssue(
+              Groups.JDBC.name(),
+              COLUMN_MAPPINGS,
+              JdbcErrors.JDBC_56,
+              mapping.field,
+              e.toString()
+          ));
+        }
+      }
     }
 
     if (issues.isEmpty()) {

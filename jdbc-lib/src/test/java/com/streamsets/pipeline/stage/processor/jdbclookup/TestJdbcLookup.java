@@ -43,6 +43,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -505,6 +507,75 @@ public class TestJdbcLookup {
 
       Assert.assertNotEquals(null, record.get("[2]"));
       Assert.assertEquals(100, record.get("[2]").getValueAsInteger());
+    } finally {
+      processorRunner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testValidationForDatetimeDefaultValue() throws Exception {
+    List<JdbcFieldColumnMapping> columnMappings = ImmutableList.of(
+        new JdbcFieldColumnMapping("P_ID", "[2]", "1-1-1999", DataType.DATE)
+    );
+
+    JdbcLookupDProcessor processor = new JdbcLookupDProcessor();
+    processor.hikariConfigBean = createConfigBean(h2ConnectionString, username, password);
+
+    ProcessorRunner processorRunner = new ProcessorRunner.Builder(JdbcLookupDProcessor.class, processor)
+        .addConfiguration("query", listQuery)
+        .addConfiguration("columnMappings", columnMappings)
+        .addConfiguration("maxClobSize", 1000)
+        .addConfiguration("maxBlobSize", 1000)
+        .addOutputLane("lane")
+        .build();
+
+    // '1-1-1999' doesn't follow the format 'yyyy/MM/dd'
+    List<Stage.ConfigIssue> issues = processorRunner.runValidateConfigs();
+    assertEquals(1, issues.size());
+  }
+
+  @Test
+  public void testDatetimeDefaultValue() throws Exception {
+    final String timeStr = "2017/02/10 15:44:33";
+    List<JdbcFieldColumnMapping> columnMappings = ImmutableList.of(
+        new JdbcFieldColumnMapping("P_ID", "[2]", timeStr, DataType.DATETIME)
+    );
+
+    JdbcLookupDProcessor processor = new JdbcLookupDProcessor();
+    processor.hikariConfigBean = createConfigBean(h2ConnectionString, username, password);
+
+    ProcessorRunner processorRunner = new ProcessorRunner.Builder(JdbcLookupDProcessor.class, processor)
+        .addConfiguration("query", queryReturnsNoRow)
+        .addConfiguration("columnMappings", columnMappings)
+        .addConfiguration("maxClobSize", 1000)
+        .addConfiguration("maxBlobSize", 1000)
+        .addOutputLane("lane")
+        .build();
+
+    Record record = RecordCreator.create();
+    List<Field> fields = new ArrayList<>();
+    fields.add(Field.create("Adam"));
+    fields.add(Field.create("Kunicki"));
+    record.set(Field.create(fields));
+
+    List<Record> singleRecord = ImmutableList.of(record);
+    processorRunner.runInit();
+    try {
+      StageRunner.Output output = processorRunner.runProcess(singleRecord);
+      Assert.assertEquals(1, output.getRecords().get("lane").size());
+
+      record = output.getRecords().get("lane").get(0);
+
+      Assert.assertNotEquals(null, record.get("[2]"));
+      Date date = record.get("[2]").getValueAsDatetime();
+      Calendar calendar = Calendar.getInstance();
+      calendar.setTime(date);
+      Assert.assertEquals(2017, calendar.get(Calendar.YEAR));
+      Assert.assertEquals(1, calendar.get(Calendar.MONTH)); // 1 is Feb
+      Assert.assertEquals(10, calendar.get(Calendar.DAY_OF_MONTH));
+      Assert.assertEquals(15, calendar.get(Calendar.HOUR_OF_DAY));
+      Assert.assertEquals(44, calendar.get(Calendar.MINUTE));
+      Assert.assertEquals(33, calendar.get(Calendar.SECOND));
     } finally {
       processorRunner.runDestroy();
     }
