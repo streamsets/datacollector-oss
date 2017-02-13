@@ -377,6 +377,11 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     // Since the origin owns the threads in PushSource, need to re-populate the PipelineEL on every batch
     PipelineEL.setConstantsInContext(pipelineConfiguration);
 
+    // Run batch listeners
+    for (BatchListener batchListener : batchListenerList) {
+      batchListener.preBatch();
+    }
+
     return batchContext;
   }
 
@@ -402,6 +407,11 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
         memoryConsumedByStage,
         stageBatchMetrics
       );
+
+      // Run batch listeners
+      for (BatchListener batchListener : batchListenerList) {
+        batchListener.postBatch();
+      }
     } catch (Throwable e) {
       LOG.error("Can't process batch", e);
 
