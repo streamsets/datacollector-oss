@@ -44,6 +44,7 @@ import com.streamsets.pipeline.stage.origin.mongodb.MongoDBDSource;
         "configBean.initialOffset",
         "configBean.offsetField",
         "configBean.mongoConfig.database",
+        "configBean.offsetType",
     }
 )
 public class MongoDBOplogDSource extends MongoDBDSource {
