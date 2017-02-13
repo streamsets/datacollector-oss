@@ -54,6 +54,18 @@ public class MongoSourceConfigBean {
   public String initialOffset;
 
   @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "OBJECTID",
+      label = "Offset Field Type",
+      description = "Offset field type. Currently ObjectId and String types are supported.",
+      displayPosition = 1003,
+      group = "MONGODB"
+  )
+  @ValueChooserModel(OffsetFieldTypeChooserValues.class)
+  public OffsetFieldType offsetType;
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "_id",
@@ -63,18 +75,6 @@ public class MongoSourceConfigBean {
       group = "MONGODB"
   )
   public String offsetField;
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.MODEL,
-      defaultValue = "OBJECTID",
-      label = "Offset Field Type",
-      description = "Offset field type. Currently ObjectId and String types are supported.",
-      displayPosition = 1010,
-      group = "MONGODB"
-  )
-  @ValueChooserModel(OffsetFieldTypeChooserValues.class)
-  public OffsetFieldType offsetType;
 
   @ConfigDef(
       type = ConfigDef.Type.NUMBER,
