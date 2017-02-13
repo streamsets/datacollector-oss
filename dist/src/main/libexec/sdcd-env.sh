@@ -62,6 +62,9 @@ export SDC_FILE_LIMIT="${SDC_FILE_LIMIT:-32768}"
 #
 export SDC_JAVA_OPTS="-Xmx1024m -Xms1024m -server -XX:-OmitStackTraceInFastThrow ${SDC_JAVA_OPTS}"
 
+# Indicate that MapR Username/Password security is enabled
+#export SDC_JAVA_OPTS="-Dmaprlogin.password.enabled=true ${SDC_JAVA_OPTS}"
+
 # Java 7 (JDK 1.7) specific options
 # by default, set MaxPermSize to 512m and use CMS garbage collector
 export SDC_JAVA7_OPTS=${SDC_JAVA7_OPTS:-"-Dhttps.protocols=TLSv1.2,TLSv1.1 -XX:PermSize=256m -XX:MaxPermSize=512m -XX:+UseConcMarkSweepGC -XX:+UseParNewGC"}
