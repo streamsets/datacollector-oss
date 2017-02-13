@@ -24,7 +24,10 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Processor;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.ToEventContext;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.lang.StringUtils;
@@ -104,10 +107,22 @@ public class EventCreator {
   }
 
   /**
-   * Create new record according to this
+   * Create new event record according for this stage context and event context.
    */
-  public EventBuilder create(Stage.Context context) {
-    return new EventBuilder(context);
+  public EventBuilder create(Stage.Context context, ToEventContext toEvent) {
+    return new EventBuilder(context, toEvent);
+  }
+
+  public EventBuilder create(Source.Context context) {
+    return new EventBuilder(context, context);
+  }
+
+  public EventBuilder create(Processor.Context context) {
+    return new EventBuilder(context, context);
+  }
+
+  public EventBuilder create(Target.Context context) {
+    return new EventBuilder(context, context);
   }
 
   /**
@@ -129,17 +144,6 @@ public class EventCreator {
      * Map that will be used as root field of the event record.
      */
     private Map<String, Field> rootMap;
-
-    /**
-     * Deprecated constructor to keep backward compatibility.
-     *
-     * Given context must also implement ToEventContext (and thus be one of Processor, Source or Target), otherwise
-     * a ClassCastException will be thrown.
-     */
-    @Deprecated
-    private EventBuilder(Stage.Context context) {
-      this(context, (ToEventContext) context);
-    }
 
     /**
      * Proper constructor that separate configuration from error sink.

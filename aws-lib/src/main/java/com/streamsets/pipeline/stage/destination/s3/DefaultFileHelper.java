@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 
@@ -44,7 +45,7 @@ final class DefaultFileHelper extends FileHelper {
 
   private int fileCount = 0;
 
-  DefaultFileHelper(Stage.Context context, S3TargetConfigBean s3TargetConfigBean, TransferManager transferManager) {
+  DefaultFileHelper(Target.Context context, S3TargetConfigBean s3TargetConfigBean, TransferManager transferManager) {
     super(context, s3TargetConfigBean, transferManager);
   }
 

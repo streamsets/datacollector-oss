@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
@@ -53,7 +54,7 @@ final class WholeFileHelper extends FileHelper {
   private static final String SIZE = "size";
   private static final Logger LOGGER = LoggerFactory.getLogger(WholeFileHelper.class);
 
-  WholeFileHelper(Stage.Context context, S3TargetConfigBean s3TargetConfigBean, TransferManager transferManager, List<Stage.ConfigIssue> configIssues) {
+  WholeFileHelper(Target.Context context, S3TargetConfigBean s3TargetConfigBean, TransferManager transferManager, List<Stage.ConfigIssue> configIssues) {
     super(context, s3TargetConfigBean, transferManager);
     //init adds the config issues
     init(configIssues);

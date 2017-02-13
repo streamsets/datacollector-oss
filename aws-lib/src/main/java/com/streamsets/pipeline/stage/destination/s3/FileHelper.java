@@ -29,8 +29,8 @@ import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.Upload;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
@@ -51,13 +51,13 @@ abstract class FileHelper {
 
   private final TransferManager transferManager;
 
-  protected final Stage.Context context;
+  protected final Target.Context context;
   protected final S3TargetConfigBean s3TargetConfigBean;
   protected final ErrorRecordHandler errorRecordHandler;
 
   protected List<EventRecord> cachedEventRecords;
 
-  FileHelper(Stage.Context context, S3TargetConfigBean s3TargetConfigBean, TransferManager transferManager) {
+  FileHelper(Target.Context context, S3TargetConfigBean s3TargetConfigBean, TransferManager transferManager) {
     this.context = context;
     this.s3TargetConfigBean = s3TargetConfigBean;
     this.transferManager = transferManager;

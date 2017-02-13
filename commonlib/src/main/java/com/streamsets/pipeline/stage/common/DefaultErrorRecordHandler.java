@@ -20,9 +20,12 @@
 package com.streamsets.pipeline.stage.common;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.ToErrorContext;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -39,17 +42,6 @@ public class DefaultErrorRecordHandler implements ErrorRecordHandler {
   private final Stage.Context context;
 
   /**
-   * Deprecated constructor to keep backward compatibility.
-   *
-   * Given context must also implement ToErrorContext (and thus be one of Processor, Source or Target), otherwise
-   * a ClassCastException will be thrown.
-   */
-  @Deprecated
-  public DefaultErrorRecordHandler(Stage.Context context) {
-    this(context, (ToErrorContext) context);
-  }
-
-  /**
    * Proper constructor that separate configuration from error sink.
    *
    * @param context Context of the stage with configuration of what should happen when error record occur.
@@ -58,6 +50,18 @@ public class DefaultErrorRecordHandler implements ErrorRecordHandler {
   public DefaultErrorRecordHandler(Stage.Context context, ToErrorContext toError) {
     this.context = context;
     this.toError = toError;
+  }
+
+  public DefaultErrorRecordHandler(Source.Context context) {
+    this(context, context);
+  }
+
+  public DefaultErrorRecordHandler(Processor.Context context) {
+    this(context, context);
+  }
+
+  public DefaultErrorRecordHandler(Target.Context context) {
+    this(context, context);
   }
 
   @Override
