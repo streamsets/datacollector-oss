@@ -82,8 +82,10 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.log.LogConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -560,13 +562,16 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     }
 
     // Now destroy the pipe runners
+    int runnerId = 0;
     for(List<Pipe> pipeRunner : pipes) {
+      MDC.put(LogConstants.RUNNER, String.valueOf(runnerId++));
       pipeBatch.skipStage(originPipe);
       destroyPipes(pipeRunner, pipeBatch, badRecordsHandler);
 
       // Next iteration should have new and empty PipeBatch
       pipeBatch = new FullPipeBatch(null,null, batchSize, false);
     }
+    MDC.put(LogConstants.RUNNER, "");
   }
 
   private void destroyPipes(
@@ -694,10 +699,13 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     List<Pipe> runnerPipes = null;
     try {
       runnerPipes = runnerPool.getRunner();
+      int runnerId = runnerPipes.get(0).getStage().getContext().getRunnerId();
+      MDC.put(LogConstants.RUNNER, String.valueOf(runnerId));
       for (Pipe pipe : runnerPipes) {
         committed = processPipe(pipe, pipeBatch, committed, entityName, newOffset, memoryConsumedByStage, stageBatchMetrics);
       }
     } finally {
+      MDC.put(LogConstants.RUNNER, "");
       if(runnerPipes != null) {
         runnerPool.returnRunner(runnerPipes);
       }

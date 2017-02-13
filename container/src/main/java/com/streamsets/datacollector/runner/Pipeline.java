@@ -46,8 +46,10 @@ import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.log.LogConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -243,11 +245,14 @@ public class Pipeline {
     }
 
     // Initialize all source-less pipeline runners
+    int runnerId = 0;
     for(List<Pipe> runnerPipes: pipes) {
+      MDC.put(LogConstants.RUNNER, String.valueOf(runnerId++));
       for(Pipe pipe : runnerPipes) {
         issues.addAll(initPipe(pipe, pipeContext));
       }
     }
+    MDC.put(LogConstants.RUNNER, "");
     return issues;
   }
 
