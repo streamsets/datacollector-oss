@@ -60,6 +60,8 @@ import java.util.Set;
 public class Pipeline {
   private static final Logger LOG = LoggerFactory.getLogger(Pipeline.class);
   private static final String EXECUTION_MODE_CONFIG_KEY = "executionMode";
+  private static final String MAX_RUNNERS_CONFIG_KEY = "pipeline.max.runners.count";
+  private static final int MAX_RUNNERS_DEFAULT = 50;
 
   private final PipelineBean pipelineBean;
   private final String name;
@@ -208,39 +210,55 @@ public class Pipeline {
     if(originPipe.getStage().getStage() instanceof PushSource) {
       Preconditions.checkArgument(pipes.size() == 1, "There are already more runners then expected");
 
-      // TODO: SDC-4728: Add option Maximal number of threads to pipeline config
-      int runnerCount = ((PushSource)originPipe.getStage().getStage()).getNumberOfThreads();
-      try {
-        for (int runnerId = 1; runnerId < runnerCount; runnerId++) {
-          // Create list of Stage beans
-          PipelineStageBeans beans = PipelineBeanCreator.get().createPipelineStageBeans(
-            true,
-            stageLib,
-            pipelineConf.getStages().subList(1, pipelineConf.getStages().size()),
-            originPipe.getStage().getConstants(),
-            issues
-          );
+      // Effective number of runners - either number of source threads or predefined value from user, whatever is *less*
+      int runnerCount = ((PushSource) originPipe.getStage().getStage()).getNumberOfThreads();
+      int pipelineRunnerCount = pipelineBean.getConfig().maxRunners;
+      if (pipelineRunnerCount > 0) {
+        runnerCount = Math.min(runnerCount, pipelineRunnerCount);
+      }
 
-          // Initialize and convert them to source-less pipeline runner
-          pipes.add(createSourceLessRunner(
-            name,
-            rev,
-            configuration,
-            pipelineConf,
-            runner,
-            stageInfos,
-            pipelineBean,
-            originPipe.getStage(),
-            runnerId,
-            beans,
-            observer,
-            memoryUsageCollectorResourceBundle,
-            scheduledExecutor
-          ));
+      // Ensure that it doesn't go over configured threshold
+      int sdcRunnerMax = configuration.get(MAX_RUNNERS_CONFIG_KEY, MAX_RUNNERS_DEFAULT);
+      boolean createAdditionalRunners = true;
+      if (runnerCount > sdcRunnerMax) {
+        createAdditionalRunners = false;
+        issues.add(IssueCreator.getPipeline().create(ContainerError.CONTAINER_0705, runnerCount, sdcRunnerMax));
+      }
+
+      // Unless the request number of runners is invalid, let's create them
+      if (createAdditionalRunners) {
+        try {
+          for (int runnerId = 1; runnerId < runnerCount; runnerId++) {
+            // Create list of Stage beans
+            PipelineStageBeans beans = PipelineBeanCreator.get().createPipelineStageBeans(
+              true,
+              stageLib,
+              pipelineConf.getStages().subList(1, pipelineConf.getStages().size()),
+              originPipe.getStage().getConstants(),
+              issues
+            );
+
+            // Initialize and convert them to source-less pipeline runner
+            pipes.add(createSourceLessRunner(
+              name,
+              rev,
+              configuration,
+              pipelineConf,
+              runner,
+              stageInfos,
+              pipelineBean,
+              originPipe.getStage(),
+              runnerId,
+              beans,
+              observer,
+              memoryUsageCollectorResourceBundle,
+              scheduledExecutor
+            ));
+          }
+        } catch (PipelineRuntimeException e) {
+          LOG.error("Can't create additional source-less pipeline runner number {}: {}", runnerCount, e.toString(), e);
+          issues.add(IssueCreator.getPipeline().create(ContainerError.CONTAINER_0704, e.toString()));
         }
-      } catch (PipelineRuntimeException e) {
-        LOG.error("Can't create additional source-less pipeline runner number {}: {}", runnerCount, e.toString(), e);
-        issues.add(IssueCreator.getPipeline().create(ContainerError.CONTAINER_0704, e.toString()));
       }
     }
 

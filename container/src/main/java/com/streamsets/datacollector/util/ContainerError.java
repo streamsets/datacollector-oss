@@ -131,6 +131,7 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0702("Pipeline initialization error: {}"),
   CONTAINER_0703("Stats Aggregator stage initialization error: {}"),
   CONTAINER_0704("Can't create additional pipeline runners: {}"),
+  CONTAINER_0705("Requested number of runners {} is higher than allowed maximum of {}"),
 
   //Runner
   CONTAINER_0800("Pipeline '{}' validation error : {}"),

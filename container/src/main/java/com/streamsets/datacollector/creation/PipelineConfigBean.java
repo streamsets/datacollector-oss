@@ -254,6 +254,17 @@ public class PipelineConfigBean implements Stage {
   )
   public long rateLimit;
 
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "0",
+      label = "Max runners",
+      description = "Maximum number of runners that should be created for this pipeline. Use 0 to not impose limit.",
+      min = 0,
+      displayPosition = 190
+  )
+  public int maxRunners = 0;
+
   @Override
   public List<ConfigIssue> init(Info info, Context context) {
     return Collections.emptyList();
