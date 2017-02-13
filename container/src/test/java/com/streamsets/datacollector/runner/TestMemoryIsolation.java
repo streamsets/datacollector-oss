@@ -92,7 +92,8 @@ public class TestMemoryIsolation {
     Set<Stage> stages = new HashSet<>();
     Pipeline pipeline = builder.build(runner);
     pipeline.init();
-    for (Pipe pipe : pipeline.getPipes()) {
+    // Working with just one runner
+    for (Pipe pipe : pipeline.getRunners().get(0)) {
       stages.add(pipe.getStage().getStage());
     }
     return stages;

@@ -57,6 +57,13 @@ public class TestPipeline {
     MockStages.resetStageCaptures();
   }
 
+  private Pipe[] getSourceAndPipelinePipes(Pipeline pipeline) {
+    List<Pipe> p = new ArrayList<>(1 + pipeline.getRunners().get(0).size());
+    p.add(pipeline.getSourcePipe());
+    p.addAll(pipeline.getRunners().get(0));
+    return p.toArray(new Pipe[p.size()]);
+  }
+
   @Test
   @SuppressWarnings("unchecked")
   public void testBuilder() throws Exception {
@@ -83,7 +90,7 @@ public class TestPipeline {
     Pipeline pipeline = builder.build(runner);
 
     // assert the pipes
-    Pipe[] pipes = pipeline.getPipes();
+    Pipe[] pipes = getSourceAndPipelinePipes(pipeline);
     Assert.assertEquals(9, pipes.length);
     Assert.assertTrue(pipes[0] instanceof StagePipe);
     Assert.assertTrue(pipes[1] instanceof ObserverPipe);
@@ -176,7 +183,7 @@ public class TestPipeline {
     Pipeline pipeline = builder.build(runner);
 
     // assert the pipes
-    Pipe[] pipes = pipeline.getPipes();
+    Pipe[] pipes = getSourceAndPipelinePipes(pipeline);
     Assert.assertEquals(9, pipes.length);
     Assert.assertTrue(pipes[0] instanceof StagePipe);
     Assert.assertEquals("s", pipes[0].getStage().getConfiguration().getInstanceName());
@@ -225,7 +232,7 @@ public class TestPipeline {
     Pipeline pipeline = builder.build(runner);
 
     // assert the pipes
-    Pipe[] pipes = pipeline.getPipes();
+    Pipe[] pipes = getSourceAndPipelinePipes(pipeline);
 
     Source.Context sourceContext = pipes[0].getStage().getContext();
     Processor.Context processorContext = pipes[3].getStage().getContext();

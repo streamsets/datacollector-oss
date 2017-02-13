@@ -88,7 +88,7 @@ public class TestStagePipe {
     Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), new Configuration(), "name", "name", "0",
                                              MockStages.createPipelineConfigurationSourceProcessorTarget())
         .build(pipelineRunner);
-    StagePipe pipe = (StagePipe) pipeline.getPipes()[0];
+    StagePipe pipe = (StagePipe) pipeline.getSourcePipe();
     BatchMakerImpl batchMaker = Mockito.mock(BatchMakerImpl.class);
     Mockito.when(batchMaker.getLanes()).thenReturn(ImmutableList.of("s"));
 
@@ -145,7 +145,7 @@ public class TestStagePipe {
     Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), new Configuration(), "name", "name", "0",
                                              MockStages.createPipelineConfigurationSourceProcessorTarget())
         .build(pipelineRunner);
-    StagePipe pipe = (StagePipe) pipeline.getPipes()[4];
+    StagePipe pipe = (StagePipe) pipeline.getRunners().get(0).get(3);
     BatchMakerImpl batchMaker = Mockito.mock(BatchMakerImpl.class);
     Mockito.when(batchMaker.getLanes()).thenReturn(ImmutableList.of("p"));
 
@@ -202,7 +202,7 @@ public class TestStagePipe {
     Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), new Configuration(), "name", "name", "0",
                                              MockStages.createPipelineConfigurationSourceProcessorTarget())
         .build(pipelineRunner);
-    StagePipe pipe = (StagePipe) pipeline.getPipes()[8];
+    StagePipe pipe = (StagePipe) pipeline.getRunners().get(0).get(7);
     BatchMakerImpl batchMaker = Mockito.mock(BatchMakerImpl.class);
     Mockito.when(batchMaker.getLanes()).thenReturn(ImmutableList.of("t"));
 
@@ -259,11 +259,10 @@ public class TestStagePipe {
     Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), new Configuration(), "name", "name", "0",
                                              MockStages.createPipelineConfigurationSourceTargetWithEventsProcessed())
         .build(pipelineRunner);
-    final int index = 4;
-    Assert.assertEquals(7, pipeline.getPipes().length);
-    Assert.assertEquals("executorName", pipeline.getPipes()[index].getStage().getDefinition().getName());
-    Assert.assertTrue(pipeline.getPipes()[index] instanceof StagePipe);
-    StagePipe pipe = (StagePipe) pipeline.getPipes()[index];
+    final int index = 3;
+    Assert.assertEquals("executorName", pipeline.getRunners().get(0).get(index).getStage().getDefinition().getName());
+    Assert.assertTrue(pipeline.getRunners().get(0).get(index) instanceof StagePipe);
+    StagePipe pipe = (StagePipe) pipeline.getRunners().get(0).get(index);
     BatchMakerImpl batchMaker = Mockito.mock(BatchMakerImpl.class);
     Mockito.when(batchMaker.getLanes()).thenReturn(ImmutableList.of("t"));
 

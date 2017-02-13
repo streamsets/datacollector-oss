@@ -122,17 +122,13 @@ public class Pipeline {
 
 
   @VisibleForTesting
-  List<List<Pipe>> getRunners() {
-    return pipes;
+  Pipe getSourcePipe() {
+    return originPipe;
   }
 
-  // TODO: To be removed in subsequent patches
   @VisibleForTesting
-  Pipe[] getPipes() {
-    List<Pipe> p = new ArrayList<>(1 + pipes.get(0).size());
-    p.add(originPipe);
-    p.addAll(pipes.get(0));
-    return p.toArray(new Pipe[p.size()]);
+  List<List<Pipe>> getRunners() {
+    return pipes;
   }
 
   private boolean calculateShouldStopOnStageError() {
@@ -657,12 +653,18 @@ public class Pipeline {
   @Override
   public String toString() {
     Set<String> instances = new LinkedHashSet<>();
-    for (Pipe pipe : getPipes()) {
+    // Describing first runner is sufficient
+    for (Pipe pipe : getRunners().get(0)) {
       instances.add(pipe.getStage().getInfo().getInstanceName());
     }
     String observerName = (observer != null) ? observer.getClass().getSimpleName() : null;
-    return Utils.format("Pipeline[stages='{}' runner='{}' observer='{}']", instances, runner.getClass().getSimpleName(),
-                        observerName);
+    return Utils.format(
+      "Pipeline[source='{}' stages='{}' runner='{}' observer='{}']",
+      originPipe.getStage().getInfo().getInstanceName(),
+      instances,
+      runner.getClass().getSimpleName(),
+      observerName
+    );
   }
 
 }

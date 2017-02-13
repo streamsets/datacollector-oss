@@ -39,7 +39,7 @@ public class TestCombinerPipe {
     Mockito.when(pipelineRunner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
     Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), new Configuration(), "name", "myPipeline",
       "0", MockStages.createPipelineConfigurationSourceTarget()).build(pipelineRunner);
-    CombinerPipe pipe = (CombinerPipe) pipeline.getPipes()[3];
+    CombinerPipe pipe = (CombinerPipe) pipeline.getRunners().get(0).get(2);
     PipeBatch pipeBatch = Mockito.mock(FullPipeBatch.class);
     pipe.process(pipeBatch);
     Mockito.verify(pipeBatch, Mockito.times(1)).combineLanes(Mockito.anyList(), Mockito.anyString());
