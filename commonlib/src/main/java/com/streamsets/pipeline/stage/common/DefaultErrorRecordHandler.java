@@ -121,8 +121,7 @@ public class DefaultErrorRecordHandler implements ErrorRecordHandler {
         LOG.error("Can't propagate error to error stream: {} with params {}", errorCode, params);
       }
 
-      // SDC-5042 - Add way to Stage.Context to retrieve instance name; using the Context.toString for now
-      throw new IllegalStateException(Utils.format("Component {} doesn't have configured error record action.", context));
+      throw new IllegalStateException(Utils.format("Component {} doesn't have configured error record action.", context.getStageInfo().getInstanceName()));
     }
   }
 
