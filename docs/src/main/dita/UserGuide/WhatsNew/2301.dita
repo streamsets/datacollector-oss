@@ -29,6 +29,9 @@
                     in the Data Collector configuration file enables handling X-Forwarded-For,
                     X-Forwarded-Proto, X-Forwarded-Port request headers issued by a reverse proxy or
                     load balancer.</li>
+                <li><xref href="../Origins/MongoDB-OffsetField.dita#concept_kx3_zrs_ns">MongoDB
+                        origin enhancement</xref> ­ The origin now supports using any string field
+                    as the offset field. </li>
             </ul></p>
  </conbody>
 </concept>
