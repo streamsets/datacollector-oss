@@ -93,6 +93,9 @@
 
         </td>
       </tr>
+      <tr ng-if="!acl || acl.permissions.length === 0">
+        <td colspan="5">{{'global.form.noRecords' | translate}}</td>
+      </tr>
       </tbody>
     </table>
 
