@@ -24,7 +24,7 @@
       Oplog, use the <xref href="#concept_bk4_2rs_ns" format="dita">MongoDB Oplog</xref> origin. </p>
   <p>The MongoDB origin reads from capped and uncapped collections. When you configure MongoDB, you
       define connection information, such as the connection string and MongoDB credentials. You also
-      configure the offset field, collection type, and start timestamp. These properties determine
+      configure the offset field, collection type, and initial offset. These properties determine
       how the origin queries the database. </p>
     <p>You can optionally configure advanced options that determine how the origin connects to
       MongoDB, including enabling SSL/TLS for the origin.</p>

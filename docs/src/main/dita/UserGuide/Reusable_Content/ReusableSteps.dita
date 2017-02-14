@@ -1794,10 +1794,18 @@
                                         uncapped collection.</entry>
                                 </row>
                                 <row>
-                                    <entry>Start Timestamp</entry>
-                                    <entry>Timestamp to begin reading data based on the timestamp in
-                                        the offset field. Use the following format:
-                                            <codeph>YYYY-MM-DD hh:mm:ss</codeph>.</entry>
+                                    <entry>Initial Offset</entry>
+                                    <entry>Initial offset to use to begin reading. When using an
+                                        Object ID field as the offset field, enter a timestamp with
+                                        the following format: <codeph>YYYY-MM-DD hh:mm:ss</codeph>.
+                                        When using a string field, enter the string to
+                                            use.<p>Default is: 2015-01-01 00:00:00</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Offset Field Type</entry>
+                                    <entry>Data type of the offset field. Use Object ID for Object
+                                        ID fields. Use String for string offset fields. <p>Default
+                                            is Object ID.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Offset Field <xref
@@ -1807,8 +1815,8 @@
                                     </entry>
                                     <entry>Field to use to track reads. Default is the _id field.
                                             <p>You can use a nested offset field, such as o._id, or
-                                            any Object ID field, but results are not
-                                        guaranteed.</p></entry>
+                                            any Object ID field or any string field. Results are not
+                                            guaranteed for anything but the _id field.</p></entry>
                                 </row>
                                 <row id="row-Mongo-BatchSize">
                                     <entry>Batch Size (records)</entry>
