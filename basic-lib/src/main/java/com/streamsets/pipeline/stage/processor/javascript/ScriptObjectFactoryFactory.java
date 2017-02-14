@@ -26,23 +26,9 @@ import javax.script.ScriptEngine;
 
 public class ScriptObjectFactoryFactory {
 
-  private static double JAVA_VERSION = getVersion();
-
   private ScriptObjectFactoryFactory() {}
 
-  static double getVersion () {
-    String version = System.getProperty("java.version");
-    int pos = version.indexOf('.');
-    pos = version.indexOf('.', pos+1);
-    return Double.parseDouble (version.substring (0, pos));
-  }
-
   public static ScriptObjectFactory getScriptObjectFactory(ScriptEngine engine, Stage.Context context) {
-    double version = getVersion();
-    if (version >= 1.8) {
-      return new Java8JavaScriptObjectFactory(engine, context);
-    } else {
-      return new Java7JavaScriptObjectFactory(engine, context);
-    }
+    return new Java8JavaScriptObjectFactory(engine, context);
   }
 }
