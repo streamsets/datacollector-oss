@@ -104,13 +104,15 @@ public class AclStoreResource {
   })
   @SuppressWarnings("unchecked")
   public Response getAcl(
-      @PathParam("pipelineName") String name
+      @PathParam("pipelineName") String name,
+      @Context SecurityContext context
   ) throws PipelineException, URISyntaxException {
     PipelineInfo pipelineInfo = store.getInfo(name);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
 
     Acl acl = aclStore.getAcl(name);
-    if (acl == null && pipelineInfo.getCreator().equals(currentUser.getName())) {
+    if (acl == null && (pipelineInfo.getCreator().equals(currentUser.getName()) || context.isUserInRole(AuthzRole.ADMIN)
+        || context.isUserInRole(AuthzRole.ADMIN_REMOTE)))  {
       // If no acl, only owner of the pipeline will have all permission
       acl = new Acl();
       acl.setResourceId(name);
