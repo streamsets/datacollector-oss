@@ -106,7 +106,7 @@
                     <provide>${project.artifactId}</provide>
                   </provides>
                   <requires>
-                    <require>jre &gt;= 1.7</require>
+                    <require>jre &gt;= 1.8</require>
                     <require>bash</require>
                     <require>which</require>
                     <require>streamsets-datacollector</require>

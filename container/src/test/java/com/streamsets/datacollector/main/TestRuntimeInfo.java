@@ -93,7 +93,7 @@ public class TestRuntimeInfo {
     Assert.assertFalse(info.hasAttribute("a"));
     info.setAttribute("a", 1);
     Assert.assertTrue(info.hasAttribute("a"));
-    Assert.assertEquals(1, info.getAttribute("a"));
+    Assert.assertEquals(1, (int)info.getAttribute("a"));
     info.removeAttribute("a");
     Assert.assertFalse(info.hasAttribute("a"));
   }
