@@ -29,6 +29,7 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.EvictingQueue;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.RateLimiter;
 import com.streamsets.datacollector.config.DeliveryGuarantee;
@@ -562,9 +563,13 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     }
 
     // Now destroy the pipe runners
-    int runnerId = 0;
-    for(List<Pipe> pipeRunner : pipes) {
-      MDC.put(LogConstants.RUNNER, String.valueOf(runnerId++));
+    //
+    // We're destroying them in reverser order to make sure that the last runner to destroy is the one with id '0'
+    // that holds reference to all class loaders. Runners with id >0 do not own their class loaders and hence needs to
+    // be destroyed before the runner with id '0'.
+    for(List<Pipe> pipeRunner : Lists.reverse(pipes)) {
+      int runnerId = pipeRunner.get(0).getStage().getContext().getRunnerId();
+      MDC.put(LogConstants.RUNNER, String.valueOf(runnerId));
       pipeBatch.skipStage(originPipe);
       destroyPipes(pipeRunner, pipeBatch, badRecordsHandler);
 

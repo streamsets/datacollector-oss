@@ -143,7 +143,7 @@ public abstract class PipelineBeanCreator {
     return new PipelineBean(pipelineConfigBean, origin, stages, errorStageBean, statsStageBean);
   }
 
-  public PipelineStageBeans createPipelineStageBeans(
+  private PipelineStageBeans createPipelineStageBeans(
     boolean forExecution,
     StageLibraryTask library,
     List<StageConfiguration> stageConfigurations,
@@ -154,6 +154,34 @@ public abstract class PipelineBeanCreator {
 
     for (StageConfiguration stageConf : stageConfigurations) {
       StageBean stageBean = createStageBean(forExecution, library, stageConf, false, constants, errors);
+
+      if (stageBean != null) {
+        stageBeans.add(stageBean);
+      }
+    }
+
+    return new PipelineStageBeans(stageBeans);
+  }
+
+  /**
+   * Creates additional PipelineStageBeans for additional runners. Stages will share stage definition and thus
+   * class loader with the first given runner. That includes stages with private class loader as well.
+   *
+   * @param pipelineStageBeans First runner that should be duplicated.
+   * @param constants Pipeline constants
+   * @param errors Any generated errors will be stored in this list
+   *
+   * @return PipelineStageBeans with new instances of the given stages
+   */
+  public PipelineStageBeans duplicatePipelineStageBeans(
+    PipelineStageBeans pipelineStageBeans,
+    Map<String, Object> constants,
+    List<Issue> errors
+  ) {
+    List<StageBean> stageBeans = new ArrayList<>(pipelineStageBeans.size());
+
+    for(StageBean original: pipelineStageBeans.getStages()) {
+      StageBean stageBean = createStage(original.getDefinition(), ClassLoaderReleaser.NOOP_RELEASER, original.getConfiguration(), constants, errors);
 
       if (stageBean != null) {
         stageBeans.add(stageBean);

@@ -66,7 +66,6 @@ public class Pipeline {
   private final PipelineBean pipelineBean;
   private final String name;
   private final String rev;
-  private final StageLibraryTask stageLib;
   private final Configuration configuration;
   private final PipelineConfiguration pipelineConf;
   private final SourcePipe originPipe;
@@ -85,7 +84,6 @@ public class Pipeline {
   private Pipeline(
       String name,
       String rev,
-      StageLibraryTask stageLib,
       Configuration configuration,
       PipelineConfiguration pipelineConf,
       PipelineBean pipelineBean,
@@ -103,7 +101,6 @@ public class Pipeline {
     this.pipelineBean = pipelineBean;
     this.name = name;
     this.rev = rev;
-    this.stageLib = stageLib;
     this.configuration = configuration;
     this.pipelineConf = pipelineConf;
     this.originPipe = originPipe;
@@ -230,10 +227,8 @@ public class Pipeline {
         try {
           for (int runnerId = 1; runnerId < runnerCount; runnerId++) {
             // Create list of Stage beans
-            PipelineStageBeans beans = PipelineBeanCreator.get().createPipelineStageBeans(
-              true,
-              stageLib,
-              pipelineConf.getStages().subList(1, pipelineConf.getStages().size()),
+            PipelineStageBeans beans = PipelineBeanCreator.get().duplicatePipelineStageBeans(
+              pipelineBean.getPipelineStageBeans().get(0),
               originPipe.getStage().getConstants(),
               issues
             );
@@ -466,7 +461,6 @@ public class Pipeline {
           pipeline = new Pipeline(
             name,
             rev,
-            stageLib,
             configuration,
             pipelineConf,
             pipelineBean,

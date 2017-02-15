@@ -21,6 +21,11 @@ package com.streamsets.datacollector.stagelibrary;
 
 public interface ClassLoaderReleaser {
 
+  /**
+   * No-op releaser for stages that doesn't own their class loader.
+   */
+  public static ClassLoaderReleaser NOOP_RELEASER = classLoader -> {};
+
   public void releaseStageClassLoader(ClassLoader classLoader);
 
 }
