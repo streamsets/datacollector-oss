@@ -99,8 +99,8 @@ angular
                     } else {
                       $modalInstance.close();
                     }
-                  },function(data) {
-                    $scope.common.errors = [data];
+                  },function(res) {
+                    $scope.common.errors = [res.data];
                   });
               } else { // If no pipeline exist or create pipeline option selected
                 var newPipelineObject,
