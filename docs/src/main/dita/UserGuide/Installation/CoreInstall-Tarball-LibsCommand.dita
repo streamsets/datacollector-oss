@@ -21,9 +21,12 @@
             to install additional tarball libraries to use stages that are not included in the core
             installation. This is an optional step, but generally you'll want to install additional
             libraries to process data.</p>
-        <note>The <codeph>stagelibs</codeph> command requires that curl version 7.18.1 or later and
+        <p>The <codeph>stagelibs</codeph> command requires that curl version 7.18.1 or later and
             sha1sum utilities are installed on the machine. Verify that these utilities are
-            installed before running the command.</note>
+            installed before running the command.</p>
+            <note>You must perform additional steps to install the MapR stage libraries, as
+                described in <xref href="MapR-Prerequisites.dita#concept_jgs_qpg_2v"/>.</note>
+        
         <p>Use the following commands to install additional tarball libraries:<dl>
                 <dlentry>
                     <dt>To view the list of available libraries:</dt>

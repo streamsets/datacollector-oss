@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_xlw_hjc_yy">
+ <title>MapR Prerequisites</title>
+ <conbody>
+  <p>
+            <draft-comment author="alisontaylor">these steps used in MapR Prereqs in Install chapter
+                and Working with Upgraded MapR System in Upgrade chapter</draft-comment>
+            <ol id="ol_kpy_jjc_yy">
+                <li id="MapR_SDCHome">Use the following command to set the
+                        <codeph>$SDC_HOME</codeph> environment variable to the location where you
+                    installed <ph conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        />:<codeblock>export SDC_HOME=&lt;installation directory></codeblock><p>For
+                        example:<codeblock>export SDC_HOME=/opt/streamsets-datacollector</codeblock></p><note>The
+                        default installation directory for an RPM installation is
+                            <codeph>/opt/streamsets-datacollector</codeph>. The tarball installation
+                        directory is the location where you extracted the file.</note></li>
+                <li id="MapR_SDCConf">Use the following command to set the
+                        <codeph>$SDC_CONF</codeph> environment variable to the <ph
+                        conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+                    configuration
+                        directory:<codeblock>export SDC_CONF=&lt;configuration directory></codeblock><p>For
+                        example, use the following command if you used the default configuration
+                        directory for an RPM
+                        installation:<codeblock>export SDC_CONF=/etc/sdc</codeblock></p></li>
+                <li id="MapR_setup">Use the following command to set up
+                    MapR:<codeblock>$SDC_DIST/bin/streamsets setup-mapr</codeblock></li>
+                <li id="MapR_absolutepath">When prompted, enter the absolute path to the MapR home directory, usually
+                    /opt/mapr.</li>
+                <li id="MapR_loginAuth">If the MapR cluster uses username/password login authentication, uncomment the
+                    following line in the environment configuration file,
+                        <codeph>sdc-env.sh</codeph> or <codeph>sdcd-env.sh</codeph>, located in the
+                        <codeph>$SDC_DIST/libexec</codeph> directory:
+                    <codeblock>#export SDC_JAVA_OPTS="-Dmaprlogin.password.enabled=true"</codeblock></li>
+            </ol>
+        </p>
+ </conbody>
+</concept>

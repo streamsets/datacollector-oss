@@ -52,6 +52,12 @@
    <topicref href="../Upgrade/PostUpgrade-Kudu.dita"/>
    <topicref href="../Upgrade/PostUpgrade-Vault.dita"/>
   </topicref>
-  <topicref href="../Upgrade/UpgradeTroubleshooting.dita"/>
+  <topicref href="../Upgrade/Upgrade-ExternalSystems.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Upgrade/UpgradeMapR.dita"/>
+  </topicref>
+  <topicref href="../Upgrade/UpgradeTroubleshooting.dita" chunk="to-content"/>
  </topicref>
 </map>
