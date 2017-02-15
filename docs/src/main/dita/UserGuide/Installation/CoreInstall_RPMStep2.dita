@@ -19,7 +19,9 @@
   <p><indexterm>core RPM install<indexterm>installing additional
             libraries</indexterm></indexterm>Install additional libraries to use stages that are not
             included in the core installation. This is an optional step, but generally you'll want
-            to install additional libraries to process data.</p>
+            to install additional libraries to process data.<note>You must perform additional steps
+                to install the MapR stage libraries, as described in <xref
+                    href="MapR-Prerequisites.dita#concept_jgs_qpg_2v"/>.</note></p>
         <p>For a complete list of the stages installed with each stage library, see <xref
                 href="CoreInstall-LibList.dita"/>.</p>
         <p>Use the following commands to install additional libraries:</p>

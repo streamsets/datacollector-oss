@@ -22,8 +22,14 @@
     <conbody>
         <note type="important">The minimum requirements for <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            can change with each version. Before you upgrade to a new version, verify that the
-            machine meets the latest minimum requirements as described in <xref
-                href="../Installation/Requirements.dita#concept_vzg_n2p_kq"/>.</note>
+            can change with each version. Before you upgrade to a new <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            version, verify that the machine meets the latest minimum requirements as described in
+                <xref href="../Installation/Requirements.dita#concept_vzg_n2p_kq"/>.</note>
+        <p>In some situations, you must complete tasks within <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            after you upgrade.</p>
+        <p>When an origin or destination system is upgraded to a new version, you must configure
+            existing pipelines to work with the upgraded system.</p>
     </conbody>
 </concept>
