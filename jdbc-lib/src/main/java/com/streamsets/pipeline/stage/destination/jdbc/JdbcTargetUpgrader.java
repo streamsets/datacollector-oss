@@ -117,7 +117,7 @@ public class JdbcTargetUpgrader extends JdbcBaseUpgrader{
 
   private void upgradeV5toV6(List<Config> configs) {
     // added default operation, unsupported operation action, and maxPrepStmtCache
-    configs.add(new Config("defaultOperation", null));
+    configs.add(new Config("defaultOperation", "INSERT"));
     configs.add(new Config("unsupportedAction", "DISCARD"));
     configs.add(new Config("maxPrepStmtCache", -1));
   }

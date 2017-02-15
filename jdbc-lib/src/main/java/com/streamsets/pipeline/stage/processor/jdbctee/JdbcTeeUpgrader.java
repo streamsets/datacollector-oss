@@ -58,7 +58,7 @@ public class JdbcTeeUpgrader extends JdbcBaseUpgrader{
     configs.removeAll(configsToRemove);
 
     // added default operation, unsupported operation action, and maxPrepStmtCache
-    configs.add(new Config("defaultOperation", null));
+    configs.add(new Config("defaultOperation", "INSERT"));
     configs.add(new Config("unsupportedAction", "DISCARD"));
     configs.add(new Config("maxPrepStmtCache", -1));
   }
