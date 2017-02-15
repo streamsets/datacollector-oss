@@ -84,7 +84,7 @@
         </li>
 
         <li>
-          <span><a href="javascript:;" ng-click="onCreateDPMUsersClick()">Click here</a> for creating DPM user account for each Data Collector user account.</span>
+          <span><a href="javascript:;" ng-click="onCreateDPMUsersClick()">Click here</a> to create a DPM user account for each Data Collector user account.</span>
         </li>
 
         <li>
@@ -118,6 +118,10 @@
 
     <button class="btn btn-primary" ng-if="isEnableInProgress && !dpmEnabled" disabled
             translate="home.enableDPM.isEnableInProgress">Enabling DPM...</button>
+
+    <button ng-if="!isEnableInProgress && dpmEnabled && !isRestartInProgress"
+            ng-click="onCreateDPMUsersClick()"
+            class="btn btn-primary" translate="home.createDPMUsers.title">Create DPM Users</button>
 
     <button ng-if="!isEnableInProgress && dpmEnabled && !isRestartInProgress"
             ng-click="restart()"
