@@ -12,7 +12,7 @@
 
     <button type="button" class="btn btn-primary"
             ng-if="isPipelineRunning"
-            ng-disabled="showLoading || snapshotInProgress"
+            ng-disabled="showLoading || snapshotInProgress || !canExecute"
             ng-click="captureSnapshot()"
             translate="home.snapshotsPane.captureSnapshot">Capture</button>
 

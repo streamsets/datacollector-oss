@@ -239,6 +239,9 @@ angular
             },
             isPipelineRunning: function() {
               return $scope.isPipelineRunning;
+            },
+            canExecute: function () {
+              return $scope.canExecute;
             }
           }
         });
