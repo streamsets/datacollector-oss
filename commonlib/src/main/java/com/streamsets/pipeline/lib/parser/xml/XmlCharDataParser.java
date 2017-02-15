@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.lib.parser.xml;
 
+import com.google.common.base.Strings;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
@@ -26,11 +27,11 @@ import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.AbstractDataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.xml.OverrunStreamingXmlParser;
+import com.streamsets.pipeline.lib.xml.StreamingXmlParser;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.MatchResult;
@@ -38,13 +39,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class XmlCharDataParser extends AbstractDataParser {
-  private static final String XPATH_KEY = "xpath";
   private static final Pattern INDEX_PATTERN = Pattern.compile("((.*)/\\S+)(\\[\\d+\\]).*");
-  private static final Pattern VALUE_PATTERN = Pattern.compile("(\\S+\\[\\d+\\])/value$");
-  private static final Pattern ATTR_PATTERN = Pattern.compile("(\\S+\\[\\d+\\])/'attr\\|(\\S+)'");
-  // TODO: Replace this system property with a proper config option.
-  // This is hidden as the xpath map is a unofficial feature.
-  static final String INCLUDE_XPATH_MAP = "include.xpath.map";
+  private static final Pattern VALUE_PATTERN = Pattern.compile("'?(\\S+\\[\\d+\\])?'?/value$");
+  private static final Pattern ATTR_PATTERN = Pattern.compile("'?(\\S+\\[\\d+\\])?'?/'attr\\|(\\S+)'");
+  public static final String REMOVE_FIELD_PATH_SINGLE_QUOTE_PATTERN = "'?([^']*)'?(\\[\\d+\\])?";
+
+  public static final String RECORD_ATTRIBUTE_NAMESPACE_PREFIX = "xmlns:";
 
   private final Stage.Context context;
   private final String readerId;
@@ -55,16 +55,21 @@ public class XmlCharDataParser extends AbstractDataParser {
 
   public XmlCharDataParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset,
       String recordElement, int maxObjectLen) throws IOException {
-    this(context, readerId, reader, readerOffset, recordElement, null, maxObjectLen);
+    this(context, readerId, reader, readerOffset, recordElement, false, null, maxObjectLen);
   }
 
   public XmlCharDataParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset,
-      String recordElement, Map<String, String> namespaces, int maxObjectLen) throws IOException {
+      String recordElement, boolean includeXpath, int maxObjectLen) throws IOException {
+    this(context, readerId, reader, readerOffset, recordElement, includeXpath, null, maxObjectLen);
+  }
+
+  public XmlCharDataParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset,
+      String recordElement, boolean includeXpath, Map<String, String> namespaces, int maxObjectLen) throws IOException {
     this.context = context;
     this.readerId = readerId;
     this.readerOffset = readerOffset;
     this.maxObjectLen = maxObjectLen;
-    this.includeXpath = Boolean.valueOf(System.getProperty(INCLUDE_XPATH_MAP, "false"));
+    this.includeXpath = includeXpath;
     try {
       parser = new OverrunStreamingXmlParser(reader, recordElement, namespaces, readerOffset, maxObjectLen);
     } catch (XMLStreamException ex) {
@@ -93,13 +98,12 @@ public class XmlCharDataParser extends AbstractDataParser {
     Record record = context.createRecord(readerId + "::" + offset);
     record.set(field);
     if (includeXpath) {
-      record.set("/" + XPATH_KEY, createXpathField(record));
+      setFieldXpathAttributes(record);
     }
     return record;
   }
 
-  private Field createXpathField(Record record) {
-    Map<String, Field> xpathMap = new HashMap<>();
+  private void setFieldXpathAttributes(Record record) {
     for (String path : record.getEscapedFieldPaths()) {
       // Only interested in leaves of the path tree so pass any complex types.
       // This check is needed because an XML element may be named as "value".
@@ -109,22 +113,42 @@ public class XmlCharDataParser extends AbstractDataParser {
         continue;
       }
       Matcher matcher = VALUE_PATTERN.matcher(path);
+      Field field = record.get(path);
+      String xpath = null;
       if (matcher.matches()) {
-        String fieldPath = matcher.group(1);
-        xpathMap.put(toXpath(fieldPath, record), record.get(path));
+        String fieldPath = removeSingleQuotesFromFieldPath(matcher.group(1));
+        xpath = toXpath(fieldPath, record);
       } else {
         matcher = ATTR_PATTERN.matcher(path);
         if (matcher.matches()) {
-          String fieldPath = matcher.group(1);
+          String fieldPath = removeSingleQuotesFromFieldPath(matcher.group(1));
           String attribute = matcher.group(2);
-          xpathMap.put(toXpath(fieldPath, record) + "@" + attribute, record.get(path));
+          xpath = toXpath(fieldPath, record) + "/@" + attribute;
         }
       }
+      if (!Strings.isNullOrEmpty(xpath)) {
+        field.setAttribute(StreamingXmlParser.XPATH_KEY, xpath);
+      }
     }
-    return Field.create(xpathMap);
+
+    Record.Header header = record.getHeader();
+    for (Map.Entry<String, String> nsEntry : parser.getNamespaceUriToPrefixMappings().entrySet()) {
+      header.setAttribute(RECORD_ATTRIBUTE_NAMESPACE_PREFIX + nsEntry.getValue(), nsEntry.getKey());
+    }
+  }
+
+  private static String removeSingleQuotesFromFieldPath(String fieldPath) {
+    if (Strings.isNullOrEmpty(fieldPath)) {
+      return fieldPath;
+    } else {
+      return fieldPath.replaceAll(REMOVE_FIELD_PATH_SINGLE_QUOTE_PATTERN, "$1$2");
+    }
   }
 
   private String toXpath(String fieldPath, Record record) {
+    if (fieldPath == null) {
+      fieldPath = "";
+    }
     String xpath = fieldPath;
     List<MatchResult> matchResults = new ArrayList<>();
     Matcher matcher = INDEX_PATTERN.matcher(fieldPath);
@@ -143,7 +167,7 @@ public class XmlCharDataParser extends AbstractDataParser {
         xpath = xpath.replace(currentPath + fieldIndex, currentPath);
       }
     }
-    return parser.getXpathPrefix() + xpath;
+    return parser.getLastParsedFieldXpathPrefix() + xpath;
   }
 
   @Override

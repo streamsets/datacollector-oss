@@ -39,11 +39,16 @@ public class XmlDataParserFactory extends DataParserFactory {
   public static final String RECORD_ELEMENT_KEY = KEY_PREFIX + "record.element";
   static final String RECORD_ELEMENT_DEFAULT = "";
 
+  public static final String INCLUDE_FIELD_XPATH_ATTRIBUTES_KEY = KEY_PREFIX + "include.fieldxpaths";
+  public static final boolean INCLUDE_FIELD_XPATH_ATTRIBUTES_DEFAULT = false;
+
   public static final String RECORD_ELEMENT_XPATH_NAMESPACES_KEY = KEY_PREFIX + "record.element.xPathNamespaces";
   static final Map<String, String> RECORD_ELEMENT_XPATH_NAMESPACES_DEFAULT = new HashMap<>();
 
   public static final Map<String, Object> CONFIGS = ImmutableMap.of(RECORD_ELEMENT_KEY, (Object) RECORD_ELEMENT_DEFAULT,
-      RECORD_ELEMENT_XPATH_NAMESPACES_KEY, RECORD_ELEMENT_XPATH_NAMESPACES_DEFAULT);
+      RECORD_ELEMENT_XPATH_NAMESPACES_KEY, RECORD_ELEMENT_XPATH_NAMESPACES_DEFAULT,
+      INCLUDE_FIELD_XPATH_ATTRIBUTES_KEY, INCLUDE_FIELD_XPATH_ATTRIBUTES_DEFAULT
+  );
   public static final Set<Class<? extends Enum>> MODES = Collections.emptySet();
 
   public XmlDataParserFactory(Settings settings) {
@@ -66,6 +71,7 @@ public class XmlDataParserFactory extends DataParserFactory {
     try {
       return new XmlCharDataParser(getSettings().getContext(), id, reader, offset,
           getSettings().<String>getConfig(RECORD_ELEMENT_KEY),
+          getSettings().<Boolean>getConfig(INCLUDE_FIELD_XPATH_ATTRIBUTES_KEY),
           getSettings().<Map<String,String>>getConfig(RECORD_ELEMENT_XPATH_NAMESPACES_KEY),
           getSettings().getMaxRecordLen());
     } catch (IOException ex) {

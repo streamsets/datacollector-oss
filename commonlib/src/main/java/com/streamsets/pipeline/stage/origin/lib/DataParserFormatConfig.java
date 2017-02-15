@@ -430,6 +430,19 @@ public class DataParserFormatConfig implements DataFormatConfig {
   public String xmlRecordElement = "";
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Include Field XPaths",
+      defaultValue = ""+XmlDataParserFactory.INCLUDE_FIELD_XPATH_ATTRIBUTES_DEFAULT,
+      description = Constants.INCLUDE_FIELD_XPATH_ATTRIBUTES_DESCRIPTION,
+      displayPosition = 442,
+      group = "DATA_FORMAT",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "XML"
+  )
+  public boolean includeFieldXpathAttributes = XmlDataParserFactory.INCLUDE_FIELD_XPATH_ATTRIBUTES_DEFAULT;
+
+  @ConfigDef(
       required = false,
       type = ConfigDef.Type.MAP,
       label = "Namespaces",
@@ -1242,6 +1255,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
         break;
       case XML:
         builder.setMaxDataLen(xmlMaxObjectLen).setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, xmlRecordElement)
+            .setConfig(XmlDataParserFactory.INCLUDE_FIELD_XPATH_ATTRIBUTES_KEY, includeFieldXpathAttributes)
             .setConfig(XmlDataParserFactory.RECORD_ELEMENT_XPATH_NAMESPACES_KEY, xPathNamespaceContext);
         break;
       case SDC_JSON:

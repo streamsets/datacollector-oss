@@ -32,6 +32,11 @@ public abstract class Constants {
       "  Or, it can be a simplified XPath expression (see docs), with elements matching the XPath expression" +
       " as records.  Leaving it blank will treat the whole XML document as one record.";
 
+  public static final String INCLUDE_FIELD_XPATH_ATTRIBUTES_DESCRIPTION = "Include XPath expressions that indicate " +
+      "the path to the input node that was parsed to create each field.  If enabled, each field will receive an " +
+      "attribute named \"xpath\" whose value is the XPath expression.  Any namespace prefixes will be mapped to " +
+      "the full URI via new xmlns:* attributes in the record header.";
+
   public static final String XPATH_NAMESPACE_CONTEXT_DESCRIPTION = "Namespace context to use if the delimiter" +
       " is an XPath expression.  This should map namespace prefixes to URIs.  Any namespace prefix that is used" +
       " in the record separator expression must be defined here.";

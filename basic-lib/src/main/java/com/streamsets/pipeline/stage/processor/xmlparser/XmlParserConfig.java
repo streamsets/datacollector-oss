@@ -92,12 +92,23 @@ public class XmlParserConfig {
   public String xmlRecordElement = "";
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Include Field XPaths",
+      defaultValue = ""+XmlDataParserFactory.INCLUDE_FIELD_XPATH_ATTRIBUTES_DEFAULT,
+      description = Constants.INCLUDE_FIELD_XPATH_ATTRIBUTES_DESCRIPTION,
+      displayPosition = 43,
+      group = "XML"
+  )
+  public boolean includeFieldXpathAttributes = XmlDataParserFactory.INCLUDE_FIELD_XPATH_ATTRIBUTES_DEFAULT;
+
+  @ConfigDef(
       required = false,
       type = ConfigDef.Type.MAP,
       label = "Namespaces",
       description = Constants.XPATH_NAMESPACE_CONTEXT_DESCRIPTION,
       defaultValue = "{}",
-      displayPosition = 41,
+      displayPosition = 45,
       group = "XML"
   )
   public Map<String, String> xPathNamespaceContext = new HashMap<>();
@@ -172,6 +183,7 @@ public class XmlParserConfig {
 
     builder.setRemoveCtrlChars(removeCtrlChars).setMaxDataLen(-1)
         .setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, xmlRecordElement)
+        .setConfig(XmlDataParserFactory.INCLUDE_FIELD_XPATH_ATTRIBUTES_KEY, includeFieldXpathAttributes)
         .setConfig(XmlDataParserFactory.RECORD_ELEMENT_XPATH_NAMESPACES_KEY, xPathNamespaceContext);
     return builder.build();
   }

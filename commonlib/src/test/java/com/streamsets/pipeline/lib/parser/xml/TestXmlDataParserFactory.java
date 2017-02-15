@@ -27,31 +27,22 @@ import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.DataParserFormat;
+import com.streamsets.pipeline.lib.xml.StreamingXmlParser;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
-import org.junit.After;
+import com.streamsets.testing.ApiUtils;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 public class TestXmlDataParserFactory {
 
   private Stage.Context getContext() {
     return ContextInfoCreator.createSourceContext("i", false, OnRecordError.TO_ERROR, Collections.EMPTY_LIST);
-  }
-
-  @Before
-  public void setUp() {
-    System.setProperty(XmlCharDataParser.INCLUDE_XPATH_MAP, "true");
-  }
-
-  @After
-  public void tearDown() {
-    System.getProperties().remove(XmlCharDataParser.INCLUDE_XPATH_MAP);
   }
 
   @Test
@@ -165,6 +156,7 @@ public class TestXmlDataParserFactory {
     DataParserFactory factory = dataParserFactoryBuilder
         .setMaxDataLen(1000)
         .setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, "")
+        .setConfig(XmlDataParserFactory.INCLUDE_FIELD_XPATH_ATTRIBUTES_KEY, true)
         .build();
 
     InputStream is = new ByteArrayInputStream(xml.getBytes());
@@ -172,16 +164,76 @@ public class TestXmlDataParserFactory {
     Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
-    Map<String, Field> xpathMap = record.get().getValueAsMap().get("xpath").getValueAsMap();
-    Assert.assertEquals("OBS", xpathMap.get("/root/entry/observation@classCode").getValueAsString());
-    Assert.assertEquals("EVN", xpathMap.get("/root/entry/observation@moodCode").getValueAsString());
-    Assert.assertEquals("false", xpathMap.get("/root/entry/observation@negationInd").getValueAsString());
-    Assert.assertEquals("CD", xpathMap.get("/root/entry/observation/value[0]@type").getValueAsString());
-    Assert.assertEquals("419199007", xpathMap.get("/root/entry/observation/value[0]@code").getValueAsString());
-    Assert.assertEquals("2.16.840.1.113883.6.96", xpathMap.get("/root/entry/observation/value[0]@codeSystem").getValueAsString());
-    Assert.assertEquals("CD", xpathMap.get("/root/entry/observation/value[1]@type").getValueAsString());
-    Assert.assertEquals("520200118", xpathMap.get("/root/entry/observation/value[1]@code").getValueAsString());
-    Assert.assertEquals("3.27.951.2.224994.7.07", xpathMap.get("/root/entry/observation/value[1]@codeSystem").getValueAsString());
+    //Map<String, Field> xpathMap = record.get().getValueAsMap().get("xpath").getValueAsMap();
+
+    Map<String, Field> entryMap = ApiUtils.firstItemAsMap(record.get().getValueAsMap().get("entry"));
+
+    Map<String, Field> observationMap = ApiUtils.firstItemAsMap(entryMap.get("observation"));
+
+    Field classCodeAttr = observationMap.get(StreamingXmlParser.ATTR_PREFIX_KEY+"classCode");
+    Assert.assertEquals("OBS", classCodeAttr.getValueAsString());
+    Assert.assertNotNull(classCodeAttr.getAttributes());
+    Assert.assertEquals(1, classCodeAttr.getAttributes().size());
+    Assert.assertEquals("/root/entry/observation/@classCode", classCodeAttr.getAttribute(StreamingXmlParser.XPATH_KEY));
+
+    Field moodCodeAttr = observationMap.get(StreamingXmlParser.ATTR_PREFIX_KEY+"moodCode");
+    Assert.assertEquals("EVN", moodCodeAttr.getValueAsString());
+    Assert.assertNotNull(moodCodeAttr.getAttributes());
+    Assert.assertEquals(1, moodCodeAttr.getAttributes().size());
+    Assert.assertEquals("/root/entry/observation/@moodCode", moodCodeAttr.getAttribute(StreamingXmlParser.XPATH_KEY));
+
+    Field negationIndAttr = observationMap.get(StreamingXmlParser.ATTR_PREFIX_KEY+"negationInd");
+    Assert.assertEquals("false", negationIndAttr.getValueAsString());
+    Assert.assertNotNull(negationIndAttr.getAttributes());
+    Assert.assertEquals(1, negationIndAttr.getAttributes().size());
+    Assert.assertEquals("/root/entry/observation/@negationInd",
+        negationIndAttr.getAttribute(StreamingXmlParser.XPATH_KEY));
+
+    List<Field> valueList = observationMap.get("value").getValueAsList();
+    Assert.assertEquals(2, valueList.size());
+
+    Map<String, Field> value1 = valueList.get(0).getValueAsMap();
+
+    Field typeAttr = value1.get(StreamingXmlParser.ATTR_PREFIX_KEY+"type");
+    Assert.assertEquals("CD", typeAttr.getValueAsString());
+    Assert.assertNotNull(typeAttr.getAttributes());
+    Assert.assertEquals(1, typeAttr.getAttributes().size());
+    Assert.assertEquals("/root/entry/observation/value[0]/@type", typeAttr.getAttribute(StreamingXmlParser.XPATH_KEY));
+
+    Field codeAttr = value1.get(StreamingXmlParser.ATTR_PREFIX_KEY+"code");
+    Assert.assertEquals("419199007", codeAttr.getValueAsString());
+    Assert.assertNotNull(codeAttr.getAttributes());
+    Assert.assertEquals(1, codeAttr.getAttributes().size());
+    Assert.assertEquals("/root/entry/observation/value[0]/@code", codeAttr.getAttribute(StreamingXmlParser.XPATH_KEY));
+
+    Field codeSysAttr = value1.get(StreamingXmlParser.ATTR_PREFIX_KEY+"codeSystem");
+    Assert.assertEquals("2.16.840.1.113883.6.96", codeSysAttr.getValueAsString());
+    Assert.assertNotNull(codeSysAttr.getAttributes());
+    Assert.assertEquals(1, codeSysAttr.getAttributes().size());
+    Assert.assertEquals("/root/entry/observation/value[0]/@codeSystem",
+        codeSysAttr.getAttribute(StreamingXmlParser.XPATH_KEY));
+
+    Map<String, Field> value2 = valueList.get(1).getValueAsMap();
+
+    typeAttr = value2.get(StreamingXmlParser.ATTR_PREFIX_KEY+"type");
+    Assert.assertEquals("CD", typeAttr.getValueAsString());
+    Assert.assertNotNull(typeAttr.getAttributes());
+    Assert.assertEquals(1, typeAttr.getAttributes().size());
+    Assert.assertEquals("/root/entry/observation/value[1]/@type", typeAttr.getAttribute(StreamingXmlParser.XPATH_KEY));
+
+    codeAttr = value2.get(StreamingXmlParser.ATTR_PREFIX_KEY+"code");
+    Assert.assertEquals("520200118", codeAttr.getValueAsString());
+    Assert.assertNotNull(codeAttr.getAttributes());
+    Assert.assertEquals(1, codeAttr.getAttributes().size());
+    Assert.assertEquals("/root/entry/observation/value[1]/@code", codeAttr.getAttribute(StreamingXmlParser.XPATH_KEY));
+
+    codeSysAttr = value2.get(StreamingXmlParser.ATTR_PREFIX_KEY+"codeSystem");
+    Assert.assertEquals("3.27.951.2.224994.7.07", codeSysAttr.getValueAsString());
+    Assert.assertNotNull(codeSysAttr.getAttributes());
+    Assert.assertEquals(1, codeSysAttr.getAttributes().size());
+    Assert.assertEquals("/root/entry/observation/value[1]/@codeSystem",
+        codeSysAttr.getAttribute(StreamingXmlParser.XPATH_KEY));
+
     parser.close();
   }
 }
