@@ -136,7 +136,12 @@ angular
         function (results) {
           $scope.fetching = false;
           groupList = results[0].data;
-          userList = _.pluck(results[1].data, 'name');
+          userList = [];
+          angular.forEach(results[1].data, function (user) {
+            if (!user.roles || user.roles.indexOf('admin') === -1) {
+              userList.push(user.name);
+            }
+          });
           userList.sort();
           filterUsersAndGroups();
         },
@@ -168,7 +173,12 @@ angular
         function (results) {
           $scope.fetching = false;
           groupList = _.pluck(results[0].data, 'id');
-          userList = _.pluck(results[1].data, 'id');
+          userList = [];
+          angular.forEach(results[1].data, function (user) {
+            if (!user.roles || user.roles.indexOf('datacollector:admin') === -1) {
+              userList.push(user.id);
+            }
+          });
           filterUsersAndGroups();
         },
         function (res) {
