@@ -365,6 +365,10 @@ public class PipelineStoreResource {
           return p2.getCreated().compareTo(p1.getCreated());
         }
 
+        if (orderBy.equals(PipelineOrderByFields.CREATOR)) {
+          return p1.getCreator().compareTo(p2.getCreator());
+        }
+
         if(orderBy.equals(PipelineOrderByFields.STATUS)) {
           try {
             PipelineState p1State = null;
