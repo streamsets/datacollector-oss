@@ -46,6 +46,9 @@ public class JdbcQueryDExecutor extends DExecutor {
 
   @Override
   protected Executor createExecutor() {
+    // The executor is meant to issue changing queries so having connection in read only mode doesn't make sense
+    config.hikariConfigBean.readOnly = false;
+
     return new JdbcQueryExecutor(config);
   }
 
