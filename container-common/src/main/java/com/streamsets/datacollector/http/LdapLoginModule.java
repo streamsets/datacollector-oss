@@ -324,6 +324,7 @@ public class LdapLoginModule extends AbstractLoginModule
 
     String roleFilter = buildFilter(_roleFilter, _roleObjectClass, _roleMemberAttribute);
     if (_roleFilter.contains(DN)) {
+      userDn = userDn.replace("\\", "\\\\\\");
       roleFilter = roleFilter.replace(DN, userDn);
     } else if (_roleFilter.contains(USER)){
       roleFilter = roleFilter.replace(USER, username);
