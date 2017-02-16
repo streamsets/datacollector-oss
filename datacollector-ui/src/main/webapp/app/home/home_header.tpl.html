@@ -116,25 +116,18 @@
         <i class="fa fa-cloud-upload fa-14x"></i>
       </a>
 
-      <!--a class="btn btn-link icon-button"
+      <a class="btn btn-link icon-button"
+         ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && !common.isSlaveNode"
          ng-disabled="selectedPipelineList.length === 0"
-         ng-click="selectedPipelineList.length === 0 || exportSelectedPipelines(true)"
-         tooltip-placement="bottom"
-         tooltip="{{('global.form.export' | translate)  + ' (' + selectedPipelineList.length + ')'}}"
-         tooltip-popup-delay="500">
-        <i class="glyphicon glyphicon-export fa-14x"></i>
-      </a-->
-
-      <a ng-disabled="selectedPipelineList.length === 0 || common.isSlaveNode"
          ng-click="selectedPipelineList.length === 0 || deleteSelectedPipeline()"
          tooltip-placement="bottom"
          tooltip="{{('global.form.delete' | translate) + ' (' + selectedPipelineList.length + ')'}}"
-         tooltip-popup-delay="500"
-         class="btn btn-link icon-button">
+         tooltip-popup-delay="500">
         <i class="fa fa-trash-o fa-14x"></i>
       </a>
 
-      <a ng-disabled="selectedPipelineList.length !== 1 || common.isSlaveNode"
+      <a ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && !common.isSlaveNode"
+         ng-disabled="selectedPipelineList.length !== 1 || common.isSlaveNode"
          ng-click="selectedPipelineList.length !== 1 || duplicatePipelines()"
          tooltip-placement="bottom"
          tooltip="{{'global.form.duplicate' | translate}}"
@@ -152,7 +145,8 @@
         <i class="fa fa-share-alt fa-14x"></i>
       </a>
 
-      <a ng-disabled="selectedPipelineList.length === 0 || common.isSlaveNode"
+      <a ng-if="isAuthorized([userRoles.admin, userRoles.manager])"
+         ng-disabled="selectedPipelineList.length === 0 || common.isSlaveNode"
          ng-click="selectedPipelineList.length === 0 || startSelectedPipelines()"
          tooltip-placement="bottom"
          tooltip="{{('home.header.start' | translate)  + ' (' + selectedPipelineList.length + ')'}}"
@@ -161,7 +155,8 @@
         <i class="glyphicon glyphicon-play fa-14x"></i>
       </a>
 
-      <a ng-disabled="selectedPipelineList.length === 0 || common.isSlaveNode"
+      <a ng-if="isAuthorized([userRoles.admin, userRoles.manager])"
+         ng-disabled="selectedPipelineList.length === 0 || common.isSlaveNode"
          ng-click="selectedPipelineList.length === 0 || stopSelectedPipelines()"
          tooltip-placement="bottom"
          tooltip="{{('home.header.stop' | translate)  + ' (' + selectedPipelineList.length + ')'}}"
