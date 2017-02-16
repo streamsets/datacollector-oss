@@ -1,0 +1,127 @@
+# Copyright 2017 StreamSets Inc.
+#
+# Licensed under the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+dn: ou=departments,dc=example,dc=org
+ObjectClass: organizationalunit
+ou: departments
+
+dn: ou=employees,dc=example,dc=org
+ObjectClass: organizationalunit
+ou: employees
+
+dn: uid=comma\, name,ou=employees,dc=example,dc=org
+ObjectClass: inetOrgPerson
+uid: comma, name
+cn: comma, name
+sn: comma
+userPassword: test
+
+dn: uid=semi\;colon,ou=employees,dc=example,dc=org
+ObjectClass: inetOrgPerson
+uid: semi;colon
+cn: semi;colon
+sn: semicolon
+userPassword: test
+
+dn: uid=back\\slash,ou=employees,dc=example,dc=org
+ObjectClass: inetOrgPerson
+uid: back\slash
+cn: back\slash
+sn: backslash
+userPassword: test
+
+dn: uid=pound\#sign,ou=employees,dc=example,dc=org
+ObjectClass: inetOrgPerson
+uid: pound#sign
+cn: pound#sign
+sn: pound
+userPassword: test
+
+dn: uid=plus\+sign,ou=employees,dc=example,dc=org
+ObjectClass: inetOrgPerson
+uid: plus+sign
+cn: plus+sign
+sn: plus
+userPassword: test
+
+dn: uid=greater\<,ou=employees,dc=example,dc=org
+ObjectClass: inetOrgPerson
+uid: greater<
+cn: greater<
+sn: greater
+userPassword: test
+
+dn: uid=smaller\>,ou=employees,dc=example,dc=org
+ObjectClass: inetOrgPerson
+uid: smaller>
+cn: smaller>
+sn: smaller
+userPassword: test
+
+dn: uid=\"double-quote\",ou=employees,dc=example,dc=org
+ObjectClass: inetOrgPerson
+uid: "double-quote"
+cn: "double-quote"
+sn: double-quote
+userPassword: test
+
+dn: uid=equal\=sign,ou=employees,dc=example,dc=org
+ObjectClass: inetOrgPerson
+uid: equal=sign
+cn: equal=sign
+sn: equal
+userPassword: test
+
+dn: uid=\ spaces\ ,ou=employees,dc=example,dc=org
+ObjectClass: inetOrgPerson
+uid:  spaces
+cn: spaces
+sn: spaces
+userPassword: test
+
+
+dn: cn=escape members,ou=departments,dc=example,dc=org
+ObjectClass: groupOfNames
+cn: memberGroup
+member: uid=comma\, name,ou=employees,dc=example,dc=org
+member: uid=semi\;colon,ou=employees,dc=example,dc=org
+member: uid=back\\slash,ou=employees,dc=example,dc=org
+member: uid=pound\#sign,ou=employees,dc=example,dc=org
+member: uid=plus\+sign,ou=employees,dc=example,dc=org
+member: uid=greater\<,ou=employees,dc=example,dc=org
+member: uid=smaller\>,ou=employees,dc=example,dc=org
+member: uid=\"double-quote\",ou=employees,dc=example,dc=org
+member: uid=equal\=sign,ou=employees,dc=example,dc=org
+member: uid=\ spaces\ ,ou=employees,dc=example,dc=org
+
+
+dn: cn=escape memberUid,ou=departments,dc=example,dc=org
+objectClass: posixGroup
+cn: memberUidGroup
+gidNumber: 1001
+memberUid: comma, name
+memberUid: semi;colon
+memberUid: back\slash
+memberUid: pound#sign
+memberUid: plus+sign
+memberUid: greater<
+memberUid: smaller>
+memberUid: "double-quote"
+memberUid: equal=sign
+memberUid:  spaces
