@@ -30,6 +30,7 @@ import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.creation.PipelineStageBeans;
 import com.streamsets.datacollector.creation.StageBean;
 import com.streamsets.datacollector.email.EmailSender;
+import com.streamsets.datacollector.execution.runner.common.RunnerUtils;
 import com.streamsets.datacollector.memory.MemoryUsageCollectorResourceBundle;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
 import com.streamsets.datacollector.runner.production.StatsAggregationHandler;
@@ -258,9 +259,8 @@ public class Pipeline {
     }
 
     // Initialize all source-less pipeline runners
-    int runnerId = 0;
     for(List<Pipe> runnerPipes: pipes) {
-      MDC.put(LogConstants.RUNNER, String.valueOf(runnerId++));
+      MDC.put(LogConstants.RUNNER, String.valueOf(RunnerUtils.getRunnerId(runnerPipes)));
       for(Pipe pipe : runnerPipes) {
         issues.addAll(initPipe(pipe, pipeContext));
       }

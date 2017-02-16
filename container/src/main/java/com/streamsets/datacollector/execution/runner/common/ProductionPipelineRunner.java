@@ -568,8 +568,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     // that holds reference to all class loaders. Runners with id >0 do not own their class loaders and hence needs to
     // be destroyed before the runner with id '0'.
     for(List<Pipe> pipeRunner : Lists.reverse(pipes)) {
-      int runnerId = pipeRunner.get(0).getStage().getContext().getRunnerId();
-      MDC.put(LogConstants.RUNNER, String.valueOf(runnerId));
+      MDC.put(LogConstants.RUNNER, String.valueOf(RunnerUtils.getRunnerId(pipeRunner)));
       pipeBatch.skipStage(originPipe);
       destroyPipes(pipeRunner, pipeBatch, badRecordsHandler);
 
@@ -704,8 +703,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     List<Pipe> runnerPipes = null;
     try {
       runnerPipes = runnerPool.getRunner();
-      int runnerId = runnerPipes.get(0).getStage().getContext().getRunnerId();
-      MDC.put(LogConstants.RUNNER, String.valueOf(runnerId));
+      MDC.put(LogConstants.RUNNER, String.valueOf(RunnerUtils.getRunnerId(runnerPipes)));
       for (Pipe pipe : runnerPipes) {
         committed = processPipe(pipe, pipeBatch, committed, entityName, newOffset, memoryConsumedByStage, stageBatchMetrics);
       }
