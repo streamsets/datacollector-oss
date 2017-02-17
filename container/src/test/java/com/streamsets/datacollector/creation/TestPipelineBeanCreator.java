@@ -596,7 +596,7 @@ public class TestPipelineBeanCreator {
 
     // Target
     Assert.assertEquals(1, bean.getPipelineStageBeans().size());
-    PipelineStageBeans stages = bean.getPipelineStageBeans().get(0);
+    PipelineStageBeans stages = bean.getPipelineStageBeans();
     Assert.assertEquals(1, stages.getStages().size());
     MyTarget target = (MyTarget)stages.getStages().get(0).getStage();
     Assert.assertEquals(ImmutableList.of("T"), target.list);
@@ -674,7 +674,7 @@ public class TestPipelineBeanCreator {
 
     // There should be two parallel pipelines (~targets)
     Assert.assertEquals(1, bean.getPipelineStageBeans().size());
-    PipelineStageBeans stages = bean.getPipelineStageBeans().get(0);
+    PipelineStageBeans stages = bean.getPipelineStageBeans();
     Assert.assertEquals(1, stages.getStages().size());
     MyTarget target = (MyTarget)stages.getStages().get(0).getStage();
     Assert.assertEquals(ImmutableList.of("T"), target.list);

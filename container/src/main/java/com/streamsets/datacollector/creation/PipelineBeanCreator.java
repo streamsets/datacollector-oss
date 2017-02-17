@@ -97,18 +97,18 @@ public abstract class PipelineBeanCreator {
     StageBean errorStageBean = null;
     StageBean statsStageBean = null;
     StageBean origin = null;
-    List<PipelineStageBeans> stages = new ArrayList<>();
+    PipelineStageBeans stages = null;
     if (pipelineConfigBean != null && pipelineConfigBean.constants != null) {
       // Instantiate usual stages
       if(!pipelineConf.getStages().isEmpty()) {
         origin = createStageBean(forExecution, library, pipelineConf.getStages().get(0), false, pipelineConfigBean.constants, errors);
 
-        stages.add(createPipelineStageBeans(
+        stages = createPipelineStageBeans(
           forExecution,
           library,
           pipelineConf.getStages().subList(1, pipelineConf.getStages().size()),
           pipelineConfigBean.constants, errors
-        ));
+        );
       }
 
       // It is not mandatory to have a stats aggregating target configured

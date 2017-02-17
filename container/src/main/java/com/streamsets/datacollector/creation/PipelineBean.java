@@ -19,19 +19,17 @@
  */
 package com.streamsets.datacollector.creation;
 
-import java.util.List;
-
 public class PipelineBean {
   private final PipelineConfigBean config;
   private final StageBean origin;
-  private final List<PipelineStageBeans> stages;
+  private final PipelineStageBeans stages;
   private final StageBean errorStage;
   private final StageBean statsAggregatorStage;
 
   public PipelineBean(
       PipelineConfigBean config,
       StageBean origin,
-      List<PipelineStageBeans> stages,
+      PipelineStageBeans stages,
       StageBean errorStage,
       StageBean statsAggregatorStage) {
     this.config = config;
@@ -49,7 +47,7 @@ public class PipelineBean {
     return origin;
   }
 
-  public List<PipelineStageBeans> getPipelineStageBeans() {
+  public PipelineStageBeans getPipelineStageBeans() {
     return stages;
   }
 

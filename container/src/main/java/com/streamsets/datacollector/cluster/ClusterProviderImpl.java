@@ -562,10 +562,7 @@ public class ClusterProviderImpl implements ClusterProvider {
       pipelineConfigurations.add(statsStage.getConfiguration());
     }
     pipelineConfigurations.add(pipelineBean.getOrigin().getConfiguration());
-    // Since all pipeline runners contains the same stages with same configuration, we don't need to iterate over
-    // all the runners here. We'll get the same information we need by just looking at the first runner (that always
-    // have to exists).
-    for (StageBean stageBean : pipelineBean.getPipelineStageBeans().get(0).getStages()) {
+    for (StageBean stageBean : pipelineBean.getPipelineStageBeans().getStages()) {
       pipelineConfigurations.add(stageBean.getConfiguration());
     }
     ExecutionMode executionMode = ExecutionMode.STANDALONE;

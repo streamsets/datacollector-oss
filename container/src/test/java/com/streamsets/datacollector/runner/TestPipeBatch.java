@@ -61,7 +61,7 @@ public class TestPipeBatch {
     PipelineBean pipelineBean = getPipelineBean();
     StageRuntime[] stages = {
       new StageRuntime(pipelineBean, pipelineBean.getOrigin()),
-      new StageRuntime(pipelineBean, pipelineBean.getPipelineStageBeans().get(0).getStages().get(0))
+      new StageRuntime(pipelineBean, pipelineBean.getPipelineStageBeans().getStages().get(0))
     };
 
     StageContext context = Mockito.mock(StageContext.class);
@@ -125,7 +125,7 @@ public class TestPipeBatch {
     PipelineBean pipelineBean = getPipelineBean();
     StageRuntime[] stages = {
       new StageRuntime(pipelineBean, pipelineBean.getOrigin()),
-      new StageRuntime(pipelineBean, pipelineBean.getPipelineStageBeans().get(0).getStages().get(0))
+      new StageRuntime(pipelineBean, pipelineBean.getPipelineStageBeans().getStages().get(0))
     };
 
     StageContext context = Mockito.mock(StageContext.class);
@@ -219,7 +219,7 @@ public class TestPipeBatch {
     PipelineBean pipelineBean = getPipelineBean();
     StageRuntime[] stages = {
       new StageRuntime(pipelineBean, pipelineBean.getOrigin()),
-      new StageRuntime(pipelineBean, pipelineBean.getPipelineStageBeans().get(0).getStages().get(0))
+      new StageRuntime(pipelineBean, pipelineBean.getPipelineStageBeans().getStages().get(0))
     };
 
     StageContext context = Mockito.mock(StageContext.class);
@@ -260,7 +260,7 @@ public class TestPipeBatch {
     PipelineBean pipelineBean = getPipelineBean();
     StageRuntime[] stages = {
       new StageRuntime(pipelineBean, pipelineBean.getOrigin()),
-      new StageRuntime(pipelineBean, pipelineBean.getPipelineStageBeans().get(0).getStages().get(0))
+      new StageRuntime(pipelineBean, pipelineBean.getPipelineStageBeans().getStages().get(0))
     };
 
     StageContext context = Mockito.mock(StageContext.class);
@@ -313,7 +313,7 @@ public class TestPipeBatch {
     PipelineBean pipelineBean = getPipelineBean();
     StageRuntime[] stages = {
       new StageRuntime(pipelineBean, pipelineBean.getOrigin()),
-      new StageRuntime(pipelineBean, pipelineBean.getPipelineStageBeans().get(0).getStages().get(0))
+      new StageRuntime(pipelineBean, pipelineBean.getPipelineStageBeans().getStages().get(0))
     };
 
     StageContext context = Mockito.mock(StageContext.class);
@@ -360,7 +360,7 @@ public class TestPipeBatch {
     PipelineBean pipelineBean = getPipelineBean();
     StageRuntime[] stages = {
       new StageRuntime(pipelineBean, pipelineBean.getOrigin()),
-      new StageRuntime(pipelineBean, pipelineBean.getPipelineStageBeans().get(0).getStages().get(0))
+      new StageRuntime(pipelineBean, pipelineBean.getPipelineStageBeans().getStages().get(0))
     };
 
     StageContext context = Mockito.mock(StageContext.class);

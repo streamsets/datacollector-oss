@@ -229,7 +229,7 @@ public class Pipeline {
           for (int runnerId = 1; runnerId < runnerCount; runnerId++) {
             // Create list of Stage beans
             PipelineStageBeans beans = PipelineBeanCreator.get().duplicatePipelineStageBeans(
-              pipelineBean.getPipelineStageBeans().get(0),
+              pipelineBean.getPipelineStageBeans(),
               originPipe.getStage().getConstants(),
               issues
             );
@@ -387,8 +387,6 @@ public class Pipeline {
       StageRuntime statsAggregator;
       List<List<Pipe>> pipes = new ArrayList<>();
       if (pipelineBean != null) {
-        Preconditions.checkArgument(!pipelineBean.getPipelineStageBeans().isEmpty(), "At least one instance of pipeline must exist!");
-
         // Origin runtime and pipe
         StageRuntime originRuntime = createAndInitializeStageRuntime(
           pipelineConf,
@@ -406,7 +404,6 @@ public class Pipeline {
         SourcePipe originPipe = createOriginPipe(originRuntime, runner);
 
         // Generate runtime and pipe for the first source-less pipeline runner
-        Preconditions.checkArgument(pipelineBean.getPipelineStageBeans().size() == 1, "There are already more pipeline stage beans then expected");
         pipes.add(createSourceLessRunner(
           pipelineName,
           rev,
@@ -417,7 +414,7 @@ public class Pipeline {
           pipelineBean,
           originRuntime,
           0,
-          pipelineBean.getPipelineStageBeans().get(0),
+          pipelineBean.getPipelineStageBeans(),
           observer,
           memoryUsageCollectorResourceBundle,
           scheduledExecutor
