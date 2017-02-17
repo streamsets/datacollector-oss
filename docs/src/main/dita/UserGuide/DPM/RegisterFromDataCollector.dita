@@ -112,6 +112,30 @@
                 <cmd>Click <uicontrol>Save</uicontrol>.</cmd>
             </step>
             <step>
+                <cmd>If the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> uses file-based authentication, you can click <uicontrol>Create DPM Groups
+                        and Users</uicontrol> to create a <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                    /> user account and group for each <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> user account and group.</cmd>
+                <info>The <uicontrol>Create DPM Groups and Users</uicontrol> window maps all
+                    existing <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> user accounts and groups to <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                    /> user accounts and groups. You can remove users or groups and can edit the
+                    IDs, names, and email addresses as needed.<p>When you have finished reviewing
+                        the users and groups to create, click <uicontrol>Create</uicontrol>. Each
+                        new user is assigned a default set of <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                        /> roles. Groups are not assigned any roles. After you log in to <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                        />, change the default role assignments as needed to secure the integrity of
+                        your organization and data. </p></info>
+            </step>
+            <step>
                 <cmd>Restart the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> in one of the following ways:</cmd>

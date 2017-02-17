@@ -42,16 +42,14 @@
                     />.</dd>
             </dlentry>
             <dlentry>
-                <dt>Create a DPM user account for each Data Collector user.</dt>
+                <dt>Create a DPM user account and group for each Data Collector user and group.</dt>
                 <dd>Create a <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                    /> user account for each <ph
+                    /> user account and group for each <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> user account, assigning each <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                    /> user account the corresponding <ph
+                    /> user account and group, assigning the corresponding <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> role. After a <ph
+                    /> roles to each. After a <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> is registered with <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
@@ -75,7 +73,16 @@
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                     /> user accounts, see the first tutorial in the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                    /> online help.</dd>
+                    /> online help.<note type="tip">If <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> uses file-based authentication and if you register the <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> from the <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> console, you can skip this step and create <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                        /> user accounts during the registration process, as described in <xref
+                            href="RegisterFromDataCollector.dita#task_a4y_v1g_xw"/>.</note></dd>
             </dlentry>
         </dl>
  </conbody>
