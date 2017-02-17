@@ -56,7 +56,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Pipeline {
   private static final Logger LOG = LoggerFactory.getLogger(Pipeline.class);
@@ -81,6 +83,7 @@ public class Pipeline {
   private final MemoryUsageCollectorResourceBundle memoryUsageCollectorResourceBundle;
   private final ResourceControlledScheduledExecutor scheduledExecutor;
   private final List<Stage.Info> stageInfos;
+  private final List<Map<String, Object>> runnerSharedMaps;
 
   private Pipeline(
       String name,
@@ -97,7 +100,8 @@ public class Pipeline {
       StatsAggregationHandler statsAggregationHandler,
       MemoryUsageCollectorResourceBundle memoryUsageCollectorResourceBundle,
       ResourceControlledScheduledExecutor scheduledExecutor,
-      List<Stage.Info> stageInfos
+      List<Stage.Info> stageInfos,
+      List<Map<String, Object>> runnerSharedMaps
   ) {
     this.pipelineBean = pipelineBean;
     this.name = name;
@@ -116,6 +120,7 @@ public class Pipeline {
     this.memoryUsageCollectorResourceBundle = memoryUsageCollectorResourceBundle;
     this.scheduledExecutor = scheduledExecutor;
     this.stageInfos = stageInfos;
+    this.runnerSharedMaps = runnerSharedMaps;
   }
 
   PipelineConfigBean getPipelineConfig() {
@@ -248,7 +253,8 @@ public class Pipeline {
               beans,
               observer,
               memoryUsageCollectorResourceBundle,
-              scheduledExecutor
+              scheduledExecutor,
+              runnerSharedMaps
             ));
           }
         } catch (PipelineRuntimeException e) {
@@ -386,6 +392,7 @@ public class Pipeline {
       StageRuntime errorStage;
       StageRuntime statsAggregator;
       List<List<Pipe>> pipes = new ArrayList<>();
+      List<Map<String, Object>> runnerSharedMaps = new ArrayList<>();
       if (pipelineBean != null) {
         // Origin runtime and pipe
         StageRuntime originRuntime = createAndInitializeStageRuntime(
@@ -398,10 +405,16 @@ public class Pipeline {
           pipelineName,
           rev,
           configuration,
-          0
+          0,
+          new ConcurrentHashMap<>()
         );
 
         SourcePipe originPipe = createOriginPipe(originRuntime, runner);
+
+        // Generate shared maps for all runners
+        for(StageBean ignore : pipelineBean.getPipelineStageBeans().getStages()) {
+          runnerSharedMaps.add(new ConcurrentHashMap<>());
+        }
 
         // Generate runtime and pipe for the first source-less pipeline runner
         pipes.add(createSourceLessRunner(
@@ -417,7 +430,8 @@ public class Pipeline {
           pipelineBean.getPipelineStageBeans(),
           observer,
           memoryUsageCollectorResourceBundle,
-          scheduledExecutor
+          scheduledExecutor,
+          runnerSharedMaps
         ));
 
         // Error stage handling
@@ -431,7 +445,8 @@ public class Pipeline {
           pipelineName,
           rev,
           configuration,
-          0
+          0,
+          new ConcurrentHashMap<>()
         );
         BadRecordsHandler badRecordsHandler = new BadRecordsHandler(errorStage);
 
@@ -448,7 +463,8 @@ public class Pipeline {
             pipelineName,
             rev,
             configuration,
-            0
+            0,
+            new ConcurrentHashMap<>()
           );
 
           statsAggregationHandler = new StatsAggregationHandler(statsAggregator);
@@ -470,7 +486,8 @@ public class Pipeline {
             statsAggregationHandler,
             memoryUsageCollectorResourceBundle,
             scheduledExecutor,
-            stageInfos
+            stageInfos,
+            runnerSharedMaps
           );
         } catch (Exception e) {
           String msg = "Can't instantiate pipeline: " + e;
@@ -516,11 +533,17 @@ public class Pipeline {
     PipelineStageBeans beans,
     Observer observer,
     MemoryUsageCollectorResourceBundle memoryUsageCollectorResourceBundle,
-    ResourceControlledScheduledExecutor scheduledExecutor
+    ResourceControlledScheduledExecutor scheduledExecutor,
+    List<Map<String, Object>> sharedRunnerMaps
   ) throws PipelineRuntimeException {
+    Preconditions.checkArgument(beans.size() == sharedRunnerMaps.size(), "New runner have different number of states then original one!");
     List<StageRuntime> stages = new ArrayList<>(1 + beans.size());
     stages.add(originRuntime);
-    for(StageBean stageBean : beans.getStages()) {
+
+    for(int i = 0; i <  beans.getStages().size(); i ++) {
+      StageBean stageBean = beans.get(i);
+      Map<String, Object> sharedRunnerMap = sharedRunnerMaps.get(i);
+
       stages.add(createAndInitializeStageRuntime(
         pipelineConf,
         pipelineBean,
@@ -531,7 +554,8 @@ public class Pipeline {
         pipelineName,
         rev,
         configuration,
-        runnerId
+        runnerId,
+        sharedRunnerMap
       ));
     }
 
@@ -632,7 +656,8 @@ public class Pipeline {
     String pipelineName,
     String pipelineRev,
     Configuration configuration,
-    int runnerId
+    int runnerId,
+    Map<String, Object> runnerSharedMap
   ) {
     // Create StageRuntime itself
     StageRuntime stageRuntime = new StageRuntime(pipelineBean, stageBean);
@@ -657,7 +682,8 @@ public class Pipeline {
         getExecutionMode(pipelineConfiguration),
         pipelineRunner.getRuntimeInfo(),
         new EmailSender(configuration),
-        configuration
+        configuration,
+        runnerSharedMap
       )
     );
 

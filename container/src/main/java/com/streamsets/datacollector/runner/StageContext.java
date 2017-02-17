@@ -67,6 +67,7 @@ import com.streamsets.pipeline.api.ext.RecordWriter;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.sampling.RecordSampler;
+import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,6 +79,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class StageContext implements Source.Context, PushSource.Context, Target.Context, Processor.Context, ContextExtensions {
 
@@ -108,6 +110,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   private volatile boolean stop;
   private final EmailSender emailSender;
   private final Sampler sampler;
+  private final Map<String, Object> sharedRunnerMap;
 
   //for SDK
   public StageContext(
@@ -159,6 +162,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
     this.resourcesDir = resourcesDir;
     this.emailSender = emailSender;
     reportErrorDelegate = errorSink;
+    this.sharedRunnerMap = new ConcurrentHashMap<>();
 
     // sample all records while testing
     Configuration configuration = new Configuration();
@@ -178,7 +182,8 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
       ExecutionMode executionMode,
       RuntimeInfo runtimeInfo,
       EmailSender emailSender,
-      Configuration configuration
+      Configuration configuration,
+      Map<String, Object> sharedRunnerMap
   ) {
     this.pipelineName = pipelineName;
     this.rev = rev;
@@ -200,6 +205,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
     int sampleSize = configuration.get(SDC_RECORD_SAMPLING_SAMPLE_SIZE, 1);
     int populationSize = configuration.get(SDC_RECORD_SAMPLING_POPULATION_SIZE, 10000);
     this.sampler = new RecordSampler(this, stageType == StageType.SOURCE, sampleSize, populationSize);
+    this.sharedRunnerMap = sharedRunnerMap;
   }
 
   private Map<String, Class<?>[]> getConfigToElDefMap(StageRuntime stageRuntime) {
@@ -508,6 +514,11 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   @Override
   public String getPipelineId() {
     return pipelineName;
+  }
+
+  @Override
+  public Map<String, Object> getStageRunnerSharedMap() {
+    return sharedRunnerMap;
   }
 
   @Override
