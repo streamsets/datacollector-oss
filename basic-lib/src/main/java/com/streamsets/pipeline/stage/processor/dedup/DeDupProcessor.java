@@ -21,28 +21,27 @@ package com.streamsets.pipeline.stage.processor.dedup;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.ToErrorContext;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.RecordProcessor;
 import com.streamsets.pipeline.lib.hashing.HashingUtil;
 import com.streamsets.pipeline.lib.queue.XEvictingQueue;
-import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
-import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class DeDupProcessor extends RecordProcessor {
   private static final long MEMORY_USAGE_PER_HASH = 85;
+  private static final String CACHE_KEY = "cache";
   private static final Logger LOG = LoggerFactory.getLogger(DeDupProcessor.class);
 
   private final  int recordCountWindow;
@@ -62,7 +61,7 @@ public class DeDupProcessor extends RecordProcessor {
 
   private HashFunction hasher;
   private HashingUtil.RecordFunnel funnel;
-  private Cache<HashCode, Object> hashCache;
+  private Cache<HashCode, HashCode> hashCache;
   private XEvictingQueue<HashCode> hashBuffer;
   private String uniqueLane;
   private String duplicateLane;
@@ -96,16 +95,22 @@ public class DeDupProcessor extends RecordProcessor {
       hasher = HashingUtil.getHasher(HashingUtil.HashType.MURMUR3_128);
       funnel = (compareFields == SelectFields.ALL_FIELDS) ? HashingUtil.getRecordFunnel(Collections.EMPTY_LIST) :
           HashingUtil.getRecordFunnel(fieldsToCompare);
-      CacheBuilder cacheBuilder = CacheBuilder.newBuilder();
-      if (timeWindowSecs > 0) {
-        cacheBuilder.expireAfterWrite(timeWindowSecs, TimeUnit.SECONDS);
-      }
-      hashCache = cacheBuilder.build(new CacheLoader<HashCode, Object>() {
-        @Override
-        public Object load(HashCode key) throws Exception {
-          return VOID;
+
+      Map<String, Object> runnerSharedMap = getContext().getStageRunnerSharedMap();
+      synchronized (runnerSharedMap) {
+        if(!runnerSharedMap.containsKey(CACHE_KEY)) {
+          CacheBuilder cacheBuilder = CacheBuilder.newBuilder();
+          if (timeWindowSecs > 0) {
+            cacheBuilder.expireAfterWrite(timeWindowSecs, TimeUnit.SECONDS);
+          }
+          hashCache = cacheBuilder.build();
+
+          runnerSharedMap.put(CACHE_KEY, hashCache);
+        } else {
+          hashCache = (Cache<HashCode, HashCode>) runnerSharedMap.get(CACHE_KEY);
         }
-      });
+      }
+
       hashBuffer = XEvictingQueue.create(recordCountWindow);
       hashAttrName = getInfo() + ".hash";
       uniqueLane = getContext().getOutputLanes().get(OutputStreams.UNIQUE.ordinal());
@@ -114,18 +119,23 @@ public class DeDupProcessor extends RecordProcessor {
     return issues;
   }
 
-  boolean duplicateCheck(Record record) {
-    boolean dup = true;
+  boolean duplicateCheck(Record record) throws ExecutionException {
     HashCode hash = hasher.hashObject(record, funnel);
     record.getHeader().setAttribute(hashAttrName, hash.toString());
-    if (hashCache.getIfPresent(hash) == null) {
-      hashCache.put(hash, VOID);
+
+    HashCode hashInstance = hashCache.get(hash, () -> hash);
+    // We are riding on the fact that if the instance is the same we just added and it is not a dup
+    boolean dup = hashInstance != hash;
+
+    // Eviction is done in async manner - e.g. around the eviction time, we can possibly not issue a record because
+    // we still think that it's a duplicate when in facts it's not.
+    if (!dup) {
       HashCode evicted = hashBuffer.addAndGetEvicted(hash);
       if (evicted != null) {
         hashCache.invalidate(evicted);
       }
-      dup = false;
     }
+
     return dup;
   }
 
@@ -137,7 +147,7 @@ public class DeDupProcessor extends RecordProcessor {
       } else {
         batchMaker.addRecord(record, uniqueLane);
       }
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException|ExecutionException e) {
       LOG.error("Error processing Record", e);
       throw new OnRecordErrorException(Errors.DEDUP_04, e.toString());
     }
