@@ -460,26 +460,6 @@ angular
         );
 
         var selectedPipelineList = $scope.selectedPipelineList;
-        var validationIssues = [];
-        angular.forEach($scope.filteredPipelines, function(pipelineInfo) {
-          if (selectedPipelineList.indexOf(pipelineInfo.name) !== -1) {
-            var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
-            if (pipelineStatus && pipelineStatus.name === pipelineInfo.name &&
-              _.contains(['RUNNING', 'STARTING', 'CONNECT_ERROR', 'RETRY', 'STOPPING'], pipelineStatus.status)) {
-              validationIssues.push('Start operation is not supported for Pipeline "' +
-                pipelineInfo.name + '" with state ' +  pipelineStatus.status );
-            }
-
-            if (!pipelineInfo.valid) {
-              validationIssues.push('Pipeline "' + pipelineInfo.name + '" is not valid');
-            }
-          }
-        });
-
-        if (validationIssues.length > 0) {
-          $rootScope.common.errors = validationIssues;
-          return;
-        }
         $rootScope.common.errors = [];
 
         api.pipelineAgent.startPipelines(selectedPipelineList).success(function(res) {
@@ -556,23 +536,12 @@ angular
 
         var selectedPipelineList = $scope.selectedPipelineList;
         var selectedPipelineInfoList = [];
-        var validationIssues = [];
+
         angular.forEach($scope.filteredPipelines, function(pipelineInfo) {
           if (selectedPipelineList.indexOf(pipelineInfo.name) !== -1) {
-            var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
-            if (pipelineStatus && pipelineStatus.name === pipelineInfo.name &&
-              !_.contains(['RUNNING', 'STARTING', 'CONNECT_ERROR', 'RETRY', 'STOPPING'], pipelineStatus.status)) {
-              validationIssues.push('Stop operation is not supported for Pipeline "' +
-                pipelineInfo.name + '" with state ' +  pipelineStatus.status );
-            }
             selectedPipelineInfoList.push(pipelineInfo);
           }
         });
-
-        if (validationIssues.length > 0) {
-          $rootScope.common.errors = validationIssues;
-          return;
-        }
         $rootScope.common.errors = [];
 
         var modalInstance = $modal.open({
