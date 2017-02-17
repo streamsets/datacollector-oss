@@ -322,8 +322,9 @@ public class DataLakeTarget extends BaseTarget {
     String dirPath = elEval.eval(vars, conf.dirPathTemplate, String.class);
     String filePath = dirPath + "/" + UUID.randomUUID();
 
-    if(client.checkExists(filePath)) {
-      client.createFile(filePath, null, "rwx", true);
+    final String octalPermission = "0770";
+    if(!client.checkExists(filePath)) {
+      client.createFile(filePath, null, octalPermission, true);
       client.delete(filePath);
     }
   }
