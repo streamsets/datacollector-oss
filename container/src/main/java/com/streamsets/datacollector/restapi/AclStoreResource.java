@@ -99,9 +99,7 @@ public class AclStoreResource {
   @ApiOperation(value ="Get Pipeline ACL", authorizations = @Authorization(value = "basic"))
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({
-      AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
-  })
+  @PermitAll
   @SuppressWarnings("unchecked")
   public Response getAcl(
       @PathParam("pipelineName") String name,
@@ -139,9 +137,7 @@ public class AclStoreResource {
   @ApiOperation(value ="Update Pipeline ACL", authorizations = @Authorization(value = "basic"))
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({
-      AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
-  })
+  @PermitAll
   @SuppressWarnings("unchecked")
   public Response saveAcl(
       @PathParam("pipelineName") String name,
