@@ -135,7 +135,7 @@ public class Configs {
       type = ConfigDef.Type.NUMBER,
       defaultValue = "3",
       label = "Retries per Batch",
-      displayPosition = 10,
+      displayPosition = 70,
       group = "ADVANCED",
       min = 0,
       max = 10
@@ -149,7 +149,7 @@ public class Configs {
       label = "Back off period",
       description = "If set to non-zero, each retry will be spaced exponentially. For value 10, first retry will be" +
         " done after 10 milliseconds, second retry after additional 100 milliseconds, third retry after additional second, ...",
-      displayPosition = 15,
+      displayPosition = 80,
       group = "ADVANCED",
       min=0
   )
@@ -160,7 +160,7 @@ public class Configs {
       type = ConfigDef.Type.NUMBER,
       defaultValue = "5000",
       label = "Connection Timeout (ms)",
-      displayPosition = 20,
+      displayPosition = 90,
       group = "ADVANCED",
       min = 100
   )
@@ -171,7 +171,7 @@ public class Configs {
       type = ConfigDef.Type.NUMBER,
       defaultValue = "2000",
       label = "Read Timeout (ms)",
-      displayPosition = 30,
+      displayPosition = 100,
       group = "ADVANCED",
       min = 100
   )
@@ -182,7 +182,7 @@ public class Configs {
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "true",
       label = "Use Compression",
-      displayPosition = 40,
+      displayPosition = 110,
       group = "ADVANCED"
   )
   public boolean compression;
