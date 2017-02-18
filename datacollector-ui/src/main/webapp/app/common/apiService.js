@@ -582,7 +582,7 @@ angular.module('dataCollectorApp.common')
        * @param description
        */
       createNewPipelineConfig: function(name, description) {
-        var url = apiBase + '/pipeline/' + name + '?autoGenerateName=true&description=' + description;
+        var url = apiBase + '/pipeline/' + encodeURIComponent(name) + '?autoGenerateName=true&description=' + description;
 
         return $http({
           method: 'PUT',
