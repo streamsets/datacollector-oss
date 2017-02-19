@@ -1249,64 +1249,6 @@ angular.module('dataCollectorApp.common')
           method: 'DELETE',
           url: url
         });
-      },
-
-      /**
-       * Fetches Pipeline ACL Information
-       *
-       * @param name
-       * @returns {*}
-       */
-      getPipelineConfigAcl: function(name) {
-        var url = apiBase + '/acl/' + name;
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
-
-      /**
-       * Sends updated Pipeline ACL to server for update.
-       *
-       * @param name - Pipeline Name
-       * @param acl - Modified ACL
-       * @returns Updated ACL
-       */
-      savePipelineAcl: function(name, acl) {
-        var url = apiBase + '/acl/' + name;
-        return $http({
-          method: 'POST',
-          url: url,
-          data: acl
-        });
-      },
-
-      /**
-       * Fetch the Pipeline Permissions for current user
-       *
-       * @returns {*}
-       */
-      getPipelinePermissions: function(pipelineName) {
-        var url = apiBase + '/acl/' + pipelineName + '/permissions';
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      }
-    };
-
-    api.timeSeries = {
-      /**
-       * Fetch Time Series Data
-       *
-       * @param query
-       */
-      getTimeSeriesData: function(query) {
-        var url = apiBase + '/pipeline/metrics/timeSeries?q=' +  query;
-        return $http({
-          method: 'GET',
-          url: url
-        });
       }
     };
 
@@ -1489,6 +1431,79 @@ angular.module('dataCollectorApp.common')
           }
         });
       }
+    };
+
+    api.acl = {
+      /**
+       * Fetches Pipeline ACL Information
+       *
+       * @param name
+       * @returns {*}
+       */
+      getPipelineConfigAcl: function(name) {
+        var url = apiBase + '/acl/' + name;
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+      /**
+       * Sends updated Pipeline ACL to server for update.
+       *
+       * @param name - Pipeline Name
+       * @param acl - Modified ACL
+       * @returns Updated ACL
+       */
+      savePipelineAcl: function(name, acl) {
+        var url = apiBase + '/acl/' + name;
+        return $http({
+          method: 'POST',
+          url: url,
+          data: acl
+        });
+      },
+
+      /**
+       * Fetch the Pipeline Permissions for current user
+       *
+       * @returns {*}
+       */
+      getPipelinePermissions: function(pipelineName) {
+        var url = apiBase + '/acl/' + pipelineName + '/permissions';
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+      /**
+       * Get all Subjects in Pipeline ACL
+       *
+       * @returns {*}
+       */
+      getSubjects: function () {
+        var url = apiBase + '/acl/pipelines/subjects';
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+      /**
+       * Update Subjects in Pipeline ACL
+       *
+       * @returns {*}
+       */
+      updateSubjects: function (subjectMapping) {
+        var url = apiBase + '/acl/pipelines/subjects';
+        return $http({
+          method: 'POST',
+          url: url,
+          data: subjectMapping
+        });
+      }
+
     };
 
     return api;

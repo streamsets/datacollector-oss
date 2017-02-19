@@ -50,7 +50,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 
 public class TestFileAclStoreTask {
@@ -204,7 +203,7 @@ public class TestFileAclStoreTask {
     createDefaultPipeline(store);
 
 
-    aclStore.updateSubjectsInAcls(store.getPipelines(), oldUsersToNewUsers);
+    aclStore.updateSubjectsInAcls(oldUsersToNewUsers);
 
     for (PipelineInfo pipelineInfo : store.getPipelines()) {
       Acl acl = aclStore.getAcl(pipelineInfo.getName());

@@ -21,7 +21,6 @@ package com.streamsets.datacollector.store.impl;
 
 import com.streamsets.datacollector.restapi.bean.UserJson;
 import com.streamsets.datacollector.store.AclStoreTask;
-import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.lib.security.acl.dto.Acl;
@@ -29,7 +28,6 @@ import com.streamsets.lib.security.acl.dto.Action;
 import com.streamsets.lib.security.acl.dto.ResourceType;
 
 import javax.inject.Inject;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -121,10 +119,12 @@ public class SlaveAclStoreTask implements AclStoreTask {
   }
 
   @Override
-  public void updateSubjectsInAcls(
-      Collection<PipelineInfo> pipelineInfos,
-      Map<String, String> subjectToSubjectMapping
-  ) throws PipelineException {
+  public void updateSubjectsInAcls(Map<String, String> subjectToSubjectMapping) throws PipelineException {
     throw new UnsupportedOperationException("updateSubjectsInAcls is not allowed in Slave Mode");
+  }
+
+  @Override
+  public Map<String, Set<String>> getSubjectsInAcls() throws PipelineException {
+    throw new UnsupportedOperationException("getSubjectsInAcls is not allowed in Slave Mode");
   }
 }

@@ -65,7 +65,7 @@ import java.util.List;
 import java.util.Map;
 
 @Path("/v1/acl")
-@Api(value = "store")
+@Api(value = "acl")
 @DenyAll
 public class AclStoreResource {
   private final PipelineStoreTask store;
@@ -212,14 +212,33 @@ public class AclStoreResource {
     return Response.ok(AclDtoJsonMapper.INSTANCE.toPermissionsJson(permissionList)).build();
   }
 
-  @Path("/pipelines/updateSubjectsInAcls")
-  @POST
+  @Path("/pipelines/subjects")
+  @GET
+  @ApiOperation(
+      value ="Get all Subjects in Pipeline ACL",
+      response = Map.class,
+      authorizations = @Authorization(value = "basic")
+  )
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
-  public Response updateSubjectsInAcls(Map<String, String> subjectMapping) throws PipelineException, URISyntaxException {
+  public Response getSubjectsInAcls() throws PipelineException {
     RestAPIUtils.injectPipelineInMDC("*");
-    aclStore.updateSubjectsInAcls(store.getPipelines(), subjectMapping);
+    return Response.ok(aclStore.getSubjectsInAcls()).build();
+  }
+
+  @Path("/pipelines/subjects")
+  @POST
+  @ApiOperation(
+      value ="Update Subjects in Pipeline ACL",
+      authorizations = @Authorization(value = "basic")
+  )
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
+  public Response updateSubjectsInAcls(Map<String, String> subjectMapping) throws PipelineException {
+    RestAPIUtils.injectPipelineInMDC("*");
+    aclStore.updateSubjectsInAcls(subjectMapping);
     return Response.ok().build();
   }
 }

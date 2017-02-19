@@ -1,5 +1,7 @@
 <div class="panel panel-default page-panel sdc-restapi-page">
 
+  <div show-loading="fetching"></div>
+
   <div class="panel-heading clearfix">
     <div class="panel-title size-toolbar">
       <h3 class="pull-left" translate="restapi.title">Data Collector RESTful API</h3>
@@ -23,10 +25,10 @@
     </div>
   </div>
 
-  <div class="panel-body"  ng-style="{'height': (windowHeight - 60 - 51) + 'px', 'width': (windowWidth) + 'px'}" resize>
+  <div class="panel-body" ng-style="{'height': (windowHeight - 60 - 51) + 'px', 'width': (windowWidth) + 'px'}" resize>
     <div swagger-ui url="swaggerURL" api-explorer="true"></div>
 
-    <div class="alert alert-info">
+    <div class="alert alert-info" ng-if="!fetching">
       <strong>Note!</strong> Custom HTTP header attribute (X-Requested-By) is required for all POST/PUT/DELETE REST API requests.
       <pre>curl -u username:password -X DELETE https://localhost:18630/rest/v1/pipeline/samplepipeline -H "X-Requested-By:sdc"</pre>
     </div>

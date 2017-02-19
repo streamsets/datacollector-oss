@@ -28,6 +28,7 @@ import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.datacollector.util.ContainerError;
+import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.lib.security.acl.dto.Acl;
 import com.streamsets.lib.security.acl.dto.Action;
@@ -37,16 +38,20 @@ import com.streamsets.lib.security.acl.dto.SubjectType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public abstract class AbstractAclStoreTask extends AbstractTask implements AclStoreTask {
   private final PipelineStoreTask pipelineStore;
+  private final LockCache<String> lockCache;
 
-  AbstractAclStoreTask(PipelineStoreTask pipelineStoreTask) {
+  AbstractAclStoreTask(PipelineStoreTask pipelineStoreTask, LockCache<String> lockCache) {
     super("aclStore");
     this.pipelineStore = pipelineStoreTask;
+    this.lockCache = lockCache;
   }
 
   @Override
@@ -104,6 +109,16 @@ public abstract class AbstractAclStoreTask extends AbstractTask implements AclSt
       return pipelineInfo.getCreator().equals(currentUser.getName());
     }
     return isPermissionGranted(acl, actions, currentUser);
+  }
+
+  @Override
+  public void updateSubjectsInAcls(Map<String, String> subjectToSubjectMapping) throws PipelineException {
+    for (PipelineInfo pipelineInfo : pipelineStore.getPipelines()) {
+      String pipelineName = pipelineInfo.getName();
+      synchronized (lockCache.getLock(pipelineName)) {
+        updateSubjectsInAcls(pipelineName, subjectToSubjectMapping);
+      }
+    }
   }
 
   protected void updateSubjectsInAcls(
@@ -167,6 +182,27 @@ public abstract class AbstractAclStoreTask extends AbstractTask implements AclSt
         return subjectIds.contains(permission.getSubjectId());
       }
     });
+  }
+
+  @Override
+  public Map<String, Set<String>> getSubjectsInAcls() throws PipelineException {
+    Map<String, Set<String>> subjects = new HashMap<>();
+    Set<String> users = new HashSet<>();
+    Set<String> groups = new HashSet<>();
+    for (PipelineInfo pipelineInfo : pipelineStore.getPipelines()) {
+      Acl acl = getAcl(pipelineInfo.getName());
+      users.add(acl.getResourceOwner());
+      for (Permission permission: acl.getPermissions()) {
+        if (permission.getSubjectType() == SubjectType.GROUP) {
+          groups.add(permission.getSubjectId());
+        } else {
+          users.add(permission.getSubjectId());
+        }
+      }
+    }
+    subjects.put("groups", groups);
+    subjects.put("users", users);
+    return subjects;
   }
 
 }

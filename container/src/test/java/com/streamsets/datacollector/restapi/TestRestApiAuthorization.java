@@ -277,6 +277,8 @@ public class TestRestApiAuthorization {
     list.add(new RestApi("/rest/v1/acl/foo", Method.GET, AuthzRole.ALL_ROLES));
     list.add(new RestApi("/rest/v1/acl/foo", Method.POST, AuthzRole.ALL_ROLES));
     list.add(new RestApi("/rest/v1/acl/foo/permissions", Method.GET, AuthzRole.ALL_ROLES));
+    list.add(new RestApi("/rest/v1/acl/pipelines/subjects", Method.GET, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/acl/pipelines/subjects", Method.POST, AuthzRole.ADMIN));
 
     return list;
   }
