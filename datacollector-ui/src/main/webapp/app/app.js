@@ -474,6 +474,18 @@ angular.module('dataCollectorApp')
           } else if (document.selection) {  // IE?
             document.selection.empty();
           }
+        },
+
+        /**
+         * Update Permissions callback function
+         */
+        updatePermissions: function () {
+          $modal.open({
+            templateUrl: 'common/administration/update_permissions/updatePermissions.tpl.html',
+            controller: 'UpdatePermissionsInstanceController',
+            size: 'lg',
+            backdrop: 'static'
+          });
         }
       };
 

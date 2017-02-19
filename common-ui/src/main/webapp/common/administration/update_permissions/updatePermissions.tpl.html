@@ -1,0 +1,106 @@
+<form class="update-permissions-modal-form" role="form" ng-submit="updatePermissions()">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title" translate="home.library.replaceUsersAndGroups">Replace Users & Groups in Permissions</h3>
+  </div>
+  <div class="modal-body">
+    <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+
+    <div ng-if="operationStatus !== 'Completed'">
+      <div class="row map-list-type"
+           ng-if="!bulkEdit"
+           ng-repeat="mapObject in subjectMapping.value track by $index">
+
+        <div class="col-xs-4">
+          <input type="text" class="form-control input-sm"
+                 name="mapObject{{$index}}"
+                 placeholder="Enter User or Group Name"
+                 ng-required="true"
+                 ng-model="mapObject.from"/>
+        </div>
+
+        <div class="col-xs-1">:</div>
+
+        <div class="col-xs-5">
+          <select class="form-control input-sm"
+                  name="mapObject{{$index}}"
+                  ng-model="mapObject.to">
+            <optgroup label="{{'global.form.groups' | translate}}">
+              <option ng-repeat="listValue in groupList"
+                      value="{{listValue}}"
+                      ng-selected="listValue === mapObject.to">{{listValue}}</option>
+            </optgroup>
+            <optgroup label="{{'global.form.users' | translate}}">
+              <option ng-repeat="listValue in userList"
+                      value="{{listValue}}"
+                      ng-selected="listValue === mapObject.to">{{listValue}}</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <div class="btn-group" role="group" aria-label="Default button group">
+          <button type="button" class="btn btn-default btn-sm"
+                  ng-click="removeFromMap($index)">
+            <i class="fa fa-minus pointer"></i>
+          </button>
+          <button type="button" class="btn btn-default btn-sm"
+                  ng-show="$last"
+                  ng-click="addToMap()">
+            <i class="fa fa-plus pointer"></i>
+          </button>
+        </div>
+      </div>
+
+      <div ui-codemirror
+           ng-if="bulkEdit"
+           class="codemirror-editor"
+           ng-model="subjectMapping.value"
+           ui-refresh="refreshCodemirror"
+           ui-codemirror-opts="getCodeMirrorOptions({
+              lineNumbers: true
+            })"
+           data-type="'LIST'">
+      </div>
+
+      <div ng-if="subjectMapping.value.length === 0 && !bulkEdit" class="row">
+        <div class="col-md-2 btn-group" role="group">
+          <button type="button" class="btn btn-default btn-sm"
+                  ng-click="addToMap()">
+            <i class="fa fa-plus pointer"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="pull-right field-selector-btn">
+        <button type="button" class="btn btn-link"
+                ng-click="bulkEdit = !bulkEdit">
+          {{bulkEdit ? ('home.detailPane.configurationTab.switchToSimpleMode' | translate) : ('home.detailPane.configurationTab.switchToBulkMode' | translate)}}
+        </button>
+      </div>
+
+    </div>
+
+    <div class="alert alert-success alert-dismissible" role="alert"
+         ng-if="operationStatus === 'Completed'"
+         translate="home.library.updatePermissionsSuccessMessage">
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="reset"  ng-if="operationStatus !== 'Completed'"
+            ng-disabled="operationStatus === 'Updating'"
+            class="btn btn-default" ng-click="cancel()"
+            translate="global.form.cancel">Cancel</button>
+
+    <button type="reset"  ng-if="operationStatus === 'Completed'"
+            class="btn btn-default" ng-click="cancel()"
+            translate="global.form.close">Close</button>
+
+    <button type="submit"  ng-if="operationStatus !== 'Completed'" class="btn btn-primary"
+            ng-disabled="operationStatus === 'Updating'"
+            translate="global.form.update">Update</button>
+  </div>
+</form>

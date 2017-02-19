@@ -732,7 +732,7 @@ angular
      */
     $q.all([
       api.pipelineAgent.getPipelineStatus(routeParamPipelineName, '0'),
-      api.pipelineAgent.getPipelinePermissions(routeParamPipelineName),
+      api.acl.getPipelinePermissions(routeParamPipelineName),
       pipelineService.init(),
       configuration.init()
     ])

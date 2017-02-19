@@ -44,7 +44,7 @@ angular
       isACLEnabled: configuration.isACLEnabled(),
 
       save : function () {
-        api.pipelineAgent.savePipelineAcl(pipelineInfo.name, $scope.acl)
+        api.acl.savePipelineAcl(pipelineInfo.name, $scope.acl)
           .then(
             function(res) {
               $modalInstance.close(res.data);
@@ -106,7 +106,7 @@ angular
     });
 
     var fetchAcl = function() {
-      api.pipelineAgent.getPipelineConfigAcl(pipelineInfo.name)
+      api.acl.getPipelineConfigAcl(pipelineInfo.name)
         .then(
           function(res) {
             $scope.acl = res.data;

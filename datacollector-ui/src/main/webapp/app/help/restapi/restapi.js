@@ -41,8 +41,9 @@ angular
       }
     );
   }])
-  .controller('RESTfulAPIController', function ($scope, $rootScope, $q, configuration, Analytics, $http, _) {
+  .controller('RESTfulAPIController', function ($scope, $rootScope, $q, configuration, Analytics, $timeout) {
     $scope.swaggerURL = 'rest/swagger.json';
+    $scope.fetching = true;
 
     $q.all([
       configuration.init()
@@ -51,4 +52,8 @@ angular
         Analytics.trackPage('/collector/restapi');
       }
     });
+
+    $timeout(function() {
+      $scope.fetching = false;
+    }, 500);
   });
