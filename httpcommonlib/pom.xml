@@ -94,6 +94,12 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-servlets</artifactId>
+      <version>${jetty.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
       <groupId>com.squareup</groupId>
       <artifactId>tape</artifactId>
       <scope>compile</scope>

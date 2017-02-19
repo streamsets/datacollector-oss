@@ -28,15 +28,21 @@ import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
+import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.DispatcherType;
 import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -109,6 +115,14 @@ public class HttpReceiverServer {
 
       servlet = new HttpReceiverServlet(context, receiver, errorQueue);
       ServletContextHandler contextHandler = new ServletContextHandler();
+      // CORS Handling
+      FilterHolder crossOriginFilter = new FilterHolder(CrossOriginFilter.class);
+      Map<String, String> params = new HashMap<>();
+      params.put(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*");
+      params.put(CrossOriginFilter.ALLOWED_HEADERS_PARAM, "*");
+      crossOriginFilter.setInitParameters(params);
+      contextHandler.addFilter(crossOriginFilter, "/*", EnumSet.of(DispatcherType.REQUEST));
+
       contextHandler.addServlet(new ServletHolder(servlet), servlet.getReceiver().getUriPath());
       contextHandler.setContextPath("/");
       server.setHandler(contextHandler);
