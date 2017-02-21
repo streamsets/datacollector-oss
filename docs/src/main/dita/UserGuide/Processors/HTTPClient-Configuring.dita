@@ -89,8 +89,14 @@
                                 <row>
                                     <entry>Request Data </entry>
                                     <entry>Request data to use with the specified method. Available
-                                        for the PUT, POST, DELETE, and Expression method
-                                        types.</entry>
+                                        for the PUT, POST, DELETE, and Expression methods.</entry>
+                                </row>
+                                <row>
+                                    <entry>Default Request Content Type</entry>
+                                    <entry>Content-Type header to include in the request. Used only
+                                        when the Content-Type header is not present. <p>Available
+                                            for the PUT, POST, DELETE, and Expression methods.
+                                            </p><p>Default is application/json.</p></entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/HTTP-ReqTransferEncod">
