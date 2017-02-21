@@ -40,6 +40,9 @@
           <li>record:attribute(&lt;attribute name>) </li>
           <li>record:attributeOrDefault(&lt;attribute name>, &lt;default value>)</li>
           <li>record:creator()</li>
+          <li>record:eventCreation()</li>
+          <li>record:eventType()</li>
+          <li>record:eventVersion()</li>
           <li>record:exists(&lt;field path>)</li>
           <li>record:id()</li>
           <li>record:path()</li>
