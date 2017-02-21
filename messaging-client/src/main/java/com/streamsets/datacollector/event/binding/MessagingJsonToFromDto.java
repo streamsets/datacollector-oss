@@ -35,6 +35,7 @@ import com.streamsets.datacollector.event.dto.AckEvent;
 import com.streamsets.datacollector.event.dto.ClientEvent;
 import com.streamsets.datacollector.event.dto.DisconnectedSsoCredentialsEvent;
 import com.streamsets.datacollector.event.dto.Event;
+import com.streamsets.datacollector.event.dto.EventType;
 import com.streamsets.datacollector.event.dto.PingFrequencyAdjustmentEvent;
 import com.streamsets.datacollector.event.dto.PipelineBaseEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveEvent;
@@ -145,6 +146,10 @@ public class MessagingJsonToFromDto {
   public ServerEvent asDto(ServerEventJson serverEventJson) throws JsonParseException, JsonMappingException,
     IOException {
     ServerEvent serverEvent = MessagingDtoJsonMapper.INSTANCE.asServerEventDto(serverEventJson);
+    EventType eventType = serverEvent.getEventType();
+    if (eventType == null) {
+      return null;
+    }
     switch (serverEvent.getEventType()) {
       case ACK_EVENT: {
         TypeReference<AckEventJson> typeRef = new TypeReference<AckEventJson>() {

@@ -22,5 +22,6 @@ package com.streamsets.datacollector.event.json;
 public enum AckEventStatusJson {
 
   SUCCESS,  // if ack returns SUCCESS from SDC to server
-  ERROR     // if ack return ERROR from SDC to server
+  ERROR,     // if ack return ERROR from SDC to server
+  IGNORE,    // ignore if cannot understand the event code
 }

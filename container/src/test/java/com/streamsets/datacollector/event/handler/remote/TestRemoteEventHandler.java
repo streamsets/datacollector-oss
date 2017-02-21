@@ -78,6 +78,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.beans.EventHandler;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -844,5 +845,33 @@ public class TestRemoteEventHandler {
         ImmutableMap.of("entries", Collections.emptyList()),
         new ObjectMapper().readValue(baos.toByteArray(), Map.class)
     );
+  }
+
+  @Test
+  public void testAckIgnore() {
+    EventHandlerCallable remoteEventHandler = new EventHandlerCallable(Mockito.mock(RemoteDataCollector.class),
+        Mockito.mock(EventClient.class),
+        MessagingJsonToFromDto.INSTANCE,
+        new ArrayList<>(),
+        new ArrayList<>(),
+        Mockito.mock(ClientEvent.class),
+        null,
+        -1,
+        Arrays.asList("JOB_RUNNER"),
+        new HashMap<>(),
+        Stopwatch.createStarted(),
+        -1,
+        null
+    );
+    ServerEventJson serverEventJson = new ServerEventJson();
+    serverEventJson.setRequiresAck(true);
+    serverEventJson.setEventTypeId(100000);
+    ClientEvent clientEvent = remoteEventHandler.handlePipelineEvent(serverEventJson);
+    Assert.assertNotNull(clientEvent);
+    Assert.assertEquals(EventType.ACK_EVENT, clientEvent.getEventType());
+    Assert.assertEquals(AckEventStatus.IGNORE, ((AckEvent)clientEvent.getEvent()).getAckEventStatus());
+    serverEventJson.setRequiresAck(false);
+    clientEvent = remoteEventHandler.handlePipelineEvent(serverEventJson);
+    Assert.assertNull(clientEvent);
   }
 }
