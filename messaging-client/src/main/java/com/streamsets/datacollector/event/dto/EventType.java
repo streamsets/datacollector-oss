@@ -47,14 +47,14 @@ public enum EventType {
 
   private final int value;
 
-  private static final Map<Integer, EventType> intToTypeMap = new HashMap<Integer, EventType>();
+  private static final Map<Integer, EventType> intToTypeMap = new HashMap<>();
   static {
     for (EventType eventType : EventType.values()) {
       intToTypeMap.put(eventType.value, eventType);
     }
   }
 
-  private EventType(int value) {
+  EventType(int value) {
     this.value = value;
   }
 
@@ -64,9 +64,6 @@ public enum EventType {
 
   public static EventType fromValue(int x) {
     EventType eventType = intToTypeMap.get(x);
-    if (eventType == null) {
-      throw new IllegalArgumentException("Cannot find event type from value " + x);
-    }
     return eventType;
   }
 }

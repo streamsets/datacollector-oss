@@ -20,15 +20,12 @@
 
 package com.streamsets.datacollector.event.dto;
 
-import com.streamsets.datacollector.event.dto.Event;
-
 public class ServerEvent {
 
   private String eventId;
   private String from;
   private boolean requiresAck;
   private boolean isAckEvent;
-  private int eventTypeId;
   private Event event;
   private long receivedTime;
   private EventType eventType;
@@ -60,14 +57,10 @@ public class ServerEvent {
   }
 
   public void setEventTypeId(int eventTypeId) {
-    this.eventTypeId = eventTypeId;
     this.eventType = EventType.fromValue(eventTypeId);
   }
 
   public EventType getEventType() {
-    if (eventType == null) {
-      throw new IllegalArgumentException("Event Type is not initialized");
-    }
     return this.eventType;
   }
 

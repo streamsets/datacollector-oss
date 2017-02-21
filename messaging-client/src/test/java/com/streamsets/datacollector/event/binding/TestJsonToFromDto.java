@@ -31,12 +31,12 @@ import java.util.UUID;
 import com.streamsets.lib.security.acl.dto.Acl;
 import com.streamsets.lib.security.acl.dto.Permission;
 import com.streamsets.lib.security.acl.dto.ResourceType;
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.streamsets.datacollector.config.dto.PipelineConfigAndRules;
 import com.streamsets.datacollector.config.json.PipelineConfigAndRulesJson;
-import com.streamsets.datacollector.event.binding.MessagingJsonToFromDto;
 import com.streamsets.datacollector.event.dto.ClientEvent;
 import com.streamsets.datacollector.event.dto.EventType;
 import com.streamsets.datacollector.event.dto.PipelineBaseEvent;
@@ -124,5 +124,13 @@ public class TestJsonToFromDto {
     assertEquals("name1", saveEvent.getName());
     assertEquals("rev1", saveEvent.getRev());
     assertEquals("user1", saveEvent.getUser());
+  }
+
+  @Test
+  public void testUnknownEventType() throws Exception {
+    ServerEventJson serverEventJson = new ServerEventJson();
+    serverEventJson.setEventId("1");
+    serverEventJson.setEventTypeId(100000);
+    Assert.assertNull(MessagingJsonToFromDto.INSTANCE.asDto(serverEventJson));
   }
 }
