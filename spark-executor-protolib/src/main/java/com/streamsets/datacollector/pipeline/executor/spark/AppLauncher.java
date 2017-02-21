@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.pipeline.executor.spark;
 
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.el.ELEvalException;
 
@@ -39,7 +40,7 @@ public interface AppLauncher {
   /**
    * Launches an application and returns an appId if the underlying system provides it
    */
-  Optional<String> launchApp(List<String> appArgs) //NOSONAR
+  Optional<String> launchApp(Record record) //NOSONAR
       throws ApplicationLaunchFailureException, ELEvalException;
 
   /**
@@ -48,5 +49,10 @@ public interface AppLauncher {
    * the pipeline wait. Returns false if the wait times out, else returns true.
    */
   boolean waitForCompletion() throws InterruptedException;
+
+  /**
+   * Close and clean up all resources.
+   */
+  void close();
 
 }

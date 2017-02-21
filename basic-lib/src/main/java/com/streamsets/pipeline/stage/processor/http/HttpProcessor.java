@@ -43,7 +43,7 @@ import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
-import com.streamsets.pipeline.stage.origin.http.Errors;
+import com.streamsets.pipeline.lib.http.Errors;
 import com.streamsets.pipeline.stage.util.http.HttpStageUtil;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
@@ -74,9 +74,9 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import static com.streamsets.pipeline.stage.origin.http.Errors.HTTP_21;
-import static com.streamsets.pipeline.stage.origin.http.Errors.HTTP_22;
-import static com.streamsets.pipeline.stage.origin.http.Errors.HTTP_24;
+import static com.streamsets.pipeline.lib.http.Errors.HTTP_21;
+import static com.streamsets.pipeline.lib.http.Errors.HTTP_22;
+import static com.streamsets.pipeline.lib.http.Errors.HTTP_24;
 
 /**
  * Processor that makes HTTP requests and stores the parsed or unparsed result in a field on a per record basis.

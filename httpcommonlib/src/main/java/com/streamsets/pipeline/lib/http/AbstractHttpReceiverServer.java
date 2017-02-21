@@ -131,7 +131,7 @@ public abstract class AbstractHttpReceiverServer {
 
       httpServer = server;
     } catch (Exception ex) {
-      issues.add(context.createConfigIssue("HTTP", "", Errors.HTTP_SERVER_ORIG_20, ex.toString()));
+      issues.add(context.createConfigIssue("HTTP", "", HttpServerErrors.HTTP_SERVER_ORIG_20, ex.toString()));
     }
     return issues;
   }

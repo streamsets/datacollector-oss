@@ -39,8 +39,12 @@ public enum Errors implements ErrorCode {
   SPARK_EXEC_08("System SPARK_HOME: '{}' does not exist, or cannot be read by this user"),
   SPARK_EXEC_09("Value expected for key: '{}'"),
   SPARK_EXEC_10("Key expected for value: '{}'"),
-
-
+  SPARK_EXEC_11("Job with ID: '{}' does not exist"),
+  SPARK_EXEC_12("Base URL is invalid"),
+  SPARK_EXEC_13("Error while requesting job listing"),
+  SPARK_EXEC_14("Incorrect job type for job ID: '{}'. Expected: '{}', found: '{}'"),
+  SPARK_EXEC_15("Invalid credentials"),
+  SPARK_EXEC_16("Running Job with ID: '{}' failed with error: '{}'"),
   ;
 
   private final String msg;

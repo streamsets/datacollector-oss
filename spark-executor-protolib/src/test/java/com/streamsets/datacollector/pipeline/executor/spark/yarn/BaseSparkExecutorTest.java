@@ -19,10 +19,15 @@
  *  limitations under the License.
  *
  */
-package com.streamsets.datacollector.pipeline.executor.spark;
+package com.streamsets.datacollector.pipeline.executor.spark.yarn;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.datacollector.pipeline.executor.spark.AppLauncher;
+import com.streamsets.datacollector.pipeline.executor.spark.ClusterManager;
+import com.streamsets.datacollector.pipeline.executor.spark.DeployMode;
+import com.streamsets.datacollector.pipeline.executor.spark.SparkExecutor;
+import com.streamsets.datacollector.pipeline.executor.spark.SparkExecutorConfigBean;
 import com.streamsets.datacollector.pipeline.executor.spark.yarn.YarnAppLauncher;
 import org.apache.spark.launcher.SparkAppHandle;
 import org.apache.spark.launcher.SparkLauncher;
@@ -60,7 +65,7 @@ public class BaseSparkExecutorTest { //NOSONAR
     conf.yarnConfigBean.appResource = getTempFile("resource");
     conf.yarnConfigBean.additionalJars = ImmutableList.of(getTempFile("jar1"), getTempFile("jar2"));
     conf.yarnConfigBean.additionalFiles = ImmutableList.of(getTempFile("file1"), getTempFile("file2"));
-    conf.appArgs = ImmutableList.of("frodo", "sam");
+    conf.yarnConfigBean.appArgs = ImmutableList.of("frodo", "sam");
     conf.yarnConfigBean.waitForCompletion = false;
     conf.yarnConfigBean.dynamicAllocation = true;
     conf.yarnConfigBean.minExecutors = 1;

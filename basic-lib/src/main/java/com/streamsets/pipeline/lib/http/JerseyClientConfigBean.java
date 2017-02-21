@@ -25,7 +25,6 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.http.oauth2.OAuth2ConfigBean;
 import com.streamsets.pipeline.stage.origin.http.AuthenticationTypeChooserValues;
-import com.streamsets.pipeline.stage.origin.http.Errors;
 import org.apache.commons.lang.StringUtils;
 import org.glassfish.jersey.client.RequestEntityProcessing;
 import org.slf4j.Logger;

@@ -27,6 +27,7 @@ import com.streamsets.datacollector.pipeline.executor.spark.ApplicationLaunchFai
 import com.streamsets.datacollector.pipeline.executor.spark.DeployMode;
 import com.streamsets.datacollector.pipeline.executor.spark.Errors;
 import com.streamsets.datacollector.pipeline.executor.spark.SparkExecutorConfigBean;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import org.apache.commons.lang3.StringUtils;
@@ -74,6 +75,8 @@ public class YarnAppLauncher implements AppLauncher {
     this.configs = configs;
     this.yarnConfigs = configs.yarnConfigBean;
 
+    Optional.ofNullable(yarnConfigs.init(context, PREFIX)).ifPresent(issues::addAll);
+
     verifyKeyValueArgs(context, yarnConfigs.env, PREFIX + "env", issues);
 
     verifyKeyValueArgs(context, yarnConfigs.args, PREFIX + "args", issues);
@@ -84,9 +87,10 @@ public class YarnAppLauncher implements AppLauncher {
 
     verifyAllFileProperties(context, issues);
 
-    if(!StringUtils.isEmpty(yarnConfigs.principal)) {
-      if (StringUtils.isEmpty(yarnConfigs.keytab)) {
-        verifyFileIsAccessible(yarnConfigs.keytab, context, issues, SPARK_GROUP, PREFIX + "keytab");
+    if(!StringUtils.isEmpty(configs.credentialsConfigBean.principal)) {
+      if (StringUtils.isEmpty(configs.credentialsConfigBean.keytab)) {
+        verifyFileIsAccessible(
+            configs.credentialsConfigBean.keytab, context, issues, SPARK_GROUP, PREFIX + "keytab");
       } else {
         issues.add(context.createConfigIssue(SPARK_GROUP, PREFIX + "keytab", SPARK_EXEC_05));
       }
@@ -212,7 +216,7 @@ public class YarnAppLauncher implements AppLauncher {
   }
 
   @Override
-  public Optional<String> launchApp(List<String> appArgs)
+  public Optional<String> launchApp(Record record)
       throws ApplicationLaunchFailureException, ELEvalException {
 
     SparkLauncher launcher = getLauncher()
@@ -249,11 +253,12 @@ public class YarnAppLauncher implements AppLauncher {
     yarnConfigs.additionalJars.forEach(launcher::addJar);
     yarnConfigs.pyFiles.forEach(launcher::addPyFile);
 
-    launcher.addAppArgs(getNonEmptyArgs(appArgs));
+    launcher.addAppArgs(getNonEmptyArgs(yarnConfigs.evaluateArgsELs(record)));
 
     applyConfIfPresent(configs.javaHome, launcher::setJavaHome);
-    applyConfIfPresent("spark.yarn.principal", yarnConfigs.principal, launcher::setConf);
-    applyConfIfPresent("spark.yarn.keytab", yarnConfigs.keytab, launcher::setConf);
+    applyConfIfPresent(
+        "spark.yarn.principal", configs.credentialsConfigBean.principal, launcher::setConf);
+    applyConfIfPresent("spark.yarn.keytab", configs.credentialsConfigBean.keytab, launcher::setConf);
     applyConfIfPresent("--proxy-user", yarnConfigs.proxyUser, launcher::addSparkArg);
     applyConfIfPresent(configs.sparkHome, launcher::setSparkHome);
 
@@ -324,6 +329,11 @@ public class YarnAppLauncher implements AppLauncher {
     return true;
   }
 
+  @Override
+  public void close() {
+    // No op
+  }
+
   private class AppListener implements SparkAppHandle.Listener {
     @Override
     public void stateChanged(SparkAppHandle handle) {
@@ -343,4 +353,5 @@ public class YarnAppLauncher implements AppLauncher {
               || handle.getState() == SparkAppHandle.State.KILLED;
     }
   }
+
 }

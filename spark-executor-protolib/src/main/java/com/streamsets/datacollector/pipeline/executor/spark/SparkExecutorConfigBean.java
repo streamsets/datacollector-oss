@@ -19,20 +19,22 @@
  */
 package com.streamsets.datacollector.pipeline.executor.spark;
 
+import com.streamsets.datacollector.pipeline.executor.spark.databricks.DatabricksConfigBean;
 import com.streamsets.datacollector.pipeline.executor.spark.yarn.YarnConfigBean;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ValueChooserModel;
-import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.el.VaultEL;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SparkExecutorConfigBean {
 
   @ConfigDefBean
   public YarnConfigBean yarnConfigBean = new YarnConfigBean();
+
+  @ConfigDefBean
+  public DatabricksConfigBean databricksConfigBean = new DatabricksConfigBean();
+
+  @ConfigDefBean
+  public CredentialsConfigBean credentialsConfigBean = new CredentialsConfigBean();
 
   @ConfigDef(
       type = ConfigDef.Type.MODEL,
@@ -68,16 +70,5 @@ public class SparkExecutorConfigBean {
       displayPosition = 130
   )
   public String javaHome = "";
-
-  @ConfigDef(
-      type = ConfigDef.Type.LIST,
-      required = false,
-      label = "Application Arguments",
-      elDefs = {RecordEL.class, VaultEL.class},
-      evaluation = ConfigDef.Evaluation.EXPLICIT,
-      group = "APPLICATION",
-      displayPosition = 50
-  )
-  public List<String> appArgs = new ArrayList<>();
 
 }

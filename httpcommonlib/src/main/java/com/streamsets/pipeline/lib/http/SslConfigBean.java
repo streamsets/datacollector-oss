@@ -22,11 +22,13 @@ package com.streamsets.pipeline.lib.http;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.stage.origin.http.Errors;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+
+import static com.streamsets.pipeline.lib.http.Errors.HTTP_04;
+import static com.streamsets.pipeline.lib.http.Errors.HTTP_05;
 
 public class SslConfigBean {
   @ConfigDef(
@@ -77,21 +79,21 @@ public class SslConfigBean {
   public void init(Stage.Context context, String groupName, String prefix, List<Stage.ConfigIssue> issues) {
     if (!trustStorePath.isEmpty()) {
       if (Files.notExists(Paths.get(trustStorePath))) {
-        issues.add(context.createConfigIssue(groupName, prefix + "trustStorePath", Errors.HTTP_04, trustStorePath));
+        issues.add(context.createConfigIssue(groupName, prefix + "trustStorePath", HTTP_04, trustStorePath));
       }
 
       if (trustStorePassword.isEmpty()) {
-        issues.add(context.createConfigIssue(groupName, prefix + "trustStorePassword", Errors.HTTP_05));
+        issues.add(context.createConfigIssue(groupName, prefix + "trustStorePassword", HTTP_05));
       }
     }
 
     if (!keyStorePath.isEmpty()) {
       if (Files.notExists(Paths.get(keyStorePath))) {
-        issues.add(context.createConfigIssue(groupName, prefix + "keyStorePath", Errors.HTTP_04, keyStorePath));
+        issues.add(context.createConfigIssue(groupName, prefix + "keyStorePath", HTTP_04, keyStorePath));
       }
 
       if (keyStorePassword.isEmpty()) {
-        issues.add(context.createConfigIssue(groupName, prefix + "keyStorePassword", Errors.HTTP_05));
+        issues.add(context.createConfigIssue(groupName, prefix + "keyStorePassword", HTTP_05));
       }
     }
   }

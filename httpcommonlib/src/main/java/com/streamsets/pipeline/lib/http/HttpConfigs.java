@@ -77,14 +77,14 @@ public abstract class HttpConfigs {
 
   void validatePort(Stage.Context context, List<Stage.ConfigIssue> issues) {
     if (getPort() < 1 || getPort() > 65535) {
-      issues.add(context.createConfigIssue(gropuName, configPrefix + PORT_CONFIG, Errors.HTTP_SERVER_ORIG_00));
+      issues.add(context.createConfigIssue(gropuName, configPrefix + PORT_CONFIG, HttpServerErrors.HTTP_SERVER_ORIG_00));
 
     } else {
       try (ServerSocket ss = new ServerSocket(getPort())) {
       } catch (Exception ex) {
         issues.add(context.createConfigIssue(gropuName,
             configPrefix + PORT_CONFIG,
-            Errors.HTTP_SERVER_ORIG_01,
+            HttpServerErrors.HTTP_SERVER_ORIG_01,
             ex.toString()
         ));
 
@@ -99,19 +99,19 @@ public abstract class HttpConfigs {
       if (!file.exists()) {
         issues.add(context.createConfigIssue(gropuName,
             configPrefix + KEY_STORE_FILE_CONFIG,
-            Errors.HTTP_SERVER_ORIG_07
+            HttpServerErrors.HTTP_SERVER_ORIG_07
         ));
       } else {
         if (!file.isFile()) {
           issues.add(context.createConfigIssue(gropuName,
               configPrefix + KEY_STORE_FILE_CONFIG,
-              Errors.HTTP_SERVER_ORIG_08
+              HttpServerErrors.HTTP_SERVER_ORIG_08
           ));
         } else {
           if (!file.canRead()) {
             issues.add(context.createConfigIssue(gropuName,
                 configPrefix + KEY_STORE_FILE_CONFIG,
-                Errors.HTTP_SERVER_ORIG_09
+                HttpServerErrors.HTTP_SERVER_ORIG_09
             ));
           } else {
             try {
@@ -122,7 +122,7 @@ public abstract class HttpConfigs {
             } catch (Exception ex) {
               issues.add(context.createConfigIssue(gropuName,
                   configPrefix + KEY_STORE_FILE_CONFIG,
-                  Errors.HTTP_SERVER_ORIG_10,
+                  HttpServerErrors.HTTP_SERVER_ORIG_10,
                   ex.toString()
               ));
             }
@@ -133,7 +133,7 @@ public abstract class HttpConfigs {
       issues.add(context.createConfigIssue(
           gropuName,
           configPrefix + KEY_STORE_FILE_CONFIG,
-          Errors.HTTP_SERVER_ORIG_11
+          HttpServerErrors.HTTP_SERVER_ORIG_11
       ));
     }
   }

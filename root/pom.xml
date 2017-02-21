@@ -74,7 +74,6 @@
     <javax.inject.version>1</javax.inject.version>
     <javax.mail.version>1.4.7</javax.mail.version>
     <jaxrpc.version>2.0.1</jaxrpc.version>
-    <jersey.version>2.22.2</jersey.version>
     <jetty.version>9.4.2.v20170220</jetty.version>
     <jodatime.version>2.3</jodatime.version>
     <jps-api.version>2.0</jps-api.version>

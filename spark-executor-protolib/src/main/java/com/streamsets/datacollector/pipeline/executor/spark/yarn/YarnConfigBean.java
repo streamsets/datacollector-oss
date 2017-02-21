@@ -24,9 +24,15 @@ package com.streamsets.datacollector.pipeline.executor.spark.yarn;
 import com.streamsets.datacollector.pipeline.executor.spark.DeployMode;
 import com.streamsets.datacollector.pipeline.executor.spark.DeployModeChooserValues;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.el.VaultEL;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -122,28 +128,6 @@ public class YarnConfigBean {
   @ConfigDef(
       type = ConfigDef.Type.STRING,
       required = false,
-      label = "Kerberos Principal",
-      group = "SPARK",
-      dependsOn = "clusterManager^",
-      triggeredByValue = "YARN",
-      displayPosition = 90
-  )
-  public String principal = "";
-
-  @ConfigDef(
-      type = ConfigDef.Type.STRING,
-      required = false,
-      label = "Kerberos Keytab",
-      group = "SPARK",
-      dependsOn = "clusterManager^",
-      triggeredByValue = "YARN",
-      displayPosition = 100
-  )
-  public String keytab = "";
-
-  @ConfigDef(
-      type = ConfigDef.Type.STRING,
-      required = false,
       label = "Proxy User",
       group = "SPARK",
       dependsOn = "clusterManager^",
@@ -223,7 +207,18 @@ public class YarnConfigBean {
   )
   public String appName = "";
 
-  // App args here.
+  @ConfigDef(
+      type = ConfigDef.Type.LIST,
+      required = false,
+      label = "Application Arguments",
+      elDefs = {RecordEL.class, VaultEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      group = "APPLICATION",
+      dependsOn = "clusterManager^",
+      triggeredByValue = "YARN",
+      displayPosition = 50
+  )
+  public List<String> appArgs = new ArrayList<>();
 
   @ConfigDef(
       type = ConfigDef.Type.LIST,
@@ -297,4 +292,32 @@ public class YarnConfigBean {
   )
   public boolean verbose;
 
+  private ELEval elEval;
+  private ELVars elVars;
+
+  public List<Stage.ConfigIssue> init(Stage.Context context, String prefix) {
+    List<Stage.ConfigIssue> issues = new ArrayList<>();
+
+    elVars = context.createELVars();
+    elEval = context.createELEval("appArgs");
+
+    for (String arg : appArgs) {
+      try {
+        context.parseEL(arg);
+      } catch (ELEvalException ex) { // NOSONAR
+        issues.add(context.createConfigIssue(
+            "APPLICATION", prefix + "appArgs", ex.getErrorCode(), ex.getParams()));
+      }
+    }
+    return issues;
+  }
+
+  List<String> evaluateArgsELs(Record record) throws ELEvalException {
+    RecordEL.setRecordInContext(elVars, record);
+    List<String> evaluatedArgs = new ArrayList<>(appArgs.size());
+    for (String arg : appArgs) {
+      evaluatedArgs.add(elEval.eval(elVars, arg, String.class));
+    }
+    return evaluatedArgs;
+  }
 }

@@ -32,7 +32,8 @@ import com.streamsets.pipeline.configurablestage.DExecutor;
     label = "Spark Executor",
     description = "Run Spark Applications",
     icon = "spark-logo-hd.png",
-    onlineHelpRefUrl = ""
+    onlineHelpRefUrl = "index.html#Executors/Spark.html#task_cdw_wxb_1z",
+    producesEvents = true
 )
 @ConfigGroups(Groups.class)
 @HideConfigs("conf.yarnConfigBean.waitForCompletion")

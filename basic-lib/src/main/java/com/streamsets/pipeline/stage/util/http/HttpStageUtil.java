@@ -32,8 +32,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import static com.streamsets.pipeline.stage.origin.http.Errors.HTTP_21;
-import static com.streamsets.pipeline.stage.origin.http.Errors.HTTP_22;
+import static com.streamsets.pipeline.lib.http.Errors.HTTP_21;
+import static com.streamsets.pipeline.lib.http.Errors.HTTP_22;
 
 public abstract class HttpStageUtil {
 

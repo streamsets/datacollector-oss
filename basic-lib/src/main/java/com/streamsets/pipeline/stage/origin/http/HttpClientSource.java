@@ -37,6 +37,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.lib.http.AuthenticationFailureException;
 import com.streamsets.pipeline.lib.http.AuthenticationType;
+import com.streamsets.pipeline.lib.http.Errors;
 import com.streamsets.pipeline.lib.http.Groups;
 import com.streamsets.pipeline.lib.http.HttpMethod;
 import com.streamsets.pipeline.lib.http.JerseyClientUtil;
@@ -78,9 +79,9 @@ import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 import static com.streamsets.pipeline.lib.parser.json.Errors.JSON_PARSER_00;
-import static com.streamsets.pipeline.stage.origin.http.Errors.HTTP_21;
-import static com.streamsets.pipeline.stage.origin.http.Errors.HTTP_22;
-import static com.streamsets.pipeline.stage.origin.http.Errors.HTTP_24;
+import static com.streamsets.pipeline.lib.http.Errors.HTTP_21;
+import static com.streamsets.pipeline.lib.http.Errors.HTTP_22;
+import static com.streamsets.pipeline.lib.http.Errors.HTTP_24;
 
 /**
  * HTTP Client Origin implementation supporting streaming, polled, and paginated HTTP resources.

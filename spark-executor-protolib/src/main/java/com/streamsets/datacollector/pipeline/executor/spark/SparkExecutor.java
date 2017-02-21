@@ -20,21 +20,17 @@
 package com.streamsets.datacollector.pipeline.executor.spark;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.datacollector.pipeline.executor.spark.databricks.DatabricksAppLauncher;
 import com.streamsets.datacollector.pipeline.executor.spark.yarn.YarnAppLauncher;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseExecutor;
-import com.streamsets.pipeline.api.el.ELEval;
-import com.streamsets.pipeline.api.el.ELEvalException;
-import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.event.EventCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -48,8 +44,6 @@ public class SparkExecutor extends BaseExecutor {
   public static final String APP_ID = "app-id";
 
   private final SparkExecutorConfigBean configBean;
-  private ELEval elEval;
-  private ELVars elVars;
   private AppLauncher appLauncher;
 
   /**
@@ -66,17 +60,6 @@ public class SparkExecutor extends BaseExecutor {
   @Override
   public List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
-    try {
-      elVars = getContext().createELVars();
-      elEval = getContext().createELEval("appArgs");
-      for (String el : configBean.appArgs) {
-        getContext().parseEL(el);
-      }
-    } catch (ELEvalException ex) {
-      LOG.error("Error evaluating EL", ex);
-      issues.add(getContext().createConfigIssue(
-          "APPLICATION_GROUP", "conf.appArgs", ex.getErrorCode(), ex.getParams()));
-    }
     appLauncher = getLauncher();
     Optional.ofNullable(appLauncher.init(getContext(), configBean)).ifPresent(issues::addAll);
     return issues;
@@ -84,7 +67,7 @@ public class SparkExecutor extends BaseExecutor {
 
   @Override
   public void destroy() {
-    // Nothing to cleanup.
+    appLauncher.close();
   }
 
   @Override
@@ -93,7 +76,7 @@ public class SparkExecutor extends BaseExecutor {
     while(records.hasNext()) {
       Record record = records.next();
       try {
-        Optional<String> appIdOpt = appLauncher.launchApp(evaluateArgsELs(record));
+        Optional<String> appIdOpt = appLauncher.launchApp(record);
         appIdOpt.ifPresent(
             (String appId) -> {
               LOG.info(Utils.format("Spark application launched with app id: '{}'", appId));
@@ -114,21 +97,15 @@ public class SparkExecutor extends BaseExecutor {
 
   @VisibleForTesting
   protected AppLauncher getLauncher() {
-    switch (configBean.clusterManager) { //NOSONAR
+    switch (configBean.clusterManager) {
       case YARN:
         return new YarnAppLauncher();
+      case DATABRICKS:
+        return new DatabricksAppLauncher();
       default:
         throw new IllegalArgumentException(
             Utils.format("{} is not a valid cluster manager", configBean.clusterManager));
     }
   }
 
-  private List<String> evaluateArgsELs(Record record) throws ELEvalException {
-    RecordEL.setRecordInContext(elVars, record);
-    List<String> evaluatedArgs = new ArrayList<>(configBean.appArgs.size());
-    for (String arg : configBean.appArgs) {
-      evaluatedArgs.add(elEval.eval(elVars, arg, String.class));
-    }
-    return evaluatedArgs;
-  }
 }

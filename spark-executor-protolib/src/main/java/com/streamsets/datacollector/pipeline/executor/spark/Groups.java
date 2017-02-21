@@ -24,6 +24,9 @@ import com.streamsets.pipeline.api.Label;
 public enum Groups implements Label {
   SPARK ("Spark"),
   APPLICATION ("Application Details"),
+  CREDENTIALS("Credentials"),
+  SSL("SSL"),
+  PROXY("Proxy"),
   ;
 
   private String label;
