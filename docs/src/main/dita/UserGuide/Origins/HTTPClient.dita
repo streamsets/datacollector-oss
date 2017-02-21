@@ -15,14 +15,16 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_wk4_bjz_5r">
  <title>HTTP Client</title>
- <shortdesc>The HTTP Client origin reads data from an HTTP resource URL.</shortdesc>
  <conbody>
   <p><indexterm>HTTP Client
           origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>HTTP
-          Client</indexterm></indexterm>When you configure HTTP Client, you specify the resource
-      URL, optional headers, and other read properties. You can configure pagination properties to
-      enable processing large volumes of data from paginated APIs. You can also enable the origin to
-      read compressed and archived files. </p>
+          Client</indexterm></indexterm>The HTTP Client origin reads data from an HTTP resource
+      URL.</p>
+    <p>When you configure HTTP Client, you specify the resource URL, optional headers, and the
+      method to use. For some methods, you can specify the request body and default content type. </p>
+    <p>You can configure the actions to take based on the response status and configure pagination
+      properties to enable processing large volumes of data from paginated APIs. You can also enable
+      the origin to read compressed and archived files. </p>
     <p>The origin provides response header fields as record header attributes so you can use the
       information in the pipeline when needed.</p>
     <p>The origin also provides several different authentication types to access data. You can enter
