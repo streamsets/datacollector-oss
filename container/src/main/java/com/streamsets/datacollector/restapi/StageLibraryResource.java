@@ -308,8 +308,9 @@ public class StageLibraryResource {
           }
           File curFile = new File(directory, entry.getName().replace(tarDirRootName, installDirName));
           File parent = curFile.getParentFile();
-          if (!parent.exists()) {
-            parent.mkdirs();
+          if (!parent.exists() && !parent.mkdirs()) {
+            // Failed to created directory
+            throw new RuntimeException(Utils.format("Failed to create directory: {}", parent.getPath()));
           }
           OutputStream out = new FileOutputStream(curFile);
           IOUtils.copy(myTarFile, out);
