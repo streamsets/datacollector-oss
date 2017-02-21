@@ -48,6 +48,32 @@
      each record:<codeblock>${record:creator()}</codeblock></dd>
    </dlentry>
    <dlentry>
+    <dt>record:eventCreation()</dt>
+    <dd>Returns the epoch timestamp when an event occurred. Use to return the creation timestamp
+     from an event record. Returns null values when applied to other records.</dd>
+    <dd>Return type: String.</dd>
+    <dd>For example, the following expression returns the time that the event-generating stage
+     generated an event:<codeblock>${record:eventCreation()}</codeblock></dd>
+   </dlentry>
+   <dlentry>
+    <dt>record:eventType()</dt>
+    <dd>Returns the event type from an event record. Returns null values when applied to other
+     records. </dd>
+    <dd>Event generating stages create different event types. For information about the possible
+     event types, see "Event Records" in the stage documentation. </dd>
+    <dd>Return type: String.</dd>
+    <dd>For example, the following expression returns the event type from an event
+     record:<codeblock>${record:eventType()}</codeblock></dd>
+   </dlentry>
+   <dlentry>
+    <dt>record:eventVersion()</dt>
+    <dd>Returns the event version from an event record. Returns null values when applied to other
+     records. </dd>
+    <dd>Return type: String.</dd>
+    <dd>For example, the following expression returns the event version from an event
+     record:<codeblock>${record:eventVersion()}</codeblock></dd>
+   </dlentry>
+   <dlentry>
     <dt>record:exists(&lt;field path>)</dt>
     <dd>Determines if the specified field is in a record. When the field is not in the record,
      returns 0. When the field is in the record, returns 1. </dd>
