@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.destination.mapr;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.mapr.db.MapRDB;
 import com.mapr.db.Table;
 import com.mapr.db.exceptions.DBException;
@@ -194,7 +195,8 @@ public class MapRJsonTarget extends BaseTarget {
 
   }
 
-  private byte [] convertToByteArray(Field field, Record rec) throws OnRecordErrorException {
+  @VisibleForTesting
+  static byte [] convertToByteArray(Field field, Record rec) throws OnRecordErrorException {
 
     switch (field.getType()) {
       case DOUBLE:
