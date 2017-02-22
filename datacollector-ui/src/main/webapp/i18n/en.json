@@ -592,7 +592,6 @@
       "nameRequiredValidation": "Please enter title of the pipeline.",
       "nameValidation": "Enter alphanumeric characters, spaces and underscores.",
       "processorPlaceholder": "Select Processor...",
-      "replaceUsersAndGroups": "Replace Users & Groups in Permissions",
       "sharingSettings": "Sharing Settings",
       "selectUsersAndGroupsPlaceholder": "Select users and groups...",
       "sourcePlaceholder":"Select Origin...",
@@ -606,7 +605,8 @@
       "system:errorPipelines": "Error Pipelines",
       "system:sharedWithMePipelines": "Shared with Me",
       "targetPlaceholder": "Select Destination...",
-      "updatePermissions": "Update Permissions",
+      "transferPermissions": "Transfer Permissions",
+      "transferUsersAndGroups": "Transfer Users & Groups in Permissions",
       "updatePermissionsSuccessMessage": "Successfully updated all permissions"
     },
     "noPipelines": "No Pipeline Found",

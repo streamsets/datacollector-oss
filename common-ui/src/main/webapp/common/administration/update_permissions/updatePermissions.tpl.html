@@ -4,7 +4,7 @@
       <span aria-hidden="true">&times;</span>
       <span class="sr-only">Close</span>
     </button>
-    <h3 class="modal-title" translate="home.library.replaceUsersAndGroups">Replace Users & Groups in Permissions</h3>
+    <h3 class="modal-title" translate="home.library.transferUsersAndGroups">Transfer Users & Groups in Permissions</h3>
   </div>
   <div class="modal-body">
     <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
@@ -14,7 +14,7 @@
            ng-if="!bulkEdit"
            ng-repeat="mapObject in subjectMapping.value track by $index">
 
-        <div class="col-xs-4">
+        <div class="col-xs-5">
           <input type="text" class="form-control input-sm"
                  name="mapObject{{$index}}"
                  placeholder="Enter User or Group Name"
@@ -22,7 +22,7 @@
                  ng-model="mapObject.from"/>
         </div>
 
-        <div class="col-xs-1">:</div>
+        <div class="col-xs-1">==></div>
 
         <div class="col-xs-5">
           <select class="form-control input-sm"
