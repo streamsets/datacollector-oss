@@ -114,7 +114,7 @@ angular
                 'jobrunner:operator',
                 'timeseries:reader',
                 'topology:editor',
-                'notification:editor',
+                'notification:user',
                 'sla:editor'
               ];
 
