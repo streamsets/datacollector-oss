@@ -19,14 +19,20 @@
  */
 package com.streamsets.pipeline.kafka.impl;
 
+import com.codahale.metrics.Gauge;
+import com.codahale.metrics.Histogram;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.kafka.api.MessageAndOffset;
 import com.streamsets.pipeline.kafka.api.SdcKafkaConsumer;
+import org.apache.commons.lang.StringUtils;
+import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.consumer.OffsetAndMetadata;
+import org.apache.kafka.clients.consumer.CommitFailedException;
 import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.errors.AuthorizationException;
@@ -34,14 +40,14 @@ import org.apache.kafka.common.errors.WakeupException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -49,8 +55,46 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class BaseKafkaConsumer09 implements SdcKafkaConsumer {
 
+  /**
+   * Our custom Rebalance listener
+   */
+  private static class DataCollectorConsumerListener implements ConsumerRebalanceListener {
+
+    private final Histogram rebalanceHistogram;
+    private final AtomicBoolean rebalanceInProgress;
+    private final ArrayBlockingQueue<ConsumerRecord<String, byte[]>> recordQueue;
+    private volatile long time;
+
+    public DataCollectorConsumerListener(Histogram rebalanceHistogram, AtomicBoolean rebalanceInProgress, ArrayBlockingQueue<ConsumerRecord<String, byte[]>> recordQueue) {
+      this.rebalanceHistogram = rebalanceHistogram;
+      this.rebalanceInProgress = rebalanceInProgress;
+      this.recordQueue = recordQueue;
+    }
+
+    @Override
+    public void onPartitionsRevoked(Collection<TopicPartition> partitions) {
+      time = System.currentTimeMillis();
+
+      LOG.trace("Received onPartitionsRevoked call back for {}", StringUtils.join(partitions, ","));
+      rebalanceInProgress.set(true);
+      // Based on Kafka documentation, on rebalance all consumers will start from their committed offsets, hence
+      // it's safe to simply discard the blocking queue.
+      recordQueue.clear();
+    }
+
+    @Override
+    public void onPartitionsAssigned(Collection<TopicPartition> partitions) {
+      LOG.trace("Received onPartitionsAssigned call back for {}", StringUtils.join(partitions, ","));
+      rebalanceInProgress.set(false);
+      // Update histogram with time spent inside rebalancing
+      rebalanceHistogram.update(System.currentTimeMillis() - time);
+    }
+  }
+
   private static final int BLOCKING_QUEUE_SIZE = 10000;
   private static final int CONSUMER_POLLING_WINDOW_MS = 100;
+  private static final String REBALANCE_IN_PROGRESS = "Rebalance In Progress";
+  private static final String WAITING_ON_POLL = "Waiting on poll";
 
   protected KafkaConsumer<String, byte[]> kafkaConsumer;
 
@@ -65,17 +109,33 @@ public abstract class BaseKafkaConsumer09 implements SdcKafkaConsumer {
   private final Map<TopicPartition, OffsetAndMetadata> topicPartitionToOffsetMetadataMap;
   // mutex to ensure poll and commit are never called concurrently
   private final Object pollCommitMutex;
+  // Holds information whether Kafka is currently rebalancing the consumer group, if so we won't be reading any data
+  private final AtomicBoolean rebalanceInProgress;
+  // Set by commit() when Kafka throws CommitFailedException to force us to call consumer's poll() before anything else
+  private final AtomicBoolean needToCallPoll;
+  // Source's context for various metrics
+  private final Source.Context context;
+  // Histogram for rebalancing events
+  private final Histogram rebalanceHistogram;
+  // Gauge with various states that we're propagating up
+  private final ConcurrentHashMap<String, Object> gaugeMap;
 
   private boolean isInited = false;
 
   private static final Logger LOG = LoggerFactory.getLogger(BaseKafkaConsumer09.class);
 
-  public BaseKafkaConsumer09(String topic) {
+  public BaseKafkaConsumer09(String topic, Source.Context context) {
     this.topic = topic;
     this.topicPartitionToOffsetMetadataMap = new HashMap<>();
     this.recordQueue = new ArrayBlockingQueue<>(BLOCKING_QUEUE_SIZE);
     this.executorService = new ScheduledThreadPoolExecutor(1);
     this.pollCommitMutex = new Object();
+    this.rebalanceInProgress = new AtomicBoolean(false);
+    this.needToCallPoll = new AtomicBoolean(false);
+    this.context = context;
+    this.rebalanceHistogram = context.createHistogram("Rebalance Time");
+    this.gaugeMap = new ConcurrentHashMap<>();
+    context.createGauge("Internal state", (Gauge<Map<String, Object>>) () -> gaugeMap);
   }
 
   @Override
@@ -97,7 +157,7 @@ public abstract class BaseKafkaConsumer09 implements SdcKafkaConsumer {
     if(null == kafkaConsumer) {
       throw new RuntimeException("validate method must be called before init which creates the Kafka Consumer");
     }
-    kafkaConsumerRunner = new KafkaConsumerRunner(kafkaConsumer, recordQueue, pollCommitMutex);
+    kafkaConsumerRunner = new KafkaConsumerRunner(kafkaConsumer, recordQueue, pollCommitMutex, needToCallPoll);
     executorService.scheduleWithFixedDelay(kafkaConsumerRunner, 0, 20, TimeUnit.MILLISECONDS);
     isInited = true;
   }
@@ -125,28 +185,57 @@ public abstract class BaseKafkaConsumer09 implements SdcKafkaConsumer {
   @Override
   public void commit() {
     synchronized (pollCommitMutex) {
-      // NOTE: there is still a potential race condition with our client; if another rebalance happens while this
-      //  method is running (ex: before commitSync), we will miss it and still commit the wrong offsets
-      Set<TopicPartition> unassignedPartitions = new HashSet<>(topicPartitionToOffsetMetadataMap.keySet());
-      for (TopicPartition partition : kafkaConsumer.assignment()) {
-        unassignedPartitions.remove(partition);
+      // While rebalancing there is no point for us to commit offset since it's not allowed operation
+      if(rebalanceInProgress.get()) {
+        LOG.debug("Kafka is rebalancing, not commiting offsets");
+        return;
       }
-      if (!unassignedPartitions.isEmpty()) {
-        for (TopicPartition unassignedPartition : unassignedPartitions) {
-          LOG.info(
-              "Removing partition {} for topic {} from offset map because it's no longer assigned to this consumer",
-              unassignedPartition.partition(),
-              unassignedPartition.topic()
-          );
-          topicPartitionToOffsetMetadataMap.remove(unassignedPartition);
+
+      if(needToCallPoll.get()) {
+        LOG.debug("Waiting on poll to be properly called before continuing.");
+        return;
+      }
+
+      try {
+        if(topicPartitionToOffsetMetadataMap.isEmpty()) {
+          LOG.info("Skipping committing offsets since we haven't consume anything.");
+          return;
         }
+
+        kafkaConsumer.commitSync(topicPartitionToOffsetMetadataMap);
+
+        // We've committed the offsets, now drop them so that we don't re-commit anything
+        topicPartitionToOffsetMetadataMap.clear();
+      } catch(CommitFailedException ex) {
+        LOG.warn("Can't commit offset to Kafka: {}", ex.toString(), ex);
+        // After CommitFailedException we MUST call consumer's poll() method first
+        needToCallPoll.set(true);
+        // The consumer thread might be stuck on writing to the queue, so we need to clean it up to unblock that thread
+        recordQueue.clear();
       }
-      kafkaConsumer.commitSync(topicPartitionToOffsetMetadataMap);
     }
   }
 
   @Override
   public MessageAndOffset read() throws StageException {
+    // First of all update gauge representing internal state
+    gaugeMap.put(REBALANCE_IN_PROGRESS, rebalanceInProgress.get());
+    gaugeMap.put(WAITING_ON_POLL, needToCallPoll.get());
+
+    // On rebalancing or if we need to call poll first, there is no point to read any messages from the buffer
+    if(rebalanceInProgress.get() || needToCallPoll.get()) {
+      // Small back off to give Kafka time to rebalance or us to get a chance to call poll()
+      try {
+        Thread.sleep(500);
+      } catch (InterruptedException e) {
+        // Not really important to us
+      }
+
+      // Return no message
+      LOG.debug("Generating empty batch since the consumer is not ready to consume (rebalance={}, needToPoll={})", rebalanceInProgress.get(), needToCallPoll.get());
+      return null;
+    }
+
     ConsumerRecord<String, byte[]> next;
     try {
        // If no record is available within the given time return null
@@ -190,7 +279,7 @@ public abstract class BaseKafkaConsumer09 implements SdcKafkaConsumer {
     configureKafkaProperties(kafkaConsumerProperties);
     LOG.debug("Creating Kafka Consumer with properties {}" , kafkaConsumerProperties.toString());
     kafkaConsumer = new KafkaConsumer<>(kafkaConsumerProperties);
-    kafkaConsumer.subscribe(Collections.singletonList(topic));
+    kafkaConsumer.subscribe(Collections.singletonList(topic), new DataCollectorConsumerListener(rebalanceHistogram, rebalanceInProgress, recordQueue));
   }
 
   static class KafkaConsumerRunner implements Runnable {
@@ -198,15 +287,18 @@ public abstract class BaseKafkaConsumer09 implements SdcKafkaConsumer {
     private final KafkaConsumer<String, byte[]> consumer;
     private final Object mutex;
     private final ArrayBlockingQueue<ConsumerRecord<String, byte[]>> blockingQueue;
+    private final AtomicBoolean needToCallPoll;
 
     public KafkaConsumerRunner(
       KafkaConsumer<String, byte[]> consumer,
       ArrayBlockingQueue<ConsumerRecord<String, byte[]>> blockingQueue,
-      Object mutex
+      Object mutex,
+      AtomicBoolean needToCallPoll
     ) {
       this.consumer = consumer;
       this.blockingQueue = blockingQueue;
       this.mutex = mutex;
+      this.needToCallPoll = needToCallPoll;
     }
 
     @Override
@@ -215,8 +307,17 @@ public abstract class BaseKafkaConsumer09 implements SdcKafkaConsumer {
         ConsumerRecords<String, byte[]> poll;
         synchronized (mutex) {
            poll = consumer.poll(CONSUMER_POLLING_WINDOW_MS);
+           // Since we've just called poll, we've always set it to true
+           needToCallPoll.set(false);
         }
+        LOG.trace("Read {} messages from Kafka", poll.count());
         for(ConsumerRecord<String, byte[]> r : poll) {
+          // If we need to call poll, we'll jump out and ignore the rest
+          if(needToCallPoll.get()) {
+            LOG.info("Discarding cached and uncommitted messages retrieved from Kafka due to need to call poll().");
+            blockingQueue.clear();
+            return;
+          }
           if (!putConsumerRecord(r)) {
             return;
           }
