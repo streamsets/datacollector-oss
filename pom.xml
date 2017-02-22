@@ -500,8 +500,8 @@
         <module>apache-kudu_1_2-lib</module>
         <module>apache-solr_6_1_0-lib</module>
         <module>cassandra_3-lib</module>
-        <module>cdh_5_9-cluster-cdh_kafka_2_0-lib</module>
-        <module>cdh_5_9-lib</module>
+        <module>cdh_5_10-cluster-cdh_kafka_2_1-lib</module>
+        <module>cdh_5_10-lib</module>
         <module>cdh_kafka_2_0-lib</module>
         <module>elasticsearch_5-lib</module>
         <module>groovy_2_4-lib</module>
