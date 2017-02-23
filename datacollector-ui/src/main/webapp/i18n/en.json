@@ -606,7 +606,6 @@
       "system:sharedWithMePipelines": "Shared with Me",
       "targetPlaceholder": "Select Destination...",
       "transferPermissions": "Transfer Permissions",
-      "transferUsersAndGroups": "Transfer Users & Groups in Permissions",
       "updatePermissionsSuccessMessage": "Successfully updated all permissions"
     },
     "noPipelines": "No Pipeline Found",
