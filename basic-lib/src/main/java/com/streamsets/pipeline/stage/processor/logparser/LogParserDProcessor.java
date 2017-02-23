@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.processor.logparser;
 
+import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
@@ -46,13 +47,14 @@ public class LogParserDProcessor extends DProcessor {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.MODEL,
       defaultValue = "/text",
       label = "Field to Parse",
       description = "String field that contains a LOG line",
       displayPosition = 10,
       group = "LOG"
   )
+  @FieldSelectorModel(singleValued = true)
   public String fieldPathToParse;
 
   @ConfigDef(
