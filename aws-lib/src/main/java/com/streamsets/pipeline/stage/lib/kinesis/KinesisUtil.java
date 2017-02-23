@@ -23,29 +23,31 @@ import com.amazonaws.AmazonClientException;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.regions.RegionUtils;
 import com.amazonaws.services.kinesis.AmazonKinesisClient;
-import com.amazonaws.services.kinesis.clientlibrary.exceptions.InvalidStateException;
-import com.amazonaws.services.kinesis.clientlibrary.exceptions.ShutdownException;
-import com.amazonaws.services.kinesis.clientlibrary.exceptions.ThrottlingException;
-import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorCheckpointer;
+import com.amazonaws.services.kinesis.clientlibrary.types.UserRecord;
 import com.amazonaws.services.kinesis.model.GetRecordsRequest;
 import com.amazonaws.services.kinesis.model.GetRecordsResult;
 import com.amazonaws.services.kinesis.model.GetShardIteratorRequest;
 import com.amazonaws.services.kinesis.model.GetShardIteratorResult;
+import com.amazonaws.services.kinesis.model.Record;
 import com.amazonaws.services.kinesis.model.Shard;
 import com.amazonaws.services.kinesis.model.StreamDescription;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
+import com.streamsets.pipeline.lib.parser.DataParser;
+import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.parser.DataParserFactory;
+import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.origin.kinesis.Groups;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class KinesisUtil {
   private static final Logger LOG = LoggerFactory.getLogger(KinesisUtil.class);
-  private static final long BACKOFF_TIME_IN_MILLIS = 3000L;
-  private static final int NUM_RETRIES = 10;
 
   public static final int KB = 1024; // KiB
   public static final int ONE_MB = 1024 * KB; // MiB
@@ -56,23 +58,23 @@ public class KinesisUtil {
   /**
    * Checks for existence of the requested stream and adds
    * any configuration issues to the list.
-   * @param regionName
+   * @param conf
    * @param streamName
    * @param issues
    * @param context
    */
   public static long checkStreamExists(
-      String regionName,
+      KinesisConfigBean conf,
       String streamName,
-      AWSConfig awsConfig,
       List<Stage.ConfigIssue> issues,
       Stage.Context context
   ) {
     long numShards = 0;
 
     try {
-      numShards = getShardCount(regionName, awsConfig, streamName);
+      numShards = getShardCount(conf, streamName);
     } catch (AmazonClientException e) {
+      LOG.error(Errors.KINESIS_01.getMessage(), e.toString(), e);
       issues.add(context.createConfigIssue(
           Groups.KINESIS.name(),
           KINESIS_CONFIG_BEAN + ".streamName", Errors.KINESIS_01, e.toString()
@@ -81,14 +83,8 @@ public class KinesisUtil {
     return numShards;
   }
 
-  public static long getShardCount(String regionName, AWSConfig awsConfig, String streamName)
-    throws AmazonClientException {
-    ClientConfiguration kinesisConfiguration = new ClientConfiguration();
-    AmazonKinesisClient kinesisClient = new AmazonKinesisClient(
-        AWSUtil.getCredentialsProvider(awsConfig),
-        kinesisConfiguration
-    );
-    kinesisClient.setRegion(RegionUtils.getRegion(regionName));
+  public static long getShardCount(KinesisConfigBean conf, String streamName) {
+    AmazonKinesisClient kinesisClient = getKinesisClient(conf);
 
     try {
       long numShards = 0;
@@ -122,21 +118,30 @@ public class KinesisUtil {
     }
   }
 
+  @NotNull
+  private static AmazonKinesisClient getKinesisClient(KinesisConfigBean conf) {
+    AmazonKinesisClient kinesisClient = new AmazonKinesisClient(
+        AWSUtil.getCredentialsProvider(conf.awsConfig),
+        new ClientConfiguration()
+    );
+
+    if (AWSRegions.OTHER == conf.region) {
+      kinesisClient.setEndpoint(conf.endpoint);
+    } else {
+      kinesisClient.setRegion(RegionUtils.getRegion(conf.region.getLabel()));
+    }
+
+    return kinesisClient;
+  }
+
   /**
    * Get the last shard Id in the given stream
    * In preview mode, kinesis source uses the last Shard Id to get records from kinesis
-   * @param regionName
-   * @param awsConfig
+   * @param conf
    * @param streamName
    */
-  public static String getLastShardId(String regionName, AWSConfig awsConfig, String streamName)
-  throws AmazonClientException {
-    ClientConfiguration kinesisConfiguration = new ClientConfiguration();
-    AmazonKinesisClient kinesisClient = new AmazonKinesisClient(
-        AWSUtil.getCredentialsProvider(awsConfig),
-        kinesisConfiguration
-    );
-    kinesisClient.setRegion(RegionUtils.getRegion(regionName));
+  public static String getLastShardId(KinesisConfigBean conf, String streamName) {
+    AmazonKinesisClient kinesisClient = getKinesisClient(conf);
 
     String lastShardId = null;
     try {
@@ -160,73 +165,43 @@ public class KinesisUtil {
     }
   }
 
-  public static void checkpoint(IRecordProcessorCheckpointer checkpointer) {
-    checkpoint(checkpointer, null, null);
-  }
-
-  public static void checkpoint(
-      IRecordProcessorCheckpointer checkpointer,
-      String sequenceNumber,
-      Long subsequenceNumber
-  ) {
-    for (int i = 0; i < NUM_RETRIES; i++) {
-      try {
-        if (subsequenceNumber != null && sequenceNumber != null) {
-          checkpointer.checkpoint(sequenceNumber, subsequenceNumber);
-        } else if (sequenceNumber != null) {
-          checkpointer.checkpoint(sequenceNumber);
-        } else {
-          checkpointer.checkpoint();
-        }
-        break;
-      } catch (ShutdownException se) {
-        // Ignore checkpoint if the processor instance has been shutdown (fail over).
-        LOG.info("Caught shutdown exception, skipping checkpoint.", se);
-        break;
-      } catch (ThrottlingException e) {
-        // Backoff and re-attempt checkpoint upon transient failures
-        if (i >= (NUM_RETRIES - 1)) {
-          LOG.error("Checkpoint failed after " + (i + 1) + "attempts.", e);
-          break;
-        } else {
-          LOG.warn("Transient issue when checkpointing - attempt {} of {}", (i + 1), NUM_RETRIES, e);
-        }
-      } catch (InvalidStateException e) {
-        // This indicates an issue with the DynamoDB table (check for table, provisioned IOPS).
-        LOG.error("Cannot save checkpoint to the DynamoDB table used by the Amazon Kinesis Client Library.", e);
-        break;
-      }
-
-      try {
-        Thread.sleep(BACKOFF_TIME_IN_MILLIS);
-      } catch (InterruptedException e) {
-        LOG.debug("Interrupted while retrying checkpoint.", e);
-      }
-    }
-  }
-
   public static List<com.amazonaws.services.kinesis.model.Record> getPreviewRecords(
-      AWSConfig awsConfig,
-      String region,
+      KinesisConfigBean conf,
       int maxBatchSize,
       GetShardIteratorRequest getShardIteratorRequest
   ) {
-    ClientConfiguration kinesisConfiguration = new ClientConfiguration();
-    AmazonKinesisClient client = new AmazonKinesisClient(
-        AWSUtil.getCredentialsProvider(awsConfig),
-        kinesisConfiguration
-    );
+    AmazonKinesisClient kinesisClient = getKinesisClient(conf);
 
-    client.setRegion(RegionUtils.getRegion(region));
-
-    GetShardIteratorResult getShardIteratorResult = client.getShardIterator(getShardIteratorRequest);
+    GetShardIteratorResult getShardIteratorResult = kinesisClient.getShardIterator(getShardIteratorRequest);
     String shardIterator = getShardIteratorResult.getShardIterator();
 
     GetRecordsRequest getRecordsRequest = new GetRecordsRequest();
     getRecordsRequest.setShardIterator(shardIterator);
     getRecordsRequest.setLimit(maxBatchSize);
 
-    GetRecordsResult getRecordsResult = client.getRecords(getRecordsRequest);
+    GetRecordsResult getRecordsResult = kinesisClient.getRecords(getRecordsRequest);
     return getRecordsResult.getRecords();
+  }
+
+  public static List<com.streamsets.pipeline.api.Record> processKinesisRecord(
+      String shardId,
+      Record kRecord,
+      DataParserFactory parserFactory
+  ) throws DataParserException, IOException {
+    final String recordId = createKinesisRecordId(shardId, kRecord);
+    DataParser parser = parserFactory.getParser(recordId, kRecord.getData().array());
+
+    List<com.streamsets.pipeline.api.Record> records = new ArrayList<>();
+    com.streamsets.pipeline.api.Record r;
+    while ((r = parser.parse()) != null) {
+      records.add(r);
+    }
+    parser.close();
+    return records;
+  }
+
+  public static String createKinesisRecordId(String shardId, com.amazonaws.services.kinesis.model.Record record) {
+    return shardId + "::" + record.getPartitionKey() + "::" + record.getSequenceNumber() + "::" + ((UserRecord)
+        record).getSubSequenceNumber();
   }
 }

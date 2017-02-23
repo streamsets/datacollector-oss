@@ -23,12 +23,12 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
+import com.streamsets.pipeline.configurablestage.DPushSource;
 
 @StageDef(
-    version = 5,
+    version = 6,
     label = "Kinesis Consumer",
     description = "Reads data from Kinesis",
     icon = "kinesis.png",
@@ -39,13 +39,13 @@ import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
-public class KinesisDSource extends DSourceOffsetCommitter {
+public class KinesisDSource extends DPushSource {
 
   @ConfigDefBean(groups = {"KINESIS", "ADVANCED"})
   public KinesisConsumerConfigBean kinesisConfig;
 
   @Override
-  protected Source createSource() {
+  protected PushSource createPushSource() {
     return new KinesisSource(kinesisConfig);
   }
 }

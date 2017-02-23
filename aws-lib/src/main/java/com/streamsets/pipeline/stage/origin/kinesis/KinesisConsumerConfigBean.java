@@ -34,7 +34,7 @@ public class KinesisConsumerConfigBean extends KinesisConfigBean {
   public DataParserFormatConfig dataFormatConfig;
 
   @ConfigDefBean(groups = "ADVANCED")
-  public ProxyConfig proxyConfig;
+  public ProxyConfig proxyConfig = new ProxyConfig();
 
   @ConfigDef(
       required = true,
@@ -99,26 +99,13 @@ public class KinesisConsumerConfigBean extends KinesisConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      defaultValue = "1000",
-      label = "Batch Wait Time (ms)",
-      description = "Max time to wait for data before sending a batch",
+      defaultValue = "${runtime:availableProcessors()}",
+      label = "Max Threads",
+      description = "Maximum number of record processing threads to spawn",
       displayPosition = 80,
       group = "#0",
       min = 1,
       max = Integer.MAX_VALUE
   )
-  public long maxWaitTime;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.NUMBER,
-      defaultValue = "5000",
-      label = "Preview Batch Wait Time (ms)",
-      description = "Max time to wait for data for preview mode. This should be at least several seconds for Kinesis.",
-      displayPosition = 90,
-      group = "#0",
-      min = 1000,
-      max = Integer.MAX_VALUE
-  )
-  public long previewWaitTime;
+  public int maxRecordProcessors;
 }

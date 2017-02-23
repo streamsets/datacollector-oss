@@ -19,29 +19,57 @@
  */
 package com.streamsets.pipeline.stage.origin.kinesis;
 
+import com.amazonaws.services.kinesis.clientlibrary.exceptions.InvalidStateException;
+import com.amazonaws.services.kinesis.clientlibrary.exceptions.ShutdownException;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorCheckpointer;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.v2.IRecordProcessor;
 import com.amazonaws.services.kinesis.clientlibrary.types.InitializationInput;
 import com.amazonaws.services.kinesis.clientlibrary.types.ProcessRecordsInput;
 import com.amazonaws.services.kinesis.clientlibrary.types.ShutdownInput;
-import com.amazonaws.services.kinesis.clientlibrary.types.ShutdownReason;
 import com.amazonaws.services.kinesis.model.Record;
-import com.streamsets.pipeline.stage.lib.kinesis.RecordsAndCheckpointer;
+import com.google.common.base.Throwables;
+import com.streamsets.pipeline.api.BatchContext;
+import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.PushSource;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.parser.DataParserFactory;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.lib.kinesis.Errors;
+import com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
+import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 
 public class StreamSetsRecordProcessor implements IRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(StreamSetsRecordProcessor.class);
 
-  private final BlockingQueue<RecordsAndCheckpointer> batchQueue;
+  private final PushSource.Context context;
+  private final DataParserFactory parserFactory;
+  private final int maxBatchSize;
+  private final BlockingQueue<Throwable> error;
 
   private String shardId;
+  private BatchContext batchContext;
+  private BatchMaker batchMaker;
+  private ErrorRecordHandler errorRecordHandler;
 
-  public StreamSetsRecordProcessor(BlockingQueue<RecordsAndCheckpointer> batchQueue) {
-    this.batchQueue = batchQueue;
+  public StreamSetsRecordProcessor(
+      PushSource.Context context,
+      DataParserFactory parserFactory,
+      int maxBatchSize,
+      BlockingQueue<Throwable> error
+  ) {
+    this.context = context;
+    this.parserFactory = parserFactory;
+    this.maxBatchSize = maxBatchSize;
+    this.error = error;
   }
 
   /**
@@ -49,10 +77,15 @@ public class StreamSetsRecordProcessor implements IRecordProcessor {
    */
   @Override
   public void initialize(InitializationInput initializationInput) {
-    final String shardId = initializationInput.getShardId();
+    shardId = initializationInput.getShardId();
     LOG.debug("Initializing record processor at: {}", initializationInput.getExtendedSequenceNumber().toString());
     LOG.debug("Initializing record processor for shard: {}", shardId);
-    this.shardId = shardId;
+  }
+
+  private void startBatch() {
+    batchContext = context.startBatch();
+    batchMaker = batchContext.getBatchMaker();
+    errorRecordHandler = new DefaultErrorRecordHandler(context, batchContext);
   }
 
   /**
@@ -61,13 +94,61 @@ public class StreamSetsRecordProcessor implements IRecordProcessor {
   @Override
   public void processRecords(ProcessRecordsInput processRecordsInput) {
     LOG.debug("RecordProcessor processRecords called");
-    List<Record> records = processRecordsInput.getRecords();
+
     IRecordProcessorCheckpointer checkpointer = processRecordsInput.getCheckpointer();
+
+    startBatch();
+    Optional<Record> lastProcessedRecord = Optional.empty();
+    int recordCount = 0;
+      for (Record kRecord : processRecordsInput.getRecords()) {
+        try {
+          KinesisUtil.processKinesisRecord(shardId, kRecord, parserFactory).forEach(batchMaker::addRecord);
+          lastProcessedRecord = Optional.of(kRecord);
+          if (++recordCount == maxBatchSize) {
+            recordCount = 0;
+            finishBatch(checkpointer, kRecord);
+            startBatch();
+          }
+        } catch (DataParserException | IOException e) {
+          com.streamsets.pipeline.api.Record record = context.createRecord(kRecord.getSequenceNumber());
+          record.set(Field.create(kRecord.getData().array()));
+          try {
+            errorRecordHandler.onError(new OnRecordErrorException(
+                record,
+                Errors.KINESIS_03,
+                kRecord.getSequenceNumber(),
+                e.toString(),
+                e
+            ));
+            // move the lastProcessedRecord forward if not set to stop pipeline
+            lastProcessedRecord = Optional.of(kRecord);
+          } catch (StageException ex) {
+            // KCL skips over the data records that were passed prior to the exception
+            // that is, these records are not re-sent to this record processor
+            // or to any other record processor in the consumer.
+            lastProcessedRecord.ifPresent(r -> finishBatch(checkpointer, r));
+            try {
+              error.put(ex);
+            } catch (InterruptedException ie) {
+              Thread.currentThread().interrupt();
+            }
+            return;
+          }
+        }
+      }
+    lastProcessedRecord.ifPresent(r -> finishBatch(checkpointer, r));
+  }
+
+  private void finishBatch(IRecordProcessorCheckpointer checkpointer, Record checkpointRecord) {
     try {
-      batchQueue.put(new RecordsAndCheckpointer(records, checkpointer));
-      LOG.debug("Placed {} records into the queue.", records.size());
-    } catch (InterruptedException e) {
-      LOG.error("Failed to place batch in queue for shardId {}", shardId);
+      if (!context.processBatch(batchContext, shardId, KinesisUtil.createKinesisRecordId(shardId, checkpointRecord))) {
+        throw Throwables.propagate(new StageException(Errors.KINESIS_04));
+      }
+      // Checkpoint iff batch processing succeeded
+      checkpointer.checkpoint(checkpointRecord);
+      LOG.debug("Checkpointed batch at record {}", checkpointRecord.toString());
+    } catch (InvalidStateException | ShutdownException e) {
+      LOG.error("Error checkpointing batch: {}", e.toString(), e);
     }
   }
 
@@ -77,15 +158,5 @@ public class StreamSetsRecordProcessor implements IRecordProcessor {
   @Override
   public void shutdown(ShutdownInput shutdownInput) {
     LOG.info("Shutting down record processor for shard: {}", shardId);
-    if (shutdownInput.getShutdownReason() == ShutdownReason.TERMINATE) {
-      // We send an empty batch with the checkpointer to signal end of a shard.
-      IRecordProcessorCheckpointer checkpointer = shutdownInput.getCheckpointer();
-      try {
-        batchQueue.put(new RecordsAndCheckpointer(checkpointer));
-        LOG.debug("Placed shutdown checkpoint into the queue.");
-      } catch (InterruptedException e) {
-        LOG.error("Interrupted while waiting for shutdown checkpoint.");
-      }
-    }
   }
 }

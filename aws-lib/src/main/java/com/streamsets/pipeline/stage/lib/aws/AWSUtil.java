@@ -25,6 +25,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.internal.StaticCredentialsProvider;
 import com.streamsets.pipeline.api.Config;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ public class AWSUtil {
 
   public static AWSCredentialsProvider getCredentialsProvider(AWSConfig config) {
     AWSCredentialsProvider credentialsProvider;
-    if (!config.awsAccessKeyId.isEmpty() && !config.awsSecretAccessKey.isEmpty()) {
+    if (!StringUtils.isEmpty(config.awsAccessKeyId) && !StringUtils.isEmpty(config.awsSecretAccessKey)) {
       credentialsProvider = new StaticCredentialsProvider(
           new BasicAWSCredentials(config.awsAccessKeyId, config.awsSecretAccessKey)
       );

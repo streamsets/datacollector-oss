@@ -28,6 +28,7 @@ import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisBaseUpgrader;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.KINESIS_CONFIG_BEAN;
 
@@ -45,25 +46,34 @@ public class KinesisSourceUpgrader extends KinesisBaseUpgrader {
     switch (fromVersion) {
       case 1:
         upgradeV1toV2(configs);
+        if (toVersion == 2) {
+          break;
+        }
         // fall through
       case 2:
         upgradeV2toV3(configs);
+        if (toVersion == 3) {
+          break;
+        }
         // fall through
       case 3:
         upgradeV3toV4(configs);
+        if (toVersion == 4) {
+          break;
+        }
         // fall through
       case 4:
         upgradeV4toV5(configs);
-        break;
+        if (toVersion == 5) {
+          break;
+        }
+        // fall through
+      case 5:
+        return upgradeV5toV6(configs);
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
     return configs;
-  }
-
-  private static void upgradeV4toV5(List<Config> configs) {
-    DataFormatUpgradeHelper.ensureAvroSchemaExists(configs, KINESIS_CONFIG_BEAN + ".dataFormatConfig");
-    DataFormatUpgradeHelper.upgradeAvroParserWithSchemaRegistrySupport(configs);
   }
 
   private void upgradeV1toV2(List<Config> configs) {
@@ -103,5 +113,17 @@ public class KinesisSourceUpgrader extends KinesisBaseUpgrader {
 
   private static void upgradeV3toV4(List<Config> configs) {
     configs.add(new Config(KINESIS_CONFIG_BEAN + ".endpoint", ""));
+  }
+
+  private static void upgradeV4toV5(List<Config> configs) {
+    DataFormatUpgradeHelper.ensureAvroSchemaExists(configs, KINESIS_CONFIG_BEAN + ".dataFormatConfig");
+    DataFormatUpgradeHelper.upgradeAvroParserWithSchemaRegistrySupport(configs);
+  }
+
+  private List<Config> upgradeV5toV6(List<Config> configs) {
+    configs.add(new Config(KINESIS_CONFIG_BEAN + ".maxRecordProcessors", "${runtime:availableProcessors()}"));
+    return configs.stream()
+        .filter(c -> !c.getName().endsWith("WaitTime")) // removes previewWaitTime and maxWaitTime
+        .collect(Collectors.toList());
   }
 }

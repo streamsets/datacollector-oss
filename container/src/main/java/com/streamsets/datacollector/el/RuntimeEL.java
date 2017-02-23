@@ -184,4 +184,12 @@ public class RuntimeEL {
     return HOSTNAME;
   }
 
+  @ElFunction(
+      prefix = "runtime",
+      name = "availableProcessors",
+      description = "Returns the number of CPU cores as reported by Java"
+  )
+  public static int availableProcessors() {
+    return Runtime.getRuntime().availableProcessors();
+  }
 }

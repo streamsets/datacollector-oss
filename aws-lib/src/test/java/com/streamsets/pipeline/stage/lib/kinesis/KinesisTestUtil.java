@@ -24,7 +24,6 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.sdk.RecordCreator;
-import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.powermock.api.mockito.PowerMockito;
 
@@ -107,7 +106,7 @@ public class KinesisTestUtil {
 
     when(
         KinesisUtil.checkStreamExists(
-          any(String.class), any(String.class), any(AWSConfig.class), any(List.class), any(Stage.Context.class)
+          any(KinesisConfigBean.class), any(String.class), any(List.class), any(Stage.Context.class)
         )
     ).thenReturn(numShards);
   }

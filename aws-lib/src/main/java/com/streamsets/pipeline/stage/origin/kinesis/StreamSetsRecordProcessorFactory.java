@@ -21,20 +21,32 @@ package com.streamsets.pipeline.stage.origin.kinesis;
 
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.v2.IRecordProcessor;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.v2.IRecordProcessorFactory;
-import com.streamsets.pipeline.stage.lib.kinesis.RecordsAndCheckpointer;
+import com.streamsets.pipeline.api.PushSource;
+import com.streamsets.pipeline.lib.parser.DataParserFactory;
 
 import java.util.concurrent.BlockingQueue;
 
 public class StreamSetsRecordProcessorFactory implements IRecordProcessorFactory {
-  final BlockingQueue<RecordsAndCheckpointer> batchQueue;
+  private final PushSource.Context context;
+  private final DataParserFactory parserFactory;
+  private final int maxBatchSize;
+  private final BlockingQueue<Throwable> error;
 
-  public StreamSetsRecordProcessorFactory(BlockingQueue<RecordsAndCheckpointer> batchQueue) {
-    this.batchQueue = batchQueue;
+  StreamSetsRecordProcessorFactory(
+      PushSource.Context context,
+      DataParserFactory parserFactory,
+      int maxBatchSize,
+      BlockingQueue<Throwable> error
+  ) {
+    this.context = context;
+    this.parserFactory = parserFactory;
+    this.maxBatchSize = maxBatchSize;
+    this.error = error;
   }
 
   @Override
   public IRecordProcessor createProcessor() {
-    return new StreamSetsRecordProcessor(batchQueue);
+    return new StreamSetsRecordProcessor(context, parserFactory, maxBatchSize, error);
   }
 
 }

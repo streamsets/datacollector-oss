@@ -115,9 +115,8 @@ public class KinesisTarget extends BaseTarget {
     }
 
     KinesisUtil.checkStreamExists(
-        conf.region.getLabel(),
+        conf,
         conf.streamName,
-        conf.awsConfig,
         issues,
         getContext()
     );

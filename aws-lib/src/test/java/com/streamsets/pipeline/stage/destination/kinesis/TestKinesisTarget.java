@@ -31,6 +31,7 @@ import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
 import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
+import com.streamsets.pipeline.stage.lib.kinesis.KinesisConfigBean;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisTestUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -108,7 +109,7 @@ public class TestKinesisTarget {
 
     when(
         KinesisUtil.checkStreamExists(
-            any(String.class), any(String.class), any(AWSConfig.class), any(List.class), any(Stage.Context.class)
+            any(KinesisConfigBean.class), any(String.class), any(List.class), any(Stage.Context.class)
         )
     ).thenReturn(1L);
 
