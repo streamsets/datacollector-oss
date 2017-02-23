@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.processor.jsonparser;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageDef;
@@ -39,13 +40,14 @@ public class JsonParserDProcessor extends DProcessor {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.MODEL,
       defaultValue = "",
       label = "Field to Parse",
       description = "String field that contains a JSON object",
       displayPosition = 10,
       group = "JSON"
   )
+  @FieldSelectorModel(singleValued = true)
   public String fieldPathToParse;
 
   @ConfigDef(
