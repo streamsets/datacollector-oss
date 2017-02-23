@@ -34,7 +34,7 @@ import java.util.Arrays;
 
 @StageDef(
     version = 1,
-    label = "Write to Another Pipeline",
+    label = "Write to SDC RPC",
     description = "Writes pipeline Statistic records to another pipeline over SDC RPC",
     icon="sdcipc.png",
     onlineHelpRefUrl = ""
