@@ -15,3 +15,4 @@
 # limitations under the License.
 
 com.streamsets.pipeline.stage.processor.groovy.StreamSetsGroovyScriptEngineFactory
+com.streamsets.pipeline.stage.processor.groovy.StreamSetsGroovyIndyScriptEngineFactory

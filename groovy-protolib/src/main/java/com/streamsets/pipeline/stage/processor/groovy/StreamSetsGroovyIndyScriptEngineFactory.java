@@ -20,38 +20,19 @@
 package com.streamsets.pipeline.stage.processor.groovy;
 
 import com.google.common.collect.ImmutableList;
-import groovy.lang.GroovyClassLoader;
-import org.codehaus.groovy.control.CompilerConfiguration;
-import org.codehaus.groovy.jsr223.GroovyScriptEngineImpl;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
-import javax.script.ScriptEngine;
 import java.util.List;
-import java.util.Map;
 
-import static org.codehaus.groovy.control.CompilerConfiguration.INVOKEDYNAMIC;
-import static org.codehaus.groovy.control.CompilerConfiguration.JDK7;
-
-@Named("groovy-sdc")
+@Named("groovy-sdc-indy")
 @Singleton
-public class StreamSetsGroovyScriptEngineFactory extends org.codehaus.groovy.jsr223.GroovyScriptEngineFactory {
-  private static final List<String> NAMES = ImmutableList.of("groovy-sdc");
-
-  public boolean useInvokeDynamic() {
-    return false;
-  }
+public class StreamSetsGroovyIndyScriptEngineFactory extends StreamSetsGroovyScriptEngineFactory {
+  private static final List<String> NAMES = ImmutableList.of("groovy-sdc-indy");
 
   @Override
-  public ScriptEngine getScriptEngine() {
-    CompilerConfiguration conf = new CompilerConfiguration();
-    Map<String, Boolean> optimizationOptions = conf.getOptimizationOptions();
-    optimizationOptions.put(INVOKEDYNAMIC, useInvokeDynamic());
-    conf.setOptimizationOptions(optimizationOptions);
-    conf.setTargetBytecode(JDK7);
-
-    GroovyClassLoader classLoader = new GroovyClassLoader(Thread.currentThread().getContextClassLoader(), conf);
-    return new GroovyScriptEngineImpl(classLoader);
+  public boolean useInvokeDynamic() {
+    return true;
   }
 
   @Override

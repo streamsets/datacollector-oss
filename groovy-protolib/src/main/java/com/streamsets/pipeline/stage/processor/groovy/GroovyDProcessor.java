@@ -30,6 +30,8 @@ import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingModeChooserValues;
 
 import static com.streamsets.pipeline.api.ConfigDef.Evaluation.EXPLICIT;
+import static com.streamsets.pipeline.stage.processor.groovy.GroovyProcessor.GROOVY_ENGINE;
+import static com.streamsets.pipeline.stage.processor.groovy.GroovyProcessor.GROOVY_INDY_ENGINE;
 
 @StageDef(
     version = 1,
@@ -169,9 +171,21 @@ public class GroovyDProcessor extends DProcessor {
   )
   public String script;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Enable invokedynamic Compiler Option",
+      description = "May improve or worsen script performance depending on use case",
+      displayPosition = 30,
+      group = "GROOVY"
+  )
+  public boolean invokeDynamic = false;
+
   @Override
   protected Processor createProcessor() {
-    return new GroovyProcessor(processingMode, script);
+    final String engineName = invokeDynamic ? GROOVY_INDY_ENGINE : GROOVY_ENGINE;
+    return new GroovyProcessor(processingMode, script, engineName);
   }
 
 }

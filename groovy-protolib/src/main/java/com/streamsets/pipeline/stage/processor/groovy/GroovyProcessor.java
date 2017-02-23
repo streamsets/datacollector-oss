@@ -31,10 +31,15 @@ import javax.script.ScriptEngine;
 public class GroovyProcessor extends AbstractScriptingProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(GroovyProcessor.class);
 
-  public static final String GROOVY_ENGINE = "groovy-sdc";
+  static final String GROOVY_ENGINE = "groovy-sdc";
+  static final String GROOVY_INDY_ENGINE = "groovy-sdc-indy";
+
+  public GroovyProcessor(ProcessingMode processingMode, String script, String engineName) {
+    super(LOG, engineName, Groups.GROOVY.name(), "script", processingMode, script);
+  }
 
   public GroovyProcessor(ProcessingMode processingMode, String script) {
-    super(LOG, GROOVY_ENGINE, Groups.GROOVY.name(), "script", processingMode, script);
+    this(processingMode, script, GROOVY_ENGINE);
   }
 
   @Override
