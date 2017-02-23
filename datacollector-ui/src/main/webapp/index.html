@@ -75,9 +75,8 @@
            src="assets/cloud_disconnected.svg"
            title="{{('global.menu.dpmDisconnectedMode' | translate) + common.dpmBaseURL}}"/>
 
-      <div class="pull-left">
-        <span class="navbar-brand" ng-if="common.headerTitle">{{common.headerTitle}}</span>
-      </div>
+      <div class="pull-left" ng-if="common.headerTitle"
+           ng-bind-html="common.headerTitle"></div>
 
     </div>
     <div class="collapse navbar-collapse" id="sdc-header-navbar-collapse">
