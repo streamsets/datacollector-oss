@@ -29,8 +29,6 @@ import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.stage.processor.fieldorder.config.ExtraFieldAction;
 import com.streamsets.pipeline.stage.processor.fieldorder.config.MissingFieldAction;
 import com.streamsets.pipeline.stage.processor.fieldorder.config.OrderConfigBean;
-import jdk.nashorn.internal.ir.annotations.Immutable;
-import org.apache.avro.generic.GenericData;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
