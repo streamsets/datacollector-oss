@@ -853,6 +853,11 @@ public class HdfsTargetConfigBean {
     // when we run a shutdown hook on app kill
     //See https://issues.streamsets.com/browse/SDC-4057
     conf.setBoolean("fs.automatic.close", false);
+
+    // See SDC-5451, we set hadoop.treat.subject.external automatically to take advantage of HADOOP-13805
+    // Not using constant to make this code compile even for stage libraries that does not have HADOOP-13805 available.
+    conf.setBoolean("hadoop.treat.subject.external", true);
+
     if (hdfsKerberos) {
       conf.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION,
         UserGroupInformation.AuthenticationMethod.KERBEROS.name());
