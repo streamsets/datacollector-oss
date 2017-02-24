@@ -74,7 +74,6 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
   private IRecordProcessorCheckpointer checkpointer;
   private ErrorRecordHandler errorRecordHandler;
   private DataParserFactory parserFactory;
-  private List<com.amazonaws.services.kinesis.model.Record> results;
 
   public KinesisSource(KinesisConsumerConfigBean conf) {
     this.conf = conf;
@@ -266,14 +265,12 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
     getShardIteratorRequest.setShardId(shardId);
     getShardIteratorRequest.setShardIteratorType(conf.initialPositionInStream.name());
 
-    if (results.isEmpty()) {
-      results = KinesisUtil.getPreviewRecords(
-          conf.awsConfig,
-          conf.region.getLabel(),
-          maxBatchSize,
-          getShardIteratorRequest
-      );
-    }
+    List<com.amazonaws.services.kinesis.model.Record> results = KinesisUtil.getPreviewRecords(
+        conf.awsConfig,
+        conf.region.getLabel(),
+        maxBatchSize,
+        getShardIteratorRequest
+    );
 
     int batchSize = results.size() > maxBatchSize ? maxBatchSize : results.size();
 

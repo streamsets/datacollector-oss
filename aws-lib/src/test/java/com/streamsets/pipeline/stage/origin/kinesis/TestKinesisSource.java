@@ -207,39 +207,6 @@ public class TestKinesisSource {
     assertEquals(0, records.size());
   }
 
-  @SuppressWarnings("unchecked")
-  @Test
-  public void testDefaultPreviewConsume() throws Exception {
-    KinesisConsumerConfigBean config = getKinesisConsumerConfig();
-
-    KinesisSource source = PowerMockito.spy(new KinesisSource(config));
-    SourceRunner sourceRunner = new SourceRunner.Builder(KinesisDSource.class, source).addOutputLane("lane").setPreview(true).build();
-
-    KinesisTestUtil.mockKinesisUtil(1);
-
-    PowerMockito.doReturn(null).when(source, "createKinesisWorker", any(IRecordProcessorFactory.class));
-
-    sourceRunner.runInit();
-
-    final int size = 2;
-    List<Record> testRecords = KinesisTestUtil.getConsumerTestRecords(size);
-
-    Whitebox.setInternalState(source, "results", testRecords);
-
-    StageRunner.Output output = sourceRunner.runProduce("", 10);
-    assertEquals(size, output.getRecords().get("lane").size());
-
-    final String offset = "0";
-    final String subSequence = "0";
-    final String partition = StringUtils.repeat("0", 19);
-
-    for(int i = 0; i < size; i++) {
-      final String sequence = String.valueOf(i);
-      final String targetId = STREAM_NAME + "::" + partition + "::" + sequence + "::" + subSequence + "::" + offset;
-      assertEquals(targetId, output.getRecords().get("lane").get(i).getHeader().getSourceId());
-    }
-  }
-
   private KinesisConsumerConfigBean getKinesisConsumerConfig() {
     KinesisConsumerConfigBean conf = new KinesisConsumerConfigBean();
     conf.dataFormatConfig = new DataParserFormatConfig();
