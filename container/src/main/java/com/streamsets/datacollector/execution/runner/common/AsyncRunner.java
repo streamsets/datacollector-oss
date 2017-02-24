@@ -144,13 +144,18 @@ public class AsyncRunner implements Runner, PipelineInfo {
   }
 
   @Override
-  public synchronized void start()
+  public void start() throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException, StageException {
+    start(null);
+  }
+
+  @Override
+  public synchronized void start(Map<String, Object> runtimeConstants)
       throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException, StageException {
     runner.prepareForStart();
     Callable<Object> callable = new Callable<Object>() {
       @Override
       public Object call() throws PipelineException, StageException {
-         runner.start();
+         runner.start(runtimeConstants);
          return null;
       }
     };

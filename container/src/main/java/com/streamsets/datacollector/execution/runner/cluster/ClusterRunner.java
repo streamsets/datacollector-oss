@@ -414,7 +414,8 @@ public class ClusterRunner extends AbstractRunner {
   }
 
   @Override
-  public synchronized void start() throws PipelineException, StageException {
+  public synchronized void start(Map<String, Object> runtimeConstants) throws PipelineException, StageException {
+    // runtimeConstants is not used in Cluster Mode for now
     try {
       Utils.checkState(!isClosed,
         Utils.formatL("Cannot start the pipeline '{}::{}' as the runner is already closed", name, rev));
@@ -690,7 +691,7 @@ public class ClusterRunner extends AbstractRunner {
     }
     ProductionPipelineBuilder builder =
       new ProductionPipelineBuilder(name, rev, configuration, runtimeInfo, stageLibrary,  runner, null);
-    return builder.build(pipelineConfiguration);
+    return builder.build(pipelineConfiguration, null);
   }
 
   static class ManagerRunnable implements Runnable {

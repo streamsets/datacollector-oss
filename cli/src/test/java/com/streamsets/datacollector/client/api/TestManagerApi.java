@@ -79,7 +79,7 @@ public class TestManagerApi {
     Assert.assertEquals(PipelineStateJson.StatusEnum.EDITED, pipelineState.getStatus());
 
     //Try to start invalid pipeline
-    pipelineState = managerApi.startPipeline(pipelineName, "0");
+    pipelineState = managerApi.startPipeline(pipelineName, "0", null);
     Assert.assertEquals(PipelineStateJson.StatusEnum.STARTING, pipelineState.getStatus());
 
     Thread.sleep(500l);

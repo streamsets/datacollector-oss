@@ -330,7 +330,14 @@ public class TestRemoteDataCollector {
     public void start() throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException,
         StageException {
       // TODO Auto-generated method stub
+    }
 
+    @Override
+    public void start(
+        Map<String, Object> runtimeConstants
+    ) throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException,
+        StageException {
+      // TODO Auto-generated method stub
     }
 
     @Override

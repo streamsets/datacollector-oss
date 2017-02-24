@@ -33,7 +33,7 @@ angular
       },
       showLoading: true,
       uploadFile: {},
-      createNewPipeline: (pipelineInfo ? false : true),
+      createNewPipeline: (!pipelineInfo),
       pipelineInfo: pipelineInfo,
       newConfig : {
         name: '',
@@ -56,9 +56,9 @@ angular
 
         reader.onload = function (loadEvent) {
           try {
-            var parsedObj = JSON.parse(loadEvent.target.result),
-              jsonConfigObj,
-              jsonRulesObj;
+            var parsedObj = JSON.parse(loadEvent.target.result);
+            var jsonConfigObj;
+            var jsonRulesObj;
 
             if (parsedObj.pipelineConfig) {
               //It is an config and rules envelope
@@ -73,7 +73,7 @@ angular
             }
 
             if (jsonConfigObj.uuid) {
-              if (pipelineInfo && !$scope.createNewPipeline) { //If pipeline config already exists
+              if (pipelineInfo && !$scope.createNewPipeline) { // If pipeline config already exists
                 jsonConfigObj.uuid = pipelineInfo.uuid;
                 jsonConfigObj.metadata = pipelineInfo.metadata;
                 jsonConfigObj.title = pipelineInfo.title;

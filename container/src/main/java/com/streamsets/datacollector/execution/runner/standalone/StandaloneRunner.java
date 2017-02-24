@@ -244,7 +244,9 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     try {
       MDC.put(LogConstants.USER, user);
       MDC.put(LogConstants.ENTITY, name);
-      PipelineStatus status = getState().getStatus();
+      PipelineState pipelineState = getState();
+      PipelineStatus status = pipelineState.getStatus();
+      Map<String, Object> attributes = pipelineState.getAttributes();
       LOG.info("Pipeline '{}::{}' has status: '{}'", name, rev, status);
       //if the pipeline was running and capture snapshot in progress, then cancel and delete snapshots
       for(SnapshotInfo snapshotInfo : getSnapshotsInfo()) {
@@ -256,6 +258,10 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         case DISCONNECTED:
           String msg = "Pipeline was in DISCONNECTED state, changing it to CONNECTING";
           LOG.debug(msg);
+          // Ger Runtime Constants from Pipeline State
+          if (attributes != null && attributes.containsKey(ProductionPipeline.RUNTIME_CONSTANTS_ATTR)) {
+            runtimeConstants = (Map<String, Object>) attributes.get(ProductionPipeline.RUNTIME_CONSTANTS_ATTR);
+          }
           validateAndSetStateTransition(PipelineStatus.CONNECTING, msg, null);
           retryOrStart();
           break;
@@ -271,7 +277,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     PipelineState pipelineState = getState();
     if (pipelineState.getRetryAttempt() == 0) {
       prepareForStart();
-      start();
+      start(runtimeConstants);
     } else {
       validateAndSetStateTransition(PipelineStatus.RETRY, "Changing the state to RETRY on startup", null);
       isRetrying = true;
@@ -619,9 +625,8 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     }
   }
 
-
   @Override
-  public void start() throws PipelineException, StageException {
+  public void start(Map<String, Object> runtimeConstants) throws PipelineException, StageException {
     Utils.checkState(!isClosed,
       Utils.formatL("Cannot start the pipeline '{}::{}' as the runner is already closed", name, rev));
 
@@ -646,6 +651,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
           throw new PipelineRuntimeException(ContainerError.CONTAINER_0116, errors);
         }
         maxRetries = pipelineConfigBean.retryAttempts;
+        this.runtimeConstants = runtimeConstants;
 
         MemoryLimitConfiguration memoryLimitConfiguration = getMemoryLimitConfiguration(pipelineConfigBean);
 
@@ -712,7 +718,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         runner.setMemoryLimitConfiguration(memoryLimitConfiguration);
 
         PipelineEL.setConstantsInContext(pipelineConfiguration);
-        prodPipeline = builder.build(pipelineConfiguration);
+        prodPipeline = builder.build(pipelineConfiguration, runtimeConstants);
         prodPipeline.registerStatusListener(this);
 
         ScheduledFuture<?> metricsFuture = null;

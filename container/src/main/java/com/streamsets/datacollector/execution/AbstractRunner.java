@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ScheduledExecutorService;
@@ -59,6 +60,7 @@ public abstract  class AbstractRunner implements Runner {
   @Inject protected StageLibraryTask stageLibrary;
   @Inject protected RuntimeInfo runtimeInfo;
   @Inject protected Configuration configuration;
+  protected Map<String, Object> runtimeConstants;
 
 
   protected PipelineConfiguration getPipelineConf(String name, String rev) throws PipelineException {
@@ -111,8 +113,9 @@ public abstract  class AbstractRunner implements Runner {
     return isRemote != null && (boolean) isRemote;
   }
 
-  protected ScheduledFuture<Void> scheduleForRetries(ScheduledExecutorService runnerExecutor) throws
-      PipelineStoreException {
+  protected ScheduledFuture<Void> scheduleForRetries(
+      ScheduledExecutorService runnerExecutor
+  ) throws PipelineStoreException {
     long delay = 0;
     long retryTimeStamp = getState().getNextRetryTimeStamp();
     long currentTime = System.currentTimeMillis();
@@ -120,15 +123,19 @@ public abstract  class AbstractRunner implements Runner {
       delay = retryTimeStamp - currentTime;
     }
     LOG.info("Scheduling retry in '{}' milliseconds", delay);
-    ScheduledFuture<Void> future = runnerExecutor.schedule(new Callable<Void>() {
+    return runnerExecutor.schedule(new Callable<Void>() {
       @Override
       public Void call() throws StageException, PipelineException {
         LOG.info("Starting the runner now");
         prepareForStart();
-        start();
+        start(runtimeConstants);
         return null;
       }
     }, delay, TimeUnit.MILLISECONDS);
-    return future;
+  }
+
+  @Override
+  public void start() throws PipelineException, StageException {
+    start(null);
   }
 }

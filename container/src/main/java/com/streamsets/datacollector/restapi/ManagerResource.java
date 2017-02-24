@@ -52,6 +52,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -166,8 +167,12 @@ public class ManagerResource {
   })
   public Response startPipeline(
       @PathParam("pipelineName") String pipelineName,
-      @QueryParam("rev") @DefaultValue("0") String rev)
-      throws StageException, PipelineException {
+      @QueryParam("rev") @DefaultValue("0") String rev,
+      @ApiParam(
+          name = "runtimeConstants",
+          value = "Runtime Constants to override Pipeline constants value"
+      ) Map<String, Object> runtimeConstants
+  ) throws StageException, PipelineException {
     if(pipelineName != null) {
       PipelineInfo pipelineInfo = store.getInfo(pipelineName);
       RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
@@ -178,7 +183,14 @@ public class ManagerResource {
         Runner runner = manager.getRunner(user, pipelineName, rev);
         Utils.checkState(runner.getState().getExecutionMode() != ExecutionMode.SLAVE,
             "This operation is not supported in SLAVE mode");
-        runner.start();
+
+        if (runtimeConstants != null) {
+          Utils.checkState(runner.getState().getExecutionMode() == ExecutionMode.STANDALONE,
+              Utils.format("This operation is not supported in {} mode", runner.getState().getExecutionMode()));
+          runner.start(runtimeConstants);
+        } else {
+          runner.start();
+        }
         return Response.ok()
             .type(MediaType.APPLICATION_JSON)
             .entity(BeanHelper.wrapPipelineState(runner.getState())).build();
@@ -224,6 +236,7 @@ public class ManagerResource {
         try {
           Utils.checkState(runner.getState().getExecutionMode() != ExecutionMode.SLAVE,
               "This operation is not supported in SLAVE mode");
+
           runner.start();
           successEntities.add(runner.getState());
 

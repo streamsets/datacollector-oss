@@ -852,13 +852,15 @@ angular.module('dataCollectorApp.common')
        *
        * @param pipelineName
        * @param rev
+       * @param runtimeConstants
        * @returns {*}
        */
-      startPipeline: function(pipelineName, rev) {
+      startPipeline: function(pipelineName, rev, runtimeConstants) {
         var url = apiBase + '/pipeline/' + pipelineName + '/start?rev=' + rev ;
         return $http({
           method: 'POST',
-          url: url
+          url: url,
+          data: runtimeConstants
         });
       },
 

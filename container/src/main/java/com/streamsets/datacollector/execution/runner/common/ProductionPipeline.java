@@ -37,7 +37,6 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ClusterSource;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +47,7 @@ import java.util.Map;
 public class ProductionPipeline {
 
   private static final Logger LOG = LoggerFactory.getLogger(ProductionPipeline.class);
+  public static final String RUNTIME_CONSTANTS_ATTR = "RUNTIME_CONSTANTS";
   private final PipelineConfiguration pipelineConf;
   private final Pipeline pipeline;
   private final ProductionPipelineRunner pipelineRunner;
@@ -103,7 +103,9 @@ public class ProductionPipeline {
         }
         if (issues.isEmpty()) {
           try {
-            stateChanged(PipelineStatus.RUNNING, null, null);
+            Map<String, Object> attributes = new HashMap<>();
+            attributes.put(RUNTIME_CONSTANTS_ATTR, pipeline.getRuntimeConstants());
+            stateChanged(PipelineStatus.RUNNING, null, attributes);
             LOG.debug("Running");
             pipeline.run();
             if (!wasStopped()) {

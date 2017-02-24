@@ -878,10 +878,15 @@ public class ManagerApi {
    *
    * @param pipelineName
    * @param rev
+   * @param runtimeConstants
    * @return PipelineStateJson
    */
-  public PipelineStateJson startPipeline (String pipelineName, String rev) throws ApiException {
-    Object postBody = null;
+  public PipelineStateJson startPipeline (
+      String pipelineName,
+      String rev,
+      Map<String, Object> runtimeConstants
+  ) throws ApiException {
+    Object postBody = runtimeConstants;
     byte[] postBinaryBody = null;
 
     // verify the required parameter 'pipelineName' is set
@@ -900,11 +905,6 @@ public class ManagerApi {
 
 
     queryParams.addAll(apiClient.parameterToPairs("", "rev", rev));
-
-
-
-
-
 
     final String[] accepts = {
         "application/json"

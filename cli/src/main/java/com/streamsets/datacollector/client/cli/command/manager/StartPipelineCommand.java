@@ -21,10 +21,15 @@ package com.streamsets.datacollector.client.cli.command.manager;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.streamsets.datacollector.client.ApiClient;
+import com.streamsets.datacollector.client.JSON;
+import com.streamsets.datacollector.client.TypeRef;
 import com.streamsets.datacollector.client.api.ManagerApi;
 import com.streamsets.datacollector.client.cli.command.BaseCommand;
 import io.airlift.airline.Command;
 import io.airlift.airline.Option;
+
+import java.util.Map;
 
 @Command(name = "start", description = "Start Pipeline")
 public class StartPipelineCommand extends BaseCommand {
@@ -42,16 +47,32 @@ public class StartPipelineCommand extends BaseCommand {
   )
   public String pipelineRev;
 
+  @Option(
+      name = {"-c", "--runtimeConstants"},
+      description = "Runtime Constants",
+      required = false
+  )
+  public String runtimeConstantsString;
+
   @Override
   public void run() {
     if(pipelineRev == null) {
       pipelineRev = "0";
     }
+    Map<String, Object> runtimeConstants = null;
     try {
-      ManagerApi managerApi = new ManagerApi(getApiClient());
+      ApiClient apiClient = getApiClient();
+      ManagerApi managerApi = new ManagerApi(apiClient);
+      if (runtimeConstantsString != null && runtimeConstantsString.trim().length() > 0) {
+        JSON json = apiClient.getJson();
+        TypeRef returnType = new TypeRef<Map<String, Object>>() {};
+        runtimeConstants = json.deserialize(runtimeConstantsString, returnType);
+      }
       ObjectMapper mapper = new ObjectMapper();
       mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
-      System.out.println(mapper.writeValueAsString(managerApi.startPipeline(pipelineName, pipelineRev)));
+      System.out.println(mapper.writeValueAsString(
+          managerApi.startPipeline(pipelineName, pipelineRev, runtimeConstants))
+      );
     } catch (Exception ex) {
       if(printStackTrace) {
         ex.printStackTrace();

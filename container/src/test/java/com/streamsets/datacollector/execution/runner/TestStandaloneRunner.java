@@ -35,6 +35,7 @@ import com.streamsets.datacollector.execution.common.ExecutorConstants;
 import com.streamsets.datacollector.execution.manager.standalone.StandaloneAndClusterPipelineManager;
 import com.streamsets.datacollector.execution.runner.common.AsyncRunner;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
+import com.streamsets.datacollector.execution.runner.common.ProductionPipeline;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
@@ -61,6 +62,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
@@ -118,6 +121,23 @@ public class TestStandaloneRunner {
     Runner runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
     runner.start();
     waitForState(runner, PipelineStatus.RUNNING);
+    ((AsyncRunner)runner).getRunner().prepareForStop();
+    ((AsyncRunner)runner).getRunner().stop();
+    waitForState(runner, PipelineStatus.STOPPED);
+  }
+
+  @Test(timeout = 20000)
+  public void testPipelineStartWithParameters() throws Exception {
+    Runner runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
+    Map<String, Object> runtimeConstants = new HashMap<>();
+    runtimeConstants.put("param1", "Param1 Value");
+    runner.start(runtimeConstants);
+    waitForState(runner, PipelineStatus.RUNNING);
+    PipelineState pipelineState = runner.getState();
+    Map<String, Object> runtimeConstantsInState = (Map<String, Object>) pipelineState.getAttributes()
+        .get(ProductionPipeline.RUNTIME_CONSTANTS_ATTR);
+    assertNotNull(runtimeConstantsInState);
+    assertEquals(runtimeConstants.get("param1"), runtimeConstantsInState.get("param1"));
     ((AsyncRunner)runner).getRunner().prepareForStop();
     ((AsyncRunner)runner).getRunner().stop();
     waitForState(runner, PipelineStatus.STOPPED);

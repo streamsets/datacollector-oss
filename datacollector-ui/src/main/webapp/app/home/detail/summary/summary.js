@@ -71,6 +71,10 @@ angular
       {
         label: 'home.detailPane.summaryTab.memoryConsumed',
         templateId: 'memoryConsumedLineChartTemplate'
+      },
+      {
+        label: 'home.detailPane.summaryTab.runtimeConstants',
+        templateId: 'summaryRuntimeConstantsTemplate'
       }
     ];
 

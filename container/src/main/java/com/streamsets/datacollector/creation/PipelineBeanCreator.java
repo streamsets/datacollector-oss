@@ -82,6 +82,15 @@ public abstract class PipelineBeanCreator {
     return (errors.size() == priorErrors) ? pipelineConfigBean : null;
   }
 
+  public PipelineBean create(
+      boolean forExecution,
+      StageLibraryTask library,
+      PipelineConfiguration pipelineConf,
+      List<Issue> errors
+  ) {
+    return create(forExecution, library, pipelineConf, errors, null);
+  }
+
   /**
    * Create PipelineBean which means instantiating all stages for the pipeline.
    *
@@ -90,8 +99,13 @@ public abstract class PipelineBeanCreator {
    * point. Hence this method will create only one instance of the whole pipeline and it's up to the caller to call
    * createPipelineStageBeans to instantiate remaining source-less pipelines later in the execution.
    */
-  public PipelineBean create(boolean forExecution, StageLibraryTask library, PipelineConfiguration pipelineConf,
-      List<Issue> errors) {
+  public PipelineBean create(
+      boolean forExecution,
+      StageLibraryTask library,
+      PipelineConfiguration pipelineConf,
+      List<Issue> errors,
+      Map<String, Object> runtimeConstants
+  ) {
     int priorErrors = errors.size();
     PipelineConfigBean pipelineConfigBean = create(pipelineConf, errors);
     StageBean errorStageBean = null;
@@ -99,15 +113,34 @@ public abstract class PipelineBeanCreator {
     StageBean origin = null;
     PipelineStageBeans stages = null;
     if (pipelineConfigBean != null && pipelineConfigBean.constants != null) {
+
+      // Merge constant and runtime Constants
+      Map<String, Object> resolvedConstants = pipelineConfigBean.constants;
+      if (runtimeConstants != null) {
+        for (String key: runtimeConstants.keySet()) {
+          if (resolvedConstants.containsKey(key)) {
+            resolvedConstants.put(key, runtimeConstants.get(key));
+          }
+        }
+      }
+
       // Instantiate usual stages
       if(!pipelineConf.getStages().isEmpty()) {
-        origin = createStageBean(forExecution, library, pipelineConf.getStages().get(0), false, pipelineConfigBean.constants, errors);
+        origin = createStageBean(
+            forExecution,
+            library,
+            pipelineConf.getStages().get(0),
+            false,
+            resolvedConstants,
+            errors
+        );
 
         stages = createPipelineStageBeans(
-          forExecution,
-          library,
-          pipelineConf.getStages().subList(1, pipelineConf.getStages().size()),
-          pipelineConfigBean.constants, errors
+            forExecution,
+            library,
+            pipelineConf.getStages().subList(1, pipelineConf.getStages().size()),
+            resolvedConstants,
+            errors
         );
       }
 
@@ -119,7 +152,7 @@ public abstract class PipelineBeanCreator {
             library,
             statsStageConf,
             false,
-            pipelineConfigBean.constants,
+            resolvedConstants,
             errors
         );
       }
@@ -127,8 +160,14 @@ public abstract class PipelineBeanCreator {
       // Error stage is mandatory
       StageConfiguration errorStageConf = pipelineConf.getErrorStage();
       if (errorStageConf != null) {
-        errorStageBean = createStageBean(forExecution, library, errorStageConf, true, pipelineConfigBean.constants,
-                                         errors);
+        errorStageBean = createStageBean(
+            forExecution,
+            library,
+            errorStageConf,
+            true,
+            resolvedConstants,
+            errors
+        );
       } else {
         errors.add(IssueCreator.getPipeline().create(PipelineGroups.BAD_RECORDS.name(), "badRecordsHandling",
                                                      CreationError.CREATION_009));

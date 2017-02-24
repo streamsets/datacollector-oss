@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class ProductionPipelineBuilder {
   private static final Logger LOG = LoggerFactory.getLogger(ProductionPipelineBuilder.class);
@@ -56,9 +57,15 @@ public class ProductionPipelineBuilder {
   private final ProductionPipelineRunner runner;
   private final Observer observer;
 
-  public ProductionPipelineBuilder(@Named("name") String name, @Named("rev") String rev,
-                                   Configuration configuration, RuntimeInfo runtimeInfo,
-                                   StageLibraryTask stageLib, ProductionPipelineRunner runner, Observer observer) {
+  public ProductionPipelineBuilder(
+      @Named("name") String name,
+      @Named("rev") String rev,
+      Configuration configuration,
+      RuntimeInfo runtimeInfo,
+      StageLibraryTask stageLib,
+      ProductionPipelineRunner runner,
+      Observer observer
+  ) {
     this.name = name;
     this.rev = rev;
     this.configuration = configuration;
@@ -68,16 +75,28 @@ public class ProductionPipelineBuilder {
     this.observer = observer;
   }
 
-  public ProductionPipeline build(PipelineConfiguration pipelineConf)
-    throws PipelineRuntimeException, StageException {
+  public ProductionPipeline build(PipelineConfiguration pipelineConf) throws PipelineRuntimeException, StageException {
+    return build(pipelineConf, null);
+  }
+
+  public ProductionPipeline build(
+      PipelineConfiguration pipelineConf,
+      Map<String, Object> runtimeConstants
+  ) throws PipelineRuntimeException, StageException {
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, name, pipelineConf);
     pipelineConf = validator.validate();
     if (validator.getIssues().hasIssues()) {
       throw new PipelineRuntimeException(ContainerError.CONTAINER_0158, ValidationUtil.getFirstIssueAsString(name,
         validator.getIssues()));
     }
-    Pipeline pipeline = new Pipeline.Builder(stageLib, configuration, name + PRODUCTION_PIPELINE_SUFFIX, name, rev,
-      pipelineConf).setObserver(observer).build(runner);
+    Pipeline pipeline = new Pipeline.Builder(
+        stageLib,
+        configuration,
+        name + PRODUCTION_PIPELINE_SUFFIX,
+        name,
+        rev,
+        pipelineConf
+    ).setObserver(observer).build(runner, runtimeConstants);
 
     SourceOffsetTracker sourceOffsetTracker;
     if (pipeline.getSource() instanceof OffsetCommitter) {

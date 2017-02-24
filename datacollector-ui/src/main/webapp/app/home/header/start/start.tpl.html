@@ -1,0 +1,72 @@
+<div class="start-pipeline-modal-form">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title" ng-if="!forceStop" translate="home.header.startWithParametersTitle">Start Pipeline With Parameters</h3>
+  </div>
+  <div class="modal-body">
+    <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+
+    <div ng-if="constantsConfig.value.length">
+      <div class="row map-list-type"
+           ng-if="!bulkEdit"
+           ng-repeat="constant in constantsConfig.value track by $index">
+
+        <div class="col-xs-4">
+          <input type="text" class="form-control input-sm"
+                 name="mapObject{{$index}}"
+                 ng-disabled="true"
+                 value="{{constant.key}}"/>
+        </div>
+
+        <div class="col-xs-1">:</div>
+
+        <div class="col-xs-5">
+          <input type="text" class="form-control input-sm"
+                 name="mapObject{{$index}}"
+                 ng-required="true"
+                 ng-model="runtimeConstants[constant.key]"/>
+        </div>
+      </div>
+
+      <div ui-codemirror
+           ng-if="bulkEdit"
+           class="codemirror-editor"
+           ng-model="runtimeConstants"
+           ui-refresh="refreshCodemirror"
+           ui-codemirror-opts="getCodeMirrorOptions({
+              lineNumbers: true
+            })"
+           data-type="'LIST'">
+      </div>
+
+      <div class="pull-right field-selector-btn">
+        <button type="button" class="btn btn-link"
+                ng-click="bulkEdit = !bulkEdit">
+          {{bulkEdit ? ('home.detailPane.configurationTab.switchToSimpleMode' | translate) : ('home.detailPane.configurationTab.switchToBulkMode' | translate)}}
+        </button>
+      </div>
+    </div>
+
+    <div class="alert alert-info alert-dismissible" role="alert"
+         ng-show="constantsConfig.value.length === 0"
+         translate="home.header.noConstantsDefinedMsg">
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-default"
+            ng-click="cancel()"
+            translate="global.form.cancel"
+            ng-disabled="starting">Cancel</button>
+    <button type="button"
+            ng-if="constantsConfig.value.length"
+            class="btn btn-primary"
+            ng-click="start()"
+            translate="home.header.start"
+            ng-disabled="starting">Start</button>
+  </div>
+</div>

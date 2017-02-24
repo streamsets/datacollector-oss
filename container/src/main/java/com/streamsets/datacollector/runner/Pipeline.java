@@ -84,6 +84,7 @@ public class Pipeline {
   private final ResourceControlledScheduledExecutor scheduledExecutor;
   private final List<Stage.Info> stageInfos;
   private final List<Map<String, Object>> runnerSharedMaps;
+  private final Map<String, Object> runtimeConstants;
 
   private Pipeline(
       String name,
@@ -101,7 +102,8 @@ public class Pipeline {
       MemoryUsageCollectorResourceBundle memoryUsageCollectorResourceBundle,
       ResourceControlledScheduledExecutor scheduledExecutor,
       List<Stage.Info> stageInfos,
-      List<Map<String, Object>> runnerSharedMaps
+      List<Map<String, Object>> runnerSharedMaps,
+      Map<String, Object> runtimeConstants
   ) {
     this.pipelineBean = pipelineBean;
     this.name = name;
@@ -121,6 +123,7 @@ public class Pipeline {
     this.scheduledExecutor = scheduledExecutor;
     this.stageInfos = stageInfos;
     this.runnerSharedMaps = runnerSharedMaps;
+    this.runtimeConstants = runtimeConstants;
   }
 
   PipelineConfigBean getPipelineConfig() {
@@ -178,6 +181,10 @@ public class Pipeline {
     } finally {
       destroy();
     }
+  }
+
+  public Map<String, Object> getRuntimeConstants() {
+    return runtimeConstants;
   }
 
   @SuppressWarnings("unchecked")
@@ -363,32 +370,48 @@ public class Pipeline {
     private final PipelineConfiguration pipelineConf;
     private Observer observer;
     private final ResourceControlledScheduledExecutor scheduledExecutor =
-      new ResourceControlledScheduledExecutor(0.01f); // consume 1% of a cpu calculating stage memory consumption
+        new ResourceControlledScheduledExecutor(0.01f); // consume 1% of a cpu calculating stage memory consumption
     private final MemoryUsageCollectorResourceBundle memoryUsageCollectorResourceBundle =
-      new MemoryUsageCollectorResourceBundle();
+        new MemoryUsageCollectorResourceBundle();
     private List<Issue> errors;
 
-
-    public Builder(StageLibraryTask stageLib, Configuration configuration, String name, String pipelineName, String rev,
-                   PipelineConfiguration pipelineConf) {
+    public Builder(
+        StageLibraryTask stageLib,
+        Configuration configuration,
+        String name,
+        String pipelineName,
+        String rev,
+        PipelineConfiguration pipelineConf
+    ) {
       this.stageLib = stageLib;
       this.name = name;
       this.pipelineName = pipelineName;
       this.rev = rev;
       this.configuration = configuration;
       this.pipelineConf = pipelineConf;
-      errors = Collections.emptyList();
+      this.errors = Collections.emptyList();
     }
+
     public Builder setObserver(Observer observer) {
       this.observer = observer;
       return this;
     }
 
     public Pipeline build(PipelineRunner runner) throws PipelineRuntimeException {
+      return build(runner, null);
+    }
+
+    public Pipeline build(PipelineRunner runner, Map<String, Object> runtimeConstants) throws PipelineRuntimeException {
       Pipeline pipeline = null;
       errors = new ArrayList<>();
       List<Stage.Info> stageInfos = new ArrayList<>();
-      PipelineBean pipelineBean = PipelineBeanCreator.get().create(true, stageLib, pipelineConf, errors);
+      PipelineBean pipelineBean = PipelineBeanCreator.get().create(
+          true,
+          stageLib,
+          pipelineConf,
+          errors,
+          runtimeConstants
+      );
       StageRuntime errorStage;
       StageRuntime statsAggregator;
       List<List<Pipe>> pipes = new ArrayList<>();
@@ -487,7 +510,8 @@ public class Pipeline {
             memoryUsageCollectorResourceBundle,
             scheduledExecutor,
             stageInfos,
-            runnerSharedMaps
+            runnerSharedMaps,
+            runtimeConstants
           );
         } catch (Exception e) {
           String msg = "Can't instantiate pipeline: " + e;
