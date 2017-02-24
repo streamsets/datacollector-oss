@@ -79,7 +79,7 @@ public class MapRJsonOriginSource extends BaseSource {
 
     if (StringUtils.isEmpty(conf.tableName)) {
       issues.add(getContext().createConfigIssue(Groups.MAPR_JSON_ORIGIN.name(),
-          "Table Name",
+          "tableName",
           Errors.MAPR_JSON_ORIGIN_01
       ));
     }

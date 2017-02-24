@@ -23,21 +23,23 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
-  MAPR_JSON_01("Table name cannot be blank"),
+  MAPR_JSON_01("Table Name cannot be blank"),
   MAPR_JSON_02("Table '{}' does not exist or cannot access table"),
   MAPR_JSON_03("Error creating table '{}'"),
   MAPR_JSON_04("Exception while flushing '{}' "),
-  MAPR_JSON_05("Exception while closing '{}' "),
+  MAPR_JSON_05("Exception while closing table '{}' "),
   MAPR_JSON_06("Exception while calling InsertOrReplace '{}' "),
   MAPR_JSON_07("Exception while Inserting record. '{}' "),
   MAPR_JSON_08("Field to use as _id column cannot be blank"),
   MAPR_JSON_09("Exception while creating, writing or closing JSON document: '{}'"),
   MAPR_JSON_10("Exception creating new MapRDB document. '{}'"),
   MAPR_JSON_11("Document key field '{}' does not exist in the record or is empty (or null)."),
-  MAPR_JSON_12("BINARY key error - invalid value or Field {} is type {} - not byte array. Use a FieldTypeConverter?"),
+  MAPR_JSON_12("Binary key error - invalid value or Field {} is type {} - not byte array. Use a FieldTypeConverter?"),
   MAPR_JSON_13("Exception converting key field '{}'"),
   MAPR_JSON_14("Conversion to byte array failed for Row Key - type '{}' "),
   MAPR_JSON_15("Field selected for record key '{}' does not exist."),
+  MAPR_JSON_16("Error Validating EL '{}' in Table Name UI field. "),
+  MAPR_JSON_18("EL Expression returned empty string."),
   ;
 
   private final String msg;

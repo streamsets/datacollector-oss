@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.destination.mapr;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.lib.el.RecordEL;
 
 public class MapRJsonConfigBean {
 
@@ -30,6 +31,8 @@ public class MapRJsonConfigBean {
       defaultValue = "",
       label = "Table Name",
       description = "MapR DB JSON Destination Table",
+      elDefs = {RecordEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 10,
       group = "MAPR_JSON"
   )
