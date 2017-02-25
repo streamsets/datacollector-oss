@@ -208,6 +208,9 @@ public class TestHiveMetadataProcessor {
       }
     });
 
+    PowerMockito.replace(MemberMatcher.method(HiveQueryExecutor.class, "executeDescribeDatabase"))
+      .with((proxy, method, args) -> "/user/hive/warehouse/" + args[0].toString() + ".db/");
+
   }
 
   /**

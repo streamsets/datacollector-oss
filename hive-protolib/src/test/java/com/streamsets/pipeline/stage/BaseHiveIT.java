@@ -65,6 +65,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
@@ -357,5 +358,36 @@ public abstract class BaseHiveIT {
         assertResultSetStructure(rs, columns);
       }
     });
+  }
+
+  /**
+   * Assert that location of given table is where expected.
+   */
+  public static void assertTableLocation(String table, String location) throws Exception {
+    assertTableExists(table);
+
+    String sql = Utils.format("desc formatted {}", table);
+    LOG.debug("Executing SQL: {}", sql);
+    String actualLocation = null;
+    try (
+        Statement statement = hiveConnection.createStatement();
+        ResultSet rs = statement.executeQuery(sql);
+    ) {
+      while(rs.next()) {
+        if(rs.getString("col_name").trim().equals("Location:")) {
+          actualLocation =  HiveMetastoreUtil.stripHdfsHostAndPort(rs.getString("data_type"));
+          break;
+        }
+      }
+
+      if(actualLocation == null) {
+        fail("Can't find 'Location' tag in the response");
+      }
+
+      assertEquals(location, actualLocation);
+    } catch (Exception e) {
+      LOG.error("Can't verify existence of table", e);
+      fail("Can't verify location of table " + table);
+    }
   }
 }

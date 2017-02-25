@@ -275,24 +275,6 @@ public final class HiveMetastoreUtil {
   }
 
   /**
-   * Get a full path from warehouse directory to table's root directory
-   * The path structure is /<warehouse directory>/<db name>.db/<table name>
-   * @param warehouseDir Directory to HMS warehouse directory
-   * @param dbName Database name
-   * @param tableName Table name
-   * @return String that contains full path of target directory
-   */
-  public static String getTargetDirectory(String warehouseDir, String dbName, String tableName) {
-    Utils.checkNotNull(warehouseDir, "warehouseDir");
-    Utils.checkNotNull(dbName, "dbName");
-    Utils.checkNotNull(tableName, "tableName");
-    if (dbName.equals(HiveMetadataProcessor.DEFAULT_DB)) {
-      return String.format("%s/%s", warehouseDir, tableName);
-    } else
-      return String.format("%s/%s.db/%s", warehouseDir, dbName, tableName);
-  }
-
-  /**
    * Extract column information from the column list in "/columns" field.<br>
    *
    * Column Type Information should exist in this form: <br>
@@ -840,7 +822,7 @@ public final class HiveMetastoreUtil {
     }
   }
 
-  static String stripHdfsHostAndPort(String location) {
+  public static String stripHdfsHostAndPort(String location) {
     Utils.checkNotNull(location, "HDFS Partition location");
     Utils.checkArgument(
         !location.isEmpty(), "HDFS location cannot be empty"

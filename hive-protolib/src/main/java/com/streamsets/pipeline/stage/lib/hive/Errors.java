@@ -58,6 +58,7 @@ public enum Errors implements ErrorCode {
   HIVE_32("Table {} is created using unsupported Storage Format Type {} "),
   HIVE_33("Record {} have unsupported root type {}"),
   HIVE_34("Connection to Hive have failed: {}"),
+  HIVE_35("Can't find database location: {}"),
   ;
   private final String msg;
 
