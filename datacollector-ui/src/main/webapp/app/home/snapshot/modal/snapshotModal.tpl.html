@@ -16,11 +16,18 @@
             ng-click="captureSnapshot()"
             translate="home.snapshotsPane.captureSnapshot">Capture</button>
 
+    <button type="button" class="btn btn-primary"
+            ng-if="!isPipelineRunning"
+            ng-disabled="showLoading || snapshotInProgress || !canExecute"
+            ng-click="captureSnapshot()"
+            translate="home.snapshotsPane.startAndCaptureSnapshot">Start & Capture</button>
+
     <table class="table table-hover">
       <thead>
         <tr>
           <th class="snapshot-label">{{'global.form.name' | translate}}</th>
           <th class="snapshot-time">{{'global.form.captured' | translate}}</th>
+          <th class="snapshot-batch-number">{{'global.form.batchNumber' | translate}}</th>
           <th class="snapshot-action">{{'global.form.actions' | translate}}</th>
         </tr>
       </thead>
@@ -38,6 +45,9 @@
           </td>
           <td>
             {{!snapshotInfo.inProgress ? (snapshotInfo.timeStamp  | date:'medium') : ('home.snapshotsPane.captureSnapshotInProgress' | translate)}}
+          </td>
+          <td>
+            {{(!snapshotInfo.inProgress && snapshotInfo.batchNumber) ? (snapshotInfo.batchNumber) : '--'}}
           </td>
           <td>
             <a href="javascript:;" translate="global.form.view"

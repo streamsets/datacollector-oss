@@ -163,6 +163,25 @@ public class AsyncRunner implements Runner, PipelineInfo {
   }
 
   @Override
+  public void startAndCaptureSnapshot(
+      Map<String, Object> runtimeConstants,
+      String snapshotName,
+      String snapshotLabel,
+      int batches,
+      int batchSize
+  ) throws PipelineException, StageException {
+    runner.prepareForStart();
+    Callable<Object> callable = new Callable<Object>() {
+      @Override
+      public Object call() throws PipelineException, StageException {
+        runner.startAndCaptureSnapshot(runtimeConstants, snapshotName, snapshotLabel, batches, batchSize);
+        return null;
+      }
+    };
+    runnerExecutor.submit(callable);
+  }
+
+  @Override
   public String captureSnapshot(String name, String label, int batches, int batchSize) throws PipelineException {
     return runner.captureSnapshot(name, label, batches, batchSize);
   }

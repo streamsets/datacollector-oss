@@ -35,4 +35,6 @@ public interface SnapshotInfo {
 
   public boolean isInProgress();
 
+  public long getBatchNumber();
+
 }

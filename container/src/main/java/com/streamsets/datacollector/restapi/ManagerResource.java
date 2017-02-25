@@ -508,15 +508,20 @@ public class ManagerResource {
       @QueryParam("snapshotLabel") String snapshotLabel,
       @QueryParam("rev") @DefaultValue("0") String rev,
       @QueryParam("batches") @DefaultValue("1") int batches,
-      @QueryParam("batchSize") int batchSize
-  ) throws PipelineException {
+      @QueryParam("batchSize") int batchSize,
+      @QueryParam("startPipeline") @DefaultValue("false") boolean startPipeline,
+      Map<String, Object> runtimeConstants
+  ) throws PipelineException, StageException {
     PipelineInfo pipelineInfo = store.getInfo(pipelineName);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
     Runner runner = manager.getRunner(user, pipelineName, rev);
-    Utils.checkState(runner != null && runner.getState().getStatus() == PipelineStatus.RUNNING,
-      "Pipeline doesn't exist or it is not running currently");
-
-    runner.captureSnapshot(snapshotName, snapshotLabel, batches, batchSize);
+    if (startPipeline && runner != null) {
+      runner.startAndCaptureSnapshot(runtimeConstants, snapshotName, snapshotLabel, batches, batchSize);
+    } else {
+      Utils.checkState(runner != null && runner.getState().getStatus() == PipelineStatus.RUNNING,
+          "Pipeline doesn't exist or it is not running currently");
+      runner.captureSnapshot(snapshotName, snapshotLabel, batches, batchSize);
+    }
     return Response.ok().build();
   }
 

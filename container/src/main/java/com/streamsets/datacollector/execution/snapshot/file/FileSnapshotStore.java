@@ -69,15 +69,20 @@ public class FileSnapshotStore implements SnapshotStore {
   public SnapshotInfo create(String user, String name, String rev, String id, String label) throws PipelineException {
     synchronized (lockCache.getLock(name)) {
       PipelineDirectoryUtil.createPipelineSnapshotDir(runtimeInfo, name, rev, id);
-      SnapshotInfo snapshotInfo = new SnapshotInfoImpl(user, id, label, name, rev, System.currentTimeMillis(), true);
+      SnapshotInfo snapshotInfo = new SnapshotInfoImpl(user, id, label, name, rev, System.currentTimeMillis(), true, 0);
       persistSnapshotInfo(snapshotInfo);
       return snapshotInfo;
     }
   }
 
   @Override
-  public SnapshotInfo save(String name, String rev, String id, List<List<StageOutput>> snapshotBatches)
-    throws PipelineException {
+  public SnapshotInfo save(
+      String name,
+      String rev,
+      String id,
+      long batchNumber,
+      List<List<StageOutput>> snapshotBatches
+  ) throws PipelineException {
     synchronized (lockCache.getLock(name)) {
       SnapshotInfo existingInfo = getInfo(name, rev, id);
       if (existingInfo == null) {
@@ -85,8 +90,16 @@ public class FileSnapshotStore implements SnapshotStore {
       }
       persistSnapshot(name, rev, id, snapshotBatches);
       SnapshotInfo updatedSnapshotInfo =
-        new SnapshotInfoImpl(existingInfo.getUser(), id, existingInfo.getLabel(), name, rev, System.currentTimeMillis(),
-            false);
+        new SnapshotInfoImpl(
+            existingInfo.getUser(),
+            id,
+            existingInfo.getLabel(),
+            name,
+            rev,
+            System.currentTimeMillis(),
+            false,
+            batchNumber
+        );
       persistSnapshotInfo(updatedSnapshotInfo);
       return updatedSnapshotInfo;
     }
@@ -107,7 +120,9 @@ public class FileSnapshotStore implements SnapshotStore {
               existingInfo.getName(),
               existingInfo.getRev(),
               existingInfo.getTimeStamp(),
-              existingInfo.isInProgress());
+              existingInfo.isInProgress(),
+              existingInfo.getBatchNumber()
+          );
       persistSnapshotInfo(updatedSnapshotInfo);
       return updatedSnapshotInfo;
     }

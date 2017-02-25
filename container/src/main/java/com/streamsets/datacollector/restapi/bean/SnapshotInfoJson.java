@@ -21,25 +21,29 @@ package com.streamsets.datacollector.restapi.bean;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.datacollector.execution.SnapshotInfo;
 import com.streamsets.datacollector.execution.snapshot.common.SnapshotInfoImpl;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SnapshotInfoJson {
 
   private final SnapshotInfo snapshotInfo;
 
   @JsonCreator
-  public SnapshotInfoJson(@JsonProperty("user") String user,
-                          @JsonProperty("id") String id,
-                          @JsonProperty("label") String label,
-                          @JsonProperty("name") String name,
-                          @JsonProperty("rev") String rev,
-                          @JsonProperty("timeStamp") long timeStamp,
-                          @JsonProperty("inProgress") boolean inProgress) {
-    snapshotInfo = new SnapshotInfoImpl(user, id, label, name, rev, timeStamp, inProgress);
+  public SnapshotInfoJson(
+      @JsonProperty("user") String user,
+      @JsonProperty("id") String id,
+      @JsonProperty("label") String label,
+      @JsonProperty("name") String name,
+      @JsonProperty("rev") String rev,
+      @JsonProperty("timeStamp") long timeStamp,
+      @JsonProperty("inProgress") boolean inProgress,
+      @JsonProperty("batchNumber") long batchNumber
+  ) {
+    snapshotInfo = new SnapshotInfoImpl(user, id, label, name, rev, timeStamp, inProgress, batchNumber);
   }
-
 
   public SnapshotInfoJson(SnapshotInfo snapshotInfo) {
     this.snapshotInfo = snapshotInfo;
@@ -71,6 +75,10 @@ public class SnapshotInfoJson {
 
   public boolean isInProgress() {
     return snapshotInfo.isInProgress();
+  }
+
+  public long getBatchNumber() {
+    return snapshotInfo.getBatchNumber();
   }
 
   @JsonIgnore

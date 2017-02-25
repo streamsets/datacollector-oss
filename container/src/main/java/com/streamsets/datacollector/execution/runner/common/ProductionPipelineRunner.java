@@ -781,7 +781,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
           snapshotBatchSize = 0;
           batchesToCapture = 0;
           if (!capturedBatches.isEmpty()) {
-            snapshotStore.save(pipelineName, revision, snapshotName, capturedBatches);
+            snapshotStore.save(pipelineName, revision, snapshotName, batchCountMeter.getCount(), capturedBatches);
             capturedBatches.clear();
           }
         }

@@ -947,13 +947,19 @@ angular.module('dataCollectorApp.common')
        * @param snapshotName
        * @param snapshotLabel
        * @param batchSize
+       * @param startPipeline
        * @returns {*}
        */
-      captureSnapshot: function(pipelineName, rev, snapshotName, snapshotLabel, batchSize) {
+      captureSnapshot: function(pipelineName, rev, snapshotName, snapshotLabel, batchSize, startPipeline) {
         var url = apiBase + '/pipeline/' + pipelineName + '/snapshot/' + snapshotName +
           '?batchSize=' + batchSize +
           '&snapshotLabel=' + snapshotLabel +
           '&rev=' + rev;
+
+        if (startPipeline) {
+          url += '&startPipeline=true';
+        }
+
         return $http({
           method: 'PUT',
           url: url

@@ -130,6 +130,18 @@ public class AclRunner implements Runner {
   }
 
   @Override
+  public void startAndCaptureSnapshot(
+      Map<String, Object> runtimeConstants,
+      String snapshotName,
+      String snapshotLabel,
+      int batches,
+      int batchSize
+  ) throws PipelineException, StageException {
+    aclStore.validateExecutePermission(this.getName(), currentUser);
+    runner.startAndCaptureSnapshot(runtimeConstants, snapshotName, snapshotLabel, batches, batchSize);
+  }
+
+  @Override
   public String captureSnapshot(
       String snapshotName,
       String snapshotLabel,

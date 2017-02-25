@@ -48,6 +48,7 @@
       "addAndRemoveStages": "Add/Remove Stages",
       "allStages": "All Stages",
       "autoArrange": "Auto Arrange",
+      "batchNumber": "Batch Number",
       "cancel": "Cancel",
       "changeRule": "Change Rule",
       "captured": "Captured",
@@ -650,7 +651,8 @@
       "captureSnapshotInProgress": "Capturing...",
       "labelChangeTitle": "Click to change Snapshot label",
       "modalTitle": "Snapshots",
-      "noSnapshots": "No Snapshots"
+      "noSnapshots": "No Snapshots",
+      "startAndCaptureSnapshot": "Start & Capture Snapshot"
     },
     "sortColumn": {
       "NAME": "Name",

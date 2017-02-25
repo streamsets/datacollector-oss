@@ -69,15 +69,20 @@ public class CacheSnapshotStore implements SnapshotStore {
   }
 
   @Override
-  public SnapshotInfo save(String name, String rev, String id, List<List<StageOutput>> snapshotBatches)
-    throws PipelineException {
+  public SnapshotInfo save(
+      String name,
+      String rev,
+      String id,
+      long batchNumber,
+      List<List<StageOutput>> snapshotBatches
+  ) throws PipelineException {
     synchronized (lockCache.getLock(name)) {
       try {
         SnapshotInfo snapshotInfo = getSnapshotInfoFromCache(name, rev, id);
         if (snapshotInfo == null) {
           throw new PipelineException(ContainerError.CONTAINER_0605);
         }
-        SnapshotInfo updatedSnapshotInfo = snapshotStore.save(name, rev, id, snapshotBatches);
+        SnapshotInfo updatedSnapshotInfo = snapshotStore.save(name, rev, id, batchNumber, snapshotBatches);
         snapshotStateCache.put(getCacheKey(name, rev, id), updatedSnapshotInfo);
         return updatedSnapshotInfo;
       } catch (ExecutionException e) {

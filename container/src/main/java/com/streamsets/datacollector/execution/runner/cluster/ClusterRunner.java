@@ -439,6 +439,17 @@ public class ClusterRunner extends AbstractRunner {
   }
 
   @Override
+  public void startAndCaptureSnapshot(
+      Map<String, Object> runtimeConstants,
+      String snapshotName,
+      String snapshotLabel,
+      int batches,
+      int batchSize
+  ) throws PipelineException, StageException {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
   public String captureSnapshot(String name, String label, int batches, int batchSize) {
     throw new UnsupportedOperationException();
   }

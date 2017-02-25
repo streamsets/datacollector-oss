@@ -34,8 +34,13 @@ public interface SnapshotStore {
   public SnapshotInfo create(String user, String name, String rev, String id, String label) throws PipelineException;;
 
   // saves the data of the snapshot and updates the corresponding snapshot info.
-  public SnapshotInfo save(String name, String rev, String id, List<List<StageOutput>> snapshotBatches)
-    throws PipelineException;
+  public SnapshotInfo save(
+      String name,
+      String rev,
+      String id,
+      long batchNumber,
+      List<List<StageOutput>> snapshotBatches
+  ) throws PipelineException;
 
   // Updates the label of snapshot by updating the Snapshot Info
   public SnapshotInfo updateLabel(String name, String rev, String id, String snapshotLabel) throws PipelineException;

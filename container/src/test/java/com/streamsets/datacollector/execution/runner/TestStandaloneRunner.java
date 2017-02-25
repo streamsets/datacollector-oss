@@ -70,6 +70,7 @@ import java.util.concurrent.Callable;
 import static com.streamsets.datacollector.util.AwaitConditionUtil.desiredPipelineState;
 import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -452,6 +453,30 @@ public class TestStandaloneRunner {
     assertNotNull(snapshot);
     assertNull(snapshot.getInfo());
     assertNull(snapshot.getOutput());
+
+    ((AsyncRunner)runner).getRunner().prepareForStop();
+    ((AsyncRunner)runner).getRunner().stop();
+    waitForState(runner, PipelineStatus.STOPPED);
+  }
+
+  @Test (timeout = 60000)
+  public void testStartAndCaptureSnapshot() throws Exception {
+    Runner runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
+    final String snapshotId = UUID.randomUUID().toString();
+    runner.startAndCaptureSnapshot(null, snapshotId, "snapshot label", 1, 10);
+    waitForState(runner, PipelineStatus.RUNNING);
+
+    Snapshot snapshot = runner.getSnapshot(snapshotId);
+    assertNotNull(snapshot);
+
+    SnapshotInfo info = snapshot.getInfo();
+    assertNotNull(info);
+    assertNotNull(snapshot.getOutput());
+    assertFalse(info.isInProgress());
+    assertEquals(snapshotId, info.getId());
+    assertEquals(TestUtil.MY_PIPELINE, info.getName());
+    assertEquals("0", info.getRev());
+    assertEquals(1, info.getBatchNumber());
 
     ((AsyncRunner)runner).getRunner().prepareForStop();
     ((AsyncRunner)runner).getRunner().stop();

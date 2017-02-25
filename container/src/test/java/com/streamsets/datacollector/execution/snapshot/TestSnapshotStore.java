@@ -94,7 +94,7 @@ public abstract class TestSnapshotStore {
 
   @Test(expected = PipelineException.class)
   public void testSaveBeforeCreate() throws PipelineException {
-    snapshotStore.save(PIPELINE_NAME, PIPELINE_REV, SNAPSHOT_ID, new ArrayList<List<StageOutput>>());
+    snapshotStore.save(PIPELINE_NAME, PIPELINE_REV, SNAPSHOT_ID, 0, new ArrayList<List<StageOutput>>());
   }
 
   @Test
@@ -122,7 +122,7 @@ public abstract class TestSnapshotStore {
     SnapshotInfo snapshotInfo = snapshotStore.create(USER, PIPELINE_NAME, PIPELINE_REV, SNAPSHOT_ID, SNAPSHOT_LABEL);
     Assert.assertTrue(snapshotInfo.isInProgress());
 
-    snapshotStore.save(PIPELINE_NAME, PIPELINE_REV, SNAPSHOT_ID, getSnapshotData());
+    snapshotStore.save(PIPELINE_NAME, PIPELINE_REV, SNAPSHOT_ID, 0, getSnapshotData());
     snapshotInfo =  snapshotStore.getInfo(PIPELINE_NAME, PIPELINE_REV, SNAPSHOT_ID);
     Assert.assertEquals(SNAPSHOT_ID, snapshotInfo.getId());
     Assert.assertEquals(PIPELINE_NAME, snapshotInfo.getName());
@@ -142,7 +142,7 @@ public abstract class TestSnapshotStore {
 
     for(int i = 0; i < 3; i++) {
       snapshotStore.create(USER, PIPELINE_NAME, PIPELINE_REV, SNAPSHOT_ID + i, SNAPSHOT_LABEL);
-      snapshotStore.save(PIPELINE_NAME, PIPELINE_REV, SNAPSHOT_ID + i, getSnapshotData());
+      snapshotStore.save(PIPELINE_NAME, PIPELINE_REV, SNAPSHOT_ID + i, 0, getSnapshotData());
     }
 
     summaryForPipeline = snapshotStore.getSummaryForPipeline(PIPELINE_NAME, PIPELINE_REV);
@@ -173,9 +173,9 @@ public abstract class TestSnapshotStore {
 
     //create and save
     snapshotStore.create(USER, PIPELINE_NAME, PIPELINE_REV, SNAPSHOT_ID + 0, SNAPSHOT_LABEL + 0);
-    snapshotStore.save(PIPELINE_NAME, PIPELINE_REV, SNAPSHOT_ID + 0, getSnapshotData());
+    snapshotStore.save(PIPELINE_NAME, PIPELINE_REV, SNAPSHOT_ID + 0, 0, getSnapshotData());
     snapshotStore.create(USER, PIPELINE_NAME, PIPELINE_REV, SNAPSHOT_ID + 1, SNAPSHOT_LABEL + 1);
-    snapshotStore.save(PIPELINE_NAME, PIPELINE_REV, SNAPSHOT_ID + 1, getSnapshotData());
+    snapshotStore.save(PIPELINE_NAME, PIPELINE_REV, SNAPSHOT_ID + 1, 0, getSnapshotData());
     List<SnapshotInfo> summaryForPipeline = snapshotStore.getSummaryForPipeline(PIPELINE_NAME, PIPELINE_REV);
     Assert.assertEquals(2, summaryForPipeline.size());
 
@@ -206,7 +206,7 @@ public abstract class TestSnapshotStore {
     SnapshotInfo snapshotInfo = snapshotStore.create(USER, PIPELINE_NAME, PIPELINE_REV, SNAPSHOT_ID, SNAPSHOT_LABEL);
     Assert.assertTrue(snapshotInfo.isInProgress());
 
-    snapshotStore.save(PIPELINE_NAME, PIPELINE_REV, SNAPSHOT_ID, getSnapshotData());
+    snapshotStore.save(PIPELINE_NAME, PIPELINE_REV, SNAPSHOT_ID, 0, getSnapshotData());
 
     Snapshot snapshot = snapshotStore.get(PIPELINE_NAME, PIPELINE_REV, SNAPSHOT_ID);
     Assert.assertNotNull(snapshot.getInfo());

@@ -341,6 +341,17 @@ public class TestRemoteDataCollector {
     }
 
     @Override
+    public void startAndCaptureSnapshot(
+        Map<String, Object> runtimeConstants,
+        String snapshotName,
+        String snapshotLabel,
+        int batches,
+        int batchSize
+    ) throws PipelineException, StageException {
+      // TODO Auto-generated method stub
+    }
+
+    @Override
     public String captureSnapshot(
         String snapshotName,
         String snapshotLabel,

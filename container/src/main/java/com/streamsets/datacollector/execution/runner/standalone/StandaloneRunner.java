@@ -389,6 +389,16 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   @Override
   public String captureSnapshot(String snapshotName, String snapshotLabel, int batches, int batchSize)
     throws PipelineException {
+    return captureSnapshot(snapshotName, snapshotLabel, batches, batchSize, true);
+  }
+
+  public String captureSnapshot(
+      String snapshotName,
+      String snapshotLabel,
+      int batches,
+      int batchSize,
+      boolean checkState
+  ) throws PipelineException {
     int maxBatchSize = configuration.get(Constants.SNAPSHOT_MAX_BATCH_SIZE_KEY, Constants.SNAPSHOT_MAX_BATCH_SIZE_DEFAULT);
 
     if(batchSize > maxBatchSize) {
@@ -396,7 +406,9 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     }
 
     LOG.debug("Capturing snapshot with batch size {}", batchSize);
-    checkState(getState().getStatus().equals(PipelineStatus.RUNNING), ContainerError.CONTAINER_0105);
+    if (checkState) {
+      checkState(getState().getStatus().equals(PipelineStatus.RUNNING), ContainerError.CONTAINER_0105);
+    }
     if(batchSize <= 0) {
       throw new PipelineRunnerException(ContainerError.CONTAINER_0107, batchSize);
     }
@@ -627,8 +639,16 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
 
   @Override
   public void start(Map<String, Object> runtimeConstants) throws PipelineException, StageException {
+    startPipeline(runtimeConstants);
+    LOG.debug("Starting the runnable for pipeline {} {}", name, rev);
+    if(!pipelineRunnable.isStopped()) {
+      pipelineRunnable.run();
+    }
+  }
+
+  private void startPipeline(Map<String, Object> runtimeConstants) throws PipelineException, StageException {
     Utils.checkState(!isClosed,
-      Utils.formatL("Cannot start the pipeline '{}::{}' as the runner is already closed", name, rev));
+        Utils.formatL("Cannot start the pipeline '{}::{}' as the runner is already closed", name, rev));
 
     synchronized (this) {
       try {
@@ -656,8 +676,8 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         MemoryLimitConfiguration memoryLimitConfiguration = getMemoryLimitConfiguration(pipelineConfigBean);
 
         BlockingQueue<Object> productionObserveRequests =
-          new ArrayBlockingQueue<>(configuration.get(Constants.OBSERVER_QUEUE_SIZE_KEY,
-            Constants.OBSERVER_QUEUE_SIZE_DEFAULT), true /* FIFO */);
+            new ArrayBlockingQueue<>(configuration.get(Constants.OBSERVER_QUEUE_SIZE_KEY,
+                Constants.OBSERVER_QUEUE_SIZE_DEFAULT), true /* FIFO */);
 
         BlockingQueue<Record> statsQueue = null;
         boolean statsAggregationEnabled = isStatsAggregationEnabled(pipelineConfiguration);
@@ -725,11 +745,11 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         metricsEventRunnable.setStatsQueue(statsQueue);
         metricsEventRunnable.setPipelineConfiguration(pipelineConfiguration);
         int refreshInterval = configuration.get(MetricsEventRunnable.REFRESH_INTERVAL_PROPERTY,
-          MetricsEventRunnable.REFRESH_INTERVAL_PROPERTY_DEFAULT);
+            MetricsEventRunnable.REFRESH_INTERVAL_PROPERTY_DEFAULT);
         if(refreshInterval > 0) {
           metricsFuture =
-            runnerExecutor.scheduleAtFixedRate(metricsEventRunnable, 0, metricsEventRunnable.getScheduledDelay(),
-              TimeUnit.MILLISECONDS);
+              runnerExecutor.scheduleAtFixedRate(metricsEventRunnable, 0, metricsEventRunnable.getScheduledDelay(),
+                  TimeUnit.MILLISECONDS);
         }
         //Schedule Rules Config Loader
         rulesConfigLoader.setStatsQueue(statsQueue);
@@ -739,11 +759,11 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
           throw new PipelineRuntimeException(ContainerError.CONTAINER_0403, name, e.toString(), e);
         }
         ScheduledFuture<?> configLoaderFuture =
-          runnerExecutor.scheduleWithFixedDelay(rulesConfigLoaderRunnable, 1, RulesConfigLoaderRunnable.SCHEDULED_DELAY,
-            TimeUnit.SECONDS);
+            runnerExecutor.scheduleWithFixedDelay(rulesConfigLoaderRunnable, 1, RulesConfigLoaderRunnable.SCHEDULED_DELAY,
+                TimeUnit.SECONDS);
 
         ScheduledFuture<?> metricObserverFuture = runnerExecutor.scheduleWithFixedDelay(metricObserverRunnable, 1, 2,
-          TimeUnit.SECONDS);
+            TimeUnit.SECONDS);
 
         // update checker
         updateChecker = new UpdateChecker(runtimeInfo, configuration, pipelineConfiguration, this);
@@ -756,8 +776,8 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         List<Future<?>> list;
         if (metricsFuture != null) {
           list =
-            ImmutableList
-              .of(configLoaderFuture, observerFuture, metricObserverFuture, metricsFuture, updateCheckerFuture);
+              ImmutableList
+                  .of(configLoaderFuture, observerFuture, metricObserverFuture, metricsFuture, updateCheckerFuture);
         } else {
           list = ImmutableList.of(configLoaderFuture, observerFuture, metricObserverFuture, updateCheckerFuture);
         }
@@ -767,11 +787,21 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         throw e;
       }
     }
+  }
+
+  public void startAndCaptureSnapshot(
+      Map<String, Object> runtimeConstants,
+      String snapshotName,
+      String snapshotLabel,
+      int batches,
+      int batchSize
+  ) throws PipelineException, StageException {
+    startPipeline(runtimeConstants);
+    captureSnapshot(snapshotName, snapshotLabel, batches, batchSize, false);
     LOG.debug("Starting the runnable for pipeline {} {}", name, rev);
     if(!pipelineRunnable.isStopped()) {
       pipelineRunnable.run();
     }
-
   }
 
   private boolean isStatsAggregationEnabled(PipelineConfiguration pipelineConfiguration) throws PipelineStoreException {

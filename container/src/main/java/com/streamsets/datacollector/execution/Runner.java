@@ -101,6 +101,15 @@ public interface Runner {
   // starts the pipeline with parameterization support
   public void start(Map<String, Object> runtimeConstants) throws PipelineException, StageException;
 
+  // starts the pipeline and then triggers a snapshot request
+  public void startAndCaptureSnapshot(
+      Map<String, Object> runtimeConstants,
+      String snapshotName,
+      String snapshotLabel,
+      int batches,
+      int batchSize
+  ) throws PipelineException, StageException;
+
   // triggers a snapshot request
   // delegates to SnapshotStore
   public String captureSnapshot(String snapshotName, String snapshotLabel, int batches, int batchSize)
