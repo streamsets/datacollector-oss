@@ -20,6 +20,9 @@
 package com.streamsets.pipeline.stage.processor.hive;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Field;
@@ -60,6 +63,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 public class HiveMetadataProcessor extends RecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(HiveMetadataProcessor.class.getCanonicalName());
@@ -73,7 +77,6 @@ public class HiveMetadataProcessor extends RecordProcessor {
   private static final String SCALE_EXPRESSION = "scaleExpression";
   private static final String PRECISION_EXPRESSION = "precisionExpression";
 
-  private static final String WAREHOUSE_DIR_PROPERTY = "hive.metastore.warehouse.dir";
   protected static final String HDFS_HEADER_ROLL = "roll";
   protected static final String HDFS_HEADER_AVROSCHEMA = "avroSchema";
   protected static final String HDFS_HEADER_TARGET_DIRECTORY = "targetDirectory";
@@ -86,7 +89,6 @@ public class HiveMetadataProcessor extends RecordProcessor {
   private final TimeZone timeZone;
 
   private HiveConfigBean hiveConfigBean;
-  private String internalWarehouseDir;
 
   private boolean partitioned;
 
@@ -101,7 +103,13 @@ public class HiveMetadataProcessor extends RecordProcessor {
 
   private String hdfsLane;
   private String hmsLane;
+
+  // Database cache only holds metadata for databases
+  private LoadingCache<String, String> databaseCache;
+
+  // The HMS cache is holding all info about tables
   private HMSCache cache;
+
   private ErrorRecordHandler errorRecordHandler;
   private HiveMetadataProcessorELEvals elEvals = new HiveMetadataProcessorELEvals();
   private HiveQueryExecutor queryExecutor;
@@ -199,12 +207,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       }
     }
 
-    if (!externalTable) {
-      if(issues.size() == 0) { // The config bean might not be properly initialized when there are validation errors
-        internalWarehouseDir = hiveConfigBean.getHiveConfigValue(WAREHOUSE_DIR_PROPERTY);
-        validateTemplate(internalWarehouseDir, "Hive Warehouse directory", Errors.HIVE_METADATA_05, issues);
-      }
-    } else {
+    if (externalTable) {
       validateTemplate(tablePathTemplate, "Table Path Template", Errors.HIVE_METADATA_06, issues);
       if (partitioned)
         validateTemplate(partitionPathTemplate, "Partition Path Template", Errors.HIVE_METADATA_06, issues);
@@ -244,7 +247,18 @@ public class HiveMetadataProcessor extends RecordProcessor {
             )
             .maxCacheSize(hiveConfigBean.maxCacheSize)
             .build(queryExecutor);
-      } catch (StageException e) {
+
+          databaseCache = CacheBuilder
+            .newBuilder()
+            .maximumSize(50)
+            .build(new CacheLoader<String, String>() {
+              @Override
+              public String load(String dbName) throws Exception {
+                return queryExecutor.executeDescribeDatabase(dbName);
+              }
+            });
+
+        } catch (StageException e) {
         issues.add(getContext().createConfigIssue(
             Groups.HIVE.name(),
             "hiveConfigBean.hiveJDBCUrl",
@@ -298,18 +312,17 @@ public class HiveMetadataProcessor extends RecordProcessor {
 
     String dbName = HiveMetastoreUtil.resolveEL(elEvals.dbNameELEval, variables, databaseEL);
     String tableName = HiveMetastoreUtil.resolveEL(elEvals.tableNameELEval,variables,tableEL);
-    String warehouseDir, avroSchema;
+    String targetPath;
+    String avroSchema;
     String partitionStr = "";
     LinkedHashMap<String, String> partitionValMap;
 
     if (dbName.isEmpty()) {
       dbName = DEFAULT_DB;
     }
-    try{
+    try {
+
       partitionValMap = getPartitionValuesFromRecord(variables);
-      warehouseDir = externalTable ?
-          HiveMetastoreUtil.resolveEL(elEvals.tablePathTemplateELEval, variables, tablePathTemplate) :
-          internalWarehouseDir;
 
       if (partitioned) {
         partitionStr = externalTable ?
@@ -319,13 +332,27 @@ public class HiveMetadataProcessor extends RecordProcessor {
           partitionStr = "/" + partitionStr;
       }
       // First, find out if this record has all necessary data to process
-      validateNames(dbName, tableName, warehouseDir);
+      validateNames(dbName, tableName);
       String qualifiedName = HiveMetastoreUtil.getQualifiedTableName(dbName, tableName);
       LOG.trace("Generated table {} for record {}", qualifiedName, record.getHeader().getSourceId());
 
-      // path from warehouse directory to table
-      String targetPath = externalTable ? warehouseDir :
-          HiveMetastoreUtil.getTargetDirectory(warehouseDir, dbName, tableName);
+      if(externalTable) {
+        // External table have location in the resolved EL
+        targetPath = HiveMetastoreUtil.resolveEL(elEvals.tablePathTemplateELEval, variables, tablePathTemplate);
+      } else {
+        // Internal table will be the database location + table name
+        String databaseLocation;
+        try {
+          databaseLocation = databaseCache.get(dbName);
+        } catch (ExecutionException e) {
+          throw new HiveStageCheckedException(com.streamsets.pipeline.stage.lib.hive.Errors.HIVE_23, e.getMessage());
+        }
+        targetPath = String.format("%s/%s", databaseLocation, tableName);
+      }
+
+      if (targetPath.isEmpty()) {
+        throw new HiveStageCheckedException(Errors.HIVE_METADATA_02, targetPath);
+      }
 
       // Obtain the record structure from current record
       LinkedHashMap<String, HiveTypeInfo> recordStructure = HiveMetastoreUtil.convertRecordToHMSType(
@@ -464,9 +491,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
     }
   }
 
-  private void validateNames(String dbName, String tableName, String warehouseDir)
-      throws HiveStageCheckedException {
-
+  private void validateNames(String dbName, String tableName) throws HiveStageCheckedException {
     if (!HiveMetastoreUtil.validateName(dbName)){
       throw new HiveStageCheckedException(Errors.HIVE_METADATA_03, HIVE_DB_NAME, dbName);
     }
@@ -474,9 +499,6 @@ public class HiveMetadataProcessor extends RecordProcessor {
       throw new HiveStageCheckedException(Errors.HIVE_METADATA_02, tableEL);
     } else if (!HiveMetastoreUtil.validateName(tableName)){
       throw new HiveStageCheckedException(Errors.HIVE_METADATA_03, HIVE_TABLE_NAME, tableName);
-    }
-    if (warehouseDir.isEmpty()) {
-      throw new HiveStageCheckedException(Errors.HIVE_METADATA_02, warehouseDir);
     }
   }
 

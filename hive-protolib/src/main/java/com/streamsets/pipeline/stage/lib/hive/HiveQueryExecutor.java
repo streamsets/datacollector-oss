@@ -33,7 +33,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -52,6 +51,7 @@ public final class HiveQueryExecutor {
   private static final String DESC = "DESC %s";
   private static final String DESC_FORMATTED = "DESC formatted %s ";
   private static final String DESC_FORMATTED_PARTITION = DESC_FORMATTED +"partition";
+  private static final String DESCRIBE_DATABASE = "DESCRIBE DATABASE `%s`";
   private static final String SHOW_TABLES = "SHOW TABLES in %s like '%s'";
   private static final String PARTITIONED_BY = "PARTITIONED BY";
   private static final String ADD_COLUMNS = "ADD COLUMNS";
@@ -76,6 +76,7 @@ public final class HiveQueryExecutor {
   private static final String RESULT_SET_DATA_TYPE = "data_type";
   private static final String RESULT_SET_PROP_NAME = "prpt_name";
   private static final String RESULT_SET_PROP_VALUE = "prpt_value";
+  private static final String RESULT_SET_LOCATION = "location";
   private static final String LOCATION_INFORMATION_IN_RESULT_SET = "Location:";
   private static final String DETAILED_PARTITION_INFORMATION = "# Detailed Partition Information";
   private static final String SERDE_LIBRARY_IN_RESULT_SET = "SerDe Library:";
@@ -304,6 +305,10 @@ public final class HiveQueryExecutor {
     return String.format(DESC, qualifiedTableName);
   }
 
+  private static String buildDescribeDatabase(String dbName) {
+    return String.format(DESCRIBE_DATABASE, dbName);
+  }
+
   @VisibleForTesting
   public static String buildShowTableQuery(String qualifiedTableName) {
     String[] dbTable = qualifiedTableName.split("\\.");
@@ -460,6 +465,25 @@ public final class HiveQueryExecutor {
         }
         return Pair.of(columnTypeInfo, partitionTypeInfo);
       }
+    });
+  }
+
+  /**
+   * Returns location for given database.
+   *
+   * @param dbName Database name
+   * @return Path where the database is stored
+   * @throws StageException in case of any {@link SQLException}
+   */
+  public String executeDescribeDatabase(String dbName) throws StageException {
+    String sql = buildDescribeDatabase(dbName);
+
+    return executeQuery(sql, rs -> {
+      if(!rs.next()) {
+        throw new HiveStageCheckedException(Errors.HIVE_35, "Database doesn't exists.");
+      }
+
+      return HiveMetastoreUtil.stripHdfsHostAndPort(rs.getString(RESULT_SET_LOCATION));
     });
   }
 
