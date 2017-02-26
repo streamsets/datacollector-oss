@@ -60,7 +60,7 @@ public class ProcessorRunner extends StageRunner<Processor> {
       BatchImpl batch = new BatchImpl(getInfo().getInstanceName(), "sdk", "sourceOffset", inputRecords);
       BatchMakerImpl batchMaker = new BatchMakerImpl(((Source.Context) getContext()).getOutputLanes());
       getStage().process(batch, batchMaker);
-      return new Output("sdk:sourceOffset", batchMaker.getOutput());
+      return new Output(Source.POLL_SOURCE_OFFSET_KEY, "sdk:sourceOffset", batchMaker.getOutput());
     } finally {
       LOG.debug("Stage '{}' process ends", getInfo().getInstanceName());
     }

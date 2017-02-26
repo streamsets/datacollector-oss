@@ -189,7 +189,7 @@ public class PushSourceRunner extends StageRunner<PushSource>  implements PushSo
 
   @Override
   public boolean processBatch(BatchContext batchContext, String entityName, String entityOffset) {
-    callback.processBatch(StageRunner.getOutput(batchContext.getBatchMaker()));
+    callback.processBatch(StageRunner.getOutput(entityName, entityOffset, batchContext.getBatchMaker()));
 
     if(entityName != null) {
       commitOffset(entityName, entityOffset);

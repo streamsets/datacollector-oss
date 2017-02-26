@@ -60,7 +60,7 @@ public class SourceRunner extends StageRunner<Source> {
       if (getStage() instanceof OffsetCommitter) {
         ((OffsetCommitter)getStage()).commit(newOffset);
       }
-      return new Output(newOffset, batchMaker.getOutput());
+      return new Output(Source.POLL_SOURCE_OFFSET_KEY, newOffset, batchMaker.getOutput());
     } finally {
       LOG.debug("Stage '{}' produce ends", getInfo().getInstanceName());
     }

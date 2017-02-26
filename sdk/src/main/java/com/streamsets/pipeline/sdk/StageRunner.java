@@ -36,6 +36,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
@@ -336,15 +337,21 @@ public abstract class StageRunner<S extends Stage> {
   }
 
   public static class Output {
+    private final String offsetEntity;
     private final String newOffset;
     private final Map<String, List<Record>> records;
 
-    Output(String newOffset, Map<String, List<Record>> records) {
+    Output(String offsetEntity, String newOffset, Map<String, List<Record>> records) {
+      this.offsetEntity = offsetEntity;
       this.newOffset = newOffset;
       for (Map.Entry<String, List<Record>> entry : records.entrySet()) {
         entry.setValue(Collections.unmodifiableList(entry.getValue()));
       }
       this.records = Collections.unmodifiableMap(records);
+    }
+
+    public String getOffsetEntity() {
+      return offsetEntity;
     }
 
     public String getNewOffset() {
@@ -428,7 +435,11 @@ public abstract class StageRunner<S extends Stage> {
   }
 
   static Output getOutput(BatchMaker batchMaker) {
-    return new Output("sdk:offset", ((BatchMakerImpl)batchMaker).getOutput());
+    return getOutput(Source.POLL_SOURCE_OFFSET_KEY, "sdk:offset", batchMaker);
+  }
+
+  static Output getOutput(String offsetEntity, String offset, BatchMaker batchMaker) {
+    return new Output(offsetEntity, offset, ((BatchMakerImpl)batchMaker).getOutput());
   }
 
 
