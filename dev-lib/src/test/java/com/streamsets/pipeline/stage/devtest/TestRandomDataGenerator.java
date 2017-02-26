@@ -21,7 +21,6 @@ package com.streamsets.pipeline.stage.devtest;
 
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
@@ -35,7 +34,7 @@ import java.util.List;
 public class TestRandomDataGenerator {
 
   @Test
-  public void testRandomDataGenerator() throws StageException {
+  public void testRandomDataGenerator() throws Exception {
 
     RandomDataGeneratorSource.DataGeneratorConfig stringData = new RandomDataGeneratorSource.DataGeneratorConfig();
     stringData.field = "name";
@@ -91,7 +90,7 @@ public class TestRandomDataGenerator {
   }
 
   @Test
-  public void testLongSequence() throws StageException {
+  public void testLongSequence() throws Exception {
     RandomDataGeneratorSource.DataGeneratorConfig seq = new RandomDataGeneratorSource.DataGeneratorConfig();
     seq.field = "id";
     seq.type = RandomDataGeneratorSource.Type.LONG_SEQUENCE;
@@ -130,7 +129,7 @@ public class TestRandomDataGenerator {
   }
 
   @Test
-  public void testEventGeneration() throws StageException {
+  public void testEventGeneration() throws Exception {
     RandomDataGeneratorSource.DataGeneratorConfig seq = new RandomDataGeneratorSource.DataGeneratorConfig();
     seq.field = "event";
     seq.type = RandomDataGeneratorSource.Type.LONG_SEQUENCE;
@@ -167,7 +166,7 @@ public class TestRandomDataGenerator {
   }
 
   @Test
-  public void testBatchSize() throws StageException {
+  public void testBatchSize() throws Exception {
     RandomDataGeneratorSource.DataGeneratorConfig seq = new RandomDataGeneratorSource.DataGeneratorConfig();
     seq.field = "id";
     seq.type = RandomDataGeneratorSource.Type.LONG_SEQUENCE;

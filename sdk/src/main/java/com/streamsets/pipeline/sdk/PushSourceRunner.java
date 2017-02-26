@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -153,7 +154,7 @@ public class PushSourceRunner extends StageRunner<PushSource>  implements PushSo
       try {
         getStage().produce(lastOffsets, maxBatchSize);
       } catch (StageException e) {
-        // TODO REPORT UP
+        throw new RuntimeException(e);
       }
     }
   }
@@ -172,11 +173,9 @@ public class PushSourceRunner extends StageRunner<PushSource>  implements PushSo
    *
    * Caller code MUST call setStop(), otherwise this method will never return.
    */
-  public void waitOnProduce() {
+  public void waitOnProduce() throws ExecutionException, InterruptedException {
     try {
       stageRunner.get();
-    } catch (Exception e) {
-      LOG.error("Can't stop origin", e);
     } finally {
       executor.shutdownNow();
     }
