@@ -30,15 +30,19 @@
                     statistics for DPM</indexterm></indexterm><indexterm>aggregated
                     statistics<indexterm>pipelines</indexterm></indexterm>To aggregate statistics,
             use <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-            /> to configure the pipeline to write the statistics to a Kafka cluster or to Amazon
-            Kinesis Streams.<draft-comment author="alisontaylor">2 paragraphs above have same text
-                as in DPM Tutorial > Configure Statistics for a Pipeline. Make same updates in both
-                places.</draft-comment></p>
+            /> to configure the pipeline to write the statistics to one of the following
+            systems:</p>
+        <ul id="ul_e23_pxp_yy">
+            <li>SDC RPC</li>
+            <li>Kafka cluster</li>
+            <li>Amazon Kinesis Streams</li>
+        </ul>
+        <note conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/AggStatsNote"/>
         <p>When you start a job that includes a pipeline configured to aggregate statistics, <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
             automatically generates and runs a system pipeline for the job. The system pipeline
-            reads the statistics written by each running pipeline instance to Kafka or Kinesis.
-            Then, the system pipeline aggregates and sends the statistics to <ph
+            reads the statistics written by each running pipeline instance to Kafka, Kinesis, or SDC
+            RPC. Then, the system pipeline aggregates and sends the statistics to <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>.
             You can view the aggregated statistics and metrics when you monitor the job in <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"

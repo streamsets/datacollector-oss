@@ -41,6 +41,9 @@
         </topicref>
         <topicref href="../DPM/AggregatedStatistics.dita" chunk="to-content">
             <topicmeta><shortdesc></shortdesc></topicmeta>
+            <topicref href="../DPM/AggStatistics_SDCRPC.dita">
+                <topicref href="../DPM/AggStatistics_SDCRPCBestPractices.dita"/>
+            </topicref>
             <topicref href="../DPM/AggStatistics_Kafka.dita">
                 <topicref href="../DPM/AggStatistics_KafkaPartitionStrategy.dita"/>
                 <topicref href="../DPM/AggStatistics_KafkaBestPractices.dita"/>

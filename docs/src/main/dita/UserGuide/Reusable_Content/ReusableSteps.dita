@@ -4286,7 +4286,7 @@
                                 </row>
                                 <row id="row-verifyHost">
                                     <entry>Verify Host in Server Certificate</entry>
-                                    <entry>Verifies the host in the SDC RPC origin keystore
+                                    <entry id="entry-verifyHost">Verifies the host in the SDC RPC origin keystore
                                         file.</entry>
                                 </row>
                             </tbody>
@@ -4318,21 +4318,21 @@
                                 <row id="row-RetriesBatch">
                                     <entry>Retries Per Batch</entry>
                                     <entry>Number of times the destination tries to write a batch to
-                                        the SDC RPC origin. <p>When the destination cannot write the
+                                        the SDC RPC origin. <p id="p-RetriesBatch">When the destination cannot write the
                                             batch within the configured number of retries, it fails
-                                            the batch.</p><p>Default is 3.</p></entry>
+                                            the batch.</p><p id="p-RetriesBatchDefault">Default is 3.</p></entry>
                                 </row>
                                 <row id="row-BackOffPeriod">
                                     <entry>Back Off Period</entry>
                                     <entry>Milliseconds to wait before retrying writing a batch to
-                                        the SDC RPC origin.<p>The value that you enter increases
+                                        the SDC RPC origin.<p id="p-BackOffExample">The value that you enter increases
                                             exponentially after each retry. For example, if you set
                                             the back off period to 10, the destination attempts the
                                             first retry after waiting 10 milliseconds, attempts the
                                             second retry after waiting 100 milliseconds, and
                                             attempts the third retry after waiting 1,000
                                             milliseconds. Set to 0 to retry
-                                            immediately.</p><p>Default is 0.</p></entry>
+                                            immediately.</p><p id="p-BackOffDefault">Default is 0.</p></entry>
                                 </row>
                                 <row id="row-ConTimeout">
                                     <entry>Connection Timeout (ms)</entry>
@@ -4344,8 +4344,8 @@
                                 <row id="row-ReadTimeout">
                                     <entry>Read Timeout (ms)</entry>
                                     <entry>Milliseconds to wait for the SDC RPC origin to read data
-                                        from a batch. <p>The destination retries the write based on
-                                            the Retries Per Batch property.</p><p>Default is 2000
+                                        from a batch. <p id="p-ReadTimeout">The destination retries the write based on
+                                            the Retries Per Batch property.</p><p id="p-ReadTimeoutDefault">Default is 2000
                                             milliseconds.</p></entry>
                                 </row>
                                 <row id="row-UseCompression">

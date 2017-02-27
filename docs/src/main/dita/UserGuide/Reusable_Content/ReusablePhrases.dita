@@ -2430,6 +2430,12 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   </dl></p>
             <p id="OAuth2_Examples">Let’s look at some examples of how to configure authentication and OAuth 2 authorization
                   to read Twitter, Microsoft Azure AD, and Google APIs.</p>
+            <draft-comment author="alisontaylor">Note used 2 times in Aggregated Statistics for
+                  Pipelines in DPM chapter</draft-comment>
+            <note type="important" id="AggStatsNote">For a production environment, use a Kafka
+                  cluster or Amazon Kinesis Streams to aggregate statistics. Using SDC RPC to
+                  aggregate statistics is not highly available and might cause the loss of some
+                  data. It should be used for development purposes only.</note>
 
       </conbody>
 </concept>
