@@ -63,6 +63,13 @@
             by the stage. </dd>
         </dlentry>
         <dlentry>
+          <dt>Dev SDC RPC with Buffering origin</dt>
+          <dd>Receives records from an SDC RPC destination, temporarily buffering the records to
+            disk before passing the records to the next stage in the pipeline. Use as the origin in
+            an SDC RPC destination pipeline.<note> After a deliberate or unexpected stop of the
+              pipeline, buffered records are lost.</note></dd>
+        </dlentry>
+        <dlentry>
           <dt>Dev Identity processor</dt>
           <dd>Passes all records through to the next stage. Use as a placeholder in the pipeline.
             You can define required fields and preconditions, and configure stage error handling.

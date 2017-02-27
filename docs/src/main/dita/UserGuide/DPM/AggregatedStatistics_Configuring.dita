@@ -27,10 +27,120 @@
                     options for the statistics aggregator:</cmd>
                 <info>
                     <ul id="ul_ljj_brd_dx">
+                        <li>Write to SDC RPC - Write the pipeline statistics to an SDC RPC
+                            destination. Use for development purposes only.</li>
                         <li>Write to Kafka - Write the pipeline statistics to a Kafka cluster.</li>
                         <li>Write to Kinesis - Write the pipeline statistics to Amazon Kinesis
                             Streams.</li>
                     </ul>
+                </info>
+            </step>
+            <step>
+                <cmd>To write statistics to an SDC RPC destination, on the <uicontrol>Stats
+                        Aggregator - Write to SDC RPC</uicontrol> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_jxy_4sq_yy">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>SDC RPC Properties</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>SDC RPC Connection</entry>
+                                    <entry>Host and port where the system pipeline runs. The host
+                                        must be a machine with a registered <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> that runs a pipeline instance for the job. <p>Use the
+                                            following format: <codeph>&lt;host>:&lt;port></codeph>.
+                                        </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Retries per Batch</entry>
+                                    <entry>Number of times the SDC RPC destination tries to write a
+                                        batch to the Dev SDC RPC with Buffering origin in the system
+                                        pipeline. <p>When the SDC RPC destination cannot write the
+                                            batch within the configured number of retries, it fails
+                                            the batch.</p><p>Default is 3.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Back off Period</entry>
+                                    <entry>Milliseconds to wait before retrying writing a batch to
+                                        the Dev SDC RPC with Buffering origin in the system
+                                            pipeline.<p>The value that you enter increases
+                                            exponentially after each retry. For example, if you set
+                                            the back off period to 10, the SDC RPC destination
+                                            attempts the first retry after waiting 10 milliseconds,
+                                            attempts the second retry after waiting 100
+                                            milliseconds, and attempts the third retry after waiting
+                                            1,000 milliseconds. Set to 0 to retry
+                                            immediately.</p><p>Default is 0.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>SDC RPC ID</entry>
+                                    <entry>User-defined ID to allow the SDC RPC destination to pass
+                                        statistics to the system pipeline. To avoid mixing
+                                        statistics from different jobs, use a unique ID for each
+                                            job.<p>You cannot define an expression that evaluates to
+                                            the ID. </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Connection Timeout (ms)</entry>
+                                    <entry>Milliseconds to establish a connection to the system
+                                        pipeline. <p>The SDC RPC destination retries the connection
+                                            based on the Retries Per Batch property.</p><p>Default
+                                            is 5000 milliseconds.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>TLS Enabled</entry>
+                                    <entry>Enables the secure transfer of data using TLS. </entry>
+                                </row>
+                                <row>
+                                    <entry>Truststore File</entry>
+                                    <entry>Truststore file for TLS. Required if the keystore file is
+                                        a self-signed certificate.<p>Must be stored in the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> resources directory,
+                                                <filepath>$SDC_RESOURCES</filepath>, on each <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> machine that runs a pipeline instance for the job.
+                                        </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Truststore Password</entry>
+                                    <entry>Password for the truststore file.<note
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
+                                        /></entry>
+                                </row>
+                                <row>
+                                    <entry>Read Timeout (ms)</entry>
+                                    <entry>Milliseconds to wait for the Dev SDC RPC with Buffering
+                                        origin in the system pipeline to read data from a batch.
+                                            <p>The SDC RPC destination retries the write based on
+                                            the Retries Per Batch property.</p><p>Default is 2000
+                                            milliseconds.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Use Compression</entry>
+                                    <entry>Enables the SDC RPC destination to use compression to
+                                        pass data to the Dev SDC RPC with Buffering origin in the
+                                        system pipeline. Enabled by default. </entry>
+                                </row>
+                                <row>
+                                    <entry>Verify Host in Server Certificate</entry>
+                                    <entry>Verifies the host in the keystore file on the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> machine that runs the system pipeline. 
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
                 </info>
             </step>
             <step>
@@ -40,7 +150,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_i2g_jwd_dx">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>Kafka Properties</entry>
@@ -58,17 +168,10 @@
                                 </row>
                                 <row>
                                     <entry>Topic</entry>
-                                    <entry>Topic to use.  To avoid mixing statistics from different
-                                        jobs, use a unique topic name for each job.<p>You can define
-                                            an expression that evaluates to the topic name. For
-                                            example, you can use the following expression to define
-                                            the topic name based on the pipeline name and
-                                            version:<codeblock>${pipeline:name()}-${pipeline:version()}</codeblock></p><p>If
-                                            you modify and then publish a new version of the
-                                            pipeline to <ph
-                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                                            />, the pipeline automatically writes to a new
-                                            topic.</p></entry>
+                                    <entry>Topic to use. To avoid mixing statistics from different
+                                        jobs, use a unique topic name for each job.<p>You cannot
+                                            define an expression that evaluates to the topic name.
+                                        </p></entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/KPPartStrategy">
@@ -114,7 +217,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_kh3_kls_dx">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>Kinesis Properties</entry>
@@ -154,15 +257,8 @@
                                     <entry>Stream Name</entry>
                                     <entry>Kinesis stream name. To avoid mixing statistics from
                                         different jobs, use a unique stream name for each job.<p>You
-                                            can define an expression that evaluates to the stream
-                                            name. For example, you can use the following expression
-                                            to define the stream name based on the pipeline name and
-                                            version:</p><codeblock>${pipeline:name()}-${pipeline:version()}</codeblock><p>If
-                                            you modify and then publish a new version of the
-                                            pipeline to <ph
-                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                                            />, the pipeline automatically writes to a new
-                                            stream.</p></entry>
+                                            cannot define an expression that evaluates to the stream
+                                            name. </p></entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/rowKinesisPartitionStrategy">
