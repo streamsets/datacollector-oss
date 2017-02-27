@@ -82,6 +82,21 @@
                                             exist, XML Parser creates the field.</p>
                                     </entry>
                                 </row>
+                                <row>
+                                    <entry>Multiple Values Behavior</entry>
+                                    <entry>Action to take when the data in the field includes
+                                        multiple values:<ul id="ul_e5j_j1c_1z">
+                                            <li>First Value Only - Returns the first value.</li>
+                                            <li>All Values as a List - Returns all values as items
+                                                in a List field.</li>
+                                            <li>Split into Multiple Records - Returns each value in
+                                                a separate record. This option generates multiple
+                                                records, one for each parsed value from the XML
+                                                document, based on the delimiter element. Other
+                                                fields in the record are retained with each
+                                                record.</li>
+                                        </ul></entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>
