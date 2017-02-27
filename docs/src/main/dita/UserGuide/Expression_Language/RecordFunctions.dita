@@ -26,18 +26,26 @@
     <dt>record:attribute(&lt;attribute name>)</dt>
     <dd>Returns the value of the specified record attribute. Use to return data, for example, for
      the "tag" attribute that you set using the File Tail origin. </dd>
+    <dd>Uses the following argument:<ul id="ul_sdn_vwv_1z">
+      <li>attribute name - Name of the record header attribute.</li>
+     </ul></dd>
     <dd>Return type: String.</dd>
     <dd>For example, the following expression returns the value of a tag attribute added by a File
      Tail origin:<codeblock>${record:attribute('tag')}</codeblock></dd>
    </dlentry>
    <dlentry>
     <dt>record:attributeOrDefault(&lt;attribute name> , &lt;default value>)</dt>
-    <dd>Returns the value of the attribute in the appropriate data type. If the attribute does not
-     exist or if the field is null, returns the default value.</dd>
-    <dd>Use to provide a default value when an attribute does not exist or when the attribute is
-     null. </dd>
-    <dd>Return type: Variable, based on whether the function returns the attribute value or default
-     value.</dd>
+    <dd>Returns the value of the specified record header attribute. When the attribute does not
+     exist or has no value, returns the specified default value.</dd>
+    <dd>Uses the following arguments:<ul id="ul_nn4_kwv_1z">
+      <li>attribute name - Name of the record header attribute.</li>
+      <li>default value - Value to use when the record header attribute does not exist or has no
+       value.</li>
+     </ul></dd>
+    <dd>Return type: Returns a string value when returning the field attribute value. Otherwise,
+     returns the type of the specified default value.</dd>
+    <dd>For example, the following expression returns the value of the tag attribute, and returns NA
+     when no value exists:<codeblock>${record:attributeOrDefault('tag', 'NA')}</codeblock></dd>
    </dlentry>
    <dlentry>
     <dt>record:creator()</dt>
@@ -81,6 +89,33 @@
     <dd>For example, the following expression returns 1 when the Name field exists in a
      record:<codeblock>${record:exists('/Name')}</codeblock></dd>
     <dd>It returns 0 when the Name field is not part of the record.</dd>
+   </dlentry>
+   <dlentry>
+    <dt>record:fieldAttribute(&lt;field path>, &lt;field attribute name>)</dt>
+    <dd>Returns the value for the specified field attribute.</dd>
+    <dd>Uses the following arguments:<ul id="ul_plr_kxv_1z">
+      <li>field path - Path to the field with the attribute.</li>
+      <li>field attribute name - Name of the field attribute.</li>
+     </ul></dd>
+    <dd>Return type: String</dd>
+    <dd>For example, the following expression returns the value for the pk attribute on the ID
+     field:<codeblock>record:fieldAttribute('/ID', 'pk')</codeblock></dd>
+   </dlentry>
+   <dlentry>
+    <dt>record:fieldAttributeOrDefault(&lt;field path>, &lt;field attribute name>, &lt;default
+     value>)</dt>
+    <dd>Returns the value for the field attribute when it exists. If the attribute does not exist,
+     returns the specified default value. </dd>
+    <dd>Uses the following arguments:<ul id="ul_wmk_sxv_1z">
+      <li>field path - Path to the field with the attribute.</li>
+      <li>field attribute name - Name of the field attribute.</li>
+      <li>default value - Value to use when the field attribute does not exist or has no value.</li>
+     </ul></dd>
+    <dd>Return type: Returns a string value when returning the field attribute value. Otherwise,
+     returns the type of the specified default value.</dd>
+    <dd>For example, the following expression returns the value for the pk attribute on the ID field
+     when available, otherwise, it returns
+     "n".<codeblock>record:fieldAttributeOrDefault('/ID', 'pk', 'n')</codeblock></dd>
    </dlentry>
    <dlentry>
     <dt>record:id()</dt>

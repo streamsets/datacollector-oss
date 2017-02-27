@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_xfm_wtp_1z">
+ <title>Field Attributes</title>
+ <conbody>
+  <p><indexterm>field attributes<indexterm>overview</indexterm></indexterm>You can create, modify,
+            and evaluate field attributes in the pipeline. The Expression Evaluator enables creating
+            and modifying field-level attributes. You can use field attribute functions to evaluate
+            field attributes.</p>
+        <p>For example, you can use an Expression Evaluator to create a field attribute based on
+            record data, then pass the record to a Stream Selector that routes data based on the
+            value of the attribute. </p>
+        <p>Field attributes are included in records written to destination systems only when you use
+            the SDC RPC data format in the destination. </p>
+        <p>To include field attributes in the record data or to use field attributes in
+            calculations, use the <codeph>record:fieldAttribute</codeph> and
+                <codeph>record:fieldAttributeOrDefault</codeph> functions. For more information
+            about field attribute functions,  see <xref
+                href="../Expression_Language/RecordFunctions.dita#concept_p1z_ggv_1r"/>.</p>
+        <p>When using data preview, you can enable viewing field attributes and record header
+            attributes to aid with pipeline development.</p>
+ </conbody>
+</concept>

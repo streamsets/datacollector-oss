@@ -15,14 +15,18 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_zm2_pp3_wq">
  <title>Expression Evaluator</title>
- <shortdesc>The Expression Evaluator performs calculations and writes the results to new or existing
-        fields. You can also use the Expression Evaluator to add or modify record header attributes. </shortdesc>
  <conbody>
   <p><indexterm>processors<indexterm>Expression
                 Evaluator</indexterm></indexterm><indexterm>Expression Evaluator
-                    processor<indexterm>overview</indexterm></indexterm>To create an expression, you
-            define the name of the field or header attribute to receive the results of the
-            expression. And then, use the expression language to define the expression to use.</p>
+                    processor<indexterm>overview</indexterm></indexterm><indexterm>record header
+                    attributes<indexterm>configuring</indexterm></indexterm><indexterm>field
+                    attributes<indexterm>configuring</indexterm></indexterm>The Expression Evaluator
+            performs calculations and writes the results to new or existing fields. You can also use
+            the Expression Evaluator to add or modify record header attributes and field
+            attributes.</p>
+        <p>To create an expression, you define the name of the field, record header attribute, or
+            field attribute to receive the results of the expression. And then, use the expression
+            language to define the expression to use.</p>
   <p>You can use pipeline constants in expressions. Define a pipeline constant when you have a
             constant value that you use in more than one expression in the pipeline or that you want
             to change easily. </p>

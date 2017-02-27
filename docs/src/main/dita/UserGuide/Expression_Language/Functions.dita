@@ -44,6 +44,9 @@
           <li>record:eventType()</li>
           <li>record:eventVersion()</li>
           <li>record:exists(&lt;field path>)</li>
+          <li>record:fieldAttribute(&lt;field path>, &lt;field attribute name>)</li>
+          <li>record:fieldAttributeOrDefault(&lt;field path>, &lt;field attribute name>, &lt;default
+           value>)</li>
           <li>record:id()</li>
           <li>record:path()</li>
           <li>record:type(&lt;field path>)</li>
