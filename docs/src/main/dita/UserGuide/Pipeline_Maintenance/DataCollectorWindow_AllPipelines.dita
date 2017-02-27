@@ -21,24 +21,23 @@
         configuring or monitoring a pipeline. View all pipelines on the Home page to perform
         pipeline maintenance.</shortdesc>
  <conbody>
-  <p><indexterm>Data Collector console<indexterm>pipelines
+        <p><indexterm>Data Collector console<indexterm>pipelines
                 view</indexterm></indexterm><indexterm>Data Collector console<indexterm>Home
                     page</indexterm></indexterm><indexterm>Home page<indexterm>Data Collector
                     console</indexterm></indexterm>The following image shows the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-            />console when you display all pipelines on the Home page:</p>
-     <image
-                href="../Graphics/DCConsoleAllPipelines.png" scale="75" id="image_a41_tlq_1w"/>
-     <simpletable frame="all" id="simpletable_v4t_zhc_pq" relcolwidth="1.0* 1.55* 3.85*">
-         <sthead>
-             <stentry>Area/Icon</stentry>
-             <stentry>Name</stentry>
-             <stentry>Description</stentry>
-         </sthead>
-         <strow>
-             <stentry>1</stentry>
-             <stentry>Pipeline library</stentry>
-             <stentry>Library of pipelines associated with this <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            console when you display all pipelines on the Home page:</p>
+        <image href="../Graphics/DCConsoleAllPipelines.png" scale="65" id="image_a41_tlq_1w"/>
+        <simpletable frame="all" id="simpletable_v4t_zhc_pq" relcolwidth="1.0* 1.55* 3.85*">
+            <sthead>
+                <stentry>Area/Icon</stentry>
+                <stentry>Name</stentry>
+                <stentry>Description</stentry>
+            </sthead>
+            <strow>
+                <stentry>1</stentry>
+                <stentry>Pipeline library</stentry>
+                <stentry>Library of pipelines associated with this <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     />. <p>The library lists:<ul id="ul_hgb_5vb_cw">
                             <li>Pipeline states - Select a pipeline state to filter pipelines in the
@@ -46,12 +45,12 @@
                             <li>Pipeline labels - Select a pipeline label to filter pipelines in the
                                 list by label.</li>
                         </ul></p></stentry>
-         </strow>
-         <strow>
-             <stentry>2</stentry>
-             <stentry>Filter field</stentry>
-             <stentry>Allows you to filter for pipelines by name.</stentry>
-         </strow>
+            </strow>
+            <strow>
+                <stentry>2</stentry>
+                <stentry>Filter field</stentry>
+                <stentry>Allows you to filter for pipelines by name.</stentry>
+            </strow>
             <strow>
                 <stentry>3</stentry>
                 <stentry>Pipeline list</stentry>
@@ -76,26 +75,34 @@
                 <stentry>More icon</stentry>
                 <stentry>
                     <p>Provides additional actions for pipelines. Use to reset origins for
-                        pipelines, add labels to pipelines, or export pipelines.</p>
+                        pipelines, add labels to pipelines, export pipelines, and display pipeline
+                        IDs.</p>
                 </stentry>
             </strow>
-         <strow>
-             <stentry><image href="../Graphics/icon_PrevRefresh.png" id="image_ndy_cyp_1w"
+            <strow>
+                <stentry><image href="../Graphics/icon_PrevRefresh.png" id="image_ndy_cyp_1w"
                     /></stentry>
-             <stentry>Refresh icon</stentry>
-             <stentry>Refreshes the pipeline list.</stentry>
-         </strow>
-         <strow>
-             <stentry><image href="../Graphics/icon_ConfigDelete.png" id="image_t2z_gyp_1w"
+                <stentry>Refresh icon</stentry>
+                <stentry>Refreshes the pipeline list.</stentry>
+            </strow>
+            <strow>
+                <stentry><image href="../Graphics/icon_ConfigDelete.png" id="image_t2z_gyp_1w"
                     /></stentry>
-             <stentry>Delete icon</stentry>
-             <stentry>Deletes the selected pipelines.</stentry>
-         </strow>
+                <stentry>Delete icon</stentry>
+                <stentry>Deletes the selected pipelines.</stentry>
+            </strow>
             <strow>
                 <stentry><image href="../Graphics/icon_ConfigCopy.png" id="image_upt_3yp_1w"
                     /></stentry>
                 <stentry>Duplicate icon</stentry>
                 <stentry>Duplicates the selected pipelines.</stentry>
+            </strow>
+            <strow>
+                <stentry><image href="../Graphics/icon-Share.png" id="image_eqt_wbv_xy" scale="90"
+                    /></stentry>
+                <stentry>Share icon</stentry>
+                <stentry>Shares the pipeline with users and groups. Use to configure pipeline
+                    permissions.</stentry>
             </strow>
             <strow>
                 <stentry><image href="../Graphics/icon_ConfigStartPipeline.png"
@@ -127,13 +134,13 @@
                 <stentry>Error icon</stentry>
                 <stentry>Indicates that the pipeline has errors.</stentry>
             </strow>
-         <strow>
-             <stentry><image href="../Graphics/icon_OverActions.png" id="image_vd2_jpq_rq" scale="70"
-             /></stentry>
-             <stentry>Actions icon</stentry>
-             <stentry>Allows you to import, export, duplicate, or delete a single
+            <strow>
+                <stentry><image href="../Graphics/icon_OverActions.png" id="image_vd2_jpq_rq"
+                        scale="70"/></stentry>
+                <stentry>Actions icon</stentry>
+                <stentry>Allows you to import, export, duplicate, or delete a single
                     pipeline.</stentry>
-         </strow>
-     </simpletable>
- </conbody>
+            </strow>
+        </simpletable>
+    </conbody>
 </concept>

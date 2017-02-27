@@ -30,6 +30,43 @@
             <p>DPM long only: <ph id="DPM-LongOnly">Dataflow Performance Manager</ph></p>
             <p>DPM short: <ph id="DPM-short">DPM</ph></p>
             <p>
+                  <draft-comment author="Loretta">The following ph is used by the registration DPM
+                        topics. </draft-comment>
+            </p>
+            <p><ph id="ph-DPMTransferPerm">To enable <ph
+                              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                        /> users to work with pipelines, transfer permissions to the <ph
+                              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                        /> users and groups. For more information, see <xref
+                              href="../DPM/TransferPermissions.dita"/>.</ph></p>
+            <p>
+                  <draft-comment author="Loretta">The following ph is used by the unregistration
+                        from DPM topics. </draft-comment>
+            </p>
+            <p><ph id="ph-SDCuser-uninstall">After restarting <ph
+                              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        />, use your <ph
+                              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> user account to log in. </ph></p>
+            <p>
+                  <draft-comment author="Loretta">The following two ph is used by the unregistration
+                        from DPM topics. </draft-comment>
+            </p>
+            <p><ph id="ph-TransferPerms-Unregister">To ensure that users can access pipelines,
+                        transfer pipeline permissions from the obsolete <ph
+                              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                        /> users and groups back to <ph
+                              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> users and groups. Or, you can edit pipeline permissions
+                        individually.</ph></p>
+            <p><ph id="ph-DPMperm-xrefs">For more information about transferring permissions, see
+                              <xref
+                              href="../Configuration/TransferringPermissions.dita#task_wkr_gdd_1z"
+                        />. For information about configuring individual pipeline permissions, see
+                              <xref
+                              href="../Pipeline_Maintenance/SharingPipelines.dita#concept_jrg_1vy_wy"
+                        />.</ph></p>
+            <p>
                   <draft-comment author="Loretta"><uicontrol>ph-VaultFunctions-Usage</uicontrol> -
                         used in Vault-Step3-CallVault.dita</draft-comment>
             </p>
@@ -2436,6 +2473,14 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   cluster or Amazon Kinesis Streams to aggregate statistics. Using SDC RPC to
                   aggregate statistics is not highly available and might cause the loss of some
                   data. It should be used for development purposes only.</note>
+
+           <p>
+                  <draft-comment author="Loretta">This ph-PermissionsDisabled is used in Permissions
+                        overview and Config the Data Collector.</draft-comment>
+            </p>
+            <p><ph id="ph-PermissionsDisabled">When pipeline permissions are disabled, access to
+                        pipelines is based on the roles assigned to the user and its
+                  groups.</ph></p>
 
       </conbody>
 </concept>

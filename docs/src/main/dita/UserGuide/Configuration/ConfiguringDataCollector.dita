@@ -338,6 +338,17 @@
                                     false.</p></entry>
                             </row>
                             <row>
+                                <entry>pipeline.access.control.enabled</entry>
+                                <entry>Enables pipeline permissions and sharing pipelines. With
+                                    pipeline permissions enabled, a user must have the appropriate
+                                    permissions to view or work with a pipeline. Only Admin users
+                                    and pipeline owners have full access to pipelines. <p><ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-PermissionsDisabled"
+                                        /></p><p>For more information about pipeline permissions,
+                                        see <xref href="Permissions.dita#concept_i1p_hzd_yy"
+                                    />.</p></entry>
+                            </row>
+                            <row>
                                 <entry>ui.header.title</entry>
                                 <entry>Optional text to display in the <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"

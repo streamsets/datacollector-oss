@@ -101,5 +101,13 @@ system disableDPM</codeblock></p>
         <p>Restart the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
             apply the changes. </p>
+        <p><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-SDCuser-uninstall"
+            /></p>
+        <p><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-TransferPerms-Unregister"
+            /></p>
+        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-DPMperm-xrefs"
+            /></p>
     </conbody>
 </concept>

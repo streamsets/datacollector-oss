@@ -22,7 +22,7 @@
   <p>The following image shows the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console in
       Monitor mode:</p>
-    <p><image href="../Graphics/CanvasMonitor.png" id="image_zjl_w35_2s" scale="90"/></p>
+    <p><image href="../Graphics/CanvasMonitor.png" id="image_zjl_w35_2s" scale="65"/></p>
   <simpletable frame="all" relcolwidth="1.0* 1.59* 4.98*" id="simpletable_jb5_1k4_tq">
       <sthead>
         <stentry>Area / Icon</stentry>
@@ -97,6 +97,13 @@
         </stentry>
         <stentry>Stop icon</stentry>
         <stentry>Stops the pipeline.</stentry>
+      </strow>
+      <strow>
+        <stentry><image href="../Graphics/icon-Share.png" id="image_eqt_wbv_xy" scale="90"
+          /></stentry>
+        <stentry>Share icon</stentry>
+        <stentry>Shares the pipeline with users and groups. Use to configure pipeline
+          permissions.</stentry>
       </strow>
       <strow>
         <stentry><image href="../Graphics/icon_MonAlert.png" id="image_kjm_xn5_br"/></stentry>

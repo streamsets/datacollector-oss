@@ -71,5 +71,12 @@
                 </choices>
             </step>
         </steps>
+        <postreq id="postreq_jpw_plr_1z"><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-SDCuser-uninstall"
+                    /><p><ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-TransferPerms-Unregister"
+                /></p><p><ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-DPMperm-xrefs"
+                /></p></postreq>
     </taskbody>
 </task>

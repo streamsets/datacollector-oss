@@ -14,15 +14,18 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_wh3_tdv_5x">
-    <title>Step 1. Configure File Authentication Properties</title>
-    <shortdesc>Configure file authentication properties in the <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>. </shortdesc>
+    <title>Step 1. Configure Authentication Properties</title>
     <taskbody>
-        <context>When you use file authentication, you can use the Basic, Digest, or Form type. By
-            default, <ph
+        <context><indexterm>authentication
+            properties<indexterm>configuring</indexterm></indexterm>Configure authentication
+            properties in the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            uses file authentication and uses the Form file authentication type. </context>
+            configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>. <p>When you use
+                file-based authentication, you can use the Basic, Digest, or Form type. By default,
+                    <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> uses file-based authentication and uses the Form authentication type.
+            </p></context>
         <steps>
             <step>
                 <cmd>In the <ph
