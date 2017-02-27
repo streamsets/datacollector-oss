@@ -26,7 +26,10 @@
             Download a published pipeline when you need to edit a published pipeline version, and
             that pipeline version was originally developed on a different <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-            />.</context>
+                />.<p>When you download a pipeline from <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                />, you become the owner of a local instance of the published pipeline. The
+                downloaded pipeline has no connection to the published pipeline.</p></context>
         <steps>
             <step>
                 <cmd>From the <uicontrol>Home</uicontrol> page, click <menucascade>

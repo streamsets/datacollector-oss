@@ -143,5 +143,8 @@ system enableDPM \
             Enabled icon displays:</p>
      <p><image href="../Graphics/SDC_DPMEnabled.png"
          scale="60" id="image_hrt_tdk_3w"/></p>
+        <p><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-DPMTransferPerm"
+            /></p>
  </conbody>
 </concept>

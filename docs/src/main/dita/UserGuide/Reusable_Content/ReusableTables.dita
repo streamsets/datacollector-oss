@@ -1338,41 +1338,157 @@
    </tgroup>
   </table>
   <draft-comment author="alisontaylor">Description of each role is conref'd in the LDAP and File
-   Authentication sections.</draft-comment>
-  <table frame="all" rowsep="1" colsep="1" id="table_x2c_kwy_9x">
+   Authentication sections. The whole table is conrefed by the Roles topic. (LC
+   2/17)</draft-comment>
+  <table frame="all" rowsep="1" colsep="1" id="Role_table">
    <tgroup cols="2">
-    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+    <colspec colname="c1" colnum="1" colwidth="1.0*"/>
     <colspec colname="c2" colnum="2" colwidth="3.0*"/>
     <thead>
      <row>
       <entry>Role</entry>
-      <entry>Description</entry>
+      <entry>Tasks</entry>
      </row>
     </thead>
     <tbody>
      <row>
       <entry>admin</entry>
       <entry id="entry_adminRole">Perform any <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> task. </entry>
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> task. Can
+       perform all tasks listed below, as well as start and stop <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, view <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+       configuration, JVM metrics, and log information. Install libraries using the Package
+       Manager.</entry>
      </row>
      <row>
       <entry>manager</entry>
-      <entry id="entry_managerRole">Manage pipelines. As a manager, users can start and stop pipelines,
-       monitor pipelines, configure and reset alerts, and review snapshots.
-       Users cannot configure pipelines or preview data.</entry>
+      <entry id="entry_managerRole">Start and stop pipelines, monitor pipelines, configure and reset
+       alerts. Take, review, and manage snapshots. </entry>
      </row>
      <row>
       <entry>creator</entry>
-      <entry id="entry_creatorRole">Configure pipelines. As a creator, users can configure pipelines and
-       alerts, preview data, and monitor the pipeline. Users cannot review
-       snapshots or reset alerts.</entry>
+      <entry id="entry_creatorRole">Create and configure pipelines and alerts, preview data, and
+       monitor the pipeline. Import pipelines.</entry>
      </row>
      <row>
       <entry>guest</entry>
-      <entry id="entry_guestRole">Read-only access. As a guest, users can view pipeline and alert
-       configuration, view general monitoring and log information. Users cannot
-       preview data or review snapshots, or configure pipelines or
-       alerts.</entry>
+      <entry id="entry_guestRole">View pipelines and alerts, and general monitoring information.
+       Export a pipeline. </entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
+  <p>
+   <draft-comment author="Loretta">Permissions table - used in Pipeline Maintenance > Sharing
+    Pipelines and Configuring > Users, Groups, blah blah > Pipeline Permissions</draft-comment>
+  </p>
+  <p>
+   <table frame="all" rowsep="1" colsep="1" id="Permissions_pipe">
+    <tgroup cols="2">
+     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+     <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+     <thead>
+      <row>
+       <entry>Permission</entry>
+       <entry>Description</entry>
+      </row>
+     </thead>
+     <tbody>
+      <row>
+       <entry>Read</entry>
+       <entry>View and monitor the pipeline, and see alerts. View existing snapshot data.</entry>
+      </row>
+      <row>
+       <entry>Write</entry>
+       <entry>Edit the pipeline and alerts.</entry>
+      </row>
+      <row>
+       <entry>Execute</entry>
+       <entry>Start and stop the pipeline. Preview data and take a snapshot.</entry>
+      </row>
+     </tbody>
+    </tgroup>
+   </table>
+  </p>
+  <p>
+   <draft-comment author="Loretta">The following User-Roles table used in Users, Groups, Roles,
+    Perms > Users and also in File-Based Authentication > Step 2.</draft-comment>
+  </p>
+  <p>
+   <table frame="all" rowsep="1" colsep="1" id="User-Roles">
+    <tgroup cols="3">
+     <colspec colname="newCol3" colnum="1" colwidth="1*"/>
+     <colspec colname="c1" colnum="2" colwidth="1*"/>
+     <colspec colname="c2" colnum="3" colwidth="3.0*"/>
+     <thead>
+      <row>
+       <entry>User Login</entry>
+       <entry>Role</entry>
+       <entry>Tasks</entry>
+      </row>
+     </thead>
+     <tbody>
+      <row>
+       <entry><codeph>admin</codeph> / <codeph>admin</codeph></entry>
+       <entry>Admin</entry>
+       <entry conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry_adminRole"/>
+      </row>
+      <row>
+       <entry><codeph>manager</codeph> / <codeph>manager</codeph></entry>
+       <entry>Manager</entry>
+       <entry conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry_managerRole"
+       />
+      </row>
+      <row>
+       <entry><codeph>creator</codeph> / <codeph>creator</codeph></entry>
+       <entry>Creator</entry>
+       <entry conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry_creatorRole"
+       />
+      </row>
+      <row>
+       <entry><codeph>guest</codeph> / <codeph>guest</codeph></entry>
+       <entry>Guest</entry>
+       <entry conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry_guestRole"/>
+      </row>
+     </tbody>
+    </tgroup>
+   </table>
+  </p>
+  <draft-comment author="Loretta">The following User-Roles table used in Users, Groups, Roles, Perms
+   > Users and also in File-Based Authentication > Step 2.</draft-comment>
+  <table frame="all" rowsep="1" colsep="1" id="User-Groups">
+   <tgroup cols="3">
+    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+    <colspec colname="c2" colnum="2" colwidth="2.0*"/>
+    <colspec colname="newCol3" colnum="3" colwidth="1.5*"/>
+    <thead>
+     <row>
+      <entry>User Login</entry>
+      <entry>Roles</entry>
+      <entry>Group</entry>
+     </row>
+    </thead>
+    <tbody>
+     <row>
+      <entry><codeph>user1</codeph> / <codeph>user1</codeph></entry>
+      <entry>Manager and Creator</entry>
+      <entry>dev</entry>
+     </row>
+     <row>
+      <entry><codeph>user2</codeph> / <codeph>user2</codeph></entry>
+      <entry>Manager and Creator</entry>
+      <entry>dev</entry>
+     </row>
+     <row>
+      <entry><codeph>user3</codeph> / <codeph>user3</codeph></entry>
+      <entry>Manager and Creator</entry>
+      <entry>test</entry>
+     </row>
+     <row>
+      <entry><codeph>user4</codeph> / <codeph>user4</codeph></entry>
+      <entry>Manager and Creator</entry>
+      <entry>test</entry>
      </row>
     </tbody>
    </tgroup>

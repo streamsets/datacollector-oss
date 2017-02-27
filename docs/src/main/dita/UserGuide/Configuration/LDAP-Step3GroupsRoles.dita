@@ -15,22 +15,33 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_x3x_lts_5x">
  <title>Step 3. Map LDAP Groups to Data Collector Roles</title>
- <shortdesc><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        roles determine the tasks that a user can perform. You map LDAP groups to <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> roles.
-        An authenticated user account that belongs to that LDAP group can complete the tasks
-        determined by the mapped role.</shortdesc>
  <conbody>
   <p><indexterm>users<indexterm>roles for LDAP
                     authentication</indexterm></indexterm><indexterm>roles<indexterm>for users with
                     LDAP authentication</indexterm></indexterm><indexterm>LDAP
-                    groups<indexterm>mapping roles</indexterm></indexterm>In the <ph
+                    groups<indexterm>mapping roles</indexterm></indexterm><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            roles determine the tasks that a user can perform. You map LDAP groups to <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            roles. An authenticated user account that belongs to that LDAP group can complete the
+            tasks determined by the mapped role.</p>
+        <p>After you map LDAP groups to <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            roles, you can assign pipeline permissions to the groups. Pipeline permissions determine
+            the pipeline access that each user has. For example, say you have an LDAP Developer
+            group for all pipeline developers. When you configure the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            LDAP properties, you assign the Creator role to the Developer group so they can create
+            new pipelines. To allow the group to edit existing pipelines, you configure the
+            permissions for each pipeline and assign read and write permission to the Developer
+            group. For more information, see <xref
+                href="RolesandPermissions.dita#concept_k1r_prc_yy"/>.</p>
+        <p>To map LDAP groups to <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            roles, in the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>, configure the
-                <uicontrol>http.authentication.ldap.role.mapping</uicontrol> property to map LDAP
-            groups to <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            roles.</p>
+                <uicontrol>http.authentication.ldap.role.mapping</uicontrol> property.</p>
         <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             provides the following roles: </p>
         <table frame="all" rowsep="1" colsep="1" id="table_x1c_kwy_5x">

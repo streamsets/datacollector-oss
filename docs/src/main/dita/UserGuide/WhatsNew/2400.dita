@@ -12,14 +12,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
-<map>
- <title>What's New</title>
-    <topicref href="../WhatsNew/WhatsNew_Title.dita" chunk="to-content">
-        <topicref href="../WhatsNew/2400.dita"/>
-        <topicref href="../WhatsNew/2301.dita"/>
-        <topicref href="../WhatsNew/2300.dita"/>
-        <topicref href="../WhatsNew/2210.dita"/>
-        <topicref href="../WhatsNew/2200.dita"/>
-    </topicref>
-</map>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_kzc_4sd_yy">
+ <title>What's New in 2.4.0.0</title>
+ <conbody>
+  <p><indexterm>what's new<indexterm>version 2.4.0.0</indexterm></indexterm><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            version 2.4.0.0 includes the following new features and enhancements:</p>
+ </conbody>
+</concept>

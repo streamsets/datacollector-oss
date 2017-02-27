@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_zbn_fpw_xy">
+ <title>Configure Pipeline Permissions</title>
+ <conbody>
+        <p><indexterm>pipeline permissions<indexterm>requirement for upgrading to
+                    2.4.0.0</indexterm></indexterm><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            version 2.4.0.0 enables pipeline sharing and permissions. </p>
+        <p>In earlier versions of <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            without pipeline permissions, pipeline access is determined by roles. For example, any
+            user with the Creator role could edit any pipeline. </p>
+        <p>In version  2.4.0.0, roles are augmented with pipeline permissions. In addition to having
+            the necessary role, users must also have the appropriate permissions to perform pipeline
+            tasks. </p>
+        <p>For example, to edit a pipeline in 2.4.0.0, a user with the Creator role must also have
+            read and write permission on the pipeline. Without write permission, the user cannot
+            edit the pipeline. Without read permission, the user cannot see the pipeline at all. It
+            does not display in the list of available pipelines. </p>
+        <p>With pipeline permissions enabled, all upgraded pipelines are initially visible only to
+            users with the Admin role and the pipeline owner - the user who created the pipeline. </p>
+        <p>To enable other users to work with pipelines, have an Admin user configure the
+            appropriate permissions for each pipeline. </p>
+        <p>To retain pre-2.4.0.0 behavior, you can disable pipeline permissions by setting the
+                <uicontrol>pipeline.access.control.enabled property</uicontrol> to
+                <uicontrol>false</uicontrol> in the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            configuration file.</p>
+        <note type="tip">You can configure pipeline permissions when permissions are disabled. Then,
+            you can enable the pipeline permissions property after pipeline permissions are properly
+            configured. </note>
+        <p>For more information about roles and permissions, see <xref
+                href="../Configuration/RolesandPermissions.dita#concept_k1r_prc_yy"/>. For details
+            about configuring pipeline permissions, see <xref
+                href="../Pipeline_Maintenance/SharingPipelines.dita#concept_jrg_1vy_wy"/>. </p>
+    </conbody>
+</concept>

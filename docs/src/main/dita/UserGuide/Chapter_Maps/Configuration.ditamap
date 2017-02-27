@@ -21,6 +21,17 @@
     <topicref href="../Configuration/FileAuth-Step2UsersRoles.dita"/>
    </topicref>
   </topicref>
+  <topicref href="../Configuration/RolesandPermissions.dita" chunk="to-content">  
+   <topicmeta>
+   <shortdesc/>
+  </topicmeta>
+   <topicref href="../Configuration/Roles.dita"/>
+   <topicref href="../Configuration/Permissions.dita"/>
+   <topicref href="../Configuration/Req-CommonTasks.dita"/>
+   <topicref href="../Configuration/TransferPipePermissions.dita">
+    <topicref href="../Configuration/TransferringPermissions.dita"/>
+   </topicref>
+  </topicref>
   <topicref href="../Configuration/DCConfig.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

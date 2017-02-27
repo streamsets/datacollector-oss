@@ -12,14 +12,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
-<map>
- <title>What's New</title>
-    <topicref href="../WhatsNew/WhatsNew_Title.dita" chunk="to-content">
-        <topicref href="../WhatsNew/2400.dita"/>
-        <topicref href="../WhatsNew/2301.dita"/>
-        <topicref href="../WhatsNew/2300.dita"/>
-        <topicref href="../WhatsNew/2210.dita"/>
-        <topicref href="../WhatsNew/2200.dita"/>
-    </topicref>
-</map>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_fmv_npr_yy">
+ <title>Pipeline Ownership and Permissions</title>
+ <conbody>
+        <p>
+            <draft-comment author="Loretta">what else needs to be said?</draft-comment>
+        </p>
+ </conbody>
+</concept>

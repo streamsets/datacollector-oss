@@ -21,7 +21,7 @@
  <conbody>
   <p>To configure file-based authentication, perform the following tasks:</p>
         <ol id="ol_by2_dyt_5x">
-            <li>Configure file authentication properties.</li>
+            <li>Configure authentication properties.</li>
             <li>Configure <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> users, groups, and roles.</li>

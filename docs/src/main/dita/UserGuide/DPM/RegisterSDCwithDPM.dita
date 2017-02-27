@@ -59,6 +59,13 @@
             use an authenticated HTTP proxy server to access <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
             />.</p>
+        <p>Before you register a <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
+            perform the necessary prerequisites. The prerequisites include creating new <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+            users and groups. After registration, be sure to transfer permissions to the new <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+            users and groups.</p>
 
  </conbody>
 </concept>

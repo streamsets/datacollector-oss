@@ -23,7 +23,7 @@
       image shows the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console in
       data preview mode:</p>
-  <p><image href="../Graphics/CanvasPreview.png" id="image_w2r_ktq_kq" scale="85"/><table
+  <p><image href="../Graphics/CanvasPreview.png" id="image_w2r_ktq_kq" scale="65"/><table
         frame="all" rowsep="1" colsep="1" id="table_nrm_fvt_sq">
         <tgroup cols="3">
           <colspec colname="c1" colnum="1" colwidth="1*"/>
@@ -121,6 +121,13 @@
                 /></entry>
               <entry>Close Preview icon</entry>
               <entry>Closes the data preview.</entry>
+            </row>
+            <row>
+              <entry><image href="../Graphics/icon-Share.png" id="image_eqt_wbv_xy" scale="90"
+                /></entry>
+              <entry>Share icon</entry>
+              <entry>Shares the pipeline with users and groups. Use to configure pipeline
+                permissions.</entry>
             </row>
           </tbody>
         </tgroup>

@@ -21,15 +21,21 @@
         when you no longer want to use that <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         installation with <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>. When
-        you restart an unregistered <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, you
-        use your <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-        /> user account to log in. </shortdesc>
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>. </shortdesc>
  <conbody>
   <p><indexterm>Data Collector<indexterm>unregistering from
                     DPM</indexterm></indexterm><indexterm>DPM<indexterm>unregistering Data
-                    Collector</indexterm></indexterm>You can unregister a <ph
+                    Collector</indexterm></indexterm>When you restart an unregistered <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
+            previously-configured <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            user accounts become immediately available unless changed in the interim. Use your <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            user account to log in.</p>
+        <p>Pipeline permissions, however, are not automatically reverted. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-TransferPerms-Unregister"
+            /></p>
+        <p>You can unregister a <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             from the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
