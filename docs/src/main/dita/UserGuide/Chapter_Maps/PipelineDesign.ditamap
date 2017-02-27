@@ -52,6 +52,7 @@
    <topicref href="../Pipeline_Design/CDC-ProcessingRecords.dita"/>
    <topicref href="../Pipeline_Design/CDC-UseCases.dita"/>
   </topicref>
+  <topicref href="../Pipeline_Design/FieldAttributes.dita"/>
   <topicref href="../Pipeline_Design/DelimitedDataRootFieldTypes.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

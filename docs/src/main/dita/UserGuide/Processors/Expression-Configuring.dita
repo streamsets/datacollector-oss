@@ -68,7 +68,7 @@
                 </cmd>
             </step>
             <step>
-                <cmd>To configure a header attribute expression, configure the following
+                <cmd>To configure a record header attribute expression, configure the following
                     information:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_kcj_xhq_f5">
@@ -77,18 +77,18 @@
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
-                                    <entry>Header Attribute Expression Property</entry>
+                                    <entry>Record Header Attribute Expression Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Header Attribute  <xref
+                                    <entry>Header Attribute <xref
                                             href="Expression-HeaderAttributeExp.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_off_qlq_f5"/></xref></entry>
                                     <entry>
-                                        <p>The header attribute to pass the results of the
+                                        <p>The record header attribute to pass the results of the
                                             expression to the next stage. Enter the name of a new or
                                             existing attribute as follows: &lt;attribute name>. </p>
                                         <p>When you use an existing attribute, the Expression
@@ -114,6 +114,49 @@
             </step>
             <step>
                 <cmd>To add additional header attribute expressions, click the
+                        <uicontrol>Add</uicontrol> icon. </cmd>
+            </step>
+            <step>
+                <cmd>To configure a field attribute expression, configure the following
+                    information:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_aqw_zsr_1z">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Field Attribute Expression Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Field Attribute <xref
+                                            href="Expression-FieldAttributeExp.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_bqw_zsr_1z"/></xref></entry>
+                                    <entry>
+                                        <p>The field attribute to pass the results of the expression
+                                            to the next stage. Enter the name of a new or existing
+                                            attribute as follows: &lt;attribute name>. </p>
+                                        <p>When you use an existing attribute, the Expression
+                                            Evaluator replaces existing values.</p>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Expression</entry>
+                                    <entry>Expression to evaluate. <p
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EEditor"
+                                        /></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>To add additional field attribute expressions, click the
                         <uicontrol>Add</uicontrol> icon. </cmd>
             </step>
         </steps>

@@ -108,9 +108,10 @@
                                             to destination or executor stages.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Show Record Header</entry>
-                                    <entry>Displays record metadata in List view. Headers do not
-                                        display in Table view.</entry>
+                                    <entry>Show Record/Field Header</entry>
+                                    <entry>Displays record header attributes and field attributes
+                                        when in List view. Attributes do not display in Table
+                                        view.</entry>
                                 </row>
                                 <row>
                                     <entry>Show Field Type</entry>
