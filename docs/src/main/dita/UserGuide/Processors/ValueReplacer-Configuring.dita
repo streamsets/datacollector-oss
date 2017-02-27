@@ -51,28 +51,28 @@
                                     </entry>
                                     <entry>One or more fields to replace with null values. Configure
                                         the following properties:<ul id="ul_ec3_2cl_3y">
-                                            <li>Fields - The fields to use.</li>
+                                            <li>Fields - The fields to use.<note
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/tip-asterisk"
+                                                /></li>
                                             <li>Condition - An optional condition to use to replace
                                                 values with null values. When omitted, the processor
                                                 replaces all values in the field with null values.
                                                   <p>Use an expression, such as:
                                                   <codeph>${str:length(record:value('/stringField'))
                                                   == 0}</codeph></p></li>
-                                        </ul><p
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/wildcard"
-                                        /></entry>
+                                        </ul></entry>
                                 </row>
                                 <row>
                                     <entry>Replace Null Values</entry>
                                     <entry>Replaces null values with constants. Click
                                             <uicontrol>Add</uicontrol> to include more fields.
                                         Configure the following properties:<ul id="ul_sq3_fcg_zq">
-                                            <li>Fields to Replace - Name of the field to use.</li>
+                                            <li>Fields to Replace - Name of the field to use.<note
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/tip-asterisk"
+                                                /></li>
                                             <li>Replacement Value - Constant to replace null values
                                                 in the field. </li>
-                                        </ul><p
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/wildcard"
-                                        /></entry>
+                                        </ul></entry>
                                 </row>
                                 <row>
                                     <entry>Conditionally Replace Values <xref
@@ -84,15 +84,15 @@
                                     <entry>Replaces the specified values with constants. Click
                                             <uicontrol>Add</uicontrol> to include more fields.
                                         Configure the following properties:<ul id="ul_vqp_sjs_3x">
-                                            <li>Fields to Replace - Name of the field to use.</li>
+                                            <li>Fields to Replace - Name of the field to use.<note
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/tip-asterisk"
+                                                /></li>
                                             <li>Operator - Operator to use for the condition. </li>
                                             <li>Comparison Value - Constant to use for the
                                                 condition.</li>
                                             <li>Replacement Value - Constant to replace values that
                                                 match the condition. </li>
-                                        </ul><p
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/wildcard"
-                                        /></entry>
+                                        </ul></entry>
                                 </row>
                                 <row>
                                     <entry>Field Does Not Exist</entry>

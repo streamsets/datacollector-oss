@@ -139,11 +139,26 @@
                         several processors (Expression Evaluator, Field Converter, Field Hasher, -
                         whichever ones allow wildcard use:</draft-comment>
             </p>
-            <p id="wildcard">You can use the asterisk wildcard to represent array indices and map
-                  elements. <xref
-                        href="../Pipeline_Configuration/WildcardsArraysMaps.dita#concept_vqr_sqc_wr"
-                              ><image href="../Graphics/icon_moreInfo.png" scale="10"/>
-                  </xref>
+            <p id="wildcard"><ph id="ph-wildcard">You can use the asterisk wildcard to represent
+                        array indices and map elements. <xref
+                              href="../Pipeline_Configuration/WildcardsArraysMaps.dita#concept_vqr_sqc_wr"
+                                    ><image href="../Graphics/icon_moreInfo.png" scale="10"
+                                    id="image_ukp_2dt_bz"/>
+                        </xref></ph>
+            </p>
+            <p>
+                  <draft-comment author="Loretta">The following tip is used several times in
+                        Configuring the Value Replacer.</draft-comment>
+            </p>
+            <p>
+                  <note type="tip" id="tip-asterisk">To use all fields, you can use the asterisk
+                        wildcard as follows: <codeph>/*</codeph>. You can also use the asterisk
+                        wildcard to represent array indices and map elements. <ph><xref
+                                    href="../Pipeline_Configuration/WildcardsArraysMaps.dita#concept_vqr_sqc_wr"
+                                          ><image href="../Graphics/icon_moreInfo.png" scale="10"
+                                          id="image_phy_rdt_bz"/>
+                              </xref></ph>
+                  </note>
             </p>
             <p>
                   <draft-comment author="Loretta"><uicontrol>DataFormats-ALL</uicontrol> - <b>no
