@@ -668,9 +668,9 @@
                               <codeph>msg</codeph>. You can also use a simplified XPath expression
                         to specify the location of the delimiter element, such as
                               <codeph>/root/*/msg</codeph>.</ph></p>
-            <p id="XML-p-MultRec2">Use an XML element when the element resides directly under the
-                  root node. Use a simplified XPath expression to access data deeper in the XML
-                  document.</p>
+            <p id="XML-p-MultRec2"><ph id="XML-ph-MultRec2">Use an XML element when the element
+                        resides directly under the root node. Use a simplified XPath expression to
+                        access data deeper in the XML document.</ph></p>
             <p>
                   <draft-comment author="Loretta">XML syntax - The following ph and code are used in
                         the XPath Syntax and Node Predicates topics.</draft-comment>
