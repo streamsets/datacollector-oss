@@ -21,12 +21,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root-lib</artifactId>
-    <version>2.2.1.0</version>
+    <version>2.2.1.0-0001</version>
     <relativePath>../root-lib</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-sdc-elasticsearch-5</artifactId>
-  <version>2.2.1.0</version>
+  <version>2.2.1.0-0001</version>
   <description>StreamSets Data Collector SDC ElasticSearch 5</description>
   <name>StreamSets Data Collector SDC elasticsearch 5</name>
   <packaging>jar</packaging>
