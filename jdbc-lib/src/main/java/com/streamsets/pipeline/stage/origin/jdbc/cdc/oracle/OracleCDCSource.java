@@ -109,7 +109,7 @@ public class OracleCDCSource extends BaseSource {
   // (which means we are executing for the first time), or it is no longer valid, so select
   // only the ones that are > than the cachedSCN.
   private static final String GET_OLDEST_SCN =
-      "SELECT FIRST_CHANGE# from V$ARCHIVED_LOG WHERE FIRST_CHANGE# > ? ORDER BY FIRST_CHANGE#";
+      "SELECT FIRST_CHANGE#, STATUS from V$ARCHIVED_LOG WHERE STATUS = 'A' AND FIRST_CHANGE# > ? ORDER BY FIRST_CHANGE#";
   private static final String SWITCH_TO_CDB_ROOT = "ALTER SESSION SET CONTAINER = CDB$ROOT";
   private static final String PREFIX = "oracle.cdc.";
   private static final String SCN = PREFIX + "scn";
