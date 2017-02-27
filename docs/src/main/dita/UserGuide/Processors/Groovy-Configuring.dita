@@ -100,6 +100,15 @@
                                     <entry>Script</entry>
                                     <entry>Groovy code to use in the processor.</entry>
                                 </row>
+                                <row>
+                                    <entry>Enable invokedynamic Compiler Option</entry>
+                                    <entry>Enables the use of the invokedynamic bytecode
+                                        instruction. <p>This can affect performance differently
+                                            depending on the use case. For more information about
+                                            Groovy invokedynamic support, see <xref
+                                                href="http://groovy-lang.org/indy.html"
+                                                format="html" scope="external"/>.</p></entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>
