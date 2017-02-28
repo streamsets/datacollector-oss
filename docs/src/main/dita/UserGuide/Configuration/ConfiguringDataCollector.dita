@@ -350,9 +350,22 @@
                             </row>
                             <row>
                                 <entry>ui.header.title</entry>
-                                <entry>Optional text to display in the <ph
+                                <entry>Optional custom header to display in the <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    /> console next to the StreamSets logo.</entry>
+                                    /> console next to the StreamSets logo. You can create a header
+                                    using HTML and include an additional image. <p>To use an image,
+                                        place the file in a directory local to the following
+                                        directory:
+                                        <codeph>$SDC_DIST/sdc-static-web/</codeph></p><p>For
+                                        example, to add custom text, you might use the following
+                                        HTML: </p><p>
+                                        <codeblock>&lt;span class="navbar-brand">Dev Data Collector&lt;/span></codeblock>
+                                    </p><p>Or to use an image in the
+                                            <codeph>$SDC_DIST/sdc-static-web/</codeph> directory,
+                                        you can use the following HTML:
+                                        <codeblock>&lt;img src="&lt;filename>.&lt;extension>"></codeblock></p><p>We
+                                        recommend using an image no more than 48 pixels
+                                    high.</p></entry>
                             </row>
                             <row>
                                 <entry>ui.local.help.base.url</entry>
