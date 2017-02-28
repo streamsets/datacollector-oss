@@ -129,7 +129,7 @@
                     <dd>
                         <ul id="ul_v5w_mhk_fy">
                             <li><xref
-                                    href="../Installation/CoreInstall-LibList.dita#concept_evs_xkm_s5"
+                                    href="../Installation/AvailableStageLibraries.dita#concept_evs_xkm_s5"
                                     >New stage libraries</xref>. Data Collector now supports the
                                 following stage libraries: <ul id="ul_oxv_nhk_fy">
                                     <li>Apache Kudu version 1.0.x - Earlier Kudu versions are no

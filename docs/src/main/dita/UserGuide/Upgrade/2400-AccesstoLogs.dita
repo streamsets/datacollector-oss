@@ -23,6 +23,6 @@
         <p>Note that the Admin role enables performing any <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             task and access to all pipelines, so avoid granting the Admin role unless necessary.</p>
-        <p>For more information about roles, see <xref href="Roles.dita#concept_zyl_qld_yy"/>.</p>
+        <p>For more information about roles, see <xref href="../Configuration/Roles.dita#concept_zyl_qld_yy"/>.</p>
  </conbody>
 </concept>

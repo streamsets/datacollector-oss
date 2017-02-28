@@ -58,6 +58,6 @@
                 and can uninstall a stage library. However, you cannot view all stage libraries or
                 install an additional stage library.</note></p>
         <p>For information about the stages installed with each stage library, see <xref
-                href="CoreInstall-LibList.dita"/>.</p>
+                href="AvailableStageLibraries.dita"/>.</p>
  </conbody>
 </concept>
