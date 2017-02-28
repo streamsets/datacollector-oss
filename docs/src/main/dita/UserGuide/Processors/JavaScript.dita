@@ -37,6 +37,6 @@
             JavaScript Evaluator performs as expected, use the same version of Java in development
             and production.</p>
         <p>The JavaScript Evaluator provides extensive sample code that you can use to develop your
-            script. </p>
+            script. You can also call external Java code from the script.</p>
  </conbody>
 </concept>

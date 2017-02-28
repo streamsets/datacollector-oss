@@ -965,7 +965,7 @@ web-0011.log</codeblock></dd>
             <p><ph id="ph-JDBCdriver">install the JDBC driver for the database. You cannot access
                         the database until you install the required driver. </ph></p>
             <p id="p-JDBCdriver-link">For more information about installing drivers, see <xref
-                        href="../Configuration/AdditionalDrivers.dita#concept_pdv_qlw_ft"/>.</p>
+                        href="../Configuration/ExternalLibs.dita#concept_pdv_qlw_ft"/>.</p>
             <p/>
             <p>
                   <draft-comment author="Loretta">Oracle CDC Client uses this in Initial Change and
@@ -2269,24 +2269,6 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                               properties in the origin.</dd>
                   </dlentry>
             </dl>
-            <draft-comment author="alisontaylor">Additional Drivers: used by main install and
-                  Cloudera Manager install</draft-comment>
-            <p id="AdditionalDrivers_list">Before you use the following stages, you need to install drivers for the implementation that
-                  you want to use: <ul id="ul_k3t_mrw_jx">
-                        <li>JMS Consumer origin</li>
-                        <li>JDBC Multitable Consumer origin</li>
-                        <li>MySQL Binary Log origin</li>
-                        <li>Oracle CDC Client origin</li>
-                        <li>JDBC Query Consumer origin</li>
-                        <li>JDBC Lookup processor</li>
-                        <li>JDBC Tee processor</li>
-                        <li>JDBC Producer destination</li>
-                        <li>JDBC Query executor</li>
-                  </ul></p>
-            <p id="AdditionalDrivers_example">For example, to use the JDBC Query Consumer or the
-                  JDBC Producer with Oracle, install the Oracle JDBC drivers.</p>
-            <p id="AdditionalDrivers_optional">Additional drivers for other stages are optional. For example, you can install custom classes
-                  for the JavaScript or Jython Evaluators. </p>
             <draft-comment author="alisontaylor"><uicontrol>Tip_Usernames</uicontrol> Used in
                   username/password properties for all stages. <uicontrol>Tip_AccessKeys</uicontrol>
                   used in AWS Credentials topic for AWS stages. <uicontrol>Tip_Passwords</uicontrol>

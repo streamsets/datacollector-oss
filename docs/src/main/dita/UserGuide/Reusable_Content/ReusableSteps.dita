@@ -4508,58 +4508,6 @@ chmod 644 /opt/cloudera/csd/STREAMSETS*.jar</codeblock></info>
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="alisontaylor">The following three steps are conref'd in
-                        Installing Additional Drivers in the Install chapter, in the Spark
-                        Evaluator, and in the Google Bigtable destination.</draft-comment>
-                </cmd>
-            </step>
-            <step id="InstallDrivers_EnvConfig_step">
-                <cmd>In the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> environment configuration file, <codeph>sdc-env.sh</codeph> or
-                        <codeph>sdcd-env.sh</codeph> located in the
-                        <codeph>$SDC_DIST/libexec</codeph> directory, add the
-                    STREAMSETS_LIBRARIES_EXTRA_DIR environment variable and point it to the external
-                    directory, as follows:</cmd>
-                <info>
-                    <codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR="&lt;external directory>"</codeblock>
-                    <p>For example: </p>
-                    <codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR="/opt/sdc-extras/"</codeblock>
-                </info>
-            </step>
-            <step id="InstallDrivers_Security_step">
-                <cmd>When using the Java Security Manager, which is enabled by default, update the
-                        <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> security policy to include the external directory as follows:</cmd>
-                <substeps id="substeps_vpt_nlr_cy">
-                    <substep>
-                        <cmd>In the <ph
-                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                            /> configuration directory, open the security policy file,
-                                <codeph>$SDC_CONF/sdc-security.policy</codeph>.</cmd>
-                    </substep>
-                    <substep>
-                        <cmd>Add the following lines to the file:</cmd>
-                        <info><codeblock>// user-defined external directory
-grant codebase "file://&lt;external directory>-" {
-  permission java.security.AllPermission;
-};</codeblock>For
-                            example:
-                            <codeblock>// user-defined external directory
-grant codebase "file:///opt/sdc-extras/-" {
-  permission java.security.AllPermission;
-};</codeblock></info>
-                    </substep>
-                </substeps>
-            </step>
-            <step id="InstallDrivers_Restart_step">
-                <cmd>Restart <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> to enable the changes.</cmd>
-            </step>
-            <step>
-                <cmd>
                     <draft-comment author="alisontaylor">The following two steps are reused in the
                         Tarball and RPM upgrade section - Update the Configuration
                         Files</draft-comment>

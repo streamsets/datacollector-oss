@@ -15,9 +15,9 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_dr2_gvd_1y">
     <title>Installing the Application</title>
-    <shortdesc>Install the Spark application JAR file as an additional library for <ph
+    <shortdesc>Install the Spark application JAR file as an external library for <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. If
-        your custom Spark application depends on additional libraries other than the
+        your custom Spark application depends on external libraries other than the
         streamsets-datacollector-api, streamsets-datacollector-spark-api, and spark-core libraries,
         install those libraries in the same location as well. </shortdesc>
     <taskbody>
@@ -27,52 +27,14 @@
                 about the Dependency Plugin, see <xref
                     href="http://maven.apache.org/plugins/maven-dependency-plugin/" format="html"
                     scope="external"/>.</note>
+            <p>To install an external library for the Spark Evaluator, see <xref
+                    href="../Configuration/ExternalLibs.dita#concept_pdv_qlw_ft"/>.</p>
+            <p>
+                <note>The Spark Evaluator processor is included in the Cloudera CDH stage libraries.
+                    When you install external libraries for the processor, you must make them
+                    accessible to the appropriate Cloudera CDH stage library.</note>
+            </p>
         </context>
-        <steps>
-            <step>
-                <cmd>Create a local directory external to the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> installation directory for the Spark application JAR files. Use an external
-                    directory to enable use of the Spark applications after <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> upgrades.</cmd>
-                <info>For example, if you installed <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> in the following directory:<codeblock>/opt/sdc/</codeblock><p>you might
-                        create the external directory at:
-                    <codeblock>/opt/sdc-extras</codeblock></p></info>
-            </step>
-            <step>
-                <cmd>Create a subdirectory for the stage library that you are using for the Spark
-                    Evaluator processor, as follows:</cmd>
-                <info>
-                    <codeblock>/opt/sdc-extras/&lt;stage library name>/lib/</codeblock>
-                    <p>For example, if you are using the Spark Evaluator processor included in the
-                        stage library for the Cloudera CDH version 5.9 distribution of Hadoop,
-                        create the following
-                        subdirectory:<codeblock>/opt/sdc-extras/streamsets-datacollector-cdh_5_9-lib/lib/</codeblock></p>
-                </info>
-            </step>
-            <step>
-                <cmd>Copy the Spark application JAR file and any dependent libraries to the
-                    subdirectory.</cmd>
-            </step>
-            <step
-                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/InstallDrivers_EnvConfig_step">
-                <cmd/>
-            </step>
-            <step
-                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/InstallDrivers_Security_step">
-                <cmd/>
-            </step>
-            <step
-                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/InstallDrivers_Restart_step">
-                <cmd/>
-            </step>
-        </steps>
     </taskbody>
-    <related-links>
-        <link href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"/>
-    </related-links>
     
 </task>

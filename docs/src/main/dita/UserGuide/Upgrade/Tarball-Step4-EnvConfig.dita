@@ -102,7 +102,7 @@
                 </info>
             </step>
             <step>
-                <cmd>If you installed additional drivers or developed custom stages, add the
+                <cmd>If you installed external libraries or developed custom stages, add the
                     STREAMSETS_LIBRARIES_EXTRA_DIR or USER_LIBRARIES_DIR environment variable to the
                     environment configuration file, and set it to the same directory used in the
                     previous version.</cmd>

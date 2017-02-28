@@ -115,6 +115,7 @@
     <topicref href="../Processors/Groovy-ViewingHeaderAttributes.dita"/>
    </topicref>
    <topicref href="../Processors/Groovy_WholeFiles.dita"/>
+   <topicref href="../Processors/Groovy-CallingExternalLibs.dita"/>
    <topicref href="../Processors/Groovy_Permissions.dita"/>
    <topicref href="../Processors/Groovy-Configuring.dita"/>
    </topicref>
@@ -173,6 +174,7 @@
     <topicref href="../Processors/JavaScript-ViewingHeaderAttributes.dita"/>
    </topicref>
    <topicref href="../Processors/JavaScript_WholeFiles.dita"/>
+   <topicref href="../Processors/JavaScript-CallingExternalLibs.dita"/>
    <topicref href="../Processors/JavaScript-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/JDBCLookup.dita" chunk="to-content">
@@ -202,6 +204,7 @@
     <topicref href="../Processors/Jython-ViewingHeaderAttributes.dita"/>
    </topicref>
    <topicref href="../Processors/Jython-WholeFiles.dita"/>
+   <topicref href="../Processors/Jython-CallingExternalLibs.dita"/>
    <topicref href="../Processors/Jython-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/LogParser.dita" chunk="to-content">

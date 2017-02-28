@@ -26,6 +26,7 @@
    of data to the processor and converts the data to a scripting-friendly data structure for
    processing.</p>
     <p>You can configure the processor to use the invokedynamic bytecode instruction. </p>
-    <p>The processor provides extensive sample code that you can use to develop your script. </p>
+    <p>The processor provides extensive sample code that you can use to develop your script. You can
+      also call external Java code from the script.</p>
  </conbody>
 </concept>

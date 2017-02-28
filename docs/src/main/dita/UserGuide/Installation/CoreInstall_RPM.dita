@@ -12,13 +12,73 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_fbq_zd3_dx">
- <title>Core RPM Installation</title>
- <conbody>
-  <p><indexterm>installation<indexterm>core RPM</indexterm></indexterm>To install the core version
-            of <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-            />, you can download the RPM package. After you perform the core installation and
-            launch, you can then install individual stage libraries as needed.</p>
- </conbody>
-</concept>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="task_ijj_cvr_kv">
+    <title>Installing the Core RPM Package</title>
+    <shortdesc>To install the core version of <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
+        download the RPM package. After you perform the core installation and launch, install
+        individual stage libraries as needed. </shortdesc>
+    <taskbody>
+        <prereq>
+            <p><indexterm>installation<indexterm>core RPM</indexterm></indexterm>When you install
+                from the RPM package, <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> uses the default directories and the default system user and group.</p><p>The default system user and group are named sdc. If an sdc user and an sdc group do not exist on
+                the machine, the installation creates the user and group for you and assigns them
+                the next available user ID and group ID.</p>
+            <note type="tip">To use specific IDs for the sdc user and group, create the user and
+                group before installation and specify the IDs that you want to use. For example, if
+                you’re installing <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> on multiple machines, you might want to create the system user and group before
+                installation to ensure that the user ID and group ID are consistent across the
+                machines.</note></prereq>
+        <context/>
+        <steps>
+            <step>
+                <cmd>Use the following URL to download the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> RPM package from the StreamSets website: <xref
+                        href="https://streamsets.com/opensource" format="html" scope="external"
+                    />.</cmd>
+            </step>
+            <step>
+                <cmd>Use the following command to extract the file to the desired location:</cmd>
+                <info>
+                    <codeblock>tar -xzf streamsets-datacollector-&lt;version>-all-rpms.tgz</codeblock>
+                    <p>For example, to extract version 2.3.0.0, use the following
+                        command:<codeblock>tar -xzf streamsets-datacollector-2.3.0.0-all-rpms.tgz</codeblock></p>
+                </info>
+            </step>
+            <step>
+                <cmd>Use the following command to install the core <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> RPM package:</cmd>
+                <info>
+                    <codeblock>yum localinstall streamsets-datacollector-&lt;version>-1.noarch.rpm</codeblock>
+                    <p>For example, to install version 2.3.0.0, use the following
+                        command:<codeblock>yum localinstall streamsets-datacollector-2.3.0.0-1.noarch.rpm</codeblock></p>
+                </info>
+            </step>
+            <step>
+                <cmd>To start <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> as a service, use the following command:</cmd>
+                <info>
+                    <codeblock>service sdc start</codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd id="AccessDC">To access the <ph>Data Collector</ph> console, enter the
+                    following URL in the address bar of your browser: </cmd>
+                <info>
+                    <codeblock>http://&lt;system-ip>:18630/</codeblock>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+    <related-links>
+        <link href="AddtionalStageLibs.dita#concept_fb2_qmn_bz"/>
+    </related-links>
+</task>

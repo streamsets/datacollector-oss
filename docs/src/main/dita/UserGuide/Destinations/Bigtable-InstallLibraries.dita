@@ -16,50 +16,15 @@
 <task id="task_jcl_z1l_1y">
     <title>Install the BoringSSL Library</title>
     <shortdesc>The Google Bigtable destination requires the BoringSSL library. You must download and
-        install the library so that <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can
-        access it.</shortdesc>
+        install the external library so that the Google Bigtable destination can access
+        it.</shortdesc>
     <taskbody>
-        <steps>
-            <step>
-                <cmd>Create a local directory external to the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> installation directory for the additional library. Use an external directory
-                    to enable use of the library after Data Collector upgrades.</cmd>
-                <info>
-                    <p>For example, if you installed <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> in the following directory:<codeblock>/opt/sdc/</codeblock></p>
-                    <p>you might create the external directory
-                        at:<codeblock>/opt/sdc-extras</codeblock></p>
-                </info>
-            </step>
-            <step>
-                <cmd>Create a subdirectory for the Google Cloud Bigtable stage library, as
-                    follows:</cmd>
-                <info>
-                    <codeblock>/opt/sdc-extras/streamsets-datacollector-bigtable-lib/lib/</codeblock>
-                </info>
-            </step>
-            <step>
-                <cmd>Download the BoringSSL library from the following location and save it to the
-                    subdirectory you just created:</cmd>
-                <info><xref
-                        href="https://repo1.maven.org/maven2/io/netty/netty-tcnative-boringssl-static/1.1.33.Fork19/netty-tcnative-boringssl-static-1.1.33.Fork19.jar"
-                        format="jar" scope="external"/></info>
-            </step>
-            <step
-                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/InstallDrivers_EnvConfig_step">
-                <cmd/>
-            </step>
-            <step
-                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/InstallDrivers_Security_step">
-                <cmd/>
-            </step>
-            <step
-                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/InstallDrivers_Restart_step">
-                <cmd/>
-            </step>
-        </steps>
+        <context id="context_m2h_dpt_bz"><p>Download the BoringSSL library from the following
+            location:</p>
+            <p><xref
+                    href="https://repo1.maven.org/maven2/io/netty/netty-tcnative-boringssl-static/1.1.33.Fork19/netty-tcnative-boringssl-static-1.1.33.Fork19.jar"
+                    format="jar" scope="external"/></p><p>Install the library as described in <xref
+                    href="../Configuration/ExternalLibs.dita#concept_pdv_qlw_ft"/>.</p></context>
+       
     </taskbody>
 </task>
