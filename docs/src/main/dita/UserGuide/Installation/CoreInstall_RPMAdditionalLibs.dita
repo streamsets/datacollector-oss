@@ -14,17 +14,11 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_amc_cf3_dx">
- <title>Install Additional RPM Libraries</title>
+ <title>Installing for RPM</title>
  <conbody>
   <p><indexterm>core RPM install<indexterm>installing additional
-            libraries</indexterm></indexterm>Install additional libraries to use stages that are not
-            included in the core installation. This is an optional step, but generally you'll want
-            to install additional libraries to process data.<note>You must perform additional steps
-                to install the MapR stage libraries, as described in <xref
-                    href="MapR-Prerequisites.dita#concept_jgs_qpg_2v"/>.</note></p>
-        <p>For a complete list of the stages installed with each stage library, see <xref
-                href="CoreInstall-LibList.dita"/>.</p>
-        <p>Use the following commands to install additional libraries:</p>
+            libraries</indexterm></indexterm>Use the following commands to install additional stage
+            libraries for an RPM installation:</p>
         <dl>
             <dlentry>
                 <dt>To install one or more stage libraries:</dt>

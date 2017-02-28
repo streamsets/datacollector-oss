@@ -79,11 +79,15 @@
    <topicref href="../Configuration/RuntimeResources-Defining.dita"/>
    <topicref href="../Configuration/RuntimeResources-Calling.dita"/>
   </topicref>
-  <topicref href="../Configuration/AdditionalDrivers.dita" chunk="to-content">
+  <topicref href="../Configuration/ExternalLibs.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Configuration/AdditionalDrivers-Installing.dita"/>
+   <topicref href="../Configuration/ExternalLibs-Step1.dita">
+    <topicref href="../Configuration/ExternalLibs-SetUpExternalDir.dita"/>
+    <topicref href="../Configuration/ExternalLibs-SetUpExternalDir-CM.dita"/>
+   </topicref>
+   <topicref href="../Configuration/ExternalLibs-Step2.dita"/>
   </topicref>
   <topicref href="../Configuration/CustomStageLibraries.dita" chunk="to-content">
    <topicmeta>

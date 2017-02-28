@@ -28,6 +28,6 @@
       batch of data to the processor and converts the data to a scripting-friendly data structure
       for processing.</p>
         <p>The Jython Evaluator provides extensive sample code that you can use to develop your
-            script. </p>
+            script. You can also call external Java code from the script.</p>
  </conbody>
 </concept>

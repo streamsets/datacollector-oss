@@ -20,7 +20,7 @@
             Oracle CDC Client origin connects to Oracle through JDBC. You cannot access the database
             until you install the required driver. </p>
         <p>Install the Oracle JDBC driver for the Oracle database version that you use. For more
-            information, see <xref
-                href="../Configuration/AdditionalDrivers.dita#concept_pdv_qlw_ft"/>.</p>
+            information, see <xref href="../Configuration/ExternalLibs.dita#concept_pdv_qlw_ft"
+            />.</p>
  </conbody>
 </concept>

@@ -3,28 +3,37 @@
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-  
+
       http://www.apache.org/licenses/LICENSE-2.0
-      
+
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_wcw_1lm_bx">
- <title>Core Tarball Installation</title>
-    <conbody>
-            <p><indexterm>installation<indexterm>core tarball</indexterm></indexterm>To install the
-            core version of <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
-            you can download the core tarball. After you perform the core installation and launch,
-            you install individual stage libraries as needed. You can install additional tarball
-            libraries using the Package Manager within <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> or
-            using the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            command line program.</p>
-    </conbody>
-</concept>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_eyy_qbn_s5">
+    <title>Installing the Core Tarball</title>
+    <shortdesc>To install the core version of <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
+        download the core tarball. After you perform the core installation and launch, install
+        individual stage libraries as needed. </shortdesc>
+    <taskbody>
+        <context>
+            <p><indexterm>installation<indexterm>core tarball</indexterm></indexterm>Download the
+                core installation tarball from the StreamSets website, and then use one of the
+                following installation methods to install the core <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    />:<ul id="ul_uzc_vbn_s5">
+                    <li>Install and launch manually. For details, see <xref
+                            href="Installing_the_DC.dita#task_bt1_zcp_kq"/>.</li>
+                    <li>Install and launch as a service. For details, see <xref
+                            href="Installing_the_DC-ServiceTarball.dita#task_pnf_344_1r"/>. </li>
+                </ul></p>
+        </context>
+    </taskbody>
+    <related-links>
+        <link href="AddtionalStageLibs.dita#concept_fb2_qmn_bz"/>
+    </related-links>
+</task>

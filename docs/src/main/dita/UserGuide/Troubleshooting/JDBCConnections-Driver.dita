@@ -21,8 +21,7 @@
             displays:<codeblock>JDBC_00 - Cannot connect to specified database: com.streamsets.pipeline.api.StageException:
 JDBC_06 - Failed to initialize connection pool: java.sql.SQLException: No suitable driver</codeblock></p>
         <p>Verify that you have followed the instructions to install additional drivers, as
-            explained in <xref
-                href="../Configuration/AdditionalDrivers-Installing.dita#task_idl_hqw_ft"/>. </p>
+            explained in <xref href="../Configuration/ExternalLibs.dita#concept_pdv_qlw_ft"/>. </p>
         <p>You can also use these additional tips to help resolve the issue:</p>
         <dl>
             <dlentry>

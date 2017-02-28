@@ -38,15 +38,16 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Installation/CoreInstall_RPM.dita">
-    <topicref href="../Installation/CoreInstall_RPMStep1.dita"/>
-    <topicref href="../Installation/CoreInstall_RPMStep2.dita"/>
-   </topicref>
-   <topicref href="../Installation/CoreInstall_Tarball.dita">
-    <topicref href="../Installation/CoreInstall_TarballInstall.dita"/>
-    <topicref href="../Installation/CoreInstall-Tarball-LibsPackageMgr.dita"/>
-    <topicref href="../Installation/CoreInstall-Tarball-LibsCommand.dita"/>
-   </topicref>
+   <topicref href="../Installation/CoreInstall_RPM.dita"/>
+   <topicref href="../Installation/CoreInstall_Tarball.dita"/>
+  </topicref>
+  <topicref href="../Installation/AddtionalStageLibs.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Installation/CoreInstall_RPMAdditionalLibs.dita"/>
+   <topicref href="../Installation/CoreInstall-Tarball-LibsPackageMgr.dita"/>
+   <topicref href="../Installation/CoreInstall-Tarball-LibsCommand.dita"/>
    <topicref href="../Installation/CoreInstall-LibList.dita"/>
   </topicref>
   <topicref href="../Installation/Installing_the_DC-Docker.dita" chunk="to-content">
@@ -64,7 +65,6 @@
    <topicref href="../Installation/CM-Step4-StreamSetsService.dita"/>
    <topicref href="../Installation/ClouderaManager-SDCConfigs.dita"/>
    <topicref href="../Installation/CM-EnableKerberos.dita"/>
-   <topicref href="../Installation/AdditionalDrivers-Installing-CM.dita"/>
    <topicref href="../Installation/CustomStageLibraries-Storing-CM.dita"/>
   </topicref>
   <topicref href="../Installation/MapR-Prerequisites.dita">

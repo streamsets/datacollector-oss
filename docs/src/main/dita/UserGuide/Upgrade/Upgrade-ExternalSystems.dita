@@ -44,7 +44,7 @@
                         href="../Installation/CoreInstall-Tarball-LibsCommand.dita#concept_bnl_n3n_s5"
                         />.<p>For an RPM installation, you must use the command line to view or
                         install stage libraries, as described in <xref
-                            href="../Installation/CoreInstall_RPMStep2.dita#concept_amc_cf3_dx"
+                            href="../Installation/CoreInstall_RPMAdditionalLibs.dita#concept_amc_cf3_dx"
                         />.</p></info>
             </step>
             <step>

@@ -29,7 +29,7 @@
         <p>The core installation includes <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
             development stages, most processors, and the origins and destinations in the basic stage
-            library, such as Directory and Local FS. You can then use the <ph
+            library, such as Directory and Local FS. You then use the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             console or the command line interface to install additional stage libraries. </p>
         <p>The core installation includes the following origins:<draft-comment author="Loretta"
