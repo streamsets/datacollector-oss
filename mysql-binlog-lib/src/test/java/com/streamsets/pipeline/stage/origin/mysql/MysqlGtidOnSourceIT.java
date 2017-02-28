@@ -19,6 +19,26 @@
  */
 package com.streamsets.pipeline.stage.origin.mysql;
 
+import com.github.shyiko.mysql.binlog.GtidSet;
+import com.google.common.io.Resources;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.lib.operation.OperationType;
+import com.streamsets.pipeline.sdk.SourceRunner;
+import com.streamsets.pipeline.sdk.StageRunner;
+import org.hamcrest.Matchers;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.testcontainers.containers.BindMode;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.MySQLContainer;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static com.streamsets.pipeline.api.Field.create;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -26,26 +46,7 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import com.github.shyiko.mysql.binlog.GtidSet;
-import com.google.common.io.Resources;
-import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.sdk.SourceRunner;
-import com.streamsets.pipeline.sdk.StageRunner;
-import com.streamsets.pipeline.lib.operation.OperationType;
-import org.hamcrest.Matchers;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.Ignore;
-import org.testcontainers.containers.BindMode;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.MySQLContainer;
-
+@Ignore
 public class MysqlGtidOnSourceIT extends AbstractMysqlSource {
   @ClassRule
   public static GenericContainer gtid_on = new MySQLContainer("mysql:5.6")

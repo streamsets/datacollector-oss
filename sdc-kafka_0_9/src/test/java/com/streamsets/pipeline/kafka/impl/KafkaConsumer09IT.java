@@ -45,6 +45,7 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -60,6 +61,7 @@ public class KafkaConsumer09IT {
 
   private static final int NUM_MESSAGES = 10;
 
+  @Ignore
   @Test
   public void testKafkaConsumer09Version() throws IOException {
     SdcKafkaConsumer sdcKafkaConsumer = createSdcKafkaConsumer("", "", 0, null, null, "");
@@ -117,6 +119,7 @@ public class KafkaConsumer09IT {
     zookeeper.shutdown();
   }
 
+  @Ignore
   @Test
   public void testAssignedPartitionsOnRebalance() throws IOException, StageException {
     int zkConnectionTimeout = 6000;

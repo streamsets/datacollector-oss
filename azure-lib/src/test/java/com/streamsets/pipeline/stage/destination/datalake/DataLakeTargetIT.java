@@ -42,6 +42,7 @@ import java.util.List;
  * Currently tests do not include client auth because of lack of support in MockWebServer in https protocol
  * so we need to implement after auth requests in https/SSL if necessary
  */
+@Ignore
 public class DataLakeTargetIT {
   private static ADLStoreClient client = null;
   private static String accountFQDN;

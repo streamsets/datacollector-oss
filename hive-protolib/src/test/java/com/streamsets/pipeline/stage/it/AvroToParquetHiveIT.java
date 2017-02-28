@@ -45,6 +45,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hive.common.util.HiveVersionInfo;
 import org.junit.Assert;
 import org.junit.Assume;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -64,6 +65,7 @@ import java.util.Collections;
  * Parametrized test for each avro type to make sure that files converted from Avro to Parquet
  * are correctly readable from Hive itself.
  */
+@Ignore
 @RunWith(Parameterized.class)
 public class AvroToParquetHiveIT extends BaseHiveIT {
 
