@@ -21,17 +21,11 @@
         stages</indexterm></indexterm><indexterm>external libraries<indexterm>installing additional
           for stages</indexterm></indexterm><indexterm>third party libraries<indexterm>installing
           additional for stages</indexterm></indexterm>Before you use the following stages, install
-      JDBC drivers for the implementation that you want to use: <ul id="ul_k3t_mrw_jx">
-        <li>JMS Consumer origin</li>
-        <li>JDBC Multitable Consumer origin</li>
-        <li>MySQL Binary Log origin</li>
-        <li>Oracle CDC Client origin</li>
-        <li>JDBC Query Consumer origin</li>
-        <li>JDBC Lookup processor</li>
-        <li>JDBC Tee processor</li>
-        <li>JDBC Producer destination</li>
-        <li>JDBC Query executor</li>
-      </ul></p>
+      JDBC drivers for the implementation that you want to use: </p>
+   <ul conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_JDBCStages"
+     id="ul_f1l_fnb_cz">
+     <li/>
+   </ul>
     <p id="AdditionalDrivers_example">For example, to use the JDBC Query Consumer or the JDBC
       Producer with Oracle, install the Oracle JDBC drivers.</p>
     <p id="AdditionalDrivers_optional">You can also install external Java libraries to call external

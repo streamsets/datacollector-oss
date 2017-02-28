@@ -2481,6 +2481,20 @@ ${YY()}_${MM()}_${DD()}</codeblock>
             <p><ph id="ph-PermissionsDisabled">When pipeline permissions are disabled, access to
                         pipelines is based on the roles assigned to the user and its
                   groups.</ph></p>
+            <draft-comment author="alisontaylor">This ul is the list of stages that need external
+                  libs/drivers to use a JDBC connection. Used in Install External Libs in Config
+                  chapter and in JDBC Connections in Troubleshooting chapter</draft-comment>
+            <ul id="ul_JDBCStages">
+                  <li>JDBC Multitable Consumer origin</li>
+                  <li>JDBC Query Consumer origin</li>
+                  <li>JMS Consumer origin</li>
+                  <li>MySQL Binary Log origin</li>
+                  <li>Oracle CDC Client origin</li>
+                  <li>JDBC Lookup processor</li>
+                  <li>JDBC Tee processor</li>
+                  <li>JDBC Producer destination</li>
+                  <li>JDBC Query executor</li>
+            </ul>
 
       </conbody>
 </concept>

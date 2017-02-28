@@ -172,7 +172,11 @@
               <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
             </row>
             <row>
-              <entry>JDBC Consumer</entry>
+              <entry>JDBC Multitable Consumer</entry>
+              <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
+            </row>
+            <row>
+              <entry>JDBC Query Consumer</entry>
               <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
             </row>
             <row>
@@ -293,6 +297,10 @@
             </row>
             <row>
               <entry>MongoDB Oplog</entry>
+              <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
+            </row>
+            <row>
+              <entry>MySQL Binary Log</entry>
               <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
             </row>
             <row>
