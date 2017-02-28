@@ -2350,10 +2350,13 @@ ${YY()}_${MM()}_${DD()}</codeblock>
             </p>
             <draft-comment author="alisontaylor">Note is used in all places where we mention Java 7:
                   Permanent Generation Size and 2 topics in JavaScript Evaluator.</draft-comment>
-            <note id="Java7">Java 7 is supported but deprecated. Oracle announced the end of public updates for
-                  Java 7 in April 2015. StreamSets recommends migrating to Java 8, as Java 7 support
-                  will be removed in a future <ph conref="#concept_vhs_5tz_xp/pName-long"/>
-                  release.</note>
+            <note id="Java7">Java 7 is supported but deprecated. Oracle announced the end of public
+                  updates for Java 7 in April 2015. StreamSets highly recommends migrating to Java 8
+                  with this version of <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                  />. <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                  /> will no longer run on Java 7 starting with version 2.5.0.0.</note>
             <p>
                   <draft-comment author="Loretta">Using CDCoverview in CDC origin
                         overviews.</draft-comment>
