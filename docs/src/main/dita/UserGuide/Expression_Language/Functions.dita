@@ -139,7 +139,9 @@
        </entry>
        <entry>
         <ul id="ul_nmc_qpn_wx">
+         <li>pipeline:id()</li>
          <li>pipeline:name()</li>
+         <li>pipeline:title()</li>
          <li>pipeline:version()</li>
         </ul>
        </entry>
