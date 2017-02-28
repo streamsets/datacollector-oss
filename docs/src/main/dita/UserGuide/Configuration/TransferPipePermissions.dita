@@ -33,7 +33,7 @@
             should no longer be able to edit them. </p>
         <p>To handle this situation, you can transfer all permissions associated with the JD account
             to another development user or a development group. Then assign JD to an Ops group with
-            the Manager role and assign the OPs group the read and execute permissions for the
+            the Manager role and assign the Ops group the read and execute permissions for the
             pipelines they need to run. Or, without an Ops group, you simply assign the Manager role
             to the JD user account and edit the pipeline permissions to grant read and execute
             permissions to JD.</p>
