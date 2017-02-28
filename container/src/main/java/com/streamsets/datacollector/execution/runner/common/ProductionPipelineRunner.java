@@ -137,6 +137,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   private final Counter batchErrorRecordsCounter;
   private final Counter batchErrorMessagesCounter;
   private final Counter memoryConsumedCounter;
+  private final Histogram runnersHistogram;
   private MetricRegistryJson metricRegistryJson;
   private Long rateLimit;
 
@@ -214,6 +215,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       revision);
     memoryConsumedCounter = MetricsConfigurator.createCounter(metrics, "pipeline.memoryConsumed", pipelineName,
       revision);
+    runnersHistogram = MetricsConfigurator.createHistogram5Min(metrics, "pipeline.runners", pipelineName, revision);
   }
 
   public void setObserveRequests(BlockingQueue<Object> observeRequests) {
@@ -253,6 +255,8 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     batchErrorMessagesCounter.inc(batchErrorMessagesRecords.getCount());
     CounterJson memoryConsumer = metricRegistryJson.getCounters().get("pipeline.memoryConsumed" + MetricsConfigurator.COUNTER_SUFFIX);
     memoryConsumedCounter.inc(memoryConsumer.getCount());
+    HistogramJson runnersJson = metricRegistryJson.getHistograms().get("pipeline.runners" + MetricsConfigurator.HISTOGRAM_M5_SUFFIX);
+    runnersHistogram.update(runnersJson.getCount());
   }
 
   @Override
@@ -312,7 +316,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     this.pipes = pipes;
     this.badRecordsHandler = badRecordsHandler;
     this.statsAggregationHandler = statsAggregationHandler;
-    this.runnerPool = new RunnerPool<>(pipes, pipeContext.getRuntimeStats());
+    this.runnerPool = new RunnerPool<>(pipes, pipeContext.getRuntimeStats(), runnersHistogram);
 
     try {
       if (originPipe.getStage().getStage() instanceof PushSource) {

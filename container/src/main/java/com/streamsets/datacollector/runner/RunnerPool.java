@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.runner;
 
+import com.codahale.metrics.Histogram;
 import com.streamsets.datacollector.util.ContainerError;
 
 import java.util.List;
@@ -40,17 +41,23 @@ public class RunnerPool <T> {
   private final RuntimeStats runtimeStats;
 
   /**
+   * Histogram with available runners
+   */
+  private final Histogram histogram;
+
+  /**
    * Create new runner pool.
    *
    * @param runners Runners that this pool object should manage
    */
-  public RunnerPool(List<T> runners, RuntimeStats runtimeStats) {
+  public RunnerPool(List<T> runners, RuntimeStats runtimeStats, Histogram histogram) {
     queue = new ArrayBlockingQueue<>(runners.size());
     queue.addAll(runners);
 
     this.runtimeStats = runtimeStats;
     this.runtimeStats.setTotalRunners(queue.size());
     this.runtimeStats.setAvailableRunners(queue.size());
+    this.histogram = histogram;
   }
 
   /**
@@ -66,6 +73,7 @@ public class RunnerPool <T> {
       throw new PipelineRuntimeException(ContainerError.CONTAINER_0801, e);
     } finally {
       runtimeStats.setAvailableRunners(queue.size());
+      histogram.update(queue.size());
     }
   }
 
@@ -77,5 +85,6 @@ public class RunnerPool <T> {
   public void returnRunner(T runner) {
     queue.add(runner);
     runtimeStats.setAvailableRunners(queue.size());
+    histogram.update(queue.size());
   }
 }

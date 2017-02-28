@@ -19,6 +19,8 @@
  */
 package com.streamsets.datacollector.runner.preview;
 
+import com.codahale.metrics.ExponentiallyDecayingReservoir;
+import com.codahale.metrics.Histogram;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.google.common.base.Throwables;
@@ -154,7 +156,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
     this.pipes = pipes;
     this.badRecordsHandler = badRecordsHandler;
     this.statsAggregationHandler = statsAggregationHandler;
-    this.runnerPool = new RunnerPool<>(pipes, new RuntimeStats());
+    this.runnerPool = new RunnerPool<>(pipes, new RuntimeStats(), new Histogram(new ExponentiallyDecayingReservoir()));
 
     stagesToSkip = new HashMap<>();
     for (StageOutput stageOutput : stageOutputsToOverride) {
