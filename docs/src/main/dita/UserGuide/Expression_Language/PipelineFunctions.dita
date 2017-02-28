@@ -15,22 +15,48 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_dvg_nqn_wx">
  <title>Pipeline Functions</title>
- <shortdesc>Use pipeline functions to determine information about a pipeline, such as the pipeline
-        name or the pipeline version. </shortdesc>
  <conbody>
   <p><indexterm>functions<indexterm>pipeline functions</indexterm></indexterm><indexterm>pipeline
-                    functions<indexterm>description</indexterm></indexterm>The expression language
-            provides the following pipeline functions: </p>
+                    functions<indexterm>description</indexterm></indexterm>Use pipeline functions to
+            determine information about a pipeline, such as the pipeline title or ID. The expression
+            language provides the following pipeline functions: </p>
         <dl>
             <dlentry>
-                <dt>pipeline:name()</dt>
-                <dd>Returns the name of the pipeline. </dd>
+                <dt>pipeline:id()</dt>
+                <dd>Returns the ID of the pipeline. The ID is a UUID automatically generated when
+                    the pipeline is created and is used by <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> to identify the pipeline. The pipeline ID cannot be changed.</dd>
                 <dd>Return type: String.</dd>
                 <dd>For example, you can include the function in the directory template for the
-                    Hadoop FS destination to include the pipeline name in the output directory name.
-                    The following expression creates output directories based on the pipeline name
-                    and timestamp of a
+                    Hadoop FS destination to include the pipeline ID in the output directory name.
+                    The following expression creates output directories based on the pipeline ID and
+                    timestamp of a
+                    record:<codeblock>/outputfiles/${pipeline:id()}/${YYYY()}-${MM()}-${DD()}-${hh()}</codeblock></dd>
+            </dlentry>
+            <dlentry>
+                <dt>pipeline:name()</dt>
+                <dd>Like <codeph>pipeline:id</codeph>, this function returns the ID of the pipeline.
+                    The ID is a UUID automatically generated when the pipeline is created and is
+                    used by <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> to identify the pipeline. The pipeline ID cannot be changed.</dd>
+                <dd>In <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> versions earlier than 2.3.0.0, this function returned the pipeline name. This
+                    function is retained for backward compatibility. Use
+                        <codeph>pipeline:id</codeph> for new development.</dd>
+                <dd>Return type: String.</dd>
+                <dd>For example, you can include the function in the directory template for the
+                    Hadoop FS destination to include the pipeline ID in the output directory name.
+                    The following expression creates output directories based on the pipeline ID and
+                    timestamp of a
                     record:<codeblock>/outputfiles/${pipeline:name()}/${YYYY()}-${MM()}-${DD()}-${hh()}</codeblock></dd>
+            </dlentry>
+            <dlentry>
+                <dt>pipeline:title()</dt>
+                <dd>Returns the title or name of the pipeline.</dd>
+                <dd>Return type: String.</dd>
             </dlentry>
             <dlentry>
                 <dt>pipeline:version()</dt>
@@ -46,16 +72,6 @@
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                     />.</dd>
                 <dd>Return type: String.</dd>
-                <dd>For example, you can use the function to define the Kafka topic name when
-                    configuring a pipeline to write aggregated statistics to a Kafka cluster. The
-                    following expression creates a Kafka topic based on the pipeline name and
-                    version. If you modify and then publish a new version of the pipeline to <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                    />, the pipeline automatically writes to a new topic:
-                    <codeblock>${pipeline:name()}-${pipeline:version()}</codeblock></dd>
-                <dd>For more information about pipeline versioning with <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                    />, see <xref href="../DPM/PipelineManagement.dita#concept_eq5_qjd_fx"/>. </dd>
             </dlentry>
         </dl>
  </conbody>
