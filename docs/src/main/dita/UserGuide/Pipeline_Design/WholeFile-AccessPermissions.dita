@@ -17,15 +17,15 @@
  <title>Access Permissions</title>
  <conbody>
   <p><indexterm>whole file data format<indexterm>file access permissions</indexterm></indexterm>By
-            default, when using the whole file data format, target files use the default access
+            default, when using the whole file data format, output files use the default access
             permissions defined in the destination system. Most destinations allow you to specify
-            access permissions for target files. Amazon S3 does not allow it.</p>
+            access permissions for output files. Amazon S3 does not allow it.</p>
         <p>You can enter an expression to define access permissions. Expressions should evaluate to
             a symbolic or numeric/octal representation of the permissions you want to use. For
             example, to make files read-only for all users, the symbolic representation is
                 <codeph>-r--r--r--</codeph>. The numeric or octal representation is
                 <codeph>0444</codeph>.</p>
-        <p>To use the original source file permissions for each target file, you can use the
+        <p>To use the original source file permissions for each output file, you can use the
             following expression:<codeblock>${record:value('/fileInfo/permissions')}</codeblock></p>
         <p>This ensures, for example, that a source file with execute permission for only the file
             owner is written to the destination system with the exact same set of permissions. </p>

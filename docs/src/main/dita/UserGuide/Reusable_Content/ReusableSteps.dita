@@ -3490,16 +3490,13 @@
                             </thead>
                             <tbody>
                                 <row id="row-FileNameExp">
-                                    <entry>File Name Expression <xref
-                                            href="../Pipeline_Design/WholeFile-Writing.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_ns2_ytl_zw"/></xref></entry>
+                                    <entry>File Name Expression</entry>
                                     <entry>
-                                        <p>Expression to use for the file name. </p>
-                                        <p>Default is
-                                                <codeph>${record:value('/fileInfo/filename')}</codeph>,
-                                            which uses the original source file name as the target
-                                            file name. </p>
+                                        <p>Expression to use for the file names. </p>
+                                        <p>For tips on how to name files based on input file names,
+                                            see <xref
+                                                href="../Pipeline_Design/WholeFile-Writing.dita#concept_a2s_4jw_1x"
+                                            />.</p>
                                     </entry>
                                 </row>
                                 <row id="row-PermExp">
@@ -3507,7 +3504,7 @@
                                             href="../Pipeline_Design/WholeFile-AccessPermissions.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_zwb_ccw_1x"/></xref></entry>
-                                    <entry>Expression that defines the access permissions for target
+                                    <entry>Expression that defines the access permissions for output
                                         files. Expressions should evaluate to a symbolic or
                                         numeric/octal representation of the permissions you want to
                                         use. <p>By default, with no specified expression, files use
@@ -3519,7 +3516,7 @@
                                 <row id="row-FileExists">
                                     <entry>File Exists</entry>
                                     <entry>Action to take when a file of the same name already
-                                        exists in the target directory. Use one of the following
+                                        exists in the output directory. Use one of the following
                                             options:<ul id="ul_a4s_l5l_zw">
                                             <li>Send to Error - Handles the record based on stage
                                                 error record handling. </li>
