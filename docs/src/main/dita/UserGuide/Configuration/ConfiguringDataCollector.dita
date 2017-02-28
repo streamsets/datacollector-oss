@@ -581,6 +581,11 @@
                                         approximately 22 standalone pipelines at the same
                                     time.</p></entry>
                             </row>
+                            <row>
+                                <entry>pipeline.max.runners.count</entry>
+                                <entry>Maximum number of pipeline runners to use for a multithreaded
+                                        pipeline.<p>Default is 50.</p></entry>
+                            </row>
                         </tbody>
                     </tgroup>
                 </table>
