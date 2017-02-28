@@ -12,8 +12,8 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Upgrade/Tarball-Step1-VerifyDirs.dita"/>
-   <topicref href="../Upgrade/Tarball-Step2-Shutdown.dita"/>
+   <topicref href="../Upgrade/Tarball-Step1-Shutdown.dita"/>
+   <topicref href="../Upgrade/Tarball-Step2-BackUp.dita"/>
    <topicref href="../Upgrade/Tarball-Step3-Install.dita">
     <topicref href="../Upgrade/Tarball-ManualStart.dita"/>
     <topicref href="../Upgrade/Tarball-ServiceStart.dita"/>
@@ -28,12 +28,13 @@
     <shortdesc/>
    </topicmeta>
    <topicref href="../Upgrade/RPM-Step1-Shutdown.dita"/>
-   <topicref href="../Upgrade/RPM-Step2-BackupEnvConfig.dita"/>
+   <topicref href="../Upgrade/RPM-Step2-BackUp.dita"/>
    <topicref href="../Upgrade/RPM-Step3-Install.dita"/>
    <topicref href="../Upgrade/RPM-Step4-EnvConfig.dita"/>
    <topicref href="../Upgrade/RPM-Step5-ConfigFiles.dita"/>
    <topicref href="../Upgrade/RPM-Step6-AdditionalLibraries.dita"/>
-   <topicref href="../Upgrade/RPM-Step7-Start.dita"/>
+   <topicref href="../Upgrade/RPM-Step7-RemovePreviousLibraries.dita"/>
+   <topicref href="../Upgrade/RPM-Step8-Start.dita"/>
   </topicref>
   <topicref href="../Upgrade/CMUpgrade.dita" chunk="to-content">
    <topicmeta>

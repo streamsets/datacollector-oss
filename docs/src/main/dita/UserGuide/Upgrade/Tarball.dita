@@ -26,24 +26,22 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             runtime directory. You then configure the new version to use the same data, log, and
             resource directories as the previous version. As a result, the new version has access to
-            the files created in the previous version.</p>
+            the files created in the previous version.<note>If you installed additional drivers or
+                developed custom stages, verify that those libraries are stored in a local directory
+                external to the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> runtime directory before you upgrade. That way, <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> can still use the libraries after the upgrade.</note></p>
         <p>To upgrade a full or core installation from the tarball, perform the following steps:</p>
-        <ol id="ol_x5s_qpr_5v">
-            <li>If the previous version of <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> used a manual start, verify that directories in the previous version are outside
-                of <codeph>$SDC_DIST</codeph>, the base <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> runtime directory.</li>
-            <li>Stop all pipelines and then shut down the previous version.</li>
-            <li>Install the new version.</li>
-            <li>Manually update the environment configuration file.</li>
-            <li>Manually update the configuration files.</li>
-            <li>For an upgrade of the core installation, install additional stage libraries as
-                needed.</li>
-            <li>Start the new version of <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                />.</li>
-        </ol>
+
+            <p><xref href="Tarball-Step1-Shutdown.dita#task_uzq_gwl_5v"/></p>
+            <p><xref href="Tarball-Step2-BackUp.dita#concept_bwg_r1h_1z"/></p>
+            <p><xref href="Tarball-Step3-Install.dita#concept_bfv_jyl_5v"/></p>
+            <p><xref href="Tarball-Step4-EnvConfig.dita#task_wzl_hst_xv"/></p>
+            <p><xref href="Tarball-Step5-UpdateConfigFiles.dita#task_orr_vcg_2y"/></p>
+            <p><xref href="Tarball-Step6-AdditionalLibraries.dita#concept_zyd_ngr_5v"/></p>
+            <p><xref href="Tarball-Step7-Start.dita#concept_uct_wfr_5v"/></p>
+        
  </conbody>
 </concept>
