@@ -55,13 +55,13 @@ public class TestStreamingXmlParser {
 
     f = parser.read();
     Assert.assertNotNull(f);
-    Assert.assertEquals(1, f.getValueAsMap().size());
-    Assert.assertEquals("A", f.getValueAsMap().get("attr|a").getValue());
+    Assert.assertEquals(0, f.getValueAsMap().size());
+    Assert.assertEquals("A", f.getAttribute(StreamingXmlParser.XMLATTR_ATTRIBUTE_PREFIX+"a"));
 
     f = parser.read();
     Assert.assertNotNull(f);
-    Assert.assertEquals(2, f.getValueAsMap().size());
-    Assert.assertEquals("y", f.getValueAsMap().get("ns|xmlns:x").getValue());
+    Assert.assertEquals(1, f.getValueAsMap().size());
+    Assert.assertEquals("y", f.getAttribute("xmlns:x"));
     Assert.assertEquals("r4", f.getValueAsMap().get("value").getValue());
 
     f = parser.read();
@@ -113,13 +113,13 @@ public class TestStreamingXmlParser {
 
     f = parser.read();
     Assert.assertNotNull(f);
-    Assert.assertEquals(1, f.getValueAsMap().size());
-    Assert.assertEquals("A", f.getValueAsMap().get("attr|a").getValue());
+    Assert.assertEquals(0, f.getValueAsMap().size());
+    Assert.assertEquals("A", f.getAttribute(StreamingXmlParser.XMLATTR_ATTRIBUTE_PREFIX+"a"));
 
     f = parser.read();
     Assert.assertNotNull(f);
-    Assert.assertEquals(2, f.getValueAsMap().size());
-    Assert.assertEquals("y", f.getValueAsMap().get("ns|xmlns:x").getValue());
+    Assert.assertEquals(1, f.getValueAsMap().size());
+    Assert.assertEquals("y", f.getAttribute("xmlns:x"));
     Assert.assertEquals("r4", f.getValueAsMap().get("value").getValue());
 
     f = parser.read();
@@ -224,14 +224,14 @@ public class TestStreamingXmlParser {
     parser = new StreamingXmlParser(getXml("TestStreamingXmlParser-records.xml"), "record", pos);
     Field f = parser.read();
     Assert.assertNotNull(f);
-    Assert.assertEquals(1, f.getValueAsMap().size());
-    Assert.assertEquals("A", f.getValueAsMap().get("attr|a").getValue());
+    Assert.assertEquals(0, f.getValueAsMap().size());
+    Assert.assertEquals("A", f.getAttribute(StreamingXmlParser.XMLATTR_ATTRIBUTE_PREFIX + "a"));
 
     f = parser.read();
     Assert.assertNotNull(f);
-    Assert.assertEquals(2, f.getValueAsMap().size());
-    Assert.assertEquals("y", f.getValueAsMap().get("ns|xmlns:x").getValue());
-    Assert.assertEquals("r4", f.getValueAsMap().get("value").getValue());
+    Assert.assertEquals(1, f.getValueAsMap().size());
+    Assert.assertEquals("y", f.getAttribute("xmlns:x"));
+    Assert.assertEquals("r4", f.getValueAsMap().get(StreamingXmlParser.VALUE_KEY).getValue());
 
     f = parser.read();
     Assert.assertNotNull(f);

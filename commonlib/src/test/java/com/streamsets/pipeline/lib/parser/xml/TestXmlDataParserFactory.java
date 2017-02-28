@@ -157,6 +157,7 @@ public class TestXmlDataParserFactory {
         .setMaxDataLen(1000)
         .setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, "")
         .setConfig(XmlDataParserFactory.INCLUDE_FIELD_XPATH_ATTRIBUTES_KEY, true)
+        .setConfig(XmlDataParserFactory.USE_FIELD_ATTRIBUTES, false)
         .build();
 
     InputStream is = new ByteArrayInputStream(xml.getBytes());

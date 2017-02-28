@@ -28,13 +28,11 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
-import com.streamsets.pipeline.lib.xml.xpath.Constants;
+import com.streamsets.pipeline.lib.xml.Constants;
 import com.streamsets.pipeline.lib.xml.xpath.XPathValidatorUtil;
 import com.streamsets.pipeline.stage.common.DataFormatErrors;
 import com.streamsets.pipeline.stage.processor.common.MultipleValuesBehavior;
 import com.streamsets.pipeline.stage.processor.common.MultipleValuesBehaviorChooserValues;
-import com.streamsets.pipeline.stage.processor.http.HeaderOutputLocation;
-import com.streamsets.pipeline.stage.processor.http.HeaderOutputLocationChooserValues;
 import org.apache.commons.lang.StringUtils;
 
 import java.nio.charset.Charset;
@@ -115,6 +113,17 @@ public class XmlParserConfig {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Output Field Attributes",
+      description = Constants.OUTPUT_FIELD_ATTRIBUTES_DESCRIPTION,
+      defaultValue = ""+XmlDataParserFactory.USE_FIELD_ATTRIBUTES_DEFAULT,
+      displayPosition = 48,
+      group = "XML"
+  )
+  public boolean outputFieldAttributes = XmlDataParserFactory.USE_FIELD_ATTRIBUTES_DEFAULT;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "",
       label = "Target Field",
@@ -184,7 +193,8 @@ public class XmlParserConfig {
     builder.setRemoveCtrlChars(removeCtrlChars).setMaxDataLen(-1)
         .setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, xmlRecordElement)
         .setConfig(XmlDataParserFactory.INCLUDE_FIELD_XPATH_ATTRIBUTES_KEY, includeFieldXpathAttributes)
-        .setConfig(XmlDataParserFactory.RECORD_ELEMENT_XPATH_NAMESPACES_KEY, xPathNamespaceContext);
+        .setConfig(XmlDataParserFactory.RECORD_ELEMENT_XPATH_NAMESPACES_KEY, xPathNamespaceContext)
+        .setConfig(XmlDataParserFactory.USE_FIELD_ATTRIBUTES, outputFieldAttributes);
     return builder.build();
   }
 

@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.lib.xml.xpath;
 
 import com.google.common.base.Strings;
+import com.streamsets.pipeline.lib.xml.Constants;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.events.Attribute;

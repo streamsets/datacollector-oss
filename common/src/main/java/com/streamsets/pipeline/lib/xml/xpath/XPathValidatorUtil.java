@@ -21,6 +21,7 @@ package com.streamsets.pipeline.lib.xml.xpath;
 
 import com.google.common.base.Strings;
 import com.streamsets.pipeline.api.impl.XMLChar;
+import com.streamsets.pipeline.lib.xml.Constants;
 
 import java.util.HashSet;
 import java.util.Set;

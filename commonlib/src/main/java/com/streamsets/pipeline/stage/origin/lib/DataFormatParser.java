@@ -300,6 +300,7 @@ public class DataFormatParser {
         builder.setConfig(XmlDataParserFactory.INCLUDE_FIELD_XPATH_ATTRIBUTES_KEY,
             dataFormatConfig.includeFieldXpathAttributes);
         builder.setConfig(XmlDataParserFactory.RECORD_ELEMENT_XPATH_NAMESPACES_KEY, dataFormatConfig.xPathNamespaceContext);
+        builder.setConfig(XmlDataParserFactory.USE_FIELD_ATTRIBUTES, dataFormatConfig.outputFieldAttributes);
         break;
       case SDC_JSON:
         builder.setMaxDataLen(-1);

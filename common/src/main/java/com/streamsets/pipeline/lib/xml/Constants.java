@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-package com.streamsets.pipeline.lib.xml.xpath;
+package com.streamsets.pipeline.lib.xml;
 
 public abstract class Constants {
   public static final char PATH_SEPARATOR_CHAR = '/';
@@ -41,10 +41,15 @@ public abstract class Constants {
       " is an XPath expression.  This should map namespace prefixes to URIs.  Any namespace prefix that is used" +
       " in the record separator expression must be defined here.";
 
+  public static final String OUTPUT_FIELD_ATTRIBUTES_DESCRIPTION = "Generate field attributes in output record for" +
+      " XML namespace declarations, and XML attributes.  Without this option, they will continue to be output as" +
+      " individual fields (separate from the element value).";
+
   public static final String ERROR_EMPTY_EXPRESSION = "expression cannot be empty";
   public static final String ERROR_INVALID_ELEMENT_NAME_PREFIX = "invalid element name: ";
   public static final String ERROR_XPATH_MUST_START_WITH_SEP = "XPath expression must start with ";
   public static final String ERROR_DESCENDENT_OR_SELF_NOT_SUPPORTED = "descendent-or-self (//) is not allowed";
   public static final String ERROR_INVALID_PREDICATE_PREFIX = "invalid predicate: ";
   public static final String ERROR_INVALID_ATTRIBUTE_PREFIX = "attribute name is not valid: ";
+
 }

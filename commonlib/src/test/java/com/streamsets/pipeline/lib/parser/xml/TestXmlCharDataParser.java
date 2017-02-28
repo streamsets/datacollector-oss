@@ -41,6 +41,18 @@ import java.util.Map;
 
 public class TestXmlCharDataParser {
 
+  public static final String BOOK_XML_NO_NAMESPACE =
+      "<bookstore>\n" +
+      "  <book>\n" +
+      "    <title lang=\"en\">Harry Potter</title>\n" +
+      "    <price>29.99</price>\n" +
+      "  </book>\n" +
+      "  <book>\n" +
+      "    <title lang=\"en_us\">Learning XML</title>\n" +
+      "    <price>39.95</price>\n" +
+      "  </book>\n" +
+      "</bookstore>";
+
   private Stage.Context getContext() {
     return ContextInfoCreator.createSourceContext("i", false, OnRecordError.TO_ERROR, Collections.EMPTY_LIST);
   }
@@ -68,18 +80,7 @@ public class TestXmlCharDataParser {
 
   @Test
   public void testXpathWithoutDelimiterElement() throws Exception {
-    OverrunReader reader = new OverrunReader(new StringReader(
-        "<bookstore>\n" +
-        "  <book>\n" +
-        "    <title lang=\"en\">Harry Potter</title>\n" +
-        "    <price>29.99</price>\n" +
-        "  </book>\n" +
-        "  <book>\n" +
-        "    <title lang=\"en_us\">Learning XML</title>\n" +
-        "    <price>39.95</price>\n" +
-        "  </book>\n" +
-        "</bookstore>"
-    ), 1000, true, false);
+    OverrunReader reader = new OverrunReader(new StringReader(BOOK_XML_NO_NAMESPACE), 1000, true, false);
     DataParser parser = new XmlCharDataParser(getContext(), "id", reader, 0, "", true, 1000);
     Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
@@ -112,24 +113,49 @@ public class TestXmlCharDataParser {
   public void testXpathWithDelimiterElement() throws Exception {
     //ensure the output xpath remains consistent regardless of record path
     for (String delimiter : Arrays.asList("/bookstore/book", "book", "/*[1]/*")) {
-      OverrunReader reader = new OverrunReader(new StringReader(
-          "<bookstore>\n" +
-              "  <book>\n" +
-              "    <title lang=\"en\">Harry Potter</title>\n" +
-              "    <price>29.99</price>\n" +
-              "  </book>\n" +
-              "  <book>\n" +
-              "    <title lang=\"en_us\">Learning XML</title>\n" +
-              "    <price>39.95</price>\n" +
-              "  </book>\n" +
-              "</bookstore>"
-      ), 1000, true, false);
+      OverrunReader reader = new OverrunReader(new StringReader(BOOK_XML_NO_NAMESPACE), 1000, true, false);
       DataParser parser = new XmlCharDataParser(getContext(), "id", reader, 0, delimiter, true, 1000);
       Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
       Record record = parser.parse();
       assertBookRecord("/bookstore/book", "Harry Potter", "en", "29.99", record);
       record = parser.parse();
       assertBookRecord("/bookstore/book", "Learning XML", "en_us", "39.95", record);
+      parser.close();
+    }
+  }
+
+  @Test
+  public void testOldStyleParserOutput() throws Exception {
+    // backwards compatibility for SDC-5407
+
+    for (String delimiter : Arrays.asList("/bookstore/book", "book", "/*[1]/*")) {
+      OverrunReader reader = new OverrunReader(new StringReader(BOOK_XML_NO_NAMESPACE), 1000, true, false);
+      DataParser parser = new XmlCharDataParser(getContext(), "id", reader, 0, delimiter, true, null, 1000, false);
+      Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
+      Record record = parser.parse();
+      assertBookRecordOldStyle(
+          "/bookstore/book",
+          "Harry Potter",
+          "en",
+          "29.99",
+          record.get("/title"),
+          record.get("/price"),
+          "",
+          "",
+          ""
+      );
+      record = parser.parse();
+      assertBookRecordOldStyle(
+          "/bookstore/book",
+          "Learning XML",
+          "en_us",
+          "39.95",
+          record.get("/title"),
+          record.get("/price"),
+          "",
+          "",
+          ""
+      );
       parser.close();
     }
   }
@@ -147,8 +173,6 @@ public class TestXmlCharDataParser {
 
   @Test
   public void testXpathWithDelimiterElementNamespaced() throws Exception {
-
-
     OverrunReader reader = new OverrunReader(new StringReader(
         "<bookstore xmlns=\""+NAMESPACE1_URI+"\" xmlns:"+NAMESPACE2_OUTPUT_PREFIX+"=\""+NAMESPACE2_URI+"\">\n"+
             "  <"+NAMESPACE2_OUTPUT_PREFIX+":book>\n" +
@@ -173,7 +197,8 @@ public class TestXmlCharDataParser {
         "/bs:bookstore/b:book",
         true,
         namespaces,
-        1000
+        1000,
+        true
     );
     Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
 
@@ -214,7 +239,7 @@ public class TestXmlCharDataParser {
             "  <something attr1=\"attrVal1-2\" attr2=\"attrVal2-2\">2</something>\n" +
             "</root>"
     ), 1000, true, false);
-    DataParser parser = new XmlCharDataParser(getContext(), "id", reader, 0, "something", true, 1000);
+    DataParser parser = new XmlCharDataParser(getContext(), "id", reader, 0, "something", true, null, 1000, false);
     Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
 
@@ -306,6 +331,42 @@ public class TestXmlCharDataParser {
   }
 
   private static void assertBookRecord(
+      String bookXpath,
+      String bookTitle,
+      String bookLang,
+      String bookPrice,
+      Field title,
+      Field price,
+      String titleXpathPrefix,
+      String langXpathPrefix,
+      String priceXpathPrefix
+  ) {
+    Assert.assertNotNull(title);
+    Assert.assertNotNull(price);
+
+    Map<String, Field> titleMap = ApiUtils.firstItemAsMap(title);
+
+    Field titleValueField = titleMap.get(StreamingXmlParser.VALUE_KEY);
+    Assert.assertEquals(bookTitle, titleValueField.getValueAsString());
+    Assert.assertNotNull(titleValueField.getAttributes());
+    Assert.assertEquals(1, titleValueField.getAttributes().size());
+    String titleXpath = titleValueField.getAttribute(StreamingXmlParser.XPATH_KEY);
+    Assert.assertEquals(bookXpath + "/" + titleXpathPrefix + "title", titleXpath);
+
+    Field titleField = title.getValueAsList().get(0);
+
+    String langField = titleField.getAttribute(StreamingXmlParser.XMLATTR_ATTRIBUTE_PREFIX+"lang");
+    Assert.assertEquals(bookLang, langField);
+
+    Map<String, Field> priceMap = ApiUtils.firstItemAsMap(price);
+    Field priceField = priceMap.get(StreamingXmlParser.VALUE_KEY);
+    Assert.assertEquals(bookPrice, priceField.getValueAsString());
+    String priceXpath = priceField.getAttribute(StreamingXmlParser.XPATH_KEY);
+    Assert.assertEquals(bookXpath + "/" + priceXpathPrefix + "price", priceXpath);
+
+  }
+
+  private static void assertBookRecordOldStyle(
       String bookXpath,
       String bookTitle,
       String bookLang,

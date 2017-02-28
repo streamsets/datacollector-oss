@@ -55,23 +55,39 @@ public class XmlCharDataParser extends AbstractDataParser {
 
   public XmlCharDataParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset,
       String recordElement, int maxObjectLen) throws IOException {
-    this(context, readerId, reader, readerOffset, recordElement, false, null, maxObjectLen);
+    this(context, readerId, reader, readerOffset, recordElement, false, null, maxObjectLen, true);
   }
 
   public XmlCharDataParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset,
       String recordElement, boolean includeXpath, int maxObjectLen) throws IOException {
-    this(context, readerId, reader, readerOffset, recordElement, includeXpath, null, maxObjectLen);
+    this(context, readerId, reader, readerOffset, recordElement, includeXpath, null, maxObjectLen, true);
   }
 
-  public XmlCharDataParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset,
-      String recordElement, boolean includeXpath, Map<String, String> namespaces, int maxObjectLen) throws IOException {
+  public XmlCharDataParser(
+      Stage.Context context,
+      String readerId,
+      OverrunReader reader,
+      long readerOffset,
+      String recordElement,
+      boolean includeXpath,
+      Map<String, String> namespaces,
+      int maxObjectLen,
+      boolean useFieldAttributesInsteadOfFields
+  ) throws IOException {
     this.context = context;
     this.readerId = readerId;
     this.readerOffset = readerOffset;
     this.maxObjectLen = maxObjectLen;
     this.includeXpath = includeXpath;
     try {
-      parser = new OverrunStreamingXmlParser(reader, recordElement, namespaces, readerOffset, maxObjectLen);
+      parser = new OverrunStreamingXmlParser(
+          reader,
+          recordElement,
+          namespaces,
+          readerOffset,
+          maxObjectLen,
+          useFieldAttributesInsteadOfFields
+      );
     } catch (XMLStreamException ex) {
       throw new IOException(ex);
     }

@@ -20,10 +20,10 @@
 package com.streamsets.pipeline.lib.xml;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.io.ObjectLengthException;
-import com.streamsets.pipeline.lib.xml.xpath.Constants;
 import com.streamsets.pipeline.lib.xml.xpath.MatchStatus;
 import com.streamsets.pipeline.lib.xml.xpath.XPathMatchingEventReader;
 import org.apache.commons.lang3.StringUtils;
@@ -45,9 +45,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 public class StreamingXmlParser {
 
@@ -56,45 +56,54 @@ public class StreamingXmlParser {
   private static final String NS_PREFIX_KEY = "ns|";
   public static final String GENERATED_NAMESPACE_PREFIX = "ns";
   public static final String XPATH_KEY = "xpath";
+  public static final String XMLATTR_ATTRIBUTE_PREFIX = "xmlAttr:";
 
   private final Reader reader;
   private final XPathMatchingEventReader xmlEventReader;
+  private final boolean useFieldAttributesInsteadOfFields;
   private String recordElement;
   private boolean closed;
 
   private String lastParsedFieldXpathPrefix;
-  private final Stack<String> elementNameStack = new Stack<>();
+  private final LinkedList<String> elementNameStack = new LinkedList<>();
 
   private int generatedNsPrefixCount = 1;
   private final Map<String, String> namespaceUriToPrefix = new HashMap<>();
 
   // reads a full XML document as a single Field
   public StreamingXmlParser(Reader xmlEventReader) throws IOException, XMLStreamException {
-    this(xmlEventReader, null, null, 0);
+    this(xmlEventReader, null, null, 0, true);
   }
 
   // reads an XML document producing a Field for each first level 'recordElement' element, other first level elements
   // are ignored
   public StreamingXmlParser(Reader xmlEventReader, String recordElement)
       throws IOException, XMLStreamException {
-    this(xmlEventReader, recordElement, null, 0);
+    this(xmlEventReader, recordElement, null, 0, true);
   }
 
   public StreamingXmlParser(Reader xmlEventReader, String recordElement,  Map<String, String> namespaces)
       throws IOException, XMLStreamException {
-    this(xmlEventReader, recordElement, namespaces, 0);
+    this(xmlEventReader, recordElement, namespaces, 0, true);
   }
 
   // reads an XML document producing a Field for each first level 'recordElement' element, other first level elements
   // are ignored
   public StreamingXmlParser(Reader reader, String recordElement, long initialPosition)
       throws IOException, XMLStreamException {
-    this(reader, recordElement, null, initialPosition);
+    this(reader, recordElement, null, initialPosition, true);
   }
 
-  public StreamingXmlParser(Reader reader, String recordElement, Map<String, String> namespaces, long initialPosition)
+  public StreamingXmlParser(
+      Reader reader,
+      String recordElement,
+      Map<String, String> namespaces,
+      long initialPosition,
+      boolean useFieldAttributesInsteadOfFields
+  )
       throws IOException, XMLStreamException {
     this.reader = reader;
+    this.useFieldAttributesInsteadOfFields = useFieldAttributesInsteadOfFields;
     if (Strings.isNullOrEmpty(recordElement)) {
       this.recordElement = Constants.ROOT_ELEMENT_PATH;
     } else {
@@ -112,7 +121,7 @@ public class StreamingXmlParser {
     } else {
       //consuming root
       StartElement startE = (StartElement) read(xmlEventReader);
-      elementNameStack.push(getNameAndTrackNs(startE.getName()));
+      elementNameStack.addFirst(getNameAndTrackNs(startE.getName()));
     }
     if (initialPosition > 0) {
       //fastforward to initial position
@@ -182,10 +191,10 @@ public class StreamingXmlParser {
       while (hasNext(xmlEventReader) && !isStartOfRecord(peek(xmlEventReader), depth)) {
         XMLEvent event = read(xmlEventReader);
         if (event.isStartElement()) {
-          elementNameStack.push(getNameAndTrackNs(event.asStartElement().getName()));
+          elementNameStack.addFirst(getNameAndTrackNs(event.asStartElement().getName()));
           depth++;
         } else if (event.getEventType() == XMLEvent.END_ELEMENT) {
-          elementNameStack.pop();
+          elementNameStack.removeFirst();
           depth--;
         }
       }
@@ -194,7 +203,7 @@ public class StreamingXmlParser {
         field = parse(xmlEventReader, startE);
         // the while loop consumes the start element for a record, and the parse method above consumes the end
         // so remove it from the stack
-        elementNameStack.pop();
+        elementNameStack.removeFirst();
       }
       // if advancing, don't evaluate XPath matches
       xmlEventReader.clearLastMatch();
@@ -210,7 +219,7 @@ public class StreamingXmlParser {
   }
 
   public String getXpathPrefix() {
-    return "/" + StringUtils.join(elementNameStack, "/");
+    return "/" + StringUtils.join(Lists.reverse(elementNameStack), "/");
   }
 
   private boolean isStartOfRecord(XMLEvent event, int depth) {
@@ -293,7 +302,8 @@ public class StreamingXmlParser {
 
   @SuppressWarnings("unchecked")
   Field parse(XMLEventReader reader, StartElement startE) throws XMLStreamException, ObjectLengthException {
-    Map<String, Field> startEMap = toField(startE);
+    Map<String, Field> map = this.useFieldAttributesInsteadOfFields ? new LinkedHashMap<>() : toField(startE);
+    Map<String, Field> startEMap = map;
     Map<String, Object> contents = new LinkedHashMap<>();
     boolean maybeText = true;
     while (hasNext(reader) && !peek(reader).isEndElement()) {
@@ -341,6 +351,20 @@ public class StreamingXmlParser {
       }
     }
     final Field field = Field.create(startEMap);
+
+    if (this.useFieldAttributesInsteadOfFields) {
+      Iterator attrs = startE.getAttributes();
+      while (attrs.hasNext()) {
+        Attribute attr = (Attribute) attrs.next();
+        field.setAttribute(getName(XMLATTR_ATTRIBUTE_PREFIX, attr), attr.getValue());
+      }
+      Iterator nss = startE.getNamespaces();
+      while (nss.hasNext()) {
+        Namespace ns = (Namespace) nss.next();
+        field.setAttribute(getName(null, ns), ns.getNamespaceURI());
+      }
+    }
+
     lastParsedFieldXpathPrefix = getXpathPrefix();
     return field;
   }

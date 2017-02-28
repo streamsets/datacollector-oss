@@ -61,7 +61,7 @@ import com.streamsets.pipeline.lib.parser.udp.DatagramParserFactory;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
 import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
 import com.streamsets.pipeline.lib.util.ProtobufConstants;
-import com.streamsets.pipeline.lib.xml.xpath.Constants;
+import com.streamsets.pipeline.lib.xml.Constants;
 import com.streamsets.pipeline.lib.xml.xpath.XPathValidatorUtil;
 import com.streamsets.pipeline.stage.common.DataFormatConfig;
 import com.streamsets.pipeline.stage.common.DataFormatErrors;
@@ -454,6 +454,19 @@ public class DataParserFormatConfig implements DataFormatConfig {
       triggeredByValue = "XML"
   )
   public Map<String, String> xPathNamespaceContext = new HashMap<>();
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Output Field Attributes",
+      description = Constants.OUTPUT_FIELD_ATTRIBUTES_DESCRIPTION,
+      defaultValue = ""+XmlDataParserFactory.USE_FIELD_ATTRIBUTES_DEFAULT,
+      displayPosition = 448,
+      group = "DATA_FORMAT",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "XML"
+  )
+  public boolean outputFieldAttributes = XmlDataParserFactory.USE_FIELD_ATTRIBUTES_DEFAULT;
 
   @ConfigDef(
       required = true,
@@ -1256,7 +1269,8 @@ public class DataParserFormatConfig implements DataFormatConfig {
       case XML:
         builder.setMaxDataLen(xmlMaxObjectLen).setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, xmlRecordElement)
             .setConfig(XmlDataParserFactory.INCLUDE_FIELD_XPATH_ATTRIBUTES_KEY, includeFieldXpathAttributes)
-            .setConfig(XmlDataParserFactory.RECORD_ELEMENT_XPATH_NAMESPACES_KEY, xPathNamespaceContext);
+            .setConfig(XmlDataParserFactory.RECORD_ELEMENT_XPATH_NAMESPACES_KEY, xPathNamespaceContext)
+            .setConfig(XmlDataParserFactory.USE_FIELD_ATTRIBUTES, outputFieldAttributes);
         break;
       case SDC_JSON:
         builder.setMaxDataLen(-1);

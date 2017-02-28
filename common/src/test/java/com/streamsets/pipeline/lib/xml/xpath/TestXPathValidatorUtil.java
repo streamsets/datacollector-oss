@@ -20,6 +20,7 @@
 
 package com.streamsets.pipeline.lib.xml.xpath;
 
+import com.streamsets.pipeline.lib.xml.Constants;
 import org.junit.Assert;
 import org.junit.Test;
 
