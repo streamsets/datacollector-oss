@@ -24,7 +24,7 @@
         <note type="important">You must perform additional steps to install the MapR stage libraries, as described in
                 <xref href="MapR-Prerequisites.dita#concept_jgs_qpg_2v"/>.</note>
         <p>For a complete list of the stages installed with each stage library, see <xref
-                href="CoreInstall-LibList.dita"/>.</p>
+                href="AvailableStageLibraries.dita"/>.</p>
         <p>You can install additional RPM stage libraries using the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             command line program.</p>

@@ -48,7 +48,7 @@
    <topicref href="../Installation/CoreInstall_RPMAdditionalLibs.dita"/>
    <topicref href="../Installation/CoreInstall-Tarball-LibsPackageMgr.dita"/>
    <topicref href="../Installation/CoreInstall-Tarball-LibsCommand.dita"/>
-   <topicref href="../Installation/CoreInstall-LibList.dita"/>
+   <topicref href="../Installation/AvailableStageLibraries.dita"/>
   </topicref>
   <topicref href="../Installation/Installing_the_DC-Docker.dita" chunk="to-content">
    <topicmeta>

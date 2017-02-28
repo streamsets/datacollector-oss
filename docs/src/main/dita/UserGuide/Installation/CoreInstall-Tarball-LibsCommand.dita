@@ -30,7 +30,7 @@
                         command:<codeblock>$SDC_DIST/bin/streamsets stagelibs -list</codeblock></dd>
                     <dd>This provides a list of all available stage libraries and whether they are
                         already installed. For more information about the stages installed with each
-                        stage library, see <xref href="CoreInstall-LibList.dita"/>.</dd>
+                        stage library, see <xref href="AvailableStageLibraries.dita"/>.</dd>
                 </dlentry>
                 <dlentry>
                     <dt>To install one or more stage libraries:</dt>
