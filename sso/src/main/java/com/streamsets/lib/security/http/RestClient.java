@@ -194,7 +194,7 @@ public class RestClient {
 
     public boolean isJson() {
       String contentType = conn.getContentType();
-      return contentType != null & contentType.toLowerCase().trim().startsWith(APPLICATION_JSON);
+      return contentType != null && contentType.toLowerCase().trim().startsWith(APPLICATION_JSON);
     }
 
     public String getHeader(String headerName) {
