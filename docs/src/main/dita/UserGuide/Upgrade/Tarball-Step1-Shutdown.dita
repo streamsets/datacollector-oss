@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_uzq_gwl_5v">
-    <title>Step 2. Shut Down the Previous Version</title>
+    <title>Step 1. Shut Down the Previous Version</title>
     <shortdesc>Stop all pipelines and then shut down the previous version of <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
         />.</shortdesc>
