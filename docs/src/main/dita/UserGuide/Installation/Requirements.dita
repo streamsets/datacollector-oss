@@ -59,10 +59,15 @@
           <row>
             <entry>Java</entry>
             <entry>Oracle Java 8.<p>Oracle Java 7 is supported but deprecated. Oracle announced the
-                end of public updates for Java 7 in April 2015. StreamSets recommends migrating to
-                Java 8, as Java 7 support will be removed in a future <ph
+                end of public updates for Java 7 in April 2015. StreamSets highly recommends
+                migrating to Java 8 with this version of <ph
+                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
+                  <ph
                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-                release.</p><note>Open JDK is not supported.</note></entry>
+                version 2.4.0.0 is the last release to support Java 7. <ph
+                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+                will no longer run on Java 7 starting with version 2.5.0.0.</p><note>Open JDK is not
+                supported.</note></entry>
           </row>
           <row>
             <entry>Browser</entry>
