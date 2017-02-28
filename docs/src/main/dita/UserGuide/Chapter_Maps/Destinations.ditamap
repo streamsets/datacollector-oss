@@ -38,7 +38,6 @@
    <topicref href="../Destinations/AmazonS3-EventGeneration.dita">
     <topicref href="../Destinations/AmazonS3-EventRecords.dita"/>
    </topicref>
-   <topicref href="../Destinations/AmazonS3-DataFormat.dita"/>
    <topicref href="../Destinations/AmazonS3-ServerSideEncryption.dita"/>
    <topicref href="../Destinations/AmazonS3-DataFormat.dita"/>
    <topicref href="../Destinations/AmazonS3-Configuring.dita"/>
