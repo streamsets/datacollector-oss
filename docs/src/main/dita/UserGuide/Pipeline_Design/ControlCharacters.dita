@@ -36,6 +36,7 @@
         <li>File Tail origin</li>
         <li>Hadoop FS origin</li>
         <li>HTTP Client origin</li>
+        <li>HTTP Server origin</li>
         <li>JMS Consumer origin</li>
         <li>Kafka Consumer origin</li>
         <li>Kinesis Consumer origin</li>
