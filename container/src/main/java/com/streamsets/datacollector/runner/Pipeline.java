@@ -40,6 +40,7 @@ import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.IssueCreator;
 import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.ProtoSource;
@@ -63,6 +64,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Pipeline {
   private static final Logger LOG = LoggerFactory.getLogger(Pipeline.class);
   private static final String EXECUTION_MODE_CONFIG_KEY = "executionMode";
+  private static final String DELIVERY_GUARANTEE_CONFIG_KEY = "deliveryGuarantee";
   private static final String MAX_RUNNERS_CONFIG_KEY = "pipeline.max.runners.count";
   private static final int MAX_RUNNERS_DEFAULT = 50;
 
@@ -602,6 +604,13 @@ public class Pipeline {
     return ExecutionMode.valueOf(executionMode);
   }
 
+  private static DeliveryGuarantee getDeliveryGuarantee(PipelineConfiguration pipelineConf) {
+    Config deliveryGuaranteeConfig = Utils.checkNotNull(pipelineConf.getConfiguration(DELIVERY_GUARANTEE_CONFIG_KEY), DELIVERY_GUARANTEE_CONFIG_KEY);
+    String deliveryGuarantee = deliveryGuaranteeConfig.getValue().toString();
+    Utils.checkState(deliveryGuarantee != null && !deliveryGuarantee.isEmpty(), "Delivery guarantee cannot be null or empty");
+    return DeliveryGuarantee.valueOf(deliveryGuarantee);
+  }
+
   private static List<Pipe> createPipes(
     String pipelineName,
     String rev,
@@ -704,6 +713,7 @@ public class Pipeline {
         stageRuntime,
         pipelineConfiguration.getMemoryLimitConfiguration().getMemoryLimit(),
         getExecutionMode(pipelineConfiguration),
+        getDeliveryGuarantee(pipelineConfiguration),
         pipelineRunner.getRuntimeInfo(),
         new EmailSender(configuration),
         configuration,

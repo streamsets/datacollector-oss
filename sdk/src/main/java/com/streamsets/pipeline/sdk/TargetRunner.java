@@ -21,6 +21,7 @@ package com.streamsets.pipeline.sdk;
 
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.runner.BatchImpl;
+import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Target;
@@ -39,18 +40,55 @@ public class TargetRunner extends StageRunner<Target> {
   private static final Logger LOG = LoggerFactory.getLogger(TargetRunner.class);
 
   @SuppressWarnings("unchecked")
-  public TargetRunner(Class<Target> targetClass, Target target, Map<String, Object> configuration, boolean isPreview,
-                      OnRecordError onRecordError, Map<String, Object> constants, ExecutionMode executionMode,
-      String resourcesDir) {
-    super(targetClass, target, StageType.TARGET, configuration, Collections.EMPTY_LIST, isPreview, onRecordError,
-      constants, executionMode, resourcesDir);
+  public TargetRunner(
+    Class<Target> targetClass,
+    Target target,
+    Map<String, Object> configuration,
+    boolean isPreview,
+    OnRecordError onRecordError,
+    Map<String, Object> constants,
+    ExecutionMode executionMode,
+    DeliveryGuarantee deliveryGuarantee,
+    String resourcesDir
+  ) {
+    super(
+      targetClass,
+      target,
+      StageType.TARGET,
+      configuration,
+      Collections.EMPTY_LIST,
+      isPreview,
+      onRecordError,
+      constants,
+      executionMode,
+      deliveryGuarantee,
+      resourcesDir
+    );
   }
 
   @SuppressWarnings("unchecked")
-  public TargetRunner(Class<Target> sourceClass, Map<String, Object> configuration, boolean isPreview,
-      OnRecordError onRecordError, Map<String, Object> constants, ExecutionMode executionMode, String resourcesDir) {
-    super(sourceClass, StageType.TARGET, configuration, Collections.EMPTY_LIST, isPreview, onRecordError, constants,
-      executionMode, resourcesDir);
+  public TargetRunner(
+    Class<Target> sourceClass,
+    Map<String, Object> configuration,
+    boolean isPreview,
+    OnRecordError onRecordError,
+    Map<String, Object> constants,
+    ExecutionMode executionMode,
+    DeliveryGuarantee deliveryGuarantee,
+    String resourcesDir
+  ) {
+    super(
+      sourceClass,
+      StageType.TARGET,
+      configuration,
+      Collections.EMPTY_LIST,
+      isPreview,
+      onRecordError,
+      constants,
+      executionMode,
+      deliveryGuarantee,
+      resourcesDir
+    );
   }
 
   public void runWrite(List<Record> inputRecords) throws StageException {
@@ -75,9 +113,30 @@ public class TargetRunner extends StageRunner<Target> {
     @Override
     public TargetRunner build() {
       Utils.checkState(outputLanes.isEmpty(), "A Target cannot have output streams");
-      return (stage != null) ?
-        new TargetRunner(stageClass, stage, configs, isPreview, onRecordError, constants, executionMode, resourcesDir)
-        : new TargetRunner(stageClass, configs, isPreview, onRecordError, constants, executionMode, resourcesDir);
+      if(stage != null) {
+        return new TargetRunner(
+          stageClass,
+          stage,
+          configs,
+          isPreview,
+          onRecordError,
+          constants,
+          executionMode,
+          deliveryGuarantee,
+          resourcesDir
+        );
+      } else {
+        return new TargetRunner(
+          stageClass,
+          configs,
+          isPreview,
+          onRecordError,
+          constants,
+          executionMode,
+          deliveryGuarantee,
+          resourcesDir
+        );
+      }
     }
 
   }

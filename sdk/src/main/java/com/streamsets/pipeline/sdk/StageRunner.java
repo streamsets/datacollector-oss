@@ -33,6 +33,7 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
@@ -211,15 +212,46 @@ public abstract class StageRunner<S extends Stage> {
   }
 
   @SuppressWarnings("unchecked")
-  StageRunner(Class<S> stageClass, StageType stageType, Map<String, Object> configuration, List<String> outputLanes,
-      boolean isPreview, OnRecordError onRecordError, Map<String, Object> constants, ExecutionMode executionMode, String resourcesDir) {
-    this(stageClass, (S) getStage(Utils.checkNotNull(stageClass, "stageClass")), stageType, configuration, outputLanes,
-      isPreview, onRecordError, constants, executionMode, resourcesDir);
+  StageRunner(
+    Class<S> stageClass,
+    StageType stageType,
+    Map<String, Object> configuration,
+    List<String> outputLanes,
+    boolean isPreview,
+    OnRecordError onRecordError,
+    Map<String, Object> constants,
+    ExecutionMode executionMode,
+    DeliveryGuarantee deliveryGuarantee,
+    String resourcesDir
+  ) {
+    this(
+      stageClass,
+      (S) getStage(Utils.checkNotNull(stageClass, "stageClass")),
+      stageType,
+      configuration,
+      outputLanes,
+      isPreview,
+      onRecordError,
+      constants,
+      executionMode,
+      deliveryGuarantee,
+      resourcesDir
+    );
   }
 
-  StageRunner(Class<S> stageClass, S stage, StageType stageType, Map < String, Object > configuration,
-              List< String > outputLanes, boolean isPreview, OnRecordError onRecordError,
-              Map<String, Object> constants, ExecutionMode executionMode, String resourcesDir) {
+  StageRunner(
+    Class<S> stageClass,
+    S stage,
+    StageType stageType,
+    Map < String, Object > configuration,
+    List< String > outputLanes,
+    boolean isPreview,
+    OnRecordError onRecordError,
+    Map<String, Object> constants,
+    ExecutionMode executionMode,
+    DeliveryGuarantee deliveryGuarantee,
+    String resourcesDir
+  ) {
     Utils.checkNotNull(stage, "stage");
     Utils.checkNotNull(configuration, "configuration");
     Utils.checkNotNull(outputLanes, "outputLanes");
@@ -250,6 +282,7 @@ public abstract class StageRunner<S extends Stage> {
         configToElDefMap,
         constants,
         executionMode,
+        deliveryGuarantee,
         resourcesDir,
         new EmailSender(new Configuration())
     );
@@ -371,6 +404,7 @@ public abstract class StageRunner<S extends Stage> {
     final Map<String, Object> constants;
     boolean isPreview;
     ExecutionMode executionMode = ExecutionMode.STANDALONE;
+    DeliveryGuarantee deliveryGuarantee = DeliveryGuarantee.AT_LEAST_ONCE;
     OnRecordError onRecordError;
     String resourcesDir;
 
@@ -391,6 +425,11 @@ public abstract class StageRunner<S extends Stage> {
 
     public B setExecutionMode(ExecutionMode executionMode) {
       this.executionMode = executionMode;
+      return (B) this;
+    }
+
+    public B setDeliveryGuarantee(DeliveryGuarantee deliveryGuarantee) {
+      this.deliveryGuarantee = deliveryGuarantee;
       return (B) this;
     }
 

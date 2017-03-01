@@ -46,6 +46,7 @@ import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.ElUtil;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.BatchContext;
+import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -67,7 +68,6 @@ import com.streamsets.pipeline.api.ext.RecordWriter;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.sampling.RecordSampler;
-import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -103,6 +103,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   private final Map<String, Object> constants;
   private final long pipelineMaxMemory;
   private final ExecutionMode executionMode;
+  private final DeliveryGuarantee deliveryGuarantee;
   private final String resourcesDir;
   private final String sdcId;
   private final String pipelineName;
@@ -123,6 +124,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
       Map<String, Class<?>[]> configToElDefMap,
       Map<String, Object> constants,
       ExecutionMode executionMode,
+      DeliveryGuarantee deliveryGuarantee,
       String resourcesDir,
       EmailSender emailSender
   ) {
@@ -159,6 +161,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
     this.constants = constants;
     this.pipelineMaxMemory = new MemoryLimitConfiguration().getMemoryLimit();
     this.executionMode = executionMode;
+    this.deliveryGuarantee = deliveryGuarantee;
     this.resourcesDir = resourcesDir;
     this.emailSender = emailSender;
     reportErrorDelegate = errorSink;
@@ -180,6 +183,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
       StageRuntime stageRuntime,
       long pipelineMaxMemory,
       ExecutionMode executionMode,
+      DeliveryGuarantee deliveryGuarantee,
       RuntimeInfo runtimeInfo,
       EmailSender emailSender,
       Configuration configuration,
@@ -199,6 +203,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
     this.constants = stageRuntime.getConstants();
     this.pipelineMaxMemory = pipelineMaxMemory;
     this.executionMode = executionMode;
+    this.deliveryGuarantee = deliveryGuarantee;
     this.resourcesDir = runtimeInfo.getResourcesDir();
     this.sdcId = runtimeInfo.getId();
     this.emailSender = emailSender;
@@ -248,6 +253,11 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   @Override
   public void commitOffset(String entity, String offset) {
     pushSourceContextDelegate.commitOffset(entity, offset);
+  }
+
+  @Override
+  public DeliveryGuarantee getDeliveryGuarantee() {
+    return deliveryGuarantee;
   }
 
   private static class ConfigIssueImpl extends Issue implements Stage.ConfigIssue {

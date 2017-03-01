@@ -21,6 +21,7 @@ package com.streamsets.pipeline.sdk;
 
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Stage;
@@ -42,14 +43,14 @@ public class TestStageRunner {
     DummyStageRunner(Class<DummyStage> stageClass, Map<String, Object> configuration, List<String> outputLanes,
         boolean isPreview, Map<String, Object> constants, ExecutionMode executionMode, String resourcesDir) {
       super(stageClass, StageType.SOURCE, configuration, outputLanes, isPreview, OnRecordError.TO_ERROR, constants,
-        executionMode, resourcesDir);
+        executionMode, DeliveryGuarantee.AT_LEAST_ONCE, resourcesDir);
     }
 
     DummyStageRunner(Class<DummyStage> stageClass, DummyStage stage, Map<String, Object> configuration,
                      List<String> outputLanes, boolean isPreview, Map<String, Object> constants,
                      ExecutionMode executionMode, String resourcesDir) {
       super(stageClass, stage, StageType.SOURCE, configuration, outputLanes, isPreview, OnRecordError.TO_ERROR,
-        constants, executionMode, resourcesDir);
+        constants, executionMode, DeliveryGuarantee.AT_LEAST_ONCE, resourcesDir);
     }
 
     public static class Builder extends StageRunner.Builder<DummyStage, DummyStageRunner, Builder> {

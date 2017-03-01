@@ -33,6 +33,7 @@ import com.streamsets.datacollector.record.EventRecordImpl;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.BatchContext;
+import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -171,6 +172,7 @@ public class TestStageContext {
       Collections.EMPTY_MAP,
       Collections.<String, Object> emptyMap(),
       ExecutionMode.STANDALONE,
+      DeliveryGuarantee.AT_LEAST_ONCE,
       null,
       sender
     );
@@ -199,6 +201,7 @@ public class TestStageContext {
       Collections.EMPTY_MAP,
       Collections.<String, Object> emptyMap(),
       ExecutionMode.STANDALONE,
+      DeliveryGuarantee.AT_LEAST_ONCE,
       null,
       sender
     );
@@ -408,6 +411,7 @@ public class TestStageContext {
       Collections.EMPTY_MAP,
       Collections.<String, Object> emptyMap(),
       ExecutionMode.STANDALONE,
+      DeliveryGuarantee.AT_LEAST_ONCE,
       null,
       new EmailSender(new Configuration())
     );

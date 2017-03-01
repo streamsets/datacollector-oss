@@ -23,6 +23,7 @@ import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.runner.*;
 import com.streamsets.pipeline.api.BatchContext;
+import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.PushSource;
@@ -58,6 +59,7 @@ public class PushSourceRunner extends StageRunner<PushSource>  implements PushSo
     OnRecordError onRecordError,
     Map<String, Object> constants,
     ExecutionMode executionMode,
+    DeliveryGuarantee deliveryGuarantee,
     String resourcesDir
   ) {
     super(
@@ -69,6 +71,7 @@ public class PushSourceRunner extends StageRunner<PushSource>  implements PushSo
       onRecordError,
       constants,
       executionMode,
+      deliveryGuarantee,
       resourcesDir
     );
   }
@@ -82,6 +85,7 @@ public class PushSourceRunner extends StageRunner<PushSource>  implements PushSo
     OnRecordError onRecordError,
     Map<String, Object> constants,
     ExecutionMode executionMode,
+    DeliveryGuarantee deliveryGuarantee,
     String resourcesDir
   ) {
     super(
@@ -94,6 +98,7 @@ public class PushSourceRunner extends StageRunner<PushSource>  implements PushSo
       onRecordError,
       constants,
       executionMode,
+      deliveryGuarantee,
       resourcesDir
     );
   }
@@ -238,6 +243,7 @@ public class PushSourceRunner extends StageRunner<PushSource>  implements PushSo
           onRecordError,
           constants,
           executionMode,
+          deliveryGuarantee,
           resourcesDir
         );
       } else {
@@ -249,6 +255,7 @@ public class PushSourceRunner extends StageRunner<PushSource>  implements PushSo
           onRecordError,
           constants,
           executionMode,
+          deliveryGuarantee,
           resourcesDir
         );
       }

@@ -21,6 +21,7 @@ package com.streamsets.pipeline.sdk;
 
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.runner.BatchImpl;
+import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Executor;
 import com.streamsets.pipeline.api.OnRecordError;
@@ -45,6 +46,7 @@ public class ExecutorRunner extends StageRunner<Executor> {
                         OnRecordError onRecordError,
                         Map<String, Object> constants,
                         ExecutionMode executionMode,
+                        DeliveryGuarantee deliveryGuarantee,
                         String resourcesDir) {
     super(executorClass,
       executor,
@@ -55,6 +57,7 @@ public class ExecutorRunner extends StageRunner<Executor> {
       onRecordError,
       constants,
       executionMode,
+      deliveryGuarantee,
       resourcesDir
     );
   }
@@ -66,6 +69,7 @@ public class ExecutorRunner extends StageRunner<Executor> {
                         OnRecordError onRecordError,
                         Map<String, Object> constants,
                         ExecutionMode executionMode,
+                        DeliveryGuarantee deliveryGuarantee,
                         String resourcesDir) {
     super(executorClass,
       StageType.EXECUTOR,
@@ -75,6 +79,7 @@ public class ExecutorRunner extends StageRunner<Executor> {
       onRecordError,
       constants,
       executionMode,
+      deliveryGuarantee,
       resourcesDir
     );
   }
@@ -101,9 +106,31 @@ public class ExecutorRunner extends StageRunner<Executor> {
     @Override
     public ExecutorRunner build() {
       Utils.checkState(outputLanes.isEmpty(), "An Executor cannot have output streams");
-      return (stage != null) ?
-        new ExecutorRunner(stageClass, stage, configs, isPreview, onRecordError, constants, executionMode, resourcesDir)
-        : new ExecutorRunner(stageClass, configs, isPreview, onRecordError, constants, executionMode, resourcesDir);
+
+      if(stage != null) {
+        return new ExecutorRunner(
+          stageClass,
+          stage,
+          configs,
+          isPreview,
+          onRecordError,
+          constants,
+          executionMode,
+          deliveryGuarantee,
+          resourcesDir
+        );
+      } else {
+        return new ExecutorRunner(
+          stageClass,
+          configs,
+          isPreview,
+          onRecordError,
+          constants,
+          executionMode,
+          deliveryGuarantee,
+          resourcesDir
+        );
+      }
     }
   }
 
