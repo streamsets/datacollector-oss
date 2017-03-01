@@ -22,6 +22,8 @@ package com.streamsets.pipeline.stage.destination.datalake.writer;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.microsoft.azure.datalake.store.ADLStoreClient;
+import com.microsoft.azure.datalake.store.oauth2.AzureADAuthenticator;
+import com.microsoft.azure.datalake.store.oauth2.AzureADToken;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
@@ -70,6 +72,9 @@ public class RecordWriter {
   private final long maxRecordsPerFile;
   private final WholeFileExistsAction wholeFileExistsAction;
   private final OutputStreamHelper outputStreamHelper;
+  private final String authTokenEndpoint;
+  private final String clientId;
+  private final String clientKey;
 
   public RecordWriter(
       ADLStoreClient client,
@@ -83,14 +88,16 @@ public class RecordWriter {
       boolean rollIfHeader,
       String rollHeaderName,
       long maxRecordsPerFile,
-      WholeFileExistsAction wholeFileExistsAction
+      WholeFileExistsAction wholeFileExistsAction,
+      String authTokenEndpoint,
+      String clientId,
+      String clientKey
   ) {
     generators = new HashMap<>();
     dirPathTemplateEval = context.createELEval("dirPathTemplate");
     dirPathTemplateVars = context.createELVars();
     fileNameEval = context.createELEval("fileNameEL");
     fileNameVars = context.createELVars();
-
 
     this.client = client;
     this.dataFormat = dataFormat;
@@ -105,6 +112,15 @@ public class RecordWriter {
     this.maxRecordsPerFile = maxRecordsPerFile;
     this.wholeFileExistsAction = wholeFileExistsAction;
     this.outputStreamHelper = getOutputStreamHelper();
+
+    this.authTokenEndpoint = authTokenEndpoint;
+    this.clientId = clientId;
+    this.clientKey = clientKey;
+  }
+
+  public void updateToken() throws IOException {
+    AzureADToken token = AzureADAuthenticator.getTokenUsingClientCreds(authTokenEndpoint, clientId, clientKey);
+    client.updateToken(token);
   }
 
   public void write(String filePath, Record record) throws StageException, IOException {

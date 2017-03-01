@@ -154,7 +154,7 @@ public class DataLakeTarget extends BaseTarget {
       try {
         client = createClient(conf.authTokenEndpoint, conf.clientId, conf.clientKey, conf.accountFQDN);
 
-        if (conf.checkPermission) {
+        if (conf.checkPermission && !conf.dirPathTemplateInHeader) {
           validatePermission();
         }
       } catch (ELEvalException ex0) {
@@ -196,7 +196,10 @@ public class DataLakeTarget extends BaseTarget {
           conf.rollIfHeader,
           conf.rollHeaderName,
           conf.maxRecordsPerFile,
-          conf.dataFormatConfig.wholeFileExistsAction
+          conf.dataFormatConfig.wholeFileExistsAction,
+          conf.authTokenEndpoint,
+          conf.clientId,
+          conf.clientKey
       );
     }
 

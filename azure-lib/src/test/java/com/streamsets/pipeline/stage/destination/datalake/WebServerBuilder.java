@@ -88,4 +88,16 @@ public class WebServerBuilder {
 
     return this;
   }
+
+  public WebServerBuilder enqueueTokenFailureResponse() {
+    MockResponse fileInfoFailureResponse = (new MockResponse()).setResponseCode(401); // client timeout
+    final String fileInfoResponseBody = "{\"length\":100, \"accessTime\":123456789, \"type\":\"FILE\", " +
+        "\"modificationTime\":123456789, \"permission\":\"read\",\"owner\":\"root\", " +
+        "\"group\":\"supergroup\",\"blockSize\":1,\"replication\":1}";
+    fileInfoFailureResponse.setBody(fileInfoResponseBody);
+
+    server.enqueue(fileInfoFailureResponse);
+
+    return this;
+  }
 }
