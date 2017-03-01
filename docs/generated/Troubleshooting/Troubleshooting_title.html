@@ -276,8 +276,8 @@ name &lt;stage name&gt;, version &lt;version&gt;</pre>
                   Collector</span>. </dd>
 
                     <dd class="dd">If you need to use a stage that is not installed on the <span class="ph">Data
-                  Collector</span>, install the related stage library. For an RPM installation, see <a class="xref" href="../Installation/CoreInstall_Overview.html#concept_amc_cf3_dx">Install Additional RPM Libraries</a>.
-                        For a tarball installation, see <a class="xref" href="../Installation/CoreInstall_Overview.html#concept_h5k_jbl_nx">Install Additional Libraries Using the Package Manager</a> or <a class="xref" href="../Installation/CoreInstall_Overview.html#concept_bnl_n3n_s5">Install Additional Libraries Using the Command Line</a>.</dd>
+                  Collector</span>, install the related stage library. For an RPM installation, see <a class="xref" href="../Installation/AddtionalStageLibs.html#concept_amc_cf3_dx">Installing for RPM</a>.
+                        For a tarball installation, see <a class="xref" href="../Installation/AddtionalStageLibs.html#concept_h5k_jbl_nx">Installing for Tarball Using the Package Manager</a> or <a class="xref" href="../Installation/AddtionalStageLibs.html#concept_bnl_n3n_s5">Installing for Tarball Using the Command Line</a>.</dd>
 
                 
             </dl>
@@ -374,11 +374,11 @@ name &lt;stage name&gt;, version &lt;version&gt;</pre>
                   Collector</span> is configured to use TLS versions 1.1 and 1.2. This error can occur when
                         you configure the HTTP Client origin or HTTP Client processor to connect to
                         an HTTP server that is using an earlier version of TLS, such as version 1.0. 
-                        <div class="note note"><span class="notetitle">Note:</span> Java 7 is supported but deprecated. Oracle announced the end of public updates for
-                  Java 7 in April 2015. StreamSets recommends migrating to Java 8, as Java 7 support
-                  will be removed in a future <span class="ph">Data
-                  Collector</span>
-                  release.</div>
+                        <div class="note note"><span class="notetitle">Note:</span> Java 7 is supported but deprecated. Oracle announced the end of public
+                  updates for Java 7 in April 2015. StreamSets highly recommends migrating to Java 8
+                  with this version of <span class="ph">Data
+                  Collector</span>. <span class="ph">Data
+                  Collector</span> will no longer run on Java 7 starting with version 2.5.0.0.</div>
 </dd>
 
                     <dd class="dd">You can enable <span class="ph">Data
@@ -529,7 +529,7 @@ Integer provided`</pre>
  </div>
 
 </div>
-<div class="topic concept nested2" id="unique_1181312631">
+<div class="topic concept nested2" id="unique_1389328268">
  <h3 class="title topictitle3">Hadoop FS</h3>
 
  <div class="body conbody">
@@ -670,25 +670,28 @@ java.net.ConnectException: Connection refused]</pre>
         <p class="p">Use the following
             tips for help with stages that use JDBC connections to connect to databases. </p>
 
-        <div class="p">The following stages use a JDBC connection: <ul class="ul" id="concept_vrq_qh1_hy__ul_t1w_h31_hy">
-                <li class="li">JDBC Multitable Consumer origin</li>
+        <p class="p">The following stages use a JDBC connection: </p>
 
-                <li class="li">JDBC Query Consumer origin</li>
+        <ul class="ul" id="concept_vrq_qh1_hy__ul_f1l_fnb_cz">
+                  <li class="li">JDBC Multitable Consumer origin</li>
 
-                <li class="li">MySQL Binary Log origin</li>
+                  <li class="li">JDBC Query Consumer origin</li>
 
-                <li class="li">Oracle CDC Client origin</li>
+                  <li class="li">JMS Consumer origin</li>
 
-                <li class="li">JDBC Lookup processor</li>
+                  <li class="li">MySQL Binary Log origin</li>
 
-                <li class="li">JDBC Tee processor</li>
+                  <li class="li">Oracle CDC Client origin</li>
 
-                <li class="li">JDBC Producer destination</li>
+                  <li class="li">JDBC Lookup processor</li>
 
-                <li class="li">JDBC Query executor</li>
+                  <li class="li">JDBC Tee processor</li>
+
+                  <li class="li">JDBC Producer destination</li>
+
+                  <li class="li">JDBC Query executor</li>
 
             </ul>
-</div>
 
     </div>
 
@@ -704,7 +707,7 @@ JDBC_06 - Failed to initialize connection pool: java.sql.SQLException: No suitab
 </div>
 
         <p class="p">Verify that you have followed the instructions to install additional drivers, as
-            explained in <a class="xref" href="../Configuration/AdditionalDrivers.html#task_idl_hqw_ft">Installing Additional Drivers</a>. </p>
+            explained in <a class="xref" href="../Configuration/ExternalLibs.html#concept_pdv_qlw_ft" title="Install external libraries to make them available to Data Collector stages.">Install External Libraries</a>. </p>
 
         <p class="p">You can also use these additional tips to help resolve the issue:</p>
 

@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The XML Parser parses a well-formed XML document embedded in a string field and passes the parsed data to an output field in the record. The XML Parser can create multiple records from an XML document ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="XML Parser" /><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_dtt_q5q_k5" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>XML Parser</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The XML Parser parses a well-formed XML document embedded in a string field and passes the parsed data to an output field in the record. When you configure the XML Parser, you specify the field that ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="XML Parser" /><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_dtt_q5q_k5" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>XML Parser</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
             
             var prefix = "../index.html";
             
@@ -31,16 +31,23 @@
   <p class="p">The XML Parser parses a well-formed XML document
             embedded in a string field and passes the parsed data to an output field in the record. </p>
 
-        <p class="p">The XML Parser can create multiple records from an XML document based on a user-defined
-            delimiter element. When defining the delimiter element, you can use an XML element or
-            simplified XPath expression. </p>
+        <p class="p">When you configure the XML Parser, you specify the field that contains the XML document
+            and the target field for the parsed results. You can define a delimiter element to
+            separate the document into multiple values. When no delimiter element is defined, XML
+            Parser passes the entire document to the target field as a map.</p>
 
-        <p class="p">Use an XML element when the element resides directly under the
-                  root node. Use a simplified XPath expression to access data deeper in the XML
-                  document.</p>
+        <p class="p">When defining the delimiter element, you can use an XML element or simplified XPath
+            expression. <span class="ph">Use an XML element when the element
+                        resides directly under the root node. Use a simplified XPath expression to
+                        access data deeper in the XML document.</span></p>
 
-        <p class="p">When no delimiter element is defined, XML Parser reads the entire contents of the field as
-            a single record.</p>
+        <p class="p">When an XML document has more than one value, you can return the first value, all values
+            as a list, or generate a record for each value in the document. </p>
+
+        <p class="p">When generating a record, the processor includes all other incoming fields in the
+            generated record. When generating multiple records because of multiple values in the
+            parsed field, the processor includes the other incoming fields for each generated
+            record. </p>
 
         <p class="p">For more information about how XML Parser processes XML data, see <a class="xref" href="../Pipeline_Design/XMLDFormat.html#concept_lty_42b_dy">XML Data Format and Data Processing</a>.</p>
 
@@ -61,14 +68,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_txd_55q_k5__d39506e3993" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_txd_55q_k5__d40627e3993" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d276423e91">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d281558e97">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d276423e94">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d281558e100">Description</th>
 
                                 </tr>
 
@@ -76,24 +83,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d276423e91 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d281558e97 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d276423e94 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d276423e91 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d276423e94 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d281558e100 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d276423e91 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_txd_55q_k5__d39506e4039" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d281558e97 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d276423e94 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d281558e100 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d281558e97 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_txd_55q_k5__d40627e4039" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d281558e100 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -101,10 +108,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d276423e91 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_txd_55q_k5__d39506e4053" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d281558e97 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_txd_55q_k5__d40627e4053" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d276423e94 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d281558e100 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -112,10 +119,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d276423e91 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_txd_55q_k5__d39506e4068" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d281558e97 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_txd_55q_k5__d40627e4068" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d276423e94 ">Error record handling for the stage: <ul class="ul" id="task_txd_55q_k5__d39506e4072">
+                                    <td class="entry" valign="top" width="70%" headers="d281558e100 ">Error record handling for the stage: <ul class="ul" id="task_txd_55q_k5__d40627e4072">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -146,9 +153,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d276423e213">Parse Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d281558e219">Parse Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d276423e216">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d281558e222">Description</th>
 
                                 </tr>
 
@@ -156,16 +163,16 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d276423e213 ">Field to Parse</td>
+                                    <td class="entry" valign="top" width="30%" headers="d281558e219 ">Field to Parse</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d276423e216 ">String field that contains XML data.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d281558e222 ">String field that contains XML data.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d276423e213 ">Charset</td>
+                                    <td class="entry" valign="top" width="30%" headers="d281558e219 ">Charset</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d276423e216 ">
+                                    <td class="entry" valign="top" width="70%" headers="d281558e222 ">
                                         <p class="p">Character encoding of the data to be processed. </p>
 
                                     </td>
@@ -173,19 +180,19 @@
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d276423e213 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_txd_55q_k5__d39718e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d281558e219 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_txd_55q_k5__d40853e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d276423e216 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d281558e222 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d276423e213 ">Delimiter Element <a class="xref" href="../Pipeline_Design/XMLDFormat.html#concept_tmc_4bc_dy">
+                                    <td class="entry" valign="top" width="30%" headers="d281558e219 ">Delimiter Element <a class="xref" href="../Pipeline_Design/XMLDFormat.html#concept_tmc_4bc_dy">
                                             <img class="image" id="task_txd_55q_k5__image_xwx_xrm_js" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d276423e216 ">Delimiter to use to process data and generate multiple
+                                    <td class="entry" valign="top" width="70%" headers="d281558e222 ">Delimiter to use to process data and generate multiple
                                         records. Omit a delimiter to treat the entire XML document
                                         as one record. <div class="p">Use one of the following as a delimiter
                                             element: <ul class="ul" id="task_txd_55q_k5__ul_zrb_j1n_gy">
@@ -211,9 +218,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d276423e213 ">Namespaces </td>
+                                    <td class="entry" valign="top" width="30%" headers="d281558e219 ">Namespaces </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d276423e216 ">Namespace prefix and URI to use when parsing the XML
+                                    <td class="entry" valign="top" width="70%" headers="d281558e222 ">Namespace prefix and URI to use when parsing the XML
                                         document. Define namespaces when the XML element being used
                                         includes a namespace prefix or when the XPath expression
                                         includes namespaces.<p class="p">For information about using
@@ -227,9 +234,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d276423e213 ">Target Field</td>
+                                    <td class="entry" valign="top" width="30%" headers="d281558e219 ">Target Field</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d276423e216 ">
+                                    <td class="entry" valign="top" width="70%" headers="d281558e222 ">
                                         <p class="p">Output field for the parsed XML data. </p>
 
                                         <p class="p">You can specify the same field to replace the original
@@ -238,6 +245,28 @@
                                             exist, XML Parser creates the field.</p>
 
                                     </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d281558e219 ">Multiple Values Behavior</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d281558e222 ">Action to take when the data in the field includes
+                                        multiple values:<ul class="ul" id="task_txd_55q_k5__ul_e5j_j1c_1z">
+                                            <li class="li">First Value Only - Returns the first value.</li>
+
+                                            <li class="li">All Values as a List - Returns all values as items
+                                                in a List field.</li>
+
+                                            <li class="li">Split into Multiple Records - Returns each value in
+                                                a separate record. This option generates multiple
+                                                records, one for each parsed value from the XML
+                                                document, based on the delimiter element. Other
+                                                fields in the record are retained with each
+                                                record.</li>
+
+                                        </ul>
+</td>
 
                                 </tr>
 

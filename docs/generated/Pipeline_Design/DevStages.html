@@ -79,6 +79,16 @@
 
         
         
+          <dt class="dt dlterm">Dev SDC RPC with Buffering origin</dt>
+
+          <dd class="dd">Receives records from an SDC RPC destination, temporarily buffering the records to
+            disk before passing the records to the next stage in the pipeline. Use as the origin in
+            an SDC RPC destination pipeline.<div class="note note"><span class="notetitle">Note:</span>  After a deliberate or unexpected stop of the
+              pipeline, buffered records are lost.</div>
+</dd>
+
+        
+        
           <dt class="dt dlterm">Dev Identity processor</dt>
 
           <dd class="dd">Passes all records through to the next stage. Use as a placeholder in the pipeline.

@@ -49,8 +49,8 @@
 </div>
 
         <p class="p">Afterwards, you can configure the <span class="ph">Data
-                  Collector</span>
-            and install additional drivers, if necessary. </p>
+                  Collector</span>,
+            enable Kerberos, and store custom stage libraries, if necessary. </p>
 
         <div class="p">
             <div class="note note"><span class="notetitle">Note:</span> When you use Cloudera Manager to install <span class="ph">Data
@@ -148,7 +148,7 @@ For CentOS 7:
     </div>
 
 </div>
-<div class="topic task nested1" id="unique_1027661619">
+<div class="topic task nested1" id="unique_1551218372">
     <h2 class="title topictitle2">Step 3. Distribute and Activate the StreamSets Parcel</h2>
 
     <div class="body taskbody">
@@ -170,7 +170,7 @@ For CentOS 7:
 
         </div>
 
-        <ol class="ol steps" id="unique_1027661619__steps_zj3_4sm_25"><li class="li step stepexpand">
+        <ol class="ol steps" id="unique_1551218372__steps_zj3_4sm_25"><li class="li step stepexpand">
                 <span class="ph cmd">To view the list of available parcels, in the menu bar, click the
                         <span class="ph uicontrol">Parcels</span> icon. </span>
                 <div class="itemgroup info">The StreamSets parcel displays in the list of available parcels. If it doesn't
@@ -321,99 +321,6 @@ To run <span class="ph">Data
                   Collector</span>.</span>
             </li>
 </ol>
-
-    </div>
-
-</div>
-<div class="topic task nested1" id="task_yhv_1pn_25">
-    <h2 class="title topictitle2">Installing Additional Drivers with Cloudera Manager (Optional)</h2>
-
-    <div class="body taskbody">
-        <div class="section context">You can install additional drivers for
-            stages. <div class="p">Before you use the following stages, you need to install drivers for the implementation that
-                  you want to use: <ul class="ul" id="task_yhv_1pn_25__d21353e3401">
-                        <li class="li">JMS Consumer origin</li>
-
-                        <li class="li">JDBC Multitable Consumer origin</li>
-
-                        <li class="li">MySQL Binary Log origin</li>
-
-                        <li class="li">Oracle CDC Client origin</li>
-
-                        <li class="li">JDBC Query Consumer origin</li>
-
-                        <li class="li">JDBC Lookup processor</li>
-
-                        <li class="li">JDBC Tee processor</li>
-
-                        <li class="li">JDBC Producer destination</li>
-
-                        <li class="li">JDBC Query executor</li>
-
-                  </ul>
-</div>
-<p class="p">For example, to use the JDBC Query Consumer or the
-                  JDBC Producer with Oracle, install the Oracle JDBC drivers.</p>
-<p class="p">Additional drivers for other stages are optional. For example, you can install custom classes
-                  for the JavaScript or Jython Evaluators. </p>
-<p class="p">To install additional drivers for a <span class="ph">Data
-                  Collector</span> administered by Cloudera Manager, perform the following steps:</p>
-<ol class="ol" id="task_yhv_1pn_25__ol_f3s_hrw_ft">
-                <li class="li">In Cloudera Manager, select the <span class="ph uicontrol">StreamSets</span> service and
-                    then click <span class="ph uicontrol">Configuration</span>. </li>
-
-                <li class="li">On the <span class="keyword wintitle">Configuration</span> page, in the <span class="ph uicontrol">Data Collector
-                        Advanced Configuration Snippet (Safety Valve) for sdc-env.sh</span>
-                    field, add the STREAMSETS_LIBRARIES_EXTRA_DIR environment variable and point it
-                    to the driver directory, as
-                        follows:<pre class="pre codeblock">export STREAMSETS_LIBRARIES_EXTRA_DIR=&lt;driver directory&gt;</pre>
-<p class="p">For
-                        example:
-                    </p>
-<pre class="pre codeblock">export STREAMSETS_LIBRARIES_EXTRA_DIR=/opt/sdc-extras/</pre>
-By
-                    default, the path is <samp class="ph codeph">/var/lib/sdc</samp>. </li>
-
-                <li class="li">On every node that runs <span class="ph">Data
-                  Collector</span>, create subdirectories for each set of additional drivers based on the stage
-                    library name as follows:
-                        <pre class="pre codeblock">$STREAMSETS_LIBRARIES_EXTRA_DIR/&lt;stage library name&gt;/lib/</pre>
-<div class="p">For
-                        example, to install drivers for JDBC, create the following subdirectory on
-                        every
-                        node:<pre class="pre codeblock">/opt/sdc-extras/streamsets-datacollector-jdbc-lib/lib/</pre>
-</div>
-<div class="p">To
-                        also install drivers for JMS, create the following subdirectory on every
-                        node:
-                        <pre class="pre codeblock">/opt/sdc-extras/streamsets-datacollector-jms-lib/lib/</pre>
-</div>
-</li>
-
-                    <li class="li">Copy the drivers to the appropriate subdirectories on every node. </li>
-
-                <li class="li">When using the Java Security Manager, which is enabled by default, update the
-                        <span class="ph uicontrol">Data Collector Advanced Configuration Snippet (Safety Valve) for
-                        sdc-security.policy</span> property to include the driver directory as follows:<div class="p">
-                        <pre class="pre codeblock">// user-defined additional driver directory
-grant codebase "file://&lt;driver directory&gt;-" {
-  permission java.security.AllPermission;
-};</pre>
-
-                    </div>
-<div class="p">For example:
-                        <pre class="pre codeblock">// user-defined additional driver directory
-grant codebase "file:///opt/sdc-extras/-" {
-  permission java.security.AllPermission;
-};</pre>
-</div>
-</li>
-
-                <li class="li">Restart <span class="ph">Data
-                  Collector</span>.</li>
-
-            </ol>
-</div>
 
     </div>
 
