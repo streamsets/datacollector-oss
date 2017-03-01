@@ -130,9 +130,9 @@
     <h2 class="title topictitle2">Installing the Application</h2>
 
     
-    <div class="body taskbody"><p class="shortdesc">Install the Spark application JAR file as an additional library for <span class="ph">Data
+    <div class="body taskbody"><p class="shortdesc">Install the Spark application JAR file as an external library for <span class="ph">Data
                   Collector</span>. If
-        your custom Spark application depends on additional libraries other than the
+        your custom Spark application depends on external libraries other than the
         streamsets-datacollector-api, streamsets-datacollector-spark-api, and spark-core libraries,
         install those libraries in the same location as well. </p>
 
@@ -141,96 +141,19 @@
                 application, you can use the Apache Maven Dependency Plugin. For more information
                 about the Dependency Plugin, see <a class="xref" href="http://maven.apache.org/plugins/maven-dependency-plugin/" target="_blank">http://maven.apache.org/plugins/maven-dependency-plugin/</a>.</div>
 
+            <p class="p">To install an external library for the Spark Evaluator, see <a class="xref" href="../Configuration/ExternalLibs.html#concept_pdv_qlw_ft" title="Install external libraries to make them available to Data Collector stages.">Install External Libraries</a>.</p>
+
+            <div class="p">
+                <div class="note note"><span class="notetitle">Note:</span> The Spark Evaluator processor is included in the Cloudera CDH stage libraries.
+                    When you install external libraries for the processor, you must make them
+                    accessible to the appropriate Cloudera CDH stage library.</div>
+
+            </div>
+
         </div>
-
-        <ol class="ol steps"><li class="li step stepexpand">
-                <span class="ph cmd">Create a local directory external to the <span class="ph">Data
-                  Collector</span> installation directory for the Spark application JAR files. Use an external
-                    directory to enable use of the Spark applications after <span class="ph">Data
-                  Collector</span> upgrades.</span>
-                <div class="itemgroup info">For example, if you installed <span class="ph">Data
-                  Collector</span> in the following directory:<pre class="pre codeblock">/opt/sdc/</pre>
-<div class="p">you might
-                        create the external directory at:
-                    <pre class="pre codeblock">/opt/sdc-extras</pre>
-</div>
-</div>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">Create a subdirectory for the stage library that you are using for the Spark
-                    Evaluator processor, as follows:</span>
-                <div class="itemgroup info">
-                    <pre class="pre codeblock">/opt/sdc-extras/&lt;stage library name&gt;/lib/</pre>
-
-                    <div class="p">For example, if you are using the Spark Evaluator processor included in the
-                        stage library for the Cloudera CDH version 5.9 distribution of Hadoop,
-                        create the following
-                        subdirectory:<pre class="pre codeblock">/opt/sdc-extras/streamsets-datacollector-cdh_5_9-lib/lib/</pre>
-</div>
-
-                </div>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">Copy the Spark application JAR file and any dependent libraries to the
-                    subdirectory.</span>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">In the <span class="ph">Data
-                  Collector</span> environment configuration file, <samp class="ph codeph">sdc-env.sh</samp> or
-                        <samp class="ph codeph">sdcd-env.sh</samp> located in the
-                        <samp class="ph codeph">$SDC_DIST/libexec</samp> directory, add the
-                    STREAMSETS_LIBRARIES_EXTRA_DIR environment variable and point it to the external
-                    directory, as follows:</span>
-                <div class="itemgroup info">
-                    <pre class="pre codeblock">export STREAMSETS_LIBRARIES_EXTRA_DIR="&lt;external directory&gt;"</pre>
-
-                    <p class="p">For example: </p>
-
-                    <pre class="pre codeblock">export STREAMSETS_LIBRARIES_EXTRA_DIR="/opt/sdc-extras/"</pre>
-
-                </div>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">When using the Java Security Manager, which is enabled by default, update the
-                        <span class="ph">Data
-                  Collector</span> security policy to include the external directory as follows:</span>
-                <ol type="a" class="ol substeps" id="task_dr2_gvd_1y__d39506e7809">
-                    <li class="li substep substepexpand">
-                        <span class="ph cmd">In the <span class="ph">Data
-                  Collector</span> configuration directory, open the security policy file,
-                                <samp class="ph codeph">$SDC_CONF/sdc-security.policy</samp>.</span>
-                    </li>
-
-                    <li class="li substep substepexpand">
-                        <span class="ph cmd">Add the following lines to the file:</span>
-                        <div class="itemgroup info"><pre class="pre codeblock">// user-defined external directory
-grant codebase "file://&lt;external directory&gt;-" {
-  permission java.security.AllPermission;
-};</pre>
-For
-                            example:
-                            <pre class="pre codeblock">// user-defined external directory
-grant codebase "file:///opt/sdc-extras/-" {
-  permission java.security.AllPermission;
-};</pre>
-</div>
-                    </li>
-
-                </ol>
-
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">Restart <span class="ph">Data
-                  Collector</span> to enable the changes.</span>
-            </li>
-</ol>
 
     </div>
 
-    <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. To enable remote debugging, define debugging options in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file.You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.When you use Data Collector with Java 7, Data Collector is configured to use TLS versions 1.1 and 1.2. To connect to a system that uses an earlier version of TLS, modify the Dhttps.protocols option in the SDC_JAVA7_OPTS environment variable in the Data Collector environment configuration file.When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
-</div>
-</div>
     
 </div>
 <div class="topic task nested1" id="task_g1p_gqn_zx">
@@ -248,14 +171,14 @@ grant codebase "file:///opt/sdc-extras/-" {
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_g1p_gqn_zx__d39506e4109" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_g1p_gqn_zx__d40627e4109" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d272168e419">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d277454e250">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d272168e422">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d277454e253">Description</th>
 
                                 </tr>
 
@@ -263,31 +186,31 @@ grant codebase "file:///opt/sdc-extras/-" {
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d272168e419 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d277454e250 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d272168e422 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d272168e419 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d272168e422 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d277454e253 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d272168e419 ">Stage Library</td>
+                                    <td class="entry" valign="top" width="30%" headers="d277454e250 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d272168e422 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d277454e253 ">Optional description.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d272168e419 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_g1p_gqn_zx__d39506e4164" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d277454e250 ">Stage Library</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d272168e422 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d277454e253 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d277454e250 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_g1p_gqn_zx__d40627e4164" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d277454e253 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -295,10 +218,10 @@ grant codebase "file:///opt/sdc-extras/-" {
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d272168e419 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_g1p_gqn_zx__d39506e4178" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d277454e250 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_g1p_gqn_zx__d40627e4178" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d272168e422 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d277454e253 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -306,10 +229,10 @@ grant codebase "file:///opt/sdc-extras/-" {
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d272168e419 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_g1p_gqn_zx__d39506e4194" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d277454e250 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_g1p_gqn_zx__d40627e4194" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d272168e422 ">Error record handling for the stage: <ul class="ul" id="task_g1p_gqn_zx__d39506e4198">
+                                    <td class="entry" valign="top" width="70%" headers="d277454e253 ">Error record handling for the stage: <ul class="ul" id="task_g1p_gqn_zx__d40627e4198">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -340,9 +263,9 @@ grant codebase "file:///opt/sdc-extras/-" {
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d272168e551">Spark Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d277454e382">Spark Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d272168e554">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d277454e385">Description</th>
 
                                 </tr>
 
@@ -350,9 +273,9 @@ grant codebase "file:///opt/sdc-extras/-" {
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d272168e551 ">Parallelism</td>
+                                    <td class="entry" valign="top" width="30%" headers="d277454e382 ">Parallelism</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d272168e554 ">Number of partitions to create per batch of records. For
+                                    <td class="entry" valign="top" width="70%" headers="d277454e385 ">Number of partitions to create per batch of records. For
                                         example, if set to 4, then the Spark application
                                         simultaneously runs 4 parallel jobs to process the batch.
                                             <p class="p">Set the value based on the number of available
@@ -363,9 +286,9 @@ grant codebase "file:///opt/sdc-extras/-" {
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d272168e551 ">Application Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d277454e382 ">Application Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d272168e554 ">Name of the Spark application. Spark displays this
+                                    <td class="entry" valign="top" width="70%" headers="d277454e385 ">Name of the Spark application. Spark displays this
                                         application name in the log files. <p class="p">If you run pipelines
                                             that include multiple Spark Evaluator processors, be
                                             sure to use a unique application name for each to make
@@ -377,11 +300,11 @@ grant codebase "file:///opt/sdc-extras/-" {
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d272168e551 ">Spark Transformer Class
+                                    <td class="entry" valign="top" width="30%" headers="d277454e382 ">Spark Transformer Class
                                         <a class="xref" href="Spark.html#concept_lfl_dvd_1y">
                                             <img class="image" id="task_g1p_gqn_zx__image_h4p_p5v_yq" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d272168e554 ">Fully qualified name of the custom Spark class that
+                                    <td class="entry" valign="top" width="70%" headers="d277454e385 ">Fully qualified name of the custom Spark class that
                                         implements the StreamSets SparkTransformer API. Enter the
                                         class name using the following
                                             format:<pre class="pre codeblock">com.streamsets.spark.&lt;custom class&gt;</pre>
@@ -402,11 +325,11 @@ grant codebase "file:///opt/sdc-extras/-" {
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d272168e551 ">Init Method Arguments
+                                    <td class="entry" valign="top" width="30%" headers="d277454e382 ">Init Method Arguments
                                         <a class="xref" href="Spark.html#concept_lfl_dvd_1y">
                                             <img class="image" id="task_g1p_gqn_zx__image_h3p_p6v_yq" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d272168e554 ">Arguments to pass to the <samp class="ph codeph">init</samp> method in
+                                    <td class="entry" valign="top" width="70%" headers="d277454e385 ">Arguments to pass to the <samp class="ph codeph">init</samp> method in
                                         the custom Spark class. Enter an argument as required by
                                         your custom Spark class.<p class="p">Click the
                                                 <span class="ph uicontrol">Add</span> icon to add additional

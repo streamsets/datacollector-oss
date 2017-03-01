@@ -64,6 +64,12 @@
                   Collector</span> to
             use an authenticated HTTP proxy server to access <span class="ph">DPM</span>.</p>
 
+        <p class="p">Before you register a <span class="ph">Data
+                  Collector</span>,
+            perform the necessary prerequisites. The prerequisites include creating new <span class="ph">DPM</span>
+            users and groups. After registration, be sure to transfer permissions to the new <span class="ph">DPM</span>
+            users and groups.</p>
+
 
  </div>
 
@@ -95,11 +101,11 @@
 
             
             
-                <dt class="dt dlterm">Create a DPM user account for each Data Collector user.</dt>
+                <dt class="dt dlterm">Create a DPM user account and group for each Data Collector user and group.</dt>
 
-                <dd class="dd">Create a <span class="ph">DPM</span> user account for each <span class="ph">Data
-                  Collector</span> user account, assigning each <span class="ph">DPM</span> user account the corresponding <span class="ph">Data
-                  Collector</span> role. After a <span class="ph">Data
+                <dd class="dd">Create a <span class="ph">DPM</span> user account and group for each <span class="ph">Data
+                  Collector</span> user account and group, assigning the corresponding <span class="ph">Data
+                  Collector</span> roles to each. After a <span class="ph">Data
                   Collector</span> is registered with <span class="ph">DPM</span>, the <span class="ph">Data
                   Collector</span> uses <span class="ph">DPM</span> user authorization. Only <span class="ph">DPM</span> user accounts can log in to registered <span class="ph">Data
                   Collector</span>s.</dd>
@@ -110,7 +116,11 @@
                     roles can log in to the registered <span class="ph">Data
                   Collector</span>s.</dd>
 
-                <dd class="dd">For instructions on creating corresponding <span class="ph">DPM</span> user accounts, see the first tutorial in the <span class="ph">DPM</span> online help.</dd>
+                <dd class="dd">For instructions on creating corresponding <span class="ph">DPM</span> user accounts, see the first tutorial in the <span class="ph">DPM</span> online help.<div class="note tip"><span class="tiptitle">Tip:</span> If <span class="ph">Data
+                  Collector</span> uses file-based authentication and if you register the <span class="ph">Data
+                  Collector</span> from the <span class="ph">Data
+                  Collector</span> console, you can skip this step and create <span class="ph">DPM</span> user accounts during the registration process, as described in <a class="xref" href="RegisterSDCwithDPM.html#task_a4y_v1g_xw" title="You can register a Data Collector with DPM from the Data Collector console.">Registering from Data Collector</a>.</div>
+</dd>
 
             
         </dl>
@@ -153,9 +163,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d39624e295">Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d43074e334">Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d39624e298">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d43074e337">Description</th>
 
                                 </tr>
 
@@ -163,33 +173,33 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d39624e295 "><span class="ph">DPM</span> Base URL</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d43074e334 "><span class="ph">DPM</span> Base URL</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d39624e298 ">Set to:
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d43074e337 ">Set to:
                                         <samp class="ph codeph">https://cloud.streamsets.com</samp></td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d39624e295 ">User Name</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d43074e334 ">User Name</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d39624e298 ">Enter your <span class="ph">DPM</span> user name using the following
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d43074e337 ">Enter your <span class="ph">DPM</span> user name using the following
                                         format:<pre class="pre codeblock">&lt;user account name&gt;@&lt;organization name&gt;</pre>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d39624e295 ">User Password</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d43074e334 ">User Password</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d39624e298 ">Enter the password for your <span class="ph">DPM</span> user account.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d43074e337 ">Enter the password for your <span class="ph">DPM</span> user account.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d39624e295 ">Labels</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d43074e334 ">Labels</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d39624e298 ">Assign a label to this <span class="ph">Data
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d43074e337 ">Assign a label to this <span class="ph">Data
                   Collector</span>. Labels that you assign here are defined in the <span class="ph">DPM</span> configuration file,
                                             <samp class="ph codeph">$SDC_CONF/dpm.properties</samp>. To remove
                                         these labels after you register the <span class="ph">Data
@@ -217,6 +227,20 @@
                 <span class="ph cmd">Click <span class="ph uicontrol">Save</span>.</span>
             </li>
 <li class="li step stepexpand">
+                <span class="ph cmd">If the <span class="ph">Data
+                  Collector</span> uses file-based authentication, you can click <span class="ph uicontrol">Create DPM Groups
+                        and Users</span> to create a <span class="ph">DPM</span> user account and group for each <span class="ph">Data
+                  Collector</span> user account and group.</span>
+                <div class="itemgroup info">The <span class="ph uicontrol">Create DPM Groups and Users</span> window maps all
+                    existing <span class="ph">Data
+                  Collector</span> user accounts and groups to <span class="ph">DPM</span> user accounts and groups. You can remove users or groups and can edit the
+                    IDs, names, and email addresses as needed.<p class="p">When you have finished reviewing
+                        the users and groups to create, click <span class="ph uicontrol">Create</span>. Each
+                        new user is assigned a default set of <span class="ph">DPM</span> roles. Groups are not assigned any roles. After you log in to <span class="ph">DPM</span>, change the default role assignments as needed to secure the integrity of
+                        your organization and data. </p>
+</div>
+            </li>
+<li class="li step stepexpand">
                 <span class="ph cmd">Restart the <span class="ph">Data
                   Collector</span> in one of the following ways:</span>
                 <ul class="ul choices" id="task_a4y_v1g_xw__choices_ost_pkm_nw">
@@ -237,6 +261,7 @@
                 <div class="itemgroup info">When you log in to the registered <span class="ph">Data
                   Collector</span> using a <span class="ph">DPM</span> user account, the following <span class="ph">DPM</span> Enabled icon displays:<p class="p"><img class="image" id="task_a4y_v1g_xw__image_hrt_tdk_3w" src="../Graphics/SDC_DPMEnabled.png" height="64" width="714" /></p>
 </div>
+                <div class="itemgroup info"><span class="ph">To enable <span class="ph">DPM</span> users to work with pipelines, transfer permissions to the <span class="ph">DPM</span> users and groups. For more information, see <a class="xref" href="RegisterSDCwithDPM.html#concept_xzz_rnr_yy">Transfer Permissions to DPM Users</a>.</span></div>
             </li>
 </ol>
 
@@ -282,9 +307,9 @@ system enableDPM \
                 
                 <thead class="thead" align="left">
                     <tr>
-                        <th class="entry" valign="top" width="33.33333333333333%" id="d39624e511">Basic Option</th>
+                        <th class="entry" valign="top" width="33.33333333333333%" id="d43074e606">Basic Option</th>
 
-                        <th class="entry" valign="top" width="66.66666666666666%" id="d39624e514">Description</th>
+                        <th class="entry" valign="top" width="66.66666666666666%" id="d43074e609">Description</th>
 
                     </tr>
 
@@ -292,10 +317,10 @@ system enableDPM \
 
                 <tbody class="tbody">
                     <tr>
-                        <td class="entry" valign="top" width="33.33333333333333%" headers="d39624e511 ">-U &lt;sdcURL&gt;<p class="p">or</p>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d43074e606 ">-U &lt;sdcURL&gt;<p class="p">or</p>
 --url &lt;sdcURL&gt;</td>
 
-                        <td class="entry" valign="top" width="66.66666666666666%" headers="d39624e514 ">Required. URL of the <span class="ph">Data
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d43074e609 ">Required. URL of the <span class="ph">Data
                   Collector</span>.<p class="p">The default URL is
                                     <samp class="ph systemoutput">http://localhost:18630</samp>.</p>
 </td>
@@ -303,11 +328,11 @@ system enableDPM \
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="33.33333333333333%" headers="d39624e511 ">-D &lt;dpmURL&gt;<p class="p">or</p>
+                        <td class="entry" valign="top" width="33.33333333333333%" headers="d43074e606 ">-D &lt;dpmURL&gt;<p class="p">or</p>
 <p class="p">--dpmURL &lt;dpmURL&gt;</p>
 </td>
 
-                        <td class="entry" valign="top" width="66.66666666666666%" headers="d39624e514 ">Required. Set to:
+                        <td class="entry" valign="top" width="66.66666666666666%" headers="d43074e609 ">Required. Set to:
                             <samp class="ph codeph">https://cloud.streamsets.com</samp></td>
 
                     </tr>
@@ -325,9 +350,9 @@ system enableDPM \
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d39624e576">Enable DPM Option</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d43074e671">Enable DPM Option</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d39624e579">Description</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d43074e674">Description</th>
 
                         </tr>
 
@@ -335,33 +360,33 @@ system enableDPM \
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d39624e576 ">--dpmUrl &lt;dpmBaseURL&gt;</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d43074e671 ">--dpmUrl &lt;dpmBaseURL&gt;</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d39624e579 ">Required. Set to:
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d43074e674 ">Required. Set to:
                                 <samp class="ph codeph">https://cloud.streamsets.com</samp></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d39624e576 ">--dpmUser &lt;dpmUserID&gt;</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d43074e671 ">--dpmUser &lt;dpmUserID&gt;</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d39624e579 ">Required. Enter your <span class="ph">DPM</span> user name using the following
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d43074e674 ">Required. Enter your <span class="ph">DPM</span> user name using the following
                                 format:<pre class="pre codeblock">&lt;user account name&gt;@&lt;organization name&gt;</pre>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d39624e576 ">--dpmPassword &lt;dpmUserPassword&gt;</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d43074e671 ">--dpmPassword &lt;dpmUserPassword&gt;</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d39624e579 ">Required. Enter the password for your <span class="ph">DPM</span> user account.</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d43074e674 ">Required. Enter the password for your <span class="ph">DPM</span> user account.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d39624e576 ">--labels &lt;labels&gt;</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d43074e671 ">--labels &lt;labels&gt;</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d39624e579 ">Optional. Assign a label to this <span class="ph">Data
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d43074e674 ">Optional. Assign a label to this <span class="ph">Data
                   Collector</span>. You can enter multiple labels separated by commas. Labels that
                                 you assign here are defined in the <span class="ph">DPM</span> configuration file, <samp class="ph codeph">$SDC_CONF/dpm.properties</samp>. To
                                 remove these labels after you register the <span class="ph">Data
@@ -399,6 +424,8 @@ For example, the following command registers a <span class="ph">Data
 
      <p class="p"><img class="image" id="concept_js4_2z1_cx__image_hrt_tdk_3w" src="../Graphics/SDC_DPMEnabled.png" height="64" width="714" /></p>
 
+        <p class="p"><span class="ph">To enable <span class="ph">DPM</span> users to work with pipelines, transfer permissions to the <span class="ph">DPM</span> users and groups. For more information, see <a class="xref" href="RegisterSDCwithDPM.html#concept_xzz_rnr_yy">Transfer Permissions to DPM Users</a>.</span></p>
+
  </div>
 
 </div>
@@ -432,9 +459,9 @@ For example, the following command registers a <span class="ph">Data
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d39624e777">Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d43074e886">Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d39624e780">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d43074e889">Description</th>
 
                                 </tr>
 
@@ -442,40 +469,40 @@ For example, the following command registers a <span class="ph">Data
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d39624e777 ">Enable <span class="ph">DPM</span></td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d43074e886 ">Enable <span class="ph">DPM</span></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d39624e780 ">Select to enable <span class="ph">DPM</span>.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d43074e889 ">Select to enable <span class="ph">DPM</span>.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d39624e777 "><span class="ph">DPM</span> URL</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d43074e886 "><span class="ph">DPM</span> URL</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d39624e780 ">Set to:
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d43074e889 ">Set to:
                                         <samp class="ph codeph">https://cloud.streamsets.com</samp></td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d39624e777 "><span class="ph">DPM</span> User Name</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d43074e886 "><span class="ph">DPM</span> User Name</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d39624e780 ">Enter your <span class="ph">DPM</span> user name using the following
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d43074e889 ">Enter your <span class="ph">DPM</span> user name using the following
                                         format:<pre class="pre codeblock">&lt;user account name&gt;@&lt;organization name&gt;</pre>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d39624e777 "><span class="ph">DPM</span> Password</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d43074e886 "><span class="ph">DPM</span> Password</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d39624e780 ">Enter the password for your <span class="ph">DPM</span> user account.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d43074e889 ">Enter the password for your <span class="ph">DPM</span> user account.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d39624e777 "><span class="ph">DPM</span> Labels</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d43074e886 "><span class="ph">DPM</span> Labels</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d39624e780 ">Assign a label to this <span class="ph">Data
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d43074e889 ">Assign a label to this <span class="ph">Data
                   Collector</span>. Labels that you assign here are defined in the <span class="ph">DPM</span> configuration file,
                                             <samp class="ph codeph">$SDC_CONF/dpm.properties</samp>. To remove
                                         these labels after you register the <span class="ph">Data
@@ -506,6 +533,7 @@ Default is "all", which you can use to run a job
                   Collector</span>.</span>
                 <div class="itemgroup info">When you log in to the registered <span class="ph">Data
                   Collector</span> using a <span class="ph">DPM</span> user account, the following <span class="ph">DPM</span> Enabled icon displays:<p class="p"><img class="image" id="task_oxx_y5m_xw__image_hrt_tdk_3w" src="../Graphics/SDC_DPMEnabled.png" height="64" width="714" /></p>
+<p class="p"><span class="ph">To enable <span class="ph">DPM</span> users to work with pipelines, transfer permissions to the <span class="ph">DPM</span> users and groups. For more information, see <a class="xref" href="RegisterSDCwithDPM.html#concept_xzz_rnr_yy">Transfer Permissions to DPM Users</a>.</span></p>
 </div>
             </li>
 </ol>
@@ -599,6 +627,38 @@ Default is "all", which you can use to run a job
                 use this workaround with caution since it exposes credentials by sending them
                 through an unencrypted proxy.</p>
 </div>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_xzz_rnr_yy">
+ <h2 class="title topictitle2">Transfer Permissions to DPM Users</h2>
+
+ <div class="body conbody">
+        <p class="p">After you register <span class="ph">Data
+                  Collector</span>
+            with <span class="ph">DPM</span>, transfer permissions from the obsolete <span class="ph">Data
+                  Collector</span>
+            users and groups to the new <span class="ph">DPM</span>
+            users and groups.</p>
+
+        <p class="p">When pipeline access controls are enabled in <span class="ph">Data
+                  Collector</span>,
+            pipeline permissions determine the access that each user has to a pipeline. Any user
+            without the Admin role requires read permission to view a pipeline. So by default, only
+                <span class="ph">DPM</span>
+            users with the Organization Administrator or <span class="ph">Data
+                  Collector</span>
+            Administrator roles can access pipelines immediately after registering <span class="ph">Data
+                  Collector</span>.</p>
+
+        <p class="p">To enable other users to access pipelines, transfer pipeline permissions to <span class="ph">DPM</span>
+            users and groups. When you transfer permissions, all permissions associated with a user
+            or group transfers to the specified user or group. If you need to customize pipeline
+            permissions, you can edit each pipeline individually.</p>
+
+        <p class="p">For information about transferring pipeline permissions, see <a class="xref" href="../Configuration/RolesandPermissions.html#concept_p11_msc_1z">Transfer Pipeline Permissions</a>. For
+            information about configuring permissions for individual pipelines, see <a class="xref" href="../Pipeline_Maintenance/PipelineMaintenance_title.html#concept_jrg_1vy_wy">Sharing Pipelines</a>.</p>
 
     </div>
 

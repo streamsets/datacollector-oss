@@ -3,7 +3,7 @@
   SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
 <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
-      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="What's New" /><meta name="abstract" content="" /><meta name="description" content="Data Collector version 2.3.0.1 includes the following new features and enhancements: Oracle CDC Client origin enhancement - The origin can now track and adapt to schema changes when reading the ..." /><meta name="DC.Relation" scheme="URI" content="../Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq" /><meta name="DC.Relation" scheme="URI" content="../Installation/Install_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_hz3_5fk_fy" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>What's New</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="What's New" /><meta name="abstract" content="" /><meta name="description" content="Data Collector version 2.4.0.0 includes the following new features and enhancements: Pipeline Sharing and Permissions Data Collector now provides pipeline-level permissions. With this change, only the ..." /><meta name="DC.Relation" scheme="URI" content="../Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq" /><meta name="DC.Relation" scheme="URI" content="../Installation/Install_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_hz3_5fk_fy" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>What's New</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
             
             var prefix = "../index.html";
             
@@ -37,6 +37,148 @@
  </div>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_kzc_4sd_yy">
+ <h2 class="title topictitle2">What's New in 2.4.0.0</h2>
+
+ <div class="body conbody">
+  <p class="p"><span class="ph">Data
+                  Collector</span>
+            version 2.4.0.0 includes the following new features and enhancements:</p>
+
+        <div class="p">
+            <dl class="dl">
+                
+                    <dt class="dt dlterm">Pipeline Sharing and Permissions</dt>
+
+                    <dd class="dd">Data Collector now provides pipeline-level permissions. With this change,
+                        only the pipeline owner and users with the Admin role can view a pipeline by
+                        default. If upgrading from a previous version of Data Collector, see the
+                        following post-upgrade task, <a class="xref" href="../Upgrade/PostUpgrade.html#concept_zbn_fpw_xy">Configure Pipeline Permissions</a>.</dd>
+
+                    <dd class="dd">This feature includes the following components:<ul class="ul" id="concept_kzc_4sd_yy__ul_qhv_ds1_cz">
+                            <li class="li"><a class="xref" href="../Configuration/RolesandPermissions.html#concept_i1p_hzd_yy">Pipeline permissions</a> - Pipelines now have read, write,
+                                and execute permissions. Pipeline permissions overlay existing Data
+                                Collector roles to provide greater security. For information, see
+                                    <a class="xref" href="../Configuration/RolesandPermissions.html#concept_k1r_prc_yy">Roles and Permissions</a>.</li>
+
+                            <li class="li"><a class="xref" href="../Pipeline_Maintenance/PipelineMaintenance_title.html#concept_jrg_1vy_wy">Pipeline sharing</a> - The pipeline owner and users with the
+                                Admin role can configure pipeline permissions for users and
+                                groups.</li>
+
+                            <li class="li"><a class="xref" href="../Configuration/DCConfig.html#task_lxk_kjw_1r" title="You can customize Data Collector by editing the Data Collector configuration file, sdc.properties.">Data Collector pipeline access control property</a> - You
+                                can enable and disable the use of pipeline permissions with the
+                                pipeline.access.control.enabled configuration property. By default,
+                                this property is enabled.</li>
+
+                            <li class="li"><a class="xref" href="../Configuration/RolesandPermissions.html#concept_p11_msc_1z">Permissions transfer</a> - You can transfer all pipeline
+                                permissions associated with a user or group to a different user or
+                                group. Use pipeline transfer to easily migrate permissions after
+                                registering with DPM or after a user or group becomes obsolete.</li>
+
+                        </ul>
+</dd>
+
+                
+                
+                    <dt class="dt dlterm">Dataflow Performance Manager (DPM)</dt>
+
+                    <dd class="dd">
+                        <ul class="ul" id="concept_kzc_4sd_yy__ul_f3t_zs1_cz">
+                            <li class="li"><a class="xref" href="../DPM/RegisterSDCwithDPM.html#task_a4y_v1g_xw" title="You can register a Data Collector with DPM from the Data Collector console.">Register Data Collectors with DPM</a> - If Data Collector
+                                uses file-based authentication and if you register the Data
+                                Collector from the Data Collector UI, you can now create DPM user
+                                accounts and groups during the registration process.</li>
+
+                            <li class="li"><a class="xref" href="../DPM/AggregatedStatistics.html#concept_c53_pzp_yy" title="When you write statistics to SDC RPC, Data Collector effectively adds an SDC RPC destination to the pipeline that you are configuring. The system pipeline is a pipeline with a Dev SDC RPC with Buffering origin that reads the statistics passed from the SDC RPC destination, and then aggregates and sends the statistics to DPM.">Aggregated statistics for DPM</a> - When working with DPM,
+                                you can now configure a pipeline to write aggregated statistics to
+                                SDC RPC. Write statistics to SDC RPC for development purposes only.
+                                For a production environment, use a Kafka cluster or Amazon Kinesis
+                                Streams to aggregate statistics.</li>
+
+                        </ul>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Origins</dt>
+
+                    <dd class="dd">
+                        <ul class="ul" id="concept_kzc_4sd_yy__ul_ad3_kt1_cz">
+                            <li class="li"><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Dev SDC RPC with Buffering origin</a> - A new development
+                                stage that receives records from an SDC RPC destination, temporarily
+                                buffering the records to disk before passing the records to the next
+                                stage in the pipeline. Use as the origin in an SDC RPC destination
+                                pipeline.</li>
+
+                            <li class="li"><a class="xref" href="../Origins/AmazonS3.html#task_gfj_ssv_yq">Amazon S3 origin enhancement</a> - You can configure a new
+                                File Pool Size property to determine the maximum number of files
+                                that the origin stores in memory for processing after loading and
+                                sorting all files present on S3.</li>
+
+                        </ul>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Other</dt>
+
+                    <dd class="dd">
+                        <ul class="ul" id="concept_kzc_4sd_yy__ul_hsj_tt1_cz">
+                            <li class="li"><a class="xref" href="../Installation/AddtionalStageLibs.html#concept_evs_xkm_s5">New stage libraries</a> - This release supports the
+                                following new stage libraries:<ul class="ul" id="concept_kzc_4sd_yy__ul_xrv_5t1_cz">
+                                    <li dir="ltr" class="li">Kudu versions 1.1 and 1.2</li>
+
+                                    <li class="li">
+                                        <p dir="ltr" class="p">Cloudera CDH version 5.10 distribution of
+                                            Hadoop</p>
+
+                                    </li>
+
+                                    <li dir="ltr" class="li">Cloudera version 5.10 distribution of Apache Kafka
+                                        2.1</li>
+
+                                </ul>
+</li>
+
+                            <li class="li"><a class="xref" href="../Configuration/ExternalLibs.html#concept_pdv_qlw_ft" title="Install external libraries to make them available to Data Collector stages.">Install external libraries using the Data Collector user
+                                    interface</a> - You can now use the Data Collector user
+                                interface to install external libraries to make them available to
+                                stages. For example, you can install JDBC drivers for stages that
+                                use JDBC connections. Or, you can install external libraries to call
+                                external Java code from the Groovy, Java, and Jython Evaluator
+                                processors.</li>
+
+                            <li class="li">Security enhancement - With this release, the ability to view log
+                                information is restricted to users with the Admin role. For
+                                information about upgrade impact, see <a class="xref" href="../Upgrade/PostUpgrade.html#concept_id5_lkk_yy">Enable Users to Access Data Collector Logs</a>.</li>
+
+                            <li class="li"><a class="xref" href="../Configuration/DCConfig.html#task_lxk_kjw_1r" title="You can customize Data Collector by editing the Data Collector configuration file, sdc.properties.">Custom header enhancement</a> - You can now use HTML in the
+                                ui.header.title configuration property to configure a custom header
+                                for the <span class="ph">Data
+                  Collector</span> console. This allows you to specify the look and feel for any
+                                text that you use, and to include small images in the header. </li>
+
+                            <li class="li"><a class="xref" href="../Processors/Groovy.html#task_asl_bpt_gv">Groovy enhancement</a> - You can configure the processor to
+                                use the invokedynamic bytecode instruction.</li>
+
+                            <li class="li">Pipeline renaming - You can now rename a pipeline by clicking
+                                directly on the pipeline name when editing the pipeline, in addition
+                                to editing the Title general pipeline property.</li>
+
+                        </ul>
+
+                    </dd>
+
+                
+            </dl>
+
+        </div>
+
+ </div>
+
+</div>
 <div class="topic concept nested1" id="concept_bml_dbt_wy">
  <h2 class="title topictitle2">What's New in 2.3.0.1</h2>
 
@@ -226,13 +368,13 @@
 
                     <dd class="dd">
                         <ul class="ul" id="concept_yym_xqt_5y__ul_lzx_xtt_5y">
-                            <li dir="ltr" class="li">Pipeline renaming - You can now rename pipelines.</li>
+                            <li dir="ltr" class="li">Pipeline renaming - You can now rename pipelines by
+                                editing the Title general pipeline property.</li>
 
                             <li dir="ltr" class="li">
-                                <p dir="ltr" class="p">Field header attributes - Data Collector now supports
-                                    field header attributes, which are attributes that you can
-                                    define for individual fields in records. Use the Expression
-                                    Evaluator to add field header attributes.</p>
+                                <p dir="ltr" class="p"><a class="xref" href="../Pipeline_Design/FieldAttributes.html#concept_xfm_wtp_1z">Field attributes</a> - Data Collector now supports
+                                    field-level attributes. Use the Expression Evaluator to add
+                                    field attributes.</p>
 
                             </li>
 
@@ -320,7 +462,7 @@
                                 another processor to convert the Datetime field to a String.</li>
 
                             <li dir="ltr" class="li">
-                                <p class="p"><a class="xref" href="../Processors/HTTPClient.html#concept_ghx_ypr_fw" title="The HTTP Client processor sends requests to an HTTP resource URL and writes the results to a field in the record. You can use the HTTP Client processor to perform a range of standard requests or you can use an expression to determine the request for each record.">HTTP Client processor enhancements</a>  - You can now
+                                <p class="p"><a class="xref" href="../Processors/HTTPClient.html#concept_ghx_ypr_fw">HTTP Client processor enhancements</a>  - You can now
                                     configure the processor to use the OAuth 2 protocol to connect
                                     to an HTTP service. You can also configure a rate limit for the
                                     processor, which defines the maximum number of requests to make
@@ -345,7 +487,8 @@
                             </li>
 
                             <li dir="ltr" class="li">
-                                <p dir="ltr" class="p">XML Parser enhancement - A new Multiple Values Behavior
+                                <p dir="ltr" class="p"><a class="xref" href="../Processors/XMLParser.html#concept_dtt_q5q_k5" title="Configure an XML Parser to parse XML data in a string field.">XML
+                                        Parser enhancement</a> - A new Multiple Values Behavior
                                     property allows you to specify the behavior when you define a
                                     delimiter element and the document includes more than one value:
                                     Return the first value as a record, return one record with a
@@ -469,18 +612,37 @@
 
                     <dd class="dd">
                         <ul class="ul" id="concept_yym_xqt_5y__ul_hq3_2xt_5y">
-                            <li dir="ltr" class="li">
-                                <div class="p" dir="ltr">New record functions - You can use the following new
-                                    record functions to determine information about records:<ul class="ul" id="concept_yym_xqt_5y__ul_k4h_kxt_5y">
-                                        <li class="li">record:fieldAttribute (&lt;attribute name&gt;, &lt;field
-                                            path&gt;) - Returns the value of the specified field header
-                                            attribute for the specified field. </li>
+                            <li class="li"><a class="xref" href="../Expression_Language/Functions.html#concept_dvg_nqn_wx">New pipeline functions</a> - You can use the following new
+                                pipeline functions to return pipeline information:<ul class="ul" id="concept_yym_xqt_5y__ul_mls_bp1_cz">
+                                    <li class="li">pipeline:id() - Returns the pipeline ID, a UUID that is
+                                        automatically generated and used by Data Collector to
+                                        identify the pipeline. <div class="note note"><span class="notetitle">Note:</span> The existing pipeline:name()
+                                            function now returns the pipeline ID instead of the
+                                            pipeline name since pipeline ID is the correct way to
+                                            identify a pipeline.</div>
+</li>
 
-                                        <li class="li">record:fieldAttributeOrDefault (&lt;attribute name&gt;,
-                                            &lt;field path&gt;, &lt;default value&gt;) - Returns the value
-                                            of the specified field header attribute for the
-                                            specified field. If the attribute does not exist or if
-                                            the field is null, returns the default value.</li>
+                                    <li class="li">
+                                        <p class="p">pipeline:title() - Returns the pipeline title or
+                                            name.</p>
+
+                                    </li>
+
+                                </ul>
+</li>
+
+                            <li dir="ltr" class="li">
+                                <div class="p" dir="ltr"><a class="xref" href="../Expression_Language/Functions.html#concept_p1z_ggv_1r" title="Use record functions to determine information about a record, such as the stage that created it or whether a field exists in the record.">New record functions</a> - You can use the following new
+                                    record functions to work with field attributes:<ul class="ul" id="concept_yym_xqt_5y__ul_k4h_kxt_5y">
+                                        <li class="li">record:fieldAttribute (&lt;field path&gt;, &lt;attribute
+                                            name&gt;) - Returns the value of the specified field
+                                            attribute. </li>
+
+                                        <li class="li">record:fieldAttributeOrDefault (&lt;field path&gt;,
+                                            &lt;attribute name&gt;, &lt;default value&gt;) - Returns the
+                                            value of the specified field attribute. Returns the
+                                            default value if the attribute does not exist or
+                                            contains no value.</li>
 
                                     </ul>
 </div>
@@ -716,7 +878,7 @@
 
                     <dd class="dd">
                         <ul class="ul" id="concept_oyv_zfk_fy__ul_v5w_mhk_fy">
-                            <li class="li"><a class="xref" href="../Installation/CoreInstall_Overview.html#concept_evs_xkm_s5">New stage libraries</a>. Data Collector now supports the
+                            <li class="li"><a class="xref" href="../Installation/AddtionalStageLibs.html#concept_evs_xkm_s5">New stage libraries</a>. Data Collector now supports the
                                 following stage libraries: <ul class="ul" id="concept_oyv_zfk_fy__ul_oxv_nhk_fy">
                                     <li class="li">Apache Kudu version 1.0.x - Earlier Kudu versions are no
                                         longer supported. </li>
@@ -983,7 +1145,7 @@
                                 </ul>
 </li>
 
-                            <li class="li">New <a class="xref" href="../Expression_Language/Functions.html#concept_dvg_nqn_wx" title="Use pipeline functions to determine information about a pipeline, such as the pipeline name or the pipeline version.">pipeline functions</a> - You can use the following new
+                            <li class="li">New <a class="xref" href="../Expression_Language/Functions.html#concept_dvg_nqn_wx">pipeline functions</a> - You can use the following new
                                 pipeline functions to determine information about a pipeline: <ul class="ul" id="concept_oyv_zfk_fy__ul_lc5_rkk_fy">
                                     <li class="li">pipeline:name() - Returns the pipeline name. </li>
 

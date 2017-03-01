@@ -38,7 +38,7 @@
             customized values for the directory environment variables, you must make the same
             customizations in the new version so that the new version can access the same files.</p>
 
-        <div class="note note"><span class="notetitle">Note:</span> If you installed additional drivers or developed custom stages, verify that those
+        <div class="note note"><span class="notetitle">Note:</span> If you installed external libraries or developed custom stages, verify that those
             libraries are stored in a local directory external to the <span class="ph">Data
                   Collector</span>
             installation directory before you upgrade. That way, <span class="ph">Data
@@ -47,25 +47,23 @@
 
         <p class="p">To upgrade an installation from the RPM package, perform the following steps:</p>
 
-     <ol class="ol" id="concept_ws4_vq5_xv__ol_x5s_qpr_5v">
-         <li class="li">Stop all pipelines and then shut down the previous version.</li>
+            <p class="p"><a class="xref" href="RPM.html#task_zk4_tr5_xv" title="Stop all pipelines and then shut down the previous version of Data Collector.">Step 1. Shut Down the Previous Version</a></p>
 
-            <li class="li">Back up the environment configuration file in the previous version.</li>
+            <p class="p"><a class="xref" href="RPM.html#concept_nzl_hkb_mw" title="Before you install the new version, create a backup of the files in the previous version by copying and renaming the data, log, and resource directories. You’ll also need to create a backup of the environment configuration file, $SDC_DIST/libexec/sdcd-env.sh, so that the file is not overwritten when you install the new version. That way, you can continue to run the previous version if needed.">Step 2. Back Up the Previous Version</a></p>
 
-         <li class="li">Install the new version.</li>
+            <p class="p"><a class="xref" href="RPM.html#task_ofc_2zl_5v" title="Install the new version of the RPM package. Installing the full Data Collector as a service requires sudo privileges on the root directory.">Step 3. Install the New Version</a></p>
 
-         <li class="li">Manually update the environment configuration file.</li>
+            <p class="p"><a class="xref" href="RPM.html#task_krt_sj5_xv" title="Each RPM installation uses the same default values as the previous version for all of the directory environment variables. If the previous version used the default values, the new version is configured to use the same working directories.">Step 4. Update the Environment Configuration File</a></p>
 
-         <li class="li">Manually update the configuration files.</li>
+            <p class="p"><a class="xref" href="RPM.html#task_lkl_wk5_xv" title="A new Data Collector version can include new properties and configuration files required for Data Collector to start or function properly.">Step 5. Update the Configuration Files</a></p>
 
-            <li class="li">For an upgrade of the core installation, install additional stage libraries as
-                needed.</li>
+            <p class="p"><a class="xref" href="RPM.html#concept_pch_vnr_bx" title="If you installed the core RPM package, install the individual stage libraries that the upgraded pipelines require.">Step 6. Install Additional Libraries for the Core Installation</a></p>
 
-         <li class="li">Start the new version of <span class="ph">Data
-                  Collector</span>.</li>
+            <p class="p"><a class="xref" href="RPM.html#concept_r3f_xyl_1z" title="Uninstall all stage libraries used by the previous Data Collector version.">Step 7. Uninstall Previous Libraries</a></p>
 
-     </ol>
+            <p class="p"><a class="xref" href="RPM.html#concept_n35_s55_xv">Step 8. Start the New Version of Data Collector</a></p>
 
+        
  </div>
 
 <div class="related-links"></div>
@@ -102,18 +100,43 @@
 
 </div>
 <div class="topic concept nested1" id="concept_nzl_hkb_mw">
- <h2 class="title topictitle2">Step 2. Back Up the Environment Configuration File</h2>
+    <h2 class="title topictitle2">Step 2. Back Up the Previous Version</h2>
 
- 
- <div class="body conbody"><p class="shortdesc">Before you install the new version, create a backup of the environment configuration
-        file, <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</samp>, so that the file is not overwritten
-        when you install the new version. </p>
+    
+    <div class="body conbody"><p class="shortdesc">Before you install the new version, create a backup of the files in the previous
+        version by copying and renaming the data, log, and resource directories. You’ll also need to
+        create a backup of the environment configuration file,
+            <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</samp>, so that the file is not overwritten when
+        you install the new version. That way, you can continue to run the previous version if
+        needed. </p>
 
-  <p class="p">For example, if you are upgrading version 2.0.0.0, you might create a backup by renaming the
-            file as follows: <samp class="ph codeph">sdcd-env-2000.sh</samp>.</p>
+        <div class="p">Copy and rename the following directories and files:<ul class="ul" id="concept_nzl_hkb_mw__ul_grw_zch_1z">
+                <li class="li">Data directory defined in the SDC_DATA environment variable. Default is
+                        <samp class="ph codeph">/var/lib/sdc</samp>.</li>
 
- </div>
+                <li class="li">Log directory defined in the SDC_LOG environment variable. Default is
+                        <samp class="ph codeph">/var/log/sdc</samp>.</li>
 
+                <li class="li">Resource directory defined in the SDC_RESOURCES environment variable. Default is
+                        <samp class="ph codeph">/var/lib/sdc-resources</samp>.</li>
+
+                <li class="li">Environment configuration file,
+                    <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</samp>.</li>
+
+            </ul>
+</div>
+
+        <p class="p">For example, if you are upgrading version 2.2.0.0, copy the Data Collector data directory
+            and rename it as follows: <samp class="ph codeph">/var/lib/sdc2200</samp>. Create a backup of the
+            environment configuration file by renaming the file as follows:
+                <samp class="ph codeph">sdcd-env-2200.sh</samp>.</p>
+
+    </div>
+
+    <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. To enable remote debugging, define debugging options in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file.You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.When you use Data Collector with Java 7, Data Collector is configured to use TLS versions 1.1 and 1.2. To connect to a system that uses an earlier version of TLS, modify the Dhttps.protocols option in the SDC_JAVA7_OPTS environment variable in the Data Collector environment configuration file.When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+</div>
+</div>
 </div>
 <div class="topic task nested1" id="task_ofc_2zl_5v">
     <h2 class="title topictitle2">Step 3. Install the New Version</h2>
@@ -133,8 +156,8 @@
                 <div class="itemgroup info">
                     <pre class="pre codeblock">tar -xzf streamsets-datacollector-&lt;version&gt;-all-rpms.tgz</pre>
 
-                    <div class="p">For example, to extract version 2.3.0.0, use the following
-                        command:<pre class="pre codeblock">tar -xzf streamsets-datacollector-2.3.0.0-all-rpms.tgz</pre>
+                    <div class="p">For example, to extract version 2.4.0.0, use the following
+                        command:<pre class="pre codeblock">tar -xzf streamsets-datacollector-2.4.0.0-all-rpms.tgz</pre>
 </div>
 
                 </div>
@@ -152,8 +175,8 @@
                     as needed, use the following command:</span>
                 <div class="itemgroup info"><pre class="pre codeblock">yum localinstall streamsets-datacollector-&lt;version&gt;-1.noarch.rpm</pre>
 For
-                    example, to install version 2.3.0.0, use the following
-                    command:<pre class="pre codeblock">yum localinstall streamsets-datacollector-2.3.0.0-1.noarch.rpm</pre>
+                    example, to install version 2.4.0.0, use the following
+                    command:<pre class="pre codeblock">yum localinstall streamsets-datacollector-2.4.0.0-1.noarch.rpm</pre>
 </div>
             </li>
 </ol>
@@ -179,7 +202,7 @@ For
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">Open the environment configuration file that you backed up in the previous
                     version.</span>
-                <div class="itemgroup info">For example, open the <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env-2000.sh</samp>
+                <div class="itemgroup info">For example, open the <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env-2200.sh</samp>
                     file.</div>
             </li>
 <li class="li step stepexpand">
@@ -284,13 +307,46 @@ For
  <div class="body conbody"><p class="shortdesc">If you installed the core RPM package, install the individual stage libraries that the
         upgraded pipelines require. </p>
 
-        <p class="p">For instructions on installing additional stage libraries, see <a class="xref" href="../Installation/CoreInstall_Overview.html#concept_amc_cf3_dx">Install Additional RPM Libraries</a>.</p>
+        <p class="p">For instructions on installing additional stage libraries, see <a class="xref" href="../Installation/AddtionalStageLibs.html#concept_amc_cf3_dx">Installing for RPM</a>.</p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_r3f_xyl_1z">
+ <h2 class="title topictitle2">Step 7. Uninstall Previous Libraries</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Uninstall all stage libraries used by the previous Data Collector version.</p>
+
+  <div class="p">
+            <ol class="ol" id="concept_r3f_xyl_1z__ol_s5t_czl_1z">
+                <li class="li">Run the following command to list all stage libraries used by the previous Data
+                    Collector
+                        version:<pre class="pre codeblock">yum list installed | grep "datacollector" | grep "&lt;version&gt;"</pre>
+<div class="p">For
+                        example, to list all stage libraries used by Data Collector version 2.0.0.0,
+                        run the following
+                        command:<pre class="pre codeblock">yum list installed | grep "datacollector" | grep "2.0.0.0"</pre>
+</div>
+</li>
+
+                <li class="li">Run the following command to uninstall all stage libraries used by the previous
+                        version:<pre class="pre codeblock">yum remove &lt;library package name&gt;,&lt;library package name&gt;,...</pre>
+<p class="p">Where
+                            <samp class="ph codeph">library package name</samp> is the full name of the libraries
+                        that you want to uninstall. Separate each name with commas. Do not include
+                        spaces in the command.</p>
+</li>
+
+            </ol>
+
+        </div>
 
  </div>
 
 </div>
 <div class="topic concept nested1" id="concept_n35_s55_xv">
- <h2 class="title topictitle2">Step 7. Start the New Version of Data Collector</h2>
+ <h2 class="title topictitle2">Step 8. Start the New Version of Data Collector</h2>
 
  <div class="body conbody">
         <div class="p">Use the following command to start the new version of <span class="ph">Data
