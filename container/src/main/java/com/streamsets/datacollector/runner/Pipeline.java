@@ -286,7 +286,7 @@ public class Pipeline {
     try {
       return pipe.init(pipeContext);
     } catch (Exception ex) {
-      String instanceName = originPipe.getStage().getConfiguration().getInstanceName();
+      String instanceName = pipe.getStage().getConfiguration().getInstanceName();
       LOG.warn(ContainerError.CONTAINER_0701.getMessage(), instanceName, ex.toString(), ex);
       return ImmutableList.of(
         IssueCreator
