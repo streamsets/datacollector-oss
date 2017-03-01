@@ -35,6 +35,8 @@ public interface HttpReceiver {
 
   String getAppId();
 
+  boolean isAppIdViaQueryParamAllowed();
+
   String getUriPath();
 
   boolean validate(HttpServletRequest req, HttpServletResponse res) throws IOException;

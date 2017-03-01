@@ -86,6 +86,11 @@ public class PushWebSocketReceiver implements WebSocketReceiver {
   }
 
   @Override
+  public boolean isAppIdViaQueryParamAllowed() {
+    return webSocketConfigs.isAppIdViaQueryParamAllowed();
+  }
+
+  @Override
   public String getUriPath() {
     return "/";
   }

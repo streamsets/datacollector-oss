@@ -145,6 +145,11 @@ public class SdcIpcConfigs extends HttpConfigs {
   }
 
   @Override
+  public boolean isAppIdViaQueryParamAllowed() {
+    return false;
+  }
+
+  @Override
   public String getKeyStorePassword() {
     return keyStorePassword;
   }

@@ -68,6 +68,17 @@ public class WebSocketConfigs extends HttpConfigs {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Allow Application ID through Query Param",
+      description = "Allow Application ID through Query Param - ws://localhost:8000?sdcApplicationId=<Application ID>",
+      displayPosition = 40,
+      group = "WEB_SOCKET"
+  )
+  public boolean appIdViaQueryParamAllowed;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Max Request Size (MB)",
       defaultValue = "100",
@@ -81,7 +92,7 @@ public class WebSocketConfigs extends HttpConfigs {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      label = "Idle Timeout (milliseconds)",
+      label = "Idle Timeout (ms)",
       defaultValue = "20000",
       displayPosition = 35,
       group = "WEB_SOCKET",
@@ -150,6 +161,11 @@ public class WebSocketConfigs extends HttpConfigs {
   @Override
   public boolean isSslEnabled() {
     return sslEnabled;
+  }
+
+  @Override
+  public boolean isAppIdViaQueryParamAllowed() {
+    return appIdViaQueryParamAllowed;
   }
 
   @Override

@@ -68,6 +68,11 @@ public class HttpReceiverServlet extends HttpServlet {
     boolean valid = false;
     String requestor = req.getRemoteAddr() + ":" + req.getRemotePort();
     String reqAppId = req.getHeader(HttpConstants.X_SDC_APPLICATION_ID_HEADER);
+
+    if (reqAppId == null && receiver.isAppIdViaQueryParamAllowed()) {
+      reqAppId = req.getParameter(HttpConstants.SDC_APPLICATION_ID_QUERY_PARAM);
+    }
+
     if (reqAppId == null) {
       LOG.warn("Request from '{}' missing appId, rejected", requestor);
       res.sendError(HttpServletResponse.SC_FORBIDDEN, "Missing 'appId'");

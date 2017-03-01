@@ -34,6 +34,8 @@ public interface WebSocketReceiver {
 
   String getAppId();
 
+  boolean isAppIdViaQueryParamAllowed();
+
   String getUriPath();
 
   int getIdleTimeout();

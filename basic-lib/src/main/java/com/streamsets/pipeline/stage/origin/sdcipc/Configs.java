@@ -19,20 +19,14 @@
  */
 package com.streamsets.pipeline.stage.origin.sdcipc;
 
-import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.lib.http.HttpConfigs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.net.ServerSocket;
-import java.security.KeyStore;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Configs extends HttpConfigs {
   private static final Logger LOG = LoggerFactory.getLogger(Configs.class);
@@ -160,6 +154,11 @@ public class Configs extends HttpConfigs {
   @Override
   public boolean isSslEnabled() {
     return sslEnabled;
+  }
+
+  @Override
+  public boolean isAppIdViaQueryParamAllowed() {
+    return false;
   }
 
   @Override

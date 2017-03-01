@@ -91,4 +91,57 @@ public class TestWebSocketServerPushSource {
     }
   }
 
+  @Test
+  public void testWithAppIdViaQueryParam() throws Exception {
+    WebSocketConfigs webSocketConfigs = new WebSocketConfigs();
+    webSocketConfigs.appId = "appId";
+    webSocketConfigs.port = NetworkUtils.getRandomPort();
+    webSocketConfigs.maxConcurrentRequests = 1;
+    webSocketConfigs.sslEnabled = false;
+    webSocketConfigs.appIdViaQueryParamAllowed = true;
+    WebSocketServerPushSource source =
+        new WebSocketServerPushSource(webSocketConfigs, DataFormat.JSON, new DataParserFormatConfig());
+    final PushSourceRunner runner =
+        new PushSourceRunner.Builder(WebSocketServerPushSource.class, source).addOutputLane("a").build();
+    runner.runInit();
+    try {
+      final List<Record> records = new ArrayList<>();
+      runner.runProduce(Collections.<String, String>emptyMap(), 1, new PushSourceRunner.Callback() {
+        @Override
+        public void processBatch(StageRunner.Output output) {
+          records.clear();
+          records.addAll(output.getRecords().get("a"));
+          runner.setStop();
+        }
+      });
+
+      WebSocketClient client = new WebSocketClient();
+      SimpleEchoSocket socket = new SimpleEchoSocket();
+      try {
+        client.start();
+        URI echoUri = new URI("ws://localhost:" + webSocketConfigs.getPort() +
+            "?" + HttpConstants.SDC_APPLICATION_ID_QUERY_PARAM + "=appId");
+        ClientUpgradeRequest request = new ClientUpgradeRequest();
+        client.connect(socket, echoUri, request);
+        // wait for closed socket connection.
+        socket.awaitClose(5, TimeUnit.SECONDS);
+      } catch (Throwable t) {
+        t.printStackTrace();
+      } finally {
+        try {
+          client.stop();
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+
+      runner.waitOnProduce();
+
+      Assert.assertEquals(1, records.size());
+      Assert.assertEquals("value", records.get(0).get("/field1").getValue());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
 }

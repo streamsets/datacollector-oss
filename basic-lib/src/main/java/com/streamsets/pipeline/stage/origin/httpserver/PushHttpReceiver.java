@@ -91,6 +91,11 @@ public class PushHttpReceiver implements HttpReceiver {
   }
 
   @Override
+  public boolean isAppIdViaQueryParamAllowed() {
+    return httpConfigs.isAppIdViaQueryParamAllowed();
+  }
+
+  @Override
   public String getUriPath() {
     return "/";
   }

@@ -23,6 +23,7 @@ package com.streamsets.pipeline.lib.http;
 public interface HttpConstants {
 
   String X_SDC_APPLICATION_ID_HEADER = "X-SDC-APPLICATION-ID";
+  String SDC_APPLICATION_ID_QUERY_PARAM = "sdcApplicationId";
 
   String X_SDC_PING_HEADER = "X-SDC-PING";
   String X_SDC_PING_VALUE = "ping";

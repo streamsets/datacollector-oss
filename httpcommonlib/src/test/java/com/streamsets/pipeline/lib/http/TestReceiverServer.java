@@ -89,6 +89,11 @@ public class TestReceiverServer {
       }
 
       @Override
+      public boolean isAppIdViaQueryParamAllowed() {
+        return false;
+      }
+
+      @Override
       public String getKeyStoreFile() {
         return null;
       }
@@ -200,6 +205,11 @@ public class TestReceiverServer {
       @Override
       public boolean isSslEnabled() {
         return true;
+      }
+
+      @Override
+      public boolean isAppIdViaQueryParamAllowed() {
+        return false;
       }
 
       @Override

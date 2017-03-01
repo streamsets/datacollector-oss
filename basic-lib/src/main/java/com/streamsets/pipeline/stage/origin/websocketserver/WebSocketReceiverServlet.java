@@ -35,6 +35,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 
 public class WebSocketReceiverServlet extends WebSocketServlet implements WebSocketCreator {
@@ -116,6 +117,16 @@ public class WebSocketReceiverServlet extends WebSocketServlet implements WebSoc
     boolean valid = false;
     String requester = req.getRemoteAddress() + ":" + req.getRemotePort();
     String reqAppId = req.getHeader(HttpConstants.X_SDC_APPLICATION_ID_HEADER);
+
+    if (reqAppId == null && receiver.isAppIdViaQueryParamAllowed()) {
+      Map<String,List<String>> parameterMap = req.getParameterMap();
+      if (parameterMap != null && parameterMap.containsKey(HttpConstants.SDC_APPLICATION_ID_QUERY_PARAM)) {
+        List<String> values = parameterMap.get(HttpConstants.SDC_APPLICATION_ID_QUERY_PARAM);
+        if (values != null && values.size() > 0) {
+          reqAppId = values.get(0);
+        }
+      }
+    }
 
     if (reqAppId == null) {
       // Since it is not possible to pass headers in some of the WebSockets client (example: browser WebSocket API)

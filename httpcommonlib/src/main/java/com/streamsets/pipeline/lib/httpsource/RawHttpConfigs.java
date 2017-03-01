@@ -70,6 +70,17 @@ public class RawHttpConfigs extends HttpConfigs {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
+      label = "Allow Application ID through Query Param",
+      description = "Allow Application ID through Query Param - http://localhost:8000?sdcApplicationId=<Application ID>",
+      displayPosition = 40,
+      group = "HTTP"
+  )
+  public boolean appIdViaQueryParamAllowed;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
       label = "Use HTTPS",
       displayPosition = 40,
       group = "HTTP"
@@ -132,6 +143,11 @@ public class RawHttpConfigs extends HttpConfigs {
   @Override
   public boolean isSslEnabled() {
     return sslEnabled;
+  }
+
+  @Override
+  public boolean isAppIdViaQueryParamAllowed() {
+    return appIdViaQueryParamAllowed;
   }
 
   @Override

@@ -51,6 +51,8 @@ public abstract class HttpConfigs {
 
   public abstract boolean isSslEnabled();
 
+  public abstract boolean isAppIdViaQueryParamAllowed();
+
   public abstract String getKeyStoreFile();
 
   public abstract String getKeyStorePassword();
