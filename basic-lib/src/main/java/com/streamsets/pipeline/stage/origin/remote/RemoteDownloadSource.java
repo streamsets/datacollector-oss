@@ -41,6 +41,7 @@ import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.vfs2.FileNotFoundException;
 import org.apache.commons.vfs2.FileObject;
@@ -553,17 +554,12 @@ public class RemoteDownloadSource extends BaseSource {
   public void destroy() {
     LOG.info(Utils.format("Destroying {}", getInfo().getInstanceName()));
     try {
-      if (currentStream != null) {
-        currentStream.close();
-      }
-      if (null != parser) {
-        parser.close();
-      }
+      IOUtils.closeQuietly(currentStream);
+      IOUtils.closeQuietly(parser);
       if (remoteDir != null) {
         remoteDir.close();
         FileSystem fs = remoteDir.getFileSystem();
         remoteDir.getFileSystem().getFileSystemManager().closeFileSystem(fs);
-
       }
     } catch (IOException ex) {
       LOG.warn("Error during destroy", ex);
@@ -573,6 +569,7 @@ public class RemoteDownloadSource extends BaseSource {
       //not to have dangling reference to old stream (which is closed)
       //Also forces to initialize the next in produce call.
       currentStream = null;
+      parser = null;
       currentOffset = null;
       next = null;
     }
