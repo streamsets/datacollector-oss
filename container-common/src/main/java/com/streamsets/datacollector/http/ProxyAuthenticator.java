@@ -23,7 +23,6 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.CORSConstants;
 import org.eclipse.jetty.http.HttpHeader;
-import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.security.ServerAuthException;
 import org.eclipse.jetty.security.authentication.FormAuthenticator;
@@ -40,7 +39,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 
 public class ProxyAuthenticator extends LoginAuthenticator {
@@ -134,11 +132,9 @@ public class ProxyAuthenticator extends LoginAuthenticator {
       }
 
       if (authToken != null && runtimeInfo.isValidAuthenticationToken(authToken)) {
-        HashLoginService loginService = (HashLoginService)getLoginService();
-        Map<String, UserIdentity> usersMap = loginService.getUsers();
-        UserIdentity userIdentity = usersMap.get(authUser);
-
-        Authentication cached=new SessionAuthentication(getAuthMethod(), userIdentity, null);
+        SdcHashLoginService loginService = (SdcHashLoginService) getLoginService();
+        UserIdentity userIdentity = loginService.getUserIdentity(authUser);
+        Authentication cached = new SessionAuthentication(getAuthMethod(), userIdentity, null);
         session.setAttribute(SessionAuthentication.__J_AUTHENTICATED, cached);
       }
 
@@ -146,20 +142,20 @@ public class ProxyAuthenticator extends LoginAuthenticator {
         String credentials = request.getHeader(HttpHeader.AUTHORIZATION.asString());
         if (credentials != null) {
           //Support User name and password as part of Authorization Header for Form & Digest Authenticator
-          int space=credentials.indexOf(' ');
-          if (space>0) {
+          int space = credentials.indexOf(' ');
+          if (space > 0) {
             String method=credentials.substring(0,space);
             if ("basic".equalsIgnoreCase(method)) {
               credentials = credentials.substring(space+1);
               credentials = B64Code.decode(credentials, StandardCharsets.ISO_8859_1);
               int i = credentials.indexOf(':');
-              if (i>0) {
+              if (i > 0) {
                 String username = credentials.substring(0,i);
                 String password = credentials.substring(i+1);
 
-                UserIdentity userIdentity = login (username, password, request);
-                if (userIdentity!=null) {
-                  Authentication cached=new SessionAuthentication(getAuthMethod(), userIdentity, null);
+                UserIdentity userIdentity = login(username, password, request);
+                if (userIdentity != null) {
+                  Authentication cached = new SessionAuthentication(getAuthMethod(), userIdentity, null);
                   session.setAttribute(SessionAuthentication.__J_AUTHENTICATED, cached);
                 } else {
                   try {

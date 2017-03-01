@@ -43,7 +43,6 @@ import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.DefaultIdentityService;
 import org.eclipse.jetty.security.DefaultUserIdentity;
-import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.security.authentication.BasicAuthenticator;
@@ -62,7 +61,6 @@ import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.server.UserIdentity;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.HandlerCollection;
-import org.eclipse.jetty.server.session.HashSessionManager;
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -178,7 +176,7 @@ public abstract class WebServerTask extends AbstractTask {
   private Server server;
   private HttpConfiguration httpConf = new HttpConfiguration();
   private Server redirector;
-  private HashSessionManager hashSessionManager;
+  private SessionHandler sessionHandler;
   Map<String, Set<String>> roleMapping;
 
   public WebServerTask(
@@ -229,8 +227,8 @@ public abstract class WebServerTask extends AbstractTask {
     server = createServer();
 
     // initialize a global session manager
-    hashSessionManager = new HashSessionManager();
-    hashSessionManager.setMaxInactiveInterval(conf.get(HTTP_SESSION_MAX_INACTIVE_INTERVAL_CONFIG,
+    sessionHandler = new SessionHandler();
+    sessionHandler.setMaxInactiveInterval(conf.get(HTTP_SESSION_MAX_INACTIVE_INTERVAL_CONFIG,
         HTTP_SESSION_MAX_INACTIVE_INTERVAL_DEFAULT));
 
     ContextHandlerCollection appHandlers = new ContextHandlerCollection();
@@ -248,14 +246,14 @@ public abstract class WebServerTask extends AbstractTask {
         throw new RuntimeException(Utils.format("Webapp already registered at '{}' context", contextPath));
       }
       // all webapps must have a session manager
-      appHandler.setSessionHandler(new SessionHandler(hashSessionManager));
+      appHandler.setSessionHandler(new SessionHandler());
 
       appHandler.setSecurityHandler(createSecurityHandler(server, appConf, appHandler, contextPath));
       contextPaths.add(contextPath);
       appHandlers.addHandler(appHandler);
     }
 
-    ServletContextHandler appHandler = configureRootContext(new SessionHandler(hashSessionManager));
+    ServletContextHandler appHandler = configureRootContext(sessionHandler);
     appHandler.setSecurityHandler(createSecurityHandler(server, conf, appHandler, "/"));
     Handler handler = configureRedirectionRules(appHandler);
     appHandlers.addHandler(handler);
@@ -722,7 +720,7 @@ public abstract class WebServerTask extends AbstractTask {
     try {
       server.start();
       port = server.getURI().getPort();
-      hashSessionManager.setSessionCookie(JSESSIONID_COOKIE + port);
+      sessionHandler.setSessionCookie(JSESSIONID_COOKIE + port);
       if(runtimeInfo.getBaseHttpUrl().equals(RuntimeInfo.UNDEF)) {
         try {
           String baseHttpUrl = "http://";
@@ -802,7 +800,7 @@ public abstract class WebServerTask extends AbstractTask {
         String realm = conf.get(DIGEST_REALM_KEY, mode + REALM_POSIX_DEFAULT);
         File realmFile = new File(runtimeInfo.getConfigDir(), realm + ".properties").getAbsoluteFile();
         validateRealmFile(realmFile);
-        loginService = new HashLoginService(realm, realmFile.getAbsolutePath());
+        loginService = new SdcHashLoginService(realm, realmFile.getAbsolutePath());
         break;
       case LDAP:
         // If “java.security.auth.login.config” system property is set then use that config file.

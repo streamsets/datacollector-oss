@@ -68,7 +68,9 @@ public class HttpReceiverServer {
     // per Jetty hardcoded logic, the minimum number of threads we can have is determined by the following formula
     int cores = Runtime.getRuntime().availableProcessors();
     int acceptors = Math.max(1, Math.min(4, cores / 8));
-    int selectors = (cores + 1) / 2;
+    // In Jetty 9.4, minimum number of threads in Server is updated. -
+    // https://github.com/eclipse/jetty.project/commit/ca3af688096687c85ec80e3173380f7d1fe45117
+    int selectors = (cores + 1);
     return acceptors + selectors + maxConcurrentRequests;
   }
 

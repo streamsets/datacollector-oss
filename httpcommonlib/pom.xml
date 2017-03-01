@@ -36,7 +36,7 @@
     <jackson.version>2.4.3</jackson.version>
     <xz.version>1.5</xz.version>
     <snappy.version>0.4</snappy.version>
-    <jetty.version>9.2.14.v20151106</jetty.version>
+    <jetty.version>9.4.2.v20170220</jetty.version>
     <tape.version>1.2.3</tape.version>
   </properties>
 

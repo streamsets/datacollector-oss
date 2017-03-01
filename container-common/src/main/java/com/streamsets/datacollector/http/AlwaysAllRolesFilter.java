@@ -19,7 +19,7 @@
  */
 package com.streamsets.datacollector.http;
 
-import org.eclipse.jetty.security.MappedLoginService;
+import org.eclipse.jetty.security.AbstractLoginService;
 import org.eclipse.jetty.util.security.Password;
 
 import javax.servlet.Filter;
@@ -52,7 +52,7 @@ class AlwaysAllRolesFilter implements Filter {
       // See https://java.net/jira/browse/JERSEY-2908
       @Override
       public Principal getUserPrincipal() {
-        return new MappedLoginService.KnownUser("admin", new Password("admin"));
+        return new AbstractLoginService.UserPrincipal("admin", new Password("admin"));
       }
     };
     chain.doFilter(request, response);

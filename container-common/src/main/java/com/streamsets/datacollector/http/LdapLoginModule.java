@@ -434,7 +434,9 @@ public class LdapLoginModule extends AbstractLoginModule
         return false;
       }
 
-      setCurrentUser(new JAASUserInfo(userInfo));
+      JAASUserInfo jaasUserInfo = new JAASUserInfo(userInfo);
+      jaasUserInfo.fetchRoles();
+      setCurrentUser(jaasUserInfo);
 
       if (webCredential instanceof String)
       {
