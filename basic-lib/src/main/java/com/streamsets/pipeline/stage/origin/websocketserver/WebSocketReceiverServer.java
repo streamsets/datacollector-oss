@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 StreamSets Inc.
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,27 +17,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.http;
+package com.streamsets.pipeline.stage.origin.websocketserver;
 
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.lib.http.AbstractHttpReceiverServer;
+import com.streamsets.pipeline.lib.http.HttpConfigs;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
 import java.util.concurrent.BlockingQueue;
 
-public class HttpReceiverServer extends AbstractHttpReceiverServer {
+public class WebSocketReceiverServer extends AbstractHttpReceiverServer {
 
-  private final HttpReceiver receiver;
-  private HttpReceiverServlet servlet;
+  private final WebSocketReceiver receiver;
+  private WebSocketReceiverServlet servlet;
 
-  public HttpReceiverServer(HttpConfigs configs, HttpReceiver receiver, BlockingQueue<Exception> errorQueue) {
+  WebSocketReceiverServer(HttpConfigs configs, WebSocketReceiver receiver, BlockingQueue<Exception> errorQueue) {
     super(configs, errorQueue);
     this.receiver = receiver;
   }
 
   @Override
   public void addReceiverServlet(Stage.Context context, ServletContextHandler contextHandler) {
-    servlet = new HttpReceiverServlet(context, receiver, errorQueue);
+    servlet = new WebSocketReceiverServlet(context, receiver, errorQueue);
     contextHandler.addServlet(new ServletHolder(servlet), receiver.getUriPath());
   }
 
