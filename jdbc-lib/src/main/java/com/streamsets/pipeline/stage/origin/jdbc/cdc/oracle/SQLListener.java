@@ -78,15 +78,24 @@ public class SQLListener extends plsqlBaseListener {
       // third level of the tree contained the actual data. I am assuming it is because
       // top level is actually empty root, 2nd level contains the actual node, and 3rd level
       // has its individual tokens -> 0 is key, 1 is = and 2 is the value.
-      Optional<ParseTree> keyOpt =
-          Optional.ofNullable(ctx.getChild(0)).map(x -> x.getChild(0)).map(x -> x.getChild(0));
-      Optional<ParseTree> valueOpt =
-          Optional.ofNullable(ctx.getChild(0)).map(x -> x.getChild(0)).map(x -> x.getChild(2));
-      if (keyOpt.isPresent() && valueOpt.isPresent()) {
-        String key = formatName(keyOpt.get().getText());
-        if (!columns.containsKey(key)) {
-          columns.put(key, formatValue(valueOpt.get().getText()));
+      String key = null;
+      String val = null;
+      ParseTree level0 = ctx.getChild(0);
+      if (level0 != null) {
+        ParseTree level1 = level0.getChild(0);
+        if (level1 != null) {
+          ParseTree keyNode = level1.getChild(0);
+          if (keyNode != null) {
+            key = formatName(keyNode.getText());
+          }
+          ParseTree valNode = level1.getChild(2);
+          if (valNode != null) {
+            val = valNode.getText();
+          }
         }
+      }
+      if (key != null && val != null && !columns.containsKey(key)) {
+        columns.put(key, formatValue(val));
       }
     }
   }
