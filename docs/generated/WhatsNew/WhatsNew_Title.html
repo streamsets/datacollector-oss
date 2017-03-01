@@ -226,13 +226,13 @@
 
                     <dd class="dd">
                         <ul class="ul" id="concept_yym_xqt_5y__ul_lzx_xtt_5y">
-                            <li dir="ltr" class="li">Pipeline renaming - You can now rename pipelines.</li>
+                            <li dir="ltr" class="li">Pipeline renaming - You can now rename pipelines by
+                                editing the Title general pipeline property.</li>
 
                             <li dir="ltr" class="li">
-                                <p dir="ltr" class="p">Field header attributes - Data Collector now supports
-                                    field header attributes, which are attributes that you can
-                                    define for individual fields in records. Use the Expression
-                                    Evaluator to add field header attributes.</p>
+                                <p dir="ltr" class="p"><a class="xref" href="../Pipeline_Design/FieldAttributes.html#concept_xfm_wtp_1z">Field attributes</a> - Data Collector now supports
+                                    field-level attributes. Use the Expression Evaluator to add
+                                    field attributes.</p>
 
                             </li>
 
@@ -320,7 +320,7 @@
                                 another processor to convert the Datetime field to a String.</li>
 
                             <li dir="ltr" class="li">
-                                <p class="p"><a class="xref" href="../Processors/HTTPClient.html#concept_ghx_ypr_fw" title="The HTTP Client processor sends requests to an HTTP resource URL and writes the results to a field in the record. You can use the HTTP Client processor to perform a range of standard requests or you can use an expression to determine the request for each record.">HTTP Client processor enhancements</a>  - You can now
+                                <p class="p"><a class="xref" href="../Processors/HTTPClient.html#concept_ghx_ypr_fw">HTTP Client processor enhancements</a>  - You can now
                                     configure the processor to use the OAuth 2 protocol to connect
                                     to an HTTP service. You can also configure a rate limit for the
                                     processor, which defines the maximum number of requests to make
@@ -345,12 +345,11 @@
                             </li>
 
                             <li dir="ltr" class="li">
-                                <p dir="ltr" class="p">XML Parser enhancement - A new Multiple Values Behavior
-                                    property allows you to specify the behavior when you define a
-                                    delimiter element and the document includes more than one value:
-                                    Return the first value as a record, return one record with a
-                                    list field for each value, or return all values as records.</p>
 
+                               <a class="xref" href="../Processors/XMLParser.html#concept_dtt_q5q_k5" title="Configure an XML Parser to parse XML data in a string field.">XML
+                                        Parser enhancement</a> - The new Multiple Values Behavior property allows you to specify the behavior when you define a
+                                    delimiter element and the document includes more than one
+                                    value.
                             </li>
 
                         </ul>
@@ -469,18 +468,33 @@
 
                     <dd class="dd">
                         <ul class="ul" id="concept_yym_xqt_5y__ul_hq3_2xt_5y">
-                            <li dir="ltr" class="li">
-                                <div class="p" dir="ltr">New record functions - You can use the following new
-                                    record functions to determine information about records:<ul class="ul" id="concept_yym_xqt_5y__ul_k4h_kxt_5y">
-                                        <li class="li">record:fieldAttribute (&lt;attribute name&gt;, &lt;field
-                                            path&gt;) - Returns the value of the specified field header
-                                            attribute for the specified field. </li>
+                            <li class="li"><a class="xref" href="../Expression_Language/Functions.html#concept_dvg_nqn_wx">New pipeline functions</a> - You can use the following new
+                                pipeline functions to return pipeline information:<ul class="ul" id="concept_yym_xqt_5y__ul_gvq_svb_cz">
+                                    <li class="li">pipeline:id() - Returns the pipeline ID, a UUID that is
+                                        automatically generated and used by Data Collector to
+                                        identify the pipeline. <div class="note note"><span class="notetitle">Note:</span> The existing pipeline:name()
+                                            function now returns the pipeline ID instead of the
+                                            pipeline name since pipeline ID is the correct way to
+                                            identify a pipeline.</div>
+</li>
 
-                                        <li class="li">record:fieldAttributeOrDefault (&lt;attribute name&gt;,
-                                            &lt;field path&gt;, &lt;default value&gt;) - Returns the value
-                                            of the specified field header attribute for the
-                                            specified field. If the attribute does not exist or if
-                                            the field is null, returns the default value.</li>
+                                    <li class="li">pipeline:title() - Returns the pipeline title or name.</li>
+
+                                </ul>
+</li>
+
+                            <li dir="ltr" class="li">
+                                <div class="p" dir="ltr"><a class="xref" href="../Expression_Language/Functions.html#concept_p1z_ggv_1r" title="Use record functions to determine information about a record, such as the stage that created it or whether a field exists in the record.">New record functions</a> - You can use the following new
+                                    record functions to work with field attributes:<ul class="ul" id="concept_yym_xqt_5y__ul_k4h_kxt_5y">
+                                        <li class="li">record:fieldAttribute (&lt;field path&gt;, &lt;attribute
+                                            name&gt;) - Returns the value of the specified field
+                                            attribute. </li>
+
+                                        <li class="li">record:fieldAttributeOrDefault (&lt;field path&gt;,
+                                            &lt;attribute name&gt;, &lt;default value&gt;) - Returns the
+                                            value of the specified field attribute. Returns the
+                                            default value if the attribute does not exist or
+                                            contains no value.</li>
 
                                     </ul>
 </div>
@@ -983,7 +997,7 @@
                                 </ul>
 </li>
 
-                            <li class="li">New <a class="xref" href="../Expression_Language/Functions.html#concept_dvg_nqn_wx" title="Use pipeline functions to determine information about a pipeline, such as the pipeline name or the pipeline version.">pipeline functions</a> - You can use the following new
+                            <li class="li">New <a class="xref" href="../Expression_Language/Functions.html#concept_dvg_nqn_wx">pipeline functions</a> - You can use the following new
                                 pipeline functions to determine information about a pipeline: <ul class="ul" id="concept_oyv_zfk_fy__ul_lc5_rkk_fy">
                                     <li class="li">pipeline:name() - Returns the pipeline name. </li>
 

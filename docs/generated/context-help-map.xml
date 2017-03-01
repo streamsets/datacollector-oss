@@ -64,7 +64,7 @@
    <appContext helpID="task_opg_yrm_25"
                path="Installation/CMInstall-Overview.html#task_opg_yrm_25"/>
    <appContext helpID="task_opg_yrm_25"
-               path="Installation/CMInstall-Overview.html#unique_1027661619"/>
+               path="Installation/CMInstall-Overview.html#unique_953053667"/>
    <appContext helpID="task_u1v_nkt_25"
                path="Installation/CMInstall-Overview.html#task_u1v_nkt_25"/>
    <appContext helpID="task_zn4_qrn_25"
@@ -282,6 +282,7 @@
                path="Pipeline_Design/CDC-Overview.html#concept_wj5_hy2_5y"/>
    <appContext helpID="concept_y5y_5xd_5y"
                path="Pipeline_Design/CDC-Overview.html#concept_y5y_5xd_5y"/>
+   <appContext helpID="concept_xfm_wtp_1z" path="Pipeline_Design/FieldAttributes.html"/>
    <appContext helpID="concept_zcg_bm4_fs"
                path="Pipeline_Design/DelimitedDataRootFieldTypes.html#concept_zcg_bm4_fs"/>
    <appContext helpID="concept_uxh_nc4_45"
@@ -791,6 +792,8 @@
                path="Processors/Expression.html#concept_pzk_fz4_yq"/>
    <appContext helpID="concept_qf3_mfq_f5"
                path="Processors/Expression.html#concept_qf3_mfq_f5"/>
+   <appContext helpID="concept_mb2_fsp_1z"
+               path="Processors/Expression.html#concept_mb2_fsp_1z"/>
    <appContext helpID="task_x2h_tv4_yq"
                path="Processors/Expression.html#task_x2h_tv4_yq"/>
    <appContext helpID="concept_njn_3kk_fx"
@@ -1103,12 +1106,10 @@
                path="Destinations/AmazonS3.html#concept_aqq_tt2_px"/>
    <appContext helpID="concept_nly_sw2_px"
                path="Destinations/AmazonS3.html#concept_nly_sw2_px"/>
-   <appContext helpID="concept_k2z_ncx_rt"
-               path="Destinations/AmazonS3.html#concept_k2z_ncx_rt"/>
    <appContext helpID="concept_adm_kn1_mw"
                path="Destinations/AmazonS3.html#concept_adm_kn1_mw"/>
    <appContext helpID="concept_k2z_ncx_rt"
-               path="Destinations/AmazonS3.html#unique_1046572086"/>
+               path="Destinations/AmazonS3.html#concept_k2z_ncx_rt"/>
    <appContext helpID="task_pxb_j3r_rt"
                path="Destinations/AmazonS3.html#task_pxb_j3r_rt"/>
    <appContext helpID="concept_jzm_kf4_zx"
@@ -1877,7 +1878,7 @@
    <appContext helpID="concept_a3w_z3m_js"
                path="Troubleshooting/Troubleshooting_title.html#concept_a3w_z3m_js"/>
    <appContext helpID="concept_a3w_z3m_js"
-               path="Troubleshooting/Troubleshooting_title.html#unique_1181312631"/>
+               path="Troubleshooting/Troubleshooting_title.html#unique_2037801468"/>
    <appContext helpID="concept_rp1_ghd_zs"
                path="Troubleshooting/Troubleshooting_title.html#concept_rp1_ghd_zs"/>
    <appContext helpID="concept_mth_cjm_js"

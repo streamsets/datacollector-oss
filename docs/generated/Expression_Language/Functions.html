@@ -38,9 +38,9 @@
      
      <thead class="thead" align="left">
       <tr>
-       <th class="entry" valign="top" width="31.25%" id="d122169e40">Function Type</th>
+       <th class="entry" valign="top" width="31.25%" id="d121930e40">Function Type</th>
 
-       <th class="entry" valign="top" width="68.75%" id="d122169e43">Functions</th>
+       <th class="entry" valign="top" width="68.75%" id="d121930e43">Functions</th>
 
       </tr>
 
@@ -48,9 +48,9 @@
 
      <tbody class="tbody">
       <tr>
-       <td class="entry" valign="top" width="31.25%" headers="d122169e40 "><a class="xref" href="Functions.html#concept_p1z_ggv_1r" title="Use record functions to determine information about a record, such as the stage that created it or whether a field exists in the record.">Record functions</a></td>
+       <td class="entry" valign="top" width="31.25%" headers="d121930e40 "><a class="xref" href="Functions.html#concept_p1z_ggv_1r" title="Use record functions to determine information about a record, such as the stage that created it or whether a field exists in the record.">Record functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d122169e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d121930e43 ">
         <div class="p">
          <ul class="ul" id="concept_lhz_pyp_1r__ul_gdz_wb2_gs">
           <li class="li">record:attribute(&lt;attribute name&gt;) </li>
@@ -60,6 +60,11 @@
           <li class="li">record:creator()</li>
 
           <li class="li">record:exists(&lt;field path&gt;)</li>
+
+          <li class="li">record:fieldAttribute(&lt;field path&gt;, &lt;field attribute name&gt;)</li>
+
+          <li class="li">record:fieldAttributeOrDefault(&lt;field path&gt;, &lt;field attribute name&gt;, &lt;default
+           value&gt;)</li>
 
           <li class="li">record:id()</li>
 
@@ -80,10 +85,10 @@
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="31.25%" headers="d122169e40 "><a class="xref" href="Functions.html#concept_s2c_q14_fs" title="Use delimited data record functions to process delimited data with the list root field type. If you configured an origin to process the delimited data with the list-map root field type, you can use standard record functions.">Delimited data record
+       <td class="entry" valign="top" width="31.25%" headers="d121930e40 "><a class="xref" href="Functions.html#concept_s2c_q14_fs" title="Use delimited data record functions to process delimited data with the list root field type. If you configured an origin to process the delimited data with the list-map root field type, you can use standard record functions.">Delimited data record
          functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d122169e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d121930e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_z2x_jc2_gs">
          <li class="li">record:dExists(&lt;header&gt;) </li>
 
@@ -106,10 +111,10 @@
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="31.25%" headers="d122169e40 "><a class="xref" href="Functions.html#concept_ndj_43v_1r" title="Error record functions provide information about error records. Use error functions to process error records.">Error record
+       <td class="entry" valign="top" width="31.25%" headers="d121930e40 "><a class="xref" href="Functions.html#concept_ndj_43v_1r" title="Error record functions provide information about error records. Use error functions to process error records.">Error record
         functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d122169e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d121930e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_n1v_z12_gs">
          <li class="li">record:errorCode()</li>
 
@@ -130,9 +135,9 @@
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="31.25%" headers="d122169e40 "><a class="xref" href="Functions.html#concept_ylk_v44_jw" title="Use Base64 functions to encode or decode data using Base64.">Base64 functions</a></td>
+       <td class="entry" valign="top" width="31.25%" headers="d121930e40 "><a class="xref" href="Functions.html#concept_ylk_v44_jw" title="Use Base64 functions to encode or decode data using Base64.">Base64 functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d122169e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d121930e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_ecm_y1d_kw">
          <li class="li">base64:decodeBytes(&lt;string&gt;)</li>
 
@@ -149,9 +154,9 @@
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="31.25%" headers="d122169e40 "><a class="xref" href="Functions.html#concept_hpn_xfk_p5" title="Use data drift functions to create alerts when data drift occurs. You can use these functions in data drift rules.">Data drift functions</a></td>
+       <td class="entry" valign="top" width="31.25%" headers="d121930e40 "><a class="xref" href="Functions.html#concept_hpn_xfk_p5" title="Use data drift functions to create alerts when data drift occurs. You can use these functions in data drift rules.">Data drift functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d122169e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d121930e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_wsq_kfk_p5">
          <li class="li">drift:names(&lt;field path&gt;, &lt;ignoreWhenMissing: true | false&gt;)</li>
 
@@ -168,9 +173,9 @@
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="31.25%" headers="d122169e40 "><a class="xref" href="Functions.html#concept_kxj_nyl_5x">File functions</a></td>
+       <td class="entry" valign="top" width="31.25%" headers="d121930e40 "><a class="xref" href="Functions.html#concept_kxj_nyl_5x">File functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d122169e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d121930e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_mmh_mqr_5x">
          <li class="li">file:fileExtension(&lt;filepath&gt;)</li>
 
@@ -192,9 +197,9 @@
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="31.25%" headers="d122169e40 "><a class="xref" href="Functions.html#concept_m2m_s1f_lw">Math functions</a></td>
+       <td class="entry" valign="top" width="31.25%" headers="d121930e40 "><a class="xref" href="Functions.html#concept_m2m_s1f_lw">Math functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d122169e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d121930e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_ntg_zhf_lw">
          <li class="li">math:abs(&lt;number&gt;)</li>
 
@@ -215,12 +220,16 @@
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="31.25%" headers="d122169e40 "><a class="xref" href="Functions.html#concept_dvg_nqn_wx" title="Use pipeline functions to determine information about a pipeline, such as the pipeline name or the pipeline version.">Pipeline functions</a>
+       <td class="entry" valign="top" width="31.25%" headers="d121930e40 "><a class="xref" href="Functions.html#concept_dvg_nqn_wx">Pipeline functions</a>
        </td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d122169e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d121930e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_nmc_qpn_wx">
+         <li class="li">pipeline:id()</li>
+
          <li class="li">pipeline:name()</li>
+
+         <li class="li">pipeline:title()</li>
 
          <li class="li">pipeline:version()</li>
 
@@ -231,9 +240,9 @@
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="31.25%" headers="d122169e40 "><a class="xref" href="Functions.html#concept_ahp_f4v_1r">String functions</a></td>
+       <td class="entry" valign="top" width="31.25%" headers="d121930e40 "><a class="xref" href="Functions.html#concept_ahp_f4v_1r">String functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d122169e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d121930e43 ">
         <div class="p">
          <ul class="ul" id="concept_lhz_pyp_1r__ul_f15_xf2_gs">
           <li class="li">str:concat(&lt;string1&gt;, &lt;string2&gt;)</li>
@@ -277,9 +286,9 @@
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="31.25%" headers="d122169e40 "><a class="xref" href="Functions.html#concept_qkr_trf_sw" title="Use time functions to return the current time or to transform datetime data.">Time functions</a></td>
+       <td class="entry" valign="top" width="31.25%" headers="d121930e40 "><a class="xref" href="Functions.html#concept_qkr_trf_sw" title="Use time functions to return the current time or to transform datetime data.">Time functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d122169e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d121930e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_vrl_4rf_sw">
          <li class="li">time:extractDateFromString(&lt;string&gt;, &lt;format string&gt;)</li>
 
@@ -304,10 +313,10 @@
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="31.25%" headers="d122169e40 "><a class="xref" href="Functions.html#concept_ddw_ld1_1s">Miscellaneous
+       <td class="entry" valign="top" width="31.25%" headers="d121930e40 "><a class="xref" href="Functions.html#concept_ddw_ld1_1s">Miscellaneous
         functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d122169e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d121930e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_xks_xg2_gs">
          <li class="li">alert:info()</li>
 
@@ -371,6 +380,12 @@
     <dd class="dd">Returns the value of the specified record attribute. Use to return data, for example, for
      the "tag" attribute that you set using the File Tail origin. </dd>
 
+    <dd class="dd">Uses the following argument:<ul class="ul" id="concept_p1z_ggv_1r__ul_sdn_vwv_1z">
+      <li class="li">attribute name - Name of the record header attribute.</li>
+
+     </ul>
+</dd>
+
     <dd class="dd">Return type: String.</dd>
 
     <dd class="dd">For example, the following expression returns the value of a tag attribute added by a File
@@ -381,14 +396,24 @@
    
     <dt class="dt dlterm">record:attributeOrDefault(&lt;attribute name&gt; , &lt;default value&gt;)</dt>
 
-    <dd class="dd">Returns the value of the attribute in the appropriate data type. If the attribute does not
-     exist or if the field is null, returns the default value.</dd>
+    <dd class="dd">Returns the value of the specified record header attribute. When the attribute does not
+     exist or has no value, returns the specified default value.</dd>
 
-    <dd class="dd">Use to provide a default value when an attribute does not exist or when the attribute is
-     null. </dd>
+    <dd class="dd">Uses the following arguments:<ul class="ul" id="concept_p1z_ggv_1r__ul_nn4_kwv_1z">
+      <li class="li">attribute name - Name of the record header attribute.</li>
 
-    <dd class="dd">Return type: Variable, based on whether the function returns the attribute value or default
-     value.</dd>
+      <li class="li">default value - Value to use when the record header attribute does not exist or has no
+       value.</li>
+
+     </ul>
+</dd>
+
+    <dd class="dd">Return type: Returns a string value when returning the field attribute value. Otherwise,
+     returns the type of the specified default value.</dd>
+
+    <dd class="dd">For example, the following expression returns the value of the tag attribute, and returns NA
+     when no value exists:<pre class="pre codeblock">${record:attributeOrDefault('tag', 'NA')}</pre>
+</dd>
 
    
    
@@ -417,6 +442,52 @@
 </dd>
 
     <dd class="dd">It returns 0 when the Name field is not part of the record.</dd>
+
+   
+   
+    <dt class="dt dlterm">record:fieldAttribute(&lt;field path&gt;, &lt;field attribute name&gt;)</dt>
+
+    <dd class="dd">Returns the value for the specified field attribute.</dd>
+
+    <dd class="dd">Uses the following arguments:<ul class="ul" id="concept_p1z_ggv_1r__ul_plr_kxv_1z">
+      <li class="li">field path - Path to the field with the attribute.</li>
+
+      <li class="li">field attribute name - Name of the field attribute.</li>
+
+     </ul>
+</dd>
+
+    <dd class="dd">Return type: String</dd>
+
+    <dd class="dd">For example, the following expression returns the value for the pk attribute on the ID
+     field:<pre class="pre codeblock">record:fieldAttribute('/ID', 'pk')</pre>
+</dd>
+
+   
+   
+    <dt class="dt dlterm">record:fieldAttributeOrDefault(&lt;field path&gt;, &lt;field attribute name&gt;, &lt;default
+     value&gt;)</dt>
+
+    <dd class="dd">Returns the value for the field attribute when it exists. If the attribute does not exist,
+     returns the specified default value. </dd>
+
+    <dd class="dd">Uses the following arguments:<ul class="ul" id="concept_p1z_ggv_1r__ul_wmk_sxv_1z">
+      <li class="li">field path - Path to the field with the attribute.</li>
+
+      <li class="li">field attribute name - Name of the field attribute.</li>
+
+      <li class="li">default value - Value to use when the field attribute does not exist or has no value.</li>
+
+     </ul>
+</dd>
+
+    <dd class="dd">Return type: Returns a string value when returning the field attribute value. Otherwise,
+     returns the type of the specified default value.</dd>
+
+    <dd class="dd">For example, the following expression returns the value for the pk attribute on the ID field
+     when available, otherwise, it returns
+     "n".<pre class="pre codeblock">record:fieldAttributeOrDefault('/ID', 'pk', 'n')</pre>
+</dd>
 
    
    
@@ -1111,27 +1182,58 @@ ${file:pathElement('/logs/weblog.txt',-2}</pre>
 <div class="topic concept nested1" id="concept_dvg_nqn_wx">
  <h2 class="title topictitle2">Pipeline Functions</h2>
 
- 
- <div class="body conbody"><p class="shortdesc">Use pipeline functions to determine information about a pipeline, such as the pipeline
-        name or the pipeline version. </p>
-
-  <p class="p">The expression language
-            provides the following pipeline functions: </p>
+ <div class="body conbody">
+  <p class="p">Use pipeline functions to
+            determine information about a pipeline, such as the pipeline title or ID. The expression
+            language provides the following pipeline functions: </p>
 
         <dl class="dl">
             
-                <dt class="dt dlterm">pipeline:name()</dt>
+                <dt class="dt dlterm">pipeline:id()</dt>
 
-                <dd class="dd">Returns the name of the pipeline. </dd>
+                <dd class="dd">Returns the ID of the pipeline. The ID is a UUID automatically generated when
+                    the pipeline is created and is used by <span class="ph">Data
+                  Collector</span> to identify the pipeline. The pipeline ID cannot be changed.</dd>
 
                 <dd class="dd">Return type: String.</dd>
 
                 <dd class="dd">For example, you can include the function in the directory template for the
-                    Hadoop FS destination to include the pipeline name in the output directory name.
-                    The following expression creates output directories based on the pipeline name
-                    and timestamp of a
+                    Hadoop FS destination to include the pipeline ID in the output directory name.
+                    The following expression creates output directories based on the pipeline ID and
+                    timestamp of a
+                    record:<pre class="pre codeblock">/outputfiles/${pipeline:id()}/${YYYY()}-${MM()}-${DD()}-${hh()}</pre>
+</dd>
+
+            
+            
+                <dt class="dt dlterm">pipeline:name()</dt>
+
+                <dd class="dd">Like <samp class="ph codeph">pipeline:id</samp>, this function returns the ID of the pipeline.
+                    The ID is a UUID automatically generated when the pipeline is created and is
+                    used by <span class="ph">Data
+                  Collector</span> to identify the pipeline. The pipeline ID cannot be changed.</dd>
+
+                <dd class="dd">In <span class="ph">Data
+                  Collector</span> versions earlier than 2.3.0.0, this function returned the pipeline name. This
+                    function is retained for backward compatibility. Use
+                        <samp class="ph codeph">pipeline:id</samp> for new development.</dd>
+
+                <dd class="dd">Return type: String.</dd>
+
+                <dd class="dd">For example, you can include the function in the directory template for the
+                    Hadoop FS destination to include the pipeline ID in the output directory name.
+                    The following expression creates output directories based on the pipeline ID and
+                    timestamp of a
                     record:<pre class="pre codeblock">/outputfiles/${pipeline:name()}/${YYYY()}-${MM()}-${DD()}-${hh()}</pre>
 </dd>
+
+            
+            
+                <dt class="dt dlterm">pipeline:title()</dt>
+
+                <dd class="dd">Returns the title or name of the pipeline.</dd>
+
+                <dd class="dd">Return type: String.</dd>
 
             
             
@@ -1141,15 +1243,6 @@ ${file:pathElement('/logs/weblog.txt',-2}</pre>
                   Collector</span> to work with <span class="ph">DPM</span>.</dd>
 
                 <dd class="dd">Return type: String.</dd>
-
-                <dd class="dd">For example, you can use the function to define the Kafka topic name when
-                    configuring a pipeline to write aggregated statistics to a Kafka cluster. The
-                    following expression creates a Kafka topic based on the pipeline name and
-                    version. If you modify and then publish a new version of the pipeline to <span class="ph">DPM</span>, the pipeline automatically writes to a new topic:
-                    <pre class="pre codeblock">${pipeline:name()}-${pipeline:version()}</pre>
-</dd>
-
-                <dd class="dd">For more information about pipeline versioning with <span class="ph">DPM</span>, see <a class="xref" href="../DPM/PipelineManagement.html#concept_eq5_qjd_fx" title="After you register a Data Collector with DPM, you can manage how the pipelines work with DPM.">Pipeline Management with DPM</a>. </dd>
 
             
         </dl>

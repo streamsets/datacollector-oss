@@ -48,11 +48,11 @@
 
 <div class="related-links"></div>
 <div class="topic concept nested1" id="concept_vx3_byr_3x">
- <h2 class="title topictitle2">Processing Order</h2>
+    <h2 class="title topictitle2">Processing Order</h2>
 
- <div class="body conbody">
-  <div class="p">Value
-            Replacer replaces values in the order that the properties display in the processor: <ol class="ol" id="concept_vx3_byr_3x__ol_amz_gyr_3x">
+    <div class="body conbody">
+        <div class="p">Value Replacer replaces values in the order that the
+            properties display in the processor: <ol class="ol" id="concept_vx3_byr_3x__ol_amz_gyr_3x">
                 <li class="li"><span class="ph uicontrol">Fields to Null</span> - Replaces existing values with null
                     values, optionally based on a condition.</li>
 
@@ -65,11 +65,17 @@
             </ol>
 </div>
 
+        <p class="p">For example, in the following Value Replacer, the processor first replaces null values in
+            the <span class="ph uicontrol">product_id</span> field, then replaces the "0289" store ID with
+            "0132". And finally, it replaces values less than 1.00 in the
+                <span class="ph uicontrol">cost</span> field with "1.00":</p>
+
+        <p class="p"><img class="image" id="concept_vx3_byr_3x__image_zmp_nys_3x" src="../Graphics/ValueReplacer-props.png" height="358" width="715" /></p>
+
         <p class="p">When you list multiple fields in a property, Value Replacer processes them in the listed
             order as well. </p>
 
-        
- </div>
+    </div>
 
 </div>
 <div class="topic concept nested1" id="concept_ppg_ztk_3y">
@@ -172,14 +178,14 @@ Use the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ihq_ymf_zq__d39506e3993" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ihq_ymf_zq__d39516e3993" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d274594e271">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d275184e268">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d274594e274">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d275184e271">Description</th>
 
                                 </tr>
 
@@ -187,24 +193,24 @@ Use the
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d274594e271 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d275184e268 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d274594e274 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d274594e271 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d274594e274 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d275184e271 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d274594e271 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_ihq_ymf_zq__d39506e4039" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d275184e268 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d274594e274 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d275184e271 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d275184e268 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_ihq_ymf_zq__d39516e4039" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d275184e271 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -212,10 +218,10 @@ Use the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d274594e271 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_ihq_ymf_zq__d39506e4053" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d275184e268 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_ihq_ymf_zq__d39516e4053" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d274594e274 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d275184e271 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -223,10 +229,10 @@ Use the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d274594e271 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_ihq_ymf_zq__d39506e4068" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d275184e268 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_ihq_ymf_zq__d39516e4068" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d274594e274 ">Error record handling for the stage: <ul class="ul" id="task_ihq_ymf_zq__d39506e4072">
+                                    <td class="entry" valign="top" width="70%" headers="d275184e271 ">Error record handling for the stage: <ul class="ul" id="task_ihq_ymf_zq__d39516e4072">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -257,9 +263,9 @@ Use the
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d274594e393">Value Replacer Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d275184e390">Value Replacer Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d274594e396">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d275184e393">Description</th>
 
                                 </tr>
 
@@ -267,13 +273,18 @@ Use the
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d274594e393 ">Fields to Null <a class="xref" href="ValueReplacer.html#concept_ppg_ztk_3y"><img class="image" id="task_ihq_ymf_zq__image_mfp_twk_3y" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d275184e390 ">Fields to Null <a class="xref" href="ValueReplacer.html#concept_ppg_ztk_3y"><img class="image" id="task_ihq_ymf_zq__image_mfp_twk_3y" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d274594e396 ">One or more fields to replace with null values. Configure
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d275184e393 ">One or more fields to replace with null values. Configure
                                         the following properties:<ul class="ul" id="task_ihq_ymf_zq__ul_ec3_2cl_3y">
-                                            <li class="li">Fields - The fields to use.</li>
+                                            <li class="li">Fields - The fields to use.<div class="note tip"><span class="tiptitle">Tip:</span> To use all fields, you can use the asterisk
+                        wildcard as follows: <samp class="ph codeph">/*</samp>. You can also use the asterisk
+                        wildcard to represent array indices and map elements. <span class="ph"><a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_vqr_sqc_wr" title="In some processors, you can use the asterisk wildcard (*) as indices in an array or key values in a map. Use a wildcard to help define the field paths for maps and arrays."><img class="image" id="task_ihq_ymf_zq__d39578e277" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" />
+                              </a></span>
+                  </div>
+</li>
 
                                             <li class="li">Condition - An optional condition to use to replace
                                                 values with null values. When omitted, the processor
@@ -284,43 +295,45 @@ Use the
 </li>
 
                                         </ul>
-<p class="p">You can use the asterisk wildcard to represent array indices and map
-                  elements. <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_vqr_sqc_wr" title="In some processors, you can use the asterisk wildcard (*) as indices in an array or key values in a map. Use a wildcard to help define the field paths for maps and arrays."><img class="image" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" />
-                  </a>
-            </p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d274594e393 ">Replace Null Values</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d275184e390 ">Replace Null Values</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d274594e396 ">Replaces null values with constants. Click
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d275184e393 ">Replaces null values with constants. Click
                                             <span class="ph uicontrol">Add</span> to include more fields.
                                         Configure the following properties:<ul class="ul" id="task_ihq_ymf_zq__ul_sq3_fcg_zq">
-                                            <li class="li">Fields to Replace - Name of the field to use.</li>
+                                            <li class="li">Fields to Replace - Name of the field to use.<div class="note tip"><span class="tiptitle">Tip:</span> To use all fields, you can use the asterisk
+                        wildcard as follows: <samp class="ph codeph">/*</samp>. You can also use the asterisk
+                        wildcard to represent array indices and map elements. <span class="ph"><a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_vqr_sqc_wr" title="In some processors, you can use the asterisk wildcard (*) as indices in an array or key values in a map. Use a wildcard to help define the field paths for maps and arrays."><img class="image" id="task_ihq_ymf_zq__d39578e277" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" />
+                              </a></span>
+                  </div>
+</li>
 
                                             <li class="li">Replacement Value - Constant to replace null values
                                                 in the field. </li>
 
                                         </ul>
-<p class="p">You can use the asterisk wildcard to represent array indices and map
-                  elements. <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_vqr_sqc_wr" title="In some processors, you can use the asterisk wildcard (*) as indices in an array or key values in a map. Use a wildcard to help define the field paths for maps and arrays."><img class="image" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" />
-                  </a>
-            </p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d274594e393 ">Conditionally Replace Values <a class="xref" href="ValueReplacer.html#concept_gqv_1sk_3y"><img class="image" id="task_ihq_ymf_zq__image_ucq_nks_3x" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d275184e390 ">Conditionally Replace Values <a class="xref" href="ValueReplacer.html#concept_gqv_1sk_3y"><img class="image" id="task_ihq_ymf_zq__image_ucq_nks_3x" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d274594e396 ">Replaces the specified values with constants. Click
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d275184e393 ">Replaces the specified values with constants. Click
                                             <span class="ph uicontrol">Add</span> to include more fields.
                                         Configure the following properties:<ul class="ul" id="task_ihq_ymf_zq__ul_vqp_sjs_3x">
-                                            <li class="li">Fields to Replace - Name of the field to use.</li>
+                                            <li class="li">Fields to Replace - Name of the field to use.<div class="note tip"><span class="tiptitle">Tip:</span> To use all fields, you can use the asterisk
+                        wildcard as follows: <samp class="ph codeph">/*</samp>. You can also use the asterisk
+                        wildcard to represent array indices and map elements. <span class="ph"><a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_vqr_sqc_wr" title="In some processors, you can use the asterisk wildcard (*) as indices in an array or key values in a map. Use a wildcard to help define the field paths for maps and arrays."><img class="image" id="task_ihq_ymf_zq__d39578e277" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" />
+                              </a></span>
+                  </div>
+</li>
 
                                             <li class="li">Operator - Operator to use for the condition. </li>
 
@@ -331,18 +344,14 @@ Use the
                                                 match the condition. </li>
 
                                         </ul>
-<p class="p">You can use the asterisk wildcard to represent array indices and map
-                  elements. <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_vqr_sqc_wr" title="In some processors, you can use the asterisk wildcard (*) as indices in an array or key values in a map. Use a wildcard to help define the field paths for maps and arrays."><img class="image" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" />
-                  </a>
-            </p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d274594e393 ">Field Does Not Exist</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d275184e390 ">Field Does Not Exist</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d274594e396 ">Determines how to handle records without the specified
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d275184e393 ">Determines how to handle records without the specified
                                             fields:<ul class="ul" id="task_ihq_ymf_zq__ul_jx1_4w2_jr">
                                             <li class="li">Continue - Passes the record with as much processing
                                                 as possible.</li>
