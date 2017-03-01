@@ -53,6 +53,7 @@ public class DataLakeWriterThread implements Callable<List<OnRecordErrorExceptio
     int numErrorRecords = 0;
     LOG.debug("Thread {} starts to write {} records to {}", threadId, records.size(), filePath);
     List<OnRecordErrorException> errorRecords = new ArrayList<>();
+    int retry = 0;
 
     for (int i = 0; i < records.size(); i++) {
       Record record = records.get(i);
@@ -66,9 +67,22 @@ public class DataLakeWriterThread implements Callable<List<OnRecordErrorExceptio
         }
 
       } catch (ADLException ex) {
+        // for 401 error, renew the token and retry the request
+        if (ex.httpResponseCode == 401 && retry < 3) {
+          try {
+            writer.updateToken();
+            LOG.info("Thread {} obtained a renewed access token", threadId);
+            retry = 0;
+            i--;
+            continue;
+          } catch (IOException ex1) {
+            // retry to obtain the token
+            retry++;
+          }
+        }
         // acutal throwing the error happening on the main thread
-        LOG.debug(Errors.ADLS_03.getMessage(), ex.remoteExceptionMessage, ex);
-        errorRecords.add(new OnRecordErrorException(record, Errors.ADLS_03, ex.remoteExceptionMessage));
+        LOG.debug(Errors.ADLS_03.getMessage(), ex.getMessage(), ex);
+        errorRecords.add(new OnRecordErrorException(record, Errors.ADLS_03, ex.getMessage()));
         numErrorRecords++;
       } catch (IOException | StageException ex) {
         // acutal throwing the error happening on the main thread

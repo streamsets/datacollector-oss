@@ -73,7 +73,6 @@ public class TestRecordWriter {
         null
     );
 
-    ELEval dirPathTemplateEval = context.createELEval("dirPathTemplate2", StringEL.class, TimeEL.class, TimeNowEL.class);
     ELVars dirPathTemplateVars = context.createELVars();
 
     final String dirPath = "/tmp/output/";
@@ -89,6 +88,9 @@ public class TestRecordWriter {
     final String fileNameEL = "";
     final String timeZoneID = "UTC";
     final boolean dirPathTemplateInHeader = false;
+    final String authTokenEndpoint = "";
+    final String clientId = "";
+    final String clientKey = "";
 
     Date date = Calendar.getInstance(TimeZone.getTimeZone(timeZoneID)).getTime();
     Calendar calendar = Calendar.getInstance();
@@ -114,7 +116,10 @@ public class TestRecordWriter {
         false,
         "",
         1000,
-        null
+        null,
+        authTokenEndpoint,
+        clientId,
+        clientKey
     );
     String filePath = recordWriter.getFilePath(dirPathTemplate, r, date);
     Assert.assertTrue(filePath.startsWith(targetFilePathPrefix));
@@ -123,17 +128,6 @@ public class TestRecordWriter {
 
   @Test
   public void testDirectoryInHeader() throws StageException {
-    Target.Context context = ContextInfoCreator.createTargetContext(
-        DataLakeTarget.class,
-        "n",
-        false,
-        OnRecordError.DISCARD,
-        null
-    );
-
-    ELEval dirPathTemplateEval = context.createELEval("dirPathTemplate2", StringEL.class, TimeEL.class, TimeNowEL.class);
-    ELVars dirPathTemplateVars = context.createELVars();
-
     final String TEST_STRING = "test";
     final String MIME = "text/plain";
     int i = 1;
@@ -146,6 +140,9 @@ public class TestRecordWriter {
     final String fileSuffix = "txt";
     final String fileNameEL = "";
     final boolean dirPathTemplateInHeader = true;
+    final String authTokenEndpoint = "";
+    final String clientId = "";
+    final String clientKey = "";
 
     RecordWriter recordWriter = new RecordWriter(
         null,
@@ -159,7 +156,10 @@ public class TestRecordWriter {
         false,
         "",
         1000,
-        null
+        null,
+        authTokenEndpoint,
+        clientId,
+        clientKey
     );
     final String dirPathTemplate = "";
     String filePath = recordWriter.getFilePath(dirPathTemplate, r, null);
@@ -182,16 +182,9 @@ public class TestRecordWriter {
     final String fileSuffix = "txt";
     final String fileNameEL = "";
     final boolean dirPathTemplateInHeader = false;
-    Target.Context context = ContextInfoCreator.createTargetContext(
-        DataLakeTarget.class,
-        "n",
-        false,
-        OnRecordError.DISCARD,
-        null
-    );
-
-    ELEval dirPathTemplateEval = context.createELEval("dirPathTemplate2", StringEL.class, TimeEL.class, TimeNowEL.class);
-    ELVars dirPathTemplateVars = context.createELVars();
+    final String authTokenEndpoint = "";
+    final String clientId = "";
+    final String clientKey = "";
 
     RecordWriter recordWriter = new RecordWriter(
         null,
@@ -205,7 +198,10 @@ public class TestRecordWriter {
         rollIfHeader,
         rollHeaderName,
         1000,
-        null
+        null,
+        authTokenEndpoint,
+        clientId,
+        clientKey
     );
 
     Assert.assertTrue(recordWriter.shouldRoll(record, dirPath));
