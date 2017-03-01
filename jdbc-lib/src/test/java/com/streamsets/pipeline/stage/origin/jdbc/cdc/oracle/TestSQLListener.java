@@ -79,6 +79,18 @@ public class TestSQLListener {
                     .put("LASTLOGIN", "TO_TIMESTAMP('2016-11-21 11:34:09.982753')")
                     .build()
             },
+            {" update \"SYS\".\"MANYCOLS\" set \"SALARY=\" = '1998.483' " +
+                "where \"ID\" = '1' and \"NAME\" = '=sdc' and" +
+                " \"HIREDATE\" = TO_DATE('21-11-2016 11:34:09', 'DD-MM-YYYY HH24:MI:SS') and " +
+                "\"SALARY=\" = '1332.322' and \"LASTLOGIN\" = TO_TIMESTAMP('2016-11-21 11:34:09.982753')",
+                ImmutableMap.builder()
+                    .put("ID", "1")
+                    .put("SALARY=", "1998.483")
+                    .put("NAME", "=sdc")
+                    .put("HIREDATE", "TO_DATE('21-11-2016 11:34:09','DD-MM-YYYY HH24:MI:SS')")
+                    .put("LASTLOGIN", "TO_TIMESTAMP('2016-11-21 11:34:09.982753')")
+                    .build()
+            },
             {
               "delete from \"SYS\".\"MANYCOLS\" where \"ID\" = '10' and \"NAME\" = 'stream' and " +
                   "\"HIREDATE\" = TO_DATE('19-11-2016 11:35:16', 'DD-MM-YYYY HH24:MI:SS') and " +
