@@ -153,12 +153,14 @@
                     <dt>Pipelines</dt>
                     <dd>
                         <ul id="ul_lzx_xtt_5y">
-                            <li dir="ltr">Pipeline renaming - You can now rename pipelines.</li>
+                            <li dir="ltr">Pipeline renaming - You can now rename pipelines by
+                                editing the Title general pipeline property.</li>
                             <li dir="ltr">
-                                <p dir="ltr">Field header attributes - Data Collector now supports
-                                    field header attributes, which are attributes that you can
-                                    define for individual fields in records. Use the Expression
-                                    Evaluator to add field header attributes.</p>
+                                <p dir="ltr"><xref
+                                        href="../Pipeline_Design/FieldAttributes.dita#concept_xfm_wtp_1z"
+                                        >Field attributes</xref> - Data Collector now supports
+                                    field-level attributes. Use the Expression Evaluator to add
+                                    field attributes.</p>
                             </li>
                         </ul>
                     </dd>
@@ -252,11 +254,12 @@
                                     does not return a lookup value for a field.</p>
                             </li>
                             <li dir="ltr">
-                                <p dir="ltr">XML Parser enhancement - A new Multiple Values Behavior
-                                    property allows you to specify the behavior when you define a
-                                    delimiter element and the document includes more than one value:
-                                    Return the first value as a record, return one record with a
-                                    list field for each value, or return all values as records.</p>
+
+                               <xref
+                                        href="../Processors/XMLParser.dita#concept_dtt_q5q_k5">XML
+                                        Parser enhancement</xref> - The new Multiple Values Behavior property allows you to specify the behavior when you define a
+                                    delimiter element and the document includes more than one
+                                    value.
                             </li>
                         </ul>
                     </dd>
@@ -359,18 +362,33 @@
                     <dt>Expression Language</dt>
                     <dd>
                         <ul id="ul_hq3_2xt_5y">
+                            <li><xref
+                                    href="../Expression_Language/PipelineFunctions.dita#concept_dvg_nqn_wx"
+                                    >New pipeline functions</xref> - You can use the following new
+                                pipeline functions to return pipeline information:<ul
+                                    id="ul_gvq_svb_cz">
+                                    <li>pipeline:id() - Returns the pipeline ID, a UUID that is
+                                        automatically generated and used by Data Collector to
+                                        identify the pipeline. <note>The existing pipeline:name()
+                                            function now returns the pipeline ID instead of the
+                                            pipeline name since pipeline ID is the correct way to
+                                            identify a pipeline.</note></li>
+                                    <li>pipeline:title() - Returns the pipeline title or name.</li>
+                                </ul></li>
                             <li dir="ltr">
-                                <p dir="ltr">New record functions - You can use the following new
-                                    record functions to determine information about records:<ul
+                                <p dir="ltr"><xref
+                                        href="../Expression_Language/RecordFunctions.dita#concept_p1z_ggv_1r"
+                                        >New record functions</xref> - You can use the following new
+                                    record functions to work with field attributes:<ul
                                         id="ul_k4h_kxt_5y">
-                                        <li>record:fieldAttribute (&lt;attribute name>, &lt;field
-                                            path>) - Returns the value of the specified field header
-                                            attribute for the specified field. </li>
-                                        <li>record:fieldAttributeOrDefault (&lt;attribute name>,
-                                            &lt;field path>, &lt;default value>) - Returns the value
-                                            of the specified field header attribute for the
-                                            specified field. If the attribute does not exist or if
-                                            the field is null, returns the default value.</li>
+                                        <li>record:fieldAttribute (&lt;field path>, &lt;attribute
+                                            name>) - Returns the value of the specified field
+                                            attribute. </li>
+                                        <li>record:fieldAttributeOrDefault (&lt;field path>,
+                                            &lt;attribute name>, &lt;default value>) - Returns the
+                                            value of the specified field attribute. Returns the
+                                            default value if the attribute does not exist or
+                                            contains no value.</li>
                                     </ul></p>
                             </li>
                             <li dir="ltr">
