@@ -53,6 +53,7 @@ import org.glassfish.jersey.test.grizzly.GrizzlyWebTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -834,6 +835,7 @@ public class HttpClientSourceIT extends JerseyTest {
     runBatchAndAssertNames(DataFormat.TEXT, conf, delayStream);
   }
 
+  @Ignore // SDC-5504
   @Test
   public void testHttpWithLinearBackoff() throws Exception {
     for (final HttpClientMode mode : HttpClientMode.values()) {
@@ -873,6 +875,7 @@ public class HttpClientSourceIT extends JerseyTest {
     }
   }
 
+  @Ignore // SDC-5504
   @Test
   public void testHttpWithExponentialBackoff() throws Exception {
     for (final HttpClientMode mode : HttpClientMode.values()) {
