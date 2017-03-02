@@ -126,7 +126,6 @@ public class KafkaConsumer09IT {
     zookeeper.shutdown();
   }
 
-  @Ignore
   @Test
   public void testAssignedPartitionsOnRebalance() throws IOException, StageException {
     int zkConnectionTimeout = 6000;
@@ -148,20 +147,20 @@ public class KafkaConsumer09IT {
 
     KafkaServer kafkaServer = TestUtil.createKafkaServer(port, zkConnect, true, numPartitions);
 
-    Source.Context sourceContext = ContextInfoCreator.createSourceContext(
-        "s",
-        false,
-        OnRecordError.TO_ERROR,
-        ImmutableList.of("a")
-    );
-
     List<SdcKafkaConsumer> consumers = new ArrayList<>();
 
     for (int i=0; i<numConsumers; i++) {
+      Source.Context sourceContext = ContextInfoCreator.createSourceContext(
+          "s",
+          false,
+          OnRecordError.TO_ERROR,
+          ImmutableList.of("a")
+      );
+
       consumers.add(createKafkaConsumer(port, topic, sourceContext));
 
       // allow rebalance to happen
-      ThreadUtil.sleep(200);
+      ThreadUtil.sleep(10000);
 
       for (int c=0; c<consumers.size(); c++) {
         SdcKafkaConsumer consumer = consumers.get(c);
