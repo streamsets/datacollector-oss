@@ -302,7 +302,8 @@ public class FileTailSource extends BaseSource {
               conf.archiveDir,
               true,
               scanIntervalSecs,
-              conf.allowLateDirectories
+              conf.allowLateDirectories,
+              getContext().isPreview()
           );
         } catch (IOException ex) {
           issues.add(

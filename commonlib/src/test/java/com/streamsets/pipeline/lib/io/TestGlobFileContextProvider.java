@@ -63,7 +63,8 @@ public class TestGlobFileContextProvider {
         1024,
         PostProcessingOptions.NONE,
         null,
-        eventPublisher
+        eventPublisher,
+        false
     );
 
     // do full loop with no files

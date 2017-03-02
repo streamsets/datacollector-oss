@@ -62,8 +62,16 @@ public class TestMultiFileReader {
     File file = new File(testDir1, "file.txt");
     MultiFileInfo di =
         new MultiFileInfo(null, file.getPath(), FileRollMode.REVERSE_COUNTER, "", "", "");
-    MultiFileReader mdr =
-        new MultiFileReader(Arrays.asList(di), UTF8, 1024, PostProcessingOptions.NONE, null, false, 0, false);
+    MultiFileReader mdr = new MultiFileReader(Arrays.asList(di),
+        UTF8,
+        1024,
+        PostProcessingOptions.NONE,
+        null,
+        false,
+        0,
+        false,
+        false
+    );
     mdr.setOffsets(new HashMap<String, String>());
     long start = System.currentTimeMillis();
 
@@ -80,8 +88,16 @@ public class TestMultiFileReader {
     Files.write(file.toPath(), Arrays.asList("Hello"), UTF8);
     MultiFileInfo di =
         new MultiFileInfo("tag", file.getPath(), FileRollMode.REVERSE_COUNTER, "", "", "");
-    MultiFileReader mdr =
-        new MultiFileReader(Arrays.asList(di), UTF8, 1024, PostProcessingOptions.NONE, null, false, 0, false);
+    MultiFileReader mdr = new MultiFileReader(Arrays.asList(di),
+        UTF8,
+        1024,
+        PostProcessingOptions.NONE,
+        null,
+        false,
+        0,
+        false,
+        false
+    );
     mdr.setOffsets(new HashMap<String, String>());
     long start = System.currentTimeMillis();
     LiveFileChunk chunk = mdr.next(1000);
@@ -116,7 +132,7 @@ public class TestMultiFileReader {
         new MultiFileInfo(null, file1.getPath(), FileRollMode.REVERSE_COUNTER, "", "", "");
     MultiFileInfo di2 =
         new MultiFileInfo(null, file1.getPath(), FileRollMode.REVERSE_COUNTER, "", "", "");
-    new MultiFileReader(Arrays.asList(di1, di2), UTF8, 1024, PostProcessingOptions.NONE, null, false, 0, false);
+    new MultiFileReader(Arrays.asList(di1, di2), UTF8, 1024, PostProcessingOptions.NONE, null, false, 0, false, false);
   }
 
   @Test
@@ -129,8 +145,16 @@ public class TestMultiFileReader {
         new MultiFileInfo("tag1", file1.getPath(), FileRollMode.REVERSE_COUNTER, "", "", "");
     MultiFileInfo di2 =
         new MultiFileInfo("tag2", file2.getPath(), FileRollMode.REVERSE_COUNTER, "", "", "");
-    MultiFileReader mdr = new MultiFileReader(Arrays.asList(di1, di2), UTF8, 1024, PostProcessingOptions.NONE, null,
-                                              false, 0, false);
+    MultiFileReader mdr = new MultiFileReader(Arrays.asList(di1, di2),
+        UTF8,
+        1024,
+        PostProcessingOptions.NONE,
+        null,
+        false,
+        0,
+        false,
+        false
+    );
 
 
     // just open the multidir, no file events
@@ -269,8 +293,16 @@ public class TestMultiFileReader {
     Files.write(file1.toPath(), Arrays.asList("f1"), UTF8);
     MultiFileInfo di1 =
         new MultiFileInfo(null, file.getPath(), FileRollMode.REVERSE_COUNTER, "", "", "");
-    MultiFileReader mdr = new MultiFileReader(Arrays.asList(di1), UTF8, 1024, PostProcessingOptions.DELETE, null,
-                                              false, 0, false);
+    MultiFileReader mdr = new MultiFileReader(Arrays.asList(di1),
+        UTF8,
+        1024,
+        PostProcessingOptions.DELETE,
+        null,
+        false,
+        0,
+        false,
+        false
+    );
 
     Assert.assertTrue(file1.exists());
     mdr.setOffsets(new HashMap<String, String>());
@@ -292,10 +324,18 @@ public class TestMultiFileReader {
     Files.write(file1.toPath(), Arrays.asList("f1"), UTF8);
     MultiFileInfo di1 =
         new MultiFileInfo(null, new File(testDir1, "f${PATTERN}.txt").getPath(),
-                                               FileRollMode.PATTERN, ".", "", "");
+            FileRollMode.PATTERN, ".", "", "");
 
-    MultiFileReader mdr = new MultiFileReader(Arrays.asList(di1), UTF8, 1024, PostProcessingOptions.DELETE, null,
-                                              false, 0, false);
+    MultiFileReader mdr = new MultiFileReader(Arrays.asList(di1),
+        UTF8,
+        1024,
+        PostProcessingOptions.DELETE,
+        null,
+        false,
+        0,
+        false,
+        false
+    );
 
     Assert.assertTrue(file1.exists());
     mdr.setOffsets(new HashMap<String, String>());
@@ -323,10 +363,18 @@ public class TestMultiFileReader {
     Files.write(file1.toPath(), Arrays.asList("f1"), UTF8);
     MultiFileInfo di1 =
         new MultiFileInfo(null, new File(testDir1, "f${PATTERN}.txt").getPath(),
-                                               FileRollMode.PATTERN, ".", "", "");
+            FileRollMode.PATTERN, ".", "", "");
 
-    MultiFileReader mdr = new MultiFileReader(Arrays.asList(di1), UTF8, 1024, PostProcessingOptions.ARCHIVE,
-                                                        testDir2.getAbsolutePath(), false, 0, false);
+    MultiFileReader mdr = new MultiFileReader(Arrays.asList(di1),
+        UTF8,
+        1024,
+        PostProcessingOptions.ARCHIVE,
+        testDir2.getAbsolutePath(),
+        false,
+        0,
+        false,
+        false
+    );
 
     Assert.assertTrue(file1.exists());
     mdr.setOffsets(new HashMap<String, String>());
@@ -350,6 +398,86 @@ public class TestMultiFileReader {
   }
 
   @Test
+  public void testPostProcessingDeleteInPreviewMode() throws Exception {
+    File file1 = new File(testDir1, "f1.txt");
+    File file2 = new File(testDir1, "f2.txt");
+    Files.write(file1.toPath(), Arrays.asList("f1"), UTF8);
+    MultiFileInfo di1 =
+        new MultiFileInfo(null, new File(testDir1, "f${PATTERN}.txt").getPath(),
+            FileRollMode.PATTERN, ".", "", "");
+
+    MultiFileReader mdr = new MultiFileReader(Arrays.asList(di1),
+        UTF8,
+        1024,
+        PostProcessingOptions.DELETE,
+        null,
+        false,
+        0,
+        false,
+        true
+    );
+
+    Assert.assertTrue(file1.exists());
+    mdr.setOffsets(new HashMap<String, String>());
+
+    //read file content
+    Assert.assertNotNull(mdr.next(0));
+
+    //triggers a periodic 'roll'
+    Files.createFile(file2.toPath());
+
+    //sleeps to trigger a livefile refresh
+    Thread.sleep(SingleLineLiveFileReader.REFRESH_INTERVAL * 2 + 1);
+
+    //reach eof
+    Assert.assertNull(mdr.next(0));
+
+    Assert.assertTrue(file1.exists());
+    mdr.close();
+  }
+
+  @Test
+  public void testPostProcessingArchiveInPreviewMode() throws Exception {
+    File file1 = new File(testDir1, "f1.txt");
+    File file2 = new File(testDir1, "f2.txt");
+    Files.write(file1.toPath(), Arrays.asList("f1"), UTF8);
+    MultiFileInfo di1 =
+        new MultiFileInfo(null, new File(testDir1, "f${PATTERN}.txt").getPath(),
+            FileRollMode.PATTERN, ".", "", "");
+
+    MultiFileReader mdr = new MultiFileReader(Arrays.asList(di1),
+        UTF8,
+        1024,
+        PostProcessingOptions.ARCHIVE,
+        testDir2.getAbsolutePath(),
+        false,
+        0,
+        false,
+        true
+    );
+
+    Assert.assertTrue(file1.exists());
+    mdr.setOffsets(new HashMap<String, String>());
+
+    //read file content
+    Assert.assertNotNull(mdr.next(0));
+
+    //triggers a periodic 'roll'
+    Files.createFile(file2.toPath());
+
+    //sleeps to trigger a livefile refresh
+    Thread.sleep(SingleLineLiveFileReader.REFRESH_INTERVAL + 1);
+
+    //reach eof
+    Assert.assertNull(mdr.next(0));
+
+    Assert.assertTrue(file1.exists());
+    Path f1Archived = Paths.get(testDir2.getAbsolutePath(), file1.getPath());
+    Assert.assertFalse(Files.exists(f1Archived));
+    mdr.close();
+  }
+
+  @Test
   public void testMultiLineFiles() throws Exception {
     File file1 = new File(testDir1, "f1.txt");
     File file2 = new File(testDir1, "f2.txt");
@@ -357,8 +485,16 @@ public class TestMultiFileReader {
     Files.write(file2.toPath(), Arrays.asList("B2M1", "B2M2", "b2m2", "B3M3"), UTF8);
     MultiFileInfo di1 = new MultiFileInfo("tag1", file1.getPath(), FileRollMode.REVERSE_COUNTER, "", "", "^A.*");
     MultiFileInfo di2 = new MultiFileInfo("tag2", file2.getPath(), FileRollMode.REVERSE_COUNTER, "", "", "^B.*");
-    MultiFileReader mdr = new MultiFileReader(Arrays.asList(di1, di2), UTF8, 1024, PostProcessingOptions.NONE, null,
-                                              false, 0, false);
+    MultiFileReader mdr = new MultiFileReader(Arrays.asList(di1, di2),
+        UTF8,
+        1024,
+        PostProcessingOptions.NONE,
+        null,
+        false,
+        0,
+        false,
+        false
+    );
 
     Set<String> lines = new HashSet<>();
     Map<String, String> offsets = new HashMap<>();
@@ -423,9 +559,16 @@ public class TestMultiFileReader {
       i++;
     }
 
-    MultiFileReader mdr = new MultiFileReader(multiFileInfos, UTF8, 1024,
-        PostProcessingOptions.DELETE, archiveDir.getAbsolutePath(),
-        true, 1, false);
+    MultiFileReader mdr = new MultiFileReader(multiFileInfos,
+        UTF8,
+        1024,
+        PostProcessingOptions.DELETE,
+        archiveDir.getAbsolutePath(),
+        true,
+        1,
+        false,
+        false
+    );
 
     Map<String, String> offsets = new HashMap<>();
     int numOfLinesProcessed = 0, totalNumberOfLines = totalNumOfFiles * numOfLinesPerFile;

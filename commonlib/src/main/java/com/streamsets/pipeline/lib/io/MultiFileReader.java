@@ -63,6 +63,7 @@ public class MultiFileReader implements Closeable {
   private final FileContextProvider fileContextProvider;
   private final List<FileEvent> events;
   private boolean open;
+  private boolean inPreviewMode;
 
   /**
    * Creates a <code>MultiFileReader</code> that will scan/read multiple directories for data.
@@ -80,7 +81,8 @@ public class MultiFileReader implements Closeable {
       String archiveDir,
       boolean globbing,
       int scanIntervalSecs,
-      boolean allowForLateDirectoryCreation
+      boolean allowForLateDirectoryCreation,
+      boolean inPreviewMode
   ) throws IOException {
     Utils.checkNotNull(fileInfos, "fileInfos");
     Utils.checkArgument(!fileInfos.isEmpty(), "fileInfos cannot be empty");
@@ -92,6 +94,7 @@ public class MultiFileReader implements Closeable {
         "archiveDir cannot be empty if postProcessing is ARCHIVE");
 
     archiveDir = (postProcessing == PostProcessingOptions.ARCHIVE) ? archiveDir : null;
+    this.inPreviewMode = inPreviewMode;
 
     events = new ArrayList<>(fileInfos.size() * 2);
     FileEventPublisher eventPublisher = new FileEventPublisher() {
@@ -111,14 +114,16 @@ public class MultiFileReader implements Closeable {
         maxLineLength,
         postProcessing,
         archiveDir,
-        eventPublisher
+        eventPublisher,
+        inPreviewMode
     ) : new ExactFileContextProvider(
         fileInfos,
         charset,
         maxLineLength,
         postProcessing,
         archiveDir,
-        eventPublisher
+        eventPublisher,
+        inPreviewMode
     );
 
     open = true;

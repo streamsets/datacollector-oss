@@ -51,9 +51,11 @@ public class FileContext {
   private RollMode rollMode;
   private final Path dir;
   private boolean open;
+  private boolean inPreviewMode;
 
   public FileContext(MultiFileInfo multiFileInfo, Charset charset, int maxLineLength,
-      PostProcessingOptions postProcessing, String archiveDir, FileEventPublisher eventPublisher) throws IOException {
+      PostProcessingOptions postProcessing, String archiveDir, FileEventPublisher eventPublisher,
+      boolean inPreviewMode) throws IOException {
     open = true;
     this.multiFileInfo = multiFileInfo;
     this.charset = charset;
@@ -66,6 +68,7 @@ public class FileContext {
     Path name = fullPath.getFileName();
     rollMode = multiFileInfo.getFileRollMode().createRollMode(name.toString(), multiFileInfo.getPattern());
     scanner = new LiveDirectoryScanner(dir.toString(), multiFileInfo.getFirstFile(), getRollMode());
+    this.inPreviewMode = inPreviewMode;
   }
 
   public String toString() {
@@ -170,24 +173,28 @@ public class FileContext {
             LOG.debug("File '{}' processing completed, post processing action 'NONE'", file);
             break;
           case DELETE:
-            try {
-              Files.delete(file.getPath());
-              LOG.debug("File '{}' processing completed, post processing action 'DELETED'", file);
-            } catch (IOException ex) {
-              throw new IOException(Utils.format("Could not delete '{}': {}", file, ex.toString()), ex);
+            if(!inPreviewMode) {
+              try {
+                Files.delete(file.getPath());
+                LOG.debug("File '{}' processing completed, post processing action 'DELETED'", file);
+              } catch (IOException ex) {
+                throw new IOException(Utils.format("Could not delete '{}': {}", file, ex.toString()), ex);
+              }
             }
             break;
           case ARCHIVE:
-            Path fileArchive = Paths.get(archiveDir, file.getPath().toString());
-            if (fileArchive == null) {
-              throw new IOException("Could not find archive file");
-            }
-            try {
-              Files.createDirectories(fileArchive.getParent());
-              Files.move(file.getPath(), fileArchive);
-              LOG.debug("File '{}' processing completed, post processing action 'ARCHIVED' as", file);
-            } catch (IOException ex) {
-              throw new IOException(Utils.format("Could not archive '{}': {}", file, ex.toString()), ex);
+            if(!inPreviewMode) {
+              Path fileArchive = Paths.get(archiveDir, file.getPath().toString());
+              if (fileArchive == null) {
+                throw new IOException("Could not find archive file");
+              }
+              try {
+                Files.createDirectories(fileArchive.getParent());
+                Files.move(file.getPath(), fileArchive);
+                LOG.debug("File '{}' processing completed, post processing action 'ARCHIVED' as", file);
+              } catch (IOException ex) {
+                throw new IOException(Utils.format("Could not archive '{}': {}", file, ex.toString()), ex);
+              }
             }
             break;
         }

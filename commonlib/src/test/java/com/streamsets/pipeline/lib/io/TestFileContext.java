@@ -62,7 +62,7 @@ public class TestFileContext {
     long openFiles = getOpenFileDescriptors();
     try {
       FileContext context =
-          new FileContext(di1, StandardCharsets.UTF_8, 100, PostProcessingOptions.NONE, null, publisher);
+          new FileContext(di1, StandardCharsets.UTF_8, 100, PostProcessingOptions.NONE, null, publisher, false);
       context.setStartingCurrentFileName(new LiveFile(file1.toPath()));
       context.setStartingOffset(20);
 

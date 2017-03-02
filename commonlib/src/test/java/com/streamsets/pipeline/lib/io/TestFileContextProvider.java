@@ -55,7 +55,8 @@ public class TestFileContextProvider {
         1024,
         PostProcessingOptions.NONE,
         null,
-        eventPublisher
+        eventPublisher,
+        false
     );
 
 

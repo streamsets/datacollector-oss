@@ -43,13 +43,14 @@ public class ExactFileContextProvider extends BaseFileContextProvider {
       int maxLineLength,
       PostProcessingOptions postProcessing,
       String archiveDir,
-      FileEventPublisher eventPublisher
+      FileEventPublisher eventPublisher,
+      boolean inPreviewMode
   ) throws IOException {
     super();
     fileContexts = new ArrayList<>();
     fileKeys = new LinkedHashSet<>();
     for (MultiFileInfo dirInfo : fileInfos) {
-      fileContexts.add(new FileContext(dirInfo, charset, maxLineLength, postProcessing, archiveDir, eventPublisher));
+      fileContexts.add(new FileContext(dirInfo, charset, maxLineLength, postProcessing, archiveDir, eventPublisher, inPreviewMode));
       if (fileKeys.contains(dirInfo.getFileKey())) {
         throw new IOException(Utils.format("File '{}' already specified, it cannot be added more than once",
             dirInfo.getFileKey()));

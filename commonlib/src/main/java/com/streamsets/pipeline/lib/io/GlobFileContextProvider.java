@@ -113,6 +113,7 @@ public class GlobFileContextProvider extends BaseFileContextProvider {
   private final String archiveDir;
   private final FileEventPublisher eventPublisher;
   private int scanIntervalSecs;
+  private boolean inPreviewMode;
 
 
   private boolean allowForLateDirectoryCreation;
@@ -128,7 +129,8 @@ public class GlobFileContextProvider extends BaseFileContextProvider {
       int maxLineLength,
       PostProcessingOptions postProcessing,
       String archiveDir,
-      FileEventPublisher eventPublisher) throws IOException {
+      FileEventPublisher eventPublisher,
+      boolean inPreviewMode) throws IOException {
     super();
     // if scan interval is zero the GlobFileInfo will work synchronously and it won't require an executor
     globFileInfos = new CopyOnWriteArrayList<GlobFileInfo>();
@@ -141,6 +143,7 @@ public class GlobFileContextProvider extends BaseFileContextProvider {
     this.postProcessing = postProcessing;
     this.archiveDir = archiveDir;
     this.eventPublisher = eventPublisher;
+    this.inPreviewMode = inPreviewMode;
 
     executor = (scanIntervalSecs == 0) ? null :
         new SafeScheduledExecutorService(fileInfos.size() / 3 + 1, "File Finder");
@@ -171,7 +174,8 @@ public class GlobFileContextProvider extends BaseFileContextProvider {
               maxLineLength,
               postProcessing,
               archiveDir,
-              eventPublisher
+              eventPublisher,
+              inPreviewMode
           )
       );
     } else {
@@ -221,7 +225,8 @@ public class GlobFileContextProvider extends BaseFileContextProvider {
             maxLineLength,
             postProcessing,
             archiveDir,
-            eventPublisher
+            eventPublisher,
+            inPreviewMode
         );
         fileContexts.add(fileContext);
         fileToGlobFile.put(fileContext, globfileInfo);
