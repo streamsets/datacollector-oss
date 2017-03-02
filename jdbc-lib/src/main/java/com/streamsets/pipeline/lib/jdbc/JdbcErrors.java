@@ -101,6 +101,7 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_74("Max Pool Size '{}' should be at least one more than the Number Of Threads '{}'"),
   JDBC_75("Jdbc Runner Failed. Reason {}"),
   JDBC_76("Invalid value '0' for Batches From Result Set"),
+  JDBC_77("{} attempting to execute query '{}'. Giving up after {} errors as per stage configuration. First error: {}"),
   ;
 
   private final String msg;

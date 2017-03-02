@@ -81,6 +81,21 @@ public final class CommonSourceConfigBean {
   )
   public int maxBlobSize;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "0",
+      label = "Number of Retries on Query Error",
+      description = "The number of times a query will be retried upon an error.  To allow for the possibility of" +
+          " handling transient errors (ex: connection issues, deadlock, etc.), provide a positive value here.  After" +
+          " the specified number of retries is reached, the stage will fail upon the next error and pipeline error" +
+          " handling behavior will take over.",
+      min = 0,
+      displayPosition = 160,
+      group = "JDBC"
+  )
+  public int numQueryErrorRetries;
+
   private static final String MAX_BATCH_SIZE = "maxBatchSize";
   private static final String MAX_CLOB_SIZE = "maxClobSize";
   private static final String MAX_BLOB_SIZE = "maxBlobSize";

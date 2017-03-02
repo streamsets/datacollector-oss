@@ -113,6 +113,8 @@ public class JdbcSource extends BaseSource {
   private String preparedQuery;
   private String hashedQuery;
   private int queryRowCount = 0;
+  private int numQueryErrors = 0;
+  private SQLException firstQueryException = null;
 
   public JdbcSource(
       boolean isIncrementalMode,
@@ -335,6 +337,8 @@ public class JdbcSource extends BaseSource {
           LOG.debug("Executing query: " + hashedQuery);
           resultSet = statement.executeQuery(preparedQuery);
           queryRowCount = 0;
+          numQueryErrors = 0;
+          firstQueryException = null;
         }
         // Read Data and track last offset
         int rowCount = 0;
@@ -386,12 +390,13 @@ public class JdbcSource extends BaseSource {
               .createAndSend();
         }
       } catch (SQLException e) {
+        if (++numQueryErrors == 1) {
+          firstQueryException = e;
+        }
         String formattedError = JdbcUtil.formatSqlException(e);
-        LOG.error(formattedError);
-        LOG.debug(formattedError, e);
+        LOG.error(formattedError, e);
         closeQuietly(connection);
         lastQueryCompletedTime = System.currentTimeMillis();
-        LOG.debug("Query failed at: {}", lastQueryCompletedTime);
         QUERY_FAILURE.create(getContext())
             .with(QUERY, preparedQuery)
             .with(TIMESTAMP, lastQueryCompletedTime)
@@ -399,7 +404,16 @@ public class JdbcSource extends BaseSource {
             .with(ROW_COUNT, queryRowCount)
             .with(SOURCE_OFFSET, nextSourceOffset)
             .createAndSend();
-        errorRecordHandler.onError(JdbcErrors.JDBC_34, hashedQuery, formattedError);
+        LOG.debug("Query '{}' failed at: {}; {} errors so far", preparedQuery, lastQueryCompletedTime, numQueryErrors);
+        if (numQueryErrors > commonSourceConfigBean.numQueryErrorRetries) {
+          throw new StageException(
+              JdbcErrors.JDBC_77,
+              e.getClass().getSimpleName(),
+              preparedQuery,
+              numQueryErrors,
+              JdbcUtil.formatSqlException(firstQueryException)
+          );
+        } // else allow nextSourceOffset to be returned, to retry
       }
     }
     return nextSourceOffset;
