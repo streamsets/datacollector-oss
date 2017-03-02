@@ -517,9 +517,8 @@
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Define the following options in the SDC_JAVA_OPTS environment variable in the
-                    Data Collector environment configuration file, <samp class="ph codeph">sdc-env.sh</samp> or
-                        <samp class="ph codeph">sdcd-env.sh</samp>:</span>
-                <ul class="ul choices" id="task_wyf_kkw_ty__d4631e7647">
+                    Data Collector environment configuration file:</span>
+                <ul class="ul choices" id="task_wyf_kkw_ty__d4667e7641">
                     <li class="li choice"><samp class="ph codeph">javax.net.ssl.trustStore</samp> - path to truststore
                         file</li>
 
@@ -529,6 +528,11 @@
                 </ul>
 
                 <div class="itemgroup info">
+                    <p class="p">If you start Data Collector as a service, set the environment variable in the
+                        <samp class="ph systemoutput">$SDC_DIST/libexec/sdcd-env.sh</samp> file. If you
+                  start Data Collector manually, set the variable in the
+                        <samp class="ph systemoutput">$SDC_DIST/libexec/sdc-env.sh</samp> file.</p>
+
                     <div class="p">For example, define the options as
                         follows:<pre class="pre codeblock">export SDC_JAVA_OPTS="<strong class="ph b">-Djavax.net.ssl.trustStore=&lt;path to truststore file&gt; -Djavax.net.ssl.trustStorePassword=&lt;password&gt;</strong> 
 -Xmx1024m  -Xms1024m -server ${SDC_JAVA_OPTS}"                   </pre>
@@ -589,9 +593,9 @@
                 
                 <thead class="thead" align="left">
                     <tr>
-                        <th class="entry" valign="top" width="12.5%" id="d25081e817">Role</th>
+                        <th class="entry" valign="top" width="12.5%" id="d25081e820">Role</th>
 
-                        <th class="entry" valign="top" width="87.5%" id="d25081e820">Description</th>
+                        <th class="entry" valign="top" width="87.5%" id="d25081e823">Description</th>
 
                     </tr>
 
@@ -599,9 +603,9 @@
 
                 <tbody class="tbody">
                     <tr>
-                        <td class="entry" valign="top" width="12.5%" headers="d25081e817 ">admin</td>
+                        <td class="entry" valign="top" width="12.5%" headers="d25081e820 ">admin</td>
 
-                        <td class="entry" valign="top" width="87.5%" headers="d25081e820 ">Perform any <span class="ph">Data
+                        <td class="entry" valign="top" width="87.5%" headers="d25081e823 ">Perform any <span class="ph">Data
                   Collector</span> task. Can
        perform all tasks listed below, as well as start and stop <span class="ph">Data
                   Collector</span>, view <span class="ph">Data
@@ -612,25 +616,25 @@
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="12.5%" headers="d25081e817 ">manager</td>
+                        <td class="entry" valign="top" width="12.5%" headers="d25081e820 ">manager</td>
 
-                        <td class="entry" valign="top" width="87.5%" headers="d25081e820 ">Start and stop pipelines, monitor pipelines, configure and reset
+                        <td class="entry" valign="top" width="87.5%" headers="d25081e823 ">Start and stop pipelines, monitor pipelines, configure and reset
        alerts. Take, review, and manage snapshots. </td>
 
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="12.5%" headers="d25081e817 ">creator</td>
+                        <td class="entry" valign="top" width="12.5%" headers="d25081e820 ">creator</td>
 
-                        <td class="entry" valign="top" width="87.5%" headers="d25081e820 ">Create and configure pipelines and alerts, preview data, and
+                        <td class="entry" valign="top" width="87.5%" headers="d25081e823 ">Create and configure pipelines and alerts, preview data, and
        monitor the pipeline. Import pipelines.</td>
 
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="12.5%" headers="d25081e817 ">guest</td>
+                        <td class="entry" valign="top" width="12.5%" headers="d25081e820 ">guest</td>
 
-                        <td class="entry" valign="top" width="87.5%" headers="d25081e820 ">View pipelines and alerts, and general monitoring information.
+                        <td class="entry" valign="top" width="87.5%" headers="d25081e823 ">View pipelines and alerts, and general monitoring information.
        Export a pipeline. </td>
 
                     </tr>
@@ -927,11 +931,11 @@
      
      <thead class="thead" align="left">
       <tr>
-       <th class="entry" valign="top" width="20%" id="d25081e1296">User Login</th>
+       <th class="entry" valign="top" width="20%" id="d25081e1299">User Login</th>
 
-       <th class="entry" valign="top" width="20%" id="d25081e1299">Role</th>
+       <th class="entry" valign="top" width="20%" id="d25081e1302">Role</th>
 
-       <th class="entry" valign="top" width="60%" id="d25081e1302">Tasks</th>
+       <th class="entry" valign="top" width="60%" id="d25081e1305">Tasks</th>
 
       </tr>
 
@@ -939,11 +943,11 @@
 
      <tbody class="tbody">
       <tr>
-       <td class="entry" valign="top" width="20%" headers="d25081e1296 "><samp class="ph codeph">admin</samp> / <samp class="ph codeph">admin</samp></td>
+       <td class="entry" valign="top" width="20%" headers="d25081e1299 "><samp class="ph codeph">admin</samp> / <samp class="ph codeph">admin</samp></td>
 
-       <td class="entry" valign="top" width="20%" headers="d25081e1299 ">Admin</td>
+       <td class="entry" valign="top" width="20%" headers="d25081e1302 ">Admin</td>
 
-       <td class="entry" valign="top" width="60%" headers="d25081e1302 ">Perform any <span class="ph">Data
+       <td class="entry" valign="top" width="60%" headers="d25081e1305 ">Perform any <span class="ph">Data
                   Collector</span> task. Can
        perform all tasks listed below, as well as start and stop <span class="ph">Data
                   Collector</span>, view <span class="ph">Data
@@ -954,31 +958,31 @@
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="20%" headers="d25081e1296 "><samp class="ph codeph">manager</samp> / <samp class="ph codeph">manager</samp></td>
+       <td class="entry" valign="top" width="20%" headers="d25081e1299 "><samp class="ph codeph">manager</samp> / <samp class="ph codeph">manager</samp></td>
 
-       <td class="entry" valign="top" width="20%" headers="d25081e1299 ">Manager</td>
+       <td class="entry" valign="top" width="20%" headers="d25081e1302 ">Manager</td>
 
-       <td class="entry" valign="top" width="60%" headers="d25081e1302 ">Start and stop pipelines, monitor pipelines, configure and reset
+       <td class="entry" valign="top" width="60%" headers="d25081e1305 ">Start and stop pipelines, monitor pipelines, configure and reset
        alerts. Take, review, and manage snapshots. </td>
 
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="20%" headers="d25081e1296 "><samp class="ph codeph">creator</samp> / <samp class="ph codeph">creator</samp></td>
+       <td class="entry" valign="top" width="20%" headers="d25081e1299 "><samp class="ph codeph">creator</samp> / <samp class="ph codeph">creator</samp></td>
 
-       <td class="entry" valign="top" width="20%" headers="d25081e1299 ">Creator</td>
+       <td class="entry" valign="top" width="20%" headers="d25081e1302 ">Creator</td>
 
-       <td class="entry" valign="top" width="60%" headers="d25081e1302 ">Create and configure pipelines and alerts, preview data, and
+       <td class="entry" valign="top" width="60%" headers="d25081e1305 ">Create and configure pipelines and alerts, preview data, and
        monitor the pipeline. Import pipelines.</td>
 
       </tr>
 
       <tr>
-       <td class="entry" valign="top" width="20%" headers="d25081e1296 "><samp class="ph codeph">guest</samp> / <samp class="ph codeph">guest</samp></td>
+       <td class="entry" valign="top" width="20%" headers="d25081e1299 "><samp class="ph codeph">guest</samp> / <samp class="ph codeph">guest</samp></td>
 
-       <td class="entry" valign="top" width="20%" headers="d25081e1299 ">Guest</td>
+       <td class="entry" valign="top" width="20%" headers="d25081e1302 ">Guest</td>
 
-       <td class="entry" valign="top" width="60%" headers="d25081e1302 ">View pipelines and alerts, and general monitoring information.
+       <td class="entry" valign="top" width="60%" headers="d25081e1305 ">View pipelines and alerts, and general monitoring information.
        Export a pipeline. </td>
 
       </tr>
@@ -1001,11 +1005,11 @@
     
     <thead class="thead" align="left">
      <tr>
-      <th class="entry" valign="top" width="30%" id="d25081e1405">User Login</th>
+      <th class="entry" valign="top" width="30%" id="d25081e1408">User Login</th>
 
-      <th class="entry" valign="top" width="40%" id="d25081e1408">Roles</th>
+      <th class="entry" valign="top" width="40%" id="d25081e1411">Roles</th>
 
-      <th class="entry" valign="top" width="30%" id="d25081e1411">Group</th>
+      <th class="entry" valign="top" width="30%" id="d25081e1414">Group</th>
 
      </tr>
 
@@ -1013,38 +1017,38 @@
 
     <tbody class="tbody">
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d25081e1405 "><samp class="ph codeph">user1</samp> / <samp class="ph codeph">user1</samp></td>
+      <td class="entry" valign="top" width="30%" headers="d25081e1408 "><samp class="ph codeph">user1</samp> / <samp class="ph codeph">user1</samp></td>
 
-      <td class="entry" valign="top" width="40%" headers="d25081e1408 ">Manager and Creator</td>
+      <td class="entry" valign="top" width="40%" headers="d25081e1411 ">Manager and Creator</td>
 
-      <td class="entry" valign="top" width="30%" headers="d25081e1411 ">dev</td>
-
-     </tr>
-
-     <tr>
-      <td class="entry" valign="top" width="30%" headers="d25081e1405 "><samp class="ph codeph">user2</samp> / <samp class="ph codeph">user2</samp></td>
-
-      <td class="entry" valign="top" width="40%" headers="d25081e1408 ">Manager and Creator</td>
-
-      <td class="entry" valign="top" width="30%" headers="d25081e1411 ">dev</td>
+      <td class="entry" valign="top" width="30%" headers="d25081e1414 ">dev</td>
 
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d25081e1405 "><samp class="ph codeph">user3</samp> / <samp class="ph codeph">user3</samp></td>
+      <td class="entry" valign="top" width="30%" headers="d25081e1408 "><samp class="ph codeph">user2</samp> / <samp class="ph codeph">user2</samp></td>
 
-      <td class="entry" valign="top" width="40%" headers="d25081e1408 ">Manager and Creator</td>
+      <td class="entry" valign="top" width="40%" headers="d25081e1411 ">Manager and Creator</td>
 
-      <td class="entry" valign="top" width="30%" headers="d25081e1411 ">test</td>
+      <td class="entry" valign="top" width="30%" headers="d25081e1414 ">dev</td>
 
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d25081e1405 "><samp class="ph codeph">user4</samp> / <samp class="ph codeph">user4</samp></td>
+      <td class="entry" valign="top" width="30%" headers="d25081e1408 "><samp class="ph codeph">user3</samp> / <samp class="ph codeph">user3</samp></td>
 
-      <td class="entry" valign="top" width="40%" headers="d25081e1408 ">Manager and Creator</td>
+      <td class="entry" valign="top" width="40%" headers="d25081e1411 ">Manager and Creator</td>
 
-      <td class="entry" valign="top" width="30%" headers="d25081e1411 ">test</td>
+      <td class="entry" valign="top" width="30%" headers="d25081e1414 ">test</td>
+
+     </tr>
+
+     <tr>
+      <td class="entry" valign="top" width="30%" headers="d25081e1408 "><samp class="ph codeph">user4</samp> / <samp class="ph codeph">user4</samp></td>
+
+      <td class="entry" valign="top" width="40%" headers="d25081e1411 ">Manager and Creator</td>
+
+      <td class="entry" valign="top" width="30%" headers="d25081e1414 ">test</td>
 
      </tr>
 

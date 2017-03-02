@@ -384,11 +384,18 @@ name &lt;stage name&gt;, version &lt;version&gt;</pre>
                     <dd class="dd">You can enable <span class="ph">Data
                   Collector</span> to connect to a system using an earlier TLS version by modifying the
                             <samp class="ph codeph">Dhttps.protocols</samp> option in the SDC_JAVA7_OPTS
-                        environment variable in the <samp class="ph codeph">sdc-env.sh</samp> or
-                            <samp class="ph codeph">sdcd-env.sh</samp> file. The files are located in the
-                            <samp class="ph codeph">$SDC_DIST/libexec</samp> directory. For example, if the HTTP
-                        server uses TLS version 1.0, modify the <samp class="ph codeph">Dhttps.protocols</samp>
-                        option as
+                        environment variable in the Data Collector environment configuration file. </dd>
+
+                    <dd class="dd">
+                        <p class="p">If you start Data Collector as a service, set the environment variable in the
+                        <samp class="ph systemoutput">$SDC_DIST/libexec/sdcd-env.sh</samp> file. If you
+                  start Data Collector manually, set the variable in the
+                        <samp class="ph systemoutput">$SDC_DIST/libexec/sdc-env.sh</samp> file.</p>
+
+                    </dd>
+
+                    <dd class="dd">For example, if the HTTP server uses TLS version 1.0, modify the
+                            <samp class="ph codeph">Dhttps.protocols</samp> option as
                         follows:<pre class="pre codeblock">SDC_JAVA7_OPTS=${SDC_JAVA7_OPTS:-"<span class="ph uicontrol">-Dhttps.protocols=TLSv1.2,TLSv1.1,TLSv1</span> -XX:PermSize=256m -XX:MaxPermSize=512m -XX:+UseConcMarkSweepGC -XX:+UseParNewGC"}</pre>
 </dd>
 
@@ -399,6 +406,10 @@ name &lt;stage name&gt;, version &lt;version&gt;</pre>
 
     </div>
 
+    <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br />
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. To enable remote debugging, define debugging options in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file.You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.When you use Data Collector with Java 7, Data Collector is configured to use TLS versions 1.1 and 1.2. To connect to a system that uses an earlier version of TLS, modify the Dhttps.protocols option in the SDC_JAVA7_OPTS environment variable in the Data Collector environment configuration file.When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+</div>
+</div>
 </div>
 <div class="topic concept nested2" id="concept_ggx_s23_ks">
  <h3 class="title topictitle3">JDBC</h3>
@@ -529,7 +540,7 @@ Integer provided`</pre>
  </div>
 
 </div>
-<div class="topic concept nested2" id="unique_1389328268">
+<div class="topic concept nested2" id="unique_903454577">
  <h3 class="title topictitle3">Hadoop FS</h3>
 
  <div class="body conbody">
@@ -753,11 +764,13 @@ JDBC_06 - Failed to initialize connection pool: java.sql.SQLException: No suitab
                     <pre class="pre codeblock">export STREAMSETS_LIBRARIES_EXTRA_DIR="/opt/sdc-extras/"</pre>
 </dd>
 
-                <dd class="dd">If you start <span class="ph">Data
-                  Collector</span> as a service, set the environment variable in the
-                        <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</samp> file. If you start <span class="ph">Data
-                  Collector</span> manually, set the variable in the
-                        <samp class="ph codeph">$SDC_DIST/libexec/sdc-env.sh</samp> file. </dd>
+                <dd class="dd">
+                    <p class="p">If you start Data Collector as a service, set the environment variable in the
+                        <samp class="ph systemoutput">$SDC_DIST/libexec/sdcd-env.sh</samp> file. If you
+                  start Data Collector manually, set the variable in the
+                        <samp class="ph systemoutput">$SDC_DIST/libexec/sdc-env.sh</samp> file.</p>
+
+                </dd>
 
             
             

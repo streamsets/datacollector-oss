@@ -78,12 +78,16 @@
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">In the <span class="ph">Data
-                  Collector</span> environment configuration file, <samp class="ph codeph">sdc-env.sh</samp> or
-                        <samp class="ph codeph">sdcd-env.sh</samp> located in the
-                        <samp class="ph codeph">$SDC_DIST/libexec</samp> directory, add the USER_LIBRARIES_DIR
-                    environment variable and point it to the custom stage library directory, as
-                    follows:</span>
+                  Collector</span> environment configuration file, add the USER_LIBRARIES_DIR environment
+                    variable and point it to the custom stage library directory.</span>
                 <div class="itemgroup info">
+                    <p class="p">If you start Data Collector as a service, set the environment variable in the
+                        <samp class="ph systemoutput">$SDC_DIST/libexec/sdcd-env.sh</samp> file. If you
+                  start Data Collector manually, set the variable in the
+                        <samp class="ph systemoutput">$SDC_DIST/libexec/sdc-env.sh</samp> file.</p>
+
+                    <p class="p">Set the environment variable as follows:</p>
+
                     <pre class="pre codeblock">export USER_LIBRARIES_DIR="&lt;custom stage library directory&gt;"</pre>
 
                     <p class="p">For example: </p>
