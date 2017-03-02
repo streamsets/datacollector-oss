@@ -19,7 +19,9 @@
         <p><indexterm>pipeline permissions<indexterm>requirement for upgrading to
                     2.4.0.0</indexterm></indexterm><ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            version 2.4.0.0 enables pipeline sharing and permissions. </p>
+            version 2.4.0.0 is designed for multitenancy and enables you to share and grant
+            permissions on pipelines. Permissions determine the access level that users and groups
+            have on pipelines.</p>
         <p>In earlier versions of <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             without pipeline permissions, pipeline access is determined by roles. For example, any

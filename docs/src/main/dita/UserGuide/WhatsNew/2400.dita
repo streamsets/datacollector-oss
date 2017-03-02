@@ -23,10 +23,13 @@
             <dl>
                 <dlentry>
                     <dt>Pipeline Sharing and Permissions</dt>
-                    <dd>Data Collector now provides pipeline-level permissions. With this change,
-                        only the pipeline owner and users with the Admin role can view a pipeline by
-                        default. If upgrading from a previous version of Data Collector, see the
-                        following post-upgrade task, <xref
+                    <dd>Data Collector now provides pipeline-level permissions. Permissions
+                        determine the access level that users and groups have on pipelines. To
+                        create a multitenant environment, create groups of users and then share
+                        pipelines with the groups to grant different levels of access.</dd>
+                    <dd>With this change, only the pipeline owner and users with the Admin role can
+                        view a pipeline by default. If upgrading from a previous version of Data
+                        Collector, see the following post-upgrade task, <xref
                             href="../Upgrade/2400-PipelinePermissions.dita#concept_zbn_fpw_xy"
                             >Configure Pipeline Permissions</xref>.</dd>
                     <dd>This feature includes the following components:<ul id="ul_qhv_ds1_cz">
