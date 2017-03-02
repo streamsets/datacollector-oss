@@ -50,6 +50,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -61,10 +62,16 @@ public class KafkaConsumer09IT {
 
   private static final int NUM_MESSAGES = 10;
 
-  @Ignore
   @Test
   public void testKafkaConsumer09Version() throws IOException {
-    SdcKafkaConsumer sdcKafkaConsumer = createSdcKafkaConsumer("", "", 0, null, null, "");
+    Source.Context sourceContext = ContextInfoCreator.createSourceContext(
+        "s",
+        false,
+        OnRecordError.TO_ERROR,
+        ImmutableList.of("a")
+    );
+
+    SdcKafkaConsumer sdcKafkaConsumer = createSdcKafkaConsumer("", "", 0, sourceContext, Collections.emptyMap(), "");
     Assert.assertEquals(Kafka09Constants.KAFKA_VERSION, sdcKafkaConsumer.getVersion());
   }
 
