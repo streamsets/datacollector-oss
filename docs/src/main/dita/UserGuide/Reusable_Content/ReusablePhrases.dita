@@ -2495,6 +2495,12 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   <li>JDBC Producer destination</li>
                   <li>JDBC Query executor</li>
             </ul>
+            <draft-comment author="alisontaylor">Use this for any location in the help that mentions
+                  these environment variable files.</draft-comment>
+            <p id="EnvFileLocation">If you start Data Collector as a service, set the environment variable in the
+                        <systemoutput>$SDC_DIST/libexec/sdcd-env.sh</systemoutput> file. If you
+                  start Data Collector manually, set the variable in the
+                        <systemoutput>$SDC_DIST/libexec/sdc-env.sh</systemoutput> file.</p>
 
       </conbody>
 </concept>

@@ -21,10 +21,9 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>. Define
         the proxy properties in the SDC_JAVA_OPTS environment variable in the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        environment configuration file, <systemoutput>sdc-env.sh</systemoutput> or
-            <codeph>sdcd-env.sh</codeph>, located in the <codeph>$SDC_DIST/libexec</codeph>
-        directory. </shortdesc>
+        environment configuration file. </shortdesc>
  <conbody>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EnvFileLocation"/>
         <p><indexterm>DPM<indexterm>HTTP proxy</indexterm></indexterm><indexterm>DPM<indexterm>HTTPS
                     proxy</indexterm></indexterm><indexterm>HTTP proxy<indexterm>for
                 DPM</indexterm></indexterm><indexterm>HTTPS proxy<indexterm>for
@@ -52,4 +51,7 @@
                 use this workaround with caution since it exposes credentials by sending them
                 through an unencrypted proxy.</p></note>
     </conbody>
+    <related-links>
+        <link href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"/>
+    </related-links>
 </concept>

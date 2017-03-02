@@ -55,13 +55,11 @@ JDBC_06 - Failed to initialize connection pool: java.sql.SQLException: No suitab
                     for additional libraries, then you would set
                         <codeph>STREAMSETS_LIBRARIES_EXTRA_DIR</codeph> as follows:
                     <codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR="/opt/sdc-extras/"</codeblock></dd>
-                <dd>If you start <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> as a service, set the environment variable in the
-                        <codeph>$SDC_DIST/libexec/sdcd-env.sh</codeph> file. If you start <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> manually, set the variable in the
-                        <codeph>$SDC_DIST/libexec/sdc-env.sh</codeph> file. </dd>
+                <dd>
+                    <p
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EnvFileLocation"
+                    />
+                </dd>
             </dlentry>
             <dlentry>
                 <dt>The security policy is not set.</dt>

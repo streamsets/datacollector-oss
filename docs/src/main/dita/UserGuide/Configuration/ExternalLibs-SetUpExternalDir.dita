@@ -48,12 +48,12 @@
             <step>
                 <cmd>In the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> environment configuration file, <codeph>sdc-env.sh</codeph> or
-                        <codeph>sdcd-env.sh</codeph> located in the
-                        <codeph>$SDC_DIST/libexec</codeph> directory, add the
-                    STREAMSETS_LIBRARIES_EXTRA_DIR environment variable and point it to the external
-                    directory, as follows:</cmd>
+                    /> environment configuration file, add the STREAMSETS_LIBRARIES_EXTRA_DIR
+                    environment variable and point it to the external directory.</cmd>
                 <info>
+                    <p
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EnvFileLocation"/>
+                    <p>Set the environment variable as follows:</p>
                     <codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR="&lt;external directory>"</codeblock>
                     <p>For example: </p>
                     <codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR="/opt/sdc-extras/"</codeblock>

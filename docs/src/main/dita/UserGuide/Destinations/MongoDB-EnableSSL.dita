@@ -39,4 +39,7 @@
             </step>
         </steps>
     </taskbody>
+    <related-links>
+        <link href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"/>
+    </related-links>
 </task>
