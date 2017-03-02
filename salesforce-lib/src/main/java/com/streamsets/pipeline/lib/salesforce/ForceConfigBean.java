@@ -23,6 +23,8 @@ import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 
 public class ForceConfigBean {
+  public static final String CONF_PREFIX = "forceConfig.";
+
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,

@@ -38,6 +38,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.operation.OperationType;
+import com.streamsets.pipeline.lib.salesforce.ForceConfigBean;
 import com.streamsets.pipeline.lib.salesforce.ForceSourceConfigBean;
 import com.streamsets.pipeline.lib.salesforce.ForceUtils;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
@@ -144,25 +145,29 @@ public class ForceSource extends BaseSource {
     if (!conf.subscribeToStreaming && !conf.queryExistingData) {
       issues.add(
           getContext().createConfigIssue(
-              Groups.FORCE.name(), "connectorConfig", Errors.FORCE_00,
+              Groups.FORCE.name(), ForceConfigBean.CONF_PREFIX + "queryExistingData", Errors.FORCE_00,
               "You must query existing data, subscribe for notifications, or both!"
           )
       );
     }
 
-    final String formattedOffsetColumn = Pattern.quote(conf.offsetColumn.toUpperCase());
-    Pattern offsetColumnInWhereAndOrderByClause = Pattern.compile(
-            String.format("(?s).*\\bWHERE\\b.*(\\b%s\\b).*\\bORDER BY\\b.*\\b%s\\b.*",
-                    formattedOffsetColumn,
-                    formattedOffsetColumn
-            )
-    );
+    if (conf.queryExistingData) {
+      final String formattedOffsetColumn = Pattern.quote(conf.offsetColumn.toUpperCase());
+      Pattern offsetColumnInWhereAndOrderByClause = Pattern.compile(
+          String.format("(?s).*\\bWHERE\\b.*(\\b%s\\b).*\\bORDER BY\\b.*\\b%s\\b.*",
+              formattedOffsetColumn,
+              formattedOffsetColumn
+          )
+      );
 
-    if (!offsetColumnInWhereAndOrderByClause.matcher(conf.soqlQuery.toUpperCase()).matches()) {
-      issues.add(getContext().createConfigIssue(Groups.FORCE.name(), "connectorConfig", Errors.FORCE_07, conf.offsetColumn));
+      if (!offsetColumnInWhereAndOrderByClause.matcher(conf.soqlQuery.toUpperCase()).matches()) {
+        issues.add(getContext().createConfigIssue(Groups.QUERY.name(),
+            ForceConfigBean.CONF_PREFIX + "soqlQuery", Errors.FORCE_07, conf.offsetColumn));
+      }
     }
 
     Pattern pattern = Pattern.compile(SOBJECT_TYPE_FROM_QUERY, Pattern.DOTALL);
+
     if (issues.isEmpty()) {
       try {
         ConnectorConfig partnerConfig = ForceUtils.getPartnerConfig(conf, new ForceSessionRenewer());
@@ -179,8 +184,8 @@ public class ForceSource extends BaseSource {
             sobjectType = m.group(1);
             LOG.info("Found sobject type {}", sobjectType);
           } else {
-            issues.add(getContext().createConfigIssue(Groups.FORCE.name(),
-                "connectorConfig",
+            issues.add(getContext().createConfigIssue(Groups.QUERY.name(),
+                ForceConfigBean.CONF_PREFIX + "soqlQuery",
                 Errors.FORCE_00,
                 "Badly formed SOQL Query: " + conf.soqlQuery
             ));
@@ -189,7 +194,7 @@ public class ForceSource extends BaseSource {
       } catch (ConnectionException | AsyncApiException e) {
         LOG.error("Error connecting: {}", e);
         issues.add(getContext().createConfigIssue(Groups.FORCE.name(),
-            "connectorConfig",
+            ForceConfigBean.CONF_PREFIX + "authEndpoint",
             Errors.FORCE_00,
             ForceUtils.getExceptionCode(e) + ", " + ForceUtils.getExceptionMessage(e)
         ));
@@ -206,7 +211,8 @@ public class ForceSource extends BaseSource {
         if (qr.getSize() != 1) {
           issues.add(
               getContext().createConfigIssue(
-                  Groups.FORCE.name(), "connectorConfig", Errors.FORCE_00, "Can't find Push Topic '" + conf.pushTopic +"'"
+                  Groups.SUBSCRIBE.name(), ForceConfigBean.CONF_PREFIX + "pushTopic", Errors.FORCE_00,
+                  "Can't find Push Topic '" + conf.pushTopic +"'"
               )
           );
         }
@@ -219,17 +225,17 @@ public class ForceSource extends BaseSource {
 
             LOG.info("Found sobject type {}", sobjectType);
           } else {
-            issues.add(getContext().createConfigIssue(Groups.FORCE.name(),
-                "connectorConfig",
+            issues.add(getContext().createConfigIssue(Groups.SUBSCRIBE.name(),
+                ForceConfigBean.CONF_PREFIX + "pushTopic",
                 Errors.FORCE_00,
-                "Badly formed SOQL Query: " + conf.soqlQuery
+                "Badly formed SOQL Query: " + soqlQuery
             ));
           }
         }
       } catch (ConnectionException e) {
         issues.add(
             getContext().createConfigIssue(
-                Groups.FORCE.name(), "connectorConfig", Errors.FORCE_00, e
+                Groups.FORCE.name(), ForceConfigBean.CONF_PREFIX + "authEndpoint", Errors.FORCE_00, e
             )
         );
       }
