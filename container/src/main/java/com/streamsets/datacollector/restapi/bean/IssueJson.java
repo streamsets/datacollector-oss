@@ -51,6 +51,10 @@ public class IssueJson {
   public String getMessage() { return issue.getMessage();
   }
 
+  public long getCount() {
+    return issue.getCount();
+  }
+
   public Map getAdditionalInfo() {
     return issue.getAdditionalInfo();
   }

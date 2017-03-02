@@ -33,6 +33,7 @@ public class Issue implements Serializable, ValidationIssue {
   private final String instanceName;
   private final String configGroup;
   private final String configName;
+  private long count;
   private final LocalizableString message;
   private Map<String, Object> additionalInfo;
 
@@ -40,6 +41,7 @@ public class Issue implements Serializable, ValidationIssue {
     this.instanceName = instanceName;
     this.configGroup = configGroup;
     this.configName = configName;
+    this.count = 1;
     message = new ErrorMessage(error, args);
   }
 
@@ -95,6 +97,14 @@ public class Issue implements Serializable, ValidationIssue {
   public String toString() {
     return Utils.format("Issue[instance='{}' group='{}' config='{}' message='{}']", instanceName, configGroup,
                         configName, message.getNonLocalized());
+  }
+
+  public long getCount() {
+    return count;
+  }
+
+  public void incCount() {
+    count++;
   }
 
 }

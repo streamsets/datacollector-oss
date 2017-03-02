@@ -20,23 +20,25 @@
 package com.streamsets.datacollector.validation;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.util.NullDeserializer;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.stream.Collectors.toMap;
+
 @JsonDeserialize(using = NullDeserializer.Object.class)
 public class Issues implements Serializable {
-  private final List<Issue> all;
   private final List<Issue> pipeline;
-  private final Map<String, List<Issue>> stages;
+  private final Map<String, Map<String, Issue>> stages;
 
   public Issues() {
-    all = new ArrayList<>();
     pipeline = new ArrayList<>();
     stages = new HashMap<>();
   }
@@ -53,22 +55,28 @@ public class Issues implements Serializable {
   }
 
   public void add(Issue issue) {
-    all.add(issue);
     String instance = issue.getInstanceName();
     if (instance == null) {
       pipeline.add(issue);
     } else {
-      List<Issue> stage = stages.get(instance);
-      if (stage == null) {
-        stage = new ArrayList<>();
-        stages.put(instance, stage);
+      Map<String, Issue> stageIssues = stages.computeIfAbsent(instance, k -> new LinkedHashMap<>());
+      String errorCode = issue.getErrorCode();
+
+      // De-duplicate the same error codes by increasing their count
+      if(stageIssues.containsKey(errorCode)) {
+        stageIssues.get(errorCode).incCount();
+      } else {
+        stageIssues.put(errorCode, issue);
       }
-      stage.add(issue);
     }
   }
 
   public List<Issue> getIssues() {
-    return all;
+    // Merge all components together and generate one list of all issues
+    ImmutableList.Builder builder = ImmutableList.builder();
+    builder.addAll(pipeline);
+    getStageIssues().forEach((key, value) -> builder.addAll(value));
+    return builder.build();
   }
 
   public List<Issue> getPipelineIssues() {
@@ -76,15 +84,16 @@ public class Issues implements Serializable {
   }
 
   public Map<String, List<Issue>> getStageIssues() {
-    return stages;
+    // Long way of saying, discard all keys from inner map and merge all it's values into a list
+    return stages.entrySet().stream().collect(toMap(Map.Entry::getKey, entry -> new ArrayList<>(entry.getValue().values())));
   }
 
   public boolean hasIssues() {
-    return !all.isEmpty();
+    return !pipeline.isEmpty() || !stages.isEmpty();
   }
 
   public int getIssueCount() {
-    return all.size();
+    return pipeline.size() + stages.values().stream().mapToInt(m -> m.values().size()).sum();
   }
 
   public String toString() {
