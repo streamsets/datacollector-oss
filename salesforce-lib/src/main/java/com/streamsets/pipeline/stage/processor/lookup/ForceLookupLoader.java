@@ -87,7 +87,7 @@ class ForceLookupLoader extends CacheLoader<String, Map<String, Field>> {
           }
 
           Object val = obj.getValue();
-          if (null == val) {
+          if ("Id".equalsIgnoreCase(key) && null == val) {
             // Get a null Id if you don't include it in the SELECT
             continue;
           }
