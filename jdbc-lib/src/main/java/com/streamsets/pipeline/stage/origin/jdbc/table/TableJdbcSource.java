@@ -265,9 +265,6 @@ public class TableJdbcSource extends BaseSource {
     int batchSize = Math.min(maxBatchSize, commonSourceConfigBean.maxBatchSize);
     offsets.putAll(OffsetQueryUtil.deserializeOffsetMap(lastSourceOffset));
 
-    long delayBeforeQuery = (commonSourceConfigBean.queryInterval * 1000) - (System.currentTimeMillis() - lastQueryIntervalTime);
-    ThreadUtil.sleep((lastQueryIntervalTime < 0 || delayBeforeQuery < 0) ? 0 : delayBeforeQuery);
-
     int recordCount = 0, noOfTablesVisited = 0;
     do {
       ResultSet rs;
@@ -281,7 +278,17 @@ public class TableJdbcSource extends BaseSource {
           TableReadContext tableReadContext = resultSetCache.getIfPresent(tableContext);
           //Meaning we will have to switch tables, execute a new query and get records.
           if (tableReadContext == null) {
-            tableReadContext = resultSetCache.get(tableContext);
+            try {
+              long delayBeforeQuery =
+                  (commonSourceConfigBean.queryInterval * 1000) - (System.currentTimeMillis() - lastQueryIntervalTime);
+              ThreadUtil.sleep((lastQueryIntervalTime < 0 || delayBeforeQuery < 0) ? 0 : delayBeforeQuery);
+              //Now issue query and get read context
+              tableReadContext = resultSetCache.get(tableContext);
+            } finally {
+              //Update lastQuery Time
+              LOG.trace("Record Last Query Time : {}", lastQueryIntervalTime);
+              lastQueryIntervalTime = System.currentTimeMillis();
+            }
           }
 
           rs = tableReadContext.getResultSet();
@@ -347,9 +354,6 @@ public class TableJdbcSource extends BaseSource {
       } catch (ExecutionException e) {
         LOG.debug("Failure happened when fetching nextTable", e);
         errorRecordHandler.onError(JdbcErrors.JDBC_67, e);
-      } finally {
-        //Update lastQuery Time
-        lastQueryIntervalTime = System.currentTimeMillis();
       }
       noOfTablesVisited++;
     } while(shouldMoveToNextTable(recordCount, noOfTablesVisited)); //If the current table has no records and if we haven't cycled through all tables.
