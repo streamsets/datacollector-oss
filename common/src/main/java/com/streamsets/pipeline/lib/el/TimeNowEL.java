@@ -190,5 +190,39 @@ public class TimeNowEL {
     formatter.setTimeZone(tz);
     return formatter.format(in);
   }
+  @ElFunction(prefix = TIME_CONTEXT_VAR,
+      name = "createDateFromStringTZ",
+      description = "Change String Date / append Timezone to a datetime object")
+  public static Date createDateFromStringTZ(
+      @ElParam("Date as String") String inDate,
+      @ElParam("TimeZone") String timeZone,
+      @ElParam("Date String's Format") String inFormat
+  ) {
+
+    if (StringUtils.isEmpty(inFormat) || StringUtils.isEmpty(timeZone) || StringUtils.isEmpty(inDate)) {
+      return null;
+    }
+
+    TimeZone tz = TimeZone.getTimeZone(timeZone);
+    if ("GMT".equals(tz.getID()) && (!"GMT".equals(timeZone))) {
+      LOG.error(Utils.format("Invalid timezone. '{}'", timeZone));
+      return null;
+    }
+
+    try {
+      SimpleDateFormat formatter = new SimpleDateFormat(inFormat);
+      formatter.setTimeZone(tz);
+      return (formatter.parse(inDate));
+
+    } catch (IllegalArgumentException | ParseException ex) {
+      LOG.error(Utils.format("Date formatting error.  Invalid date '{}', timezone '{}' or format '{}'",
+          inDate,
+          timeZone,
+          inFormat,
+          ex
+      ));
+    }
+    return null;
+  }
 
 }
