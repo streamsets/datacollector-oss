@@ -209,25 +209,24 @@ public class TestFileAclStoreTask {
       Acl acl = aclStore.getAcl(pipelineInfo.getName());
       //Pipeline with no acl
       if (pipelineInfo.getName().equals(TestFilePipelineStoreTask.DEFAULT_PIPELINE_NAME)) {
-        Assert.assertNull(acl);
-      } else {
-        //pipelines with acl
-        String owner = acl.getResourceOwner();
+        // Updated code to create ACL for pipelines with no ACL to help upgraded pipelines
+        Assert.assertNotNull(acl);
+      }
+      String owner = acl.getResourceOwner();
+      Assert.assertEquals(
+          (oldUsersToNewUsers.containsKey(owner)) ? oldUsersToNewUsers.get(owner) : owner,
+          owner
+      );
+      for (Permission permission : acl.getPermissions()) {
         Assert.assertEquals(
             (oldUsersToNewUsers.containsKey(owner)) ? oldUsersToNewUsers.get(owner) : owner,
-            owner
+            permission.getLastModifiedBy()
         );
-        for (Permission permission : acl.getPermissions()) {
-          Assert.assertEquals(
-              (oldUsersToNewUsers.containsKey(owner)) ? oldUsersToNewUsers.get(owner) : owner,
-              permission.getLastModifiedBy()
-          );
-          String user = permission.getSubjectId();
-          Assert.assertEquals(
-              (oldUsersToNewUsers.containsKey(user)) ? oldUsersToNewUsers.get(user) : user,
-              user
-          );
-        }
+        String user = permission.getSubjectId();
+        Assert.assertEquals(
+            (oldUsersToNewUsers.containsKey(user)) ? oldUsersToNewUsers.get(user) : user,
+            user
+        );
       }
     }
   }
