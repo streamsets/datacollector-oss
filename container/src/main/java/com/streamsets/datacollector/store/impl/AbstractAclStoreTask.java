@@ -191,12 +191,14 @@ public abstract class AbstractAclStoreTask extends AbstractTask implements AclSt
     Set<String> groups = new HashSet<>();
     for (PipelineInfo pipelineInfo : pipelineStore.getPipelines()) {
       Acl acl = getAcl(pipelineInfo.getName());
-      users.add(acl.getResourceOwner());
-      for (Permission permission: acl.getPermissions()) {
-        if (permission.getSubjectType() == SubjectType.GROUP) {
-          groups.add(permission.getSubjectId());
-        } else {
-          users.add(permission.getSubjectId());
+      if (acl != null) {
+        users.add(acl.getResourceOwner());
+        for (Permission permission: acl.getPermissions()) {
+          if (permission.getSubjectType() == SubjectType.GROUP) {
+            groups.add(permission.getSubjectId());
+          } else {
+            users.add(permission.getSubjectId());
+          }
         }
       }
     }
