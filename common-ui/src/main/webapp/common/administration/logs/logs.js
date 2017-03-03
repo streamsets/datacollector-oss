@@ -54,6 +54,8 @@ angular
       }
     });
 
+    $rootScope.common.errors = [];
+
     angular.extend($scope, {
       logMessages: [],
       logEndingOffset: -1,

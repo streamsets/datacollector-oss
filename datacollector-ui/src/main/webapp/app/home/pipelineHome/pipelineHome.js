@@ -742,9 +742,8 @@ angular
 
         var permissions = results[1].data;
         var isACLEnabled = configuration.isACLEnabled();
-        if ($rootScope.common.authenticationType === 'none' || authService.isAuthorized([userRoles.admin]) ||
-          !isACLEnabled) {
-          // If auth type is none or for admin user or if ACL is disabled
+        if (authService.isAuthorized([userRoles.admin]) || !isACLEnabled) {
+          // for admin user or if ACL is disabled
           $scope.canWrite = true;
           $scope.canExecute = true;
         } else if (permissions) {

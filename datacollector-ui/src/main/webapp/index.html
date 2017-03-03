@@ -261,7 +261,7 @@
               </a>
             </li>
 
-            <li ng-if="common.userName && isAuthorized([userRoles.admin]) && !common.isDPMEnabled">
+            <li ng-if="common.userName && isAuthorized([userRoles.admin]) && !common.isDPMEnabled && common.authenticationType !== 'none'">
               <a href="/collector/usersAndGroups">
                 <i class="glyphicon glyphicon-user"></i>
                 <span translate="global.menu.admin.usersAndGroups">Users & Groups</span>
@@ -275,7 +275,7 @@
               </a>
             </li>
 
-            <li ng-if="common.userName && isAuthorized([userRoles.admin])">
+            <li ng-if="common.userName && isAuthorized([userRoles.admin]) && (common.authenticationType !== 'none' || common.isDPMEnabled)">
               <a href="javascript:;" ng-click="common.updatePermissions()">
                 <i class="fa fa-share-alt"></i>
                 <span translate="home.library.transferPermissions">Transfer Permissions</span>
