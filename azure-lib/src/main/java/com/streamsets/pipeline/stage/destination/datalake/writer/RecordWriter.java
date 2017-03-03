@@ -150,6 +150,12 @@ public class RecordWriter {
       dirPath = resolvePath(dirPathTemplateEval, dirPathTemplateVars, dirPathTemplate, recordTime, record);
     }
 
+    // SDC-5492: replace "//" to "/" in file path
+    dirPath = dirPath.replaceAll("/+","/");
+    if (dirPath.endsWith("/")) {
+      dirPath = dirPath.substring(0, dirPath.length()-1);
+    }
+
     return outputStreamHelper.getTempFilePath(dirPath, record, recordTime);
   }
 
