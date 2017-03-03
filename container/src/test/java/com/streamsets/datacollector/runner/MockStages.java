@@ -740,6 +740,33 @@ public class MockStages {
           .withConfig(reqField)
           .build();
 
+        ConfigDefinition requiredMapField = new ConfigDefinition(
+            "requiredMapFieldConfName",
+            ConfigDef.Type.MAP,
+            "requiredMapFieldLabel",
+            "requiredMapFieldDesc",
+            new ArrayList<>(),
+            true,
+            "groupName",
+            "requiredMapFieldFieldName",
+            null,
+            "",
+            null,
+            0,
+            Collections.<ElFunctionDefinition>emptyList(),
+            Collections.<ElConstantDefinition>emptyList(),
+            Long.MIN_VALUE,
+            Long.MAX_VALUE,
+            "text/plain",
+            0,
+            Collections.<Class> emptyList(),
+            ConfigDef.Evaluation.IMPLICIT,
+            new HashMap<>()
+        );
+
+        StageDefinition targetWithRequiredMapField = new StageDefinitionBuilder(cl, MTarget.class, "targetWithRequiredMapField")
+            .withConfig(requiredMapField)
+            .build();
 
         //error target configurations
         ConfigDefinition errorTargetConf = new ConfigDefinition(
@@ -833,6 +860,7 @@ public class MockStages {
               tDef,
               tEventDef,
               targetWithReqField,
+              targetWithRequiredMapField,
               swcDef,
               eDef,
               statsDef,
@@ -1092,17 +1120,7 @@ public class MockStages {
       .build();
     stages.add(target);
 
-    PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
-        PipelineConfigBean.VERSION,
-        UUID.randomUUID(),
-        "label",
-        null,
-        createPipelineConfigs(),
-        null,
-        stages,
-        getErrorStageConfig(),
-        getStatsAggregatorStageConfig()
-    );
+    PipelineConfiguration pipelineConfiguration = pipeline(stages);
     Map<String, Object> metadata = new HashMap<>();
     metadata.put("a", "A");
     pipelineConfiguration.setMetadata(metadata);
@@ -1127,17 +1145,7 @@ public class MockStages {
       .build();
     stages.add(target);
 
-    PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
-        PipelineConfigBean.VERSION,
-        UUID.randomUUID(),
-        "label",
-        null,
-        createPipelineConfigs(),
-        null,
-        stages,
-        getErrorStageConfig(),
-        getStatsAggregatorStageConfig()
-    );
+    PipelineConfiguration pipelineConfiguration = pipeline(stages);
     Map<String, Object> metadata = new HashMap<>();
     metadata.put("a", "A");
     pipelineConfiguration.setMetadata(metadata);
@@ -1162,17 +1170,7 @@ public class MockStages {
       .build();
     stages.add(target);
 
-    PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
-        PipelineConfigBean.VERSION,
-        UUID.randomUUID(),
-        "label",
-        null,
-        createPipelineConfigs(),
-        null,
-        stages,
-        getErrorStageConfig(),
-        getStatsAggregatorStageConfig()
-    );
+    PipelineConfiguration pipelineConfiguration = pipeline(stages);
     Map<String, Object> metadata = new HashMap<>();
     metadata.put("a", "A");
     pipelineConfiguration.setMetadata(metadata);
@@ -1193,17 +1191,7 @@ public class MockStages {
       .build();
     stages.add(target);
 
-    PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
-        PipelineConfigBean.VERSION,
-        UUID.randomUUID(),
-        "label",
-        null,
-        createPipelineConfigs(),
-        null,
-        stages,
-        getErrorStageConfig(),
-        getStatsAggregatorStageConfig()
-    );
+    PipelineConfiguration pipelineConfiguration = pipeline(stages);
     Map<String, Object> metadata = new HashMap<>();
     metadata.put("a", "A");
     pipelineConfiguration.setMetadata(metadata);
@@ -1229,17 +1217,7 @@ public class MockStages {
       .build();
     stages.add(target);
 
-    PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
-        PipelineConfigBean.VERSION,
-        UUID.randomUUID(),
-        "label",
-        null,
-        createPipelineConfigs(),
-        null,
-        stages,
-        getErrorStageConfig(),
-        getStatsAggregatorStageConfig()
-    );
+    PipelineConfiguration pipelineConfiguration = pipeline(stages);
     Map<String, Object> metadata = new HashMap<>();
     metadata.put("a", "A");
     pipelineConfiguration.setMetadata(metadata);
@@ -1322,8 +1300,7 @@ public class MockStages {
       .withInputLanes("p")
       .build();
     stages.add(target);
-    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION, UUID.randomUUID(),
-        "label", null, createPipelineConfigs(), null, stages, getErrorStageConfig(), getStatsAggregatorStageConfig());
+    return pipeline(stages);
   }
 
   @SuppressWarnings("unchecked")
@@ -1338,23 +1315,11 @@ public class MockStages {
       .withInputLanes("a")
       .build();
     stages.add(target);
-    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION, UUID.randomUUID(),
-        "label", null, createPipelineConfigs(), null, stages, getErrorStageConfig(), getStatsAggregatorStageConfig());
+    return pipeline(stages);
   }
 
   public static PipelineConfiguration createPipelineConfigurationWithLabels(List<String> labels) {
-    PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(
-        PipelineStoreTask.SCHEMA_VERSION,
-        PipelineConfigBean.VERSION,
-        UUID.randomUUID(),
-        "label",
-        null,
-        createPipelineConfigs(),
-        null,
-        null,
-        getErrorStageConfig(),
-        getStatsAggregatorStageConfig()
-    );
+    PipelineConfiguration pipelineConfiguration = pipeline(null);
 
     pipelineConfiguration.setPipelineInfo(
         new PipelineInfo(
@@ -1388,18 +1353,7 @@ public class MockStages {
       .withInputLanes("a")
       .build();
     stages.add(target);
-    return new PipelineConfiguration(
-        PipelineStoreTask.SCHEMA_VERSION,
-        PipelineConfigBean.VERSION,
-        UUID.randomUUID(),
-        "label",
-        null,
-        createPipelineConfigs(),
-        null,
-        stages,
-        getErrorStageConfig(),
-        getStatsAggregatorStageConfig()
-    );
+    return pipeline(stages);
   }
 
   @SuppressWarnings("unchecked")
@@ -1413,8 +1367,7 @@ public class MockStages {
       .withInputLanes("a")
       .build();
     stages.add(target);
-    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION, UUID.randomUUID(),
-        "label", null, createPipelineConfigs(), null, stages, getErrorStageConfig(), getStatsAggregatorStageConfig());
+    return pipeline(stages);
   }
 
   @SuppressWarnings("unchecked")
@@ -1428,8 +1381,7 @@ public class MockStages {
       .withInputLanes("a")
       .build();
     stages.add(target);
-    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION, UUID.randomUUID(),
-        "label", null, createPipelineConfigs(), null, stages, getErrorStageConfig(), getStatsAggregatorStageConfig());
+    return pipeline(stages);
   }
 
   @SuppressWarnings("unchecked")
@@ -1443,8 +1395,7 @@ public class MockStages {
       .withInputLanes("a")
       .build();
     stages.add(target);
-    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION, UUID.randomUUID(),
-                                     "label", null, createPipelineConfigs(), null, stages, getErrorStageConfig(), getStatsAggregatorStageConfig());
+    return pipeline(stages);
   }
 
   public static PipelineConfiguration createPipelineConfigurationSourceTwoTargets() {
@@ -1461,8 +1412,7 @@ public class MockStages {
       .withInputLanes("a")
       .build();
     stages.add(target);
-    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION, UUID.randomUUID(),
-        "label", null, createPipelineConfigs(), null, stages, getErrorStageConfig(), getStatsAggregatorStageConfig());
+    return pipeline(stages);
   }
 
   public static PipelineConfiguration createPipelineConfigurationSourceTwoTargetsTwoEvents() {
@@ -1489,8 +1439,7 @@ public class MockStages {
       .withInputLanes("e")
       .build();
     stages.add(target);
-    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION, UUID.randomUUID(),
-        "label", null, createPipelineConfigs(), null, stages, getErrorStageConfig(), getStatsAggregatorStageConfig());
+    return pipeline(stages);
   }
 
   @SuppressWarnings("unchecked")
@@ -1621,8 +1570,25 @@ public class MockStages {
       .withInputLanes("a")
       .build();
     stages.add(target);
-    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION, UUID.randomUUID(),
-        "label", null, Arrays.asList(new Config("executionMode", ExecutionMode.STANDALONE)), null, stages, getErrorStageConfig(), getStatsAggregatorStageConfig());
+    return pipeline(stages);
+  }
+
+  @SuppressWarnings("unchecked")
+  public static PipelineConfiguration createPipelineConfTargetWithRequiredMapField() {
+    List<StageConfiguration> stages = new ArrayList<>();
+    StageConfiguration source = new StageConfigurationBuilder("s", "sourceName")
+        .withOutputLanes("a")
+        .build();
+    stages.add(source);
+
+    // Create target with empty value for the required Map field "requiredMapFieldConfName"
+    // Default "empty" value deserialized from our JSON is an empty ArrayList
+    StageConfiguration target = new StageConfigurationBuilder("t", "targetWithRequiredMapField")
+        .withConfig(new Config("requiredMapFieldConfName", new ArrayList<>()))
+        .withInputLanes("a")
+        .build();
+    stages.add(target);
+    return pipeline(stages);
   }
 
   public static PipelineConfiguration createPipelineConfigurationSourceTargetWithRequiredFields() {
@@ -1636,8 +1602,21 @@ public class MockStages {
       .withInputLanes("a")
       .build();
     stages.add(target);
-    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION, UUID.randomUUID(),
-        "label", null, createPipelineConfigs(), null, stages, getErrorStageConfig(), getStatsAggregatorStageConfig());
+    return pipeline(stages);
   }
 
+  private static PipelineConfiguration pipeline(List<StageConfiguration> stages) {
+    return new PipelineConfiguration(
+        PipelineStoreTask.SCHEMA_VERSION,
+        PipelineConfigBean.VERSION,
+        UUID.randomUUID(),
+        "label",
+        null,
+        createPipelineConfigs(),
+        null,
+        stages,
+        getErrorStageConfig(),
+        getStatsAggregatorStageConfig()
+    );
+  }
 }

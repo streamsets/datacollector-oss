@@ -56,6 +56,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -664,8 +665,23 @@ public class PipelineConfigurationValidator {
         isNullOrEmptyString = true;
       }
     } else if (confDef.getType() == ConfigDef.Type.MAP) {
-      if (((Map<?, ?>) config.getValue()).isEmpty()) {
-        isNullOrEmptyString = true;
+      final Object value = config.getValue();
+      if (value instanceof Collection) {
+        if (((Collection<?>) value).isEmpty()) {
+          isNullOrEmptyString = true;
+        }
+      } else if (value instanceof Map) {
+        if (((Map<?,?>) value).isEmpty()) {
+          isNullOrEmptyString = true;
+        }
+      } else {
+        throw new IllegalStateException(String.format(
+            "ConfigDefinition with name %s is type %s but config value class is instance of %s, with toString of %s",
+            confDef.getName(),
+            confDef.getType().name(),
+            value.getClass().getName(),
+            value.toString()
+        ));
       }
     }
     return isNullOrEmptyString;

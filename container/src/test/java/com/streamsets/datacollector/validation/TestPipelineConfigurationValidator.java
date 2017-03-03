@@ -202,6 +202,19 @@ public class TestPipelineConfigurationValidator {
   }
 
   @Test
+  public void testEmptyValueRequiredMapField() {
+    StageLibraryTask lib = MockStages.createStageLibrary();
+    PipelineConfiguration conf = MockStages.createPipelineConfTargetWithRequiredMapField();
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);
+    conf = validator.validate();
+    Assert.assertTrue(conf.getIssues().hasIssues());
+
+    List<Issue> issues = conf.getIssues().getIssues();
+    Assert.assertEquals(1, issues.size());
+    Assert.assertEquals(ValidationError.VALIDATION_0007.name(), issues.get(0).getErrorCode());
+  }
+
+  @Test
   public void testInvalidRequiredFieldsName() {
     StageLibraryTask lib = MockStages.createStageLibrary();
     PipelineConfiguration conf = MockStages.createPipelineConfigurationSourceTargetWithRequiredFields();
