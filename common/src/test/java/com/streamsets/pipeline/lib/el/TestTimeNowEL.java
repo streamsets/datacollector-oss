@@ -22,7 +22,9 @@ package com.streamsets.pipeline.lib.el;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class TestTimeNowEL {
 
@@ -138,4 +140,23 @@ public class TestTimeNowEL {
     );
   }
 
+  @Test
+  public void testCreateDatefromStringTZ() {
+
+    String in = "2016-07-14 11:23:45";
+    String tz = "Pacific/Honolulu";
+    String fmt = "yyyy-MM-dd HH:mm:ss";
+    String fmt2 = "yyyy-MM-dd HH:mm:ss zzzz";
+
+    Date dt = TimeNowEL.createDateFromStringTZ(in, tz, fmt);
+    Assert.assertNotNull(dt);
+
+
+    // prevents conversion to local time.
+    SimpleDateFormat formatter = new SimpleDateFormat(fmt2);
+    TimeZone theZone = TimeZone.getTimeZone(tz);
+    formatter.setTimeZone(theZone);
+
+    Assert.assertEquals("2016-07-14 11:23:45 Hawaii Standard Time", formatter.format(dt));
+  }
 }
