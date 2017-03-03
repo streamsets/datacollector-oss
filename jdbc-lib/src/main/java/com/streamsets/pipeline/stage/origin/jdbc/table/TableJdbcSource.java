@@ -281,13 +281,19 @@ public class TableJdbcSource extends BaseSource {
             try {
               long delayBeforeQuery =
                   (commonSourceConfigBean.queryInterval * 1000) - (System.currentTimeMillis() - lastQueryIntervalTime);
-              ThreadUtil.sleep((lastQueryIntervalTime < 0 || delayBeforeQuery < 0) ? 0 : delayBeforeQuery);
+              boolean interrupted =
+                  !ThreadUtil.sleep((lastQueryIntervalTime < 0 || delayBeforeQuery < 0) ? 0 : delayBeforeQuery);
+              if (interrupted) {
+                //if interrupted simply return from the produce, so we can stop the pipeline
+                //gracefully and not block
+                return OffsetQueryUtil.serializeOffsetMap(offsets);
+              }
               //Now issue query and get read context
               tableReadContext = resultSetCache.get(tableContext);
             } finally {
               //Update lastQuery Time
-              LOG.trace("Record Last Query Time : {}", lastQueryIntervalTime);
               lastQueryIntervalTime = System.currentTimeMillis();
+              LOG.trace("Record Last Query Time : {}", lastQueryIntervalTime);
             }
           }
 
