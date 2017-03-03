@@ -33,6 +33,7 @@ import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.lib.security.acl.dto.Acl;
 import com.streamsets.lib.security.acl.dto.Action;
 import com.streamsets.lib.security.acl.dto.Permission;
+import com.streamsets.lib.security.acl.dto.ResourceType;
 import com.streamsets.lib.security.acl.dto.SubjectType;
 
 import java.util.ArrayList;
@@ -121,36 +122,45 @@ public abstract class AbstractAclStoreTask extends AbstractTask implements AclSt
     }
   }
 
-  protected void updateSubjectsInAcls(
+  private void updateSubjectsInAcls(
       String pipelineName,
       Map<String, String> subjectToSubjectMapping
   ) throws PipelineException {
     Acl acl = getAcl(pipelineName);
-    if (acl != null) {
-      String resourceOwner = acl.getResourceOwner();
-      String newResourceOwner = subjectToSubjectMapping.get(resourceOwner);
-      //No mapping defined
-      if (newResourceOwner != null) {
-        acl.setResourceOwner(newResourceOwner);
-      }
-      for (Permission permission : acl.getPermissions()) {
-        if (permission != null) {
-          String lastModifiedBy = permission.getLastModifiedBy();
-          String newModifiedBy = subjectToSubjectMapping.get(lastModifiedBy);
-          //No mapping defined
-          if (newModifiedBy != null) {
-            permission.setLastModifiedBy(newModifiedBy);
-          }
-          String subjectId = permission.getSubjectId();
-          String newSubjectId = subjectToSubjectMapping.get(subjectId);
-          //No mapping defined
-          if (newSubjectId != null) {
-            permission.setSubjectId(newSubjectId);
-          }
+    if (acl == null) {
+      // If ACL file doesn't exist create default one
+      PipelineInfo pipelineInfo = pipelineStore.getInfo(pipelineName);
+      acl = createAcl(
+          pipelineInfo.getName(),
+          ResourceType.PIPELINE,
+          pipelineInfo.getCreated().getTime(),
+          pipelineInfo.getCreator()
+      );
+    }
+
+    String resourceOwner = acl.getResourceOwner();
+    String newResourceOwner = subjectToSubjectMapping.get(resourceOwner);
+    //No mapping defined
+    if (newResourceOwner != null) {
+      acl.setResourceOwner(newResourceOwner);
+    }
+    for (Permission permission : acl.getPermissions()) {
+      if (permission != null) {
+        String lastModifiedBy = permission.getLastModifiedBy();
+        String newModifiedBy = subjectToSubjectMapping.get(lastModifiedBy);
+        //No mapping defined
+        if (newModifiedBy != null) {
+          permission.setLastModifiedBy(newModifiedBy);
+        }
+        String subjectId = permission.getSubjectId();
+        String newSubjectId = subjectToSubjectMapping.get(subjectId);
+        //No mapping defined
+        if (newSubjectId != null) {
+          permission.setSubjectId(newSubjectId);
         }
       }
-      saveAcl(pipelineName, acl);
     }
+    saveAcl(pipelineName, acl);
   }
 
   private boolean isPermissionGranted(Acl acl, Set<Action> actions, UserJson currentUser) {
