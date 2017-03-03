@@ -109,8 +109,9 @@ public class AclStoreResource {
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
 
     Acl acl = aclStore.getAcl(name);
-    if (acl == null && (pipelineInfo.getCreator().equals(currentUser.getName()) || context.isUserInRole(AuthzRole.ADMIN)
-        || context.isUserInRole(AuthzRole.ADMIN_REMOTE)))  {
+    if (acl == null && currentUser != null &&
+        (pipelineInfo.getCreator().equals(currentUser.getName()) || context.isUserInRole(AuthzRole.ADMIN) ||
+            context.isUserInRole(AuthzRole.ADMIN_REMOTE)))  {
       // If no acl, only owner of the pipeline will have all permission
       acl = new Acl();
       acl.setResourceId(name);
@@ -185,7 +186,7 @@ public class AclStoreResource {
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
     List<Permission> permissionList = new ArrayList<>();
     Acl acl = aclStore.getAcl(name);
-    if (acl != null) {
+    if (acl != null && currentUser != null) {
       final List<String> subjectIds = new ArrayList<>();
       subjectIds.add(currentUser.getName());
       if (currentUser.getGroups() != null) {
@@ -201,7 +202,7 @@ public class AclStoreResource {
 
     } else {
       // If no acl, only owner of the pipeline will have all permission
-      if (pipelineInfo.getCreator().equals(currentUser.getName())) {
+      if (currentUser != null && pipelineInfo.getCreator().equals(currentUser.getName())) {
         Permission ownerPermission = new Permission();
         ownerPermission.setSubjectId(pipelineInfo.getCreator());
         ownerPermission.setSubjectType(SubjectType.USER);

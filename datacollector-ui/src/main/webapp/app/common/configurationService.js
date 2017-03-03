@@ -265,7 +265,8 @@ angular.module('dataCollectorApp.common')
      */
     this.isACLEnabled = function() {
       if (self.config && self.config[PIPELINE_ACCESS_CONTROL_ENABLED] !== undefined) {
-        return self.config[PIPELINE_ACCESS_CONTROL_ENABLED] === 'true';
+        return self.config[PIPELINE_ACCESS_CONTROL_ENABLED] === 'true' &&
+          (self.config[HTTP_AUTHENTICATION] !== 'none' || this.isDPMEnabled());
       }
       return true;
     };

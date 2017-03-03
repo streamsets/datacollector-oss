@@ -85,7 +85,12 @@ public class RuntimeModule {
         boolean isDPMEnabled = conf.get(RemoteSSOService.DPM_ENABLED, RemoteSSOService.DPM_ENABLED_DEFAULT);
         runtimeInfo.setDPMEnabled(isDPMEnabled);
         boolean aclEnabled = conf.get(PIPELINE_ACCESS_CONTROL_ENABLED, PIPELINE_ACCESS_CONTROL_ENABLED_DEFAULT);
-        runtimeInfo.setAclEnabled(aclEnabled);
+        String auth = conf.get(WebServerTask.AUTHENTICATION_KEY, WebServerTask.AUTHENTICATION_DEFAULT);
+        if (aclEnabled && (!"none".equals(auth) || isDPMEnabled)) {
+          runtimeInfo.setAclEnabled(true);
+        } else {
+          runtimeInfo.setAclEnabled(false);
+        }
       } catch (IOException ex) {
         throw new RuntimeException(ex);
       }

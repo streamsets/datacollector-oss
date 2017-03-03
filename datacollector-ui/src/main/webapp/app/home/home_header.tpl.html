@@ -137,6 +137,7 @@
       </a>
 
       <a ng-disabled="selectedPipelineList.length !== 1 || common.isSlaveNode"
+         ng-if="(common.authenticationType !== 'none' || common.isDPMEnabled) && !common.isSlaveNode"
          ng-click="selectedPipelineList.length !== 1 || shareSelectedPipelineConfig()"
          tooltip-placement="bottom"
          tooltip="{{'global.form.share' | translate}}"

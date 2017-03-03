@@ -286,7 +286,7 @@
          tooltip-placement="bottom" tooltip="{{'global.form.share' | translate}}"
          tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
          tooltip-popup-delay="500"
-         ng-if="common.authenticationType !== 'none' && !common.isSlaveNode"
+         ng-if="(common.authenticationType !== 'none' || common.isDPMEnabled) && !common.isSlaveNode"
          ng-click="sharePipelineConfig(activeConfigInfo, $event)"
          ng-show="!previewMode && !snapshotMode && activeConfigStatus.status != 'STARTING'">
         <span class="fa fa-share-alt fa-14x"></span>
