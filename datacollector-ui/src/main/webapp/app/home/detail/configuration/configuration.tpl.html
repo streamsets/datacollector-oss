@@ -28,7 +28,7 @@
               ng-class="{'form-group-sm': ($storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT)}"
               name="{{selectedType === pipelineConstant.STAGE_INSTANCE ? 'd' + detailPaneConfig.instanceName : 'pipeline'}}">
           <div class="form-group "
-               ng-class="{'has-error': getConfigurationIssueMessage(detailPaneConfig, configDefinition)}"
+               ng-class="{'has-error': getConfigurationIssues(detailPaneConfig, configDefinition).length > 0}"
                ng-repeat="configDefinition in detailPaneConfigDefn.configDefinitions | filter: {group: groupNameToLabelMap.name} | orderBy: 'displayPosition'"
                ng-if="(verifyDependsOnMap(detailPaneConfig, configDefinition)) && configDefinition.group === groupNameToLabelMap.name"
                ng-init="configIndex = getConfigIndex(detailPaneConfig, configDefinition)">
@@ -53,7 +53,7 @@
               ng-class="{'form-group-sm': ($storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT)}"
               name="badRecordsForm">
           <div class="form-group"
-               ng-class="{'has-error': getConfigurationIssueMessage(detailPaneConfig, configDefinition)}"
+               ng-class="{'has-error': getConfigurationIssues(detailPaneConfig, configDefinition).length > 0}"
                ng-repeat="configDefinition in errorStageConfigDefn.configDefinitions | orderBy: 'displayPosition'"
                ng-if="(verifyDependsOnMap(errorStageConfig, configDefinition))"
                ng-init="configIndex = getConfigIndex(errorStageConfig, configDefinition);">
@@ -93,7 +93,7 @@
               ng-class="{'form-group-sm': ($storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT)}"
               name="badRecordsForm">
           <div class="form-group"
-               ng-class="{'has-error': getConfigurationIssueMessage(detailPaneConfig, configDefinition)}"
+               ng-class="{'has-error': getConfigurationIssues(detailPaneConfig, configDefinition).length > 0}"
                ng-repeat="configDefinition in statsAggregatorStageConfigDefn.configDefinitions | orderBy: 'displayPosition'"
                ng-if="(verifyDependsOnMap(statsAggregatorStageConfig, configDefinition))"
                ng-init="configIndex = getConfigIndex(statsAggregatorStageConfig, configDefinition);">

@@ -27,7 +27,7 @@ angular
 
   .controller('ConfigurationController', function ($scope, $rootScope, $q, $modal, _, $timeout,
                                                    api, previewService, pipelineConstant, pipelineService) {
-    var getIssueMessage = function(config, issues, instanceName, configDefinition) {
+    var getIssues = function(config, issues, instanceName, configDefinition) {
       if (instanceName && issues.stageIssues && issues.stageIssues[instanceName]) {
         issues = issues.stageIssues[instanceName];
       } else if (config.errorStage && issues.stageIssues && issues.stageIssues[config.errorStage.instanceName] &&
@@ -40,11 +40,9 @@ angular
         issues = issues.pipelineIssues;
       }
 
-      var filteredIssues = _.filter(issues, function(issue) {
+      return _.filter((issues || []), function(issue) {
         return (issue.configName === configDefinition.name);
       });
-
-      return filteredIssues && filteredIssues.length ? _.pluck(filteredIssues, 'message').join(' , ') : '';
     };
 
     var previewBatchSizeForFetchingFieldPaths = 10;
@@ -153,25 +151,25 @@ angular
       },
 
       /**
-       * Returns message for the give Configuration Object and Definition.
+       * Returns issues for the given Configuration Object and Definition.
        *
        * @param configObject
        * @param configDefinition
        */
-      getConfigurationIssueMessage: function(configObject, configDefinition) {
+      getConfigurationIssues: function(configObject, configDefinition) {
         var config = $scope.pipelineConfig,
           commonErrors = $rootScope.common.errors,
-          issue;
+          issues;
 
         if (config && config.issues) {
-          issue = getIssueMessage(config, config.issues, configObject.instanceName, configDefinition);
+          issues = getIssues(config, config.issues, configObject.instanceName, configDefinition);
         }
 
-        if (!issue && commonErrors && commonErrors.length && commonErrors[0].pipelineIssues) {
-          issue = getIssueMessage(config, commonErrors[0], configObject.instanceName, configDefinition);
+        if (issues.length === 0 && commonErrors && commonErrors.length && commonErrors[0].pipelineIssues) {
+          issues = getIssues(config, commonErrors[0], configObject.instanceName, configDefinition);
         }
 
-        return issue;
+        return issues;
       },
 
       /**

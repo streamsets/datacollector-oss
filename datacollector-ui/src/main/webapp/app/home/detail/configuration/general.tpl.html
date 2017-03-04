@@ -97,7 +97,7 @@
       ng-class="{'form-group-sm': ($storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT)}"
       name="{{selectedType === pipelineConstant.STAGE_INSTANCE ? 'd' + detailPaneConfig.instanceName : 'pipeline'}}">
   <div class="form-group"
-       ng-class="{'has-error': getConfigurationIssueMessage(detailPaneConfig, configDefinition)}"
+       ng-class="{'has-error': getConfigurationIssues(detailPaneConfig, configDefinition).length > 0}"
        ng-repeat="configDefinition in detailPaneConfigDefn.configDefinitions | filter: {group: ''} | orderBy: 'displayPosition'"
        ng-if="(verifyDependsOnMap(detailPaneConfig, configDefinition)) && configDefinition.group === ''"
        ng-init="configIndex = getConfigIndex(detailPaneConfig, configDefinition)">

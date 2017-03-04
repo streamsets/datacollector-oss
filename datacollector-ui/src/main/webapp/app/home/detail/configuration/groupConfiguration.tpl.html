@@ -204,7 +204,12 @@
           <i class="fa fa-plus pointer"></i>
         </button>
 
-        <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
+        <div class="help-block">
+          <div ng-repeat="issue in getConfigurationIssues(detailPaneConfig, configDefinition)">
+            <span>{{issue.message}}</span>
+            <span ng-show="issue.count > 1" class="badge">{{issue.count}}</span>
+          </div>
+        </div>
 
       </div>
 
