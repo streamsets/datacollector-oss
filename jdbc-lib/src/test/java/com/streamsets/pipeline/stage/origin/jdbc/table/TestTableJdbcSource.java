@@ -70,4 +70,18 @@ public class TestTableJdbcSource {
         .build();
     testWrongConfiguration(tableJdbcSource, false);
   }
+
+  @Test
+  public void testLessConnectionPoolSizeThanNoOfThreads() throws Exception {
+    TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder( "jdbc:db://localhost:1000", true, USER_NAME, PASSWORD)
+        .tableConfigBeans(
+            ImmutableList.of(
+                new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder().tablePattern("testTable").build()
+            )
+        )
+        .numberOfThreads(3)
+        .maximumPoolSize(2)
+        .build();
+    testWrongConfiguration(tableJdbcSource, true);
+  }
 }

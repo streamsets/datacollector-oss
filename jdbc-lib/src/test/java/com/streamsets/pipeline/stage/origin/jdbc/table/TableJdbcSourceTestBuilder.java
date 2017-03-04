@@ -46,6 +46,7 @@ public class TableJdbcSourceTestBuilder {
   private TableOrderStrategy tableOrderStrategy;
   private int resultSetCacheSize;
   private int numberOfThreads;
+  private int maximumPoolSize;
 
 
   public TableJdbcSourceTestBuilder(String jdbcUrl, boolean useCredentials, String username, String password) {
@@ -67,6 +68,7 @@ public class TableJdbcSourceTestBuilder {
     this.tableOrderStrategy = TableOrderStrategy.NONE;
     this.resultSetCacheSize = -1;
     this.numberOfThreads = 1;
+    this.maximumPoolSize = -1;
   }
 
   public TableJdbcSourceTestBuilder() {
@@ -158,6 +160,11 @@ public class TableJdbcSourceTestBuilder {
     return this;
   }
 
+  public TableJdbcSourceTestBuilder maximumPoolSize(int maximumPoolSize) {
+    this.maximumPoolSize = maximumPoolSize;
+    return this;
+  }
+
   public TableJdbcSource build() {
     HikariPoolConfigBean hikariPoolConfigBean = new HikariPoolConfigBean();
     hikariPoolConfigBean.useCredentials = useCredentials;
@@ -167,7 +174,9 @@ public class TableJdbcSourceTestBuilder {
     hikariPoolConfigBean.driverClassName = driverClassName;
     hikariPoolConfigBean.driverProperties = driverProperties;
     hikariPoolConfigBean.connectionTestQuery = connectionTestQuery;
-    hikariPoolConfigBean.maximumPoolSize = numberOfThreads + 1;
+    if (maximumPoolSize == -1) {
+      hikariPoolConfigBean.maximumPoolSize = numberOfThreads + 1;
+    }
 
     TableJdbcConfigBean tableJdbcConfigBean = new TableJdbcConfigBean();
     tableJdbcConfigBean.tableConfigs = tableConfigBeanList;

@@ -30,6 +30,8 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 /**
  * A Topological Sorter for a {@link DirectedGraph}. The graph should be acyclic or an exception is thrown.
@@ -56,54 +58,44 @@ public final class TopologicalSorter<V> {
     final Map<V, Integer> vertexToSortedNumber = new HashMap<>();
     Map<V, Integer> inEdgesCount = new TreeMap<>();
 
-    SortedSet<V> sortedSet = new TreeSet<>(new Comparator<V>() {
-      @Override
-      public int compare(V o1, V o2) {
-        Integer sortedNumber1 = vertexToSortedNumber.get(o1);
-        Integer sortedNumber2 = vertexToSortedNumber.get(o2);
-        if (sortedNumber1.intValue() == sortedNumber2.intValue()) {
-          //If there is no tie comparator and there is a tie, arrange o1 before o2.
-          return (tieComparator != null)? tieComparator.compare(o1, o2) : -1;
-        }
-        return sortedNumber1.compareTo(sortedNumber2);
+    SortedSet<V> sortedSet = new TreeSet<>((o1, o2) -> {
+      Integer sortedNumber1 = vertexToSortedNumber.get(o1);
+      Integer sortedNumber2 = vertexToSortedNumber.get(o2);
+      if (sortedNumber1.intValue() == sortedNumber2.intValue()) {
+        //If there is no tie comparator and there is a tie, arrange o1 before o2.
+        return (tieComparator != null)? tieComparator.compare(o1, o2) : -1;
       }
+      return sortedNumber1.compareTo(sortedNumber2);
     });
 
-    int startNumber = 1;
+    final AtomicInteger startNumber = new AtomicInteger(1);
 
-    for (V vertex : directedGraph.vertices()) {
+    directedGraph.vertices().forEach(vertex -> {
       Collection<V> inwardVertices = directedGraph.getInwardEdgeVertices(vertex);
       inEdgesCount.put(vertex, inwardVertices.size());
-    }
+    });
 
     while (!inEdgesCount.isEmpty()) {
       Set<V> nextVertices = nextVerticesForProcessing(inEdgesCount);
-      for (V vertexForProcessing : nextVertices) {
+      nextVertices.forEach(vertexForProcessing -> {
         inEdgesCount.remove(vertexForProcessing);
         updateCounts(vertexForProcessing, inEdgesCount);
-        vertexToSortedNumber.put(vertexForProcessing, startNumber);
-      }
-      startNumber++;
+        vertexToSortedNumber.put(vertexForProcessing, startNumber.getAndIncrement());
+      });
     }
     sortedSet.addAll(vertexToSortedNumber.keySet());
     return sortedSet;
   }
 
   private Set<V> nextVerticesForProcessing(Map<V, Integer> inEdgesCount) {
-    Set<V> currentVertices = new HashSet<>();
-    for (Map.Entry<V, Integer> entry : inEdgesCount.entrySet()) {
-      if (entry.getValue() == 0) {
-        currentVertices.add(entry.getKey());
-      }
-    }
-    return currentVertices;
+    return inEdgesCount.keySet().stream().filter(v-> inEdgesCount.get(v) == 0).collect(Collectors.toSet());
   }
 
   private void updateCounts(V v, Map<V, Integer> inEdgesCount) {
     Collection<V> outwardVertices = directedGraph.getOutwardEdgeVertices(v);
-    for (V outwardVertex : outwardVertices) {
+    outwardVertices.forEach(outwardVertex->{
       int inEdgeCount = inEdgesCount.get(outwardVertex);
       inEdgesCount.put(outwardVertex, inEdgeCount - 1);
-    }
+    });
   }
 }

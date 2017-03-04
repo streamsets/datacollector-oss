@@ -46,6 +46,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
@@ -53,6 +54,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
 
 public class TableJdbcSource extends BasePushSource {
   private static final Logger LOG = LoggerFactory.getLogger(TableJdbcSource.class);
@@ -134,21 +136,6 @@ public class TableJdbcSource extends BasePushSource {
           );
         }
 
-        //Max pool size should be at least one greater than number of threads
-        //The main thread needs one connection and each individual data threads needs
-        //one connection
-        if (tableJdbcConfigBean.numberOfThreads >= hikariConfigBean.maximumPoolSize) {
-          issues.add(
-              getContext().createConfigIssue(
-                  Groups.ADVANCED.name(),
-                  "hikariConfigBean." + HikariPoolConfigBean.MAX_POOL_SIZE_NAME,
-                  JdbcErrors.JDBC_74,
-                  hikariConfigBean.maximumPoolSize,
-                  tableJdbcConfigBean.numberOfThreads
-              )
-          );
-        }
-
         numberOfThreads = tableJdbcConfigBean.numberOfThreads;
 
         if (tableJdbcConfigBean.numberOfThreads > allTableContexts.size()) {
@@ -157,7 +144,7 @@ public class TableJdbcSource extends BasePushSource {
               "Number of threads configured '{}'is more than number of tables '{}'. Will be Using '{}' number of threads.",
               tableJdbcConfigBean.numberOfThreads,
               allTableContexts.size(),
-              Math.min(tableJdbcConfigBean.numberOfThreads, allTableContexts.size())
+              numberOfThreads
           );
         }
 
@@ -165,12 +152,19 @@ public class TableJdbcSource extends BasePushSource {
         offsets = new ConcurrentHashMap<>();
       } catch (SQLException e) {
         logError(e);
-        connectionManager.closeConnection();
         issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, e.toString()));
       } catch (StageException e) {
         LOG.debug("Error when finding tables:", e);
-        connectionManager.closeConnection();
-        issues.add(context.createConfigIssue(Groups.TABLE.name(), TableJdbcConfigBean.TABLE_CONFIG, e.getErrorCode(), e.getParams()));
+        issues.add(
+            context.createConfigIssue(
+                Groups.TABLE.name(),
+                TableJdbcConfigBean.TABLE_CONFIG,
+                e.getErrorCode(),
+                e.getParams()
+            )
+        );
+      } finally {
+        Optional.ofNullable(connectionManager).ifPresent(ConnectionManager::closeAll);
       }
     }
   }
@@ -182,6 +176,22 @@ public class TableJdbcSource extends BasePushSource {
     issues = hikariConfigBean.validateConfigs(context, issues);
     issues = commonSourceConfigBean.validateConfigs(context, issues);
     issues = tableJdbcConfigBean.validateConfigs(context, issues);
+
+    //Max pool size should be at least one greater than number of threads
+    //The main thread needs one connection and each individual data threads needs
+    //one connection
+    if (tableJdbcConfigBean.numberOfThreads >= hikariConfigBean.maximumPoolSize) {
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.ADVANCED.name(),
+              "hikariConfigBean." + HikariPoolConfigBean.MAX_POOL_SIZE_NAME,
+              JdbcErrors.JDBC_74,
+              hikariConfigBean.maximumPoolSize,
+              tableJdbcConfigBean.numberOfThreads
+          )
+      );
+    }
+
     if (issues.isEmpty()) {
       checkConnectionAndBootstrap(context, issues);
     }
@@ -198,21 +208,17 @@ public class TableJdbcSource extends BasePushSource {
     int batchSize = Math.min(maxBatchSize, commonSourceConfigBean.maxBatchSize);
     handleLastOffset(lastOffsets);
     try {
-      executorService = new SafeScheduledExecutorService(
-          numberOfThreads,
-          TableJdbcRunnable.TABLE_JDBC_THREAD_PREFIX
-      );
+      executorService = new SafeScheduledExecutorService(numberOfThreads, TableJdbcRunnable.TABLE_JDBC_THREAD_PREFIX);
 
       List<Future> futures = new ArrayList<>();
 
       Map<Integer, Map<String, TableContext>> partitionedTableContexts = partitionTableContextForRunners();
 
-      // Run all the threads (Have to think of optimization to figure out whether some threads are idle)
-      for (int i = 0; i < numberOfThreads; i++) {
-        Map<String, TableContext> tableContextMapForThread = partitionedTableContexts.get(i);
+      IntStream.range(0, numberOfThreads).forEach(threadNumber -> {
+        Map<String, TableContext> tableContextMapForThread = partitionedTableContexts.get(threadNumber);
         TableJdbcRunnable runnable = new TableJdbcRunnable.Builder()
             .context(getContext())
-            .threadNumber(i)
+            .threadNumber(threadNumber)
             .calendar(calendar)
             .batchSize(batchSize)
             .connectionManager(connectionManager)
@@ -223,7 +229,7 @@ public class TableJdbcSource extends BasePushSource {
             .build();
         toBeInvalidatedThreadCaches.add(runnable.getTableReadContextCache());
         futures.add(executorService.submit(runnable));
-      }
+      });
 
       while (!getContext().isStopped()) {
         for (Future future : futures) {
@@ -244,9 +250,8 @@ public class TableJdbcSource extends BasePushSource {
           }
         }
       }
-    } catch (SQLException | ExecutionException e) {
-      connectionManager.closeConnection();
     } finally {
+      connectionManager.closeConnection();
       shutdownExecutorIfNeeded();
     }
   }
@@ -258,9 +263,7 @@ public class TableJdbcSource extends BasePushSource {
     //Invalidate all the thread cache so that all statements/result sets are properly closed.
     toBeInvalidatedThreadCaches.forEach(Cache::invalidateAll);
     //Closes all connections
-    if (connectionManager != null) {
-      connectionManager.closeAll();
-    }
+    Optional.ofNullable(connectionManager).ifPresent(ConnectionManager::closeAll);
     JdbcUtil.closeQuietly(hikariDataSource);
   }
 
@@ -281,10 +284,12 @@ public class TableJdbcSource extends BasePushSource {
   }
 
   private void shutdownExecutorIfNeeded() {
-    if (executorService != null && !executorService.isTerminated()) {
-      LOG.info("Shutting down executor service");
-      executorService.shutdown();
-    }
+    Optional.ofNullable(executorService).ifPresent(executor -> {
+      if (!executor.isTerminated()) {
+        LOG.info("Shutting down executor service");
+        executor.shutdown();
+      }
+    });
   }
 
   private void handleLastOffset(Map<String, String> lastOffsets) throws StageException {

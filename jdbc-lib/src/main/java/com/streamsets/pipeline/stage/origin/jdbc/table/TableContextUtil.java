@@ -120,9 +120,7 @@ public final class TableContextUtil {
       if (primaryKeys.isEmpty()) {
         throw new StageException(JdbcErrors.JDBC_62, tableName);
       }
-      for (String primaryKey : primaryKeys) {
-        offsetColumnToType.put(primaryKey, columnNameToType.get(primaryKey));
-      }
+      primaryKeys.forEach(primaryKey -> offsetColumnToType.put(primaryKey, columnNameToType.get(primaryKey)));
     }
 
     checkForUnsupportedOffsetColumns(offsetColumnToType);
@@ -206,9 +204,7 @@ public final class TableContextUtil {
       Map<String, String> offsetColumnToStartOffset
   ) throws StageException {
     List<String> invalidInitialOffsetFieldAndValue =  new ArrayList<>();
-    for (Map.Entry<String, Integer> offsetColumnTypeEntry : offsetColumnToType.entrySet()) {
-      int offsetSqlType = offsetColumnTypeEntry.getValue();
-      String offsetColumn = offsetColumnTypeEntry.getKey();
+    offsetColumnToType.forEach((offsetColumn, offsetSqlType) -> {
       String initialOffsetValue = offsetColumnToStartOffset.get(offsetColumn);
       try {
         if (JdbcUtil.isSqlTypeOneOf(offsetSqlType, Types.DATE, Types.TIME, Types.TIMESTAMP)) {
@@ -229,7 +225,7 @@ public final class TableContextUtil {
         );
         invalidInitialOffsetFieldAndValue.add(offsetColumn + " - " + initialOffsetValue);
       }
-    }
+    });
     if (!invalidInitialOffsetFieldAndValue.isEmpty()) {
       throw new StageException(
           JdbcErrors.JDBC_72,

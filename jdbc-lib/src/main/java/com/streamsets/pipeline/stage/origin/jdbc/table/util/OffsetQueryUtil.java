@@ -250,8 +250,7 @@ public final class OffsetQueryUtil {
       Object value = field.getType().isOneOf(Field.Type.DATETIME, Field.Type.DATE, Field.Type.TIME)?
           //For DATE/TIME fields store the long in string format and convert back to date when using offset
           //in query
-          String.valueOf(field.getValueAsDatetime().getTime())
-          : field.getValue();
+          String.valueOf(field.getValueAsDatetime().getTime()) : field.getValue();
       offsetColumnFormat.add(String.format(OFFSET_COLUMN_NAME_VALUE, offsetColumn, value));
     }
     return OFFSET_COLUMN_JOINER.join(offsetColumnFormat);

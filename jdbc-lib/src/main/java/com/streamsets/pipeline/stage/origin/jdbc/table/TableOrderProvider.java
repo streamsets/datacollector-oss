@@ -37,13 +37,6 @@ public interface TableOrderProvider {
   void initialize(Map<String, TableContext> allTableContexts) throws SQLException, ExecutionException, StageException;
 
   /**
-   * Returns number of tables being selected for the Table Order Provider
-   * @return Number of tables
-   */
-  int getNumberOfTables();
-
-
-  /**
    * Returns the next table in the order.
    * @return Next table in the order.
    */
@@ -59,9 +52,7 @@ public interface TableOrderProvider {
     @Override
     public void initialize(Map<String, TableContext> allTableContexts) throws SQLException, ExecutionException, StageException {
       tableContextMap = allTableContexts;
-      for (String qualifiedTableName : allTableContexts.keySet()) {
-        addTable(qualifiedTableName);
-      }
+      allTableContexts.keySet().forEach(this::addTable);
       tableQueue = calculateOrGetOrder();
       LOGGER.info("Ordering of Tables : \n {}", NEW_LINE_JOINER.join(tableQueue));
     }
@@ -72,11 +63,6 @@ public interface TableOrderProvider {
 
     TableContext getTableContext(String qualifiedTableName) {
       return tableContextMap.get(qualifiedTableName);
-    }
-
-    @Override
-    public int getNumberOfTables() {
-      return tableContextMap.keySet().size();
     }
 
     @Override

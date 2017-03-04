@@ -19,7 +19,6 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
-import com.codahale.metrics.Gauge;
 import com.google.common.base.Throwables;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
@@ -50,6 +49,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 
@@ -91,7 +91,7 @@ public final class TableJdbcRunnable implements Runnable {
       ConnectionManager connectionManager,
       TableJdbcConfigBean tableJdbcConfigBean,
       CommonSourceConfigBean commonSourceConfigBean
-  ) throws SQLException,ExecutionException,StageException {
+  ) {
     this.context = context;
     this.threadNumber = threadNumber;
     this.lastQueryIntervalTime = -1;
@@ -119,7 +119,7 @@ public final class TableJdbcRunnable implements Runnable {
       while (!context.isStopped()) {
         generateBatchAndCommitOffset(context.startBatch());
       }
-    } catch (SQLException|ExecutionException|StageException e) {
+    } catch (SQLException | ExecutionException | StageException e) {
       handleStageError(JdbcErrors.JDBC_67, e);
     }
   }
@@ -167,20 +167,10 @@ public final class TableJdbcRunnable implements Runnable {
    */
   private void initGaugeIfNeeded(Stage.Context context) {
     String gaugeName = TABLE_METRICS + threadNumber;
-    Gauge<Map<String, String>> gauge = context.getGauge(gaugeName);
-    if (gauge == null) {
-     context.createGauge(gaugeName, (Gauge<Map<String, Object>>) () -> gaugeMap);
-    }
+    Optional.ofNullable(context.getGauge(gaugeName)).orElse(context.createGauge(gaugeName, () -> gaugeMap));
     gaugeMap.put(THREAD_NAME, Thread.currentThread().getName());
     gaugeMap.put(TABLE_COUNT, tableContexts.size());
     gaugeMap.put(CURRENT_TABLE, "");
-  }
-
-  /**
-   * Update the gauge with current table name
-   */
-  private void updateGauge(String tableQualifiedName) {
-    gaugeMap.put(CURRENT_TABLE, tableQualifiedName);
   }
 
   /**
@@ -188,39 +178,36 @@ public final class TableJdbcRunnable implements Runnable {
    * and then commit offset.
    */
   private void generateBatchAndCommitOffset(BatchContext batchContext) {
-    int recordCount = 0, noOfTablesVisited = 0;
-    do {
-      try {
-        initTableContextIfNeeded();
-        if (tableContext != null) {
-          TableReadContext tableReadContext = getOrLoadTableReadContext();
-          ResultSet rs = tableReadContext.getResultSet();
-          boolean evictTableReadContext = false;
-          try {
-            updateGauge(tableContext.getQualifiedName());
-            // Create new batch
-            while (recordCount < batchSize) {
-              if (rs.isClosed() || !rs.next()) {
-                evictTableReadContext = true;
-                break;
-              }
-              createAndAddRecord(rs, tableContext, batchContext);
-              recordCount++;
+    int recordCount = 0;
+    try {
+      initTableContextIfNeeded();
+      if (tableContext != null) {
+        TableReadContext tableReadContext = getOrLoadTableReadContext();
+        ResultSet rs = tableReadContext.getResultSet();
+        boolean evictTableReadContext = false;
+        try {
+          gaugeMap.put(CURRENT_TABLE, tableContext.getQualifiedName());
+          // Create new batch
+          while (recordCount < batchSize) {
+            if (rs.isClosed() || !rs.next()) {
+              evictTableReadContext = true;
+              break;
             }
-          } finally {
-            handlePostBatchAsNeeded(evictTableReadContext, recordCount, batchContext);
+            createAndAddRecord(rs, tableContext, batchContext);
+            recordCount++;
           }
-        }
-      } catch (SQLException | ExecutionException | StageException e) {
-        connectionManager.closeConnection();
-        if (e instanceof SQLException) {
-          handleStageError(JdbcErrors.JDBC_34, e);
-        } else {
-          handleStageError(JdbcErrors.JDBC_67, e);
+        } finally {
+          handlePostBatchAsNeeded(evictTableReadContext, recordCount, batchContext);
         }
       }
-      noOfTablesVisited++;
-    } while(shouldMoveToNextTable(recordCount, noOfTablesVisited));
+    } catch (SQLException | ExecutionException | StageException e) {
+      connectionManager.closeConnection();
+      if (e instanceof SQLException) {
+        handleStageError(JdbcErrors.JDBC_34, e);
+      } else {
+        handleStageError(JdbcErrors.JDBC_67, e);
+      }
+    }
   }
 
   /**
@@ -292,8 +279,7 @@ public final class TableJdbcRunnable implements Runnable {
     initTableEvalContextForProduce(tableContext);
 
     //Check and then if we want to wait for query being issued do that
-    TableReadContext tableReadContext =
-        tableReadContextCache.getIfPresent(tableContext);
+    TableReadContext tableReadContext = tableReadContextCache.getIfPresent(tableContext);
 
     if (tableReadContext == null) {
       //Wait before issuing query (Optimization instead of waiting during each batch)
@@ -338,13 +324,6 @@ public final class TableJdbcRunnable implements Runnable {
     batchContext.getBatchMaker().addRecord(record);
 
     offsets.put(tableContext.getQualifiedName(), offsetFormat);
-  }
-
-  /**
-   * Decides if need to move to next table for generating a batch
-   */
-  private boolean shouldMoveToNextTable(int recordCount, int noOfTablesVisited) {
-    return recordCount == 0 && noOfTablesVisited < tableContexts.size();
   }
 
   /**
@@ -423,7 +402,7 @@ public final class TableJdbcRunnable implements Runnable {
       return this;
     }
 
-    TableJdbcRunnable build() throws SQLException, StageException, ExecutionException{
+    TableJdbcRunnable build() {
       return new TableJdbcRunnable(
           context,
           threadNumber,

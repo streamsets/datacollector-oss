@@ -30,7 +30,6 @@ import com.streamsets.pipeline.stage.origin.jdbc.table.util.TopologicalSorter;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -82,7 +81,8 @@ public final class ReferentialTblOrderProvider extends TableOrderProvider.BaseTa
         for (String referredTable : referredTableSetForThisContext) {
           TableContext referredTableContext = getTableContext(tableContext.getSchema(), referredTable);
           //Checking whether the referred table is used by the origin or has the table has a reference to itself.
-          if (referredTableContext != null && !referredTableContext.getQualifiedName().equals(tableContext.getQualifiedName())) {
+          if (referredTableContext != null
+              && !referredTableContext.getQualifiedName().equals(tableContext.getQualifiedName())) {
             //This edge states referred table should be ingested first
             directedGraph.addDirectedEdge(
                 referredTableContext.getQualifiedName(),
@@ -95,16 +95,8 @@ public final class ReferentialTblOrderProvider extends TableOrderProvider.BaseTa
       areAllEdgesConstructed = true;
       try {
         Iterator<String> topologicalOrderIterator =
-            new TopologicalSorter<>(directedGraph, new Comparator<String>() {
-              @Override
-              public int compare(String o1, String o2) {
-                return o1.compareTo(o2);
-              }
-            }).sort().iterator();
-
-        while (topologicalOrderIterator.hasNext()) {
-          orderedTables.add(topologicalOrderIterator.next());
-        }
+            new TopologicalSorter<>(directedGraph, String::compareTo).sort().iterator();
+        topologicalOrderIterator.forEachRemaining(table -> orderedTables.add(table));
       } catch(IllegalStateException e) {
         throw new StageException(JdbcErrors.JDBC_68, e.getMessage());
       }

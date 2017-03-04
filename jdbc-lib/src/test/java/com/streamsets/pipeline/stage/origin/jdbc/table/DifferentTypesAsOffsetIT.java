@@ -68,7 +68,6 @@ public class DifferentTypesAsOffsetIT extends BaseTableJdbcSourceIT {
   private static final String EXTRA_STRING_COLUMN = "extra_string_column";
   private static final String INSERT_PREPARED_STATEMENT = "INSERT INTO %s.%s values (?, ?)";
   private static final int NUMBER_OF_RECORDS = 2000;
-  private static final Random RANDOM = new Random();
 
   private final int offsetSqlType;
   private final Field.Type offsetFieldType;
@@ -132,114 +131,25 @@ public class DifferentTypesAsOffsetIT extends BaseTableJdbcSourceIT {
     }
   }
 
-  private Date getRandomDateTime(Field.Type type) {
-    Calendar calendar = Calendar.getInstance();
-    //1990-2020
-    calendar.set(Calendar.YEAR, RANDOM.nextInt(30) + 1990);
-    calendar.set(Calendar.MONTH, RANDOM.nextInt(11) + 1);
-    calendar.set(Calendar.DAY_OF_MONTH, RANDOM.nextInt(25));
-    calendar.set(Calendar.HOUR_OF_DAY, RANDOM.nextInt(24));
-    calendar.set(Calendar.MINUTE, RANDOM.nextInt(60));
-    calendar.set(Calendar.SECOND, RANDOM.nextInt(60));
-    calendar.set(Calendar.MILLISECOND, RANDOM.nextInt(1000));
-    if (type == Field.Type.DATE) {
-      //zero out time part
-      calendar.set(Calendar.HOUR_OF_DAY, 0);
-      calendar.set(Calendar.MINUTE, 0);
-      calendar.set(Calendar.SECOND, 0);
-      calendar.set(Calendar.MILLISECOND, 0);
-    } else if (type == Field.Type.TIME) {
-      //unset
-      calendar.set(Calendar.YEAR, 1970);
-      calendar.set(Calendar.MONTH, 0);
-      calendar.set(Calendar.DAY_OF_MONTH, 1);
+  private String getTimeELForInitialOffsetForDateTimeTypes(Date date) {
+    String initialOffset;
+    switch (offsetSqlType) {
+      case Types.DATE:
+        String dateString = new SimpleDateFormat("yyyy-MM-dd").format(date);
+        initialOffset = "${time:dateTimeToMilliseconds(time:extractDateFromString('"+ dateString+"','yyyy-MM-dd'))}";
+        break;
+      case Types.TIME:
+        String timeString = new SimpleDateFormat("HH:mm:ss.SSS").format(date);
+        initialOffset = "${time:dateTimeToMilliseconds(time:extractDateFromString('"+ timeString+"','HH:mm:ss.SSS'))}";
+        break;
+      case Types.TIMESTAMP:
+        String dateTimeString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(date);
+        initialOffset = "${time:dateTimeToMilliseconds(time:extractDateFromString('"+ dateTimeString+"','yyyy-MM-dd HH:mm:ss.SSS'))}";
+        break;
+      default:
+        throw new IllegalArgumentException("Unknown sql Type : " + offsetSqlType);
     }
-    return calendar.getTime();
-  }
-
-  private Object generateRandomData() {
-    switch(offsetFieldType) {
-      case DATE:
-      case DATETIME:
-      case TIME:
-        return getRandomDateTime(offsetFieldType);
-      case DOUBLE:
-        return RANDOM.nextDouble();
-      case FLOAT:
-        return RANDOM.nextFloat();
-      case SHORT:
-        return (short) RANDOM.nextInt(Short.MAX_VALUE + 1);
-      case INTEGER:
-        return RANDOM.nextInt();
-      case LONG:
-        return RANDOM.nextLong();
-      case CHAR:
-        return UUID.randomUUID().toString().charAt(0);
-      case STRING:
-        return UUID.randomUUID().toString();
-      case DECIMAL:
-        return new BigDecimal(BigInteger.valueOf(RANDOM.nextLong() % (long)Math.pow(10, 20)), 10);
-    }
-    return null;
-  }
-
-  @Before
-  public void setupTable() throws Exception {
-    offsetFieldName = String.format(FIELD_NAME_TEMPLATE, offsetFieldType.name().toLowerCase());
-    try (Statement st = connection.createStatement()) {
-      st.execute(
-          getCreateStatement(
-              database,
-              TABLE_NAME,
-              Collections.singletonMap(offsetFieldName, FIELD_TYPE_TO_SQL_TYPE_AND_STRING.get(offsetFieldType)),
-              Collections.singletonMap(EXTRA_STRING_COLUMN, FIELD_TYPE_TO_SQL_TYPE_AND_STRING.get(Field.Type.STRING)
-              )
-          )
-      );
-    }
-
-    Set<Field> alreadySeenOffsetFieldValues = new TreeSet<>(new OffsetFieldComparator());
-    for (int i = 0; i < NUMBER_OF_RECORDS; i++) {
-      Field offsetField;
-      //Make offset unique
-      do {
-        offsetField = Field.create(offsetFieldType, generateRandomData());
-      } while (!alreadySeenOffsetFieldValues.add(offsetField));
-
-      String extraColumnValue = UUID.randomUUID().toString();
-      Record record = RecordCreator.create();
-      LinkedHashMap<String, Field> rootField = new LinkedHashMap<>();
-      rootField.put(offsetFieldName, offsetField);
-      rootField.put(EXTRA_STRING_COLUMN, Field.create(Field.Type.STRING, extraColumnValue));
-      record.set(Field.createListMap(rootField));
-      expectedRecords.add(record);
-    }
-
-    //Sort the records based on the offset field value.
-    Collections.sort(expectedRecords, new Comparator<Record>() {
-      @Override
-      public int compare(Record r1, Record r2) {
-        Field f1 = r1.get("/" + offsetFieldName);
-        Field f2 = r2.get("/" + offsetFieldName);
-        return new OffsetFieldComparator().compare(f1, f2);
-      }
-    });
-
-    String insertStatement = String.format(INSERT_PREPARED_STATEMENT, database, TABLE_NAME);
-    try (PreparedStatement ps = connection.prepareStatement(insertStatement)) {
-      for (Record record : expectedRecords) {
-        setParamsToPreparedStatement(ps, 1, offsetSqlType, record.get("/"+ offsetFieldName).getValue());
-        setParamsToPreparedStatement(ps, 2, Types.VARCHAR, record.get("/"+ EXTRA_STRING_COLUMN).getValueAsString());
-        ps.execute();
-      }
-    }
-  }
-
-  @After
-  public void deleteTable() throws Exception {
-    try (Statement st = connection.createStatement()) {
-      st.execute(String.format(DROP_STATEMENT_TEMPLATE, database, TABLE_NAME));
-    }
+    return initialOffset;
   }
 
   private void runSourceAndUpdateOffset(
@@ -280,6 +190,63 @@ public class DifferentTypesAsOffsetIT extends BaseTableJdbcSourceIT {
     }
   }
 
+
+  @Before
+  public void setupTable() throws Exception {
+    offsetFieldName = String.format(FIELD_NAME_TEMPLATE, offsetFieldType.name().toLowerCase());
+    try (Statement st = connection.createStatement()) {
+      st.execute(
+          getCreateStatement(
+              database,
+              TABLE_NAME,
+              Collections.singletonMap(offsetFieldName, FIELD_TYPE_TO_SQL_TYPE_AND_STRING.get(offsetFieldType)),
+              Collections.singletonMap(EXTRA_STRING_COLUMN, FIELD_TYPE_TO_SQL_TYPE_AND_STRING.get(Field.Type.STRING)
+              )
+          )
+      );
+    }
+
+    Set<Field> alreadySeenOffsetFieldValues = new TreeSet<>(new OffsetFieldComparator());
+    for (int i = 0; i < NUMBER_OF_RECORDS; i++) {
+      Field offsetField;
+      //Make offset unique
+      do {
+        offsetField = Field.create(offsetFieldType, generateRandomData(offsetFieldType));
+      } while (!alreadySeenOffsetFieldValues.add(offsetField));
+
+      String extraColumnValue = UUID.randomUUID().toString();
+      Record record = RecordCreator.create();
+      LinkedHashMap<String, Field> rootField = new LinkedHashMap<>();
+      rootField.put(offsetFieldName, offsetField);
+      rootField.put(EXTRA_STRING_COLUMN, Field.create(Field.Type.STRING, extraColumnValue));
+      record.set(Field.createListMap(rootField));
+      expectedRecords.add(record);
+    }
+
+    //Sort the records based on the offset field value.
+    expectedRecords.sort((r1, r2) -> {
+      Field f1 = r1.get("/" + offsetFieldName);
+      Field f2 = r2.get("/" + offsetFieldName);
+      return new OffsetFieldComparator().compare(f1, f2);
+    });
+
+    String insertStatement = String.format(INSERT_PREPARED_STATEMENT, database, TABLE_NAME);
+    try (PreparedStatement ps = connection.prepareStatement(insertStatement)) {
+      for (Record record : expectedRecords) {
+        setParamsToPreparedStatement(ps, 1, offsetSqlType, record.get("/"+ offsetFieldName).getValue());
+        setParamsToPreparedStatement(ps, 2, Types.VARCHAR, record.get("/"+ EXTRA_STRING_COLUMN).getValueAsString());
+        ps.execute();
+      }
+    }
+  }
+
+  @After
+  public void deleteTable() throws Exception {
+    try (Statement st = connection.createStatement()) {
+      st.execute(String.format(DROP_STATEMENT_TEMPLATE, database, TABLE_NAME));
+    }
+  }
+
   @Test
   public void testCorrectOffsetRead() throws Exception {
     Map<String, String> offsets = new ConcurrentHashMap<>();
@@ -288,27 +255,6 @@ public class DifferentTypesAsOffsetIT extends BaseTableJdbcSourceIT {
       runSourceAndUpdateOffset(offsets, totalNoOfRecordsRead);
     }
     Assert.assertEquals(totalNoOfRecordsRead.get(), expectedRecords.size());
-  }
-
-  private String getTimeELForInitialOffsetForDateTimeTypes(Date date) {
-    String initialOffset;
-    switch (offsetSqlType) {
-      case Types.DATE:
-        String dateString = new SimpleDateFormat("yyyy-MM-dd").format(date);
-        initialOffset = "${time:dateTimeToMilliseconds(time:extractDateFromString('"+ dateString+"','yyyy-MM-dd'))}";
-        break;
-      case Types.TIME:
-        String timeString = new SimpleDateFormat("HH:mm:ss.SSS").format(date);
-        initialOffset = "${time:dateTimeToMilliseconds(time:extractDateFromString('"+ timeString+"','HH:mm:ss.SSS'))}";
-        break;
-      case Types.TIMESTAMP:
-        String dateTimeString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(date);
-        initialOffset = "${time:dateTimeToMilliseconds(time:extractDateFromString('"+ dateTimeString+"','yyyy-MM-dd HH:mm:ss.SSS'))}";
-        break;
-      default:
-        throw new IllegalArgumentException("Unknown sql Type : " + offsetSqlType);
-    }
-    return initialOffset;
   }
 
   @Test

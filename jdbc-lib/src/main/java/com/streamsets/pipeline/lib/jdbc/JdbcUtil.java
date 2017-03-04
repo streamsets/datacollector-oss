@@ -293,7 +293,7 @@ public class JdbcUtil {
       String jdbcNameSpacePrefix
   ) throws SQLException {
     Record.Header header = record.getHeader();
-    Set<String> tableNames = new HashSet<>(knownTableNames);
+    Set<String> tableNames = new HashSet<>();
     for (int i=1; i<=metaData.getColumnCount(); i++) {
       header.setAttribute(jdbcNameSpacePrefix + metaData.getColumnLabel(i) + ".jdbcType", String.valueOf(metaData.getColumnType(i)));
 
@@ -308,6 +308,10 @@ public class JdbcUtil {
 
       // Store the column's table name
       tableNames.add(metaData.getTableName(i));
+    }
+
+    if (tableNames.isEmpty()) {
+      tableNames.addAll(knownTableNames);
     }
 
     header.setAttribute(jdbcNameSpacePrefix + "tables", Joiner.on(",").join(tableNames));

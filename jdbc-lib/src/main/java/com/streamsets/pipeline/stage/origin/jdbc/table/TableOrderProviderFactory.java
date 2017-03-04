@@ -79,11 +79,5 @@ public final class TableOrderProviderFactory {
     public void addTable(String qualifiedTableName) {
       orderedTableContexts.add(qualifiedTableName);
     }
-
-    @Override
-    public int getNumberOfTables() {
-      return orderedTableContexts.size();
-    }
   }
-
 }
