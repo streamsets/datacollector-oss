@@ -30,6 +30,21 @@
              ng-click="addStageInstance({stage: stageLibrary}, $event)"
              ng-style="{'background-image': 'url({{icon}})'}">
             <span>{{stageLibrary.label}}</span>
+            <span
+              ng-if="$storage.stageFilterGroup.group !== 'Type' && stageLibrary.type == 'SOURCE'"
+              class="circle origin">O</span>
+
+            <span
+              ng-if="$storage.stageFilterGroup.group !== 'Type' && stageLibrary.type == 'PROCESSOR'"
+              class="circle processor">P</span>
+
+            <span
+              ng-if="$storage.stageFilterGroup.group !== 'Type' && stageLibrary.type == 'TARGET'"
+              class="circle destination">D</span>
+
+            <span
+              ng-if="$storage.stageFilterGroup.group !== 'Type' && stageLibrary.type == 'EXECUTOR'"
+              class="circle executor">E</span>
           </a>
         </li>
 
