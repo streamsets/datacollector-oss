@@ -65,6 +65,7 @@ angular
       filterSeverity: undefined,
       filterPipeline: undefined,
       pipelines: [],
+      pauseLogAutoFetch: $rootScope.$storage.pauseLogAutoFetch,
 
       loadPreviousLog: function() {
         $scope.fetchingLog = true;
@@ -116,28 +117,48 @@ angular
           backdrop: 'static',
           size: 'lg'
         });
-      }
+      },
 
+      toggleAutoFetch: function () {
+        $rootScope.$storage.pauseLogAutoFetch = $scope.pauseLogAutoFetch = !$scope.pauseLogAutoFetch;
+        if ($scope.pauseLogAutoFetch) {
+          pauseLogWebSocket();
+        } else {
+          startLogWebSocket();
+        }
+      }
     });
 
-    api.log.getCurrentLog($scope.logEndingOffset).then(function(res) {
-      //check if first message is extra line
-      if (res.data && res.data.length > 0 && !res.data[0].timeStamp && res.data[0].exception) {
-        $scope.extraMessage = res.data[0].exception;
-        res.data.shift();
+    var startLogWebSocket = function () {
+      if (logWebSocket) {
+        logWebSocket.close();
       }
 
-      $scope.logMessages = res.data;
-      $scope.logEndingOffset = +res.headers('X-SDC-LOG-PREVIOUS-OFFSET');
+      api.log.getCurrentLog(-1).then(function(res) {
+        //check if first message is extra line
+        if (res.data && res.data.length > 0 && !res.data[0].timeStamp && res.data[0].exception) {
+          $scope.extraMessage = res.data[0].exception;
+          res.data.shift();
+        }
 
-      logWebSocket = new WebSocket(webSocketLogURL);
+        $scope.logMessages = res.data;
+        $scope.logEndingOffset = +res.headers('X-SDC-LOG-PREVIOUS-OFFSET');
 
-      logWebSocket.onmessage = function (evt) {
-        var received_msg = JSON.parse(evt.data);
-        logWebSocketMessages.push(received_msg);
-      };
+        if (!$scope.pauseLogAutoFetch) {
+          logWebSocket = new WebSocket(webSocketLogURL);
+          logWebSocket.onmessage = function (evt) {
+            var received_msg = JSON.parse(evt.data);
+            logWebSocketMessages.push(received_msg);
+          };
+        }
+      });
+    };
 
-    });
+    var pauseLogWebSocket = function () {
+      if (logWebSocket) {
+        logWebSocket.close();
+      }
+    };
 
     var intervalPromise = $interval(function() {
       if (logWebSocketMessages && logWebSocketMessages.length) {
@@ -156,7 +177,14 @@ angular
             }
 
             lastMessageFiltered = false;
+
             $scope.logMessages.push(logWebSocketMessage);
+
+
+            if ($scope.logMessages.length > 10) {
+              $scope.logMessages.shift();
+              $scope.logEndingOffset = -1;
+            }
 
           } else if (!lastMessageFiltered){
             var lastMessage = $scope.logMessages[$scope.logMessages.length - 1];
@@ -200,6 +228,8 @@ angular
         logWebSocket.close();
       }
     });
+
+    startLogWebSocket();
 
     $timeout(function() {
       var $panelBody = $('.logs-page > .panel-body');

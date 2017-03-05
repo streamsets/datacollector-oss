@@ -119,6 +119,9 @@
         {{'logs.logConfig.headerLabel' | translate}}
       </button>
 
+      <button type="button" class="btn btn-primary btn-sm" ng-click="toggleAutoFetch()">
+        {{(pauseLogAutoFetch ? 'logs.autoFetchContinue' : 'logs.autoFetchPause') | translate}}
+      </button>
     </div>
 
   </div>
