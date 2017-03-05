@@ -699,6 +699,8 @@
   },
   "logs": {
     "all": "All",
+    "autoFetchContinue": "Start Auto Refresh",
+    "autoFetchPause": "Stop Auto Refresh",
     "download": "Download",
     "emptyMessage": "Loading Logs...",
     "loadPreviousLog": "Load Previous Logs",
