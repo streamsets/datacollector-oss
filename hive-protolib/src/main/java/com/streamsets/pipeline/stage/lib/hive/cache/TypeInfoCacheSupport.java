@@ -77,6 +77,7 @@ public class TypeInfoCacheSupport
         } else if (!state.get(columnName).equals(columnTypeInfo)) {
           throw new HiveStageCheckedException(
               Errors.HIVE_21,
+              columnName,
               state.get(columnName).toString(),
               columnTypeInfo.toString()
           );
