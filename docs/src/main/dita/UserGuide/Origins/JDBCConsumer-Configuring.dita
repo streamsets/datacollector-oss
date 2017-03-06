@@ -216,8 +216,8 @@
                                         </xref></entry>
                                     <entry>Adds JDBC header attributes to records. The origin
                                         creates JDBC header attributes by default. <p>
-                                            <note>When using the origin with the Hive Drift
-                                                Solution, make sure this property is
+                                            <note>When using the origin with the Drift
+                                                Synchronization Solution, make sure this property is
                                                 selected.</note>
                                         </p></entry>
                                 </row>

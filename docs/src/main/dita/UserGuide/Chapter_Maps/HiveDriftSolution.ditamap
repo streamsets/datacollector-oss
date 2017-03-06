@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
 <map>
- <title>Hive Drift Solution</title>
+ <title>Drift Synchronization for Hive</title>
     <topicref href="../Hive_Drift_Solution/HiveDriftSolution_title.dita" chunk="to-content">
         <topicref href="../Hive_Drift_Solution/HiveDrift-Overview.dita" >
             <topicmeta><shortdesc></shortdesc></topicmeta>

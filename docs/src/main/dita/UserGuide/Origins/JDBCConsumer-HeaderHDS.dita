@@ -14,13 +14,13 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_tvf_tgp_fx">
- <title>JDBC Header Attributes with the Hive Drift Solution</title>
+ <title>Header Attributes with the Drift Synchronization Solution</title>
  <conbody>
-  <p><indexterm>JDBC header attributes<indexterm>using with the Hive Drift
-                Solution</indexterm></indexterm><indexterm>Hive Drift Solution<indexterm>Using the
-                    JDBC Query Consumer header attributes</indexterm></indexterm>When you use the
-            JDBC Query Consumer with the Hive Drift Solution, ensure that the origin creates JDBC
-            header attributes. </p>
+  <p><indexterm>JDBC header attributes<indexterm>using with the Drift Synchronization
+                    Solution</indexterm></indexterm><indexterm>Drift Synchronization
+                    Solution<indexterm>Using the JDBC Query Consumer header
+                attributes</indexterm></indexterm>When you use the JDBC Query Consumer with the
+            Drift Synchronization Solution, ensure that the origin creates JDBC header attributes. </p>
         <p>JDBC header attributes allow the Hive Metadata processor to use the precision and scale
             information in the attributes to define decimal fields.</p>
         <p>To enable the Hive Metadata processor to define decimal fields as needed, perform the

@@ -14,16 +14,17 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hqg_nzh_vx">
- <title>Impala Queries for the Hive Drift Solution</title>
+ <title>Impala Queries for the Drift Synchronization Solution for Hive</title>
  <conbody>
-        <p><indexterm>Hive Query executor<indexterm>Impala queries for the Hive Drift
-                    Solution</indexterm></indexterm><indexterm>Hive Drift
-                    Solution<indexterm>implementing Impala Invalidate Metadata
-                queries</indexterm></indexterm>The Hive Drift Solution enables a pipeline to
-            automatically create and update Hive tables and to write files to the tables. </p>
-        <p>When implementing the Hive Drift Solution with Impala, you can use the Hive Query
-            executor to submit an invalidate metadata query each time you need to update the Impala
-            metadata cache. For a detailed example, see <xref
+        <p><indexterm>Hive Query executor<indexterm>Impala queries for the Drift Synchronization
+                    Solution for Hive</indexterm></indexterm><indexterm>Drift Synchronization
+                Solution for Hive<indexterm>implementing Impala Invalidate Metadata
+                    queries</indexterm></indexterm>The Drift Synchronization Solution for Hive
+            enables a pipeline to automatically create and update Hive tables and to write files to
+            the tables. </p>
+        <p>When implementing the Drift Synchronization Solution for Hive with Impala, you can use
+            the Hive Query executor to submit an invalidate metadata query each time you need to
+            update the Impala metadata cache. For a detailed example, see <xref
                 href="../Event_Handling/CaseStudy-Impala.dita#concept_szz_xwm_lx"/>.</p>
         <p>Connect a Hive Query executor to the event stream from the Hive Metastore destination and
             the Hadoop FS destination. You can use the same executor for both, or use a separate

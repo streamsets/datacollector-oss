@@ -87,8 +87,9 @@
                                             executor processes multiple queries in order, and waits
                                             for each query to complete before continuing to the next
                                             query.</p><p>To process events from the Hive Metastore
-                                            or Hadoop FS destinations when using the Hive Drift
-                                            Solution with Impala, you might use the following query:
+                                            or Hadoop FS destinations when using the Drift
+                                            Synchronization Solution for Hive with Impala, you might
+                                            use the following query:
                                             <codeblock>invalidate metadata ${record:attribute('/table')}</codeblock></p><p>For
                                             more information, see <xref
                                                 href="HiveQuery-ImpalaHDS.dita#concept_hqg_nzh_vx"

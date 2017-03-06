@@ -22,9 +22,9 @@
             fields. The processor can flatten the entire record to produce a record with no nested
             fields. Or it can flatten specific list or map fields.</p>
         <p>Use the Field Flattener when you have nested fields that you need to flatten. For
-            example, the Hive Drift Solution cannot process records with nested fields, so you can
-            use the Field Flattener to flatten records before passing them to the Hive Metadata
-            processor. </p>
+            example, the Drift Synchronization Solution for Hive cannot process records with nested
+            fields, so you can use the Field Flattener to flatten records before passing them to the
+            Hive Metadata processor. </p>
         <p>When you configure a Field Flattener, you configure whether to flatten the entire record
             or specific fields in the record. You also configure the name separator to use for
             flattened field names. </p>

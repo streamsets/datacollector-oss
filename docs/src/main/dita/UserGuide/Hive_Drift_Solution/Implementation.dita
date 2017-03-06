@@ -16,9 +16,9 @@
 <concept id="concept_y5w_dj3_fw">
  <title>Implementation Steps</title>
  <conbody>
-  <p><indexterm>Hive Drift Solution<indexterm>implementation</indexterm></indexterm>To
-            implement the Hive Drift Solution, perform the following steps:<ol
-                id="ol_zr1_3j3_fw">
+  <p><indexterm>Drift Synchronization Solution for
+                Hive<indexterm>implementation</indexterm></indexterm>To implement the Drift
+            Synchronization Solution for Hive, perform the following steps:<ol id="ol_zr1_3j3_fw">
                 <li> Configure the origin and any additional processors that you want to use. <ul
                         id="ul_qjn_kp4_hx">
                         <li>If using the JDBC Query Consumer as the origin, enable the creation of
@@ -39,9 +39,9 @@
                                 use constants or expressions that evaluate to the same precision and
                                 scale for all decimal fields. Or, you can create more complex
                                 expressions that evaluate to different values for different fields.
-                                </p><p>When processing data from the JDBC Query Consumer or the
-                                JDBC Multitable Consumer with JDBC header attributes, use the
-                                default expressions. </p></li>
+                                </p><p>When processing data from the JDBC Query Consumer or the JDBC
+                                Multitable Consumer with JDBC header attributes, use the default
+                                expressions. </p></li>
                         <li>Optionally configure advanced options, such as the maximum cache size,
                             time basis, and data time zone.</li>
                     </ul><p>For more information about the Hive Metadata processor, see <xref

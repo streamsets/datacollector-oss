@@ -16,8 +16,9 @@
 <concept id="concept_u2t_fgy_1x">
  <title>Impala Support</title>
  <conbody>
-  <p><indexterm>Hive Drift Solution<indexterm>Apache Impala support</indexterm></indexterm>Data
-            written by the Hive Drift Solution is compatible with Impala.</p>
+  <p><indexterm>Drift Synchronization Solution<indexterm>Apache Impala
+                support</indexterm></indexterm>Data written by the Drift Synchronization Solution is
+            compatible with Impala.</p>
         <p>Impala requires using the Invalidate Metadata command to refresh the Impala metadata
             cache each time changes occur in the Hive Metastore. To automatically refresh the Impala
             metadata cache, add an event stream to your pipeline. For details, see <xref

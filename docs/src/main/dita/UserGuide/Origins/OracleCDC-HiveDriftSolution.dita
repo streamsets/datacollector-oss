@@ -14,17 +14,18 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_q4t_b32_dx">
- <title>Working with the Hive Drift Solution</title>
+ <title>Working with the Drift Synchronization Solution</title>
  <conbody>
-        <p><indexterm>Oracle CDC Client origin<indexterm>working with the Hive Drift
-                    Solution</indexterm></indexterm><indexterm>Hive Drift Solution<indexterm>Oracle
-                    CDC Client recommendation</indexterm></indexterm>If you use the Oracle CDC
-            Client origin as part of a Hive Drift Solution pipeline, make sure to pass only records
+        <p><indexterm>Oracle CDC Client origin<indexterm>working with the Drift Synchronization
+                    Solution for Hive</indexterm></indexterm><indexterm>Drift Synchronization
+                Solution for Hive<indexterm>Oracle CDC Client
+            recommendation</indexterm></indexterm>If you use the Oracle CDC Client origin as part of
+            a Drift Synchronization Solution for Hive pipeline, make sure to pass only records
             flagged for Insert to the Hive Metadata processor. </p>
-        <p>The Hive Drift Solution enables automatic updates of Hive tables based on incoming data.
-            The Hive Metadata processor, the first stage in the solution, expects Insert records
-            only. Below are some recommended methods to ensure that the processor receives only
-            Insert records:<ul id="ul_y5h_4xj_fx">
+        <p>The Drift Synchronization Solution for Hive enables automatic updates of Hive tables
+            based on incoming data. The Hive Metadata processor, the first stage in the solution,
+            expects Insert records only. Below are some recommended methods to ensure that the
+            processor receives only Insert records:<ul id="ul_y5h_4xj_fx">
                 <li>Configure the Oracle CDC Client to process only Insert records. </li>
                 <li>If you want to process additional record types in the pipeline, use a Stream
                     Selector to route only Insert records to the Hive Metadata processor. </li>

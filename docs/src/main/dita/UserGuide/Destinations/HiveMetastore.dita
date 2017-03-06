@@ -16,7 +16,7 @@
 <concept id="concept_gcr_z2t_zv">
  <title>Hive Metastore</title>
  <shortdesc>The Hive Metastore destination works with the Hive Metadata processor and the Hadoop FS
-        or MapR FS destination as part of the Hive Drift Solution. </shortdesc>
+        or MapR FS destination as part of the Drift Synchronization Solution for Hive. </shortdesc>
  <conbody>
         <p><indexterm>destinations<indexterm>Hive Metastore </indexterm></indexterm><indexterm>Hive
                 Metastore destination<indexterm>overview</indexterm></indexterm>The Hive Metastore

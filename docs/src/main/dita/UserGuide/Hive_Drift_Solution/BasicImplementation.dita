@@ -16,13 +16,13 @@
 <concept id="concept_zzs_fkg_2w">
     <title>Basic Implementation</title>
     <conbody>
-        <p><indexterm>Hive Drift Solution<indexterm>basic implementation</indexterm></indexterm>You
-            can use the Hive Metadata processor, Hive Metastore destination for metadata processing,
-            and Hadoop FS or MapR FS destination for data processing in any pipeline where the logic
-            is appropriate.</p>
-        <p>A basic implementation of the Hive Drift Solution includes the origin of your choice and
-            the Hive Metadata processor connected to the Hive Metastore destination and either the
-            Hadoop FS or MapR FS destinations, as follows:</p>
+        <p><indexterm>Drift Synchronization Solution for Hive<indexterm>basic
+                    implementation</indexterm></indexterm>You can use the Hive Metadata processor,
+            Hive Metastore destination for metadata processing, and Hadoop FS or MapR FS destination
+            for data processing in any pipeline where the logic is appropriate.</p>
+        <p>A basic implementation of the Drift Synchronization Solution for Hive includes the origin
+            of your choice and the Hive Metadata processor connected to the Hive Metastore
+            destination and either the Hadoop FS or MapR FS destinations, as follows:</p>
         <p><image href="../Graphics/HiveMeta-Pipeline.png" id="image_ys3_ztg_2w" scale="65"/></p>
         <p><image href="../Graphics/HiveMeta-MapR-Pipeline.png" id="image_nrz_fdk_tw" scale="65"
             /></p>

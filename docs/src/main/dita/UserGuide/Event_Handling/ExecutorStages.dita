@@ -26,9 +26,10 @@
                     <dd>Use with the Hive Metadata destination to run Hive or Impala queries after
                         Hive metastore updates. You can also use the executor with the Hadoop FS or
                         MapR FS destinations to run queries after closing files. </dd>
-                    <dd>For example, you might use the Hive Query executor as part of the Hive Drift
-                        Solution if you read data with Impala. Impala requires you to run the
-                        Invalidate Metadata command when the table structure or data changes. </dd>
+                    <dd>For example, you might use the Hive Query executor as part of the Drift
+                        Synchronization Solution for Hive if you read data with Impala. Impala
+                        requires you to run the Invalidate Metadata command when the table structure
+                        or data changes. </dd>
                     <dd>Instead of trying to time this action manually, you can use the Hive Query
                         executor to submit the command automatically each time the Hive Metastore
                         destination changes the structure of a table and each time the Hadoop FS
