@@ -121,8 +121,15 @@ public class HdfsMetadataExecutor extends BaseExecutor {
             Path workingFile = new Path(evaluate(variables, "filePath", actions.filePath));
             LOG.info("Working on file: " + workingFile);
 
-            if(actions.shouldMoveFile || actions.shouldRename) {
+            // Create empty file if configured
+            if(actions.createFile) {
+              ensureDirectoryExists(fs, workingFile.getParent());
+              if(!fs.createNewFile(workingFile)) {
+                throw new IOException("Can't create file (probably already exists): " + workingFile);
+              }
+            }
 
+            if(!actions.createFile && (actions.shouldMoveFile || actions.shouldRename)) {
               Path newPath = workingFile.getParent();
               String newName = workingFile.getName();
               if(actions.shouldMoveFile) {
@@ -133,13 +140,7 @@ public class HdfsMetadataExecutor extends BaseExecutor {
               }
 
               Path destinationFile = new Path(newPath, newName);
-
-              if(!fs.exists(newPath)) {
-                LOG.debug("Creating parent directory for destination file: {}", newPath);
-                if(!fs.mkdirs(newPath)) {
-                  throw new IOException("Can't create directory: " + newPath);
-                }
-              }
+              ensureDirectoryExists(fs, newPath);
 
               LOG.debug("Renaming to: {}", destinationFile);
               if(!fs.rename(workingFile, destinationFile)) {
@@ -187,6 +188,20 @@ public class HdfsMetadataExecutor extends BaseExecutor {
         }
         LOG.error("Failure when applying metadata changes to HDFS", e);
         errorRecordHandler.onError(new OnRecordErrorException(record, HdfsMetadataErrors.HDFS_METADATA_000, e.getMessage()));
+      }
+    }
+  }
+
+  /**
+   * Ensure that given directory exists.
+   *
+   * Creates the directory if it doesn't exists. No-op if it does.
+   */
+  private void ensureDirectoryExists(FileSystem fs, Path path) throws IOException {
+    if(!fs.exists(path)) {
+      LOG.debug("Creating directory: {}", path);
+      if(!fs.mkdirs(path)) {
+        throw new IOException("Can't create directory: " + path);
       }
     }
   }

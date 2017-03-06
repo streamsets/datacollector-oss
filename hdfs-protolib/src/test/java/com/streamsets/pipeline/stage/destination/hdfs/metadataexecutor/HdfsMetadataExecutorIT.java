@@ -262,6 +262,31 @@ public class HdfsMetadataExecutorIT {
   }
 
   @Test
+  public void testCreateFile() throws Exception {
+    Path outputPath = new Path(outputDir, INPUT_FILE);
+
+    HdfsConnectionConfig conn = new HdfsConnectionConfig();
+    conn.hdfsConfDir = confDir;
+
+    HdfsActionsConfig actions = new HdfsActionsConfig();
+    actions.filePath = "${record:value('/new_dir')}/" + INPUT_FILE;
+    actions.createFile = true;
+
+    HdfsMetadataExecutor executor = new HdfsMetadataExecutor(conn, actions);
+
+    ExecutorRunner runner = new ExecutorRunner.Builder(HdfsMetadataDExecutor.class, executor)
+      .setOnRecordError(OnRecordError.STOP_PIPELINE)
+      .build();
+    runner.runInit();
+
+    runner.runWrite(ImmutableList.of(getTestRecord()));
+    assertEvent(runner.getEventRecords(), outputPath);
+    runner.runDestroy();
+
+    assertFile(outputPath, "");
+  }
+
+  @Test
   public void testMoveFile() throws Exception {
     Path outputPath = new Path(outputDir, INPUT_FILE);
 
