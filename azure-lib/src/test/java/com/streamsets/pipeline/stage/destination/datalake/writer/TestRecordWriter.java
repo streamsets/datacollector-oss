@@ -25,18 +25,13 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
-import com.streamsets.pipeline.stage.destination.datalake.DataLakeDTarget;
 import com.streamsets.pipeline.stage.destination.datalake.DataLakeTarget;
-import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -49,8 +44,6 @@ import java.util.concurrent.Callable;
 
 public class TestRecordWriter {
   final String TEMP = "_tmp_";
-  private static Target.Context targetContext = ContextInfoCreator.createTargetContext(DataLakeDTarget.class,
-      "testWritersLifecycle", false, OnRecordError.TO_ERROR, null);
 
   @BeforeClass
   public static void setup() throws IOException {
@@ -85,12 +78,7 @@ public class TestRecordWriter {
     r.set(Field.create((TEST_STRING+ i)));
     final String uniquePrefix = "sdc";
     final String fileSuffix = "txt";
-    final String fileNameEL = "";
     final String timeZoneID = "UTC";
-    final boolean dirPathTemplateInHeader = false;
-    final String authTokenEndpoint = "";
-    final String clientId = "";
-    final String clientKey = "";
 
     Date date = Calendar.getInstance(TimeZone.getTimeZone(timeZoneID)).getTime();
     Calendar calendar = Calendar.getInstance();
@@ -104,23 +92,11 @@ public class TestRecordWriter {
 
     final String targetFilePathPrefix = dirPath + year + "-" + month + "-" + day + "/" + TEMP + uniquePrefix + "-";
 
-    RecordWriter recordWriter = new RecordWriter(
-        null,
-        DataFormat.TEXT,
-        new DataGeneratorFormatConfig(),
-        uniquePrefix,
-        fileSuffix,
-        fileNameEL,
-        dirPathTemplateInHeader,
-        targetContext,
-        false,
-        "",
-        1000,
-        null,
-        authTokenEndpoint,
-        clientId,
-        clientKey
-    );
+    RecordWriter recordWriter = new RecordWriterTestBuilder()
+        .uniquePrefix(uniquePrefix)
+        .fileNameSuffix(fileSuffix)
+        .build();
+
     String filePath = recordWriter.getFilePath(dirPathTemplate, r, date);
     Assert.assertTrue(filePath.startsWith(targetFilePathPrefix));
     Assert.assertTrue(filePath.endsWith(fileSuffix));
@@ -138,29 +114,12 @@ public class TestRecordWriter {
     r.set(Field.create((TEST_STRING+ i)));
     final String uniquePrefix = "sdc";
     final String fileSuffix = "txt";
-    final String fileNameEL = "";
-    final boolean dirPathTemplateInHeader = true;
-    final String authTokenEndpoint = "";
-    final String clientId = "";
-    final String clientKey = "";
 
-    RecordWriter recordWriter = new RecordWriter(
-        null,
-        DataFormat.TEXT,
-        new DataGeneratorFormatConfig(),
-        uniquePrefix,
-        fileSuffix,
-        fileNameEL,
-        dirPathTemplateInHeader,
-        targetContext,
-        false,
-        "",
-        1000,
-        null,
-        authTokenEndpoint,
-        clientId,
-        clientKey
-    );
+    RecordWriter recordWriter = new RecordWriterTestBuilder()
+        .uniquePrefix(uniquePrefix)
+        .fileNameSuffix(fileSuffix)
+        .dirPathTemplateInHeader(true)
+        .build();
     final String dirPathTemplate = "";
     String filePath = recordWriter.getFilePath(dirPathTemplate, r, null);
 
@@ -178,31 +137,10 @@ public class TestRecordWriter {
     Record.Header header = record.getHeader();
     header.setAttribute(rollHeaderName, rollHeaderName);
 
-    final String uniquePrefix = "sdc";
-    final String fileSuffix = "txt";
-    final String fileNameEL = "";
-    final boolean dirPathTemplateInHeader = false;
-    final String authTokenEndpoint = "";
-    final String clientId = "";
-    final String clientKey = "";
-
-    RecordWriter recordWriter = new RecordWriter(
-        null,
-        DataFormat.TEXT,
-        new DataGeneratorFormatConfig(),
-        uniquePrefix,
-        fileSuffix,
-        fileNameEL,
-        dirPathTemplateInHeader,
-        targetContext,
-        rollIfHeader,
-        rollHeaderName,
-        1000,
-        null,
-        authTokenEndpoint,
-        clientId,
-        clientKey
-    );
+    RecordWriter recordWriter = new RecordWriterTestBuilder()
+        .rollHeaderName(rollHeaderName)
+        .rollIfHeader(rollIfHeader)
+        .build();
 
     Assert.assertTrue(recordWriter.shouldRoll(record, dirPath));
   }
