@@ -14,15 +14,17 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_phk_bdf_2w">
-    <title>Hive Drift Solution: Ingesting Drifting Data into Hive</title>
+    <title>Drift Synchronization Solution for Hive</title>
     <conbody>
-        <p><indexterm>Hive Drift Solution<indexterm>overview</indexterm></indexterm>The Hive Drift
-            Solution detects drift in incoming data and updates corresponding Hive tables. The
-            solution enables creating and updating Hive tables based on record requirements and
-            writing data to HDFS or MapR FS based on record header attributes. You can use the full
-            functionality of the solution or individual pieces, as needed. </p>
-        <p>The Hive Drift Solution supports only Avro data at this time. The solution is compatible
-            with Impala.</p>
+        <p><indexterm>Drift Synchronization Solution<indexterm>overview</indexterm></indexterm>The
+            Drift Synchronization Solution for Hive detects drift in incoming data and updates
+            corresponding Hive tables. Previously known as the Hive Drift Solution, the Drift
+            Synchronization Solution for Hive enables creating and updating Hive tables based on
+            record requirements and writing data to HDFS or MapR FS based on record header
+            attributes. You can use the full functionality of the solution or individual pieces, as
+            needed. </p>
+        <p>The Drift Synchronization Solution for Hive supports only Avro data at this time. The
+            solution is compatible with Impala.</p>
         <p>The solution incorporates the Hive Metadata processor, Hive Metastore destination, and
             the Hadoop FS or MapR FS destination as follows:</p>
         <p>
@@ -68,10 +70,10 @@
         </p>
         <p>For example, say you use this solution to write sales data to MapR FS. A partial upgrade
             of the sales system adds several new fields to a subset of the incoming data. </p>
-        <p>With the Hive Drift Solution, the Hive Metadata processor notes the new fields in a
-            metadata record and passes it to the Hive Metastore destination. The Hive Metastore
-            destination adds the new columns to the Hive target table. The MapR FS destination then
-            writes the data to the updated table. When writing data without the new fields to the
-            updated table, the destination inserts null values for the missing fields. </p>
+        <p>With the Drift Synchronization Solution for Hive, the Hive Metadata processor notes the
+            new fields in a metadata record and passes it to the Hive Metastore destination. The
+            Hive Metastore destination adds the new columns to the Hive target table. The MapR FS
+            destination then writes the data to the updated table. When writing data without the new
+            fields to the updated table, the destination inserts null values for the missing fields. </p>
     </conbody>
 </concept>

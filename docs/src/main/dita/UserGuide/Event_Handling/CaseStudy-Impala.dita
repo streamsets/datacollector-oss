@@ -14,25 +14,26 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_szz_xwm_lx">
-    <title>Case Study: Impala Metadata Updates for HDS</title>
+    <title>Case Study: Impala Metadata Updates for DDS for Hive</title>
     <conbody>
-        <p><indexterm>event framework case studies<indexterm>Impala-Hive Drift
-                Solution</indexterm></indexterm>You love the <xref
-                href="../Hive_Drift_Solution/HiveDrift-Overview.dita#concept_phk_bdf_2w">Hive Drift
-                Solution</xref> (HDS) because it automatically updates the Hive metastore when
-            needed. But if you've been using it with Impala, you've been trying to time the
-            Invalidate Metadata command after each metadata change and file write.</p>
-        <p>Instead of running the command manually, you use the event framework in your Hive Drift
-            Solution pipeline to execute the command automatically. </p>
+        <p><indexterm>event framework case studies<indexterm>Drift Synchronization Solution for Hive
+                    with Impala</indexterm></indexterm>You love the <xref
+                href="../Hive_Drift_Solution/HiveDrift-Overview.dita#concept_phk_bdf_2w">Drift
+                Synchronization Solution for Hive</xref> because it automatically updates the Hive
+            metastore when needed. But if you've been using it with Impala, you've been trying to
+            time the Invalidate Metadata command after each metadata change and file write.</p>
+        <p>Instead of running the command manually, you use the event framework in your Drift
+            Synchronization Solution for Hive pipeline to execute the command automatically. </p>
         <p>Enable both the Hive Metastore destination and the Hadoop FS destination to generate
             events. You can connect both event streams to a single Hive Query executor. The executor
             then runs the Invalidate Metadata command each time the Hive Metastore destination
             changes the Hive metastore and each time Hadoop FS writes a file to a Hive table.</p>
         <p>Here's how it works:</p>
-        <p>The following Hive Drift Solution pipeline reads files from a directory. The Hive
-            Metadata processor evaluates the data for structural changes. It passes data to Hadoop
-            FS and metadata records to the Hive Metastore destination. Hive Metastore creates and
-            updates tables in Hive based on the metadata records it receives:</p>
+        <p>The following Drift Synchronization Solution for Hive pipeline reads files from a
+            directory. The Hive Metadata processor evaluates the data for structural changes. It
+            passes data to Hadoop FS and metadata records to the Hive Metastore destination. Hive
+            Metastore creates and updates tables in Hive based on the metadata records it
+            receives:</p>
         <p><image href="../Graphics/Event-HDS-BasicPipe.png" id="image_lz5_414_lx" scale="75"/></p>
         <p>
             <ol id="ol_mtf_tzn_lx">

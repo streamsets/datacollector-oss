@@ -23,8 +23,8 @@
             event record. </p>
         <p>Use the Hive Query executor as part of an event stream to perform event-driven queries in
             Hive or Impala. For example, you can use the Hive Query executor to perform the
-            Invalidate Metadata query for Impala as part of the Hive Drift Solution or to configure
-            table properties for newly-created tables.</p>
+            Invalidate Metadata query for Impala as part of the Drift Synchronization Solution for
+            Hive or to configure table properties for newly-created tables.</p>
         <p>
             <note
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/note-HiveQuery"/>
