@@ -27,7 +27,6 @@ import plsql.plsqlParser;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * Listener for use with {@linkplain org.antlr.v4.runtime.tree.ParseTreeWalker}.

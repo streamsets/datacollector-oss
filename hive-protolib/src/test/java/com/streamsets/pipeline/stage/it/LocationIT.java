@@ -28,6 +28,7 @@ import com.streamsets.pipeline.stage.HiveMetadataProcessorBuilder;
 import com.streamsets.pipeline.stage.HiveMetastoreTargetBuilder;
 import com.streamsets.pipeline.stage.destination.hive.HiveMetastoreTarget;
 import com.streamsets.pipeline.stage.processor.hive.HiveMetadataProcessor;
+import com.streamsets.pipeline.stage.processor.hive.PartitionConfig;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Before;
 import org.junit.Test;
@@ -61,7 +62,7 @@ public class LocationIT extends BaseHiveMetadataPropagationIT {
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
       .database("default")
       .table("tbl")
-      .partitions(Collections.emptyList())
+      .partitions(Collections.<PartitionConfig>emptyList())
       .build();
 
     processRecordsAndAssertData(processor,"default.tbl");
@@ -75,7 +76,7 @@ public class LocationIT extends BaseHiveMetadataPropagationIT {
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
       .database("custom")
       .table("tbl")
-      .partitions(Collections.emptyList())
+      .partitions(Collections.<PartitionConfig>emptyList())
       .build();
 
     processRecordsAndAssertData(processor,"custom.tbl");
@@ -89,7 +90,7 @@ public class LocationIT extends BaseHiveMetadataPropagationIT {
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
       .database("custom")
       .table("tbl")
-      .partitions(Collections.emptyList())
+      .partitions(Collections.<PartitionConfig>emptyList())
       .build();
 
     processRecordsAndAssertData(processor,"custom.tbl");
@@ -105,7 +106,7 @@ public class LocationIT extends BaseHiveMetadataPropagationIT {
       .table("tbl")
       .external(true)
       .tablePathTemplate("/user/hive/tbl")
-      .partitions(Collections.emptyList())
+        .partitions(Collections.<PartitionConfig>emptyList())
       .build();
 
     processRecordsAndAssertData(processor,"custom.tbl");
@@ -120,7 +121,7 @@ public class LocationIT extends BaseHiveMetadataPropagationIT {
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
       .database("custom")
       .table("tbl")
-      .partitions(Collections.emptyList())
+      .partitions(Collections.<PartitionConfig>emptyList())
       .build();
 
     processRecordsAndAssertData(processor,"custom.tbl");

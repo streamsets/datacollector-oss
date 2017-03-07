@@ -477,13 +477,14 @@ public final class HiveQueryExecutor {
    */
   public String executeDescribeDatabase(String dbName) throws StageException {
     String sql = buildDescribeDatabase(dbName);
-
-    return executeQuery(sql, rs -> {
-      if(!rs.next()) {
-        throw new HiveStageCheckedException(Errors.HIVE_35, "Database doesn't exists.");
+    return executeQuery(sql, new WithResultSet<String>() {
+      @Override
+      public String run(ResultSet rs) throws SQLException, StageException {
+        if(!rs.next()) {
+          throw new HiveStageCheckedException(Errors.HIVE_35, "Database doesn't exists.");
+        }
+        return HiveMetastoreUtil.stripHdfsHostAndPort(rs.getString(RESULT_SET_LOCATION));
       }
-
-      return HiveMetastoreUtil.stripHdfsHostAndPort(rs.getString(RESULT_SET_LOCATION));
     });
   }
 

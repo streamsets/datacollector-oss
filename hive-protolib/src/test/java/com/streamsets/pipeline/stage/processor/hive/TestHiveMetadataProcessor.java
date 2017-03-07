@@ -209,8 +209,12 @@ public class TestHiveMetadataProcessor {
     });
 
     PowerMockito.replace(MemberMatcher.method(HiveQueryExecutor.class, "executeDescribeDatabase"))
-      .with((proxy, method, args) -> "/user/hive/warehouse/" + args[0].toString() + ".db/");
-
+        .with(new InvocationHandler() {
+          @Override
+          public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            return "/user/hive/warehouse/" + args[0].toString() + ".db/";
+          }
+        });
   }
 
   /**
@@ -561,10 +565,10 @@ public class TestHiveMetadataProcessor {
 
     // Invalid precision evaluation
     processor = new HiveMetadataProcessorBuilder()
-      .decimalConfig(
-        "${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.precision'))}",
-        "2")
-      .build();
+        .decimalConfig(
+            "${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.precision'))}",
+            "2")
+        .build();
     runner = getProcessRunner(processor);
     runner.runInit();
     runner.runProcess(ImmutableList.of(record));
@@ -576,10 +580,10 @@ public class TestHiveMetadataProcessor {
 
     // Invalid scale evaluation
     processor = new HiveMetadataProcessorBuilder()
-      .decimalConfig(
-        "2",
-        "${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.scale'))}")
-      .build();
+        .decimalConfig(
+            "2",
+            "${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.scale'))}")
+        .build();
     runner = getProcessRunner(processor);
     runner.runInit();
     runner.runProcess(ImmutableList.of(record));
