@@ -44,7 +44,7 @@ public class ReferentialConstraintOrderingIT extends BaseTableJdbcSourceIT {
   //                  -- ORDER_TBL <--
   //                 |                |
   //                \|/               |
-  //                USER_TABLE            ITEMS
+  //                USER_TABLE       ITEMS
   //                                  |
   //                                 \|/
   //                                PRODUCT
@@ -260,6 +260,7 @@ public class ReferentialConstraintOrderingIT extends BaseTableJdbcSourceIT {
 
     TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
         .tableConfigBeans(ImmutableList.of(tableConfigBean))
+        .batchTableStrategy(BatchTableStrategy.SWITCH_TABLES)
         .tableOrderStrategy(TableOrderStrategy.REFERENTIAL_CONSTRAINTS)
         .build();
 

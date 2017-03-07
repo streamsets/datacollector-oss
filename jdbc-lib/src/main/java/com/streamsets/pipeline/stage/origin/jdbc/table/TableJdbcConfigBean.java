@@ -22,7 +22,6 @@ package com.streamsets.pipeline.stage.origin.jdbc.table;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.PushSource;
-import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.TimeZoneChooserValues;
@@ -69,6 +68,22 @@ public class TableJdbcConfigBean {
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "-1",
+      label = "Batches from Result Set",
+      description = "Determines the number of batches that can be generated from the fetched " +
+          "result set after which result set is closed. Leave -1 to keep the result set open as long as possible",
+      min = -1,
+      max = Integer.MAX_VALUE,
+      displayPosition = 170,
+      group = "JDBC",
+      dependsOn = "batchTableStrategy",
+      triggeredByValue = "SWITCH_TABLES"
+  )
+  public int numberOfBatchesFromRs;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "-1",
       label = "Result Set Cache Size",
       description = "Determines how many open statements/result sets can be cached." +
           " Leave -1 to Opt Out and have one statement open per table.",
@@ -85,7 +100,8 @@ public class TableJdbcConfigBean {
       type = ConfigDef.Type.MODEL,
       defaultValue = "NONE",
       label = "Table Order Strategy",
-      description = "Determines the strategy for table ordering",
+      description = "Determines the strategy for initial table ordering." +
+          "In case of Switch table batch strategy, this is a hint for initial order",
       displayPosition = 190,
       group = "ADVANCED"
   )
@@ -114,12 +130,22 @@ public class TableJdbcConfigBean {
   )
   public int numberOfThreads;
 
-  private static final String TABLE_JDBC_CONFIG_BEAN_PREFIX = "tableJdbcConfigBean.";
+  public static final String TABLE_JDBC_CONFIG_BEAN_PREFIX = "tableJdbcConfigBean.";
   public static final String TABLE_CONFIG = TABLE_JDBC_CONFIG_BEAN_PREFIX + "tableConfigs";
+  public static final String BATCHES_FROM_THE_RESULT_SET = "numberOfBatchesFromRs";
 
   public List<Stage.ConfigIssue> validateConfigs(PushSource.Context context, List<Stage.ConfigIssue> issues) {
     if (tableConfigs.isEmpty()) {
       issues.add(context.createConfigIssue(Groups.TABLE.name(), TABLE_CONFIG, JdbcErrors.JDBC_66));
+    }
+    if (batchTableStrategy == BatchTableStrategy.SWITCH_TABLES && numberOfBatchesFromRs == 0) {
+      issues.add(
+          context.createConfigIssue(
+              Groups.JDBC.name(),
+              TABLE_JDBC_CONFIG_BEAN_PREFIX +"numberOfBatchesFromRs",
+              JdbcErrors.JDBC_76
+          )
+      );
     }
     return issues;
   }

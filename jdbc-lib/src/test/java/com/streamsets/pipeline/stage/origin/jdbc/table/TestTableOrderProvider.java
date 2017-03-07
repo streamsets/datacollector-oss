@@ -41,16 +41,14 @@ import org.powermock.reflect.Whitebox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -167,7 +165,7 @@ public class TestTableOrderProvider {
         null,
         tableName,
         new LinkedHashMap<>(ImmutableMap.of("prim_key", Types.INTEGER)),
-        Collections.<String, String>emptyMap(),
+        Collections.emptyMap(),
         null
     );
   }
@@ -182,14 +180,8 @@ public class TestTableOrderProvider {
             String.class,
             String.class
         )
-    ).with(new InvocationHandler() {
-      @Override
-      public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        return new HashSet<>(referredTablesTestRelation.getReferredTableMap().get((String)args[2]));
-      }
-    });
+    ).with((proxy, method, args) -> new HashSet<>(referredTablesTestRelation.getReferredTableMap().get((String)args[2])));
     tableOrderProvider = new TableOrderProviderFactory(PowerMockito.mock(Connection.class), tableOrderStrategy).create();
-
     for (String table : referredTablesTestRelation.getTableListingOrder()) {
       tableContextsMap.put(TableContextUtil.getQualifiedTableName(null, table), getTableContext(table));
     }
@@ -216,11 +208,7 @@ public class TestTableOrderProvider {
       int totalNumberOfTables = Sets.union(referredTablesMap.keySet(), new HashSet<>(referredTablesMap.values())).size();
       Assert.assertEquals(totalNumberOfTables, tableContextMap.size());
 
-      List<String> actualOrder = new ArrayList<>();
-      for (int i =0; i < totalNumberOfTables; i++) {
-        TableContext nextTable = tableOrderProvider.nextTable();
-        actualOrder.add(nextTable.getQualifiedName());
-      }
+      List<String> actualOrder = new LinkedList<>(tableOrderProvider.getOrderedTables());
 
       LOG.debug("Expected Order: {}", JOINER.join(expectedOrderOrNullIfError));
       LOG.debug("Actual Order: {}", JOINER.join(actualOrder));

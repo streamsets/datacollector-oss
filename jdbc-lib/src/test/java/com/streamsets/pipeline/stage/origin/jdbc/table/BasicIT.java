@@ -436,16 +436,13 @@ public class BasicIT extends BaseTableJdbcSourceIT {
     JdbcPushSourceTestCallback callback = new JdbcPushSourceTestCallback(runner, 1);
     Stage.Context context  = runner.getContext();
     try {
-      runner.runProduce(offsets, 1000, callback);
+      runner.runProduce(offsets, 10, callback);
       callback.waitForAllBatchesAndReset();
 
       Map<String, Object> gaugeMap =
-          (Map<String, Object>) context.getGauge(TableJdbcRunnable.TABLE_METRICS + "0").getValue();
+          context.getGauge(TableJdbcRunnable.TABLE_METRICS + "0").getValue();
 
-      Integer numberOfTables = (int)gaugeMap.get(TableJdbcRunnable.TABLE_COUNT);
-      Assert.assertEquals(2, numberOfTables.intValue());
       Assert.assertEquals(tableName, gaugeMap.get(TableJdbcRunnable.CURRENT_TABLE));
-
       offsets.clear();
       offsets.putAll(runner.getOffsets());
     } finally {

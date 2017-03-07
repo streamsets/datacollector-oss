@@ -72,7 +72,7 @@ public final class ReferentialTblOrderProvider extends TableOrderProvider.BaseTa
   }
 
   @Override
-  public Queue<String> calculateOrGetOrder() throws SQLException, ExecutionException, StageException {
+  public Queue<String> calculateOrder() throws SQLException, ExecutionException, StageException {
     if (!areAllEdgesConstructed) {
       orderedTables = new LinkedList<>();
       for (String qualifiedTableName : directedGraph.vertices()) {

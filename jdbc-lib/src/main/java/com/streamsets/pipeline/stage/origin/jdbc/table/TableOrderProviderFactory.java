@@ -28,6 +28,7 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.ExecutionException;
 
@@ -49,10 +50,10 @@ public final class TableOrderProviderFactory {
     switch (tableOrderStrategy) {
       case NONE:
         //Don't do any ordering, just add tables as per the incoming order.
-        return new DefaultTableOrderProvider(new LinkedHashSet<String>());
+        return new DefaultTableOrderProvider(new LinkedHashSet<>());
       case ALPHABETICAL:
         //Alphabetical sorting based on table qualified names.
-        return new DefaultTableOrderProvider(new TreeSet<String>());
+        return new DefaultTableOrderProvider(new TreeSet<>());
       case REFERENTIAL_CONSTRAINTS:
         return new ReferentialTblOrderProvider(connection);
       default:
@@ -71,7 +72,7 @@ public final class TableOrderProviderFactory {
     }
 
     @Override
-    public Queue<String> calculateOrGetOrder() throws SQLException, ExecutionException, StageException {
+    public Queue<String> calculateOrder() throws SQLException, ExecutionException, StageException {
       return new LinkedList<>(orderedTableContexts);
     }
 

@@ -26,6 +26,8 @@ import com.streamsets.pipeline.stage.origin.jdbc.table.TableReadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
+
 /**
  * Listens for cache invalidation and appropriately closes the result set and statement.
  */
@@ -35,10 +37,13 @@ public class JdbcTableReadContextInvalidationListener implements RemovalListener
 
   @Override
   public void onRemoval(RemovalNotification<TableContext, TableReadContext> tableReadContextRemovalNotification) {
-    TableContext tableContext = tableReadContextRemovalNotification.getKey();
-    LOG.debug("Closing statement and result set for : {}", tableContext.getQualifiedName());
-    TableReadContext readContext = tableReadContextRemovalNotification.getValue();
-    //Destroy and close statement/result set.
-    readContext.destroy();
+    Optional.ofNullable(tableReadContextRemovalNotification.getKey()).ifPresent(tableContext -> {
+      LOG.debug("Closing statement and result set for : {}", tableContext.getQualifiedName());
+      Optional.ofNullable(tableReadContextRemovalNotification.getValue()).ifPresent(readContext -> {
+        readContext.setNumberOfBatches(0);
+        //Destroy and close statement/result set.
+        readContext.destroy();
+      });
+    });
   }
 }

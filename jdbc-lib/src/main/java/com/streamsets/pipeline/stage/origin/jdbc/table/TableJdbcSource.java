@@ -42,7 +42,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +52,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
 public class TableJdbcSource extends BasePushSource {
@@ -76,8 +74,8 @@ public class TableJdbcSource extends BasePushSource {
   private HikariDataSource hikariDataSource;
   private ConnectionManager connectionManager;
   private Map<String, String> offsets;
-  private Map<String, TableContext> allTableContexts;
   private ExecutorService executorService;
+  private MultithreadedTableProvider tableOrderProvider;
   private int numberOfThreads;
 
   public TableJdbcSource(
@@ -111,7 +109,7 @@ public class TableJdbcSource extends BasePushSource {
 
         connectionManager = new ConnectionManager(hikariDataSource);
 
-        allTableContexts = new LinkedHashMap<>();
+        Map<String, TableContext> allTableContexts = new LinkedHashMap<>();
 
         for (TableConfigBean tableConfigBean : tableJdbcConfigBean.tableConfigs) {
           //No duplicates even though a table matches multiple configurations, we will add it only once.
@@ -134,22 +132,41 @@ public class TableJdbcSource extends BasePushSource {
                   JdbcErrors.JDBC_66
               )
           );
+        } else {
+          numberOfThreads = tableJdbcConfigBean.numberOfThreads;
+          if (tableJdbcConfigBean.numberOfThreads > allTableContexts.size()) {
+            numberOfThreads = Math.min(tableJdbcConfigBean.numberOfThreads, allTableContexts.size());
+            LOG.info(
+                "Number of threads configured '{}'is more than number of tables '{}'. Will be Using '{}' number of threads.",
+                tableJdbcConfigBean.numberOfThreads,
+                allTableContexts.size(),
+                numberOfThreads
+            );
+          }
+
+          TableOrderProvider tableOrderProvider = new TableOrderProviderFactory(
+              connectionManager.getConnection(),
+              tableJdbcConfigBean.tableOrderStrategy
+          ).create();
+
+          try {
+            tableOrderProvider.initialize(allTableContexts);
+            int maxQueueSize =
+                (tableJdbcConfigBean.batchTableStrategy == BatchTableStrategy.SWITCH_TABLES) ?
+                    allTableContexts.size() / numberOfThreads
+                    : 1;
+            this.tableOrderProvider = new MultithreadedTableProvider(
+                allTableContexts,
+                tableOrderProvider.getOrderedTables(),
+                maxQueueSize
+            );
+          } catch (ExecutionException e) {
+            LOG.debug("Error during Table Order Provider Init", e);
+            throw new StageException(JdbcErrors.JDBC_67, e);
+          }
+          //Accessed by all runner threads
+          offsets = new ConcurrentHashMap<>();
         }
-
-        numberOfThreads = tableJdbcConfigBean.numberOfThreads;
-
-        if (tableJdbcConfigBean.numberOfThreads > allTableContexts.size()) {
-          numberOfThreads = Math.min(tableJdbcConfigBean.numberOfThreads, allTableContexts.size());
-          LOG.info(
-              "Number of threads configured '{}'is more than number of tables '{}'. Will be Using '{}' number of threads.",
-              tableJdbcConfigBean.numberOfThreads,
-              allTableContexts.size(),
-              numberOfThreads
-          );
-        }
-
-        //Accessed by all runner threads
-        offsets = new ConcurrentHashMap<>();
       } catch (SQLException e) {
         logError(e);
         issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, e.toString()));
@@ -212,10 +229,7 @@ public class TableJdbcSource extends BasePushSource {
 
       List<Future> futures = new ArrayList<>();
 
-      Map<Integer, Map<String, TableContext>> partitionedTableContexts = partitionTableContextForRunners();
-
       IntStream.range(0, numberOfThreads).forEach(threadNumber -> {
-        Map<String, TableContext> tableContextMapForThread = partitionedTableContexts.get(threadNumber);
         TableJdbcRunnable runnable = new TableJdbcRunnable.Builder()
             .context(getContext())
             .threadNumber(threadNumber)
@@ -223,7 +237,7 @@ public class TableJdbcSource extends BasePushSource {
             .batchSize(batchSize)
             .connectionManager(connectionManager)
             .offsets(offsets)
-            .tableContexts(tableContextMapForThread)
+            .tableProvider(tableOrderProvider)
             .commonSourceConfigBean(commonSourceConfigBean)
             .tableJdbcConfigBean(tableJdbcConfigBean)
             .build();
@@ -267,22 +281,6 @@ public class TableJdbcSource extends BasePushSource {
     JdbcUtil.closeQuietly(hikariDataSource);
   }
 
-  //TODO: Initial implementation for partition - https://issues.streamsets.com/browse/SDC-5247 for more robust
-  private Map<Integer, Map<String, TableContext>> partitionTableContextForRunners() {
-    Map<Integer, Map<String, TableContext>> partitionedTableContexts = new HashMap<>();
-    List<TableContext> tableContexts = new ArrayList<>(allTableContexts.values());
-
-    AtomicInteger counter = new AtomicInteger(0);
-    tableContexts.forEach(tableContext -> {
-      int threadNum = (counter.getAndIncrement()) % numberOfThreads;
-      Map<String, TableContext> tableContextMapForCurrentThread =
-          partitionedTableContexts.computeIfAbsent(threadNum, k -> new LinkedHashMap<>());
-      tableContextMapForCurrentThread.put(tableContext.getQualifiedName(), tableContext);
-    });
-
-    return partitionedTableContexts;
-  }
-
   private void shutdownExecutorIfNeeded() {
     Optional.ofNullable(executorService).ifPresent(executor -> {
       if (!executor.isTerminated()) {
@@ -301,9 +299,7 @@ public class TableJdbcSource extends BasePushSource {
           offsets.putAll(OffsetQueryUtil.deserializeOffsetMap(innerTableOffsetsAsString));
         }
 
-        offsets.forEach((tableName, tableOffset) -> {
-          getContext().commitOffset(tableName, tableOffset);
-        });
+        offsets.forEach((tableName, tableOffset) -> getContext().commitOffset(tableName, tableOffset));
 
         //Remove Poll Source Offset key from the offset.
         //Do this at last so as not to lose the offsets if there is failure in the middle

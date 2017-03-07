@@ -27,12 +27,10 @@ import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ToErrorContext;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
-import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
@@ -50,8 +48,8 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public final class TableJdbcRunnable implements Runnable {
   private static final Logger LOG = LoggerFactory.getLogger(TableJdbcRunnable.class);
@@ -59,13 +57,14 @@ public final class TableJdbcRunnable implements Runnable {
 
   static final String THREAD_NAME = "Thread Name";
   static final String CURRENT_TABLE = "Current Table";
-  static final String TABLE_COUNT = "Table Count";
+  static final String TABLES_OWNED_COUNT = "Tables Owned";
   static final String TABLE_METRICS = "Table Metrics for Thread - ";
-  static final String TABLE_JDBC_THREAD_PREFIX = "Table Jdbc Runner -";
+  static final String TABLE_JDBC_THREAD_PREFIX = "Table Jdbc Runner - ";
 
   private final PushSource.Context context;
   private final Map<String, String> offsets;
   private final LoadingCache<TableContext, TableReadContext> tableReadContextCache;
+  private final MultithreadedTableProvider tableProvider;
   private final int threadNumber;
   private final int batchSize;
   private final TableJdbcConfigBean tableJdbcConfigBean;
@@ -73,11 +72,9 @@ public final class TableJdbcRunnable implements Runnable {
   private final Calendar calendar;
   private final TableJdbcELEvalContext tableJdbcELEvalContext;
   private final ConnectionManager connectionManager;
-  private final Map<String, TableContext> tableContexts;
   private final ErrorRecordHandler errorRecordHandler;
   private final Map<String, Object> gaugeMap;
 
-  private TableOrderProvider tableOrderProvider;
   private TableContext tableContext;
   private long lastQueryIntervalTime;
 
@@ -86,8 +83,8 @@ public final class TableJdbcRunnable implements Runnable {
       int threadNumber,
       int batchSize,
       Calendar calendar,
-      Map<String, TableContext> tableContexts,
       Map<String, String> offsets,
+      MultithreadedTableProvider tableProvider,
       ConnectionManager connectionManager,
       TableJdbcConfigBean tableJdbcConfigBean,
       CommonSourceConfigBean commonSourceConfigBean
@@ -98,8 +95,8 @@ public final class TableJdbcRunnable implements Runnable {
     this.batchSize = batchSize;
     this.calendar = calendar;
     this.tableJdbcELEvalContext = new TableJdbcELEvalContext(context, context.createELVars());
-    this.tableContexts = tableContexts;
     this.offsets = offsets;
+    this.tableProvider = tableProvider;
     this.tableJdbcConfigBean = tableJdbcConfigBean;
     this.commonSourceConfigBean = commonSourceConfigBean;
     this.connectionManager = connectionManager;
@@ -111,32 +108,17 @@ public final class TableJdbcRunnable implements Runnable {
     this.gaugeMap = context.createGauge(gaugeName).getValue();
   }
 
-  public LoadingCache<TableContext, TableReadContext> getTableReadContextCache() {
+  LoadingCache<TableContext, TableReadContext> getTableReadContextCache() {
     return tableReadContextCache;
   }
 
   @Override
   public void run() {
-    try {
-      performPreRun();
-      while (!context.isStopped()) {
-        generateBatchAndCommitOffset(context.startBatch());
-      }
-    } catch (SQLException | ExecutionException | StageException e) {
-      handleStageError(JdbcErrors.JDBC_67, e);
-    }
-  }
-
-  /**
-   * Init the gauge, init table order provider.
-   */
-  private void performPreRun() throws SQLException, ExecutionException, StageException {
     Thread.currentThread().setName(TABLE_JDBC_THREAD_PREFIX + threadNumber);
-    TableOrderProviderFactory tableOrderProviderFactory =
-        new TableOrderProviderFactory(connectionManager.getConnection(), tableJdbcConfigBean.tableOrderStrategy);
-    this.tableOrderProvider = tableOrderProviderFactory.create();
-    tableOrderProvider.initialize(tableContexts);
-    initGaugeIfNeeded(context);
+    initGaugeIfNeeded();
+    while (!context.isStopped()) {
+      generateBatchAndCommitOffset(context.startBatch());
+    }
   }
 
   /**
@@ -168,10 +150,15 @@ public final class TableJdbcRunnable implements Runnable {
   /**
    * Initialize the gauge with needed information
    */
-  private void initGaugeIfNeeded(Stage.Context context) {
+  private void initGaugeIfNeeded() {
     gaugeMap.put(THREAD_NAME, Thread.currentThread().getName());
-    gaugeMap.put(TABLE_COUNT, tableContexts.size());
+    gaugeMap.put(TABLES_OWNED_COUNT, tableReadContextCache.size());
     gaugeMap.put(CURRENT_TABLE, "");
+  }
+
+  private void updateGauge() {
+    gaugeMap.put(CURRENT_TABLE, tableContext.getQualifiedName());
+    gaugeMap.put(TABLES_OWNED_COUNT, tableReadContextCache.size());
   }
 
   /**
@@ -187,8 +174,7 @@ public final class TableJdbcRunnable implements Runnable {
         ResultSet rs = tableReadContext.getResultSet();
         boolean evictTableReadContext = false;
         try {
-          gaugeMap.put(CURRENT_TABLE, tableContext.getQualifiedName());
-          // Create new batch
+          updateGauge();
           while (recordCount < batchSize) {
             if (rs.isClosed() || !rs.next()) {
               evictTableReadContext = true;
@@ -198,34 +184,64 @@ public final class TableJdbcRunnable implements Runnable {
             recordCount++;
           }
         } finally {
-          handlePostBatchAsNeeded(evictTableReadContext, recordCount, batchContext);
+          handlePostBatchAsNeeded(new AtomicBoolean(evictTableReadContext), recordCount, batchContext);
         }
       }
-    } catch (SQLException | ExecutionException | StageException e) {
+    } catch (SQLException | ExecutionException | StageException | InterruptedException e) {
+      //invalidate if the connection is closed
+      tableReadContextCache.invalidateAll();
       connectionManager.closeConnection();
       if (e instanceof SQLException) {
         handleStageError(JdbcErrors.JDBC_34, e);
+      } else if (e instanceof InterruptedException) {
+        LOG.info("Thread {} interrupted", gaugeMap.get(THREAD_NAME));
       } else {
         handleStageError(JdbcErrors.JDBC_67, e);
       }
     }
   }
 
+  private void calculateEvictTableFlag(AtomicBoolean evictTableReadContext, TableReadContext tableReadContext) {
+    boolean shouldEvict = evictTableReadContext.get();
+    boolean isNumberOfBatchesReached = (
+        tableJdbcConfigBean.batchTableStrategy == BatchTableStrategy.SWITCH_TABLES
+            && tableJdbcConfigBean.numberOfBatchesFromRs > 0
+            &&  tableReadContext.getNumberOfBatches() >= tableJdbcConfigBean.numberOfBatchesFromRs
+    );
+    evictTableReadContext.set(shouldEvict || isNumberOfBatchesReached);
+  }
+
   /**
    * After a batch is generate perform needed operations, generate and commit batch
    * Evict entries from {@link #tableReadContextCache}, reset {@link #tableContext}
    */
-  private void handlePostBatchAsNeeded(boolean evictTableReadContext, int recordCount, BatchContext batchContext) {
+  private void handlePostBatchAsNeeded(AtomicBoolean shouldEvict, int recordCount, BatchContext batchContext) {
     //Only process batch if there are records
     if (recordCount > 0) {
+      TableReadContext tableReadContext = tableReadContextCache.getIfPresent(tableContext);
+      Optional.ofNullable(tableReadContext)
+          .ifPresent(readContext -> {
+            readContext.setNumberOfBatches(readContext.getNumberOfBatches() + 1);
+            LOG.debug(
+                "Table {} read {} number of batches from the fetched result set",
+                tableContext.getQualifiedName(),
+                readContext.getNumberOfBatches()
+            );
+            calculateEvictTableFlag(shouldEvict, tableReadContext);
+          });
+
       //Process And Commit offsets
       context.processBatch(batchContext, tableContext.getQualifiedName(), offsets.get(tableContext.getQualifiedName()));
     }
     //Make sure we close the result set only when there are no more rows in the result set
-    if (evictTableReadContext) {
+    if (shouldEvict.get()) {
       //Invalidate so as to fetch a new result set
       //We close the result set/statement in Removal Listener
       tableReadContextCache.invalidate(tableContext);
+
+      //evict from owned tables
+      tableProvider.releaseOwnedTable(tableContext);
+
       tableContext = null;
     } else if (tableJdbcConfigBean.batchTableStrategy == BatchTableStrategy.SWITCH_TABLES) {
       tableContext = null;
@@ -246,12 +262,12 @@ public final class TableJdbcRunnable implements Runnable {
    * NOTE: This sets the table context to null if there is any mismatch
    * We will simply proceed to next table if that is the case
    */
-  private void initTableContextIfNeeded() throws ExecutionException, SQLException, StageException {
+  private void initTableContextIfNeeded() throws ExecutionException, SQLException, StageException, InterruptedException {
     if (tableContext == null) {
-      tableContext = tableOrderProvider.nextTable();
+      tableContext = tableProvider.nextTable();
       //If the offset already does not contain the table (meaning it is the first start or a new table)
       //We can skip validation
-      if (offsets.containsKey(tableContext.getQualifiedName())) {
+      if (tableContext != null && offsets.containsKey(tableContext.getQualifiedName())) {
         try {
           OffsetQueryUtil.validateStoredAndSpecifiedOffset(tableContext, offsets.get(tableContext.getQualifiedName()));
         } catch (StageException e) {
@@ -266,17 +282,17 @@ public final class TableJdbcRunnable implements Runnable {
   /**
    * Wait If needed before a new query is issued. (Does not wait if the result set is already cached)
    */
-  private void waitIfNeeded() {
+  private void waitIfNeeded() throws InterruptedException {
     long delayTime =
         (commonSourceConfigBean.queryInterval * 1000) - (System.currentTimeMillis() - lastQueryIntervalTime);
-    ThreadUtil.sleep((lastQueryIntervalTime < 0 || delayTime < 0) ? 0 : delayTime);
+    Thread.sleep((lastQueryIntervalTime < 0 || delayTime < 0) ? 0 : delayTime);
   }
 
 
   /**
    * Get Or Load {@link TableReadContext} for {@link #tableContext}
    */
-  private TableReadContext getOrLoadTableReadContext() throws ExecutionException {
+  private TableReadContext getOrLoadTableReadContext() throws ExecutionException, InterruptedException {
     initTableEvalContextForProduce(tableContext);
 
     //Check and then if we want to wait for query being issued do that
@@ -351,9 +367,9 @@ public final class TableJdbcRunnable implements Runnable {
     private Calendar calendar;
     private TableJdbcConfigBean tableJdbcConfigBean;
     private CommonSourceConfigBean commonSourceConfigBean;
-    private Map<String, TableContext> tableContexts;
     private Map<String, String> offsets;
     private ConnectionManager connectionManager;
+    private MultithreadedTableProvider tableProvider;
 
     public Builder() {
     }
@@ -378,13 +394,13 @@ public final class TableJdbcRunnable implements Runnable {
       return this;
     }
 
-    Builder tableContexts(Map<String, TableContext> tableContexts) {
-      this.tableContexts = tableContexts;
+    Builder offsets(Map<String, String> offsets) {
+      this.offsets = offsets;
       return this;
     }
 
-    Builder offsets(Map<String, String> offsets) {
-      this.offsets = offsets;
+    Builder tableProvider(MultithreadedTableProvider tableProvider) {
+      this.tableProvider = tableProvider;
       return this;
     }
 
@@ -409,8 +425,8 @@ public final class TableJdbcRunnable implements Runnable {
           threadNumber,
           batchSize,
           calendar,
-          tableContexts,
           offsets,
+          tableProvider,
           connectionManager,
           tableJdbcConfigBean,
           commonSourceConfigBean

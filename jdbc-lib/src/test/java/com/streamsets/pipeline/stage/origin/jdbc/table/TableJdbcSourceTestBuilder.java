@@ -47,6 +47,7 @@ public class TableJdbcSourceTestBuilder {
   private int resultSetCacheSize;
   private int numberOfThreads;
   private int maximumPoolSize;
+  private int numberOfBatchesFromResultset;
 
 
   public TableJdbcSourceTestBuilder(String jdbcUrl, boolean useCredentials, String username, String password) {
@@ -69,6 +70,7 @@ public class TableJdbcSourceTestBuilder {
     this.resultSetCacheSize = -1;
     this.numberOfThreads = 1;
     this.maximumPoolSize = -1;
+    this.numberOfBatchesFromResultset = -1;
   }
 
   public TableJdbcSourceTestBuilder() {
@@ -155,6 +157,11 @@ public class TableJdbcSourceTestBuilder {
     return this;
   }
 
+  public TableJdbcSourceTestBuilder numberOfBatchesFromResultset(int numberOfBatchesFromResultset) {
+    this.numberOfBatchesFromResultset = numberOfBatchesFromResultset;
+    return this;
+  }
+
   public TableJdbcSourceTestBuilder numberOfThreads(int numberOfThreads) {
     this.numberOfThreads = numberOfThreads;
     return this;
@@ -186,6 +193,7 @@ public class TableJdbcSourceTestBuilder {
     tableJdbcConfigBean.batchTableStrategy = batchTableStrategy;
     tableJdbcConfigBean.resultCacheSize = resultSetCacheSize;
     tableJdbcConfigBean.numberOfThreads = numberOfThreads;
+    tableJdbcConfigBean.numberOfBatchesFromRs = numberOfBatchesFromResultset;
 
     return new TableJdbcSource(
         hikariPoolConfigBean,

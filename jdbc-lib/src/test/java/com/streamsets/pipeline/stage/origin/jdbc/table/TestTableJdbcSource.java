@@ -84,4 +84,20 @@ public class TestTableJdbcSource {
         .build();
     testWrongConfiguration(tableJdbcSource, true);
   }
+
+  @Test
+  public void testWrongBatchesFromResultSetConfig() throws Exception {
+    TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder( "jdbc:db://localhost:1000", true, USER_NAME, PASSWORD)
+        .tableConfigBeans(
+            ImmutableList.of(
+                new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+                    .tablePattern("testTable")
+                    .build()
+            )
+        )
+        .numberOfBatchesFromResultset(0)
+        .batchTableStrategy(BatchTableStrategy.SWITCH_TABLES)
+        .build();
+    testWrongConfiguration(tableJdbcSource, true);
+  }
 }

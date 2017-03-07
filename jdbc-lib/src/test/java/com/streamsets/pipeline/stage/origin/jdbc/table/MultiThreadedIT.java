@@ -185,6 +185,7 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
         pushSourceRunner.waitOnProduce();
       } catch (Exception e) {
         Throwables.propagate(e);
+        Assert.fail(e.getMessage());
       }
       return ImmutableMap.copyOf(tableToRecords);
     }
@@ -209,20 +210,7 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
     }
   }
 
-
-  @Test
-  public void testMultithreadedRead() throws Exception {
-    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
-        .tablePattern("%")
-        .schema(database)
-        .build();
-
-    TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
-        .tableConfigBeans(ImmutableList.of(tableConfigBean))
-        // 4 threads
-        .numberOfThreads(NUMBER_OF_THREADS)
-        .build();
-
+  public void testMultiThreadedRead(TableJdbcSource tableJdbcSource) throws Exception {
     PushSourceRunner runner = new PushSourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
         .addOutputLane("a").build();
     runner.runInit();
@@ -240,5 +228,56 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
     } finally {
       runner.runDestroy();
     }
+  }
+
+  @Test
+  public void testSwitchTables() throws Exception {
+    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+        .tablePattern("%")
+        .schema(database)
+        .build();
+
+    TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
+        .tableConfigBeans(ImmutableList.of(tableConfigBean))
+        .batchTableStrategy(BatchTableStrategy.SWITCH_TABLES)
+        // 4 threads
+        .numberOfThreads(NUMBER_OF_THREADS)
+        .build();
+    testMultiThreadedRead(tableJdbcSource);
+  }
+
+  @Test
+  public void testProcessAllRows() throws Exception {
+    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+        .tablePattern("%")
+        .schema(database)
+        .build();
+
+    TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
+        .tableConfigBeans(ImmutableList.of(tableConfigBean))
+        .batchTableStrategy(BatchTableStrategy.PROCESS_ALL_AVAILABLE_ROWS_FROM_TABLE)
+        // 4 threads
+        .numberOfThreads(NUMBER_OF_THREADS)
+        .build();
+
+    testMultiThreadedRead(tableJdbcSource);
+  }
+
+  @Test
+  public void testSwitchTablesWithNumberOfBatches() throws Exception {
+    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+        .tablePattern("%")
+        .schema(database)
+        .build();
+
+    TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
+        .tableConfigBeans(ImmutableList.of(tableConfigBean))
+        // 4 threads
+        .numberOfThreads(NUMBER_OF_THREADS)
+        .batchTableStrategy(BatchTableStrategy.SWITCH_TABLES)
+        .numberOfBatchesFromResultset(2)
+        .build();
+
+    testMultiThreadedRead(tableJdbcSource);
   }
 }

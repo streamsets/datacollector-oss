@@ -41,6 +41,7 @@ public final class TableReadContext {
   private final PreparedStatement ps;
   private final String query;
   private final ResultSet rs;
+  private int numberOfBatches;
 
   public TableReadContext(
       Connection connection,
@@ -55,6 +56,7 @@ public final class TableReadContext {
     LOGGER.info("Executing Query :{}", query);
     LOGGER.debug("Parameter Types And Values {}", paramValuesToSet);
     rs = ps.executeQuery();
+    numberOfBatches = 0;
   }
 
   private void setPreparedStParameters(List<Pair<Integer, String>> paramValuesToSet) throws SQLException, StageException {
@@ -108,6 +110,14 @@ public final class TableReadContext {
 
   public String getQuery() {
     return query;
+  }
+
+  public int getNumberOfBatches() {
+    return numberOfBatches;
+  }
+
+  public void setNumberOfBatches(int numberOfBatches) {
+    this.numberOfBatches = numberOfBatches;
   }
 
   public void destroy() {
