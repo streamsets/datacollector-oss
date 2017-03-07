@@ -134,13 +134,18 @@ public final class OffsetQueryUtil {
         )
     );
 
-    Map<String, String> offset = tableContext.isOffsetOverriden()?
+    Map<String, String> storedTableToOffset = getColumnsToOffsetMapFromOffsetFormat(lastOffset);
+
+    //Determines whether an initial offset is specified in the config and there is no stored offset.
+    boolean isOffsetOverriden = tableContext.isOffsetOverriden() && storedTableToOffset.isEmpty();
+
+    Map<String, String> offset = isOffsetOverriden?
         //Use the offset in the configuration
         tableContext.getOffsetColumnToStartOffset() :
         // if offset is available
         // get the stored offset (which is of the form partitionName=value) and strip off 'offsetColumns=' prefix
         // else null
-        getColumnsToOffsetMapFromOffsetFormat(lastOffset);
+        storedTableToOffset;
 
     List<String> finalAndConditions = new ArrayList<>();
     //Apply last offset conditions
