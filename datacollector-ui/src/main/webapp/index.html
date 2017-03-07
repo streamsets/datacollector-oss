@@ -120,7 +120,7 @@
           </a>
         </li>
 
-        <li ng-if="!common.isSlaveNode">
+        <li ng-if="!common.isSlaveNode && isAuthorized([userRoles.admin])">
           <a href="/collector/packageManager"
              tooltip-placement="bottom"
              tooltip="{{'global.menu.packageManager' | translate}}"
@@ -226,7 +226,7 @@
               </a>
             </li>
 
-            <li ng-if="common.userName && isAuthorized([userRoles.admin])">
+            <li ng-if="common.userName && isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])">
               <a href="collector/logs">
                 <i class="fa fa-tasks"></i>
                 <span translate="global.menu.admin.logs">Logs</span>

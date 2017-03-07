@@ -25,24 +25,26 @@
 angular
   .module('commonUI.logs')
   .config(['$routeProvider', function ($routeProvider) {
-    $routeProvider.when('/collector/logs',
-      {
-        templateUrl: 'common/administration/logs/logs.tpl.html',
-        controller: 'LogsController',
-        resolve: {
-          myVar: function(authService) {
-            return authService.init();
-          }
-        },
-        data: {
-          authorizedRoles: ['admin']
+    var routeParamValues = {
+      templateUrl: 'common/administration/logs/logs.tpl.html',
+      controller: 'LogsController',
+      resolve: {
+        myVar: function(authService) {
+          return authService.init();
         }
+      },
+      data: {
+        authorizedRoles: ['admin', 'creator', 'manager']
       }
-    );
+    };
+    $routeProvider.when('/collector/logs/:pipelineTitle/:pipelineName', routeParamValues)
+      .when('/collector/logs', routeParamValues);
   }])
   .controller('LogsController', function (
-    $rootScope, $scope, $interval, api, configuration, Analytics, $timeout, $modal
+    $rootScope, $scope, $routeParams, $interval, api, configuration, Analytics, $timeout, $modal
   ) {
+    var pipelineNameParam = $routeParams.pipelineName;
+    var pipelineTitleParam = $routeParams.pipelineTitle;
     var webSocketLogURL = $rootScope.common.webSocketBaseURL + 'rest/v1/webSocket?type=log';
     var logWebSocket;
     var logWebSocketMessages = [];
@@ -63,7 +65,8 @@ angular
       fetchingLog: false,
       extraMessage: undefined,
       filterSeverity: undefined,
-      filterPipeline: undefined,
+      filterPipeline: pipelineNameParam,
+      filterPipelineLabel: pipelineTitleParam + '/' + pipelineNameParam,
       pipelines: [],
       pauseLogAutoFetch: $rootScope.$storage.pauseLogAutoFetch,
 
@@ -91,22 +94,19 @@ angular
       severityFilterChanged: function(severity) {
         if ($scope.filterSeverity != severity) {
           $scope.filterSeverity = severity;
-          $scope.logEndingOffset = -1;
-          $scope.extraMessage = '';
-          $scope.logMessages = [];
-          lastMessageFiltered = false;
-          $scope.loadPreviousLog();
+          $scope.refreshLogs();
         }
       },
 
       pipelineFilterChanged: function(pipeline) {
-        if ($scope.filterPipeline != pipeline) {
-          $scope.filterPipeline = pipeline;
-          $scope.logEndingOffset = -1;
-          $scope.extraMessage = '';
-          $scope.logMessages = [];
-          lastMessageFiltered = false;
-          $scope.loadPreviousLog();
+        if (pipeline && $scope.filterPipeline != pipeline.name) {
+          $scope.filterPipeline = pipeline.name;
+          $scope.filterPipelineLabel = pipeline.title + '/' + pipeline.name;
+          $scope.refreshLogs();
+        } else if (pipeline == undefined && $scope.filterPipeline != undefined) {
+          $scope.filterPipeline = undefined;
+          $scope.filterPipelineLabel = 'All';
+          $scope.refreshLogs();
         }
       },
 
@@ -122,42 +122,71 @@ angular
       toggleAutoFetch: function () {
         $rootScope.$storage.pauseLogAutoFetch = $scope.pauseLogAutoFetch = !$scope.pauseLogAutoFetch;
         if ($scope.pauseLogAutoFetch) {
-          pauseLogWebSocket();
+          if (logWebSocket) {
+            logWebSocket.close();
+          }
         } else {
-          startLogWebSocket();
+          $scope.refreshLogs();
         }
+      },
+
+      refreshLogs: function () {
+        $scope.logEndingOffset = -1;
+        $scope.extraMessage = '';
+        $scope.logMessages = [];
+        lastMessageFiltered = false;
+        refreshLogContents();
       }
     });
 
-    var startLogWebSocket = function () {
+    var refreshLogContents = function () {
       if (logWebSocket) {
         logWebSocket.close();
       }
 
-      api.log.getCurrentLog(-1).then(function(res) {
-        //check if first message is extra line
-        if (res.data && res.data.length > 0 && !res.data[0].timeStamp && res.data[0].exception) {
-          $scope.extraMessage = res.data[0].exception;
-          res.data.shift();
+      if (!$rootScope.common.isUserAdmin && !$scope.filterPipeline) {
+        if ($scope.pipelines.length) {
+          $scope.filterPipeline = $scope.pipelines[0].name;
+          $scope.filterPipelineLabel = $scope.pipelines[0].title + '/' + $scope.pipelines[0].name;
+        } else {
+          // For non admins - they can access only pipeline filtered logs
+          $scope.logMessages = [];
+          return;
         }
-
-        $scope.logMessages = res.data;
-        $scope.logEndingOffset = +res.headers('X-SDC-LOG-PREVIOUS-OFFSET');
-
-        if (!$scope.pauseLogAutoFetch) {
-          logWebSocket = new WebSocket(webSocketLogURL);
-          logWebSocket.onmessage = function (evt) {
-            var received_msg = JSON.parse(evt.data);
-            logWebSocketMessages.push(received_msg);
-          };
-        }
-      });
-    };
-
-    var pauseLogWebSocket = function () {
-      if (logWebSocket) {
-        logWebSocket.close();
       }
+
+      $scope.fetchingLog = true;
+
+      api.log.getCurrentLog(-1, $scope.extraMessage, $scope.filterPipeline, $scope.filterSeverity).then(
+        function(res) {
+          //check if first message is extra line
+          if (res.data && res.data.length > 0 && !res.data[0].timeStamp && res.data[0].exception) {
+            $scope.extraMessage = res.data[0].exception;
+            res.data.shift();
+          }
+
+          $scope.logMessages = res.data;
+          $scope.logEndingOffset = +res.headers('X-SDC-LOG-PREVIOUS-OFFSET');
+          $scope.fetchingLog = false;
+
+          $timeout(function() {
+            var $panelBody = $('.logs-page > .panel-body');
+            $panelBody.scrollTop($panelBody[0].scrollHeight);
+          }, 500);
+
+          if (!$scope.pauseLogAutoFetch && $rootScope.common.isUserAdmin) {
+            logWebSocket = new WebSocket(webSocketLogURL);
+            logWebSocket.onmessage = function (evt) {
+              var received_msg = JSON.parse(evt.data);
+              logWebSocketMessages.push(received_msg);
+            };
+          }
+        },
+        function (res) {
+          $scope.fetchingLog = false;
+          $rootScope.common.errors = [res.data];
+        }
+      );
     };
 
     var intervalPromise = $interval(function() {
@@ -201,18 +230,21 @@ angular
 
     }, 2000);
 
-    api.log.getFilesList().then(
-      function(res) {
-        $scope.logFiles = res.data;
-      },
-      function (res) {
-        $rootScope.common.errors = [res.data];
-      }
-    );
+    if ($rootScope.common.isUserAdmin) {
+      api.log.getFilesList().then(
+        function(res) {
+          $scope.logFiles = res.data;
+        },
+        function (res) {
+          $rootScope.common.errors = [res.data];
+        }
+      );
+    }
 
     api.pipelineAgent.getPipelines(null, null, 0, 50, 'NAME', 'ASC', false).then(
       function (res) {
         $scope.pipelines = res.data;
+        refreshLogContents();
       },
       function (res) {
         $rootScope.common.errors = [res.data];
@@ -228,11 +260,4 @@ angular
         logWebSocket.close();
       }
     });
-
-    startLogWebSocket();
-
-    $timeout(function() {
-      var $panelBody = $('.logs-page > .panel-body');
-      $panelBody.scrollTop($panelBody[0].scrollHeight);
-    }, 1000);
   });

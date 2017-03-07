@@ -39,10 +39,11 @@ angular
         }
       });
   }])
-  .controller('PipelineHomeController', function ($scope, $rootScope, $routeParams, $timeout, api, configuration, _, $q,
-                                          $modal, $localStorage, pipelineService, pipelineConstant,
-                                          visibilityBroadcaster, $translate, contextHelpService, $location, authService,
-                                          userRoles, Analytics) {
+  .controller('PipelineHomeController', function (
+    $scope, $rootScope, $routeParams, $timeout, api, configuration, _, $q, $modal, $localStorage, pipelineService,
+    pipelineConstant, visibilityBroadcaster, $translate, contextHelpService, $location, authService, userRoles,
+    Analytics
+  ) {
     var routeParamPipelineName = $routeParams.pipelineName;
     var configTimeout;
     var configDirty = false;
