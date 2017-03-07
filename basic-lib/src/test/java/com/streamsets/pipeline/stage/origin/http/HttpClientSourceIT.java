@@ -44,6 +44,7 @@ import org.apache.commons.codec.Charsets;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.test.DeploymentContext;
@@ -210,6 +211,12 @@ public class HttpClientSourceIT extends JerseyTest {
     public Response.ResponseBuilder buildBackoffResponseHelper(int requestNum, long lastRequestTime, long acceptableTime) {
       final long timeSinceLastReq = System.currentTimeMillis() - lastRequestTime;
       if (timeSinceLastReq <= acceptableTime) {
+        Logger.getLogger(HttpClientSourceIT.class).error(String.format(
+            "Failing backoff test; requestNum %d, lastRequestTime %d, timeSinceLastReq %d",
+            requestNum,
+            lastRequestTime,
+            timeSinceLastReq
+        ));
         return Response.status(STATUS_TEST_FAIL);
       } else if (requestNum <= NUM_SLOW_DOWN_RESPONSES) {
         return Response.status(STATUS_SLOW_DOWN);
@@ -836,7 +843,6 @@ public class HttpClientSourceIT extends JerseyTest {
     runBatchAndAssertNames(DataFormat.TEXT, conf, delayStream);
   }
 
-  @Ignore // SDC-5504
   @Test
   public void testHttpWithLinearBackoff() throws Exception {
     for (final HttpClientMode mode : HttpClientMode.values()) {
@@ -876,7 +882,6 @@ public class HttpClientSourceIT extends JerseyTest {
     }
   }
 
-  @Ignore // SDC-5504
   @Test
   public void testHttpWithExponentialBackoff() throws Exception {
     for (final HttpClientMode mode : HttpClientMode.values()) {
