@@ -1,0 +1,212 @@
+/*
+ * Copyright 2017 StreamSets Inc.
+ *
+ * Licensed under the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.streamsets.pipeline.stage.destination.http;
+
+import com.google.common.util.concurrent.RateLimiter;
+import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.lib.generator.DataGenerator;
+import com.streamsets.pipeline.lib.generator.DataGeneratorException;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
+import com.streamsets.pipeline.lib.http.HttpClientCommon;
+import com.streamsets.pipeline.lib.http.Errors;
+import com.streamsets.pipeline.lib.http.Groups;
+import com.streamsets.pipeline.lib.http.HttpMethod;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.util.http.HttpStageUtil;
+import org.glassfish.jersey.client.oauth1.OAuth1ClientSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.ws.rs.client.AsyncInvoker;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+public class HttpClientTarget extends BaseTarget {
+
+  private static final Logger LOG = LoggerFactory.getLogger(HttpClientTarget.class);
+  private final HttpClientTargetConfig conf;
+  private final HttpClientCommon httpClientCommon;
+  private DataGeneratorFactory generatorFactory;
+  private ErrorRecordHandler errorRecordHandler;
+  private RateLimiter rateLimiter;
+
+  HttpClientTarget(HttpClientTargetConfig conf) {
+    this.conf = conf;
+    this.httpClientCommon = new HttpClientCommon(conf.client);
+  }
+
+  @Override
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> issues = super.init();
+    int rateLimit = conf.rateLimit > 0 ? conf.rateLimit : Integer.MAX_VALUE;
+    rateLimiter = RateLimiter.create(rateLimit);
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
+    this.httpClientCommon.init(issues, getContext());
+    if(issues.size() == 0) {
+      conf.dataGeneratorFormatConfig.init(
+          getContext(),
+          conf.dataFormat,
+          Groups.HTTP.name(),
+          HttpClientCommon.DATA_FORMAT_CONFIG_PREFIX,
+          issues
+      );
+      generatorFactory = conf.dataGeneratorFormatConfig.getDataGeneratorFactory();
+    }
+    return issues;
+  }
+
+  @Override
+  public void write(Batch batch) throws StageException {
+    List<Future<Response>> responses = new ArrayList<>();
+    Iterator<Record> records = batch.getRecords();
+    while (records.hasNext()) {
+      Record record = records.next();
+      String resolvedUrl = httpClientCommon.getResolvedUrl(conf.resourceUrl, record);
+      WebTarget target = httpClientCommon.getClient().target(resolvedUrl);
+
+      // If the request (headers or body) contain a known sensitive EL and we're not using https then fail the request.
+      if (httpClientCommon.requestContainsSensitiveInfo(conf.headers, null) &&
+          !target.getUri().getScheme().toLowerCase().startsWith("https")) {
+        throw new StageException(Errors.HTTP_07);
+      }
+
+      final MultivaluedMap<String, Object> resolvedHeaders =  httpClientCommon.resolveHeaders(conf.headers, record);
+
+      final AsyncInvoker asyncInvoker = target.request()
+          .property(OAuth1ClientSupport.OAUTH_PROPERTY_ACCESS_TOKEN, httpClientCommon.getAuthToken())
+          .headers(resolvedHeaders)
+          .async();
+
+      HttpMethod method = httpClientCommon.getHttpMethod(conf.httpMethod, conf.methodExpression, record);
+      String contentType = getContentType();
+      rateLimiter.acquire();
+
+      try {
+        if (method == HttpMethod.POST || method == HttpMethod.PUT) {
+          StreamingOutput streamingOutput = outputStream -> {
+            try {
+              DataGenerator dataGenerator = generatorFactory.getGenerator(outputStream);
+              dataGenerator.write(record);
+              dataGenerator.flush();
+            } catch (DataGeneratorException e) {
+              throw new IOException(e);
+            }
+          };
+          responses.add(asyncInvoker.method(method.getLabel(), Entity.entity(streamingOutput, contentType)));
+        } else {
+          responses.add(asyncInvoker.method(method.getLabel()));
+        }
+      } catch (Exception ex) {
+        LOG.error(Errors.HTTP_41.getMessage(), ex.toString(), ex);
+        throw new OnRecordErrorException(record, Errors.HTTP_41, ex.toString());
+      }
+    }
+
+    records = batch.getRecords();
+    int recordNum = 0;
+    while (records.hasNext()) {
+      try {
+        processResponse(records.next(), responses.get(recordNum), conf.maxRequestCompletionSecs, false);
+      } catch (OnRecordErrorException e) {
+        errorRecordHandler.onError(e);
+      } finally {
+        ++recordNum;
+      }
+    }
+  }
+
+  /**
+   * Waits for the Jersey client to complete an asynchronous request, checks the response code
+   * and continues to parse the response if it is deemed ok.
+   *
+   * @param record the current record to set in context for any expression evaluation
+   * @param responseFuture the async HTTP request future
+   * @param maxRequestCompletionSecs maximum time to wait for request completion (start to finish)
+   * @throws StageException if the request fails, times out, or cannot be parsed
+   */
+  private void processResponse(
+      Record record,
+      Future<Response> responseFuture,
+      long maxRequestCompletionSecs,
+      boolean failOn403
+  ) throws StageException {
+    Response response;
+    try {
+      response = responseFuture.get(maxRequestCompletionSecs, TimeUnit.SECONDS);
+      String responseBody = "";
+      if (response.hasEntity()) {
+        responseBody = response.readEntity(String.class);
+      }
+      response.close();
+      if (conf.client.useOAuth2 && response.getStatus() == 403 && !failOn403) {
+        HttpStageUtil.getNewOAuth2Token(conf.client.oauth2, httpClientCommon.getClient());
+      } else if (response.getStatus() < 200 || response.getStatus() >= 300) {
+        throw new OnRecordErrorException(
+            record,
+            Errors.HTTP_40,
+            response.getStatus(),
+            response.getStatusInfo().getReasonPhrase() + " " + responseBody
+        );
+      }
+    } catch (InterruptedException | ExecutionException e) {
+      LOG.error(Errors.HTTP_41.getMessage(), e.toString(), e);
+      throw new OnRecordErrorException(record, Errors.HTTP_41, e.toString());
+    } catch (TimeoutException e) {
+      LOG.error("HTTP request future timed out", e.toString(), e);
+      throw new OnRecordErrorException(record, Errors.HTTP_41, e.toString());
+    }
+  }
+
+  private String getContentType() {
+    switch (conf.dataFormat) {
+      case TEXT:
+        return MediaType.TEXT_PLAIN;
+      case BINARY:
+        return MediaType.APPLICATION_OCTET_STREAM;
+      case JSON:
+      case SDC_JSON:
+      default:
+        return MediaType.APPLICATION_JSON;
+    }
+  }
+
+  @Override
+  public void destroy() {
+    this.httpClientCommon.destroy();
+    super.destroy();
+  }
+}
