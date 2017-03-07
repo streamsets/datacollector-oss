@@ -76,6 +76,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -380,14 +381,19 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
     return MetricsConfigurator.getHistogram(getMetrics(), CUSTOM_METRICS_PREFIX + stageInfo.getInstanceName() + "." + name);
   }
 
-  @SuppressWarnings("unchecked")
-  public <T> Gauge<T> createGauge(String name, Gauge<T> gauge) {
-    return MetricsConfigurator.createGauge(getMetrics(), CUSTOM_METRICS_PREFIX + stageInfo.getInstanceName() + "." + name, gauge, name, rev);
+  @Override
+  public Gauge<Map<String, Object>> createGauge(String name) {
+    return MetricsConfigurator.createStageGauge(getMetrics(), CUSTOM_METRICS_PREFIX +stageInfo.getInstanceName() + "." + name, null, pipelineName, rev);
   }
 
-  @SuppressWarnings("unchecked")
-  public <T> Gauge<T> getGauge(String name) {
-    return MetricsConfigurator.getGauge(getMetrics(), CUSTOM_METRICS_PREFIX + stageInfo.getInstanceName() + "." + name);
+  @Override
+  public Gauge<Map<String, Object>> createGauge(String name, Comparator<String> comparator) {
+    return MetricsConfigurator.createStageGauge(getMetrics(), CUSTOM_METRICS_PREFIX +stageInfo.getInstanceName() + "." + name, comparator, pipelineName, rev);
+  }
+
+  @Override
+  public Gauge<Map<String, Object>> getGauge(String name) {
+    return MetricsConfigurator.getGauge(getMetrics(), CUSTOM_METRICS_PREFIX +stageInfo.getInstanceName() + "." + name);
   }
 
   // for SDK

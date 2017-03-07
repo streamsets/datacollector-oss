@@ -28,11 +28,11 @@ import com.codahale.metrics.Metric;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.SlidingTimeWindowReservoir;
 import com.codahale.metrics.Timer;
-import com.sun.org.apache.xerces.internal.util.HTTPInputSource;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -173,10 +173,30 @@ public class MetricsConfigurator {
     );
   }
 
-  public static Gauge createGauge(MetricRegistry metrics, String name, final Gauge guage, final String pipelineName, final String pipelineRev) {
+  public static Gauge<Map<String, Object>> createStageGauge(MetricRegistry metrics, String nameSuffix, Comparator<String> comparator, final String pipelineName, final String pipelineRev) {
+    String name = metricName(nameSuffix, GAUGE_SUFFIX);
+    if(metrics.getGauges().containsKey(name)) {
+      return metrics.getGauges().get(name);
+    }
+
+    return createGauge(metrics, nameSuffix, comparator, pipelineName, pipelineRev);
+  }
+
+  public static Gauge<Map<String, Object>> createGauge(MetricRegistry metrics, String name, Comparator<String> comparator, final String pipelineName, final String pipelineRev) {
     return create(
       metrics,
-      guage,
+      new MapGauge(comparator),
+      metricName(name, GAUGE_SUFFIX),
+      pipelineName,
+      pipelineRev
+    );
+  }
+
+  // Kept for backward compatibility with runtime stats, to be removed in future
+  public static Gauge<Map<String, Object>> createGauge(MetricRegistry metrics, String name, Gauge gauge, final String pipelineName, final String pipelineRev) {
+    return create(
+      metrics,
+      gauge,
       metricName(name, GAUGE_SUFFIX),
       pipelineName,
       pipelineRev

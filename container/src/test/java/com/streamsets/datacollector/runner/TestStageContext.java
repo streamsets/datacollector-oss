@@ -270,12 +270,8 @@ public class TestStageContext {
       h.update((long)value);
       return (T)h;
     } else {
-      Gauge<Object> g = context.createGauge(metricName, new Gauge<Object>() {
-        @Override
-        public Object getValue() {
-          return value;
-        }
-      });
+      Gauge<Map<String, Object>> g = context.createGauge(metricName);
+      g.getValue().putAll(((Map)value));
       return (T)g;
     }
   }
@@ -344,11 +340,10 @@ public class TestStageContext {
     gaugeMap.put("2", 2);
     gaugeMap.put("3", 3);
     createMetrics(context, metricName, Gauge.class, gaugeMap);
-    Gauge<Map<String, Integer>> g = context.getGauge(metricName);
+    Gauge<Map<String, Object>> g = context.getGauge(metricName);
     Assert.assertNotNull(g);
     Assert.assertEquals(gaugeMap, g.getValue());
-    Assert.assertSame(gaugeMap, g.getValue());
-    gaugeMap.remove("3");
+    g.getValue().remove("3");
     g =  context.getGauge(metricName);
     Assert.assertTrue(g.getValue().containsKey("1"));
     Assert.assertTrue(g.getValue().containsKey("2"));

@@ -50,7 +50,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentSkipListMap;
 
 public final class FileRefUtil {
   private FileRefUtil() {}
@@ -120,26 +119,15 @@ public final class FileRefUtil {
   @SuppressWarnings("unchecked")
   public static void initMetricsIfNeeded(Stage.Context context) {
     Gauge<Map<String, Object>> gauge = context.getGauge(FileRefUtil.GAUGE_NAME);
-    if (gauge == null) {
-      //Concurrent because the metrics thread will access this.
-      final Map<String, Object> gaugeStatistics = new ConcurrentSkipListMap<>(new Comparator<String>() {
-        @Override
-        public int compare(String o1, String o2) {
-          return GAUGE_MAP_ORDERING.get(o1).compareTo(GAUGE_MAP_ORDERING.get(o2));
-        }
-      });
+    if(gauge == null) {
+      gauge = context.createGauge(FileRefUtil.GAUGE_NAME, Comparator.comparing(GAUGE_MAP_ORDERING::get));
+      Map<String, Object> gaugeStatistics = gauge.getValue();
       //File name is populated at the MetricEnabledWrapperStream.
       gaugeStatistics.put(FileRefUtil.FILE, "");
       gaugeStatistics.put(FileRefUtil.TRANSFER_THROUGHPUT, 0L);
       gaugeStatistics.put(FileRefUtil.SENT_BYTES, String.format(FileRefUtil.BRACKETED_TEMPLATE, 0, 0));
       gaugeStatistics.put(FileRefUtil.REMAINING_BYTES, 0L);
       gaugeStatistics.put(FileRefUtil.COMPLETED_FILE_COUNT, 0L);
-      context.createGauge(FileRefUtil.GAUGE_NAME, new Gauge<Map<String, Object>>() {
-        @Override
-        public Map<String, Object> getValue() {
-          return gaugeStatistics;
-        }
-      });
     }
 
     Meter dataTransferMeter = context.getMeter(FileRefUtil.TRANSFER_THROUGHPUT_METER);

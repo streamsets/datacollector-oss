@@ -75,7 +75,7 @@ public final class TableJdbcRunnable implements Runnable {
   private final ConnectionManager connectionManager;
   private final Map<String, TableContext> tableContexts;
   private final ErrorRecordHandler errorRecordHandler;
-  private final ConcurrentHashMap<String, Object> gaugeMap;
+  private final Map<String, Object> gaugeMap;
 
   private TableOrderProvider tableOrderProvider;
   private TableContext tableContext;
@@ -104,8 +104,11 @@ public final class TableJdbcRunnable implements Runnable {
     this.commonSourceConfigBean = commonSourceConfigBean;
     this.connectionManager = connectionManager;
     this.tableReadContextCache = buildReadContextCache();
-    this.gaugeMap = new ConcurrentHashMap<>();
     this.errorRecordHandler = new DefaultErrorRecordHandler(context, (ToErrorContext) context);
+
+    // Metrics
+    String gaugeName = TABLE_METRICS + threadNumber;
+    this.gaugeMap = context.createGauge(gaugeName).getValue();
   }
 
   public LoadingCache<TableContext, TableReadContext> getTableReadContextCache() {
@@ -166,8 +169,6 @@ public final class TableJdbcRunnable implements Runnable {
    * Initialize the gauge with needed information
    */
   private void initGaugeIfNeeded(Stage.Context context) {
-    String gaugeName = TABLE_METRICS + threadNumber;
-    Optional.ofNullable(context.getGauge(gaugeName)).orElse(context.createGauge(gaugeName, () -> gaugeMap));
     gaugeMap.put(THREAD_NAME, Thread.currentThread().getName());
     gaugeMap.put(TABLE_COUNT, tableContexts.size());
     gaugeMap.put(CURRENT_TABLE, "");

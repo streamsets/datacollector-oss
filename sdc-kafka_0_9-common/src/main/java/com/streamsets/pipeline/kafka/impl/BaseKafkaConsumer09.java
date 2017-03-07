@@ -19,7 +19,6 @@
  */
 package com.streamsets.pipeline.kafka.impl;
 
-import com.codahale.metrics.Gauge;
 import com.codahale.metrics.Histogram;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
@@ -47,7 +46,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -118,7 +116,7 @@ public abstract class BaseKafkaConsumer09 implements SdcKafkaConsumer {
   // Histogram for rebalancing events
   private final Histogram rebalanceHistogram;
   // Gauge with various states that we're propagating up
-  private final ConcurrentHashMap<String, Object> gaugeMap;
+  private final Map<String, Object> gaugeMap;
 
   private boolean isInited = false;
 
@@ -134,8 +132,7 @@ public abstract class BaseKafkaConsumer09 implements SdcKafkaConsumer {
     this.needToCallPoll = new AtomicBoolean(false);
     this.context = context;
     this.rebalanceHistogram = context.createHistogram("Rebalance Time");
-    this.gaugeMap = new ConcurrentHashMap<>();
-    context.createGauge("Internal state", (Gauge<Map<String, Object>>) () -> gaugeMap);
+    this.gaugeMap = context.createGauge("Internal state").getValue();
   }
 
   @Override
