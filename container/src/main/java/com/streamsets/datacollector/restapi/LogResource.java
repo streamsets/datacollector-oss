@@ -26,6 +26,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.bean.UserJson;
 import com.streamsets.datacollector.store.AclStoreTask;
+import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.store.impl.AclPipelineStoreTask;
 import com.streamsets.datacollector.util.AuthzRole;
@@ -38,6 +39,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
@@ -129,7 +131,12 @@ public class LogResource {
     if (!context.isUserInRole(AuthzRole.ADMIN) && !context.isUserInRole(AuthzRole.ADMIN_REMOTE) &&
         runtimeInfo.isAclEnabled() ) {
       Utils.checkNotNull(pipeline, "Pipeline name");
-      store.getInfo(pipeline); // Validates Pipeline ACL Permission
+    }
+
+    if (!StringUtils.isEmpty(pipeline)) {
+      // Validates Pipeline ACL Permission
+      PipelineInfo pipelineInfo = store.getInfo(pipeline);
+      pipeline = pipelineInfo.getTitle() + "/" + pipelineInfo.getName();
     }
 
     String logFile = LogUtils.getLogFile(runtimeInfo);

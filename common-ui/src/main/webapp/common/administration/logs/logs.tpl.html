@@ -56,27 +56,27 @@
       </div>
 
 
-      <span class="sort-by-label">Pipeline:</span>
-      <div class="btn-group pipeline-dropdown">
+      <span class="sort-by-label" ng-if="pipelines.length">Pipeline:</span>
+      <div class="btn-group pipeline-dropdown" ng-if="pipelines.length">
 
         <button class="btn btn-link dropdown-toggle icon-button" type="button" data-toggle="dropdown">
           <span ng-if="!filterPipeline" translate="logs.all">All</span>
-          <span ng-if="filterPipeline">{{filterPipeline}}</span>
+          <span ng-if="filterPipeline">{{filterPipelineLabel}}</span>
         </button>
 
-        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+        <ul class="dropdown-menu" role="menu"
+            aria-labelledby="dropdownMenu1">
 
-          <li role="presentation">
+          <li role="presentation" ng-if="common.isUserAdmin">
             <a role="menuitem" tabindex="-1" href="#"
                ng-click="pipelineFilterChanged(undefined);">
               <span translate="logs.all">All</span>
             </a>
           </li>
 
-
           <li role="presentation" ng-repeat="pipeline in pipelines">
             <a role="menuitem" tabindex="-1" href="#"
-               ng-click="pipelineFilterChanged(pipeline.title + '/' + pipeline.name);">
+               ng-click="pipelineFilterChanged(pipeline);">
               <span>{{pipeline.title}}/{{pipeline.name}}</span>
             </a>
           </li>
@@ -101,7 +101,7 @@
         </span>
       </button>
 
-      <div class="btn-group download-btn-group" ng-if="logFiles && logFiles.length">
+      <div class="btn-group download-btn-group" ng-if="logFiles && logFiles.length && common.isUserAdmin">
         <a href="/rest/v1/system/logs/files/{{logFiles[0].file}}?attachment=true" target="_self"
            class="btn btn-primary btn-sm">{{'logs.download' | translate}}</a>
         <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -115,13 +115,16 @@
         </ul>
       </div>
 
-      <button type="button" class="btn btn-primary btn-sm" ng-click="onLogConfigClick()">
+      <button type="button" class="btn btn-primary btn-sm"  ng-if="common.isUserAdmin" ng-click="onLogConfigClick()">
         {{'logs.logConfig.headerLabel' | translate}}
       </button>
 
-      <button type="button" class="btn btn-primary btn-sm" ng-click="toggleAutoFetch()">
+      <button type="button" class="btn btn-primary btn-sm"  ng-if="common.isUserAdmin" ng-click="toggleAutoFetch()">
         {{(pauseLogAutoFetch ? 'logs.autoFetchContinue' : 'logs.autoFetchPause') | translate}}
       </button>
+
+      <button type="button" class="btn btn-primary btn-sm"
+              ng-click="refreshLogs()">{{'global.form.refresh' | translate}}</button>
     </div>
 
   </div>
@@ -168,6 +171,11 @@
           </div>
         </td>
       </tr>
+
+      <tr ng-if="logMessages.length == 0">
+        <td colspan="7">{{'logs.noLogsMessage' | translate}}</td>
+      </tr>
+
       </tbody>
     </table>
   </div>

@@ -79,7 +79,7 @@
           },
           {
             "key" : "log4j.appender.streamsets.layout.ConversionPattern",
-            "value" : "%d{ISO8601} %p %c: %m%n"
+            "value" : "%d{ISO8601} [user:%X{s-user}] [pipeline:%X{s-entity}] [runner:%X{s-runner}] [thread:%t] %-5p %c{1} - %m%n"
           }
         ]
       },

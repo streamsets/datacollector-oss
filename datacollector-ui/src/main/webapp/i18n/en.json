@@ -179,6 +179,7 @@
       "username.placeholder": "Your login",
       "value": "Value",
       "view": "View",
+      "viewLogs": "View Logs",
       "write": "Write",
       "yes": "Yes"
     },
@@ -703,6 +704,7 @@
     "logConfig": {
       "headerLabel": "Log Config"
     },
+    "noLogsMessage": "No Record Found",
     "refreshLog": "Refresh Log",
     "title": "Logs"
   },
