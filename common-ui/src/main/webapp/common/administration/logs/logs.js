@@ -25,20 +25,31 @@
 angular
   .module('commonUI.logs')
   .config(['$routeProvider', function ($routeProvider) {
-    var routeParamValues = {
-      templateUrl: 'common/administration/logs/logs.tpl.html',
-      controller: 'LogsController',
-      resolve: {
-        myVar: function(authService) {
-          return authService.init();
+    $routeProvider
+      .when('/collector/logs/:pipelineTitle/:pipelineName', {
+        templateUrl: 'common/administration/logs/logs.tpl.html',
+        controller: 'LogsController',
+        resolve: {
+          myVar: function(authService) {
+            return authService.init();
+          }
+        },
+        data: {
+          authorizedRoles: ['admin', 'creator', 'manager']
         }
-      },
-      data: {
-        authorizedRoles: ['admin', 'creator', 'manager']
-      }
-    };
-    $routeProvider.when('/collector/logs/:pipelineTitle/:pipelineName', routeParamValues)
-      .when('/collector/logs', routeParamValues);
+      })
+      .when('/collector/logs', {
+        templateUrl: 'common/administration/logs/logs.tpl.html',
+        controller: 'LogsController',
+        resolve: {
+          myVar: function(authService) {
+            return authService.init();
+          }
+        },
+        data: {
+          authorizedRoles: ['admin', 'creator', 'manager']
+        }
+      });
   }])
   .controller('LogsController', function (
     $rootScope, $scope, $routeParams, $interval, api, configuration, Analytics, $timeout, $modal
@@ -62,6 +73,7 @@ angular
       logMessages: [],
       logEndingOffset: -1,
       logFiles: [],
+      loading: true,
       fetchingLog: false,
       extraMessage: undefined,
       filterSeverity: undefined,
@@ -155,7 +167,7 @@ angular
         }
       }
 
-      $scope.fetchingLog = true;
+      $scope.loading = true;
 
       api.log.getCurrentLog(-1, $scope.extraMessage, $scope.filterPipeline, $scope.filterSeverity).then(
         function(res) {
@@ -167,7 +179,7 @@ angular
 
           $scope.logMessages = res.data;
           $scope.logEndingOffset = +res.headers('X-SDC-LOG-PREVIOUS-OFFSET');
-          $scope.fetchingLog = false;
+          $scope.loading = false;
 
           $timeout(function() {
             var $panelBody = $('.logs-page > .panel-body');
@@ -183,7 +195,7 @@ angular
           }
         },
         function (res) {
-          $scope.fetchingLog = false;
+          $scope.loading = false;
           $rootScope.common.errors = [res.data];
         }
       );

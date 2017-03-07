@@ -68,21 +68,21 @@
             aria-labelledby="dropdownMenu1">
 
           <li role="presentation" ng-if="common.isUserAdmin">
-            <a role="menuitem" tabindex="-1" href="#"
-               ng-click="pipelineFilterChanged(undefined);">
+            <a role="menuitem" tabindex="-1" ng-href="/collector/logs">
               <span translate="logs.all">All</span>
             </a>
           </li>
 
           <li role="presentation" ng-repeat="pipeline in pipelines">
-            <a role="menuitem" tabindex="-1" href="#"
-               ng-click="pipelineFilterChanged(pipeline);">
+            <a role="menuitem" tabindex="-1" ng-href="/collector/logs/{{pipeline.title}}/{{pipeline.name}}">
               <span>{{pipeline.title}}/{{pipeline.name}}</span>
             </a>
           </li>
 
         </ul>
       </div>
+
+      <a ng-if="filterPipeline" ng-href="/collector/pipeline/{{filterPipeline}}">( view pipeline... )</a>
 
     </div>
 
@@ -135,7 +135,7 @@
   <div class="panel-body"
        ng-style="{'height': (windowHeight - 60 - 51) + 'px', 'width': (windowWidth) + 'px'}" resize>
 
-    <table class="table log-table">
+    <table class="table log-table" ng-if="!loading">
       <thead>
       <tr>
         <th>Timestamp</th>
@@ -178,5 +178,11 @@
 
       </tbody>
     </table>
+
+
+    <div class="stage-libraries-loading">
+      <div class="pipeline-home-loading" show-loading="loading"></div>
+    </div>
+
   </div>
 </div>
