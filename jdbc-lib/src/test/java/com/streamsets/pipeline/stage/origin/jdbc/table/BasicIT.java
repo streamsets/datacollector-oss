@@ -662,4 +662,39 @@ public class BasicIT extends BaseTableJdbcSourceIT {
         ((ErrorMessage)Whitebox.getInternalState(configIssues.get(0), "message")).getErrorCode()
     );
   }
+
+   private void runSourceForInitialOffset(List<Record> expectedRecords, int batchSize, Map<String, String> lastOffsets) throws Exception {
+    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+        .tablePattern("TENNIS_STARS")
+        .schema(database)
+        //set initial offset as id 3 (we will read from id 4)
+        .offsetColumnToInitialOffsetValue(ImmutableMap.of("P_ID", "3"))
+        .build();
+
+    TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
+        .tableConfigBeans(ImmutableList.of(tableConfigBean))
+        .build();
+
+    PushSourceRunner runner = new PushSourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
+        .addOutputLane("a")
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+    runner.runInit();
+    try {
+      List<Record> actualRecords = runProduceSingleBatchAndGetRecords(tableJdbcSource, lastOffsets, batchSize);
+      checkRecords(expectedRecords, actualRecords);
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testInitialOffset() throws Exception {
+    Map<String, String> lastOffsets = new HashMap<>();
+    //no last offset, read 5 records from id 4 as initial offset (read till id 9)
+    runSourceForInitialOffset(EXPECTED_TENNIS_STARS_RECORDS.subList(3, 8), 5, lastOffsets);
+    //Now the origin is started again with initial offset 5 but we pass the last offset, which means
+    //we should read from id 9
+    runSourceForInitialOffset(EXPECTED_TENNIS_STARS_RECORDS.subList(8, 15), 100, lastOffsets);
+  }
 }
