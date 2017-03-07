@@ -316,7 +316,7 @@ public final class TableJdbcRunnable implements Runnable {
     //Set Column Headers
     JdbcUtil.setColumnSpecificHeaders(
         record,
-        Collections.singleton(tableContext.getQualifiedName()),
+        Collections.singleton(tableContext.getTableName()),
         md,
         JDBC_NAMESPACE_HEADER
     );

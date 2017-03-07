@@ -306,8 +306,12 @@ public class JdbcUtil {
           break;
       }
 
-      // Store the column's table name
-      tableNames.add(metaData.getTableName(i));
+      String tableName = metaData.getTableName(i);
+
+      // Store the column's table name (if not empty)
+      if (StringUtils.isNotEmpty(tableName)) {
+        tableNames.add(tableName);
+      }
     }
 
     if (tableNames.isEmpty()) {
