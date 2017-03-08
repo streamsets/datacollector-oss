@@ -124,6 +124,12 @@
       <version>${cassandra-driver.version}</version>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>com.datastax.cassandra</groupId>
+      <artifactId>cassandra-driver-extras</artifactId>
+      <version>${cassandra-driver.version}</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
 
   <build>

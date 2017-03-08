@@ -93,6 +93,10 @@
           <artifactId>cassandra-driver-mapping</artifactId>
         </exclusion>
         <exclusion>
+          <groupId>com.datastax.cassandra</groupId>
+          <artifactId>cassandra-driver-extras</artifactId>
+        </exclusion>
+        <exclusion>
           <groupId>io.netty</groupId>
           <artifactId>netty-handler</artifactId>
         </exclusion>
@@ -134,6 +138,12 @@
     <dependency>
       <groupId>com.datastax.cassandra</groupId>
       <artifactId>cassandra-driver-mapping</artifactId>
+      <version>${cassandra-driver.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.datastax.cassandra</groupId>
+      <artifactId>cassandra-driver-extras</artifactId>
       <version>${cassandra-driver.version}</version>
       <scope>compile</scope>
     </dependency>

@@ -214,6 +214,11 @@ public class CassandraTarget extends BaseTarget {
                   }
                 }
             );
+
+        cluster.getConfiguration().getCodecRegistry()
+            .register(new UUIDAsStringCodec());
+        cluster.getConfiguration().getCodecRegistry()
+            .register(new TimeUUIDAsStringCodec());
       } catch (NoHostAvailableException | AuthenticationException | IllegalStateException e) {
         LOG.error(Errors.CASSANDRA_03.getMessage(), e.toString(), e);
         issues.add(context.createConfigIssue(null, null, Errors.CASSANDRA_03, e.toString()));

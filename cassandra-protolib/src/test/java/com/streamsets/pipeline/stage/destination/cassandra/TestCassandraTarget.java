@@ -58,6 +58,8 @@ public class TestCassandraTarget {
 
   private static final Double EPSILON = 1e-15;
   private static final long CASSANDRA_STARTUP_TIMEOUT = 20000;
+  public static final String SAMPLE_TIMEUUID = "474b1386-0379-11e7-bdfe-fa245441bcee";
+  public static final String SAMPLE_UUID = "46c5379c-a083-4ccd-bfac-c4a8d17574c7";
   private static int CASSANDRA_NATIVE_PORT = 9142;
 
   private static Cluster cluster = null;
@@ -93,6 +95,8 @@ public class TestCassandraTarget {
             "time int," +
             "x double," +
             "y double," +
+            "time_id timeuuid, " +
+            "unique_id uuid, " +
             "PRIMARY KEY (driver_id, trip_id)" +
             ");"
     );
@@ -117,7 +121,9 @@ public class TestCassandraTarget {
         new CassandraFieldMappingConfig("[1]", "trip_id"),
         new CassandraFieldMappingConfig("[2]", "time"),
         new CassandraFieldMappingConfig("[3]", "x"),
-        new CassandraFieldMappingConfig("[4]", "y")
+        new CassandraFieldMappingConfig("[4]", "y"),
+        new CassandraFieldMappingConfig("[5]", "time_id"),
+        new CassandraFieldMappingConfig("[6]", "unique_id")
     );
 
     TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
@@ -144,7 +150,9 @@ public class TestCassandraTarget {
         new CassandraFieldMappingConfig("[1]", "trip_id"),
         new CassandraFieldMappingConfig("[2]", "time"),
         new CassandraFieldMappingConfig("[3]", "x"),
-        new CassandraFieldMappingConfig("[4]", "y")
+        new CassandraFieldMappingConfig("[4]", "y"),
+        new CassandraFieldMappingConfig("[5]", "time_id"),
+        new CassandraFieldMappingConfig("[6]", "unique_id")
     );
 
     TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
@@ -164,6 +172,8 @@ public class TestCassandraTarget {
     fields.add(Field.create(3));
     fields.add(Field.create(4.0));
     fields.add(Field.create(5.0));
+    fields.add(Field.create(SAMPLE_TIMEUUID));
+    fields.add(Field.create(SAMPLE_UUID));
     record.set(Field.create(fields));
 
     List<Record> singleRecord = ImmutableList.of(record);
@@ -186,6 +196,8 @@ public class TestCassandraTarget {
     Assert.assertEquals(3, row.getInt("time"));
     Assert.assertEquals(4.0, row.getDouble("x"), EPSILON);
     Assert.assertEquals(5.0, row.getDouble("y"), EPSILON);
+    Assert.assertEquals(SAMPLE_TIMEUUID, row.getUUID("time_id").toString());
+    Assert.assertEquals(SAMPLE_UUID, row.getUUID("unique_id").toString());
   }
 
   @Test
@@ -242,7 +254,9 @@ public class TestCassandraTarget {
         new CassandraFieldMappingConfig("[1]", "trip_id"),
         new CassandraFieldMappingConfig("[2]", "time"),
         new CassandraFieldMappingConfig("[3]", "x"),
-        new CassandraFieldMappingConfig("[4]", "y")
+        new CassandraFieldMappingConfig("[4]", "y"),
+        new CassandraFieldMappingConfig("[5]", "time_id"),
+        new CassandraFieldMappingConfig("[6]", "unique_id")
     );
 
     TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
@@ -263,6 +277,8 @@ public class TestCassandraTarget {
     fields.add(Field.create(3));
     fields.add(Field.create(4.0));
     fields.add(Field.create(5.0));
+    fields.add(Field.create(SAMPLE_TIMEUUID));
+    fields.add(Field.create(SAMPLE_UUID));
     record.set(Field.create(fields));
 
     List<Record> singleRecord = ImmutableList.of(record);
@@ -288,7 +304,9 @@ public class TestCassandraTarget {
         new CassandraFieldMappingConfig("[1]", "trip_id"),
         new CassandraFieldMappingConfig("[2]", "time"),
         new CassandraFieldMappingConfig("[3]", "x"),
-        new CassandraFieldMappingConfig("[4]", "y")
+        new CassandraFieldMappingConfig("[4]", "y"),
+        new CassandraFieldMappingConfig("[5]", "time_id"),
+        new CassandraFieldMappingConfig("[6]", "unique_id")
     );
 
     TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
@@ -310,6 +328,8 @@ public class TestCassandraTarget {
     // intentionally passing doubles where these values are expected to be ints triggers errors!
     fields.add(Field.create(4.0));
     fields.add(Field.create(5.0));
+    fields.add(Field.create(SAMPLE_TIMEUUID));
+    fields.add(Field.create(SAMPLE_UUID));
     record.set(Field.create(fields));
 
     List<Record> singleRecord = ImmutableList.of(record);
@@ -335,7 +355,9 @@ public class TestCassandraTarget {
         new CassandraFieldMappingConfig("[1]", "trip_id"),
         new CassandraFieldMappingConfig("[2]", "time"),
         new CassandraFieldMappingConfig("[3]", "x"),
-        new CassandraFieldMappingConfig("[4]", "y")
+        new CassandraFieldMappingConfig("[4]", "y"),
+        new CassandraFieldMappingConfig("[5]", "time_id"),
+        new CassandraFieldMappingConfig("[6]", "unique_id")
     );
 
     TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
@@ -356,6 +378,8 @@ public class TestCassandraTarget {
     fields.add(Field.create(3));
     fields.add(Field.create(4.0));
     fields.add(Field.create(5.0));
+    fields.add(Field.create(SAMPLE_TIMEUUID));
+    fields.add(Field.create(SAMPLE_UUID));
     record.set(Field.create(fields));
 
     List<Record> singleRecord = ImmutableList.of(record);
@@ -381,7 +405,9 @@ public class TestCassandraTarget {
         new CassandraFieldMappingConfig("/trip", "trip_id"),
         new CassandraFieldMappingConfig("/time", "time"),
         new CassandraFieldMappingConfig("/x", "x"),
-        new CassandraFieldMappingConfig("/y", "y")
+        new CassandraFieldMappingConfig("/y", "y"),
+        new CassandraFieldMappingConfig("/time_id", "time_id"),
+        new CassandraFieldMappingConfig("/unique_id", "unique_id")
     );
 
     TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
@@ -400,6 +426,8 @@ public class TestCassandraTarget {
         .put("trip", Field.create(2))
         .put("time", Field.create(3))
         .put("y", Field.create(5.0))
+        .put("time_id", Field.create(SAMPLE_TIMEUUID))
+        .put("unique_id", Field.create(SAMPLE_UUID))
         .build();
     record.set(Field.create(fields));
 
@@ -423,6 +451,8 @@ public class TestCassandraTarget {
     Assert.assertEquals(3, row.getInt("time"));
     Assert.assertEquals(null, row.getBytesUnsafe("x"));
     Assert.assertEquals(5.0, row.getDouble("y"), EPSILON);
+    Assert.assertEquals(SAMPLE_TIMEUUID, row.getUUID("time_id").toString());
+    Assert.assertEquals(SAMPLE_UUID, row.getUUID("unique_id").toString());
   }
 
   @Test(expected = StageException.class)
@@ -432,7 +462,9 @@ public class TestCassandraTarget {
         new CassandraFieldMappingConfig("/trip", "trip_id"),
         new CassandraFieldMappingConfig("/time", "time"),
         new CassandraFieldMappingConfig("/x", "x"),
-        new CassandraFieldMappingConfig("/y", "y")
+        new CassandraFieldMappingConfig("/y", "y"),
+        new CassandraFieldMappingConfig("/time_id", "time_id"),
+        new CassandraFieldMappingConfig("/unique_id", "unique_id")
     );
 
     TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
@@ -456,7 +488,9 @@ public class TestCassandraTarget {
         new CassandraFieldMappingConfig("[1]", "trip_id"),
         new CassandraFieldMappingConfig("[2]", "time"),
         new CassandraFieldMappingConfig("[3]", "x"),
-        new CassandraFieldMappingConfig("[4]", "y")
+        new CassandraFieldMappingConfig("[4]", "y"),
+        new CassandraFieldMappingConfig("[5]", "time_id"),
+        new CassandraFieldMappingConfig("[6]", "unique_id")
     );
 
     TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
@@ -478,6 +512,8 @@ public class TestCassandraTarget {
       fields.add(Field.create(3));
       fields.add(Field.create(4.0));
       fields.add(Field.create(5.0));
+      fields.add(Field.create(SAMPLE_TIMEUUID));
+      fields.add(Field.create(SAMPLE_UUID));
       record.set(Field.create(fields));
       records.add(record);
     }
