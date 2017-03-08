@@ -1070,6 +1070,7 @@ public class MockStages {
   private static List<Config> createPipelineConfigs() {
     List<Config> pipelineConfig = new ArrayList<>();
     pipelineConfig.add(new Config("executionMode", ExecutionMode.STANDALONE.name()));
+    pipelineConfig.add(new Config("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE.name()));
     return pipelineConfig;
   }
 
