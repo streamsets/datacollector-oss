@@ -29,13 +29,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
+import java.sql.BatchUpdateException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedMap;
+
+import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_14;
 
 public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
   private static final Logger LOG = LoggerFactory.getLogger(JdbcGenericRecordWriter.class);
@@ -106,6 +110,7 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
     List<OnRecordErrorException> errorRecords = new LinkedList<>();
     Connection connection = null;
     PreparedStatementMap statementsForBatch = null;
+    List<PreparedStatement> statementsToExecute = new ArrayList<>();
     try {
       connection = getDataSource().getConnection();
 
@@ -130,37 +135,43 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
             getColumnsToParameters(),
             getColumnsToFields()
         );
-        PreparedStatement statement = null;
+        PreparedStatement statement;
         try {
           statement = statementsForBatch.getPreparedStatement(
               opCode,
               columnsToParameters
           );
+          if (!statementsToExecute.contains(statement)) {
+            statementsToExecute.add(statement);
+          }
           setParameters(opCode, columnsToParameters, record, connection, statement);
-          LOG.debug("Bound Query: {}", statement.toString());
-          statement.execute();
-
-          if (getGeneratedColumnMappings() != null) {
-            writeGeneratedColumns(statement, batch.iterator(), errorRecords);
+          statement.addBatch();
+          if (LOG.isDebugEnabled()) {
+            LOG.debug("Bound Query: {}", statement.toString());
           }
-        } catch (SQLException e) {
-          if (getRollbackOnError()) {
-            LOG.debug("Error due to {}. Rollback the record: {}", e.getMessage(), record.toString());
-            connection.rollback();
-          }
-          errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_34, e.getMessage(), e.getCause()));
+        } catch (SQLException ex) { // These don't trigger a rollback
+          errorRecords.add(new OnRecordErrorException(record, JDBC_14, ex));
         } catch (OnRecordErrorException ex){
           errorRecords.add(ex);
+        }
+      }
+      for (PreparedStatement statement : statementsToExecute) {
+        try {
+          statement.executeBatch();
+        } catch (SQLException e) {
+          if (getRollbackOnError()) {
+            connection.rollback();
+          }
+          handleBatchUpdateException(batch, e, errorRecords);
+        }
+        if (getGeneratedColumnMappings() != null) {
+          writeGeneratedColumns(statement, batch.iterator(), errorRecords);
         }
       }
       connection.commit();
     } catch (SQLException e) {
       handleSqlException(e);
     } finally {
-      if (statementsForBatch != null) {
-        // PreparedStatements for this tableName are cached. Close all.
-        statementsForBatch.destroy();
-      }
       if (connection != null) {
         try {
           connection.close();
@@ -203,4 +214,44 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
     return paramIdx;
   }
 
+  /**
+   * <p>
+   *   Some databases drivers allow us to figure out which record in a particular batch failed.
+   * </p>
+   * <p>
+   *   In the case that we have a list of update counts, we can mark just the record as erroneous.
+   *   Otherwise we must send the entire batch to error.
+   * </p>
+   * @param failedRecords List of Failed Records
+   * @param e BatchUpdateException
+   * @param errorRecords List of error records for this batch
+   */
+  private void handleBatchUpdateException(
+      Collection<Record> failedRecords, SQLException e, List<OnRecordErrorException> errorRecords
+  ) throws StageException {
+    if (JdbcUtil.isDataError(getConnectionString(), e)) {
+      String formattedError = JdbcUtil.formatSqlException(e);
+      LOG.error(formattedError);
+      LOG.debug(formattedError, e);
+
+      if (!getRollbackOnError() && e instanceof BatchUpdateException &&
+          ((BatchUpdateException) e).getUpdateCounts().length > 0) {
+        BatchUpdateException bue = (BatchUpdateException) e;
+
+        int i = 0;
+        for (Record record : failedRecords) {
+          if (i >= bue.getUpdateCounts().length || bue.getUpdateCounts()[i] == PreparedStatement.EXECUTE_FAILED) {
+            errorRecords.add(new OnRecordErrorException(record, JDBC_14, formattedError));
+          }
+          i++;
+        }
+      } else {
+        for (Record record : failedRecords) {
+          errorRecords.add(new OnRecordErrorException(record, JDBC_14, formattedError));
+        }
+      }
+    } else {
+      handleSqlException(e);
+    }
+  }
 }
