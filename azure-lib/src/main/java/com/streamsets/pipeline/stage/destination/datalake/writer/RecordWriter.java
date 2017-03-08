@@ -190,6 +190,12 @@ public class RecordWriter {
     }
   }
 
+  public void flush(String filePath) throws IOException {
+    DataGenerator generator = generators.get(filePath);
+    Utils.checkNotNull(generator, "File path does not exist: '" + filePath + "'");
+    generator.flush();
+  }
+
   private DataGenerator getGenerator(String filePath) throws StageException, IOException {
     DataGenerator generator = generators.get(filePath);
     if (generator == null) {
@@ -249,10 +255,5 @@ public class RecordWriter {
     }
 
     return outputStreamHelper.shouldRoll(dirPath);
-  }
-
-  void flush(String filePath) throws IOException {
-    generators.get(filePath).flush();
-    outputStreamHelper.commitFile(filePath.substring(0, filePath.lastIndexOf("/")));
   }
 }

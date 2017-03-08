@@ -261,7 +261,7 @@ public class DataLakeTarget extends BaseTarget {
     }
 
     // Wait for proper execution finish
-    for(Future<List<OnRecordErrorException>> f : futures) {
+    for (Future<List<OnRecordErrorException>> f : futures) {
       try {
         List<OnRecordErrorException> result = f.get();
         errorRecords.addAll(result);

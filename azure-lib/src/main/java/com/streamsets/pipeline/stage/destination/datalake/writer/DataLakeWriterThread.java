@@ -37,13 +37,13 @@ import java.util.concurrent.Callable;
 public class DataLakeWriterThread implements Callable<List<OnRecordErrorException>> {
   private static final Logger LOG = LoggerFactory.getLogger(DataLakeTarget.class);
 
-  private String filePath;
+  private String tmpFilePath;
   private List<Record> records;
   private RecordWriter writer;
 
-  public DataLakeWriterThread(RecordWriter writer, String filePath, List<Record> records) {
+  public DataLakeWriterThread(RecordWriter writer, String tmpFilePath, List<Record> records) {
     this.writer = writer;
-    this.filePath = filePath;
+    this.tmpFilePath = tmpFilePath;
     this.records = records;
   }
 
@@ -51,19 +51,23 @@ public class DataLakeWriterThread implements Callable<List<OnRecordErrorExceptio
   public List<OnRecordErrorException> call() {
     long threadId = Thread.currentThread().getId();
     int numErrorRecords = 0;
-    LOG.debug("Thread {} starts to write {} records to {}", threadId, records.size(), filePath);
+    LOG.debug("Thread {} starts to write {} records to {}", threadId, records.size(), tmpFilePath);
     List<OnRecordErrorException> errorRecords = new ArrayList<>();
     int retry = 0;
+    boolean isFlushed = false;
 
     for (int i = 0; i < records.size(); i++) {
       Record record = records.get(i);
       try {
-        String dirPath = filePath.substring(0, filePath.lastIndexOf("/"));
-        writer.write(filePath, record);
+        String dirPath = tmpFilePath.substring(0, tmpFilePath.lastIndexOf("/"));
+        writer.write(tmpFilePath, record);
 
         if (writer.shouldRoll(record, dirPath)) {
-          writer.flush(filePath);
-          writer.commitOldFile(dirPath, filePath);
+          writer.flush(tmpFilePath);
+          writer.commitOldFile(dirPath, tmpFilePath);
+          isFlushed = true;
+        } else {
+          isFlushed = false;
         }
 
       } catch (ADLException ex) {
@@ -92,7 +96,30 @@ public class DataLakeWriterThread implements Callable<List<OnRecordErrorExceptio
       }
     }
 
-    LOG.debug("Thread {} ends to write {} records to {}", threadId, records.size() - numErrorRecords, filePath);
+    if (!isFlushed) {
+      try {
+        writer.flush(tmpFilePath);
+      } catch (IOException ex) {
+        // reset error records
+        errorRecords.clear();
+        numErrorRecords = 0;
+        // send to error records
+        for (Record record : records) {
+          LOG.debug(Errors.ADLS_03.getMessage(), ex.toString(), ex);
+          errorRecords.add(new OnRecordErrorException(record, Errors.ADLS_03, ex.toString()));
+          numErrorRecords++;
+        }
+      }
+    }
+
+    LOG.debug(
+        "Thread {} ends to write {} out of {} records to {}",
+        threadId,
+        records.size() - numErrorRecords,
+        records.size(),
+        tmpFilePath
+    );
+
     return errorRecords;
   }
 }
