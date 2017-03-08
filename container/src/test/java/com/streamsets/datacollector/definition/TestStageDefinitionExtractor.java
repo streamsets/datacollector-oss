@@ -324,6 +324,37 @@ public class TestStageDefinitionExtractor {
   }
 
   @Test
+  public void testExtractSource2DisablePrivateCL() {
+    String noPrivateCLProperty = Source2.class.getCanonicalName() + ".no.private.classloader";
+    System.setProperty(noPrivateCLProperty, "");
+    try {
+      StageDefinition def = StageDefinitionExtractor.get().extract(MOCK_LIB_DEF, Source2.class, "x");
+      Assert.assertFalse(def.isPrivateClassLoader());
+      Assert.assertEquals(Source2.class.getName(), def.getClassName());
+      Assert.assertEquals(StageDefinitionExtractor.getStageName(Source2.class), def.getName());
+      Assert.assertEquals(2, def.getVersion());
+      Assert.assertEquals("LL", def.getLabel());
+      Assert.assertEquals("DD", def.getDescription());
+      Assert.assertNotNull(def.getRawSourceDefinition());
+      Assert.assertEquals(1, def.getConfigGroupDefinition().getGroupNames().size());
+      Assert.assertEquals(3, def.getConfigDefinitions().size());
+      Assert.assertEquals(2, def.getOutputStreams());
+      Assert.assertEquals(2, def.getExecutionModes().size());
+      Assert.assertEquals("TargetIcon.svg", def.getIcon());
+      Assert.assertEquals(TwoOutputStreams.class.getName(), def.getOutputStreamLabelProviderClass());
+      Assert.assertEquals(null, def.getOutputStreamLabels());
+      Assert.assertEquals(StageType.SOURCE, def.getType());
+      Assert.assertFalse(def.isVariableOutputStreams());
+      Assert.assertFalse(def.hasOnRecordError());
+      Assert.assertFalse(def.hasPreconditions());
+      Assert.assertTrue(def.getUpgrader() instanceof Source2Upgrader);
+      Assert.assertFalse(def.isProducingEvents());
+    } finally {
+      System.clearProperty(noPrivateCLProperty);
+    }
+  }
+
+  @Test
   public void testExtractSource3() {
     StageDefinition def = StageDefinitionExtractor.get().extract(MOCK_LIB_DEF, Source3.class, "x");
     Assert.assertEquals(0, def.getOutputStreams());

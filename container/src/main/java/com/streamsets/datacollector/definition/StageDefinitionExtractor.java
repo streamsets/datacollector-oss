@@ -250,7 +250,11 @@ public abstract class StageDefinitionExtractor {
           cDef.addAutoELDefinitions(libraryDef);
         }
 
-        boolean privateClassLoader = sDef.privateClassLoader();
+        // This is on purpose and made difficult. The property will be:
+        // -Dcom.streamsets.pipeline.stage.destination.hdfs.HdfsDTarget.no.private.classloader
+        boolean privateClassLoader =
+            sDef.privateClassLoader() &&
+                System.getProperty(klass.getCanonicalName() + ".no.private.classloader") == null;
 
         StageUpgrader upgrader;
         try {
