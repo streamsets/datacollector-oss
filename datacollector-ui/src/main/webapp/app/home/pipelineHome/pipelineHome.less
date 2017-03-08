@@ -46,10 +46,8 @@
     }
 
     >.split-pane1 {
-      //margin-top: 60px;
       width: 250px;
       position: absolute;
-      //height: calc(~"100% - 145px");
     }
 
     >.split-pane2 {
@@ -57,8 +55,6 @@
       right: 0;
       border-left: 1px solid #aaa;
       position: absolute;
-      //margin-top: 60px;
-      //height: calc(~"100% - 145px");
     }
 
 
@@ -87,8 +83,6 @@
 
   }
 
-
-  /* Graph/Stage Library Splitter */
   .split-panes.stage-library-splitter {
     >.split-handler {
       display: none;
@@ -108,9 +102,9 @@
       width: 180px;
       border-left: 1px solid #aaa;
       position: absolute;
-      overflow: auto;
+      overflow-y: auto;
+      overflow-x: hidden;
     }
-
 
     &.hide-stage-library-panel {
       >.split-handler {
@@ -133,7 +127,6 @@
         display: none;
       }
     }
-
   }
 
   /* Vertical */
@@ -187,11 +180,6 @@
     &.minimize-pane2 {
       >.split-handler {
         display: none;
-        /*height: 4px;
-        top: 95% ;
-        left: 0;
-        right: 0;
-        cursor: ns-resize;*/
       }
 
       >.split-pane1, >.split-pane2 {
