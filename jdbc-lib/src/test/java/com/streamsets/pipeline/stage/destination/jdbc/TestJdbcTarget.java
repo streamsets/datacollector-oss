@@ -366,17 +366,12 @@ public class TestJdbcTarget {
     targetRunner.runWrite(records);
 
     connection = DriverManager.getConnection(h2ConnectionString, username, password);
-    // Since we don't batch same operations anymore, rollback is done to records that are executed already
-    // in the same connection. Then we will continue processing rest of the records in batch.
-    // In this test, 1st record success, 2nd record fail, so 1nd and 2nd records will rollback,
-    // then 3rd record will success.
     try (Statement statement = connection.createStatement()) {
       ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM TEST.TEST_TABLE");
       rs.next();
-      assertEquals(1, rs.getInt(1));  // the 3rd record should make it
+      assertEquals(0, rs.getInt(1));  // the 3rd record should make it
     }
-    // The record that caused failure, which is 2nd record.
-    assertEquals(1, targetRunner.getErrorRecords().size());
+    assertEquals(3, targetRunner.getErrorRecords().size());
   }
 
   @Test
