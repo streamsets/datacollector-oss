@@ -35,6 +35,7 @@ import com.streamsets.pipeline.stage.lib.hive.cache.TypeInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedException;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -593,8 +594,8 @@ public final class HiveMetastoreUtil {
     LinkedHashMap<String, HiveTypeInfo> columns = new LinkedHashMap<>();
     Map<String, Field> list = record.get().getValueAsMap();
     for(Map.Entry<String,Field> pair:  list.entrySet()) {
-      if (pair.getKey().isEmpty()) {
-        throw new HiveStageCheckedException(Errors.HIVE_01, "Field names are empty");
+      if (StringUtils.isEmpty(pair.getKey())) {
+        throw new HiveStageCheckedException(Errors.HIVE_01, "Field name is empty");
       }
       Field currField = pair.getValue();
       switch(currField.getType()) {
