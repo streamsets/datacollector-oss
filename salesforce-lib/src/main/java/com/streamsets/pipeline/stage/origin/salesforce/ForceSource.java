@@ -39,6 +39,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.salesforce.ForceConfigBean;
+import com.streamsets.pipeline.lib.salesforce.ForceRepeatQuery;
 import com.streamsets.pipeline.lib.salesforce.ForceSourceConfigBean;
 import com.streamsets.pipeline.lib.salesforce.ForceUtils;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
@@ -112,6 +113,8 @@ public class ForceSource extends BaseSource {
   // SOAP API state
   private QueryResult queryResult;
   private int recordIndex;
+
+  private long lastQueryCompletedTime = 0L;
 
   private BlockingQueue<Message> messageQueue;
   private ForceStreamConsumer forceConsumer;
@@ -303,12 +306,24 @@ public class ForceSource extends BaseSource {
         return null;
       }
     } else if (conf.queryExistingData) {
+      if (!queryInProgress()) {
+        long now = System.currentTimeMillis();
+        long delay = Math.max(0, (lastQueryCompletedTime + (1000 * conf.queryInterval)) - now);
+
+        if (delay > 0) {
+          // Sleep in one second increments so we don't tie up the app.
+          LOG.info("{}ms remaining until next fetch.", delay);
+          ThreadUtil.sleep(Math.min(delay, 1000));
+          return lastSourceOffset;
+        }
+      }
+
       if (conf.useBulkAPI) {
         nextSourceOffset = bulkProduce(lastSourceOffset, batchSize, batchMaker);
       } else {
         nextSourceOffset = soapProduce(lastSourceOffset, batchSize, batchMaker);
       }
-    } else {
+    } else if (conf.subscribeToStreaming) {
       // No offset, and we're not querying existing data, so switch to streaming
       nextSourceOffset = READ_EVENTS_FROM_NOW;
     }
@@ -316,6 +331,10 @@ public class ForceSource extends BaseSource {
     LOG.debug("nextSourceOffset: {}", nextSourceOffset);
 
     return nextSourceOffset;
+  }
+
+  private boolean queryInProgress() {
+    return (conf.useBulkAPI && job != null) || (!conf.useBulkAPI && queryResult != null);
   }
 
   public String bulkProduce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
@@ -412,7 +431,8 @@ public class ForceSource extends BaseSource {
               // We're out of results, too!
               try {
                 bulkConnection.closeJob(job.getId());
-                LOG.info("Query completed at: {}", System.currentTimeMillis());
+                lastQueryCompletedTime = System.currentTimeMillis();
+                LOG.info("Query completed at: {}", lastQueryCompletedTime);
               } catch (AsyncApiException e) {
                 LOG.error("Error closing job: {}", e);
               }
@@ -420,8 +440,14 @@ public class ForceSource extends BaseSource {
               queryResultList = null;
               batch = null;
               job = null;
-              // Switch to processing events
-              nextSourceOffset = READ_EVENTS_FROM_NOW;
+              if (conf.subscribeToStreaming) {
+                // Switch to processing events
+                nextSourceOffset = READ_EVENTS_FROM_NOW;
+              } else if (conf.repeatQuery == ForceRepeatQuery.FULL) {
+                nextSourceOffset = RECORD_ID_OFFSET_PREFIX + conf.initialOffset;
+              } else if (conf.repeatQuery == ForceRepeatQuery.NO_REPEAT) {
+                nextSourceOffset = null;
+              }
             }
             return nextSourceOffset;
           } else {
@@ -512,8 +538,16 @@ public class ForceSource extends BaseSource {
       try {
         if (queryResult.isDone()) {
           queryResult = null;
-          // Switch to processing events
-          nextSourceOffset = READ_EVENTS_FROM_NOW;
+          lastQueryCompletedTime = System.currentTimeMillis();
+          LOG.info("Query completed at: {}", lastQueryCompletedTime);
+          if (conf.subscribeToStreaming) {
+            // Switch to processing events
+            nextSourceOffset = READ_EVENTS_FROM_NOW;
+          } else if (conf.repeatQuery == ForceRepeatQuery.FULL) {
+            nextSourceOffset = RECORD_ID_OFFSET_PREFIX + conf.initialOffset;
+          } else if (conf.repeatQuery == ForceRepeatQuery.NO_REPEAT) {
+            nextSourceOffset = null;
+          }
         } else {
           queryResult = partnerConnection.queryMore(queryResult.getQueryLocator());
           recordIndex = 0;

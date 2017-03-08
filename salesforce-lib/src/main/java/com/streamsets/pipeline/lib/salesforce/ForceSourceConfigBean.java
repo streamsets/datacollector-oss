@@ -21,7 +21,10 @@ package com.streamsets.pipeline.lib.salesforce;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.Dependency;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.OffsetEL;
+import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 
 public class ForceSourceConfigBean extends ForceConfigBean {
@@ -66,6 +69,39 @@ public class ForceSourceConfigBean extends ForceConfigBean {
       group = "QUERY"
   )
   public String soqlQuery;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "NO_REPEAT",
+      label = "Repeat query",
+      description = "Select one of the options to repeat the query, or not",
+      displayPosition = 85,
+      dependencies = {
+          @Dependency(configName = "queryExistingData", triggeredByValues = "true"),
+          @Dependency(configName = "subscribeToStreaming", triggeredByValues = "false")
+      },
+      group = "QUERY"
+  )
+  @ValueChooserModel(ForceRepeatQueryChooserValues.class)
+  public ForceRepeatQuery repeatQuery;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "${1 * MINUTES}",
+      label = "Query Interval",
+      displayPosition = 87,
+      dependencies = {
+          @Dependency(configName = "queryExistingData", triggeredByValues = "true"),
+          @Dependency(configName = "subscribeToStreaming", triggeredByValues = "false"),
+          @Dependency(configName = "repeatQuery", triggeredByValues = {"FULL", "INCREMENTAL"}),
+      },
+      elDefs = {TimeEL.class},
+      evaluation = ConfigDef.Evaluation.IMPLICIT,
+      group = "QUERY"
+  )
+  public long queryInterval;
 
   @ConfigDef(
       required = true,
