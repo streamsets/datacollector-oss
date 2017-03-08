@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 StreamSets Inc.
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,30 +19,10 @@
  */
 package com.streamsets.pipeline.stage.processor.fieldflattener;
 
-import com.streamsets.pipeline.api.ErrorCode;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-@GenerateResourceBundle
-public enum Errors implements ErrorCode {
-  FIELD_FLATTENER_01("Field with path '{}' was not found in the record"),
-  FIELD_FLATTENER_02("Flatten target field '{}' does not exists"),
-  FIELD_FLATTENER_03("Flatten target field '{}' is not a MAP or LIST_MAP, it's {}"),
-  FIELD_FLATTENER_04("Record already contains field '{}'"),
-  ;
-
-  private final String msg;
-  Errors(String msg) {
-    this.msg = msg;
+public class CollisionFieldActionValueChooser extends BaseEnumChooserValues<CollisionFieldAction> {
+  public CollisionFieldActionValueChooser() {
+    super(CollisionFieldAction.class);
   }
-
-  @Override
-  public String getCode() {
-    return name();
-  }
-
-  @Override
-  public String getMessage() {
-    return msg;
-  }
-
 }

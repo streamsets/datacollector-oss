@@ -82,13 +82,53 @@ public class FieldFlattenerProcessor extends SingleLaneRecordProcessor {
   }
 
   private void flattenSpecificFields(Record record) throws OnRecordErrorException {
+    Field flattenTarget = null;
+
+    if(!config.flattenInPlace) {
+      if(!record.has(config.flattenTargetField)) {
+        throw new OnRecordErrorException(record, Errors.FIELD_FLATTENER_02, config.flattenTargetField);
+      }
+
+      flattenTarget = record.get(config.flattenTargetField);
+      if(!flattenTarget.getType().isOneOf(Field.Type.MAP, Field.Type.LIST_MAP)) {
+        throw new OnRecordErrorException(record, Errors.FIELD_FLATTENER_03, config.flattenTargetField, flattenTarget.getType().name());
+      }
+    }
+
     for (String flattenField : config.fields) {
       if (record.has(flattenField)) {
         final Map<String, Field> flattened = flattenEntireRecord(record.get(flattenField));
-        record.set(flattenField, Field.create(Field.Type.MAP, flattened));
+        if(config.flattenInPlace) {
+          record.set(flattenField, Field.create(Field.Type.MAP, flattened));
+        } else {
+          appendFieldsToRecord(flattened, record, flattenTarget);
+
+          if(config.removeFlattenedField) {
+            record.delete(flattenField);
+          }
+        }
       } else {
         throw new OnRecordErrorException(record, Errors.FIELD_FLATTENER_01, flattenField);
       }
+    }
+  }
+
+  private void appendFieldsToRecord(Map<String, Field> flattened, Record record, Field flattenTarget) throws OnRecordErrorException {
+    Map<String, Field> flattenTargetMap = flattenTarget.getValueAsMap();
+
+    for(Map.Entry<String, Field> entry : flattened.entrySet()) {
+      if(flattenTargetMap.containsKey(entry.getKey())) {
+        switch (config.collisionFieldAction) {
+          case DISCARD:
+            continue; // Simply continue in the loop
+          case TO_ERROR:
+            throw new OnRecordErrorException(record, Errors.FIELD_FLATTENER_04, entry.getKey());
+          case OVERRIDE:
+            // Jump out of the switch and replace the field:
+        }
+      }
+
+      flattenTarget.getValueAsMap().put(entry.getKey(), entry.getValue());
     }
   }
 

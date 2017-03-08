@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.processor.fieldflattener;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
 
 import java.util.LinkedList;
@@ -53,11 +54,64 @@ public class FieldFlattenerConfig {
 
   @ConfigDef(
     required = true,
+    type = ConfigDef.Type.BOOLEAN,
+    label = "Flatten in Place",
+    defaultValue = "true",
+    description = "When set, each filed will be flatten in place.",
+    displayPosition = 20,
+    group = "FLATTEN",
+    dependsOn = "flattenType",
+    triggeredByValue = { "SPECIFIC_FIELDS" }
+  )
+  public boolean flattenInPlace = true;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    label = "Target Field",
+    description = "Field (must be MAP or MAP_LIST) into which the fields should be flattened.",
+    displayPosition = 25,
+    group = "FLATTEN",
+    dependsOn = "flattenInPlace",
+    triggeredByValue = { "false" }
+  )
+  @FieldSelectorModel(singleValued = true)
+  public String flattenTargetField;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    defaultValue="TO_ERROR",
+    label = "Collision Field Action",
+    description = "Action that should be performed when he target field already have field with given name.",
+    displayPosition = 30,
+    group = "FLATTEN",
+    dependsOn = "flattenInPlace",
+    triggeredByValue = { "false" }
+  )
+  @ValueChooserModel(CollisionFieldActionValueChooser.class)
+  public CollisionFieldAction collisionFieldAction;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.BOOLEAN,
+    label = "Remove Flattened Field",
+    defaultValue = "true",
+    description = "When set, flattened filed will be removed after successful flattening.",
+    displayPosition = 35,
+    group = "FLATTEN",
+    dependsOn = "flattenInPlace",
+    triggeredByValue = { "false" }
+  )
+  public boolean removeFlattenedField = true;
+
+  @ConfigDef(
+    required = true,
     type = ConfigDef.Type.STRING,
     label = "Name separator",
     defaultValue = ".",
     description = "Separator that is used when created merged field name from nested structures.",
-    displayPosition = 20,
+    displayPosition = 35,
     group = "FLATTEN"
   )
   public String nameSeparator;
