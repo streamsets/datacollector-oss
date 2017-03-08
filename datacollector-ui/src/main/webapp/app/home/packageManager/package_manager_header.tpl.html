@@ -85,7 +85,7 @@
         <a ng-if="isAuthorized([userRoles.admin])"
            ng-click="onUploadExtrasClick()"
            tooltip-placement="bottom"
-           tooltip="Install Additional Drivers"
+           tooltip="{{'packageManager.uploadExtras.title' | translate}}"
            tooltip-popup-delay="500"
            class="btn btn-link icon-button">
           <i class="fa fa-upload fa-14x"></i>
@@ -95,7 +95,7 @@
            ng-disabled="common.isSlaveNode || !selectedStageLibraryList.length"
            ng-click="selectedStageLibraryList.length === 0 || onDeleteExtrasClick()"
            tooltip-placement="bottom"
-           tooltip="Delete Additional Drivers"
+           tooltip="{{'global.form.delete' | translate}}"
            tooltip-popup-delay="500"
            class="btn btn-link icon-button">
           <i class="fa fa-trash-o fa-14x"></i>
@@ -104,8 +104,5 @@
       </div>
     </div>
 
-
-
   </div>
-
 </div>
