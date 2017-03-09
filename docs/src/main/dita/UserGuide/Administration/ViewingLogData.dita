@@ -34,6 +34,12 @@
                     information. </info>
             </step>
             <step>
+                <cmd>To stop the automatic refresh of log data, click <uicontrol>Stop Auto
+                        Refresh.</uicontrol></cmd>
+                <info>Or, click <uicontrol>Start Auto Refresh</uicontrol> to view the latest
+                    data.</info>
+            </step>
+            <step>
                 <cmd>To view earlier events, click <uicontrol>Load Previous Logs</uicontrol>.</cmd>
             </step>
             <step>
