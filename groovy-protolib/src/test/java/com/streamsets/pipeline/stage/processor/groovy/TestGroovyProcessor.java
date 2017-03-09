@@ -344,4 +344,21 @@ public class TestGroovyProcessor {
     );
     ScriptingProcessorTestUtil.verifyRecordHeaderAttribute(GroovyProcessor.class, processor, RecordCreator.create());
   }
+
+  @Test
+  public void testInitDestroy() throws Exception {
+    String initScript = "state['initValue'] = 'init'";
+    String script = "for (record in records) {\n" +
+        "  record.value['initValue'] = state['initValue']\n" +
+        "  output.write(record)\n" +
+        "}";
+
+    Processor processor = new GroovyProcessor(
+        ProcessingMode.BATCH,
+        script,
+        initScript,
+        ""
+    );
+    ScriptingProcessorTestUtil.verifyInitDestroy(GroovyProcessor.class, processor);
+  }
 }

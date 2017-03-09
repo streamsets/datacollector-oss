@@ -32,7 +32,8 @@ public enum Errors implements ErrorCode {
   SCRIPTING_05("Script error while processing record: {}"),
   SCRIPTING_06("Script error while processing batch: {}"),
   SCRIPTING_07("Sending normal record to event stream: {}"),
-
+  SCRIPTING_08("Script error while running init script: {}"),
+  SCRIPTING_09("Script error while running destroy script: {}"),
   ;
   private final String msg;
 

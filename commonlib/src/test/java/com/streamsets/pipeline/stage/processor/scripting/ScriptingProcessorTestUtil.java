@@ -48,6 +48,9 @@ import java.util.Map;
 import java.util.LinkedList;
 import java.util.UUID;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 
 /**
  * Common verification of scripting processor unit tests.
@@ -69,11 +72,11 @@ public class ScriptingProcessorTestUtil {
       record.set(Field.create("Hello"));
       List<Record> input = Collections.singletonList(record);
       StageRunner.Output output = runner.runProcess(input);
-      Assert.assertEquals(2, output.getRecords().get("lane").size());
-      Assert.assertEquals("Hello", output.getRecords().get("lane").get(0).get().getValueAsString());
-      Assert.assertEquals("Bye", output.getRecords().get("lane").get(1).get().getValueAsString());
-      Assert.assertEquals(1, runner.getErrorRecords().size());
-      Assert.assertEquals("Error", runner.getErrorRecords().get(0).get().getValueAsString());
+      assertEquals(2, output.getRecords().get("lane").size());
+      assertEquals("Hello", output.getRecords().get("lane").get(0).get().getValueAsString());
+      assertEquals("Bye", output.getRecords().get("lane").get(1).get().getValueAsString());
+      assertEquals(1, runner.getErrorRecords().size());
+      assertEquals("Error", runner.getErrorRecords().get(0).get().getValueAsString());
     } finally {
       runner.runDestroy();
     }
@@ -89,27 +92,27 @@ public class ScriptingProcessorTestUtil {
       Record record = RecordCreator.create();
       List<Record> input = Collections.singletonList(record);
       StageRunner.Output output = runner.runProcess(input);
-      Assert.assertEquals(4, output.getRecords().get("lane").size());
+      assertEquals(4, output.getRecords().get("lane").size());
       Record outRec = output.getRecords().get("lane").get(0);
-      Assert.assertEquals(Field.create((String) null), outRec.get());
+      assertEquals(Field.create((String) null), outRec.get());
       outRec = output.getRecords().get("lane").get(1);
-      Assert.assertEquals(Field.Type.STRING, outRec.get("/").getType());
-      Assert.assertEquals("Hello", outRec.get("/").getValue());
+      assertEquals(Field.Type.STRING, outRec.get("/").getType());
+      assertEquals("Hello", outRec.get("/").getValue());
       outRec = output.getRecords().get("lane").get(2);
-      Assert.assertEquals(Field.Type.MAP, outRec.get("/").getType());
-      Assert.assertEquals(Field.Type.STRING, outRec.get("/foo").getType());
-      Assert.assertEquals("FOO", outRec.get("/foo").getValue());
+      assertEquals(Field.Type.MAP, outRec.get("/").getType());
+      assertEquals(Field.Type.STRING, outRec.get("/foo").getType());
+      assertEquals("FOO", outRec.get("/foo").getValue());
       outRec = output.getRecords().get("lane").get(3);
-      Assert.assertEquals(Field.Type.LIST, outRec.get("/").getType());
+      assertEquals(Field.Type.LIST, outRec.get("/").getType());
       // JavaScript only defines "Number" as a type which is a 64-bit float (double)
       if (System.getProperty("java.version").startsWith("1.7.")) {
-        Assert.assertEquals(Field.Type.DOUBLE, outRec.get("[0]").getType());
-        Assert.assertEquals(5.0, outRec.get("[0]").getValue());
+        assertEquals(Field.Type.DOUBLE, outRec.get("[0]").getType());
+        assertEquals(5.0, outRec.get("[0]").getValue());
       }
       // Java8's Nashorn engine however, will respect the original Java type of Integer.
       if (System.getProperty("java.version").startsWith("1.8")) {
-        Assert.assertEquals(Field.Type.INTEGER, outRec.get("[0]").getType());
-        Assert.assertEquals(5, outRec.get("[0]").getValue());
+        assertEquals(Field.Type.INTEGER, outRec.get("[0]").getType());
+        assertEquals(5, outRec.get("[0]").getValue());
       }
     } finally {
       runner.runDestroy();
@@ -129,10 +132,10 @@ public class ScriptingProcessorTestUtil {
       record2.set(Field.create("Bye"));
       List<Record> input = Arrays.asList(record1, record2);
       StageRunner.Output output = runner.runProcess(input);
-      Assert.assertEquals(2, output.getRecords().get("lane").size());
-      Assert.assertEquals("Hello", output.getRecords().get("lane").get(0).get().getValueAsString());
-      Assert.assertEquals("Bye", output.getRecords().get("lane").get(1).get().getValueAsString());
-      Assert.assertEquals(0, runner.getErrorRecords().size());
+      assertEquals(2, output.getRecords().get("lane").size());
+      assertEquals("Hello", output.getRecords().get("lane").get(0).get().getValueAsString());
+      assertEquals("Bye", output.getRecords().get("lane").get(1).get().getValueAsString());
+      assertEquals(0, runner.getErrorRecords().size());
     } finally {
       runner.runDestroy();
     }
@@ -157,14 +160,14 @@ public class ScriptingProcessorTestUtil {
       List<Record> input = Arrays.asList(record1, record2);
       StageRunner.Output output = runner.runProcess(input);
       if (onRecordError == OnRecordError.DISCARD) {
-        Assert.assertEquals(1, output.getRecords().get("lane").size());
-        Assert.assertEquals("Bye", output.getRecords().get("lane").get(0).get().getValueAsString());
-        Assert.assertEquals(0, runner.getErrorRecords().size());
+        assertEquals(1, output.getRecords().get("lane").size());
+        assertEquals("Bye", output.getRecords().get("lane").get(0).get().getValueAsString());
+        assertEquals(0, runner.getErrorRecords().size());
       } else if (onRecordError == OnRecordError.TO_ERROR) {
-        Assert.assertEquals(1, output.getRecords().get("lane").size());
-        Assert.assertEquals("Bye", output.getRecords().get("lane").get(0).get().getValueAsString());
-        Assert.assertEquals(1, runner.getErrorRecords().size());
-        Assert.assertEquals("Hello", runner.getErrorRecords().get(0).get().getValueAsString());
+        assertEquals(1, output.getRecords().get("lane").size());
+        assertEquals("Bye", output.getRecords().get("lane").get(0).get().getValueAsString());
+        assertEquals(1, runner.getErrorRecords().size());
+        assertEquals("Hello", runner.getErrorRecords().get(0).get().getValueAsString());
       }
     } finally {
       runner.runDestroy();
@@ -217,8 +220,8 @@ public class ScriptingProcessorTestUtil {
       record.set(Field.create(list));
       List<Record> input = Collections.singletonList(record);
       StageRunner.Output output = runner.runProcess(input);
-      Assert.assertEquals(1, output.getRecords().get("lane").size());
-      Assert.assertEquals(record.get(), output.getRecords().get("lane").get(0).get());
+      assertEquals(1, output.getRecords().get("lane").size());
+      assertEquals(record.get(), output.getRecords().get("lane").get(0).get());
     } finally {
       runner.runDestroy();
     }
@@ -235,7 +238,7 @@ public class ScriptingProcessorTestUtil {
       Record record = RecordCreator.create();
       List<Record> input = Collections.singletonList(record);
       StageRunner.Output output = runner.runProcess(input);
-      Assert.assertEquals(2, output.getRecords().get("lane").size());
+      assertEquals(2, output.getRecords().get("lane").size());
 
       List<Field> list = new ArrayList<>();
       list.add(Field.create(1)); //int
@@ -244,9 +247,9 @@ public class ScriptingProcessorTestUtil {
       list.add(Field.create(true));
       list.add(Field.create("hello"));
       Field field = Field.create(list);
-      Assert.assertEquals(field, output.getRecords().get("lane").get(0).get());
+      assertEquals(field, output.getRecords().get("lane").get(0).get());
 
-      Assert.assertEquals(Field.create((List) null), output.getRecords().get("lane").get(1).get());
+      assertEquals(Field.create((List) null), output.getRecords().get("lane").get(1).get());
     } finally {
       runner.runDestroy();
     }
@@ -277,10 +280,10 @@ public class ScriptingProcessorTestUtil {
 
     try {
       StageRunner.Output output = runner.runProcess(input);
-      Assert.assertEquals(1, output.getRecords().get("lane").size());
+      assertEquals(1, output.getRecords().get("lane").size());
       List<Field> result = output.getRecords().get("lane").get(0).get().getValueAsList();
       for(int i = 0; i < list.size(); i++){
-        Assert.assertEquals(list.get(i).getType(), result.get(i).getType());
+        assertEquals(list.get(i).getType(), result.get(i).getType());
       }
     } finally {
       runner.runDestroy();
@@ -300,7 +303,7 @@ public class ScriptingProcessorTestUtil {
       Record record = RecordCreator.create();
       List<Record> input = Collections.singletonList(record);
       StageRunner.Output output = runner.runProcess(input);
-      Assert.assertEquals(2, output.getRecords().get("lane").size());
+      assertEquals(2, output.getRecords().get("lane").size());
 
       List<Field> list = new ArrayList<>();
       // JavaScript only defines "Number" as a type which is a 64-bit float (double)
@@ -315,9 +318,9 @@ public class ScriptingProcessorTestUtil {
       list.add(Field.create(true));
       list.add(Field.create("hello"));
       Field field = Field.create(list);
-      Assert.assertEquals(field, output.getRecords().get("lane").get(0).get());
+      assertEquals(field, output.getRecords().get("lane").get(0).get());
 
-      Assert.assertEquals(Field.create((List) null), output.getRecords().get("lane").get(1).get());
+      assertEquals(Field.create((List) null), output.getRecords().get("lane").get(1).get());
     } finally {
       runner.runDestroy();
     }
@@ -354,16 +357,16 @@ public class ScriptingProcessorTestUtil {
       runner.runDestroy();
     }
 
-    Assert.assertEquals(1, output.getRecords().get("lane").size());
+    assertEquals(1, output.getRecords().get("lane").size());
     Map<String, Field> outRec = output.getRecords().get("lane").get(0).get().getValueAsMap();
     if (!clazz.getName().equals(JAVASCRIPT_CLASSNAME)) {
       // JavaScript has ony "Number" type. No int, long, double, decimal types. So skip them.
-      Assert.assertEquals(Field.Type.LONG, outRec.get("int_long").getType());
-      Assert.assertEquals(Field.Type.DECIMAL, outRec.get("double_decimal").getType());
+      assertEquals(Field.Type.LONG, outRec.get("int_long").getType());
+      assertEquals(Field.Type.DECIMAL, outRec.get("double_decimal").getType());
       // JavaScript fails this test because Date is Object type.
-      Assert.assertEquals(Field.Type.DATETIME, outRec.get("str_date").getType());
+      assertEquals(Field.Type.DATETIME, outRec.get("str_date").getType());
     }
-    Assert.assertEquals(Field.Type.BOOLEAN, outRec.get("long_bool").getType());
+    assertEquals(Field.Type.BOOLEAN, outRec.get("long_bool").getType());
   }
 
 
@@ -382,8 +385,8 @@ public class ScriptingProcessorTestUtil {
       List<Record> input = Collections.singletonList(record);
       runner.runProcess(input);
       StageRunner.Output output = runner.runProcess(input);
-      Assert.assertEquals(1, output.getRecords().get("lane").size());
-      Assert.assertEquals(2, output.getRecords().get("lane").get(0).get("/count").getValue());
+      assertEquals(1, output.getRecords().get("lane").size());
+      assertEquals(2, output.getRecords().get("lane").get(0).get("/count").getValue());
     } finally {
       runner.runDestroy();
     }
@@ -403,9 +406,9 @@ public class ScriptingProcessorTestUtil {
       List<Record> input = Collections.singletonList(record);
       runner.runProcess(input);
       StageRunner.Output output = runner.runProcess(input);
-      Assert.assertEquals(1, output.getRecords().get("lane").size());
+      assertEquals(1, output.getRecords().get("lane").size());
       // JavaScript only has a single number type, which is a double.
-      Assert.assertEquals(2.0d, output.getRecords().get("lane").get(0).get("/count").getValue());
+      assertEquals(2.0d, output.getRecords().get("lane").get(0).get("/count").getValue());
     } finally {
       runner.runDestroy();
     }
@@ -425,23 +428,23 @@ public class ScriptingProcessorTestUtil {
       List<Record> input = Collections.singletonList(record);
       StageRunner.Output output = runner.runProcess(input);
 
-      Assert.assertEquals(2, output.getRecords().get("lane").size());
+      assertEquals(2, output.getRecords().get("lane").size());
       Record outRec = output.getRecords().get("lane").get(0);
-      Assert.assertEquals(Field.Type.LIST_MAP, outRec.get().getType());
+      assertEquals(Field.Type.LIST_MAP, outRec.get().getType());
       // In this case the type passthrough works because the scripting processor didn't modify this field.
-      Assert.assertEquals(1, outRec.get("/Hello").getValue());
-      Assert.assertEquals(1, outRec.get("[0]").getValue());
+      assertEquals(1, outRec.get("/Hello").getValue());
+      assertEquals(1, outRec.get("[0]").getValue());
       outRec = output.getRecords().get("lane").get(1);
-      Assert.assertEquals(Field.Type.LIST_MAP, outRec.get().getType());
+      assertEquals(Field.Type.LIST_MAP, outRec.get().getType());
       // JavaScript only defines "Number" as a type which is a 64-bit float (double)
       if (System.getProperty("java.version").startsWith("1.7.")) {
-        Assert.assertEquals(2.0, outRec.get("/Hello").getValue());
-        Assert.assertEquals(2.0, outRec.get("[0]").getValue());
+        assertEquals(2.0, outRec.get("/Hello").getValue());
+        assertEquals(2.0, outRec.get("[0]").getValue());
       }
       // Java8's Nashorn engine however, will respect the original Java type of Integer.
       if (System.getProperty("java.version").startsWith("1.8")) {
-        Assert.assertEquals(2, outRec.get("/Hello").getValue());
-        Assert.assertEquals(2, outRec.get("[0]").getValue());
+        assertEquals(2, outRec.get("/Hello").getValue());
+        assertEquals(2, outRec.get("[0]").getValue());
       }
     } finally {
       runner.runDestroy();
@@ -463,31 +466,31 @@ public class ScriptingProcessorTestUtil {
       List<Record> input = Collections.singletonList(record);
       StageRunner.Output output = runner.runProcess(input);
 
-      Assert.assertEquals(2, output.getRecords().get("lane").size());
+      assertEquals(2, output.getRecords().get("lane").size());
       Record outRec = output.getRecords().get("lane").get(0);
-      Assert.assertEquals(Field.Type.MAP, outRec.get().getType());
+      assertEquals(Field.Type.MAP, outRec.get().getType());
       // In this case the type passthrough works because the scripting processor didn't modify this field.
-      Assert.assertEquals(1, outRec.get("/Hello").getValue());
+      assertEquals(1, outRec.get("/Hello").getValue());
       Field f = outRec.get("/Test");
-      Assert.assertEquals(Field.Type.LIST_MAP, f.getType());
-      Assert.assertEquals("streamsets", outRec.get("/Test/Key").getValue());
+      assertEquals(Field.Type.LIST_MAP, f.getType());
+      assertEquals("streamsets", outRec.get("/Test/Key").getValue());
       outRec = output.getRecords().get("lane").get(1);
-      Assert.assertEquals(Field.Type.LIST_MAP, outRec.get().getType());
+      assertEquals(Field.Type.LIST_MAP, outRec.get().getType());
       // JavaScript only defines "Number" as a type which is a 64-bit float (double)
       if (System.getProperty("java.version").startsWith("1.7.")) {
-        Assert.assertEquals(2.0, outRec.get("/Hello").getValue());
-        Assert.assertEquals(2.0, outRec.get("[0]").getValue());
+        assertEquals(2.0, outRec.get("/Hello").getValue());
+        assertEquals(2.0, outRec.get("[0]").getValue());
       }
       // Java8's Nashorn engine however, will respect the original Java type of Integer.
       if (System.getProperty("java.version").startsWith("1.8")) {
-        Assert.assertEquals(2, outRec.get("/Hello").getValue());
-        Assert.assertEquals(2, outRec.get("[0]").getValue());
+        assertEquals(2, outRec.get("/Hello").getValue());
+        assertEquals(2, outRec.get("[0]").getValue());
       }
       f = outRec.get("/Test");
       // The field referred to as /Test and [1] should be the same
-      Assert.assertEquals(f, outRec.get("[1]"));
-      Assert.assertEquals(Field.Type.MAP, f.getType());
-      Assert.assertEquals("dpm", outRec.get("/Test/Key").getValue());
+      assertEquals(f, outRec.get("[1]"));
+      assertEquals(Field.Type.MAP, f.getType());
+      assertEquals("dpm", outRec.get("/Test/Key").getValue());
     } finally {
       runner.runDestroy();
     }
@@ -506,14 +509,14 @@ public class ScriptingProcessorTestUtil {
 
       List<Record> events = runner.getEventRecords();
       Assert.assertNotNull(events);
-      Assert.assertEquals(1, events.size());
+      assertEquals(1, events.size());
 
       Record event = events.get(0);
       Assert.assertNotNull(event);
-      Assert.assertTrue(event.has("/a"));
-      Assert.assertEquals(1, event.get("/a").getValueAsInteger());
-      Assert.assertTrue(event.has("/b"));
-      Assert.assertEquals(2, event.get("/b").getValueAsInteger());
+      assertTrue(event.has("/a"));
+      assertEquals(1, event.get("/a").getValueAsInteger());
+      assertTrue(event.has("/b"));
+      assertEquals(2, event.get("/b").getValueAsInteger());
     } finally {
       runner.runDestroy();
     }
@@ -536,12 +539,12 @@ public class ScriptingProcessorTestUtil {
       List<Record> input = Collections.singletonList(record);
       StageRunner.Output output = runner.runProcess(input);
 
-      Assert.assertEquals(1, output.getRecords().get("lane").size());
+      assertEquals(1, output.getRecords().get("lane").size());
       Record outRec = output.getRecords().get("lane").get(0);
-      Assert.assertEquals(Field.Type.LIST_MAP, outRec.get().getType());
+      assertEquals(Field.Type.LIST_MAP, outRec.get().getType());
 
-      Assert.assertEquals(20, outRec.get("/").getValueAsListMap().size());
-      Assert.assertEquals(
+      assertEquals(20, outRec.get("/").getValueAsListMap().size());
+      assertEquals(
           new ArrayList<>(listMap.keySet()),
           new ArrayList<>(outRec.get("/").getValueAsListMap().keySet())
       );
@@ -598,18 +601,18 @@ public class ScriptingProcessorTestUtil {
       runner.runDestroy();
     }
 
-    Assert.assertEquals(1, output.getRecords().get("lane").size());
+    assertEquals(1, output.getRecords().get("lane").size());
     Record outRec = output.getRecords().get("lane").get(0);
-    Assert.assertEquals(Field.Type.MAP, outRec.get().getType());
+    assertEquals(Field.Type.MAP, outRec.get().getType());
 
     // All of the values in the "row1" map are null, but type should be preserved
     Map<String, Field> row1map = outRec.get().getValueAsMap().get("row1").getValueAsMap();
     for (Map.Entry<String, Field> r1 : row1map.entrySet()){
       Assert.assertNull(r1.getValue().getValue());
-      Assert.assertEquals(r1.getValue().getType(), row1.get(r1.getKey()).getType());
+      assertEquals(r1.getValue().getType(), row1.get(r1.getKey()).getType());
     }
     // "row2" map is null, but the type should be preserved
-    Assert.assertEquals(Field.Type.MAP, outRec.get().getValueAsMap().get("row2").getType());
+    assertEquals(Field.Type.MAP, outRec.get().getValueAsMap().get("row2").getType());
     Assert.assertNull(outRec.get().getValueAsMap().get("row2").getValue());
   }
 
@@ -630,7 +633,7 @@ public class ScriptingProcessorTestUtil {
       runner.runDestroy();
     }
     Record outRec = output.getRecords().get("lane").get(0);
-    Assert.assertEquals(record.get().getValueAsMap().size(), outRec.get().getValueAsMap().size());
+    assertEquals(record.get().getValueAsMap().size(), outRec.get().getValueAsMap().size());
     Map<String, Field> outMap = outRec.get().getValueAsMap();
     for(Map.Entry<String, Field> entry : outMap.entrySet()) {
       assertFieldUtil(entry.getKey(), entry.getValue(), null);
@@ -654,7 +657,7 @@ public class ScriptingProcessorTestUtil {
       runner.runDestroy();
     }
     Record outRec = output.getRecords().get("lane").get(0);
-    Assert.assertEquals(record.get().getValueAsMap().size(), outRec.get().getValueAsMap().size());
+    assertEquals(record.get().getValueAsMap().size(), outRec.get().getValueAsMap().size());
     Map<String, Field> outMap = outRec.get().getValueAsMap();
 
     assertFieldUtil("null_int", outMap.get("null_int"), 123);
@@ -680,7 +683,7 @@ public class ScriptingProcessorTestUtil {
     String testDir = "target/" + UUID.randomUUID().toString();
     File testDirectory = new File(testDir);
     testDirectory.deleteOnExit();
-    Assert.assertTrue(testDirectory.mkdirs());
+    assertTrue(testDirectory.mkdirs());
 
     ProcessorRunner runner = new ProcessorRunner.Builder(clazz, processor)
         .addOutputLane("lane")
@@ -707,11 +710,11 @@ public class ScriptingProcessorTestUtil {
 
     List<Record> records = output.getRecords().get("lane");
 
-    Assert.assertEquals(1, records.size());
+    assertEquals(1, records.size());
 
     Record record = records.get(0);
 
-    Assert.assertTrue(record.has("/byte_array"));
+    assertTrue(record.has("/byte_array"));
 
     List<Field> bytes = record.get("/byte_array").getValueAsList();
 
@@ -719,10 +722,10 @@ public class ScriptingProcessorTestUtil {
     for (int i = 0; i < bytes.size(); i++) {
       byte_array[i] = (byte) bytes.get(i).getValueAsInteger();
     }
-    Assert.assertEquals(FileRefTestUtil.TEXT, new String(byte_array));
+    assertEquals(FileRefTestUtil.TEXT, new String(byte_array));
 
-    Assert.assertTrue(record.has("/fileRef"));
-    Assert.assertEquals(Field.Type.FILE_REF, record.get("/fileRef").getType());
+    assertTrue(record.has("/fileRef"));
+    assertEquals(Field.Type.FILE_REF, record.get("/fileRef").getType());
   }
 
   public static <C extends Processor> void verifyCreateRecord(
@@ -746,9 +749,9 @@ public class ScriptingProcessorTestUtil {
       runner.runDestroy();
     }
     List<Record> records = output.getRecords().get("lane");
-    Assert.assertEquals(2, records.size());
-    Assert.assertEquals("record_value", records.get(0).get("/record_value").getValueAsString());
-    Assert.assertEquals("record_value", records.get(1).get("/record_value").getValueAsString());
+    assertEquals(2, records.size());
+    assertEquals("record_value", records.get(0).get("/record_value").getValueAsString());
+    assertEquals("record_value", records.get(1).get("/record_value").getValueAsString());
   }
 
   public static <C extends Processor> void verifyRecordHeaderAttribute(
@@ -762,19 +765,41 @@ public class ScriptingProcessorTestUtil {
 
     runner.runInit();
     StageRunner.Output output;
-    try{
+    try {
       List<Record> input = Collections.singletonList(record);
       output = runner.runProcess(input);
     } finally {
       runner.runDestroy();
     }
     List<Record> records = output.getRecords().get("lane");
-    Assert.assertEquals(1, records.size());
-    Assert.assertEquals(1, records.get(0).getHeader().getAttributeNames().size());
+    assertEquals(1, records.size());
+    assertEquals(1, records.get(0).getHeader().getAttributeNames().size());
 
     final String key = "key1";
     final String value = "value1";
-    Assert.assertEquals(value, records.get(0).getHeader().getAttribute(key));
+    assertEquals(value, records.get(0).getHeader().getAttribute(key));
+  }
+
+  public static <C extends Processor> void verifyInitDestroy(Class<C> clazz, Processor processor) throws Exception {
+    ProcessorRunner runner = new ProcessorRunner.Builder(clazz, processor)
+        .addOutputLane("lane")
+        .build();
+
+    Record record = RecordCreator.create();
+    record.set(Field.create(new HashMap<>()));
+
+    runner.runInit();
+    StageRunner.Output output;
+    try {
+      List<Record> input = Collections.singletonList(record);
+      output = runner.runProcess(input);
+    } finally {
+      runner.runDestroy();
+    }
+    List<Record> records = output.getRecords().get("lane");
+    assertEquals(1, records.size());
+    assertTrue(records.get(0).has("/initValue"));
+    assertEquals("init", records.get(0).get("/initValue").getValueAsString());
   }
 
   static void assertFieldUtil(String fieldName, Field field, Object obj){
@@ -830,10 +855,10 @@ public class ScriptingProcessorTestUtil {
         expectedType = Field.Type.MAP;
         break;
     }
-    Assert.assertEquals(expectedType, field.getType());
+    assertEquals(expectedType, field.getType());
     if(obj == null)
       Assert.assertNull(field.getValue());
     else
-      Assert.assertEquals(obj, field.getValue());
+      assertEquals(obj, field.getValue());
   }
 }

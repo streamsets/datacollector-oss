@@ -27,7 +27,6 @@ import com.streamsets.pipeline.stage.processor.scripting.ScriptObjectFactory;
 import com.streamsets.pipeline.stage.processor.scripting.ScriptTypedNullObject;
 import org.python.core.PyDictionary;
 import org.python.core.PyList;
-import org.python.core.PyObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,8 +46,12 @@ public class JythonProcessor extends AbstractScriptingProcessor {
 
   public static final String JYTHON_ENGINE = "jython";
 
+  public JythonProcessor(ProcessingMode processingMode, String script, String initScript, String destroyScript) {
+    super(LOG, JYTHON_ENGINE, Groups.JYTHON.name(), processingMode, script, initScript, destroyScript);
+  }
+
   public JythonProcessor(ProcessingMode processingMode, String script) {
-    super(LOG, JYTHON_ENGINE, Groups.JYTHON.name(), "script", processingMode, script);
+    this(processingMode, script, "", "");
   }
 
   @Override
@@ -207,7 +210,7 @@ public class JythonProcessor extends AbstractScriptingProcessor {
       private final boolean isListMap;
 
       public PyDictionaryMapInfo(boolean isListMap) {
-        super(new ConcurrentLinkedHashMap<PyObject, PyObject>(), true);
+        super(new ConcurrentLinkedHashMap<>(), true);
         this.isListMap = isListMap;
       }
 

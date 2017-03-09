@@ -42,11 +42,31 @@ import java.util.Iterator;
 import java.util.List;
 
 public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
+  private static final String STATE_BINDING_NAME = "state";
+  private static final String LOG_BINDING_NAME = "log";
   private final Logger log;
+
+  private final String scriptingEngineName;
+  private final String scriptConfigGroup;
+  private final ProcessingMode processingMode;
+  private final String script;
+  private final String initScript;
+  private final String destroyScript;
+  private final SimpleBindings bindings = new SimpleBindings();
+  // State obj for use by end-user scripts.
+  private Object state;
+
+  private CompiledScript compiledScript;
+  private ScriptObjectFactory scriptObjectFactory;
+  private ErrorRecordHandler errorRecordHandler;
+  private Err err;
+  private SdcFunctions sdcFunc;
+
+  protected ScriptEngine engine;
 
   // to hide all other methods of batchMaker
   public interface Out {
-    public void write(ScriptRecord record);
+    void write(ScriptRecord record);
   }
 
   // to hide all other methods of Stage.Context
@@ -94,37 +114,22 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
 
   }
 
-  private final String scriptingEngineName;
-  private final String scriptConfigGroup;
-  private final String scriptConfigName;
-  private final ProcessingMode processingMode;
-  private final  String script;
-  private final SimpleBindings bindings = new SimpleBindings();
-  // State obj for use by end-user scripts.
-  private Object state;
-
-  private CompiledScript compiledScript;
-  private ScriptObjectFactory scriptObjectFactory;
-  private ErrorRecordHandler errorRecordHandler;
-  private Err err;
-  private SdcFunctions sdcFunc;
-
-  protected ScriptEngine engine;
-
   public AbstractScriptingProcessor(
       Logger log,
       String scriptingEngineName,
       String scriptConfigGroup,
-      String scriptConfigName,
       ProcessingMode processingMode,
-      String script
+      String script,
+      String initScript,
+      String destroyScript
   ) {
     this.log = log;
     this.scriptingEngineName = scriptingEngineName;
     this.scriptConfigGroup = scriptConfigGroup;
-    this.scriptConfigName = scriptConfigName;
     this.processingMode = processingMode;
     this.script = script;
+    this.initScript = initScript;
+    this.destroyScript = destroyScript;
   }
 
   private ScriptObjectFactory getScriptObjectFactory() {
@@ -156,14 +161,14 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
     }
 
     if (script.trim().isEmpty()) {
-      issues.add(getContext().createConfigIssue(scriptConfigGroup, scriptConfigName, Errors.SCRIPTING_02));
+      issues.add(getContext().createConfigIssue(scriptConfigGroup, "script", Errors.SCRIPTING_02));
     } else {
       try {
         compiledScript = ((Compilable) engine).compile(script);
       } catch (ScriptException e) {
         // This likely means that there is a syntactic error in the script.
         issues.add(
-            getContext().createConfigIssue(scriptConfigGroup, scriptConfigName, Errors.SCRIPTING_03, e.toString())
+            getContext().createConfigIssue(scriptConfigGroup, "script", Errors.SCRIPTING_03, e.toString())
         );
         log.error(Errors.SCRIPTING_03.getMessage(), e.toString(), e);
       }
@@ -171,17 +176,36 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
 
     err = new Err();
     sdcFunc = new SdcFunctions();
+
+    SimpleBindings initBindings = new SimpleBindings();
+    initBindings.put(STATE_BINDING_NAME, state);
+    initBindings.put(LOG_BINDING_NAME, log);
+
+    try {
+      engine.eval(initScript, initBindings);
+    } catch (ScriptException e) {
+      issues.add(getContext().createConfigIssue(scriptConfigGroup, "initScript", Errors.SCRIPTING_08, e.toString(), e));
+    }
+
     return issues;
   }
 
   @Override
+  public void destroy() {
+    try {
+      SimpleBindings destroyBindings = new SimpleBindings();
+      destroyBindings.put(STATE_BINDING_NAME, state);
+      destroyBindings.put(LOG_BINDING_NAME, log);
+      engine.eval(destroyScript, destroyBindings);
+    } catch (ScriptException e) {
+      log.error(Errors.SCRIPTING_09.getMessage(), e.toString(), e);
+    }
+    super.destroy();
+  }
+
+  @Override
   public void process(Batch batch, final SingleLaneBatchMaker singleLaneBatchMaker) throws StageException {
-    Out out = new Out() {
-      @Override
-      public void write(ScriptRecord scriptRecord) {
-        singleLaneBatchMaker.addRecord(getScriptObjectFactory().getRecord(scriptRecord));
-      }
-    };
+    Out out = scriptRecord -> singleLaneBatchMaker.addRecord(getScriptObjectFactory().getRecord(scriptRecord));
 
     switch (processingMode) {
       case RECORD:
@@ -220,8 +244,8 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
     bindings.put("records", records.toArray(new Object[records.size()]));
     bindings.put("output", out);
     bindings.put("error", err);
-    bindings.put("state", state);
-    bindings.put("log", log);
+    bindings.put(STATE_BINDING_NAME, state);
+    bindings.put(LOG_BINDING_NAME, log);
     ScriptTypedNullObject.fillNullTypes(bindings);
     bindings.put("sdcFunctions", sdcFunc);
 

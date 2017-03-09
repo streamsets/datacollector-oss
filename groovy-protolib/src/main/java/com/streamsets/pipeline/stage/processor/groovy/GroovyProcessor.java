@@ -34,8 +34,22 @@ public class GroovyProcessor extends AbstractScriptingProcessor {
   static final String GROOVY_ENGINE = "groovy-sdc";
   static final String GROOVY_INDY_ENGINE = "groovy-sdc-indy";
 
+  public GroovyProcessor(
+      ProcessingMode processingMode,
+      String script,
+      String initScript,
+      String destroyScript,
+      String engineName
+  ) {
+    super(LOG, engineName, Groups.GROOVY.name(), processingMode, script, initScript, destroyScript);
+  }
+
   public GroovyProcessor(ProcessingMode processingMode, String script, String engineName) {
-    super(LOG, engineName, Groups.GROOVY.name(), "script", processingMode, script);
+    this(processingMode, script, "", "", engineName);
+  }
+
+  public GroovyProcessor(ProcessingMode processingMode, String script, String initScript, String destroyScript) {
+    this(processingMode, script, initScript, destroyScript, GROOVY_ENGINE);
   }
 
   public GroovyProcessor(ProcessingMode processingMode, String script) {

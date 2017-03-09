@@ -561,4 +561,21 @@ public class TestJavaScriptProcessor {
     );
     ScriptingProcessorTestUtil.verifyRecordHeaderAttribute(JavaScriptProcessor.class, processor, RecordCreator.create());
   }
+
+  @Test
+  public void testInitDestroy() throws Exception {
+    String initScript = "state['initValue'] = 'init';";
+    String script = "for (var i = 0; i < records.length; i++) {\n" +
+        "  records[i].value['initValue'] = state['initValue'];\n" +
+        "  output.write(records[i])\n" +
+        "}";
+
+    Processor processor = new JavaScriptProcessor(
+        ProcessingMode.BATCH,
+        script,
+        initScript,
+        ""
+    );
+    ScriptingProcessorTestUtil.verifyInitDestroy(JavaScriptProcessor.class, processor);
+  }
 }

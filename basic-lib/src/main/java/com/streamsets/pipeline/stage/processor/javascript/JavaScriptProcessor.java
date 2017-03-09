@@ -31,8 +31,12 @@ public class JavaScriptProcessor extends AbstractScriptingProcessor {
 
   public static final String JAVASCRIPT_ENGINE = "javascript";
 
+  public JavaScriptProcessor(ProcessingMode processingMode, String script, String initScript, String destroyScript) {
+    super(LOG, JAVASCRIPT_ENGINE, Groups.JAVASCRIPT.name(), processingMode, script, initScript, destroyScript);
+  }
+
   public JavaScriptProcessor(ProcessingMode processingMode, String script) {
-    super(LOG, JAVASCRIPT_ENGINE, Groups.JAVASCRIPT.name(), "script", processingMode, script);
+    this(processingMode, script, "", "");
   }
 
   @Override

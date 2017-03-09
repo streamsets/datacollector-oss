@@ -466,4 +466,19 @@ public class TestJythonProcessor {
     ScriptingProcessorTestUtil.verifyRecordHeaderAttribute(JythonProcessor.class, processor, RecordCreator.create());
   }
 
+  @Test
+  public void testInitDestroy() throws Exception {
+    String initScript = "state['initValue'] = 'init'";
+    String script = "for record in records:\n" +
+        "  record.value['initValue'] = state['initValue']\n" +
+        "  output.write(record)\n";
+
+    Processor processor = new JythonProcessor(
+        ProcessingMode.BATCH,
+        script,
+        initScript,
+        ""
+    );
+    ScriptingProcessorTestUtil.verifyInitDestroy(JythonProcessor.class, processor);
+  }
 }

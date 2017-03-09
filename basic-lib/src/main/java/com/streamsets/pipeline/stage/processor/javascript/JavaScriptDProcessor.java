@@ -165,20 +165,74 @@ public class JavaScriptDProcessor extends DProcessor {
       "  }\n" +
       "}\n";
 
+  private static final String DEFAULT_INIT_SCRIPT =
+      "/**\n" +
+          " * Available Objects:\n" +
+          " * \n" +
+          " *  state: a dict that is preserved between invocations of this script. \n" +
+          " *        Useful for caching bits of data e.g. counters and long-lived resources.\n" +
+          " *\n" +
+          " *  log.<loglevel>(msg, obj...): use instead of print to send log messages to the log4j log instead of stdout.\n" +
+          " *                               loglevel is any log4j level: e.g. info, error, warn, trace.\n" +
+          " *\n" +
+          " */\n" +
+          "\n" +
+          "// state['connection'] = new Connection().open();\n" +
+          "\n";
+
+  private static final String DEFAULT_DESTROY_SCRIPT =
+      "/**\n" +
+          " * Available Objects:\n" +
+          " * \n" +
+          " *  state: a dict that is preserved between invocations of this script. \n" +
+          " *        Useful for caching bits of data e.g. counters and long-lived resources.\n" +
+          " *\n" +
+          " *  log.<loglevel>(msg, obj...): use instead of print to send log messages to the log4j log instead of stdout.\n" +
+          " *                               loglevel is any log4j level: e.g. info, error, warn, trace.\n" +
+          " *\n" +
+          " */\n" +
+          "\n" +
+          "// state['connection'].close();\n" +
+          "\n";
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.TEXT,
+      defaultValue = DEFAULT_INIT_SCRIPT,
+      label = "Init Script",
+      description = "Place initialization code here. Called on pipeline validate/start.",
+      displayPosition = 20,
+      group = "JAVASCRIPT",
+      mode = ConfigDef.Mode.JAVASCRIPT
+  )
+  public String initScript = "";
+
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.TEXT,
       defaultValue = DEFAULT_SCRIPT,
       label = "Script",
-      displayPosition = 20,
+      displayPosition = 30,
       group = "JAVASCRIPT",
       mode = ConfigDef.Mode.JAVASCRIPT
   )
   public String script;
 
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.TEXT,
+      defaultValue = DEFAULT_DESTROY_SCRIPT,
+      label = "Destroy Script",
+      description = "Place cleanup code here. Called on pipeline stop.",
+      displayPosition = 40,
+      group = "JAVASCRIPT",
+      mode = ConfigDef.Mode.JAVASCRIPT
+  )
+  public String destroyScript = "";
+
   @Override
   protected Processor createProcessor() {
-    return new JavaScriptProcessor(processingMode, script);
+    return new JavaScriptProcessor(processingMode, script, initScript, destroyScript);
   }
 
 }
