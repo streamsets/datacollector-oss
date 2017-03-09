@@ -78,7 +78,7 @@ public class GroovyDProcessor extends DProcessor {
           " *                             loglevel is any log4j level: e.g. info, warn, error, trace.\n" +
           " *   output.write(Record): Writes a record to the processor output.\n" +
           " *\n" +
-          " *   error.write(Record): Writes a record to the error pipeline.\n" +
+          " *   error.write(Record, message): Writes a record to the error pipeline.\n" +
           " *\n" +
           " *   sdcFunctions.getFieldNull(Record, 'field path'): Receive a constant defined above \n" +
           " *                          to check if the field is typed field with value null\n" +
