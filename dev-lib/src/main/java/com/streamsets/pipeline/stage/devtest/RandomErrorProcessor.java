@@ -25,7 +25,9 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 
 import java.util.Iterator;
 import java.util.List;
@@ -45,6 +47,7 @@ public class RandomErrorProcessor extends SingleLaneProcessor {
   private int batchCount;
   private double batchThreshold1;
   private double batchThreshold2;
+  private DefaultErrorRecordHandler errorHandler;
 
   @ConfigDef(label = "Discard Some Records",
     required = false,
@@ -57,6 +60,7 @@ public class RandomErrorProcessor extends SingleLaneProcessor {
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
     random = new Random();
+    errorHandler = new DefaultErrorRecordHandler(getContext());
     return issues;
   }
 
@@ -74,8 +78,7 @@ public class RandomErrorProcessor extends SingleLaneProcessor {
         if (action < batchThreshold1) {
           batchMaker.addRecord(it.next());
         } else if (action < batchThreshold2) {
-          Exception ex = new RuntimeException("Random Error");
-          getContext().toError(it.next(), RandomProcessorErrors.RANDOM_01, "RANDOM_01", ex.getMessage(), ex);
+          errorHandler.onError(new OnRecordErrorException(it.next(), RandomProcessorErrors.RANDOM_01));
         } else {
           // we eat the record
           it.next();
@@ -84,8 +87,7 @@ public class RandomErrorProcessor extends SingleLaneProcessor {
         if (action < batchThreshold1) {
           batchMaker.addRecord(it.next());
         } else {
-          Exception ex = new RuntimeException(RandomProcessorErrors.RANDOM_01.getMessage());
-          getContext().toError(it.next(), RandomProcessorErrors.RANDOM_01, "RANDOM_01", ex.getMessage(), ex);
+          errorHandler.onError(new OnRecordErrorException(it.next(), RandomProcessorErrors.RANDOM_01));
         }
       }
     }
