@@ -508,6 +508,21 @@ public class ForceSource extends BaseSource {
     return nextSourceOffset;
   }
 
+  private static XmlObject getChildIgnoreCase(SObject record, String name) {
+    XmlObject item = null;
+    Iterator<XmlObject> iter = record.getChildren();
+
+    while(iter.hasNext()) {
+      XmlObject child = (XmlObject)iter.next();
+      if(child.getName().getLocalPart().equalsIgnoreCase(name)) {
+        item = child;
+        break;
+      }
+    }
+
+    return item;
+  }
+
   public String soapProduce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
 
     String nextSourceOffset = (null == lastSourceOffset) ? RECORD_ID_OFFSET_PREFIX + conf.initialOffset : lastSourceOffset;
@@ -533,7 +548,11 @@ public class ForceSource extends BaseSource {
     for ( ;recordIndex < endIndex; recordIndex++) {
       SObject record = records[recordIndex];
 
-      final String recordContext = conf.soqlQuery + "::" + record.getChild(conf.offsetColumn).getValue();
+      XmlObject offsetField = getChildIgnoreCase(record, conf.offsetColumn);
+      if (offsetField == null) {
+        throw new StageException(Errors.FORCE_22, conf.offsetColumn);
+      }
+      final String recordContext = conf.soqlQuery + "::" + offsetField.getValue();
       Record rec = getContext().createRecord(recordContext);
       LinkedHashMap<String, Field> map = new LinkedHashMap<>();
 

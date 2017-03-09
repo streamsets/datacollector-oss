@@ -47,6 +47,7 @@ public enum Errors implements ErrorCode {
   FORCE_19("Error getting user info: {}"),
   FORCE_20("Failed to parse Salesforce field '{}' to SDC field with value {}."),
   FORCE_21("Error calling describeSObjects"),
+  FORCE_22("Can't find offset column {} in the returned data. Ensure it is present in the query."),
   ;
   private final String msg;
 
