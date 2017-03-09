@@ -354,7 +354,7 @@
           "label": "LDAP Login Module Name",
           "description": "The login module name that identifies the login module to use for data collector. Assumes 'ldap' if none specified.",
           "type": "string",
-          "default": "com.streamsets.datacollector.http.LdapLoginModule"
+          "default": "ldap"
         },
         {
           "name": "use.ldap.login.file",
