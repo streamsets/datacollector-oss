@@ -27,6 +27,7 @@ public enum Groups implements Label {
   FORCE("Salesforce"),
   QUERY("Query"),
   SUBSCRIBE("Subscribe"),
+  ADVANCED("Advanced"),
   ;
 
   private final String label;

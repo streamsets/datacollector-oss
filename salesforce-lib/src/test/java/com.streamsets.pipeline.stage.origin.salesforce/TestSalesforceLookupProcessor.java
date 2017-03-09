@@ -32,6 +32,7 @@ import com.streamsets.testing.NetworkUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -53,6 +54,8 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 
+// Skip these tests until Mock Server supports metadata
+@Ignore
 public class TestSalesforceLookupProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(TestSalesforceLookupProcessor.class);
   private static final String username = "test@example.com";

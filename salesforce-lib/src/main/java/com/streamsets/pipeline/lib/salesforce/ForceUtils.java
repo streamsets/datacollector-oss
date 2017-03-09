@@ -21,16 +21,27 @@ package com.streamsets.pipeline.lib.salesforce;
 
 import com.sforce.async.AsyncApiException;
 import com.sforce.async.BulkConnection;
+import com.sforce.soap.partner.DescribeSObjectResult;
+import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.soap.partner.fault.ApiFault;
 import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
 import com.sforce.ws.SessionRenewer;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Record;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ForceUtils {
+  private static final String SOBJECT_TYPE_FROM_QUERY = "^SELECT.*FROM\\s*(\\S*)\\b.*";
+  private static Pattern sObjectFromQueryPattern = Pattern.compile(SOBJECT_TYPE_FROM_QUERY, Pattern.DOTALL);
+
   public static String getExceptionCode(Throwable th) {
     return (th instanceof ApiFault) ? ((ApiFault) th).getExceptionCode().name() : "";
   }
@@ -111,5 +122,60 @@ public class ForceUtils {
         return null;
       }
     }
+  }
+
+  public static void setHeadersOnField(Field field, com.sforce.soap.partner.Field sfdcField, String salesforceNsHeaderPrefix) {
+    Map<String, String> headerMap = getHeadersForField(sfdcField, salesforceNsHeaderPrefix);
+    for (String key : headerMap.keySet()) {
+      field.setAttribute(key, headerMap.get(key));
+    }
+  }
+
+  public static Map<String, String> getHeadersForField(com.sforce.soap.partner.Field sfdcField,
+      String salesforceNsHeaderPrefix) {
+    Map<String, String> attributeMap = new HashMap<>();
+
+    String type = sfdcField.getType().toString();
+    attributeMap.put(salesforceNsHeaderPrefix + "salesforceType", type);
+    if ("string".equals(type) || "textarea".equals(type)) {
+      attributeMap.put(salesforceNsHeaderPrefix + "length", Integer.toString(sfdcField.getLength()));
+    } else if ("double".equals(type)) {
+      attributeMap.put(salesforceNsHeaderPrefix + "precision", Integer.toString(sfdcField.getPrecision()));
+      attributeMap.put(salesforceNsHeaderPrefix + "scale", Integer.toString(sfdcField.getScale()));
+    } else if ("int".equals(type)) {
+      attributeMap.put(salesforceNsHeaderPrefix + "digits", Integer.toString(sfdcField.getDigits()));
+    }
+
+    return attributeMap;
+  }
+
+  public static Map<String, com.sforce.soap.partner.Field> getFieldMap(
+      PartnerConnection partnerConnection,
+      String sobjectType
+  ) throws ConnectionException {
+    DescribeSObjectResult[] results = partnerConnection.describeSObjects(new String[]{sobjectType});
+
+    Map<String, com.sforce.soap.partner.Field> fieldMap = new LinkedHashMap<>();
+    com.sforce.soap.partner.Field[] fields = results[0].getFields();
+    for (int i = 0; i < fields.length; i++) {
+      com.sforce.soap.partner.Field field = fields[i];
+      String typeName = field.getType().name();
+      if ("address".equals(typeName) || "location".equals(typeName)) {
+        // Skip compound fields of address or geolocation type since they are returned
+        // with null values by the SOAP API and not supported at all by the Bulk API
+        continue;
+      }
+      fieldMap.put(field.getName(), field);
+    }
+
+    return fieldMap;
+  }
+
+  public static String getSobjectTypeFromQuery(String query) {
+    Matcher m = sObjectFromQueryPattern.matcher(query);
+    if (m.matches()) {
+      return m.group(1);
+    }
+    return null;
   }
 }

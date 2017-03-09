@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 StreamSets Inc.
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,24 +19,17 @@
  */
 package com.streamsets.pipeline.stage.processor.lookup;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.Field;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  FORCE("Salesforce"),
-  ADVANCED("Advanced"),
-  ;
+import java.util.HashMap;
+import java.util.Map;
 
-  private final String label;
+public class LookupCacheEntry {
+  public Map<String, Field> fieldMap;
+  public Map<String, String> attributeMap;
 
-  private Groups(String label) {
-    this.label = label;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public String getLabel() {
-    return this.label;
+  public LookupCacheEntry() {
+    this.fieldMap = new HashMap<>();
+    this.attributeMap = new HashMap<>();
   }
 }

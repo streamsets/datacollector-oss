@@ -30,7 +30,6 @@ import com.sforce.async.ContentType;
 import com.sforce.async.JobInfo;
 import com.sforce.async.OperationEnum;
 import com.sforce.async.QueryResultList;
-import com.sforce.soap.partner.DescribeSObjectResult;
 import com.sforce.soap.partner.QueryResult;
 import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.bind.XmlObject;
@@ -58,17 +57,14 @@ import org.slf4j.LoggerFactory;
 import javax.xml.namespace.QName;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -83,7 +79,6 @@ public class ForceSource extends BaseSource {
   private static final String HEADER_ATTRIBUTE_PREFIX = "salesforce.cdc.";
   private static final String SOBJECT_TYPE_ATTRIBUTE = "salesforce.sobjectType";
   private static final String REPLAY_ID = "replayId";
-  private static final String SOBJECT_TYPE_FROM_QUERY = "^SELECT.*FROM\\s*(\\S*)\\b.*";
   private static final String WILDCARD_SELECT_QUERY = "^SELECT\\s*\\*\\s*FROM\\s*.*";
   private static final String AUTHENTICATION_INVALID = "401::Authentication invalid";
   private static final String META = "/meta";
@@ -122,6 +117,8 @@ public class ForceSource extends BaseSource {
   private ForceStreamConsumer forceConsumer;
 
   private Pattern wildcardSelectPattern = Pattern.compile(WILDCARD_SELECT_QUERY, Pattern.DOTALL);
+
+  private Map<String, com.sforce.soap.partner.Field> fieldMap;
 
   public ForceSource(
       ForceSourceConfigBean conf
@@ -173,8 +170,6 @@ public class ForceSource extends BaseSource {
       }
     }
 
-    Pattern pattern = Pattern.compile(SOBJECT_TYPE_FROM_QUERY, Pattern.DOTALL);
-
     if (issues.isEmpty()) {
       try {
         ConnectorConfig partnerConfig = ForceUtils.getPartnerConfig(conf, new ForceSessionRenewer());
@@ -186,11 +181,9 @@ public class ForceSource extends BaseSource {
         LOG.info("Successfully authenticated as {}", conf.username);
 
         if (conf.queryExistingData) {
-          Matcher m = pattern.matcher(conf.soqlQuery);
-          if (m.matches()) {
-            sobjectType = m.group(1);
-            LOG.info("Found sobject type {}", sobjectType);
-          } else {
+          sobjectType = ForceUtils.getSobjectTypeFromQuery(conf.soqlQuery);
+          LOG.info("Found sobject type {}", sobjectType);
+          if (sobjectType == null) {
             issues.add(getContext().createConfigIssue(Groups.QUERY.name(),
                 ForceConfigBean.CONF_PREFIX + "soqlQuery",
                 Errors.FORCE_00,
@@ -226,12 +219,9 @@ public class ForceSource extends BaseSource {
 
         if (null == sobjectType) {
           String soqlQuery = (String)qr.getRecords()[0].getField("Query");
-          Matcher m = pattern.matcher(soqlQuery);
-          if (m.matches()) {
-            sobjectType = m.group(1);
-
-            LOG.info("Found sobject type {}", sobjectType);
-          } else {
+          sobjectType = ForceUtils.getSobjectTypeFromQuery(soqlQuery);
+          LOG.info("Found sobject type {}", sobjectType);
+          if (sobjectType == null) {
             issues.add(getContext().createConfigIssue(Groups.SUBSCRIBE.name(),
                 ForceConfigBean.CONF_PREFIX + "pushTopic",
                 Errors.FORCE_00,
@@ -249,6 +239,19 @@ public class ForceSource extends BaseSource {
 
       messageQueue = new ArrayBlockingQueue<>(2 * conf.basicConfig.maxBatchSize);
     }
+
+    if (issues.isEmpty()) {
+      try {
+        fieldMap = ForceUtils.getFieldMap(partnerConnection, sobjectType);
+      } catch (ConnectionException e) {
+        issues.add(getContext().createConfigIssue(Groups.QUERY.name(),
+            ForceConfigBean.CONF_PREFIX + "soqlQuery",
+            Errors.FORCE_21,
+            sobjectType
+        ));
+      }
+    }
+
     // If issues is not empty, the UI will inform the user of each configuration issue in the list.
     return issues;
   }
@@ -293,16 +296,14 @@ public class ForceSource extends BaseSource {
     Matcher m = wildcardSelectPattern.matcher(query);
     if (m.matches()) {
       // Query is SELECT * FROM... - substitute in list of field names
-      DescribeSObjectResult[] results = null;
-      try {
-        results = partnerConnection.describeSObjects(new String[]{sobjectType});
-      } catch (ConnectionException e) {
-        throw new StageException(Errors.FORCE_21, e);
-      }
-      com.sforce.soap.partner.Field[] fields = results[0].getFields();
       StringBuffer fieldsString = new StringBuffer();
-      for (int i = 0; i < fields.length; i++) {
-        com.sforce.soap.partner.Field field = fields[i];
+      try {
+        fieldMap = ForceUtils.getFieldMap(partnerConnection, sobjectType);
+      } catch (ConnectionException e) {
+        throw new StageException(Errors.FORCE_21, sobjectType, e);
+      }
+
+      for (com.sforce.soap.partner.Field field : fieldMap.values()) {
         String typeName = field.getType().name();
         if ("address".equals(typeName) || "location".equals(typeName)) {
           // Skip compound fields of address or geolocation type since they are returned
@@ -489,7 +490,12 @@ public class ForceSource extends BaseSource {
             Record record = getContext().createRecord(sourceId);
             LinkedHashMap<String, Field> map = new LinkedHashMap<>();
             for (int i = 0; i < resultHeader.size(); i++) {
-              map.put(resultHeader.get(i), Field.create(row.get(i)));
+              Field field = Field.create(row.get(i));
+              String fieldName = resultHeader.get(i);
+              if (conf.createSalesforceNsHeaders) {
+                ForceUtils.setHeadersOnField(field, fieldMap.get(fieldName), conf.salesforceNsHeaderPrefix);
+              }
+              map.put(fieldName, field);
             }
             record.set(Field.createListMap(map));
             record.getHeader().setAttribute(SOBJECT_TYPE_ATTRIBUTE, sobjectType);
@@ -577,6 +583,10 @@ public class ForceSource extends BaseSource {
 
         if (key.equalsIgnoreCase(conf.offsetColumn)) {
           nextSourceOffset = RECORD_ID_OFFSET_PREFIX + val;
+        }
+
+        if (conf.createSalesforceNsHeaders) {
+          ForceUtils.setHeadersOnField(field, fieldMap.get(key), conf.salesforceNsHeaderPrefix);
         }
       }
 
@@ -688,6 +698,9 @@ public class ForceSource extends BaseSource {
             Errors.FORCE_04,
             "Key: " + key + ", unexpected type for val: " + ((val == null) ? val : val.getClass().toString())
         );
+      }
+      if (conf.createSalesforceNsHeaders) {
+        ForceUtils.setHeadersOnField(field, fieldMap.get(key), conf.salesforceNsHeaderPrefix);
       }
       map.put(key, field);
     }

@@ -154,6 +154,30 @@ public class ForceSourceConfigBean extends ForceConfigBean {
   )
   public String pushTopic;
 
-  @ConfigDefBean(groups = {"FORCE", "QUERY", "SUBSCRIBE"})
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Create Salesforce Header Attributes",
+      description = "Generates record header attributes that provide additional details about source data, such as the original data type or source object.",
+      defaultValue = "true",
+      displayPosition = 130,
+      group = "ADVANCED"
+  )
+  public boolean createSalesforceNsHeaders = true;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Salesforce Header Prefix",
+      description = "Prefix for the header attributes, used as follows: <prefix>.<field name>.<type of information>. For example: salesforce.<field name>.precision and salesforce.<field name>.scale",
+      defaultValue = "salesforce.",
+      displayPosition = 140,
+      group = "ADVANCED",
+      dependsOn = "createSalesforceNsHeaders",
+      triggeredByValue = "true"
+  )
+  public String salesforceNsHeaderPrefix = "salesforce.";
+
+  @ConfigDefBean(groups = {"FORCE", "QUERY", "SUBSCRIBE", "ADVANCED"})
   public BasicConfig basicConfig = new BasicConfig();
 }

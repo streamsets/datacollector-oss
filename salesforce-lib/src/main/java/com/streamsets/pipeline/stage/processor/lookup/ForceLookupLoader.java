@@ -34,39 +34,49 @@ import com.streamsets.pipeline.lib.salesforce.ForceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-class ForceLookupLoader extends CacheLoader<String, Map<String, Field>> {
+class ForceLookupLoader extends CacheLoader<String, LookupCacheEntry> {
   private static final Logger LOG = LoggerFactory.getLogger(ForceLookupLoader.class);
 
   private final Map<String, String> columnsToFields;
   private final Map<String, String> columnsToDefaults;
   private final Map<String, DataType> columnsToTypes;
   private final PartnerConnection partnerConnection;
+  private final boolean createSalesforceNsHeaders;
+  private final String salesforceNsHeaderPrefix;
 
   ForceLookupLoader(
       PartnerConnection partnerConnection,
       Map<String, String> columnsToFields,
       Map<String, String> columnsToDefaults,
-      Map<String, DataType> columnsToTypes
+      Map<String, DataType> columnsToTypes,
+      boolean createSalesforceNsHeaders,
+      String salesforceNsHeaderPrefix
   ) {
     this.partnerConnection = partnerConnection;
     this.columnsToFields = columnsToFields;
     this.columnsToDefaults = columnsToDefaults;
     this.columnsToTypes = columnsToTypes;
+    this.createSalesforceNsHeaders = createSalesforceNsHeaders;
+    this.salesforceNsHeaderPrefix = salesforceNsHeaderPrefix;
   }
 
   @Override
-  public Map<String, Field> load(String key) throws Exception {
+  public LookupCacheEntry load(String key) throws Exception {
     return lookupValuesForRecord(key);
   }
 
-  private Map<String, Field> lookupValuesForRecord(String preparedQuery) throws StageException {
-    Map<String, Field> values = new HashMap<>();
+  private LookupCacheEntry lookupValuesForRecord(String preparedQuery) throws StageException {
+    LookupCacheEntry entry = new LookupCacheEntry();
 
     try {
+      Map<String, com.sforce.soap.partner.Field> fieldMap = null;
+      if (createSalesforceNsHeaders) {
+        fieldMap = ForceUtils.getFieldMap(partnerConnection, ForceUtils.getSobjectTypeFromQuery(preparedQuery));
+      }
+
       QueryResult queryResult = partnerConnection.query(preparedQuery);
 
       SObject[] records = queryResult.getRecords();
@@ -98,7 +108,11 @@ class ForceLookupLoader extends CacheLoader<String, Map<String, Field>> {
               throw new StageException(Errors.FORCE_04,
                   "Key: " + key + ", unexpected type for val: " + val.getClass().toString());
             }
-            values.put(key, field);
+            entry.fieldMap.put(key, field);
+
+            if (createSalesforceNsHeaders) {
+              entry.attributeMap.putAll(ForceUtils.getHeadersForField(fieldMap.get(key), salesforceNsHeaderPrefix));
+            }
           } catch (IllegalArgumentException e) {
             throw new OnRecordErrorException(Errors.FORCE_20, key, val, e);
           }
@@ -110,7 +124,7 @@ class ForceLookupLoader extends CacheLoader<String, Map<String, Field>> {
           try {
             if (columnsToTypes.get(key) != DataType.USE_SALESFORCE_TYPE) {
               Field field = Field.create(Field.Type.valueOf(columnsToTypes.get(key).getLabel()), val);
-              values.put(key, field);
+              entry.fieldMap.put(key, field);
             }
           } catch (IllegalArgumentException e) {
             throw new OnRecordErrorException(Errors.FORCE_20, key, val, e);
@@ -122,6 +136,6 @@ class ForceLookupLoader extends CacheLoader<String, Map<String, Field>> {
       throw new OnRecordErrorException(Errors.FORCE_17, preparedQuery, e.getMessage());
     }
 
-    return values;
+    return entry;
   }
 }

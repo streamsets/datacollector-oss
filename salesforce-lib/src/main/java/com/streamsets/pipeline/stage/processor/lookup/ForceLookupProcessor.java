@@ -64,7 +64,7 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
   private Map<String, String> columnsToDefaults = new HashMap<>();
   private Map<String, DataType> columnsToTypes = new HashMap<>();
 
-  private LoadingCache<String, Map<String, Field>> cache;
+  private LoadingCache<String, LookupCacheEntry> cache;
 
   private PartnerConnection partnerConnection;
   private ErrorRecordHandler errorRecordHandler;
@@ -144,13 +144,13 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
       ELVars elVars = getContext().createELVars();
       RecordEL.setRecordInContext(elVars, record);
       String preparedQuery = queryEval.eval(elVars, conf.soqlQuery, String.class);
-      Map<String, Field> values = cache.get(preparedQuery);
-      if (values.isEmpty()) {
+      LookupCacheEntry values = cache.get(preparedQuery);
+      if (values.fieldMap.isEmpty()) {
         // No results
         LOG.error(Errors.FORCE_15.getMessage(), preparedQuery);
         errorRecordHandler.onError(new OnRecordErrorException(record, Errors.FORCE_15, preparedQuery));
       }
-      for (Map.Entry<String, Field> entry : values.entrySet()) {
+      for (Map.Entry<String, Field> entry : values.fieldMap.entrySet()) {
         String columnName = entry.getKey();
         String fieldPath = columnsToFields.get(columnName.toLowerCase());
         Field field = entry.getValue();
@@ -175,6 +175,10 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
         }
         record.set(fieldPath, field);
       }
+      Record.Header header = record.getHeader();
+      for (String key : values.attributeMap.keySet()) {
+        header.setAttribute(key, values.attributeMap.get(key));
+      }
       batchMaker.addRecord(record);
     } catch (ELEvalException e) {
       LOG.error(Errors.FORCE_16.getMessage(), conf.soqlQuery, e);
@@ -189,13 +193,15 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
   }
 
   @SuppressWarnings("unchecked")
-  private LoadingCache<String, Map<String, Field>> buildCache() {
+  private LoadingCache<String, LookupCacheEntry> buildCache() {
     CacheBuilder cacheBuilder = CacheBuilder.newBuilder();
     if (!conf.cacheConfig.enabled) {
       return cacheBuilder.maximumSize(0).build(new ForceLookupLoader(partnerConnection,
           columnsToFields,
           columnsToDefaults,
-          columnsToTypes
+          columnsToTypes,
+          conf.createSalesforceNsHeaders,
+          conf.salesforceNsHeaderPrefix
       ));
     }
 
@@ -217,7 +223,9 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
     return cacheBuilder.build(new ForceLookupLoader(partnerConnection,
         columnsToFields,
         columnsToDefaults,
-        columnsToTypes
+        columnsToTypes,
+        conf.createSalesforceNsHeaders,
+        conf.salesforceNsHeaderPrefix
     ));
   }
 }
