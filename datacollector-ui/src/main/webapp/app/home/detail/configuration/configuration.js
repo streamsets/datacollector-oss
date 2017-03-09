@@ -364,16 +364,20 @@ angular
        * Add Object to Custom Field Configuration.
        *
        * @param stageInstance
-       * @param configValue
+       * @param config
        * @param configDefinitions
        */
-      addToCustomField: function(stageInstance, configValue, configDefinitions) {
+      addToCustomField: function(stageInstance, config, configDefinitions) {
         var complexFieldObj = {};
         angular.forEach(configDefinitions, function (complexFiledConfigDefinition) {
           var complexFieldConfig = pipelineService.setDefaultValueForConfig(complexFiledConfigDefinition, stageInstance);
           complexFieldObj[complexFieldConfig.name] = (complexFieldConfig.value !== undefined && complexFieldConfig.value !== null) ? complexFieldConfig.value : undefined;
         });
-        configValue.push(complexFieldObj);
+        if (config.value) {
+          config.value.push(complexFieldObj);
+        } else {
+          config.value = [complexFieldObj];
+        }
       },
 
 

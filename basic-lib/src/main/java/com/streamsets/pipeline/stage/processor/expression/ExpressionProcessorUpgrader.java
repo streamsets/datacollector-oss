@@ -24,6 +24,8 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class ExpressionProcessorUpgrader implements StageUpgrader {
@@ -42,6 +44,6 @@ public class ExpressionProcessorUpgrader implements StageUpgrader {
   }
 
   private void upgradeV1ToV2(List<Config> configs) {
-    configs.add(new Config("headerAttributeConfigs", null));
+    configs.add(new Config("headerAttributeConfigs", new ArrayList<LinkedHashMap<String, Object>>()));
   }
 }
