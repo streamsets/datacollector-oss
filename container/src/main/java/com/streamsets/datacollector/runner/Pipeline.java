@@ -241,12 +241,25 @@ public class Pipeline {
       if (createAdditionalRunners) {
         try {
           for (int runnerId = 1; runnerId < runnerCount; runnerId++) {
+            List<Issue> localIssues = new ArrayList<>();
+
             // Create list of Stage beans
             PipelineStageBeans beans = PipelineBeanCreator.get().duplicatePipelineStageBeans(
               pipelineBean.getPipelineStageBeans(),
               originPipe.getStage().getConstants(),
-              issues
+              localIssues
             );
+
+            // If there was an issue creating the beans, don't continue
+            if(!localIssues.isEmpty()) {
+              issues.addAll(localIssues);
+
+              // To create the beans, we've already got class loaders, so we need to release them (they would leak otherwise
+              // as the beans object is not persisted anywhere).
+              beans.getStages().forEach(StageBean::releaseClassLoader);
+
+              break;
+            }
 
             // Initialize and convert them to source-less pipeline runner
             pipes.add(createSourceLessRunner(
@@ -562,7 +575,9 @@ public class Pipeline {
     ResourceControlledScheduledExecutor scheduledExecutor,
     List<Map<String, Object>> sharedRunnerMaps
   ) throws PipelineRuntimeException {
-    Preconditions.checkArgument(beans.size() == sharedRunnerMaps.size(), "New runner have different number of states then original one!");
+    Preconditions.checkArgument(beans.size() == sharedRunnerMaps.size(),
+      Utils.format("New runner have different number of states then original one! ({} != {})", beans.size(), sharedRunnerMaps.size()));
+
     List<StageRuntime> stages = new ArrayList<>(1 + beans.size());
     stages.add(originRuntime);
 
