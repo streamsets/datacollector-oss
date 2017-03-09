@@ -71,8 +71,8 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
 
   // to hide all other methods of Stage.Context
   public class Err {
-    public void write(ScriptRecord scriptRecord, String errMsg) {
-      getContext().toError(getScriptObjectFactory().getRecord(scriptRecord), Errors.SCRIPTING_04, errMsg);
+    public void write(ScriptRecord scriptRecord, String errMsg) throws StageException {
+      errorRecordHandler.onError(new OnRecordErrorException(getScriptObjectFactory().getRecord(scriptRecord), Errors.SCRIPTING_04, errMsg));
     }
   }
 

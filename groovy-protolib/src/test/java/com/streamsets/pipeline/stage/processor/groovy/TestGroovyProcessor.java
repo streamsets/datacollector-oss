@@ -41,21 +41,6 @@ import java.util.Map;
 public class TestGroovyProcessor {
 
   @Test
-  public void testWriteErrorRecord() throws Exception {
-    final String script = Resources.toString(Resources.getResource("WriteErrorRecordScript.groovy"), Charsets.UTF_8);
-    Processor processor = new GroovyProcessor(ProcessingMode.RECORD, script);
-
-    ProcessorRunner runner = new ProcessorRunner.Builder(GroovyDProcessor.class, processor)
-        .addOutputLane("lane")
-        .build();
-
-    runner.runInit();
-
-    ScriptingProcessorTestUtil.verifyWriteErrorRecord(GroovyDProcessor.class, processor);
-
-  }
-
-  @Test
   public void testGroovyAndMapArray() throws Exception {
     final String script = Resources.toString(Resources.getResource("MapAndArrayScript.groovy"), Charsets.UTF_8);
     Processor processor = new GroovyProcessor(ProcessingMode.RECORD, script);
@@ -360,5 +345,35 @@ public class TestGroovyProcessor {
         ""
     );
     ScriptingProcessorTestUtil.verifyInitDestroy(GroovyProcessor.class, processor);
+  }
+
+  private static final String WRITE_ERROR_SCRIPT = "for (record in records) { error.write(record, 'oops'); }";
+
+  @Test
+  public void testErrorRecordStopPipeline() throws Exception {
+    Processor processor = new GroovyProcessor(
+      ProcessingMode.RECORD,
+      WRITE_ERROR_SCRIPT
+    );
+    ScriptingProcessorTestUtil.verifyErrorRecordStopPipeline(GroovyProcessor.class, processor);
+  }
+
+  @Test
+  public void testErrorRecordDiscard() throws Exception {
+    Processor processor = new GroovyProcessor(
+      ProcessingMode.RECORD,
+      WRITE_ERROR_SCRIPT
+    );
+    ScriptingProcessorTestUtil.verifyErrorRecordDiscard(GroovyProcessor.class, processor);
+  }
+
+
+  @Test
+  public void testErrorRecordErrorSink() throws Exception {
+    Processor processor = new GroovyProcessor(
+      ProcessingMode.RECORD,
+      WRITE_ERROR_SCRIPT
+    );
+    ScriptingProcessorTestUtil.verifyErrorRecordErrorSink(GroovyProcessor.class, processor);
   }
 }

@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.io.fileref.FileRefTestUtil;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
@@ -60,27 +61,6 @@ import static org.junit.Assert.assertTrue;
 public class ScriptingProcessorTestUtil {
   private ScriptingProcessorTestUtil() {}
   static final String JAVASCRIPT_CLASSNAME = "com.streamsets.pipeline.stage.processor.javascript.JavaScriptProcessor";
-
-  public static <C extends Processor> void verifyWriteErrorRecord(Class<C> clazz, Processor processor)
-      throws StageException {
-    ProcessorRunner runner = new ProcessorRunner.Builder(clazz, processor)
-        .addOutputLane("lane")
-        .build();
-    runner.runInit();
-    try {
-      Record record = RecordCreator.create();
-      record.set(Field.create("Hello"));
-      List<Record> input = Collections.singletonList(record);
-      StageRunner.Output output = runner.runProcess(input);
-      assertEquals(2, output.getRecords().get("lane").size());
-      assertEquals("Hello", output.getRecords().get("lane").get(0).get().getValueAsString());
-      assertEquals("Bye", output.getRecords().get("lane").get(1).get().getValueAsString());
-      assertEquals(1, runner.getErrorRecords().size());
-      assertEquals("Error", runner.getErrorRecords().get(0).get().getValueAsString());
-    } finally {
-      runner.runDestroy();
-    }
-  }
 
   public static <C extends Processor> void verifyMapAndArray(Class<C> clazz, Processor processor)
       throws StageException {
@@ -861,4 +841,75 @@ public class ScriptingProcessorTestUtil {
     else
       assertEquals(obj, field.getValue());
   }
+
+  public static <C extends Processor> void verifyErrorRecordStopPipeline(
+      Class<C> clazz,
+      Processor processor
+  ) throws StageException {
+    ProcessorRunner runner = new ProcessorRunner.Builder(clazz, processor)
+      .setOnRecordError(OnRecordError.STOP_PIPELINE)
+      .addOutputLane("lane")
+      .build();
+
+    Record record = RecordCreator.create();
+    record.set(Field.create("Not Important"));
+
+    runner.runInit();
+    try {
+      runner.runProcess(ImmutableList.of(record));
+      Assert.fail("Expected exception");
+    } catch(Exception e) {
+      Assert.assertTrue(e.toString(), e.toString().contains("Script sent record to error"));
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  public static <C extends Processor> void verifyErrorRecordDiscard(
+      Class<C> clazz,
+      Processor processor
+  ) throws StageException {
+    ProcessorRunner runner = new ProcessorRunner.Builder(clazz, processor)
+      .setOnRecordError(OnRecordError.DISCARD)
+      .addOutputLane("lane")
+      .build();
+
+    Record record = RecordCreator.create();
+    record.set(Field.create("Not Important"));
+
+    runner.runInit();
+    StageRunner.Output output;
+    try {
+      output = runner.runProcess(ImmutableList.of(record));
+    } finally {
+      runner.runDestroy();
+    }
+
+    Assert.assertEquals(0, output.getRecords().get("lane").size());
+  }
+
+  public static <C extends Processor> void verifyErrorRecordErrorSink(
+      Class<C> clazz,
+      Processor processor
+  ) throws StageException {
+    ProcessorRunner runner = new ProcessorRunner.Builder(clazz, processor)
+      .setOnRecordError(OnRecordError.TO_ERROR)
+      .addOutputLane("lane")
+      .build();
+
+    Record record = RecordCreator.create();
+    record.set(Field.create("Not Important"));
+
+    runner.runInit();
+    StageRunner.Output output;
+    try {
+      output = runner.runProcess(ImmutableList.of(record));
+    } finally {
+      runner.runDestroy();
+    }
+
+    Assert.assertEquals(0, output.getRecords().get("lane").size());
+    Assert.assertEquals(1, runner.getErrorRecords().size());
+  }
+
 }
