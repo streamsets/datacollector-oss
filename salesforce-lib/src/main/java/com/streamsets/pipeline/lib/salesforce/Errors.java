@@ -46,6 +46,7 @@ public enum Errors implements ErrorCode {
   FORCE_18("Since the default value of '{}' is not empty, its data type cannot be '" + DataType.USE_SALESFORCE_TYPE.getLabel() + "'."),
   FORCE_19("Error getting user info: {}"),
   FORCE_20("Failed to parse Salesforce field '{}' to SDC field with value {}."),
+  FORCE_21("Error calling describeSObjects"),
   ;
   private final String msg;
 

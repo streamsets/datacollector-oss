@@ -30,6 +30,7 @@ import com.sforce.async.ContentType;
 import com.sforce.async.JobInfo;
 import com.sforce.async.OperationEnum;
 import com.sforce.async.QueryResultList;
+import com.sforce.soap.partner.DescribeSObjectResult;
 import com.sforce.soap.partner.QueryResult;
 import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.bind.XmlObject;
@@ -83,6 +84,7 @@ public class ForceSource extends BaseSource {
   private static final String SOBJECT_TYPE_ATTRIBUTE = "salesforce.sobjectType";
   private static final String REPLAY_ID = "replayId";
   private static final String SOBJECT_TYPE_FROM_QUERY = "^SELECT.*FROM\\s*(\\S*)\\b.*";
+  private static final String WILDCARD_SELECT_QUERY = "^SELECT\\s*\\*\\s*FROM\\s*.*";
   private static final String AUTHENTICATION_INVALID = "401::Authentication invalid";
   private static final String META = "/meta";
   private static final String META_HANDSHAKE = "/meta/handshake";
@@ -118,6 +120,8 @@ public class ForceSource extends BaseSource {
 
   private BlockingQueue<Message> messageQueue;
   private ForceStreamConsumer forceConsumer;
+
+  private Pattern wildcardSelectPattern = Pattern.compile(WILDCARD_SELECT_QUERY, Pattern.DOTALL);
 
   public ForceSource(
       ForceSourceConfigBean conf
@@ -283,8 +287,36 @@ public class ForceSource extends BaseSource {
     super.destroy();
   }
 
-  private String prepareQuery(String query, String lastSourceOffset) {
+  private String prepareQuery(String query, String lastSourceOffset) throws StageException {
     final String offset = (null == lastSourceOffset) ? conf.initialOffset : lastSourceOffset;
+
+    Matcher m = wildcardSelectPattern.matcher(query);
+    if (m.matches()) {
+      // Query is SELECT * FROM... - substitute in list of field names
+      DescribeSObjectResult[] results = null;
+      try {
+        results = partnerConnection.describeSObjects(new String[]{sobjectType});
+      } catch (ConnectionException e) {
+        throw new StageException(Errors.FORCE_21, e);
+      }
+      com.sforce.soap.partner.Field[] fields = results[0].getFields();
+      StringBuffer fieldsString = new StringBuffer();
+      for (int i = 0; i < fields.length; i++) {
+        com.sforce.soap.partner.Field field = fields[i];
+        String typeName = field.getType().name();
+        if ("address".equals(typeName) || "location".equals(typeName)) {
+          // Skip compound fields of address or geolocation type since they are returned
+          // with null values by the SOAP API and not supported at all by the Bulk API
+          continue;
+        }
+        if (fieldsString.length() > 0){
+          fieldsString.append(',');
+        }
+        fieldsString.append(field.getName());
+      }
+      query = query.replaceFirst("\\*", fieldsString.toString());
+    }
+
     return query.replaceAll("\\$\\{offset\\}", offset);
   }
 
