@@ -32,7 +32,6 @@ angular
       },
       libraryList: _.clone(libraryList),
       maprStageLib: false,
-      solr6StageLib: false,
       operationStatus: 'incomplete',
       operationStatusMap: {},
       failedLibraries: [],
@@ -120,10 +119,6 @@ angular
       angular.forEach(libraryList, function(library) {
         if (library.id.indexOf('streamsets-datacollector-mapr_') !== -1) {
           $scope.maprStageLib = true;
-        }
-
-        if (library.id.indexOf('streamsets-datacollector-apache-solr_6') !== -1) {
-          $scope.solr6StageLib = true;
         }
       });
     }
