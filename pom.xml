@@ -130,6 +130,7 @@
 
     <module>commonlib</module>
     <module>httpcommonlib</module>
+    <module>net-commonlib</module>
 
     <module>lookup-protolib</module>
 

@@ -24,7 +24,6 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.lib.parser.udp.syslog.SyslogParser;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.UnpooledByteBufAllocator;
@@ -78,7 +77,8 @@ public class TestSyslogParser {
     ByteBuf buffer = allocator.buffer(bytes.length);
     buffer.writeBytes(bytes);
     try {
-      parser.parse(buffer, InetSocketAddress.createUnresolved("localhost", 5000),
+      parser.parse(
+          buffer, InetSocketAddress.createUnresolved("localhost", 5000),
         InetSocketAddress.createUnresolved("localhost", 50000));
       Assert.fail("Expected OnRecordErrorException");
     } catch (OnRecordErrorException ex) {
@@ -119,7 +119,8 @@ public class TestSyslogParser {
       byte[] bytes = msg.getBytes(StandardCharsets.UTF_8);
       ByteBuf buffer = allocator.buffer(bytes.length);
       buffer.writeBytes(bytes);
-      List<Record> records = parser.parse(buffer, InetSocketAddress.createUnresolved("localhost", 5000),
+      List<Record> records = parser.parse(
+          buffer, InetSocketAddress.createUnresolved("localhost", 5000),
         InetSocketAddress.createUnresolved("localhost", 50000));
       Assert.assertEquals(1, records.size());
       Assert.assertEquals("Failure to parse known-good syslog message",

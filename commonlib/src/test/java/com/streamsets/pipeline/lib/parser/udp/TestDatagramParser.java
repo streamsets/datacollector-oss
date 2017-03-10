@@ -29,6 +29,7 @@ import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.DataParserFormat;
+import com.streamsets.pipeline.lib.parser.net.netflow.NetflowTestUtil;
 import com.streamsets.pipeline.lib.udp.UDPConstants;
 import com.streamsets.pipeline.lib.util.UDPTestUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
@@ -41,11 +42,9 @@ import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 public class TestDatagramParser {
 
@@ -94,7 +93,7 @@ public class TestDatagramParser {
       r = parser.parse();
     }
 
-    UDPTestUtil.assertRecordsForTenPackets(records);
+    NetflowTestUtil.assertRecordsForTenPackets(records);
     parser.close();
   }
 

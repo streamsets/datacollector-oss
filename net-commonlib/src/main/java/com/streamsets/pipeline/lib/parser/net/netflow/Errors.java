@@ -1,5 +1,5 @@
-/**
- * Copyright 2015 StreamSets Inc.
+/*
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.parser.udp.netflow;
+package com.streamsets.pipeline.lib.parser.net.netflow;
 
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 public enum Errors implements ErrorCode {
   NETFLOW_00("Invalid version: '{}'"),
   NETFLOW_01("Corrupt packet: {}"),
+  NETFLOW_02("Unexpected error: {}"),
   ;
 
   private final String msg;

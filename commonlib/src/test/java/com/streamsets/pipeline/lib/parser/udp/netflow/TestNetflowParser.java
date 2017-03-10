@@ -24,7 +24,7 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.lib.util.UDPTestUtil;
+import com.streamsets.pipeline.lib.parser.net.netflow.NetflowTestUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.UnpooledByteBufAllocator;
@@ -97,7 +97,7 @@ public class TestNetflowParser {
     ByteBuf buf = allocator.buffer(bytes.length);
     buf.writeBytes(bytes);
     List<Record> records = netflowParser.parse(buf, null, null);
-    UDPTestUtil.assertRecordsForTenPackets(records);
+    NetflowTestUtil.assertRecordsForTenPackets(records);
   }
 
 }

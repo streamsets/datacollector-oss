@@ -66,6 +66,7 @@
     <!-- Sets the VM argument line used when unit and integration tests are run. -->
     <argLine>-Xmx2G -XX:MaxPermSize=256M</argLine>
     <testcontainers.version>1.1.8</testcontainers.version>
+    <netty.version>4.0.41.Final</netty.version>
 
     <!-- Platform encoding override -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

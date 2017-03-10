@@ -1,21 +1,25 @@
 /*
- * Copied from DataStax Cassandra Java Driver as it's used by code in NetflowParser
+ * Copyright 2017 StreamSets Inc.
  *
- *      Copyright (C) 2012-2014 DataStax Inc.
+ * Licensed under the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *   Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *   You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-package com.streamsets.pipeline.lib.parser.udp.netflow;
+package com.streamsets.pipeline.lib.parser.net.netflow;
+
+import com.google.common.base.Charsets;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -23,10 +27,16 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Properties;
+import java.util.Random;
+import java.util.Set;
+import java.util.TimeZone;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
-
-import com.google.common.base.Charsets;
 
 /**
  * Utility methods to work with UUID and most specifically with time-based ones
@@ -161,7 +171,7 @@ public final class UUIDs {
    * range. In particular, you should not insert such UUID.
    * <p>
    * Also, the timestamp to provide as parameter must be a unix timestamp (as
-   * returned by {@link System#currentTimeMillis} or {@link java.util.Date#getTime}),
+   * returned by {@link System#currentTimeMillis} or {@link Date#getTime}),
    * not a UUID 100-nanoseconds intervals since 15 October 1582. In other
    * words, given a UUID {@code uuid}, you should never do
    * {@code startOf(uuid.timestamp())} but rather
@@ -195,7 +205,7 @@ public final class UUIDs {
    * range. In particular, you should not insert such UUID.
    * <p>
    * Also, the timestamp to provide as parameter must be a unix timestamp (as
-   * returned by {@link System#currentTimeMillis} or {@link java.util.Date#getTime}),
+   * returned by {@link System#currentTimeMillis} or {@link Date#getTime}),
    * not a UUID 100-nanoseconds intervals since 15 October 1582. In other
    * words, given a UUID {@code uuid}, you should never do
    * {@code startOf(uuid.timestamp())} but rather
@@ -225,7 +235,7 @@ public final class UUIDs {
    * milliseconds, i.e. a timestamp representing a number of milliseconds
    * since midnight, January 1, 1970 UTC. In particular the timestamps
    * returned by this method are comparable to the timestamp returned by
-   * {@link System#currentTimeMillis}, {@link java.util.Date#getTime}, etc.
+   * {@link System#currentTimeMillis}, {@link Date#getTime}, etc.
    *
    * @param uuid the UUID to return the timestamp of.
    * @return the unix timestamp of {@code uuid}.
