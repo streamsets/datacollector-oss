@@ -22,14 +22,26 @@ package com.streamsets.datacollector.runner;
 import com.google.common.collect.AbstractIterator;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ToErrorContext;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.Errors;
 
 import java.util.Iterator;
 
+/**
+ * Filter record entering stage.
+ *
+ * This filter will work properly only for Processor, Destination and Executors. It does not make sense and will not
+ * work properly for sources (especially for PushSource).
+ */
 public class FilterRecordBatch implements Batch {
   private final Batch batch;
   private final Predicate[] predicates;
-  private final Sink filteredOutRecordsSink;
+  private final DefaultErrorRecordHandler errorHandler;
 
   public interface Predicate {
 
@@ -45,10 +57,10 @@ public class FilterRecordBatch implements Batch {
 
   }
 
-  public FilterRecordBatch(Batch batch, Predicate[] predicates, Sink filteredOutRecordsSink) {
+  public FilterRecordBatch(Batch batch, Predicate[] predicates, Stage.Context context) {
     this.batch = batch;
     this.predicates = predicates;
-    this.filteredOutRecordsSink = filteredOutRecordsSink;
+    this.errorHandler = new DefaultErrorRecordHandler(context, (ToErrorContext) context);
   }
 
   @Override
@@ -90,7 +102,11 @@ public class FilterRecordBatch implements Batch {
         if (passed) {
           next = record;
         } else {
-          filteredOutRecordsSink.add(record, rejectedMessage);
+          try {
+            errorHandler.onError(new OnRecordErrorException(record, Errors.COMMON_0001, rejectedMessage.toString()));
+          } catch (StageException e) {
+            throw new RuntimeException(e.getMessage(), e);
+          }
         }
       }
       if (next == null && !iterator.hasNext()) {
