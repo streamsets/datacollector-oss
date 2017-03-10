@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 StreamSets Inc.
+ * Copyright 2017 StreamSets Inc.
  * <p>
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,12 +17,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.processor.spark.util;
+package com.streamsets.pipeline.spark;
 
-import com.google.common.base.Preconditions;
+
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.Processor;
-import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,44 +44,35 @@ public class RecordCloner {
   private RecordCloner() {
   }
 
-  /**
-   * Kryo loads the RecordImpl in Spark's classloader. So this one clones it to this stage's classloader.
-   *
-   * @param record Record to be cloned
-   * @param context The context of the {@linkplain Processor} to use to clone the record
-   * @return Cloned record
-   */
-  public static Record clone(Record record, Processor.Context context) {
-    // Kryo loads the RecordImpl class during deserialization in a Spark's classloader.
-    // So directly using the deserialized RecordImpl gives a ClassCastException (RecordImpl -> RecordImpl).
-    // So create a new record and set its root field to be the deserialized one's root field.
-    Record r = context.createRecord(record);
-    r.set(record.get());
-    r.getHeader().setAllAttributes(record.getHeader().getAllAttributes());
-    return r;
-  }
-
   @SuppressWarnings("unchecked")
-  public static Record clone(Object record, Processor.Context context) {
-    Record newRecord = context.createRecord("dummyId");
+  public static Object clone(Object record) {
     try {
-      Object origHeaders = record.getClass().getMethod("getHeader").invoke(record);
-      Map<String, Object> headers =
-          (Map<String, Object>) origHeaders.getClass().getMethod("getAllAttributes").invoke(origHeaders);
-      newRecord.getHeader().setAllAttributes(headers);
-      newRecord.set(RecordCloner.cloneField(record.getClass().getMethod("get").invoke(record)));
-      return newRecord;
-    } catch(Exception ex) {
+      Class recordClass = record.getClass();
+      Object header = recordClass.getMethod("getHeader").invoke(record);
+      Map<String, Object> headers = (Map<String, Object>) header.getClass().getMethod("getAllAttributes").invoke(header);
+      Object field = recordClass.getMethod("get").invoke(record);
+      Class recordClassCl = Class.forName("com.streamsets.datacollector.record.RecordImpl");
+      Class headerClassCl = Class.forName("com.streamsets.datacollector.record.HeaderImpl");
+
+      Object newHeader = headerClassCl.newInstance();
+      headerClassCl.getMethod("setAllAttributes", Map.class).invoke(newHeader, headers);
+
+      Field resultField = cloneField(field);
+
+      return recordClassCl.getConstructor(headerClassCl, Field.class).newInstance(newHeader, resultField);
+    } catch (Exception ex) {
       throw new RuntimeException(ex);
     }
+
   }
+
 
   @SuppressWarnings("unchecked")
   public static Field cloneField(Object field) throws Exception {
     Object fieldType = field.getClass().getMethod("getType").invoke(field);
     String fieldTypeName = (String) fieldType.getClass().getMethod("name").invoke(fieldType);
 
-    Preconditions.checkArgument(!FILE_REF.equals(fieldTypeName), "FILE_REF is not supported in Cluster Mode");
+    Utils.checkArgument(!FILE_REF.equals(fieldTypeName), "FILE_REF is not supported in Cluster Mode");
 
     if (MAP.equals(fieldTypeName) || LIST_MAP.equals(fieldTypeName)) {
       Map<String, Object> fields = (Map<String, Object>) field.getClass().getMethod("getValueAsMap").invoke(field);

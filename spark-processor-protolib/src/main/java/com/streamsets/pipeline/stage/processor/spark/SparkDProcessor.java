@@ -27,23 +27,40 @@ import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DProcessor;
 
+import java.util.concurrent.Semaphore;
+
 @StageDef(
     version = 1,
     label = "Spark Evaluator",
     description = "Process Records in Spark",
     icon = "spark-logo-hd.png",
-    execution = ExecutionMode.STANDALONE,
+    execution = {ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_MESOS_STREAMING, ExecutionMode.CLUSTER_YARN_STREAMING},
     onlineHelpRefUrl = "index.html#Processors/Spark.html#task_g1p_gqn_zx",
     privateClassLoader = true
 )
 @GenerateResourceBundle
 @ConfigGroups(Groups.class)
-public class StandaloneSparkDProcessor extends DProcessor {
+public class SparkDProcessor extends DProcessor {
 
   @ConfigDefBean
-  public StandaloneSparkProcessorConfigBean sparkProcessorConfigBean = new StandaloneSparkProcessorConfigBean();
+  // Validation is done at the cluster level
+  public SparkProcessorConfigBean sparkProcessorConfigBean = new SparkProcessorConfigBean();
+  private volatile DelegatingSparkProcessor processor;
+  private final Semaphore created = new Semaphore(0);
 
+  public Processor get() throws Exception {
+    if (processor == null || processor.getUnderlyingProcessor() == null) {
+      created.acquire();
+    }
+
+    return processor.getUnderlyingProcessor();
+  }
+
+  @Override
   protected Processor createProcessor() {
-    return new SparkProcessor(sparkProcessorConfigBean);
+    // The config is never passed to the processor.
+    // The configs are used by the driver to instantiate the transformer.
+    processor = new DelegatingSparkProcessor(sparkProcessorConfigBean, created);
+    return processor;
   }
 }

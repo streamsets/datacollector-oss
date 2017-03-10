@@ -19,21 +19,26 @@
  */
 package com.streamsets.pipeline;
 
-import java.util.List;
-import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.impl.ClusterSource;
 import com.streamsets.pipeline.api.impl.Utils;
-
+import com.streamsets.pipeline.configurablestage.DSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Method;
+import java.util.ArrayDeque;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
-
-import com.streamsets.pipeline.configurablestage.DSource;
+import java.util.Set;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Creates a pool of embedded SDC's to be used within a single executor (JVM)
@@ -42,22 +47,80 @@ import com.streamsets.pipeline.configurablestage.DSource;
 public class EmbeddedSDCPool {
   private static final Logger LOG = LoggerFactory.getLogger(EmbeddedSDCPool.class);
   private static final boolean IS_TRACE_ENABLED = LOG.isTraceEnabled();
-  private final ConcurrentLinkedDeque<EmbeddedSDC> instanceQueue = new ConcurrentLinkedDeque<>();
-  private final List<EmbeddedSDC> instances = new CopyOnWriteArrayList<>();
   private final Properties properties;
   private boolean infinitePoolSize;
   private volatile boolean open;
+  private static final ReentrantLock lock = new ReentrantLock();
+  private static EmbeddedSDCPool instance;
+
+  /**
+   * notStarted => Batch has not started yet, so no data read from kafka
+   * notStarted -> waitingForBatchToBeRead (0)
+   *
+   * waitingForBatchToBeRead (id) =>
+   *   Embedded SDC whose spark processor at location (i) whose data has been read into the pipeline,
+   *   but not read from the pipeline to the transformer.
+   * waitingForBatchToBeRead (id) -> Transformer #id.
+   *
+   * batchRead (id) =>
+   *   SDC whose batch has been read into transformer at id, but processed/error data has not arrived.
+   * Transformer #id -> batchRead (id)
+   *
+   * errorsWritten (id) =>
+   *   SDC whose batch has been processed by transformer and errors have been written to the processor at (id)
+   *
+   * batchRead (id) -> errorsWritten (id)
+   *   Once a transformer is completed, it will pick up an Embedded SDC whose batch has been read at (id),
+   *   and then write errors to it. Once errors are written, it will check the SDC into errorsWritten at (id)
+   *
+   * errorsWritten (id) -> waitingForBatchToBeRead (id + 1) or notStarted (if id + 1 == sparkProcessorCount)
+   *   Once errors are written, it is checked out and the mapping function will now write out the results from
+   *   the transformer. If there are more processors, the sdc is added to  waitingForBatchToBeRead at (id + 1), else
+   *   we wait for batch completion, and then add the sdc to notStarted.
+   *
+   */
+  private Set<EmbeddedSDC> notStarted = new HashSet<>();
+  private Map<Integer, Deque<EmbeddedSDC>> waitingForBatchToBeRead = new HashMap<>();
+  private Map<Integer, Deque<EmbeddedSDC>> batchRead = new HashMap<>();
+  private Map<Integer, Deque<EmbeddedSDC>> errorsWritten = new HashMap<>();
+  private Set<EmbeddedSDC> used = new HashSet<>();
+  private int sparkProcessorCount;
 
   /**
    * Create a pool. For now, there is only instance being created
    * @param properties the properties file
    * @throws Exception
    */
-  public EmbeddedSDCPool(Properties properties) throws Exception {
+  protected EmbeddedSDCPool(Properties properties) throws Exception {
     this.open = true;
     this.properties = properties;
-    infinitePoolSize = Boolean.valueOf(properties.getProperty("sdc.pool.size.infinite", "false"));
-    addToQueues(create());
+    infinitePoolSize = Boolean.valueOf(properties.getProperty("sdc.pool.size.infinite", "true"));
+  }
+
+
+  public static EmbeddedSDCPool createPool(Properties properties) throws Exception {
+    lock.lock();
+    try {
+      Preconditions.checkArgument(instance == null, "EmbeddedSDCPool has already been created.");
+      instance = new EmbeddedSDCPool(properties);
+      return instance;
+    } finally {
+      lock.unlock();
+    }
+  }
+
+  public static EmbeddedSDCPool getPool() {
+    lock.lock();
+    try {
+      Preconditions.checkArgument(instance != null, "EmbeddedSDCPool has not been initialized yet");
+      return instance;
+    } finally {
+      lock.unlock();
+    }
+  }
+
+  public void setSparkProcessorCount(int count) {
+    this.sparkProcessorCount = count;
   }
 
   /**
@@ -65,21 +128,14 @@ public class EmbeddedSDCPool {
    * @return EmbeddedSDC
    * @throws Exception
    */
+  @SuppressWarnings("unchecked")
   protected EmbeddedSDC create() throws Exception {
     Utils.checkState(open, "Not open");
     final EmbeddedSDC embeddedSDC = new EmbeddedSDC();
     Object source;
-    source = BootstrapCluster.startPipeline(new Runnable() { // post-batch runnable
-      @Override
-      public void run() {
-        LOG.debug(
-            "Returning SDC instance: '{}' in state: '{}' back to queue",
-            embeddedSDC.getInstanceId(),
-            !embeddedSDC.inErrorState() ? "SUCCESS" : "ERROR"
-        );
-        checkin(embeddedSDC);
-      }
-    });
+    // post-batch runnable
+    Object pipelineStartResult = BootstrapCluster.startPipeline(() -> LOG.debug("Batch completed"));
+    source = pipelineStartResult.getClass().getDeclaredField("source").get(pipelineStartResult);
     if (source instanceof DSource) {
       long startTime = System.currentTimeMillis();
       long endTime = startTime;
@@ -100,105 +156,151 @@ public class EmbeddedSDCPool {
         throw new IllegalArgumentException("Source is not of type ClusterSource: " + source.getClass().getName());
     }
     embeddedSDC.setSource((ClusterSource) source);
+    embeddedSDC.setSparkProcessors(
+        (List<Object>)pipelineStartResult.getClass().getDeclaredField("sparkProcessors").get(pipelineStartResult));
     return embeddedSDC;
   }
 
-  private void addToQueues(EmbeddedSDC embeddedSDC) throws Exception {
-    Utils.checkState(open, "Not open");
-    instances.add(embeddedSDC);
-    instanceQueue.add(embeddedSDC);
+  public synchronized EmbeddedSDC getNotStartedSDC() throws Exception {
     if (IS_TRACE_ENABLED) {
-      LOG.trace("After adding, size of queue is " + instanceQueue.size());
+      LOG.trace("Getting SDC whose pipeline has not started.");
     }
-  }
-
-  /**
-   * Get an instance of embedded SDC
-   * @return
-   * @throws Exception
-   */
-  public EmbeddedSDC checkout() throws Exception {
-    Utils.checkState(open, "Not open");
-    if (IS_TRACE_ENABLED) {
-      LOG.trace("Before polling, size of queue is " + instanceQueue.size());
-    }
-    EmbeddedSDC embeddedSDC;
-    if (instanceQueue.size() == 0) {
-      if (infinitePoolSize) {
-        LOG.warn("Creating new SDC as no SDC found in queue, This should be called only during testing");
-        embeddedSDC = create();
-        addToQueues(embeddedSDC);
-        embeddedSDC = instanceQueue.poll();
-      } else {
-        // wait for a minute for sdc to be returned back
-        embeddedSDC = waitForSDC(60000);
-      }
+    EmbeddedSDC sdc;
+    Iterator<EmbeddedSDC> notStartedIter = notStarted.iterator();
+    if (notStartedIter.hasNext()) {
+      sdc = notStartedIter.next();
+      notStartedIter.remove();
     } else {
-      embeddedSDC = instanceQueue.poll();
+      sdc = create();
     }
-    if (embeddedSDC == null) {
-      throw new IllegalStateException("Cannot find SDC, this should never happen");
-    }
-    return embeddedSDC;
+    used.add(sdc);
+    return sdc;
   }
 
-  /**
-   * Return size of pool
-   * @return
-   */
-  public synchronized int size() {
-    Utils.checkState(open, "Not open");
-    return instanceQueue.size();
-  }
-
-  /**
-   * Return the embedded SDC back. This function is called once the batch of
-   * RDD's is processed
-   */
-  public void checkin(EmbeddedSDC embeddedSDC) {
-    // don't check open since we want the instance returned per the
-    // condition in destroy blocking for all instances to be returned
-    if (!instanceQueue.contains(embeddedSDC)) {
-      instanceQueue.offer(embeddedSDC);
-    }
+  public synchronized EmbeddedSDC getSDCWaitingForBatchRead(int id) throws Exception {
     if (IS_TRACE_ENABLED) {
-      LOG.trace("After returning an SDC, size of queue is " + instanceQueue.size());
+      LOG.trace("Getting SDC whose batch has not been read for id: " + id);
+    }
+    return getOrCreate(id, waitingForBatchToBeRead);
+  }
+
+  public synchronized void checkInAfterReadingBatch(int id, EmbeddedSDC sdc) throws Exception {
+    if (IS_TRACE_ENABLED) {
+      LOG.trace("Checking SDC in after reading batch for id: " + id);
+    }
+    checkInAtId(id, sdc, batchRead);
+  }
+
+  public synchronized EmbeddedSDC getSDCBatchRead(int id) throws Exception {
+    if (IS_TRACE_ENABLED) {
+      LOG.trace("Getting SDC whose batch been read for id: " + id);
+    }
+    // This may require a fast-forward. Due to shuffle, we may end calling this one without actually having an SDC
+    // at this state, so we must create one and fast-forward it to this one by sending an empty batch
+    return getOrCreate(id, batchRead);
+  }
+
+
+  public synchronized EmbeddedSDC getSDCErrorsWritten(int id) throws Exception {
+    if (IS_TRACE_ENABLED) {
+      LOG.trace("Getting SDC to which errors have been written for id: " + id);
+    }
+    return getOrCreate(id, errorsWritten);
+  }
+
+  public synchronized void checkInAfterWritingErrors(int id, EmbeddedSDC sdc) throws Exception {
+    if (IS_TRACE_ENABLED) {
+      LOG.trace("Checking SDC in after errors written for id: " + id);
+    }
+    checkInAtId(id, sdc, errorsWritten);
+  }
+
+  public synchronized void checkInAfterWritingTransformedBatch(int id, EmbeddedSDC sdc) throws Exception {
+    if (IS_TRACE_ENABLED) {
+      LOG.trace("Checking SDC in after batch written for id: " + id);
+    }
+    if  (id == sparkProcessorCount) {
+      sdc.getSource().completeBatch();
+      notStarted.add(sdc);
+      used.remove(sdc);
+    } else {
+      checkInAtId(id, sdc, waitingForBatchToBeRead);
     }
   }
 
   /**
-   * Get total instances of SDC (used and unused)
-   * @return the list of SDC
+   * What is this?!
+   * Spark could end up scheduling transformers to run on machines that may actually not have received the data, due to:
+   * - Non-local reads: Spark Locality is time-bound, so if local executor where the data is located is not available,
+   *     Spark will tell another one to pick up the task.
+   * - Shuffle in the transformer: After a shuffle, it is possible the next task passing the data to the next batch could
+   *     end up on a different executor.
+   *
+   * In both these cases, it is possible that there is no SDC at that id. So we create a new SDC and fast-forward to
+   * that id. Since a read can never happen from a fast-forwarded id, we read the fake batch we passed till there, and
+   * then return the sdc so it is ready for writes/errors.
+   *
    */
-  public List<EmbeddedSDC> getInstances() {
-    Utils.checkState(open, "Not open");
-    return instances;
+  private EmbeddedSDC fastForward(int id) throws Exception {
+    if (id == sparkProcessorCount) {
+      return null;
+    }
+    LOG.info("No SDC was found at ID: " + id + ". Fast-forwarding..");
+    EmbeddedSDC sdc;
+    // If there are not SDCs that are just idling, create a new one, else return one from the not started pool.
+    if (notStarted.isEmpty()) {
+      sdc = create();
+    } else {
+      sdc = getNotStartedSDC();
+    }
+
+    Class<?> clusterFunctionClass = Class.forName("com.streamsets.pipeline.cluster.ClusterFunctionImpl");
+    Method getBatch = clusterFunctionClass.getMethod("getNextBatch", int.class, EmbeddedSDC.class);
+    Method forward =
+        clusterFunctionClass.getMethod("writeTransformedToProcessor", Iterator.class, int.class, EmbeddedSDC.class);
+    sdc.getSource().put(Collections.emptyList());
+    for (int i = 0; i <= id - 1; i++) {
+      getBatch.invoke(null, i, sdc);
+      forward.invoke(null, Collections.emptyIterator(), i, sdc);
+    }
+    getBatch.invoke(null, id, sdc);
+    return sdc;
   }
 
-  @VisibleForTesting
-  EmbeddedSDC waitForSDC(long timeout) throws InterruptedException {
-    EmbeddedSDC embeddedSDC = null;
-    if (timeout < 0) throw new IllegalArgumentException("Timeout shouldn't be less than zero");
-    long startTime = System.currentTimeMillis();
-    long endTime = startTime;
-    long diff = 0;
-    int counter = 1000;
-    while (diff < timeout) {
-      Utils.checkState(open, "Not open");
-      embeddedSDC = instanceQueue.poll();
-      if (embeddedSDC != null) {
-        break;
-      }
-      Thread.sleep(50);
-      endTime = System.currentTimeMillis();
-      diff = endTime - startTime;
-      if (diff > counter) {
-        LOG.warn("Have been waiting for sdc for " + diff + "ms");
-        // as we want to print messages every second
-        counter = counter + 1000;
-      }
+
+  private synchronized void checkInAtId(
+      int id,
+      EmbeddedSDC sdc,
+      Map<Integer, Deque<EmbeddedSDC>> sdcMap
+  ) throws Exception {
+    Deque<EmbeddedSDC> sdcList = sdcMap.computeIfAbsent(id, i -> new ArrayDeque<>());
+    sdcList.addLast(sdc);
+    used.remove(sdc);
+  }
+
+  private EmbeddedSDC getOrCreate(int id, Map<Integer, Deque<EmbeddedSDC>> sdcMap) throws Exception {
+    Deque<EmbeddedSDC> deque = sdcMap.computeIfAbsent(id, key -> new ArrayDeque<>());
+    EmbeddedSDC sdc;
+    if (!deque.isEmpty()) {
+      sdc = deque.removeFirst();
+    } else {
+      sdc = fastForward(id);
     }
-    return embeddedSDC;
+    used.add(sdc);
+    return sdc;
+  }
+
+  public synchronized void shutdown() {
+    this.open = false;
+    used.forEach(sdc -> sdc.getSource().shutdown());
+    shutdownAllInMap(waitingForBatchToBeRead);
+    shutdownAllInMap(errorsWritten);
+    shutdownAllInMap(batchRead);
+    notStarted.forEach(sdc -> sdc.getSource().shutdown());
+  }
+
+  private void shutdownAllInMap(Map<Integer, Deque<EmbeddedSDC>> sdcMap) {
+    sdcMap.values().forEach(sdcList -> sdcList.forEach(sdc -> sdc.getSource().shutdown()));
   }
 
 }

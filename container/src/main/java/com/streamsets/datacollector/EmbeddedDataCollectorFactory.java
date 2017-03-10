@@ -20,21 +20,26 @@
 
 package com.streamsets.datacollector;
 
-import com.streamsets.pipeline.api.ProtoSource;
+import com.streamsets.datacollector.runner.BatchListener;
+import com.streamsets.datacollector.runner.Pipe;
+import com.streamsets.datacollector.runner.Pipeline;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.streamsets.datacollector.runner.BatchListener;
-import com.streamsets.datacollector.runner.Pipeline;
-import com.streamsets.pipeline.api.impl.Utils;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class EmbeddedDataCollectorFactory {
   private static final Logger LOG = LoggerFactory.getLogger(EmbeddedDataCollectorFactory.class);
+  public static final String SPARK_DPROCESSOR_CLASS =
+      "com.streamsets.pipeline.stage.processor.spark.SparkDProcessor";
 
   private EmbeddedDataCollectorFactory() {}
 
-  public static ProtoSource startPipeline(final Runnable postBatchRunnable) throws Exception {
+  public static PipelineStartResult startPipeline(final Runnable postBatchRunnable) throws Exception {
     EmbeddedDataCollector embeddedDataCollector = new EmbeddedDataCollector();
     embeddedDataCollector.init();
     embeddedDataCollector.startPipeline();
@@ -51,6 +56,17 @@ public class EmbeddedDataCollectorFactory {
       throw new IllegalStateException(Utils.format("Pipeline has not started even after waiting '{}'", diff));
     }
     Pipeline realPipeline = embeddedDataCollector.getPipeline();
+    List<Object> sparkProcessors = new ArrayList<>();
+    List<Pipe> pipes = realPipeline.getRunners().get(0).getPipes(); // Cluster pipelines are single threaded.
+    for (Pipe pipe : pipes) {
+      Stage stage = pipe.getStage().getStage();
+      if (stage.getClass().getCanonicalName().equals(SPARK_DPROCESSOR_CLASS)) {
+        LOG.info("Added Spark Processor for " + stage.toString());
+        if (!sparkProcessors.contains(stage)) {
+          sparkProcessors.add(stage);
+        }
+      }
+    }
     realPipeline.getRunner().registerListener(new BatchListener() {
       @Override
       public void preBatch() {
@@ -62,6 +78,6 @@ public class EmbeddedDataCollectorFactory {
         postBatchRunnable.run();
       }
     });
-    return realPipeline.getSource();
+    return new PipelineStartResult(realPipeline.getSource(), sparkProcessors);
   }
 }

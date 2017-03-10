@@ -21,7 +21,6 @@ package com.streamsets.pipeline.stage.processor.spark;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
-
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -56,20 +55,21 @@ import static com.streamsets.pipeline.stage.processor.spark.Errors.SPARK_04;
 import static com.streamsets.pipeline.stage.processor.spark.Errors.SPARK_05;
 import static com.streamsets.pipeline.stage.processor.spark.Errors.SPARK_06;
 import static com.streamsets.pipeline.stage.processor.spark.Errors.SPARK_07;
+import static com.streamsets.pipeline.stage.processor.spark.Errors.SPARK_08;
 import static com.streamsets.pipeline.stage.processor.spark.Groups.SPARK;
 
-public class SparkProcessor extends SingleLaneProcessor {
-  private static final Logger LOG = LoggerFactory.getLogger(SparkProcessor.class);
+public class StandaloneSparkProcessor extends SingleLaneProcessor {
+  private static final Logger LOG = LoggerFactory.getLogger(StandaloneSparkProcessor.class);
   public static final String TRANSFORMER_CLASS = "sparkProcessorConfigBean.transformerClass";
 
-  private final StandaloneSparkProcessorConfigBean configBean;
+  private final SparkProcessorConfigBean configBean;
   private transient SparkTransformer transformer; // NOSONAR
   private transient JavaSparkContext jsc; // NOSONAR
 
   private ErrorRecordHandler errorRecordHandler = null;
   private boolean transformerInited = false;
 
-  public SparkProcessor(StandaloneSparkProcessorConfigBean configBean) {
+  public StandaloneSparkProcessor(SparkProcessorConfigBean configBean) {
     this.configBean = configBean;
   }
 
@@ -77,6 +77,12 @@ public class SparkProcessor extends SingleLaneProcessor {
   public List<ConfigIssue> init() {
     // We keep moving forward and adding more issues, so we can return as many validation issues in one shot
     List<ConfigIssue> issues = super.init();
+
+    if (configBean.threadCount < 1) {
+      issues.add(getContext().createConfigIssue(
+          SPARK.name(), "sparkProcessorConfigBean.threadCount", SPARK_08));
+    }
+
     final File[] jars = getJarFiles(issues);
     if (issues.isEmpty()) {
       jsc = startSparkContext(jars);
@@ -126,7 +132,7 @@ public class SparkProcessor extends SingleLaneProcessor {
       }
     } catch (URISyntaxException ex) {
       LOG.error("Cannot find Streamsets directories", ex);
-      issues.add(getContext().createConfigIssue(SPARK.name(), "appName", SPARK_03));
+      issues.add(getContext().createConfigIssue(SPARK.name(), "sparkProcessorConfigBean.appName", SPARK_03));
     }
     return jars;
   }

@@ -21,7 +21,6 @@ package com.streamsets.datacollector.cluster;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
-import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
@@ -87,8 +86,10 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
@@ -98,6 +99,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.streamsets.datacollector.definition.StageLibraryDefinitionExtractor.DATA_COLLECTOR_LIBRARY_PROPERTIES;
+import static java.util.Arrays.stream;
 
 public class ClusterProviderImpl implements ClusterProvider {
   static final Pattern YARN_APPLICATION_ID_REGEX = Pattern.compile("\\s(application_[0-9]+_[0-9]+)(\\s|$)");
@@ -130,6 +132,7 @@ public class ClusterProviderImpl implements ClusterProvider {
   private static final String ALL_STAGES = "*";
   private static final String TOPIC = "topic";
   private static final String MESOS_HOSTING_DIR_PARENT = "mesos";
+  public static final String SPARK_PROCESSOR_STAGE = "com.streamsets.pipeline.stage.processor.spark.SparkDProcessor";
   private final RuntimeInfo runtimeInfo;
   private final YARNStatusParser yarnStatusParser;
   private final MesosStatusParser mesosStatusParser;
@@ -548,7 +551,7 @@ public class ClusterProviderImpl implements ClusterProvider {
     // order is important here as we don't want error stage
     // configs overriding source stage configs
     String clusterToken = UUID.randomUUID().toString();
-    List<String> jarsToShip = new ArrayList<String>();
+    Set<String> jarsToShip = new LinkedHashSet<>();
     List<Issue> errors = new ArrayList<>();
     PipelineBean pipelineBean = PipelineBeanCreator.get().create(false, stageLibrary, pipelineConfiguration, errors);
     if (!errors.isEmpty()) {
@@ -565,6 +568,7 @@ public class ClusterProviderImpl implements ClusterProvider {
     for (StageBean stageBean : pipelineBean.getPipelineStageBeans().getStages()) {
       pipelineConfigurations.add(stageBean.getConfiguration());
     }
+
     ExecutionMode executionMode = ExecutionMode.STANDALONE;
     for (StageConfiguration stageConf : pipelineConfigurations.build()) {
       StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(), false);
@@ -617,6 +621,7 @@ public class ClusterProviderImpl implements ClusterProvider {
           }
         }
       }
+
       String type = StageLibraryUtils.getLibraryType(stageDef.getStageClassLoader());
       String name = StageLibraryUtils.getLibraryName(stageDef.getStageClassLoader());
       if (ClusterModeConstants.STREAMSETS_LIBS.equals(type)) {
@@ -628,7 +633,31 @@ public class ClusterProviderImpl implements ClusterProvider {
       } else {
         throw new IllegalStateException(Utils.format("Error unknown stage library type: '{}'", type));
       }
+
+      // TODO: Get extras dir from the env var.
+      // Then traverse each jar's parent (getParent method) and add only the ones who has the extras dir as parent.
+      // Add all jars of stagelib to --jars. We only really need stuff from the extras directory.
+      if (stageDef.getClassName().equals(SPARK_PROCESSOR_STAGE)) {
+        LOG.info("Spark processor found in pipeline, adding to spark-submit");
+        File extras = new File(System.getenv("STREAMSETS_LIBRARIES_EXTRA_DIR"));
+        LOG.info("Found extras dir: " + extras.toString());
+        File stageLibExtras = new File(extras.toString() + "/" + stageConf.getLibrary() + "/" + "lib");
+        LOG.info("StageLib Extras dir: " + stageLibExtras.toString());
+        File[] extraJarsForStageLib = stageLibExtras.listFiles();
+        if (extraJarsForStageLib != null) {
+          stream(extraJarsForStageLib).map(File::toString).forEach(jarsToShip::add);
+        }
+        addJarsToJarsList((URLClassLoader) stageDef.getStageClassLoader(), jarsToShip, "streamsets-datacollector-spark-api-[0-9]+.*");
+      }
     }
+
+    if (executionMode == ExecutionMode.CLUSTER_YARN_STREAMING ||
+        executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
+      LOG.info("Execution Mode is CLUSTER_STREAMING. Adding container jar and API jar to spark-submit");
+      addJarsToJarsList(containerCL, jarsToShip, "streamsets-datacollector-container-[0-9]+.*");
+      addJarsToJarsList(apiCL, jarsToShip, "streamsets-datacollector-api-[0-9]+.*");
+    }
+
     LOG.info("stagingDir = '{}'", stagingDir);
     LOG.info("bootstrapDir = '{}'", bootstrapDir);
     LOG.info("etcDir = '{}'", etcDir);
@@ -675,6 +704,7 @@ public class ClusterProviderImpl implements ClusterProvider {
     } else if (executionMode == ExecutionMode.CLUSTER_YARN_STREAMING) {
       jarsToShip.add(getBootstrapClusterJar(bootstrapDir, CLUSTER_BOOTSTRAP_API_JAR_PATTERN).getAbsolutePath());
     }
+
     try {
       etcDir = createDirectoryClone(etcDir, "etc", stagingDir);
       if (executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
@@ -737,7 +767,7 @@ public class ClusterProviderImpl implements ClusterProvider {
           throw new IllegalStateException("HDFS/S3 Checkpoint configuration directory is required");
         }
       }
-      rewriteProperties(sdcPropertiesFile, etcDir, sourceConfigs, sourceInfo, clusterToken, Optional.fromNullable
+      rewriteProperties(sdcPropertiesFile, etcDir, sourceConfigs, sourceInfo, clusterToken, Optional.ofNullable
           (mesosURL));
       TarFileCreator.createTarGz(etcDir, etcTarGz);
     } catch (RuntimeException ex) {
@@ -892,6 +922,22 @@ public class ClusterProviderImpl implements ClusterProvider {
     }
   }
 
+  private void addJarsToJarsList(URLClassLoader cl, Set<String> jarsToShip, String regex) {
+    jarsToShip.addAll(getFilesInCL(cl, regex));
+  }
+
+  private List<String> getFilesInCL(URLClassLoader cl, String regex) {
+    List<String> files = new ArrayList<>();
+    for (URL url : cl.getURLs()){
+      File jar = new File(url.getPath());
+      if (jar.getName().matches(regex)) {
+        LOG.info(Utils.format("Adding {} to ship.", url.getPath()));
+        files.add(jar.getAbsolutePath());
+      }
+    }
+    return files;
+  }
+
   @VisibleForTesting
   void copyDpmTokenIfRequired(Properties sdcProps, File etcStagingDir) throws IOException {
     String configFiles = sdcProps.getProperty(Configuration.CONFIG_INCLUDES);
@@ -1004,7 +1050,7 @@ public class ClusterProviderImpl implements ClusterProvider {
   private List<String> generateMRArgs(String clusterManager, String slaveMemory, String javaOpts,
                                       String libsTarGz, String etcTarGz, String resourcesTarGz, String log4jProperties,
                                       String bootstrapJar, String sdcPropertiesFile,
-                                      String clusterBootstrapJar, List<String> jarsToShip) {
+                                      String clusterBootstrapJar, Set<String> jarsToShip) {
     List<String> args = new ArrayList<>();
     args.add(clusterManager);
     args.add("start");
@@ -1042,7 +1088,7 @@ public class ClusterProviderImpl implements ClusterProvider {
       String resourcesTarGz,
       String log4jProperties,
       String bootstrapJar,
-      List<String> jarsToShip,
+      Set<String> jarsToShip,
       String clusterBootstrapJar
   ) {
     List<String> args = new ArrayList<>();

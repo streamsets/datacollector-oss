@@ -20,8 +20,10 @@
 package com.streamsets.pipeline.stage.processor.spark;
 
 import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
+import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -29,6 +31,7 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.pipeline.stage.processor.spark.cluster.ClusterExecutorSparkProcessor;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -47,10 +50,10 @@ public class TestSparkProcessor {
   private static final String LANE = "spark";
   private static final String INSERTED_CONSTANT = "testing";
   private static final String INCREMENT = "1000";
-  private final Class<? extends DProcessor> DProcessorClass = StandaloneSparkDProcessor.class;
+  private final Class<? extends DProcessor> DProcessorClass = SparkDProcessor.class;
 
-  private StandaloneSparkProcessorConfigBean getConfigBean() {
-    StandaloneSparkProcessorConfigBean configBean = new StandaloneSparkProcessorConfigBean();
+  private SparkProcessorConfigBean getConfigBean() {
+    SparkProcessorConfigBean configBean = new SparkProcessorConfigBean();
     configBean.preprocessMethodArgs = ImmutableList.of(INCREMENT, INSERTED_CONSTANT);
     configBean.appName = "Test App";
     configBean.threadCount = 1;
@@ -59,9 +62,56 @@ public class TestSparkProcessor {
   }
 
   @Test
+  public void testExecutionModes() throws Exception {
+    final OnRecordError onRecordError = OnRecordError.STOP_PIPELINE;
+
+    ProcessorRunner runner =
+        new ProcessorRunner.Builder(DProcessorClass, null)
+            .addOutputLane(LANE)
+            .setExecutionMode(ExecutionMode.STANDALONE)
+            .setOnRecordError(onRecordError)
+            .build();
+    Assert.assertTrue(((SparkDProcessor) runner.getStage()).createProcessor() instanceof DelegatingSparkProcessor);
+
+    runner =
+        new ProcessorRunner.Builder(DProcessorClass, new DelegatingSparkProcessor(getConfigBean(), null))
+            .addOutputLane(LANE)
+            .setExecutionMode(ExecutionMode.STANDALONE)
+            .setOnRecordError(onRecordError)
+            .build();
+
+    DelegatingSparkProcessor sparkProcessor = new DelegatingSparkProcessor(getConfigBean(), null);
+    sparkProcessor.init(runner.getInfo(), (Processor.Context) runner.getContext());
+    Assert.assertTrue(sparkProcessor.getUnderlyingProcessor() instanceof StandaloneSparkProcessor);
+    sparkProcessor.destroy();
+
+    runner = new ProcessorRunner.Builder(DProcessorClass, new DelegatingSparkProcessor(getConfigBean(), null))
+        .addOutputLane(LANE)
+        .setOnRecordError(onRecordError)
+        .setExecutionMode(ExecutionMode.CLUSTER_MESOS_STREAMING)
+        .build();
+
+    sparkProcessor = new DelegatingSparkProcessor(getConfigBean(), null);
+    sparkProcessor.init(runner.getInfo(), (Processor.Context) runner.getContext());
+    Assert.assertTrue(sparkProcessor.getUnderlyingProcessor() instanceof ClusterExecutorSparkProcessor);
+    sparkProcessor.destroy();
+
+    runner = new ProcessorRunner.Builder(DProcessorClass, new DelegatingSparkProcessor(getConfigBean(), null))
+        .addOutputLane(LANE)
+        .setOnRecordError(onRecordError)
+        .setExecutionMode(ExecutionMode.CLUSTER_YARN_STREAMING)
+        .build();
+
+    sparkProcessor = new DelegatingSparkProcessor(getConfigBean(), null);
+    sparkProcessor.init(runner.getInfo(), (Processor.Context) runner.getContext());
+    Assert.assertTrue(sparkProcessor.getUnderlyingProcessor() instanceof ClusterExecutorSparkProcessor);
+    sparkProcessor.destroy();
+  }
+
+  @Test
   public void testSuccess() throws Exception {
     final OnRecordError onRecordError = OnRecordError.STOP_PIPELINE;
-    SparkProcessor processor = new SparkProcessor(getConfigBean());
+    StandaloneSparkProcessor processor = new StandaloneSparkProcessor(getConfigBean());
 
     List<Record> records = new ArrayList<>(100);
     for (int i = 0; i < 100; i++) {
@@ -97,10 +147,10 @@ public class TestSparkProcessor {
   public void testError() throws Exception {
     final OnRecordError onRecordError = OnRecordError.TO_ERROR;
 
-    StandaloneSparkProcessorConfigBean configBean = getConfigBean();
+    SparkProcessorConfigBean configBean = getConfigBean();
     configBean.transformerClass = OnlyErrorTransformer.class.getCanonicalName();
 
-    SparkProcessor processor = new SparkProcessor(configBean);
+    StandaloneSparkProcessor processor = new StandaloneSparkProcessor(configBean);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(DProcessorClass, processor)
         .addOutputLane(LANE).setOnRecordError(onRecordError).build();
@@ -133,10 +183,10 @@ public class TestSparkProcessor {
   public void testSuccessError() throws Exception {
     final OnRecordError onRecordError = OnRecordError.TO_ERROR;
 
-    StandaloneSparkProcessorConfigBean configBean = getConfigBean();
+    SparkProcessorConfigBean configBean = getConfigBean();
     configBean.transformerClass = HalfHalfTransformer.class.getCanonicalName();
 
-    SparkProcessor processor = new SparkProcessor(configBean);
+    StandaloneSparkProcessor processor = new StandaloneSparkProcessor(configBean);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(DProcessorClass, processor)
         .addOutputLane(LANE).setOnRecordError(onRecordError).build();
@@ -190,10 +240,10 @@ public class TestSparkProcessor {
   public void testNonExistentTransformer() throws Exception {
     final OnRecordError onRecordError = OnRecordError.TO_ERROR;
 
-    StandaloneSparkProcessorConfigBean configBean = getConfigBean();
+    SparkProcessorConfigBean configBean = getConfigBean();
     configBean.transformerClass = "Non-Existent Class";
 
-    SparkProcessor processor = new SparkProcessor(configBean);
+    StandaloneSparkProcessor processor = new StandaloneSparkProcessor(configBean);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(DProcessorClass, processor)
         .addOutputLane(LANE).setOnRecordError(onRecordError).build();
@@ -212,10 +262,10 @@ public class TestSparkProcessor {
   public void testInvalidTransformer() throws Exception {
     final OnRecordError onRecordError = OnRecordError.TO_ERROR;
 
-    StandaloneSparkProcessorConfigBean configBean = getConfigBean();
+    SparkProcessorConfigBean configBean = getConfigBean();
     configBean.transformerClass = ClassNotImplementingSparkTransformer.class.getCanonicalName();
 
-    SparkProcessor processor = new SparkProcessor(configBean);
+    StandaloneSparkProcessor processor = new StandaloneSparkProcessor(configBean);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(DProcessorClass, processor)
         .addOutputLane(LANE).setOnRecordError(onRecordError).build();
@@ -233,10 +283,10 @@ public class TestSparkProcessor {
   public void testTransformerInstantiationFail() throws Exception {
     final OnRecordError onRecordError = OnRecordError.TO_ERROR;
 
-    StandaloneSparkProcessorConfigBean configBean = getConfigBean();
+    SparkProcessorConfigBean configBean = getConfigBean();
     configBean.transformerClass = ConstructorThrowingSparkTransformer.class.getCanonicalName();
 
-    SparkProcessor processor = new SparkProcessor(configBean);
+    StandaloneSparkProcessor processor = new StandaloneSparkProcessor(configBean);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(DProcessorClass, processor)
         .addOutputLane(LANE).setOnRecordError(onRecordError).build();
@@ -254,10 +304,10 @@ public class TestSparkProcessor {
   public void testTransformerInitializationFail() throws Exception {
     final OnRecordError onRecordError = OnRecordError.TO_ERROR;
 
-    StandaloneSparkProcessorConfigBean configBean = getConfigBean();
+    SparkProcessorConfigBean configBean = getConfigBean();
     configBean.transformerClass = InitThrowingSparkTransformer.class.getCanonicalName();
 
-    SparkProcessor processor = new SparkProcessor(configBean);
+    StandaloneSparkProcessor processor = new StandaloneSparkProcessor(configBean);
 
     ProcessorRunner runner = new ProcessorRunner.Builder(DProcessorClass, processor)
         .addOutputLane(LANE).setOnRecordError(onRecordError).build();
@@ -276,10 +326,10 @@ public class TestSparkProcessor {
   public void testMethodCalls() throws Exception {
     final OnRecordError onRecordError = OnRecordError.TO_ERROR;
 
-    StandaloneSparkProcessorConfigBean configBean = getConfigBean();
+    SparkProcessorConfigBean configBean = getConfigBean();
     configBean.transformerClass = MethodCallCountingTransformer.class.getCanonicalName();
 
-    SparkProcessor processor = new SparkProcessor(configBean);
+    StandaloneSparkProcessor processor = new StandaloneSparkProcessor(configBean);
 
     Random random = new Random();
     List<Record> records = new ArrayList<>(100);
@@ -310,15 +360,15 @@ public class TestSparkProcessor {
   public void testExceptionStrings() {
 
     Assert.assertEquals("java.lang.RuntimeException : Shire",
-        SparkProcessor.getExceptionString(new RuntimeException("Shire")));
+        StandaloneSparkProcessor.getExceptionString(new RuntimeException("Shire")));
 
     Assert.assertEquals("java.lang.RuntimeException : Baggins",
-        SparkProcessor.getExceptionString(new RuntimeException("Baggins")));
+        StandaloneSparkProcessor.getExceptionString(new RuntimeException("Baggins")));
 
     Assert.assertEquals("java.lang.NumberFormatException : Mordor",
-        SparkProcessor.getExceptionString(new NumberFormatException("Mordor")));
+        StandaloneSparkProcessor.getExceptionString(new NumberFormatException("Mordor")));
 
     Assert.assertEquals("java.lang.IllegalStateException",
-        SparkProcessor.getExceptionString(new IllegalStateException()));
+        StandaloneSparkProcessor.getExceptionString(new IllegalStateException()));
   }
 }

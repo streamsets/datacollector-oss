@@ -353,7 +353,12 @@ public class MockStages {
     }
 
     @Override
-    public void put(List<Map.Entry> batch) throws InterruptedException {
+    public Object put(List<Map.Entry> batch) throws InterruptedException {
+      return null;
+    }
+
+    @Override
+    public void completeBatch() throws InterruptedException {
 
     }
 

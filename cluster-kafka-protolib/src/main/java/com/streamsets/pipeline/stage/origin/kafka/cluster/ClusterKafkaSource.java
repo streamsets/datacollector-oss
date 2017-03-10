@@ -108,9 +108,15 @@ public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitt
   }
 
   @Override
-  public void put(List<Map.Entry> batch) throws InterruptedException {
-    producer.put(new OffsetAndResult<>(recordsProduced, batch));
+  public Object put(List<Map.Entry> batch) throws InterruptedException {
+    Object expectedOffset = producer.put(new OffsetAndResult<>(recordsProduced, batch));
     recordsProduced += batch.size();
+    return expectedOffset;
+  }
+
+  @Override
+  public void completeBatch() throws InterruptedException {
+    producer.waitForCommit();
   }
 
   @Override

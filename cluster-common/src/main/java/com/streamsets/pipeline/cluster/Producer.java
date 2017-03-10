@@ -56,7 +56,7 @@ public class Producer {
    * control messages from the consumer. Throws an exception
    * when the consumer has indicated it encountered an error.
    */
-  public void put(OffsetAndResult<Map.Entry> batch) throws InterruptedException {
+  public Object put(OffsetAndResult<Map.Entry> batch) {
     if (consumerError != null) {
       throw new RuntimeException(Utils.format("Consumer encountered error: {}", consumerError), consumerError);
     }
@@ -81,28 +81,7 @@ public class Producer {
           }
         }
       }
-      // now wait for offset commit
-      while (true) {
-        for (ControlChannel.Message controlMessage : controlChannel.getProducerMessages()) {
-          switch (controlMessage.getType()) {
-            case CONSUMER_COMMIT:
-              if (!controlMessage.getPayload().equals(expectedOffset)) {
-                LOG.warn("Expected offset: '{}' and found: '{}'", expectedOffset, controlMessage.getPayload());
-              } else if (LOG.isTraceEnabled()) {
-                LOG.trace("Commit of: '{}'", controlMessage.getPayload());
-              }
-              return;
-            case CONSUMER_ERROR:
-              Throwable throwable = (Throwable) controlMessage.getPayload();
-              consumerError = throwable;
-              throw new ConsumerRuntimeException(Utils.format("Consumer encountered error: {}", throwable), throwable);
-            default:
-              throw new IllegalStateException(Utils.format("Illegal control message type: '{}'",
-                controlMessage.getType()));
-          }
-        }
-        TimeUnit.MILLISECONDS.sleep(10);
-      }
+      return expectedOffset;
     } catch (Throwable throwable) {
       controlChannel.producerComplete();
       if (!(throwable instanceof ConsumerRuntimeException)) {
@@ -114,6 +93,28 @@ public class Producer {
         }
       }
       throw Throwables.propagate(throwable);
+    }
+  }
+
+  public void waitForCommit() throws InterruptedException {
+    while (true) {
+      for (ControlChannel.Message controlMessage : controlChannel.getProducerMessages()) {
+        switch (controlMessage.getType()) {
+          case CONSUMER_COMMIT:
+            if (LOG.isTraceEnabled()) {
+              LOG.trace("Commit of: '{}'", controlMessage.getPayload());
+            }
+            return;
+          case CONSUMER_ERROR:
+            Throwable throwable = (Throwable) controlMessage.getPayload();
+            consumerError = throwable;
+            throw new ConsumerRuntimeException(Utils.format("Consumer encountered error: {}", throwable), throwable);
+          default:
+            throw new IllegalStateException(Utils.format("Illegal control message type: '{}'",
+              controlMessage.getType()));
+        }
+      }
+      TimeUnit.MILLISECONDS.sleep(10);
     }
   }
 

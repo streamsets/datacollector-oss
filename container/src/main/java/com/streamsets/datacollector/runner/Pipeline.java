@@ -138,8 +138,7 @@ public class Pipeline {
     return originPipe;
   }
 
-  @VisibleForTesting
-  List<PipeRunner> getRunners() {
+  public List<PipeRunner> getRunners() {
     return pipes;
   }
 

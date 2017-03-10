@@ -29,7 +29,8 @@ public enum Errors implements ErrorCode {
   SPARK_04("{}"),
   SPARK_05("Init method for SparkTransformer class: '{}' failed with error: '{}'"),
   SPARK_06("Error while transforming batch: {}"),
-  SPARK_07("Spark job failed with error: {}")
+  SPARK_07("Spark job failed with error: {}"),
+  SPARK_08("Parallelism must be >= 1"),
   ;
 
   private final String message;

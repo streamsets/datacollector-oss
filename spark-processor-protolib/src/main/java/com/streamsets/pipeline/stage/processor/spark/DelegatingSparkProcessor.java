@@ -17,48 +17,51 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.processor.spark.cluster;
+package com.streamsets.pipeline.stage.processor.spark;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
-import com.streamsets.pipeline.stage.processor.spark.SparkProcessor;
-import com.streamsets.pipeline.stage.processor.spark.SparkProcessorConfigBean;
-import com.streamsets.pipeline.stage.processor.spark.StandaloneSparkProcessorConfigBean;
+import com.streamsets.pipeline.stage.processor.spark.cluster.ClusterExecutorSparkProcessor;
 
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 public class DelegatingSparkProcessor extends SingleLaneProcessor {
 
   private SingleLaneProcessor underlyingProcessor;
   private final SparkProcessorConfigBean conf;
-  private static final String PREVIEW_APP_NAME = "Spark Processor Preview";
+  private final Semaphore initedSema;
 
-  DelegatingSparkProcessor(SparkProcessorConfigBean conf) {
+  public DelegatingSparkProcessor(SparkProcessorConfigBean conf, Semaphore initedSema) {
     this.conf = conf;
+    this.initedSema = initedSema;
   }
 
   @Override
-  public List<ConfigIssue> init(){
+  public List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
-    if (getContext().isPreview()) {
-      StandaloneSparkProcessorConfigBean standaloneConfigBean = new StandaloneSparkProcessorConfigBean();
-      standaloneConfigBean.transformerClass = this.conf.transformerClass;
-      standaloneConfigBean.preprocessMethodArgs = this.conf.preprocessMethodArgs;
-      standaloneConfigBean.appName = PREVIEW_APP_NAME;
-      standaloneConfigBean.threadCount = 4;
-      underlyingProcessor = new SparkProcessor(standaloneConfigBean);
-      issues.addAll(((SparkProcessor) underlyingProcessor).init());
+    if (getContext().isPreview() || getContext().getExecutionMode() == ExecutionMode.STANDALONE) {
+      underlyingProcessor = new StandaloneSparkProcessor(conf);
     } else {
       underlyingProcessor = new ClusterExecutorSparkProcessor();
-      issues.addAll(((ClusterExecutorSparkProcessor) underlyingProcessor).init());
     }
+    issues.addAll(underlyingProcessor.init(getInfo(), getContext()));
+    initedSema.release();
     return issues;
   }
 
   @Override
   public void process(Batch batch, SingleLaneBatchMaker singleLaneBatchMaker) throws StageException {
     underlyingProcessor.process(batch, singleLaneBatchMaker);
+  }
+
+  @VisibleForTesting
+  Processor getUnderlyingProcessor() {
+    return underlyingProcessor;
   }
 
   @Override

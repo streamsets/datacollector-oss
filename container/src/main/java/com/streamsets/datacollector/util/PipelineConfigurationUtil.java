@@ -34,11 +34,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class PipelineConfigurationUtil {
 
   private static final String KEY = "key";
   private static final String VALUE = "value";
+
+  private static final String SPARK_PROCESSOR_STAGE = "com_streamsets_pipeline_stage_processor_spark_SparkDProcessor";
 
   private PipelineConfigurationUtil() {}
 
@@ -66,14 +69,41 @@ public class PipelineConfigurationUtil {
     return constants;
   }
 
-  public static String getSourceLibName(String pipelineJson) throws JsonParseException, JsonMappingException,
-      IOException {
+  private static PipelineConfiguration getPipelineConfiguration(String pipelineJson) throws IOException {
     ObjectMapper json = ObjectMapperFactory.getOneLine();
     PipelineConfigurationJson pipelineConfigBean = json.readValue(pipelineJson, PipelineConfigurationJson.class);
-    PipelineConfiguration pipelineConf = BeanHelper.unwrapPipelineConfiguration(pipelineConfigBean);
+    return BeanHelper.unwrapPipelineConfiguration(pipelineConfigBean);
+  }
+
+  public static String getSourceLibName(String pipelineJson) throws JsonParseException, JsonMappingException,
+      IOException {
+    PipelineConfiguration pipelineConf = getPipelineConfiguration(pipelineJson);
     StageConfiguration stageConfiguration = Utils.checkNotNull(getSourceStageConf(pipelineConf), "StageConfiguration" +
         "for origin");
     return stageConfiguration.getLibrary();
+  }
+
+  @SuppressWarnings("unchecked")
+  public static List<SparkTransformerConfig> getSparkTransformers(String pipelineJson) throws Exception {
+    PipelineConfiguration pipelineConf = getPipelineConfiguration(pipelineJson);
+    return
+        pipelineConf.getStages().stream()
+        .filter(stageConfiguration -> stageConfiguration.getStageName().equals(SPARK_PROCESSOR_STAGE))
+        .map(stageConfiguration -> {
+          String transformerClass =
+              stageConfiguration.getConfig("sparkProcessorConfigBean.transformerClass").getValue().toString();
+          List<String> parameters =
+              (List<String>) stageConfiguration.getConfig("sparkProcessorConfigBean.preprocessMethodArgs").getValue();
+          return new SparkTransformerConfig(transformerClass, parameters);
+        }).collect(Collectors.toList());
+  }
+
+  public static List<String> getSparkProcessorConf(String pipelineJson) throws Exception {
+    PipelineConfiguration pipelineConf = getPipelineConfiguration(pipelineJson);
+    return pipelineConf.getStages().stream()
+        .filter(stageConfiguration -> stageConfiguration.getStageName().equals(SPARK_PROCESSOR_STAGE))
+        .map(StageConfiguration::getLibrary)
+        .collect(Collectors.toList());
   }
 
   public static StageConfiguration getSourceStageConf(PipelineConfiguration pipelineConf) {
