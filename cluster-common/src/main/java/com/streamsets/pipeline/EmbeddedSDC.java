@@ -19,10 +19,10 @@
  */
 package com.streamsets.pipeline;
 
-
-import java.util.concurrent.atomic.AtomicInteger;
-
 import com.streamsets.pipeline.api.impl.ClusterSource;
+
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Embedded SDC providing access to the source
@@ -31,6 +31,9 @@ public class EmbeddedSDC {
   private static final AtomicInteger instanceIdCounter = new AtomicInteger(0);
   private final int instanceId;
   private ClusterSource source;
+
+  // To avoid having SparkProcessors in classpath for Cluster batch mode, we use objects here.
+  private List<Object> sparkProcessors;
 
   public EmbeddedSDC() {
     instanceId = instanceIdCounter.getAndIncrement();
@@ -46,6 +49,14 @@ public class EmbeddedSDC {
 
   public void setSource(ClusterSource source) {
     this.source = source;
+  }
+
+  public void setSparkProcessors(List<Object> processors) {
+    this.sparkProcessors = processors;
+  }
+
+  public Object getSparkProcessorAt(int id) {
+    return sparkProcessors.get(id);
   }
 
   public boolean inErrorState() {

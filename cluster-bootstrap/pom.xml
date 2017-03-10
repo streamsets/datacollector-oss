@@ -47,6 +47,11 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-spark-api</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
       <groupId>org.apache.spark</groupId>
       <artifactId>spark-streaming-kafka_2.10</artifactId>
       <version>${spark.version}</version>

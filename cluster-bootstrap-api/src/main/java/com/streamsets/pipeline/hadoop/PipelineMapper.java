@@ -142,7 +142,7 @@ public class PipelineMapper extends Mapper {
           }
           hasNext = context.nextKeyValue(); // not like iterator.hasNext, actually advances
         }
-        clusterFunction.invoke(batch);
+        clusterFunction.startBatch(batch, true);
       }
       errorOccurred = false;
     } catch (Exception ex) {

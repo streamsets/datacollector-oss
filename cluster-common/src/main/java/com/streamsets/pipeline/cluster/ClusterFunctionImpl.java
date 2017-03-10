@@ -19,22 +19,30 @@
  */
 package com.streamsets.pipeline.cluster;
 
+import com.google.common.collect.Iterators;
+import com.streamsets.pipeline.BootstrapCluster;
 import com.streamsets.pipeline.EmbeddedSDC;
 import com.streamsets.pipeline.EmbeddedSDCPool;
-import com.streamsets.pipeline.impl.ClusterFunction;
+import com.streamsets.pipeline.api.impl.ClusterSource;
 import com.streamsets.pipeline.api.impl.Utils;
-
+import com.streamsets.pipeline.impl.ClusterFunction;
+import com.streamsets.pipeline.spark.RecordCloner;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Method;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
-import java.util.concurrent.Callable;
 
 public class ClusterFunctionImpl implements ClusterFunction  {
   private static final Logger LOG = LoggerFactory.getLogger(ClusterFunctionImpl.class);
@@ -42,6 +50,11 @@ public class ClusterFunctionImpl implements ClusterFunction  {
   private static volatile EmbeddedSDCPool sdcPool;
   private static volatile boolean initialized = false;
   private static volatile String errorStackTrace;
+  private volatile Object offset;
+
+  private static final String GET_BATCH = "getBatch";
+  private static final String SET_ERRORS = "setErrors";
+  private static final String CONTINUE_PROCESSING = "continueProcessing";
 
   private static synchronized void initialize(Properties properties, Integer id, String rootDataDir) throws Exception {
     if (initialized) {
@@ -56,23 +69,28 @@ public class ClusterFunctionImpl implements ClusterFunction  {
     numberFormat.setMinimumIntegerDigits(6);
     numberFormat.setGroupingUsed(false);
     final String sdcId = numberFormat.format(id);
-    Utils.setSdcIdCallable(new Callable<String>() {
-      @Override
-      public String call() {
-        return sdcId;
-      }
-    });
-    sdcPool = new EmbeddedSDCPool(properties);
+    Utils.setSdcIdCallable(() -> sdcId);
+    sdcPool = EmbeddedSDCPool.createPool(properties);
     initialized = true;
+  }
+
+  public void setSparkProcessorCount(int count) {
+    sdcPool.setSparkProcessorCount(count);
+  }
+
+  public static synchronized boolean isInitialized() {
+    return initialized;
   }
 
   public static ClusterFunction create(Properties properties, Integer id, String rootDataDir) throws Exception {
     initialize(Utils.checkNotNull(properties, "Properties"), id, rootDataDir);
-    return new ClusterFunctionImpl();
+    ClusterFunctionImpl fn = new ClusterFunctionImpl();
+    fn.setSparkProcessorCount(BootstrapCluster.getSparkProcessorLibraryNames().size());
+    return fn;
   }
 
   @Override
-  public void invoke(List<Map.Entry> batch) throws Exception {
+  public Object startBatch(List<Map.Entry> batch, boolean waitForCompletion) throws Exception {
     if (IS_TRACE_ENABLED) {
       LOG.trace("In executor function " + " " + Thread.currentThread().getName() + ": " + batch.size());
     }
@@ -80,15 +98,141 @@ public class ClusterFunctionImpl implements ClusterFunction  {
       LOG.info("Not proceeding as error in previous run");
       throw new RuntimeException(errorStackTrace);
     }
+    EmbeddedSDC sdc = null;
     try {
-      EmbeddedSDC embeddedSDC = sdcPool.checkout();
-      embeddedSDC.getSource().put(batch);
+      sdc = sdcPool.getNotStartedSDC();
+      ClusterSource source = sdc.getSource();
+      offset = source.put(batch);
+      return offset;
     } catch (Exception | Error e) {
       // Get the stacktrace as string as the spark driver wont have the jars
       // required to deserialize the classes from the exception cause
       errorStackTrace = getErrorStackTrace(e);
       throw new RuntimeException(errorStackTrace);
+    } finally {
+      if (sdc != null) {
+        if (IS_TRACE_ENABLED) {
+          LOG.trace("Checking SDC: " + sdc + " back in after starting batch");
+        }
+        sdcPool.checkInAfterWritingTransformedBatch(0, sdc);
+      }
     }
+  }
+
+  @Override
+  public Iterable<Object> getNextBatchFromSparkProcessor(int id) throws Exception {
+    EmbeddedSDC sdc = sdcPool.getSDCWaitingForBatchRead(id);
+    try {
+      if (IS_TRACE_ENABLED) {
+        LOG.trace("Getting next batch from ID " + id);
+      }
+      if (sdc == null) {
+        if (IS_TRACE_ENABLED) {
+          LOG.trace("No SDC for ID " + id + ". Returning empty batch");
+        }
+        return Collections.emptyList();
+      }
+      Iterable<Object> batch = getNextBatch(id, sdc);
+      if (IS_TRACE_ENABLED) {
+        LOG.trace("Returning " + Iterators.toArray(batch.iterator(), Object.class).length);
+      }
+      return batch;
+    } finally {
+      if (sdc != null) {
+        if (IS_TRACE_ENABLED) {
+          LOG.trace("Checking SDC: " + sdc + " back in after getting batch for id " + id);
+        }
+        sdcPool.checkInAfterReadingBatch(id, sdc);
+      }
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  public static Iterable<Object> getNextBatch(int id, EmbeddedSDC sdc) {
+    return Optional.ofNullable(sdc.getSparkProcessorAt(id)).flatMap(t -> {
+      try {
+        Object processor = t.getClass().getMethod("get").invoke(t);
+        final Method getBatch = processor.getClass().getDeclaredMethod(GET_BATCH);
+        List<Object> cloned = new ArrayList<>();
+        for (Object record : (Iterable<Object>) getBatch.invoke(processor)) {
+          cloned.add(RecordCloner.clone(record));
+        }
+        return Optional.of(cloned);
+      } catch (Exception ex) {
+        throw new RuntimeException(ex);
+      }
+    }).orElse(Collections.emptyList());
+  }
+
+  @Override
+  public void writeErrorRecords(Map errors, int id) throws Exception {
+    EmbeddedSDC sdc = sdcPool.getSDCBatchRead(id);
+    try {
+      if (IS_TRACE_ENABLED) {
+        if (sdc == null) {
+          LOG.trace("No SDC at ID " + id);
+        } else {
+          LOG.trace("Writing " + errors.size() + " errors to SDC " + sdc.toString());
+        }
+      }
+      writeErrorsToProcessor(errors, id, sdc);
+    } finally {
+      if (sdc != null) {
+        if (IS_TRACE_ENABLED) {
+          LOG.trace("Checking SDC: " + sdc +" back in after writing errors for id " + id);
+        }
+        sdcPool.checkInAfterWritingErrors(id, sdc);
+      }
+    }
+  }
+
+  public static void writeErrorsToProcessor(Map errors, int id, EmbeddedSDC sdc) {
+    Optional.ofNullable(sdc.getSparkProcessorAt(id)).ifPresent(t -> {
+      try {
+        Object processor = t.getClass().getMethod("get").invoke(t);
+        final Method setErrors = processor.getClass().getDeclaredMethod(SET_ERRORS, Map.class);
+        setErrors.invoke(processor, errors);
+      } catch (Exception ex) {
+        throw new RuntimeException(ex);
+      }
+    });
+  }
+
+  @Override
+  public void forwardTransformedBatch(Iterator<Object> batch, int id) throws Exception {
+    EmbeddedSDC sdc = sdcPool.getSDCErrorsWritten(id);
+    try {
+      if (IS_TRACE_ENABLED) {
+        if (sdc == null) {
+          LOG.trace("No SDC at ID " + id);
+        } else {
+          LOG.trace("Writing batch to SDC " + sdc.toString());
+        }
+      }
+      writeTransformedToProcessor(batch, id, sdc);
+    } finally {
+      if (sdc != null) {
+        if (IS_TRACE_ENABLED) {
+          LOG.trace("Checking SDC: " + sdc +" back in after writing batch for id " + id + 1);
+        }
+        sdcPool.checkInAfterWritingTransformedBatch(id + 1, sdc);
+      }
+    }
+
+  }
+
+  @SuppressWarnings("unchecked")
+  public static void writeTransformedToProcessor(Iterator<Object> batch, int id, EmbeddedSDC sdc) {
+    Optional.ofNullable(sdc.getSparkProcessorAt(id)).ifPresent(t -> {
+      try {
+        Class sparkDProcessorClass = t.getClass();
+        Object processor = sparkDProcessorClass.getMethod("get").invoke(t);
+        final Method continueProcessing = processor.getClass().getDeclaredMethod(CONTINUE_PROCESSING, Iterator.class);
+        continueProcessing.invoke(processor, batch);
+      } catch (Exception ex) {
+        throw new RuntimeException(ex);
+      }
+    });
   }
 
   private String getErrorStackTrace(Throwable e) {
@@ -104,21 +248,6 @@ public class ClusterFunctionImpl implements ClusterFunction  {
   public void shutdown() throws Exception {
     LOG.info("Shutdown");
     Utils.checkState(initialized, "Not initialized");
-    EmbeddedSDC embeddedSDC = sdcPool.checkout();
-    // shutdown is special call which causes the pipeline origin to
-    // return null resulting in the pipeline finishing normally
-    embeddedSDC.getSource().shutdown();
-    sdcPool.checkin(embeddedSDC);
-  }
-
-  public static long getRecordsProducedJVMWide() {
-    long result = 0;
-    if (sdcPool == null) {
-      throw new RuntimeException("Embedded SDC pool is not initialized");
-    }
-    for (EmbeddedSDC sdc : sdcPool.getInstances()) {
-      result += sdc.getSource().getRecordsProduced();
-    }
-    return result;
+    sdcPool.shutdown();
   }
 }

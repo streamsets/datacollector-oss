@@ -20,12 +20,39 @@
 package com.streamsets.pipeline.stage.processor.spark;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.lib.el.VaultEL;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@GenerateResourceBundle
 public class SparkProcessorConfigBean {
+
+  public static final String DEFAULT_THREAD_COUNT = "4";
+  public static final String DEFAULT_APP_NAME = "SDC Spark App";
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = DEFAULT_THREAD_COUNT,
+      label = "Parallelism (Standalone Mode Only)",
+      description = "Number of partitions to create per batch of records. Ignored in Cluster Mode.",
+      group = "SPARK",
+      displayPosition = 10
+  )
+  public int threadCount;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      defaultValue = DEFAULT_APP_NAME,
+      label = "Application Name  (Standalone Mode Only)",
+      description = "Name of the Application submitted to Spark. Ignored in Cluster Mode.",
+      group = "SPARK",
+      displayPosition = 20
+  )
+  public String appName;
 
   @ConfigDef(
       required = true,

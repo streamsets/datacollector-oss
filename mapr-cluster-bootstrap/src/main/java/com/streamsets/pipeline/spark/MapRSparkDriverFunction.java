@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.spark;
 
+import com.streamsets.pipeline.BootstrapCluster;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.function.VoidFunction;
 
@@ -36,8 +37,10 @@ public class MapRSparkDriverFunction<T1, T2>  implements VoidFunction<JavaPairRD
   @Override
   @SuppressWarnings("unchecked")
   public void call(JavaPairRDD<T1, T2> byteArrayJavaRDD) throws Exception {
-    Map<Integer, Long> offsets = MaprStreamsOffsetUtil.getOffsets(byteArrayJavaRDD);
-    byteArrayJavaRDD.foreachPartition(new MapRBootstrapSparkFunction());
-    MaprStreamsOffsetUtil.saveOffsets(offsets);
+    synchronized (BootstrapCluster.class) {
+      Map<Integer, Long> offsets = MaprStreamsOffsetUtil.getOffsets(byteArrayJavaRDD);
+      DriverFunctionImpl.processRDD(byteArrayJavaRDD, new MapRBootstrapSparkFunction());
+      MaprStreamsOffsetUtil.saveOffsets(offsets);
+    }
   }
 }

@@ -20,26 +20,27 @@
 package com.streamsets.pipeline.spark;
 
 import com.streamsets.pipeline.BootstrapCluster;
+import com.streamsets.pipeline.ClusterFunctionProvider;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.impl.ClusterFunction;
 import com.streamsets.pipeline.impl.Pair;
-
-import org.apache.spark.TaskContext;
-import org.apache.spark.api.java.function.VoidFunction;
+import org.apache.spark.api.java.function.FlatMapFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import scala.Tuple2;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-public abstract class AbstractBootstrapSparkFunction<T1, T2> implements VoidFunction<Iterator<Tuple2<T1, T2>>>,
+public abstract class AbstractBootstrapSparkFunction<T1, T2>
+    implements FlatMapFunction<Iterator<Tuple2<T1, T2>>, Record>,
     Serializable {
   private static final Logger LOG = LoggerFactory.getLogger(AbstractBootstrapSparkFunction.class);
   private static final char[] HEX_CHARS = "0123456789abcdef".toCharArray();
@@ -48,9 +49,10 @@ public abstract class AbstractBootstrapSparkFunction<T1, T2> implements VoidFunc
   private volatile boolean initialized = false;
   private ClusterFunction clusterFunction;
   private Properties properties;
-  private int batchSize;
   private volatile static boolean isPreprocessingMesosDone;
+  private boolean waitForCompletion;
   private static final Object lockObject = new Object();
+
   public AbstractBootstrapSparkFunction() {
   }
 
@@ -77,14 +79,15 @@ public abstract class AbstractBootstrapSparkFunction<T1, T2> implements VoidFunc
         }
       }
     }
-    clusterFunction = (ClusterFunction)BootstrapCluster.getClusterFunction(TaskContext.get().partitionId());
+    clusterFunction = ClusterFunctionProvider.getClusterFunction();
     properties = BootstrapCluster.getProperties();
-    batchSize = getBatchSize();
+    waitForCompletion = BootstrapCluster.getSparkProcessorLibraryNames().isEmpty();
     initialized = true;
   }
 
   @Override
-  public void call(Iterator<Tuple2<T1, T2>> tupleIterator) throws Exception {
+  @SuppressWarnings("unchecked")
+  public Iterable<Record> call(Iterator<Tuple2<T1, T2>> tupleIterator) throws Exception {
     initialize();
     List<Map.Entry> batch = new ArrayList<>();
     while (tupleIterator.hasNext()) {
@@ -92,14 +95,12 @@ public abstract class AbstractBootstrapSparkFunction<T1, T2> implements VoidFunc
       if (IS_TRACE_ENABLED) {
         LOG.trace("Got message: 1: {}, 2: {}", toString(tuple._1), toString(tuple._2));
       }
-      if (batch.size() == batchSize) {
-        clusterFunction.invoke(batch);
-        batch = new ArrayList<>();
-      }
-      // Mapr doesn't provide partitionId in tuple
       batch.add(new Pair(tuple._1() != null ? tuple._1(): "UNKNOWN_PARTITION".getBytes(), tuple._2()));
     }
-    clusterFunction.invoke(batch);
+
+    clusterFunction.startBatch(batch, waitForCompletion);
+    Iterable<Record> transformed = (Iterable<Record>) clusterFunction.getNextBatchFromSparkProcessor(0);
+    return transformed == null ? Collections.emptyList() : transformed;
   }
 
   private static String toString(Object buf) {

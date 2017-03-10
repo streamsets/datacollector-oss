@@ -24,7 +24,6 @@ import com.esotericsoftware.kryo.io.Input;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.ext.RecordReader;
-
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;

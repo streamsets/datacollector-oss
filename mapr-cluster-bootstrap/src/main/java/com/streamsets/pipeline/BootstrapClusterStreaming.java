@@ -39,6 +39,8 @@ public class BootstrapClusterStreaming {
     try {
       binding = new MapRStreamingBinding(BootstrapCluster.getProperties());
       binding.init();
+      BootstrapCluster.createTransformers(binding.getStreamingContext().sparkContext());
+      binding.startContext();
       binding.awaitTermination();
     } catch (Throwable error) {
       String msg = "Error trying to invoke BootstrapClusterStreaming.main: " + error;

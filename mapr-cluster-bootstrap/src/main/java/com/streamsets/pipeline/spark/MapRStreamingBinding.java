@@ -82,7 +82,8 @@ public class MapRStreamingBinding extends AbstractStreamingBinding {
         Utils.getNumberOfPartitions(getProperties()),
         Utils.getPropertyOrEmptyString(getProperties(), AUTO_OFFSET_RESET),
         groupId,
-        isRunningInMesos
+        isRunningInMesos,
+        Utils.getMaprStreamsRateLimit(getProperties())
     );
   }
 
@@ -95,6 +96,7 @@ public class MapRStreamingBinding extends AbstractStreamingBinding {
     private final boolean isRunningInMesos;
     private final String autoOffsetValue;
     private final String groupId;
+    private final int maxRatePerPartition;
 
     public JavaStreamingContextFactoryImpl(
         SparkConf sparkConf,
@@ -103,7 +105,8 @@ public class MapRStreamingBinding extends AbstractStreamingBinding {
         int numberOfPartitions,
         String autoOffsetValue,
         String groupId,
-        boolean isRunningInMesos
+        boolean isRunningInMesos,
+        int maxRatePerPartition
     ) {
       this.sparkConf = sparkConf;
       this.duration = duration;
@@ -112,6 +115,8 @@ public class MapRStreamingBinding extends AbstractStreamingBinding {
       this.autoOffsetValue = autoOffsetValue;
       this.groupId = groupId;
       this.isRunningInMesos = isRunningInMesos;
+      this.maxRatePerPartition = maxRatePerPartition;
+
     }
 
     private Map<TopicPartition, Long> getOffsetForDStream(Map<Integer, Long> partitionToOffset) {
@@ -126,6 +131,8 @@ public class MapRStreamingBinding extends AbstractStreamingBinding {
     @Override
     @SuppressWarnings("unchecked")
     public JavaStreamingContext create() {
+      sparkConf.set("spark.streaming.kafka.maxRatePerPartition", String.valueOf(maxRatePerPartition));
+      sparkConf.set("spark.cleaner.ttl", "60s"); // force all old RDD metadata out
       JavaStreamingContext result = new JavaStreamingContext(sparkConf, new Duration(duration));
       Map<String, String> props = new HashMap<>();
       if (!autoOffsetValue.isEmpty()) {

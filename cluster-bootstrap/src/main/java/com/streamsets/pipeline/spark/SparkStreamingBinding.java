@@ -19,9 +19,7 @@
  */
 package com.streamsets.pipeline.spark;
 
-import com.streamsets.pipeline.SdcClusterOffsetHelper;
 import com.streamsets.pipeline.Utils;
-import kafka.common.TopicAndPartition;
 import kafka.message.MessageAndMetadata;
 import kafka.serializer.DefaultDecoder;
 import org.apache.spark.SparkConf;
@@ -103,7 +101,8 @@ public class SparkStreamingBinding extends AbstractStreamingBinding {
         Utils.getNumberOfPartitions(getProperties()),
         groupId,
         autoOffsetValue,
-        isRunningInMesos
+        isRunningInMesos,
+        Utils.getKafkaPartitionRateLimit(getProperties())
     );
   }
 
@@ -115,6 +114,7 @@ public class SparkStreamingBinding extends AbstractStreamingBinding {
     private final int numberOfPartitions;
     private final String groupId;
     private final boolean isRunningInMesos;
+    private final int maxRatePerPartition;
 
     private String autoOffsetValue;
 
@@ -126,7 +126,8 @@ public class SparkStreamingBinding extends AbstractStreamingBinding {
         int numberOfPartitions,
         String groupId,
         String autoOffsetValue,
-        boolean isRunningInMesos
+        boolean isRunningInMesos,
+        int maxRatePerPartition
     ) {
       this.sparkConf = sparkConf;
       this.duration = duration;
@@ -136,11 +137,15 @@ public class SparkStreamingBinding extends AbstractStreamingBinding {
       this.autoOffsetValue = autoOffsetValue;
       this.isRunningInMesos = isRunningInMesos;
       this.groupId = groupId;
+      this.maxRatePerPartition = maxRatePerPartition;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public JavaStreamingContext create() {
+
+      sparkConf.set("spark.streaming.kafka.maxRatePerPartition", String.valueOf(maxRatePerPartition));
+      sparkConf.set("spark.cleaner.ttl", "60s"); // force all old RDD metadata out
       JavaStreamingContext result = new JavaStreamingContext(sparkConf, new Duration(duration));
       Map<String, String> props = new HashMap<>();
       props.put("metadata.broker.list", metaDataBrokerList);
@@ -173,7 +178,8 @@ public class SparkStreamingBinding extends AbstractStreamingBinding {
             KafkaUtils.createDirectStream(result, byte[].class, byte[].class, DefaultDecoder.class, DefaultDecoder.class,
                 props, new HashSet<>(Arrays.asList(topic.split(","))));
       }
-      dStream.foreachRDD(new SparkDriverFunction());
+      SparkDriverFunction driverFunction = new SparkDriverFunction();
+      dStream.foreachRDD(driverFunction);
       return result;
     }
   }

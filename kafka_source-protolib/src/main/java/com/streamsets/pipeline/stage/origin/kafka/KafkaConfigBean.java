@@ -108,7 +108,7 @@ public class KafkaConfigBean {
       type = ConfigDef.Type.NUMBER,
       defaultValue = "1000",
       label = "Max Batch Size (records)",
-      description = "Max number of records per batch",
+      description = "Max number of records per batch (Standalone only)",
       displayPosition = 70,
       group = "KAFKA",
       min = 1,
@@ -128,6 +128,19 @@ public class KafkaConfigBean {
       max = Integer.MAX_VALUE
   )
   public int maxWaitTime;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "1000",
+      label = "Rate Limit Per Partition (Kafka messages)",
+      description = "Max number of messages to read per batch per partition(Cluster Mode only)",
+      displayPosition = 85,
+      group = "KAFKA",
+      min = 1,
+      max = Integer.MAX_VALUE
+  )
+  public int maxRatePerPartition;
 
   @ConfigDef(
       required = true,

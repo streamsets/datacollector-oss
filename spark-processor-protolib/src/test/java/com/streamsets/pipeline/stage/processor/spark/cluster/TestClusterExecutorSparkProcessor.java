@@ -19,8 +19,8 @@
  */
 package com.streamsets.pipeline.stage.processor.spark.cluster;
 
-import com.google.common.base.Throwables;
 import com.google.common.base.Function;
+import com.google.common.base.Throwables;
 import com.google.common.collect.Iterators;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
@@ -28,16 +28,18 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.pipeline.stage.processor.spark.SparkDProcessor;
 import org.junit.Assert;
 import org.junit.Test;
-import scala.Tuple2;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
@@ -59,7 +61,7 @@ public class TestClusterExecutorSparkProcessor {
       r.set("/value", Field.create(i));
     }
 
-    final ProcessorRunner runner = new ProcessorRunner.Builder(ClusterExecutorSparkDProcessor.class, processor)
+    final ProcessorRunner runner = new ProcessorRunner.Builder(SparkDProcessor.class, processor)
         .addOutputLane(LANE).setOnRecordError(onRecordError).build();
 
     final AtomicReference<StageRunner.Output> output = new AtomicReference<>();
@@ -75,37 +77,33 @@ public class TestClusterExecutorSparkProcessor {
         }
       }
     });
-    Record[] dataFromProcessor = Iterators.toArray(processor.getBatch(), Record.class);
+    Record[] dataFromProcessor = Iterators.toArray(processor.getBatch().iterator(), Record.class);
     Iterator<Record> inputBatchReceived = Iterators.forArray(dataFromProcessor);
     for (Record record : records) {
       Assert.assertTrue(inputBatchReceived.hasNext());
       Assert.assertEquals(record.get(), inputBatchReceived.next().get());
     }
 
-    Iterator<Record> transformed = Iterators.transform(
+    Iterator transformed = Iterators.transform(
         Iterators.forArray(Arrays.copyOfRange(dataFromProcessor, 0, dataFromProcessor.length - 5)),
         new Function<Record, Record>() {
           @Nullable
           @Override
           public Record apply(@Nullable Record record) {
             Record newR = RecordCreator.create();
-            newR.set(Field.create(new HashMap<String, Field>()));
+            newR.set(Field.create(new HashMap<>()));
             newR.set("/value", Field.create(record.get("/value").getValueAsInteger() + 100));
             return newR;
           }
         });
 
-    Iterator<Tuple2<Record, String>> errors = Iterators.transform(
-        Iterators.forArray(Arrays.copyOfRange(dataFromProcessor, dataFromProcessor.length - 5, dataFromProcessor.length)),
-        new Function<Record, Tuple2<Record, String>>() {
-          @Nullable
-          @Override
-          public Tuple2<Record, String> apply(@Nullable Record record) {
-            return new Tuple2<>(record, "");
-          }
-        });
+    Record[] errors = Arrays.copyOfRange(dataFromProcessor, dataFromProcessor.length - 5, dataFromProcessor.length);
 
-    processor.setErrors(errors);
+    Map<Record, String> errorMap = new LinkedHashMap<>();
+    for (Record error : errors) {
+      errorMap.put(error, "");
+    }
+    processor.setErrors(errorMap);
     processor.continueProcessing(transformed);
 
     Thread.sleep(1000);

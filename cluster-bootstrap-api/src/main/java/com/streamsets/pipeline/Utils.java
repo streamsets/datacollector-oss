@@ -133,6 +133,16 @@ public class Utils {
     }
   }
 
+  public static int getKafkaPartitionRateLimit(Properties properties) {
+    String rateLimitAsString = properties.getProperty(KAFKA_CONFIG_BEAN_PREFIX + "maxRatePerPartition", "1000").trim();
+    try {
+      return Integer.parseInt(rateLimitAsString);
+    } catch (NumberFormatException e) {
+      String msg = "Invalid " + KAFKA_CONFIG_BEAN_PREFIX + "maxRatePerPartition '" + rateLimitAsString + "' : " + e;
+      throw new IllegalArgumentException(msg, e);
+    }
+  }
+
   public static String getKafkaTopic(Properties properties) {
     return getPropertyNotNull(properties, KAFKA_CONFIG_BEAN_PREFIX + "topic");
   }
@@ -171,6 +181,18 @@ public class Utils {
       return Integer.parseInt(maxBatchAsString);
     } catch (NumberFormatException e) {
       String msg = "Invalid " + MAPR_STREAMS_SOURCE_CONFIG_BEAN_PREFIX + "maxBatchSize '" + maxBatchAsString + "' : "
+          + e;
+      throw new IllegalArgumentException(msg, e);
+    }
+  }
+
+  public static int getMaprStreamsRateLimit(Properties properties) {
+    String maxRateAsString = properties.getProperty(MAPR_STREAMS_SOURCE_CONFIG_BEAN_PREFIX + "maxRatePerPartition",
+        "1000").trim();
+    try {
+      return Integer.parseInt(maxRateAsString);
+    } catch (NumberFormatException e) {
+      String msg = "Invalid " + MAPR_STREAMS_SOURCE_CONFIG_BEAN_PREFIX + "maxRatePerPartition '" + maxRateAsString + "' : "
           + e;
       throw new IllegalArgumentException(msg, e);
     }

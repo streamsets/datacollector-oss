@@ -41,6 +41,7 @@ import java.util.Properties;
 public abstract class AbstractStreamingBinding implements ClusterBinding {
   static final String AUTO_OFFSET_RESET = "auto.offset.reset";
   static final String CHECKPOINT_BASE_DIR = ".streamsets-spark-streaming";
+  private final String RDD_CHECKPOINT_DIR = "rdd-checkpoints";
   static final String SDC_ID = "sdc.id";
   static final String CLUSTER_PIPELINE_NAME = "cluster.pipeline.name";
   private static final Logger LOG = LoggerFactory.getLogger(AbstractStreamingBinding.class);
@@ -137,6 +138,13 @@ public abstract class AbstractStreamingBinding implements ClusterBinding {
     } else {
       LOG.info("Using SDC checkpoint mechanism at: {}", checkPointPath);
       ssc = javaStreamingContextFactory.create();
+      Path rddCheckpointDir = new Path(checkPointPath, RDD_CHECKPOINT_DIR);
+      if (hdfs.exists(rddCheckpointDir)) {
+        hdfs.delete(rddCheckpointDir, true);
+      }
+      hdfs.mkdirs(rddCheckpointDir);
+      ssc.checkpoint(rddCheckpointDir.toString());
+
     }
 
     // mesos tries to stop the context internally, so don't do it here - deadlock bug in spark
@@ -152,6 +160,13 @@ public abstract class AbstractStreamingBinding implements ClusterBinding {
       Runtime.getRuntime().addShutdownHook(shutdownHookThread);
     }
     logMessage("Making calls through spark context ", isRunningInMesos);
+  }
+
+  public JavaStreamingContext getStreamingContext() {
+    return ssc;
+  }
+
+  public void startContext() {
     ssc.start();
   }
 

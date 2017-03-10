@@ -19,18 +19,18 @@
  */
 package com.streamsets.pipeline.configurablestage;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
-import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.impl.ClusterSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.impl.ClusterSource;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 public abstract class DClusterSourceOffsetCommitter extends DSourceOffsetCommitter implements ClusterSource {
   private static final Logger LOG = LoggerFactory.getLogger(DClusterSourceOffsetCommitter.class);
@@ -72,10 +72,16 @@ public abstract class DClusterSourceOffsetCommitter extends DSourceOffsetCommitt
    * @throws InterruptedException
    */
   @Override
-  public void put(List<Map.Entry> batch) throws InterruptedException {
+  public Object put(List<Map.Entry> batch) throws InterruptedException {
     if (initializeClusterSource()) {
-      clusterSource.put(batch);
+      return clusterSource.put(batch);
     }
+    return null;
+  }
+
+  @Override
+  public void completeBatch() throws InterruptedException {
+    clusterSource.completeBatch();
   }
 
   private boolean initializeClusterSource() {

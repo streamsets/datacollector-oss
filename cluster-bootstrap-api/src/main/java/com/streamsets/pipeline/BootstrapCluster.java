@@ -19,6 +19,9 @@
  */
 package com.streamsets.pipeline;
 
+import com.streamsets.pipeline.spark.api.SparkTransformer;
+import org.apache.spark.api.java.JavaSparkContext;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,8 +45,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.jar.JarFile;
 import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.stream.Collectors;
 
 /**
  * This class is responsible for all activities which cross classloaders. At present
@@ -54,6 +58,7 @@ import java.util.jar.JarEntry;
  * </ol>
  */
 public class BootstrapCluster {
+  public static final String STREAMSETS_LIBS_PREFIX = "streamsets-libs/";
   /**
    * We might have to have a reset method for unit tests
    */
@@ -67,6 +72,9 @@ public class BootstrapCluster {
   private static final String MESOS_BOOTSTRAP_JAR_REGEX = "streamsets-datacollector-mesos-bootstrap";
   public static final String SDC_MESOS_BASE_DIR = "sdc_mesos";
   private static File mesosBootstrapFile;
+  private static List<ClassLoader> transformerCLs;
+  private static String pipelineJson;
+  private static List<SparkTransformer> transformers;
 
   private BootstrapCluster() {}
 
@@ -174,7 +182,6 @@ public class BootstrapCluster {
       String msg = "Pipeline JSON file does not exist at expected location: " + pipelineJsonFile;
       throw new IllegalStateException(msg);
     }
-    String pipelineJson;
     try {
       pipelineJson = new String(Files.readAllBytes(Paths.get(pipelineJsonFile.toURI())), StandardCharsets.UTF_8);
     } catch (Exception ex) {
@@ -182,11 +189,15 @@ public class BootstrapCluster {
       throw new IllegalStateException(msg, ex);
     }
 
-    String sparkLib = getSourceLibraryName(pipelineJson);
+    String sparkLib = getSourceLibraryName();
+    List<String> sparkProcessorLibs =
+        getSparkProcessorLibraryNames()
+        .stream()
+            .map(x -> STREAMSETS_LIBS_PREFIX + x).collect(Collectors.toList());
     if (sparkLib == null) {
       throw new IllegalStateException("Couldn't find the source library in pipeline file");
     }
-    String lookupLib = "streamsets-libs" +"/" + sparkLib;
+    String lookupLib = STREAMSETS_LIBS_PREFIX + sparkLib;
     System.err.println("\n Cluster lib is " + lookupLib);
     for (Map.Entry<String,List<URL>> entry : libsUrls.entrySet()) {
       String[] parts = entry.getKey().split(System.getProperty("file.separator"));
@@ -196,13 +207,20 @@ public class BootstrapCluster {
       }
       String type = parts[0];
       String name = parts[1];
-      SDCClassLoader sdcClassLoader = SDCClassLoader.getStageClassLoader(type, name, entry.getValue(), apiCL);
+      SDCClassLoader sdcClassLoader = SDCClassLoader.getStageClassLoader(type, name, entry.getValue(), apiCL); //NOSONAR
       // TODO add spark, scala, etc to blacklist
       if (lookupLib.equals(entry.getKey())) {
         if (sparkCL != null) {
           throw new IllegalStateException("Found two classloaders for " + lookupLib);
         }
         sparkCL = sdcClassLoader;
+      }
+
+      if (sparkProcessorLibs.contains(entry.getKey())) {
+        if (transformerCLs == null) {
+          transformerCLs = new ArrayList<>();
+        }
+        transformerCLs.add(sdcClassLoader);
       }
       stageLibrariesCLs.add(sdcClassLoader);
     }
@@ -249,7 +267,7 @@ public class BootstrapCluster {
    * @return a source object associated with the newly created pipeline
    * @throws Exception
    */
-  public static /*Source*/ Object startPipeline(Runnable postBatchRunnable) throws Exception {
+  public static /*PipelineStartResult*/ Object startPipeline(Runnable postBatchRunnable) throws Exception {
     BootstrapCluster.initialize();
     ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
     try {
@@ -266,20 +284,61 @@ public class BootstrapCluster {
     }
   }
 
-  private static String getSourceLibraryName(String pipelineJson) throws Exception {
+  private static String getSourceLibraryName() throws Exception {
+    try {
+      return callOnPiplineConfigurationUtil("getSourceLibName");
+    } catch (Exception ex) {
+      String msg = "Error trying to retrieve library name from pipeline json: " + ex;
+      throw new IllegalStateException(msg, ex);
+    }
+  }
+
+  public static List<String> getSparkProcessorLibraryNames() throws Exception {
+    return callOnPiplineConfigurationUtil("getSparkProcessorConf");
+  }
+
+  @SuppressWarnings("unchecked")
+  private static <T> T callOnPiplineConfigurationUtil(String method) throws Exception {
     ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
     try {
       Thread.currentThread().setContextClassLoader(containerCL);
       Class pipelineConfigurationUtil =
-        Class.forName("com.streamsets.datacollector.util.PipelineConfigurationUtil", true, containerCL);
-      Method createPipelineMethod = pipelineConfigurationUtil.getMethod("getSourceLibName", String.class);
-      return (String) createPipelineMethod.invoke(null, pipelineJson);
-    } catch (Exception ex) {
-      String msg = "Error trying to retrieve library name from pipeline json: " + ex;
-      throw new IllegalStateException(msg, ex);
+          Class.forName("com.streamsets.datacollector.util.PipelineConfigurationUtil", true, containerCL);
+      Method m = pipelineConfigurationUtil.getMethod(method, String.class);
+      return (T) m.invoke(null, pipelineJson);
     } finally {
       Thread.currentThread().setContextClassLoader(originalClassLoader);
     }
+  }
+
+  @SuppressWarnings("unchecked")
+  public static void createTransformers(JavaSparkContext context) throws Exception {
+
+    if (transformerCLs == null) {
+      return;
+    }
+
+    List<Object> configs = callOnPiplineConfigurationUtil("getSparkTransformers");
+    transformers = new ArrayList<>();
+    for (Object transformerConfig : configs) {
+      try {
+        String transformerClass =
+            (String) transformerConfig.getClass().getMethod("getTransformerClass").invoke(transformerConfig);
+        Class<?> clazz = Class.forName(transformerClass);
+        SparkTransformer transformer = (SparkTransformer) clazz.newInstance();
+        List<String> params =
+            (List<String>) transformerConfig.getClass().
+                getMethod("getTransformerParameters").invoke(transformerConfig);
+        transformer.init(context, params);
+        transformers.add(transformer);
+      } catch (Exception ex) {
+        throw new RuntimeException(ex);
+      }
+    }
+  }
+
+  public static List<SparkTransformer> getTransformers() {
+    return transformers;
   }
 
   public static Object getClusterFunction(Integer id) throws Exception {

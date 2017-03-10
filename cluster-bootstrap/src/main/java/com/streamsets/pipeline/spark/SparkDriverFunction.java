@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.spark;
 
+import com.streamsets.pipeline.BootstrapCluster;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.function.Function;
 
@@ -36,9 +37,12 @@ public class SparkDriverFunction<T1, T2>  implements Function<JavaPairRDD<T1, T2
   @Override
   @SuppressWarnings("unchecked")
   public Void call(JavaPairRDD<T1, T2> byteArrayJavaRDD) throws Exception {
-    Map<Integer, Long> offsets = KafkaOffsetUtil.getOffsets(byteArrayJavaRDD);
-    byteArrayJavaRDD.foreachPartition(new BootstrapSparkFunction());
-    KafkaOffsetUtil.saveOffsets(offsets);
-    return null;
+    synchronized (BootstrapCluster.class) {
+      Map<Integer, Long> offsets = KafkaOffsetUtil.getOffsets(byteArrayJavaRDD);
+      DriverFunctionImpl.processRDD(byteArrayJavaRDD, new BootstrapSparkFunction());
+      KafkaOffsetUtil.saveOffsets(offsets);
+      return null;
+    }
   }
+
 }

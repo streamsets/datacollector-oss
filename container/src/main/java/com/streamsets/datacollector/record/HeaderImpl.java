@@ -29,12 +29,13 @@ import com.streamsets.pipeline.api.impl.LocalizableString;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable {
+public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable, Serializable {
   private static final String RESERVED_PREFIX = "_.";
   private static final String STAGE_CREATOR_INSTANCE_ATTR = RESERVED_PREFIX + "stageCreator";
   private static final String RECORD_SOURCE_ID_ATTR = RESERVED_PREFIX + "recordSourceId";

@@ -78,7 +78,7 @@
     <jodatime.version>2.3</jodatime.version>
     <jps-api.version>2.0</jps-api.version>
     <jtar.version>2.2</jtar.version>
-    <kryo.version>3.0.1</kryo.version>
+    <kryo.version>3.0.1</kryo.version> <!-- old versions of cdh use this -->
     <minikdc-hadoop.version>2.6.0</minikdc-hadoop.version>
     <minikdc-jdbm1.version>2.0.0-M3</minikdc-jdbm1.version>
     <mockserver.version>3.10.4</mockserver.version>
