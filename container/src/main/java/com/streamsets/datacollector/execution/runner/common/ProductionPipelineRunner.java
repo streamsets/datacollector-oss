@@ -54,6 +54,7 @@ import com.streamsets.datacollector.runner.Observer;
 import com.streamsets.datacollector.runner.Pipe;
 import com.streamsets.datacollector.runner.PipeBatch;
 import com.streamsets.datacollector.runner.PipeContext;
+import com.streamsets.datacollector.runner.PipeRunner;
 import com.streamsets.datacollector.runner.PipelineRunner;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.PushSourceContextDelegate;
@@ -80,13 +81,10 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.lib.log.LogConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -99,6 +97,7 @@ import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public class ProductionPipelineRunner implements PipelineRunner, PushSourceContextDelegate, ReportErrorDelegate {
@@ -116,8 +115,8 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   private final List<ErrorListener> errorListeners;
 
   private SourcePipe originPipe;
-  private List<List<Pipe>> pipes;
-  private RunnerPool<List<Pipe>> runnerPool;
+  private List<PipeRunner> pipes;
+  private RunnerPool<PipeRunner> runnerPool;
   private BadRecordsHandler badRecordsHandler;
   private StatsAggregationHandler statsAggregationHandler;
 
@@ -308,7 +307,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   @Override
   public void run(
     SourcePipe originPipe,
-    List<List<Pipe>> pipes,
+    List<PipeRunner> pipes,
     BadRecordsHandler badRecordsHandler,
     StatsAggregationHandler statsAggregationHandler
   ) throws StageException, PipelineRuntimeException {
@@ -449,7 +448,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   @Override
   public void reportError(String stage, ErrorMessage errorMessage) {
     // For PushSource, the runner itself is listening to errors because they can happen outside of batch's scope
-    retainErrorMessagesInMemory(ImmutableMap.<String, List<ErrorMessage>>of(stage, ImmutableList.of(errorMessage)));
+    retainErrorMessagesInMemory(ImmutableMap.of(stage, ImmutableList.of(errorMessage)));
   }
 
   public void runPollSource() throws StageException, PipelineException {
@@ -503,7 +502,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   }
 
   @Override
-  public void errorNotification(SourcePipe originPipe, List<List<Pipe>> pipes, Throwable throwable) {
+  public void errorNotification(SourcePipe originPipe, List<PipeRunner> pipes, Throwable throwable) {
     Set<ErrorListener> listeners = Sets.newIdentityHashSet();
     for (BatchListener batchListener : batchListenerList) {
       batchListener.postBatch();
@@ -512,13 +511,13 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     if (originPipe.getStage().getStage() instanceof ErrorListener) {
       listeners.add((ErrorListener) originPipe.getStage().getStage());
     }
-    for(List<Pipe> pipeRunner : pipes) {
-      for (Pipe pipe : pipeRunner) {
+    for(PipeRunner pipeRunner : pipes) {
+      pipeRunner.forEachNoException(pipe -> {
         Stage stage = pipe.getStage().getStage();
         if (stage instanceof ErrorListener) {
           listeners.add((ErrorListener) stage);
         }
-      }
+      });
     }
     for (ErrorListener listener : listeners) {
       try {
@@ -533,7 +532,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   @Override
   public void run(
     SourcePipe originPipe,
-    List<List<Pipe>> pipes,
+    List<PipeRunner> pipes,
     BadRecordsHandler badRecordsHandler,
     List<StageOutput> stageOutputsToOverride,
     StatsAggregationHandler statsAggregationHandler
@@ -550,11 +549,12 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   @Override
   public void destroy(
     SourcePipe originPipe,
-    List<List<Pipe>> pipes,
+    List<PipeRunner> pipeRunners,
     BadRecordsHandler badRecordsHandler,
     StatsAggregationHandler statsAggregationHandler
   ) throws StageException, PipelineRuntimeException {
     int batchSize = configuration.get(Constants.MAX_BATCH_SIZE_KEY, Constants.MAX_BATCH_SIZE_DEFAULT);
+    long lastBatchTime = offsetTracker.getLastBatchTime();
     FullPipeBatch pipeBatch;
 
     // Destroy origin pipe
@@ -571,53 +571,44 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     // We're destroying them in reverser order to make sure that the last runner to destroy is the one with id '0'
     // that holds reference to all class loaders. Runners with id >0 do not own their class loaders and hence needs to
     // be destroyed before the runner with id '0'.
-    for(List<Pipe> pipeRunner : Lists.reverse(pipes)) {
-      MDC.put(LogConstants.RUNNER, String.valueOf(RunnerUtils.getRunnerId(pipeRunner)));
-      pipeBatch.skipStage(originPipe);
-      destroyPipes(pipeRunner, pipeBatch, badRecordsHandler);
+    for(PipeRunner pipeRunner : Lists.reverse(pipeRunners)) {
+      final FullPipeBatch finalPipeBatch = pipeBatch;
+      finalPipeBatch.skipStage(originPipe);
+
+      pipeRunner.forEach(pipe -> {
+        // Set the last batch time in the stage context of each pipe
+        ((StageContext)pipe.getStage().getContext()).setLastBatchTime(lastBatchTime);
+        String instanceName = pipe.getStage().getConfiguration().getInstanceName();
+
+        if(pipe instanceof StagePipe) {
+          // Stage pipes are processed only if they are in event path
+          if(pipe.getStage().getConfiguration().isInEventPath()) {
+            LOG.trace("Stage pipe {} is in event path, running last process", instanceName);
+            pipe.process(finalPipeBatch);
+          } else {
+            LOG.trace("Stage pipe {} is in data path, skipping it's processing.", instanceName);
+            finalPipeBatch.skipStage(pipe);
+          }
+        } else {
+          // Non stage pipes are executed always
+          LOG.trace("Non stage pipe {}, running last process", instanceName);
+          pipe.process(finalPipeBatch);
+        }
+
+        // And finally destroy the pipe
+        try {
+          LOG.trace("Running destroy for {}", instanceName);
+          pipe.destroy(finalPipeBatch);
+        } catch(RuntimeException e) {
+          LOG.warn("Exception throw while destroying pipe", e);
+        }
+      });
+
+      badRecordsHandler.handle(null, null, getBadRecords(pipeBatch.getErrorSink()));
 
       // Next iteration should have new and empty PipeBatch
       pipeBatch = new FullPipeBatch(null,null, batchSize, false);
     }
-    MDC.put(LogConstants.RUNNER, "");
-  }
-
-  private void destroyPipes(
-    List<Pipe> pipes,
-    FullPipeBatch pipeBatch,
-    BadRecordsHandler badRecordsHandler
-  ) throws PipelineRuntimeException, StageException {
-    long lastBatchTime = offsetTracker.getLastBatchTime();
-    for (Pipe pipe : pipes) {
-      // Set the last batch time in the stage context of each pipe
-      ((StageContext)pipe.getStage().getContext()).setLastBatchTime(lastBatchTime);
-      String instanceName = pipe.getStage().getConfiguration().getInstanceName();
-
-      if(pipe instanceof StagePipe) {
-        // Stage pipes are processed only if they are in event path
-        if(pipe.getStage().getConfiguration().isInEventPath()) {
-          LOG.trace("Stage pipe {} is in event path, running last process", instanceName);
-          pipe.process(pipeBatch);
-        } else {
-          LOG.trace("Stage pipe {} is in data path, skipping it's processing.", instanceName);
-          pipeBatch.skipStage(pipe);
-        }
-      } else {
-        // Non stage pipes are executed always
-        LOG.trace("Non stage pipe {}, running last process", instanceName);
-        pipe.process(pipeBatch);
-      }
-
-      // And finally destroy the pipe
-      try {
-        LOG.trace("Running destroy for {}", instanceName);
-        pipe.destroy(pipeBatch);
-      } catch(RuntimeException e) {
-        LOG.warn("Exception throw while destroying pipe", e);
-      }
-    }
-
-    badRecordsHandler.handle(null, null, getBadRecords(pipeBatch.getErrorSink()));
   }
 
   @Override
@@ -700,32 +691,32 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     Map<String, Long> memoryConsumedByStage,
     Map<String, Object> stageBatchMetrics
   ) throws PipelineException, StageException {
-    boolean committed = false;
-    OffsetCommitTrigger offsetCommitTrigger = getOffsetCommitTrigger(originPipe, pipes);
+    final AtomicBoolean committed = new AtomicBoolean(false);
     String previousOffset = pipeBatch.getPreviousOffset();
 
-    List<Pipe> runnerPipes = null;
+    PipeRunner pipeRunner = null;
     try {
-      runnerPipes = runnerPool.getRunner();
-      MDC.put(LogConstants.RUNNER, String.valueOf(RunnerUtils.getRunnerId(runnerPipes)));
-      for (Pipe pipe : runnerPipes) {
-        committed = processPipe(pipe, pipeBatch, committed, entityName, newOffset, memoryConsumedByStage, stageBatchMetrics);
+      pipeRunner = runnerPool.getRunner();
+      OffsetCommitTrigger offsetCommitTrigger = pipeRunner.getOffsetCommitTrigger();
+
+      pipeRunner.forEach(pipe -> {
+        committed.set(processPipe(pipe, pipeBatch, committed.get(), entityName, newOffset, memoryConsumedByStage, stageBatchMetrics));
+
+      });
+
+      enforceMemoryLimit(memoryConsumedByStage);
+      badRecordsHandler.handle(entityName, newOffset, getBadRecords(pipeBatch.getErrorSink()));
+      if (deliveryGuarantee == DeliveryGuarantee.AT_LEAST_ONCE) {
+        // When AT_LEAST_ONCE commit only if
+        // 1. There is no offset commit trigger for this pipeline or
+        // 2. there is a commit trigger and it is on
+        if (offsetCommitTrigger == null || offsetCommitTrigger.commit()) {
+          offsetTracker.commitOffset(entityName, newOffset);
+        }
       }
     } finally {
-      MDC.put(LogConstants.RUNNER, "");
-      if(runnerPipes != null) {
-        runnerPool.returnRunner(runnerPipes);
-      }
-    }
-
-    enforceMemoryLimit(memoryConsumedByStage);
-    badRecordsHandler.handle(entityName, newOffset, getBadRecords(pipeBatch.getErrorSink()));
-    if (deliveryGuarantee == DeliveryGuarantee.AT_LEAST_ONCE) {
-      // When AT_LEAST_ONCE commit only if
-      // 1. There is no offset commit trigger for this pipeline or
-      // 2. there is a commit trigger and it is on
-      if (offsetCommitTrigger == null || offsetCommitTrigger.commit()) {
-        offsetTracker.commitOffset(entityName, newOffset);
+      if(pipeRunner != null) {
+        runnerPool.returnRunner(pipeRunner);
       }
     }
 
@@ -960,20 +951,6 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
 
   private boolean isStatsAggregationEnabled() {
     return null != statsAggregatorRequests;
-  }
-
-  // TODO: Do we need to keep list of all offset committing stages?
-  private OffsetCommitTrigger getOffsetCommitTrigger(SourcePipe originPipe, List<List<Pipe>> pipes) {
-    // Origin can't be OffsetCommitTrigger, so going only through out the pipe list and only through first instance
-    // as we're interested in the first offset committing stage at this point.
-    for (Pipe pipe : pipes.get(0)) {
-      Stage stage = pipe.getStage().getStage();
-      if (stage instanceof Target &&
-        stage instanceof OffsetCommitTrigger) {
-        return (OffsetCommitTrigger) stage;
-      }
-    }
-    return null;
   }
 
   @Override

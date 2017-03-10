@@ -30,7 +30,6 @@ import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.creation.PipelineStageBeans;
 import com.streamsets.datacollector.creation.StageBean;
 import com.streamsets.datacollector.email.EmailSender;
-import com.streamsets.datacollector.execution.runner.common.RunnerUtils;
 import com.streamsets.datacollector.memory.MemoryUsageCollectorResourceBundle;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
 import com.streamsets.datacollector.runner.production.StatsAggregationHandler;
@@ -48,10 +47,8 @@ import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.lib.log.LogConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -74,7 +71,7 @@ public class Pipeline {
   private final Configuration configuration;
   private final PipelineConfiguration pipelineConf;
   private final SourcePipe originPipe;
-  private final List<List<Pipe>> pipes;
+  private final List<PipeRunner> pipes;
   private final PipelineRunner runner;
   private final Observer observer;
   private final BadRecordsHandler badRecordsHandler;
@@ -95,7 +92,7 @@ public class Pipeline {
       PipelineConfiguration pipelineConf,
       PipelineBean pipelineBean,
       SourcePipe originPipe,
-      List<List<Pipe>> pipes,
+      List<PipeRunner> pipes,
       Observer observer,
       BadRecordsHandler badRecordsHandler,
       PipelineRunner runner,
@@ -139,27 +136,19 @@ public class Pipeline {
   }
 
   @VisibleForTesting
-  List<List<Pipe>> getRunners() {
+  List<PipeRunner> getRunners() {
     return pipes;
   }
 
   private boolean calculateShouldStopOnStageError() {
-    if(shouldPipeStopPipeline(originPipe)) {
+    // Check origin
+    StageContext stageContext = originPipe.getStage().getContext();
+    if(stageContext.getOnErrorRecord() == OnRecordError.STOP_PIPELINE) {
       return true;
     }
 
-    for(Pipe pipe : pipes.get(0)) {
-      if(shouldPipeStopPipeline(pipe)) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  private static boolean shouldPipeStopPipeline(Pipe pipe) {
-    StageContext stageContext = pipe.getStage().getContext();
-    return stageContext.getOnErrorRecord() == OnRecordError.STOP_PIPELINE;
+    // Working with only first runner is sufficient here as all runners share the same configuration
+    return pipes.get(0).onRecordErrorStopPipeline();
   }
 
   public boolean shouldStopOnStageError() {
@@ -287,13 +276,10 @@ public class Pipeline {
     }
 
     // Initialize all source-less pipeline runners
-    for(List<Pipe> runnerPipes: pipes) {
-      MDC.put(LogConstants.RUNNER, String.valueOf(RunnerUtils.getRunnerId(runnerPipes)));
-      for(Pipe pipe : runnerPipes) {
-        issues.addAll(initPipe(pipe, pipeContext));
-      }
+    for(PipeRunner pipeRunner: pipes) {
+      pipeRunner.forEachNoException(p -> issues.addAll(initPipe(p, pipeContext)));
     }
-    MDC.put(LogConstants.RUNNER, "");
+
     return issues;
   }
 
@@ -368,10 +354,8 @@ public class Pipeline {
 
   public void stop() {
     ((StageContext)originPipe.getStage().getContext()).setStop(true);
-    for(List<Pipe> runnerPipes : pipes) {
-      for(Pipe p : runnerPipes) {
-        ((StageContext)p.getStage().getContext()).setStop(true);
-      }
+    for(PipeRunner pipeRunner : pipes) {
+      pipeRunner.forEachNoException(p -> ((StageContext)p.getStage().getContext()).setStop(true));
     }
   }
 
@@ -429,7 +413,7 @@ public class Pipeline {
       );
       StageRuntime errorStage;
       StageRuntime statsAggregator;
-      List<List<Pipe>> pipes = new ArrayList<>();
+      List<PipeRunner> pipes = new ArrayList<>();
       List<Map<String, Object>> runnerSharedMaps = new ArrayList<>();
       if (pipelineBean != null) {
         // Origin runtime and pipe
@@ -559,7 +543,7 @@ public class Pipeline {
 
   }
 
-  private static List<Pipe> createSourceLessRunner(
+  private static PipeRunner createSourceLessRunner(
     String pipelineName,
     String rev,
     Configuration configuration,
@@ -600,7 +584,7 @@ public class Pipeline {
       ));
     }
 
-    return createPipes(
+    return new PipeRunner(runnerId, createPipes(
       pipelineName,
       rev,
       configuration,
@@ -609,7 +593,7 @@ public class Pipeline {
       observer,
       memoryUsageCollectorResourceBundle,
       scheduledExecutor
-    );
+    ));
   }
 
   private static ExecutionMode getExecutionMode(PipelineConfiguration pipelineConf) {
@@ -743,9 +727,7 @@ public class Pipeline {
   public String toString() {
     Set<String> instances = new LinkedHashSet<>();
     // Describing first runner is sufficient
-    for (Pipe pipe : getRunners().get(0)) {
-      instances.add(pipe.getStage().getInfo().getInstanceName());
-    }
+    pipes.get(0).forEachNoException(pipe -> instances.add(pipe.getStage().getInfo().getInstanceName()));
     String observerName = (observer != null) ? observer.getClass().getSimpleName() : null;
     return Utils.format(
       "Pipeline[source='{}' stages='{}' runner='{}' observer='{}']",

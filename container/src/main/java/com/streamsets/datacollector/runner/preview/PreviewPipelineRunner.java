@@ -36,9 +36,8 @@ import com.streamsets.datacollector.runner.FullPipeBatch;
 import com.streamsets.datacollector.runner.MultiplexerPipe;
 import com.streamsets.datacollector.runner.Observer;
 import com.streamsets.datacollector.runner.ObserverPipe;
-import com.streamsets.datacollector.runner.Pipe;
-import com.streamsets.datacollector.runner.PipeBatch;
 import com.streamsets.datacollector.runner.PipeContext;
+import com.streamsets.datacollector.runner.PipeRunner;
 import com.streamsets.datacollector.runner.PipelineRunner;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.PushSourceContextDelegate;
@@ -87,8 +86,8 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
   private volatile Throwable exceptionFromExecution = null;
 
   private SourcePipe originPipe;
-  private List<List<Pipe>> pipes;
-  private RunnerPool<List<Pipe>> runnerPool;
+  private List<PipeRunner> pipes;
+  private RunnerPool<PipeRunner> runnerPool;
   private BadRecordsHandler badRecordsHandler;
   private StatsAggregationHandler statsAggregationHandler;
   private Map<String, StageOutput> stagesToSkip;
@@ -115,7 +114,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
   }
 
   @Override
-  public void errorNotification(SourcePipe originPipe, List<List<Pipe>> pipes, Throwable throwable) {
+  public void errorNotification(SourcePipe originPipe, List<PipeRunner> pipes, Throwable throwable) {
   }
 
   @Override
@@ -137,7 +136,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
   @SuppressWarnings("unchecked")
   public void run(
     SourcePipe originPipe,
-    List<List<Pipe>> pipes,
+    List<PipeRunner> pipes,
     BadRecordsHandler badRecordsHandler,
     StatsAggregationHandler statsAggregationHandler
   ) throws StageException, PipelineRuntimeException {
@@ -147,7 +146,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
   @Override
   public void run(
     SourcePipe originPipe,
-    List<List<Pipe>> pipes,
+    List<PipeRunner> pipes,
     BadRecordsHandler badRecordsHandler,
     List<StageOutput> stageOutputsToOverride,
     StatsAggregationHandler statsAggregationHandler
@@ -287,10 +286,10 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
     String offsetEntity,
     String newOffset
   ) throws StageException, PipelineRuntimeException {
-    List<Pipe> runnerPipes = null;
+    PipeRunner pipeRunner = null;
     try {
-      runnerPipes = runnerPool.getRunner();
-      for (Pipe pipe : pipes.get(0)) {
+      pipeRunner = runnerPool.getRunner();
+      pipeRunner.forEach(pipe -> {
         StageOutput stageOutput = stagesToSkip.get(pipe.getStage().getInfo().getInstanceName());
         if (stageOutput == null || (pipe instanceof ObserverPipe) || (pipe instanceof MultiplexerPipe)) {
           if (!skipTargets || !pipe.getStage().getDefinition().getType().isOneOf(StageType.TARGET, StageType.EXECUTOR)) {
@@ -303,10 +302,10 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
             pipeBatch.overrideStageOutput((StagePipe) pipe, stageOutput);
           }
         }
-      }
+      });
     } finally {
-      if(runnerPipes != null) {
-        runnerPool.returnRunner(runnerPipes);
+      if(pipeRunner != null) {
+        runnerPool.returnRunner(pipeRunner);
       }
     }
 
@@ -319,23 +318,20 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
   @Override
   public void destroy(
     SourcePipe originPipe,
-    List<List<Pipe>> pipes,
+    List<PipeRunner> pipeRunners,
     BadRecordsHandler badRecordsHandler,
     StatsAggregationHandler statsAggregationHandler
   ) throws StageException, PipelineRuntimeException {
     // We're not doing any special event propagation during preview destroy phase
 
     // Destroy origin on it's own
-    PipeBatch pipeBatch = new FullPipeBatch(null,null, batchSize, true);
-    originPipe.destroy(pipeBatch);
+    originPipe.destroy(new FullPipeBatch(null,null, batchSize, true));
 
     // And destroy each pipeline instance separately
-    for(List<Pipe> pipeRunner: pipes) {
-      pipeBatch = new FullPipeBatch(null,null, batchSize, true);
+    for(PipeRunner pipeRunner: pipeRunners) {
+      final FullPipeBatch pipeBatch = new FullPipeBatch(null,null, batchSize, true);
       pipeBatch.skipStage(originPipe);
-      for(Pipe pipe : pipeRunner) {
-        pipe.destroy(pipeBatch);
-      }
+      pipeRunner.forEach(p -> p.destroy(pipeBatch));
     }
   }
 

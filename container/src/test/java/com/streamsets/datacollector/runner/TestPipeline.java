@@ -60,7 +60,7 @@ public class TestPipeline {
   private Pipe[] getSourceAndPipelinePipes(Pipeline pipeline) {
     List<Pipe> p = new ArrayList<>(1 + pipeline.getRunners().get(0).size());
     p.add(pipeline.getSourcePipe());
-    p.addAll(pipeline.getRunners().get(0));
+    p.addAll(pipeline.getRunners().get(0).getPipes());
     return p.toArray(new Pipe[p.size()]);
   }
 

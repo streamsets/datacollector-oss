@@ -39,14 +39,14 @@ public interface PipelineRunner {
 
   public void run(
     SourcePipe originPipe,
-    List<List<Pipe>> pipes,
+    List<PipeRunner> pipes,
     BadRecordsHandler badRecordsHandler,
     StatsAggregationHandler statsAggregationHandler
   ) throws StageException, PipelineRuntimeException;
 
   public void run(
     SourcePipe originPipe,
-    List<List<Pipe>> pipes,
+    List<PipeRunner> pipes,
     BadRecordsHandler badRecordsHandler,
     List<StageOutput> stageOutputsToOverride,
     StatsAggregationHandler statsAggregationHandler
@@ -54,7 +54,7 @@ public interface PipelineRunner {
 
   public void destroy(
     SourcePipe originPipe,
-    List<List<Pipe>> pipes,
+    List<PipeRunner> pipes,
     BadRecordsHandler badRecordsHandler,
     StatsAggregationHandler statsAggregationHandler
   ) throws StageException, PipelineRuntimeException;
@@ -69,7 +69,7 @@ public interface PipelineRunner {
 
   void errorNotification(
     SourcePipe originPipe,
-    List<List<Pipe>> pipes,
+    List<PipeRunner> pipes,
     Throwable throwable
   );
 
