@@ -168,24 +168,24 @@ public final class TableJdbcRunnable implements Runnable {
   private void generateBatchAndCommitOffset(BatchContext batchContext) {
     int recordCount = 0;
     try {
-      initTableContextIfNeeded();
-      if (tableContext != null) {
-        TableReadContext tableReadContext = getOrLoadTableReadContext();
-        ResultSet rs = tableReadContext.getResultSet();
-        boolean evictTableReadContext = false;
-        try {
-          updateGauge();
-          while (recordCount < batchSize) {
-            if (rs.isClosed() || !rs.next()) {
-              evictTableReadContext = true;
-              break;
-            }
-            createAndAddRecord(rs, tableContext, batchContext);
-            recordCount++;
+      if (tableContext == null) {
+        tableContext = tableProvider.nextTable();
+      }
+      TableReadContext tableReadContext = getOrLoadTableReadContext();
+      ResultSet rs = tableReadContext.getResultSet();
+      boolean evictTableReadContext = false;
+      try {
+        updateGauge();
+        while (recordCount < batchSize) {
+          if (rs.isClosed() || !rs.next()) {
+            evictTableReadContext = true;
+            break;
           }
-        } finally {
-          handlePostBatchAsNeeded(new AtomicBoolean(evictTableReadContext), recordCount, batchContext);
+          createAndAddRecord(rs, tableContext, batchContext);
+          recordCount++;
         }
+      } finally {
+        handlePostBatchAsNeeded(new AtomicBoolean(evictTableReadContext), recordCount, batchContext);
       }
     } catch (SQLException | ExecutionException | StageException | InterruptedException e) {
       //invalidate if the connection is closed
@@ -194,7 +194,7 @@ public final class TableJdbcRunnable implements Runnable {
       if (e instanceof SQLException) {
         handleStageError(JdbcErrors.JDBC_34, e);
       } else if (e instanceof InterruptedException) {
-        LOG.info("Thread {} interrupted", gaugeMap.get(THREAD_NAME));
+        LOG.error("Thread {} interrupted", gaugeMap.get(THREAD_NAME));
       } else {
         handleStageError(JdbcErrors.JDBC_67, e);
       }
@@ -255,28 +255,6 @@ public final class TableJdbcRunnable implements Runnable {
     tableJdbcELEvalContext.setCalendar(calendar);
     tableJdbcELEvalContext.setTime(calendar.getTime());
     tableJdbcELEvalContext.setTableContext(tableContext);
-  }
-
-  /**
-   * Initialize and set the table context.
-   * NOTE: This sets the table context to null if there is any mismatch
-   * We will simply proceed to next table if that is the case
-   */
-  private void initTableContextIfNeeded() throws ExecutionException, SQLException, StageException, InterruptedException {
-    if (tableContext == null) {
-      tableContext = tableProvider.nextTable();
-      //If the offset already does not contain the table (meaning it is the first start or a new table)
-      //We can skip validation
-      if (tableContext != null && offsets.containsKey(tableContext.getQualifiedName())) {
-        try {
-          OffsetQueryUtil.validateStoredAndSpecifiedOffset(tableContext, offsets.get(tableContext.getQualifiedName()));
-        } catch (StageException e) {
-          LOG.error("Error when validating stored offset with configuration", e);
-          tableContext = null;
-          handleStageError(e.getErrorCode(), e);
-        }
-      }
-    }
   }
 
   /**

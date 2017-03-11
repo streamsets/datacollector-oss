@@ -99,9 +99,8 @@ public class TableJdbcConfigBean {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "NONE",
-      label = "Table Order Strategy",
-      description = "Determines the strategy for initial table ordering." +
-          "In case of Switch table batch strategy, this is a hint for initial order",
+      label = "Initial Table Order Strategy",
+      description = "Determines the strategy for initial table ordering",
       displayPosition = 190,
       group = "ADVANCED"
   )

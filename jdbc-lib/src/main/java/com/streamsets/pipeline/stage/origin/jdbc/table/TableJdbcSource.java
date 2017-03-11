@@ -67,6 +67,7 @@ public class TableJdbcSource extends BasePushSource {
   private final CommonSourceConfigBean commonSourceConfigBean;
   private final TableJdbcConfigBean tableJdbcConfigBean;
   private final Properties driverProperties = new Properties();
+  private final Map<String, TableContext> allTableContexts;
   //If we have more state to clean up, we can introduce a state manager to do that which
   //can keep track of different closeables from different threads
   private final Collection<Cache<TableContext, TableReadContext>> toBeInvalidatedThreadCaches;
@@ -88,6 +89,7 @@ public class TableJdbcSource extends BasePushSource {
     this.commonSourceConfigBean = commonSourceConfigBean;
     this.tableJdbcConfigBean = tableJdbcConfigBean;
     driverProperties.putAll(hikariConfigBean.driverProperties);
+    allTableContexts = new LinkedHashMap<>();
     toBeInvalidatedThreadCaches = new ArrayList<>();
   }
 
@@ -109,8 +111,6 @@ public class TableJdbcSource extends BasePushSource {
         calendar = Calendar.getInstance(TimeZone.getTimeZone(tableJdbcConfigBean.timeZoneID));
 
         connectionManager = new ConnectionManager(hikariDataSource);
-
-        Map<String, TableContext> allTableContexts = new LinkedHashMap<>();
 
         for (TableConfigBean tableConfigBean : tableJdbcConfigBean.tableConfigs) {
           //No duplicates even though a table matches multiple configurations, we will add it only once.
@@ -320,6 +320,21 @@ public class TableJdbcSource extends BasePushSource {
         getContext().commitOffset(OFFSET_VERSION, OFFSET_VERSION_1);
       } else {
         offsets.putAll(lastOffsets);
+      }
+    }
+
+    //If the offset already does not contain the table (meaning it is the first start or a new table)
+    //We can skip validation
+    for (Map.Entry<String, String> tableAndOffsetEntry : offsets.entrySet()) {
+      TableContext tableContext = allTableContexts.get(tableAndOffsetEntry.getKey());
+      if (tableContext != null) { //When the table is removed from the configuration
+        try {
+          OffsetQueryUtil.validateStoredAndSpecifiedOffset(tableContext, tableAndOffsetEntry.getValue());
+        } catch (StageException e) {
+          LOG.error("Error when validating stored offset with configuration", e);
+          //Throw the stage exception, we should not start the pipeline with this.
+          throw e;
+        }
       }
     }
   }

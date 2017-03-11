@@ -51,7 +51,8 @@ public final class MultithreadedTableProvider {
       int maxQueueSize
   ) {
     this.tableContextMap = new ConcurrentHashMap<>(tableContextMap);
-    this.sharedAvailableTablesQueue = new ArrayBlockingQueue<>(tableContextMap.size());
+    this.sharedAvailableTablesQueue =
+        new ArrayBlockingQueue<>(tableContextMap.size(), true); //Using fair access policy
     sortedTableOrder.forEach(sharedAvailableTablesQueue::offer);
     this.maxQueueSize = maxQueueSize;
   }
@@ -93,9 +94,8 @@ public final class MultithreadedTableProvider {
   }
 
   /**
-   * Return the next table to work on for the current thread
+   * Return the next table to work on for the current thread (Will not return null)
    * Deque the current element from head of the queue and put it back at the tail to queue.
-   *
    */
   public TableContext nextTable() throws SQLException, ExecutionException, StageException, InterruptedException {
     acquireTableAsNeeded();
