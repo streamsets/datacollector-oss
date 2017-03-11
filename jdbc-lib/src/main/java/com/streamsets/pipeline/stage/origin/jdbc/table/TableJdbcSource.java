@@ -50,6 +50,7 @@ import java.util.Properties;
 import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.stream.IntStream;
@@ -227,7 +228,7 @@ public class TableJdbcSource extends BasePushSource {
     try {
       executorService = new SafeScheduledExecutorService(numberOfThreads, TableJdbcRunnable.TABLE_JDBC_THREAD_PREFIX);
 
-      List<Future> futures = new ArrayList<>();
+      ExecutorCompletionService<Future> completionService = new ExecutorCompletionService<>(executorService);
 
       IntStream.range(0, numberOfThreads).forEach(threadNumber -> {
         TableJdbcRunnable runnable = new TableJdbcRunnable.Builder()
@@ -242,31 +243,40 @@ public class TableJdbcSource extends BasePushSource {
             .tableJdbcConfigBean(tableJdbcConfigBean)
             .build();
         toBeInvalidatedThreadCaches.add(runnable.getTableReadContextCache());
-        futures.add(executorService.submit(runnable));
+        completionService.submit(runnable, null);
       });
 
       while (!getContext().isStopped()) {
-        for (Future future : futures) {
-          if (future.isDone()) {
-            try {
-              future.get();
-            } catch (InterruptedException e) {
-              LOG.error("Thread interrupted", e);
-            } catch (ExecutionException e) {
-              Throwable cause = Throwables.getRootCause(e);
-              if (cause != null && cause instanceof StageException) {
-                throw (StageException) cause;
-              } else {
-                LOG.error("Internal Error. {}", e);
-                throw new StageException(JdbcErrors.JDBC_75, e.toString());
-              }
-            }
-          }
-        }
+        checkWorkerStatus(completionService);
       }
     } finally {
       connectionManager.closeConnection();
       shutdownExecutorIfNeeded();
+    }
+  }
+
+  /**
+   * Checks whether any of the {@link TableJdbcRunnable} workers completed
+   * and whether there is any error that needs to be handled from them.
+   * @param completionService {@link ExecutorCompletionService} used to detect completion
+   * @throws StageException if {@link StageException} is thrown by the workers (if the error handling is stop pipeline)
+   */
+  private void checkWorkerStatus(ExecutorCompletionService<Future> completionService) throws StageException {
+    Future future = completionService.poll();
+    if (future != null) {
+      try {
+        future.get();
+      } catch (InterruptedException e) {
+        LOG.error("Thread interrupted", e);
+      } catch (ExecutionException e) {
+        Throwable cause = Throwables.getRootCause(e);
+        if (cause != null && cause instanceof StageException) {
+          throw (StageException) cause;
+        } else {
+          LOG.error("Internal Error. {}", e);
+          throw new StageException(JdbcErrors.JDBC_75, e.toString());
+        }
+      }
     }
   }
 
