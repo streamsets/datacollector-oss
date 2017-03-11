@@ -118,7 +118,7 @@ public class ManagerResource {
   @Path("/pipelines/status")
   @GET
   @ApiOperation(value = "Returns all Pipeline Status", response = PipelineStateJson.class,
-    responseContainer = "Map[String, PipelineStateJson]", authorizations = @Authorization(value = "basic"))
+    responseContainer = "Map", authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
   public Response getAllPipelineStatus() throws PipelineException {

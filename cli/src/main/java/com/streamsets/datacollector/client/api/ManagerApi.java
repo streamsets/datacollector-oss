@@ -1146,9 +1146,9 @@ public class ManagerApi {
   /**
    * Returns all Pipeline Status
    *
-   * @return PipelineStateJson
+   * @return Map<String, PipelineStateJson>
    */
-  public PipelineStateJson getAllPipelineStatus () throws ApiException {
+  public Map<String, PipelineStateJson> getAllPipelineStatus () throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
@@ -1159,12 +1159,6 @@ public class ManagerApi {
     List<Pair> queryParams = new ArrayList<Pair>();
     Map<String, String> headerParams = new HashMap<String, String>();
     Map<String, Object> formParams = new HashMap<String, Object>();
-
-
-
-
-
-
 
     final String[] accepts = {
         "application/json"
@@ -1178,16 +1172,9 @@ public class ManagerApi {
 
     String[] authNames = new String[] { "basic" };
 
-
-
-
-
-    TypeRef returnType = new TypeRef<PipelineStateJson>() {};
-    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
-        contentType, authNames, returnType);
-
-
-
+    TypeRef returnType = new TypeRef<Map<String, PipelineStateJson>>() {};
+    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams,
+        accept, contentType, authNames, returnType);
 
   }
 
