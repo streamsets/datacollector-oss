@@ -26,6 +26,7 @@ import com.streamsets.datacollector.alerts.AlertEventListener;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.metrics.MetricsEventListener;
+import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.dc.execution.manager.standalone.ThreadUsage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,7 +133,7 @@ public class EventListenerManager {
 
       try {
         ObjectMapper objectMapper = ObjectMapperFactory.get();
-        String toStateJson = objectMapper.writer().writeValueAsString(toState);
+        String toStateJson = objectMapper.writer().writeValueAsString(BeanHelper.wrapPipelineState(toState, true));
 
         for(StateEventListener stateEventListener : stateEventListenerListCopy) {
           try {
