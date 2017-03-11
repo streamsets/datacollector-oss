@@ -72,7 +72,7 @@ angular
           operation.produces = operation.produces || swagger.produces;
           form[operationId] = {
             contentType: operation.consumes && operation.consumes.length === 1 ? operation.consumes[0] : 'application/json',
-            responseType: 'application/json'
+            responseType: 'application/json, text/plain, */*'
           };
           operation.httpMethod = httpMethod;
           operation.path = path;
