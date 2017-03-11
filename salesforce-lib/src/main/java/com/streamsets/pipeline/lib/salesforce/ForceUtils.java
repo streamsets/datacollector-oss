@@ -28,7 +28,6 @@ import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
 import com.sforce.ws.SessionRenewer;
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.Record;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -50,17 +49,29 @@ public class ForceUtils {
     return (th instanceof ApiFault) ? ((ApiFault) th).getExceptionMessage() : th.getMessage();
   }
 
+  private static void setProxyConfig(ForceConfigBean conf, ConnectorConfig config) {
+    if (conf.useProxy) {
+      config.setProxy(conf.proxyHostname, conf.proxyPort);
+      if (conf.useProxyCredentials) {
+        config.setProxyUsername(conf.proxyUsername);
+        config.setProxyPassword(conf.proxyPassword);
+      }
+    }
+  }
+
   public static ConnectorConfig getPartnerConfig(ForceConfigBean conf, SessionRenewer sessionRenewer) {
-    ConnectorConfig partnerConfig = new ConnectorConfig();
+    ConnectorConfig config = new ConnectorConfig();
 
-    partnerConfig.setUsername(conf.username);
-    partnerConfig.setPassword(conf.password);
-    partnerConfig.setAuthEndpoint("https://"+conf.authEndpoint+"/services/Soap/u/"+conf.apiVersion);
-    partnerConfig.setCompression(conf.useCompression);
-    partnerConfig.setTraceMessage(conf.showTrace);
-    partnerConfig.setSessionRenewer(sessionRenewer);
+    config.setUsername(conf.username);
+    config.setPassword(conf.password);
+    config.setAuthEndpoint("https://"+conf.authEndpoint+"/services/Soap/u/"+conf.apiVersion);
+    config.setCompression(conf.useCompression);
+    config.setTraceMessage(conf.showTrace);
+    config.setSessionRenewer(sessionRenewer);
 
-    return partnerConfig;
+    setProxyConfig(conf, config);
+
+    return config;
   }
 
   public static BulkConnection getBulkConnection(ConnectorConfig partnerConfig, ForceConfigBean conf) throws ConnectionException,
@@ -80,6 +91,9 @@ public class ForceUtils {
     config.setRestEndpoint(restEndpoint);
     config.setCompression(conf.useCompression);
     config.setTraceMessage(conf.showTrace);
+    config.setSessionRenewer(partnerConfig.getSessionRenewer());
+
+    setProxyConfig(conf, config);
 
     return new BulkConnection(config);
   }
