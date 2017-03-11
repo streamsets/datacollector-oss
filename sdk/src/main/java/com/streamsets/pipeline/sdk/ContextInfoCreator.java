@@ -86,11 +86,12 @@ public class ContextInfoCreator {
         onRecordError,
         outputLanes,
         configToElDefMap,
-        new HashMap<String, Object>(),
+        new HashMap<>(),
         ExecutionMode.STANDALONE,
         DeliveryGuarantee.AT_LEAST_ONCE,
         resourcesDir,
-        new EmailSender(new Configuration())
+        new EmailSender(new Configuration()),
+        new Configuration()
     );
   }
 

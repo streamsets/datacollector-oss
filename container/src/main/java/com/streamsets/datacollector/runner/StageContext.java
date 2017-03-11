@@ -85,10 +85,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class StageContext implements Source.Context, PushSource.Context, Target.Context, Processor.Context, ContextExtensions {
 
   private static final Logger LOG = LoggerFactory.getLogger(StageContext.class);
+  private static final String STAGE_CONF_PREFIX = "stage.conf_";
   private static final String CUSTOM_METRICS_PREFIX = "custom.";
   private static final String SDC_RECORD_SAMPLING_POPULATION_SIZE = "sdc.record.sampling.population.size";
   private static final String SDC_RECORD_SAMPLING_SAMPLE_SIZE = "sdc.record.sampling.sample.size";
 
+  private final Configuration configuration;
   private final int runnerId;
   private final List<Stage.Info> pipelineInfo;
   private final StageType stageType;
@@ -127,7 +129,8 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
       ExecutionMode executionMode,
       DeliveryGuarantee deliveryGuarantee,
       String resourcesDir,
-      EmailSender emailSender
+      EmailSender emailSender,
+      Configuration configuration
   ) {
     this.pipelineName = "myPipeline";
     this.sdcId = "mySDC";
@@ -169,7 +172,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
     this.sharedRunnerMap = new ConcurrentHashMap<>();
 
     // sample all records while testing
-    Configuration configuration = new Configuration();
+    this.configuration = configuration.getSubSetConfiguration(STAGE_CONF_PREFIX);
     this.sampler = new RecordSampler(this, stageType == StageType.SOURCE, 0, 0);
   }
 
@@ -208,6 +211,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
     this.resourcesDir = runtimeInfo.getResourcesDir();
     this.sdcId = runtimeInfo.getId();
     this.emailSender = emailSender;
+    this.configuration = configuration.getSubSetConfiguration(STAGE_CONF_PREFIX);
     int sampleSize = configuration.get(SDC_RECORD_SAMPLING_SAMPLE_SIZE, 1);
     int populationSize = configuration.get(SDC_RECORD_SAMPLING_POPULATION_SIZE, 10000);
     this.sampler = new RecordSampler(this, stageType == StageType.SOURCE, sampleSize, populationSize);
@@ -309,6 +313,11 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   @Override
   public Sampler getSampler() {
     return sampler;
+  }
+
+  @Override
+  public String getConfig(String configName) {
+    return configuration.get(STAGE_CONF_PREFIX + configName, null);
   }
 
   @Override

@@ -174,7 +174,8 @@ public class TestStageContext {
       ExecutionMode.STANDALONE,
       DeliveryGuarantee.AT_LEAST_ONCE,
       null,
-      sender
+      sender,
+      new Configuration()
     );
 
     try {
@@ -203,7 +204,8 @@ public class TestStageContext {
       ExecutionMode.STANDALONE,
       DeliveryGuarantee.AT_LEAST_ONCE,
       null,
-      sender
+      sender,
+      new Configuration()
     );
 
     context.notify(ImmutableList.of("foo", "bar"), "SUBJECT", "BODY");
@@ -351,6 +353,14 @@ public class TestStageContext {
   }
 
   @Test
+  public void testGetConf() throws StageException, EmailException {
+    StageContext context = createStageContextForSDK();
+
+    Assert.assertNull(context.getConfig("jarcec"));
+    Assert.assertEquals("is awesome", context.getConfig("girish"));
+  }
+
+  @Test
   public void testPushSourceContextDelegate() throws Exception {
     StageContext context = createStageContextForSDK();
 
@@ -396,6 +406,10 @@ public class TestStageContext {
   }
 
   private StageContext createStageContextForSDK() {
+    Configuration configuration = new Configuration();
+    configuration.set("stage.conf_girish", "is awesome");
+    configuration.set("stage.conf_arvind", "is Arvind");
+
     return new StageContext(
       "stage",
       StageType.SOURCE,
@@ -408,7 +422,8 @@ public class TestStageContext {
       ExecutionMode.STANDALONE,
       DeliveryGuarantee.AT_LEAST_ONCE,
       null,
-      new EmailSender(new Configuration())
+      new EmailSender(new Configuration()),
+      configuration
     );
   }
 }

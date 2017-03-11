@@ -284,7 +284,8 @@ public abstract class StageRunner<S extends Stage> {
         executionMode,
         deliveryGuarantee,
         resourcesDir,
-        new EmailSender(new Configuration())
+        new EmailSender(new Configuration()),
+        new Configuration()
     );
     status = Status.CREATED;
   }

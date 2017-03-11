@@ -62,7 +62,8 @@ public class TestPreconditionsPredicate {
         ExecutionMode.STANDALONE,
         DeliveryGuarantee.AT_LEAST_ONCE,
         "",
-        new EmailSender(new Configuration())
+        new EmailSender(new Configuration()),
+        new Configuration()
     );
   }
 
