@@ -23,11 +23,13 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.base.Throwables;
 import com.google.common.cache.Cache;
+import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BasePushSource;
+import com.streamsets.pipeline.lib.event.EventCreator;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
@@ -56,6 +58,8 @@ import java.util.concurrent.Future;
 import java.util.stream.IntStream;
 
 public class TableJdbcSource extends BasePushSource {
+  public static final String JDBC_NO_MORE_DATA= "jdbc-no-more-data";
+
   private static final Logger LOG = LoggerFactory.getLogger(TableJdbcSource.class);
   private static final Joiner NEW_LINE_JOINER = Joiner.on("\n");
   private static final String HIKARI_CONFIG_PREFIX = "hikariConfigBean.";
@@ -95,7 +99,7 @@ public class TableJdbcSource extends BasePushSource {
 
   private static String logError(SQLException e) {
     String formattedError = JdbcUtil.formatSqlException(e);
-    LOG.debug(formattedError, e);
+    LOG.error(formattedError, e);
     return formattedError;
   }
 
@@ -248,10 +252,26 @@ public class TableJdbcSource extends BasePushSource {
 
       while (!getContext().isStopped()) {
         checkWorkerStatus(completionService);
+        generateNoMoreDataEventIfNeeded();
       }
     } finally {
       connectionManager.closeConnection();
       shutdownExecutorIfNeeded();
+    }
+  }
+
+  /**
+   * Checks whether to generate a no-more-data event, if
+   * so creates a new batch and then
+   */
+  private void generateNoMoreDataEventIfNeeded() {
+    if (tableOrderProvider.shouldGenerateNoMoreDataEvent()) {
+      //throw event
+      LOG.info("No More data to process, Triggered No More Data Event");
+      BatchContext batchContext = getContext().startBatch();
+      new EventCreator.Builder(JDBC_NO_MORE_DATA, 1).build()
+          .create(getContext(), batchContext).createAndSend();
+      getContext().processBatch(batchContext);
     }
   }
 

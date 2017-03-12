@@ -39,6 +39,7 @@ import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     resetOffset = true,
+    producesEvents = true,
     upgrader = TableJdbcSourceUpgrader.class,
     onlineHelpRefUrl = "index.html#Origins/MultiTableJDBCConsumer.html#task_kst_m4w_4y"
 )

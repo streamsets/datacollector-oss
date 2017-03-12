@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
+import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
@@ -30,6 +31,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
@@ -42,8 +44,12 @@ public final class MultithreadedTableProvider {
 
   private final Map<String, TableContext> tableContextMap;
   private final ArrayBlockingQueue<String> sharedAvailableTablesQueue;
-  private final ThreadLocal<Deque<String>> ownedTablesQueue = ThreadLocal.withInitial(LinkedList::new);
+  private final Set<String> tablesWithNoMoreData;
   private final int maxQueueSize;
+
+  private final ThreadLocal<Deque<String>> ownedTablesQueue = ThreadLocal.withInitial(LinkedList::new);
+
+  private volatile boolean isNoMoreDataEventGeneratedAlready = false;
 
   public MultithreadedTableProvider(
       Map<String, TableContext> tableContextMap,
@@ -54,6 +60,7 @@ public final class MultithreadedTableProvider {
     this.sharedAvailableTablesQueue =
         new ArrayBlockingQueue<>(tableContextMap.size(), true); //Using fair access policy
     sortedTableOrder.forEach(sharedAvailableTablesQueue::offer);
+    this.tablesWithNoMoreData = Sets.newConcurrentHashSet();
     this.maxQueueSize = maxQueueSize;
   }
 
@@ -127,5 +134,36 @@ public final class MultithreadedTableProvider {
         )
     );
     sharedAvailableTablesQueue.offer(tableName);
+  }
+
+  /**
+   * Each {@link TableJdbcRunnable} worker thread can call this api to update
+   * if there is data/no more data on the current table
+   */
+  public void reportDataOrNoMoreData(TableContext tableContext, boolean noMoreData) {
+    if (noMoreData) {
+      tablesWithNoMoreData.add(tableContext.getQualifiedName());
+    } else {
+      //When we see a table with data, we mark isNoMoreDataEventGeneratedAlready to false
+      //so we can generate event again if we don't see data from all tables.
+      isNoMoreDataEventGeneratedAlready = false;
+      tablesWithNoMoreData.remove(tableContext.getQualifiedName());
+    }
+    LOG.trace("Number of Tables With No More Data {}", tablesWithNoMoreData.size());
+  }
+
+  /**
+   * Used by the main thread {@link TableJdbcSource} to check whether all
+   * tables have marked no more data
+   * Generate event only if we haven't generate no more data event already
+   * or we have seen a table with records after we generated an event before
+   */
+  public boolean shouldGenerateNoMoreDataEvent() {
+    boolean noMoreData = (!isNoMoreDataEventGeneratedAlready && tablesWithNoMoreData.size() == tableContextMap.size());
+    if (noMoreData) {
+      tablesWithNoMoreData.clear();
+      isNoMoreDataEventGeneratedAlready = true;
+    }
+    return noMoreData;
   }
 }

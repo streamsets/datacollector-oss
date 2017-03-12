@@ -184,6 +184,9 @@ public final class TableJdbcRunnable implements Runnable {
           createAndAddRecord(rs, tableContext, batchContext);
           recordCount++;
         }
+        //If exception happened we do not report anything about no more data event
+        //We report noMoreData if either evictTableReadContext is true (result set no more rows) / record count is 0.
+        tableProvider.reportDataOrNoMoreData(tableContext, recordCount == 0 || evictTableReadContext);
       } finally {
         handlePostBatchAsNeeded(new AtomicBoolean(evictTableReadContext), recordCount, batchContext);
       }
@@ -229,7 +232,6 @@ public final class TableJdbcRunnable implements Runnable {
             );
             calculateEvictTableFlag(shouldEvict, tableReadContext);
           });
-
       //Process And Commit offsets
       context.processBatch(batchContext, tableContext.getQualifiedName(), offsets.get(tableContext.getQualifiedName()));
     }
@@ -325,7 +327,9 @@ public final class TableJdbcRunnable implements Runnable {
    * Handle Exception
    */
   private void handleStageError(ErrorCode errorCode, Exception e) {
-    LOG.error("Failure happened when fetching nextTable", e);
+    String errorMessage = (e instanceof SQLException)? JdbcUtil.formatSqlException((SQLException)e) : "Failure Happened";
+    LOG.error(errorMessage, e);
+
     try {
       errorRecordHandler.onError(errorCode, e);
     } catch (StageException se) {

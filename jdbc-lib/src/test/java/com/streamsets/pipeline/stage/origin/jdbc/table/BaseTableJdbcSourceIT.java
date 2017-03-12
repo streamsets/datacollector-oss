@@ -118,9 +118,12 @@ public abstract class BaseTableJdbcSourceIT {
 
     @Override
     public void processBatch(StageRunner.Output output) {
-      batchRecords.add(batchesProduced.get(), output.getRecords().get("a"));
-      if (batchesProduced.incrementAndGet() == numberOfBatches) {
-        pushSourceRunner.setStop();
+      List<Record> records = output.getRecords().get("a");
+      if (!records.isEmpty()) {
+        batchRecords.add(batchesProduced.get(), records);
+        if (batchesProduced.incrementAndGet() == numberOfBatches) {
+          pushSourceRunner.setStop();
+        }
       }
     }
   }

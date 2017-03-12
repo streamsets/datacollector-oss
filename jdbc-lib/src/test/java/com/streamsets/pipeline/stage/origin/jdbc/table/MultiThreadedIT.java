@@ -30,7 +30,9 @@ import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Timeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,6 +75,9 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
           )
           .collect(Collectors.toList());
   private static final Map<String, List<Record>> EXPECTED_TABLES_TO_RECORDS = new LinkedHashMap<>();
+
+  @Rule
+  public Timeout globalTimeout = Timeout.seconds(300); // 5 minutes
 
   private static void populateColumns(
       Map<String, Field.Type> columnToFieldType,
@@ -203,9 +208,10 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
         if (expectedRecords.size() == recordList.size()) {
           tablesYetToBeCompletelyRead.remove(tableName);
         }
-        if (tablesYetToBeCompletelyRead.isEmpty()) {
-          pushSourceRunner.setStop();
-        }
+      }
+      List<Record> eventRecords = pushSourceRunner.getEventRecords();
+      if (tablesYetToBeCompletelyRead.isEmpty() && !eventRecords.isEmpty()) {
+        pushSourceRunner.setStop();
       }
     }
   }
@@ -225,6 +231,12 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
         List<Record> actualRecords = actualTableToRecords.get(tableName);
         checkRecords(expectedRecords, actualRecords);
       });
+
+      Assert.assertEquals(1, runner.getEventRecords().size());
+      Record eventRecord = runner.getEventRecords().get(0);
+      String eventType = eventRecord.getHeader().getAttribute("sdc.event.type");
+      Assert.assertNotNull(eventType);
+      Assert.assertTrue(TableJdbcSource.JDBC_NO_MORE_DATA.equals(eventType));
     } finally {
       runner.runDestroy();
     }
