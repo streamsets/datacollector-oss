@@ -213,7 +213,7 @@ public class TableJdbcSource extends BaseSource {
         closeEverything();
         issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, e.toString()));
       } catch (StageException e) {
-        LOG.debug("Error when finding tables:", e);
+        LOG.error("Error when finding tables:", e);
         closeEverything();
         issues.add(context.createConfigIssue(Groups.TABLE.name(), TableJdbcConfigBean.TABLE_CONFIG, e.getErrorCode(), e.getParams()));
       }
@@ -266,9 +266,9 @@ public class TableJdbcSource extends BaseSource {
     offsets.putAll(OffsetQueryUtil.deserializeOffsetMap(lastSourceOffset));
 
     int recordCount = 0, noOfTablesVisited = 0;
-    do {
-      ResultSet rs;
-      try {
+    try {
+      do {
+        ResultSet rs;
         if (tableContext == null) {
           initTableContext();
         }
@@ -278,7 +278,6 @@ public class TableJdbcSource extends BaseSource {
           TableReadContext tableReadContext = resultSetCache.getIfPresent(tableContext);
           //Meaning we will have to switch tables, execute a new query and get records.
           if (tableReadContext == null) {
-            try {
               long delayBeforeQuery =
                   (commonSourceConfigBean.queryInterval * 1000) - (System.currentTimeMillis() - lastQueryIntervalTime);
               boolean interrupted =
@@ -290,11 +289,9 @@ public class TableJdbcSource extends BaseSource {
               }
               //Now issue query and get read context
               tableReadContext = resultSetCache.get(tableContext);
-            } finally {
-              //Update lastQuery Time
+              //Update lastQuery Time (only if query was successful), in case of failed query we will retry immediately
               lastQueryIntervalTime = System.currentTimeMillis();
               LOG.trace("Record Last Query Time : {}", lastQueryIntervalTime);
-            }
           }
 
           rs = tableReadContext.getResultSet();
@@ -351,18 +348,15 @@ public class TableJdbcSource extends BaseSource {
             }
           }
         }
-      } catch (SQLException e) {
-        String formattedError = logError(e);
-        closeEverything();
-        LOG.debug("Query failed at: {}", lastQueryIntervalTime);
-        //Throw Stage Errors
-        errorRecordHandler.onError(JdbcErrors.JDBC_34, query, formattedError);
-      } catch (ExecutionException e) {
-        LOG.debug("Failure happened when fetching nextTable", e);
-        errorRecordHandler.onError(JdbcErrors.JDBC_67, e);
-      }
-      noOfTablesVisited++;
-    } while(shouldMoveToNextTable(recordCount, noOfTablesVisited)); //If the current table has no records and if we haven't cycled through all tables.
+        noOfTablesVisited++;
+      } while (shouldMoveToNextTable(recordCount, noOfTablesVisited)); //If the current table has no records and if we haven't cycled through all tables.
+    } catch(SQLException | ExecutionException e) {
+      closeEverything();
+      LOG.error("Exception happened during query", e);
+      String error = (e instanceof SQLException)? logError((SQLException)e) : e.toString();
+      //Throw Stage Errors
+      errorRecordHandler.onError(JdbcErrors.JDBC_67, error);
+    }
     return OffsetQueryUtil.serializeOffsetMap(offsets);
   }
 
