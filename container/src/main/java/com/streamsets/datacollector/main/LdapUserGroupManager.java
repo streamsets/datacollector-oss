@@ -67,6 +67,14 @@ public class LdapUserGroupManager implements UserGroupManager {
     for (Principal principal: principals) {
       if (principal instanceof JAASRole) {
         groups.add(principal.getName());
+        Set<String> mappedRoles = roleMapping.get(principal.getName());
+        if (mappedRoles != null && !mappedRoles.isEmpty()) {
+          for (String mappedRole: mappedRoles) {
+            if (!roles.contains(mappedRole)) {
+              roles.add(mappedRole);
+            }
+          }
+        }
       }
     }
     UserJson userJson = new UserJson();
