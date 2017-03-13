@@ -157,7 +157,7 @@ public class ForceConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "true",
+      defaultValue = "false",
       label = "Use Compression",
       displayPosition = 1000
   )
@@ -166,7 +166,7 @@ public class ForceConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "true",
+      defaultValue = "false",
       label = "Show Debug Trace",
       displayPosition = 1010
   )

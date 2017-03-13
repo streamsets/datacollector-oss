@@ -20,38 +20,17 @@
 package com.streamsets.pipeline.lib.waveanalytics;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.lib.salesforce.ForceConfigBean;
 
-public class WaveAnalyticsConfigBean {
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "",
-      label = "Username",
-      description = "Salesforce username, in the form user@example.com",
-      displayPosition = 10,
-      group = "WAVE"
-  )
-  public String username;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "",
-      label = "Password",
-      description = "Salesforce password, or an EL to load the password from a resource, for example, ${runtime:loadResource('forcePassword.txt',true)}",
-      displayPosition = 20,
-      group = "WAVE"
-  )
-  public String password;
-
+public class WaveAnalyticsConfigBean extends ForceConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "",
       label = "Edgemart Alias",
       description = "The alias of a dataset, which must be unique across an organization.",
-      displayPosition = 30,
-      group = "WAVE"
+      displayPosition = 50,
+      group = "FORCE"
   )
   public String edgemartAliasPrefix;
 
@@ -61,8 +40,8 @@ public class WaveAnalyticsConfigBean {
       defaultValue = "0",
       label = "Dataset Wait Time (secs)",
       description = "Max time to wait for new data before requesting that the dataset be processed.",
-      displayPosition = 40,
-      group = "WAVE"
+      displayPosition = 60,
+      group = "FORCE"
   )
   public int datasetWaitTime = 0;
 
@@ -72,8 +51,8 @@ public class WaveAnalyticsConfigBean {
       defaultValue = "false",
       label = "Use Dataflow",
       description = "Enable to use a dataflow to combine successive datasets into one.",
-      displayPosition = 50,
-      group = "WAVE"
+      displayPosition = 70,
+      group = "FORCE"
   )
   public boolean useDataflow;
 
@@ -83,10 +62,10 @@ public class WaveAnalyticsConfigBean {
       defaultValue = "SalesEdgeEltWorkflow",
       label = "Dataflow Name",
       description = "Name of a dataflow to combine datasets into one. CAUTION - existing dataflow content will be overwritten!",
-      displayPosition = 60,
+      displayPosition = 80,
       dependsOn = "useDataflow",
       triggeredByValue = "true",
-      group = "WAVE"
+      group = "FORCE"
   )
   public String dataflowName;
 
@@ -96,10 +75,10 @@ public class WaveAnalyticsConfigBean {
       defaultValue = "false",
       label = "Run Dataflow After Upload",
       description = "Enable this to run the dataflow after each dataset is uploaded. Caution - ensure that your Dataset Wait Time is at least an hour or you will overrun the limit on dataflow runs!",
-      displayPosition = 70,
+      displayPosition = 90,
       dependsOn = "useDataflow",
       triggeredByValue = "true",
-      group = "WAVE"
+      group = "FORCE"
   )
   public boolean runDataflow = false;
 
@@ -109,8 +88,8 @@ public class WaveAnalyticsConfigBean {
       defaultValue = "",
       label = "Metadata JSON",
       description = "Metadata in JSON format, which describes the structure of the uploaded file.",
-      displayPosition = 80,
-      group = "WAVE"
+      displayPosition = 100,
+      group = "FORCE"
   )
   public String metadataJson = "";
 }

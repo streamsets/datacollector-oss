@@ -40,6 +40,7 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.delimited.DelimitedCharDataGenerator;
+import com.streamsets.pipeline.lib.salesforce.ForceConfigBean;
 import com.streamsets.pipeline.lib.salesforce.ForceUtils;
 import com.streamsets.pipeline.lib.waveanalytics.WaveAnalyticsConfigBean;
 import com.streamsets.pipeline.lib.waveanalytics.Errors;
@@ -90,26 +91,11 @@ public class WaveAnalyticsTarget extends BaseTarget {
     this.conf = conf;
   }
 
-  private ConnectorConfig getConnectorConfig() {
-    ConnectorConfig connectorConfig = new ConnectorConfig();
-
-    connectorConfig.setUsername(conf.username);
-    connectorConfig.setPassword(conf.password);
-    // This is required because version 38.0 Maven jar inexplicably sets auth endpoint to
-    // "https://login-blitz01.soma.salesforce.com/services/Soap/u/38.0"
-    // Longer term fix is to allow config of auth endpoint - see SDC-5090
-    connectorConfig.setAuthEndpoint("https://login.salesforce.com/services/Soap/u/38.0");
-    connectorConfig.setCompression(true);
-    connectorConfig.setSessionRenewer(new WaveSessionRenewer());
-
-    return connectorConfig;
-  }
-
   // Renew the Salesforce session on timeout
   private class WaveSessionRenewer implements SessionRenewer {
     @Override
     public SessionRenewalHeader renewSession(ConnectorConfig config) throws ConnectionException {
-      connection = Connector.newConnection(getConnectorConfig());
+      connection = Connector.newConnection(ForceUtils.getPartnerConfig(conf, new WaveSessionRenewer()));
       SessionRenewalHeader header = new SessionRenewalHeader();
       header.name = new QName("urn:enterprise.soap.sforce.com", "SessionHeader");
       header.headerElement = connection.getSessionHeader();
@@ -428,14 +414,14 @@ public class WaveAnalyticsTarget extends BaseTarget {
     List<ConfigIssue> issues = super.init();
 
     try {
-      connection = Connector.newConnection(getConnectorConfig());
+      connection = Connector.newConnection(ForceUtils.getPartnerConfig(conf, new WaveSessionRenewer()));
       LOG.info("Successfully authenticated as {}", conf.username);
 
       String soapEndpoint = connection.getConfig().getServiceEndpoint();
       restEndpoint = soapEndpoint.substring(0, soapEndpoint.indexOf("services/Soap/"));
     } catch (ConnectionException ce) {
-      issues.add(getContext().createConfigIssue(Groups.WAVE.name(),
-          "connectorConfig",
+      issues.add(getContext().createConfigIssue(Groups.FORCE.name(),
+          ForceConfigBean.CONF_PREFIX + "authEndpoint",
           Errors.WAVE_00,
           ForceUtils.getExceptionCode(ce) + ", " + ForceUtils.getExceptionMessage(ce)
       ));
