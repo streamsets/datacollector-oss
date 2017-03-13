@@ -23,6 +23,8 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         environment configuration file. </shortdesc>
  <conbody>
+        <draft-comment author="alisontaylor">text copied from same topic in DPM User Guide. Make the
+            same updates in both places. </draft-comment>
         <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EnvFileLocation"/>
         <p><indexterm>DPM<indexterm>HTTP proxy</indexterm></indexterm><indexterm>DPM<indexterm>HTTPS
                     proxy</indexterm></indexterm><indexterm>HTTP proxy<indexterm>for

@@ -38,6 +38,7 @@
             <topicref href="../DPM/RegisterFromClouderaManager.dita"/>
             <topicref href="../DPM/DisconnectedMode.dita"/>
             <topicref href="../DPM/HTTPProxy.dita"/>
+            <topicref href="../DPM/PublicURL.dita"/>
             <topicref href="../DPM/TransferPermissions.dita"/>
         </topicref>
         <topicref href="../DPM/AggregatedStatistics.dita" chunk="to-content">
