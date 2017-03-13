@@ -58,6 +58,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.IssuesJson;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
+import com.streamsets.datacollector.runner.UserContext;
 import com.streamsets.datacollector.runner.production.OffsetFileUtil;
 import com.streamsets.datacollector.security.SecurityConfiguration;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
@@ -700,9 +701,16 @@ public class ClusterRunner extends AbstractRunner {
     if (rateLimit > 0) {
       runner.setRateLimit(rateLimit);
     }
-    ProductionPipelineBuilder builder =
-      new ProductionPipelineBuilder(name, rev, configuration, runtimeInfo, stageLibrary,  runner, null);
-    return builder.build(pipelineConfiguration, null);
+    ProductionPipelineBuilder builder = new ProductionPipelineBuilder(
+      name,
+      rev,
+      configuration,
+      runtimeInfo,
+      stageLibrary,
+      runner,
+      null
+    );
+    return builder.build(new UserContext(user), pipelineConfiguration, null);
   }
 
   static class ManagerRunnable implements Runnable {

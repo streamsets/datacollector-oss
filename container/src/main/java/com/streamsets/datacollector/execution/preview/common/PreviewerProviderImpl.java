@@ -42,7 +42,7 @@ public class PreviewerProviderImpl implements PreviewerProvider {
 
     objectGraph = objectGraph.plus(SyncPreviewerInjectorModule.class);
     objectGraph = objectGraph.plus(
-      new AsyncPreviewerModule(UUID.randomUUID().toString(), name, rev, listener, objectGraph));
+      new AsyncPreviewerModule(UUID.randomUUID().toString(), user, name, rev, listener, objectGraph));
     return objectGraph.get(Previewer.class);
   }
 }

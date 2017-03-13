@@ -27,6 +27,7 @@ import com.streamsets.datacollector.runner.Observer;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.SourceOffsetTracker;
+import com.streamsets.datacollector.runner.UserContext;
 import com.streamsets.datacollector.runner.production.ProductionSourceOffsetCommitterOffsetTracker;
 import com.streamsets.datacollector.runner.production.ProductionSourceOffsetTracker;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
@@ -75,11 +76,12 @@ public class ProductionPipelineBuilder {
     this.observer = observer;
   }
 
-  public ProductionPipeline build(PipelineConfiguration pipelineConf) throws PipelineRuntimeException, StageException {
-    return build(pipelineConf, null);
+  public ProductionPipeline build(UserContext userContext, PipelineConfiguration pipelineConf) throws PipelineRuntimeException, StageException {
+    return build(userContext, pipelineConf, null);
   }
 
   public ProductionPipeline build(
+      UserContext userContext,
       PipelineConfiguration pipelineConf,
       Map<String, Object> runtimeConstants
   ) throws PipelineRuntimeException, StageException {
@@ -95,6 +97,7 @@ public class ProductionPipelineBuilder {
         name + PRODUCTION_PIPELINE_SUFFIX,
         name,
         rev,
+        userContext,
         pipelineConf
     ).setObserver(observer).build(runner, runtimeConstants);
 

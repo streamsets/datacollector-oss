@@ -39,6 +39,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.SourceOffsetTracker;
 import com.streamsets.datacollector.runner.StageOutput;
+import com.streamsets.datacollector.runner.UserContext;
 import com.streamsets.datacollector.runner.preview.PreviewPipeline;
 import com.streamsets.datacollector.runner.preview.PreviewPipelineBuilder;
 import com.streamsets.datacollector.runner.preview.PreviewPipelineOutput;
@@ -79,6 +80,7 @@ public class SyncPreviewer implements Previewer {
   private static final int MAX_SOURCE_PREVIEW_SIZE_DEFAULT = 4*1024;
 
   private final String id;
+  private final String user;
   private final String name;
   private final String rev;
   private final PreviewerListener previewerListener;
@@ -90,9 +92,16 @@ public class SyncPreviewer implements Previewer {
   private volatile PreviewOutput previewOutput;
   private volatile PreviewPipeline previewPipeline;
 
-  public SyncPreviewer(String id, String name, String rev, PreviewerListener previewerListener,
-                       ObjectGraph objectGraph) {
+  public SyncPreviewer(
+    String id,
+    String user,
+    String name,
+    String rev,
+    PreviewerListener previewerListener,
+    ObjectGraph objectGraph
+  ) {
     this.id = id;
+    this.user = user;
     this.name = name;
     this.rev = rev;
     this.previewerListener = previewerListener;
@@ -282,7 +291,7 @@ public class SyncPreviewer implements Previewer {
     PreviewPipelineRunner runner = new PreviewPipelineRunner(name, rev, runtimeInfo, tracker, batchSize, batches,
       skipTargets);
     return new PreviewPipelineBuilder(stageLibrary, configuration, name, rev, pipelineConf, endStageInstanceName)
-      .build(runner);
+      .build(new UserContext(user), runner);
   }
 
   private RawSourcePreviewer createRawSourcePreviewer(

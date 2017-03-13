@@ -87,7 +87,7 @@ public class TestFailedProdRun {
     PipelineConfiguration pipelineConfiguration = MockStages.createPipelineConfigurationSourceProcessorTarget();
     pipelineConfiguration.getStages().remove(2);
     ProductionPipeline pipeline = new ProductionPipelineBuilder(PIPELINE_NAME, REVISION, conf, runtimeInfo,
-      MockStages.createStageLibrary(), runner, null).build(pipelineConfiguration);
+      MockStages.createStageLibrary(), runner, null).build(MockStages.userContext(), pipelineConfiguration);
 
 
   }
@@ -135,7 +135,7 @@ public class TestFailedProdRun {
     runner.setOffsetTracker(tracker);
     PipelineConfiguration pipelineConfiguration = MockStages.createPipelineConfigurationSourceProcessorTarget();
     ProductionPipeline pipeline = new ProductionPipelineBuilder(PIPELINE_NAME, REVISION, conf, runtimeInfo,
-      MockStages.createStageLibrary(), runner, null).build(pipelineConfiguration);
+      MockStages.createStageLibrary(), runner, null).build(MockStages.userContext(), pipelineConfiguration);
     try {
       pipeline.registerStatusListener(new TestProductionPipeline.MyStateListener());
       pipeline.run();

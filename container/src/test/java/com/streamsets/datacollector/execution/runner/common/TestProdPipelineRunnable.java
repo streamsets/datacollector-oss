@@ -179,7 +179,7 @@ public class TestProdPipelineRunnable {
     runner.setOffsetTracker(tracker);
 
     ProductionPipeline pipeline = new ProductionPipelineBuilder(TestUtil.MY_PIPELINE, "0", conf, runtimeInfo,
-      MockStages.createStageLibrary(), runner, null).build(MockStages.createPipelineConfigurationSourceProcessorTarget());
+      MockStages.createStageLibrary(), runner, null).build(MockStages.userContext(), MockStages.createPipelineConfigurationSourceProcessorTarget());
 
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.STOPPED, null, null, null, null, 0, 0);
 

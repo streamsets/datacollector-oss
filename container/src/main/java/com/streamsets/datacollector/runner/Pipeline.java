@@ -82,6 +82,7 @@ public class Pipeline {
   private final MemoryUsageCollectorResourceBundle memoryUsageCollectorResourceBundle;
   private final ResourceControlledScheduledExecutor scheduledExecutor;
   private final List<Stage.Info> stageInfos;
+  private final UserContext userContext;
   private final List<Map<String, Object>> runnerSharedMaps;
   private final Map<String, Object> runtimeConstants;
 
@@ -101,6 +102,7 @@ public class Pipeline {
       MemoryUsageCollectorResourceBundle memoryUsageCollectorResourceBundle,
       ResourceControlledScheduledExecutor scheduledExecutor,
       List<Stage.Info> stageInfos,
+      UserContext userContext,
       List<Map<String, Object>> runnerSharedMaps,
       Map<String, Object> runtimeConstants
   ) {
@@ -122,6 +124,7 @@ public class Pipeline {
     this.scheduledExecutor = scheduledExecutor;
     this.stageInfos = stageInfos;
     this.runnerSharedMaps = runnerSharedMaps;
+    this.userContext = userContext;
     this.runtimeConstants = runtimeConstants;
   }
 
@@ -258,6 +261,7 @@ public class Pipeline {
               pipelineConf,
               runner,
               stageInfos,
+              userContext,
               pipelineBean,
               originPipe.getStage(),
               runnerId,
@@ -366,6 +370,7 @@ public class Pipeline {
     private final String name;
     private final String pipelineName;
     private final String rev;
+    private final UserContext userContext;
     private final PipelineConfiguration pipelineConf;
     private Observer observer;
     private final ResourceControlledScheduledExecutor scheduledExecutor =
@@ -380,12 +385,14 @@ public class Pipeline {
         String name,
         String pipelineName,
         String rev,
+        UserContext userContext,
         PipelineConfiguration pipelineConf
     ) {
       this.stageLib = stageLib;
       this.name = name;
       this.pipelineName = pipelineName;
       this.rev = rev;
+      this.userContext = userContext;
       this.configuration = configuration;
       this.pipelineConf = pipelineConf;
       this.errors = Collections.emptyList();
@@ -426,6 +433,7 @@ public class Pipeline {
           true,
           pipelineName,
           rev,
+          userContext,
           configuration,
           0,
           new ConcurrentHashMap<>()
@@ -446,6 +454,7 @@ public class Pipeline {
           pipelineConf,
           runner,
           stageInfos,
+          userContext,
           pipelineBean,
           originRuntime,
           0,
@@ -466,6 +475,7 @@ public class Pipeline {
           false,
           pipelineName,
           rev,
+          userContext,
           configuration,
           0,
           new ConcurrentHashMap<>()
@@ -484,6 +494,7 @@ public class Pipeline {
             false,
             pipelineName,
             rev,
+            userContext,
             configuration,
             0,
             new ConcurrentHashMap<>()
@@ -509,6 +520,7 @@ public class Pipeline {
             memoryUsageCollectorResourceBundle,
             scheduledExecutor,
             stageInfos,
+            userContext,
             runnerSharedMaps,
             runtimeConstants
           );
@@ -550,6 +562,7 @@ public class Pipeline {
     PipelineConfiguration pipelineConf,
     PipelineRunner runner,
     List<Stage.Info> stageInfos,
+    UserContext userContext,
     PipelineBean pipelineBean,
     StageRuntime originRuntime,
     int runnerId,
@@ -578,6 +591,7 @@ public class Pipeline {
         true,
         pipelineName,
         rev,
+        userContext,
         configuration,
         runnerId,
         sharedRunnerMap
@@ -687,6 +701,7 @@ public class Pipeline {
     boolean addToStageInfos,
     String pipelineName,
     String pipelineRev,
+    UserContext userContext,
     Configuration configuration,
     int runnerId,
     Map<String, Object> runnerSharedMap
@@ -705,6 +720,7 @@ public class Pipeline {
         pipelineName,
         pipelineRev,
         Collections.unmodifiableList(stageInfos),
+        userContext,
         stageRuntime.getDefinition().getType(),
         runnerId,
         pipelineRunner.isPreview(),

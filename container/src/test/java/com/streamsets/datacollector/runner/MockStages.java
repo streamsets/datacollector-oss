@@ -605,6 +605,10 @@ public class MockStages {
     return createStageLibrary(Thread.currentThread().getContextClassLoader());
   }
 
+  public static UserContext userContext() {
+    return new UserContext("test-user");
+  }
+
   public static class MockStageLibraryTask implements StageLibraryTask {
     private final List<StageDefinition> stages;
 

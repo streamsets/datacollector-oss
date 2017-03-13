@@ -207,6 +207,7 @@ public class TestErrorRecord {
         runner,
         null
     ).build(
+        MockStages.userContext(),
         MockStages.createPipelineConfigurationSourceProcessorTarget()
     );
     pipeline.registerStatusListener(new TestProductionPipeline.MyStateListener());

@@ -48,7 +48,7 @@ import static org.awaitility.Awaitility.await;
 public class TestAsyncPreviewer extends TestPreviewer {
 
   protected Previewer createPreviewer() {
-    return new AsyncPreviewer(new SyncPreviewer(ID, NAME, REV, previewerListener, objectGraph),
+    return new AsyncPreviewer(new SyncPreviewer(ID, "test-user", NAME, REV, previewerListener, objectGraph),
       new SafeScheduledExecutorService(5, "preview"));
   }
 

@@ -93,6 +93,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   private final Configuration configuration;
   private final int runnerId;
   private final List<Stage.Info> pipelineInfo;
+  private final Stage.UserContext userContext;
   private final StageType stageType;
   private final boolean isPreview;
   private final MetricRegistry metrics;
@@ -152,6 +153,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
         return instanceName;
       }
     };
+    this.userContext = new UserContext("sdk-user");
     pipelineInfo = ImmutableList.of(stageInfo);
     this.stageType = stageType;
     this.runnerId = runnerId;
@@ -180,6 +182,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
       String pipelineName,
       String rev,
       List<Stage.Info> pipelineInfo,
+      Stage.UserContext userContext,
       StageType stageType,
       int runnerId,
       boolean isPreview,
@@ -196,6 +199,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
     this.pipelineName = pipelineName;
     this.rev = rev;
     this.pipelineInfo = pipelineInfo;
+    this.userContext = userContext;
     this.stageType = stageType;
     this.runnerId = runnerId;
     this.isPreview = isPreview;
@@ -333,6 +337,11 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   @Override
   public boolean isPreview() {
     return isPreview;
+  }
+
+  @Override
+  public Stage.UserContext getUserContext() {
+    return userContext;
   }
 
   @Override

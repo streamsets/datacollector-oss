@@ -420,7 +420,7 @@ public class TestProductionPipeline {
 
     ProductionPipeline pipeline =
         new ProductionPipelineBuilder(PIPELINE_NAME, REVISION, config, runtimeInfo, MockStages.createStageLibrary(), runner, null)
-            .build(pConf);
+            .build(MockStages.userContext(), pConf);
     runner.setOffsetTracker(tracker);
 
     if (captureNextBatch) {

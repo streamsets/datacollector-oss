@@ -70,6 +70,7 @@ import com.streamsets.datacollector.runner.Observer;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRunner;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
+import com.streamsets.datacollector.runner.UserContext;
 import com.streamsets.datacollector.runner.production.OffsetFileUtil;
 import com.streamsets.datacollector.runner.production.ProductionSourceOffsetTracker;
 import com.streamsets.datacollector.runner.production.RulesConfigLoaderRunnable;
@@ -738,7 +739,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         runner.setMemoryLimitConfiguration(memoryLimitConfiguration);
 
         PipelineEL.setConstantsInContext(pipelineConfiguration);
-        prodPipeline = builder.build(pipelineConfiguration, runtimeConstants);
+        prodPipeline = builder.build(new UserContext(user), pipelineConfiguration, runtimeConstants);
         prodPipeline.registerStatusListener(this);
 
         ScheduledFuture<?> metricsFuture = null;

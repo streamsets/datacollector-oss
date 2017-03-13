@@ -38,14 +38,16 @@ import javax.inject.Named;
 public class AsyncPreviewerModule {
 
   private final String id;
+  private final String user;
   private final String name;
   private final String rev;
   private final ObjectGraph objectGraph;
   private final PreviewerListener previewerListener;
 
-  public AsyncPreviewerModule(String id, String name, String rev, PreviewerListener previewerListener,
+  public AsyncPreviewerModule(String id, String user, String name, String rev, PreviewerListener previewerListener,
                               ObjectGraph objectGraph) {
     this.id = id;
+    this.user = user;
     this.name = name;
     this.rev = rev;
     this.objectGraph = objectGraph;
@@ -55,7 +57,7 @@ public class AsyncPreviewerModule {
 
   @Provides
   public SyncPreviewer providePreviewer() {
-    return new SyncPreviewer(id, name, rev, previewerListener, objectGraph);
+    return new SyncPreviewer(id, user, name, rev, previewerListener, objectGraph);
   }
 
   @Provides

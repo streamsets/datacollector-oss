@@ -24,6 +24,7 @@ import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRunner;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
+import com.streamsets.datacollector.runner.UserContext;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
@@ -79,7 +80,7 @@ public class PreviewPipelineBuilder {
     this.endStageInstanceName = endStageInstanceName;
   }
 
-  public PreviewPipeline build(PipelineRunner runner) throws PipelineRuntimeException, StageException {
+  public PreviewPipeline build(UserContext userContext, PipelineRunner runner) throws PipelineRuntimeException, StageException {
     if(endStageInstanceName != null && endStageInstanceName.trim().length() > 0) {
       List<StageConfiguration> stages = new ArrayList<>();
       Set<String> allowedOutputLanes = new HashSet<>();
@@ -125,7 +126,15 @@ public class PreviewPipelineBuilder {
       throw new PipelineRuntimeException(ContainerError.CONTAINER_0154, ValidationUtil.getFirstIssueAsString(name,
         validator.getIssues()));
     }
-     Pipeline.Builder builder = new Pipeline.Builder(stageLib, configuration, name + ":preview", name, rev, pipelineConf);
+     Pipeline.Builder builder = new Pipeline.Builder(
+       stageLib,
+       configuration,
+       name + ":preview",
+       name,
+       rev,
+       userContext,
+       pipelineConf
+     );
      Pipeline pipeline = builder.build(runner);
      if (pipeline != null) {
        return new PreviewPipeline(name, rev, pipeline, validator.getIssues());
