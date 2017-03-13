@@ -20,9 +20,6 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Destinations/RecordHeaderAttributes.dita">
-    <topicref href="../Destinations/RecordHeaderAttributes-Generating.dita"/>
-   </topicref>
   </topicref>
   <topicref href="../Destinations/AmazonS3.dita" chunk="to-content">
    <topicmeta>

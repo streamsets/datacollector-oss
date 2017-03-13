@@ -37,9 +37,8 @@
                 </dlentry>
                 <dlentry>
                     <dt>record header attributes</dt>
-                    <dd>The Hive Metadata processor adds the following header attributes to each
-                        record header and passes the records to the Hadoop FS or MapR FS
-                            destination:<ul id="ul_oj1_1ws_dw">
+                    <dd>The Hive Metadata processor adds the following attributes to each record
+                            header:<ul id="ul_oj1_1ws_dw">
                             <li>targetDirectory - The location where each record should be
                                     written.<p>The processor generates the directory based on the
                                     database, table, and partition information for each record and
@@ -62,6 +61,12 @@
                                     header. And then, use the default "roll" as the name of the
                                     header attribute. </p></li>
                         </ul></dd>
+                    <dd>For more information about using destinations to process these attributes,
+                        see <xref
+                            href="../Pipeline_Design/RecordBasedWrites-overview.dita#concept_lmn_gdc_1w"/>.
+                        For general information about record header attributes, see <xref
+                            href="../Pipeline_Design/RecordHeaderAttributes.dita#concept_wn2_jcz_dz"
+                        />. </dd>
                 </dlentry>
             </dl>
         </p>

@@ -59,5 +59,7 @@
                         header attribute as follows: <codeph>extraInfo</codeph>. </dd>
                 </dlentry>
             </dl></p>
+        <p>For more information about record header attributes, see <xref
+                href="../Pipeline_Design/RecordHeaderAttributes.dita#concept_wn2_jcz_dz"/>.</p>
     </conbody>
 </concept>

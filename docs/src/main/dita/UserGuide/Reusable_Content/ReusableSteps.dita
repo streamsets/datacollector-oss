@@ -2815,7 +2815,7 @@
                                                 record header attribute. Use only when the
                                                 avroSchema attribute is defined for all records.
                                                   <xref
-                                                  href="../Destinations/RecordHeaderAttributes.dita">
+                                                  href="../Pipeline_Design/RecordBasedWrites-overview.dita">
                                                   <image href="../Graphics/icon_moreInfo.png"
                                                   scale="10" id="image_alj_pws_nx"/></xref></li>
                                             <li>Confluent Schema Registry - Retrieve the schema from
@@ -2916,7 +2916,7 @@
                                                 record header attribute. Use only when the
                                                 avroSchema attribute is defined for all records.
                                                   <xref
-                                                  href="../Destinations/RecordHeaderAttributes.dita">
+                                                  href="../Pipeline_Design/RecordBasedWrites-overview.dita">
                                                   <image href="../Graphics/icon_moreInfo.png"
                                                   scale="10" id="image_yjw_4ws_nx"/></xref></li>
                                             <li>Confluent Schema Registry - Retrieve the schema from
@@ -3012,7 +3012,7 @@
                                                 record header attribute. Use only when the
                                                 avroSchema attribute is defined for all records.
                                                   <xref
-                                                  href="../Destinations/RecordHeaderAttributes.dita">
+                                                  href="../Pipeline_Design/RecordBasedWrites-overview.dita">
                                                   <image href="../Graphics/icon_moreInfo.png"
                                                   scale="10" id="image_dsv_nws_nx"/></xref></li>
                                             <li>Confluent Schema Registry - Retrieve the schema from
@@ -3113,7 +3113,7 @@
                                                 record header attribute. Use only when the
                                                 avroSchema attribute is defined for all records.
                                                   <xref
-                                                  href="../Destinations/RecordHeaderAttributes.dita">
+                                                  href="../Pipeline_Design/RecordBasedWrites-overview.dita">
                                                   <image href="../Graphics/icon_moreInfo.png"
                                                   scale="10" id="image_fvd_sis_nw"/></xref></li>
                                             <li>Confluent Schema Registry - Retrieve the schema from
@@ -3637,7 +3637,7 @@
                                 </row>
                                 <row id="row-DirectoryinHeader">
                                     <entry>Directory in Header <xref
-                                            href="../Destinations/RecordHeaderAttributes.dita">
+                                            href="../Pipeline_Design/RecordBasedWrites-overview.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_ydt_vvg_1w"/></xref>
                                     </entry>
@@ -3725,7 +3725,7 @@
                                 </row>
                                 <row id="row-RollAttri">
                                     <entry>Use Roll Attribute <xref
-                                            href="../Destinations/RecordHeaderAttributes.dita">
+                                            href="../Pipeline_Design/RecordBasedWrites-overview.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                             /></xref>
                                     </entry>

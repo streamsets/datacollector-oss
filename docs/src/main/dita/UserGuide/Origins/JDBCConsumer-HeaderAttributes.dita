@@ -14,14 +14,14 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_egw_d4c_kw">
- <title>JDBC Header Attributes </title>
+ <title>JDBC Record Header Attributes </title>
  <conbody>
-        <p><indexterm>JDBC Query Consumer origin<indexterm>JDBC header
-                attributes</indexterm></indexterm><indexterm>JDBC header attributes<indexterm>JDBC
-                    Query Consumer</indexterm></indexterm>The JDBC Query Consumer generates JDBC
-            header attributes that provide additional information about each record, such as the
-            original data type of a field or the source tables for the record. The origin receives
-            these details from the JDBC driver. </p>
+        <p><indexterm>JDBC Query Consumer origin<indexterm>JDBC record header
+                attributes</indexterm></indexterm><indexterm>JDBC record header
+                    attributes<indexterm>JDBC Query Consumer</indexterm></indexterm>The JDBC Query
+            Consumer generates JDBC record header attributes that provide additional information
+            about each record, such as the original data type of a field or the source tables for
+            the record. The origin receives these details from the JDBC driver. </p>
         <p
             conref="../Reusable_Content/Reusable_Topics/ReusableJDBCHeaderAttributes.dita#concept_fbf_rk2_py/functions"
             />
