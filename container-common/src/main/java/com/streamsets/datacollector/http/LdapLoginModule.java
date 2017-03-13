@@ -488,8 +488,7 @@ public class LdapLoginModule extends AbstractLoginModule
    * @return true always
    * @throws LoginException
    */
-  public boolean bindingLogin(String username, Object password)
-  {
+  public boolean bindingLogin(String username, Object password) throws Exception {
     if (StringUtils.isBlank(_userObjectClass)|| StringUtils.isBlank(_userIdAttribute)
         || StringUtils.isBlank(_userBaseDn)){
       LOG.error("Failed to get user because at least one of the following is null : " +
@@ -513,7 +512,9 @@ public class LdapLoginModule extends AbstractLoginModule
     List<String> roles = getUserRoles(username, userDn);
 
     UserInfo userInfo = new UserInfo(username, null, roles);
-    setCurrentUser(new JAASUserInfo(userInfo));
+    JAASUserInfo jaasUserInfo = new JAASUserInfo(userInfo);
+    jaasUserInfo.fetchRoles();
+    setCurrentUser(jaasUserInfo);
     setAuthenticated(true);
 
     return true;
