@@ -21,7 +21,6 @@
    <topicref href="../Origins/Origins-HTTPComparison.dita"/>
    <topicref href="../Origins/BatchSizeWaitTime.dita"/>
    <topicref href="../Origins/FileCompressionFormats.dita"/>
-   <topicref href="../Origins/FilePath_Offset.dita"/>
   <topicref href="../Origins/PreviewingRawSourceData.dita"/></topicref>
   <topicref href="../Origins/AmazonS3.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
@@ -43,6 +42,7 @@
    </topicref>
    <topicref href="../Origins/Directory-FirstFile.dita"/>
    <topicref href="../Origins/Directory-LateDir.dita"/>
+   <topicref href="../Origins/Directory-RecordHeaderAtts.dita"/>
    <topicref href="../Origins/Directory-EventGeneration.dita">
     <topicref href="../Origins/Directory-EventRecords.dita"/>
    </topicref>
@@ -58,7 +58,9 @@
    <topicref href="../Origins/FileTail-MultipleDirectories.dita"/>
    <topicref href="../Origins/FileTail-LateDirectories.dita"/>
    <topicref href="../Origins/FileTail-Patterns.dita"/>
-   <topicref href="../Origins/FileTail-TagAttribute.dita"/>
+   <topicref href="../Origins/FileTail-RecordHeaderAtts.dita">
+    <topicref href="../Origins/FileTail-TagAttribute.dita"/>
+   </topicref>
    <topicref href="../Origins/FileTail-MultipleLines.dita"/>
    <topicref href="../Origins/FileTail-Output.dita"/>
    <topicref href="../Origins/FileTail-EventGeneration.dita">
@@ -159,14 +161,15 @@
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/KConsumer-Offsets.dita"/>
    <topicref href="../Origins/KConsumer-ExistingData.dita"/>
-   <topicref href="../Origins/KConsumer-DataFormats.dita">
-    <topicref href="../Origins/LogFormats.dita"/>
-   </topicref>
    <topicref href="../Origins/KConsumer_AdditionalKProp.dita"/>
+   <topicref href="../Origins/Kafka-RecordHeaderAtts.dita"/>
    <topicref href="../Origins/KConsumer-EnablingSecurity.dita">
     <topicref href="../Origins/KafkaC-EnablingSSL.dita"/>
     <topicref href="../Origins/KafkaC-EnablingKerberos.dita"/>
     <topicref href="../Origins/KafkaC-EnablingSSLKerb.dita"/>
+   </topicref>
+   <topicref href="../Origins/KConsumer-DataFormats.dita">
+    <topicref href="../Origins/LogFormats.dita"/>
    </topicref>
    <topicref href="../Origins/KConsumer-Configuring.dita"/>
   </topicref>

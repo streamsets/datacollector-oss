@@ -75,7 +75,7 @@
                                 <uicontrol>Avro Schema Location</uicontrol> property, select
                                 <uicontrol>In Record Header</uicontrol>.</li>
                     </ul><p>For more information about using record header attributes, see <xref
-                            href="../Destinations/RecordHeaderAttributes.dita#concept_lmn_gdc_1w"
+                            href="../Pipeline_Design/RecordBasedWrites-overview.dita#concept_lmn_gdc_1w"
                         />.</p></li>
             </ol></p>
  </conbody>

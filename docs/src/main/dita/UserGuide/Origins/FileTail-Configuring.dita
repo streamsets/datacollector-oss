@@ -140,8 +140,8 @@
                                             href="FileTail-TagAttribute.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_gs4_vnx_fs"/></xref></entry>
-                                    <entry>An optional attribute defined for the record to help you
-                                        differentiate between different sets of records. </entry>
+                                    <entry>An optional record header attribute to help differentiate
+                                        between different sets of records. </entry>
                                 </row>
                                 <row>
                                     <entry>Allow Late Directories <xref

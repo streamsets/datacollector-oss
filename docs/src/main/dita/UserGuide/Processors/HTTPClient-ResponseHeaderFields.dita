@@ -28,6 +28,9 @@
                     <dd>For example, if you define "info-" as the prefix, then data in the
                         content-encoding response header field is written to the
                         "info-content-encoding" record header attribute.</dd>
+                    <dd>For general information about record header attributes, see <xref
+                            href="../Pipeline_Design/RecordHeaderAttributes.dita#concept_wn2_jcz_dz"
+                        />.</dd>
                 </dlentry>
                 <dlentry>
                     <dt>Record field</dt>

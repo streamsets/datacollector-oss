@@ -40,6 +40,19 @@
    <topicref href="../Pipeline_Design/ErrorHandling-Stage.dita"/>
    <topicref href="../Pipeline_Design/ErrorHandling-Example.dita"/>
   </topicref>
+  <topicref href="../Pipeline_Design/RecordHeaderAttributes.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Pipeline_Design/InternalAttributes.dita"/>
+   <topicref href="../Pipeline_Design/RecordHeaderAttributes-WorkingWith.dita"/>
+   <topicref href="../Pipeline_Design/Attributes-ViewinginDPreview.dita"/>
+   <topicref href="../Pipeline_Design/AttributeGeneratingStages.dita"/>
+   <topicref href="../Pipeline_Design/RecordBasedWrites-overview.dita">
+    <topicref href="../Pipeline_Design/RecordbasedWrites-GeneratingAtts.dita"/>
+   </topicref>
+  </topicref>
+  <topicref href="../Pipeline_Design/FieldAttributes.dita"/>
   <topicref href="../Pipeline_Design/CDC-Overview.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
@@ -52,7 +65,6 @@
    <topicref href="../Pipeline_Design/CDC-ProcessingRecords.dita"/>
    <topicref href="../Pipeline_Design/CDC-UseCases.dita"/>
   </topicref>
-  <topicref href="../Pipeline_Design/FieldAttributes.dita"/>
   <topicref href="../Pipeline_Design/DelimitedDataRootFieldTypes.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

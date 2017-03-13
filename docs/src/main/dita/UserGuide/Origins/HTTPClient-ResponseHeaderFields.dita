@@ -14,13 +14,14 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ccn_jzt_zw">
- <title>Response Header Fields</title>
+ <title>Response Header Fields in Header Attributes</title>
  <conbody>
-  <p><indexterm>HTTP Client origin<indexterm>request
-                headers</indexterm></indexterm><indexterm>request header fields<indexterm>HTTP
-                    Client origin</indexterm></indexterm>The HTTP Client origin includes response
-            header fields – such as Content-Encoding, Content-Type, or any custom response header
-            field – in records as record header attributes. The attribute names match the original
-            response header field name. </p>
+  <p><indexterm>HTTP Client origin<indexterm>request headers in header
+                attributes</indexterm></indexterm><indexterm>request header fields<indexterm>HTTP
+                    Client origin</indexterm></indexterm><indexterm>record header
+                    attributes<indexterm>HTTP Client origin</indexterm></indexterm>The HTTP Client
+            origin includes response header fields – such as Content-Encoding, Content-Type, or any
+            custom response header field – in records as record header attributes. The attribute
+            names match the original response header field name. </p>
  </conbody>
 </concept>

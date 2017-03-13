@@ -28,8 +28,7 @@
     <p>You can add additional Kafka configuration properties as needed. When using <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>, you can
       also configure the origin to use Kafka security features.</p>
-    <p>Kafka Consumer includes additional header attributes that enable you to include the
-      provenance of a record in the record. For more information, see <xref
-        href="FilePath_Offset.dita#concept_ljn_2h3_yv"/>. </p>
+    <p>Kafka Consumer includes record header attributes that enable you to use the origins of a
+      record in pipeline processing. </p>
  </conbody>
 </concept>

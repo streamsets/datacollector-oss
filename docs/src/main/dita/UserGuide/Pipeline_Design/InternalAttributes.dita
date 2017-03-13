@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_itf_55z_dz">
+ <title>Internal Attributes</title>
+ <conbody>
+  <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> generates
+            and updates some read-only internal record header attributes as records move from stage
+            to stage. These attributes can be viewed for debugging issues, but cannot be altered by
+            users.</p>
+        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            uses the following read-only internal record header attributes:<ul id="ul_u4t_1wz_dz">
+                <li>stageCreator - The ID of the stage that created the record.</li>
+                <li>sourceId - Source of the record. Can include different information based on the
+                    origin type.</li>
+                <li>stagesPath - List of stages that processed the record in order, by stage name. </li>
+                <li>trackingId - The route the record has taken through the pipeline, starting with
+                    the sourceId, then listing the stages that processed the record.</li>
+                <li>previousTrackingId - The tracking Id of the record before it entered the current
+                    stage.</li>
+            </ul></p>
+ </conbody>
+</concept>

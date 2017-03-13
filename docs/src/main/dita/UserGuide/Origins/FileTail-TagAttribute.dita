@@ -15,13 +15,14 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_crd_tlx_fs">
  <title>Defining and Using a Tag</title>
- <shortdesc>A tag is an optional record attribute that you can define for sets of files. In the
-  pipeline, you can use a function to return the value of the tag. </shortdesc>
+ <shortdesc>A tag is an optional record header attribute that you can define for sets of files. In
+  the pipeline, you can use a function to return the value of the tag attribute. </shortdesc>
  <conbody>
-  <p><indexterm>File Tail origin<indexterm>tag attribute</indexterm></indexterm>Define a tag so you
-   can easily reference tagged records. You can define a tag for files specified by a path. Note
-   that when you use wildcards or glob patterns in a path to represent several sets of files, those
-   files would all use the same tag.</p>
+  <p><indexterm>File Tail origin<indexterm>tag record header attribute</indexterm></indexterm>Define
+   a tag attribute so you can easily reference tagged records. Use the <uicontrol>Tag</uicontrol>
+   property to define a tag for a set of files associated with a path. Note that when you use
+   wildcards or glob patterns in a path to represent several sets of files, those files would all
+   use the same tag.</p>
   <p>In the pipeline, you can use the following expression to return the tag
    attribute:<codeblock>record:attribute('tag')</codeblock></p>
   <p>For example, when you use two different paths to tail files from two servers, you can tag the
