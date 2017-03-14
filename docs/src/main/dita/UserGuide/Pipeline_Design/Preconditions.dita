@@ -24,8 +24,9 @@
           design<indexterm>preconditions</indexterm></indexterm>When you create more than one
       precondition in a stage, a record must pass all conditions to enter the stage. You can use
       most functions, pipeline constants, and runtime properties in preconditions. </p>
-  <p>Configure preconditions as part of the overall pipeline logic or  to minimize processing
-   errors. For example, you might use the following expression to exclude records that originate
-   from outside the United States:<codeblock> ${record:value('/COUNTRY') = 'US'}</codeblock></p>
+  <p>Configure preconditions as part of the overall pipeline logic or to minimize processing errors.
+            For example, you might use the following expression to exclude records that originate
+            from outside the United
+            States:<codeblock> ${record:value('/COUNTRY') == 'US'}</codeblock></p>
  </conbody>
 </concept>

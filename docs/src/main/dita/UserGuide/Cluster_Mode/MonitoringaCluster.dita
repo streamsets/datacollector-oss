@@ -14,10 +14,11 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_fk4_gd4_1s">
- <title>Cluster Monitoring</title>
+ <title>Monitoring and Snapshot</title>
  <conbody>
-    <p><indexterm>cluster mode<indexterm>monitoring</indexterm></indexterm><indexterm>metrics and
-          alerts<indexterm>for cluster pipelines</indexterm></indexterm>The <ph
+    <p><indexterm>cluster mode<indexterm>monitoring and
+        snapshot</indexterm></indexterm><indexterm>metrics and alerts<indexterm>for cluster
+          pipelines</indexterm></indexterm>The <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console
       allows you to monitor each <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> worker. </p>
@@ -27,9 +28,10 @@
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> worker.
       For monitoring details for a <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> worker,
-      click the worker link. You can then view metrics and alerts for the worker. <note>Metric and
-        data alerts are defined for the pipeline, but triggered by individual workers.  When you
-        define a metric or data alert, each worker inherits the alert and triggers the alert based
-        on the statistics for the worker.</note></p>
+      click the worker link. You can then view metrics and alerts for the worker. </p>
+    <p>Metric and data alerts are defined for the pipeline, but triggered by individual workers.
+      When you define a metric or data alert, each worker inherits the alert and triggers the alert
+      based on the statistics for the worker.<note>You cannot take snapshots when monitoring in
+        cluster pipelines.</note></p>
   </conbody>
 </concept>

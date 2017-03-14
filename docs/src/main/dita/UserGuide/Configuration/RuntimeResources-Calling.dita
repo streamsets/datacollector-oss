@@ -21,9 +21,15 @@
  <conbody>
   <p><indexterm>runtime resources<indexterm>calling from a pipeline</indexterm></indexterm>To call a
       runtime resource, use the following syntax: </p>
-  <codeblock>runtime:loadResource(&lt;file name>, &lt;restricted: true | false>)</codeblock>
-  <p>For example, the following expression returns the password for a JDBC Query Consumer origin.
-            The file is named JDBCpassword.txt and is restricted so only the owner can read the
-            file:<codeblock>${runtime:loadResource("JDBCpassword.txt", true)</codeblock></p>
+  <codeblock>${runtime:loadResource(&lt;file name>, &lt;restricted: true | false>)}</codeblock>
+        <p>
+            <note type="tip">To strip any leading or trailing white space characters from the file,
+                add the <codeph>str:trim</codeph> function as
+                follows:<codeblock>${str:trim(runtime:loadResource(&lt;file name>, &lt;restricted: true | false>)}</codeblock></note>
+        </p>
+  <p>For example, the following expression returns the contents of the JDBCpassword.txt file,
+            stripping any leading or trailing white space characters. The file contains a password
+            and is restricted so only the owner can read the
+            file:<codeblock>${str:trim(runtime:loadResource("JDBCpassword.txt", true))}</codeblock></p>
  </conbody>
 </concept>
