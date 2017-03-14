@@ -59,15 +59,20 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.RuleDefinitionsJson;
+import com.streamsets.datacollector.restapi.bean.SourceOffsetJson;
+import com.streamsets.datacollector.runner.production.SourceOffset;
+import com.streamsets.datacollector.runner.production.SourceOffsetUpgrader;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.lib.security.http.AbstractSSOService;
 import com.streamsets.lib.security.http.DisconnectedSSOManager;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,6 +81,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -96,6 +102,9 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   private static final String DEFAULT_REMOTE_JOB_LABELS = "all";
   private static final String REMOTE_CONTROL_EVENTS_RECIPIENT = REMOTE_CONTROL + "events.recipient";
   private static final String DEFAULT_REMOTE_CONTROL_EVENTS_RECIPIENT = "jobrunner-app";
+  public static final String OFFSET = "offset";
+  public static final int OFFSET_PROTOCOL_VERSION = 2;
+
   private final RemoteDataCollector remoteDataCollector;
   private final EventClient eventSenderReceiver;
   private final MessagingJsonToFromDto jsonToFromDto;
@@ -300,6 +309,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
           jsonToFromDto.serialize(BeanHelper.wrapIssues(pipelineAndValidationStatus.getIssues())),
           pipelineAndValidationStatus.isClusterMode(),
           pipelineAndValidationStatus.getOffset(),
+          OFFSET_PROTOCOL_VERSION,
           pipelineAndValidationStatus.getAcl()
       );
       return pipelineStatusEvent;
@@ -406,11 +416,14 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
                 new TypeReference<RuleDefinitionsJson>() {
                 }
             );
+
+            SourceOffset sourceOffset = getSourceOffset(pipelineSaveEvent);
+
             remoteDataCollector.savePipeline(pipelineSaveEvent.getUser(),
                 pipelineSaveEvent.getName(),
                 pipelineSaveEvent.getRev(),
                 pipelineSaveEvent.getDescription(),
-                pipelineSaveEvent.getOffset(),
+                sourceOffset,
                 BeanHelper.unwrapPipelineConfiguration(pipelineConfigJson),
                 BeanHelper.unwrapRuleDefinitions(ruleDefinitionsJson),
                 pipelineSaveEvent.getAcl()
@@ -517,6 +530,29 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         LOG.warn(ackEventMessage, ex);
       }
       return ackEventMessage;
+    }
+
+    @Nullable
+    private SourceOffset getSourceOffset(PipelineSaveEvent pipelineSaveEvent) throws IOException {
+      String offset = pipelineSaveEvent.getOffset();
+      SourceOffset sourceOffset;
+      if (pipelineSaveEvent.getOffsetProtocolVersion() < 2) {
+        // If the offset protocol version is less than 2, convert it to a structure similar to offset.json
+        sourceOffset = new SourceOffset();
+        sourceOffset.setOffset(offset);
+      } else if (null == offset ) {
+        // First run when offset is null
+        sourceOffset = new SourceOffset(
+            SourceOffset.CURRENT_VERSION,
+            Collections.emptyMap()
+        );
+      } else {
+        // Offset exists
+        SourceOffsetJson sourceOffsetJson = ObjectMapperFactory.get().readValue(offset, SourceOffsetJson.class);
+        sourceOffset = BeanHelper.unwrapSourceOffset(sourceOffsetJson);
+      }
+      new SourceOffsetUpgrader().upgrade(sourceOffset);
+      return sourceOffset;
     }
 
     @VisibleForTesting

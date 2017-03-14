@@ -25,8 +25,8 @@ import java.util.List;
 
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
-import com.streamsets.datacollector.event.dto.SyncAclEvent;
 import com.streamsets.datacollector.event.handler.remote.PipelineAndValidationStatus;
+import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.lib.security.acl.dto.Acl;
 import com.streamsets.pipeline.api.StageException;
@@ -46,7 +46,7 @@ public interface DataCollector {
       String name,
       String rev,
       String description,
-      String offset,
+      SourceOffset offset,
       PipelineConfiguration pipelineConfiguration,
       RuleDefinitions ruleDefinitions,
       Acl acl

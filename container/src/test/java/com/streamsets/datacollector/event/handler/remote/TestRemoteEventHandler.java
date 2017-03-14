@@ -65,6 +65,7 @@ import com.streamsets.datacollector.io.DataStore;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
 import com.streamsets.datacollector.runner.MockStages;
+import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.ContainerError;
@@ -419,7 +420,7 @@ public class TestRemoteEventHandler {
         String name,
         String rev,
         String description,
-        String offset,
+        SourceOffset offset,
         PipelineConfiguration pipelineConfiguration,
         RuleDefinitions ruleDefinitions, Acl acl
     ) throws PipelineStoreException {

@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.runner.production;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.streamsets.datacollector.io.DataStore;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -85,6 +86,20 @@ public class OffsetFileUtil {
       dataStore.release();
     }
   }
+  public static void saveSourceOffset(RuntimeInfo runtimeInfo, String pipelineName, String rev, SourceOffset offset) {
+    // Assumes that the argument offset confirms to the format on disk. hence just writes it to offset file
+    LOG.debug("Saving offset {} for pipeline {}", offset, pipelineName);
+    DataStore dataStore = new DataStore(OffsetFileUtil.getPipelineOffsetFile(runtimeInfo, pipelineName, rev));
+    try (OutputStream os = dataStore.getOutputStream()) {
+      ObjectMapperFactory.get().writeValue(os, offset);
+      dataStore.commit(os);
+    } catch (IOException e) {
+      LOG.error("Failed to save offset={}. Reason {}", offset, e.toString(), e);
+      throw new IllegalStateException(e);
+    } finally {
+      dataStore.release();
+    }
+  }
 
   public static void resetOffsets(RuntimeInfo runtimeInfo, String pipelineName, String rev) {
     saveOffsets(runtimeInfo, pipelineName, rev, DEFAULT_OFFSET);
@@ -93,6 +108,15 @@ public class OffsetFileUtil {
   public static Map<String, String> getOffsets(RuntimeInfo runtimeInfo, String pipelineName, String rev) {
     SourceOffset sourceOffset = getOffsetInternal(runtimeInfo, pipelineName, rev);
     return sourceOffset == null ? DEFAULT_OFFSET : sourceOffset.getOffsets();
+  }
+
+  public static String getSourceOffset(RuntimeInfo runtimeInfo, String pipelineName, String rev) {
+    SourceOffset sourceOffset = getOffsetInternal(runtimeInfo, pipelineName, rev);
+    try {
+      return ObjectMapperFactory.get().writeValueAsString(new SourceOffsetJson(sourceOffset));
+    } catch (JsonProcessingException e) {
+      throw new IllegalStateException(Utils.format("Failed to serialize source offset : {}", e.toString(), e));
+    }
   }
 
   private static SourceOffset getOffsetInternal(RuntimeInfo runtimeInfo, String pipelineName, String rev) {

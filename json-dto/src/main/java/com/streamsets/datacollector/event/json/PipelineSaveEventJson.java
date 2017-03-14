@@ -28,6 +28,7 @@ public class PipelineSaveEventJson extends PipelineBaseEventJson {
   private String description;
   private String user;
   private String offset;
+  private int offsetProtocolVersion;
   private AclJson acl;
 
   public PipelineConfigAndRulesJson getPipelineConfigurationAndRules() {
@@ -70,5 +71,13 @@ public class PipelineSaveEventJson extends PipelineBaseEventJson {
 
   public void setAcl(AclJson acl) {
     this.acl = acl;
+  }
+
+  public int getOffsetProtocolVersion() {
+    return offsetProtocolVersion;
+  }
+
+  public void setOffsetProtocolVersion(int offsetProtocolVersion) {
+    this.offsetProtocolVersion = offsetProtocolVersion;
   }
 }

@@ -122,6 +122,7 @@ public class TestDtoJsonMapper {
         null,
         true,
         "offset",
+        2,
         acl
     );
     PipelineStatusEvents pipelineStatusEvents = new PipelineStatusEvents();

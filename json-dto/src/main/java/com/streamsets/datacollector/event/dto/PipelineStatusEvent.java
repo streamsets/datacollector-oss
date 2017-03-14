@@ -37,6 +37,7 @@ public class PipelineStatusEvent implements Event {
   private boolean isRemote;
   private boolean isClusterMode;
   private String offset;
+  private int offsetProtocolVersion = 1;
   private Acl acl;
 
   public PipelineStatusEvent() {
@@ -54,6 +55,7 @@ public class PipelineStatusEvent implements Event {
       String issues,
       boolean isClusterMode,
       String offset,
+      int offsetProtocolVersion,
       Acl acl
   ) {
     this.name = name;
@@ -68,6 +70,7 @@ public class PipelineStatusEvent implements Event {
     this.isClusterMode = isClusterMode;
     this.offset = offset;
     this.acl = acl;
+    this.offsetProtocolVersion = offsetProtocolVersion;
   }
 
   public boolean isRemote() {
@@ -165,5 +168,13 @@ public class PipelineStatusEvent implements Event {
 
   public Acl getAcl() {
     return acl;
+  }
+
+  public int getOffsetProtocolVersion() {
+    return offsetProtocolVersion;
+  }
+
+  public void setOffsetProtocolVersion(int offsetProtocolVersion) {
+    this.offsetProtocolVersion = offsetProtocolVersion;
   }
 }

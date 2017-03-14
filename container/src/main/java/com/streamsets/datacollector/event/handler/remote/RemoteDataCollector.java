@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.event.handler.remote;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
@@ -35,8 +36,11 @@ import com.streamsets.datacollector.execution.PreviewOutput;
 import com.streamsets.datacollector.execution.PreviewStatus;
 import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.execution.Runner;
+import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.restapi.bean.SourceOffsetJson;
 import com.streamsets.datacollector.runner.production.OffsetFileUtil;
+import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreTask;
@@ -45,7 +49,6 @@ import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.lib.security.acl.dto.Acl;
 import com.streamsets.pipeline.api.ExecutionMode;
-import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -56,7 +59,6 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -147,7 +149,7 @@ public class RemoteDataCollector implements DataCollector {
       String name,
       String rev,
       String description,
-      String offset,
+      SourceOffset offset,
       PipelineConfiguration pipelineConfiguration,
       RuleDefinitions ruleDefinitions,
       Acl acl
@@ -178,8 +180,7 @@ public class RemoteDataCollector implements DataCollector {
     }
     LOG.info("Offset for remote pipeline '{}:{}' is {}", name, rev, offset);
     if (offset != null) {
-      // TODO(SDC-4920): DPM Doesn't support two dimensional offset
-      OffsetFileUtil.saveOffsets(runtimeInfo, name, rev, Collections.singletonMap(Source.POLL_SOURCE_OFFSET_KEY, offset));
+      OffsetFileUtil.saveSourceOffset(runtimeInfo, name, rev, offset);
     }
   }
 
@@ -280,8 +281,7 @@ public class RemoteDataCollector implements DataCollector {
           latestState.getMessage(),
           workerInfos,
           isClusterMode,
-          // TODO(SDC-4920): DPM Doesn't support two dimensional offset
-          offset.get(Source.POLL_SOURCE_OFFSET_KEY),
+          getSourceOffset(offset),
           null
       ));
     }
@@ -313,8 +313,7 @@ public class RemoteDataCollector implements DataCollector {
   }
 
   private String getOffset(String pipelineName, String rev) {
-    // TODO(SDC-4920): DPM Doesn't support two dimensional offset
-    return OffsetFileUtil.getOffsets(runtimeInfo, pipelineName, rev).get(Source.POLL_SOURCE_OFFSET_KEY);
+    return OffsetFileUtil.getSourceOffset(runtimeInfo, pipelineName, rev);
   }
 
   @Override
@@ -433,6 +432,15 @@ public class RemoteDataCollector implements DataCollector {
   @VisibleForTesting
   List<String> getValidatorList() {
     return validatorIdList;
+  }
+
+  private String getSourceOffset(Map<String, String> offset) {
+    SourceOffset sourceOffset = new SourceOffset(SourceOffset.CURRENT_VERSION, offset);
+    try {
+      return ObjectMapperFactory.get().writeValueAsString(new SourceOffsetJson(sourceOffset));
+    } catch (JsonProcessingException e) {
+      throw new IllegalStateException(Utils.format("Failed to serialize source offset : {}", e.toString(), e));
+    }
   }
 
 }

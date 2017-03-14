@@ -27,6 +27,7 @@ public class PipelineSaveEvent extends PipelineBaseEvent {
   private PipelineConfigAndRules pipelineConfigurationAndRules;
   private String description;
   private String offset;
+  private int offsetProtocolVersion;
   private Acl acl;
 
   public PipelineSaveEvent() {
@@ -38,6 +39,14 @@ public class PipelineSaveEvent extends PipelineBaseEvent {
 
   public void setPipelineConfigurationAndRules(PipelineConfigAndRules pipelineConfigurationAndRules) {
     this.pipelineConfigurationAndRules = pipelineConfigurationAndRules;
+  }
+
+  public int getOffsetProtocolVersion() {
+    return offsetProtocolVersion;
+  }
+
+  public void setOffsetProtocolVersion(int offsetProtocolVersion) {
+    this.offsetProtocolVersion = offsetProtocolVersion;
   }
 
   public void setDescription(String description) {

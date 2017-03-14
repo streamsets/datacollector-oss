@@ -38,6 +38,7 @@ public class PipelineStatusEventJson implements EventJson {
   private Collection<WorkerInfoJson> workerInfos;
   private boolean isClusterMode;
   private String offset;
+  private int offsetProtocolVersion = 1;
   private AclJson acl;
 
   public PipelineStatusJson getPipelineStatus() {
@@ -134,5 +135,13 @@ public class PipelineStatusEventJson implements EventJson {
 
   public void setAcl(AclJson acl) {
     this.acl = acl;
+  }
+
+  public int getOffsetProtocolVersion() {
+    return offsetProtocolVersion;
+  }
+
+  public void setOffsetProtocolVersion(int offsetProtocolVersion) {
+    this.offsetProtocolVersion = offsetProtocolVersion;
   }
 }
