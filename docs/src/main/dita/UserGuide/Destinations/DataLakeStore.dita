@@ -31,6 +31,7 @@
             destination closes a file. </p>
         <p>Alternatively, you can write records to the specified directory, use the defined Avro
             schema, and roll files based on record header attributes. For more information, see
-                <xref href="../Destinations/RecordHeaderAttributes.dita#concept_lmn_gdc_1w"/>.</p>
+                <xref href="../Pipeline_Design/RecordBasedWrites-overview.dita#concept_lmn_gdc_1w"
+            />.</p>
  </conbody>
 </concept>

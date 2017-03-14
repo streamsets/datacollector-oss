@@ -147,7 +147,7 @@
                 <dd>For example, the following expression converts a Date object to a string date
                     while adjusting to the America/New_York time zone and daylight savings. It
                     expresses the date in the format, "03/30/2016 12:15:33
-                    AM":<codeblock>${time:extractStringFromDateTZ(record:value('/datetime'), 'America/New_York', 'MM-dd-yyyy hh:mm:ss a'}</codeblock></dd>
+                    AM":<codeblock>${time:extractStringFromDateTZ(record:value('/datetime'), 'America/New_York', 'MM-dd-yyyy hh:mm:ss a')}</codeblock></dd>
             </dlentry>
             <dlentry>
                 <dt>time:millisecondsToDateTime(&lt;long>)</dt>

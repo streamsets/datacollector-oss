@@ -119,16 +119,15 @@
         </dlentry>
     <dlentry>
      <dt>str:substring(&lt;string>, &lt;beginIndex>, &lt;endIndex>)</dt>
-     <dd>Returns a subset of the string value that starts with the beginIndex character and ends
-      before the endIndex character. </dd>
+     <dd>Returns a subset of the string value that starts with the beginIndex character and ends one
+            character before the endIndex. </dd>
      <dd>Uses the following arguments:<ul id="ul_pcx_4yw_1r">
        <li>string - The string that contains the return substring that you want.</li>
-       <li>beginIndex - An integer that represents the beginning position of the returned substring,
-        where 0 is the first character.</li>
-       <li>endIndex - An integer that represents one character past end position of the substring,
-        equivalent to the number of characters to return. </li>
+       <li>beginIndex - An integer that represents the beginning position of the returned substring.
+                Start the count from the left with 0. </li>
+       <li>endIndex - An integer that represents one position past the end of the substring. </li>
       </ul></dd>
-     <dd>For example, ${str:substring("Chewing Gum", 0, 4)} returns: Chew.</dd>
+     <dd>For example, ${str:substring("Chewing Gum", 0, 5)} returns: Chew.</dd>
     </dlentry>
         <dlentry>
           <dt>str:toLower(&lt;string>)</dt>

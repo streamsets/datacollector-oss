@@ -29,6 +29,25 @@
       temporarily change the Consumer Group name to a different value. Run data preview. Then,
       change the Consumer Group back to the correct value and start the pipeline.</note></dd>
    </dlentry>
+   <dlentry>
+    <dt>How can I reset the offset for a Kafka Consumer?</dt>
+    <dd>Since the offset for a Kafka Consumer is stored with the ZooKeeper for the Kafka cluster,
+     you cannot reset the offset through the <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. For
+     information about resetting an offset through Kafka, see the Apache Kafka documentation. </dd>
+   </dlentry>
+   <dlentry>
+    <dt>The Kafka Consumer with Kerberos enabled cannot connect to an HDP 2.3 distribution of
+     Kafka.</dt>
+    <dd>
+     <p>When enabling Kerberos, by default, HDP 2.3 sets the
+       <uicontrol>security.inter.broker.protocol</uicontrol> Kafka broker configuration property to
+       <codeph>PLAINTEXTSASL</codeph>, which is not supported.</p>
+     <p>To correct the issue, set <uicontrol>security.inter.broker.protocol</uicontrol> to
+       PLAINTEXT.<draft-comment author="Loretta">This is replacing a RN known limitation for
+       SDC-1731</draft-comment></p>
+    </dd>
+   </dlentry>
   </dl>
  </conbody>
 </concept>

@@ -51,8 +51,8 @@
                 <cmd>Click the <wintitle>Expressions</wintitle> tab.</cmd>
             </step>
             <step>
-                <cmd>Click the <uicontrol>Add</uicontrol> icon twice and configure the properties as
-                    follows:</cmd>
+                <cmd>Configure the following <uicontrol>Field Expression</uicontrol>
+                    properties:</cmd>
                 <info>
                     <simpletable frame="all" id="simpletable_xdm_rcr_ps">
                         <sthead>
@@ -70,12 +70,6 @@
                 <info>Since we're using "n/a" as a constant for the expression, we don't need to use
                     the dollar sign and brackets for the expression. But if we wanted to use them,
                     we could define them as ${'credit_card_type'} and ${'N/A'}. </info>
-            </step>
-            <step>
-                <cmd>Since we don't need to change header attributes, use the
-                        <uicontrol>Subtract</uicontrol> icon (<image
-                        href="../Graphics/icon_ConfigSubtractIcon.png" id="image_arx_p5p_15"
-                        scale="55"/>) to delete the default header attribute expression. </cmd>
             </step>
             <step>
                 <cmd>Link the Expression Evaluator to the Hadoop FS destination. </cmd>
