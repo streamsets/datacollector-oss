@@ -129,6 +129,7 @@ public class HiveQueryExecutor extends BaseExecutor {
       //Get and validate connection before each query execution
       //to make sure we don't have stale connection
       try (Statement st = config.hiveConfigBean.getHiveConnection().createStatement()){
+        LOG.debug("Executing Query {}", query);
         st.execute(query);
         //Query Successful
         HiveQueryExecutorEvents.successfulQuery.create(getContext()).with(HiveQueryExecutorEvents.QUERY_EVENT_FIELD, query).createAndSend();
