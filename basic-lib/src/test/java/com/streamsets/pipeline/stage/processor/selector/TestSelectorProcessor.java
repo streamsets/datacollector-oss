@@ -32,12 +32,14 @@ import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class TestSelectorProcessor {
 
@@ -176,6 +178,49 @@ public class TestSelectorProcessor {
     }
   }
 
+  @Test
+  public void testSelectWithTime() throws Exception {
+    ProcessorRunner runner = new ProcessorRunner.Builder(SelectorDProcessor.class)
+        .setOnRecordError(OnRecordError.DISCARD)
+        .addConfiguration("lanePredicates",
+            createLanePredicates(
+            "a", "${record:value('') > time:extractDateFromString('2015-04-23', 'yyyy-MM-dd')}",
+            "b", "default"))
+        .addOutputLane("a")
+        .addOutputLane("b")
+        .build();
+
+    runner.runInit();
+    try {
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+      // force tests use GMT, so they work anywhere in the world with hard coded dates.
+      sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+      Date dt0 = sdf.parse("2014-04-22");
+      Record r0 = RecordCreator.create();
+      r0.set(Field.createDate(dt0));
+
+      Date dt1 = sdf.parse("2016-05-29");
+      Record r1 = RecordCreator.create();
+      r1.set(Field.createDate(dt1));
+
+      List<Record> input = ImmutableList.of(r0, r1);
+      StageRunner.Output output = runner.runProcess(input);
+
+      Assert.assertEquals(ImmutableSet.of("a", "b"), output.getRecords().keySet());
+
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      String ans = sdf.format(output.getRecords().get("a").get(0).get().getValue());
+      Assert.assertEquals("2016-05-29", ans);
+
+      Assert.assertEquals(1, output.getRecords().get("b").size());
+      ans = sdf.format(output.getRecords().get("b").get(0).get().getValue());
+      Assert.assertEquals("2014-04-22", ans);
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
   @Test
   public void testSelectError() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SelectorDProcessor.class)

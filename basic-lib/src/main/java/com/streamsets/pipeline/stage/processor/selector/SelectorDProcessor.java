@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DProcessor;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 
 import java.util.List;
 import java.util.Map;
@@ -52,7 +53,7 @@ public class SelectorDProcessor extends DProcessor {
       displayPosition = 10,
       group = "CONDITIONS",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      elDefs = {RecordEL.class}
+      elDefs = {RecordEL.class, TimeNowEL.class}
   )
   @PredicateModel
   public List<Map<String, String>> lanePredicates;
