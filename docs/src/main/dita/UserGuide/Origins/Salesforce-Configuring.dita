@@ -119,6 +119,30 @@
                                         Salesforce.</entry>
                                 </row>
                                 <row>
+                                    <entry>Repeat Query <xref href="Salesforce-RepeatQuery.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_fxy_vkw_2z"
+                                        /></xref></entry>
+                                    <entry>Determines whether the origin runs the query more than
+                                        once. Available when the origin processes existing data and
+                                        is not subscribed to notifications. Uses one of the
+                                        following properties:<ul id="ul_zkg_qkw_2z">
+                                            <li>Repeat Full Query - Repeats the query using the
+                                                initial offset in each query. </li>
+                                            <li>Repeat Incremental Query - Repeats the query using
+                                                the initial offset for the first query and then
+                                                using the last-saved offset for subsequent
+                                                queries.</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Query Interval</entry>
+                                    <entry>Amount of time to wait between queries. Enter an
+                                        expression based on a unit of time. You can use SECONDS,
+                                        MINUTES, or HOURS. <p>Default is 1 minute: ${1 * MINUTES}.
+                                        </p></entry>
+                                </row>
+                                <row>
                                     <entry>Initial Offset</entry>
                                     <entry>Offset value to use when the pipeline starts.<p>Default
                                             is <codeph>000000000000000</codeph>.</p></entry>

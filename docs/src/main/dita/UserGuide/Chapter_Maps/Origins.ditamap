@@ -275,6 +275,7 @@
     <topicref href="../Origins/Salesforce-SOQLQuery.dita"/>
     <topicref href="../Origins/Salesforce-QueryExample.dita"/>
    </topicref>
+   <topicref href="../Origins/Salesforce-RepeatQuery.dita"/>
    <topicref href="../Origins/Salesforce-Subscribe.dita">
     <topicref href="../Origins/Salesforce-SubscribeRecordFormat.dita"/>
    </topicref>
