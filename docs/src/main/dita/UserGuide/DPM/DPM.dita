@@ -37,14 +37,16 @@
             individual pipelines in a development <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
             The data engineer then publishes the finished pipelines to <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>. A
-            DevOps or site reliability engineer adds published pipelines to jobs and then starts the
-            jobs across multiple <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>. </p>
+        <p>A DevOps or site reliability engineer adds published pipelines to jobs and then starts
+            the jobs across multiple <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s,
             running a remote pipeline instance on each <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
             Data architects map the related jobs into a single visual topology, and then use the
-            topology to monitor and measure the complete dataflow.</p>
+            topology to monitor and measure the complete dataflow. DevOps engineers create data SLAs
+            (service level agreements) for topologies to define thresholds that the dataflows cannot
+            exceed, ensuring that data is delivered in a timely manner.</p>
         <p>Let’s take a closer look at what data architects, data engineers, and DevOps engineers
             can accomplish with <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
