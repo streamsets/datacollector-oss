@@ -23,6 +23,7 @@
             <topicref href="../DPM/ManageJobOrchestration.dita"/>
             <topicref href="../DPM/MapJobsTopology.dita"/>
             <topicref href="../DPM/MeasureQuality.dita"/>
+            <topicref href="../DPM/MasterOperations.dita"/>
         </topicref>
         <topicref href="../DPM/WorkingWithDPM.dita" chunk="to-content">
             <topicmeta><shortdesc></shortdesc></topicmeta>

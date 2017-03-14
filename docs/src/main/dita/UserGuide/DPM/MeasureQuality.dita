@@ -21,12 +21,12 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. </shortdesc>
  <conbody>
         <p><draft-comment author="alisontaylor">text copied from same topic in DPM User Guide. Make
-                the same updates in both places. </draft-comment>As a data architect, you can
-            measure the health of the topology and the performance of all jobs and connecting
-            systems included in the topology. <ph
+                the same updates in both places. </draft-comment>As a data architect or as a DevOps
+            or site reliability engineer, you can measure the health of the topology and the
+            performance of all jobs and connecting systems included in the topology. <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
-            monitoring provides real-time statistics, error information, and alerts about the
-            running pipelines. </p>
+            monitoring provides real-time statistics and error information about the running
+            pipelines. </p>
         <p>For example, the Summary tab of the Customer 360 topology provides a single view into the
             record count and throughput for all running pipelines in the topology:</p>
         <p><image href="../Graphics/DPM_MeasureQualityTopology.png" scale="55" id="image_hv1_ctq_fx"
@@ -45,9 +45,5 @@
             displays metrics for the selected job:</p>
         <p><image href="../Graphics/DPM_MeasureQualityJob.png" scale="55" id="image_ylz_ptq_fx"
             /></p>
-        <p>We've seen how you can use DPM to turn a high-level architecture diagram of your
-            dataflows into pipelines and jobs that you can then manage and measure from a single
-            topology. Give it a try, and see for yourself how easy DPM has made it to map, measure,
-            and master your data in motion.</p>
     </conbody>
 </concept>
