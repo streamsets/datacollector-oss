@@ -32,12 +32,17 @@
             value is a value within the offset field where you want the Salesforce origin to start
             reading. </p>
         <p>If you configure the origin to query existing data but not to subscribe to notifications,
-            the pipeline stops when it finishes reading all data from the Salesforce object. If you
-            start the pipeline again, the origin uses the initial offset value to start reading,
-            reading the entire set of existing data again. If the pipeline stops before it finishes
-            reading all data, the Salesforce origin saves the last read offset value. When the
-            pipeline starts again, the origin uses the last read offset value to continue processing
-            from where it stopped. You can reset the origin to process all requested objects. </p>
+            you can configure the origin to run the query once or to repeat the query. When running
+            the query once, the pipeline stops when it finishes reading all data from the Salesforce
+            object. If you start the pipeline again, the origin uses the initial offset value to
+            start reading, reading the entire set of existing data again. </p>
+        <p>If the pipeline stops before it finishes reading all data, the Salesforce origin saves
+            the last read offset value. When the pipeline starts again, the origin uses the last
+            read offset value to continue processing from where it stopped. You can reset the origin
+            to process all requested objects. When you configure the origin to run the query more
+            than once, the pipeline runs continuously so it can repeat the query at regular
+            intervals. You can choose how the origin repeats the query. For more information, see
+                <xref href="Salesforce-RepeatQuery.dita#concept_owv_nj5_2z"/>.</p>
         <p>When the origin is configured to subscribe to notifications, the pipeline runs
             continuously so that it can receive changed events. If you configure the origin to both
             query existing data and to subscribe to notifications, the origin first subscribes for
