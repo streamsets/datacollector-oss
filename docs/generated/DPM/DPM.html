@@ -43,14 +43,17 @@
             flow through multiple systems. A data engineer uses this high-level design to develop
             individual pipelines in a development <span class="ph">Data
                   Collector</span>.
-            The data engineer then publishes the finished pipelines to <span class="ph">DPM</span>. A
-            DevOps or site reliability engineer adds published pipelines to jobs and then starts the
-            jobs across multiple <span class="ph">Data
+            The data engineer then publishes the finished pipelines to <span class="ph">DPM</span>. </p>
+
+        <p class="p">A DevOps or site reliability engineer adds published pipelines to jobs and then starts
+            the jobs across multiple <span class="ph">Data
                   Collector</span>s,
             running a remote pipeline instance on each <span class="ph">Data
                   Collector</span>.
             Data architects map the related jobs into a single visual topology, and then use the
-            topology to monitor and measure the complete dataflow.</p>
+            topology to monitor and measure the complete dataflow. DevOps engineers create data SLAs
+            (service level agreements) for topologies to define thresholds that the dataflows cannot
+            exceed, ensuring that data is delivered in a timely manner.</p>
 
         <p class="p">Let’s take a closer look at what data architects, data engineers, and DevOps engineers
             can accomplish with <span class="ph">DPM</span>.</p>
@@ -214,11 +217,11 @@
         accustomed to seeing for pipelines within <span class="ph">Data
                   Collector</span>. </p>
 
-        <p class="p">As a data architect, you can
-            measure the health of the topology and the performance of all jobs and connecting
-            systems included in the topology. <span class="ph">DPM</span>
-            monitoring provides real-time statistics, error information, and alerts about the
-            running pipelines. </p>
+        <p class="p">As a data architect or as a DevOps
+            or site reliability engineer, you can measure the health of the topology and the
+            performance of all jobs and connecting systems included in the topology. <span class="ph">DPM</span>
+            monitoring provides real-time statistics and error information about the running
+            pipelines. </p>
 
         <p class="p">For example, the Summary tab of the Customer 360 topology provides a single view into the
             record count and throughput for all running pipelines in the topology:</p>
@@ -241,12 +244,51 @@
 
         <p class="p"><img class="image" id="concept_sx5_zds_bx__image_ylz_ptq_fx" src="../Graphics/DPM_MeasureQualityJob.png" height="536" width="748" /></p>
 
-        <p class="p">We've seen how you can use DPM to turn a high-level architecture diagram of your
-            dataflows into pipelines and jobs that you can then manage and measure from a single
-            topology. Give it a try, and see for yourself how easy DPM has made it to map, measure,
-            and master your data in motion.</p>
-
     </div>
+
+</div>
+<div class="topic concept nested1" id="concept_xvp_x2x_fz">
+ <h2 class="title topictitle2">Master Dataflow Operations</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">As a DevOps or site reliability engineer, you can master your day-to-day operations by
+        defining data SLAs (service level agreements) to ensure that incoming data meets business
+        requirements for availability and accuracy.</p>
+
+  <p class="p">
+            
+        </p>
+
+        <p class="p">In addition to measuring the health of a topology, you define data SLAs to define the
+            expected thresholds of the data throughput rate or the error record rate. Data SLAs
+            trigger an alert when the specified threshold is reached. Data SLA alerts provide
+            immediate feedback on the data processing rates expected by your team. They enable you
+            to master your dataflow operations by quickly investigating and resolving issues that
+            arise.</p>
+
+        <p class="p">For example, you have service level agreements with the operational analytics team to
+            ensure that all of the data captured and processed in the Customer 360 topology is clean
+            and available for immediate analysis. If any of the Customer 360 jobs encounter
+            processing errors, you must immediately resolve those issues. You define and activate a
+            data SLA that triggers an alert when a job in the topology encounters more than 100
+            error records per second. </p>
+
+        <p class="p">If the alert triggers, DPM notifies you with a red Notifications icon in the top toolbar:
+                <img class="image" id="concept_xvp_x2x_fz__image_gk1_rfx_fz" src="../Graphics/icon_Notifications.png" height="16" width="14" />.
+            You drill into the details of the data SLA to discover which threshold was reached and
+            to investigate the issues that need to be resolved. The triggered data SLA displays a
+            graph of the error record rate. The red line in the graph represents the defined
+            threshold, as follows:</p>
+
+        <p class="p"><img class="image" id="concept_xvp_x2x_fz__image_xyw_rfx_fz" src="../Graphics/DPM_MasterOperations.png" height="354" width="680" /></p>
+
+        <p class="p">We've seen how you can use <span class="ph">DPM</span> to
+            turn a high-level architecture diagram of your dataflows into pipelines and jobs that
+            you can then manage and measure from a single topology. Give it a try, and see for
+            yourself how easy <span class="ph">DPM</span> has
+            made it to map, measure, and master your data in motion.</p>
+
+ </div>
 
 </div>
 </div>

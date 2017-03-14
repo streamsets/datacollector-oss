@@ -1,0 +1,644 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="Record header attributes are attributes in record headers that you can use in pipeline logic, as needed. Some stages create record header attributes for a particular purpose. For example, CDC-enabled ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Record Header Attributes" /><meta name="DC.Relation" scheme="URI" content="../Pipeline_Design/PipelineDesign_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_wn2_jcz_dz" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Record Header Attributes</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+            
+            var prefix = "../index.html";
+            
+            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../Pipeline_Design/PipelineDesign_title.html" title="Pipeline Concepts and Design">Pipeline Concepts and Design</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../Pipeline_Design/PipelineDesign_title.html" title="Pipeline Concepts and Design"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Concepts and Design</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_wn2_jcz_dz">
+    <h1 class="title topictitle1">Record Header Attributes</h1>
+
+    <div class="body conbody">
+        <p class="p">Record
+            header attributes are attributes in record headers that you can use in pipeline logic,
+            as needed.</p>
+
+        <p class="p">Some stages create record header attributes for a particular purpose. For example, <a class="xref" href="CDC-Overview.html#concept_iws_mhd_ty">CDC-enabled origins</a> include the
+            CRUD operation type in the sdc.operation.type record header attribute. This enables
+            CRUD-enabled destinations to determine the operation type to use when processing
+            records. Similarly, the Hive Metadata processor generates record header attributes that
+            some destinations can use as part of the <a class="xref" href="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_phk_bdf_2w">Drift
+                Synchronization Solution for Hive</a>. </p>
+
+        <p class="p">Other stages include processing-related information in record header attributes for
+            general use. For example, <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_zrl_mhn_lx">event-generating stages</a> include the event type in record header attributes
+            in case you want to process the event based on that information. And several origins
+            include information such as the originating file name, location, or partition for each
+            record.</p>
+
+        <p class="p">You can use certain processors to create or update record header attributes. For example,
+            you can use an Expression Evaluator to create attributes for <a class="xref" href="RecordHeaderAttributes.html#concept_lmn_gdc_1w">record-based
+                writes</a>. </p>
+
+        <p class="p">The inclusion of attributes in record headers does not require using them in the
+            pipeline. You can, for example, use the CDC-enabled Salesforce origin in a non-CDC
+            pipeline and ignore the CDC record header attributes that are automatically
+            generated.</p>
+
+        <p class="p">When writing data to destinations, record header attributes are preserved with the record
+            only when you write data using the SDC Record data format. To preserve the information
+            when using other data formats, use the Expression Evaluator to copy information from
+            record header attributes to record fields.</p>
+
+    </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_itf_55z_dz">
+ <h2 class="title topictitle2">Internal Attributes</h2>
+
+ <div class="body conbody">
+  <p class="p"><span class="ph">Data
+                  Collector</span> generates
+            and updates some read-only internal record header attributes as records move from stage
+            to stage. These attributes can be viewed for debugging issues, but cannot be altered by
+            users.</p>
+
+        <div class="p"><span class="ph">Data
+                  Collector</span>
+            uses the following read-only internal record header attributes:<ul class="ul" id="concept_itf_55z_dz__ul_u4t_1wz_dz">
+                <li class="li">stageCreator - The ID of the stage that created the record.</li>
+
+                <li class="li">sourceId - Source of the record. Can include different information based on the
+                    origin type.</li>
+
+                <li class="li">stagesPath - List of stages that processed the record in order, by stage name. </li>
+
+                <li class="li">trackingId - The route the record has taken through the pipeline, starting with
+                    the sourceId, then listing the stages that processed the record.</li>
+
+                <li class="li">previousTrackingId - The tracking Id of the record before it entered the current
+                    stage.</li>
+
+            </ul>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_rd2_ghz_dz">
+ <h2 class="title topictitle2">Creating and Updating Header Attributes</h2>
+
+ <div class="body conbody">
+  <p class="p">Some stages
+            automatically create record header attributes. Others can be quickly configured to
+            create record header attributes. For example, the JDBC Query Consumer has an option on
+            the Advanced tab to create JDBC header attributes. </p>
+
+        <p class="p">You can also use the Expression Evaluator or any scripting processor to create or update
+            record header attributes. You can use these processors to create or update header
+            attributes for downstream stages. For example, the MongoDB destination requires a CRUD
+            operation to be specified in a record header attribute. If the origin providing the data
+            does not generate that information automatically, you can use the Expression Evaluator
+            or scripting processor to set the attribute value.</p>
+
+        <div class="p">The expression language includes <a class="xref" href="../Expression_Language/Functions.html#concept_p1z_ggv_1r" title="Use record functions to determine information about a record, such as the stage that created it or whether a field exists in the record.">record:attribute functions</a> that you can use to work with attributes. <div class="note important"><span class="importanttitle">Important:</span> Record header attributes do not have field paths. When using an
+                attribute in an expression, use just the attribute name, surrounded by quotation
+                marks since attributes are strings, as
+                follows:<pre class="pre codeblock"> ${record:attribute('&lt;attribute name&gt;')}</pre>
+</div>
+</div>
+
+        <p class="p">For example, the following Expression Evaluator adds the file and offset record header
+            attributes created by the Directory origin to the record: </p>
+
+        <p class="p"><img class="image" id="concept_rd2_ghz_dz__image_prx_fn3_yv" src="../Graphics/Origins-EEval-headerattributes.png" height="289" width="588" /></p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_t1l_xwf_2z">
+ <h2 class="title topictitle2">Viewing Attributes in Data Preview</h2>
+
+ <div class="body conbody">
+        <p class="p"><span class="ph">You can use data preview to view the record header attributes
+                associated with a record at any given point in the pipeline. To view record header
+                attributes, enable the Show Record/Field Header data preview property.</span></p>
+
+        <p class="p">For example, the following image shows a record generated by the
+            Directory origin in data preview. </p>
+
+        <p class="p"><img class="image" id="concept_t1l_xwf_2z__d39708e116" src="../Reusable_Content/Reusable_Topics/../../Graphics/HeaderAttribute-Preview.png" height="241" width="335" /></p>
+
+        <p class="p"><span class="ph">The "Record Header" list displays the set of
+                read-only internal attributes in the record at this point of the pipeline.</span>
+            <span class="ph">The header attributes under "values" are the
+                attributes created by the Directory origin.</span></p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_ih1_3f1_2z">
+ <h2 class="title topictitle2">Attribute-Generating Stages</h2>
+
+ <div class="body conbody">
+  <div class="p">The following table lists the stages that generate record header attributes to enable special
+                processing:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_ih1_3f1_2z__table_hzf_lf1_2z" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="30%" id="d236205e203">Stage</th>
+
+                            <th class="entry" valign="top" width="70%" id="d236205e206">Description</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d236205e203 ">Amazon S3 origin</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d236205e206 ">Can be configured to include system-defined and user-defined
+                                    object metadata in record header attributes.
+                                <a class="xref" href="../Origins/AmazonS3.html#concept_inh_qjx_yw">
+                                    <img class="image" id="concept_ih1_3f1_2z__image_kjt_3m4_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d236205e203 ">Directory origin</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d236205e206 ">Includes <span class="ph">information about the
+                    origins of the record</span> in record header attributes.
+                                <a class="xref" href="../Origins/Directory.html#concept_tlj_3g1_2z">
+                                    <img class="image" id="concept_ih1_3f1_2z__image_cy1_jm4_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
+                                <p class="p">Includes event header attributes when generating
+                                        events.
+                                            <a class="xref" href="../Origins/Directory.html#concept_z2k_b3n_qx"> <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a> </p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d236205e203 ">File Tail origin</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d236205e206 ">Includes <span class="ph">information about the
+                    origins of the record</span>
+                                <a class="xref" href="../Origins/FileTail.html#concept_tlj_3g1_2z" title="A tag is an optional record header attribute that you can define for sets of files. In the pipeline, you can use a function to return the value of the tag attribute.">
+                                    <img class="image" id="concept_ih1_3f1_2z__image_j1n_ycv_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a><p class="p">Can be configured to use
+                                    tag attributes for sets of files. <a class="xref" href="../Origins/FileTail.html#concept_crd_tlx_fs" title="A tag is an optional record header attribute that you can define for sets of files. In the pipeline, you can use a function to return the value of the tag attribute.">
+                                        <img class="image" id="concept_ih1_3f1_2z__image_it5_k2v_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></p>
+<p class="p">Includes event
+                                    header attributes when generating events. <a class="xref" href="../Origins/FileTail.html#concept_hwr_yn2_px">
+                                        <img class="image" id="concept_ih1_3f1_2z__image_tqw_k2v_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d236205e203 ">HTTP Client origin</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d236205e206 ">Includes response header fields in record header attributes.<a class="xref" href="../Origins/HTTPClient.html#concept_ccn_jzt_zw">
+                                    <img class="image" id="concept_ih1_3f1_2z__image_wsz_k2v_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d236205e203 ">JDBC Multitable Consumer origin</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d236205e206 ">Includes table and data type information in record header
+                                attributes. <a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_xrx_11y_4y">
+                                    <img class="image" id="concept_ih1_3f1_2z__image_ezd_l2v_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d236205e203 ">JDBC Query Consumer origin</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d236205e206 ">Can be configured to include table and data type information in
+                                record header attributes. <a class="xref" href="../Origins/JDBCConsumer.html#concept_egw_d4c_kw">
+                                    <img class="image" id="concept_ih1_3f1_2z__image_wfh_l2v_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a><p class="p">Includes the CRUD operation
+                                    type in the sdc.operation.type record header attribute when
+                                    reading change capture data from Microsoft SQL Server. <a class="xref" href="../Origins/JDBCConsumer.html#concept_bnh_hry_ty">
+                                        <img class="image" id="concept_ih1_3f1_2z__image_nnl_l2v_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d236205e203 ">Kafka Consumer origin</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d236205e206 ">Includes information about the origins of the record in record
+                                header attributes. <a class="xref" href="../Origins/KConsumer.html#concept_tlj_3g1_2z">
+                                    <img class="image" id="concept_ih1_3f1_2z__image_mgp_l2v_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d236205e203 ">MongoDB Oplog origin</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d236205e206 ">Includes CRUD information in CDC header attributes. <a class="xref" href="../Origins/MongoDBOplog.html#concept_isy_thx_ty">
+                                    <img class="image" id="concept_ih1_3f1_2z__image_xts_l2v_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d236205e203 ">MySQL Binary Log origin</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d236205e206 ">Includes the CRUD operation type in the sdc.operation.type header
+                                attribute. <a class="xref" href="../Origins/MySQLBinaryLog.html#concept_rfd_15l_dy">
+                                    <img class="image" id="concept_ih1_3f1_2z__image_orv_l2v_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d236205e203 ">Oracle CDC Client origin</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d236205e206 ">Includes CRUD and CDC information in record header attributes.
+                                    <a class="xref" href="../Origins/OracleCDC.html#concept_x4h_m42_5y"> <img class="image" id="concept_ih1_3f1_2z__image_ep2_xcv_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a><p class="p">Includes event header
+                                    attributes when generating events. <a class="xref" href="../Origins/OracleCDC.html#concept_cbz_sz1_vy">
+                                        <img class="image" id="concept_ih1_3f1_2z__image_asz_wcv_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d236205e203 ">Salesforce origin</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d236205e206 ">Includes Salesforce information about the origins of the record
+                                in record header attributes. <a class="xref" href="../Origins/Salesforce.html#concept_psx_1wg_cy" title="The Salesforce origin generates Salesforce record header attributes that provide additional information about each record, such as the source objects for the record. The origin receives these details from Salesforce.">
+                                    <img class="image" id="concept_ih1_3f1_2z__image_rkv_wcv_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a><p class="p">Includes the CRUD operation
+                                    type in the sdc.operation.type header attribute. <a class="xref" href="../Origins/Salesforce.html#concept_yns_y2m_5y">
+                                        <img class="image" id="concept_ih1_3f1_2z__image_z4s_wcv_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d236205e203 ">Expression Evaluator processor</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d236205e206 ">Can be configured to create or update record header attributes.
+                                    <a class="xref" href="../Processors/Expression.html#concept_qf3_mfq_f5">
+                                    <img class="image" id="concept_ih1_3f1_2z__image_fxq_144_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d236205e203 ">Groovy Evaluator processor</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d236205e206 ">
+                                <p class="p">Can be configured to create or update record header attributes.
+                                        <a class="xref" href="../Processors/Groovy.html#concept_uw4_kqw_1y">
+                                        <img class="image" id="concept_ih1_3f1_2z__image_k22_wcv_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></p>
+
+                                <p class="p">Includes event header attributes when generating events. <a class="xref" href="../Processors/Groovy.html#concept_qcz_ssq_1y">
+                                        <img class="image" id="concept_ih1_3f1_2z__image_jkm_m2v_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></p>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d236205e203 ">Hive Metadata processor</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d236205e206 ">Generates record header attributes for record-based writes as
+                                part of the <a class="xref" href="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_phk_bdf_2w">Drift Synchronization Solution for Hive</a>. <a class="xref" href="../Processors/HiveMetadata.html#concept_g3p_sss_dw">
+                                    <img class="image" id="concept_ih1_3f1_2z__image_u1j_m2v_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d236205e203 ">HTTP Client processor</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d236205e206 ">Includes response header fields in record header attributes.
+                                    <a class="xref" href="../Processors/HTTPClient.html#concept_ekz_wrz_zw">
+                                    <img class="image" id="concept_ih1_3f1_2z__image_fqg_m2v_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d236205e203 ">JavaScript Evaluator processor</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d236205e206 ">Can be configured to create or update record header attributes.
+                                    <a class="xref" href="../Processors/JavaScript.html#concept_sh1_khh_cy">
+                                    <img class="image" id="concept_ih1_3f1_2z__image_r5p_xc4_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a><p class="p">Includes event header
+                                    attributes when generating events. <a class="xref" href="../Processors/JavaScript.html#concept_sh1_khh_cy">
+                                        <img class="image" id="concept_ih1_3f1_2z__image_oyt_xc4_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d236205e203 ">Jython Evaluator processor</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d236205e206 ">Can be configured to create or update record header attributes.
+                                    <a class="xref" href="../Processors/Jython.html#concept_s2k_qhh_cy">
+                                    <img class="image" id="concept_ih1_3f1_2z__image_z4j_byn_lw" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a><p class="p">Includes event header
+                                    attributes when generating events. <a class="xref" href="../Processors/Jython.html#concept_zhd_chh_cy">
+                                        <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></p>
+</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d236205e203 ">Hadoop FS destination</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d236205e206 ">Includes event header attributes when generating events.
+                                <a class="xref" href="../Destinations/HadoopFS-destination.html#concept_dmx_1ln_qx">
+                                    <img class="image" id="concept_ih1_3f1_2z__image_tkv_m44_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d236205e203 ">Hive Metastore destination</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d236205e206 ">Includes event header attributes when generating events.
+                                <a class="xref" href="../Destinations/HiveMetastore.html#concept_x4p_fyc_rx">
+                                    <img class="image" id="concept_ih1_3f1_2z__image_b11_n44_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d236205e203 ">Local FS destination</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d236205e206 ">Includes event header attributes when generating events.
+                                <a class="xref" href="../Destinations/LocalFS.html#concept_tyc_scc_rx">
+                                    <img class="image" id="concept_ih1_3f1_2z__image_ksd_n44_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d236205e203 ">MapR FS destination</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d236205e206 ">Includes event header attributes when generating events.
+                                <a class="xref" href="../Destinations/MapRFS.html#concept_z15_qcc_rx">
+                                    <img class="image" id="concept_ih1_3f1_2z__image_vk3_n44_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d236205e203 ">HDFS File Metadata executor</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d236205e206 ">Includes event header attributes when generating events.
+                                <a class="xref" href="../Executors/HDFSMetadata.html#concept_omr_3tk_rx">
+                                    <img class="image" id="concept_ih1_3f1_2z__image_lbm_n44_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d236205e203 ">Hive Query executor</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d236205e206 ">Includes event header attributes when generating events.
+                                <a class="xref" href="../Executors/HiveQuery.html#concept_iwg_r2p_my">
+                                    <img class="image" id="concept_ih1_3f1_2z__image_myq_n44_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d236205e203 ">MapReduce executor</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d236205e206 ">Includes event header attributes when generating events.
+                                <a class="xref" href="../Executors/MapReduce.html#concept_vjr_cn5_sx">
+                                    <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_lmn_gdc_1w">
+    <h2 class="title topictitle2">Record Header Attributes for Record-Based Writes</h2>
+
+    <div class="body conbody">
+        <p class="p">Destinations can use information in record header
+            attributes to write data. Destinations that write Avro data can use Avro schemas in the
+            record header. The Hadoop FS and MapR FS destinations can use record header attributes
+            to determine the directory to write to and when to roll a file as part of the Drift
+            Synchronization Solution for Hive. For more information, see <a class="xref" href="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_phk_bdf_2w">Drift Synchronization Solution for Hive</a>. </p>
+
+        <p class="p">To use a record header attribute, configure the destination to use the header attribute
+            and ensure that the records include the header attribute.</p>
+
+        <p class="p"><span class="ph">The Hive Metadata processor automatically generates record
+                        header attributes for Hadoop FS and MapR FS to use as part of the Drift
+                        Synchronization Solution for Hive. For all other destinations, you can use
+                        the Expression Evaluator or a scripting processor to add record header
+                        attributes.</span>
+        </p>
+
+        <div class="p">You can use the following record header attributes in destinations:
+            <dl class="dl">
+                
+                    <dt class="dt dlterm">targetDirectory attribute in the Azure Data Lake Store, Hadoop FS, Local FS,
+                        and MapR FS destinations</dt>
+
+                    <dd class="dd">The targetDirectory record header attribute defines the directory where the
+                        record is written. If the directory does not exist, the destination creates
+                        the directory. The targetDirectory header attribute replaces the Directory
+                        Template property in the destination.</dd>
+
+                    <dd class="dd">When you use targetDirectory to provide the directory, the time basis
+                        configured for the destination is used only for determining whether a record
+                        is late. Time basis is not used to determine the output directories to
+                        create or to write records to directories.</dd>
+
+                    <dd class="dd">To use the targetDirectory header attribute, on the
+                            <span class="keyword wintitle">Output</span> tab, select <span class="ph uicontrol">Directory in
+                            Header</span>.</dd>
+
+                
+                
+                    <dt class="dt dlterm">avroSchema attribute in destinations that write Avro data</dt>
+
+                    <dd class="dd">The avroSchema header attribute defines the Avro schema for the record. When
+                        you use this header attribute, you cannot define an Avro schema to use in
+                        the destination. </dd>
+
+                    <dd class="dd">To use the avroSchema header attribute, on the <span class="keyword wintitle">Data
+                            Format</span> tab, select the <span class="ph uicontrol">Avro</span> data
+                        format, and then for the <span class="ph uicontrol">Avro Schema Location</span>
+                        property, select <span class="ph uicontrol">In Record Header</span>.</dd>
+
+                
+                
+                    <dt class="dt dlterm">roll attribute in the Azure Data Lake Store, Hadoop FS, Local FS, and MapR
+                        FS destinations</dt>
+
+                    <dd class="dd">The roll attribute, when present in the record header, triggers a roll of
+                        the file. </dd>
+
+                    <dd class="dd">You can define the name of the roll header attribute. When you use the Hive
+                        Metadata processor to generate the roll header attribute, use the default
+                        "roll" attribute name. When you use an Expression Evaluator, use the name of
+                        the roll attribute that you defined in the processor.</dd>
+
+                    <dd class="dd">To use a roll header attribute, on the <span class="keyword wintitle">Output</span> tab,
+                        select <span class="ph uicontrol">Use Roll Attribute</span> and define the name of the
+                        attribute. </dd>
+
+                
+            </dl>
+</div>
+
+    </div>
+
+<div class="topic concept nested2" id="concept_th5_3zj_mw">
+    <h3 class="title topictitle3">Generating Attributes for Record-Based Writes</h3>
+
+    <div class="body conbody">
+        <p class="p">You can use the Hive Metadata processor, the
+            Expression Evaluator, or a scripting processor to generate record header attributes for
+            record-based writes. <span class="ph">The Hive Metadata processor automatically generates record
+                        header attributes for Hadoop FS and MapR FS to use as part of the Drift
+                        Synchronization Solution for Hive. For all other destinations, you can use
+                        the Expression Evaluator or a scripting processor to add record header
+                        attributes.</span></p>
+
+        <div class="p">To use the Expression Evaluator or scripting processor, you must generate record header
+            attributes as expected by the destination. Use the following guidelines to generate
+            record header attributes:<dl class="dl">
+                
+                    <dt class="dt dlterm">Generating the target directory</dt>
+
+                    <dd class="dd">When using the Expression Evaluator or scripting processor to generate the
+                        target directory, note the following details:</dd>
+
+                    <dd class="dd">
+                        <ul class="ul" id="concept_th5_3zj_mw__ul_i1l_xyj_mw">
+                            <li class="li">The destination expects the directory in a header attribute named
+                                "targetDirectory".</li>
+
+                            <li class="li">
+                                <p class="p">The destination uses the directory exactly as written in the
+                                    targetDirectory header attribute. Unlike directory templates,
+                                    the directory specified in the targetDirectory attribute should
+                                    not include any components that require evaluation, such as
+                                    constants, variables, or runtime properties. </p>
+
+                            </li>
+
+                            <li class="li">
+                                <p class="p">When you define the expression that evaluates to a directory, you
+                                    can use any valid component, including expressions that evaluate
+                                    data in the record. </p>
+
+                            </li>
+
+                        </ul>
+
+                    </dd>
+
+                    <dd class="dd">
+                        <p class="p">For example, you want to write records to different directories based on
+                            the <span class="ph">Data
+                  Collector</span> that runs the pipeline, and the region and store ID where the
+                            transaction took place. You can set up a runtime resource named DIR that
+                            defines the base for the directory and define DIR for each <span class="ph">Data
+                  Collector</span> that runs the pipeline. Then, you can use the following expression in
+                            the Expression Evaluator to define the targetDirectory attribute: </p>
+
+                        <pre class="pre">${runtime:conf('DIR')/transactions/${record.value('/region')}/${record.value('/storeID')}</pre>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Generating the Avro schema</dt>
+
+                    <dd class="dd">When using the Expression Evaluator or a scripting processor to generate the
+                        Avro schema, note the following details: <ul class="ul" id="concept_th5_3zj_mw__ul_kx1_4ql_nw">
+                            <li class="li">The destination expects the Avro schema in a header attribute named
+                                "avroSchema".</li>
+
+                            <li class="li">Use the standard Avro schema format, for example:
+                                <pre class="pre codeblock">{"type":"record","name":"table_name","namespace":"database_name",
+"fields":[{"name":"int_val","type":["null","int"],"default":null},
+{"name":"str_val","type":["null","string"],"default":null}]}</pre>
+</li>
+
+                            <li class="li">The database name and table name must be included in the Avro
+                                schema.</li>
+
+                        </ul>
+</dd>
+
+                    <dd class="dd">
+                        <div class="note tip"><span class="tiptitle">Tip:</span> You might use an Avro schema generator to help generate the
+                            Avro schema. </div>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Generating the roll attribute</dt>
+
+                    <dd class="dd">When using the Expression Evaluator or scripting processor to generate the
+                        roll attribute, note the following details: <ul class="ul" id="concept_th5_3zj_mw__ul_a23_hnc_pw">
+                            <li class="li">Use any name for the attribute and specify the attribute name in the
+                                destination. </li>
+
+                            <li class="li">Configure an expression that defines when to roll files.</li>
+
+                        </ul>
+</dd>
+
+                
+            </dl>
+</div>
+
+        <div class="p">To define these record header attributes in the Expression Evaluator, perform the
+            following steps:<ol class="ol" id="concept_th5_3zj_mw__ol_jww_k31_cw">
+                <li class="li">On the <span class="keyword wintitle">Expressions</span> tab of the Expression Evaluator, specify
+                    the <span class="ph uicontrol">Header Attribute</span> name. <p class="p">To generate a target
+                        directory, use <samp class="ph codeph">targetDirectory</samp>. </p>
+<p class="p">To generate an Avro
+                        schema, use <samp class="ph codeph">avroSchema</samp>.</p>
+<p class="p">You can use any name for a
+                        roll indicator header attribute.</p>
+</li>
+
+                <li class="li">For the <span class="ph uicontrol">Header Attribute Expression</span>, define the
+                    expression that evaluates to the information you want the destination to use.
+                </li>
+
+            </ol>
+</div>
+
+        <p class="p">For information about generating record header attributes with scripting processors, see
+            the scripting processor documentation.</p>
+
+    </div>
+
+</div>
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Pipeline_Design/PipelineDesign_title.html" title="Pipeline Concepts and Design"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Concepts and Design</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>
