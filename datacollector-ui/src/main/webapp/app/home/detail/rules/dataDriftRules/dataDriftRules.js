@@ -37,6 +37,10 @@ angular
           labelMap[outputLane] = stageInstance.uiInfo.label + ' Output Stream ' + (index + 1);
         });
 
+        angular.forEach(stageInstance.eventLanes, function(eventLane, index) {
+          labelMap[eventLane] = stageInstance.uiInfo.label + ' Event Stream ' + (index + 1);
+        });
+
         return labelMap;
       }, {}),
 
@@ -59,7 +63,7 @@ angular
           resolve: {
             laneName: function () {
               if ($scope.selectedType === pipelineConstant.LINK) {
-                return $scope.selectedObject.outputLane;
+                return $scope.selectedObject.outputLane || $scope.selectedObject.eventLane;
               } else {
                 var firstStage = stageInstances.length ? stageInstances[0] : undefined;
                 return firstStage && firstStage.outputLanes && firstStage.outputLanes.length ?
@@ -167,7 +171,7 @@ angular
       getFilteredDataDriftRules: function() {
         if ($scope.selectedType === pipelineConstant.LINK) {
           return _.filter($scope.pipelineRules.driftRuleDefinitions, function(rule) {
-            return rule.lane === $scope.selectedObject.outputLane;
+            return (rule.lane === $scope.selectedObject.outputLane || rule.lane === $scope.selectedObject.eventLane);
           });
         } else {
           return $scope.pipelineRules.driftRuleDefinitions;
@@ -200,9 +204,10 @@ angular
 
   })
 
-  .controller('CreateDataDriftRuleModalInstanceController', function ($scope, $modalInstance, $translate, $timeout,
-                                                                 pipelineService, laneName, rulesElMetadata, fieldPaths,
-                                                                 streamLabelMap, alertTextElMetadata) {
+  .controller('CreateDataDriftRuleModalInstanceController', function (
+    $scope, $modalInstance, $translate, $timeout, pipelineService, laneName, rulesElMetadata, fieldPaths,
+    streamLabelMap, alertTextElMetadata
+  ) {
 
     angular.extend($scope, {
       showLoading: false,
@@ -255,9 +260,10 @@ angular
     $scope.$broadcast('show-errors-check-validity');
   })
 
-  .controller('EditDataDriftRuleModalInstanceController', function ($scope, $modalInstance, $translate, pipelineService,
-                                                               $timeout, dataDriftRuleDefn, rulesElMetadata, fieldPaths,
-                                                               streamLabelMap, alertTextElMetadata) {
+  .controller('EditDataDriftRuleModalInstanceController', function (
+    $scope, $modalInstance, $translate, pipelineService, $timeout, dataDriftRuleDefn, rulesElMetadata, fieldPaths,
+    streamLabelMap, alertTextElMetadata
+  ) {
 
     angular.extend($scope, {
       showLoading: false,
