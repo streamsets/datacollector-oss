@@ -381,7 +381,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     originPipe.prepareBatchContext(batchContext);
 
     // Since the origin owns the threads in PushSource, need to re-populate the PipelineEL on every batch
-    PipelineEL.setConstantsInContext(pipelineConfiguration);
+    PipelineEL.setConstantsInContext(pipelineConfiguration, originPipe.getStage().getContext().getUserContext());
 
     // Run batch listeners
     for (BatchListener batchListener : batchListenerList) {

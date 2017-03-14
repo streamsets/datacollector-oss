@@ -80,7 +80,7 @@ public class SyncPreviewer implements Previewer {
   private static final int MAX_SOURCE_PREVIEW_SIZE_DEFAULT = 4*1024;
 
   private final String id;
-  private final String user;
+  private final UserContext userContext;
   private final String name;
   private final String rev;
   private final PreviewerListener previewerListener;
@@ -101,7 +101,7 @@ public class SyncPreviewer implements Previewer {
     ObjectGraph objectGraph
   ) {
     this.id = id;
-    this.user = user;
+    this.userContext = new UserContext(user);
     this.name = name;
     this.rev = rev;
     this.previewerListener = previewerListener;
@@ -285,13 +285,13 @@ public class SyncPreviewer implements Previewer {
     batchSize = Math.min(maxBatchSize, batchSize);
     int maxBatches = configuration.get(MAX_BATCHES_KEY, MAX_BATCHES_DEFAULT);
     PipelineConfiguration pipelineConf = pipelineStore.load(name, rev);
-    PipelineEL.setConstantsInContext(pipelineConf);
+    PipelineEL.setConstantsInContext(pipelineConf, userContext);
     batches = Math.min(maxBatches, batches);
     SourceOffsetTracker tracker = new PreviewSourceOffsetTracker(Collections.<String, String>emptyMap());
     PreviewPipelineRunner runner = new PreviewPipelineRunner(name, rev, runtimeInfo, tracker, batchSize, batches,
       skipTargets);
     return new PreviewPipelineBuilder(stageLibrary, configuration, name, rev, pipelineConf, endStageInstanceName)
-      .build(new UserContext(user), runner);
+      .build(userContext, runner);
   }
 
   private RawSourcePreviewer createRawSourcePreviewer(

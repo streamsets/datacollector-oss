@@ -135,7 +135,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   private final ObjectGraph objectGraph;
   private final String name;
   private final String rev;
-  private final String user;
+  private final UserContext userContext;
   private String token;
 
   /*Mutex objects to synchronize start and stop pipeline methods*/
@@ -175,7 +175,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   public StandaloneRunner(String user, String name, String rev, ObjectGraph objectGraph) {
     this.name = name;
     this.rev = rev;
-    this.user = user;
+    this.userContext = new UserContext(user);
     this.objectGraph = objectGraph;
     this.errorListeners = new ArrayList<>();
     objectGraph.inject(this);
@@ -189,7 +189,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   public void prepareForDataCollectorStart() throws PipelineStoreException, PipelineRunnerException {
     PipelineStatus status = getState().getStatus();
     try {
-      MDC.put(LogConstants.USER, user);
+      MDC.put(LogConstants.USER, userContext.getUser());
       MDC.put(LogConstants.ENTITY, name);
       LOG.info("Pipeline " + name + " with rev " + rev + " is in state: " + status);
       String msg = null;
@@ -243,7 +243,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   @Override
   public void onDataCollectorStart() throws PipelineException, StageException {
     try {
-      MDC.put(LogConstants.USER, user);
+      MDC.put(LogConstants.USER, userContext.getUser());
       MDC.put(LogConstants.ENTITY, name);
       PipelineState pipelineState = getState();
       PipelineStatus status = pipelineState.getStatus();
@@ -289,7 +289,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   @Override
   public void onDataCollectorStop() throws PipelineStoreException, PipelineRunnerException {
     try {
-      MDC.put(LogConstants.USER, user);
+      MDC.put(LogConstants.USER, userContext.getUser());
       MDC.put(LogConstants.ENTITY, name);
       if (getState().getStatus() == PipelineStatus.RETRY) {
         LOG.info("Pipeline '{}'::'{}' is in retry", name, rev);
@@ -332,7 +332,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
 
   @Override
   public String getUser() {
-    return user;
+    return userContext.getUser();
   }
 
   @Override
@@ -413,7 +413,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     if(batchSize <= 0) {
       throw new PipelineRunnerException(ContainerError.CONTAINER_0107, batchSize);
     }
-    SnapshotInfo snapshotInfo = snapshotStore.create(user, name, rev, snapshotName, snapshotLabel);
+    SnapshotInfo snapshotInfo = snapshotStore.create(userContext.getUser(), name, rev, snapshotName, snapshotLabel);
     prodPipeline.captureSnapshot(snapshotName, batchSize, batches);
     return snapshotInfo.getId();
   }
@@ -574,7 +574,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         }
       }
       pipelineState =
-        pipelineStateStore.saveState(user, name, rev, toStatus, message, attributes, ExecutionMode.STANDALONE,
+        pipelineStateStore.saveState(userContext.getUser(), name, rev, toStatus, message, attributes, ExecutionMode.STANDALONE,
           metricString, retryAttempt, nextRetryTimeStamp);
       if (toStatus == PipelineStatus.RETRY) {
         retryFuture = scheduleForRetries(runnerExecutor);
@@ -738,8 +738,8 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         runner.setDeliveryGuarantee(pipelineConfigBean.deliveryGuarantee);
         runner.setMemoryLimitConfiguration(memoryLimitConfiguration);
 
-        PipelineEL.setConstantsInContext(pipelineConfiguration);
-        prodPipeline = builder.build(new UserContext(user), pipelineConfiguration, runtimeConstants);
+        PipelineEL.setConstantsInContext(pipelineConfiguration, userContext);
+        prodPipeline = builder.build(userContext, pipelineConfiguration, runtimeConstants);
         prodPipeline.registerStatusListener(this);
 
         ScheduledFuture<?> metricsFuture = null;
