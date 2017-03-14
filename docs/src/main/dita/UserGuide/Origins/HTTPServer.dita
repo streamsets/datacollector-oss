@@ -27,7 +27,7 @@
             from multiple HTTP clients. Before you configure the origin, perform additional steps to
             configure the HTTP clients. </p>
         <p>When you configure the HTTP Server origin, you specify the maximum number of concurrent
-            requests to determine how many theads to use. You also define the listening port,
+            requests to determine how many threads to use. You also define the listening port,
             application ID, and the maximum message size. You can optionally enable HTTPS. </p>
         <p>
             <note type="tip"><ph

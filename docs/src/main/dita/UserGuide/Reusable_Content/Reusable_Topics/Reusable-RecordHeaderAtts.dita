@@ -21,7 +21,7 @@
                 Attribute-Generating Stages</draft-comment>The File Tail origin <ph id="1st-ph"
                 >creates record header attributes that include <ph id="ph-def">information about the
                     origins of the record</ph>.</ph>
-            <ph id="functions-ph">You can use record:attribute functions to use the atrribute
+            <ph id="functions-ph">You can use record:attribute functions to use the attribute
                 information in pipeline processing.</ph>
             <ph id="Crossref-ph">For more information about record header attributes, see <xref
                     href="../../Pipeline_Design/RecordHeaderAttributes.dita#concept_wn2_jcz_dz"

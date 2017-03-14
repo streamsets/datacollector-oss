@@ -53,8 +53,8 @@
             all properties as if you are starting the pipeline for the first time - processing all
             requested files before continuing to the active file. </p>
 
-        <p class="p">File Tail includes additional header attributes that enable you to include the provenance
-            of a record in the record. For more information, see <a class="xref" href="Origins_overview.html#concept_ljn_2h3_yv" title="The Directory, File Tail, and Kafka Consumer origins include record header attributes for each record. To track the provenance of each record, you can use a function to include this information in the records.">Record Header Attributes</a>. </p>
+        <p class="p">File Tail includes record header attributes that enable you to use the origins of a
+            record in pipeline processing. </p>
 
         <p class="p">The origin can also generate events for an event
                   stream. For more information about the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Event Framework Overview</a>. </p>
@@ -222,22 +222,50 @@
   <p class="p">For example, the following properties process data in files named
    weblog_&lt;yyyy&gt;-&lt;mm&gt;-&lt;dd&gt;.json and add a "webservers" tag attribute to each record:</p>
 
-  <p class="p"><img class="image" id="concept_d5j_vrx_fs__image_plp_y2d_gs" src="../Graphics/FileTail-Properties.png" height="139" width="520" /></p>
+  <p class="p"><img class="image" id="concept_d5j_vrx_fs__image_plp_y2d_gs" src="../Graphics/FileTail-Properties.png" height="173" width="650" /></p>
 
  </div>
 
 </div>
-<div class="topic concept nested1" id="concept_crd_tlx_fs">
- <h2 class="title topictitle2">Defining and Using a Tag</h2>
+<div class="topic concept nested1" id="concept_tlj_3g1_2z">
+ <h2 class="title topictitle2">Record Header Attributes</h2>
+
+ <div class="body conbody">
+        <p class="p">The
+            File Tail origin <span class="ph">creates record header attributes that include <span class="ph" id="concept_tlj_3g1_2z__d26485e19">information about the
+                    origins of the record</span>.</span>
+            <span class="ph">You can use record:attribute functions to use the attribute
+                information in pipeline processing.</span>
+            <span class="ph">For more information about record header attributes, see <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_wn2_jcz_dz">Record Header Attributes</a>.</span></p>
+
+        <div class="p">The File Tail origin <span class="ph">creates the following record header
+                attributes:</span><ul class="ul" id="concept_tlj_3g1_2z__ul_yxl_hl1_2z">
+                <li class="li">filename - Provides the name of the file where the record originated.</li>
+
+                <li class="li">file - Provides the file path and file name where the record originated.</li>
+
+                <li class="li">offset - Provides the file offset in bytes. The file offset is the location in
+                    the file where the record originated.</li>
+
+            </ul>
+</div>
+
+        <p class="p">The origin can also generate a tag attribute.</p>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_crd_tlx_fs">
+ <h3 class="title topictitle3">Defining and Using a Tag</h3>
 
  
- <div class="body conbody"><p class="shortdesc">A tag is an optional record attribute that you can define for sets of files. In the
-  pipeline, you can use a function to return the value of the tag. </p>
+ <div class="body conbody"><p class="shortdesc">A tag is an optional record header attribute that you can define for sets of files. In
+  the pipeline, you can use a function to return the value of the tag attribute. </p>
 
-  <p class="p">Define a tag so you
-   can easily reference tagged records. You can define a tag for files specified by a path. Note
-   that when you use wildcards or glob patterns in a path to represent several sets of files, those
-   files would all use the same tag.</p>
+  <p class="p">Define
+   a tag attribute so you can easily reference tagged records. Use the <span class="ph uicontrol">Tag</span>
+   property to define a tag for a set of files associated with a path. Note that when you use
+   wildcards or glob patterns in a path to represent several sets of files, those files would all
+   use the same tag.</p>
 
   <div class="p">In the pipeline, you can use the following expression to return the tag
    attribute:<pre class="pre codeblock">record:attribute('tag')</pre>
@@ -252,6 +280,7 @@
 
  </div>
 
+</div>
 </div>
 <div class="topic concept nested1" id="concept_mzk_w4v_js">
  <h2 class="title topictitle2">Multiple Line Processing</h2>
@@ -355,9 +384,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d154465e478">Field</th>
+                            <th class="entry" valign="top" width="30%" id="d154579e526">Field</th>
 
-                            <th class="entry" valign="top" width="70%" id="d154465e481">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d154579e529">Description</th>
 
                         </tr>
 
@@ -365,30 +394,30 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d154465e478 ">fileName</td>
+                            <td class="entry" valign="top" width="30%" headers="d154579e526 ">fileName</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d154465e481 ">Name of the file.</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="30%" headers="d154465e478 ">inode</td>
-
-                            <td class="entry" valign="top" width="70%" headers="d154465e481 ">Index information for the file.</td>
+                            <td class="entry" valign="top" width="70%" headers="d154579e529 ">Name of the file.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d154465e478 ">time</td>
+                            <td class="entry" valign="top" width="30%" headers="d154579e526 ">inode</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d154465e481 ">Time that the event occurred.</td>
+                            <td class="entry" valign="top" width="70%" headers="d154579e529 ">Index information for the file.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d154465e478 ">event </td>
+                            <td class="entry" valign="top" width="30%" headers="d154579e526 ">time</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d154465e481 ">Event that generated the record. Uses one of the following
+                            <td class="entry" valign="top" width="70%" headers="d154579e529 ">Time that the event occurred.</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d154579e526 ">event </td>
+
+                            <td class="entry" valign="top" width="70%" headers="d154579e529 ">Event that generated the record. Uses one of the following
                                     values:<ul class="ul" id="concept_hwr_yn2_px__ul_nhc_p42_px">
                                     <li class="li">START - File Tail started processing the specified
                                         file.</li>
@@ -556,9 +585,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d154465e753">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d154579e801">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d154465e756">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d154579e804">Description</th>
 
                                 </tr>
 
@@ -566,34 +595,34 @@
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d154465e753 ">Name</td>
+       <td class="entry" valign="top" width="30%" headers="d154579e801 ">Name</td>
 
-       <td class="entry" valign="top" width="70%" headers="d154465e756 ">Stage name.</td>
-
-      </tr>
-
-                                <tr>
-       <td class="entry" valign="top" width="30%" headers="d154465e753 ">Description</td>
-
-       <td class="entry" valign="top" width="70%" headers="d154465e756 ">Optional description.</td>
+       <td class="entry" valign="top" width="70%" headers="d154579e804 ">Stage name.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d154465e753 ">Produce Events <a class="xref" href="FileTail.html#concept_gwn_c32_px">
+       <td class="entry" valign="top" width="30%" headers="d154579e801 ">Description</td>
+
+       <td class="entry" valign="top" width="70%" headers="d154579e804 ">Optional description.</td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d154579e801 ">Produce Events <a class="xref" href="FileTail.html#concept_gwn_c32_px">
                                             <img class="image" id="task_unq_wdw_yq__image_plp_tp2_px" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d154465e756 ">Generates event records when events occur. Use for event
+                                    <td class="entry" valign="top" width="70%" headers="d154579e804 ">Generates event records when events occur. Use for event
         handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
-         <img class="image" id="task_unq_wdw_yq__d24850e103" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+         <img class="image" id="task_unq_wdw_yq__d25011e103" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d154465e753 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-         <img class="image" id="task_unq_wdw_yq__d24850e112" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d154579e801 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+         <img class="image" id="task_unq_wdw_yq__d25011e112" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d154465e756 ">Error record handling for the stage: <ul class="ul" id="task_unq_wdw_yq__d24850e116">
+       <td class="entry" valign="top" width="70%" headers="d154579e804 ">Error record handling for the stage: <ul class="ul" id="task_unq_wdw_yq__d25011e116">
          <li class="li">Discard - Discards the record.</li>
 
          <li class="li">Send to Error - Sends the record to the pipeline for error handling.</li>
@@ -622,9 +651,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="27.77777777777778%" id="d154465e855">File Property</th>
+                                    <th class="entry" valign="top" width="27.77777777777778%" id="d154579e903">File Property</th>
 
-                                    <th class="entry" valign="top" width="72.22222222222221%" id="d154465e858">Description</th>
+                                    <th class="entry" valign="top" width="72.22222222222221%" id="d154579e906">Description</th>
 
                                 </tr>
 
@@ -632,9 +661,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d154465e855 ">Maximum Batch Size</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d154579e903 ">Maximum Batch Size</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d154465e858 ">Maximum number of lines to include in a batch. Honors
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d154579e906 ">Maximum number of lines to include in a batch. Honors
                                         values up to the <span class="ph">Data
                   Collector</span> maximum batch size. <p class="p">Default is 1000. The <span class="ph">Data
                   Collector</span> default is 1000.</p>
@@ -643,27 +672,27 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d154465e855 ">Batch Wait Time (secs) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d154579e903 ">Batch Wait Time (secs) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
                                             <img class="image" id="task_unq_wdw_yq__image_ulc_2fm_cr" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d154465e858 ">Number of seconds to wait before sending a batch.</td>
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d154579e906 ">Number of seconds to wait before sending a batch.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d154465e855 ">File to Tail</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d154579e903 ">File to Tail</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d154465e858 ">Directories and sets of files to process. Click the
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d154579e906 ">Directories and sets of files to process. Click the
                                             <span class="ph uicontrol">Add</span> icon to enter additional sets
                                         of information. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d154465e855 ">Path <a class="xref" href="FileTail.html#concept_cyz_kr4_1s" title="File Tail can read sets of files in different directories. When File Tail processes different sets of files, it merges all data in the pipeline. If you need to separate the records later, you can use the tag record attribute.">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d154579e903 ">Path <a class="xref" href="FileTail.html#concept_cyz_kr4_1s" title="File Tail can read sets of files in different directories. When File Tail processes different sets of files, it merges all data in the pipeline. If you need to separate the records later, you can use the tag record attribute.">
                                             <img class="image" id="task_unq_wdw_yq__image_prq_1zx_mv" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d154465e858 ">Full path to the active file to tail. <p class="p">You can use
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d154579e906 ">Full path to the active file to tail. <p class="p">You can use
                                             wildcards to define glob patterns. Do not use multiple
                                             wildcards in a row. The path before the wildcard must
                                             exist unless you enable reading from late
@@ -673,19 +702,19 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d154465e855 ">Naming <a class="xref" href="FileTail.html#concept_trt_thq_5r" title="File Tail processes the active file and archived files based on how the source server generates files. When you specify the naming convention for archived files, File Tail determines the file generation method and processes the data accordingly.">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d154579e903 ">Naming <a class="xref" href="FileTail.html#concept_trt_thq_5r" title="File Tail processes the active file and archived files based on how the source server generates files. When you specify the naming convention for archived files, File Tail determines the file generation method and processes the data accordingly.">
                                             <img class="image" id="task_unq_wdw_yq__image_ckc_4ks_2s" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d154465e858 ">Naming convention for archived files. Select the naming
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d154579e906 ">Naming convention for archived files. Select the naming
                                         convention that describes how the server generates file
                                         names.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d154465e855 ">Pattern</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d154579e903 ">Pattern</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d154465e858 ">Regular expression that defines the file name pattern
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d154579e906 ">Regular expression that defines the file name pattern
                                         used to create files. <p class="p">You can use UNIX-style wildcards,
                                             such as an asterisk or question mark. </p>
 <p class="p">Available
@@ -696,9 +725,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d154465e855 ">First File</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d154579e903 ">First File</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d154465e858 ">Name of the first file to process when you start the
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d154579e906 ">Name of the first file to process when you start the
                                         pipeline. Use a name that uses the file name pattern. Leave
                                         empty to read all files in the directory with the specified
                                         naming convention.<p class="p">When you enter a file name, File Tail
@@ -711,19 +740,19 @@ When you restart a stopped pipeline, File Tail
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d154465e855 ">Tag <a class="xref" href="FileTail.html#concept_crd_tlx_fs" title="A tag is an optional record attribute that you can define for sets of files. In the pipeline, you can use a function to return the value of the tag.">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d154579e903 ">Tag <a class="xref" href="FileTail.html#concept_crd_tlx_fs" title="A tag is an optional record header attribute that you can define for sets of files. In the pipeline, you can use a function to return the value of the tag attribute.">
                                             <img class="image" id="task_unq_wdw_yq__image_gs4_vnx_fs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d154465e858 ">An optional attribute defined for the record to help you
-                                        differentiate between different sets of records. </td>
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d154579e906 ">An optional record header attribute to help differentiate
+                                        between different sets of records. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d154465e855 ">Allow Late Directories <a class="xref" href="FileTail.html#concept_xcd_dxw_mv" title="You can configure File Tail to read files in late directories - directories that appear after the pipeline starts.">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d154579e903 ">Allow Late Directories <a class="xref" href="FileTail.html#concept_xcd_dxw_mv" title="You can configure File Tail to read files in late directories - directories that appear after the pipeline starts.">
                                             <img class="image" id="task_unq_wdw_yq__image_cxt_zfx_mv" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d154465e858 ">Allows reading files from directories that appear after
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d154579e906 ">Allows reading files from directories that appear after
                                         the pipeline starts. When enabled, the origin does not
                                         validate the file path. </td>
 
@@ -746,9 +775,9 @@ When you restart a stopped pipeline, File Tail
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d154465e1029">Post Processing Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d154579e1077">Post Processing Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d154465e1032">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d154579e1080">Description</th>
 
                                 </tr>
 
@@ -756,9 +785,9 @@ When you restart a stopped pipeline, File Tail
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d154465e1029 ">File Post Processing</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d154579e1077 ">File Post Processing</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d154465e1032 ">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d154579e1080 ">
                                         <div class="p">The action taken after processing a file: <ul class="ul" id="task_unq_wdw_yq__ul_gyx_nfp_1s">
                                                 <li class="li">None - Keeps the file in place.</li>
 
@@ -775,9 +804,9 @@ When you restart a stopped pipeline, File Tail
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d154465e1029 ">Archive Directory</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d154579e1077 ">Archive Directory</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d154465e1032 ">Directory for archived files. </td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d154579e1080 ">Directory for archived files. </td>
 
                                 </tr>
 
@@ -798,9 +827,9 @@ When you restart a stopped pipeline, File Tail
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d154465e1098">Data Format Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d154579e1146">Data Format Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d154465e1101">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d154579e1149">Description</th>
 
                                 </tr>
 
@@ -808,10 +837,10 @@ When you restart a stopped pipeline, File Tail
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d154465e1098 ">Data Format <a class="xref" href="FileTail.html#concept_pm4_b3q_5r" title="When you use an origin to read log data, you define the format of the log files to be read.">
+                                    <td class="entry" valign="top" width="30%" headers="d154579e1146 ">Data Format <a class="xref" href="FileTail.html#concept_pm4_b3q_5r" title="When you use an origin to read log data, you define the format of the log files to be read.">
                                             <img class="image" id="task_unq_wdw_yq__image_zjl_jz3_vx" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d154465e1101 ">Format of data in the file. Use one of the following
+                                    <td class="entry" valign="top" width="70%" headers="d154579e1149 ">Format of data in the file. Use one of the following
                                             options:<ul class="ul" id="task_unq_wdw_yq__ul_akl_jz3_vx">
                                             <li class="li">JSON</li>
 
@@ -836,14 +865,14 @@ When you restart a stopped pipeline, File Tail
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_unq_wdw_yq__d24837e1431" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_unq_wdw_yq__d24998e1431" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d154465e1162">JSON Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d154579e1210">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d154465e1165">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d154579e1213">Description</th>
 
                                 </tr>
 
@@ -851,10 +880,10 @@ When you restart a stopped pipeline, File Tail
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d154465e1162 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_unq_wdw_yq__d24850e541" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d154579e1210 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_unq_wdw_yq__d25011e541" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d154465e1165 ">The compression format of the files:<ul class="ul" id="task_unq_wdw_yq__d24850e545">
+       <td class="entry" valign="top" width="70%" headers="d154579e1213 ">The compression format of the files:<ul class="ul" id="task_unq_wdw_yq__d25011e545">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -870,20 +899,20 @@ When you restart a stopped pipeline, File Tail
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d154465e1162 ">File Name Pattern within Compressed Directory</td>
+       <td class="entry" valign="top" width="30%" headers="d154579e1210 ">File Name Pattern within Compressed Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d154465e1165 ">File name pattern that represents the files to process within the compressed
+       <td class="entry" valign="top" width="70%" headers="d154579e1213 ">File name pattern that represents the files to process within the compressed
         directory. You can use UNIX-style wildcards, such as an asterisk or question mark. For
         example, *.json.<p class="p">Default is *, which processes all files.</p>
 </td>
 
       </tr>
 
-                                <tr id="task_unq_wdw_yq__d24837e1463">
-                                    <td class="entry" valign="top" width="30%" headers="d154465e1162 ">JSON Content</td>
+                                <tr id="task_unq_wdw_yq__d24998e1463">
+                                    <td class="entry" valign="top" width="30%" headers="d154579e1210 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d154465e1165 ">Type of JSON content. Use one of the following options: <div class="p">
-                                            <ul class="ul" id="task_unq_wdw_yq__d24837e1472">
+                                    <td class="entry" valign="top" width="70%" headers="d154579e1213 ">Type of JSON content. Use one of the following options: <div class="p">
+                                            <ul class="ul" id="task_unq_wdw_yq__d24998e1472">
                                                 <li class="li">Array of Objects </li>
 
                                                 <li class="li">Multiple Objects</li>
@@ -895,10 +924,10 @@ When you restart a stopped pipeline, File Tail
 
                                 </tr>
 
-                                <tr id="task_unq_wdw_yq__d24837e1483">
-                                    <td class="entry" valign="top" width="30%" headers="d154465e1162 ">Maximum Object Length (chars)</td>
+                                <tr id="task_unq_wdw_yq__d24998e1483">
+                                    <td class="entry" valign="top" width="30%" headers="d154579e1210 ">Maximum Object Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d154465e1165 ">Maximum number of characters in a JSON object. <p class="p">Longer
+                                    <td class="entry" valign="top" width="70%" headers="d154579e1213 ">Maximum number of characters in a JSON object. <p class="p">Longer
                                             objects are diverted to the pipeline for error handling.
                                         </p>
 </td>
@@ -906,17 +935,17 @@ When you restart a stopped pipeline, File Tail
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d154465e1162 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d154579e1210 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d154465e1165 ">Character encoding of the files to be processed.</td>
+       <td class="entry" valign="top" width="70%" headers="d154579e1213 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d154465e1162 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_unq_wdw_yq__d24850e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d154579e1210 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_unq_wdw_yq__d25011e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d154465e1165 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d154579e1213 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
@@ -938,9 +967,9 @@ When you restart a stopped pipeline, File Tail
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d154465e1298">Log Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d154579e1346">Log Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d154465e1301">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d154579e1349">Description</th>
 
                                 </tr>
 
@@ -948,10 +977,10 @@ When you restart a stopped pipeline, File Tail
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d154465e1298 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_unq_wdw_yq__d24850e541" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d154579e1346 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_unq_wdw_yq__d25011e541" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d154465e1301 ">The compression format of the files:<ul class="ul" id="task_unq_wdw_yq__d24850e545">
+       <td class="entry" valign="top" width="70%" headers="d154579e1349 ">The compression format of the files:<ul class="ul" id="task_unq_wdw_yq__d25011e545">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -967,9 +996,9 @@ When you restart a stopped pipeline, File Tail
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d154465e1298 ">File Name Pattern within Compressed Directory</td>
+       <td class="entry" valign="top" width="30%" headers="d154579e1346 ">File Name Pattern within Compressed Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d154465e1301 ">File name pattern that represents the files to process within the compressed
+       <td class="entry" valign="top" width="70%" headers="d154579e1349 ">File name pattern that represents the files to process within the compressed
         directory. You can use UNIX-style wildcards, such as an asterisk or question mark. For
         example, *.json.<p class="p">Default is *, which processes all files.</p>
 </td>
@@ -977,19 +1006,19 @@ When you restart a stopped pipeline, File Tail
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d154465e1298 ">Pattern for Multiline <a class="xref" href="FileTail.html#concept_mzk_w4v_js" title="File Tail can process log and text data that includes multiple lines. You might use multiple line processing to include stack traces with log data, or to process MySQL multiline logs.">
+                                    <td class="entry" valign="top" width="30%" headers="d154579e1346 ">Pattern for Multiline <a class="xref" href="FileTail.html#concept_mzk_w4v_js" title="File Tail can process log and text data that includes multiple lines. You might use multiple line processing to include stack traces with log data, or to process MySQL multiline logs.">
                                             <img class="image" id="task_unq_wdw_yq__image_hxf_lnb_ks" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d154465e1301 ">Regular expression that defines the pattern for the
+                                    <td class="entry" valign="top" width="70%" headers="d154579e1349 ">Regular expression that defines the pattern for the
                                         standard log line.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d154465e1298 ">Log Format</td>
+                                    <td class="entry" valign="top" width="30%" headers="d154579e1346 ">Log Format</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d154465e1301 ">Format of the log files. Use one of the following
-                                            options:<ul class="ul" id="task_unq_wdw_yq__d24837e1580">
+                                    <td class="entry" valign="top" width="70%" headers="d154579e1349 ">Format of the log files. Use one of the following
+                                            options:<ul class="ul" id="task_unq_wdw_yq__d24998e1580">
                                             <li class="li">Common Log Format</li>
 
                                             <li class="li">Combined Log Format</li>
@@ -1010,17 +1039,17 @@ When you restart a stopped pipeline, File Tail
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d154465e1298 ">Max Line Length</td>
+                                    <td class="entry" valign="top" width="30%" headers="d154579e1346 ">Max Line Length</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d154465e1301 ">Maximum length of a log line. The origin truncates longer
+                                    <td class="entry" valign="top" width="70%" headers="d154579e1349 ">Maximum length of a log line. The origin truncates longer
                                         lines. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d154465e1298 ">Retain Original Line</td>
+                                    <td class="entry" valign="top" width="30%" headers="d154579e1346 ">Retain Original Line</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d154465e1301 ">Determines how to treat the original log line. Select to
+                                    <td class="entry" valign="top" width="70%" headers="d154579e1349 ">Determines how to treat the original log line. Select to
                                         include the original log line as a field in the resulting
                                             record.<p class="p">By default, the original line is
                                             discarded.</p>
@@ -1029,17 +1058,17 @@ When you restart a stopped pipeline, File Tail
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d154465e1298 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d154579e1346 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d154465e1301 ">Character encoding of the files to be processed.</td>
+       <td class="entry" valign="top" width="70%" headers="d154579e1349 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d154465e1298 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_unq_wdw_yq__d24850e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d154579e1346 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_unq_wdw_yq__d25011e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d154465e1301 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d154579e1349 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
@@ -1072,14 +1101,14 @@ When you restart a stopped pipeline, File Tail
 
                         <li class="li">When you select <span class="ph uicontrol">Log4j</span>, define the following properties:<div class="p">
                                 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_unq_wdw_yq__d24837e1685" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_unq_wdw_yq__d24998e1685" class="table" frame="border" border="1" rules="all">
                                         
                                         
                                         <thead class="thead" align="left">
                                             <tr>
-                                                <th class="entry" valign="top" width="22.22222222222222%" id="d154465e1509">Log4j Property</th>
+                                                <th class="entry" valign="top" width="22.22222222222222%" id="d154579e1557">Log4j Property</th>
 
-                                                <th class="entry" valign="top" width="77.77777777777779%" id="d154465e1512">Description</th>
+                                                <th class="entry" valign="top" width="77.77777777777779%" id="d154579e1560">Description</th>
 
                                             </tr>
 
@@ -1087,10 +1116,10 @@ When you restart a stopped pipeline, File Tail
 
                                         <tbody class="tbody">
                                             <tr>
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d154465e1509 ">On Parse Error</td>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d154579e1557 ">On Parse Error</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d154465e1512 ">Determines how to handle information that
-                                                  cannot be parsed:<ul class="ul" id="task_unq_wdw_yq__d24837e1714">
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d154579e1560 ">Determines how to handle information that
+                                                  cannot be parsed:<ul class="ul" id="task_unq_wdw_yq__d24998e1714">
                                                   <li class="li">Skip and Log Error - Skips reading the line
                                                   and logs a stage error.</li>
 
@@ -1109,17 +1138,17 @@ When you restart a stopped pipeline, File Tail
                                             </tr>
 
                                             <tr>
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d154465e1509 ">Use Custom Log Format</td>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d154579e1557 ">Use Custom Log Format</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d154465e1512 ">Allows you to define a custom log
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d154579e1560 ">Allows you to define a custom log
                                                   format.</td>
 
                                             </tr>
 
                                             <tr>
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d154465e1509 ">Custom Format</td>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d154579e1557 ">Custom Format</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d154465e1512 ">Use log4j variables to define a custom log
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d154579e1560 ">Use log4j variables to define a custom log
                                                   format. </td>
 
                                             </tr>
@@ -1146,9 +1175,9 @@ When you restart a stopped pipeline, File Tail
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d154465e1586">Text Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d154579e1634">Text Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d154465e1589">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d154579e1637">Description</th>
 
                                 </tr>
 
@@ -1156,10 +1185,10 @@ When you restart a stopped pipeline, File Tail
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d154465e1586 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_unq_wdw_yq__d24850e541" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d154579e1634 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_unq_wdw_yq__d25011e541" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d154465e1589 ">The compression format of the files:<ul class="ul" id="task_unq_wdw_yq__d24850e545">
+       <td class="entry" valign="top" width="70%" headers="d154579e1637 ">The compression format of the files:<ul class="ul" id="task_unq_wdw_yq__d25011e545">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -1175,9 +1204,9 @@ When you restart a stopped pipeline, File Tail
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d154465e1586 ">File Name Pattern within Compressed Directory</td>
+       <td class="entry" valign="top" width="30%" headers="d154579e1634 ">File Name Pattern within Compressed Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d154465e1589 ">File name pattern that represents the files to process within the compressed
+       <td class="entry" valign="top" width="70%" headers="d154579e1637 ">File name pattern that represents the files to process within the compressed
         directory. You can use UNIX-style wildcards, such as an asterisk or question mark. For
         example, *.json.<p class="p">Default is *, which processes all files.</p>
 </td>
@@ -1185,18 +1214,18 @@ When you restart a stopped pipeline, File Tail
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d154465e1586 ">Pattern for Multiline <a class="xref" href="FileTail.html#concept_mzk_w4v_js" title="File Tail can process log and text data that includes multiple lines. You might use multiple line processing to include stack traces with log data, or to process MySQL multiline logs.">
+                                    <td class="entry" valign="top" width="30%" headers="d154579e1634 ">Pattern for Multiline <a class="xref" href="FileTail.html#concept_mzk_w4v_js" title="File Tail can process log and text data that includes multiple lines. You might use multiple line processing to include stack traces with log data, or to process MySQL multiline logs.">
                                             <img class="image" id="task_unq_wdw_yq__image_qss_jfm_wx" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d154465e1589 ">Regular expression that defines the pattern for the
+                                    <td class="entry" valign="top" width="70%" headers="d154579e1637 ">Regular expression that defines the pattern for the
                                         standard line of text.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d154465e1586 ">Max Line Length</td>
+                                    <td class="entry" valign="top" width="30%" headers="d154579e1634 ">Max Line Length</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d154465e1589 ">Maximum number of characters allowed for a line. Longer
+                                    <td class="entry" valign="top" width="70%" headers="d154579e1637 ">Maximum number of characters allowed for a line. Longer
                                         lines are truncated.<p class="p">Adds a boolean field to the record to
                                             indicate if it was truncated. The field name is
                                             Truncated. </p>
@@ -1205,40 +1234,40 @@ When you restart a stopped pipeline, File Tail
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d154465e1586 ">Use Custom Delimiter <a class="xref" href="../Pipeline_Design/TextCDelim.html#concept_lg2_gcg_jx">
-                                            <img class="image" id="task_unq_wdw_yq__d24837e2184" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d154579e1634 ">Use Custom Delimiter <a class="xref" href="../Pipeline_Design/TextCDelim.html#concept_lg2_gcg_jx">
+                                            <img class="image" id="task_unq_wdw_yq__d24998e2184" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d154465e1589 ">Uses custom delimiters to define records instead of line
+                                    <td class="entry" valign="top" width="70%" headers="d154579e1637 ">Uses custom delimiters to define records instead of line
                                         breaks. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d154465e1586 ">Custom Delimiter</td>
+                                    <td class="entry" valign="top" width="30%" headers="d154579e1634 ">Custom Delimiter</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d154465e1589 ">One or more characters to use to define records. </td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d154465e1586 ">Include Custom Delimiter</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d154465e1589 ">Includes delimiter characters in the record.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d154579e1637 ">One or more characters to use to define records. </td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d154465e1586 ">Charset</td>
+                                    <td class="entry" valign="top" width="30%" headers="d154579e1634 ">Include Custom Delimiter</td>
 
-       <td class="entry" valign="top" width="70%" headers="d154465e1589 ">Character encoding of the files to be processed.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d154579e1637 ">Includes delimiter characters in the record.</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d154579e1634 ">Charset</td>
+
+       <td class="entry" valign="top" width="70%" headers="d154579e1637 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d154465e1586 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_unq_wdw_yq__d24850e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d154579e1634 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_unq_wdw_yq__d25011e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d154465e1589 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d154579e1637 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>

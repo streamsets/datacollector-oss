@@ -245,7 +245,7 @@
 
 </div>
 <div class="topic concept nested2" id="concept_fk4_gd4_1s">
- <h3 class="title topictitle3">Cluster Monitoring</h3>
+ <h3 class="title topictitle3">Monitoring and Snapshot</h3>
 
  <div class="body conbody">
     <p class="p">The <span class="ph">Data
@@ -253,16 +253,18 @@
       allows you to monitor each <span class="ph">Data
                   Collector</span> worker. </p>
 
-    <div class="p">After you start a pipeline, the <span class="ph">Data
+    <p class="p">After you start a pipeline, the <span class="ph">Data
                   Collector</span> console
       displays basic monitoring information for the pipeline and links to each <span class="ph">Data
                   Collector</span> worker.
       For monitoring details for a <span class="ph">Data
                   Collector</span> worker,
-      click the worker link. You can then view metrics and alerts for the worker. <div class="note note"><span class="notetitle">Note:</span> Metric and
-        data alerts are defined for the pipeline, but triggered by individual workers.  When you
-        define a metric or data alert, each worker inherits the alert and triggers the alert based
-        on the statistics for the worker.</div>
+      click the worker link. You can then view metrics and alerts for the worker. </p>
+
+    <div class="p">Metric and data alerts are defined for the pipeline, but triggered by individual workers.
+      When you define a metric or data alert, each worker inherits the alert and triggers the alert
+      based on the statistics for the worker.<div class="note note"><span class="notetitle">Note:</span> You cannot take snapshots when monitoring in
+        cluster pipelines.</div>
 </div>
 
   </div>
@@ -281,9 +283,9 @@
                         
                         <thead class="thead" align="left">
                             <tr>
-                                <th class="entry" valign="top" width="33.33333333333333%" id="d22886e472">Component</th>
+                                <th class="entry" valign="top" width="33.33333333333333%" id="d22911e475">Component</th>
 
-                                <th class="entry" valign="top" width="66.66666666666666%" id="d22886e475">Minimum Requirement</th>
+                                <th class="entry" valign="top" width="66.66666666666666%" id="d22911e478">Minimum Requirement</th>
 
                             </tr>
 
@@ -291,16 +293,16 @@
 
                         <tbody class="tbody">
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d22886e472 ">Spark Streaming</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d22911e475 ">Spark Streaming</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d22886e475 ">Spark version 1.3 through 1.6</td>
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d22911e478 ">Spark version 1.3 through 1.6</td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d22886e472 ">Apache Kafka</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d22911e475 ">Apache Kafka</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d22886e475 ">Spark Streaming on YARN requires a Cloudera or Hortonworks
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d22911e478 ">Spark Streaming on YARN requires a Cloudera or Hortonworks
                                     distribution of an Apache Kafka cluster. <p class="p">Spark Streaming on
                                         Mesos requires Apache Kafka on Apache Mesos.</p>
 </td>
@@ -486,9 +488,9 @@ If the script is not in this
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d22886e854">Component</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d22911e857">Component</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d22886e857">Minimum Requirement</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d22911e860">Minimum Requirement</th>
 
                         </tr>
 
@@ -496,16 +498,16 @@ If the script is not in this
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d22886e854 ">Spark Streaming (for cluster streaming mode)</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d22911e857 ">Spark Streaming (for cluster streaming mode)</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d22886e857 ">Spark version 1.5.2 through 1.6</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d22911e860 ">Spark version 1.5.2 through 1.6</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d22886e854 ">MapR</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d22911e857 ">MapR</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d22886e857 ">MapR version 5.1 or 5.2</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d22911e860 ">MapR version 5.1 or 5.2</td>
 
                         </tr>
 

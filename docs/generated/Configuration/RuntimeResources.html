@@ -99,11 +99,20 @@
   <p class="p">To call a
       runtime resource, use the following syntax: </p>
 
-  <pre class="pre codeblock">runtime:loadResource(&lt;file name&gt;, &lt;restricted: true | false&gt;)</pre>
+  <pre class="pre codeblock">${runtime:loadResource(&lt;file name&gt;, &lt;restricted: true | false&gt;)}</pre>
 
-  <div class="p">For example, the following expression returns the password for a JDBC Query Consumer origin.
-            The file is named JDBCpassword.txt and is restricted so only the owner can read the
-            file:<pre class="pre codeblock">${runtime:loadResource("JDBCpassword.txt", true)</pre>
+        <div class="p">
+            <div class="note tip"><span class="tiptitle">Tip:</span> To strip any leading or trailing white space characters from the file,
+                add the <samp class="ph codeph">str:trim</samp> function as
+                follows:<pre class="pre codeblock">${str:trim(runtime:loadResource(&lt;file name&gt;, &lt;restricted: true | false&gt;)}</pre>
+</div>
+
+        </div>
+
+  <div class="p">For example, the following expression returns the contents of the JDBCpassword.txt file,
+            stripping any leading or trailing white space characters. The file contains a password
+            and is restricted so only the owner can read the
+            file:<pre class="pre codeblock">${str:trim(runtime:loadResource("JDBCpassword.txt", true))}</pre>
 </div>
 
  </div>
