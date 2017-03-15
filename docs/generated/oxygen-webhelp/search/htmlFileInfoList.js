@@ -1,5 +1,5 @@
 fil = new Array();
-fil["0"]= "Administration/Administration_title.html@@@Administration@@@The store command provides arguments to view a list of all pipelines and to import a pipeline...";
+fil["0"]= "Administration/Administration_title.html@@@Administration@@@The system command provides arguments to register and unregister the Data Collector with DPM...";
 fil["1"]= "Alerts/RulesAlerts_title.html@@@Rules and Alerts@@@You can define the email addresses to receive metric and data alerts. When an alert triggers an email, the Data Collector sends an email to every address in the list...";
 fil["2"]= "Apx-DataFormats/DataFormat_Title.html@@@Data Formats by Stage@@@The following table lists the data formats supported by each destination...";
 fil["3"]= "Apx-GrokPatterns/GrokPatterns_title.html@@@Grok Patterns@@@You can use the grok patterns in this appendix to define the structure of log data...";
@@ -189,4 +189,4 @@ fil["186"]= "Upgrade/Upgrade-ExternalSystems.html@@@Working with Upgraded Extern
 fil["187"]= "Upgrade/Upgrade.html@@@Upgrade@@@You can upgrade a previous version of Data Collector to a new version. You can upgrade an installation from the tarball, an installation from the RPM package, or an installation with Cloudera Manager...";
 fil["188"]= "Upgrade/UpgradeTroubleshooting.html@@@Troubleshooting an Upgrade@@@Use the following tips for help with upgrades: After upgrading a Data Collector that is registered with DPM , the Data Collector fails to start with the following error about a component ID: Failed...";
 fil["189"]= "Upgrade/Upgrade_title.html@@@Upgrade@@@...";
-fil["190"]= "WhatsNew/WhatsNew_Title.html@@@What&apos;s New@@@Data Collector version 2.4.1.0 includes the following new features and enhancements: Log data display - You can stop and restart the automatic display of the most recent log data on the Data Collector...";
+fil["190"]= "WhatsNew/WhatsNew_Title.html@@@What&apos;s New@@@Data Collector version 2.4.1.0 includes the following new features and enhancements: Salesforce origin enhancement - When the origin processes existing data and is not subscribed to notifications, it...";
