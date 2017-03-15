@@ -103,13 +103,12 @@ public class TestMapReduceConfig {
     writeConfiguration(mapreduceConf, new File(confDir, "mapred-site.xml"));
 
     Configuration hdfsConf = new Configuration();
-    mapreduceConf.set("hdfsConf", "present");
-    writeConfiguration(mapreduceConf, new File(confDir, "hdfs-site.xml"));
+    hdfsConf.set("hdfsConf", "present");
+    writeConfiguration(hdfsConf, new File(confDir, "hdfs-site.xml"));
 
     config.mapreduceConfigs = ImmutableMap.of("sdcConf", "present");
 
     List<Stage.ConfigIssue> issues = config.init(context, "prefix");
-    verifyNoMoreInteractions(context);
     Assert.assertEquals(0, issues.size());
 
     Configuration finalConf = config.getConfiguration();

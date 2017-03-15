@@ -19,6 +19,8 @@
  */
 package com.streamsets.datacollector.security;
 
+import com.streamsets.pipeline.api.Stage;
+import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.zookeeper.server.util.KerberosUtil;
@@ -26,6 +28,8 @@ import org.apache.zookeeper.server.util.KerberosUtil;
 import java.io.IOException;
 import java.security.AccessControlContext;
 import java.security.AccessController;
+import java.util.List;
+import java.util.Optional;
 
 public class HadoopSecurityUtil {
 
@@ -40,7 +44,40 @@ public class HadoopSecurityUtil {
     }
   }
 
-  public static UserGroupInformation getProxyUser(String user, UserGroupInformation loginUser) {
+  /**
+   * Return UGI object that should be used for any remote operation.
+   *
+   * This object will be impersonate according to the configuration. This method is meant to be called once during
+   * initialization and it's expected that caller will cache the result for a lifetime of the stage execution.
+   */
+  public static UserGroupInformation getProxyUser(
+    String user,                    // Hadoop user (HDFS User, HBase user, generally the to-be-impersonated user in component's configuration)
+    Stage.Context context,          // Stage context object
+    UserGroupInformation loginUser, // Login UGI (sdc user)
+    List<Stage.ConfigIssue> issues, // Reports errors
+    String configGroup,             // Group where "HDFS User" is present
+    String configName               // Config name of "HDFS User"
+  ) {
+    // Should we always impersonate current user?
+    String alwaysImpersonateString = Optional
+      .ofNullable(context.getConfig(HadoopConfigConstants.IMPERSONATION_ALWAYS_CURRENT_USER))
+      .orElse("false");
+
+    // If so, propagate current user to "user" (the one to be impersonated)
+    if(Boolean.parseBoolean(alwaysImpersonateString)) {
+      if(!StringUtils.isEmpty(user)) {
+        issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOP_00001));
+      }
+
+      user = context.getUserContext().getUser();
+    }
+
+    // If impersonated user is empty, simply return login UGI (no impersonation performed)
+    if(StringUtils.isEmpty(user)) {
+      return loginUser;
+    }
+
+    // Otherwise impersonate the "user"
     AccessControlContext accessContext = AccessController.getContext();
     synchronized (SecurityUtil.getSubjectDomainLock(accessContext)) {
       return UserGroupInformation.createProxyUser(user, loginUser);

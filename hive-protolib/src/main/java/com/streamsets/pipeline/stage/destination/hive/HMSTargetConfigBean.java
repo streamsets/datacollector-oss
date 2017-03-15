@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.destination.hive;
 
 import com.google.common.base.Joiner;
+import com.streamsets.datacollector.security.HadoopConfigConstants;
 import com.streamsets.datacollector.security.HadoopSecurityUtil;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
@@ -109,6 +110,7 @@ public class HMSTargetConfigBean {
   )
   public String hdfsUser;
 
+  private UserGroupInformation userUgi;
   private FileSystem fs;
   private ELEval schemaFolderELEval;
 
@@ -123,8 +125,7 @@ public class HMSTargetConfigBean {
   }
 
   public UserGroupInformation getHDFSUgi() {
-    return (hdfsUser == null || hdfsUser.isEmpty())?
-        hiveConfigBean.getUgi() : HadoopSecurityUtil.getProxyUser(hdfsUser, hiveConfigBean.getUgi());
+    return userUgi;
   }
 
   public void destroy() {
@@ -133,14 +134,11 @@ public class HMSTargetConfigBean {
       return;
     }
     try {
-      getHDFSUgi().doAs(new PrivilegedExceptionAction<Void>() {
-        @Override
-        public Void run() throws Exception {
-          if (fs != null) {
-            fs.close();
-          }
-          return null;
+      getHDFSUgi().doAs((PrivilegedExceptionAction<Void>) () -> {
+        if (fs != null) {
+          fs.close();
         }
+        return null;
       });
     } catch (Exception e) {
       LOG.warn("Error when closing hdfs file system:", e);
@@ -149,18 +147,21 @@ public class HMSTargetConfigBean {
 
   public void init(final Stage.Context context, final String prefix, final List<Stage.ConfigIssue> issues) {
     hiveConfigBean.init(context, JOINER.join(prefix, HIVE_CONFIG_BEAN), issues);
+    userUgi = HadoopSecurityUtil.getProxyUser(
+      hdfsUser,
+      context,
+      hiveConfigBean.getUgi(),
+      issues,
+      Groups.HIVE.name(),
+      JOINER.join(prefix, HIVE_CONFIG_BEAN, "hdfsUser")
+    );
     schemaFolderELEval = context.createELEval("schemaFolderLocation");
     if (storedAsAvro) {
       return;
     }
     //use ugi.
     try {
-      fs = getHDFSUgi().doAs(new PrivilegedExceptionAction<FileSystem>() {
-        @Override
-        public FileSystem run() throws Exception{
-          return FileSystem.get(hiveConfigBean.getConfiguration());
-        }
-      });
+      fs = getHDFSUgi().doAs((PrivilegedExceptionAction<FileSystem>) () -> FileSystem.get(hiveConfigBean.getConfiguration()));
     } catch (Exception e) {
       LOG.error("Error accessing HDFS", e);
       issues.add(

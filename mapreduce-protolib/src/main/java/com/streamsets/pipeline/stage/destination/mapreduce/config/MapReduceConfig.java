@@ -90,8 +90,9 @@ public class MapReduceConfig {
     return configuration;
   }
   private UserGroupInformation loginUgi;
+  private UserGroupInformation userUgi;
   public UserGroupInformation getUGI() {
-    return mapreduceUser.isEmpty() ? loginUgi : HadoopSecurityUtil.getProxyUser(mapreduceUser, loginUgi);
+    return userUgi;
   }
 
   public List<Stage.ConfigIssue> init(Stage.Context context, String prefix) {
@@ -128,6 +129,14 @@ public class MapReduceConfig {
     // We're doing here the same as HDFS (which should be at some point refactored to shared code)
     try {
       loginUgi = HadoopSecurityUtil.getLoginUser(configuration);
+      userUgi = HadoopSecurityUtil.getProxyUser(
+        mapreduceUser,
+        context,
+        loginUgi,
+        issues,
+        Groups.MAPREDUCE.name(),
+        Joiner.on(".").join(prefix, "mapreduceUser")
+      );
       if(kerberos) {
         if (loginUgi.getAuthenticationMethod() != UserGroupInformation.AuthenticationMethod.KERBEROS) {
           issues.add(context.createConfigIssue(

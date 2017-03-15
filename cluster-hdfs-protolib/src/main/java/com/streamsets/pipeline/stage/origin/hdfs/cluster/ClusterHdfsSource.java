@@ -105,6 +105,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   private ErrorRecordHandler errorRecordHandler;
   private DataParserFactory parserFactory;
   private UserGroupInformation loginUgi;
+  private UserGroupInformation userUgi;
   private long recordsProduced;
   private final Map<String, Object> previewBuffer;
   private final CountDownLatch countDownLatch;
@@ -600,6 +601,14 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     StringBuilder logMessage = new StringBuilder();
     try {
       loginUgi = HadoopSecurityUtil.getLoginUser(hadoopConf);
+      userUgi = HadoopSecurityUtil.getProxyUser(
+        conf.hdfsUser,
+        getContext(),
+        loginUgi,
+        issues,
+        Groups.HADOOP_FS.name(),
+        CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsUser"
+      );
       if (conf.hdfsKerberos) {
         logMessage.append("Using Kerberos");
         if (loginUgi.getAuthenticationMethod() != UserGroupInformation.AuthenticationMethod.KERBEROS) {
@@ -694,12 +703,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   @VisibleForTesting
   FileSystem getFileSystemForInitDestroy() throws IOException {
     try {
-      return getUGI().doAs(new PrivilegedExceptionAction<FileSystem>() {
-        @Override
-        public FileSystem run() throws Exception {
-          return FileSystem.get(new URI(conf.hdfsUri), hadoopConf);
-        }
-      });
+      return getUGI().doAs((PrivilegedExceptionAction<FileSystem>) () -> FileSystem.get(new URI(conf.hdfsUri), hadoopConf));
     } catch (IOException ex) {
       throw ex;
     } catch (Exception ex) {
@@ -709,8 +713,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
 
   @VisibleForTesting
   UserGroupInformation getUGI() {
-    return (conf.hdfsUser == null || conf.hdfsUser.isEmpty()) ?
-        loginUgi : HadoopSecurityUtil.getProxyUser(conf.hdfsUser, loginUgi);
+    return userUgi;
   }
 
   @Override

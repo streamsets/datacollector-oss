@@ -71,6 +71,7 @@ public final class HBaseUtil {
   private static final String REGIONSERVER_KERBEROS_PRINCIPAL = "hbase.regionserver.kerberos.principal";
   private static final String HBASE_CONF_DIR_CONFIG = "hbaseConfDir";
   private static UserGroupInformation loginUgi;
+  private static UserGroupInformation userUgi;
 
   private HBaseUtil() {
   }
@@ -182,6 +183,7 @@ public final class HBaseUtil {
       List<Stage.ConfigIssue> issues,
       Stage.Context context,
       String hbaseName,
+      String hbaseUser,
       Configuration hbaseConf,
       boolean kerberosAuth
   ) {
@@ -214,6 +216,14 @@ public final class HBaseUtil {
       }
 
       loginUgi = HadoopSecurityUtil.getLoginUser(hbaseConf);
+      userUgi = HadoopSecurityUtil.getProxyUser(
+        hbaseUser,
+        context,
+        loginUgi,
+        issues,
+        hbaseName,
+        "hbaseUser"
+      );
 
       StringBuilder logMessage = new StringBuilder();
       if (kerberosAuth) {
@@ -234,9 +244,8 @@ public final class HBaseUtil {
     }
   }
 
-  public static UserGroupInformation getUGI(String hbaseUser) {
-    return (hbaseUser == null || hbaseUser.isEmpty()) ?
-        loginUgi : HadoopSecurityUtil.getProxyUser(hbaseUser, loginUgi);
+  public static UserGroupInformation getUGI() {
+    return userUgi;
   }
 
   public static HTableDescriptor checkConnectionAndTableExistence(

@@ -451,6 +451,7 @@ public class HdfsTargetConfigBean {
 
   private Configuration hdfsConfiguration;
   private UserGroupInformation loginUgi;
+  private UserGroupInformation userUgi;
   private FileSystem fs;
   private long lateRecordsLimitSecs;
   private long idleTimeSecs = -1;
@@ -713,7 +714,7 @@ public class HdfsTargetConfigBean {
     if (issues.isEmpty()) {
 
       try {
-        getUGI().doAs(new PrivilegedExceptionAction<Void>() {
+        userUgi.doAs(new PrivilegedExceptionAction<Void>() {
           @Override
           public Void run() throws Exception {
             getCurrentWriters().commitOldFiles(fs);
@@ -743,12 +744,9 @@ public class HdfsTargetConfigBean {
         // * We do have the directory template available (e.g. it's not in header)
         // * Only for the first runner, since it would be empty operation for the others
         if(dataFormat != DataFormat.WHOLE_FILE && !skipOldTempFileRecovery && !dirPathTemplateInHeader && context.getRunnerId() == 0) {
-          getUGI().doAs(new PrivilegedExceptionAction<Void>() {
-            @Override
-            public Void run() throws Exception {
-              getCurrentWriters().getWriterManager().handleAlreadyExistingFiles();
-              return null;
-            }
+          userUgi.doAs((PrivilegedExceptionAction<Void>) () -> {
+            getCurrentWriters().getWriterManager().handleAlreadyExistingFiles();
+            return null;
           });
         }
       } catch (Exception ex) {
@@ -769,11 +767,11 @@ public class HdfsTargetConfigBean {
   public void destroy() {
     LOG.info("Destroy");
     try {
-      if(getUGI() == null) {
+      if(userUgi == null) {
         return;
       }
 
-      getUGI().doAs(new PrivilegedExceptionAction<Void>() {
+      userUgi.doAs(new PrivilegedExceptionAction<Void>() {
         @Override
         public Void run() throws Exception {
           try {
@@ -861,7 +859,7 @@ public class HdfsTargetConfigBean {
   }
 
   UserGroupInformation getUGI() {
-    return (hdfsUser.isEmpty()) ? loginUgi : HadoopSecurityUtil.getProxyUser(hdfsUser, loginUgi);
+    return userUgi;
   }
 
   protected ActiveRecordWriters getCurrentWriters() {
@@ -1076,6 +1074,19 @@ public class HdfsTargetConfigBean {
     try {
       // forcing UGI to initialize with the security settings from the stage
       loginUgi = HadoopSecurityUtil.getLoginUser(hdfsConfiguration);
+      userUgi = HadoopSecurityUtil.getProxyUser(
+        hdfsUser,
+        context,
+        loginUgi,
+        issues,
+        Groups.HADOOP_FS.name(),
+        getTargetConfigBeanPrefix() + "hdfsUser"
+      );
+
+      if(!issues.isEmpty()) {
+        return false;
+      }
+
       if (hdfsKerberos) {
         logMessage.append("Using Kerberos");
         if (loginUgi.getAuthenticationMethod() != UserGroupInformation.AuthenticationMethod.KERBEROS) {
@@ -1125,7 +1136,7 @@ public class HdfsTargetConfigBean {
     dirPathTemplate = (dirPathTemplate.isEmpty()) ? "/" : dirPathTemplate;
     try {
       final Path dir = new Path(dirPathTemplate);
-      getUGI().doAs(new PrivilegedExceptionAction<Void>() {
+      userUgi.doAs(new PrivilegedExceptionAction<Void>() {
                   @Override
                   public Void run() throws Exception {
           // Based on whether the target directory exists or not, we'll do different check
@@ -1181,7 +1192,7 @@ public class HdfsTargetConfigBean {
 
   private FileSystem createFileSystem() throws Exception {
     try {
-      return getUGI().doAs(new PrivilegedExceptionAction<FileSystem>() {
+      return userUgi.doAs(new PrivilegedExceptionAction<FileSystem>() {
         @Override
         public FileSystem run() throws Exception {
           return FileSystem.newInstance(new URI(hdfsUri), hdfsConfiguration);

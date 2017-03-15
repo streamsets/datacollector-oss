@@ -103,10 +103,11 @@ public class HdfsConnectionConfig {
 
   private Configuration conf;
   private UserGroupInformation loginUgi;
+  private UserGroupInformation userUgi;
   private FileSystem fs;
 
   public UserGroupInformation getUGI() {
-    return (hdfsUser.isEmpty()) ? loginUgi : HadoopSecurityUtil.getProxyUser(hdfsUser, loginUgi);
+    return userUgi;
   }
 
   public FileSystem getFs() {
@@ -195,8 +196,16 @@ public class HdfsConnectionConfig {
 
     try {
       loginUgi = HadoopSecurityUtil.getLoginUser(conf);
+      userUgi = HadoopSecurityUtil.getProxyUser(
+        hdfsUser,
+        context,
+        loginUgi,
+        issues,
+        Groups.HDFS.name(),
+        JOIN.join(prefix, "hdfsUser")
+      );
     } catch (IOException e) {
-      LOG.error("Can't create login UGI", e);
+      LOG.error("Can't create UGI", e);
       issues.add(context.createConfigIssue(Groups.HDFS.name(), null, HdfsMetadataErrors.HDFS_METADATA_005, e.getMessage(), e));
     }
 
@@ -205,12 +214,7 @@ public class HdfsConnectionConfig {
     }
 
     try {
-      fs = getUGI().doAs(new PrivilegedExceptionAction<FileSystem>() {
-        @Override
-        public FileSystem run() throws Exception {
-          return FileSystem.newInstance(new URI(hdfsUri), conf);
-        }
-      });
+      fs = getUGI().doAs((PrivilegedExceptionAction<FileSystem>) () -> FileSystem.newInstance(new URI(hdfsUri), conf));
     } catch (Exception ex) {
       LOG.error("Can't retrieve FileSystem instance", ex);
       issues.add(context.createConfigIssue(Groups.HDFS.name(), null, HdfsMetadataErrors.HDFS_METADATA_005, ex.getMessage(), ex));
@@ -220,12 +224,9 @@ public class HdfsConnectionConfig {
   public void destroy() {
     try {
       if(fs != null) {
-        getUGI().doAs(new PrivilegedExceptionAction<Void>() {
-          @Override
-          public Void run() throws Exception {
-            fs.close();
-            return null;
-          }
+        getUGI().doAs((PrivilegedExceptionAction<Void>) () -> {
+          fs.close();
+          return null;
         });
       }
     } catch (IOException|InterruptedException e) {

@@ -23,6 +23,7 @@ import com.google.common.base.CharMatcher;
 import com.google.common.base.Optional;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
@@ -182,6 +183,7 @@ public class HBaseLookupProcessor extends BaseProcessor {
       HBaseUtil.validateSecurityConfigs(issues,
           getContext(),
           Groups.HBASE.getLabel(),
+          conf.hBaseConnectionConfig.hbaseUser,
           hbaseConf,
           conf.hBaseConnectionConfig.kerberosAuth
       );
@@ -195,18 +197,13 @@ public class HBaseLookupProcessor extends BaseProcessor {
 
     if (issues.isEmpty()) {
       try {
-        HBaseUtil.getUGI(conf.hBaseConnectionConfig.hbaseUser).doAs(new PrivilegedExceptionAction<HTableDescriptor>() {
-          @Override
-          public HTableDescriptor run() throws Exception {
-            return HBaseUtil.checkConnectionAndTableExistence(
-                issues,
-                getContext(),
-                hbaseConf,
-                Groups.HBASE.getLabel(),
-                conf.hBaseConnectionConfig.tableName
-            );
-          }
-        });
+        HBaseUtil.getUGI().doAs((PrivilegedExceptionAction<HTableDescriptor>) () -> HBaseUtil.checkConnectionAndTableExistence(
+          issues,
+          getContext(),
+          hbaseConf,
+          Groups.HBASE.getLabel(),
+          conf.hBaseConnectionConfig.tableName
+        ));
       } catch (Exception e) {
         LOG.warn("Unexpected exception", e.toString());
         throw new RuntimeException(e);
@@ -215,13 +212,10 @@ public class HBaseLookupProcessor extends BaseProcessor {
 
     if(issues.isEmpty()) {
       try {
-        HBaseUtil.getUGI(conf.hBaseConnectionConfig.hbaseUser).doAs(new PrivilegedExceptionAction<Void>() {
-          @Override
-          public Void run() throws Exception {
-            keyExprEval = getContext().createELEval("rowExpr");
-            store = new HBaseStore(conf, hbaseConf);
-            return null;
-          }
+        HBaseUtil.getUGI().doAs((PrivilegedExceptionAction<Void>) () -> {
+          keyExprEval = getContext().createELEval("rowExpr");
+          store = new HBaseStore(conf, hbaseConf);
+          return null;
         });
       } catch (Exception e) {
         LOG.error(Errors.HBASE_36.getMessage(), e.toString(), e);
@@ -259,12 +253,9 @@ public class HBaseLookupProcessor extends BaseProcessor {
     super.destroy();
     if(store != null) {
       try {
-        HBaseUtil.getUGI(conf.hBaseConnectionConfig.hbaseUser).doAs(new PrivilegedExceptionAction<Void>() {
-          @Override
-          public Void run() throws Exception {
-            store.close();
-            return null;
-          }
+        HBaseUtil.getUGI().doAs((PrivilegedExceptionAction<Void>) () -> {
+          store.close();
+          return null;
         });
       } catch (IOException | InterruptedException e) {
         LOG.warn("Unexpected exception", e);
@@ -284,13 +275,7 @@ public class HBaseLookupProcessor extends BaseProcessor {
       try {
         for (HBaseLookupParameterConfig parameter : conf.lookups) {
           final Pair<String, HBaseColumn> key = getKey(record, parameter);
-          Optional<String> value = HBaseUtil.getUGI(conf.hBaseConnectionConfig.hbaseUser).doAs(new PrivilegedExceptionAction<Optional<String>>() {
-            @Override
-            public Optional<String> run() throws Exception {
-              return cache.getUnchecked(key);
-            }
-          });
-
+          Optional<String> value = HBaseUtil.getUGI().doAs((PrivilegedExceptionAction<Optional<String>>) () -> cache.getUnchecked(key));
           updateRecord(record, parameter, key, value);
         }
       } catch (ELEvalException | JSONException e1) {
@@ -309,12 +294,8 @@ public class HBaseLookupProcessor extends BaseProcessor {
     final Set<Pair<String, HBaseColumn>> keys = getKeyColumnListMap(batch);
 
     try {
-      Map<Pair<String, HBaseColumn>, Optional<String>> values = HBaseUtil.getUGI(conf.hBaseConnectionConfig.hbaseUser).doAs(new PrivilegedExceptionAction<Map<Pair<String, HBaseColumn>, Optional<String>>>() {
-        @Override
-        public Map<Pair<String, HBaseColumn>, Optional<String>> run() throws Exception {
-          return cache.getAll(keys);
-        }
-      });
+      Map<Pair<String, HBaseColumn>, Optional<String>> values = HBaseUtil.getUGI()
+        .doAs((PrivilegedExceptionAction<ImmutableMap<Pair<String, HBaseColumn>, Optional<String>>>) () -> cache.getAll(keys));
       Record record;
       while (records.hasNext()) {
         record = records.next();

@@ -19,10 +19,18 @@
  */
 package com.streamsets.datacollector.security;
 
+import com.streamsets.pipeline.api.Stage;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.Matchers.anyString;
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 public class TestHadoopSecurityUtil {
 
@@ -37,8 +45,59 @@ public class TestHadoopSecurityUtil {
   @Test
   public void testGetProxyUser() throws Exception {
     final UserGroupInformation fooUgi = UserGroupInformation.createUserForTesting("foo", new String[] { "all" });
-    UserGroupInformation ugi = HadoopSecurityUtil.getProxyUser("proxy", fooUgi);
+    Stage.Context context = mock(Stage.Context.class);
+    List<Stage.ConfigIssue> issues = new ArrayList<>();
+
+    UserGroupInformation ugi = HadoopSecurityUtil.getProxyUser(
+      "proxy",
+      context,
+      fooUgi,
+      issues,
+      "config",
+      "userName"
+    );
     Assert.assertEquals("proxy", ugi.getUserName());
+  }
+
+  @Test
+  public void testGetProxyUserEnforceCurrentUser() throws Exception {
+    final UserGroupInformation fooUgi = UserGroupInformation.createUserForTesting("foo", new String[] { "all" });
+    Stage.Context context = mock(Stage.Context.class);
+    List<Stage.ConfigIssue> issues = new ArrayList<>();
+
+    when(context.getConfig(anyString())).thenReturn("true");
+    when(context.getUserContext()).thenReturn(() -> "test-user");
+
+    UserGroupInformation ugi = HadoopSecurityUtil.getProxyUser(
+      "",
+      context,
+      fooUgi,
+      issues,
+      "config",
+      "userName"
+    );
+    Assert.assertEquals("test-user", ugi.getUserName());
+  }
+
+  @Test
+  public void testGetProxyUserCantSpecifyUserWhenEnforcingCurrentUser() throws Exception {
+    final UserGroupInformation fooUgi = UserGroupInformation.createUserForTesting("foo", new String[] { "all" });
+    Stage.Context context = mock(Stage.Context.class);
+    List<Stage.ConfigIssue> issues = new ArrayList<>();
+
+    when(context.getConfig(anyString())).thenReturn("true");
+    when(context.getUserContext()).thenReturn(() -> "test-user");
+
+    UserGroupInformation ugi = HadoopSecurityUtil.getProxyUser(
+      "employee-of-the-year",
+      context,
+      fooUgi,
+      issues,
+      "config",
+      "userName"
+    );
+
+    Assert.assertEquals(1, issues.size());
   }
 }
 
