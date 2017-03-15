@@ -20,6 +20,11 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             version 2.4.1.0 includes the following new features and enhancements:<ul
                 id="ul_xdl_tdz_fz">
+                <li><xref href="../Origins/Salesforce-RepeatQuery.dita#concept_owv_nj5_2z"
+                        >Salesforce origin enhancement</xref> - When the origin processes existing
+                    data and is not subscribed to notifications, it can now repeat the specified
+                    query at regular intervals. The origin can repeat a full or incremental
+                    query.</li>
                 <li><xref href="../Administration/ViewingLogData.dita#task_gbm_s3k_br">Log data
                         display</xref> - You can stop and restart the automatic display of the most
                     recent log data on the Data Collector Logs page.</li>
