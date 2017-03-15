@@ -30,6 +30,7 @@ import com.streamsets.pipeline.config.TimeZoneChooserValues;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,11 +45,11 @@ public class DataLakeConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      evaluation = ConfigDef.Evaluation.EXPLICIT,
       defaultValue = "",
       label = "Client ID",
       description = "Azure Client ID.",
       displayPosition = 10,
+      elDefs = VaultEL.class,
       group = "#0"
   )
   public String clientId;
@@ -56,11 +57,11 @@ public class DataLakeConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      evaluation = ConfigDef.Evaluation.EXPLICIT,
       defaultValue = "https://login.microsoftonline.com/example-example",
       label = "Auth Token Endpoint",
       description = "Azure Auth Token Endpoint.",
       displayPosition = 20,
+      elDefs = VaultEL.class,
       group = "#0"
   )
   public String authTokenEndpoint;
@@ -68,11 +69,11 @@ public class DataLakeConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      evaluation = ConfigDef.Evaluation.EXPLICIT,
       defaultValue = "example.azuredatalakestore.net",
       label = "Account FQDN",
       description = "full account FQDN, not just the account name.",
       displayPosition = 30,
+      elDefs = VaultEL.class,
       group = "#0"
   )
   public String accountFQDN;
@@ -80,11 +81,11 @@ public class DataLakeConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      evaluation = ConfigDef.Evaluation.EXPLICIT,
       defaultValue = "",
       label = "Client Key",
       description = "Azure Client Key.",
       displayPosition = 40,
+      elDefs = VaultEL.class,
       group = "#0"
   )
   public String clientKey;
