@@ -2503,6 +2503,11 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                         <systemoutput>$SDC_DIST/libexec/sdcd-env.sh</systemoutput> file. If you
                   start Data Collector manually, set the variable in the
                         <systemoutput>$SDC_DIST/libexec/sdc-env.sh</systemoutput> file.</p>
+            <draft-comment author="alisontaylor">Use this for the pipeline --name option for any
+                  commands in the CLI docs</draft-comment>
+            <p id="CliPipelineName">The name is automatically generated when the pipeline is created and is used by <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                  /> to identify the pipeline. The pipeline name cannot be changed.</p>
 
       </conbody>
 </concept>

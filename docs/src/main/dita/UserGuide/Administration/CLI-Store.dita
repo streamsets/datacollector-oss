@@ -26,31 +26,44 @@
                         following syntax:<codeblock>store list</codeblock></dd>
                     <dd>Returns the following information for each
                         pipeline:<codeblock> {
-  "name" : "&lt;name>",
+  "name" : "&lt;pipeline name>",
+  "title" : "&lt;pipeline title>"
   "description" : "&lt; >",
   "created" : &lt;created time>,
   "lastModified" : &lt;last modified time>,
   "creator" : "admin",
   "lastModifier" : "admin",
   "lastRev" : "0",
-  "uuid" : "c4807b4b-f82a-4e5f-ac65-2c2a81db62e4",
-  "valid" : true
+  "uuid" : "&lt;internal ID used for optimistic locking>",
+  "valid" : true,
+  "metadata" : {
+    "labels" : [ ],
+    "dpm.pipeline.id" : "&lt;DPM pipeline ID>:&lt;organization name>",
+    "dpm.pipeline.version" : "&lt;published pipeline version>"
+  }
 },</codeblock></dd>
                     <dd>For example, the following command lists all pipelines associated with the
                             <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        />:
+                        /> when it is not registered with DPM:
                         <codeblock>bin/streamsets cli -U http://localhost:18630 store list</codeblock></dd>
+                    <dd>The following command lists all pipelines associated with the <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> when it is registered with DPM:
+                        <codeblock>bin/streamsets cli -U http://localhost:18630 -a dpm -u user1@mycompany -p MyPassword \
+--dpmURL https://cloud.streamsets.com store list</codeblock></dd>
                 </dlentry>
                 <dlentry>
                     <dt>import</dt>
                     <dd>Imports a pipeline. Use to import a pipeline JSON file, typically exported
                         from a <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        />. </dd>
+                        />. Returns a message when the import is successful. </dd>
                     <dd>The <codeph>import</codeph> argument uses the following syntax:</dd>
                     <dd>
-                        <codeblock>store import (-n &lt;pipelineName> | --name &lt;pipelineName>) [--stack] \
+                        <codeblock>store import \
+(-n &lt;pipelineName> | --name &lt;pipelineName>) \
+[--stack] \
 [(-f &lt;fileName> | --file &lt;fileName>)]</codeblock>
                     </dd>
                     <dd>
@@ -66,11 +79,12 @@
                                 </thead>
                                 <tbody>
                                     <row>
-                                        <entry>-n &lt;pipelineName><p>or </p><p>-name
+                                        <entry>-n &lt;pipelineName><p>or </p><p>--name
                                                 &lt;pipelineName></p></entry>
-                                        <entry>Required. Name for the imported pipeline. <p>If the
-                                                name includes spaces, surround the name in quotation
-                                                marks.</p></entry>
+                                        <entry>Required. Name for the imported pipeline. Also used
+                                            for the title of the pipeline.<p>If the name includes
+                                                spaces, surround the name in quotation
+                                            marks.</p></entry>
                                     </row>
                                     <row>
                                         <entry>--stack</entry>
@@ -91,11 +105,21 @@
                             </tgroup>
                         </table>
                     </dd>
-                    <dd>Returns a message when the import is successful. </dd>
-                    <dd>For example, the following command creates a "Dir to HDFS" pipeline based on
-                        the files2hdfs.json file:
-                        <codeblock>bin/streamsets cli -U http://localhost:18630 store import -n "Files to HDFS" \
--f ../../exported_pipelines/files2hdfs.json</codeblock></dd>
+                    <dd>For example, the following command creates a pipeline with the name "Files
+                        to HDFS" based on the files2hdfs.json file when the <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> is not registered with <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                        />:
+                        <codeblock>bin/streamsets cli -U http://localhost:18630 store import -n "Files to HDFS" -f ../../exported_pipelines/files2hdfs.json</codeblock></dd>
+                    <dd>The following command creates a pipeline with the name "Files to HDFS" based
+                        on the files2hdfs.json file when the <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> is registered with <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                        />:
+                        <codeblock>bin/streamsets cli -U http://localhost:18630 -a dpm -u user1@mycompany -p MyPassword \
+--dpmURL https://cloud.streamsets.com store import -n "Files to HDFS" -f ../../exported_pipelines/files2hdfs.json</codeblock></dd>
                 </dlentry>
             </dl></p>
  </conbody>

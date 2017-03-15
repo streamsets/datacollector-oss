@@ -26,8 +26,13 @@
 [(-a &lt;sdcAuthType> | --auth-type &lt;sdcAuthType>)] \
 [(-u &lt;sdcUser> | --user &lt;sdcUser>)] \
 [(-p &lt;sdcPassword> | --password &lt;sdcPassword>)] \
+[(-D &lt;dpmURL> | --dpmURL &lt;dpmURL>)] \
 <b>help &lt;command></b></codeblock></p>
-     <p>For example, the following command displays the details for the manager command:
+     <p>For example, the following command displays the details for the manager command. Use the
+            same command options when the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> is
+            registered or is not registered with <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>:
             <codeblock>$SDC_DIST/bin/streamsets cli -U http://localhost:18630 help manager</codeblock></p>
  </conbody>
 </concept>
