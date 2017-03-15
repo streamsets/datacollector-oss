@@ -16,6 +16,8 @@
                path="Getting_Started/GettingStarted_Title.html#task_r3q_fnx_pr"/>
    <appContext helpID="concept_hz3_5fk_fy"
                path="WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy"/>
+   <appContext helpID="concept_cf2_sdz_fz"
+               path="WhatsNew/WhatsNew_Title.html#concept_cf2_sdz_fz"/>
    <appContext helpID="concept_kzc_4sd_yy"
                path="WhatsNew/WhatsNew_Title.html#concept_kzc_4sd_yy"/>
    <appContext helpID="concept_bml_dbt_wy"
@@ -64,7 +66,7 @@
    <appContext helpID="task_opg_yrm_25"
                path="Installation/CMInstall-Overview.html#task_opg_yrm_25"/>
    <appContext helpID="task_opg_yrm_25"
-               path="Installation/CMInstall-Overview.html#unique_946864881"/>
+               path="Installation/CMInstall-Overview.html#unique_2031664519"/>
    <appContext helpID="task_u1v_nkt_25"
                path="Installation/CMInstall-Overview.html#task_u1v_nkt_25"/>
    <appContext helpID="task_zn4_qrn_25"
@@ -1937,7 +1939,7 @@
    <appContext helpID="concept_a3w_z3m_js"
                path="Troubleshooting/Troubleshooting_title.html#concept_a3w_z3m_js"/>
    <appContext helpID="concept_a3w_z3m_js"
-               path="Troubleshooting/Troubleshooting_title.html#unique_462688869"/>
+               path="Troubleshooting/Troubleshooting_title.html#unique_662522697"/>
    <appContext helpID="concept_rp1_ghd_zs"
                path="Troubleshooting/Troubleshooting_title.html#concept_rp1_ghd_zs"/>
    <appContext helpID="concept_mth_cjm_js"
