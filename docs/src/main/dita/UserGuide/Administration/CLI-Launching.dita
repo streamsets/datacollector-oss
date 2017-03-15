@@ -27,53 +27,11 @@
 [(-a &lt;sdcAuthType> | --auth-type &lt;sdcAuthType>)] \
 [(-u &lt;sdcUser> | --user &lt;sdcUser>)] \
 [(-p &lt;sdcPassword> | --password &lt;sdcPassword>)] \
+[(-D &lt;dpmURL> | --dpmURL &lt;dpmURL>)] \
 &lt;command> [&lt;args>] </codeblock></p>
-    <p>The following table describes the options for the basic command:<table frame="all" rowsep="1"
-        colsep="1" id="table_apy_55t_qt">
-        <tgroup cols="2">
-          <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-          <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-          <thead>
-            <row>
-              <entry>Option</entry>
-              <entry>Description</entry>
-            </row>
-          </thead>
-          <tbody>
-            <row>
-              <entry>-U &lt;sdcURL> <p>or</p>--url &lt;sdcURL></entry>
-              <entry>URL of the <ph
-                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
-                  <p>The default URL is <codeph>http://localhost:18630/</codeph>.</p></entry>
-            </row>
-            <row>
-              <entry>-a &lt;sdcAuthType><p>or</p>--auth-type &lt;sdcAuthType></entry>
-              <entry>Optional. HTTP authentication type used by the <ph
-                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
-              </entry>
-            </row>
-            <row>
-              <entry>-u &lt;sdcUser><p>or</p><p>--user &lt;sdcUser></p></entry>
-              <entry>Optional. User name to use to log in. The roles assigned to the user account
-                determine the tasks that you can perform.<p>If you omit this option, the <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                  /> allows admin access.</p></entry>
-            </row>
-            <row>
-              <entry>-p &lt;sdcPassword><p>or</p><p>--password &lt;sdcPassword></p></entry>
-              <entry>Optional. Required when you enter a user name. Password for the user
-                account.</entry>
-            </row>
-            <row>
-              <entry>&lt;command> </entry>
-              <entry>Required. Command to perform.</entry>
-            </row>
-            <row>
-              <entry>&lt;args></entry>
-              <entry>Optional. Include arguments and options as needed.</entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </table></p>
+    <p>The usage of the basic command options depends on whether or not the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> is
+      registered with <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>. </p>
   </conbody>
 </concept>

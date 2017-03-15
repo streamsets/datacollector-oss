@@ -56,10 +56,14 @@
    <shortdesc/>
   </topicmeta>
    <topicref href="../Administration/CLI-JavaConfigOptions.dita"/>
-   <topicref href="../Administration/CLI-Launching.dita"/>
+   <topicref href="../Administration/CLI-Launching.dita">
+    <topicref href="../Administration/CLI-LaunchingDPMDisabled.dita"/>
+    <topicref href="../Administration/CLI-LaunchingDPMEnabled.dita"/>
+   </topicref>
    <topicref href="../Administration/CLI-Help.dita"/>
    <topicref href="../Administration/CLI-Manager.dita"/>
    <topicref href="../Administration/CLI-Store.dita"/>
+   <topicref href="../Administration/CLI-System.dita"/>
  </topicref>
  </topicref>
 </map>

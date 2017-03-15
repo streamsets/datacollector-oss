@@ -48,6 +48,21 @@
               <li>list - Lists information for all available pipelines.</li>
             </ul></dd>
         </dlentry>
+        <dlentry>
+          <dt>system</dt>
+          <dd>Provides the following arguments:<ul id="ul_nwj_fsx_fz">
+              <li>enableDPM - Register the <ph
+                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+                with <ph
+                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                />.</li>
+              <li>disableDPM - Unregister the <ph
+                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+                from <ph
+                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                />.</li>
+            </ul></dd>
+        </dlentry>
       </dl></p>
  </conbody>
 </concept>
