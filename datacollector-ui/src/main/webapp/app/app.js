@@ -616,8 +616,12 @@ angular.module('dataCollectorApp')
         };
 
         statusWebSocket.onclose = function(evt) {
-          //On Close try calling REST API so that if server is down it will reload the page.
-          api.pipelineAgent.getAllPipelineStatus();
+          $timeout(
+            function() {
+              refreshPipelineStatus();
+            },
+            100
+          );
         };
 
       } else {
@@ -698,6 +702,16 @@ angular.module('dataCollectorApp')
 
             }
           };
+
+          alertsWebSocket.onclose = function(evt) {
+            $timeout(
+              function() {
+                refreshAlerts();
+              },
+              100
+            );
+          };
+
         });
       } else {
         //WebSocket is not support use polling to get Pipeline Status
