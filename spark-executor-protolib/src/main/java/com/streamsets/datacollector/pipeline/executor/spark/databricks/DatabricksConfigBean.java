@@ -103,7 +103,9 @@ public class DatabricksConfigBean {
       group = "APPLICATION",
       dependsOn = "jobType",
       triggeredByValue = "NOTEBOOK",
-      displayPosition = 30
+      displayPosition = 30,
+      elDefs = {RecordEL.class, VaultEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public Map<String, String> notebookParams;
 
