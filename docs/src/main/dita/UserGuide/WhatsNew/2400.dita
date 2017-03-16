@@ -119,11 +119,6 @@
                                 use JDBC connections. Or, you can install external libraries to call
                                 external Java code from the Groovy, Java, and Jython Evaluator
                                 processors.</li>
-                            <li>Security enhancement - With this release, the ability to view log
-                                information is restricted to users with the Admin role. For
-                                information about upgrade impact, see <xref
-                                    href="../Upgrade/2400-AccesstoLogs.dita#concept_id5_lkk_yy"
-                                />.</li>
                             <li><xref
                                     href="../Configuration/ConfiguringDataCollector.dita#task_lxk_kjw_1r"
                                     >Custom header enhancement</xref> - You can now use HTML in the

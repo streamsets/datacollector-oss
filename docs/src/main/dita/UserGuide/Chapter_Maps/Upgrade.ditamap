@@ -50,7 +50,6 @@
     <shortdesc/>
    </topicmeta>
    <topicref href="../Upgrade/2400-PipelinePermissions.dita"/>
-   <topicref href="../Upgrade/2400-AccesstoLogs.dita"/>
    <topicref href="../Upgrade/PostUpgrade-Elasticsearch.dita"/>
    <topicref href="../Upgrade/PostUpgrade-Kudu.dita"/>
    <topicref href="../Upgrade/PostUpgrade-Vault.dita"/>
