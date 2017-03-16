@@ -459,7 +459,7 @@ public class JdbcSource extends BaseSource {
       return null; // Don't output this record.
     }
 
-    final String recordContext = query + "::rowCount:" + rowCount + (StringUtils.isEmpty(offsetColumn) ? "" : ":" + resultSet.getString(offsetColumn));
+    final String recordContext = StringUtils.substring(query.replaceAll("[\n\r]", ""), 0, 100) + "::rowCount:" + rowCount + (StringUtils.isEmpty(offsetColumn) ? "" : ":" + resultSet.getString(offsetColumn));
     Record record = context.createRecord(recordContext);
     if (jdbcRecordType == JdbcRecordType.LIST_MAP) {
       record.set(Field.createListMap(fields));
