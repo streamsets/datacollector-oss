@@ -57,8 +57,9 @@ public class KafkaValidationUtil09 extends BaseKafkaValidationUtil implements Sd
       long retryBackoffMs
   ) throws StageException {
     int partitionCount = -1;
+    KafkaConsumer<String, String> kafkaConsumer = null;
     try {
-      KafkaConsumer<String, String> kafkaConsumer = createTopicMetadataClient(metadataBrokerList, kafkaClientConfigs);
+      kafkaConsumer = createTopicMetadataClient(metadataBrokerList, kafkaClientConfigs);
       List<PartitionInfo> partitionInfoList = kafkaConsumer.partitionsFor(topic);
       if(partitionInfoList != null) {
         partitionCount = partitionInfoList.size();
@@ -66,6 +67,10 @@ public class KafkaValidationUtil09 extends BaseKafkaValidationUtil implements Sd
     } catch (KafkaException e) {
       LOG.error(KafkaErrors.KAFKA_41.getMessage(), topic, e.toString(), e);
       throw new StageException(KafkaErrors.KAFKA_41, topic, e.toString());
+    } finally {
+      if (kafkaConsumer != null) {
+        kafkaConsumer.close();
+      }
     }
     return partitionCount;
   }
