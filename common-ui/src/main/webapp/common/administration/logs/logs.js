@@ -163,6 +163,7 @@ angular
         } else {
           // For non admins - they can access only pipeline filtered logs
           $scope.logMessages = [];
+          $scope.loading = false;
           return;
         }
       }
