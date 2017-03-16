@@ -26,6 +26,7 @@ import com.microsoft.azure.datalake.store.oauth2.AzureADAuthenticator;
 import com.microsoft.azure.datalake.store.oauth2.AzureADToken;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
@@ -74,6 +75,7 @@ public class DataLakeTarget extends BaseTarget {
   private RecordWriter writer;
   private ErrorRecordHandler errorRecordHandler;
   private SafeScheduledExecutorService scheduledExecutor;
+  private long idleTimeSecs = -1;
 
 
   public static final String TARGET_DIRECTORY_HEADER = "targetDirectory";
@@ -96,6 +98,11 @@ public class DataLakeTarget extends BaseTarget {
     timeDriverVars = getContext().createELVars();
 
     calendar = Calendar.getInstance(TimeZone.getTimeZone(conf.timeZoneID));
+
+    if (conf.idleTimeout != null && !conf.idleTimeout.isEmpty()) {
+      idleTimeSecs = initTimeConfigs(getContext(), "idleTimeout", conf.idleTimeout, Groups.OUTPUT,
+          true, Errors.ADLS_06, issues);
+    }
 
     if (conf.dirPathTemplate.startsWith(EL_PREFIX)) {
       TimeEL.setCalendarInContext(dirPathTemplateVars, calendar);
@@ -199,7 +206,8 @@ public class DataLakeTarget extends BaseTarget {
           conf.dataFormatConfig.wholeFileExistsAction,
           conf.authTokenEndpoint,
           conf.clientId,
-          conf.clientKey
+          conf.clientKey,
+          idleTimeSecs
       );
     }
 
@@ -218,7 +226,18 @@ public class DataLakeTarget extends BaseTarget {
     super.destroy();
     try {
       if(writer != null) {
-        writer.close();
+        try {
+          writer.close();
+        } catch (StageException | IOException ex) {
+          String errorMessage = ex.toString();
+          if (ex instanceof ADLException) {
+            errorMessage = ex.getMessage();
+            if (errorMessage == null) {
+              errorMessage = ((ADLException) ex).remoteExceptionMessage;
+            }
+          }
+          LOG.error(Errors.ADLS_04.getMessage(), errorMessage, ex);
+        }
       }
 
       if (scheduledExecutor != null && !scheduledExecutor.isTerminated()) {
@@ -228,15 +247,6 @@ public class DataLakeTarget extends BaseTarget {
           Thread.sleep(100);
         }
       }
-    } catch (IOException ex) {
-      String errorMessage = ex.toString();
-      if (ex instanceof ADLException) {
-        errorMessage = ex.getMessage();
-        if (errorMessage == null) {
-          errorMessage = ((ADLException) ex).remoteExceptionMessage;
-        }
-      }
-      LOG.error(Errors.ADLS_04.getMessage(), errorMessage, ex);
     } catch (InterruptedException ex) {
       LOG.error("interrupted: {}", ex.toString(), ex);
       Thread.currentThread().interrupt();
@@ -330,5 +340,43 @@ public class DataLakeTarget extends BaseTarget {
       client.createFile(filePath, null, octalPermission, true);
       client.delete(filePath);
     }
+  }
+
+  private long initTimeConfigs(
+      Stage.Context context,
+      String configName,
+      String configuredValue,
+      Groups configGroup,
+      boolean allowNegOne,
+      Errors errorCode,
+      List<Stage.ConfigIssue> issues) {
+    long timeInSecs = 0;
+    try {
+      ELEval timeEvaluator = context.createELEval(configName);
+      context.parseEL(configuredValue);
+      timeInSecs = timeEvaluator.eval(context.createELVars(),
+          configuredValue, Long.class);
+      if (timeInSecs <= 0 && (!allowNegOne || timeInSecs != -1)) {
+        issues.add(
+            context.createConfigIssue(
+                configGroup.name(),
+                DataLakeConfigBean.ADLS_CONFIG_BEAN_PREFIX + configName,
+                errorCode
+            )
+        );
+      }
+    } catch (Exception ex) {
+      issues.add(
+          context.createConfigIssue(
+              configGroup.name(),
+              DataLakeConfigBean.ADLS_CONFIG_BEAN_PREFIX + configName,
+              Errors.ADLS_10,
+              configuredValue,
+              ex.toString(),
+              ex
+          )
+      );
+    }
+    return timeInSecs;
   }
 }

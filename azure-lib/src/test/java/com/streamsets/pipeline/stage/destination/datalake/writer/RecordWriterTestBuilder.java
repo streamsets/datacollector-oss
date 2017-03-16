@@ -43,6 +43,7 @@ public class RecordWriterTestBuilder {
   String authTokenEndpoint;
   String clientId;
   String clientKey;
+  long idleTimeout;
 
   public RecordWriterTestBuilder() {
     this.client = null;
@@ -59,6 +60,7 @@ public class RecordWriterTestBuilder {
     this.authTokenEndpoint = "";
     this.clientId = "";
     this.clientKey = "";
+    this.idleTimeout = -1L;
   }
 
   public RecordWriterTestBuilder uniquePrefix(String uniquePrefix) {
@@ -108,7 +110,8 @@ public class RecordWriterTestBuilder {
         wholeFileExistsAction,
         authTokenEndpoint,
         clientId,
-        clientKey
+        clientKey,
+        idleTimeout
     );
   }
 

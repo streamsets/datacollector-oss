@@ -63,8 +63,7 @@ public class DataLakeWriterThread implements Callable<List<OnRecordErrorExceptio
         writer.write(tmpFilePath, record);
 
         if (writer.shouldRoll(record, dirPath)) {
-          writer.flush(tmpFilePath);
-          writer.commitOldFile(dirPath, tmpFilePath);
+          writer.commitOldFile(tmpFilePath);
           isFlushed = true;
         } else {
           isFlushed = false;

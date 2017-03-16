@@ -181,6 +181,23 @@ public class DataLakeConfigBean {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "${1 * HOURS}",
+      label = "Idle Timeout",
+      description = "Maximum time for a file to remain idle. After no records are written to a file for the" +
+          " specified time, the destination closes the file. Enter a number to specify a value in seconds. You" +
+          " can also use the MINUTES or HOURS constants in an expression. Use -1 to opt out of a timeout.",
+      group = "OUTPUT",
+      displayPosition = 136,
+      elDefs = {TimeEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      dependsOn = "dataFormat",
+      triggeredByValue = {"TEXT", "JSON", "DELIMITED", "AVRO", "BINARY", "PROTOBUF"}
+  )
+  public String idleTimeout;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
       label = "Use Roll Attribute",

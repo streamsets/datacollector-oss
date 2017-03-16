@@ -37,7 +37,6 @@ import com.streamsets.pipeline.config.WholeFileExistsAction;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
-import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.stage.destination.datalake.DataLakeTarget;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import org.slf4j.Logger;
@@ -53,7 +52,7 @@ public class RecordWriter {
   private final static Logger LOG = LoggerFactory.getLogger(RecordWriter.class);
 
   // FilePath with ADLS connections stream
-  private Map<String, DataGenerator> generators;
+  private Map<String, DataLakeDataGenerator> generators;
   private final ADLStoreClient client;
   private final DataFormat dataFormat;
   private final DataGeneratorFormatConfig dataFormatConfig;
@@ -75,6 +74,7 @@ public class RecordWriter {
   private final String authTokenEndpoint;
   private final String clientId;
   private final String clientKey;
+  private final long idleTimeSecs;
 
   public RecordWriter(
       ADLStoreClient client,
@@ -91,7 +91,8 @@ public class RecordWriter {
       WholeFileExistsAction wholeFileExistsAction,
       String authTokenEndpoint,
       String clientId,
-      String clientKey
+      String clientKey,
+      long idleTimeSecs
   ) {
     generators = new HashMap<>();
     dirPathTemplateEval = context.createELEval("dirPathTemplate");
@@ -111,11 +112,12 @@ public class RecordWriter {
     this.rollHeaderName = rollHeaderName;
     this.maxRecordsPerFile = maxRecordsPerFile;
     this.wholeFileExistsAction = wholeFileExistsAction;
-    this.outputStreamHelper = getOutputStreamHelper();
-
     this.authTokenEndpoint = authTokenEndpoint;
     this.clientId = clientId;
     this.clientKey = clientKey;
+    this.idleTimeSecs = idleTimeSecs;
+
+    this.outputStreamHelper = getOutputStreamHelper();
   }
 
   public void updateToken() throws IOException {
@@ -124,11 +126,11 @@ public class RecordWriter {
   }
 
   public void write(String filePath, Record record) throws StageException, IOException {
-    DataGenerator generator = getGenerator(filePath);
+    DataLakeDataGenerator generator = getGenerator(filePath);
     generator.write(record);
 
     if (dataFormat == DataFormat.WHOLE_FILE) {
-      commitOldFile(filePath.substring(0, filePath.lastIndexOf("/")), filePath);
+      commitOldFile(filePath);
     }
   }
 
@@ -159,18 +161,23 @@ public class RecordWriter {
     return outputStreamHelper.getTempFilePath(dirPath, record, recordTime);
   }
 
-  public void close() throws IOException {
-    for (Map.Entry<String, DataGenerator> entry : generators.entrySet()) {
+  public void close() throws IOException, StageException {
+    for (Map.Entry<String, DataLakeDataGenerator> entry : generators.entrySet()) {
       entry.getValue().close();
       String dirPath = entry.getKey().substring(0, entry.getKey().lastIndexOf("/"));
       outputStreamHelper.commitFile(dirPath);
+      generators.remove(dirPath);
     }
     generators.clear();
     outputStreamHelper.clearStatus();
   }
 
-  public void commitOldFile(String dirPath, String filePath) throws IOException {
-    outputStreamHelper.commitFile(dirPath);
+  public void commitOldFile(String filePath) throws IOException, StageException {
+    DataLakeDataGenerator generator = generators.get(filePath);
+
+    Utils.checkArgument(generator != null, "Generator cannot be null");
+
+    generator.commitFile();
     generators.remove(filePath);
   }
 
@@ -191,13 +198,13 @@ public class RecordWriter {
   }
 
   public void flush(String filePath) throws IOException {
-    DataGenerator generator = generators.get(filePath);
+    DataLakeDataGenerator generator = generators.get(filePath);
     Utils.checkNotNull(generator, "File path does not exist: '" + filePath + "'");
     generator.flush();
   }
 
-  private DataGenerator getGenerator(String filePath) throws StageException, IOException {
-    DataGenerator generator = generators.get(filePath);
+  private DataLakeDataGenerator getGenerator(String filePath) throws StageException, IOException {
+    DataLakeDataGenerator generator = generators.get(filePath);
     if (generator == null) {
       generator = createDataGenerator(filePath);
       generators.put(filePath, generator);
@@ -205,8 +212,8 @@ public class RecordWriter {
     return generator;
   }
 
-  private DataGenerator createDataGenerator(String filePath) throws StageException, IOException {
-    return dataFormatConfig.getDataGeneratorFactory().getGenerator(outputStreamHelper.getOutputStream(filePath));
+  private DataLakeDataGenerator createDataGenerator(String filePath) throws StageException, IOException {
+    return new DataLakeDataGenerator(filePath, outputStreamHelper, dataFormatConfig, idleTimeSecs);
   }
 
   OutputStreamHelper getOutputStreamHelper() {
