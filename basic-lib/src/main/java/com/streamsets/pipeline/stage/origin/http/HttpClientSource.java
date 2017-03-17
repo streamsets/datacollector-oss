@@ -647,8 +647,9 @@ public class HttpClientSource extends BaseSource {
       if (record == null) {
         // Done reading this response
         cleanupResponse(in);
-        incrementSourceOffset(sourceOffset, subRecordCount);
       }
+
+      incrementSourceOffset(sourceOffset, subRecordCount);
     } catch (IOException e) {
       errorRecordHandler.onError(Errors.HTTP_00, e.toString(), e);
     }
