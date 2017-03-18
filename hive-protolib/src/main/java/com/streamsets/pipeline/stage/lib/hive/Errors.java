@@ -59,6 +59,7 @@ public enum Errors implements ErrorCode {
   HIVE_33("Record {} have unsupported root type {}"),
   HIVE_34("Connection to Hive have failed: {}"),
   HIVE_35("Can't find database location: {}"),
+  HIVE_36("Can't parse partition location as URI: {}"),
   ;
   private final String msg;
 

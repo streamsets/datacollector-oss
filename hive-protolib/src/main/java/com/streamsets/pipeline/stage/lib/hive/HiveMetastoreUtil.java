@@ -50,6 +50,8 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.PrivilegedExceptionAction;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -122,7 +124,6 @@ public final class HiveMetastoreUtil {
   private static final Pattern UNSUPPORTED_PARTITION_VALUE_PATTERN = Pattern.compile(UNSUPPORTED_PARTITION_VALUE_REGEX);
   //Letters followed by letters/numbers/underscore
   private static final Pattern COLUMN_NAME_PATTERN = Pattern.compile("[A-Za-z_][A-Za-z0-9_]*");
-  private static final String HDFS_LOCATION_REGEX = "((hdfs://[^/]+(:[0-9]+)?)|(maprfs:))/";
 
   public enum MetadataRecordType {
     /**
@@ -823,16 +824,16 @@ public final class HiveMetastoreUtil {
     }
   }
 
-  public static String stripHdfsHostAndPort(String location) {
-    Utils.checkNotNull(location, "HDFS Partition location");
-    Utils.checkArgument(
-        !location.isEmpty(), "HDFS location cannot be empty"
-    );
-    Utils.checkArgument(
-        location.matches(HDFS_LOCATION_REGEX + ".*"),
-        "HDFS Partition location should match pattern" + HDFS_LOCATION_REGEX + ".*"
-    );
-    return location.replaceFirst(HDFS_LOCATION_REGEX, HiveMetastoreUtil.SEP);
+  public static String stripHdfsHostAndPort(String location) throws StageException {
+    Utils.checkNotNull(location, "HDFS Partition location can't be null");
+    Utils.checkArgument(!location.isEmpty(), "HDFS location cannot be empty");
+
+    try {
+      String path = new URI(location).getPath();
+      return Utils.checkNotNull(path, "HDFS Partition path can't be null");
+    } catch (URISyntaxException e) {
+      throw new StageException(Errors.HIVE_36, location, e.getMessage(), e);
+    }
   }
 
   /**
