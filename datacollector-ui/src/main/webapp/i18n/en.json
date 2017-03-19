@@ -365,6 +365,7 @@
         "errorsCount": "Stage Errors Count (since last startup)",
         "errorsHistogram": "Stage Errors Histogram (5 minutes decay)"
       },
+      "committedOffsets": "Committed Offsets",
       "configuration": "Configuration",
       "configurationTab": {
         "changeStageLibrary": "Change Stage Library",

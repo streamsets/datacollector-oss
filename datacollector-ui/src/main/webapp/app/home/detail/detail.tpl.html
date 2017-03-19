@@ -79,6 +79,11 @@
                target="_blank">{{'home.detailPane.definitionsJSONData' | translate}}</a>
           </li>
 
+          <li role="presentation" ng-if="!$storage.dontShowRESTResponseMenu">
+            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline/{{pipelineConfig.info.name}}/committedOffsets"
+               target="_blank">{{'home.detailPane.committedOffsets' | translate}}</a>
+          </li>
+
           <li role="presentation" ng-if="isPipelineRunning && activeDetailTab.name == 'summary'"
               ng-if="!$storage.dontShowRESTResponseMenu"
               class="divider"></li>
