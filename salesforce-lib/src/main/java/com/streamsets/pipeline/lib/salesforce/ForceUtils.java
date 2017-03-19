@@ -27,19 +27,62 @@ import com.sforce.soap.partner.fault.ApiFault;
 import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
 import com.sforce.ws.SessionRenewer;
+import com.sforce.ws.bind.XmlObject;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.StageException;
+import org.apache.commons.codec.binary.Base64;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ForceUtils {
   private static final String SOBJECT_TYPE_FROM_QUERY = "^SELECT.*FROM\\s*(\\S*)\\b.*";
   private static Pattern sObjectFromQueryPattern = Pattern.compile(SOBJECT_TYPE_FROM_QUERY, Pattern.DOTALL);
+  private static SimpleDateFormat DATETIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss");
+  private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+  private static TimeZone TZ = TimeZone.getTimeZone("GMT");
+  private static List<String> BOOLEAN_TYPES = Arrays.asList("boolean", "checkbox");
+  private static List<String> STRING_TYPES = Arrays.asList(
+      "email",
+      "encryptedstring",
+      "id",
+      "multipicklist",
+      "phone",
+      "picklist",
+      "reference",
+      "string",
+      "textarea",
+      "time",
+      "url"
+  );
+  private static List<String> DECIMAL_TYPES = Arrays.asList(
+      "currency",
+      "double",
+      "percent"
+  );
+  private static List<String> INT_TYPES = Collections.singletonList("int");
+  private static List<String> BINARY_TYPES = Collections.singletonList("base64");
+  private static List<String> BYTE_TYPES = Collections.singletonList("byte");
+  private static List<String> DATETIME_TYPES = Collections.singletonList("datetime");
+  private static List<String> DATE_TYPES = Collections.singletonList("date");
+
+  static {
+    DATETIME_FORMAT.setTimeZone(TZ);
+    DATE_FORMAT.setTimeZone(TZ);
+  }
 
   public static String getExceptionCode(Throwable th) {
     return (th instanceof ApiFault) ? ((ApiFault) th).getExceptionCode().name() : "";
@@ -98,44 +141,117 @@ public class ForceUtils {
     return new BulkConnection(config);
   }
 
-  public static Field createField(Object val) {
-    return createField(val, DataType.USE_SALESFORCE_TYPE);
+  public static Field createField(Object val, com.sforce.soap.partner.Field sfdcField) throws StageException {
+    return createField(val, DataType.USE_SALESFORCE_TYPE, sfdcField);
   }
 
-  public static Field createField(Object val, DataType userSpecifiedType) {
+  public static Field createField(Object val, DataType userSpecifiedType, com.sforce.soap.partner.Field sfdcField) throws StageException {
+    String sfdcType = sfdcField.getType().toString();
     if (userSpecifiedType != DataType.USE_SALESFORCE_TYPE) {
       return Field.create(Field.Type.valueOf(userSpecifiedType.getLabel()), val);
     } else {
-      if (val instanceof Boolean) {
-        return Field.create((Boolean)val);
-      } else if (val instanceof Character) {
-        return  Field.create((Character)val);
-      } else if (val instanceof Byte) {
-        return  Field.create((Byte)val);
-      } else if (val instanceof Short) {
-        return  Field.create((Short)val);
-      } else if (val instanceof Integer) {
-        return  Field.create((Integer)val);
-      } else if (val instanceof Long) {
-        return  Field.create((Long)val);
-      } else if (val instanceof Float) {
-        return  Field.create((Float)val);
-      } else if (val instanceof Double) {
-        return  Field.create((Double)val);
-      } else if (val instanceof BigDecimal) {
-        return  Field.create((BigDecimal)val);
-      } else if (val instanceof String) {
-        return  Field.create((String)val);
-      } else if (val instanceof byte[]) {
-        return  Field.create((byte[])val);
-      } else if (val instanceof Date) {
-        return  Field.createDatetime((Date)val);
-      } else if (val == null) {
-        return  Field.create(Field.Type.STRING, null);
+      if (val != null && !(val instanceof String)) {
+        throw new StageException(
+            Errors.FORCE_04,
+            "Unexpected type: " + val.getClass().getName()
+        );
+      }
+      String strVal = (String)val;
+      if (BOOLEAN_TYPES.contains(sfdcType)) {
+        return Field.create(Field.Type.BOOLEAN, (strVal != null) ? Boolean.valueOf(strVal) : null);
+      } else if (BYTE_TYPES.contains(sfdcType)) {
+        return  Field.create(Field.Type.BYTE, (strVal != null) ? Byte.valueOf(strVal) : null);
+      } else if (INT_TYPES.contains(sfdcType)) {
+        return  Field.create(Field.Type.INTEGER, (strVal != null) ? Integer.valueOf(strVal) : null);
+      } else if (DECIMAL_TYPES.contains(sfdcType)) {
+        return  Field.create(Field.Type.DECIMAL, (strVal != null) ? new BigDecimal(strVal) : null);
+      } else if (STRING_TYPES.contains(sfdcType)) {
+        return  Field.create(Field.Type.STRING, strVal);
+      } else if (BINARY_TYPES.contains(sfdcType)) {
+        return  Field.create(Field.Type.BYTE_ARRAY, (strVal != null) ? Base64.decodeBase64(strVal) : null);
+      } else if (DATETIME_TYPES.contains(sfdcType)) {
+        try {
+          return Field.createDatetime((strVal != null) ? DATETIME_FORMAT.parse(strVal) : null);
+        } catch (ParseException e) {
+          throw new StageException(Errors.FORCE_04, "Error parsing date", e);
+        }
+      } else if (DATE_TYPES.contains(sfdcType)) {
+        try {
+          return Field.createDatetime((strVal != null) ? DATE_FORMAT.parse(strVal) : null);
+        } catch (ParseException e) {
+          throw new StageException(Errors.FORCE_04, "Error parsing date", e);
+        }
       } else {
-        return null;
+        throw new StageException(
+            Errors.FORCE_04,
+            "Unexpected type: " + sfdcType
+        );
       }
     }
+  }
+
+  public static LinkedHashMap<String, Field> addFields(
+      XmlObject parent,
+      Map<String, Map<String, com.sforce.soap.partner.Field>> metadataMap,
+      boolean createSalesforceNsHeaders,
+      String salesforceNsHeaderPrefix
+  ) throws StageException {
+      return addFields(parent, metadataMap, createSalesforceNsHeaders, salesforceNsHeaderPrefix, null);
+  }
+
+  public static LinkedHashMap<String, Field> addFields(
+      XmlObject parent,
+      Map<String, Map<String, com.sforce.soap.partner.Field>> metadataMap,
+      boolean createSalesforceNsHeaders,
+      String salesforceNsHeaderPrefix,
+      Map<String, DataType> columnsToTypes
+  ) throws StageException {
+    LinkedHashMap<String, Field> map = new LinkedHashMap<>();
+
+    Iterator<XmlObject> iter = parent.getChildren();
+    String type = null;
+    while (iter.hasNext()) {
+      XmlObject obj = iter.next();
+
+      String key = obj.getName().getLocalPart();
+      if ("type".equals(key)) {
+        // Housekeeping field
+        type = obj.getValue().toString().toLowerCase();
+        continue;
+      }
+
+      if (obj.hasChildren()) {
+        map.put(key, Field.createListMap(addFields(obj, metadataMap, createSalesforceNsHeaders, salesforceNsHeaderPrefix, columnsToTypes)));
+      } else {
+        Object val = obj.getValue();
+        if ("Id".equalsIgnoreCase(key) && null == val) {
+          // Get a null Id if you don't include it in the SELECT
+          continue;
+        }
+        if (type == null) {
+          throw new StageException(
+              Errors.FORCE_04,
+              "No type information for " + obj.getName().getLocalPart() +
+                  ". Specify component fields of compound fields, e.g. Location__Latitude__s or BillingStreet"
+          );
+        }
+        com.sforce.soap.partner.Field sfdcField = metadataMap.get(type).get(key.toLowerCase());
+        Field field = null;
+        if (sfdcField == null) {
+          // null relationship
+          field = Field.createListMap(new LinkedHashMap<>());
+        } else {
+          DataType dataType = (columnsToTypes != null) ? columnsToTypes.get(key.toLowerCase()) : null;
+          field = ForceUtils.createField(val, (dataType == null ? DataType.USE_SALESFORCE_TYPE : dataType), sfdcField);
+        }
+        if (createSalesforceNsHeaders) {
+          ForceUtils.setHeadersOnField(field, sfdcField, salesforceNsHeaderPrefix);
+        }
+        map.put(key, field);
+      }
+    }
+
+    return map;
   }
 
   public static void setHeadersOnField(Field field, com.sforce.soap.partner.Field sfdcField, String salesforceNsHeaderPrefix) {
@@ -149,46 +265,74 @@ public class ForceUtils {
       String salesforceNsHeaderPrefix) {
     Map<String, String> attributeMap = new HashMap<>();
 
+    if (sfdcField == null) {
+      return attributeMap;
+    }
     String type = sfdcField.getType().toString();
     attributeMap.put(salesforceNsHeaderPrefix + "salesforceType", type);
-    if ("string".equals(type) || "textarea".equals(type)) {
+    if (STRING_TYPES.contains(type)) {
       attributeMap.put(salesforceNsHeaderPrefix + "length", Integer.toString(sfdcField.getLength()));
-    } else if ("double".equals(type)) {
+    } else if (DECIMAL_TYPES.contains(type) ||
+        "currency".equals(type) ||
+        "percent".equals(type)) {
       attributeMap.put(salesforceNsHeaderPrefix + "precision", Integer.toString(sfdcField.getPrecision()));
       attributeMap.put(salesforceNsHeaderPrefix + "scale", Integer.toString(sfdcField.getScale()));
-    } else if ("int".equals(type)) {
+    } else if (INT_TYPES.contains(type)) {
       attributeMap.put(salesforceNsHeaderPrefix + "digits", Integer.toString(sfdcField.getDigits()));
     }
 
     return attributeMap;
   }
 
-  public static Map<String, com.sforce.soap.partner.Field> getFieldMap(
+  // Recurse through the tree of referenced types, building a metadata query for each level
+  // Salesforce constrains the depth of the tree to 5, so we don't need to worry about
+  // infinite recursion
+  private static void getAllReferences(
+      PartnerConnection partnerConnection,
+      Map<String, Map<String, com.sforce.soap.partner.Field>> metadataMap,
+      String[] types
+  ) throws ConnectionException {
+    List<String> next = new ArrayList<>();
+
+    for (DescribeSObjectResult result : partnerConnection.describeSObjects(types)) {
+      Map<String, com.sforce.soap.partner.Field> fieldMap = new LinkedHashMap<>();
+      com.sforce.soap.partner.Field[] fields = result.getFields();
+      for (int i = 0; i < fields.length; i++) {
+        com.sforce.soap.partner.Field field = fields[i];
+        fieldMap.put(field.getName().toLowerCase(), field);
+      }
+
+      metadataMap.put(result.getName().toLowerCase(), fieldMap);
+
+      Set<String> sobjectNames = metadataMap.keySet();
+      for (com.sforce.soap.partner.Field field : fieldMap.values()) {
+        for (String ref : field.getReferenceTo()) {
+          ref = ref.toLowerCase();
+          if (!sobjectNames.contains(ref) && !next.contains(ref)) {
+            next.add(ref);
+          }
+        }
+      }
+    }
+
+    if (next.size() > 0) {
+      getAllReferences(partnerConnection, metadataMap, next.toArray(new String[0]));
+    }
+  }
+
+  public static Map<String, Map<String, com.sforce.soap.partner.Field>> getMetadataMap(
       PartnerConnection partnerConnection,
       String sobjectType
   ) throws ConnectionException {
-    DescribeSObjectResult[] results = partnerConnection.describeSObjects(new String[]{sobjectType});
-
-    Map<String, com.sforce.soap.partner.Field> fieldMap = new LinkedHashMap<>();
-    com.sforce.soap.partner.Field[] fields = results[0].getFields();
-    for (int i = 0; i < fields.length; i++) {
-      com.sforce.soap.partner.Field field = fields[i];
-      String typeName = field.getType().name();
-      if ("address".equals(typeName) || "location".equals(typeName)) {
-        // Skip compound fields of address or geolocation type since they are returned
-        // with null values by the SOAP API and not supported at all by the Bulk API
-        continue;
-      }
-      fieldMap.put(field.getName(), field);
-    }
-
-    return fieldMap;
+    Map<String, Map<String, com.sforce.soap.partner.Field>> metadataMap = new LinkedHashMap<>();
+    getAllReferences(partnerConnection, metadataMap, new String[]{sobjectType});
+    return metadataMap;
   }
 
   public static String getSobjectTypeFromQuery(String query) {
     Matcher m = sObjectFromQueryPattern.matcher(query);
     if (m.matches()) {
-      return m.group(1);
+      return m.group(1).toLowerCase();
     }
     return null;
   }

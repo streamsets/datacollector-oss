@@ -24,7 +24,6 @@ import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.soap.partner.QueryResult;
 import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.ConnectionException;
-import com.sforce.ws.bind.XmlObject;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
@@ -34,10 +33,10 @@ import com.streamsets.pipeline.lib.salesforce.ForceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.Map;
 
-class ForceLookupLoader extends CacheLoader<String, LookupCacheEntry> {
+class ForceLookupLoader extends CacheLoader<String, Map<String, Field>> {
   private static final Logger LOG = LoggerFactory.getLogger(ForceLookupLoader.class);
 
   private final Map<String, String> columnsToFields;
@@ -64,18 +63,16 @@ class ForceLookupLoader extends CacheLoader<String, LookupCacheEntry> {
   }
 
   @Override
-  public LookupCacheEntry load(String key) throws Exception {
+  public Map<String, Field> load(String key) throws Exception {
     return lookupValuesForRecord(key);
   }
 
-  private LookupCacheEntry lookupValuesForRecord(String preparedQuery) throws StageException {
-    LookupCacheEntry entry = new LookupCacheEntry();
+  private Map<String, Field> lookupValuesForRecord(String preparedQuery) throws StageException {
+    Map<String, Field> fieldMap = new HashMap<>();
 
     try {
-      Map<String, com.sforce.soap.partner.Field> fieldMap = null;
-      if (createSalesforceNsHeaders) {
-        fieldMap = ForceUtils.getFieldMap(partnerConnection, ForceUtils.getSobjectTypeFromQuery(preparedQuery));
-      }
+      Map<String, Map<String, com.sforce.soap.partner.Field>> metadataMap =
+          ForceUtils.getMetadataMap(partnerConnection, ForceUtils.getSobjectTypeFromQuery(preparedQuery));
 
       QueryResult queryResult = partnerConnection.query(preparedQuery);
 
@@ -84,39 +81,12 @@ class ForceLookupLoader extends CacheLoader<String, LookupCacheEntry> {
       LOG.info("Retrieved {} records", records.length);
 
       if (records.length > 0) {
-        SObject record = records[0];
+        // TODO - handle multiple records (SDC-4739)
 
-        Iterator<XmlObject> iter = record.getChildren();
-        while (iter.hasNext()) {
-          XmlObject obj = iter.next();
-
-          String key = obj.getName().getLocalPart();
-          if ("type".equals(key)) {
-            // Housekeeping field
-            continue;
-          }
-
-          Object val = obj.getValue();
-          if ("Id".equalsIgnoreCase(key) && null == val) {
-            // Get a null Id if you don't include it in the SELECT
-            continue;
-          }
-          try {
-            DataType dataType = columnsToTypes.get(key.toLowerCase());
-            Field field = ForceUtils.createField(val, dataType == null ? DataType.USE_SALESFORCE_TYPE : dataType);
-            if (field == null) {
-              throw new StageException(Errors.FORCE_04,
-                  "Key: " + key + ", unexpected type for val: " + val.getClass().toString());
-            }
-            entry.fieldMap.put(key, field);
-
-            if (createSalesforceNsHeaders) {
-              entry.attributeMap.putAll(ForceUtils.getHeadersForField(fieldMap.get(key), salesforceNsHeaderPrefix));
-            }
-          } catch (IllegalArgumentException e) {
-            throw new OnRecordErrorException(Errors.FORCE_20, key, val, e);
-          }
-        }
+        fieldMap = ForceUtils.addFields(
+            records[0],
+            metadataMap,
+            createSalesforceNsHeaders, salesforceNsHeaderPrefix, columnsToTypes);
       } else {
         // Salesforce returns no row. Use default values.
         for (String key : columnsToFields.keySet()) {
@@ -124,7 +94,7 @@ class ForceLookupLoader extends CacheLoader<String, LookupCacheEntry> {
           try {
             if (columnsToTypes.get(key) != DataType.USE_SALESFORCE_TYPE) {
               Field field = Field.create(Field.Type.valueOf(columnsToTypes.get(key).getLabel()), val);
-              entry.fieldMap.put(key, field);
+              fieldMap.put(key, field);
             }
           } catch (IllegalArgumentException e) {
             throw new OnRecordErrorException(Errors.FORCE_20, key, val, e);
@@ -136,6 +106,6 @@ class ForceLookupLoader extends CacheLoader<String, LookupCacheEntry> {
       throw new OnRecordErrorException(Errors.FORCE_17, preparedQuery, e.getMessage());
     }
 
-    return entry;
+    return fieldMap;
   }
 }

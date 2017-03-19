@@ -118,7 +118,12 @@ public class ForceSource extends BaseSource {
 
   private Pattern wildcardSelectPattern = Pattern.compile(WILDCARD_SELECT_QUERY, Pattern.DOTALL);
 
-  private Map<String, com.sforce.soap.partner.Field> fieldMap;
+  private Map<String, Map<String, com.sforce.soap.partner.Field>> metadataMap;
+
+  private class FieldTree {
+    String offset;
+    LinkedHashMap<String, Field> map;
+  }
 
   public ForceSource(
       ForceSourceConfigBean conf
@@ -240,7 +245,7 @@ public class ForceSource extends BaseSource {
 
     if (issues.isEmpty()) {
       try {
-        fieldMap = ForceUtils.getFieldMap(partnerConnection, sobjectType);
+        metadataMap = ForceUtils.getMetadataMap(partnerConnection, sobjectType);
       } catch (ConnectionException e) {
         issues.add(getContext().createConfigIssue(Groups.QUERY.name(),
             ForceConfigBean.CONF_PREFIX + "soqlQuery",
@@ -291,17 +296,17 @@ public class ForceSource extends BaseSource {
   private String prepareQuery(String query, String lastSourceOffset) throws StageException {
     final String offset = (null == lastSourceOffset) ? conf.initialOffset : lastSourceOffset;
 
+    try {
+      metadataMap = ForceUtils.getMetadataMap(partnerConnection, sobjectType);
+    } catch (ConnectionException e) {
+      throw new StageException(Errors.FORCE_21, sobjectType, e);
+    }
+
     Matcher m = wildcardSelectPattern.matcher(query);
     if (m.matches()) {
       // Query is SELECT * FROM... - substitute in list of field names
       StringBuffer fieldsString = new StringBuffer();
-      try {
-        fieldMap = ForceUtils.getFieldMap(partnerConnection, sobjectType);
-      } catch (ConnectionException e) {
-        throw new StageException(Errors.FORCE_21, sobjectType, e);
-      }
-
-      for (com.sforce.soap.partner.Field field : fieldMap.values()) {
+      for (com.sforce.soap.partner.Field field : metadataMap.get(sobjectType.toLowerCase()).values()) {
         String typeName = field.getType().name();
         if ("address".equals(typeName) || "location".equals(typeName)) {
           // Skip compound fields of address or geolocation type since they are returned
@@ -488,10 +493,11 @@ public class ForceSource extends BaseSource {
             Record record = getContext().createRecord(sourceId);
             LinkedHashMap<String, Field> map = new LinkedHashMap<>();
             for (int i = 0; i < resultHeader.size(); i++) {
-              Field field = Field.create(row.get(i));
               String fieldName = resultHeader.get(i);
+              com.sforce.soap.partner.Field sfdcField = metadataMap.get(sobjectType).get(fieldName.toLowerCase());
+              Field field = ForceUtils.createField(row.get(i), sfdcField);
               if (conf.createSalesforceNsHeaders) {
-                ForceUtils.setHeadersOnField(field, fieldMap.get(fieldName), conf.salesforceNsHeaderPrefix);
+                ForceUtils.setHeadersOnField(field, metadataMap.get(sobjectType).get(fieldName.toLowerCase()), conf.salesforceNsHeaderPrefix);
               }
               map.put(fieldName, field);
             }
@@ -517,7 +523,7 @@ public class ForceSource extends BaseSource {
     Iterator<XmlObject> iter = record.getChildren();
 
     while(iter.hasNext()) {
-      XmlObject child = (XmlObject)iter.next();
+      XmlObject child = iter.next();
       if(child.getName().getLocalPart().equalsIgnoreCase(name)) {
         item = child;
         break;
@@ -553,43 +559,17 @@ public class ForceSource extends BaseSource {
       SObject record = records[recordIndex];
 
       XmlObject offsetField = getChildIgnoreCase(record, conf.offsetColumn);
-      if (offsetField == null) {
+      if (offsetField == null || offsetField.getValue() == null) {
         throw new StageException(Errors.FORCE_22, conf.offsetColumn);
       }
-      final String recordContext = conf.soqlQuery + "::" + offsetField.getValue();
+      String offset = offsetField.getValue().toString();
+      nextSourceOffset = RECORD_ID_OFFSET_PREFIX + offset;
+      final String recordContext = conf.soqlQuery + "::" + offset;
+
       Record rec = getContext().createRecord(recordContext);
-      LinkedHashMap<String, Field> map = new LinkedHashMap<>();
-
-      Iterator<XmlObject> iter = record.getChildren();
-      while (iter.hasNext()) {
-        XmlObject obj = iter.next();
-
-        String key = obj.getName().getLocalPart();
-        if (key.equals("type")) {
-          // Housekeeping field
-          continue;
-        }
-
-        Object val = obj.getValue();
-        Field field = ForceUtils.createField(val);
-        if (field == null) {
-          throw new StageException(Errors.FORCE_04,
-              "Key: "+key+", unexpected type for val: " + ((val == null) ? val : val.getClass().toString()));
-        }
-
-        map.put(key, field);
-
-        if (key.equalsIgnoreCase(conf.offsetColumn)) {
-          nextSourceOffset = RECORD_ID_OFFSET_PREFIX + val;
-        }
-
-        if (conf.createSalesforceNsHeaders) {
-          ForceUtils.setHeadersOnField(field, fieldMap.get(key), conf.salesforceNsHeaderPrefix);
-        }
-      }
-
-      rec.set(Field.createListMap(map));
+      rec.set(Field.createListMap(ForceUtils.addFields(record, metadataMap, conf.createSalesforceNsHeaders, conf.salesforceNsHeaderPrefix)));
       rec.getHeader().setAttribute(SOBJECT_TYPE_ATTRIBUTE, sobjectType);
+
       batchMaker.addRecord(rec);
     }
 
@@ -690,15 +670,10 @@ public class ForceSource extends BaseSource {
 
     for (String key : sobject.keySet()) {
       Object val = sobject.get(key);
-      Field field = ForceUtils.createField(val);
-      if (field == null) {
-        throw new StageException(
-            Errors.FORCE_04,
-            "Key: " + key + ", unexpected type for val: " + ((val == null) ? val : val.getClass().toString())
-        );
-      }
+      com.sforce.soap.partner.Field sfdcField = metadataMap.get(sobjectType).get(key.toLowerCase());
+      Field field = ForceUtils.createField(val, sfdcField);
       if (conf.createSalesforceNsHeaders) {
-        ForceUtils.setHeadersOnField(field, fieldMap.get(key), conf.salesforceNsHeaderPrefix);
+        ForceUtils.setHeadersOnField(field, metadataMap.get(sobjectType).get(key.toLowerCase()), conf.salesforceNsHeaderPrefix);
       }
       map.put(key, field);
     }
