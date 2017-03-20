@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.VaultEL;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CassandraTargetConfig {
@@ -38,7 +39,7 @@ public class CassandraTargetConfig {
       displayPosition = 10,
       group = "CASSANDRA"
   )
-  public List<String> contactPoints;
+  public List<String> contactPoints = new ArrayList<>();
 
   @ConfigDef(
       required = true,
@@ -49,7 +50,7 @@ public class CassandraTargetConfig {
       displayPosition = 20,
       group = "CASSANDRA"
   )
-  public int port;
+  public int port = 9042;
 
   @ConfigDef(
       required = true,
@@ -73,7 +74,7 @@ public class CassandraTargetConfig {
       group = "CASSANDRA"
   )
   @ValueChooserModel(CompressionChooserValues.class)
-  public CassandraCompressionCodec compression;
+  public CassandraCompressionCodec compression = CassandraCompressionCodec.LZ4;
 
   @ConfigDef(
       required = true,
@@ -84,14 +85,26 @@ public class CassandraTargetConfig {
       displayPosition = 50
   )
   @ValueChooserModel(BatchTypeChooserValues.class)
-  public BatchStatement.Type batchType;
+  public BatchStatement.Type batchType = BatchStatement.Type.LOGGED;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "65535",
+      min = 1,
+      max = 65535,
+      label = "Max Batch Size",
+      description = "Maximum statements to batch prior to submission.",
+      displayPosition = 60
+  )
+  public int maxBatchSize = 65535;
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Use Credentials",
       defaultValue = "false",
-      displayPosition = 60,
+      displayPosition = 70,
       group = "CASSANDRA"
   )
   public boolean useCredentials = false;
@@ -101,7 +114,7 @@ public class CassandraTargetConfig {
       type = ConfigDef.Type.STRING,
       label = "Fully Qualified Table Name",
       description = "Table write to, e.g. <keyspace>.<table_name>",
-      displayPosition = 70,
+      displayPosition = 80,
       group = "CASSANDRA"
   )
   public String qualifiedTableName;
@@ -111,7 +124,7 @@ public class CassandraTargetConfig {
       type = ConfigDef.Type.MODEL,
       label = "Field to Column Mapping",
       description = "Fields to map to Cassandra columns. To avoid errors, field data types must match.",
-      displayPosition = 80,
+      displayPosition = 90,
       group = "CASSANDRA"
   )
   @ListBeanModel

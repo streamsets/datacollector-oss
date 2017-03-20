@@ -33,7 +33,7 @@
 
   <properties>
     <cassandra-driver.version>3.1.4</cassandra-driver.version>
-    <cassandra-unit.version>3.0.0.1</cassandra-unit.version>
+    <cassandra-unit.version>3.1.3.2</cassandra-unit.version>
     <lz4.version>1.3.0</lz4.version>
     <snappy.version>1.0.5</snappy.version>
   </properties>

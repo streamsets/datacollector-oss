@@ -30,6 +30,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import org.apache.cassandra.exceptions.ConfigurationException;
@@ -40,7 +41,6 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +52,6 @@ import java.util.Map;
 
 import static org.junit.Assert.fail;
 
-@Ignore
 public class TestCassandraTarget {
   private static final Logger LOG = LoggerFactory.getLogger(TestCassandraTarget.class);
 
@@ -126,15 +125,17 @@ public class TestCassandraTarget {
         new CassandraFieldMappingConfig("[6]", "unique_id")
     );
 
-    TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
-        .addConfiguration("protocolVersion", ProtocolVersion.V4)
-        .addConfiguration("contactPoints", ImmutableList.of("localhost"))
-        .addConfiguration("useCredentials", false)
-        .addConfiguration("compression", CassandraCompressionCodec.NONE)
-        .addConfiguration("qualifiedTableName", tableName)
-        .addConfiguration("columnNames", fieldMappings)
-        .addConfiguration("port", CASSANDRA_NATIVE_PORT)
-        .build();
+    CassandraTargetConfig conf = new CassandraTargetConfig();
+    conf.contactPoints.add("localhost");
+    conf.port = CASSANDRA_NATIVE_PORT;
+    conf.protocolVersion = ProtocolVersion.V4;
+    conf.useCredentials = false;
+    conf.compression = CassandraCompressionCodec.NONE;
+    conf.columnNames = fieldMappings;
+    conf.qualifiedTableName = tableName;
+
+    Target target = new CassandraTarget(conf);
+    TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class, target).build();
 
     List<Record> emptyBatch = ImmutableList.of();
     targetRunner.runInit();
@@ -155,15 +156,17 @@ public class TestCassandraTarget {
         new CassandraFieldMappingConfig("[6]", "unique_id")
     );
 
-    TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
-        .addConfiguration("protocolVersion", ProtocolVersion.V4)
-        .addConfiguration("contactPoints", ImmutableList.of("localhost"))
-        .addConfiguration("useCredentials", false)
-        .addConfiguration("compression", CassandraCompressionCodec.NONE)
-        .addConfiguration("qualifiedTableName", tableName)
-        .addConfiguration("columnNames", fieldMappings)
-        .addConfiguration("port", CASSANDRA_NATIVE_PORT)
-        .build();
+    CassandraTargetConfig conf = new CassandraTargetConfig();
+    conf.contactPoints.add("localhost");
+    conf.port = CASSANDRA_NATIVE_PORT;
+    conf.protocolVersion = ProtocolVersion.V4;
+    conf.useCredentials = false;
+    conf.compression = CassandraCompressionCodec.NONE;
+    conf.columnNames = fieldMappings;
+    conf.qualifiedTableName = tableName;
+
+    Target target = new CassandraTarget(conf);
+    TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class, target).build();
 
     Record record = RecordCreator.create();
     List<Field> fields = new ArrayList<>();
@@ -209,15 +212,17 @@ public class TestCassandraTarget {
         new CassandraFieldMappingConfig("[2]", "a_map")
     );
 
-    TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
-        .addConfiguration("protocolVersion", ProtocolVersion.V4)
-        .addConfiguration("contactPoints", ImmutableList.of("localhost"))
-        .addConfiguration("useCredentials", false)
-        .addConfiguration("compression", CassandraCompressionCodec.NONE)
-        .addConfiguration("qualifiedTableName", tableName)
-        .addConfiguration("columnNames", fieldMappings)
-        .addConfiguration("port", CASSANDRA_NATIVE_PORT)
-        .build();
+    CassandraTargetConfig conf = new CassandraTargetConfig();
+    conf.contactPoints.add("localhost");
+    conf.port = CASSANDRA_NATIVE_PORT;
+    conf.protocolVersion = ProtocolVersion.V4;
+    conf.useCredentials = false;
+    conf.compression = CassandraCompressionCodec.NONE;
+    conf.columnNames = fieldMappings;
+    conf.qualifiedTableName = tableName;
+
+    Target target = new CassandraTarget(conf);
+    TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class, target).build();
 
     Record record = RecordCreator.create();
     List<Field> fields = new ArrayList<>();
@@ -259,14 +264,17 @@ public class TestCassandraTarget {
         new CassandraFieldMappingConfig("[6]", "unique_id")
     );
 
-    TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
-        .addConfiguration("protocolVersion", ProtocolVersion.V4)
-        .addConfiguration("contactPoints", ImmutableList.of("localhost"))
-        .addConfiguration("useCredentials", false)
-        .addConfiguration("compression", CassandraCompressionCodec.NONE)
-        .addConfiguration("qualifiedTableName", tableName)
-        .addConfiguration("columnNames", fieldMappings)
-        .addConfiguration("port", CASSANDRA_NATIVE_PORT)
+    CassandraTargetConfig conf = new CassandraTargetConfig();
+    conf.contactPoints.add("localhost");
+    conf.port = CASSANDRA_NATIVE_PORT;
+    conf.protocolVersion = ProtocolVersion.V4;
+    conf.useCredentials = false;
+    conf.compression = CassandraCompressionCodec.NONE;
+    conf.columnNames = fieldMappings;
+    conf.qualifiedTableName = tableName;
+
+    Target target = new CassandraTarget(conf);
+    TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class, target)
         .setOnRecordError(OnRecordError.DISCARD)
         .build();
 
@@ -309,14 +317,17 @@ public class TestCassandraTarget {
         new CassandraFieldMappingConfig("[6]", "unique_id")
     );
 
-    TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
-        .addConfiguration("protocolVersion", ProtocolVersion.V4)
-        .addConfiguration("contactPoints", ImmutableList.of("localhost"))
-        .addConfiguration("useCredentials", false)
-        .addConfiguration("compression", CassandraCompressionCodec.NONE)
-        .addConfiguration("qualifiedTableName", tableName)
-        .addConfiguration("columnNames", fieldMappings)
-        .addConfiguration("port", CASSANDRA_NATIVE_PORT)
+    CassandraTargetConfig conf = new CassandraTargetConfig();
+    conf.contactPoints.add("localhost");
+    conf.port = CASSANDRA_NATIVE_PORT;
+    conf.protocolVersion = ProtocolVersion.V4;
+    conf.useCredentials = false;
+    conf.compression = CassandraCompressionCodec.NONE;
+    conf.columnNames = fieldMappings;
+    conf.qualifiedTableName = tableName;
+
+    Target target = new CassandraTarget(conf);
+    TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class, target)
         .setOnRecordError(OnRecordError.TO_ERROR)
         .build();
 
@@ -360,14 +371,17 @@ public class TestCassandraTarget {
         new CassandraFieldMappingConfig("[6]", "unique_id")
     );
 
-    TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
-        .addConfiguration("protocolVersion", ProtocolVersion.V4)
-        .addConfiguration("contactPoints", ImmutableList.of("localhost"))
-        .addConfiguration("useCredentials", false)
-        .addConfiguration("compression", CassandraCompressionCodec.NONE)
-        .addConfiguration("qualifiedTableName", tableName)
-        .addConfiguration("columnNames", fieldMappings)
-        .addConfiguration("port", CASSANDRA_NATIVE_PORT)
+    CassandraTargetConfig conf = new CassandraTargetConfig();
+    conf.contactPoints.add("localhost");
+    conf.port = CASSANDRA_NATIVE_PORT;
+    conf.protocolVersion = ProtocolVersion.V4;
+    conf.useCredentials = false;
+    conf.compression = CassandraCompressionCodec.NONE;
+    conf.columnNames = fieldMappings;
+    conf.qualifiedTableName = tableName;
+
+    Target target = new CassandraTarget(conf);
+    TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class, target)
         .setOnRecordError(OnRecordError.STOP_PIPELINE)
         .build();
 
@@ -410,15 +424,17 @@ public class TestCassandraTarget {
         new CassandraFieldMappingConfig("/unique_id", "unique_id")
     );
 
-    TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
-        .addConfiguration("protocolVersion", ProtocolVersion.V4)
-        .addConfiguration("contactPoints", ImmutableList.of("localhost"))
-        .addConfiguration("useCredentials", false)
-        .addConfiguration("compression", CassandraCompressionCodec.NONE)
-        .addConfiguration("qualifiedTableName", tableName)
-        .addConfiguration("columnNames", fieldMappings)
-        .addConfiguration("port", CASSANDRA_NATIVE_PORT)
-        .build();
+    CassandraTargetConfig conf = new CassandraTargetConfig();
+    conf.contactPoints.add("localhost");
+    conf.port = CASSANDRA_NATIVE_PORT;
+    conf.protocolVersion = ProtocolVersion.V4;
+    conf.useCredentials = false;
+    conf.compression = CassandraCompressionCodec.NONE;
+    conf.columnNames = fieldMappings;
+    conf.qualifiedTableName = tableName;
+
+    Target target = new CassandraTarget(conf);
+    TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class, target).build();
 
     Record record = RecordCreator.create();
     Map<String, Field> fields = new ImmutableMap.Builder<String, Field>()
@@ -467,15 +483,18 @@ public class TestCassandraTarget {
         new CassandraFieldMappingConfig("/unique_id", "unique_id")
     );
 
-    TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
-        .addConfiguration("protocolVersion", ProtocolVersion.V4)
-        .addConfiguration("contactPoints", ImmutableList.of("localhost"))
-        .addConfiguration("useCredentials", false)
-        .addConfiguration("compression", CassandraCompressionCodec.NONE)
-        .addConfiguration("qualifiedTableName", "tablename")
-        .addConfiguration("columnNames", fieldMappings)
-        .addConfiguration("port", CASSANDRA_NATIVE_PORT)
-        .build();
+    CassandraTargetConfig conf = new CassandraTargetConfig();
+    conf.contactPoints.add("localhost");
+    conf.port = CASSANDRA_NATIVE_PORT;
+    conf.protocolVersion = ProtocolVersion.V4;
+    conf.useCredentials = false;
+    conf.compression = CassandraCompressionCodec.NONE;
+    conf.columnNames = fieldMappings;
+    conf.qualifiedTableName = "tableName";
+
+    Target target = new CassandraTarget(conf);
+    TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class, target).build();
+
     targetRunner.runInit();
     fail("should have thrown a StageException!");
   }
@@ -493,18 +512,21 @@ public class TestCassandraTarget {
         new CassandraFieldMappingConfig("[6]", "unique_id")
     );
 
-    TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
-        .addConfiguration("protocolVersion", ProtocolVersion.V4)
-        .addConfiguration("contactPoints", ImmutableList.of("localhost"))
-        .addConfiguration("useCredentials", false)
-        .addConfiguration("compression", CassandraCompressionCodec.NONE)
-        .addConfiguration("qualifiedTableName", tableName)
-        .addConfiguration("columnNames", fieldMappings)
-        .addConfiguration("port", CASSANDRA_NATIVE_PORT)
-        .build();
+    CassandraTargetConfig conf = new CassandraTargetConfig();
+    conf.contactPoints.add("localhost");
+    conf.port = CASSANDRA_NATIVE_PORT;
+    conf.protocolVersion = ProtocolVersion.V4;
+    conf.useCredentials = false;
+    conf.compression = CassandraCompressionCodec.NONE;
+    conf.columnNames = fieldMappings;
+    conf.qualifiedTableName = tableName;
+    conf.maxBatchSize = 35;
 
-    List<Record> records = new ArrayList<Record>();
-    for (int i = 0; i < 70000; i++) {
+    Target target = new CassandraTarget(conf);
+    TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class, target).build();
+
+    List<Record> records = new ArrayList<>();
+    for (int i = 0; i < 1000; i++) {
       Record record = RecordCreator.create();
       List<Field> fields = new ArrayList<>();
       fields.add(Field.create(i));
@@ -529,6 +551,6 @@ public class TestCassandraTarget {
     // simple verification that there are as many records as expected
     ResultSet resultSet = session.execute("SELECT * FROM test.trips");
     List<Row> allRows = resultSet.all();
-    Assert.assertEquals(70000, allRows.size());
+    Assert.assertEquals(1000, allRows.size());
   }
 }

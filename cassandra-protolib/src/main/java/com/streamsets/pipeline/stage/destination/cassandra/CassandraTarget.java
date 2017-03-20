@@ -82,7 +82,6 @@ import java.util.stream.Collectors;
  */
 public class CassandraTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(CassandraTarget.class);
-  private static final int MAX_BATCH_SIZE = 65535;
   private static final String CONTACT_NODES_LABEL = "contactPoints";
 
   private final CassandraTargetConfig conf;
@@ -277,7 +276,7 @@ public class CassandraTarget extends BaseTarget {
       if (boundStmt != null) {
         // if this batch is currently at the max batch size, then let's execute it and make a new batch before adding
         // this latest statement to it.
-        if (batchedStatement.size() == MAX_BATCH_SIZE) {
+        if (batchedStatement.size() == conf.maxBatchSize) {
           session.execute(batchedStatement);
           batchedStatement = new BatchStatement();
         }

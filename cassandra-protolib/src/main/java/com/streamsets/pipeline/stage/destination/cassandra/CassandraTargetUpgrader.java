@@ -77,6 +77,7 @@ public class CassandraTargetUpgrader implements StageUpgrader {
         .collect(Collectors.toList());
 
     newConfigs.add(new Config("conf.batchType", BatchStatement.Type.LOGGED));
+    newConfigs.add(new Config("conf.maxBatchSize", 65535));
 
     return newConfigs;
   }
