@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.destination.jdbc;
 
+import com.google.common.base.Strings;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -57,8 +58,10 @@ public class JdbcTarget extends BaseTarget {
   private final int maxPrepStmtParameters;
   private final int maxPrepStmtCache;
 
+  private final String schema;
   private final String tableNameTemplate;
   private final List<JdbcFieldColumnParamMapping> customMappings;
+  private final boolean caseSensitive;
 
   private final Properties driverProperties = new Properties();
   private final ChangeLogFormat changeLogFormat;
@@ -99,8 +102,10 @@ public class JdbcTarget extends BaseTarget {
       .build(new RecordWriterLoader());
 
   public JdbcTarget(
+      final String schema,
       final String tableNameTemplate,
       final List<JdbcFieldColumnParamMapping> customMappings,
+      final boolean caseSensitive,
       final boolean rollbackOnError,
       final boolean useMultiRowOp,
       int maxPrepStmtParameters,
@@ -110,8 +115,10 @@ public class JdbcTarget extends BaseTarget {
       final UnsupportedOperationAction unsupportedAction,
       final HikariPoolConfigBean hikariConfigBean
   ) {
+    this.schema = schema;
     this.tableNameTemplate = tableNameTemplate;
     this.customMappings = customMappings;
+    this.caseSensitive = caseSensitive;
     this.rollbackOnError = rollbackOnError;
     this.useMultiRowOp = useMultiRowOp;
     this.maxPrepStmtParameters = maxPrepStmtParameters;
@@ -151,7 +158,7 @@ public class JdbcTarget extends BaseTarget {
         dataSource = JdbcUtil.createDataSourceForWrite(
             hikariConfigBean,
             driverProperties,
-            tableNameTemplate,
+            Strings.isNullOrEmpty(schema) ? tableNameTemplate : schema + "." + tableNameTemplate,
             issues,
             customMappings,
             getContext()
@@ -178,6 +185,6 @@ public class JdbcTarget extends BaseTarget {
   @Override
   @SuppressWarnings("unchecked")
   public void write(Batch batch) throws StageException {
-    JdbcUtil.write(batch, tableNameEval, tableNameVars, tableNameTemplate, recordWriters, errorRecordHandler);
+    JdbcUtil.write(batch, schema, tableNameEval, tableNameVars, tableNameTemplate, caseSensitive, recordWriters, errorRecordHandler);
   }
 }

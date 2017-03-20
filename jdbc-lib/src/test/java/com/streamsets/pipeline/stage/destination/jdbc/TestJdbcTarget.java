@@ -60,7 +60,8 @@ public class TestJdbcTarget {
   private final String unprivUser = "unpriv_user";
   private final String unprivPassword = "unpriv_pass";
   private final String database = "TEST";
-  private final String tableName = "TEST.TEST_TABLE";
+  private final String schema = "TEST";
+  private final String tableName = "TEST_TABLE";
 
   private final String h2ConnectionString = "jdbc:h2:mem:" + database;
 
@@ -141,8 +142,10 @@ public class TestJdbcTarget {
     );
 
     Target target = new JdbcTarget(
+        schema,
         tableName,
         fieldMappings,
+        false, // enclose table name
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
@@ -170,8 +173,10 @@ public class TestJdbcTarget {
     );
 
     Target target = new JdbcTarget(
+        schema,
         tableName,
         fieldMappings,
+        false, // enclose table name
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
@@ -213,8 +218,10 @@ public class TestJdbcTarget {
     );
 
     Target target = new JdbcTarget(
+        schema,
         tableName,
         fieldMappings,
+        false, // enclose table name
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
@@ -257,8 +264,10 @@ public class TestJdbcTarget {
     );
 
     Target target = new JdbcTarget(
+        schema,
         tableName,
         fieldMappings,
+        false, // enclose table name
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
@@ -321,8 +330,10 @@ public class TestJdbcTarget {
     );
 
     Target target = new JdbcTarget(
+        schema,
         tableName,
         fieldMappings,
+        false, // enclose table name
         true,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
@@ -384,8 +395,10 @@ public class TestJdbcTarget {
     );
 
     Target target = new JdbcTarget(
+        schema,
         tableName,
         fieldMappings,
+        false, // enclose table name
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
@@ -450,8 +463,10 @@ public class TestJdbcTarget {
     );
 
     Target target = new JdbcTarget(
+        schema,
         tableName,
         fieldMappings,
+        false, // enclose table name
         false,
         true,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
@@ -510,8 +525,10 @@ public class TestJdbcTarget {
     );
 
     Target target = new JdbcTarget(
+        schema,
         tableName,
         fieldMappings,
+        false, // enclose table name
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
@@ -569,8 +586,10 @@ public class TestJdbcTarget {
     );
 
     Target target = new JdbcTarget(
+        schema,
         tableName,
         fieldMappings,
+        false, // enclose table name
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
@@ -596,8 +615,10 @@ public class TestJdbcTarget {
     );
 
     Target target = new JdbcTarget(
+        schema,
         tableName,
         fieldMappings,
+        false, // enclose table name
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
@@ -623,8 +644,10 @@ public class TestJdbcTarget {
     );
 
     Target target = new JdbcTarget(
+        schema,
         tableName,
         fieldMappings,
+        false, // enclose table name
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
@@ -650,8 +673,10 @@ public class TestJdbcTarget {
     );
 
     Target target = new JdbcTarget(
+        schema,
         "${record:attribute('tableName')}",
         fieldMappings,
+        false, // enclose table name
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
@@ -664,10 +689,10 @@ public class TestJdbcTarget {
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
 
     List<Record> records = ImmutableList.of(
-        generateRecord(1, "Adam", "Kunicki", "TEST.TABLE_ONE"),
-        generateRecord(2, "John", "Smith", "TEST.TABLE_TWO"),
-        generateRecord(3, "Jane", "Doe", "TEST.TABLE_TWO"),
-        generateRecord(4, "Jane", "Doe", "TEST.TABLE_THREE")
+        generateRecord(1, "Adam", "Kunicki", "TABLE_ONE"),
+        generateRecord(2, "John", "Smith", "TABLE_TWO"),
+        generateRecord(3, "Jane", "Doe", "TABLE_TWO"),
+        generateRecord(4, "Jane", "Doe", "TABLE_THREE")
     );
     targetRunner.runInit();
     targetRunner.runWrite(records);
@@ -717,8 +742,10 @@ public class TestJdbcTarget {
     );
 
     Target target = new JdbcTarget(
-        "TEST.DATETIMES",
+        schema,
+        "DATETIMES",
         fieldMappings,
+        false, // enclose table name
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
@@ -763,8 +790,10 @@ public class TestJdbcTarget {
     );
 
     Target target = new JdbcTarget(
-        "TEST.DATETIMES",
+        schema,
+        "DATETIMES",
         fieldMappings,
+        false, // enclose table name
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,

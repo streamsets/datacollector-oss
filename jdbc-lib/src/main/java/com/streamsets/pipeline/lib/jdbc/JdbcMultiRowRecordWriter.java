@@ -63,8 +63,8 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
   public static final int UNLIMITED_PARAMETERS = -1;
   private int maxPrepStmtParameters;
   private static final Joiner joiner = Joiner.on(", ");
-  private static final Joiner joinerColumn = Joiner.on(" = ?, ");
-  private static final Joiner joinerWhereClause =  Joiner.on(" = ? AND ");
+  private static final Joiner joinerColumn = Joiner.on("\" = ?, \"");
+  private static final Joiner joinerWhereClause =  Joiner.on("\" = ? AND \"");
 
   /**
    * Class constructor
@@ -304,17 +304,17 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       case OperationType.INSERT_CODE:
         valuePlaceholder = String.format("(%s)", joiner.join(columns.values()));
         valuePlaceholders = StringUtils.repeat(valuePlaceholder, ", ", numRecords);
-        query = String.format("INSERT INTO %s (%s) VALUES %s",
-            getTableName(), Joiner.on(", ").join(columns.keySet()), valuePlaceholders);
+        query = String.format("INSERT INTO %s (\"%s\") VALUES %s",
+            getTableName(), Joiner.on("\", \"").join(columns.keySet()), valuePlaceholders);
         break;
       case OperationType.DELETE_CODE:
         valuePlaceholder = String.format("(%s)", joiner.join(getPrimaryKeyParams()));
         valuePlaceholders = StringUtils.repeat(valuePlaceholder, ", ", numRecords);
-        query = String.format("DELETE FROM %s WHERE (%s) IN (%s)",
-            getTableName(), joiner.join(primaryKeys), valuePlaceholders);
+        query = String.format("DELETE FROM %s WHERE (\"%s\") IN (%s)",
+            getTableName(), Joiner.on("\", \"").join(primaryKeys), valuePlaceholders);
         break;
       case OperationType.UPDATE_CODE:
-        query = String.format("UPDATE %s SET %s = ? WHERE %s = ?",
+        query = String.format("UPDATE %s SET \"%s\" = ? WHERE \"%s\" = ?",
             getTableName(),
             joinerColumn.join(columns.keySet()),
             joinerWhereClause.join(primaryKeys));

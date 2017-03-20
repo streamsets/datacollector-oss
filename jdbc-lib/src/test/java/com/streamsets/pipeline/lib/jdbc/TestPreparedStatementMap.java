@@ -109,13 +109,13 @@ public class TestPreparedStatementMap {
     );
     try {
       PreparedStatement insert = cacheMap.getPreparedStatement(OperationType.INSERT_CODE, columnToParam);
-      Assert.assertTrue(insert.toString().contains("INSERT INTO TEST.TEST_TABLE (MSG,P_ID) VALUES (?,?)"));
+      Assert.assertTrue(insert.toString().contains("INSERT INTO TEST.TEST_TABLE (\"MSG\", \"P_ID\") VALUES (?,?)"));
 
       PreparedStatement delete = cacheMap.getPreparedStatement(OperationType.DELETE_CODE, columnToParam);
-      Assert.assertTrue(delete.toString().contains("DELETE FROM TEST.TEST_TABLE WHERE P_ID = ?"));
+      Assert.assertTrue(delete.toString().contains("DELETE FROM TEST.TEST_TABLE WHERE \"P_ID\" = ?"));
 
       PreparedStatement update = cacheMap.getPreparedStatement(OperationType.UPDATE_CODE, columnToParam);
-      Assert.assertTrue(update.toString().contains("UPDATE TEST.TEST_TABLE SET MSG = ?, P_ID = ? WHERE P_ID = ?"));
+      Assert.assertTrue(update.toString().contains("UPDATE TEST.TEST_TABLE SET \"MSG\" = ?, \"P_ID\" = ? WHERE \"P_ID\" = ?"));
     } catch (StageException ex) {
       Assert.fail("StageException while generating a PreparedStatement:" + ex.getMessage());
     }
@@ -145,14 +145,14 @@ public class TestPreparedStatementMap {
 
     try {
       PreparedStatement insert = cacheMap.getPreparedStatement(OperationType.INSERT_CODE, columnToParam);
-      Assert.assertTrue(insert.toString().contains("INSERT INTO TEST.COMPOSITE_KEY (MSG,P_ID,P_IDB) VALUES (?,?,?)"));
+      Assert.assertTrue(insert.toString().contains("INSERT INTO TEST.COMPOSITE_KEY (\"MSG\", \"P_ID\", \"P_IDB\") VALUES (?,?,?)"));
 
       PreparedStatement delete = cacheMap.getPreparedStatement(OperationType.DELETE_CODE, columnToParam);
-      Assert.assertTrue(delete.toString().contains("DELETE FROM TEST.COMPOSITE_KEY WHERE P_ID = ? AND P_IDB = ?"));
+      Assert.assertTrue(delete.toString().contains("DELETE FROM TEST.COMPOSITE_KEY WHERE \"P_ID\" = ? AND \"P_IDB\" = ?"));
 
       PreparedStatement update = cacheMap.getPreparedStatement(OperationType.UPDATE_CODE, columnToParam);
       Assert.assertTrue(update.toString().contains(
-          "UPDATE TEST.COMPOSITE_KEY SET MSG = ?, P_ID = ?, P_IDB = ? WHERE P_ID = ? AND P_IDB = ?"
+          "UPDATE TEST.COMPOSITE_KEY SET \"MSG\" = ?, \"P_ID\" = ?, \"P_IDB\" = ? WHERE \"P_ID\" = ? AND \"P_IDB\" = ?"
       ));
     } catch (StageException ex) {
       Assert.fail("StageException while generating a PreparedStatement:" + ex.getMessage());

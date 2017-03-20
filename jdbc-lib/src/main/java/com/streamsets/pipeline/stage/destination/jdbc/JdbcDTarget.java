@@ -59,14 +59,23 @@ import java.util.List;
 public class JdbcDTarget extends DTarget {
 
   @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Schema Name",
+      displayPosition = 20,
+      group = "JDBC"
+  )
+  public String schema;
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
       elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       defaultValue = "${record:attribute('tableName')}",
       label = "Table Name",
-      description = "Depending on the database, may be specified as <schema>.<table>. Some databases require schema " +
-          "be specified separately in the connection string.",
+      description = "Table Names should contain only table names. Schema should be defined in the connection string or " +
+          "schema configuration",
       displayPosition = 30,
       group = "JDBC"
   )
@@ -83,6 +92,18 @@ public class JdbcDTarget extends DTarget {
   )
   @ListBeanModel
   public List<JdbcFieldColumnParamMapping> columnNames;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Enclose Table Name",
+      description = "Use for lower or mixed-case database, table and field names. " +
+          "Select only when the database or tables were created with quotation marks around the names.",
+      displayPosition = 40,
+      group = "JDBC",
+      defaultValue = "false"
+  )
+  public boolean encloseTableName;
 
   @ConfigDef(
       required = false,
@@ -177,8 +198,9 @@ public class JdbcDTarget extends DTarget {
   @Override
   protected Target createTarget() {
     return new JdbcTarget(
+        schema,
         tableNameTemplate,
-        columnNames,
+        columnNames, encloseTableName,
         rollbackOnError,
         useMultiRowInsert,
         maxPrepStmtParameters,
