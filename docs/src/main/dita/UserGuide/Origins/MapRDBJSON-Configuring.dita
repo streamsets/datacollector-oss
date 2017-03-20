@@ -42,10 +42,11 @@
                             <tbody>
                                 <row>
                                     <entry>Table Name</entry>
-                                    <entry>Name of the MapR DB JSON table to read from. <p
-                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MapRDBJSON_Table1"
-                                        conrefend="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MapRDBJSON_Table2"
-                                    /></entry>
+                                    <entry>Name of the MapR DB JSON table to read from. Enter the
+                                        name of a table.<p
+                                            conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MapRDBJSON_Table1"
+                                            conrefend="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MapRDBJSON_Table2"
+                                        /></entry>
                                 </row>
                                 <row>
                                     <entry>Initial Offset</entry>

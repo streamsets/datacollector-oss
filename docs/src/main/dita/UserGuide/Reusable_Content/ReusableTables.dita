@@ -1509,9 +1509,9 @@
      <row>
       <entry>Table Name</entry>
       <entry>
-       <p id="MapRDBJSON_Table1">Enter the name of a table. If you do not include a path to the table, the destination
-        assumes that the table exists in the user's home directory. For example,
-         <codeph>/user/&lt;user name>/&lt;table name></codeph>.</p>
+       <p id="MapRDBJSON_Table1">If you do not include a path to the table, the stage assumes that
+        the table exists in the user's home directory. For example, <codeph>/user/&lt;user
+         name>/&lt;table name></codeph>.</p>
        <p id="MapRDBJSON_Table2">You can include a path relative to the user's home directory or an absolute path when you
         enter the table name. For tables in a default cluster, specify the absolute path as
          <codeph>/&lt;table path></codeph>. For tables in a specific cluster, specify the absolute
