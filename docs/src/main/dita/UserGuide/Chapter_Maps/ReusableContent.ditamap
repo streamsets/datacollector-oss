@@ -30,4 +30,5 @@
     <topicref href="../Reusable_Content/Reusable_Topics/ReusableJDBCHeaderAttributes.dita"/>
     <topicref href="../Reusable_Content/Reusable_Topics/Reusable_OAuth2Examples.dita"/>
     <topicref href="../Reusable_Content/Reusable_Topics/MapRPrereqs.dita"/>
+    <topicref href="../Reusable_Content/Reusable_Topics/Reusable-InstallExternalLibs.dita"/>
 </map>

@@ -15,7 +15,8 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_pdv_qlw_ft">
  <title>Install External Libraries </title>
-  <shortdesc>Install external libraries to make them available to Data Collector stages. </shortdesc>
+  <shortdesc>Install external libraries to make them available to <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> stages. </shortdesc>
  <conbody>
     <p><indexterm>drivers<indexterm>installing additional for
         stages</indexterm></indexterm><indexterm>external libraries<indexterm>installing additional
@@ -30,12 +31,8 @@
       Producer with Oracle, install the Oracle JDBC drivers.</p>
     <p id="AdditionalDrivers_optional">You can also install external Java libraries to call external
       Java code from the Groovy, Java, and Jython Evaluator processors.</p>
-    <p>To install external libraries, complete the following general steps:</p>
-    <ol id="ol_acn_swz_bz">
-      <li>Set up an external directory to store the libraries.</li>
-      <li>Use the Package Manager within <ph
-          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
-        install the external libraries.</li>
-    </ol>
+    <p>You can install external libraries using the Package Manager in the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> user
+      interface, or you can install them manually.</p>
   </conbody>
 </concept>
