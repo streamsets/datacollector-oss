@@ -243,7 +243,7 @@ public class TestJdbcMultiRowRecordWriter {
     try {
       Assert.assertEquals(
           "Generated a wrong query",
-          "INSERT INTO TEST.TEST_TABLE (F1, F2, F3, F4, P_ID) " +
+          "INSERT INTO TEST.TEST_TABLE (\"F1\", \"F2\", \"F3\", \"F4\", \"P_ID\") " +
               "VALUES (?, ?, ?, ?, ?), (?, ?, ?, ?, ?), (?, ?, ?, ?, ?)",
           writer.generateQueryForMultiRow(OperationType.INSERT_CODE, columns, primaryKeys, records.size())
       );
@@ -255,7 +255,7 @@ public class TestJdbcMultiRowRecordWriter {
     try {
       Assert.assertEquals(
           "Generated a wrong query",
-          "UPDATE TEST.TEST_TABLE SET F1 = ?, F2 = ?, F3 = ?, F4 = ?, P_ID = ? WHERE P_ID = ?",
+          "UPDATE TEST.TEST_TABLE SET \"F1\" = ?, \"F2\" = ?, \"F3\" = ?, \"F4\" = ?, \"P_ID\" = ? WHERE \"P_ID\" = ?",
           writer.generateQueryForMultiRow(OperationType.UPDATE_CODE, columns, primaryKeys, records.size())
       );
     } catch (SQLException ex) {
@@ -266,7 +266,7 @@ public class TestJdbcMultiRowRecordWriter {
     try {
       Assert.assertEquals(
           "Generated a wrong query",
-          "DELETE FROM TEST.TEST_TABLE WHERE (P_ID) IN ((?), (?), (?))",
+          "DELETE FROM TEST.TEST_TABLE WHERE (\"P_ID\") IN ((?), (?), (?))",
           writer.generateQueryForMultiRow(OperationType.DELETE_CODE, columns, primaryKeys, records.size())
       );
     } catch (SQLException ex) {

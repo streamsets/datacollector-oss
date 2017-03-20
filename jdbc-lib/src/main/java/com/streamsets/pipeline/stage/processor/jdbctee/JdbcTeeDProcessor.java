@@ -59,6 +59,14 @@ import java.util.List;
   "hikariConfigBean.autoCommit"
 })
 public class JdbcTeeDProcessor extends DProcessor {
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Schema Name",
+      displayPosition = 10,
+      group = "JDBC"
+  )
+  public String schema;
 
   @ConfigDef(
       required = true,
@@ -67,8 +75,8 @@ public class JdbcTeeDProcessor extends DProcessor {
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       defaultValue = "${record:attribute('tableName')}",
       label = "Table Name",
-      description = "Depending on the database, may be specified as <schema>.<table>. Some databases require schema "
-          + "be specified separately in the connection string.",
+      description = "Table Names should contain only table names. Schema should be defined in the connection string or " +
+          "schema configuration",
       displayPosition = 20,
       group = "JDBC"
   )
@@ -97,6 +105,18 @@ public class JdbcTeeDProcessor extends DProcessor {
   )
   @ListBeanModel
   public List<JdbcFieldColumnMapping> generatedColumnMappings;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Enclose Table Name",
+      description = "Use for lower or mixed-case database, table and field names. " +
+          "Select only when the database or tables were created with quotation marks around the names.",
+      displayPosition = 40,
+      group = "JDBC",
+      defaultValue = "false"
+  )
+  public boolean encloseTableName;
 
   @ConfigDef(
       required = false,
@@ -191,9 +211,10 @@ public class JdbcTeeDProcessor extends DProcessor {
   @Override
   protected Processor createProcessor() {
     return new JdbcTeeProcessor(
+        schema,
         tableNameTemplate,
         customMappings,
-        generatedColumnMappings,
+        generatedColumnMappings, encloseTableName,
         rollbackOnError,
         useMultiRowOp,
         maxPrepStmtParameters,

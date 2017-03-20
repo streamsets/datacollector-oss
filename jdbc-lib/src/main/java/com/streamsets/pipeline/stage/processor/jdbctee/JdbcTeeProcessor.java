@@ -57,9 +57,11 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
   private final int maxPrepStmtParameters;
   private final int maxPrepStmtCache;
 
+  private final String schema;
   private final String tableNameTemplate;
   private final List<JdbcFieldColumnParamMapping> customMappings;
   private final List<JdbcFieldColumnMapping> generatedColumnMappings;
+  private final boolean caseSensitive;
 
   private final Properties driverProperties = new Properties();
   private final ChangeLogFormat changeLogFormat;
@@ -76,9 +78,11 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
   private UnsupportedOperationAction unsupportedAction;
 
   public JdbcTeeProcessor(
+      String schema,
       String tableNameTemplate,
       List<JdbcFieldColumnParamMapping> customMappings,
       List<JdbcFieldColumnMapping> generatedColumnMappings,
+      boolean caseSensitive,
       boolean rollbackOnError,
       boolean useMultiRowOp,
       int maxPrepStmtParameters,
@@ -88,9 +92,11 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
       JDBCOperationType defaultOp,
       UnsupportedOperationAction unsupportedAction
   ) {
+    this.schema = schema;
     this.tableNameTemplate = tableNameTemplate;
     this.customMappings = customMappings;
     this.generatedColumnMappings = generatedColumnMappings;
+    this.caseSensitive = caseSensitive;
     this.rollbackOnError = rollbackOnError;
     this.useMultiRowOp = useMultiRowOp;
     this.maxPrepStmtParameters = maxPrepStmtParameters;
@@ -181,7 +187,7 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
   /** {@inheritDoc} */
   @Override
   public void process(Batch batch, SingleLaneBatchMaker batchMaker) throws StageException {
-    JdbcUtil.write(batch, tableNameEval, tableNameVars, tableNameTemplate, recordWriters, errorRecordHandler);
+    JdbcUtil.write(batch, schema, tableNameEval, tableNameVars, tableNameTemplate, caseSensitive, recordWriters, errorRecordHandler);
 
     Iterator<Record> it = batch.getRecords();
     while (it.hasNext()) {

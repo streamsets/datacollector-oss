@@ -54,8 +54,8 @@ public class PreparedStatementCache {
   public static final int UNLIMITED_CACHE = -1;
 
   private static final Joiner joiner = Joiner.on(',');
-  private static final Joiner joinerEqual = Joiner.on(" = ?, ");
-  private static final Joiner joinerEqualAnd = Joiner.on(" = ? AND ");
+  private static final Joiner joinerEqual = Joiner.on("\" = ?, \"");
+  private static final Joiner joinerEqualAnd = Joiner.on("\" = ? AND \"");
   private final String deleteQuery;
   private final String primaryKeyCols;
 
@@ -101,7 +101,7 @@ public class PreparedStatementCache {
 
     primaryKeyCols = joinerEqualAnd.join(primaryKeyColumns);
     //Delete query is always same for same table, single-row operation.
-    deleteQuery = String.format("DELETE FROM %s WHERE %s = ?", tableName, primaryKeyCols);
+    deleteQuery = String.format("DELETE FROM %s WHERE \"%s\" = ?", tableName, primaryKeyCols);
     CacheBuilder cacheBuilder = CacheBuilder.newBuilder();
     if (maxCacheSize > -1){
       cacheBuilder.maximumSize(maxCacheSize);
@@ -127,8 +127,8 @@ public class PreparedStatementCache {
     }
     switch (opCode) {
       case OperationType.INSERT_CODE:
-        query = String.format("INSERT INTO %s (%s) VALUES (%s)", tableName,
-            joiner.join(columns.keySet()),
+        query = String.format("INSERT INTO %s (\"%s\") VALUES (%s)", tableName,
+            Joiner.on("\", \"").join(columns.keySet()),
             joiner.join(columns.values())
         );
         break;
@@ -136,7 +136,7 @@ public class PreparedStatementCache {
         query = deleteQuery;
         break;
       case OperationType.UPDATE_CODE:
-        query = String.format("UPDATE %s SET %s = ? WHERE %s = ?", tableName,
+        query = String.format("UPDATE %s SET \"%s\" = ? WHERE \"%s\" = ?", tableName,
             joinerEqual.join(columns.keySet()),
             primaryKeyCols
         );

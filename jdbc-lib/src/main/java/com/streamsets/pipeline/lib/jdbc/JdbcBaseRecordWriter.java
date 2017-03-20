@@ -106,7 +106,7 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
     createCustomFieldMappings();
     lookupPrimaryKeys();
     primaryKeyParams = new LinkedList<>();
-    for(String key: primaryKeyColumns) {
+    for (String key: primaryKeyColumns) {
       primaryKeyParams.add(getColumnsToParameters().get(key));
     }
   }
@@ -150,7 +150,8 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
    */
   private void createDefaultFieldMappings() throws StageException {
     try (Connection connection = dataSource.getConnection()) {
-      try (ResultSet columns = JdbcUtil.getColumnMetadata(connection, tableName)) {
+      String tableNameTemp = tableName.replace("\"", "");
+      try (ResultSet columns = JdbcUtil.getColumnMetadata(connection, tableNameTemp)) {
         while (columns.next()) {
           String columnName = columns.getString(COLUMN_NAME);
           columnsToFields.put(columnName, "/" + columnName); // Default implicit field mappings

@@ -248,6 +248,7 @@ public class JdbcUtil {
     String table = tableName;
     String schema = null;
     DatabaseMetaData metadata = connection.getMetaData();
+    tableName = tableName.replace("\"", "");
     if (tableName.contains(".")) {
       // Need to split this into the schema and table parts for column metadata to be retrieved.
       String[] parts = tableName.split("\\.");
@@ -630,9 +631,11 @@ public class JdbcUtil {
 
   public static void write(
       Batch batch,
+      String schema,
       ELEval tableNameEval,
       ELVars tableNameVars,
       String tableNameTemplate,
+      boolean caseSensitive,
       LoadingCache<String, JdbcRecordWriter> recordWriters,
       ErrorRecordHandler errorRecordHandler
   ) throws StageException {
@@ -644,7 +647,21 @@ public class JdbcUtil {
     );
     Set<String> tableNames = partitions.keySet();
     for (String tableName : tableNames) {
-      List<OnRecordErrorException> errors = recordWriters.getUnchecked(tableName).writeBatch(partitions.get(tableName));
+      String tableNameWithSchema = new String(tableName);
+
+      if (!Strings.isNullOrEmpty(schema)) {
+        if (caseSensitive) {
+          tableNameWithSchema = schema + "\".\"" + tableNameWithSchema;
+        } else {
+          tableNameWithSchema = schema + "." + tableNameWithSchema;
+        }
+      }
+
+      if (caseSensitive) {
+        tableNameWithSchema = "\"" + tableNameWithSchema + "\"";
+      }
+
+      List<OnRecordErrorException> errors = recordWriters.getUnchecked(tableNameWithSchema).writeBatch(partitions.get(tableName));
       for (OnRecordErrorException error : errors) {
         errorRecordHandler.onError(error);
       }
