@@ -19,22 +19,16 @@
  */
 package com.streamsets.pipeline.stage.destination.cassandra;
 
-import com.datastax.driver.core.ProtocolVersion;
-import com.streamsets.pipeline.lib.el.VaultEL;
-import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.configurablestage.DTarget;
-
-import java.util.List;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 3,
+    version = 4,
     label = "Cassandra",
     description = "Writes data to Cassandra",
     icon = "cassandra.png",
@@ -44,122 +38,11 @@ import java.util.List;
 @ConfigGroups(value = Groups.class)
 public class CassandraDTarget extends DTarget {
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.LIST,
-      defaultValue = "[\"localhost\"]",
-      label = "Cassandra Contact Points",
-      description = "Hostnames of Cassandra nodes to use as contact points. To ensure a connection, enter several.",
-      displayPosition = 10,
-      group = "CASSANDRA"
-  )
-  public List<String> contactNodes;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.NUMBER,
-      defaultValue = "9042",
-      label = "Cassandra Port",
-      description = "Port number to use when connecting to Cassandra nodes",
-      displayPosition = 20,
-      group = "CASSANDRA"
-  )
-  public int port;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      label = "Protocol Version",
-      description = "If unsure which setting to use, refer to: https://datastax.github" +
-          ".io/java-driver/manual/native_protocol",
-      displayPosition = 30,
-      group = "CASSANDRA"
-  )
-  @ValueChooserModel(ProtocolVersionChooserValues.class)
-  public ProtocolVersion protocolVersion;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      defaultValue = "LZ4",
-      label = "Compression",
-      description = "Optional compression for transport-level requests and responses.",
-      displayPosition = 35,
-      group = "CASSANDRA"
-  )
-  @ValueChooserModel(CompressionChooserValues.class)
-  public CassandraCompressionCodec compression;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      label = "Use Credentials",
-      defaultValue = "false",
-      displayPosition = 40,
-      group = "CASSANDRA"
-  )
-  public boolean useCredentials = false;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "",
-      label = "Fully Qualified Table Name",
-      description = "Table write to, e.g. <keyspace>.<table_name>",
-      displayPosition = 50,
-      group = "CASSANDRA"
-  )
-  public String qualifiedTableName;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      defaultValue="",
-      label = "Field to Column Mapping",
-      description = "Fields to map to Cassandra columns. To avoid errors, field data types must match.",
-      displayPosition = 60,
-      group = "CASSANDRA"
-  )
-  @ListBeanModel
-  public List<CassandraFieldMappingConfig> columnNames;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "Username",
-      defaultValue = "",
-      displayPosition = 10,
-      elDefs = VaultEL.class,
-      group = "CREDENTIALS",
-      dependsOn = "useCredentials",
-      triggeredByValue = "true"
-  )
-  public String username;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "Password",
-      defaultValue = "",
-      displayPosition = 20,
-      elDefs = VaultEL.class,
-      group = "CREDENTIALS",
-      dependsOn = "useCredentials",
-      triggeredByValue = "true"
-  )
-  public String password;
+  @ConfigDefBean
+  public CassandraTargetConfig conf = new CassandraTargetConfig();
 
   @Override
   protected Target createTarget() {
-    return new CassandraTarget(
-        contactNodes,
-        port,
-        protocolVersion,
-        compression.getCodec(),
-        username,
-        password,
-        qualifiedTableName,
-        columnNames
-    );
+    return new CassandraTarget(conf);
   }
 }

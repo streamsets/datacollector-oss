@@ -26,10 +26,19 @@ import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CassandraTargetUpgrader implements StageUpgrader {
   @Override
-  public List<Config> upgrade(String library, String stageName, String stageInstance, int fromVersion, int toVersion, List<Config> configs) throws StageException {
+  public List<Config> upgrade(
+      String library,
+      String stageName,
+      String stageInstance,
+      int fromVersion,
+      int toVersion,
+      List<Config> configs
+  ) throws StageException {
+    List<Config> newConfigs = configs;
     switch(fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
@@ -39,11 +48,17 @@ public class CassandraTargetUpgrader implements StageUpgrader {
         // fall through
       case 2:
         upgradeV2ToV3(configs);
+        if (toVersion == 3) {
+          break;
+        }
+        // fall through
+      case 3:
+        newConfigs = upgradeV3ToV4(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
-    return configs;
+    return newConfigs;
   }
 
   private void upgradeV1ToV2(List<Config> configs) {
@@ -52,5 +67,14 @@ public class CassandraTargetUpgrader implements StageUpgrader {
 
   private void upgradeV2ToV3(List<Config> configs) {
     configs.add(new Config("protocolVersion", ProtocolVersion.V3));
+  }
+
+  private List<Config> upgradeV3ToV4(List<Config> configs) {
+    List<Config> newConfigs = configs
+        .stream()
+        .map(config -> new Config("conf." + config.getName(), config.getValue()))
+        .collect(Collectors.toList());
+
+    return newConfigs;
   }
 }

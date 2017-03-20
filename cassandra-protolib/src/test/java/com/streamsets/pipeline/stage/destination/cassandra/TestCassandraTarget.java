@@ -58,8 +58,8 @@ public class TestCassandraTarget {
 
   private static final Double EPSILON = 1e-15;
   private static final long CASSANDRA_STARTUP_TIMEOUT = 20000;
-  public static final String SAMPLE_TIMEUUID = "474b1386-0379-11e7-bdfe-fa245441bcee";
-  public static final String SAMPLE_UUID = "46c5379c-a083-4ccd-bfac-c4a8d17574c7";
+  private static final String SAMPLE_TIMEUUID = "474b1386-0379-11e7-bdfe-fa245441bcee";
+  private static final String SAMPLE_UUID = "46c5379c-a083-4ccd-bfac-c4a8d17574c7";
   private static int CASSANDRA_NATIVE_PORT = 9142;
 
   private static Cluster cluster = null;
@@ -128,7 +128,7 @@ public class TestCassandraTarget {
 
     TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
         .addConfiguration("protocolVersion", ProtocolVersion.V4)
-        .addConfiguration("contactNodes", ImmutableList.of("localhost"))
+        .addConfiguration("contactPoints", ImmutableList.of("localhost"))
         .addConfiguration("useCredentials", false)
         .addConfiguration("compression", CassandraCompressionCodec.NONE)
         .addConfiguration("qualifiedTableName", tableName)
@@ -157,7 +157,7 @@ public class TestCassandraTarget {
 
     TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
         .addConfiguration("protocolVersion", ProtocolVersion.V4)
-        .addConfiguration("contactNodes", ImmutableList.of("localhost"))
+        .addConfiguration("contactPoints", ImmutableList.of("localhost"))
         .addConfiguration("useCredentials", false)
         .addConfiguration("compression", CassandraCompressionCodec.NONE)
         .addConfiguration("qualifiedTableName", tableName)
@@ -211,7 +211,7 @@ public class TestCassandraTarget {
 
     TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
         .addConfiguration("protocolVersion", ProtocolVersion.V4)
-        .addConfiguration("contactNodes", ImmutableList.of("localhost"))
+        .addConfiguration("contactPoints", ImmutableList.of("localhost"))
         .addConfiguration("useCredentials", false)
         .addConfiguration("compression", CassandraCompressionCodec.NONE)
         .addConfiguration("qualifiedTableName", tableName)
@@ -261,7 +261,7 @@ public class TestCassandraTarget {
 
     TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
         .addConfiguration("protocolVersion", ProtocolVersion.V4)
-        .addConfiguration("contactNodes", ImmutableList.of("localhost"))
+        .addConfiguration("contactPoints", ImmutableList.of("localhost"))
         .addConfiguration("useCredentials", false)
         .addConfiguration("compression", CassandraCompressionCodec.NONE)
         .addConfiguration("qualifiedTableName", tableName)
@@ -311,7 +311,7 @@ public class TestCassandraTarget {
 
     TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
         .addConfiguration("protocolVersion", ProtocolVersion.V4)
-        .addConfiguration("contactNodes", ImmutableList.of("localhost"))
+        .addConfiguration("contactPoints", ImmutableList.of("localhost"))
         .addConfiguration("useCredentials", false)
         .addConfiguration("compression", CassandraCompressionCodec.NONE)
         .addConfiguration("qualifiedTableName", tableName)
@@ -362,7 +362,7 @@ public class TestCassandraTarget {
 
     TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
         .addConfiguration("protocolVersion", ProtocolVersion.V4)
-        .addConfiguration("contactNodes", ImmutableList.of("localhost"))
+        .addConfiguration("contactPoints", ImmutableList.of("localhost"))
         .addConfiguration("useCredentials", false)
         .addConfiguration("compression", CassandraCompressionCodec.NONE)
         .addConfiguration("qualifiedTableName", tableName)
@@ -412,7 +412,7 @@ public class TestCassandraTarget {
 
     TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
         .addConfiguration("protocolVersion", ProtocolVersion.V4)
-        .addConfiguration("contactNodes", ImmutableList.of("localhost"))
+        .addConfiguration("contactPoints", ImmutableList.of("localhost"))
         .addConfiguration("useCredentials", false)
         .addConfiguration("compression", CassandraCompressionCodec.NONE)
         .addConfiguration("qualifiedTableName", tableName)
@@ -469,7 +469,7 @@ public class TestCassandraTarget {
 
     TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
         .addConfiguration("protocolVersion", ProtocolVersion.V4)
-        .addConfiguration("contactNodes", ImmutableList.of("localhost"))
+        .addConfiguration("contactPoints", ImmutableList.of("localhost"))
         .addConfiguration("useCredentials", false)
         .addConfiguration("compression", CassandraCompressionCodec.NONE)
         .addConfiguration("qualifiedTableName", "tablename")
@@ -495,7 +495,7 @@ public class TestCassandraTarget {
 
     TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
         .addConfiguration("protocolVersion", ProtocolVersion.V4)
-        .addConfiguration("contactNodes", ImmutableList.of("localhost"))
+        .addConfiguration("contactPoints", ImmutableList.of("localhost"))
         .addConfiguration("useCredentials", false)
         .addConfiguration("compression", CassandraCompressionCodec.NONE)
         .addConfiguration("qualifiedTableName", tableName)
