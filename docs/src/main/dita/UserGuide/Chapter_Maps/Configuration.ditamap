@@ -83,11 +83,14 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Configuration/ExternalLibs-Step1.dita">
-    <topicref href="../Configuration/ExternalLibs-SetUpExternalDir.dita"/>
-    <topicref href="../Configuration/ExternalLibs-SetUpExternalDir-CM.dita"/>
+   <topicref href="../Configuration/ExternalLibs-PackageMgr.dita">
+    <topicref href="../Configuration/ExternalLibs-Step1.dita"/>
+    <topicref href="../Configuration/ExternalLibs-Step2.dita"/>
    </topicref>
-   <topicref href="../Configuration/ExternalLibs-Step2.dita"/>
+   <topicref href="../Configuration/ExternalLibs-Manual.dita">
+    <topicref href="../Configuration/ExternalLibs-Manual-RPMTarball.dita"/>
+    <topicref href="../Configuration/ExternalLibs-Manual-CM.dita"/>
+   </topicref>
   </topicref>
   <topicref href="../Configuration/CustomStageLibraries.dita" chunk="to-content">
    <topicmeta>
