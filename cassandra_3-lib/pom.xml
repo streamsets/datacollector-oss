@@ -32,7 +32,7 @@
   <packaging>jar</packaging>
 
   <properties>
-    <cassandra-driver.version>3.1.0</cassandra-driver.version>
+    <cassandra-driver.version>3.1.4</cassandra-driver.version>
     <cassandra-unit.version>3.0.0.1</cassandra-unit.version>
   </properties>
 
