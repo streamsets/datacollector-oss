@@ -22,11 +22,13 @@ package com.streamsets.pipeline.stage.destination.cassandra;
 import com.datastax.driver.core.BatchStatement;
 import com.datastax.driver.core.BoundStatement;
 import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.CodecRegistry;
 import com.datastax.driver.core.ColumnMetadata;
 import com.datastax.driver.core.KeyspaceMetadata;
 import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.core.TableMetadata;
+import com.datastax.driver.core.TypeCodec;
 import com.datastax.driver.core.exceptions.AuthenticationException;
 import com.datastax.driver.core.exceptions.CodecNotFoundException;
 import com.datastax.driver.core.exceptions.InvalidTypeException;
@@ -83,10 +85,14 @@ import java.util.stream.Collectors;
 public class CassandraTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(CassandraTarget.class);
   private static final String CONTACT_NODES_LABEL = "contactPoints";
+  private static final List<TypeCodec<?>> SDC_CODECS = ImmutableList.of(
+      new TimeUUIDAsStringCodec(),
+      new UUIDAsStringCodec(),
+      new LocalDateAsDateCodec()
+  );
 
   private final CassandraTargetConfig conf;
   private List<InetAddress> contactPoints;
-
 
   private Cluster cluster;
   private Session session;
@@ -146,13 +152,7 @@ public class CassandraTarget extends BaseTarget {
     }
 
     if (issues.isEmpty()) {
-      cluster = Cluster.builder()
-          .addContactPoints(contactPoints)
-          .withCompression(conf.compression.getCodec())
-          .withPort(conf.port)
-          // If authentication is disabled on the C* cluster, this method has no effect.
-          .withCredentials(conf.username, conf.password)
-          .build();
+      cluster = getCluster();
 
       try {
         session = cluster.connect();
@@ -182,11 +182,6 @@ public class CassandraTarget extends BaseTarget {
                   }
                 }
             );
-
-        cluster.getConfiguration().getCodecRegistry()
-            .register(new UUIDAsStringCodec());
-        cluster.getConfiguration().getCodecRegistry()
-            .register(new TimeUUIDAsStringCodec());
       } catch (NoHostAvailableException | AuthenticationException | IllegalStateException e) {
         LOG.error(Errors.CASSANDRA_03.getMessage(), e.toString(), e);
         issues.add(context.createConfigIssue(null, null, Errors.CASSANDRA_03, e.toString()));
@@ -356,9 +351,11 @@ public class CassandraTarget extends BaseTarget {
   private Cluster getCluster() {
     return Cluster.builder()
         .addContactPoints(contactPoints)
+        // If authentication is disabled on the C* cluster, this method has no effect.
         .withCredentials(conf.username, conf.password)
         .withProtocolVersion(conf.protocolVersion)
         .withPort(conf.port)
+        .withCodecRegistry(new CodecRegistry().register(SDC_CODECS))
         .build();
   }
 }

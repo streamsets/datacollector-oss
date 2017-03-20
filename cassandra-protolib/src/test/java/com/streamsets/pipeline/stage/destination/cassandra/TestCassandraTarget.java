@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.destination.cassandra;
 
 import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.LocalDate;
 import com.datastax.driver.core.ProtocolVersion;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
@@ -47,6 +48,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -94,6 +96,8 @@ public class TestCassandraTarget {
             "time int," +
             "x double," +
             "y double," +
+            "dt date," +
+            "ts timestamp," +
             "time_id timeuuid, " +
             "unique_id uuid, " +
             "PRIMARY KEY (driver_id, trip_id)" +
@@ -157,8 +161,10 @@ public class TestCassandraTarget {
         new CassandraFieldMappingConfig("[2]", "time"),
         new CassandraFieldMappingConfig("[3]", "x"),
         new CassandraFieldMappingConfig("[4]", "y"),
-        new CassandraFieldMappingConfig("[5]", "time_id"),
-        new CassandraFieldMappingConfig("[6]", "unique_id")
+        new CassandraFieldMappingConfig("[5]", "dt"),
+        new CassandraFieldMappingConfig("[6]", "ts"),
+        new CassandraFieldMappingConfig("[7]", "time_id"),
+        new CassandraFieldMappingConfig("[8]", "unique_id")
     );
 
     CassandraTargetConfig conf = new CassandraTargetConfig();
@@ -173,6 +179,10 @@ public class TestCassandraTarget {
     Target target = new CassandraTarget(conf);
     TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class, target).build();
 
+    long now = System.currentTimeMillis();
+    LocalDate dt = LocalDate.fromMillisSinceEpoch(now);
+    Date ts = new Date();
+
     Record record = RecordCreator.create();
     List<Field> fields = new ArrayList<>();
     fields.add(Field.create(1));
@@ -180,6 +190,8 @@ public class TestCassandraTarget {
     fields.add(Field.create(3));
     fields.add(Field.create(4.0));
     fields.add(Field.create(5.0));
+    fields.add(Field.create(Field.Type.DATE, new Date(dt.getMillisSinceEpoch())));
+    fields.add(Field.create(Field.Type.DATETIME, ts));
     fields.add(Field.create(SAMPLE_TIMEUUID));
     fields.add(Field.create(SAMPLE_UUID));
     record.set(Field.create(fields));
@@ -204,6 +216,8 @@ public class TestCassandraTarget {
     Assert.assertEquals(3, row.getInt("time"));
     Assert.assertEquals(4.0, row.getDouble("x"), EPSILON);
     Assert.assertEquals(5.0, row.getDouble("y"), EPSILON);
+    Assert.assertEquals(dt, row.getDate("dt"));
+    Assert.assertEquals(ts, row.getTimestamp("ts"));
     Assert.assertEquals(SAMPLE_TIMEUUID, row.getUUID("time_id").toString());
     Assert.assertEquals(SAMPLE_UUID, row.getUUID("unique_id").toString());
   }
