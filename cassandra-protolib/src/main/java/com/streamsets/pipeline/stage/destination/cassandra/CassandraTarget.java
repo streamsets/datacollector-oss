@@ -263,7 +263,7 @@ public class CassandraTarget extends BaseTarget {
   @SuppressWarnings("unchecked")
   public void write(Batch batch) throws StageException {
     // The batch holding the current batch to INSERT.
-    BatchStatement batchedStatement = new BatchStatement();
+    BatchStatement batchedStatement = new BatchStatement(conf.batchType);
 
     Iterator<Record> records = batch.getRecords();
 

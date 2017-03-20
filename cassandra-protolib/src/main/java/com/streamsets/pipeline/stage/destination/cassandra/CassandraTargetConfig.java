@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.destination.cassandra;
 
+import com.datastax.driver.core.BatchStatement;
 import com.datastax.driver.core.ProtocolVersion;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ListBeanModel;
@@ -73,6 +74,17 @@ public class CassandraTargetConfig {
   )
   @ValueChooserModel(CompressionChooserValues.class)
   public CassandraCompressionCodec compression;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "LOGGED",
+      label = "Batch Type",
+      description = "Un-logged batches do not use the Cassandra distributed batch log and as such as nonatomic.",
+      displayPosition = 50
+  )
+  @ValueChooserModel(BatchTypeChooserValues.class)
+  public BatchStatement.Type batchType;
 
   @ConfigDef(
       required = true,

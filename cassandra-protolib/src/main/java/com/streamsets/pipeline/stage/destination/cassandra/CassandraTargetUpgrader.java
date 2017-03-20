@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.destination.cassandra;
 
+import com.datastax.driver.core.BatchStatement;
 import com.datastax.driver.core.ProtocolVersion;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
@@ -74,6 +75,8 @@ public class CassandraTargetUpgrader implements StageUpgrader {
         .stream()
         .map(config -> new Config("conf." + config.getName(), config.getValue()))
         .collect(Collectors.toList());
+
+    newConfigs.add(new Config("conf.batchType", BatchStatement.Type.LOGGED));
 
     return newConfigs;
   }
