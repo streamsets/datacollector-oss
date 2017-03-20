@@ -103,10 +103,15 @@ public class TestCassandraTarget {
     session.execute(
         "CREATE TABLE IF NOT EXISTS test.collections (id int, a_list list<int>, a_map map<text, int>, PRIMARY KEY(id));"
     );
+
+    session.execute(
+        "CREATE TABLE IF NOT EXISTS test.test_null_values (a varchar, b varchar, PRIMARY KEY(a));"
+    );
   }
 
   @After
   public void tearDown() {
+    session.execute("DROP TABLE IF EXISTS test.test_null_values");
     session.execute("DROP TABLE IF EXISTS test.collections");
     session.execute("DROP TABLE IF EXISTS test.trips");
     session.execute("DROP KEYSPACE IF EXISTS test");
@@ -552,5 +557,49 @@ public class TestCassandraTarget {
     ResultSet resultSet = session.execute("SELECT * FROM test.trips");
     List<Row> allRows = resultSet.all();
     Assert.assertEquals(1000, allRows.size());
+  }
+
+  @Test
+  public void testWriteNullValuedColumns() throws Exception {
+    final String tableName = "test.test_null_values";
+    List<CassandraFieldMappingConfig> fieldMappings = ImmutableList.of(new CassandraFieldMappingConfig("[0]", "a"),
+        new CassandraFieldMappingConfig("[1]", "b")
+    );
+
+    CassandraTargetConfig conf = new CassandraTargetConfig();
+    conf.contactPoints.add("localhost");
+    conf.port = CASSANDRA_NATIVE_PORT;
+    conf.protocolVersion = ProtocolVersion.V4;
+    conf.useCredentials = false;
+    conf.compression = CassandraCompressionCodec.NONE;
+    conf.columnNames = fieldMappings;
+    conf.qualifiedTableName = tableName;
+
+    Target target = new CassandraTarget(conf);
+    TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class, target).build();
+
+    Record record = RecordCreator.create();
+    List<Field> fields = new ArrayList<>();
+    fields.add(Field.create("abc"));
+    fields.add(Field.create(Field.Type.STRING, null));
+    record.set(Field.create(fields));
+
+    List<Record> singleRecord = ImmutableList.of(record);
+    targetRunner.runInit();
+    targetRunner.runWrite(singleRecord);
+
+    // Should not be any error records.
+    Assert.assertTrue(targetRunner.getErrorRecords().isEmpty());
+    Assert.assertTrue(targetRunner.getErrors().isEmpty());
+
+    targetRunner.runDestroy();
+
+    ResultSet resultSet = session.execute("SELECT * FROM test.test_null_values");
+    List<Row> allRows = resultSet.all();
+    Assert.assertEquals(1, allRows.size());
+
+    Row row = allRows.get(0);
+    Assert.assertEquals("abc", row.getString("a"));
+    Assert.assertEquals(null, row.getString("b"));
   }
 }

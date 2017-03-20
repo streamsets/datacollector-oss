@@ -302,7 +302,8 @@ public class CassandraTarget extends BaseTarget {
       String fieldPath = mapping.getValue();
 
       // If we're missing fields, skip them.
-      if (!record.has(fieldPath)) {
+      // If a field is present, but null, also remove it from columnsPresent since we can't write nulls.
+      if (!record.has(fieldPath) || record.get(fieldPath).getValue() == null) {
         columnsPresent.remove(columnName);
         continue;
       }
