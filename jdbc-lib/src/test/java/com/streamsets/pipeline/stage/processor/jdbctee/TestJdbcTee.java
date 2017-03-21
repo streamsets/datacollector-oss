@@ -59,7 +59,7 @@ public class TestJdbcTee {
   private final String unprivPassword = "unpriv_pass";
   private final String database = "TEST";
   private final String tableName = "TEST_TABLE";
-  private final boolean caseSensitive = false;
+  private final boolean enclosedTableName = false;
   private final String h2ConnectionString = "jdbc:h2:mem:" + database;
 
   private Connection connection = null;
@@ -82,6 +82,8 @@ public class TestJdbcTee {
           "(255), LAST_NAME VARCHAR(255), TS TIMESTAMP);");
       statement.addBatch("CREATE TABLE IF NOT EXISTS TEST.TABLE_THREE " + "(P_ID IDENTITY, FIRST_NAME " +
           "VARCHAR(255), LAST_NAME VARCHAR(255), TS TIMESTAMP);");
+      statement.addBatch("CREATE TABLE IF NOT EXISTS \"TEST\".\"test_table@\" " + "(P_ID IDENTITY, FIRST_NAME " +
+          "VARCHAR(255), LAST_NAME VARCHAR(255), TS TIMESTAMP);");
       statement.addBatch("CREATE USER IF NOT EXISTS " + unprivUser + " PASSWORD '" + unprivPassword + "';");
       statement.addBatch("GRANT SELECT ON TEST.TEST_TABLE TO " + unprivUser + ";");
 
@@ -97,6 +99,7 @@ public class TestJdbcTee {
       statement.execute("DROP TABLE IF EXISTS TEST.TABLE_ONE;");
       statement.execute("DROP TABLE IF EXISTS TEST.TABLE_TWO;");
       statement.execute("DROP TABLE IF EXISTS TEST.TABLE_THREE;");
+      statement.execute("DROP TABLE IF EXISTS \"TEST\".\"test_table@\";");
     }
 
     // Last open connection terminates H2
@@ -130,7 +133,7 @@ public class TestJdbcTee {
         .addConfiguration("schema", database)
         .addConfiguration("tableNameTemplate", tableName)
         .addConfiguration("customMappings", fieldMappings)
-        .addConfiguration("encloseTableName", caseSensitive)
+        .addConfiguration("encloseTableName", enclosedTableName)
         .addConfiguration("rollbackOnError", false)
         .addConfiguration("useMultiRowOp", false)
         .addConfiguration("maxPrepStmtParameters", JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS)
@@ -439,7 +442,7 @@ public class TestJdbcTee {
         .addConfiguration("schema", database)
         .addConfiguration("tableNameTemplate", tableName)
         .addConfiguration("customMappings", fieldMappings)
-        .addConfiguration("encloseTableName", caseSensitive)
+        .addConfiguration("encloseTableName", enclosedTableName)
         .addConfiguration("rollbackOnError", false)
         .addConfiguration("useMultiRowOp", false)
         .addConfiguration("maxPrepStmtParameters", JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS)
@@ -606,7 +609,7 @@ public class TestJdbcTee {
         .addConfiguration("schema", database)
         .addConfiguration("tableNameTemplate", tableName)
         .addConfiguration("customMappings", fieldMappings)
-        .addConfiguration("encloseTableName", caseSensitive)
+        .addConfiguration("encloseTableName", enclosedTableName)
         .addConfiguration("rollbackOnError", false)
         .addConfiguration("useMultiRowOp", true)
         .addConfiguration("maxPrepStmtParameters", JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS)
@@ -733,7 +736,7 @@ public class TestJdbcTee {
         .addConfiguration("schema", database)
         .addConfiguration("tableNameTemplate", tableName)
         .addConfiguration("customMappings", fieldMappings)
-        .addConfiguration("encloseTableName", caseSensitive)
+        .addConfiguration("encloseTableName", enclosedTableName)
         .addConfiguration("rollbackOnError", false)
         .addConfiguration("useMultiRowOp", false)
         .addConfiguration("maxPrepStmtParameters", JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS)
@@ -768,7 +771,7 @@ public class TestJdbcTee {
         .addConfiguration("schema", database)
         .addConfiguration("tableNameTemplate", tableName)
         .addConfiguration("customMappings", fieldMappings)
-        .addConfiguration("encloseTableName", caseSensitive)
+        .addConfiguration("encloseTableName", enclosedTableName)
         .addConfiguration("rollbackOnError", false)
         .addConfiguration("useMultiRowOp", false)
         .addConfiguration("maxPrepStmtParameters", JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS)
@@ -801,7 +804,7 @@ public class TestJdbcTee {
         .addConfiguration("schema", database)
         .addConfiguration("tableNameTemplate", tableName)
         .addConfiguration("customMappings", fieldMappings)
-        .addConfiguration("encloseTableName", caseSensitive)
+        .addConfiguration("encloseTableName", enclosedTableName)
         .addConfiguration("rollbackOnError", false)
         .addConfiguration("useMultiRowOp", false)
         .addConfiguration("maxPrepStmtParameters", JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS)
@@ -837,7 +840,7 @@ public class TestJdbcTee {
         .addConfiguration("schema", database)
         .addConfiguration("tableNameTemplate", "${record:attribute('tableName')}")
         .addConfiguration("customMappings", fieldMappings)
-        .addConfiguration("encloseTableName", caseSensitive)
+        .addConfiguration("encloseTableName", enclosedTableName)
         .addConfiguration("customMappings", fieldMappings)
         .addConfiguration("rollbackOnError", false)
         .addConfiguration("useMultiRowOp", false)
@@ -888,6 +891,55 @@ public class TestJdbcTee {
       Assert.assertEquals(1, rs.getInt(1));
       Assert.assertEquals("Jane", rs.getString(2));
       Assert.assertEquals("Doe", rs.getString(3));
+      Assert.assertEquals(false, rs.next());
+    }
+  }
+
+  @Test
+  public void testEncloseTableNames() throws Exception {
+    List<JdbcFieldColumnParamMapping> fieldMappings = ImmutableList.of(new JdbcFieldColumnParamMapping(
+            "[0]",
+            "FIRST_NAME"
+        ),
+        new JdbcFieldColumnParamMapping("[1]", "LAST_NAME"),
+        new JdbcFieldColumnParamMapping("[2]", "TS")
+    );
+
+    List<JdbcFieldColumnMapping> generatedColumnMappings = ImmutableList.of(new JdbcFieldColumnMapping("P_ID", "[3]"));
+
+    JdbcTeeDProcessor processor = new JdbcTeeDProcessor();
+    processor.hikariConfigBean = createConfigBean(h2ConnectionString, username, password);
+
+    ProcessorRunner processorRunner = new ProcessorRunner.Builder(JdbcTeeDProcessor.class, processor)
+        .addConfiguration("schema", database)
+        .addConfiguration("tableNameTemplate", "${record:attribute('tableName')}")
+        .addConfiguration("customMappings", fieldMappings)
+        .addConfiguration("encloseTableName", true)
+        .addConfiguration("customMappings", fieldMappings)
+        .addConfiguration("rollbackOnError", false)
+        .addConfiguration("useMultiRowOp", false)
+        .addConfiguration("maxPrepStmtParameters", JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS)
+        .addConfiguration("maxPrepStmtCache", PreparedStatementCache.UNLIMITED_CACHE)
+        .addConfiguration("changeLogFormat", ChangeLogFormat.NONE)
+        .addConfiguration("unsupportedAction", UnsupportedOperationAction.DISCARD)
+        .addConfiguration("defaultOperation", JDBCOperationType.INSERT)
+        .addConfiguration("generatedColumnMappings", generatedColumnMappings)
+        .addOutputLane("lane").setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+
+    List<Record> records = ImmutableList.of(
+        generateRecord("Ji Sun", "Kim", "test_table@")
+    );
+    processorRunner.runInit();
+    processorRunner.runProcess(records);
+
+    connection = DriverManager.getConnection(h2ConnectionString, username, password);
+    try (Statement statement = connection.createStatement()) {
+      ResultSet rs = statement.executeQuery("SELECT P_ID, FIRST_NAME, LAST_NAME FROM \"TEST\".\"test_table@\"");
+      rs.next();
+      Assert.assertEquals(1, rs.getInt(1));
+      Assert.assertEquals("Ji Sun", rs.getString(2));
+      Assert.assertEquals("Kim", rs.getString(3));
       Assert.assertEquals(false, rs.next());
     }
   }

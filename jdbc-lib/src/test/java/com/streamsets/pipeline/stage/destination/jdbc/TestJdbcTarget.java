@@ -100,6 +100,11 @@ public class TestJdbcTarget {
       statement.addBatch(
         "CREATE TABLE IF NOT EXISTS TEST.DATETIMES (P_ID INT NOT NULL, T TIME, D DATE, DT DATETIME, PRIMARY KEY(P_ID)) "
       );
+      statement.addBatch(
+          "CREATE TABLE IF NOT EXISTS \"TEST\".\"test_table@\"" +
+              "(P_ID INT NOT NULL, FIRST_NAME VARCHAR(255), LAST_NAME VARCHAR(255), TS TIMESTAMP, UNIQUE(P_ID), " +
+              "PRIMARY KEY(P_ID));"
+      );
       statement.addBatch("CREATE USER IF NOT EXISTS " + unprivUser + " PASSWORD '" + unprivPassword + "';");
       statement.addBatch("GRANT SELECT ON TEST.TEST_TABLE TO " + unprivUser + ";");
 
@@ -116,7 +121,7 @@ public class TestJdbcTarget {
       statement.execute("DROP TABLE IF EXISTS TEST.TABLE_TWO;");
       statement.execute("DROP TABLE IF EXISTS TEST.TABLE_THREE;");
       statement.execute("DROP TABLE IF EXISTS TEST.DATETIMES;");
-
+      statement.execute("DROP TABLE IF EXISTS \"TEST\".\"test_table@\";");
     }
 
     // Last open connection terminates H2
@@ -676,7 +681,7 @@ public class TestJdbcTarget {
         schema,
         "${record:attribute('tableName')}",
         fieldMappings,
-        false, // enclose table name
+        true, // enclose table name
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
@@ -712,6 +717,45 @@ public class TestJdbcTarget {
 
     try (Statement statement = connection.createStatement()) {
       ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM TEST.TABLE_THREE");
+      rs.next();
+      assertEquals(1, rs.getInt(1));
+    }
+  }
+
+  @Test
+  public void testEncloseTableNames() throws Exception {
+    List<JdbcFieldColumnParamMapping> fieldMappings = ImmutableList.of(
+        new JdbcFieldColumnParamMapping("[0]", "P_ID"),
+        new JdbcFieldColumnParamMapping("[1]", "FIRST_NAME"),
+        new JdbcFieldColumnParamMapping("[2]", "LAST_NAME"),
+        new JdbcFieldColumnParamMapping("[3]", "TS")
+    );
+
+    Target target = new JdbcTarget(
+        schema,
+        "${record:attribute('tableName')}",
+        fieldMappings,
+        true, // enclose table name
+        false,
+        false,
+        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
+        PreparedStatementCache.UNLIMITED_CACHE,
+        ChangeLogFormat.NONE,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
+        createConfigBean(h2ConnectionString, username, password)
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
+
+    List<Record> records = ImmutableList.of(
+        generateRecord(1, "Ji Sun", "Kim", "test_table@")
+    );
+    targetRunner.runInit();
+    targetRunner.runWrite(records);
+
+    connection = DriverManager.getConnection(h2ConnectionString, username, password);
+    try (Statement statement = connection.createStatement()) {
+      ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM TEST.\"test_table@\"");
       rs.next();
       assertEquals(1, rs.getInt(1));
     }
