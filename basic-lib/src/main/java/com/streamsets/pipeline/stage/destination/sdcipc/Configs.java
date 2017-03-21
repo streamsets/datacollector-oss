@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.destination.sdcipc;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.math.IntMath;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
@@ -57,6 +58,7 @@ public class Configs {
   private static final String CONFIG_PREFIX = "config.";
   private static final String HOST_PORTS = CONFIG_PREFIX + "hostPorts";
   private static final String TRUST_STORE_FILE = CONFIG_PREFIX + "trustStoreFile";
+  private static final int MAX_BACKOFF_WAIT = 5 * 60 * 1000; // 5 minutes in milliseconds
 
   @ConfigDef(
       required = true,
@@ -138,7 +140,7 @@ public class Configs {
       displayPosition = 70,
       group = "ADVANCED",
       min = 0,
-      max = 10
+      max = Integer.MAX_VALUE
   )
   public int retriesPerBatch;
 
@@ -148,7 +150,8 @@ public class Configs {
       defaultValue = "30",
       label = "Back off period",
       description = "If set to non-zero, each retry will be spaced exponentially. For value 10, first retry will be" +
-        " done after 10 milliseconds, second retry after additional 100 milliseconds, third retry after additional second, ...",
+        " done after 10 milliseconds, second retry after additional 100 milliseconds, third retry after additional second, ..." +
+        " The maximum wait time is 5 minutes.",
       displayPosition = 80,
       group = "ADVANCED",
       min=0
@@ -212,16 +215,9 @@ public class Configs {
         validateConnectivity(context, moreIssues);
 
         int retryCount = 0;
-        long waitTime = backOff;
-        while (moreIssues.size() > 0 && retryDuringValidation && retryCount < retriesPerBatch) {
-          if(retryCount > 0 && backOff > 0) {
-            LOG.debug("Waiting '{}' milliseconds before re-try", backOff);
-            boolean uninterrupted = ThreadUtil.sleep(waitTime);
-            if (!uninterrupted) {
-              LOG.info("Backoff waiting was interrupted");
-            }
-            waitTime *= backOff;
-          }
+        while (!moreIssues.isEmpty() && retryDuringValidation && (retryCount < retriesPerBatch)) {
+          backOffWait(retryCount);
+
           moreIssues.clear();
           validateConnectivity(context, moreIssues);
           retryCount++;
@@ -231,6 +227,29 @@ public class Configs {
       }
     }
     return issues;
+  }
+
+  public void backOffWait(int retryCount) {
+    // No wait if wait is disabled or this is first re-try
+    if(retryCount <= 0 || backOff <= 0) {
+      return;
+    }
+
+    // Wait time period
+    int waitTime;
+
+    // Current exponential back off
+    try {
+      waitTime = IntMath.checkedPow(backOff, retryCount);
+    } catch (ArithmeticException e) {
+      waitTime = MAX_BACKOFF_WAIT;
+    }
+
+    // Apply upper limit for the wait and finally wait
+    waitTime = Math.min(waitTime, MAX_BACKOFF_WAIT);
+    if (!ThreadUtil.sleep(waitTime)) {
+      LOG.info("Backoff waiting was interrupted");
+    }
   }
 
   boolean validateHostPorts(Stage.Context context, List<Stage.ConfigIssue> issues) {
