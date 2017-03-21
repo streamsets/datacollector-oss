@@ -856,6 +856,9 @@ public class PipelineStoreResource {
     PipelineConfigurationJson pipelineConfigurationJson = pipelineEnvelope.getPipelineConfig();
     PipelineConfiguration pipelineConfig = BeanHelper.unwrapPipelineConfiguration(pipelineConfigurationJson);
 
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipelineConfig);
+    pipelineConfig = validator.validate();
+
     RuleDefinitionsJson ruleDefinitionsJson = pipelineEnvelope.getPipelineRules();
     RuleDefinitions ruleDefinitions = BeanHelper.unwrapRuleDefinitions(ruleDefinitionsJson);
 
