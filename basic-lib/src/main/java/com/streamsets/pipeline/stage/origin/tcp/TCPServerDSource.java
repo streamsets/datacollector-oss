@@ -80,10 +80,6 @@ public class TCPServerDSource extends DPushSource {
     if (!conf.enableEpoll) {
       conf.numThreads = 1;
     }
-    // Force single thread if epoll not enabled.
-    if (!conf.enableEpoll) {
-      conf.numThreads = 1;
-    }
     return new TCPServerSource(
         conf.maxMessageSize,
         conf.ports,
@@ -92,7 +88,9 @@ public class TCPServerDSource extends DPushSource {
         conf.syslogCharset,
         conf.tcpMode,
         conf.syslogFramingMode,
-        conf.nonTransparentFramingSeparatorCharStr,
+        conf.tcpMode == TCPMode.SYSLOG ? conf.nonTransparentFramingSeparatorCharStr : conf.recordSeparatorStr,
+        conf.dataFormat,
+        conf.dataFormatConfig,
         conf.batchSize,
         conf.maxWaitTime
     );

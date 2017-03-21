@@ -26,13 +26,12 @@ import com.streamsets.pipeline.api.Label;
 @GenerateResourceBundle
 public enum Groups implements Label {
   TCP("TCP"),
-  SYSLOG("syslog"),
-  COLLECTD("collectd"),
+  DATA_FORMAT("Delimited records format"),
   ;
 
   private final String label;
 
-  private Groups(String label) {
+  Groups(String label) {
     this.label = label;
   }
 

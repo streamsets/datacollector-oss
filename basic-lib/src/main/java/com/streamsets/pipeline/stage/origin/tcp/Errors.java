@@ -35,7 +35,8 @@ public enum Errors implements ErrorCode {
   TCP_07("Insufficient permissions to listen on privileged port {}"),
   TCP_08("Multithreaded TCP server is not available on your platform."),
   TCP_09("Failing pipeline on error as per stage configuration: {}"),
-  TCP_10("{} caught in Netty channel pipeline: {}"),
+  TCP_10("{} thrown in Netty channel pipeline: {}"),
+  TCP_11("DataParserException thrown in Netty channel pipeline from DataFormatParserDecoder: {}"),
   ;
 
   private final String msg;

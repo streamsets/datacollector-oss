@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.net.MessageToRecord;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -131,10 +132,10 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
     if (msg instanceof MessageToRecord) {
       Record record = context.createRecord(generateRecordId());
       ((MessageToRecord) msg).populateRecord(record);
-      batchContext.getBatchMaker().addRecord(record);
-      if (++batchRecordCount >= maxBatchSize) {
-        newBatch();
-      }
+      addRecord(record);
+    } else if (msg instanceof Record) {
+      // we already have a Record (ex: from a DataFormatParserDecoder), so just add it
+      addRecord((Record)msg);
     } else {
       throw new IllegalStateException(String.format(
           "Unexpected object type (%s) found in Netty channel pipeline",
@@ -144,6 +145,13 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
 
     long waitTimeRemaining = this.maxWaitTime - (getCurrentTime() - lastBatchStart);
     restartMaxWaitTimeTask(ctx, waitTimeRemaining);
+  }
+
+  private void addRecord(Record record) {
+    batchContext.getBatchMaker().addRecord(record);
+    if (++batchRecordCount >= maxBatchSize) {
+      newBatch();
+    }
   }
 
   private void newBatch() {
@@ -170,6 +178,8 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
       }
       ctx.close();
       return;
+    } else if (exception instanceof DataParserException) {
+      exception = new OnRecordErrorException(Errors.TCP_11, exception.getMessage(), exception);
     }
 
     LOG.error("exceptionCaught in TCPObjectToRecordHandler", exception);

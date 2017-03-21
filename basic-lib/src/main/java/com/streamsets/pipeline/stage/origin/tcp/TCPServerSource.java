@@ -25,11 +25,15 @@ import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BasePushSource;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.lib.parser.DataParserFactory;
+import com.streamsets.pipeline.lib.parser.net.DataFormatParserDecoder;
 import com.streamsets.pipeline.lib.parser.net.DelimitedLengthFieldBasedFrameDecoder;
 import com.streamsets.pipeline.lib.parser.net.netflow.NetflowDecoder;
 import com.streamsets.pipeline.lib.parser.net.syslog.SyslogDecoder;
 import com.streamsets.pipeline.lib.parser.net.syslog.SyslogFramingMode;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
+import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelInitializer;
@@ -65,9 +69,12 @@ public class TCPServerSource extends BasePushSource {
   private final String charset;
   private final TCPMode tcpMode;
   private final SyslogFramingMode syslogFramingMode;
-  private final String nonTransparentFramingSeparatorChar;
+  private final DataFormat parserFormat;
+  private final DataParserFormatConfig parserConfig;
+  private final String recordSeparatorStr;
   private TCPConsumingServer tcpServer;
   private boolean privilegedPortUsage;
+  private DataParserFactory parserFactory;
 
   private final Map<String, OnRecordErrorException> pipelineIdsToFail;
 
@@ -81,7 +88,9 @@ public class TCPServerSource extends BasePushSource {
       String charset,
       TCPMode tcpMode,
       SyslogFramingMode syslogFramingMode,
-      String nonTransparentFramingSeparatorChar,
+      String recordSeparatorStr,
+      DataFormat parserFormat,
+      DataParserFormatConfig parserConfig,
       int maxBatchSize,
       long maxWaitTime
   ) {
@@ -92,7 +101,9 @@ public class TCPServerSource extends BasePushSource {
     this.charset = charset;
     this.tcpMode = tcpMode;
     this.syslogFramingMode = syslogFramingMode;
-    this.nonTransparentFramingSeparatorChar = nonTransparentFramingSeparatorChar;
+    this.parserFormat = parserFormat;
+    this.parserConfig = parserConfig;
+    this.recordSeparatorStr = recordSeparatorStr;
     this.maxBatchSize = maxBatchSize;
     this.maxWaitTime = maxWaitTime;
     this.addresses = new ArrayList<>();
@@ -140,44 +151,44 @@ public class TCPServerSource extends BasePushSource {
       }
     }
 
-    if (issues.isEmpty() && !addresses.isEmpty()) {
-      tcpServer = new TCPConsumingServer(enableEpoll, numThreads, addresses, new ChannelInitializer<SocketChannel>() { // (4)
-        @Override
-        public void initChannel(SocketChannel ch) throws Exception {
-          ch.pipeline().addLast(
-              // first, decode the ByteBuf into some POJO type extending MessageToRecord
-              buildByteBufToMessageDecoderChain(issues).toArray(new ChannelHandler[0])
-          );
-          ch.pipeline().addLast(
-              // next, handle MessageToRecord instances to build SDC records and errors
-              new TCPObjectToRecordHandler(
-                  getContext(),
-                  maxBatchSize,
-                  maxWaitTime,
-                  pipelineIdsToFail::put
-              )
-          );
-        }
-      });
-      try {
-        tcpServer.listen();
-        tcpServer.start();
-      } catch (Exception ex) {
-        tcpServer.destroy();
-        tcpServer = null;
+    if (issues.isEmpty()&&!addresses.isEmpty()) {
+        tcpServer = new TCPConsumingServer(enableEpoll, numThreads, addresses, new ChannelInitializer<SocketChannel>() { // (4)
+          @Override
+          public void initChannel(SocketChannel ch) throws Exception {
+            ch.pipeline().addLast(
+                // first, decode the ByteBuf into some POJO type extending MessageToRecord
+                buildByteBufToMessageDecoderChain(issues).toArray(new ChannelHandler[0])
+            );
+            ch.pipeline().addLast(
+                // next, handle MessageToRecord instances to build SDC records and errors
+                new TCPObjectToRecordHandler(
+                    getContext(),
+                    maxBatchSize,
+                    maxWaitTime,
+                    pipelineIdsToFail::put
+                )
+            );
+          }
+        });
+        if (issues.isEmpty()) {try {
+          tcpServer.listen();
+          tcpServer.start();
+        } catch (Exception ex) {
+          tcpServer.destroy();
+          tcpServer = null;
 
-        if (ex instanceof SocketException && privilegedPortUsage) {
-          issues.add(getContext().createConfigIssue(Groups.TCP.name(), "ports", Errors.TCP_07, ports, ex));
-        } else {
-          LOG.debug("Caught exception while starting up TCP server: {}", ex);
-          issues.add(getContext().createConfigIssue(
-              Groups.TCP.name(),
-              "ports",
-              Errors.TCP_00,
-              addresses.toString(),
-              ex.toString(),
-              ex
-          ));
+          if (ex instanceof SocketException && privilegedPortUsage) {
+            issues.add(getContext().createConfigIssue(Groups.TCP.name(), "ports", Errors.TCP_07, ports, ex));
+          } else {
+            LOG.error("Caught exception while starting up TCP server: {}", ex);
+            issues.add(getContext().createConfigIssue(Groups.TCP.name(),
+                "ports",
+                Errors.TCP_00,
+                addresses.toString(),
+                ex.toString(),
+                ex
+            ));
+          }
         }
       }
     }
@@ -208,7 +219,7 @@ public class TCPServerSource extends BasePushSource {
         } else if (syslogFramingMode == SyslogFramingMode.NON_TRANSPARENT_FRAMING) {
           // first, a DelimiterBasedFrameDecoder to ensure we can capture a full message
           decoderChain.add(new DelimiterBasedFrameDecoder(maxMessageSize, true, Unpooled.copiedBuffer(
-              StringEscapeUtils.unescapeJava(nonTransparentFramingSeparatorChar).getBytes()
+              StringEscapeUtils.unescapeJava(recordSeparatorStr).getBytes()
           )));
           // next, decode the syslog message itself
           decoderChain.add(new SyslogDecoder(charsetObj));
@@ -216,12 +227,23 @@ public class TCPServerSource extends BasePushSource {
           throw new IllegalStateException("Unrecognized SyslogFramingMode: "+syslogFramingMode.name());
         }
         break;
+      case DELIMITED_RECORDS:
+        if (issues.isEmpty()) {
+          parserConfig.init(getContext(), parserFormat, Groups.TCP.name(), "dataFormatConfig", maxMessageSize, issues);
+          parserFactory = parserConfig.getParserFactory();
+
+          // first, a DelimiterBasedFrameDecoder to ensure we can capture a full message
+          decoderChain.add(new DelimiterBasedFrameDecoder(maxMessageSize, true, Unpooled.copiedBuffer(
+              StringEscapeUtils.unescapeJava(recordSeparatorStr).getBytes()
+          )));
+          // next, decode the delimited message itself
+          decoderChain.add(new DataFormatParserDecoder(parserFactory, getContext()));
+        }
+        break;
       default:
         issues.add(getContext().createConfigIssue(
-            Groups.TCP.name(),
-            "tcpMode",
-            Errors.TCP_01,
-            tcpMode
+            Groups.TCP.name(), "tcpMode",
+          Errors.TCP_01, tcpMode
         ));
         break;
     }

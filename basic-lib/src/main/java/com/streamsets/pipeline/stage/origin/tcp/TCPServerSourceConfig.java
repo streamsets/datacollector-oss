@@ -21,14 +21,33 @@
 package com.streamsets.pipeline.stage.origin.tcp;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.CharsetChooserValues;
+import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.DataFormatChooserValues;
 import com.streamsets.pipeline.lib.parser.net.syslog.SyslogFramingMode;
 import com.streamsets.pipeline.lib.parser.net.syslog.SyslogFramingModeChooserValues;
+import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
 import java.util.List;
 
 public class TCPServerSourceConfig {
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Data Format",
+      displayPosition = 1,
+      group = "DATA_FORMAT",
+      dependsOn = "tcpMode",
+      triggeredByValue = "DELIMITED_RECORDS"
+  )
+  @ValueChooserModel(DataFormatChooserValues.class)
+  public DataFormat dataFormat;
+
+  @ConfigDefBean(groups = "DATA_FORMAT")
+  public DataParserFormatConfig dataFormatConfig;
 
   @ConfigDef(
       required = true,
@@ -121,6 +140,20 @@ public class TCPServerSourceConfig {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Record separator",
+      description = "When using delimited records mode, this is the separator character that will appear between" +
+          " separate records.  Specify using Java Unicode syntax (\"\\uxxxx\").  Defaults to line feed (000A).",
+      defaultValue = "\\u000A",
+      group = "TCP",
+      dependsOn = "tcpMode",
+      triggeredByValue = "DELIMITED_RECORDS",
+      displayPosition = 35
+  )
+  public String recordSeparatorStr;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "1000",
       label = "Max Batch Size (messages)",
@@ -150,7 +183,7 @@ public class TCPServerSourceConfig {
       label = "TypesDB File Path",
       description = "User-specified TypesDB file. Overrides the included version.",
       displayPosition = 70,
-      group = "COLLECTD",
+      group = "TCP",
       dependsOn = "tcpMode",
       triggeredByValue = "COLLECTD"
   )
@@ -163,7 +196,7 @@ public class TCPServerSourceConfig {
       label = "Convert Hi-Res Time & Interval",
       description = "Converts high resolution time format interval and timestamp to unix time in (ms).",
       displayPosition = 80,
-      group = "COLLECTD",
+      group = "TCP",
       dependsOn = "tcpMode",
       triggeredByValue = "COLLECTD"
   )
@@ -176,7 +209,7 @@ public class TCPServerSourceConfig {
       label = "Exclude Interval",
       description = "Excludes the interval field from output records.",
       displayPosition = 90,
-      group = "COLLECTD",
+      group = "TCP",
       dependsOn = "tcpMode",
       triggeredByValue = "COLLECTD"
   )
@@ -188,7 +221,7 @@ public class TCPServerSourceConfig {
       label = "Auth File",
       description = "",
       displayPosition = 100,
-      group = "COLLECTD",
+      group = "TCP",
       dependsOn = "tcpMode",
       triggeredByValue = "COLLECTD"
   )
@@ -200,7 +233,7 @@ public class TCPServerSourceConfig {
       defaultValue = "UTF-8",
       label = "Charset",
       displayPosition = 110,
-      group = "COLLECTD",
+      group = "TCP",
       dependsOn = "tcpMode",
       triggeredByValue = "COLLECTD"
   )
