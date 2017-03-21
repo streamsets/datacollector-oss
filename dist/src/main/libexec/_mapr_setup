@@ -114,6 +114,7 @@ printf "Done.\n"
 # Create symbolic links. Ignore the stderr (there will be a lot of symlinks already exist errors)
 printf "Creating symbolic links ...."
 ln -s ${MAPR_HOME}/lib/*.jar ${SDC_HOME}/streamsets-libs/${MAPR_LIB}/lib/ 2>/dev/null
+ln -s ${MAPR_HOME}/hadoop/hadoop-*/share/hadoop/common/lib/*.jar ${SDC_HOME}/streamsets-libs/${MAPR_LIB}/lib/ 2>/dev/null
 ln -s ${MAPR_HOME}/hbase/hbase-*/lib/*.jar  ${SDC_HOME}/streamsets-libs/${MAPR_LIB}/lib/ 2>/dev/null
 ln -s ${MAPR_HOME}/hive/hive-*/lib/*.jar ${SDC_HOME}/streamsets-libs/${MAPR_LIB}/lib/ 2>/dev/null
 ln -s ${MAPR_HOME}/hive/hive-*/hcatalog/share/hcatalog/*.jar ${SDC_HOME}/streamsets-libs/${MAPR_LIB}/lib/ 2>/dev/null
