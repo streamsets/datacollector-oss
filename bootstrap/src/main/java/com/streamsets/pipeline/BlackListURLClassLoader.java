@@ -32,10 +32,13 @@ public class BlackListURLClassLoader extends URLClassLoader {
   private final String[] blacklistedPackages;
   private final String[] blacklistedDirs;
 
+  protected final List<URL> urls;
+
 
   public BlackListURLClassLoader(String type, String name, List<URL> urls, ClassLoader parent,
                                  String[] blacklistedPackages) {
     super(urls.toArray(new URL[urls.size()]), parent);
+    this.urls = urls;
     this.type = type;
     this.name = name;
     this.blacklistedPackages = (blacklistedPackages != null) ? blacklistedPackages : new String[0];

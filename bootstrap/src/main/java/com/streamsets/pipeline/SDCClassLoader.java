@@ -114,7 +114,6 @@ public class SDCClassLoader extends BlackListURLClassLoader {
     SYSTEM_API_CHILDREN_CLASSES = Collections.unmodifiableList(apiChildren);
   }
 
-  private final List<URL> urls;
   private final ClassLoader parent;
   private final boolean parentIsAPIClassLoader;
   private final SystemPackage systemPackage;
@@ -124,11 +123,7 @@ public class SDCClassLoader extends BlackListURLClassLoader {
   public SDCClassLoader(String type, String name, List<URL> urls, ClassLoader parent, String[] blacklistedPackages,
       SystemPackage systemPackage, ApplicationPackage applicationPackage,
       boolean isPrivate, boolean parentIsAPIClassLoader, boolean isStageLibClassLoader) {
-    super(type, name, urls, parent, blacklistedPackages);
-
-    // only for stagelib classloaders, we force stagelib and protolib JARs to be first in the classpath, so they can
-    // override classes from its dependencies. Usecase: Hadoop native compression codecs replacement
-    this.urls = (isStageLibClassLoader) ? bringStageAndProtoLibsToFront(name, urls) : urls;
+    super(type, name, getOrderedURLsForClassLoader(urls, isStageLibClassLoader, name), parent, blacklistedPackages);
     if (debug) {
       System.err.println(getClass().getSimpleName() + " " + getName() + ": urls: " + Arrays.toString(urls.toArray()));
       System.err.println(getClass().getSimpleName() + " " + getName() + ": system classes: " + systemPackage);
@@ -405,6 +400,17 @@ public class SDCClassLoader extends BlackListURLClassLoader {
   public SDCClassLoader duplicateStageClassLoader() {
     return getStageClassLoader(getType(), getName(), urls, parent, true);
   }
+
+  private static List<URL> getOrderedURLsForClassLoader(
+      List<URL> urls,
+      boolean isStageLibClassLoader,
+      String stageLibName
+  ) {
+    // only for stagelib classloaders, we force stagelib and protolib JARs to be first in the classpath, so they can
+    // override classes from its dependencies. Usecase: Hadoop native compression codecs replacement
+    return (isStageLibClassLoader) ? bringStageAndProtoLibsToFront(stageLibName, urls) : urls;
+  }
+
 
   public boolean isPrivate() {
     return isPrivate;
