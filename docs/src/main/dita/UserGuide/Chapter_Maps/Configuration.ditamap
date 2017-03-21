@@ -59,8 +59,6 @@
     <topicref href="../Configuration/JavaHeapSize.dita"/>
     <topicref href="../Configuration/JavaConfig_RemoteDebug.dita"/>
     <topicref href="../Configuration/JavaConfig_GarbageCollector.dita"/>
-    <topicref href="../Configuration/JavaConfig_TLSProtocolVersions.dita"/>
-    <topicref href="../Configuration/PermGenSize.dita"/>
    </topicref>
    <topicref href="../Configuration/JavaSecurityManager.dita"/>
    <topicref href="../Configuration/RootClassloader.dita"/>

@@ -8,6 +8,13 @@
     <shortdesc/>
    </topicmeta>
   </topicref>
+  <topicref href="../Upgrade/PreUpgrade.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Upgrade/PreUpgrade-InstallRequirements.dita"/>
+   <topicref href="../Upgrade/PreUpgrade-Java8.dita"/>
+  </topicref>
   <topicref href="../Upgrade/Tarball.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

@@ -57,16 +57,7 @@ for(var i = 0; i &lt; records.length; i++) {
    </dl>
    <dl>
     <dlentry>
-          <dt>For Java 7, modified numeric values lose their original type</dt>
-          <dd>Numeric data that is modified becomes a Double, other types of data retain their
-            original type.</dd>
-          <dd>Values that are not modified in the processor retain their original type.</dd>
-          <dd>
-            <note conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Java7"/>
-          </dd>
-        </dlentry>
-    <dlentry>
-     <dt>For Java 8, values retain their original type</dt>
+     <dt>Values retain their original type</dt>
      <dd>Values retain their original type regardless of whether the processor modifies the
       value.</dd>
     </dlentry>

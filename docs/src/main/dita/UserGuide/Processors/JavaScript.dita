@@ -26,16 +26,8 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             passes a batch of data to the processor and converts the data to a scripting-friendly
             data structure for processing.</p>
-        <p>The JavaScript Evaluator supports the following versions of Java:<ul id="ul_xyk_lp2_qr">
-                <li>Java 7 - Supports ECMAScript 5 and partially supports JavaScript 1.8. Runs on
-                    the Rhino 1.7R3 JavaScript engine.</li>
-                <li>Java 8u40 and later - Supports ECMAScript 5.1. Runs on the Nashorn JavaScript
-                    engine.</li>
-            </ul></p>
-        <note conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Java7"/>
-        <p>Some Java 8 JavaScript functionality is not available in Java 7 JavaScript. To ensure the
-            JavaScript Evaluator performs as expected, use the same version of Java in development
-            and production.</p>
+        <p>The JavaScript Evaluator supports Java version 8u40 and later and ECMAScript version 5.1.
+            The processor runs on the Nashorn JavaScript engine.</p>
         <p>The JavaScript Evaluator provides extensive sample code that you can use to develop your
             script. You can also call external Java code from the script.</p>
  </conbody>

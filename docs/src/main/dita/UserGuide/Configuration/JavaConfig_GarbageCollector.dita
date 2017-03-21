@@ -28,12 +28,10 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             performance before making the same change in a production environment. Garbage collector
             performance depends on each particular use case.</p>
-        <p>Define the garbage collector in the SDC_JAVA7_OPTS or SDC_JAVA8_OPTS environment variable
-            in the <ph
+        <p>Define the garbage collector in the SDC_JAVA8_OPTS environment variable in the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            environment configuration file, based on the Java version that you are using. </p>
-        <p>For example, if you are using Java 8, the default garbage collector is defined as
-            follows:</p>
+            environment configuration file. </p>
+        <p>For example, the default garbage collector is defined as follows:</p>
         <codeblock>SDC_JAVA8_OPTS=${SDC_JAVA8_OPTS:-"<uicontrol>-XX:+UseConcMarkSweepGC -XX:+UseParNewGC</uicontrol>"}</codeblock>
         <p>To use the G1 garbage collector, set the option as follows: </p>
         <codeblock>SDC_JAVA8_OPTS=${SDC_JAVA8_OPTS:-"<uicontrol>-XX:+UseG1GC</uicontrol>"}</codeblock>

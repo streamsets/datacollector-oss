@@ -34,7 +34,6 @@
    </topicmeta>
    <topicref href="../Troubleshooting/Origins-Directory.dita"/>
    <topicref href="../Troubleshooting/Origins-HadoopFS.dita"/>
-   <topicref href="../Troubleshooting/Origins-HTTPClient.dita"/>
    <topicref href="../Troubleshooting/Origins-JDBC.dita"/>
    <topicref href="../Troubleshooting/Origins-KafkaConsumer.dita"/>
    <topicref href="../Troubleshooting/Origins-OracleCDC.dita"/>

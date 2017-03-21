@@ -20,23 +20,18 @@
           file</indexterm></indexterm><indexterm>Data Collector<indexterm>Java configuration
           options</indexterm></indexterm><indexterm>SDC_ROOT_CLASSPATH<indexterm>Java environment
           variable</indexterm></indexterm><indexterm>SDC_JAVA_OPTS<indexterm>Java environment
-          variable</indexterm></indexterm><indexterm>SDC_JAVA7_OPTS<indexterm>Java environment
           variable</indexterm></indexterm><indexterm>SDC_JAVA8_OPTS<indexterm>Java environment
           variable</indexterm></indexterm>You can edit the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       environment configuration file to add or update Java configuration options. </p>
     <p>You can update Java configuration options in the following environment variables:</p>
     <ul id="ul_xfx_q33_vx">
-      <li>SDC_JAVA_OPTS - Includes configuration options for both Java 7 and 8.</li>
-      <li>SDC_JAVA7_OPTS - Includes configuration options for Java 7. </li>
-      <li>SDC_JAVA8_OPTS - Includes configuration options for Java 8.</li>
+      <li>SDC_JAVA_OPTS - Includes configuration options for Java.</li>
+      <li>SDC_JAVA8_OPTS - Includes configuration options specific to Java 8.</li>
     </ul>
-    <p>Based on the Java version installed on the <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> machine,
-        <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> loads
+    <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> loads
       the value of the version-specific environment variable and adds it to the SDC_JAVA_OPTS
       environment variable.</p>
-   <note conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Java7"/>
     <p>To modify Java configuration options for the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> command
       line interface, use the SDC_CLI_JAVA_OPTS environment variable. For more information, see
