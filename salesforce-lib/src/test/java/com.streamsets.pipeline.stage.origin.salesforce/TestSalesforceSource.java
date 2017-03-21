@@ -304,6 +304,58 @@ public class TestSalesforceSource {
     }
   }
 
+  @Test
+  public void testStreaming() throws Exception {
+    ForceSourceConfigBean conf = getForceSourceConfig();
+    conf.queryExistingData = false;
+    conf.subscribeToStreaming = true;
+    conf.pushTopic = "Test";
+    ForceSource origin = new ForceSource(conf);
+
+    mockServer.sforceApi().query().returnResults()
+        .withRow().withField("Id", "001000000000001").withField("Query", "SELECT Id, Name FROM Account");
+
+    SourceRunner runner = new SourceRunner.Builder(ForceDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    assertEquals(0, issues.size());
+  }
+
+  @Test
+  public void testStreamingNoPushTopic() throws Exception {
+    ForceSourceConfigBean conf = getForceSourceConfig();
+    conf.queryExistingData = false;
+    conf.subscribeToStreaming = true;
+    ForceSource origin = new ForceSource(conf);
+
+    SourceRunner runner = new SourceRunner.Builder(ForceDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    assertEquals(1, issues.size());
+    assertTrue(issues.get(0).toString().contains("A configuration is invalid"));
+  }
+
+  @Test
+  public void testStreamingBadPushTopic() throws Exception {
+    ForceSourceConfigBean conf = getForceSourceConfig();
+    conf.queryExistingData = false;
+    conf.subscribeToStreaming = true;
+    conf.pushTopic = "Test";
+    ForceSource origin = new ForceSource(conf);
+
+    SourceRunner runner = new SourceRunner.Builder(ForceDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    assertEquals(1, issues.size());
+    assertTrue(issues.get(0).toString().contains("A configuration is invalid"));
+  }
+
   private ForceSourceConfigBean getForceSourceConfig() {
     ForceSourceConfigBean conf = new ForceSourceConfigBean();
 

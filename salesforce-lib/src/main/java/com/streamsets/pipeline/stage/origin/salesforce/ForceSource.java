@@ -215,9 +215,7 @@ public class ForceSource extends BaseSource {
                   "Can't find Push Topic '" + conf.pushTopic +"'"
               )
           );
-        }
-
-        if (null == sobjectType) {
+        } else if (null == sobjectType) {
           String soqlQuery = (String)qr.getRecords()[0].getField("Query");
           sobjectType = ForceUtils.getSobjectTypeFromQuery(soqlQuery);
           LOG.info("Found sobject type {}", sobjectType);
