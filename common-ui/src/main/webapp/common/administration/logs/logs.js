@@ -213,7 +213,7 @@ angular
               return;
             }
 
-            if ($scope.filterPipeline && $scope.filterPipeline != logWebSocketMessage['s-entity']) {
+            if ($scope.filterPipeline && $scope.filterPipelineLabel != logWebSocketMessage['s-entity']) {
               lastMessageFiltered = true;
               return;
             }
