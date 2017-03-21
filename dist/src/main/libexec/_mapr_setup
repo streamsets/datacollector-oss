@@ -115,10 +115,16 @@ printf "Done.\n"
 printf "Creating symbolic links ...."
 ln -s ${MAPR_HOME}/lib/*.jar ${SDC_HOME}/streamsets-libs/${MAPR_LIB}/lib/ 2>/dev/null
 ln -s ${MAPR_HOME}/hadoop/hadoop-*/share/hadoop/common/lib/*.jar ${SDC_HOME}/streamsets-libs/${MAPR_LIB}/lib/ 2>/dev/null
+ln -s ${MAPR_HOME}/hadoop/hadoop-*/share/hadoop/mapreduce/lib/*.jar ${SDC_HOME}/streamsets-libs/${MAPR_LIB}/lib/ 2>/dev/null
+ln -s ${MAPR_HOME}/hadoop/hadoop-*/share/hadoop/mapreduce/*.jar ${SDC_HOME}/streamsets-libs/${MAPR_LIB}/lib/ 2>/dev/null
 ln -s ${MAPR_HOME}/hbase/hbase-*/lib/*.jar  ${SDC_HOME}/streamsets-libs/${MAPR_LIB}/lib/ 2>/dev/null
 ln -s ${MAPR_HOME}/hive/hive-*/lib/*.jar ${SDC_HOME}/streamsets-libs/${MAPR_LIB}/lib/ 2>/dev/null
 ln -s ${MAPR_HOME}/hive/hive-*/hcatalog/share/hcatalog/*.jar ${SDC_HOME}/streamsets-libs/${MAPR_LIB}/lib/ 2>/dev/null
 ln -s ${MAPR_HOME}/lib/maprfs-${MAPR_VERSION}*.jar  ${SDC_HOME}/root-lib/ 2>/dev/null
+printf "Done.\n"
+
+printf "Removing old Hadoop 0.20 jars ...."
+rm -rf ${SDC_HOME}/streamsets-libs/${MAPR_LIB}/lib/hadoop-0.20*.jar
 printf "Done.\n"
 
 # Add permission to sdc-security.policy file
