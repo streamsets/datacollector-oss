@@ -52,11 +52,25 @@ public class CassandraTargetUpgrader implements StageUpgrader {
         // fall through
       case 3:
         newConfigs = upgradeV3ToV4(configs);
+        if (toVersion == 4) {
+          break;
+        }
+        // fall through
+      case 4:
+        newConfigs = upgradeV4ToV5(newConfigs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
     return newConfigs;
+  }
+
+  private List<Config> upgradeV4ToV5(List<Config> configs) {
+    configs.add(new Config("conf.authProviderOption", AuthProviderOption.NONE));
+    return configs
+        .stream()
+        .filter(c -> !"conf.useCredentials".equals(c.getName()))
+        .collect(Collectors.toList());
   }
 
   private void upgradeV1ToV2(List<Config> configs) {

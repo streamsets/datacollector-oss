@@ -15,12 +15,14 @@
  */
 package com.streamsets.pipeline.stage.destination.cassandra;
 
+import com.datastax.driver.core.AuthProvider;
 import com.datastax.driver.core.BatchStatement;
 import com.datastax.driver.core.BoundStatement;
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.CodecRegistry;
 import com.datastax.driver.core.ColumnMetadata;
 import com.datastax.driver.core.KeyspaceMetadata;
+import com.datastax.driver.core.PlainTextAuthProvider;
 import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.core.TableMetadata;
@@ -29,6 +31,8 @@ import com.datastax.driver.core.exceptions.AuthenticationException;
 import com.datastax.driver.core.exceptions.CodecNotFoundException;
 import com.datastax.driver.core.exceptions.InvalidTypeException;
 import com.datastax.driver.core.exceptions.NoHostAvailableException;
+import com.datastax.driver.dse.auth.DseGSSAPIAuthProvider;
+import com.datastax.driver.dse.auth.DsePlainTextAuthProvider;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.cache.CacheBuilder;
@@ -53,8 +57,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
+import javax.security.auth.Subject;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.security.AccessControlContext;
+import java.security.AccessController;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -105,8 +112,22 @@ public class CassandraTarget extends BaseTarget {
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
-
     Target.Context context = getContext();
+
+    // Verify that we can load DSE classes if DSE auth modes are selected
+    try {
+      getAuthProvider();
+    } catch (NoClassDefFoundError e) {
+      LOG.error(Errors.CASSANDRA_10.getMessage(), conf.authProviderOption, e);
+      issues.add(context.createConfigIssue(
+          "CASSANDRA",
+          "authProviderOption",
+          Errors.CASSANDRA_10,
+          conf.authProviderOption
+      ));
+      return issues;
+    }
+
     if (conf.contactPoints.isEmpty()) {
       issues.add(context.createConfigIssue(Groups.CASSANDRA.name(), CONTACT_NODES_LABEL, Errors.CASSANDRA_00));
     }
@@ -348,10 +369,27 @@ public class CassandraTarget extends BaseTarget {
     return Cluster.builder()
         .addContactPoints(contactPoints)
         // If authentication is disabled on the C* cluster, this method has no effect.
-        .withCredentials(conf.username, conf.password)
+        .withAuthProvider(getAuthProvider())
         .withProtocolVersion(conf.protocolVersion)
         .withPort(conf.port)
         .withCodecRegistry(new CodecRegistry().register(SDC_CODECS))
         .build();
+  }
+
+  private AuthProvider getAuthProvider() {
+    switch (conf.authProviderOption) {
+      case NONE:
+        return AuthProvider.NONE;
+      case PLAINTEXT:
+        return new PlainTextAuthProvider(conf.username, conf.password);
+      case DSE_PLAINTEXT:
+        return new DsePlainTextAuthProvider(conf.username, conf.password);
+      case KERBEROS:
+        AccessControlContext accessContext = AccessController.getContext();
+        Subject subject = Subject.getSubject(accessContext);
+        return DseGSSAPIAuthProvider.builder().withSubject(subject).build();
+      default:
+        throw new IllegalArgumentException("Unrecognized AuthProvider: " + conf.authProviderOption);
+    }
   }
 }

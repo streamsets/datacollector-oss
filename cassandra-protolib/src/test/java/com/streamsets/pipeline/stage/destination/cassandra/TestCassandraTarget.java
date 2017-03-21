@@ -133,7 +133,7 @@ public class TestCassandraTarget {
     conf.contactPoints.add("localhost");
     conf.port = CASSANDRA_NATIVE_PORT;
     conf.protocolVersion = ProtocolVersion.V4;
-    conf.useCredentials = false;
+    conf.authProviderOption = AuthProviderOption.NONE;
     conf.compression = CassandraCompressionCodec.NONE;
     conf.columnNames = fieldMappings;
     conf.qualifiedTableName = tableName;
@@ -166,7 +166,7 @@ public class TestCassandraTarget {
     conf.contactPoints.add("localhost");
     conf.port = CASSANDRA_NATIVE_PORT;
     conf.protocolVersion = ProtocolVersion.V4;
-    conf.useCredentials = false;
+    conf.authProviderOption = AuthProviderOption.NONE;
     conf.compression = CassandraCompressionCodec.NONE;
     conf.columnNames = fieldMappings;
     conf.qualifiedTableName = tableName;
@@ -230,7 +230,7 @@ public class TestCassandraTarget {
     conf.contactPoints.add("localhost");
     conf.port = CASSANDRA_NATIVE_PORT;
     conf.protocolVersion = ProtocolVersion.V4;
-    conf.useCredentials = false;
+    conf.authProviderOption = AuthProviderOption.NONE;
     conf.compression = CassandraCompressionCodec.NONE;
     conf.columnNames = fieldMappings;
     conf.qualifiedTableName = tableName;
@@ -282,7 +282,7 @@ public class TestCassandraTarget {
     conf.contactPoints.add("localhost");
     conf.port = CASSANDRA_NATIVE_PORT;
     conf.protocolVersion = ProtocolVersion.V4;
-    conf.useCredentials = false;
+    conf.authProviderOption = AuthProviderOption.NONE;
     conf.compression = CassandraCompressionCodec.NONE;
     conf.columnNames = fieldMappings;
     conf.qualifiedTableName = tableName;
@@ -335,7 +335,7 @@ public class TestCassandraTarget {
     conf.contactPoints.add("localhost");
     conf.port = CASSANDRA_NATIVE_PORT;
     conf.protocolVersion = ProtocolVersion.V4;
-    conf.useCredentials = false;
+    conf.authProviderOption = AuthProviderOption.NONE;
     conf.compression = CassandraCompressionCodec.NONE;
     conf.columnNames = fieldMappings;
     conf.qualifiedTableName = tableName;
@@ -389,7 +389,7 @@ public class TestCassandraTarget {
     conf.contactPoints.add("localhost");
     conf.port = CASSANDRA_NATIVE_PORT;
     conf.protocolVersion = ProtocolVersion.V4;
-    conf.useCredentials = false;
+    conf.authProviderOption = AuthProviderOption.NONE;
     conf.compression = CassandraCompressionCodec.NONE;
     conf.columnNames = fieldMappings;
     conf.qualifiedTableName = tableName;
@@ -442,7 +442,7 @@ public class TestCassandraTarget {
     conf.contactPoints.add("localhost");
     conf.port = CASSANDRA_NATIVE_PORT;
     conf.protocolVersion = ProtocolVersion.V4;
-    conf.useCredentials = false;
+    conf.authProviderOption = AuthProviderOption.NONE;
     conf.compression = CassandraCompressionCodec.NONE;
     conf.columnNames = fieldMappings;
     conf.qualifiedTableName = tableName;
@@ -501,7 +501,7 @@ public class TestCassandraTarget {
     conf.contactPoints.add("localhost");
     conf.port = CASSANDRA_NATIVE_PORT;
     conf.protocolVersion = ProtocolVersion.V4;
-    conf.useCredentials = false;
+    conf.authProviderOption = AuthProviderOption.NONE;
     conf.compression = CassandraCompressionCodec.NONE;
     conf.columnNames = fieldMappings;
     conf.qualifiedTableName = "tableName";
@@ -530,7 +530,7 @@ public class TestCassandraTarget {
     conf.contactPoints.add("localhost");
     conf.port = CASSANDRA_NATIVE_PORT;
     conf.protocolVersion = ProtocolVersion.V4;
-    conf.useCredentials = false;
+    conf.authProviderOption = AuthProviderOption.NONE;
     conf.compression = CassandraCompressionCodec.NONE;
     conf.columnNames = fieldMappings;
     conf.qualifiedTableName = tableName;
@@ -579,7 +579,7 @@ public class TestCassandraTarget {
     conf.contactPoints.add("localhost");
     conf.port = CASSANDRA_NATIVE_PORT;
     conf.protocolVersion = ProtocolVersion.V4;
-    conf.useCredentials = false;
+    conf.authProviderOption = AuthProviderOption.NONE;
     conf.compression = CassandraCompressionCodec.NONE;
     conf.columnNames = fieldMappings;
     conf.qualifiedTableName = tableName;

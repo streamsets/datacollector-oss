@@ -24,7 +24,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 4,
+    version = 5,
     label = "Cassandra",
     description = "Writes data to Cassandra",
     icon = "cassandra.png",

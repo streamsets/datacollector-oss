@@ -31,7 +31,8 @@ public enum Errors implements ErrorCode {
   CASSANDRA_06("Could not prepare record id'{}' due to: {}"),
   CASSANDRA_07("Could not insert batch due to: {}"),
   CASSANDRA_08("Invalid column mappings specified. Table doesn't have columns: {}"),
-  CASSANDRA_09("Could not insert batch which included record: '{}': {}")
+  CASSANDRA_09("Could not insert batch which included record: '{}': {}"),
+  CASSANDRA_10("Requested Auth Provider '{}' not available. Please ensure you have the DSE driver jar installed."),
   ;
   private final String msg;
 

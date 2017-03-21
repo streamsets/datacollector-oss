@@ -51,10 +51,21 @@ public class CassandraTargetConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
+      label = "Authentication Provider",
+      defaultValue = "NONE",
+      displayPosition = 30,
+      group = "CASSANDRA"
+  )
+  @ValueChooserModel(AuthenticatorClassChooserValues.class)
+  public AuthProviderOption authProviderOption = AuthProviderOption.NONE;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
       label = "Protocol Version",
       description = "If unsure which setting to use, refer to: https://datastax.github" +
           ".io/java-driver/manual/native_protocol",
-      displayPosition = 30,
+      displayPosition = 40,
       group = "CASSANDRA"
   )
   @ValueChooserModel(ProtocolVersionChooserValues.class)
@@ -66,7 +77,7 @@ public class CassandraTargetConfig {
       defaultValue = "LZ4",
       label = "Compression",
       description = "Optional compression for transport-level requests and responses.",
-      displayPosition = 40,
+      displayPosition = 50,
       group = "CASSANDRA"
   )
   @ValueChooserModel(CompressionChooserValues.class)
@@ -78,7 +89,7 @@ public class CassandraTargetConfig {
       defaultValue = "LOGGED",
       label = "Batch Type",
       description = "Un-logged batches do not use the Cassandra distributed batch log and as such as nonatomic.",
-      displayPosition = 50
+      displayPosition = 60
   )
   @ValueChooserModel(BatchTypeChooserValues.class)
   public BatchStatement.Type batchType = BatchStatement.Type.LOGGED;
@@ -91,19 +102,9 @@ public class CassandraTargetConfig {
       max = 65535,
       label = "Max Batch Size",
       description = "Maximum statements to batch prior to submission.",
-      displayPosition = 60
+      displayPosition = 70
   )
   public int maxBatchSize = 65535;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      label = "Use Credentials",
-      defaultValue = "false",
-      displayPosition = 70,
-      group = "CASSANDRA"
-  )
-  public boolean useCredentials = false;
 
   @ConfigDef(
       required = true,
@@ -134,8 +135,8 @@ public class CassandraTargetConfig {
       displayPosition = 10,
       elDefs = VaultEL.class,
       group = "CREDENTIALS",
-      dependsOn = "useCredentials",
-      triggeredByValue = "true"
+      dependsOn = "authProviderOption",
+      triggeredByValue = {"PLAINTEXT", "DSE_PLAINTEXT"}
   )
   public String username;
 
@@ -147,8 +148,8 @@ public class CassandraTargetConfig {
       displayPosition = 20,
       elDefs = VaultEL.class,
       group = "CREDENTIALS",
-      dependsOn = "useCredentials",
-      triggeredByValue = "true"
+      dependsOn = "authProviderOption",
+      triggeredByValue = {"PLAINTEXT", "DSE_PLAINTEXT"}
   )
   public String password;
 }

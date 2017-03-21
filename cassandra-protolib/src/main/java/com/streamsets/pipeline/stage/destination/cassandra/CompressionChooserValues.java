@@ -17,7 +17,7 @@ package com.streamsets.pipeline.stage.destination.cassandra;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public class CompressionChooserValues extends BaseEnumChooserValues {
+public class CompressionChooserValues extends BaseEnumChooserValues<CassandraCompressionCodec> {
 
   public CompressionChooserValues() {
     super(CassandraCompressionCodec.class);
