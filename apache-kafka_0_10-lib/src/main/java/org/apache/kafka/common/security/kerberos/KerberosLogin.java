@@ -7,7 +7,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,28 +18,32 @@
 
 package org.apache.kafka.common.security.kerberos;
 
-import org.apache.kafka.common.config.SaslConfigs;
-import org.apache.kafka.common.security.authenticator.AbstractLogin;
-import org.apache.kafka.common.utils.Shell;
-import org.apache.kafka.common.utils.SystemTime;
-import org.apache.kafka.common.utils.Time;
-import org.apache.kafka.common.utils.Utils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.security.auth.Subject;
 import javax.security.auth.kerberos.KerberosPrincipal;
-import javax.security.auth.kerberos.KerberosTicket;
 import javax.security.auth.login.AppConfigurationEntry;
 import javax.security.auth.login.Configuration;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
+import javax.security.auth.kerberos.KerberosTicket;
+import javax.security.auth.Subject;
+
+import org.apache.kafka.common.KafkaException;
+import org.apache.kafka.common.security.JaasUtils;
+import org.apache.kafka.common.security.authenticator.AbstractLogin;
+import org.apache.kafka.common.config.SaslConfigs;
+import org.apache.kafka.common.utils.Shell;
+import org.apache.kafka.common.utils.Time;
+import org.apache.kafka.common.utils.SystemTime;
+import org.apache.kafka.common.utils.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 import java.security.AccessController;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -105,7 +109,7 @@ public class KerberosLogin extends AbstractLogin {
 
   @Override
   public LoginContext login() throws LoginException {
-    // BEGIN changes for SDC-2430
+
     Subject existingSubject = Subject.getSubject(AccessController.getContext());
     if (existingSubject != null) {
       // Found a subject in the threads access control context. Check if it has a valid Kerberos ticket
@@ -130,7 +134,6 @@ public class KerberosLogin extends AbstractLogin {
         return loginContext;
       }
     }
-    // END changes for SDC-2430
 
     this.lastLogin = currentElapsedTime();
     loginContext = super.login();
@@ -147,14 +150,12 @@ public class KerberosLogin extends AbstractLogin {
       if (entry.getOptions().get("useTicketCache") != null) {
         String val = (String) entry.getOptions().get("useTicketCache");
         isUsingTicketCache = val.equals("true");
-      } else {
+      } else
         isUsingTicketCache = false;
-      }
-      if (entry.getOptions().get("principal") != null) {
+      if (entry.getOptions().get("principal") != null)
         principal = (String) entry.getOptions().get("principal");
-      } else {
+      else
         principal = null;
-      }
     }
 
     if (!isKrbTicket) {
@@ -186,17 +187,14 @@ public class KerberosLogin extends AbstractLogin {
             long expiry = tgt.getEndTime().getTime();
             Date expiryDate = new Date(expiry);
             if (isUsingTicketCache && tgt.getRenewTill() != null && tgt.getRenewTill().getTime() < expiry) {
-              log.warn("The TGT cannot be renewed beyond the next expiry date: {}." +
+              log.error("The TGT cannot be renewed beyond the next expiry date: {}." +
                       "This process will not be able to authenticate new SASL connections after that " +
                       "time (for example, it will not be able to authenticate a new connection with a Kafka " +
                       "Broker).  Ask your system administrator to either increase the " +
                       "'renew until' time by doing : 'modprinc -maxrenewlife {} ' within " +
                       "kadmin, or instead, to generate a keytab for {}. Because the TGT's " +
                       "expiry cannot be further extended by refreshing, exiting refresh thread now.",
-                  expiryDate,
-                  principal,
-                  principal
-              );
+                  expiryDate, principal, principal);
               return;
             }
             // determine how long to sleep from looking at ticket's expiry.
@@ -212,20 +210,17 @@ public class KerberosLogin extends AbstractLogin {
                 // next scheduled refresh is sooner than (now + MIN_TIME_BEFORE_LOGIN).
                 Date until = new Date(nextRefresh);
                 Date newUntil = new Date(now + minTimeBeforeRelogin);
-                log.warn("TGT refresh thread time adjusted from {} to {} since the former is sooner " + "than the minimum refresh interval ({} seconds) from now.",
-                    until,
-                    newUntil,
-                    minTimeBeforeRelogin / 1000
-                );
+                log.warn("TGT refresh thread time adjusted from {} to {} since the former is sooner " +
+                        "than the minimum refresh interval ({} seconds) from now.",
+                    until, newUntil, minTimeBeforeRelogin / 1000);
               }
               nextRefresh = Math.max(nextRefresh, now + minTimeBeforeRelogin);
             }
             nextRefreshDate = new Date(nextRefresh);
             if (nextRefresh > expiry) {
-              log.error("Next refresh: {} is later than expiry {}. This may indicate a clock skew problem." + "Check that this host and the KDC hosts' clocks are in sync. Exiting refresh thread.",
-                  nextRefreshDate,
-                  expiryDate
-              );
+              log.error("Next refresh: {} is later than expiry {}. This may indicate a clock skew problem." +
+                      "Check that this host and the KDC hosts' clocks are in sync. Exiting refresh thread.",
+                  nextRefreshDate, expiryDate);
               return;
             }
           }
@@ -239,10 +234,10 @@ public class KerberosLogin extends AbstractLogin {
               return;
             }
           } else {
-            log.error(
-                "NextRefresh: {} is in the past: exiting refresh thread. Check" + " clock sync between this host and KDC - (KDC's clock is likely ahead of this host)." + " Manual intervention will be required for this client to successfully authenticate." + " Exiting refresh thread.",
-                nextRefreshDate
-            );
+            log.error("NextRefresh: {} is in the past: exiting refresh thread. Check"
+                + " clock sync between this host and KDC - (KDC's clock is likely ahead of this host)."
+                + " Manual intervention will be required for this client to successfully authenticate."
+                + " Exiting refresh thread.", nextRefreshDate);
             return;
           }
           if (isUsingTicketCache) {
@@ -264,10 +259,8 @@ public class KerberosLogin extends AbstractLogin {
                     return;
                   }
                 } else {
-                  log.warn(
-                      "Could not renew TGT due to problem running shell command: '" + kinitCmd + " " + kinitArgs + "'" + "; exception was: " + e + ". Exiting refresh thread.",
-                      e
-                  );
+                  log.warn("Could not renew TGT due to problem running shell command: '" + kinitCmd
+                      + " " + kinitArgs + "'" + "; exception was: " + e + ". Exiting refresh thread.", e);
                   return;
                 }
               }
@@ -328,18 +321,12 @@ public class KerberosLogin extends AbstractLogin {
   }
 
   private String getServiceName(Map<String, ?> configs, String loginContext) {
-    // BEGIN changes for SDC-2430
-
-    // Comment out existing implementation of this method which looks up service names from both
-    // kafka client jaas file as well as client configuration.
-    // Support reading service name from "sasl.kerberos.service.name" client configuration.
-
-    /*
-    String jaasServiceName;
+    String jaasServiceName = null;
     try {
       jaasServiceName = JaasUtils.jaasConfig(loginContext, JaasUtils.SERVICE_NAME);
     } catch (IOException e) {
-      throw new KafkaException("Jaas configuration not found", e);
+      //throw new KafkaException("Jaas configuration not found", e);
+      log.warn("Jaas configuration not found", e);
     }
     String configServiceName = (String) configs.get(SaslConfigs.SASL_KERBEROS_SERVICE_NAME);
     if (jaasServiceName != null && configServiceName != null && !jaasServiceName.equals(configServiceName)) {
@@ -354,14 +341,6 @@ public class KerberosLogin extends AbstractLogin {
       return configServiceName;
 
     throw new IllegalArgumentException("No serviceName defined in either JAAS or Kafka config");
-    */
-
-    String configServiceName = (String) configs.get(SaslConfigs.SASL_KERBEROS_SERVICE_NAME);
-    if (configServiceName != null) {
-      return configServiceName;
-    }
-    throw new IllegalArgumentException("No serviceName defined in Kafka config. " + "Please specify the kafka service name using the \"sasl.kerberos.service.name\" configuration in the client.");
-    // END changes for SDC-2430
   }
 
 
@@ -370,15 +349,14 @@ public class KerberosLogin extends AbstractLogin {
     long expires = tgt.getEndTime().getTime();
     log.info("TGT valid starting at: {}", tgt.getStartTime());
     log.info("TGT expires: {}", tgt.getEndTime());
-    long proposedRefresh = start + (long) ((expires - start) * (ticketRenewWindowFactor + (ticketRenewJitter * RNG.nextDouble())));
+    long proposedRefresh = start + (long) ((expires - start) *
+        (ticketRenewWindowFactor + (ticketRenewJitter * RNG.nextDouble())));
 
     if (proposedRefresh > expires)
-    // proposedRefresh is too far in the future: it's after ticket expires: simply return now.
-    {
+      // proposedRefresh is too far in the future: it's after ticket expires: simply return now.
       return currentWallTime();
-    } else {
+    else
       return proposedRefresh;
-    }
   }
 
   private synchronized KerberosTicket getTGT() {
@@ -386,10 +364,8 @@ public class KerberosLogin extends AbstractLogin {
     for (KerberosTicket ticket : tickets) {
       KerberosPrincipal server = ticket.getServer();
       if (server.getName().equals("krbtgt/" + server.getRealm() + "@" + server.getRealm())) {
-        log.debug("Found TGT with client principal '{}' and server principal '{}'.",
-            ticket.getClient().getName(),
-            ticket.getServer().getName()
-        );
+        log.debug("Found TGT with client principal '{}' and server principal '{}'.", ticket.getClient().getName(),
+            ticket.getServer().getName());
         return ticket;
       }
     }
@@ -399,10 +375,8 @@ public class KerberosLogin extends AbstractLogin {
   private boolean hasSufficientTimeElapsed() {
     long now = currentElapsedTime();
     if (now - lastLogin < minTimeBeforeRelogin) {
-      log.warn(
-          "Not attempting to re-login since the last re-login was attempted less than {} seconds before.",
-          minTimeBeforeRelogin / 1000
-      );
+      log.warn("Not attempting to re-login since the last re-login was attempted less than {} seconds before.",
+          minTimeBeforeRelogin / 1000);
       return false;
     }
     return true;
