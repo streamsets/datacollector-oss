@@ -38,7 +38,6 @@ import io.netty.channel.epoll.Epoll;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,18 +54,7 @@ import java.util.Map;
 public class TCPServerSource extends BasePushSource {
   private static final Logger LOG = LoggerFactory.getLogger(TCPServerSource.class);
 
-//  private final boolean enableEpoll;
-//  private final int numThreads;
-//  private final int maxMessageSize;
-//  private final Set<String> ports;
-//  private final int maxBatchSize;
-//  private final long maxWaitTime;
   private final List<InetSocketAddress> addresses = new LinkedList<>();
-//  private final String charset;
-//  private final TCPMode tcpMode;
-//  private final TCPFramingMode tcpFramingMode;
-//  private final DataFormat parserFormat;
-//  private final DataParserFormatConfig parserConfig;
   private final String recordSeparatorStr;
   private TCPConsumingServer tcpServer;
   private boolean privilegedPortUsage;
@@ -74,57 +62,11 @@ public class TCPServerSource extends BasePushSource {
 
   private final TCPServerSourceConfig config;
 
-  private SslContextFactory sslContextFactory;
-
   private final Map<String, OnRecordErrorException> pipelineIdsToFail = new HashMap<>();
 
   private static final long PRODUCE_LOOP_INTERVAL_MS = 1000;
 
-//  public TCPServerSource(
-//      int maxMessageSize,
-//      List<String> ports,
-//      boolean enableEpoll,
-//      int numThreads,
-//      String charset,
-//      TCPMode tcpMode,
-//      TCPFramingMode tcpFramingMode,
-//      String recordSeparatorStr,
-//      DataFormat parserFormat,
-//      DataParserFormatConfig parserConfig,
-//      int maxBatchSize,
-//      long maxWaitTime
-//  ) {
-//    this.maxMessageSize = maxMessageSize;
-//    this.enableEpoll = enableEpoll;
-//    this.numThreads = numThreads;
-//    this.ports = ImmutableSet.copyOf(ports);
-//    this.charset = charset;
-//    this.tcpMode = tcpMode;
-//    this.tcpFramingMode = tcpFramingMode;
-//    this.parserFormat = parserFormat;
-//    this.parserConfig = parserConfig;
-//    this.recordSeparatorStr = recordSeparatorStr;
-//    this.maxBatchSize = maxBatchSize;
-//    this.maxWaitTime = maxWaitTime;
-//    this.addresses = new ArrayList<>();
-//    this.pipelineIdsToFail = new HashMap<>();
-//  }
-
   public TCPServerSource(TCPServerSourceConfig config) {
-//    this(
-//        config.maxMessageSize,
-//        config.ports,
-//        config.enableEpoll,
-//        config.numThreads,
-//        config.syslogCharset,
-//        config.tcpMode,
-//        config.tcpFramingMode,
-//        config.recordSeparatorStr,
-//        config.dataFormat,
-//        config.dataFormatConfig,
-//        config.batchSize,
-//        config.maxWaitTime
-//    );
     this.config = config;
 
     this.recordSeparatorStr = config.tcpMode == TCPMode.SYSLOG

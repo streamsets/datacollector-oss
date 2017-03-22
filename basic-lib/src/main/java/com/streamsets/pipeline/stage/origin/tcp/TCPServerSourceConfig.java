@@ -193,69 +193,6 @@ public class TCPServerSourceConfig {
   public int maxWaitTime;
 
   @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.STRING,
-      label = "TypesDB File Path",
-      description = "User-specified TypesDB file. Overrides the included version.",
-      displayPosition = 100,
-      group = "TCP",
-      dependsOn = "tcpMode",
-      triggeredByValue = "COLLECTD"
-  )
-  public String typesDbPath;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
-      label = "Convert Hi-Res Time & Interval",
-      description = "Converts high resolution time format interval and timestamp to unix time in (ms).",
-      displayPosition = 110,
-      group = "TCP",
-      dependsOn = "tcpMode",
-      triggeredByValue = "COLLECTD"
-  )
-  public boolean convertTime;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "true",
-      label = "Exclude Interval",
-      description = "Excludes the interval field from output records.",
-      displayPosition = 120,
-      group = "TCP",
-      dependsOn = "tcpMode",
-      triggeredByValue = "COLLECTD"
-  )
-  public boolean excludeInterval;
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.STRING,
-      label = "Auth File",
-      description = "",
-      displayPosition = 130,
-      group = "TCP",
-      dependsOn = "tcpMode",
-      triggeredByValue = "COLLECTD"
-  )
-  public String authFilePath;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      defaultValue = "UTF-8",
-      label = "Charset",
-      displayPosition = 140,
-      group = "TCP",
-      dependsOn = "tcpMode",
-      triggeredByValue = "COLLECTD"
-  )
-  @ValueChooserModel(CharsetChooserValues.class)
-  public String collectdCharset;
-
-  @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "4096",

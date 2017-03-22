@@ -28,13 +28,6 @@ import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.configurablestage.DPushSource;
-import com.streamsets.pipeline.lib.parser.udp.ParserConfig;
-
-import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.AUTH_FILE_PATH;
-import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.CHARSET;
-import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.CONVERT_TIME;
-import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.EXCLUDE_INTERVAL;
-import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.TYPES_DB_PATH;
 
 @StageDef(
     version = 1,
@@ -50,7 +43,6 @@ import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.TYPES_DB_PA
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
 public class TCPServerDSource extends DPushSource {
-  private ParserConfig parserConfig = new ParserConfig();
 
   @ConfigDefBean
   public TCPServerSourceConfig conf;
@@ -60,26 +52,6 @@ public class TCPServerDSource extends DPushSource {
     Utils.checkNotNull(conf.tcpMode, "Data format cannot be null");
     Utils.checkNotNull(conf.ports, "Ports cannot be null");
 
-    switch (conf.tcpMode) {
-      case SYSLOG:
-        parserConfig.put(CHARSET, conf.syslogCharset);
-        break;
-      case COLLECTD:
-        parserConfig.put(CHARSET, conf.collectdCharset);
-        break;
-      default:
-        // NOOP
-    }
-
-    parserConfig.put(CONVERT_TIME, conf.convertTime);
-    parserConfig.put(TYPES_DB_PATH, conf.typesDbPath);
-    parserConfig.put(EXCLUDE_INTERVAL, conf.excludeInterval);
-    parserConfig.put(AUTH_FILE_PATH, conf.authFilePath);
-
-    // Force single thread if epoll not enabled.
-    if (!conf.enableEpoll) {
-      conf.numThreads = 1;
-    }
     return new TCPServerSource(conf);
   }
 }
