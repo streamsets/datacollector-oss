@@ -79,7 +79,6 @@ public class ForceSource extends BaseSource {
   private static final String HEADER_ATTRIBUTE_PREFIX = "salesforce.cdc.";
   private static final String SOBJECT_TYPE_ATTRIBUTE = "salesforce.sobjectType";
   private static final String REPLAY_ID = "replayId";
-  private static final String WILDCARD_SELECT_QUERY = "^SELECT\\s*\\*\\s*FROM\\s*.*";
   private static final String AUTHENTICATION_INVALID = "401::Authentication invalid";
   private static final String META = "/meta";
   private static final String META_HANDSHAKE = "/meta/handshake";
@@ -115,8 +114,6 @@ public class ForceSource extends BaseSource {
 
   private BlockingQueue<Message> messageQueue;
   private ForceStreamConsumer forceConsumer;
-
-  private Pattern wildcardSelectPattern = Pattern.compile(WILDCARD_SELECT_QUERY, Pattern.DOTALL);
 
   private Map<String, Map<String, com.sforce.soap.partner.Field>> metadataMap;
 
@@ -302,24 +299,7 @@ public class ForceSource extends BaseSource {
       throw new StageException(Errors.FORCE_21, sobjectType, e);
     }
 
-    Matcher m = wildcardSelectPattern.matcher(query);
-    if (m.matches()) {
-      // Query is SELECT * FROM... - substitute in list of field names
-      StringBuffer fieldsString = new StringBuffer();
-      for (com.sforce.soap.partner.Field field : metadataMap.get(sobjectType.toLowerCase()).values()) {
-        String typeName = field.getType().name();
-        if ("address".equals(typeName) || "location".equals(typeName)) {
-          // Skip compound fields of address or geolocation type since they are returned
-          // with null values by the SOAP API and not supported at all by the Bulk API
-          continue;
-        }
-        if (fieldsString.length() > 0){
-          fieldsString.append(',');
-        }
-        fieldsString.append(field.getName());
-      }
-      query = query.replaceFirst("\\*", fieldsString.toString());
-    }
+    query = ForceUtils.expandWildcard(query, sobjectType, metadataMap);
 
     return query.replaceAll("\\$\\{offset\\}", offset);
   }

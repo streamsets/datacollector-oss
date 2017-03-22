@@ -50,6 +50,8 @@ import java.util.regex.Pattern;
 
 public class ForceUtils {
   private static final String SOBJECT_TYPE_FROM_QUERY = "^SELECT.*FROM\\s*(\\S*)\\b.*";
+  private static final String WILDCARD_SELECT_QUERY = "^SELECT\\s*\\*\\s*FROM\\s*.*";
+  public static final Pattern WILDCARD_SELECT_PATTERN = Pattern.compile(WILDCARD_SELECT_QUERY, Pattern.DOTALL);
   private static Pattern sObjectFromQueryPattern = Pattern.compile(SOBJECT_TYPE_FROM_QUERY, Pattern.DOTALL);
   private static SimpleDateFormat DATETIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss");
   private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
@@ -287,7 +289,7 @@ public class ForceUtils {
   // Recurse through the tree of referenced types, building a metadata query for each level
   // Salesforce constrains the depth of the tree to 5, so we don't need to worry about
   // infinite recursion
-  private static void getAllReferences(
+  public static void getAllReferences(
       PartnerConnection partnerConnection,
       Map<String, Map<String, com.sforce.soap.partner.Field>> metadataMap,
       String[] types
@@ -335,5 +337,31 @@ public class ForceUtils {
       return m.group(1).toLowerCase();
     }
     return null;
+  }
+
+  public static String expandWildcard(
+      String query,
+      String sobjectType,
+      Map<String, Map<String, com.sforce.soap.partner.Field>> metadataMap
+  ) {
+    Matcher m = ForceUtils.WILDCARD_SELECT_PATTERN.matcher(query);
+    if (m.matches()) {
+      // Query is SELECT * FROM... - substitute in list of field names
+      StringBuilder fieldsString = new StringBuilder();
+      for (com.sforce.soap.partner.Field field : metadataMap.get(sobjectType.toLowerCase()).values()) {
+        String typeName = field.getType().name();
+        if ("address".equals(typeName) || "location".equals(typeName)) {
+          // Skip compound fields of address or geolocation type since they are returned
+          // with null values by the SOAP API and not supported at all by the Bulk API
+          continue;
+        }
+        if (fieldsString.length() > 0){
+          fieldsString.append(',');
+        }
+        fieldsString.append(field.getName());
+      }
+      query = query.replaceFirst("\\*", fieldsString.toString());
+    }
+    return query;
   }
 }

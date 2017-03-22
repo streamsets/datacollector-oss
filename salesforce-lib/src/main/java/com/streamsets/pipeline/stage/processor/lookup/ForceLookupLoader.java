@@ -39,27 +39,10 @@ import java.util.Map;
 class ForceLookupLoader extends CacheLoader<String, Map<String, Field>> {
   private static final Logger LOG = LoggerFactory.getLogger(ForceLookupLoader.class);
 
-  private final Map<String, String> columnsToFields;
-  private final Map<String, String> columnsToDefaults;
-  private final Map<String, DataType> columnsToTypes;
-  private final PartnerConnection partnerConnection;
-  private final boolean createSalesforceNsHeaders;
-  private final String salesforceNsHeaderPrefix;
+  private final ForceLookupProcessor processor;
 
-  ForceLookupLoader(
-      PartnerConnection partnerConnection,
-      Map<String, String> columnsToFields,
-      Map<String, String> columnsToDefaults,
-      Map<String, DataType> columnsToTypes,
-      boolean createSalesforceNsHeaders,
-      String salesforceNsHeaderPrefix
-  ) {
-    this.partnerConnection = partnerConnection;
-    this.columnsToFields = columnsToFields;
-    this.columnsToDefaults = columnsToDefaults;
-    this.columnsToTypes = columnsToTypes;
-    this.createSalesforceNsHeaders = createSalesforceNsHeaders;
-    this.salesforceNsHeaderPrefix = salesforceNsHeaderPrefix;
+  ForceLookupLoader(ForceLookupProcessor processor) {
+    this.processor = processor;
   }
 
   @Override
@@ -71,10 +54,7 @@ class ForceLookupLoader extends CacheLoader<String, Map<String, Field>> {
     Map<String, Field> fieldMap = new HashMap<>();
 
     try {
-      Map<String, Map<String, com.sforce.soap.partner.Field>> metadataMap =
-          ForceUtils.getMetadataMap(partnerConnection, ForceUtils.getSobjectTypeFromQuery(preparedQuery));
-
-      QueryResult queryResult = partnerConnection.query(preparedQuery);
+      QueryResult queryResult = processor.partnerConnection.query(preparedQuery);
 
       SObject[] records = queryResult.getRecords();
 
@@ -85,15 +65,17 @@ class ForceLookupLoader extends CacheLoader<String, Map<String, Field>> {
 
         fieldMap = ForceUtils.addFields(
             records[0],
-            metadataMap,
-            createSalesforceNsHeaders, salesforceNsHeaderPrefix, columnsToTypes);
+            processor.metadataMap,
+            processor.conf.createSalesforceNsHeaders,
+            processor.conf.salesforceNsHeaderPrefix,
+            processor.columnsToTypes);
       } else {
         // Salesforce returns no row. Use default values.
-        for (String key : columnsToFields.keySet()) {
-          String val = columnsToDefaults.get(key);
+        for (String key : processor.columnsToFields.keySet()) {
+          String val = processor.columnsToDefaults.get(key);
           try {
-            if (columnsToTypes.get(key) != DataType.USE_SALESFORCE_TYPE) {
-              Field field = Field.create(Field.Type.valueOf(columnsToTypes.get(key).getLabel()), val);
+            if (processor.columnsToTypes.get(key) != DataType.USE_SALESFORCE_TYPE) {
+              Field field = Field.create(Field.Type.valueOf(processor.columnsToTypes.get(key).getLabel()), val);
               fieldMap.put(key, field);
             }
           } catch (IllegalArgumentException e) {
