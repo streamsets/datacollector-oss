@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -167,13 +168,27 @@ public class Vault {
    */
   static String calculateUserId() {
     try {
+      // Try to hash based on default interface
       InetAddress ip = InetAddress.getLocalHost();
       NetworkInterface netIf = NetworkInterface.getByInetAddress(ip);
       byte[] mac = netIf.getHardwareAddress();
 
+      if (mac == null) {
+        // In some cases the default interface may be a tap/tun device which has no MAC
+        // instead pick the first available interface.
+        Enumeration<NetworkInterface> netIfs = NetworkInterface.getNetworkInterfaces();
+        while (netIfs.hasMoreElements() && mac == null) {
+          netIf = netIfs.nextElement();
+          mac = netIf.getHardwareAddress();
+        }
+      }
+
+      if (mac == null) {
+        throw new IllegalStateException("Could not find network interface with MAC address.");
+      }
+
       Hasher hasher = HASH_FUNCTION.newHasher(6); // MAC is 6 bytes.
-      hasher.putBytes(mac);
-      return hasher.hash().toString();
+      return hasher.putBytes(mac).hash().toString();
     } catch (IOException e) {
       LOG.error("Could not compute Vault user-id: '{}'", e.toString(), e);
       throw new VaultRuntimeException("Could not compute Vault user-id: " + e.toString());
