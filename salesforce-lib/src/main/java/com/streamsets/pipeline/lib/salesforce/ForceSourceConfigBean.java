@@ -74,7 +74,7 @@ public class ForceSourceConfigBean extends ForceConfigBean {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "NO_REPEAT",
-      label = "Repeat query",
+      label = "Repeat Query",
       description = "Select one of the options to repeat the query, or not",
       displayPosition = 85,
       dependencies = {
