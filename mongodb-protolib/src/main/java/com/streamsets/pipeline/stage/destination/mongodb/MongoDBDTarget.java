@@ -38,11 +38,7 @@ import com.streamsets.pipeline.stage.common.mongodb.Groups;
 )
 
 @ConfigGroups(value = Groups.class)
-@HideConfigs(
-    preconditions = true,
-    onErrorRecord = true,
-    value = {"configBean.mongoConfig.isSingleMode"}
-)
+@HideConfigs("configBean.mongoConfig.isSingleMode")
 @GenerateResourceBundle
 public class MongoDBDTarget extends DTarget {
 
