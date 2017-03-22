@@ -154,6 +154,16 @@ public class Vault {
         LOG.debug("Removing lease '{}' as expired", lease);
       }
     }
+
+    /**
+     * Returns the path portion of the specified leaseId
+     *
+     * @param leaseId a leaseId
+     * @return path portion of leaseId
+     */
+    private String getPath(String leaseId) {
+      return leaseId.substring(0, leaseId.lastIndexOf('/') - 1);
+    }
   }
 
   /**
@@ -267,17 +277,11 @@ public class Vault {
     return value;
   }
 
-  /**
-   * Returns the path portion of the specified leaseId
-   *
-   * @param leaseId a leaseId
-   * @return path portion of leaseId
-   */
-  private String getPath(String leaseId) {
-    return leaseId.substring(0, leaseId.lastIndexOf('/') - 1);
-  }
-
   private VaultConfiguration getConfig() {
+    if (config == null) {
+      throw new VaultRuntimeException("Vault has not been configured for this Data Collector.");
+    }
+
     if (authExpirationTime - System.currentTimeMillis() <= 1000) {
       VaultClient vault = new VaultClient(config);
       Secret auth;
