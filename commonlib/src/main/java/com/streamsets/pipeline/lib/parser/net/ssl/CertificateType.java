@@ -18,26 +18,26 @@
  * limitations under the License.
  */
 
-package com.streamsets.pipeline.stage.origin.tcp;
+package com.streamsets.pipeline.lib.parser.net.ssl;
 
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
-public enum Groups implements Label {
-  TCP("TCP"),
-  DATA_FORMAT("Delimited records format"),
-  SSL("SSL"),
+public enum CertificateType implements Label {
+  JKS("Java Keystore file (JKS)"),
+  PKCS8("PKCS-8 (PEM file)"),
+  PKCS12("PKCS-12 (p12 file)"),
   ;
 
   private final String label;
 
-  Groups(String label) {
+  CertificateType(String label) {
     this.label = label;
   }
 
   @Override
   public String getLabel() {
-    return this.label;
+    return label;
   }
 }

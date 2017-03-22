@@ -17,33 +17,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.tcp;
+
+package com.streamsets.pipeline.lib.parser.net.ssl;
 
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-
+import com.streamsets.pipeline.api.impl.ErrorMessage;
 
 @GenerateResourceBundle
-public enum Errors implements ErrorCode {
-  TCP_00("Cannot bind to port {}: {}"),
-  TCP_01("Unknown data format: {}"),
-  TCP_02("No ports specified"),
-  TCP_03("Port '{}' is invalid"),
-  TCP_04("Charset '{}' is not supported"),
-  TCP_05("collectd Types DB '{}' not found"),
-  TCP_06("collectd Auth File '{}' not found"),
-  TCP_07("Insufficient permissions to listen on privileged port {}"),
-  TCP_08("Multithreaded TCP server is not available on your platform."),
-  TCP_09("Failing pipeline on error as per stage configuration: {}"),
-  TCP_10("{} thrown in Netty channel pipeline: {}"),
-  TCP_11("DataParserException thrown in Netty channel pipeline from DataFormatParserDecoder: {}"),
-  TCP_12("No addresses available for TCP server to listen on"),
+public enum SslConfigErrors implements ErrorCode {
+  SSL_01("{} keystore file does not exist at {}"),
+  SSL_02("Password file ({}) for {} keystore invalid: {}"),
+  SSL_03("Error reading password file at {} for {} keystore: {}"),
+  SSL_10("{} file does not exist at {}"),
+  SSL_20("Error initializing {} keystore: {}"),
+  SSL_30("Error reading certificate chain file at {}: {}"),
   ;
 
-  private final String msg;
-  Errors(String msg) {
+  SslConfigErrors(String msg) {
     this.msg = msg;
   }
+
+  private final String msg;
 
   @Override
   public String getCode() {
@@ -54,4 +49,5 @@ public enum Errors implements ErrorCode {
   public String getMessage() {
     return msg;
   }
+
 }

@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.CharsetChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.DataFormatChooserValues;
+import com.streamsets.pipeline.lib.parser.net.ssl.SslConfigBean;
 import com.streamsets.pipeline.lib.parser.net.syslog.SyslogFramingMode;
 import com.streamsets.pipeline.lib.parser.net.syslog.SyslogFramingModeChooserValues;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
@@ -49,6 +50,9 @@ public class TCPServerSourceConfig {
   @ConfigDefBean(groups = "DATA_FORMAT")
   public DataParserFormatConfig dataFormatConfig;
 
+  @ConfigDefBean(groups = "SSL")
+  public SslConfigBean sslConfigBean = new SslConfigBean();
+
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.LIST,
@@ -56,7 +60,7 @@ public class TCPServerSourceConfig {
       defaultValue = "[\"9999\"]",
       description = "Port to listen on",
       group = "TCP",
-      displayPosition = 10
+      displayPosition = 1
   )
   public List<String> ports; // string so we can listen on multiple ports in the future
 
@@ -67,20 +71,31 @@ public class TCPServerSourceConfig {
       description = "Use multiple receiver threads for each port. Only available on 64-bit Linux systems",
       defaultValue = "false",
       group = "TCP",
-      displayPosition = 15
+      displayPosition = 5
   )
   public boolean enableEpoll;
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Use TLS",
+      description = "Enable TLS on the TCP transport.  Must specify the X.509 certificate chain file, the private" +
+          " key file (in PKCS8 format), and a key encryption passphrase (if used for the key).",
+      displayPosition = 10,
+      group = "TCP"
+  )
+  public boolean tlsEnabled;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Number of Receiver Threads",
-      description = "Number of receiver threads for each port. It should be based on the CPU cores expected to be dedicated to the pipeline",
+      description = "Number of receiver threads for each port. It should be based on the CPU cores expected to be" +
+          " dedicated to the pipeline",
       defaultValue = "1",
       group = "TCP",
-      dependsOn = "enableEpoll",
-      triggeredByValue = "true",
-      displayPosition = 16
+      displayPosition = 20
   )
   public int numThreads;
 
@@ -91,7 +106,7 @@ public class TCPServerSourceConfig {
       description = "The mode the TCP server operates in, based on the expected input data format",
       defaultValue = "SYSLOG",
       group = "TCP",
-      displayPosition = 20
+      displayPosition = 30
   )
   @ValueChooserModel(TCPModeChooserValues.class)
   public TCPMode tcpMode;
@@ -148,7 +163,7 @@ public class TCPServerSourceConfig {
       group = "TCP",
       dependsOn = "tcpMode",
       triggeredByValue = "DELIMITED_RECORDS",
-      displayPosition = 35
+      displayPosition = 60
   )
   public String recordSeparatorStr;
 
@@ -158,7 +173,7 @@ public class TCPServerSourceConfig {
       defaultValue = "1000",
       label = "Max Batch Size (messages)",
       group = "TCP",
-      displayPosition = 40,
+      displayPosition = 70,
       min = 0,
       max = Integer.MAX_VALUE
   )
@@ -170,7 +185,7 @@ public class TCPServerSourceConfig {
       defaultValue = "1000",
       label = "Batch Wait Time (ms)",
       description = "Max time to wait for data before sending a batch",
-      displayPosition = 50,
+      displayPosition = 80,
       group = "TCP",
       min = 1,
       max = Integer.MAX_VALUE
@@ -182,7 +197,7 @@ public class TCPServerSourceConfig {
       type = ConfigDef.Type.STRING,
       label = "TypesDB File Path",
       description = "User-specified TypesDB file. Overrides the included version.",
-      displayPosition = 70,
+      displayPosition = 100,
       group = "TCP",
       dependsOn = "tcpMode",
       triggeredByValue = "COLLECTD"
@@ -195,7 +210,7 @@ public class TCPServerSourceConfig {
       defaultValue = "false",
       label = "Convert Hi-Res Time & Interval",
       description = "Converts high resolution time format interval and timestamp to unix time in (ms).",
-      displayPosition = 80,
+      displayPosition = 110,
       group = "TCP",
       dependsOn = "tcpMode",
       triggeredByValue = "COLLECTD"
@@ -208,7 +223,7 @@ public class TCPServerSourceConfig {
       defaultValue = "true",
       label = "Exclude Interval",
       description = "Excludes the interval field from output records.",
-      displayPosition = 90,
+      displayPosition = 120,
       group = "TCP",
       dependsOn = "tcpMode",
       triggeredByValue = "COLLECTD"
@@ -220,7 +235,7 @@ public class TCPServerSourceConfig {
       type = ConfigDef.Type.STRING,
       label = "Auth File",
       description = "",
-      displayPosition = 100,
+      displayPosition = 130,
       group = "TCP",
       dependsOn = "tcpMode",
       triggeredByValue = "COLLECTD"
@@ -232,7 +247,7 @@ public class TCPServerSourceConfig {
       type = ConfigDef.Type.MODEL,
       defaultValue = "UTF-8",
       label = "Charset",
-      displayPosition = 110,
+      displayPosition = 140,
       group = "TCP",
       dependsOn = "tcpMode",
       triggeredByValue = "COLLECTD"
@@ -246,7 +261,7 @@ public class TCPServerSourceConfig {
       defaultValue = "4096",
       label = "Max Message Size (bytes)",
       description = "Max message size in bytes",
-      displayPosition = 120,
+      displayPosition = 150,
       group = "TCP",
       min = 1,
       max = Integer.MAX_VALUE

@@ -39,6 +39,12 @@ import java.util.List;
 
 public class TCPConsumingServer extends BaseNettyServer {
 
+  private static final int NUM_BOSS_THREADS = 1;
+
+  // TODO: make config options?
+  private static final int SOCKET_MAX_INBOUND_CONNECTION_QUEUE_DEPTH = 128;
+  private static final boolean SOCKET_KEEPALIVE = true;
+
   private final ChannelInitializer<SocketChannel> channelInitializer;
 
   public TCPConsumingServer(
@@ -60,29 +66,30 @@ public class TCPConsumingServer extends BaseNettyServer {
   protected AbstractBootstrap bootstrap(boolean enableEpoll) {
     if (enableEpoll) {
       enableDirectBuffers();
+      // boss group simply opens channels and hands processing off to the child
+      EpollEventLoopGroup bossGroup = new EpollEventLoopGroup(NUM_BOSS_THREADS);
       EventLoopGroup workerGroup = new EpollEventLoopGroup(numThreads);
-      EpollEventLoopGroup bossGroup = new EpollEventLoopGroup(numThreads); // (1)
       groups.add(bossGroup);
       groups.add(workerGroup);
-      ServerBootstrap b = new ServerBootstrap(); // (2)
+      ServerBootstrap b = new ServerBootstrap();
       b.group(bossGroup, workerGroup)
-          .channel(EpollServerSocketChannel.class) // (3)
+          .channel(EpollServerSocketChannel.class)
           .childHandler(this.channelInitializer)
-          .option(ChannelOption.SO_BACKLOG, 128)          // (5)
-          .childOption(ChannelOption.SO_KEEPALIVE, true); // (6)
+          .option(ChannelOption.SO_BACKLOG, SOCKET_MAX_INBOUND_CONNECTION_QUEUE_DEPTH)
+          .childOption(ChannelOption.SO_KEEPALIVE, SOCKET_KEEPALIVE);
       return b;
     } else {
       disableDirectBuffers();
-      EventLoopGroup bossGroup = new NioEventLoopGroup(); // (1)
-      EventLoopGroup workerGroup = new NioEventLoopGroup();
+      EventLoopGroup bossGroup = new NioEventLoopGroup(NUM_BOSS_THREADS);
+      EventLoopGroup workerGroup = new NioEventLoopGroup(numThreads);
       groups.add(bossGroup);
       groups.add(workerGroup);
-      ServerBootstrap b = new ServerBootstrap(); // (2)
+      ServerBootstrap b = new ServerBootstrap();
       b.group(bossGroup, workerGroup)
-          .channel(NioServerSocketChannel.class) // (3)
+          .channel(NioServerSocketChannel.class)
           .childHandler(this.channelInitializer)
-          .option(ChannelOption.SO_BACKLOG, 128)          // (5)
-          .childOption(ChannelOption.SO_KEEPALIVE, true); // (6)
+          .option(ChannelOption.SO_BACKLOG, SOCKET_MAX_INBOUND_CONNECTION_QUEUE_DEPTH)
+          .childOption(ChannelOption.SO_KEEPALIVE, SOCKET_KEEPALIVE);
       return b;
     }
 

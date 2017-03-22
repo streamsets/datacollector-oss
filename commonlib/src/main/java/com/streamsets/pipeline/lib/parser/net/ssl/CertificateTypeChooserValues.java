@@ -18,26 +18,13 @@
  * limitations under the License.
  */
 
-package com.streamsets.pipeline.stage.origin.tcp;
+package com.streamsets.pipeline.lib.parser.net.ssl;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  TCP("TCP"),
-  DATA_FORMAT("Delimited records format"),
-  SSL("SSL"),
-  ;
+public class CertificateTypeChooserValues extends BaseEnumChooserValues<CertificateType> {
 
-  private final String label;
-
-  Groups(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return this.label;
+  public CertificateTypeChooserValues() {
+    super(CertificateType.class);
   }
 }

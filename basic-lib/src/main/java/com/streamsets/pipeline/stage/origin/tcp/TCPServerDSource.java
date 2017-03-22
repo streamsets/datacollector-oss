@@ -80,19 +80,6 @@ public class TCPServerDSource extends DPushSource {
     if (!conf.enableEpoll) {
       conf.numThreads = 1;
     }
-    return new TCPServerSource(
-        conf.maxMessageSize,
-        conf.ports,
-        conf.enableEpoll,
-        conf.numThreads,
-        conf.syslogCharset,
-        conf.tcpMode,
-        conf.syslogFramingMode,
-        conf.tcpMode == TCPMode.SYSLOG ? conf.nonTransparentFramingSeparatorCharStr : conf.recordSeparatorStr,
-        conf.dataFormat,
-        conf.dataFormatConfig,
-        conf.batchSize,
-        conf.maxWaitTime
-    );
+    return new TCPServerSource(conf);
   }
 }
