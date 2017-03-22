@@ -27,7 +27,7 @@ public enum Errors implements ErrorCode {
   FIELD_RENAMER_00("Record '{}' does not contain fields '{}'"),
   FIELD_RENAMER_01("Target Fields '{}' cannot be overwritten for record '{}'"),
   FIELD_RENAMER_02("Invalid From Field Expression : {}"),
-  FIELD_RENAMER_03("Same fields matched my multiple expressions. {} "),
+  FIELD_RENAMER_03("Same fields matched by multiple expressions. {} "),
   FIELD_RENAMER_04("Cannot set value in field '{}'. Reason : {}"),
   FIELD_RENAMER_05("Cache exception '{}'"),
   ;
