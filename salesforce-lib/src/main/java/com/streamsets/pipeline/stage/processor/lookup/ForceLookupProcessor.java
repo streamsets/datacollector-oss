@@ -37,6 +37,7 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.cache.CacheCleaner;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.salesforce.DataType;
 import com.streamsets.pipeline.lib.salesforce.Errors;
@@ -73,6 +74,7 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
   private ErrorRecordHandler errorRecordHandler;
   private ELEval queryEval;
   Map<String, Map<String, com.sforce.soap.partner.Field>> metadataMap;
+  private CacheCleaner cacheCleaner;
 
   public ForceLookupProcessor(ForceLookupConfigBean conf) {
     this.conf = conf;
@@ -137,8 +139,13 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
 
   @Override
   public void process(Batch batch, SingleLaneBatchMaker batchMaker) throws StageException {
-    // New metadata map for each batch
-    metadataMap = new LinkedHashMap<>();
+    if (batch.getRecords().hasNext()) {
+      // New metadata map for each batch
+      metadataMap = new LinkedHashMap<>();
+    } else {
+      // No records - take the opportunity to clean up the cache so that we don't hold on to memory indefinitely
+      cacheCleaner.periodicCleanUp();
+    }
     super.process(batch, batchMaker);
   }
 
@@ -222,6 +229,10 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
       conf.cacheConfig.maxSize = Long.MAX_VALUE;
     }
 
+    if(LOG.isDebugEnabled()) {
+      cacheBuilder.recordStats();
+    }
+
     // CacheBuilder doesn't support specifying type thus suffers from erasure, so
     // we build it with this if / else logic.
     if (conf.cacheConfig.evictionPolicyType == EvictionPolicyType.EXPIRE_AFTER_ACCESS) {
@@ -233,6 +244,11 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
           conf.cacheConfig.evictionPolicyType
       ));
     }
-    return cacheBuilder.build(new ForceLookupLoader(this));
+
+    LoadingCache<String, Map<String, Field>> cache = cacheBuilder.build(new ForceLookupLoader(this));
+
+    cacheCleaner = new CacheCleaner(cache, "ForceLookupProcessor", 10 * 60 * 1000);
+
+    return cache;
   }
 }

@@ -36,6 +36,7 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.cache.CacheCleaner;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.hbase.common.Errors;
@@ -80,6 +81,7 @@ public class HBaseLookupProcessor extends BaseProcessor {
   private ELEval timestampExprEval;
   private HBaseStore store;
   private LoadingCache<Pair<String, HBaseColumn>, Optional<String>> cache;
+  private CacheCleaner cacheCleaner;
 
   public HBaseLookupProcessor(HBaseLookupConfig conf) {
     if (null != conf.hBaseConnectionConfig.zookeeperQuorum) {
@@ -228,6 +230,8 @@ public class HBaseLookupProcessor extends BaseProcessor {
         ));
       }
       cache = LookupUtils.buildCache(store, conf.cache);
+
+      cacheCleaner = new CacheCleaner(cache, "HBaseLookupProcessor", 10 * 60 * 1000);
     }
     return issues;
   }
@@ -235,7 +239,8 @@ public class HBaseLookupProcessor extends BaseProcessor {
   @Override
   public void process(final Batch batch, final BatchMaker batchMaker) throws StageException {
     if (!batch.getRecords().hasNext()) {
-      // empty batch
+      // No records - take the opportunity to clean up the cache so that we don't hold on to memory indefinitely
+      cacheCleaner.periodicCleanUp();
       return;
     }
 

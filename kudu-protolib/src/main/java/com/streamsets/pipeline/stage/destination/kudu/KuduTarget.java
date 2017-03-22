@@ -37,6 +37,7 @@ import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.lib.cache.CacheCleaner;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
@@ -94,6 +95,7 @@ public class KuduTarget extends BaseTarget {
   private final int tableCacheSize = 500;
 
   private final LoadingCache<String, KuduTable> kuduTables;
+  private final CacheCleaner cacheCleaner;
 
   private ErrorRecordHandler errorRecordHandler;
   private ELVars tableNameVars;
@@ -112,15 +114,22 @@ public class KuduTarget extends BaseTarget {
         : configBean.fieldMappingConfigs;
     this.defaultOperation = configBean.defaultOperation;
 
-    kuduTables = CacheBuilder.newBuilder()
+    CacheBuilder cacheBuilder = CacheBuilder.newBuilder()
         .maximumSize(tableCacheSize)
-        .expireAfterAccess(1, TimeUnit.HOURS)
-        .build(new CacheLoader<String, KuduTable>() {
+        .expireAfterAccess(1, TimeUnit.HOURS);
+
+    if(LOG.isDebugEnabled()) {
+      cacheBuilder.recordStats();
+    }
+
+    kuduTables = cacheBuilder.build(new CacheLoader<String, KuduTable>() {
           @Override
           public KuduTable load(String tableName) throws KuduException {
             return kuduClient.openTable(tableName);
           }
         });
+
+    cacheCleaner = new CacheCleaner(kuduTables, "KuduTarget", 10 * 60 * 1000);
   }
 
   @Override
@@ -282,6 +291,11 @@ public class KuduTarget extends BaseTarget {
   @Override
   public void write(final Batch batch) throws StageException {
     try {
+      if (!batch.getRecords().hasNext()) {
+        // No records - take the opportunity to clean up the cache so that we don't hold on to memory indefinitely
+        cacheCleaner.periodicCleanUp();
+      }
+
       writeBatch(batch);
     } catch (Exception e) {
       throw throwStageException(e);

@@ -34,6 +34,7 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.cache.CacheCleaner;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.redis.DataType;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
@@ -71,6 +72,7 @@ public class RedisLookupProcessor extends BaseProcessor {
   private LoadingCache<Pair<String, DataType>, LookupValue> cache;
 
   private RedisStore store;
+  private CacheCleaner cacheCleaner;
 
   public RedisLookupProcessor(RedisLookupConfig conf) {
     this.conf = conf;
@@ -107,6 +109,8 @@ public class RedisLookupProcessor extends BaseProcessor {
       keyExprEval = getContext().createELEval("keyExpr");
       store = new RedisStore(conf);
       cache = LookupUtils.buildCache(store, conf.cache);
+
+      cacheCleaner = new CacheCleaner(cache, "RedisLookupProcessor", 10 * 60 * 1000);
     }
 
     return issues;
@@ -115,7 +119,8 @@ public class RedisLookupProcessor extends BaseProcessor {
   @Override
   public void process(Batch batch, BatchMaker batchMaker) throws StageException {
     if (!batch.getRecords().hasNext()) {
-      // empty batch
+      // No records - take the opportunity to clean up the cache so that we don't hold on to memory indefinitely
+      cacheCleaner.periodicCleanUp();
       return;
     }
     if (conf.mode == BATCH) {

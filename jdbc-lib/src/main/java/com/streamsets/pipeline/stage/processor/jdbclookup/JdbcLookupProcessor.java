@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.processor.jdbclookup;
 
 import com.google.common.base.Throwables;
 import com.google.common.cache.LoadingCache;
+import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
@@ -30,6 +31,7 @@ import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.lib.cache.CacheCleaner;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.jdbc.DataType;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
@@ -47,6 +49,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -78,6 +81,7 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
   private final Properties driverProperties = new Properties();
 
   private LoadingCache<String, Map<String, Field>> cache;
+  private CacheCleaner cacheCleaner;
 
   public JdbcLookupProcessor(
       String query,
@@ -154,6 +158,8 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
 
     if (issues.isEmpty()) {
       cache = buildCache();
+
+      cacheCleaner = new CacheCleaner(cache, "JdbcLookupProcessor", 10 * 60 * 1000);
     }
     // If issues is not empty, the UI will inform the user of each configuration issue in the list.
     return issues;
@@ -164,6 +170,15 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
   public void destroy() {
     closeQuietly(dataSource);
     super.destroy();
+  }
+
+  @Override
+  public void process(Batch batch, SingleLaneBatchMaker batchMaker) throws StageException {
+    if (!batch.getRecords().hasNext()) {
+      // No records - take the opportunity to clean up the cache so that we don't hold on to memory indefinitely
+      cacheCleaner.periodicCleanUp();
+    }
+    super.process(batch, batchMaker);
   }
 
   /** {@inheritDoc} */

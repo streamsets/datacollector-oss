@@ -23,11 +23,14 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
+import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.RecordProcessor;
+import com.streamsets.pipeline.api.base.SingleLaneProcessor;
+import com.streamsets.pipeline.lib.cache.CacheCleaner;
 import com.streamsets.pipeline.lib.hashing.HashingUtil;
 import com.streamsets.pipeline.lib.queue.XEvictingQueue;
 import org.slf4j.Logger;
@@ -48,6 +51,7 @@ public class DeDupProcessor extends RecordProcessor {
   private final  int timeWindowSecs;
   private final  SelectFields compareFields;
   private final  List<String> fieldsToCompare;
+  private CacheCleaner cacheCleaner;
 
   public DeDupProcessor(int recordCountWindow, int timeWindowSecs,
       SelectFields compareFields, List<String> fieldsToCompare) {
@@ -103,6 +107,9 @@ public class DeDupProcessor extends RecordProcessor {
           if (timeWindowSecs > 0) {
             cacheBuilder.expireAfterWrite(timeWindowSecs, TimeUnit.SECONDS);
           }
+          if(LOG.isDebugEnabled()) {
+            cacheBuilder.recordStats();
+          }
           hashCache = cacheBuilder.build();
 
           runnerSharedMap.put(CACHE_KEY, hashCache);
@@ -110,6 +117,7 @@ public class DeDupProcessor extends RecordProcessor {
           hashCache = (Cache<HashCode, HashCode>) runnerSharedMap.get(CACHE_KEY);
         }
       }
+      cacheCleaner = new CacheCleaner(hashCache, "DeDupProcessor", 10 * 60 * 1000);
 
       hashBuffer = XEvictingQueue.create(recordCountWindow);
       hashAttrName = getInfo() + ".hash";
@@ -137,6 +145,15 @@ public class DeDupProcessor extends RecordProcessor {
     }
 
     return dup;
+  }
+
+  @Override
+  public void process(Batch batch, BatchMaker batchMaker) throws StageException {
+    if (!batch.getRecords().hasNext()) {
+      // No records - take the opportunity to clean up the cache so that we don't hold on to memory indefinitely
+      cacheCleaner.periodicCleanUp();
+    }
+    super.process(batch, batchMaker);
   }
 
   @Override

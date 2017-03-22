@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.lib.cache.CacheCleaner;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.jdbc.*;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
@@ -66,6 +67,7 @@ public class JdbcTarget extends BaseTarget {
   private final Properties driverProperties = new Properties();
   private final ChangeLogFormat changeLogFormat;
   private final HikariPoolConfigBean hikariConfigBean;
+  private final CacheCleaner cacheCleaner;
 
   private ErrorRecordHandler errorRecordHandler;
   private HikariDataSource dataSource = null;
@@ -96,10 +98,7 @@ public class JdbcTarget extends BaseTarget {
     }
   }
 
-  private final LoadingCache<String, JdbcRecordWriter> recordWriters = CacheBuilder.newBuilder()
-      .maximumSize(500)
-      .expireAfterAccess(1, TimeUnit.HOURS)
-      .build(new RecordWriterLoader());
+  private final LoadingCache<String, JdbcRecordWriter> recordWriters;
 
   public JdbcTarget(
       final String schema,
@@ -128,6 +127,18 @@ public class JdbcTarget extends BaseTarget {
     this.defaultOperation = defaultOperation;
     this.unsupportedAction = unsupportedAction;
     this.hikariConfigBean = hikariConfigBean;
+
+    CacheBuilder cacheBuilder = CacheBuilder.newBuilder()
+        .maximumSize(500)
+        .expireAfterAccess(1, TimeUnit.HOURS);
+
+    if(LOG.isDebugEnabled()) {
+      cacheBuilder.recordStats();
+    }
+
+    this.recordWriters = cacheBuilder.build(new RecordWriterLoader());
+
+    cacheCleaner = new CacheCleaner(this.recordWriters, "JdbcTarget", 10 * 60 * 1000);
   }
 
   @Override
@@ -185,6 +196,10 @@ public class JdbcTarget extends BaseTarget {
   @Override
   @SuppressWarnings("unchecked")
   public void write(Batch batch) throws StageException {
+    if (!batch.getRecords().hasNext()) {
+      // No records - take the opportunity to clean up the cache so that we don't hold on to memory indefinitely
+      cacheCleaner.periodicCleanUp();
+    }
     JdbcUtil.write(batch, schema, tableNameEval, tableNameVars, tableNameTemplate, caseSensitive, recordWriters, errorRecordHandler);
   }
 }

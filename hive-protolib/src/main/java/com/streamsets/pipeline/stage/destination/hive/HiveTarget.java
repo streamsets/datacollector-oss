@@ -32,6 +32,7 @@ import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.lib.cache.CacheCleaner;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
@@ -105,6 +106,8 @@ public class HiveTarget extends BaseTarget {
 
   private LoadingCache<HiveEndPoint, StreamingConnection> hiveConnectionPool;
   private LoadingCache<HiveEndPoint, RecordWriter> recordWriterPool;
+  private CacheCleaner hiveConnectionCacheCleaner;
+  private CacheCleaner recordWriterCacheCleaner;
 
   class HiveConnectionLoader extends CacheLoader<HiveEndPoint, StreamingConnection> {
     @Override
@@ -203,10 +206,14 @@ public class HiveTarget extends BaseTarget {
         .removalListener(new HiveConnectionRemovalListener())
         .build(new HiveConnectionLoader());
 
+    hiveConnectionCacheCleaner = new CacheCleaner(hiveConnectionPool, "HiveTarget connection pool", 10 * 60 * 1000);
+
     recordWriterPool = CacheBuilder.newBuilder()
         .maximumSize(10)
         .expireAfterAccess(10, TimeUnit.MINUTES)
         .build(new HiveRecordWriterLoader());
+
+    recordWriterCacheCleaner = new CacheCleaner(recordWriterPool, "HiveTarget record writer pool", 10 * 60 * 1000);
 
     LOG.debug("Total issues: {}", issues.size());
     return issues;
@@ -407,6 +414,12 @@ public class HiveTarget extends BaseTarget {
   public void write(Batch batch) throws StageException {
     Map<HiveEndPoint, TransactionBatch> transactionBatches = new HashMap<>();
     Iterator<Record> it = batch.getRecords();
+
+    if (!it.hasNext()) {
+      // No records - take the opportunity to clean up the cache so that we don't hold on to memory indefinitely
+      hiveConnectionCacheCleaner.periodicCleanUp();
+      recordWriterCacheCleaner.periodicCleanUp();
+    }
 
     while (it.hasNext()) {
       Record record = it.next();

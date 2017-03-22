@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.lib.cache.CacheCleaner;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.jdbc.*;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
@@ -66,6 +67,7 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
   private final Properties driverProperties = new Properties();
   private final ChangeLogFormat changeLogFormat;
   private final HikariPoolConfigBean hikariConfigBean;
+  private final CacheCleaner cacheCleaner;
 
   private ELEval tableNameEval = null;
   private ELVars tableNameVars = null;
@@ -106,6 +108,18 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
     this.hikariConfigBean = hikariConfigBean;
     this.defaultOperation = defaultOp;
     this.unsupportedAction = unsupportedAction;
+
+    CacheBuilder cacheBuilder = CacheBuilder.newBuilder()
+        .maximumSize(500)
+        .expireAfterAccess(1, TimeUnit.HOURS);
+
+    if(LOG.isDebugEnabled()) {
+      cacheBuilder.recordStats();
+    }
+
+    this.recordWriters = cacheBuilder.build(new RecordWriterLoader());
+
+    cacheCleaner = new CacheCleaner(this.recordWriters, "JdbcTeeProcessor", 10 * 60 * 1000);
   }
 
   class RecordWriterLoader extends CacheLoader<String, JdbcRecordWriter> {
@@ -128,10 +142,7 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
     }
   }
 
-  private final LoadingCache<String, JdbcRecordWriter> recordWriters = CacheBuilder.newBuilder()
-      .maximumSize(500)
-      .expireAfterAccess(1, TimeUnit.HOURS)
-      .build(new RecordWriterLoader());
+  private final LoadingCache<String, JdbcRecordWriter> recordWriters;
 
   /** {@inheritDoc} */
   @Override
@@ -187,6 +198,11 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
   /** {@inheritDoc} */
   @Override
   public void process(Batch batch, SingleLaneBatchMaker batchMaker) throws StageException {
+    if (!batch.getRecords().hasNext()) {
+      // No records - take the opportunity to clean up the cache so that we don't hold on to memory indefinitely
+      cacheCleaner.periodicCleanUp();
+    }
+
     JdbcUtil.write(batch, schema, tableNameEval, tableNameVars, tableNameTemplate, caseSensitive, recordWriters, errorRecordHandler);
 
     Iterator<Record> it = batch.getRecords();

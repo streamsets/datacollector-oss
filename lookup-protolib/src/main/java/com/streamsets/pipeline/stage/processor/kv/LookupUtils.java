@@ -24,8 +24,12 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LookupUtils {
+  private static final Logger LOG = LoggerFactory.getLogger(LookupUtils.class);
+
   private LookupUtils() {}
 
   @NotNull
@@ -39,6 +43,10 @@ public class LookupUtils {
 
     if(conf.maxSize == -1) {
       conf.maxSize = Long.MAX_VALUE;
+    }
+
+    if(LOG.isDebugEnabled()) {
+      cacheBuilder.recordStats();
     }
 
     // CacheBuilder doesn't support specifying type thus suffers from erasure, so
