@@ -1639,26 +1639,6 @@ public class TestFieldTypeConverterProcessorFields {
     }
   }
 
-  private static BigDecimal convertValueToBigDecimalWithoutScale(Object value) {
-    BigDecimal bigDecimal = null;
-    if (value instanceof Byte) {
-      bigDecimal = new BigDecimal((Byte)value);
-    } else if (value instanceof Short){
-      bigDecimal = new BigDecimal((short)value);
-    } else if (value instanceof Integer) {
-      bigDecimal = new BigDecimal((int)value);
-    } else if (value instanceof Long) {
-      bigDecimal = new BigDecimal((long)value);
-    } else if (value instanceof Float) {
-      bigDecimal = new BigDecimal((float)value);
-    } else if (value instanceof Double) {
-      bigDecimal = new BigDecimal((double)value);
-    } else if (value instanceof BigDecimal) {
-      bigDecimal = (BigDecimal) value;
-    }
-    return bigDecimal;
-  }
-
   @Test
   public void testConvertToDecimalSupportedTypesWithoutScale() throws Exception {
     Map<String, ?> bigDecimalMap =
@@ -1726,11 +1706,9 @@ public class TestFieldTypeConverterProcessorFields {
       Map<String, Field> fieldMap = output.getRecords().get("a").get(0).get().getValueAsMap();
 
       for (Map.Entry<String, Field> entry : fieldMap.entrySet()) {
-        String fieldName = entry.getKey();
         Field field = entry.getValue();
         Assert.assertEquals(Field.Type.DECIMAL, field.getType());
-        Object expectedValue = bigDecimalMap.get("/" + fieldName);
-        Assert.assertEquals(convertValueToBigDecimalWithoutScale(expectedValue), field.getValueAsDecimal());
+        Assert.assertEquals(new BigDecimal(field.getValueAsString()), field.getValueAsDecimal());
       }
     } finally {
       runner.runDestroy();
