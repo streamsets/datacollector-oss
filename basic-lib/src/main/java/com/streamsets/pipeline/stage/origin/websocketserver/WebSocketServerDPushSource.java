@@ -39,7 +39,7 @@ import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
     icon="websockets.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
-    onlineHelpRefUrl = "index.html#Origins/HTTPServer.html#task_pgw_b3b_4y"
+    onlineHelpRefUrl = "index.html#Origins/WebSocketServer.html#task_mzv_cvc_3z"
 )
 @ConfigGroups(Groups.class)
 @HideConfigs(value = {

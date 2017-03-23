@@ -72,7 +72,7 @@ public class RawHttpConfigs extends HttpConfigs {
       defaultValue = "false",
       label = "Allow Application ID through Query Param",
       description = "Allow Application ID through Query Param - http://localhost:8000?sdcApplicationId=<Application ID>",
-      displayPosition = 40,
+      displayPosition = 21,
       group = "HTTP"
   )
   public boolean appIdViaQueryParamAllowed;
