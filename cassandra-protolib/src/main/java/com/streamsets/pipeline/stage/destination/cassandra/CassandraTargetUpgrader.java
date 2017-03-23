@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,14 +72,34 @@ public class CassandraTargetUpgrader implements StageUpgrader {
   }
 
   private List<Config> upgradeV3ToV4(List<Config> configs) {
-    List<Config> newConfigs = configs
-        .stream()
-        .map(config -> new Config("conf." + config.getName(), config.getValue()))
-        .collect(Collectors.toList());
+    List<Config> configsToRemove = new ArrayList<>();
+    List<Config> configsToAdd = new ArrayList<>();
 
-    newConfigs.add(new Config("conf.batchType", BatchStatement.Type.LOGGED));
-    newConfigs.add(new Config("conf.maxBatchSize", 65535));
+    for(Config conf: configs) {
+      switch (conf.getName()) {
+        case "contactNodes":
+          configsToAdd.add(new Config("conf.contactPoints", conf.getValue()));
+          configsToRemove.add(conf);
+          break;
+        case "port":
+        case "protocolVersion":
+        case "compression":
+        case "useCredentials":
+        case "qualifiedTableName":
+        case "columnNames":
+        case "username":
+        case "password":
+          configsToAdd.add(new Config("conf." + conf.getName(), conf.getValue()));
+          configsToRemove.add(conf);
+          break;
+      }
+    }
 
-    return newConfigs;
+    configsToAdd.add(new Config("conf.batchType", BatchStatement.Type.LOGGED));
+    configsToAdd.add(new Config("conf.maxBatchSize", 65535));
+
+    configs.addAll(configsToAdd);
+    configs.removeAll(configsToRemove);
+    return configs;
   }
 }
