@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.lib.parser.json;
 
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
@@ -190,6 +191,34 @@ public class TestJsonCharDataParser {
     Assert.assertNotNull(record);
     Assert.assertEquals("id::0", record.getHeader().getSourceId());
     Assert.assertEquals("foobar", record.get().getValueAsMap().get("a").getValueAsString());
+    record = parser.parse();
+    Assert.assertNull(record);
+    parser.close();
+  }
+
+  @Test
+  public void testParseBigInteger() throws Exception {
+    OverrunReader reader = new OverrunReader(
+        new StringReader("{\"test\": 100000000000100000000000100000000000100000000000100000000000100000000000}"),
+        1000,
+        true,
+        true
+    );
+    DataParser parser = new JsonCharDataParser(
+        getContext(),
+        "id",
+        reader,
+        0,
+        OverrunStreamingJsonParser.Mode.MULTIPLE_OBJECTS, 1000
+    );
+    Record record = parser.parse();
+    Assert.assertNotNull(record);
+    Assert.assertEquals("id::0", record.getHeader().getSourceId());
+    Assert.assertEquals(Field.Type.DECIMAL, record.get().getValueAsMap().get("test").getType());
+    Assert.assertEquals(
+        "100000000000100000000000100000000000100000000000100000000000100000000000",
+        record.get().getValueAsMap().get("test").getValueAsString()
+    );
     record = parser.parse();
     Assert.assertNull(record);
     parser.close();

@@ -31,6 +31,7 @@ import com.streamsets.pipeline.lib.parser.DataParserException;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -128,6 +129,8 @@ public class JsonCharDataParser extends AbstractDataParser {
       field = Field.createDate((Date) json);
     } else if (json instanceof BigDecimal) {
       field = Field.create((BigDecimal) json);
+    } else if (json instanceof BigInteger) {
+      field = Field.create(new BigDecimal((BigInteger) json));
     } else {
       throw new DataParserException(Errors.JSON_PARSER_01, readerId, offset, json.getClass().getSimpleName());
     }
@@ -136,7 +139,7 @@ public class JsonCharDataParser extends AbstractDataParser {
 
   @Override
   public String getOffset() {
-    return (eof) ? String.valueOf(-1) : String.valueOf(parser.getReaderPosition());
+    return eof ? String.valueOf(-1) : String.valueOf(parser.getReaderPosition());
   }
 
   @Override
