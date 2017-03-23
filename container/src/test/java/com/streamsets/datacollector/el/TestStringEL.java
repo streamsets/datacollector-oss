@@ -342,4 +342,11 @@ public class TestStringEL {
         )
     );
   }
+
+  @Test
+  public void testUnescapeJava() throws Exception {
+    ELEvaluator eval = new ELEvaluator("testUnescapeJava", StringEL.class);
+    ELVariables variables = new ELVariables();
+    Assert.assertEquals("\n", eval.eval(variables, "${str:unescapeJava(\"\\\\n\")}", String.class));
+  }
 }

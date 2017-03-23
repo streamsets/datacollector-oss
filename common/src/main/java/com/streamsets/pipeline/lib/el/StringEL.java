@@ -292,4 +292,13 @@ public class StringEL {
     return StringEscapeUtils.unescapeXml(string);
   }
 
+  @ElFunction(
+      prefix = "str",
+      name = "unescapeJava",
+      description = "Returns an unescaped string from a string with Java special characters (e.g. \\n will be converted to 0x0A)."
+  )
+  public static String java(@ElParam("string") String string) {
+    return StringEscapeUtils.unescapeJava(string);
+  }
+
 }

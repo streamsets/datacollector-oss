@@ -19,9 +19,6 @@
  */
 package com.streamsets.datacollector.el;
 
-import com.streamsets.datacollector.el.ELEvaluator;
-import com.streamsets.datacollector.el.ElConstantDefinition;
-import com.streamsets.datacollector.el.ElFunctionDefinition;
 import com.streamsets.pipeline.api.ElConstant;
 import com.streamsets.pipeline.api.ElFunction;
 import com.streamsets.pipeline.api.el.ELEval;
