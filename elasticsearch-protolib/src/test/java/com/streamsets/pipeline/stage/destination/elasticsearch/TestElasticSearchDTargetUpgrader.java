@@ -52,16 +52,6 @@ public class TestElasticSearchDTargetUpgrader {
     assertEquals("elasticSearchConfigBean.defaultOperation", newConfigs.get(5).getName());
   }
 
-  @Test
-  public void testV6ToV7Upgrade() throws Exception {
-    StageUpgrader upgrader = new ElasticsearchDTargetUpgrader();
-    List<Config> configs = createConfigs();
-
-    List<Config> newConfigs = upgrader.upgrade("l", "s", "i", 1, 7, configs);
-    assertEquals(6, configs.size());
-    newConfigs.forEach(config -> assertTrue(config.getName().startsWith(ElasticsearchConfig.CONF_PREFIX)));
-  }
-
   private List<Config> createConfigs() {
     List<Config> configs = new ArrayList<>();
     configs.add(new Config(ElasticsearchDTargetUpgrader.OLD_CONFIG_PREFIX + "clusterName", "MyCluster"));

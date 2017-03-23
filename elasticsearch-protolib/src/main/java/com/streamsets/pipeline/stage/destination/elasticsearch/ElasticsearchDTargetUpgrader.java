@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 
 public class ElasticsearchDTargetUpgrader implements StageUpgrader {
   static final String OLD_CONFIG_PREFIX = "elasticSearchConfigBean.";
+  static final String OLD_SECURITY_PREFIX = "elasticSearchConfigBean.securityConfigBean.";
 
   @Override
   public List<Config> upgrade(
@@ -172,12 +173,12 @@ public class ElasticsearchDTargetUpgrader implements StageUpgrader {
         configsToRemove.add(config);
       }
       // Rename shieldConfigBean to securityConfig.
-      if (config.getName().equals(OLD_CONFIG_PREFIX + "shieldConfigBean.sslTrustStorePath")) {
+      if (config.getName().equals(OLD_CONFIG_PREFIX + "shieldConfigBean.sslTruststorePath")) {
         configsToAdd.add(new Config(config.getName().replace("shield", "security"), config.getValue()));
         configsToRemove.add(config);
       }
       // Rename shieldConfigBean to securityConfig.
-      if (config.getName().equals(OLD_CONFIG_PREFIX + "shieldConfigBean.sslTrustStorePassword")) {
+      if (config.getName().equals(OLD_CONFIG_PREFIX + "shieldConfigBean.sslTruststorePassword")) {
         configsToAdd.add(new Config(config.getName().replace("shield", "security"), config.getValue()));
         configsToRemove.add(config);
       }
@@ -228,20 +229,36 @@ public class ElasticsearchDTargetUpgrader implements StageUpgrader {
   }
 
   private List<Config> upgradeV6ToV7(List<Config> configs) {
-    List<Config> newConfigs = configs
-        .stream()
-        .map(config -> {
-          if (config.getName().startsWith(OLD_CONFIG_PREFIX)) {
-            return new Config(
-                config.getName().replace(OLD_CONFIG_PREFIX, ElasticsearchConfig.CONF_PREFIX),
-                config.getValue()
-            );
-          } else {
-            return config;
-          }
-        })
-        .collect(Collectors.toList());
-    return newConfigs;
+   return configs.stream()
+      // Rename of beans
+      .map(config -> {
+        if (config.getName().startsWith(OLD_SECURITY_PREFIX)) {
+          return new Config(
+            config.getName().replace(OLD_SECURITY_PREFIX, "elasticSearchConfig.securityConfig."),
+            config.getValue()
+          );
+        } else if (config.getName().startsWith(OLD_CONFIG_PREFIX)) {
+          return new Config(
+              config.getName().replace(OLD_CONFIG_PREFIX, "elasticSearchConfig."),
+              config.getValue()
+          );
+        } else {
+          return config;
+        }
+      })
+      // Fixing case of sslTrustStore
+     .map(config -> {
+       if(config.getName().contains("sslTruststore")) {
+         return new Config(
+           config.getName().replace("sslTruststore", "sslTrustStore"),
+           config.getValue()
+         );
+       } else {
+         return config;
+       }
+     })
+     // And we're done
+     .collect(Collectors.toList());
   }
 
 }
