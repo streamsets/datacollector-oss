@@ -39,7 +39,6 @@ import io.jsonwebtoken.Header;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.directory.api.util.Base64;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.RequestEntityProcessing;
 import org.slf4j.Logger;
@@ -64,6 +63,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -339,7 +339,7 @@ public class OAuth2ConfigBean {
     privKeyPEM = privKeyPEM.replace("-----END PRIVATE KEY-----", "");
 
     // Base64 decode the data
-    byte [] encoded = Base64.decode(privKeyPEM.toCharArray());
+    byte [] encoded = Base64.getDecoder().decode(privKeyPEM.getBytes());
 
     // PKCS8 decode the encoded RSA private key
     PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encoded);

@@ -100,7 +100,7 @@ public class HttpClientCommon {
           .property(ClientProperties.READ_TIMEOUT, jerseyClientConfig.readTimeoutMillis)
           .property(ClientProperties.ASYNC_THREADPOOL_SIZE, jerseyClientConfig.numThreads)
           .property(ClientProperties.REQUEST_ENTITY_PROCESSING, jerseyClientConfig.transferEncoding)
-          .connectorProvider(new GrizzlyConnectorProvider());
+          .connectorProvider(new GrizzlyConnectorProvider(new GrizzlyClientCustomizer(jerseyClientConfig)));
 
       ClientBuilder clientBuilder = ClientBuilder.newBuilder().withConfig(clientConfig);
 

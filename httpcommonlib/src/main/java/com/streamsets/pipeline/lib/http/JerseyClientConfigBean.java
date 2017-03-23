@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 StreamSets Inc.
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -24,7 +24,6 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.http.oauth2.OAuth2ConfigBean;
-import com.streamsets.pipeline.stage.origin.http.AuthenticationTypeChooserValues;
 import org.apache.commons.lang.StringUtils;
 import org.glassfish.jersey.client.RequestEntityProcessing;
 import org.slf4j.Logger;

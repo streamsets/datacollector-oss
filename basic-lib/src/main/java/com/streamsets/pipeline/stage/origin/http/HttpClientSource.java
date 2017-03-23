@@ -38,6 +38,7 @@ import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.lib.http.AuthenticationFailureException;
 import com.streamsets.pipeline.lib.http.AuthenticationType;
 import com.streamsets.pipeline.lib.http.Errors;
+import com.streamsets.pipeline.lib.http.GrizzlyClientCustomizer;
 import com.streamsets.pipeline.lib.http.Groups;
 import com.streamsets.pipeline.lib.http.HttpMethod;
 import com.streamsets.pipeline.lib.http.JerseyClientUtil;
@@ -78,10 +79,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
-import static com.streamsets.pipeline.lib.parser.json.Errors.JSON_PARSER_00;
 import static com.streamsets.pipeline.lib.http.Errors.HTTP_21;
 import static com.streamsets.pipeline.lib.http.Errors.HTTP_22;
 import static com.streamsets.pipeline.lib.http.Errors.HTTP_24;
+import static com.streamsets.pipeline.lib.parser.json.Errors.JSON_PARSER_00;
 
 /**
  * HTTP Client Origin implementation supporting streaming, polled, and paginated HTTP resources.
@@ -234,7 +235,7 @@ public class HttpClientSource extends BaseSource {
         .property(ClientProperties.READ_TIMEOUT, conf.client.readTimeoutMillis)
         .property(ClientProperties.ASYNC_THREADPOOL_SIZE, 1)
         .property(ClientProperties.REQUEST_ENTITY_PROCESSING, conf.client.transferEncoding)
-        .connectorProvider(new GrizzlyConnectorProvider());
+        .connectorProvider(new GrizzlyConnectorProvider(new GrizzlyClientCustomizer(conf.client)));
 
     clientBuilder = ClientBuilder.newBuilder().withConfig(clientConfig);
 

@@ -30,7 +30,9 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.lib.http.GrizzlyClientCustomizer;
 import com.streamsets.pipeline.lib.http.JerseyClientUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.RequestEntityProcessing;
@@ -84,10 +86,17 @@ public class DatabricksAppLauncher implements AppLauncher {
         databricksConfigBean.baseUrl.substring(0, databricksConfigBean.baseUrl.length() - 1) :
         databricksConfigBean.baseUrl;
 
+    com.streamsets.pipeline.lib.http.HttpProxyConfigBean proxyConf = databricksConfigBean.proxyConfigBean
+        .getUnderlyingConfig();
+
     ClientConfig clientConfig = new ClientConfig()
         .property(ClientProperties.ASYNC_THREADPOOL_SIZE, 1)
         .property(ClientProperties.REQUEST_ENTITY_PROCESSING, RequestEntityProcessing.BUFFERED)
-        .connectorProvider(new GrizzlyConnectorProvider());
+        .connectorProvider(new GrizzlyConnectorProvider(new GrizzlyClientCustomizer(
+            !StringUtils.isEmpty(proxyConf.uri),
+            proxyConf.username,
+            proxyConf.password
+        )));
 
     HttpAuthenticationFeature auth = configs.credentialsConfigBean.init();
     ClientBuilder builder = getClientBuilder()
@@ -100,7 +109,7 @@ public class DatabricksAppLauncher implements AppLauncher {
 
     JerseyClientUtil.configureSslContext(databricksConfigBean.sslConfigBean.getUnderlyingConfig(), builder);
 
-    JerseyClientUtil.configureProxy(databricksConfigBean.proxyConfigBean.getUnderlyingConfig(), builder);
+    JerseyClientUtil.configureProxy(proxyConf, builder);
 
     client = builder.build();
     validateWithDatabricks(context, issues);
