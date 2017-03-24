@@ -70,6 +70,19 @@ public class PaginationConfigBean {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Keep All Fields",
+      description = "Includes all fields in the output record, rather than only fields from Result Field Path",
+      defaultValue = "false",
+      group = "#0",
+      displayPosition = 50,
+      dependsOn = "mode",
+      triggeredByValue = { "LINK_HEADER", "BY_PAGE", "BY_OFFSET" }
+  )
+  public boolean keepAllFields;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Wait Time Between Pages (ms)",
       defaultValue = "2000",

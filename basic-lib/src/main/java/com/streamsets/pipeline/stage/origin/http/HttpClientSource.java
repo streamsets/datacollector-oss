@@ -731,7 +731,12 @@ public class HttpClientSource extends BaseSource {
     int subRecordIdx = 0;
     for (Field result : results) {
       Record r = getContext().createRecord(sourceOffset + "::" + subRecordIdx++);
-      r.set(result);
+      if (conf.pagination.keepAllFields) {
+        r.set(record.get().clone());
+        r.set(conf.pagination.resultFieldPath, result);
+      } else {
+        r.set(result);
+      }
       addResponseHeaders(r.getHeader());
       batchMaker.addRecord(r);
       ++numSubRecords;

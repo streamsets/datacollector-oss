@@ -105,11 +105,21 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
         }
       case 10:
         upgradeV10ToV11(configs);
+        if (toVersion == 11) {
+          break;
+        }
+        // fall through
+      case 11:
+        upgradeV11ToV12(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
     return configs;
+  }
+
+  private void upgradeV11ToV12(List<Config> configs) {
+    configs.add(new Config(joiner.join(CONF, PAGINATION_CONFIG, "keepAllFields"), false));
   }
 
   private static void upgradeV8ToV9(List<Config> configs) {

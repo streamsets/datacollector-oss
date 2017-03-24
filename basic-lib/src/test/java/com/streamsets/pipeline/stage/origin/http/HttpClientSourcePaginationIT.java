@@ -63,6 +63,7 @@ import static com.streamsets.pipeline.stage.origin.http.PaginationMode.BY_PAGE;
 import static com.streamsets.pipeline.stage.origin.http.PaginationMode.LINK_HEADER;
 import static com.streamsets.testing.ParametrizedUtils.crossProduct;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @Category(SingleForkNoReuseTest.class)
 @RunWith(Parameterized.class)
@@ -71,7 +72,12 @@ public class HttpClientSourcePaginationIT extends JerseyTest {
 
   @Parameterized.Parameters
   public static Collection<Object[]> offsets() {
-    return crossProduct(new Integer[]{1, 3}, new Integer[]{2, 4}, new Object[]{LINK_HEADER, BY_OFFSET, BY_PAGE});
+    return crossProduct(
+        new Integer[]{1, 3},
+        new Integer[]{2, 4},
+        new Object[]{LINK_HEADER, BY_OFFSET, BY_PAGE},
+        new Boolean[]{false, true}
+    );
   }
 
   @Parameter
@@ -82,6 +88,9 @@ public class HttpClientSourcePaginationIT extends JerseyTest {
 
   @Parameter(value = 2)
   public PaginationMode mode;
+
+  @Parameter(value = 3)
+  public boolean keepAllFields;
 
   private static List<String> rows = ImmutableList.of(
       "{\"row\": \"1\"}",
@@ -124,7 +133,7 @@ public class HttpClientSourcePaginationIT extends JerseyTest {
     }
 
     private String getRows(int pageNum, int limit, PaginationMode mode) {
-      StringBuilder sb = new StringBuilder("{\"results\": [");
+      StringBuilder sb = new StringBuilder("{\"metadata\":\"some metadata\",\"results\": [");
 
       // 1 is first page
       int startOffset;
@@ -140,7 +149,7 @@ public class HttpClientSourcePaginationIT extends JerseyTest {
       }
 
       int lastComma = sb.lastIndexOf(",");
-      if (lastComma > 0) {
+      if (lastComma > 29) { // need to skip the comma after "some metadata",
         sb.deleteCharAt(lastComma);
       }
       sb.append("]}");
@@ -167,7 +176,7 @@ public class HttpClientSourcePaginationIT extends JerseyTest {
 
   @Test
   public void testPaging() throws Exception {
-    HttpClientConfigBean conf = getHttpClientConfigBean(pageNum, limit, mode);
+    HttpClientConfigBean conf = getHttpClientConfigBean(pageNum, limit, mode, keepAllFields);
 
     HttpClientSource origin = new HttpClientSource(conf);
 
@@ -192,14 +201,23 @@ public class HttpClientSourcePaginationIT extends JerseyTest {
 
       int recordNum = start;
       for (Record record : parsedRecords) {
-        assertEquals(++recordNum, record.get("/row").getValueAsInteger());
+        String rowFieldPath = keepAllFields ? conf.pagination.resultFieldPath + "/row" : "/row";
+        assertEquals(++recordNum, record.get(rowFieldPath).getValueAsInteger());
+        if (keepAllFields) {
+          assertTrue(record.has("/metadata"));
+        }
       }
     } finally {
       runner.runDestroy();
     }
   }
 
-  private HttpClientConfigBean getHttpClientConfigBean(int start, int limit, PaginationMode mode) {
+  private HttpClientConfigBean getHttpClientConfigBean(
+      int start,
+      int limit,
+      PaginationMode mode,
+      boolean keepAllFields
+  ) {
     HttpClientConfigBean conf = new HttpClientConfigBean();
     conf.client.authType = AuthenticationType.NONE;
     conf.httpMode = HttpClientMode.BATCH;
@@ -221,6 +239,7 @@ public class HttpClientSourcePaginationIT extends JerseyTest {
     conf.pagination.startAt = start;
     conf.pagination.resultFieldPath = "/results";
     conf.pagination.rateLimit = 0;
+    conf.pagination.keepAllFields = keepAllFields;
     return conf;
   }
 }
