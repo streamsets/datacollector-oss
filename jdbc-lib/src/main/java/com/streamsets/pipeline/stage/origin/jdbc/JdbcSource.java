@@ -29,9 +29,10 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.lib.event.CommonEvents;
 import com.streamsets.pipeline.lib.event.EventCreator;
-import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.jdbc.MSOperationCode;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
@@ -115,6 +116,7 @@ public class JdbcSource extends BaseSource {
   private int queryRowCount = 0;
   private int numQueryErrors = 0;
   private SQLException firstQueryException = null;
+  private boolean shouldSendNoMoreDataEvent = true;
 
   public JdbcSource(
       boolean isIncrementalMode,
@@ -305,6 +307,13 @@ public class JdbcSource extends BaseSource {
       // Sleep in one second increments so we don't tie up the app.
       LOG.debug("{}ms remaining until next fetch.", delay);
       ThreadUtil.sleep(Math.min(delay, 1000));
+
+      // send event only once for each time we run out of data.
+      if(shouldSendNoMoreDataEvent) {
+        CommonEvents.NO_MORE_DATA.create(getContext()).createAndSend();
+        shouldSendNoMoreDataEvent = false;
+      }
+
     } else {
       Statement statement;
       Hasher hasher = HF.newHasher();
@@ -389,6 +398,12 @@ public class JdbcSource extends BaseSource {
               .with(SOURCE_OFFSET, nextSourceOffset)
               .createAndSend();
         }
+
+        if(rowCount > 0) {
+          // processed some records - reset the no-more-data event.
+          shouldSendNoMoreDataEvent = true;
+        }
+
       } catch (SQLException e) {
         if (++numQueryErrors == 1) {
           firstQueryException = e;
