@@ -161,6 +161,17 @@ public class HiveMetadataDProcessor extends DProcessor {
   @ValueChooserModel(TimeZoneChooserValues.class)
   public String timeZoneID;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Enable Parquet",
+      description = "Enable it if the records are stored in parquet format",
+      displayPosition = 150,
+      group = "HIVE"
+  )
+  public boolean enableParquet;
+
   @ConfigDefBean
   public DecimalDefaultsConfig decimalDefaultsConfig;
 
@@ -176,7 +187,8 @@ public class HiveMetadataDProcessor extends DProcessor {
         hiveConfigBean,
         timeDriver,
         decimalDefaultsConfig,
-        TimeZone.getTimeZone(timeZoneID)
+        TimeZone.getTimeZone(timeZoneID),
+        enableParquet
     );
   }
 

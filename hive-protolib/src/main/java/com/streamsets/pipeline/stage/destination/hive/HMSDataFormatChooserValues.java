@@ -24,6 +24,9 @@ import com.streamsets.pipeline.config.DataFormat;
 
 public class HMSDataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
   public HMSDataFormatChooserValues() {
-    super(DataFormat.AVRO);
+    super(
+        DataFormat.AVRO,
+        DataFormat.PARQUET
+    );
   }
 }

@@ -37,6 +37,7 @@ public enum DataFormat implements Label {
   PROTOBUF("Protobuf", DataParserFormat.PROTOBUF, DataGeneratorFormat.PROTOBUF),
   DATAGRAM("Datagram", DataParserFormat.DATAGRAM, null),
   WHOLE_FILE("Whole File", DataParserFormat.WHOLE_FILE, DataGeneratorFormat.WHOLE_FILE),
+  PARQUET("Parquet",null, null),
   ;
 
   private final String label;

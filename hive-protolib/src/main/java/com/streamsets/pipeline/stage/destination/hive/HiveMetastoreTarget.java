@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
@@ -117,7 +118,8 @@ public class HiveMetastoreTarget extends BaseTarget {
         );
 
         if (tblPropertiesInfo != null) {
-          if (!tblPropertiesInfo.getSerdeLibrary().equals(HiveMetastoreUtil.AVRO_SERDE)) {
+          if (!tblPropertiesInfo.getSerdeLibrary().equals(HiveMetastoreUtil.AVRO_SERDE) &&
+              !tblPropertiesInfo.getSerdeLibrary().equals(HiveMetastoreUtil.PARQUET_SERDE)) {
             throw new HiveStageCheckedException(
                 Errors.HIVE_32,
                 qualifiedTableName,
@@ -136,6 +138,14 @@ public class HiveMetastoreTarget extends BaseTarget {
           }
         }
 
+        if (conf.dataFormat == DataFormat.PARQUET) {
+          if (!location.endsWith(".avro")) {
+            LOG.warn("location does not end with .avro");
+          }
+          LOG.debug("Parquet file received");
+          location = location.substring(0, location.length() - ".avro".length());
+        }
+
         if (HiveMetastoreUtil.isSchemaChangeRecord(metadataRecord)) {
           handleSchemaChange(
               metadataRecord,
@@ -143,7 +153,8 @@ public class HiveMetastoreTarget extends BaseTarget {
               databaseName,
               tableName,
               queryExecutor,
-              tblPropertiesInfo
+              tblPropertiesInfo,
+              conf.dataFormat
           );
         } else {
           handlePartitionAddition(metadataRecord, qualifiedTableName, location, queryExecutor);
@@ -167,7 +178,8 @@ public class HiveMetastoreTarget extends BaseTarget {
       String databaseName,
       String tableName,
       HiveQueryExecutor hiveQueryExecutor,
-      TBLPropertiesInfoCacheSupport.TBLPropertiesInfo tblPropertiesInfo
+      TBLPropertiesInfoCacheSupport.TBLPropertiesInfo tblPropertiesInfo,
+      DataFormat dataFormat
   ) throws StageException {
     //Schema Change
     String qualifiedTableName = HiveMetastoreUtil.getQualifiedTableName(databaseName, tableName);
@@ -207,7 +219,8 @@ public class HiveMetastoreTarget extends BaseTarget {
           partitionTypeInfo,
           conf.storedAsAvro,
           schemaPath,
-          isInternal
+          isInternal,
+          dataFormat
       );
 
       hmsCache.put(

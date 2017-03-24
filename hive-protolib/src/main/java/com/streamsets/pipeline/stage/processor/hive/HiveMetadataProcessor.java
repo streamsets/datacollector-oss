@@ -76,6 +76,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
   private static final String TIME_DRIVER = "timeDriver";
   private static final String SCALE_EXPRESSION = "scaleExpression";
   private static final String PRECISION_EXPRESSION = "precisionExpression";
+  private static final String PARQUET_TARGET_PATH = ".avro";
 
   protected static final String HDFS_HEADER_ROLL = "roll";
   protected static final String HDFS_HEADER_AVROSCHEMA = "avroSchema";
@@ -87,6 +88,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
   private final String timeDriver;
   private final DecimalDefaultsConfig decimalDefaultsConfig;
   private final TimeZone timeZone;
+  private final boolean enableParquet;
 
   private HiveConfigBean hiveConfigBean;
 
@@ -146,7 +148,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
       HiveConfigBean hiveConfig,
       String timeDriver,
       DecimalDefaultsConfig decimalDefaultsConfig,
-      TimeZone timezone
+      TimeZone timezone,
+      boolean enableParquet
   ) {
     this.databaseEL = databaseEL;
     this.tableEL = tableEL;
@@ -161,6 +164,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
     this.decimalDefaultsConfig = decimalDefaultsConfig;
     partitionTypeInfo = new LinkedHashMap<>();
     this.timeZone = timezone;
+    this.enableParquet = enableParquet;
   }
 
   @Override
@@ -375,7 +379,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
       );
 
       if (tblPropertiesInfo != null) {
-        if (!tblPropertiesInfo.getSerdeLibrary().equals(HiveMetastoreUtil.AVRO_SERDE)) {
+        if (!tblPropertiesInfo.getSerdeLibrary().equals(HiveMetastoreUtil.AVRO_SERDE) &&
+            !tblPropertiesInfo.getSerdeLibrary().equals(HiveMetastoreUtil.PARQUET_SERDE)) {
           throw new HiveStageCheckedException(
               com.streamsets.pipeline.stage.lib.hive.Errors.HIVE_32,
               qualifiedName,
@@ -480,6 +485,11 @@ public class HiveMetadataProcessor extends RecordProcessor {
           handleNewPartition(partitionValMap, pCache, dbName, tableName, targetPath, batchMaker, qualifiedName, diff);
         }
       }
+
+      if (enableParquet) {
+        targetPath = targetPath + "/" + PARQUET_TARGET_PATH;
+      }
+
       // Send record to HDFS target.
       changeRecordFieldToLowerCase(record);
       updateRecordForHDFS(record, schemaDrift, avroSchema, targetPath);

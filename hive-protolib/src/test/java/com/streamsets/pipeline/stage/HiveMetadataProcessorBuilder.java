@@ -37,6 +37,7 @@ public class HiveMetadataProcessorBuilder {
   private String timeDriver;
   private DecimalDefaultsConfig decimalDefaultsConfig;
   private TimeZone timeZone;
+  private boolean isParquet;
 
   public HiveMetadataProcessorBuilder() {
     database = "default";
@@ -50,6 +51,7 @@ public class HiveMetadataProcessorBuilder {
     decimalDefaultsConfig.scaleExpression = String.valueOf(38);
     decimalDefaultsConfig.precisionExpression = String.valueOf(38);
     timeZone = TimeZone.getTimeZone("UTC");
+    isParquet = false;
   }
 
   public HiveMetadataProcessorBuilder database(String database) {
@@ -121,7 +123,8 @@ public class HiveMetadataProcessorBuilder {
         BaseHiveIT.getHiveConfigBean(),
         timeDriver,
         decimalDefaultsConfig,
-        timeZone
+        timeZone,
+        isParquet
     );
   }
 }
