@@ -94,6 +94,7 @@
                         <li>SDC RPC</li>
                         <li>SFTP/FTP Client</li>
                         <li>UDP Source</li>
+                        <li>WebSocket Server</li>
                   </ul>
             </p>
             <draft-comment author="Loretta">Core install includes all processors except... </draft-comment>

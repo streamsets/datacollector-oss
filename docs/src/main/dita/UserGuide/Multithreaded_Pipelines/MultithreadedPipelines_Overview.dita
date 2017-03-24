@@ -27,8 +27,13 @@
             to the pipeline and <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
             />.</p>
-        <p>At this time, you can use the HTTP Server origin to create a multithreaded pipeline. You
-            can also use the Dev Data Generator development origin to test a multithreaded pipeline. </p>
+        <p>At this time, you can use the following origins to create a multithreaded pipeline:<ul
+                id="ul_oql_bym_3z">
+                <li>HTTP Server origin</li>
+                <li>WebSocket Server origin</li>
+            </ul></p>
+        <p>You can also use the Dev Data Generator development origin to test a multithreaded
+            pipeline. </p>
         <p>A multithreaded pipeline honors the configured delivery guarantee for the pipeline, but
             does not guarantee the order in which batches of data are processed. </p>
  </conbody>

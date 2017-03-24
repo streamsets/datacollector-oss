@@ -324,5 +324,15 @@
    </topicref>
    <topicref href="../Origins/UDPtoKafka-Configuring.dita"/>
   </topicref>
+  <topicref href="../Origins/WebSocketServer.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/WebSocketServer-Prerequisites.dita">
+    <topicref href="../Origins/WebSocketServer-PrerequisitesPort.dita"/>
+    <topicref href="../Origins/WebSocketServer-PrerequisitesAppID.dita"/>
+   </topicref>
+   <topicref href="../Origins/WebSocketServer-MultithreadProcessing.dita"/>
+   <topicref href="../Origins/WebSocketServer-DataFormat.dita"/>
+   <topicref href="../Origins/WebSocketServer-Configuring.dita"/>
+  </topicref>
  </topicref>
 </map>

@@ -422,6 +422,29 @@
               <entry>UDP to Kafka</entry>
               <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
             </row>
+            <row>
+              <entry>WebSocket Server</entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_lzk_jvf_3z"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_mzk_jvf_3z"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_nzk_jvf_3z"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_ozk_jvf_3z"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_lmn_lvf_3z"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_pzk_jvf_3z"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_qzk_jvf_3z"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_zwl_lvf_3z"
+                /></entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_rzk_jvf_3z"
+                /></entry>
+            </row>
           </tbody>
         </tgroup>
             </table>

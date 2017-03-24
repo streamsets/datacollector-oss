@@ -45,6 +45,7 @@
         <li>RabbitMQ Consumer origin</li>
         <li>Redis Consumer origin</li>
         <li>SFTP/FTP Client origin</li>
+        <li>WebSocket Server origin</li>
         <li>HTTP Client processor</li>
         <li>JSON Parser processor</li>
         <li>Log Parser processor</li>
