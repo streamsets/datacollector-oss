@@ -63,8 +63,8 @@ import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.RecordReader;
-import com.streamsets.pipeline.api.ext.Sampler;
 import com.streamsets.pipeline.api.ext.RecordWriter;
+import com.streamsets.pipeline.api.ext.Sampler;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.sampling.RecordSampler;
@@ -236,6 +236,9 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
     }
     return configToElDefMap;
 
+  }
+
+  public void finishPipeline() {
   }
 
   PushSourceContextDelegate pushSourceContextDelegate;
