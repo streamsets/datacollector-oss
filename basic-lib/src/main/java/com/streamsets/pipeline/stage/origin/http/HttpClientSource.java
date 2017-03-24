@@ -20,8 +20,6 @@
 
 package com.streamsets.pipeline.stage.origin.http;
 
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
@@ -57,7 +55,6 @@ import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
@@ -77,7 +74,9 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Function;
 
 import static com.streamsets.pipeline.lib.http.Errors.HTTP_21;
 import static com.streamsets.pipeline.lib.http.Errors.HTTP_22;
@@ -320,7 +319,7 @@ public class HttpClientSource extends BaseSource {
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     long start = System.currentTimeMillis();
     int chunksToFetch = Math.min(conf.basic.maxBatchSize, maxBatchSize);
-    Optional<String> newSourceOffset = Optional.absent();
+    Optional<String> newSourceOffset = Optional.empty();
     recordCount = 0;
 
     setPageOffset(lastSourceOffset);
@@ -342,20 +341,19 @@ public class HttpClientSource extends BaseSource {
       } else if (shouldMakeRequest()) {
 
         if (conf.pagination.mode != PaginationMode.NONE) {
-          target = client.target(resolveNextPageUrl(newSourceOffset.orNull()));
+          target = client.target(resolveNextPageUrl(newSourceOffset.orElse(null)));
           // Pause between paging requests so we don't get rate limited.
           uninterrupted = ThreadUtil.sleep(conf.pagination.rateLimit);
         }
 
         makeRequest(target);
         if (lastRequestTimedOut) {
+          String actionName = conf.responseTimeoutActionConfig.getAction().name();
           LOG.warn(
-            String.format(
-              "HTTPClient timed out after waiting %d ms for response from server;" +
-              " reconnecting client and proceeding as per configured %s action",
+              "HTTPClient timed out after waiting {} ms for response from server;" +
+              " reconnecting client and proceeding as per configured {} action",
               conf.client.readTimeoutMillis,
-              conf.responseTimeoutActionConfig.getAction().name()
-            )
+              actionName
           );
           reconnectClient();
           return nonTerminating(lastSourceOffset);
@@ -371,11 +369,7 @@ public class HttpClientSource extends BaseSource {
       }
     }
 
-    if (newSourceOffset.isPresent()) {
-      return newSourceOffset.get();
-    } else {
-      return lastSourceOffset;
-    }
+    return newSourceOffset.orElse(lastSourceOffset);
   }
 
   /**
@@ -435,7 +429,6 @@ public class HttpClientSource extends BaseSource {
    * Helper method to construct an HTTP request and fetch a response.
    *
    * @param target the target url to fetch.
-   * @return true if the request timed out
    * @throws StageException if an unhandled error is encountered
    */
   private void makeRequest(WebTarget target) throws StageException {
@@ -473,13 +466,11 @@ public class HttpClientSource extends BaseSource {
           final HttpResponseActionConfigBean actionConf = this.statusToActionConfigs.get(status);
           final boolean statusChanged = lastStatus != status || lastRequestTimedOut;
 
-          keepRequesting &= applyResponseAction(actionConf, statusChanged, new Function<Void, StageException>() {
-            @Nullable
-            @Override
-            public StageException apply(@Nullable Void input) {
-              return new StageException(Errors.HTTP_14, status, response.readEntity(String.class));
-            }
-          });
+          keepRequesting = applyResponseAction(
+              actionConf,
+              statusChanged,
+              input -> new StageException(Errors.HTTP_14, status, response.readEntity(String.class))
+          );
 
         } else {
           keepRequesting = false;
@@ -501,13 +492,7 @@ public class HttpClientSource extends BaseSource {
 
             final boolean firstTimeout = !lastRequestTimedOut;
 
-            applyResponseAction(actionConf, firstTimeout, new Function<Void, StageException>() {
-              @Nullable
-              @Override
-              public StageException apply(@Nullable Void input) {
-                return new StageException(Errors.HTTP_18);
-              }
-            });
+            applyResponseAction(actionConf, firstTimeout, input -> new StageException(Errors.HTTP_18));
 
           }
 
@@ -810,7 +795,7 @@ public class HttpClientSource extends BaseSource {
    */
   private Optional<String> processResponse(long start, int maxRecords, BatchMaker batchMaker) throws
       StageException {
-    Optional<String> newSourceOffset = Optional.absent();
+    Optional<String> newSourceOffset = Optional.empty();
 
     if (response == null) {
       return newSourceOffset;
