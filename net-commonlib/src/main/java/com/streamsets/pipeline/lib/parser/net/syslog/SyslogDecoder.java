@@ -132,10 +132,12 @@ public class SyslogDecoder extends ByteToMessageDecoder {
     }
 
     final SyslogMessage syslogMsg = new SyslogMessage();
-    String senderHost = resolveHostAddressString(sender);
-    syslogMsg.setSenderHost(senderHost);
-    syslogMsg.setSenderAddress(senderHost + ":" + sender.getPort());
-    syslogMsg.setSenderPort(sender.getPort());
+    if (sender != null) {
+      String senderHost = resolveHostAddressString(sender);
+      syslogMsg.setSenderHost(senderHost);
+      syslogMsg.setSenderAddress(resolveAddressString(senderHost, sender));
+      syslogMsg.setSenderPort(sender.getPort());
+    }
     final String msg = buf.toString(charset);
     int msgLen = msg.length();
     int curPos = 0;
@@ -226,10 +228,12 @@ public class SyslogDecoder extends ByteToMessageDecoder {
     } else {
       syslogMsg.setRemainingMessage("");
     }
-    String receiverHost = resolveHostAddressString(recipient);
-    syslogMsg.setReceiverHost(receiverHost);
-    syslogMsg.setReceiverAddress(receiverHost + ":" + recipient.getPort());
-    syslogMsg.setReceiverPort(recipient.getPort());
+    if (recipient != null) {
+      String receiverHost = resolveHostAddressString(recipient);
+      syslogMsg.setReceiverHost(receiverHost);
+      syslogMsg.setReceiverAddress(resolveAddressString(receiverHost, recipient));
+      syslogMsg.setReceiverPort(recipient.getPort());
+    }
     out.add(syslogMsg);
     // consume the buffer that was just read (as an entire String)
     buf.skipBytes(buf.readableBytes());
@@ -245,6 +249,13 @@ public class SyslogDecoder extends ByteToMessageDecoder {
       receiverHost = "[" + receiverHost + "]";
     }
     return receiverHost;
+  }
+
+  public static String resolveAddressString(String hostName, InetSocketAddress address) {
+    if (hostName == null || address == null) {
+      return null;
+    }
+    return hostName + ":" + address.getPort();
   }
 
   protected long parseRfc5424Date(String ts) throws OnRecordErrorException {
