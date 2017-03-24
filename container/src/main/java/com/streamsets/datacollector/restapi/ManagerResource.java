@@ -528,7 +528,7 @@ public class ManagerResource {
 
   @Path("/pipeline/{pipelineName}/snapshot/{snapshotName}")
   @POST
-  @ApiOperation(value = "Capture Snapshot", authorizations = @Authorization(value = "basic"))
+  @ApiOperation(value = "Update Snapshot Label", authorizations = @Authorization(value = "basic"))
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN, AuthzRole.MANAGER_REMOTE, AuthzRole.ADMIN_REMOTE })
   public Response updateSnapshotLabel(
       @PathParam("pipelineName") String pipelineName,
