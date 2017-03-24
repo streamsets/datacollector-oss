@@ -93,7 +93,6 @@ public abstract class MysqlSource extends BaseSource {
     // we don't reuse this client later on, it is used just to check that client can connect, it
     // is immediately closed after connection.
     BinaryLogClient tmpClient = createBinaryLogClient();
-    tmpClient.setServerId(serverId);
     try {
       tmpClient.setKeepAlive(false);
       tmpClient.connect(getConfig().connectTimeout);
@@ -168,6 +167,7 @@ public abstract class MysqlSource extends BaseSource {
     } else {
       binLogClient.setSSLMode(SSLMode.DISABLED);
     }
+    binLogClient.setServerId(serverId);
     return binLogClient;
   }
 

@@ -15,32 +15,11 @@
  */
 package com.streamsets.pipeline.stage.origin.mysql;
 
-import static com.streamsets.pipeline.api.Field.*;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.isEmptyString;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.collection.IsEmptyCollection.empty;
-import static org.junit.Assert.assertThat;
-
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.sql.DataSource;
-
+import com.google.common.base.Throwables;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.zaxxer.hikari.HikariConfig;
@@ -49,9 +28,40 @@ import org.hamcrest.Matchers;
 import org.hamcrest.collection.IsEmptyCollection;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.junit.Ignore;
+import org.junit.After;
 import org.junit.Test;
 import org.testcontainers.containers.GenericContainer;
+
+import javax.sql.DataSource;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static com.streamsets.pipeline.api.Field.create;
+import static com.streamsets.pipeline.api.Field.createDate;
+import static com.streamsets.pipeline.api.Field.createDatetime;
+import static com.streamsets.pipeline.api.Field.createTime;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isEmptyString;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.collection.IsEmptyCollection.empty;
+import static org.junit.Assert.assertThat;
 
 public abstract class AbstractMysqlSource {
   public static final int MAX_BATCH_SIZE = 500;
@@ -63,12 +73,29 @@ public abstract class AbstractMysqlSource {
   protected static GenericContainer mysql;
 
   protected static HikariDataSource ds;
+  protected SourceRunner runner;
+
+  @After
+  public void teardown() throws Exception {
+    for (String table: Arrays.asList("foo", "foo2", "ALL_TYPES")) {
+      if (tableExists(table)) {
+        execute(ds, String.format("TRUNCATE %s", table));
+      }
+    }
+    if (runner != null) {
+      try {
+        runner.runDestroy();
+      } catch (Exception ignored) {
+        // just don't care. runner may have not even been initialized
+      }
+    }
+  }
 
   @Test
   public void shouldFailWhenUserIsNotSuper() throws Exception {
     MysqlSourceConfig config = createConfig("test");
     MysqlSource source = createMysqlSource(config);
-    SourceRunner runner = new SourceRunner.Builder(MysqlDSource.class, source)
+    runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
         .build();
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
@@ -80,19 +107,18 @@ public abstract class AbstractMysqlSource {
     MysqlSourceConfig config = createConfig("root");
     config.port = "1";
     MysqlSource source = createMysqlSource(config);
-    SourceRunner runner = new SourceRunner.Builder(MysqlDSource.class, source)
+    runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
         .build();
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
     assertThat(issues, hasSize(2));
   }
 
-  @Ignore
   @Test
   public void shouldConvertAllMysqlTypes() throws Exception {
     MysqlSourceConfig config = createConfig("root");
     MysqlSource source = createMysqlSource(config);
-    SourceRunner runner = new SourceRunner.Builder(MysqlDSource.class, source)
+    runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
         .build();
     runner.runInit();
@@ -184,7 +210,6 @@ public abstract class AbstractMysqlSource {
     assertThat(rec.get("/Type"), is(create("INSERT")));
   }
 
-  @Ignore
   @Test
   public void shouldStartFromBeginning() throws Exception {
     execute(ds, "INSERT INTO foo (bar) VALUES (1)");
@@ -192,7 +217,7 @@ public abstract class AbstractMysqlSource {
     MysqlSourceConfig config = createConfig("root");
     config.startFromBeginning = true;
     MysqlSource source = createMysqlSource(config);
-    SourceRunner runner = new SourceRunner.Builder(MysqlDSource.class, source)
+    runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
         .build();
     runner.runInit();
@@ -214,10 +239,8 @@ public abstract class AbstractMysqlSource {
       }
     }
     assertThat(found, notNullValue());
-    execute(ds, "TRUNCATE foo");
   }
 
-  @Ignore
   @Test
   public void shouldStartFromCurrent() throws Exception {
     execute(ds, "INSERT INTO foo (bar) VALUES (1)");
@@ -225,7 +248,7 @@ public abstract class AbstractMysqlSource {
     MysqlSourceConfig config = createConfig("root");
     config.startFromBeginning = false;
     MysqlSource source = createMysqlSource(config);
-    SourceRunner runner = new SourceRunner.Builder(MysqlDSource.class, source)
+    runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
         .build();
     runner.runInit();
@@ -254,10 +277,8 @@ public abstract class AbstractMysqlSource {
     }
     assertThat(found, notNullValue());
     assertThat(found.get("/Data/bar"), is(create(2)));
-    execute(ds, "TRUNCATE foo");
   }
 
-  @Ignore
   @Test
   public void shouldCreateMutipleRecordsForEventWithMultipleRows() throws Exception {
     int count = 10;
@@ -267,7 +288,7 @@ public abstract class AbstractMysqlSource {
 
     MysqlSourceConfig config = createConfig("root");
     MysqlSource source = createMysqlSource(config);
-    SourceRunner runner = new SourceRunner.Builder(MysqlDSource.class, source)
+    runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
         .build();
     runner.runInit();
@@ -302,10 +323,8 @@ public abstract class AbstractMysqlSource {
     runner.runInit();
     output = runner.runProduce(output.getNewOffset(), MAX_BATCH_SIZE);
     assertThat(output.getRecords().get(LANE), is(IsEmptyCollection.<Record>empty()));
-    execute(ds, "TRUNCATE foo");
   }
 
-  @Ignore
   @Test
   public void shouldSendAllEventRecordsDiscardingbatchSize() throws Exception {
     int count = 100;
@@ -315,7 +334,7 @@ public abstract class AbstractMysqlSource {
 
     MysqlSourceConfig config = createConfig("root");
     MysqlSource source = createMysqlSource(config);
-    SourceRunner runner = new SourceRunner.Builder(MysqlDSource.class, source)
+    runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
         .build();
     runner.runInit();
@@ -332,15 +351,13 @@ public abstract class AbstractMysqlSource {
     records.addAll(output.getRecords().get(LANE));
 
     assertThat(records, hasSize(count));
-    execute(ds, "TRUNCATE foo");
   }
 
-  @Ignore
   @Test
   public void shouldHandlePartialUpdates() throws Exception {
     MysqlSourceConfig config = createConfig("root");
     MysqlSource source = createMysqlSource(config);
-    SourceRunner runner = new SourceRunner.Builder(MysqlDSource.class, source)
+    runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
         .build();
     runner.runInit();
@@ -373,17 +390,15 @@ public abstract class AbstractMysqlSource {
     assertThat(rec.get("/OldData/a"), is(create(1)));
     assertThat(rec.get("/OldData/b"), is(create(2)));
     assertThat(rec.get("/OldData/c"), is(create(3)));
-    execute(ds, "TRUNCATE foo2");
   }
 
-  @Ignore
   @Test
   public void shouldIncludeAndIgnoreTables() throws Exception {
     MysqlSourceConfig config = createConfig("root");
     MysqlSource source = createMysqlSource(config);
     config.includeTables = "test.foo,t%.foo2";
     config.ignoreTables = "test.foo";
-    SourceRunner runner = new SourceRunner.Builder(MysqlDSource.class, source)
+    runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
         .build();
     runner.runInit();
@@ -403,14 +418,13 @@ public abstract class AbstractMysqlSource {
     execute(ds, "TRUNCATE foo2");
   }
 
-  @Ignore
   @Test
   public void shouldIgnoreEmptyFilters() throws Exception {
     MysqlSourceConfig config = createConfig("root");
     MysqlSource source = createMysqlSource(config);
     config.includeTables = "";
     config.ignoreTables = "";
-    SourceRunner runner = new SourceRunner.Builder(MysqlDSource.class, source)
+    runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
         .build();
     runner.runInit();
@@ -425,16 +439,14 @@ public abstract class AbstractMysqlSource {
     output = runner.runProduce(output.getNewOffset(), MAX_BATCH_SIZE);
     List<Record> records = output.getRecords().get(LANE);
     assertThat(records, hasSize(2));
-    execute(ds, "TRUNCATE foo");
-    execute(ds, "TRUNCATE foo2");
   }
-  @Ignore
+
   @Test
   public void shouldReturnCorrectOffsetForFilteredOutEvents() throws Exception {
     MysqlSourceConfig config = createConfig("root");
     MysqlSource source = createMysqlSource(config);
     config.ignoreTables = "test.foo";
-    SourceRunner runner = new SourceRunner.Builder(MysqlDSource.class, source)
+    runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
         .build();
     runner.runInit();
@@ -449,15 +461,13 @@ public abstract class AbstractMysqlSource {
     List<Record> records = output.getRecords().get(LANE);
     assertThat(records, is(empty()));
     assertThat(output.getNewOffset(), not(isEmptyString()));
-    execute(ds, "TRUNCATE foo");
   }
 
-  @Ignore
   @Test
   public void shouldCreateRecordWithoutColumnNamesWhenMetadataNotFound() throws Exception {
     MysqlSourceConfig config = createConfig("root");
     MysqlSource source = createMysqlSource(config);
-    SourceRunner runner = new SourceRunner.Builder(MysqlDSource.class, source)
+    runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
         .setOnRecordError(OnRecordError.TO_ERROR)
         .build();
@@ -523,7 +533,7 @@ public abstract class AbstractMysqlSource {
 
     assertThat(rec.get("/Data/col_9"), is(create(
         formatterDateLocal.print(
-          formatter.parseDateTime("2016-08-18 12:01:02").withTimeAtStartOfDay().getMillis()
+            formatter.parseDateTime("2016-08-18 12:01:02").withTimeAtStartOfDay().getMillis()
         )
     )));
 
@@ -550,7 +560,86 @@ public abstract class AbstractMysqlSource {
     assertThat(rec.get("/ServerId"), notNullValue());
     assertThat(rec.get("/Timestamp"), notNullValue());
     assertThat(rec.get("/Type"), is(create("INSERT")));
-    execute(ds, "TRUNCATE ALL_TYPES");
+  }
+
+  @Test
+  public void shouldSetClientServerId() throws Exception {
+    // get current offset
+    MysqlSourceConfig tconfig = createConfig("root");
+    tconfig.startFromBeginning = true;
+    MysqlSource tsource = createMysqlSource(tconfig);
+    SourceRunner trunner = new SourceRunner.Builder(MysqlDSource.class, tsource)
+        .addOutputLane(LANE)
+        .build();
+    StageRunner.Output toutput = null;
+    try {
+      trunner.runInit();
+      toutput = trunner.runProduce(null, MAX_BATCH_SIZE);
+      while (!toutput.getRecords().get(LANE).isEmpty()) {
+        toutput = trunner.runProduce(toutput.getNewOffset(), MAX_BATCH_SIZE);
+      }
+    } finally {
+      trunner.runDestroy();
+    }
+    final String lastSourceOffset = toutput.getNewOffset();
+
+    // now start two sources from same offset
+    execute(ds, "INSERT INTO foo (bar) VALUES (1)");
+
+    List<Record> records = new Vector<>();
+
+    List<String> serverIds = Arrays.asList("1", "2");
+    List<SourceRunner> runners = new ArrayList<>();
+
+    for (String serverId: serverIds) {
+      MysqlSourceConfig config = createConfig("root");
+      config.startFromBeginning = false;
+      config.serverId = serverId;
+      MysqlSource source = createMysqlSource(config);
+      runner = new SourceRunner.Builder(MysqlDSource.class, source)
+          .addOutputLane(LANE)
+          .build();
+      runner.runInit();
+      runners.add(runner);
+    }
+
+    ExecutorService ec = Executors.newFixedThreadPool(2);
+    CountDownLatch latch = new CountDownLatch(2);
+
+    for (final SourceRunner runner : runners) {
+      ec.submit(new Runnable() {
+        @Override
+        public void run() {
+          try {
+            StageRunner.Output output = runner.runProduce(lastSourceOffset, MAX_BATCH_SIZE);
+
+            while (!output.getRecords().get(LANE).isEmpty()) {
+              records.addAll(output.getRecords().get(LANE));
+              output = runner.runProduce(output.getNewOffset(), MAX_BATCH_SIZE);
+            }
+          } catch (Exception e) {
+            throw Throwables.propagate(e);
+          } finally {
+            latch.countDown();
+            try {
+              runner.runDestroy();
+            } catch (StageException e) {
+              e.printStackTrace();
+            }
+          }
+        }
+      });
+    }
+
+    latch.await();
+
+    int count = 0;
+    for (Record record : records) {
+      if (record.get("/Table").getValueAsString().equals("foo")) {
+        count += 1;
+      }
+    }
+    assertThat(count, is(2));
   }
 
   protected void execute(DataSource ds, String sql) throws SQLException {
@@ -583,6 +672,7 @@ public abstract class AbstractMysqlSource {
     return new HikariDataSource(hikariConfig);
   }
 
+  private int nextServerId = 1;
   protected MysqlSourceConfig createConfig(String username) {
     MysqlSourceConfig config = new MysqlSourceConfig();
     config.username = username;
@@ -629,5 +719,18 @@ public abstract class AbstractMysqlSource {
       }
     }
     return res;
+  }
+
+  private boolean tableExists(String tableName) throws SQLException {
+    try (Connection conn = ds.getConnection()) {
+      try (
+          Statement stmt = conn.createStatement();
+          ResultSet rs = stmt.executeQuery(
+              String.format("select * from information_schema.tables where table_schema = 'test' and table_name = '%s' limit 1", tableName)
+          )
+      ) {
+        return rs.next();
+      }
+    }
   }
 }
