@@ -27,7 +27,7 @@
 
   <properties>
     <!-- required JDK version -->
-    <javaVersion>1.7</javaVersion>
+    <javaVersion>1.8</javaVersion>
 
     <!-- Platform encoding override -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
