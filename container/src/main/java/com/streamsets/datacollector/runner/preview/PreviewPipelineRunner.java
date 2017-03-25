@@ -38,6 +38,7 @@ import com.streamsets.datacollector.runner.Observer;
 import com.streamsets.datacollector.runner.ObserverPipe;
 import com.streamsets.datacollector.runner.PipeContext;
 import com.streamsets.datacollector.runner.PipeRunner;
+import com.streamsets.datacollector.runner.PipelineFinisherDelegate;
 import com.streamsets.datacollector.runner.PipelineRunner;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.PushSourceContextDelegate;
@@ -67,7 +68,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextDelegate, ReportErrorDelegate {
+public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextDelegate, ReportErrorDelegate,
+    PipelineFinisherDelegate {
 
   private static final Logger LOG = LoggerFactory.getLogger(PreviewPipelineRunner.class);
 
@@ -363,4 +365,11 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
   @Override
   public void reportError(String stage, ErrorMessage errorMessage) {
   }
+
+  @Override
+  public void setFinished() {
+    LOG.info("PreviewPipelineRunner:  setFinished() was called. ");
+
+  }
+
 }

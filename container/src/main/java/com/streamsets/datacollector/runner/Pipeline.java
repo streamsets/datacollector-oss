@@ -281,8 +281,12 @@ public class Pipeline {
 
     // Initialize all source-less pipeline runners
     for(PipeRunner pipeRunner: pipes) {
-      pipeRunner.forEachNoException(p -> issues.addAll(initPipe(p, pipeContext)));
+      pipeRunner.forEachNoException(pipe -> {
+        ((StageContext)pipe.getStage().getContext()).setPipelineFinisherDelegate((PipelineFinisherDelegate)runner);
+        issues.addAll(initPipe(pipe, pipeContext));
+      });
     }
+    ((StageContext)originPipe.getStage().getContext()).setPipelineFinisherDelegate((PipelineFinisherDelegate)runner);
 
     return issues;
   }

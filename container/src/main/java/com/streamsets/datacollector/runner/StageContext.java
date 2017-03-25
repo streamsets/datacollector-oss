@@ -116,6 +116,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   private final EmailSender emailSender;
   private final Sampler sampler;
   private final Map<String, Object> sharedRunnerMap;
+  private PipelineFinisherDelegate pipelineFinisherDelegate;
 
   //for SDK
   public StageContext(
@@ -238,7 +239,13 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
 
   }
 
+  @Override
   public void finishPipeline() {
+    pipelineFinisherDelegate.setFinished();
+  }
+
+  public void setPipelineFinisherDelegate(PipelineFinisherDelegate runner) {
+    pipelineFinisherDelegate = runner;
   }
 
   PushSourceContextDelegate pushSourceContextDelegate;
