@@ -388,8 +388,15 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
-  public String captureSnapshot(String snapshotName, String snapshotLabel, int batches, int batchSize)
-    throws PipelineException {
+  public String captureSnapshot(
+      String snapshotName,
+      String snapshotLabel,
+      int batches,
+      int batchSize
+  ) throws PipelineException {
+    if(batchSize <= 0) {
+      throw new PipelineRunnerException(ContainerError.CONTAINER_0107, batchSize);
+    }
     return captureSnapshot(snapshotName, snapshotLabel, batches, batchSize, true);
   }
 
@@ -409,9 +416,6 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     LOG.debug("Capturing snapshot with batch size {}", batchSize);
     if (checkState) {
       checkState(getState().getStatus().equals(PipelineStatus.RUNNING), ContainerError.CONTAINER_0105);
-    }
-    if(batchSize <= 0) {
-      throw new PipelineRunnerException(ContainerError.CONTAINER_0107, batchSize);
     }
     SnapshotInfo snapshotInfo = snapshotStore.create(userContext.getUser(), name, rev, snapshotName, snapshotLabel);
     prodPipeline.captureSnapshot(snapshotName, batchSize, batches);

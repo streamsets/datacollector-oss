@@ -32,6 +32,7 @@ import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.store.PipelineStoreException;
+import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -170,6 +171,9 @@ public class AsyncRunner implements Runner, PipelineInfo {
       int batches,
       int batchSize
   ) throws PipelineException, StageException {
+    if(batchSize <= 0) {
+      throw new PipelineRunnerException(ContainerError.CONTAINER_0107, batchSize);
+    }
     runner.prepareForStart();
     Callable<Object> callable = new Callable<Object>() {
       @Override

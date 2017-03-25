@@ -508,7 +508,7 @@ public class ManagerResource {
       @QueryParam("snapshotLabel") String snapshotLabel,
       @QueryParam("rev") @DefaultValue("0") String rev,
       @QueryParam("batches") @DefaultValue("1") int batches,
-      @QueryParam("batchSize") int batchSize,
+      @QueryParam("batchSize") @DefaultValue("10") int batchSize,
       @QueryParam("startPipeline") @DefaultValue("false") boolean startPipeline,
       Map<String, Object> runtimeConstants
   ) throws PipelineException, StageException {
