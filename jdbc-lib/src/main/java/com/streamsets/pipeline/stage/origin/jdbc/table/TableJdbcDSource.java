@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
@@ -44,6 +45,9 @@ import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
     onlineHelpRefUrl = "index.html#Origins/MultiTableJDBCConsumer.html#task_kst_m4w_4y"
 )
 @ConfigGroups(value = Groups.class)
+@HideConfigs(value = {
+    "commonSourceConfigBean.numQueryErrorRetries"
+    })
 @GenerateResourceBundle
 public final class TableJdbcDSource extends DPushSource {
 

@@ -169,7 +169,7 @@ public final class TableJdbcRunnable implements Runnable {
     int recordCount = 0;
     try {
       if (tableContext == null) {
-        tableContext = tableProvider.nextTable();
+        tableContext = tableProvider.nextTable(threadNumber);
       }
       TableReadContext tableReadContext = getOrLoadTableReadContext();
       ResultSet rs = tableReadContext.getResultSet();

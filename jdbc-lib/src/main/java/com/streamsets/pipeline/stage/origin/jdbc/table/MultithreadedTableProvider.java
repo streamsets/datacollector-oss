@@ -45,7 +45,7 @@ public final class MultithreadedTableProvider {
   private final Map<String, TableContext> tableContextMap;
   private final ArrayBlockingQueue<String> sharedAvailableTablesQueue;
   private final Set<String> tablesWithNoMoreData;
-  private final int maxQueueSize;
+  private final Map<Integer, Integer> threadNumToMaxTableSlots;
 
   private final ThreadLocal<Deque<String>> ownedTablesQueue = ThreadLocal.withInitial(LinkedList::new);
 
@@ -54,14 +54,14 @@ public final class MultithreadedTableProvider {
   public MultithreadedTableProvider(
       Map<String, TableContext> tableContextMap,
       Queue<String> sortedTableOrder,
-      int maxQueueSize
+      Map<Integer, Integer> threadNumToMaxTableSlots
   ) {
     this.tableContextMap = new ConcurrentHashMap<>(tableContextMap);
     this.sharedAvailableTablesQueue =
         new ArrayBlockingQueue<>(tableContextMap.size(), true); //Using fair access policy
     sortedTableOrder.forEach(sharedAvailableTablesQueue::offer);
     this.tablesWithNoMoreData = Sets.newConcurrentHashSet();
-    this.maxQueueSize = maxQueueSize;
+    this.threadNumToMaxTableSlots = threadNumToMaxTableSlots;
   }
 
   private Deque<String> getOwnedTablesQueue() {
@@ -83,11 +83,13 @@ public final class MultithreadedTableProvider {
 
   /**
    * Basically acquires more tables for the current thread to work on.
-   * The maximum can thread can hold is upper bounded to {@link #maxQueueSize}
+   * The maximum a thread can hold is upper bounded to the
+   * value the thread number was allocated in {@link #threadNumToMaxTableSlots}
    * If there are no tables currently owned make a blocking call to {@link #sharedAvailableTablesQueue}
    * else simply poll {@link #sharedAvailableTablesQueue} and it to the {@link #ownedTablesQueue}
    */
-  private void acquireTableAsNeeded() throws InterruptedException {
+  private void acquireTableAsNeeded(int threadNumber) throws InterruptedException {
+    int upperBoundOnTablesToAcquire = threadNumToMaxTableSlots.get(threadNumber);
     if (getOwnedTablesQueue().isEmpty()) {
       offerToOwnedTablesQueue(sharedAvailableTablesQueue.take());
     }
@@ -95,7 +97,7 @@ public final class MultithreadedTableProvider {
     do {
       acquiredTableName = sharedAvailableTablesQueue.poll();
       offerToOwnedTablesQueue(acquiredTableName);
-    } while (acquiredTableName != null && getOwnedTablesQueue().size() < maxQueueSize);
+    } while (acquiredTableName != null && getOwnedTablesQueue().size()< upperBoundOnTablesToAcquire);
     //If we keep acquiring we will starve other threads, maxQueueSize is an upper bound
     //for number of tables we can acquire
   }
@@ -104,12 +106,12 @@ public final class MultithreadedTableProvider {
    * Return the next table to work on for the current thread (Will not return null)
    * Deque the current element from head of the queue and put it back at the tail to queue.
    */
-  public TableContext nextTable() throws SQLException, ExecutionException, StageException, InterruptedException {
-    acquireTableAsNeeded();
+  public TableContext nextTable(int threadNumber) throws SQLException, ExecutionException, StageException, InterruptedException {
+    acquireTableAsNeeded(threadNumber);
     String tableName = getOwnedTablesQueue().pollFirst();
     LOG.trace("Thread '{}' has been assigned table '{}' to work on ", getCurrentThreadName(), tableName);
     //enqueue at the last because we just scheduled this table
-    getOwnedTablesQueue().offerLast(tableName);
+    offerToOwnedTablesQueue(tableName);
     return tableContextMap.get(tableName);
   }
 

@@ -44,6 +44,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +57,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class TableJdbcSource extends BasePushSource {
@@ -156,14 +159,10 @@ public class TableJdbcSource extends BasePushSource {
 
           try {
             tableOrderProvider.initialize(allTableContexts);
-            int maxQueueSize =
-                (tableJdbcConfigBean.batchTableStrategy == BatchTableStrategy.SWITCH_TABLES) ?
-                    allTableContexts.size() / numberOfThreads
-                    : 1;
             this.tableOrderProvider = new MultithreadedTableProvider(
                 allTableContexts,
                 tableOrderProvider.getOrderedTables(),
-                maxQueueSize
+                decideMaxTableSlotsForThreads()
             );
           } catch (ExecutionException e) {
             LOG.debug("Error during Table Order Provider Init", e);
@@ -186,9 +185,45 @@ public class TableJdbcSource extends BasePushSource {
             )
         );
       } finally {
-        Optional.ofNullable(connectionManager).ifPresent(ConnectionManager::closeAll);
+        Optional.ofNullable(connectionManager).ifPresent(ConnectionManager::closeConnection);
       }
     }
+  }
+
+  private Map<Integer, Integer> decideMaxTableSlotsForThreads() {
+    Map<Integer, Integer> threadNumberToMaxQueueSize = new HashMap<>();
+    if (tableJdbcConfigBean.batchTableStrategy == BatchTableStrategy.SWITCH_TABLES) {
+      //If it is switch table strategy, we equal divide the work between all threads
+      //(and if it cannot be equal distribute the remaining table slots to subset of threads)
+      int totalNumberOfTables = allTableContexts.size();
+      int balancedQueueSize = totalNumberOfTables / numberOfThreads;
+      //first divide total tables / number of threads to get
+      //an exact balanced number of table slots to be assigned to all threads
+      IntStream.range(0, numberOfThreads).forEach(
+          threadNumber -> threadNumberToMaxQueueSize.put(threadNumber, balancedQueueSize)
+      );
+      //Remaining table slots which are not assigned, can be assigned to a subset of threads
+      int toBeAssignedTableSlots = totalNumberOfTables % numberOfThreads;
+
+      //Randomize threads and pick a set of threads for processing extra slots
+      List<Integer> threadNumbers = IntStream.range(0, numberOfThreads).boxed().collect(Collectors.toList());
+      Collections.shuffle(threadNumbers);
+      threadNumbers = threadNumbers.subList(0, toBeAssignedTableSlots);
+
+      //Assign the remaining table slots to thread by incrementing the max table slot for each of the randomly selected
+      //thread by 1
+      for (int threadNumber : threadNumbers) {
+        threadNumberToMaxQueueSize.put(threadNumber, threadNumberToMaxQueueSize.get(threadNumber) + 1);
+      }
+    } else {
+      //Assign one table slot to each thread if the strategy is process all available rows
+      //So each table will pick up one table process it completely then return it back to pool
+      //then pick up a new table and work on it.
+      IntStream.range(0, numberOfThreads).forEach(
+          threadNumber -> threadNumberToMaxQueueSize.put(threadNumber, 1)
+      );
+    }
+    return threadNumberToMaxQueueSize;
   }
 
   @Override
@@ -199,10 +234,10 @@ public class TableJdbcSource extends BasePushSource {
     issues = commonSourceConfigBean.validateConfigs(context, issues);
     issues = tableJdbcConfigBean.validateConfigs(context, issues);
 
-    //Max pool size should be at least one greater than number of threads
-    //The main thread needs one connection and each individual data threads needs
-    //one connection
-    if (tableJdbcConfigBean.numberOfThreads >= hikariConfigBean.maximumPoolSize) {
+    //Max pool size should be equal to number of threads
+    //The main thread will use one connection to list threads and close (return to hikari pool) the connection
+    // and each individual data threads needs one connection
+    if (tableJdbcConfigBean.numberOfThreads > hikariConfigBean.maximumPoolSize) {
       issues.add(
           getContext().createConfigIssue(
               Groups.ADVANCED.name(),
@@ -255,7 +290,6 @@ public class TableJdbcSource extends BasePushSource {
         generateNoMoreDataEventIfNeeded();
       }
     } finally {
-      connectionManager.closeConnection();
       shutdownExecutorIfNeeded();
     }
   }
