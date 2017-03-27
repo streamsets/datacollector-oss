@@ -29,7 +29,7 @@ import com.streamsets.pipeline.configurablestage.DExecutor;
     version = 1,
     label = "Pipeline Finished Executor",
     description = "Forces pipeline to transition to Finished after receiving an event.",
-    icon = "rdbms-executor.png",
+//    icon = "rdbms-executor.png",
     onlineHelpRefUrl = "index.html#Executors/PipelineFinished.html#task_lrm_pws_3z"
 )
 
