@@ -29,7 +29,7 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BasePushSource;
-import com.streamsets.pipeline.lib.event.EventCreator;
+import com.streamsets.pipeline.lib.event.CommonEvents;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
@@ -303,8 +303,7 @@ public class TableJdbcSource extends BasePushSource {
       //throw event
       LOG.info("No More data to process, Triggered No More Data Event");
       BatchContext batchContext = getContext().startBatch();
-      new EventCreator.Builder(JDBC_NO_MORE_DATA, 1).build()
-          .create(getContext(), batchContext).createAndSend();
+      CommonEvents.NO_MORE_DATA.create(getContext(), batchContext).createAndSend();
       getContext().processBatch(batchContext);
     }
   }

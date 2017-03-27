@@ -24,6 +24,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.lib.event.CommonEvents;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -236,7 +237,7 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
       Record eventRecord = runner.getEventRecords().get(0);
       String eventType = eventRecord.getHeader().getAttribute("sdc.event.type");
       Assert.assertNotNull(eventType);
-      Assert.assertTrue(TableJdbcSource.JDBC_NO_MORE_DATA.equals(eventType));
+      Assert.assertTrue(CommonEvents.NO_MORE_DATA_TAG.equals(eventType));
     } finally {
       runner.runDestroy();
     }
