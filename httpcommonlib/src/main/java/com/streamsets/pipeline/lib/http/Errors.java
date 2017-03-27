@@ -59,6 +59,12 @@ public enum Errors implements ErrorCode {
   // HTTP Target
   HTTP_40("Error sending resource. Status: {} Reason: {}"),
   HTTP_41("Error sending resource. Reason: {}"),
+
+  // WebSocket Target
+  HTTP_50("Error sending resource. Reason: {}"),
+  HTTP_51("Invalid Resource URI."),
+  HTTP_52("Invalid Resource URI. Reason : {}"),
+
   ;
 
   private final String msg;

@@ -26,6 +26,7 @@ import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import com.streamsets.testing.NetworkUtils;
+import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.junit.Assert;
@@ -35,6 +36,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 public class TestWebSocketServerPushSource {
@@ -69,7 +71,8 @@ public class TestWebSocketServerPushSource {
         URI echoUri = new URI("ws://localhost:" + webSocketConfigs.getPort());
         ClientUpgradeRequest request = new ClientUpgradeRequest();
         request.setHeader(HttpConstants.X_SDC_APPLICATION_ID_HEADER, "appId");
-        client.connect(socket, echoUri, request);
+        Future<Session> future = client.connect(socket, echoUri, request);
+        future.get();
         // wait for closed socket connection.
         socket.awaitClose(5, TimeUnit.SECONDS);
       } catch (Throwable t) {
