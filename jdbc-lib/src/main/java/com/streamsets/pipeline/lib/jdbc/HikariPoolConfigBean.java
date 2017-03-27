@@ -142,7 +142,7 @@ public class HikariPoolConfigBean {
       required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Maximum Pool Size",
-      description = "Maximum number of connections to create to the data source. A setting of 1 is recommended.",
+      description = "Maximum number of connections to create to the data source",
       min = 1,
       defaultValue = "1",
       displayPosition = 10,

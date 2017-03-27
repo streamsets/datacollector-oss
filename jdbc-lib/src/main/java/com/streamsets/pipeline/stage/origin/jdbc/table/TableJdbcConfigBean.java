@@ -34,7 +34,7 @@ public class TableJdbcConfigBean {
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Table Configs",
-      displayPosition  = 10,
+      displayPosition  = 20,
       group = "TABLE"
   )
   @ListBeanModel
@@ -42,15 +42,14 @@ public class TableJdbcConfigBean {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.MODEL,
-      defaultValue = "UTC",
-      label = "Data Time Zone",
-      description = "Time zone to use to resolve time based expressions",
-      displayPosition = 70,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "1",
+      label = "Number of Threads",
+      description = "Number of parallel threads that read data",
+      displayPosition = 80,
       group = "JDBC"
   )
-  @ValueChooserModel(TimeZoneChooserValues.class)
-  public String timeZoneID;
+  public int numberOfThreads;
 
   @ConfigDef(
       required = true,
@@ -58,7 +57,7 @@ public class TableJdbcConfigBean {
       defaultValue = "SWITCH_TABLES",
       label = "Per Batch Strategy",
       description = "Determines the strategy for each batch to generate records from.",
-      displayPosition = 80,
+      displayPosition = 90,
       group = "JDBC"
   )
   @ValueChooserModel(BatchTableStrategyChooserValues.class)
@@ -73,7 +72,7 @@ public class TableJdbcConfigBean {
           "result set after which result set is closed. Leave -1 to keep the result set open as long as possible",
       min = -1,
       max = Integer.MAX_VALUE,
-      displayPosition = 170,
+      displayPosition = 142,
       group = "JDBC",
       dependsOn = "batchTableStrategy",
       triggeredByValue = "SWITCH_TABLES"
@@ -87,7 +86,7 @@ public class TableJdbcConfigBean {
       label = "Result Set Cache Size",
       description = "Determines how many open statements/result sets can be cached." +
           " Leave -1 to Opt Out and have one statement open per table.",
-      displayPosition = 180,
+      displayPosition = 143,
       group = "JDBC",
       dependsOn = "batchTableStrategy",
       //For Process all rows we will need a cache with size 1, user does not have to configure it.
@@ -98,10 +97,22 @@ public class TableJdbcConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
+      defaultValue = "UTC",
+      label = "Data Time Zone",
+      description = "Time zone to use to resolve time based expressions",
+      displayPosition = 200,
+      group = "JDBC"
+  )
+  @ValueChooserModel(TimeZoneChooserValues.class)
+  public String timeZoneID;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
       defaultValue = "NONE",
       label = "Initial Table Order Strategy",
       description = "Determines the strategy for initial table ordering",
-      displayPosition = 190,
+      displayPosition = 210,
       group = "ADVANCED"
   )
   @ValueChooserModel(TableOrderStrategyChooserValues.class)
@@ -113,21 +124,10 @@ public class TableJdbcConfigBean {
       defaultValue = "1000",
       label = "Fetch Size",
       description = "Fetch Size for the JDBC Statement. Should not be 0",
-      displayPosition = 210,
-      group = "JDBC"
-  )
-  public int fetchSize;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.NUMBER,
-      defaultValue = "1",
-      label = "Number of Threads",
-      description = "Number of threads to parallely read data from",
       displayPosition = 220,
       group = "JDBC"
   )
-  public int numberOfThreads;
+  public int fetchSize;
 
   public static final String TABLE_JDBC_CONFIG_BEAN_PREFIX = "tableJdbcConfigBean.";
   public static final String TABLE_CONFIG = TABLE_JDBC_CONFIG_BEAN_PREFIX + "tableConfigs";
