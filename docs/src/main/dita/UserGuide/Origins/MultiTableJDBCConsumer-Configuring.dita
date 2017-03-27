@@ -53,9 +53,14 @@
                                     <entry/>
                                 </row>
                                 <row>
-                                    <entry>Data Time Zone</entry>
-                                    <entry>Time zone to use to evaluate datetime-based offset column
-                                        conditions. </entry>
+                                    <entry>Number of Threads <xref
+                                            href="MultiTableJDBCConsumer-Multithread.dita"><image
+                                                href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_r2s_8lq_fs"/></xref></entry>
+                                    <entry>Number of threads the origin generates and uses for
+                                        multithreaded processing.<p>Configure the Maximum Pool Size
+                                            property on the Advanced tab to be equal to or greater
+                                            than this value.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Per Batch Strategy <xref
@@ -65,25 +70,38 @@
                                         </xref></entry>
                                     <entry>Strategy to create each batch of data:<ul
                                             id="ul_fk4_11f_py">
-                                            <li>Switch Tables - Creates a batch of data from one
-                                                table, and then switches to the next table to create
-                                                the next batch.</li>
-                                            <li>Process All Available Rows from the Table - Creates
-                                                multiple batches of data from one table, until all
-                                                available rows are read from that table.</li>
+                                            <li>Switch Tables - Each thread creates a batch of data
+                                                from one table, and then switches to the next
+                                                available table to create the next batch. Define the
+                                                Result Set Cache Size and the Batches from Result
+                                                Set properties when you configure a switch tables
+                                                strategy.</li>
+                                            <li>Process All Available Rows from the Table - Each
+                                                thread creates multiple batches of data from one
+                                                table, until all available rows are read from that
+                                                table.</li>
                                         </ul></entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCMaxBatch_row">
                                     <entry/>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCMaxClob_row">
-                                    <entry/>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCMaxBlob_row">
-                                    <entry/>
+                                <row>
+                                    <entry>Batches from Result Set <xref
+                                            href="MultiTableJDBCConsumer-BatchStrategy.dita"><image
+                                                href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_h3m_wkh_hz"/>
+                                        </xref></entry>
+                                    <entry>Number of batches to create from the result set when
+                                        using the switch tables batch strategy. After a thread
+                                        creates this number of batches, the database closes the
+                                        result set and then another thread can read from the same
+                                            table.<p>Use a positive integer to set a limit on the
+                                            number of batches created from the result set. Use -1 to
+                                            opt out of this property.</p><p>By default, the origin
+                                            creates an unlimited number of batches from the result
+                                            set, keeping the result set open as long as
+                                            possible.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Result Set Cache Size <xref
@@ -96,6 +114,19 @@
                                         set a limit on the number of cached result sets. Use -1 to
                                         opt out of this property.<p>By default, the origin caches an
                                             unlimited number of result sets.</p></entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCMaxClob_row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCMaxBlob_row">
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Data Time Zone</entry>
+                                    <entry>Time zone to use to evaluate datetime-based offset column
+                                        conditions. </entry>
                                 </row>
                                 <row>
                                     <entry>Fetch Size</entry>
@@ -236,9 +267,11 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-MaxPoolSize">
-                                    <entry/>
+                                <row>
+                                    <entry>Maximum Pool Size</entry>
+                                    <entry>The maximum number of connections to create. Must be
+                                        equal to or greater than the value of the Number of Threads
+                                            property.<p>Default is 1.</p></entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-MaxIdleConn">
@@ -269,12 +302,13 @@
                                     <entry/>
                                 </row>
                                 <row>
-                                    <entry>Table Order Strategy <xref
+                                    <entry>Initial Table Order Strategy <xref
                                             href="MultiTableJDBCConsumer-TableOrder.dita"><image
                                                 href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_r5t_0kq_ds"/>
                                         </xref></entry>
-                                    <entry>Order used to read the tables:<ul id="ul_opw_1jf_py">
+                                    <entry>Initial order used to read the tables:<ul
+                                            id="ul_opw_1jf_py">
                                             <li>None - Reads the tables in the order that they are
                                                 listed in the database.</li>
                                             <li>Alphabetical - Reads the tables in alphabetical

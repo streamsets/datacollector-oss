@@ -925,9 +925,18 @@ web-0011.log</codeblock></dd>
             </p>
             <p/>
             <draft-comment author="Loretta">Used in Pipeline Concepts &amp; Design > Single &amp;
-                  Multithreaded Pipes, and Multithreaded > Overview.</draft-comment>
+                  Multithreaded Pipes, and Multithreaded > Overview. And in Multithreaded Processing
+                  topics in origin sections.</draft-comment>
             <p><ph id="ph-MultiThread-def1">When you start the pipeline, the origin creates the
                         specified number of threads and <ph
+                              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> creates a matching number of <term>pipeline runners</term> to perform
+                        pipeline processing. The origin creates batches and passes each batch to a
+                        pipeline runner. Each pipeline runner runs a <term>sourceless pipeline
+                              instance</term> - an instance of the pipeline that includes all of the
+                        processors and destinations in the pipeline and performs all pipeline
+                        processing after the origin.</ph></p>
+            <p><ph id="ph-MultiThread-def1_JDBCModified"><ph
                               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> creates a matching number of <term>pipeline runners</term> to perform
                         pipeline processing. The origin creates batches and passes each batch to a
@@ -940,7 +949,8 @@ web-0011.log</codeblock></dd>
                         slows, the pipeline runners wait idly until they are needed.</ph></p>
             <p>
                   <draft-comment author="Loretta">Used in Multithreaded > How it works and origins >
-                        HTTP Server > Multithreaded Processing</draft-comment>
+                        HTTP Server > Multithreaded Processing and JDBC Multitable Consumer >
+                        Multithreaded Processing</draft-comment>
             </p>
             <p><ph id="HTTPServer-process-ph">the origin creates five threads, and <ph
                               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"

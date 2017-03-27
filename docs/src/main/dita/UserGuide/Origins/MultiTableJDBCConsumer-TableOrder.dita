@@ -14,13 +14,13 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_nff_2hx_4y">
- <title>Table Order Strategy</title>
- <shortdesc>You can define the order that the origin uses to read the tables.</shortdesc>
+ <title>Initial Table Order Strategy</title>
+ <shortdesc>You can define the initial order that the origin uses to read the tables.</shortdesc>
  <conbody>
-  <p><indexterm>JDBC Multitable Consumer origin<indexterm>table order
-                strategy</indexterm></indexterm><indexterm>table order strategy<indexterm>JDBC
-                    Multitable Consumer origin</indexterm></indexterm>Define one of the following
-            table order strategies: </p>
+  <p><indexterm>JDBC Multitable Consumer origin<indexterm>initial table order
+                strategy</indexterm></indexterm><indexterm>initial table order
+                    strategy<indexterm>JDBC Multitable Consumer origin</indexterm></indexterm>Define
+            one of the following initial table order strategies: </p>
         <dl>
             <dlentry>
                 <dt>None</dt>
@@ -44,5 +44,8 @@
                     reading them.</dd>
             </dlentry>
         </dl>
+        <p>The origin uses this table order only for the initial reading of the tables. When threads
+            switch back to previously read tables, they read from the next available table,
+            regardless of the defined order.</p>
  </conbody>
 </concept>

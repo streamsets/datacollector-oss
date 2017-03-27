@@ -36,8 +36,8 @@
           HTTP endpoint and writes the contents of all authorized HTTP POST requests directly to
           Kafka.</li>
         <li><xref href="MultiTableJDBCConsumer.dita#concept_zp3_wnw_4y">JDBC Multitable
-            Consumer</xref> - Reads database data from multiple tables through a JDBC
-          connection.</li>
+            Consumer</xref> - Reads database data from multiple tables through a JDBC connection.
+          Creates multiple threads to enable parallel processing in a multithreaded pipeline.</li>
         <li><xref href="JDBCConsumer.dita#concept_qhf_hjr_bs">JDBC Query Consumer</xref> - Reads
           database data using a user-defined SQL query through a JDBC connection. </li>
         <li><xref href="JMS.dita#concept_rhh_4nj_dt">JMS Consumer</xref> - Reads messages from JMS. </li>

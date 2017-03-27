@@ -20,20 +20,24 @@
         values.</shortdesc>
  <conbody>
   <p><indexterm>origins<indexterm>JDBC Multitable Consumer</indexterm></indexterm><indexterm>JDBC
-                Multitable Consumer origin<indexterm>overview</indexterm></indexterm>When you
+                Multitable Consumer
+                origin<indexterm>overview</indexterm></indexterm><indexterm>multithreaded
+                    origins<indexterm>JDBC Multitable Consumer</indexterm></indexterm>When you
             configure the origin, you define groups of database tables to read. The origin generates
-            SQL queries based on the table configurations that you define. Use the JDBC Multitable
-            Consumer origin to read multiple tables in the same database. For example, you might
-            want to use the origin for database replication.</p>
+            SQL queries based on the table configurations that you define. The origin uses multiple
+            threads to enable parallel processing of data. Use the JDBC Multitable Consumer origin
+            to read multiple tables in the same database. For example, you might want to use the
+            origin for database replication. </p>
         <note>To configure your own SQL query to read database data from a single table or from a
             join of tables, use the <xref href="JDBCConsumer.dita#concept_qhf_hjr_bs"/>
             origin.</note>
         <p>When you configure JDBC Multitable Consumer, you specify connection information, a query
             interval, and custom JDBC configuration properties to determine how the origin connects
             to the database. </p>
-        <p>You define a table configuration for each group of tables that you want to read. You also
-            define the strategy that the origin uses to create each batch of data and the order that
-            the origin uses to read the tables.</p>
+        <p>You define a table configuration for each group of tables that you want to read. You
+            define the number of threads that the origin uses to read from the tables and the
+            strategy that the origin uses to create each batch of data. You also define the initial
+            order that the origin uses to read the tables.</p>
         <p>When the pipeline stops, JDBC Multitable Consumer notes where it stops reading. When the
             pipeline starts again, JDBC Multitable Consumer continues processing from where it
             stopped by default. You can reset the origin to process all available data.</p>

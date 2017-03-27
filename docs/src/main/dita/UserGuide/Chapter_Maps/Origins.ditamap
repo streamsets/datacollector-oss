@@ -121,6 +121,7 @@
    <topicref href="../Origins/MultiTableJDBCConsumer-DriverInstall.dita">
     <topicref href="../Origins/MultiTableJDBCConsumer-MySQLDriver.dita"/>
    </topicref>
+   <topicref href="../Origins/MultiTableJDBCConsumer-Multithread.dita"/>
    <topicref href="../Origins/MultiTableJDBCConsumer-BatchStrategy.dita"/>
    <topicref href="../Origins/MultiTableJDBCConsumer-TableConfiguration.dita">
     <topicref href="../Origins/MultiTableJDBCConsumer-TableName.dita"/>

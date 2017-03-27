@@ -17,8 +17,8 @@
  <title>Multithreaded Processing</title>
  <conbody>
   <p><indexterm>HTTP Server origin<indexterm>multithreaded
-                processing</indexterm></indexterm><indexterm>Max Concurrent Requests<indexterm>HTP
-                    Server m</indexterm></indexterm>The HTTP Server origin performs parallel
+                processing</indexterm></indexterm><indexterm>Max Concurrent Requests<indexterm>HTTP
+                    Server</indexterm></indexterm>The HTTP Server origin performs parallel
             processing and enables the creation of a multithreaded pipeline. </p>
         <p>The HTTP Server origin uses multiple concurrent threads based on the Max Concurrent
             Requests property. <ph

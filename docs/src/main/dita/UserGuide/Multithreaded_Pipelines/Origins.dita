@@ -23,6 +23,9 @@
                 <li><xref href="../Origins/HTTPServer.dita#concept_s2p_5hb_4y">HTTP Server</xref> -
                     Listens on a HTTP endpoint and processes the contents of all authorized HTTP
                     POST requests. </li>
+                <li><xref href="../Origins/MultiTableJDBCConsumer.dita#concept_zp3_wnw_4y">JDBC
+                        Multitable Consumer</xref> - Reads database data from multiple tables
+                    through a JDBC connection.</li>
                 <li><xref href="../Origins/WebSocketServer.dita#concept_u2r_gpc_3z">WebSocket
                         Server</xref> - Listens on a WebSocket endpoint and processes the contents
                     of all authorized WebSocket requests. </li>
