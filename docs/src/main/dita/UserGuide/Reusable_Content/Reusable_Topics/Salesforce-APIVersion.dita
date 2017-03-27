@@ -25,8 +25,8 @@
         <steps id="ChangeAPIVersion">
             <step>
                 <cmd>On the <uicontrol>Salesforce</uicontrol> tab, set the <uicontrol>API
-                    Version</uicontrol> property to the version that you want to use, for
-                    example 38.0.</cmd>
+                        Version</uicontrol> property to the version that you want to use, for
+                    example 36.0.</cmd>
             </step>
             <step>
                 <cmd>Download the relevant version of the following JAR files from Salesforce Web
@@ -40,7 +40,7 @@
                     </choice>
                 </choices>
                 <info>
-                    <p>Where &lt;version> is the API version number, for example, 38.</p> 
+                    <p>Where &lt;version> is the API version number, for example, 36.</p> 
                     <p>For information about downloading libraries from Salesforce WSC, see <xref
                             href="https://developer.salesforce.com/page/Introduction_to_the_Force.com_Web_Services_Connector"
                             format="html" scope="external"/>.</p>
@@ -49,7 +49,7 @@
             <step>
                 <cmd>In the following <ph
                         conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> directory,
-                    replace the default force-wsc-36.0.0.jar and force-partner-api-36.0.0.jar files
+                    replace the default force-wsc-38.0.0.jar and force-partner-api-38.0.0.jar files
                     with the versioned JAR files that you downloaded:</cmd>
                 <info>
                     <codeblock>$SDC_DIST/streamsets-libs/streamsets-datacollector-salesforce-lib/lib/</codeblock>

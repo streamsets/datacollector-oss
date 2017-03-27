@@ -13,11 +13,11 @@
   limitations under the License.
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
-<task id="task_rjz_lck_fy">
+<task id="task_kff_4vn_jz">
     <title>Changing the API Version</title>
     <taskbody>
         <context>
-            <p><indexterm>Salesforce Lookup processor<indexterm>API
+            <p><indexterm>Wave Analytics destination<indexterm>API
                     version</indexterm></indexterm><ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> ships with version 38.0 of the Salesforce Web Services Connector libraries. You

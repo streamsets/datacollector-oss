@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_hpm_tns_hz">
+ <title>Standalone and Cluster Pipelines</title>
+ <conbody>
+        <p><indexterm>Spark Evaluator processor<indexterm>standalone
+                pipelines</indexterm></indexterm><indexterm>Spark Evaluator
+                    processor<indexterm>cluster pipelines</indexterm></indexterm>Use the Spark
+            Evaluator in the following types of pipelines:</p>
+        <dl>
+            <dlentry>
+                <dt>Standalone pipelines</dt>
+                <dd>
+                    <p>In a standalone pipeline, you define a parallelism value for the Spark
+                        Evaluator. The Spark application creates this number of partitions for each
+                        batch of records. The Spark Transformer processes each partition in
+                        parallel, and then returns the results and errors back to the pipeline for
+                        further processing.</p>
+                </dd>
+            </dlentry>
+        </dl>
+        <dl>
+            <dlentry>
+                <dt>Cluster pipelines</dt>
+                <dd>You can include the processor in pipelines that process data from a Kafka
+                    cluster in cluster streaming mode. The cluster manager spawns a <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> worker for each topic partition in the Kafka cluster. Each <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> worker processes a single partition.</dd>
+                <dd>
+                    <p>The Spark Evaluator processor combines the partitioned data run in earlier
+                        stages into a single RDD for the batch, and passes the RDD to the Spark
+                        Transformer API. The Spark Transformer runs on the driver. It processes all
+                        of the data received in the batch across all <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> workers the cluster, then returns the results and errors back to the
+                        Spark Evaluator processor.</p>
+                    <p>The Spark Evaluator processor partitions the RDD, and passes the partitions
+                        of data to <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> workers to process the remaining pipeline stages in parallel. </p>
+                </dd>
+                <dd>When you configure a Spark Evaluator processor for a cluster pipeline, you do
+                    not define a parallelism value. The Spark application uses the number of
+                    partitions defined in the Kafka Consumer origin. </dd>
+            </dlentry>
+        </dl>
+        <p>Because the Spark Evaluator uses multiple threads to process a batch, the processor is
+            especially useful when you need to perform heavy custom processing within a pipeline,
+            such as image classification.</p>
+ </conbody>
+    <related-links>
+        <link href="../Cluster_Mode/ClusterPipelines.dita#concept_hmh_kfn_1s"/>
+    </related-links>
+</concept>

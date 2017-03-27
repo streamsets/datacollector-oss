@@ -130,6 +130,23 @@
                     </table>
                 </info>
             </step>
+            <step>
+                <cmd>On the <wintitle>Advanced</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table
+                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Salesforce_Proxy"
+                        id="table_gsp_hxn_jz">
+                        <tgroup cols="1">
+                            <tbody>
+                                <row>
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
         </steps>
     </taskbody>
 </task>

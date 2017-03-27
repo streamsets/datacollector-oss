@@ -1331,8 +1331,48 @@
      <row>
       <entry>API Version</entry>
       <entry id="SalesforceAPIVersion">Salesforce API version to use to connect to Salesforce.
-        <p>Default is 36.0. If you change the version, you also must download the relevant JAR files
+        <p>Default is 38.0. If you change the version, you also must download the relevant JAR files
         from Salesforce Web Services Connector (WSC).</p></entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
+  <draft-comment author="alisontaylor">All Salesforce stages use this table</draft-comment>
+  <table frame="all" rowsep="1" colsep="1" id="Salesforce_Proxy">
+   <tgroup cols="2">
+    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+    <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+    <thead>
+     <row>
+      <entry>Advanced Property</entry>
+      <entry>Description</entry>
+     </row>
+    </thead>
+    <tbody>
+     <row>
+      <entry>Use Proxy</entry>
+      <entry>Specifies whether to use an HTTP proxy to connect to Salesforce.</entry>
+     </row>
+     <row>
+      <entry>Proxy Hostname</entry>
+      <entry>Proxy host.</entry>
+     </row>
+     <row>
+      <entry>Proxy Port</entry>
+      <entry>Proxy port.</entry>
+     </row>
+     <row>
+      <entry>Proxy Requires Credentials</entry>
+      <entry>Specifies whether the proxy requires a user name and password.</entry>
+     </row>
+     <row>
+      <entry>Proxy Username</entry>
+      <entry>User name for proxy credentials.</entry>
+     </row>
+     <row>
+      <entry>Proxy Password</entry>
+      <entry>Password for proxy credentials.<note
+        conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"/></entry>
      </row>
     </tbody>
    </tgroup>

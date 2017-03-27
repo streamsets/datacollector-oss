@@ -322,6 +322,7 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Destinations/WaveAnalytics-APIVersion.dita"/>
    <topicref href="../Destinations/WaveAnalytics-Dataflow.dita"/>
    <topicref href="../Destinations/WaveAnalytics-Configuring.dita"/>
   </topicref>

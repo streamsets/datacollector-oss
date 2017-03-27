@@ -48,6 +48,19 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/SalesforcePassword">
                                     <entry/>
                                 </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/SalesforceEndpoint">
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>API Version
+                                        <xref href="WaveAnalytics-APIVersion.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_weh_nch_er" placement="inline"
+                                            /></xref></entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/SalesforceAPIVersion"/>
+                                </row>
                                 <row>
                                     <entry>Edgemart Alias</entry>
                                     <entry>Dataset name. The alias must be unique across an
@@ -97,6 +110,23 @@
                                             Wave Analytics handles JSON metadata for uploaded
                                             external data, see the Salesforce Wave Analytics
                                             developer documentation.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Advanced</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table
+                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Salesforce_Proxy"
+                        id="table_gsp_hxn_jz">
+                        <tgroup cols="1">
+                            <tbody>
+                                <row>
+                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>

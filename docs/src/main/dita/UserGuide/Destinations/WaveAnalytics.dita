@@ -23,16 +23,17 @@
                     Analytics</indexterm></indexterm><indexterm>Salesforce Wave Analytics
                     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Salesforce
                     Wave Analytics</indexterm></indexterm>When you configure the Wave Analytics
-            destination, you define connection information and specify the <i>edgemart alias</i> or
-            name of the dataset to create.</p>
-        <p>The destination typically creates multiple datasets for the edgemart alias, based on the
-            dataset wait time that you configure for the destination. After no data has arrived for
-            the specified wait time, the destination closes and uploads the dataset to Wave
-            Analytics. When new data arrives, the destination creates a new dataset. Each dataset is
-            named with the edgemart alias name and appended with the timestamp of when the dataset
-            is uploaded. </p>
+            destination, you define connection information, including the API version that the
+            destination uses to connect to Salesforce Wave Analytics. </p>
+        <p>You specify the <i>edgemart alias</i> or name of the dataset to create. The destination
+            typically creates multiple datasets for the edgemart alias, based on the dataset wait
+            time that you configure for the destination. After no data has arrived for the specified
+            wait time, the destination closes and uploads the dataset to Wave Analytics. When new
+            data arrives, the destination creates a new dataset. Each dataset is named with the
+            edgemart alias name and appended with the timestamp of when the dataset is uploaded. </p>
         <p>You can optionally configure the destination to use a Wave Analytics dataflow to combine
             multiple datasets together. You can also specify the metadata of the external data in a
             JSON format.</p>
+        <p>You can optionally use an HTTP proxy to connect to Salesforce Wave Analytics. </p>
  </conbody>
 </concept>
