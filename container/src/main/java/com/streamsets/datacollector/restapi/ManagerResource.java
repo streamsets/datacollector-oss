@@ -184,9 +184,9 @@ public class ManagerResource {
         Utils.checkState(runner.getState().getExecutionMode() != ExecutionMode.SLAVE,
             "This operation is not supported in SLAVE mode");
 
-        if (runtimeConstants != null) {
+        if (runtimeConstants != null && !runtimeConstants.isEmpty()) {
           Utils.checkState(runner.getState().getExecutionMode() == ExecutionMode.STANDALONE,
-              Utils.format("This operation is not supported in {} mode", runner.getState().getExecutionMode()));
+              Utils.format("Using runtime constants is not supported in {} mode", runner.getState().getExecutionMode()));
           runner.start(runtimeConstants);
         } else {
           runner.start();
