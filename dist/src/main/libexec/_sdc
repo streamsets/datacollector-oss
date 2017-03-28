@@ -208,7 +208,7 @@ cd ${SDC_DIST}
 
 ulimit=`ulimit -n`
 if [[ $ulimit -lt $SDC_FILE_LIMIT ]]; then
-  echo "Configuration of maximum open file limit is too low: $ulimit (expected at least $SDC_FILE_LIMIT)."
+  echo "Configuration of maximum open file limit is too low: $ulimit (expected at least $SDC_FILE_LIMIT). Please consult https://goo.gl/LgvGFl"
   exit 1
 fi
 
