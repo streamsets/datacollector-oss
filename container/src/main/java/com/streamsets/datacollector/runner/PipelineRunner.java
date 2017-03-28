@@ -29,7 +29,7 @@ import com.streamsets.pipeline.api.StageException;
 
 import java.util.List;
 
-public interface PipelineRunner {
+public interface PipelineRunner extends PipelineFinisherDelegate {
 
   public RuntimeInfo getRuntimeInfo();
 
