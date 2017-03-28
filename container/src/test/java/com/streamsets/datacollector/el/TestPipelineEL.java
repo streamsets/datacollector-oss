@@ -54,9 +54,9 @@ public class TestPipelineEL {
     pipelineConfiguration.setMetadata(metadata);
     pipelineConfiguration.setPipelineInfo(new PipelineInfo("hello" , "label", "", new Date(), new Date(), "", "", "", uuid, false, metadata));
     PipelineEL.setConstantsInContext(pipelineConfiguration, new UserContext("test-user"));
-    Assert.assertEquals(uuid.toString(), PipelineEL.name());
+    Assert.assertEquals("hello", PipelineEL.name());
     Assert.assertEquals("3", PipelineEL.version());
-    Assert.assertEquals(uuid.toString(), PipelineEL.id());
+    Assert.assertEquals("hello", PipelineEL.id());
     Assert.assertEquals("label", PipelineEL.title());
     Assert.assertEquals("test-user", PipelineEL.user());
   }

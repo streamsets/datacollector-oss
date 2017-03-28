@@ -35,7 +35,7 @@ public class PipelineEL {
 
   public static final String SDC_PIPELINE_TITLE_VAR = "SDC_PIPELINE_TITLE";
   public static final String SDC_PIPELINE_USER_VAR = "SDC_PIPELINE_USER";
-  public static final String SDC_PIPELINE_ID_VAR = "SDC_PIPELINE_ID";
+  public static final String SDC_PIPELINE_NAME_VAR = "SDC_PIPELINE_NAME";
   public static final String SDC_PIPELINE_VERSION_VAR = "SDC_PIPELINE_VERSION";
 
   @VisibleForTesting
@@ -49,7 +49,7 @@ public class PipelineEL {
     description = "Returns the name of the pipeline")
   @Deprecated
   public static String name() {
-    return getVariableFromScope(SDC_PIPELINE_ID_VAR);
+    return getVariableFromScope(SDC_PIPELINE_NAME_VAR);
   }
 
   @ElFunction(
@@ -73,7 +73,7 @@ public class PipelineEL {
     name = "id",
     description = "Returns the id of the pipeline if applicable. Returns \"UNDEFINED\" otherwise")
   public static String id() {
-    return getVariableFromScope(SDC_PIPELINE_ID_VAR);
+    return getVariableFromScope(SDC_PIPELINE_NAME_VAR);
   }
 
   @ElFunction(
@@ -103,7 +103,7 @@ public class PipelineEL {
       title = pipelineConfiguration.getInfo().getTitle();
     }
     if (null != pipelineConfiguration.getInfo() && null != pipelineConfiguration.getInfo().getUuid()) {
-      id = pipelineConfiguration.getInfo().getUuid().toString();
+      id = pipelineConfiguration.getInfo().getName();
     }
     if (null != pipelineConfiguration.getMetadata() &&
         pipelineConfiguration.getMetadata().containsKey(PIPELINE_VERSION_VAR)) {
@@ -111,7 +111,7 @@ public class PipelineEL {
     }
     Map<String, Object> variablesInScope = CONSTANTS_IN_SCOPE_TL.get();
     variablesInScope.put(PipelineEL.SDC_PIPELINE_VERSION_VAR, version);
-    variablesInScope.put(PipelineEL.SDC_PIPELINE_ID_VAR, id);
+    variablesInScope.put(PipelineEL.SDC_PIPELINE_NAME_VAR, id);
     variablesInScope.put(PipelineEL.SDC_PIPELINE_TITLE_VAR, title);
     variablesInScope.put(PipelineEL.SDC_PIPELINE_USER_VAR, user);
     CONSTANTS_IN_SCOPE_TL.set(variablesInScope);
@@ -120,7 +120,7 @@ public class PipelineEL {
   public static void unsetConstantsInContext() {
     Map<String, Object>  variablesInScope = CONSTANTS_IN_SCOPE_TL.get();
     variablesInScope.remove(PipelineEL.SDC_PIPELINE_VERSION_VAR);
-    variablesInScope.remove(PipelineEL.SDC_PIPELINE_ID_VAR);
+    variablesInScope.remove(PipelineEL.SDC_PIPELINE_NAME_VAR);
     variablesInScope.remove(PipelineEL.SDC_PIPELINE_TITLE_VAR);
     variablesInScope.remove(PipelineEL.SDC_PIPELINE_USER_VAR);
     CONSTANTS_IN_SCOPE_TL.set(variablesInScope);
