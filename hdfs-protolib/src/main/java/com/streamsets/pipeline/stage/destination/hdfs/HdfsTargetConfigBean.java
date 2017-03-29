@@ -1146,10 +1146,13 @@ public class HdfsTargetConfigBean {
 
             // We don't want to pollute HDFS with random directories, so we'll create exactly one directory under
             // another already existing directory on the template path. (e.g. if template is /a/b/c/d and only /a
-            // exists, then we will create only /a/b during this test).
-            while(!fs.exists(workDir.getParent())) {
+            // exists, then we will create new dummy directory in /a during this test).
+            while(!fs.exists(workDir)) {
               workDir = workDir.getParent();
             }
+
+            // Sub-directory to be created in existing directory
+            workDir = new Path(workDir, "_sdc-dummy-" + UUID.randomUUID().toString());
 
             try {
               if (fs.mkdirs(workDir)) {
