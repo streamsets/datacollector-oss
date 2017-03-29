@@ -811,10 +811,13 @@ public class ManagerResource {
     throws PipelineException {
     RestAPIUtils.injectPipelineInMDC("*");
     List<AlertInfo> alertInfoList = new ArrayList<>();
-    for(PipelineState pipelineState: manager.getPipelines()) {
-      Runner runner = manager.getRunner(user, pipelineState.getName(), pipelineState.getRev());
-      if(runner != null && runner.getState().getStatus().isActive()) {
-        alertInfoList.addAll(runner.getAlerts());
+    if (store.getPipelines().size() < 100) {
+      // get alerts for all pipelines only if number of pipelines is less than 100
+      for(PipelineState pipelineState: manager.getPipelines()) {
+        Runner runner = manager.getRunner(user, pipelineState.getName(), pipelineState.getRev());
+        if(runner != null && runner.getState().getStatus().isActive()) {
+          alertInfoList.addAll(runner.getAlerts());
+        }
       }
     }
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapAlertInfoList(

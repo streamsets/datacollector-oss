@@ -503,7 +503,7 @@ angular.module('dataCollectorApp')
       }
     });
 
-    $q.all([api.pipelineAgent.getAllAlerts(), configuration.init(), authService.init()])
+    $q.all([configuration.init(), authService.init()])
       .then(function(results) {
         $rootScope.common.userName = authService.getUserName();
         $rootScope.common.userRoles = authService.getUserRoles().join(', ');
@@ -534,7 +534,20 @@ angular.module('dataCollectorApp')
           authService.fetchRemoteUserRoles();
         }
 
-        var alertsInfoList = results[0].data;
+        isWebSocketSupported = (typeof(WebSocket) === "function") && configuration.isWebSocketUseEnabled();
+        refreshPipelineStatus();
+        refreshAlerts();
+
+        $rootScope.$storage.serverTimezone = configuration.getServerTimezone();
+        if (configuration.isUIDebugEnabled()) {
+          window.$rootScope = $rootScope;
+        }
+      });
+
+
+    api.pipelineAgent.getAllAlerts()
+      .then(function(res) {
+        var alertsInfoList = res.data;
         $rootScope.common.alertsTotalCount = alertsInfoList.length;
         $rootScope.common.alertsMap = _.reduce(alertsInfoList,
           function (alertsMap, alertInfo) {
@@ -546,15 +559,6 @@ angular.module('dataCollectorApp')
           },
           {}
         );
-
-        isWebSocketSupported = (typeof(WebSocket) === "function") && configuration.isWebSocketUseEnabled();
-        refreshPipelineStatus();
-        refreshAlerts();
-
-        $rootScope.$storage.serverTimezone = configuration.getServerTimezone();
-        if (configuration.isUIDebugEnabled()) {
-          window.$rootScope = $rootScope;
-        }
       });
 
     // set actions to be taken each time the user navigates
