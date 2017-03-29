@@ -132,6 +132,7 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
 
     if (issues.isEmpty()) {
       cache = buildCache();
+      cacheCleaner = new CacheCleaner(cache, "ForceLookupProcessor", 10 * 60 * 1000);
     }
 
     return issues;
@@ -246,8 +247,6 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
     }
 
     LoadingCache<String, Map<String, Field>> cache = cacheBuilder.build(new ForceLookupLoader(this));
-
-    cacheCleaner = new CacheCleaner(cache, "ForceLookupProcessor", 10 * 60 * 1000);
 
     return cache;
   }
