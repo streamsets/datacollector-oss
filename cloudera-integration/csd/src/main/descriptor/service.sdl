@@ -80,6 +80,10 @@
           {
             "key" : "log4j.appender.streamsets.layout.ConversionPattern",
             "value" : "%d{ISO8601} [user:%X{s-user}] [pipeline:%X{s-entity}] [runner:%X{s-runner}] [thread:%t] %-5p %c{1} - %m%n"
+          },
+          {
+            "key" : "log4j.appender.RFA.layout.ConversionPattern",
+            "value" : "%d{ISO8601} [user:%X{s-user}] [pipeline:%X{s-entity}] [runner:%X{s-runner}] [thread:%t] %-5p %c{1} - %m%n"
           }
         ]
       },
