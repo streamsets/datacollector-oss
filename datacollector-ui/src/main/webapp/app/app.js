@@ -75,7 +75,7 @@ angular.module('dataCollectorApp')
           if (rejection.status === 401) {
             window.location.reload();
           } else if ((rejection.status === 0 || rejection.status === -1 ||
-            (rejection.data && (typeof rejection.data.indexOf == 'function') &&
+            (rejection.data && (typeof rejection.data.indexOf === 'function') &&
             rejection.data.indexOf('login.html') !== -1))
           )  {
             // check if the error is related to remote service
@@ -112,7 +112,7 @@ angular.module('dataCollectorApp')
     var bases = document.getElementsByTagName('base');
     var baseHref = (bases.length > 0) ? (bases[0].href).replace(httpBaseURL, '') : '/';
     var webSocketBaseURL = ((loc.protocol === "https:") ?
-        "wss://" : "ws://") + loc.hostname + (((loc.protocol === "http:" && loc.port == 80) || (loc.protocol === "https:" && loc.port == 443)) ? "" : ":" + loc.port) + baseHref;
+        "wss://" : "ws://") + loc.hostname + (((loc.protocol === "http:" && loc.port === 80) || (loc.protocol === "https:" && loc.port === 443)) ? "" : ":" + loc.port) + baseHref;
     var BACKSPACE_KEY = 8;
     var DELETE_KEY = 46;
     var D_KEY = 68;
@@ -152,18 +152,6 @@ angular.module('dataCollectorApp')
         showNameColumn: true
       },
       runPreviewForFieldPaths: true
-    });
-
-    api.pipelineAgent.getUIConfiguration().then(function (res) {
-      $rootScope.$storage.serverTimezone = res.data['ui.server.timezone'];
-
-      if (res.data['ui.debug'] === 'true') {
-        window.$rootScope = $rootScope;
-      }
-
-    }, function(err) {
-      $rootScope.$storage.serverTimezone = 'UTC';
-      console.error('Failed: api.pipelineAgent.getUIConfiguration()', err);
     });
 
     $rootScope.common = $rootScope.common || {
@@ -559,10 +547,14 @@ angular.module('dataCollectorApp')
           {}
         );
 
-
         isWebSocketSupported = (typeof(WebSocket) === "function") && configuration.isWebSocketUseEnabled();
         refreshPipelineStatus();
         refreshAlerts();
+
+        $rootScope.$storage.serverTimezone = configuration.getServerTimezone();
+        if (configuration.isUIDebugEnabled()) {
+          window.$rootScope = $rootScope;
+        }
       });
 
     // set actions to be taken each time the user navigates
@@ -787,7 +779,7 @@ angular.module('dataCollectorApp')
         return;
       }
 
-      if (typeof event == 'undefined') {
+      if (typeof event === 'undefined') {
         event = window.event;
       }
       if (event) {

@@ -31,6 +31,8 @@ angular.module('dataCollectorApp.common')
     var UI_HOSTED_HELP_BASE_URL = 'ui.hosted.help.base.url';
     var UI_ENABLE_USAGE_DATA_COLLECTION = 'ui.enable.usage.data.collection';
     var UI_ENABLE_WEB_SOCKET = 'ui.enable.webSocket';
+    var UI_SERVER_TIMEZONE = 'ui.server.timezone';
+    var UI_DEBUG = 'ui.debug';
     var HTTP_AUTHENTICATION = 'http.authentication';
     var PIPELINE_EXECUTION_MODE = 'pipeline.execution.mode';
     var CALLBACK_SERVER_URL = 'callback.server.url';
@@ -49,8 +51,14 @@ angular.module('dataCollectorApp.common')
     this.init = function() {
       if (!self.initializeDefer) {
         self.initializeDefer = $q.defer();
-        api.pipelineAgent.getConfiguration().then(function(res) {
-          self.config = res.data;
+        $q.all([
+          api.pipelineAgent.getConfiguration(),
+          api.pipelineAgent.getUIConfiguration()
+        ]).then(function(results) {
+          self.config = results[0].data;
+          angular.forEach(results[1].data, function(value, key) {
+            self.config[key] = value;
+          });
           self.initializeDefer.resolve(self.config);
         });
       }
@@ -181,6 +189,29 @@ angular.module('dataCollectorApp.common')
         return self.config[UI_UNDO_LIMIT];
       }
       return 10;
+    };
+
+    /**
+     * Returns Server timezone
+     *
+     * @returns string
+     */
+    this.getServerTimezone = function() {
+      if (self.config && self.config[UI_SERVER_TIMEZONE]) {
+        return self.config[UI_SERVER_TIMEZONE];
+      }
+      return 'UTC';
+    };
+
+    /*
+     * Returns ui.debug flag value
+     * @returns {*}
+     */
+    this.isUIDebugEnabled = function() {
+      if (self.config && self.config[UI_DEBUG] !== undefined) {
+        return self.config[UI_DEBUG] === 'true';
+      }
+      return false;
     };
 
     /*
