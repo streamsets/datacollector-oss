@@ -35,7 +35,6 @@ import com.streamsets.pipeline.stage.config.elasticsearch.Groups;
     description = "Read data from an Elasticsearch cluster",
     icon = "elasticsearch.png",
     resetOffset = true,
-    producesEvents = true,
     onlineHelpRefUrl = "index.html#Origins/Elasticsearch.html#task_pmh_xpm_2z"
 )
 @ConfigGroups(Groups.class)

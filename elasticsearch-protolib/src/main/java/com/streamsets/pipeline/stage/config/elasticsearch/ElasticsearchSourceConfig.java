@@ -49,7 +49,7 @@ public class ElasticsearchSourceConfig extends ElasticsearchConfig {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Incremental Mode",
-      description = "Will fetch data incrementally based on a date field until the pipeline is stopped",
+      description = "Fetches data incrementally based on the offset field until the pipeline is stopped",
       defaultValue = "false",
       group = "ELASTIC_SEARCH",
       displayPosition = 70
@@ -112,8 +112,8 @@ public class ElasticsearchSourceConfig extends ElasticsearchConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Cursor Timeout",
-      description = "TTL for the Elasticsearch cursor",
+      label = "Scroll Timeout",
+      description = "Maximum amount of time to keep the search context alive",
       defaultValue = "1m",
       group = "ELASTIC_SEARCH",
       displayPosition = 140
@@ -123,8 +123,8 @@ public class ElasticsearchSourceConfig extends ElasticsearchConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Delete Cursor on Pipeline Stop",
-      description = "Whether to explicitly delete the cursor on pipeline stop, or let it expire.",
+      label = "Delete Scroll on Pipeline Stop",
+      description = "Whether to explicitly delete the scroll on pipeline stop, or let it expire",
       defaultValue = "true",
       group = "ELASTIC_SEARCH",
       displayPosition = 150
@@ -146,8 +146,8 @@ public class ElasticsearchSourceConfig extends ElasticsearchConfig {
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "1",
-      label = "Num Slices",
-      description = "Number of slices per cursor (scroll) to process in parallel.",
+      label = "Number of Slices",
+      description = "Number of slices per scroll to process in parallel",
       min = 1,
       max = 200,
       group = "ELASTIC_SEARCH",
