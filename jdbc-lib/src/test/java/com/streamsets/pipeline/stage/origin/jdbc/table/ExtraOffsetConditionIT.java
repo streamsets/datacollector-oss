@@ -30,8 +30,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.api.support.membermodification.MemberMatcher;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.powermock.reflect.Whitebox;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,7 +52,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-@RunWith(Parameterized.class)
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(value = Parameterized.class)
+@PowerMockIgnore(value = {"javax.security.*", "javax.management.*"})
+@PrepareForTest(value = {
+    TableJdbcSource.class,
+    TableJdbcRunnable.class
+})
 public class ExtraOffsetConditionIT extends BaseTableJdbcSourceIT {
   private static final int BATCHES = 5;
   private static final String RANDOM_STRING_COLUMN = "random_string";
@@ -297,8 +311,18 @@ public class ExtraOffsetConditionIT extends BaseTableJdbcSourceIT {
       finalCalendar.set(Calendar.SECOND, seconds);
       finalCalendar.set(Calendar.MILLISECOND, milliSeconds);
     }
-
-    Whitebox.setInternalState(tableJdbcSource, "calendar", finalCalendar);
+    PowerMockito.replace(
+        MemberMatcher.method(
+            TableJdbcRunnable.class,
+            "initTableEvalContextForProduce",
+            TableJdbcELEvalContext.class,
+            TableContext.class,
+            Calendar.class
+        )
+    ).with((proxy, method, args) -> {
+      args[2] = finalCalendar;
+      return method.invoke(proxy, args);
+    });
   }
 
   @Test

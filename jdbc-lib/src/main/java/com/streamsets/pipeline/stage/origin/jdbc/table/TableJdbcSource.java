@@ -79,7 +79,6 @@ public class TableJdbcSource extends BasePushSource {
   //can keep track of different closeables from different threads
   private final Collection<Cache<TableContext, TableReadContext>> toBeInvalidatedThreadCaches;
 
-  private Calendar calendar;
   private HikariDataSource hikariDataSource;
   private ConnectionManager connectionManager;
   private Map<String, String> offsets;
@@ -115,8 +114,6 @@ public class TableJdbcSource extends BasePushSource {
     }
     if (issues.isEmpty()) {
       try {
-        calendar = Calendar.getInstance(TimeZone.getTimeZone(tableJdbcConfigBean.timeZoneID));
-
         connectionManager = new ConnectionManager(hikariDataSource);
 
         for (TableConfigBean tableConfigBean : tableJdbcConfigBean.tableConfigs) {
@@ -273,7 +270,6 @@ public class TableJdbcSource extends BasePushSource {
         TableJdbcRunnable runnable = new TableJdbcRunnable.Builder()
             .context(getContext())
             .threadNumber(threadNumber)
-            .calendar(calendar)
             .batchSize(batchSize)
             .connectionManager(connectionManager)
             .offsets(offsets)

@@ -48,6 +48,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TimeZone;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -69,7 +70,6 @@ public final class TableJdbcRunnable implements Runnable {
   private final int batchSize;
   private final TableJdbcConfigBean tableJdbcConfigBean;
   private final CommonSourceConfigBean commonSourceConfigBean;
-  private final Calendar calendar;
   private final TableJdbcELEvalContext tableJdbcELEvalContext;
   private final ConnectionManager connectionManager;
   private final ErrorRecordHandler errorRecordHandler;
@@ -82,7 +82,6 @@ public final class TableJdbcRunnable implements Runnable {
       PushSource.Context context,
       int threadNumber,
       int batchSize,
-      Calendar calendar,
       Map<String, String> offsets,
       MultithreadedTableProvider tableProvider,
       ConnectionManager connectionManager,
@@ -93,7 +92,6 @@ public final class TableJdbcRunnable implements Runnable {
     this.threadNumber = threadNumber;
     this.lastQueryIntervalTime = -1;
     this.batchSize = batchSize;
-    this.calendar = calendar;
     this.tableJdbcELEvalContext = new TableJdbcELEvalContext(context, context.createELVars());
     this.offsets = offsets;
     this.tableProvider = tableProvider;
@@ -253,7 +251,11 @@ public final class TableJdbcRunnable implements Runnable {
   /**
    * Initialize the {@link TableJdbcELEvalContext} before generating a batch
    */
-  private void initTableEvalContextForProduce(TableContext tableContext) {
+  private static void initTableEvalContextForProduce(
+      TableJdbcELEvalContext tableJdbcELEvalContext,
+      TableContext tableContext,
+      Calendar calendar
+  ) {
     tableJdbcELEvalContext.setCalendar(calendar);
     tableJdbcELEvalContext.setTime(calendar.getTime());
     tableJdbcELEvalContext.setTableContext(tableContext);
@@ -273,7 +275,11 @@ public final class TableJdbcRunnable implements Runnable {
    * Get Or Load {@link TableReadContext} for {@link #tableContext}
    */
   private TableReadContext getOrLoadTableReadContext() throws ExecutionException, InterruptedException {
-    initTableEvalContextForProduce(tableContext);
+    initTableEvalContextForProduce(
+        tableJdbcELEvalContext,
+        tableContext,
+        Calendar.getInstance(TimeZone.getTimeZone(tableJdbcConfigBean.timeZoneID))
+    );
 
     //Check and then if we want to wait for query being issued do that
     TableReadContext tableReadContext = tableReadContextCache.getIfPresent(tableContext);
@@ -346,7 +352,6 @@ public final class TableJdbcRunnable implements Runnable {
     private PushSource.Context context;
     private int threadNumber;
     private int batchSize;
-    private Calendar calendar;
     private TableJdbcConfigBean tableJdbcConfigBean;
     private CommonSourceConfigBean commonSourceConfigBean;
     private Map<String, String> offsets;
@@ -368,11 +373,6 @@ public final class TableJdbcRunnable implements Runnable {
 
     Builder batchSize(int batchSize) {
       this.batchSize = batchSize;
-      return this;
-    }
-
-    Builder calendar(Calendar calendar) {
-      this.calendar = calendar;
       return this;
     }
 
@@ -406,7 +406,6 @@ public final class TableJdbcRunnable implements Runnable {
           context,
           threadNumber,
           batchSize,
-          calendar,
           offsets,
           tableProvider,
           connectionManager,
