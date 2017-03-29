@@ -54,13 +54,14 @@ public class SolrTarget extends BaseTarget {
   private final ProcessingMode indexingMode;
   private final List<SolrFieldMappingConfig> fieldNamesMap;
   private final boolean kerberosAuth;
+  private final OptionalFieldAction optionalFieldAction;
 
   private ErrorRecordHandler errorRecordHandler;
   private SdcSolrTarget sdcSolrTarget;
 
   public SolrTarget(final InstanceTypeOptions instanceType, final String solrURI, final String zookeeperConnect,
                     final ProcessingMode indexingMode, final List<SolrFieldMappingConfig> fieldNamesMap,
-                    String defaultCollection, boolean kerberosAuth) {
+                    String defaultCollection, boolean kerberosAuth, OptionalFieldAction optionalFieldAction) {
     this.instanceType = instanceType;
     this.solrURI = solrURI;
     this.zookeeperConnect = zookeeperConnect;
@@ -68,6 +69,7 @@ public class SolrTarget extends BaseTarget {
     this.indexingMode = indexingMode;
     this.fieldNamesMap = fieldNamesMap;
     this.kerberosAuth = kerberosAuth;
+    this.optionalFieldAction = optionalFieldAction;
   }
 
   @Override
@@ -124,48 +126,71 @@ public class SolrTarget extends BaseTarget {
     while (it.hasNext()) {
       atLeastOne = true;
       Record record = it.next();
+      Map<String, Object> fieldMap = new HashMap();
       try {
-        Map<String, Object> fieldMap = new HashMap();
-        for(SolrFieldMappingConfig fieldMapping: fieldNamesMap) {
+        for (SolrFieldMappingConfig fieldMapping : fieldNamesMap) {
           Field field = record.get(fieldMapping.field);
           if (field == null) {
-            throw new OnRecordErrorException(record, Errors.SOLR_06, fieldMapping.field);
+            switch (optionalFieldAction) {
+              case DISCARD:
+                LOG.debug(Errors.SOLR_06.getMessage(), fieldMapping.field);
+                break;
+              case STOP_PIPELINE:
+                throw new StageException(Errors.SOLR_06, fieldMapping.field);
+              case TO_ERROR:
+                throw new OnRecordErrorException(record, Errors.SOLR_06, fieldMapping.field);
+              default: //unknown operation
+                LOG.debug("Sending record to error due to unknown operation {}", optionalFieldAction);
+                throw new OnRecordErrorException(record, Errors.SOLR_06, fieldMapping.field);
+            }
+          } else {
+            fieldMap.put(fieldMapping.solrFieldName, JsonUtil.fieldToJsonObject(record, field));
           }
-          fieldMap.put(fieldMapping.solrFieldName, JsonUtil.fieldToJsonObject(record, field));
         }
-
-        if(ProcessingMode.BATCH.equals(indexingMode)) {
-          batchFieldMap.add(fieldMap);
-          recordsBackup.add(record);
-        } else {
-          sdcSolrTarget.add(fieldMap);
-        }
-
-      } catch (StageException ex) {
-        errorRecordHandler.onError(
-            new OnRecordErrorException(
-                record,
-                Errors.SOLR_04,
-                record.getHeader().getSourceId(),
-                ex.toString(),
-                ex
-            )
-        );
+      } catch (OnRecordErrorException ex) {
+        errorRecordHandler.onError(new OnRecordErrorException(
+            record,
+            Errors.SOLR_06,
+            record.getHeader().getSourceId(),
+            ex.toString(),
+            ex
+        ));
+        record = null;
       }
-    }
 
-    if(atLeastOne) {
-      try {
-        if(ProcessingMode.BATCH.equals(indexingMode)) {
-          sdcSolrTarget.add(batchFieldMap);
-        }
-        sdcSolrTarget.commit();
-      } catch (StageException ex) {
+      if (record != null) {
         try {
-          sdcSolrTarget.rollback();
-          errorRecordHandler.onError(recordsBackup, ex);
-        } catch (StageException ex2) {
-          errorRecordHandler.onError(recordsBackup, ex2);
+          if (ProcessingMode.BATCH.equals(indexingMode)) {
+            batchFieldMap.add(fieldMap);
+            recordsBackup.add(record);
+          } else {
+            sdcSolrTarget.add(fieldMap);
+          }
+        } catch (StageException ex) {
+          errorRecordHandler.onError(new OnRecordErrorException(record,
+              Errors.SOLR_04,
+              record.getHeader().getSourceId(),
+              ex.toString(),
+              ex
+          ));
+        }
+
+        if (atLeastOne) {
+          try {
+            if (ProcessingMode.BATCH.equals(indexingMode)) {
+              sdcSolrTarget.add(batchFieldMap);
+            }
+            sdcSolrTarget.commit();
+          } catch (StageException ex) {
+            try {
+              if (instanceType != InstanceTypeOptions.SOLR_CLOUD) {
+                sdcSolrTarget.rollback();
+              }
+              errorRecordHandler.onError(recordsBackup, ex);
+            } catch (StageException ex2) {
+              errorRecordHandler.onError(recordsBackup, ex2);
+            }
+          }
         }
       }
     }

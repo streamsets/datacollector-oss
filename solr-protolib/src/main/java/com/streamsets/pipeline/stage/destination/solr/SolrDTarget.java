@@ -130,9 +130,30 @@ public class SolrDTarget extends DTarget {
   )
   public boolean kerberosAuth;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue= "TO_ERROR",
+      label = "Optional Fields",
+      description = "Action to take when fields are empty",
+      displayPosition = 70,
+      group = "SOLR"
+  )
+  @ValueChooserModel(OptionalFieldActionChooserValues.class)
+  public OptionalFieldAction optionalFieldAction = OptionalFieldAction.TO_ERROR;
+
   @Override
   protected Target createTarget() {
-    return new SolrTarget(instanceType, solrURI, zookeeperConnect, indexingMode, fieldNamesMap, defaultCollection, kerberosAuth);
+    return new SolrTarget(
+        instanceType,
+        solrURI,
+        zookeeperConnect,
+        indexingMode,
+        fieldNamesMap,
+        defaultCollection,
+        kerberosAuth,
+        optionalFieldAction
+    );
   }
 
 }
