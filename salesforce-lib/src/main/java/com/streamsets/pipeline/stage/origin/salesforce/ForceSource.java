@@ -522,7 +522,9 @@ public class ForceSource extends BaseSource {
         String id = (lastSourceOffset == null) ? null : lastSourceOffset.substring(lastSourceOffset.indexOf(':') + 1);
         final String preparedQuery = prepareQuery(conf.soqlQuery, id);
         LOG.info("preparedQuery: {}", preparedQuery);
-        queryResult = partnerConnection.query(preparedQuery);
+        queryResult = conf.queryAll
+            ? partnerConnection.queryAll(preparedQuery)
+            : partnerConnection.query(preparedQuery);
         recordIndex = 0;
       } catch (ConnectionException e) {
         throw new StageException(Errors.FORCE_08, e);
@@ -739,7 +741,7 @@ public class ForceSource extends BaseSource {
           throws AsyncApiException {
     JobInfo job = new JobInfo();
     job.setObject(sobjectType);
-    job.setOperation(OperationEnum.query);
+    job.setOperation(conf.queryAll ? OperationEnum.queryAll : OperationEnum.query);
     job.setContentType(ContentType.CSV);
     job = connection.createJob(job);
     return job;

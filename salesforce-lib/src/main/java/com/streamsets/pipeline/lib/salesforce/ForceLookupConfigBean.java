@@ -46,6 +46,17 @@ public class ForceLookupConfigBean extends ForceConfigBean {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Include Deleted Records",
+      description = "When enabled, the processor will additionally retrieve deleted records from the Recycle Bin",
+      defaultValue = "false",
+      displayPosition = 55,
+      group = "FORCE"
+  )
+  public boolean queryAll = false;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
       label = "Field Mappings",
       defaultValue = "",

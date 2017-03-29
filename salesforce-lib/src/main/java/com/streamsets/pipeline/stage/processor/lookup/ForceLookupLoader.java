@@ -54,7 +54,9 @@ class ForceLookupLoader extends CacheLoader<String, Map<String, Field>> {
     Map<String, Field> fieldMap = new HashMap<>();
 
     try {
-      QueryResult queryResult = processor.partnerConnection.query(preparedQuery);
+      QueryResult queryResult = processor.conf.queryAll
+          ? processor.partnerConnection.queryAll(preparedQuery)
+          : processor.partnerConnection.query(preparedQuery);
 
       SObject[] records = queryResult.getRecords();
 

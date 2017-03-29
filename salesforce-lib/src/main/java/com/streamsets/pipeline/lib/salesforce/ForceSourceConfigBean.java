@@ -72,6 +72,19 @@ public class ForceSourceConfigBean extends ForceConfigBean {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Include Deleted Records",
+      description = "When enabled, the processor will additionally retrieve deleted records from the Recycle Bin",
+      defaultValue = "false",
+      displayPosition = 82,
+      dependsOn = "queryExistingData",
+      triggeredByValue = "true",
+      group = "QUERY"
+  )
+  public boolean queryAll = false;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "NO_REPEAT",
       label = "Repeat Query",
