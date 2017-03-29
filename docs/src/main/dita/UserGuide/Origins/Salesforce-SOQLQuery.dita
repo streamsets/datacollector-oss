@@ -50,5 +50,11 @@
         </dl>
         <p>The complete SOQL query must use the following syntax:</p>
         <codeblock>SELECT &lt;offset field>, &lt;field name1>, &lt;field name2>, ... FROM &lt;object> WHERE &lt;offset field> > ${OFFSET} ORDER BY &lt;offset field></codeblock>
+        <p>If you specify <codeph>SELECT * FROM &lt;object></codeph> in the SOQL query, the origin
+            expands <codeph>*</codeph> to all fields in the Salesforce object that are accessible to
+            the configured user. Note that the origin adds components of compound fields to the
+            query, rather than adding the compound fields themselves. For example, the origin adds
+            BillingStreet, BillingCity, etc., rather than adding BillingAddress. Similarly, it adds
+            Location__Latitude__s and Location__Longitude__s rather than Location__c.</p>
     </conbody>
 </concept>

@@ -1323,9 +1323,9 @@
       <entry>Auth Endpoint</entry>
       <entry>Salesforce SOAP API authentication endpoint. Enter one of the following values:<ul
         id="ul_lnr_x2c_tx">
-        <li>login.salesforce.com - To connect to a Production or Developer Edition
+        <li>login.salesforce.com - Use to connect to a Production or Developer Edition
          organization.</li>
-        <li>test.salesforce.com - To connect to a sandbox organization.</li>
+        <li>test.salesforce.com - Use to connect to a sandbox organization.</li>
        </ul><p>Default is login.salesforce.com.</p></entry>
      </row>
      <row>

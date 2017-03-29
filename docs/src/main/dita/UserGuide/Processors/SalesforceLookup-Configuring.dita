@@ -71,7 +71,18 @@
                                             example, to use the account number field in the record
                                             to look up the account name field in the Salesforce
                                             Account object, use the following
-                                            query:<codeblock>SELECT Name FROM Account WHERE AccountNumber = '${record:value('/account_number')}'</codeblock></p></entry>
+                                            query:<codeblock>SELECT Name FROM Account WHERE AccountNumber = '${record:value('/account_number')}'</codeblock></p><p>If
+                                            you specify <codeph>SELECT * FROM &lt;object></codeph>
+                                            in the SOQL query, the processor expands
+                                                <codeph>*</codeph> to all fields in the Salesforce
+                                            object that are accessible to the configured user. Note
+                                            that the processor adds components of compound fields to
+                                            the query, rather than adding the compound fields
+                                            themselves. For example, the origin adds BillingStreet,
+                                            BillingCity, etc., rather than adding BillingAddress.
+                                            Similarly, it adds Location__Latitude__s and
+                                            Location__Longitude__s rather than
+                                        Location__c.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Field Mappings</entry>
