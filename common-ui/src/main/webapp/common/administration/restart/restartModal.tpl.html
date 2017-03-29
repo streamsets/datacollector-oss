@@ -29,11 +29,9 @@
 
   </div>
   <div class="modal-footer" ng-hide="isShutdownSucceed">
-    <button type="reset" class="btn btn-default" ng-click="cancel()" translate="global.form.no" ng-disabled="isRestarting">
-      No
-    </button>
-    <button type="submit" class="btn btn-primary" translate="global.form.yes" ng-disabled="isRestarting">
-      Yes
-    </button>
+    <button type="reset" class="btn btn-default" ng-click="cancel()" translate="global.form.no"
+            ng-if="!isRestarting">No</button>
+    <button type="submit" class="btn btn-primary" translate="global.form.yes"
+            ng-if="!isRestarting">Yes</button>
   </div>
 </form>

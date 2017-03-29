@@ -35,7 +35,6 @@ angular
         api.admin.restartDataCollector()
           .success(function() {
             $scope.isRestartSucceed = true;
-            $scope.isRestarting = false;
           })
           .error(function(data) {
             $scope.issues = [data];
