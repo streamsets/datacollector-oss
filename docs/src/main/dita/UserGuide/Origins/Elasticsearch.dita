@@ -15,8 +15,27 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_f1q_vpm_2z">
  <title>Elasticsearch </title>
- <shortdesc></shortdesc>
+ <shortdesc>The Elasticsearch origin is a multithreaded origin that reads data from an Elasticsearch
+        cluster, including Elastic Cloud clusters (formerly Found clusters). The origin generates a
+        record for each Elasticsearch document.</shortdesc>
  <conbody>
-  <p></p>
- </conbody>
+        <p><indexterm>Elasticsearch
+                    origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>Elasticsearch</indexterm></indexterm>When
+            you configure the Elasticsearch origin, you configure the HTTP URI used to connect to
+            the Elasticsearch cluster and specify whether security is enabled on the cluster. You
+            configure the origin to run in batch or incremental mode. </p>
+        <p>The origin uses the Elasticsearch scroll API to run a query that you define. A query can
+            retrieve large numbers of documents from Elasticsearch. This allows the origin to run a
+            single query and then read multiple batches of data from the scroll until no results are
+            left. You configure a scroll timeout that defines the amount of time that the search
+            context remains valid.</p>
+        <p>When the pipeline stops, the Elasticsearch origin notes where it stops reading. When the
+            pipeline starts again, the origin continues processing from where it stopped - as long
+            as the scroll timeout has not been exceeded or the origin is not configured to delete
+            the scroll when the pipeline stops. You can reset the origin to process all requested
+            documents.</p>
+        <p>When you configure the Elasticsearch origin, you specify the maximum number of slices to
+            split the scroll into. The number of slices determines how many threads the origin uses
+            to read the data.</p>
+    </conbody>
 </concept>

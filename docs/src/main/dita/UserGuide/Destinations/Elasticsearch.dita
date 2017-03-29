@@ -16,8 +16,8 @@
 <concept id="concept_u5t_vpv_4r">
  <title>Elasticsearch</title>
  <shortdesc>The Elasticsearch destination writes data to an Elasticsearch cluster, including Elastic
-    Cloud clusters (formerly Found clusters) and Shield-enabled clusters. The destination uses the
-    Elasticsearch HTTP API to write each record to Elasticsearch as a document.</shortdesc>
+        Cloud clusters (formerly Found clusters). The destination uses the Elasticsearch HTTP API to
+        write each record to Elasticsearch as a document.</shortdesc>
  <conbody>
   <p><indexterm>Elasticsearch
                     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Elasticsearch</indexterm></indexterm>When

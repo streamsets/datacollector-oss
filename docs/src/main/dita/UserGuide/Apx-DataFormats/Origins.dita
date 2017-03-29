@@ -96,6 +96,10 @@
                 /></entry>
             </row>
             <row>
+              <entry>Elasticsearch</entry>
+              <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
+            </row>
+            <row>
               <entry>File Tail</entry>
               <entry/>
               <entry/>

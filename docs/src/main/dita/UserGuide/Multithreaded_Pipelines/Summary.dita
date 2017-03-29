@@ -22,6 +22,8 @@
             <ul id="ul_igl_q4d_py">
                 <li>Use multithreaded origins to create a multithreaded pipeline. You can use the
                     following origins at this time:<ul id="ul_exg_jym_3z">
+                        <li><xref href="../Origins/Elasticsearch.dita#concept_f1q_vpm_2z"
+                                >Elasticsearch</xref></li>
                         <li><xref href="../Origins/HTTPServer.dita#concept_s2p_5hb_4y">HTTP
                                 Server</xref></li>
                         <li><xref href="../Origins/MultiTableJDBCConsumer.dita#concept_zp3_wnw_4y"

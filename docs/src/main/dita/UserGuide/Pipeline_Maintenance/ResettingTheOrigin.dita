@@ -27,7 +27,8 @@
                 stages:<ul id="ul_k1q_35k_2s">
                 <li>Amazon S3</li>
                 <li>Directory</li>
-                <li>File Tail]</li>
+                <li>Elasticsearch</li>
+                <li>File Tail</li>
                 <li>JDBC Multitable Consumer</li>
                 <li>JDBC Query Consumer</li>
                 <li>MapR DB JSON</li>

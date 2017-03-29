@@ -29,6 +29,7 @@
             />.</p>
         <p>At this time, you can use the following origins to create a multithreaded pipeline:<ul
                 id="ul_oql_bym_3z">
+                <li>Elasticsearch origin</li>
                 <li>HTTP Server origin</li>
                 <li>JDBC Multitable Consumer origin</li>
                 <li>WebSocket Server origin</li>

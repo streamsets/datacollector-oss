@@ -52,6 +52,16 @@
    </topicref>
    <topicref href="../Origins/Directory-Configuring.dita"/>
   </topicref>
+  <topicref href="../Origins/Elasticsearch.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/Elasticsearch-BatchIncrementalMode.dita"/>
+   <topicref href="../Origins/Elasticsearch-Query.dita">
+    <topicref href="../Origins/Elasticsearch-IncrementalQuery.dita"/>
+   </topicref>
+   <topicref href="../Origins/Elasticsearch-ScrollTimeout.dita"/>
+   <topicref href="../Origins/Elasticsearch-MultithreadProcessing.dita"/>
+   <topicref href="../Origins/Elasticsearch-Configuring.dita"/>
+  </topicref>
   <topicref href="../Origins/FileTail.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/FileTail-FileProcessing.dita"/>

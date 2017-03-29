@@ -3762,10 +3762,11 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta">Elasticsearch properties - all used by
-                        Elasticsearch destination. All but Default Operation and Unsupported
-                        Operation Handling used by Configuring a Pipeline > Error handling. Default
-                        Operation and Unsupported Operation Handling descriptions used by Kudu, JDBC
-                        Producer and JDBC Tee</draft-comment>
+                        Elasticsearch destination. Most used by Elasticsearch origin. All but
+                        Default Operation and Unsupported Operation Handling used by Configuring a
+                        Pipeline > Error handling. Default Operation and Unsupported Operation
+                        Handling descriptions used by Kudu, JDBC Producer and JDBC
+                        Tee</draft-comment>
                 </cmd>
             </step>
             <step id="ELASTICprops-Step">
@@ -3785,20 +3786,17 @@
                             <tbody>
                                 <row id="row_ElasticCluster">
                                     <entry>Cluster HTTP URI</entry>
-                                    <entry>Use when the cluster uses a custom HTTP URI. Use the
+                                    <entry>HTTP URI used to connect to the cluster. Use the
                                         following format:
-                                            <codeblock>&lt;host>:&lt;port></codeblock><p>Unless
-                                            configured, the destination uses the default HTTP URI to
-                                            verify that the cluster version is compatible with the
-                                            destination libraries.</p></entry>
+                                        <codeblock>&lt;host>:&lt;port></codeblock></entry>
                                 </row>
                                 <row id="row_ElasticHTTP">
                                     <entry>Additional HTTP Params</entry>
-                                    <entry>Additional HTTP parameters that you want to send as
-                                        querystring parameters to Elasticsearch. Enter the exact
+                                    <entry>Additional HTTP parameters that you want to send as query
+                                        string parameters to Elasticsearch. Enter the exact
                                         parameter name and value expected by Elasticsearch.</entry>
                                 </row>
-                                <row>
+                                <row id="row_AdditionalNodes">
                                     <entry>Detect Additional Nodes in Cluster</entry>
                                     <entry>
                                         <p>Detects additional nodes in the cluster based on the
@@ -3909,7 +3907,7 @@
             </step>
             <step id="ElasticSHIELD-step">
                 <cmd>If you enabled security, on the <wintitle>Security</wintitle> tab, configure
-                    the following property:</cmd>
+                    the following properties:</cmd>
                 <info id="ElasticSHIELD-Info">
                     <table frame="all" rowsep="1" colsep="1" id="table_jsk_fhg_z5">
                         <tgroup cols="2">

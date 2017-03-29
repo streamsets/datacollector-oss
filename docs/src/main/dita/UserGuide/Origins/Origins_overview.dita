@@ -25,6 +25,9 @@
           Amazon S3.</li>
         <li><xref href="Directory.dita#concept_qcq_54n_jq">Directory</xref> - Reads fully-written
           files from a directory. </li>
+        <li><xref href="Elasticsearch.dita#concept_f1q_vpm_2z">Elasticsearch</xref> - Reads data
+          from an Elasticsearch cluster. Creates multiple threads to enable parallel processing in a
+          multithreaded pipeline.</li>
         <li><xref href="FileTail.dita#concept_n1y_qyp_5q">File Tail</xref> - Reads lines of data
           from an active file after reading related archived files in the directory. </li>
         <li><xref href="HTTPClient.dita#concept_wk4_bjz_5r">HTTP Client</xref> - Reads data from a

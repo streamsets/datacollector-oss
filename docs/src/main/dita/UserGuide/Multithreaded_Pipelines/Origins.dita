@@ -20,6 +20,8 @@
                     pipelines<indexterm>origins</indexterm></indexterm><indexterm>origins<indexterm>for
                     multithreaded pipelines</indexterm></indexterm>You can use the following origins
             to create multithreaded pipelines:<ul id="ul_d2v_vpd_py">
+                <li><xref href="../Origins/Elasticsearch.dita#concept_f1q_vpm_2z"
+                        >Elasticsearch</xref> - Reads data from an Elasticsearch cluster.</li>
                 <li><xref href="../Origins/HTTPServer.dita#concept_s2p_5hb_4y">HTTP Server</xref> -
                     Listens on a HTTP endpoint and processes the contents of all authorized HTTP
                     POST requests. </li>
