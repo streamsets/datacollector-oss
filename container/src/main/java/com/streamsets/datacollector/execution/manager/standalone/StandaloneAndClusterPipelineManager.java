@@ -64,7 +64,6 @@ import javax.inject.Named;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -144,13 +143,10 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
     final String nameAndRevString = getNameAndRevString(name, rev);
     RunnerInfo runnerInfo;
     try {
-      runnerInfo = runnerCache.get(nameAndRevString, new Callable<RunnerInfo>() {
-        @Override
-        public RunnerInfo call() throws PipelineStoreException {
-          ExecutionMode executionMode = pipelineStateStore.getState(name, rev).getExecutionMode();
-          Runner runner = getRunner(pipelineStateStore.getState(name, rev).getUser(), name, rev, executionMode);
-          return new RunnerInfo(runner, executionMode);
-        }
+      runnerInfo = runnerCache.get(nameAndRevString, () -> {
+        ExecutionMode executionMode = pipelineStateStore.getState(name, rev).getExecutionMode();
+        Runner runner = getRunner(user, name, rev, executionMode);
+        return new RunnerInfo(runner, executionMode);
       });
       ExecutionMode cachedExecutionMode = runnerInfo.executionMode;
       ExecutionMode persistentExecutionMode = pipelineStateStore.getState(name, rev).getExecutionMode();
