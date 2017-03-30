@@ -125,6 +125,7 @@ public class CompositeKeysIT extends BaseTableJdbcSourceIT {
 
       TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
           .tableConfigBeans(ImmutableList.of(tableConfigBean))
+          .quoteChar(QuoteChar.BACKTICK)
           .build();
 
       PushSourceRunner runner = new PushSourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)

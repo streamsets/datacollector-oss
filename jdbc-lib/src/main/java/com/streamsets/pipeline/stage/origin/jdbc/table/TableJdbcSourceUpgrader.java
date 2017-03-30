@@ -54,5 +54,17 @@ public class TableJdbcSourceUpgrader implements StageUpgrader{
             -1
         )
     );
+    configs.add(
+        new Config(
+            TableJdbcConfigBean.TABLE_JDBC_CONFIG_BEAN_PREFIX + TableJdbcConfigBean.NUMBER_OF_THREADS,
+            1
+        )
+    );
+    configs.add(
+        new Config(
+            TableJdbcConfigBean.TABLE_JDBC_CONFIG_BEAN_PREFIX + TableJdbcConfigBean.QUOTE_CHAR,
+            QuoteChar.NONE
+        )
+    );
   }
 }

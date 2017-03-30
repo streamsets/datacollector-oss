@@ -140,6 +140,7 @@ public final class TableJdbcRunnable implements Runnable {
             connectionManager,
             offsets,
             tableJdbcConfigBean.fetchSize,
+            tableJdbcConfigBean.quoteChar.getQuoteCharacter(),
             tableJdbcELEvalContext
         )
     );
@@ -280,13 +281,18 @@ public final class TableJdbcRunnable implements Runnable {
         tableContext,
         Calendar.getInstance(TimeZone.getTimeZone(tableJdbcConfigBean.timeZoneID))
     );
-
     //Check and then if we want to wait for query being issued do that
     TableReadContext tableReadContext = tableReadContextCache.getIfPresent(tableContext);
 
     if (tableReadContext == null) {
       //Wait before issuing query (Optimization instead of waiting during each batch)
       waitIfNeeded();
+      //Set time before query
+      initTableEvalContextForProduce(
+          tableJdbcELEvalContext,
+          tableContext,
+          Calendar.getInstance(TimeZone.getTimeZone(tableJdbcConfigBean.timeZoneID))
+      );
       LOG.debug("Selected table : '{}' for generating records", tableContext.getQualifiedName());
       tableReadContext = tableReadContextCache.get(tableContext);
       //Record query time

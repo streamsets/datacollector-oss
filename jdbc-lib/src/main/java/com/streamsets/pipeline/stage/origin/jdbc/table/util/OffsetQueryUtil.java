@@ -30,6 +30,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableContext;
+import com.streamsets.pipeline.stage.origin.jdbc.table.TableContextUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcELEvalContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -39,12 +40,14 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public final class OffsetQueryUtil {
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
@@ -70,6 +73,7 @@ public final class OffsetQueryUtil {
   private static final Joiner OFFSET_COLUMN_JOINER = Joiner.on("::");
   private static final Splitter OFFSET_COLUMN_SPLITTER = Splitter.on("::");
   private static final String OFFSET_COLUMN_NAME_VALUE = "%s=%s";
+  public static final String QUOTED_NAME = "%s%s%s";
 
   public static final Set<Integer> UNSUPPORTED_OFFSET_SQL_TYPES = ImmutableSet.of(
       Types.BLOB,
@@ -123,6 +127,7 @@ public final class OffsetQueryUtil {
   public static Pair<String, List<Pair<Integer, String>>> buildAndReturnQueryAndParamValToSet(
       TableContext tableContext,
       String lastOffset,
+      String quoteChar,
       TableJdbcELEvalContext tableJdbcELEvalContext
   ) throws ELEvalException {
     StringBuilder queryBuilder = new StringBuilder();
@@ -130,7 +135,11 @@ public final class OffsetQueryUtil {
     queryBuilder.append(
         String.format(
             TABLE_QUERY_SELECT,
-            tableContext.getQualifiedName()
+            TableContextUtil.getQuotedQualifiedTableName(
+                tableContext.getSchema(),
+                tableContext.getTableName(),
+                quoteChar
+            )
         )
     );
 
@@ -162,7 +171,8 @@ public final class OffsetQueryUtil {
             getConditionForPartitionColumn(
                 partitionColumn,
                 true,
-                preconditions
+                preconditions,
+                quoteChar
             );
         //Add for preconditions (EX: composite keys)
         paramValueToSet.addAll(new ArrayList<>(preconditionParamVals));
@@ -174,7 +184,8 @@ public final class OffsetQueryUtil {
             getConditionForPartitionColumn(
                 partitionColumn,
                 false,
-                Collections.<String>emptyList()
+                Collections.emptyList(),
+                quoteChar
             )
         );
         preconditionParamVals.add(paramValForCurrentOffsetColumn);
@@ -196,7 +207,12 @@ public final class OffsetQueryUtil {
       queryBuilder.append(String.format(WHERE_CLAUSE, AND_JOINER.join(finalAndConditions)));
     }
 
-    queryBuilder.append(String.format(ORDER_BY_CLAUSE, COMMA_SPACE_JOINER.join(tableContext.getOffsetColumns())));
+    Collection<String> quotedOffsetColumns =
+        tableContext.getOffsetColumns().stream().map(
+            offsetCol -> String.format(QUOTED_NAME, quoteChar, offsetCol, quoteChar)
+        ).collect(Collectors.toList());
+
+    queryBuilder.append(String.format(ORDER_BY_CLAUSE, COMMA_SPACE_JOINER.join(quotedOffsetColumns)));
     return Pair.of(queryBuilder.toString(),paramValueToSet);
   }
 
@@ -214,11 +230,18 @@ public final class OffsetQueryUtil {
   private static String getConditionForPartitionColumn(
       String partitionColumn,
       boolean greaterThan,
-      List<String> preconditions
+      List<String> preconditions,
+      String quoteChar
   ) {
     String conditionTemplate = greaterThan? COLUMN_GREATER_THAN_VALUE : COLUMN_EQUALS_VALUE;
     List<String> finalConditions = new ArrayList<>(preconditions);
-    finalConditions.add(String.format(conditionTemplate, partitionColumn, PREPARED_STATEMENT_POSITIONAL_PARAMETER));
+    finalConditions.add(
+        String.format(
+            conditionTemplate,
+            String.format(QUOTED_NAME, quoteChar, partitionColumn, quoteChar),
+            PREPARED_STATEMENT_POSITIONAL_PARAMETER
+        )
+    );
     return AND_JOINER.join(finalConditions);
   }
 

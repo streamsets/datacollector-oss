@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
 import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.api.impl.Utils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -34,15 +35,17 @@ public class TestTableJdbcSourceUpgrader {
     TableJdbcSourceUpgrader upgrader = new TableJdbcSourceUpgrader();
     List<Config> upgradedConfigs =
         upgrader.upgrade("a", "b", "c", 1, 2, configs);
-    Assert.assertEquals(1, upgradedConfigs.size());
-    Config config = upgradedConfigs.get(0);
-    Assert.assertEquals(
-        TableJdbcConfigBean.TABLE_JDBC_CONFIG_BEAN_PREFIX + TableJdbcConfigBean.BATCHES_FROM_THE_RESULT_SET,
-        config.getName()
-    );
-    Assert.assertEquals(
-        -1,
-        config.getValue()
-    );
+    Assert.assertEquals(3, upgradedConfigs.size());
+    for (Config config : upgradedConfigs) {
+      if (config.getName().equals(TableJdbcConfigBean.TABLE_JDBC_CONFIG_BEAN_PREFIX + TableJdbcConfigBean.BATCHES_FROM_THE_RESULT_SET)) {
+        Assert.assertEquals(-1, config.getValue());
+      } else if (config.getName().equals(TableJdbcConfigBean.TABLE_JDBC_CONFIG_BEAN_PREFIX + TableJdbcConfigBean.QUOTE_CHAR)) {
+        Assert.assertEquals(QuoteChar.NONE, config.getValue());
+      } else if (config.getName().equals(TableJdbcConfigBean.TABLE_JDBC_CONFIG_BEAN_PREFIX + TableJdbcConfigBean.NUMBER_OF_THREADS)) {
+        Assert.assertEquals(1, config.getValue());
+      } else {
+        Assert.fail(Utils.format("Unexpected Config '{}' after upgrade", config.getName()));
+      }
+    }
   }
 }

@@ -93,6 +93,21 @@ public final class TableContextUtil {
     return StringUtils.isEmpty(schema) ? tableName : schema + "." + tableName ;
   }
 
+  /**
+   * Returns quoted qualified table name (schema.table name) based on quoteChar
+   * @param schema schema name, can be null
+   * @param tableName table name
+   * @param qC quote character to be attached before and after table and schema name.
+   * @return qualified table name if schema is not null and tableName alone if schema is null.
+   */
+  public static String getQuotedQualifiedTableName(String schema, String tableName, String qC) {
+    String quotedTableName = String.format(OffsetQueryUtil.QUOTED_NAME, qC, tableName, qC);
+    return StringUtils.isEmpty(schema) ?
+        quotedTableName: String.format(OffsetQueryUtil.QUOTED_NAME, qC, schema, qC)  + "." + quotedTableName ;
+  }
+
+
+
   private static TableContext createTableContext(
       Connection connection,
       String schemaName,

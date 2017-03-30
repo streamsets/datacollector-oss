@@ -47,7 +47,8 @@ public class TableJdbcConfigBean {
       label = "Number of Threads",
       description = "Number of parallel threads that read data",
       displayPosition = 80,
-      group = "JDBC"
+      group = "JDBC",
+      min = 1
   )
   public int numberOfThreads;
 
@@ -110,6 +111,18 @@ public class TableJdbcConfigBean {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "NONE",
+      label = "Quote Character",
+      description = "Determines the quote character to be used on table / schema / column names during query.",
+      displayPosition = 205,
+      group = "JDBC"
+  )
+  @ValueChooserModel(QuoteCharChooserValues.class)
+  public QuoteChar quoteChar;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "NONE",
       label = "Initial Table Order Strategy",
       description = "Determines the strategy for initial table ordering",
       displayPosition = 210,
@@ -132,6 +145,8 @@ public class TableJdbcConfigBean {
   public static final String TABLE_JDBC_CONFIG_BEAN_PREFIX = "tableJdbcConfigBean.";
   public static final String TABLE_CONFIG = TABLE_JDBC_CONFIG_BEAN_PREFIX + "tableConfigs";
   public static final String BATCHES_FROM_THE_RESULT_SET = "numberOfBatchesFromRs";
+  public static final String NUMBER_OF_THREADS = "numberOfThreads";
+  public static final String QUOTE_CHAR = "quoteChar";
 
   public List<Stage.ConfigIssue> validateConfigs(PushSource.Context context, List<Stage.ConfigIssue> issues) {
     if (tableConfigs.isEmpty()) {
