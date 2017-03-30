@@ -25,7 +25,7 @@
 angular
   .module('dataCollectorApp.home')
   .controller('AllStageMemoryConsumedChartController', function($rootScope, $scope, api, pipelineConstant) {
-    var baseQuery = "select count,metric from counters where (pipeline='" + $scope.pipelineConfig.info.name + "') and ",
+    var baseQuery = "select count,metric from counters where (pipeline='" + $scope.pipelineConfig.info.pipelineId + "') and ",
       sizeFormat = function(d){
         var mbValue = d;
         return mbValue.toFixed(1) + ' MB';

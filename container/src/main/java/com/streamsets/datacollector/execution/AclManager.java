@@ -127,7 +127,7 @@ public class AclManager implements Manager {
       @Override
       public boolean apply(PipelineState pipelineState) {
         try {
-          return aclStore.isPermissionGranted(pipelineState.getName(), EnumSet.of(Action.READ), currentUser);
+          return aclStore.isPermissionGranted(pipelineState.getPipelineId(), EnumSet.of(Action.READ), currentUser);
         } catch (PipelineException e) {
           LOG.warn("Failed to validate ACL");
         }

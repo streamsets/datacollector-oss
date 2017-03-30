@@ -178,9 +178,9 @@ public class TestPipelineStoreResource extends JerseyTest {
     List<PipelineInfoJson> pipelineInfoJsons = response.readEntity(new GenericType<List<PipelineInfoJson>>() {});
     Assert.assertNotNull(pipelineInfoJsons);
     Assert.assertEquals(6, pipelineInfoJsons.size());
-    Assert.assertEquals("name1", pipelineInfoJsons.get(0).getName());
-    Assert.assertEquals("name2", pipelineInfoJsons.get(1).getName());
-    Assert.assertEquals("name3", pipelineInfoJsons.get(2).getName());
+    Assert.assertEquals("name1", pipelineInfoJsons.get(0).getPipelineId());
+    Assert.assertEquals("name2", pipelineInfoJsons.get(1).getPipelineId());
+    Assert.assertEquals("name3", pipelineInfoJsons.get(2).getPipelineId());
 
     response = target("/v1/pipelines")
         .queryParam("orderBy", "NAME")
@@ -190,9 +190,9 @@ public class TestPipelineStoreResource extends JerseyTest {
     pipelineInfoJsons = response.readEntity(new GenericType<List<PipelineInfoJson>>() {});
     Assert.assertNotNull(pipelineInfoJsons);
     Assert.assertEquals(6, pipelineInfoJsons.size());
-    Assert.assertEquals("readWriteOnly", pipelineInfoJsons.get(0).getName());
-    Assert.assertEquals("readWriteExecute", pipelineInfoJsons.get(1).getName());
-    Assert.assertEquals("readOnly", pipelineInfoJsons.get(2).getName());
+    Assert.assertEquals("readWriteOnly", pipelineInfoJsons.get(0).getPipelineId());
+    Assert.assertEquals("readWriteExecute", pipelineInfoJsons.get(1).getPipelineId());
+    Assert.assertEquals("readOnly", pipelineInfoJsons.get(2).getPipelineId());
 
     response = target("/v1/pipelines")
         .queryParam("orderBy", "STATUS")
@@ -202,9 +202,9 @@ public class TestPipelineStoreResource extends JerseyTest {
     pipelineInfoJsons = response.readEntity(new GenericType<List<PipelineInfoJson>>() {});
     Assert.assertNotNull(pipelineInfoJsons);
     Assert.assertEquals(6, pipelineInfoJsons.size());
-    Assert.assertEquals("name2", pipelineInfoJsons.get(0).getName());
-    Assert.assertEquals("name1", pipelineInfoJsons.get(1).getName());
-    Assert.assertEquals("name3", pipelineInfoJsons.get(2).getName());
+    Assert.assertEquals("name2", pipelineInfoJsons.get(0).getPipelineId());
+    Assert.assertEquals("name1", pipelineInfoJsons.get(1).getPipelineId());
+    Assert.assertEquals("name3", pipelineInfoJsons.get(2).getPipelineId());
   }
 
   @Test
@@ -219,8 +219,8 @@ public class TestPipelineStoreResource extends JerseyTest {
     List<PipelineInfoJson> pipelineInfoJsons = response.readEntity(new GenericType<List<PipelineInfoJson>>() {});
     Assert.assertNotNull(pipelineInfoJsons);
     Assert.assertEquals(2, pipelineInfoJsons.size());
-    Assert.assertEquals("name2", pipelineInfoJsons.get(0).getName());
-    Assert.assertEquals("name3", pipelineInfoJsons.get(1).getName());
+    Assert.assertEquals("name2", pipelineInfoJsons.get(0).getPipelineId());
+    Assert.assertEquals("name3", pipelineInfoJsons.get(1).getPipelineId());
     Assert.assertNotNull(response.getHeaders().get("TOTAL_COUNT"));
     Assert.assertEquals("6", response.getHeaders().get("TOTAL_COUNT").get(0));
   }

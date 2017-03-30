@@ -21,6 +21,7 @@ package com.streamsets.datacollector.restapi.bean;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -29,12 +30,14 @@ import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PipelineInfoJson {
   private final PipelineInfo pipelineInfo;
 
   @JsonCreator
   public PipelineInfoJson(
     @JsonProperty("name") String name,
+    @JsonProperty("pipelineId") String pipelineId,
     @JsonProperty("title") String title,
     @JsonProperty("description") String description,
     @JsonProperty("created") Date created,
@@ -46,7 +49,10 @@ public class PipelineInfoJson {
     @JsonProperty("valid") boolean valid,
     @JsonProperty("metadata") Map<String, Object> metadata
   ) {
-    this.pipelineInfo = new PipelineInfo(name, title, description, created, lastModified,
+    if (pipelineId == null) {
+      pipelineId = name;
+    }
+    this.pipelineInfo = new PipelineInfo(pipelineId, title, description, created, lastModified,
       creator, lastModifier, lastRev, uuid, valid, metadata);
   }
 
@@ -55,13 +61,18 @@ public class PipelineInfoJson {
     this.pipelineInfo = pipelineInfo;
   }
 
+  @Deprecated
   public String getName() {
-    return pipelineInfo.getName();
+    return pipelineInfo.getPipelineId();
+  }
+
+  public String getPipelineId() {
+    return pipelineInfo.getPipelineId();
   }
 
   public String getTitle() {
     if (pipelineInfo.getTitle() == null) {
-      return pipelineInfo.getName();
+      return pipelineInfo.getPipelineId();
     }
     return pipelineInfo.getTitle();
   }

@@ -86,6 +86,8 @@ public class PipelineConfigurationUpgrader {
     switch (pipelineConf.getSchemaVersion()) {
       case 1:
         upgradeSchema1to2(pipelineConf, issues);
+      case 2:
+        upgradeSchema2to3(pipelineConf, issues);
         break;
       default:
         issues.add(IssueCreator.getPipeline().create(ValidationError.VALIDATION_0000, pipelineConf.getSchemaVersion()));
@@ -108,6 +110,14 @@ public class PipelineConfigurationUpgrader {
     convertEventLaneNullToEmptyList(pipelineConf.getErrorStage());
     convertEventLaneNullToEmptyList(pipelineConf.getStatsAggregatorStage());
   }
+
+  private void upgradeSchema2to3(PipelineConfiguration pipelineConf, List<Issue> issues) {
+    // Added new attribute "pipelineId"
+    if (pipelineConf.getPipelineId() == null) {
+      pipelineConf.setPipelineId(pipelineConf.getInfo().getPipelineId());
+    }
+  }
+
 
   private void convertEventLaneNullToEmptyList(StageConfiguration stage) {
     if(stage != null && stage.getEventLanes() == null) {

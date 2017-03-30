@@ -38,7 +38,7 @@ angular
         $scope.stopping = true;
         if ($scope.isList) {
 
-          var pipelineNames = _.pluck(pipelineInfo, 'name');
+          var pipelineNames = _.pluck(pipelineInfo, 'pipelineId');
           api.pipelineAgent.stopPipelines(pipelineNames, forceStop).success(function(res) {
             if (res.errorMessages.length === 0) {
               $modalInstance.close(res);
@@ -52,7 +52,7 @@ angular
           });
 
         } else {
-          api.pipelineAgent.stopPipeline(pipelineInfo.name, 0, forceStop)
+          api.pipelineAgent.stopPipeline(pipelineInfo.pipelineId, 0, forceStop)
             .success(function(res) {
               $modalInstance.close(res);
             })

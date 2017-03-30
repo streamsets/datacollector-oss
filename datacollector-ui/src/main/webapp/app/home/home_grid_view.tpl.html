@@ -14,21 +14,21 @@
     </header>
 
     <section class="project-additional-info"
-             ng-hide="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'">
+             ng-hide="common.pipelineStatusMap[pipeline.pipelineId].status === 'RUNNING'">
       <span class="time-update" translate="home.updated">Updated</span>
       <span class="time-update" am-time-ago="pipeline.lastModified"></span>
       <span class="time-update" translate="home.ago">ago</span>
     </section>
 
     <section class="project-additional-info"
-             ng-show="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'">
+             ng-show="common.pipelineStatusMap[pipeline.pipelineId].status === 'RUNNING'">
       <span class="time-update" translate="home.header.uptime">Uptime</span>
-      <span class="time-update" am-time-ago="common.pipelineStatusMap[pipeline.name].timeStamp"></span>
+      <span class="time-update" am-time-ago="common.pipelineStatusMap[pipeline.pipelineId].timeStamp"></span>
     </section>
 
     <footer >
       <section class="running-status"
-               ng-if="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'"
+               ng-if="common.pipelineStatusMap[pipeline.pipelineId].status === 'RUNNING'"
                tooltip-placement="bottom"
                tooltip="{{'home.runningStatus' | translate}}">
         <i class="fa fa-spinner fa-spin fa-14x"></i>
@@ -42,19 +42,19 @@
       </section>
 
       <section class="invalid-status"
-               ng-if="common.pipelineStatusMap[pipeline.name].status == 'START_ERROR' || common.pipelineStatusMap[pipeline.name].status == 'RUNNING_ERROR' || common.pipelineStatusMap[pipeline.name].status == 'RUN_ERROR' || common.pipelineStatusMap[pipeline.name].status == 'CONNECT_ERROR'"
+               ng-if="common.pipelineStatusMap[pipeline.pipelineId].status == 'START_ERROR' || common.pipelineStatusMap[pipeline.pipelineId].status == 'RUNNING_ERROR' || common.pipelineStatusMap[pipeline.pipelineId].status == 'RUN_ERROR' || common.pipelineStatusMap[pipeline.pipelineId].status == 'CONNECT_ERROR'"
                tooltip-placement="bottom"
-               tooltip="{{'Pipeline Status :' + common.pipelineStatusMap[pipeline.name].status + ': ' + common.pipelineStatusMap[pipeline.name].message}}">
+               tooltip="{{'Pipeline Status :' + common.pipelineStatusMap[pipeline.pipelineId].status + ': ' + common.pipelineStatusMap[pipeline.pipelineId].message}}">
         <i class="fa fa-exclamation-triangle fa-12x"></i>
       </section>
 
       <section class="triggered-alert-status"
-               ng-if="common.pipelineStatusMap[pipeline.name].status === 'RUNNING' &&
-                   common.alertsMap[pipeline.name] && common.alertsMap[pipeline.name].length > 0"
+               ng-if="common.pipelineStatusMap[pipeline.pipelineId].status === 'RUNNING' &&
+                   common.alertsMap[pipeline.pipelineId] && common.alertsMap[pipeline.pipelineId].length > 0"
                tooltip-placement="bottom"
-               tooltip-html="getPipelineAlerts(common.alertsMap[pipeline.name])">
+               tooltip-html="getPipelineAlerts(common.alertsMap[pipeline.pipelineId])">
         <i class="fa fa-bell fa-12x"></i>
-        <span ng-bind="common.alertsMap[pipeline.name].length"></span>
+        <span ng-bind="common.alertsMap[pipeline.pipelineId].length"></span>
       </section>
 
       <section class="pipeline-menu" ng-if="!common.isSlaveNode && isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])">
@@ -67,7 +67,7 @@
           <ul class="dropdown-menu" role="menu">
             <li role="presentation"
                 ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && !common.isSlaveNode"
-                ng-hide="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'">
+                ng-hide="common.pipelineStatusMap[pipeline.pipelineId].status === 'RUNNING'">
               <a href="#" dropdown-toggle ng-click="deletePipelineConfig(pipeline, $event)">
                 <i class="fa fa-trash-o"></i>
                 <span>{{'global.form.delete' | translate}}</span>
@@ -115,7 +115,7 @@
 
             <li role="presentation"
                 ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && !common.isSlaveNode"
-                ng-hide="common.pipelineStatusMap[pipeline.name].status === 'RUNNING' || common.pipelineStatusMap[pipeline.name].status === 'STARTING' || !pipeline.valid">
+                ng-hide="common.pipelineStatusMap[pipeline.pipelineId].status === 'RUNNING' || common.pipelineStatusMap[pipeline.pipelineId].status === 'STARTING' || !pipeline.valid">
               <a href="#" dropdown-toggle ng-click="startPipeline(pipeline, $event)">
                 <i class="glyphicon glyphicon-play"></i>
                 <span>{{'home.header.start' | translate}}</span>
@@ -124,7 +124,7 @@
 
             <li role="presentation"
                 ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && !common.isSlaveNode"
-                ng-show="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'">
+                ng-show="common.pipelineStatusMap[pipeline.pipelineId].status === 'RUNNING'">
               <a href="#" dropdown-toggle ng-click="stopPipeline(pipeline, $event)">
                 <i class="glyphicon glyphicon-stop"></i>
                 <span>{{'home.header.stop' | translate}}</span>

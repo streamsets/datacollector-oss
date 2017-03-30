@@ -36,7 +36,7 @@ angular
 
       start: function() {
         $scope.starting = true;
-        api.pipelineAgent.startPipeline(pipelineConfig.info.name, 0, $scope.runtimeConstants)
+        api.pipelineAgent.startPipeline(pipelineConfig.info.pipelineId, 0, $scope.runtimeConstants)
           .then(
             function(res) {
               $modalInstance.close(res);

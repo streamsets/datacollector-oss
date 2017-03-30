@@ -217,7 +217,7 @@ public class FilePipelineStateStore implements PipelineStateStore {
     } catch (JsonProcessingException e) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0210, e.toString(), e);
     }
-    DataStore dataStore = new DataStore(getPipelineStateFile(pipelineState.getName(), pipelineState.getRev()));
+    DataStore dataStore = new DataStore(getPipelineStateFile(pipelineState.getPipelineId(), pipelineState.getRev()));
     try (OutputStream os = dataStore.getOutputStream()) {
       os.write(pipelineString.getBytes());
       dataStore.commit(os);
@@ -228,7 +228,7 @@ public class FilePipelineStateStore implements PipelineStateStore {
     }
     // In addition, append the state of the pipeline to the pipelineState.json present in the directory of that
     // pipeline
-    LogUtil.log(pipelineState.getName(), pipelineState.getRev(), STATE, pipelineString);
+    LogUtil.log(pipelineState.getPipelineId(), pipelineState.getRev(), STATE, pipelineString);
   }
 
   private File[] getHistoryStateFiles(String pipelineName, String rev) {

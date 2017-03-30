@@ -140,7 +140,7 @@ public class TestFilePipelineStoreTask {
       Assert.assertEquals(1, store.getPipelines().size());
       store.save("foo2", "a", "A", "", store.load("a", "0"));
       assertEquals("foo2", store.getPipelines().get(0).getLastModifier());
-      Assert.assertEquals("a", store.getInfo("a").getName());
+      Assert.assertEquals("a", store.getInfo("a").getPipelineId());
       store.delete("a");
       Assert.assertEquals(0, store.getPipelines().size());
     } finally {
@@ -236,7 +236,7 @@ public class TestFilePipelineStoreTask {
       PipelineInfo info2 = store.getInfo(DEFAULT_PIPELINE_NAME);
       Assert.assertEquals(info1.getCreated(), info2.getCreated());
       Assert.assertEquals(info1.getCreator(), info2.getCreator());
-      Assert.assertEquals(info1.getName(), info2.getName());
+      Assert.assertEquals(info1.getPipelineId(), info2.getPipelineId());
       Assert.assertEquals(info1.getLastRev(), info2.getLastRev());
       Assert.assertEquals("foo", info2.getLastModifier());
       Assert.assertTrue(info2.getLastModified().getTime() > info1.getLastModified().getTime());

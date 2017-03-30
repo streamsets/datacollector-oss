@@ -421,7 +421,7 @@
       <div class="panel-body">
         <ul class="table-properties">
           <li ng-repeat="sdcURL in common.pipelineMetrics.slaves">
-            <a href="/rest/v1/cluster/redirectToSlave?name={{pipelineConfig.info.name}}&sdcURL={{sdcURL}}"
+            <a href="/rest/v1/cluster/redirectToSlave?name={{pipelineConfig.info.pipelineId}}&sdcURL={{sdcURL}}"
                target="_blank">{{sdcURL}}</a>
           </li>
         </ul>

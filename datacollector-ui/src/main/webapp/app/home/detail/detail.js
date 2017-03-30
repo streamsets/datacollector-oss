@@ -361,7 +361,7 @@ angular
         $scope.activeDetailTab = tab;
         switch($scope.selectedType) {
           case pipelineConstant.PIPELINE:
-            $scope.selectedDetailPaneTabCache[$scope.pipelineConfig.info.name] = tab.name;
+            $scope.selectedDetailPaneTabCache[$scope.pipelineConfig.info.pipelineId] = tab.name;
             break;
           case pipelineConstant.STAGE_INSTANCE:
             $scope.selectedDetailPaneTabCache[$scope.selectedObject.instanceName] = tab.name;

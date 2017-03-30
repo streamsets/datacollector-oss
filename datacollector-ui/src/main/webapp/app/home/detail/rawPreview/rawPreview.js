@@ -40,7 +40,7 @@ angular
        * Raw Source Preview
        */
       rawSourcePreview: function() {
-        api.pipelineAgent.rawSourcePreview($scope.activeConfigInfo.name, 0, $scope.detailPaneConfig.uiInfo.rawSource.configuration)
+        api.pipelineAgent.rawSourcePreview($scope.activeConfigInfo.pipelineId, 0, $scope.detailPaneConfig.uiInfo.rawSource.configuration)
           .success(function(data) {
             $rootScope.common.errors = [];
             $scope.rawSourcePreviewData = data ? data.previewData : '';

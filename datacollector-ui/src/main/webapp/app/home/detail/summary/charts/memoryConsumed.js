@@ -26,7 +26,7 @@ angular
   .module('dataCollectorApp.home')
   .controller('MemoryConsumedLineChartController', function($scope, $rootScope, pipelineConstant, api) {
     var color = $scope.recordsColor,
-      baseQuery = "select count,metric from counters where (pipeline='" + $scope.pipelineConfig.info.name + "') and ",
+      baseQuery = "select count,metric from counters where (pipeline='" + $scope.pipelineConfig.info.pipelineId + "') and ",
       getColor = function(d) {
         if(d && d.key && color[d.key]) {
           return color[d.key];
@@ -125,7 +125,7 @@ angular
       if($scope.stageSelected) {
         values =  memoryConsumed[currentSelection.instanceName];
       } else {
-        values = memoryConsumed['pipeline.' + pipelineConfig.info.name];
+        values = memoryConsumed['pipeline.' + pipelineConfig.info.pipelineId];
       }
 
       if(!values) {

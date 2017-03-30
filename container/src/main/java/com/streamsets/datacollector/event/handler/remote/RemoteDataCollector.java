@@ -117,7 +117,7 @@ public class RemoteDataCollector implements DataCollector {
     validateIfRemote(name, rev, "START");
     PipelineState pipelineState = pipelineStateStore.getState(name, rev);
     if (pipelineState.getStatus().isActive()) {
-      LOG.warn("Pipeline {}:{} is already in active state {}", pipelineState.getName(), pipelineState.getRev(),
+      LOG.warn("Pipeline {}:{} is already in active state {}", pipelineState.getPipelineId(), pipelineState.getRev(),
           pipelineState.getStatus());
     } else {
       manager.getRunner(user, name, rev).start();
@@ -158,7 +158,7 @@ public class RemoteDataCollector implements DataCollector {
     List<PipelineState> pipelineInfoList = manager.getPipelines();
     boolean pipelineExists = false;
     for (PipelineState pipelineState : pipelineInfoList) {
-      if (pipelineState.getName().equals(name)) {
+      if (pipelineState.getPipelineId().equals(name)) {
         pipelineExists = true;
         break;
       }
@@ -255,7 +255,7 @@ public class RemoteDataCollector implements DataCollector {
     for (Pair<PipelineState, Map<String, String>> pipelineStateAndOffset: stateEventListener.getPipelineStateEvents()) {
       PipelineState pipelineState = pipelineStateAndOffset.getLeft();
       Map<String, String> offset = pipelineStateAndOffset.getRight();
-      String name = pipelineState.getName();
+      String name = pipelineState.getPipelineId();
       String rev = pipelineState.getRev();
       PipelineState latestState;
       boolean isClusterMode = (pipelineState.getExecutionMode() != ExecutionMode.STANDALONE) ? true : false;
@@ -325,7 +325,7 @@ public class RemoteDataCollector implements DataCollector {
     Set<String> localPipelineIds = new HashSet<>();
     for (PipelineState pipelineState : pipelineStates) {
       boolean isRemote = false;
-      String name = pipelineState.getName();
+      String name = pipelineState.getPipelineId();
       PipelineInfo pipelineInfo = pipelineStore.getInfo(name);
       String title = pipelineInfo.getTitle();
       String rev = pipelineState.getRev();

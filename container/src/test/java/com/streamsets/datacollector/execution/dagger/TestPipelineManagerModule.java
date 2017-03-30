@@ -86,22 +86,22 @@ public class TestPipelineManagerModule {
     PipelineStoreTask pipelineStoreTask = pipelineTask.getPipelineStoreTask();
     PipelineConfiguration pc = pipelineStoreTask.create("user", "p1", "p1", "description", false);
     //Create previewer
-    Previewer previewer = pipelineManager.createPreviewer("user", pc.getInfo().getName(), "1");
+    Previewer previewer = pipelineManager.createPreviewer("user", pc.getInfo().getPipelineId(), "1");
     assertEquals(previewer, pipelineManager.getPreviewer(previewer.getId()));
     ((StandaloneAndClusterPipelineManager)pipelineManager).outputRetrieved(previewer.getId());
     assertNull(pipelineManager.getPreviewer(previewer.getId()));
 
-    pipelineStoreTask.save("user", pc.getInfo().getName(), "0", "description", pc);
+    pipelineStoreTask.save("user", pc.getInfo().getPipelineId(), "0", "description", pc);
 
     //create Runner
-    Runner runner = pipelineManager.getRunner("user", pc.getInfo().getName(), "0");
+    Runner runner = pipelineManager.getRunner("user", pc.getInfo().getPipelineId(), "0");
     Assert.assertTrue(runner instanceof AsyncRunner);
 
     runner = ((AsyncRunner)runner).getRunner();
     Assert.assertTrue(runner instanceof StandaloneRunner);
 
     Assert.assertEquals(PipelineStatus.EDITED, runner.getState().getStatus());
-    Assert.assertEquals(pc.getInfo().getName(), runner.getName());
+    Assert.assertEquals(pc.getInfo().getPipelineId(), runner.getName());
     Assert.assertEquals("0", runner.getRev());
   }
 

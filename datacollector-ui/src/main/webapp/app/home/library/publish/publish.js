@@ -44,7 +44,7 @@ angular
             deferList.push(api.remote.publishPipeline(
               authService.getRemoteBaseUrl(),
               authService.getSSOToken(),
-              pipelineInfo[i].name,
+              pipelineInfo[i].pipelineId,
               {
                 name:  pipelineInfo[i].title,
                 commitMessage: $scope.commitPipelineModel.commitMessage
@@ -69,7 +69,7 @@ angular
           $q.when(api.remote.publishPipeline(
             authService.getRemoteBaseUrl(),
             authService.getSSOToken(),
-            pipelineInfo.name,
+            pipelineInfo.pipelineId,
             $scope.commitPipelineModel
           )).
           then(

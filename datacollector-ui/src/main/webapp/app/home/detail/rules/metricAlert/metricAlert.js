@@ -33,7 +33,7 @@ angular
        * Refresh Rules
        */
       refreshRules: function() {
-        updateRules($scope.activeConfigInfo.name);
+        updateRules($scope.activeConfigInfo.pipelineId);
       },
 
       /**

@@ -25,7 +25,7 @@
              ng-class="{'show-name-column': header.showNameColumn}"
              ng-if="header.showNameColumn">
           <a ng-click="onSortColumnHeaderClick('NAME')">
-            <span>{{'global.form.id' | translate}}</span>
+            <span>{{'global.form.pipelineId' | translate}}</span>
             <i ng-if="header.sortColumn !== 'NAME'" class="fa fa-sort" aria-hidden="true"></i>
             <i ng-if="header.sortColumn === 'NAME' && !header.sortReverse" class="fa fa-arrow-down"></i>
             <i ng-if="header.sortColumn === 'NAME' && header.sortReverse" class="fa fa-arrow-up"></i>
@@ -71,14 +71,14 @@
       </li>
 
       <li class="list-group-item"
-          ng-class="{'active-info': selectedPipelineMap[pipeline.name]}"
+          ng-class="{'active-info': selectedPipelineMap[pipeline.pipelineId]}"
           ng-repeat="pipeline in filteredPipelines">
 
-        <i ng-if="selectedPipelineMap[pipeline.name]"
+        <i ng-if="selectedPipelineMap[pipeline.pipelineId]"
            ng-click="unSelectPipeline(pipeline)"
            class="glyphicon glyphicon-check fa-12x"></i>
 
-        <i ng-if="!selectedPipelineMap[pipeline.name]"
+        <i ng-if="!selectedPipelineMap[pipeline.pipelineId]"
            ng-click="selectPipeline(pipeline, $event)"
            class="glyphicon glyphicon-unchecked fa-12x"></i>
 
@@ -97,7 +97,7 @@
         <div class="pipeline-name"
              ng-class="{'show-name-column': header.showNameColumn}"
              ng-if="header.showNameColumn">
-          <span>{{pipeline.name}}</span>
+          <span>{{pipeline.pipelineId}}</span>
         </div>
 
         <span class="pipeline-update-time">
@@ -107,12 +107,12 @@
 
         <span class="pipeline-creator">{{pipeline.creator}}</span>
 
-        <span class="pipeline-status {{common.pipelineStatusMap[pipeline.name].status}}">{{common.pipelineStatusMap[pipeline.name].status}}</span>
+        <span class="pipeline-status {{common.pipelineStatusMap[pipeline.pipelineId].status}}">{{common.pipelineStatusMap[pipeline.pipelineId].status}}</span>
 
         <span class="pipeline-uptime"
-              ng-show="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'">
+              ng-show="common.pipelineStatusMap[pipeline.pipelineId].status === 'RUNNING'">
           <span class="time-update" translate="home.header.uptime">Uptime</span>
-          <span class="time-update" am-time-ago="common.pipelineStatusMap[pipeline.name].timeStamp"></span>
+          <span class="time-update" am-time-ago="common.pipelineStatusMap[pipeline.pipelineId].timeStamp"></span>
         </span>
 
         <div class="action-menu pull-right" dropdown>
@@ -123,7 +123,7 @@
           <ul class="dropdown-menu" role="menu">
             <li role="presentation"
                 ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && !common.isSlaveNode"
-                ng-hide="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'">
+                ng-hide="common.pipelineStatusMap[pipeline.pipelineId].status === 'RUNNING'">
               <a href="#" dropdown-toggle ng-click="deletePipelineConfig(pipeline, $event)">
                 <i class="fa fa-trash-o"></i>
                 <span>{{'global.form.delete' | translate}}</span>
@@ -171,7 +171,7 @@
 
             <li role="presentation"
                 ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && !common.isSlaveNode"
-                ng-hide="common.pipelineStatusMap[pipeline.name].status === 'RUNNING' || common.pipelineStatusMap[pipeline.name].status === 'STARTING' || common.pipelineStatusMap[pipeline.name].status === 'STOPPING' || !pipeline.valid">
+                ng-hide="common.pipelineStatusMap[pipeline.pipelineId].status === 'RUNNING' || common.pipelineStatusMap[pipeline.pipelineId].status === 'STARTING' || common.pipelineStatusMap[pipeline.pipelineId].status === 'STOPPING' || !pipeline.valid">
               <a href="#" dropdown-toggle ng-click="startPipeline(pipeline, $event)">
                 <i class="glyphicon glyphicon-play"></i>
                 <span>{{'home.header.start' | translate}}</span>
@@ -180,7 +180,7 @@
 
             <li role="presentation"
                 ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && !common.isSlaveNode"
-                ng-show="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'">
+                ng-show="common.pipelineStatusMap[pipeline.pipelineId].status === 'RUNNING'">
               <a href="#" dropdown-toggle ng-click="stopPipeline(pipeline, false, $event)">
                 <i class="glyphicon glyphicon-stop"></i>
                 <span>{{'home.header.stop' | translate}}</span>
@@ -189,7 +189,7 @@
 
             <li role="presentation"
                 ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && !common.isSlaveNode"
-                ng-show="common.pipelineStatusMap[pipeline.name].status === 'STOPPING'">
+                ng-show="common.pipelineStatusMap[pipeline.pipelineId].status === 'STOPPING'">
               <a href="#" dropdown-toggle ng-click="stopPipeline(pipeline, true, $event)">
                 <i class="glyphicon glyphicon-stop"></i>
                 <span>{{'home.header.forceStop' | translate}}</span>
@@ -207,19 +207,19 @@
         </div>
 
         <div class="invalid-status pull-right"
-             ng-if="common.pipelineStatusMap[pipeline.name].status == 'START_ERROR' || common.pipelineStatusMap[pipeline.name].status == 'RUNNING_ERROR' || common.pipelineStatusMap[pipeline.name].status == 'RUN_ERROR' || common.pipelineStatusMap[pipeline.name].status == 'CONNECT_ERROR'"
+             ng-if="common.pipelineStatusMap[pipeline.pipelineId].status == 'START_ERROR' || common.pipelineStatusMap[pipeline.pipelineId].status == 'RUNNING_ERROR' || common.pipelineStatusMap[pipeline.pipelineId].status == 'RUN_ERROR' || common.pipelineStatusMap[pipeline.pipelineId].status == 'CONNECT_ERROR'"
              tooltip-placement="bottom"
-             tooltip="{{'Pipeline Status :' + common.pipelineStatusMap[pipeline.name].status + ': ' + common.pipelineStatusMap[pipeline.name].message}}">
+             tooltip="{{'Pipeline Status :' + common.pipelineStatusMap[pipeline.pipelineId].status + ': ' + common.pipelineStatusMap[pipeline.pipelineId].message}}">
           <i class="fa fa-exclamation-triangle fa-12x"></i>
         </div>
 
         <div class="triggered-alert-status pull-right"
-             ng-if="common.pipelineStatusMap[pipeline.name].status === 'RUNNING' &&
-                   common.alertsMap[pipeline.name] && common.alertsMap[pipeline.name].length > 0"
+             ng-if="common.pipelineStatusMap[pipeline.pipelineId].status === 'RUNNING' &&
+                   common.alertsMap[pipeline.pipelineId] && common.alertsMap[pipeline.pipelineId].length > 0"
              tooltip-placement="bottom"
-             tooltip-html="getPipelineAlerts(common.alertsMap[pipeline.name])">
+             tooltip-html="getPipelineAlerts(common.alertsMap[pipeline.pipelineId])">
           <i class="fa fa-bell fa-12x"></i>
-          <span ng-bind="common.alertsMap[pipeline.name].length"></span>
+          <span ng-bind="common.alertsMap[pipeline.pipelineId].length"></span>
         </div>
 
         <div class="clearfix pipeline-details" ng-if="showDetails">
@@ -230,17 +230,17 @@
           </div>
 
           <div class="invalid-status pull-right"
-               ng-if="common.pipelineStatusMap[pipeline.name].status == 'START_ERROR' ||
-                   common.pipelineStatusMap[pipeline.name].status == 'RUNNING_ERROR' ||
-                   common.pipelineStatusMap[pipeline.name].status == 'RUN_ERROR' ||
-                   common.pipelineStatusMap[pipeline.name].status == 'CONNECT_ERROR'">
-            <span>{{common.pipelineStatusMap[pipeline.name].message}}</span>
+               ng-if="common.pipelineStatusMap[pipeline.pipelineId].status == 'START_ERROR' ||
+                   common.pipelineStatusMap[pipeline.pipelineId].status == 'RUNNING_ERROR' ||
+                   common.pipelineStatusMap[pipeline.pipelineId].status == 'RUN_ERROR' ||
+                   common.pipelineStatusMap[pipeline.pipelineId].status == 'CONNECT_ERROR'">
+            <span>{{common.pipelineStatusMap[pipeline.pipelineId].message}}</span>
           </div>
 
           <div class="triggered-alert-status  pull-right"
-               ng-if="common.pipelineStatusMap[pipeline.name].status === 'RUNNING' &&
-                   common.alertsMap[pipeline.name] && common.alertsMap[pipeline.name].length > 0">
-            <span ng-bind-html="getPipelineAlerts(common.alertsMap[pipeline.name])"></span>
+               ng-if="common.pipelineStatusMap[pipeline.pipelineId].status === 'RUNNING' &&
+                   common.alertsMap[pipeline.pipelineId] && common.alertsMap[pipeline.pipelineId].length > 0">
+            <span ng-bind-html="getPipelineAlerts(common.alertsMap[pipeline.pipelineId])"></span>
           </div>
 
         </div>

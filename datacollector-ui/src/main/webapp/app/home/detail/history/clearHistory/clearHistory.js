@@ -28,7 +28,7 @@ angular
       pipelineInfo: pipelineInfo,
 
       yes: function() {
-        api.pipelineAgent.clearHistory(pipelineInfo.name).
+        api.pipelineAgent.clearHistory(pipelineInfo.pipelineId).
           success(function() {
             $modalInstance.close(pipelineInfo);
           }).

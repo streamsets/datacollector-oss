@@ -35,7 +35,7 @@ angular
       yes: function() {
         $scope.operationInProgress = true;
         if ($scope.isList) {
-          api.pipelineAgent.deletePipelines(_.pluck(pipelineInfo, 'name'))
+          api.pipelineAgent.deletePipelines(_.pluck(pipelineInfo, 'pipelineId'))
             .success(function() {
               $modalInstance.close(pipelineInfo);
             })
@@ -45,7 +45,7 @@ angular
             });
 
         } else {
-          api.pipelineAgent.deletePipelineConfig(pipelineInfo.name)
+          api.pipelineAgent.deletePipelineConfig(pipelineInfo.pipelineId)
             .success(function() {
               $modalInstance.close(pipelineInfo);
             })

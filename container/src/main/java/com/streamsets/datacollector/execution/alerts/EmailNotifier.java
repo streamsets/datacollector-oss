@@ -81,7 +81,7 @@ public class EmailNotifier implements StateEventListener {
       Map<String, String> offset
   ) throws PipelineRuntimeException {
     //should not be active in slave mode
-    if(toState.getExecutionMode() != ExecutionMode.SLAVE && name.equals(toState.getName())) {
+    if(toState.getExecutionMode() != ExecutionMode.SLAVE && name.equals(toState.getPipelineId())) {
       if (pipelineStates != null && pipelineStates.contains(toState.getStatus().name())) {
         //pipeline switched to a terminal state. Send email
         String emailBody = null;
@@ -94,37 +94,37 @@ public class EmailNotifier implements StateEventListener {
               url = Resources.getResource(EmailConstants.NOTIFY_ERROR_EMAIL_TEMPLATE);
               emailBody = Resources.toString(url, Charsets.UTF_8);
               emailBody = emailBody.replace(EmailConstants.DESCRIPTION_KEY, toState.getMessage());
-              subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + toState.getName() + " - ERROR";
+              subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + toState.getPipelineId() + " - ERROR";
               break;
             case STOPPED:
               url = Resources.getResource(EmailConstants.PIPELINE_STATE_CHANGE__EMAIL_TEMPLATE);
               emailBody = Resources.toString(url, Charsets.UTF_8);
               emailBody = emailBody.replace(EmailConstants.MESSAGE_KEY, "was stopped");
-              subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + toState.getName() + " - STOPPED";
+              subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + toState.getPipelineId() + " - STOPPED";
               break;
             case FINISHED:
               url = Resources.getResource(EmailConstants.PIPELINE_STATE_CHANGE__EMAIL_TEMPLATE);
               emailBody = Resources.toString(url, Charsets.UTF_8);
               emailBody = emailBody.replace(EmailConstants.MESSAGE_KEY, "finished executing");
-              subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + toState.getName() + " - FINISHED";
+              subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + toState.getPipelineId() + " - FINISHED";
               break;
             case RUNNING:
               url = Resources.getResource(EmailConstants.PIPELINE_STATE_CHANGE__EMAIL_TEMPLATE);
               emailBody = Resources.toString(url, Charsets.UTF_8);
               emailBody = emailBody.replace(EmailConstants.MESSAGE_KEY, "started executing");
-              subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + toState.getName() + " - RUNNING";
+              subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + toState.getPipelineId() + " - RUNNING";
               break;
             case DISCONNECTED:
               url = Resources.getResource(EmailConstants.SDC_STATE_CHANGE__EMAIL_TEMPLATE);
               emailBody = Resources.toString(url, Charsets.UTF_8);
               emailBody = emailBody.replace(EmailConstants.MESSAGE_KEY, "was shut down");
-              subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + toState.getName() + " - DISCONNECTED";
+              subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + toState.getPipelineId() + " - DISCONNECTED";
               break;
             case CONNECTING:
               url = Resources.getResource(EmailConstants.SDC_STATE_CHANGE__EMAIL_TEMPLATE);
               emailBody = Resources.toString(url, Charsets.UTF_8);
               emailBody = emailBody.replace(EmailConstants.MESSAGE_KEY, "was started");
-              subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + toState.getName() + " - CONNECTING";
+              subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + toState.getPipelineId() + " - CONNECTING";
               break;
             default:
               throw new IllegalStateException("Unexpected PipelineState " + toState);
@@ -134,9 +134,9 @@ public class EmailNotifier implements StateEventListener {
         }
         java.text.DateFormat dateTimeFormat = new SimpleDateFormat(EmailConstants.DATE_MASK, Locale.ENGLISH);
         emailBody = emailBody.replace(EmailConstants.TIME_KEY, dateTimeFormat.format(new Date(toState.getTimeStamp())))
-          .replace(EmailConstants.PIPELINE_NAME_KEY, toState.getName())
+          .replace(EmailConstants.PIPELINE_NAME_KEY, toState.getPipelineId())
           .replace(EmailConstants.URL_KEY, runtimeInfo.getBaseHttpUrl() + EmailConstants.PIPELINE_URL +
-            toState.getName().replaceAll(" ", "%20"));
+            toState.getPipelineId().replaceAll(" ", "%20"));
         try {
           emailSender.send(emails, subject, emailBody);
         } catch (EmailException e) {

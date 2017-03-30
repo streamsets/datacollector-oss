@@ -25,7 +25,7 @@
 angular
   .module('dataCollectorApp.home')
   .controller('AllStageBatchTimerChartController', function($rootScope, $scope, api, pipelineConstant) {
-    var baseQuery = "select mean,metric from timers where (pipeline='" + $scope.pipelineConfig.info.name + "') and ";
+    var baseQuery = "select mean,metric from timers where (pipeline='" + $scope.pipelineConfig.info.pipelineId + "') and ";
 
     angular.extend($scope, {
       allDataZero: true,

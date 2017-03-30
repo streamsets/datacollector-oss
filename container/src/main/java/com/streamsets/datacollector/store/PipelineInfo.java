@@ -20,6 +20,7 @@
 package com.streamsets.datacollector.store;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
@@ -27,8 +28,9 @@ import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PipelineInfo implements Serializable {
-  private String name;
+  private String pipelineId;
   private String title;
   private String description;
   private Date created;
@@ -42,7 +44,7 @@ public class PipelineInfo implements Serializable {
 
   @JsonCreator
   public PipelineInfo(
-      @JsonProperty("name") String name,
+      @JsonProperty("pipelineId") String pipelineId,
       @JsonProperty("title") String title,
       @JsonProperty("description") String description,
       @JsonProperty("created") Date created,
@@ -54,7 +56,7 @@ public class PipelineInfo implements Serializable {
       @JsonProperty("valid") boolean valid,
       @JsonProperty("metadata") Map<String, Object> metadata
   ) {
-    this.name = name;
+    this.pipelineId = pipelineId;
     this.title = title;
     this.description = description;
     this.created = created;
@@ -77,12 +79,12 @@ public class PipelineInfo implements Serializable {
       UUID uuid, boolean valid,
       Map<String, Object> metadata
   ) {
-    this(pipelineInfo.getName(), title, description, pipelineInfo.getCreated(), lastModified,
+    this(pipelineInfo.getPipelineId(), title, description, pipelineInfo.getCreated(), lastModified,
          pipelineInfo.getCreator(), lastModifier, lastRev, uuid, valid, metadata);
   }
 
-  public String getName() {
-    return name;
+  public String getPipelineId() {
+    return pipelineId;
   }
 
   public String getTitle() {

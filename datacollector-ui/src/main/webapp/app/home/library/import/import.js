@@ -46,7 +46,7 @@ angular
       import: function () {
         var reader = new FileReader();
 
-        if ($scope.createNewPipeline && !$scope.newConfig.name) {
+        if ($scope.createNewPipeline && !$scope.newConfig.pipelineId) {
           $translate('home.library.nameRequiredValidation').then(function(translation) {
             $scope.common.errors = [translation];
           });
@@ -78,10 +78,10 @@ angular
                 jsonConfigObj.metadata = pipelineInfo.metadata;
                 jsonConfigObj.title = pipelineInfo.title;
 
-                api.pipelineAgent.savePipelineConfig(pipelineInfo.name, jsonConfigObj).
+                api.pipelineAgent.savePipelineConfig(pipelineInfo.pipelineId, jsonConfigObj).
                   then(function(res) {
                     if (jsonRulesObj && jsonRulesObj.uuid) {
-                      api.pipelineAgent.getPipelineRules(pipelineInfo.name).
+                      api.pipelineAgent.getPipelineRules(pipelineInfo.pipelineId).
                         then(function(res) {
                           var rulesObj = res.data;
                           rulesObj.metricsRuleDefinitions = jsonRulesObj.metricsRuleDefinitions;
@@ -89,7 +89,7 @@ angular
                           rulesObj.driftRuleDefinitions = jsonRulesObj.driftRuleDefinitions;
                           rulesObj.emailIds = jsonRulesObj.emailIds;
 
-                          api.pipelineAgent.savePipelineRules(pipelineInfo.name, rulesObj).
+                          api.pipelineAgent.savePipelineRules(pipelineInfo.pipelineId, rulesObj).
                             then(function() {
                               $modalInstance.close();
                             });
@@ -109,17 +109,17 @@ angular
                   description;
 
                 if ($scope.createNewPipeline) {
-                  label = $scope.newConfig.name;
+                  label = $scope.newConfig.pipelineId;
                   description = $scope.newConfig.description;
                 } else {
-                  label = jsonConfigObj.info.label || jsonConfigObj.info.name;
+                  label = jsonConfigObj.info.label || jsonConfigObj.info.pipelineId;
                   description = jsonConfigObj.info.description;
                 }
 
                 api.pipelineAgent.createNewPipelineConfig(label, description)
                   .then(function(res) {
                     newPipelineObject = res.data;
-                    name = newPipelineObject.info.name;
+                    name = newPipelineObject.info.pipelineId;
                     newPipelineObject.configuration = jsonConfigObj.configuration;
                     newPipelineObject.errorStage = jsonConfigObj.errorStage;
                     newPipelineObject.statsAggregatorStage = jsonConfigObj.statsAggregatorStage;

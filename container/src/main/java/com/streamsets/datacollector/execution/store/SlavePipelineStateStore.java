@@ -50,9 +50,9 @@ public class SlavePipelineStateStore implements PipelineStateStore {
   @Override
   public PipelineState saveState(String user, String name, String rev, PipelineStatus status, String message,
     Map<String, Object> attributes, ExecutionMode executionMode, String metrics, int retryAttempt, long nextRetryTimeStamp) throws PipelineStoreException {
-    if (pipelineState != null && (!pipelineState.getName().equals(name) || !pipelineState.getRev().equals(rev))) {
+    if (pipelineState != null && (!pipelineState.getPipelineId().equals(name) || !pipelineState.getRev().equals(rev))) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0212, name, rev, ExecutionMode.SLAVE,
-        pipelineState.getName(), pipelineState.getRev());
+        pipelineState.getPipelineId(), pipelineState.getRev());
     }
     if (attributes == null) {
       attributes = getState(name, rev).getAttributes();
@@ -65,7 +65,7 @@ public class SlavePipelineStateStore implements PipelineStateStore {
 
   @Override
   public PipelineState getState(String name, String rev) throws PipelineStoreException {
-    if (pipelineState != null && pipelineState.getName().equals(name) && pipelineState.getRev().equals(rev)) {
+    if (pipelineState != null && pipelineState.getPipelineId().equals(name) && pipelineState.getRev().equals(rev)) {
       return pipelineState;
     } else {
       throw new PipelineStoreException(ContainerError.CONTAINER_0211, name, rev, ExecutionMode.SLAVE);

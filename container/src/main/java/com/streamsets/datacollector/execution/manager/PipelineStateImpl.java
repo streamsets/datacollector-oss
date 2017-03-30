@@ -77,7 +77,7 @@ public class PipelineStateImpl implements PipelineState {
   }
 
   @Override
-  public String getName() {
+  public String getPipelineId() {
     return name;
   }
 
@@ -89,7 +89,7 @@ public class PipelineStateImpl implements PipelineState {
   @Override
   public String toString() {
     return Utils.format("PipelineState[name='{}' rev='{}' state='{}' message='{}' timeStamp='{}' attributes='{}']",
-      getName(), getRev(), getStatus().name(), getMessage(), getTimeStamp(), getAttributes());
+      getPipelineId(), getRev(), getStatus().name(), getMessage(), getTimeStamp(), getAttributes());
   }
 
   @Override

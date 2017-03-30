@@ -223,11 +223,11 @@ public class TestRemoteDataCollector {
       pipelineList.add(pipelineStatus3);
       pipelineList.add(pipelineStatus4);
       pipelineList.add(pipelineStatus5);
-      stateMap.put(pipelineStatus1.getName() + "::" + pipelineStatus1.getRev(), pipelineStatus1);
-      stateMap.put(pipelineStatus2.getName() + "::" + pipelineStatus2.getRev(), pipelineStatus2);
-      stateMap.put(pipelineStatus3.getName() + "::" + pipelineStatus3.getRev(), pipelineStatus3);
-      stateMap.put(pipelineStatus4.getName() + "::" + pipelineStatus4.getRev(), pipelineStatus4);
-      stateMap.put(pipelineStatus5.getName() + "::" + pipelineStatus5.getRev(), pipelineStatus5);
+      stateMap.put(pipelineStatus1.getPipelineId() + "::" + pipelineStatus1.getRev(), pipelineStatus1);
+      stateMap.put(pipelineStatus2.getPipelineId() + "::" + pipelineStatus2.getRev(), pipelineStatus2);
+      stateMap.put(pipelineStatus3.getPipelineId() + "::" + pipelineStatus3.getRev(), pipelineStatus3);
+      stateMap.put(pipelineStatus4.getPipelineId() + "::" + pipelineStatus4.getRev(), pipelineStatus4);
+      stateMap.put(pipelineStatus5.getPipelineId() + "::" + pipelineStatus5.getRev(), pipelineStatus5);
       return pipelineList;
     }
 
@@ -717,8 +717,8 @@ public class TestRemoteDataCollector {
     @Override
     public PipelineConfiguration create(
         String user,
-        String name,
-        String label,
+        String pipelineId,
+        String pipelineTitle,
         String description,
         boolean isRemote
     ) throws PipelineStoreException {
@@ -726,6 +726,7 @@ public class TestRemoteDataCollector {
       return new PipelineConfiguration(
           1,
           1,
+          "pipelineId",
           UUID.randomUUID(),
           "label",
           "",

@@ -165,7 +165,7 @@ public class TestPipelineStateStore {
     PipelineState pipelineState = pipelineStateStore.getState("name1", "0");
 
     assertEquals("user2", pipelineState.getUser());
-    assertEquals("name1", pipelineState.getName());
+    assertEquals("name1", pipelineState.getPipelineId());
     assertEquals("0", pipelineState.getRev());
     assertEquals(ExecutionMode.STANDALONE, pipelineState.getExecutionMode());
 
@@ -174,7 +174,7 @@ public class TestPipelineStateStore {
     pipelineStoreTask.save("user3", "name1", "0", "execution mdoe changed", pc0);
     pipelineState = pipelineStateStore.getState("name1", "0");
     assertEquals("user3", pipelineState.getUser());
-    assertEquals("name1", pipelineState.getName());
+    assertEquals("name1", pipelineState.getPipelineId());
     assertEquals("0", pipelineState.getRev());
     assertEquals(ExecutionMode.CLUSTER_BATCH, pipelineState.getExecutionMode());
 
@@ -267,7 +267,7 @@ public class TestPipelineStateStore {
     pipelineStateStore.saveState("user1", "aaa", "0", PipelineStatus.EDITED, "Pipeline edited", null, ExecutionMode.STANDALONE, null, 0, 0);
     PipelineState pipelineState = pipelineStateStore.getState("aaa", "0");
     assertEquals("user1", pipelineState.getUser());
-    assertEquals("aaa", pipelineState.getName());
+    assertEquals("aaa", pipelineState.getPipelineId());
     assertEquals("0", pipelineState.getRev());
     assertEquals(PipelineStatus.EDITED, pipelineState.getStatus());
     assertEquals("Pipeline edited", pipelineState.getMessage());
@@ -290,7 +290,7 @@ public class TestPipelineStateStore {
     pipelineStateStore.edited("user2", "aaa", "0", ExecutionMode.STANDALONE, false);
     PipelineState pipelineState = pipelineStateStore.getState("aaa", "0");
     assertEquals("user2", pipelineState.getUser());
-    assertEquals("aaa", pipelineState.getName());
+    assertEquals("aaa", pipelineState.getPipelineId());
     assertEquals("0", pipelineState.getRev());
     assertEquals(PipelineStatus.EDITED, pipelineState.getStatus());
 

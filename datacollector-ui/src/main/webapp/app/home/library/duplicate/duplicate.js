@@ -39,8 +39,8 @@ angular
         if ($scope.newConfig.numberOfCopies === 1) {
           $scope.operationInProgress = true;
           $q.all([
-            api.pipelineAgent.getPipelineConfig(pipelineInfo.name),
-            api.pipelineAgent.getPipelineRules(pipelineInfo.name)
+            api.pipelineAgent.getPipelineConfig(pipelineInfo.pipelineId),
+            api.pipelineAgent.getPipelineRules(pipelineInfo.pipelineId)
           ]).then(function(results) {
             var pipelineObject = results[0].data;
             var pipelineRulesObject = results[1].data;
@@ -62,8 +62,8 @@ angular
         } else {
           $scope.operationInProgress = true;
           $q.all([
-            api.pipelineAgent.getPipelineConfig(pipelineInfo.name),
-            api.pipelineAgent.getPipelineRules(pipelineInfo.name)
+            api.pipelineAgent.getPipelineConfig(pipelineInfo.pipelineId),
+            api.pipelineAgent.getPipelineRules(pipelineInfo.pipelineId)
           ]).then(function(results) {
             var pipelineObject = results[0].data;
             var pipelineRulesObject = results[1].data;
@@ -71,7 +71,7 @@ angular
             for (var i = 0; i < $scope.newConfig.numberOfCopies; i++) {
               deferList.push(
                 api.pipelineAgent.duplicatePipelineConfig(
-                  $scope.newConfig.name + (i + 1),
+                  $scope.newConfig.pipelineId + (i + 1),
                   $scope.newConfig.description,
                   pipelineObject,
                   pipelineRulesObject

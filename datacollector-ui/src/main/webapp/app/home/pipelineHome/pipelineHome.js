@@ -829,7 +829,7 @@ angular
 
           updateGraph(config, rules, undefined, undefined, true);
 
-          if (clickedAlert && clickedAlert.pipelineName === $scope.activeConfigInfo.name) {
+          if (clickedAlert && clickedAlert.pipelineName === $scope.activeConfigInfo.pipelineId) {
             var edges = $scope.edges,
                 edge;
             $rootScope.common.clickedAlert = undefined;
@@ -885,7 +885,7 @@ angular
 
           updateGraph(config, rules);
 
-          if (clickedAlert && clickedAlert.pipelineName === $scope.activeConfigInfo.name) {
+          if (clickedAlert && clickedAlert.pipelineName === $scope.activeConfigInfo.pipelineId) {
             var edges = $scope.edges,
                 edge;
             $rootScope.common.clickedAlert = undefined;
@@ -996,7 +996,7 @@ angular
 
 
       if (!$scope.isPipelineRunning) {
-        api.pipelineAgent.savePipelineConfig($scope.activeConfigInfo.name, config).
+        api.pipelineAgent.savePipelineConfig($scope.activeConfigInfo.pipelineId, config).
           success(function (res) {
 
             //Clear Previous errors
@@ -1037,7 +1037,7 @@ angular
           uiInfoMap[stageInstance.instanceName] = stageInstance.uiInfo;
         });
 
-        api.pipelineAgent.savePipelineUIInfo($scope.activeConfigInfo.name, uiInfoMap).
+        api.pipelineAgent.savePipelineUIInfo($scope.activeConfigInfo.pipelineId, uiInfoMap).
           success(function (res) {
 
             //Clear Previous errors
@@ -1156,7 +1156,7 @@ angular
 
       $scope.firstOpenLane = $rootScope.$storage.dontShowHelpAlert ? {} : getFirstOpenLane();
 
-      if (pipelineStatus && pipelineStatus.name === pipelineConfig.info.name &&
+      if (pipelineStatus && pipelineStatus.pipelineId === pipelineConfig.info.pipelineId &&
         pipelineStatus.status === 'RUNNING' && pipelineMetrics && pipelineMetrics.meters) {
         stageErrorCounts = getStageErrorCounts();
       }
@@ -1275,7 +1275,7 @@ angular
         optionsLength = Object.keys(options).length;
 
       if (!$scope.previewMode && !$scope.snapshotMode && $scope.selectedType === type && $scope.selectedObject && selectedObject && optionsLength <= 2 &&
-        ((type === pipelineConstant.PIPELINE && $scope.selectedObject.info.name === selectedObject.info.name) ||
+        ((type === pipelineConstant.PIPELINE && $scope.selectedObject.info.pipelineId === selectedObject.info.pipelineId) ||
           (type === pipelineConstant.STAGE_INSTANCE && $scope.selectedObject.instanceName === selectedObject.instanceName))) {
         //Previous selection remain same
         return;
@@ -1357,8 +1357,8 @@ angular
         }
 
         if (!options.detailTabName) {
-          if ($scope.selectedDetailPaneTabCache[$scope.pipelineConfig.info.name]) {
-            options.detailTabName = $scope.selectedDetailPaneTabCache[$scope.pipelineConfig.info.name];
+          if ($scope.selectedDetailPaneTabCache[$scope.pipelineConfig.info.pipelineId]) {
+            options.detailTabName = $scope.selectedDetailPaneTabCache[$scope.pipelineConfig.info.pipelineId];
           } else {
             if ($scope.isPipelineRunning) {
               options.detailTabName = 'summary';
@@ -1367,8 +1367,8 @@ angular
             }
           }
 
-          if ($scope.selectedConfigGroupCache[$scope.pipelineConfig.info.name]) {
-            options.configGroup = $scope.selectedConfigGroupCache[$scope.pipelineConfig.info.name];
+          if ($scope.selectedConfigGroupCache[$scope.pipelineConfig.info.pipelineId]) {
+            options.configGroup = $scope.selectedConfigGroupCache[$scope.pipelineConfig.info.pipelineId];
           }
         }
 
@@ -1442,7 +1442,7 @@ angular
 
         pipelineMetricsTimer.then(
           function() {
-            api.pipelineAgent.getPipelineMetrics($scope.activeConfigInfo.name, 0)
+            api.pipelineAgent.getPipelineMetrics($scope.activeConfigInfo.pipelineId, 0)
               .success(function(data) {
                 if (!_.isObject(data) && _.isString(data) && data.indexOf('<!doctype html>') !== -1) {
                   //Session invalidated
@@ -1550,7 +1550,7 @@ angular
     var derivePipelineRunning = function() {
       var pipelineStatus = $rootScope.common.pipelineStatusMap[routeParamPipelineName],
         config = $scope.pipelineConfig;
-      return (pipelineStatus && config && pipelineStatus.name === config.info.name &&
+      return (pipelineStatus && config && pipelineStatus.pipelineId === config.info.pipelineId &&
       _.contains(['RUNNING', 'STARTING', 'CONNECT_ERROR', 'RETRY', 'STOPPING'], pipelineStatus.status));
     };
 
@@ -1572,7 +1572,7 @@ angular
       rulesSaveInProgress = true;
       $rootScope.common.saveOperationInProgress++;
 
-      api.pipelineAgent.savePipelineRules($scope.activeConfigInfo.name, rules).
+      api.pipelineAgent.savePipelineRules($scope.activeConfigInfo.pipelineId, rules).
         success(function (res) {
           rulesSaveInProgress = false;
           $rootScope.common.saveOperationInProgress--;
@@ -1788,14 +1788,14 @@ angular
     });
 
     $scope.$on('onOriginStageDelete', function () {
-      api.pipelineAgent.resetOffset($scope.activeConfigInfo.name);
+      api.pipelineAgent.resetOffset($scope.activeConfigInfo.pipelineId);
     });
 
     $scope.$on('onPipelineConfigSelect', function(event, configInfo) {
       if (configInfo) {
         $scope.activeConfigInfo = configInfo;
         $scope.closePreview();
-        loadPipelineConfig($scope.activeConfigInfo.name);
+        loadPipelineConfig($scope.activeConfigInfo.pipelineId);
       } else {
         //No Pipieline config exists
         ignoreUpdate = true;
@@ -1812,7 +1812,7 @@ angular
       });
     });
 
-    infoNameWatchListener = $scope.$watch('pipelineConfig.info.name', function() {
+    infoNameWatchListener = $scope.$watch('pipelineConfig.info.pipelineId', function() {
       $scope.isPipelineRunning = derivePipelineRunning();
       $scope.activeConfigStatus = $rootScope.common.pipelineStatusMap[routeParamPipelineName];
       if ($scope.activeConfigStatus && $scope.activeConfigStatus.attributes &&
@@ -1859,7 +1859,7 @@ angular
     metricsWatchListener = $rootScope.$watch('common.pipelineMetrics', function() {
       var pipelineStatus = $rootScope.common.pipelineStatusMap[routeParamPipelineName],
         config = $scope.pipelineConfig;
-      if (pipelineStatus && config && pipelineStatus.name === config.info.name &&
+      if (pipelineStatus && config && pipelineStatus.pipelineId === config.info.pipelineId &&
         $scope.isPipelineRunning && $rootScope.common.pipelineMetrics) {
 
         if (!$scope.snapshotMode) {
@@ -1940,7 +1940,7 @@ angular
     });
 
     $scope.$on('onAlertClick', function(event, alert) {
-      if (alert && alert.pipelineName === $scope.activeConfigInfo.name) {
+      if (alert && alert.pipelineName === $scope.activeConfigInfo.pipelineId) {
         var edges = $scope.edges,
             edge;
 

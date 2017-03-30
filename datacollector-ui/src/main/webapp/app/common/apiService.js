@@ -650,7 +650,7 @@ angular.module('dataCollectorApp.common')
                 labels: pipelineObject.metadata.labels
               };
             }
-            name = duplicatePipelineObject.info.name;
+            name = duplicatePipelineObject.info.pipelineId;
             return api.pipelineAgent.savePipelineConfig(name, duplicatePipelineObject);
           })
           .then(function(res) {

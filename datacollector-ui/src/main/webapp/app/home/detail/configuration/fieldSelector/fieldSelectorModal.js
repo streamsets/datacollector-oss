@@ -55,7 +55,7 @@ angular
     });
 
     $timeout(function() {
-      previewService.getInputRecordsFromPreview(activeConfigInfo.name, detailPaneConfig, 1).
+      previewService.getInputRecordsFromPreview(activeConfigInfo.pipelineId, detailPaneConfig, 1).
         then(
         function (inputRecords) {
           $scope.showLoading = false;

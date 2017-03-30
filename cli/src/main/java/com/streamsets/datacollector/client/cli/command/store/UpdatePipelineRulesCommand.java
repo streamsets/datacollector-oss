@@ -36,7 +36,7 @@ import java.io.File;
 public class UpdatePipelineRulesCommand extends BaseCommand {
   @Option(
     name = {"-n", "--name"},
-    description = "Pipeline Name",
+    description = "Pipeline ID",
     required = true
   )
   public String pipelineName;

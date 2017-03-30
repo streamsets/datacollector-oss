@@ -235,7 +235,7 @@ angular.module('dataCollectorApp.common')
       });
 
       modalInstance.result.then(function (configObject) {
-        $location.path('/collector/pipeline/' + configObject.info.name);
+        $location.path('/collector/pipeline/' + configObject.info.pipelineId);
       }, function () {
 
       });
@@ -263,7 +263,7 @@ angular.module('dataCollectorApp.common')
 
       modalInstance.result.then(function (configObject) {
         if (configObject) {
-          $location.path('/collector/pipeline/' + configObject.info.name);
+          $location.path('/collector/pipeline/' + configObject.info.pipelineId);
         } else {
           $route.reload();
         }

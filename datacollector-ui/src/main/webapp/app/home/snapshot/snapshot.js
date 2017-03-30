@@ -110,7 +110,7 @@ angular
     };
 
     var viewSnapshot = function(snapshotName) {
-      api.pipelineAgent.getSnapshot($scope.activeConfigInfo.name, 0, snapshotName).
+      api.pipelineAgent.getSnapshot($scope.activeConfigInfo.pipelineId, 0, snapshotName).
         success(function(res) {
           $scope.previewData = res;
 
@@ -142,7 +142,7 @@ angular
         if(res && res.data && res.data.length) {
           $scope.snapshotsInfo = _.chain(res.data)
             .filter(function(snapshotInfo) {
-              return snapshotInfo.name === $scope.activeConfigInfo.name && !snapshotInfo.inProgress;
+              return snapshotInfo.name === $scope.activeConfigInfo.pipelineId && !snapshotInfo.inProgress;
             })
             .sortBy('timeStamp')
             .value();

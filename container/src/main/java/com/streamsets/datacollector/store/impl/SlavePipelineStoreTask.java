@@ -41,10 +41,10 @@ public class SlavePipelineStoreTask  implements PipelineStoreTask {
 
   @Override
   public PipelineConfiguration create(
-      String name,
-      String label,
-      String description,
       String user,
+      String pipelineId,
+      String pipelineTitle,
+      String description,
       boolean isRemote
   ) throws PipelineStoreException {
     throw new UnsupportedOperationException();

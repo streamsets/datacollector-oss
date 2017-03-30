@@ -63,7 +63,7 @@ angular
         refreshCodemirrorWidget();
         switch($scope.selectedType) {
           case pipelineConstant.PIPELINE:
-            $scope.selectedConfigGroupCache[$scope.pipelineConfig.info.name] = tab.name;
+            $scope.selectedConfigGroupCache[$scope.pipelineConfig.info.pipelineId] = tab.name;
             break;
           case pipelineConstant.STAGE_INSTANCE:
             $scope.selectedConfigGroupCache[$scope.selectedObject.instanceName] = tab.name;

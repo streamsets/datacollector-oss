@@ -41,7 +41,7 @@ angular
       yes: function() {
         if ($scope.isList) {
           $scope.showLoading = true;
-          api.pipelineAgent.resetOffsets(_.pluck(pipelineInfo, 'name'))
+          api.pipelineAgent.resetOffsets(_.pluck(pipelineInfo, 'pipelineId'))
             .success(function() {
               $scope.showLoading = false;
               $scope.isOffsetResetSucceed = true;
@@ -54,7 +54,7 @@ angular
         } else {
           if(originStageDef.resetOffset) {
             $scope.showLoading = true;
-            api.pipelineAgent.resetOffset(pipelineInfo.name).
+            api.pipelineAgent.resetOffset(pipelineInfo.pipelineId).
             success(function() {
               $scope.showLoading = false;
               $scope.isOffsetResetSucceed = true;

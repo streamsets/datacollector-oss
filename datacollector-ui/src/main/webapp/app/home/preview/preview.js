@@ -159,7 +159,7 @@ angular
 
         $scope.showLoading = true;
 
-        api.pipelineAgent.createPreview($scope.activeConfigInfo.name, $scope.previewSourceOffset,
+        api.pipelineAgent.createPreview($scope.activeConfigInfo.pipelineId, $scope.previewSourceOffset,
           previewConfig.batchSize, 0, !previewConfig.writeToDestinations, stageOutputs, null, previewConfig.timeout).
           success(function (res) {
             var defer = $q.defer();
@@ -431,7 +431,7 @@ angular
       }
 
       $q.all(deferList).then(function() {
-        api.pipelineAgent.createPreview($scope.activeConfigInfo.name, $scope.previewSourceOffset,
+        api.pipelineAgent.createPreview($scope.activeConfigInfo.pipelineId, $scope.previewSourceOffset,
           previewConfig.batchSize, 0, !previewConfig.writeToDestinations, stageOutputs, null, previewConfig.timeout).
           success(function (res) {
             var defer = $q.defer();

@@ -24,7 +24,6 @@ import com.streamsets.datacollector.execution.StateEventListener;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.dc.execution.manager.standalone.ThreadUsage;
-import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.slf4j.Logger;
@@ -69,12 +68,12 @@ public class RemoteStateEventListener implements StateEventListener {
     if ((isRemote == null) ? false : (boolean) isRemote) {
       if (pipelineStateQueue.offer(new ImmutablePair<>(toState, offset))) {
         LOG.debug(Utils.format("Adding status event for remote pipeline: '{}' in status: '{}'",
-            toState.getName(),
+            toState.getPipelineId(),
             toState.getStatus()
         ));
       } else {
         LOG.warn(Utils.format("Cannot add status event for remote pipeline: '{}' in status: '{}'; Queue for " +
-            "storing pipeline state events is full"), toState.getName(), toState.getStatus());
+            "storing pipeline state events is full"), toState.getPipelineId(), toState.getStatus());
       }
     }
   }
@@ -85,7 +84,7 @@ public class RemoteStateEventListener implements StateEventListener {
     // Keep last state for a given pipeline
     Map<String, Pair<PipelineState, Map<String, String>>> map = new HashMap<>();
     for (Pair<PipelineState, Map<String, String>> pipelineStateAndOffset: pipelineStates) {
-      map.put(pipelineStateAndOffset.getLeft().getName(), pipelineStateAndOffset);
+      map.put(pipelineStateAndOffset.getLeft().getPipelineId(), pipelineStateAndOffset);
     }
     return map.values();
   }

@@ -1097,6 +1097,7 @@ public class MockStages {
 
     PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(schemaVersion,
         PipelineConfigBean.VERSION,
+        "pipelineId",
         UUID.randomUUID(),
         "label",
         null,
@@ -1285,7 +1286,7 @@ public class MockStages {
       .build();
     stages.add(target);
 
-    return new PipelineConfiguration(schemaVersion, PipelineConfigBean.VERSION, UUID.randomUUID(), "label", null,
+    return new PipelineConfiguration(schemaVersion, PipelineConfigBean.VERSION, "pipelineId", UUID.randomUUID(), "label", null,
                                      createPipelineConfigs(), null, stages, getErrorStageConfig(), getStatsAggregatorStageConfig());
   }
 
@@ -1458,7 +1459,7 @@ public class MockStages {
       .withInputLanes("a")
       .build();
     stages.add(target);
-    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION, UUID.randomUUID(), "label", null,
+    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION, "pipelineId", UUID.randomUUID(), "label", null,
                                      Arrays.asList(new Config("executionMode",
                                                                            executionMode.name()), new Config("retryAttempts", 3)), null, stages,
                                      getErrorStageConfig(), getStatsAggregatorStageConfig());
@@ -1481,6 +1482,7 @@ public class MockStages {
     return new PipelineConfiguration(
         PipelineStoreTask.SCHEMA_VERSION,
         PipelineConfigBean.VERSION,
+        "pipelineId",
         UUID.randomUUID(),
         "label",
         null,
@@ -1509,6 +1511,7 @@ public class MockStages {
     return new PipelineConfiguration(
       PipelineStoreTask.SCHEMA_VERSION,
       PipelineConfigBean.VERSION,
+        "pipelineId",
       UUID.randomUUID(),
         "label",
         null,
@@ -1537,7 +1540,7 @@ public class MockStages {
       .withInputLanes("a")
       .build();
     stages.add(target);
-    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION, UUID.randomUUID(), "label", null,
+    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION, "pipelineId", UUID.randomUUID(), "label", null,
       Arrays.asList(new Config("executionMode", executionMode.name())), null,
       stages, getErrorStageConfig(), getStatsAggregatorStageConfig());
   }
@@ -1556,7 +1559,7 @@ public class MockStages {
       .withInputLanes("a")
       .build();
     stages.add(target);
-    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION, UUID.randomUUID(),
+    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION, "pipelineId", UUID.randomUUID(),
         "label", null, Arrays.asList(new Config("executionMode", executionMode.name())), null, stages, getErrorStageConfig(), getStatsAggregatorStageConfig());
   }
 
@@ -1614,6 +1617,7 @@ public class MockStages {
     return new PipelineConfiguration(
         PipelineStoreTask.SCHEMA_VERSION,
         PipelineConfigBean.VERSION,
+        "pipelineId",
         UUID.randomUUID(),
         "label",
         null,

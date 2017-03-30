@@ -39,6 +39,7 @@ import java.util.UUID;
 public class PipelineConfiguration implements Serializable{
   private int schemaVersion;
   private int version;
+  private String pipelineId;
   private UUID uuid = null;
   private PipelineInfo info;
   private String title;
@@ -57,6 +58,7 @@ public class PipelineConfiguration implements Serializable{
   public PipelineConfiguration(
       int schemaVersion,
       int version,
+      String pipelineId,
       UUID uuid,
       String title,
       String description,
@@ -68,6 +70,7 @@ public class PipelineConfiguration implements Serializable{
   ) {
     this.schemaVersion = schemaVersion;
     this.version = version;
+    this.pipelineId = pipelineId;
     this.uuid = Preconditions.checkNotNull(uuid, "uuid cannot be null");
     this.title = title;
     this.description = description;
@@ -104,6 +107,14 @@ public class PipelineConfiguration implements Serializable{
 
   public int getVersion() {
     return version;
+  }
+
+  public String getPipelineId() {
+    return pipelineId;
+  }
+
+  public void setPipelineId(String pipelineId) {
+    this.pipelineId = pipelineId;
   }
 
   public String getTitle() {
@@ -250,6 +261,7 @@ public class PipelineConfiguration implements Serializable{
     return new PipelineConfiguration(
         schemaVersion,
         version,
+        pipelineId,
         uuid,
         title,
         description,

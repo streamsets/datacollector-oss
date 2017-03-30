@@ -32,7 +32,7 @@ angular
         errors: []
       },
       pipelineInfo: pipelineInfo,
-      pipelineId: metadata['dpm.pipeline.id'],
+      pipelineId: metadata['dpm.pipeline.pipelineId'],
       pipelineVersion: metadata['dpm.pipeline.version'],
       pipelinesCommit: [],
       updatedPipelineConfig: undefined,
@@ -48,7 +48,7 @@ angular
                 pipelineRules: JSON.parse(remotePipeline.currentRules.rulesDefinition)
               };
 
-              api.pipelineAgent.importPipelineConfig(pipelineInfo.name, pipelineEnvelope, true)
+              api.pipelineAgent.importPipelineConfig(pipelineInfo.pipelineId, pipelineEnvelope, true)
                 .then(
                   function(res) {
                     $scope.updatedPipelineConfig = res.data.pipelineConfig;

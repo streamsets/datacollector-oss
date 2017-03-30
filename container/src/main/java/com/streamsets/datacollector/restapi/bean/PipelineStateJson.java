@@ -21,11 +21,14 @@ package com.streamsets.datacollector.restapi.bean;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.datacollector.execution.PipelineState;
+import com.streamsets.datacollector.execution.manager.PipelineStateImpl;
 
 import java.util.Map;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PipelineStateJson {
 
   private final PipelineState pipelineState;
@@ -35,6 +38,7 @@ public class PipelineStateJson {
   public PipelineStateJson(
     @JsonProperty("user") String user,
     @JsonProperty("name") String name,
+    @JsonProperty("pipelineId") String pipelineId,
     @JsonProperty("rev") String rev,
     @JsonProperty("status") StatusJson statusJson,
     @JsonProperty("message") String message,
@@ -44,9 +48,11 @@ public class PipelineStateJson {
     @JsonProperty("metrics") String metrics,
     @JsonProperty("retryAttempt") int retryAttempt,
     @JsonProperty("nextRetryTimeStamp") long nextRetryTimeStamp) {
-    pipelineState = new com.streamsets.datacollector.execution.manager.PipelineStateImpl(user, name, rev,
-      BeanHelper.unwrapState(statusJson), message, timeStamp, attributes,
-      BeanHelper.unwrapExecutionMode(executionModeJson), metrics, retryAttempt, nextRetryTimeStamp);
+    if (pipelineId == null) {
+      pipelineId = name;
+    }
+    pipelineState = new PipelineStateImpl(user, pipelineId, rev, BeanHelper.unwrapState(statusJson), message, timeStamp,
+        attributes, BeanHelper.unwrapExecutionMode(executionModeJson), metrics, retryAttempt, nextRetryTimeStamp);
   }
 
   public PipelineStateJson(PipelineState pipelineState, boolean ignoreMetrics) {
@@ -74,8 +80,13 @@ public class PipelineStateJson {
     return pipelineState.getTimeStamp();
   }
 
+  @Deprecated
   public String getName() {
-    return pipelineState.getName();
+    return pipelineState.getPipelineId();
+  }
+
+  public String getPipelineId() {
+    return pipelineState.getPipelineId();
   }
 
   public Map<String, Object> getAttributes() {

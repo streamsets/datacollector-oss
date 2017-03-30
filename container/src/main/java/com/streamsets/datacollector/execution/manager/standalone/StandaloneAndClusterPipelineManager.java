@@ -181,7 +181,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
     List<PipelineInfo> pipelineInfoList = pipelineStore.getPipelines();
     List<PipelineState> pipelineStateList = new ArrayList<>();
     for (PipelineInfo pipelineInfo : pipelineInfoList) {
-      String name = pipelineInfo.getName();
+      String name = pipelineInfo.getPipelineId();
       String rev = pipelineInfo.getLastRev();
       PipelineState pipelineState = pipelineStateStore.getState(name, rev);
       Utils.checkState(pipelineState != null, Utils.format("State for pipeline: '{}::{}' doesn't exist", name, rev));
@@ -226,7 +226,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
       throw new RuntimeException("Cannot load the list of pipelines from StateStore", ex);
     }
     for (PipelineInfo pipelineInfo : pipelineInfoList) {
-      String name = pipelineInfo.getName();
+      String name = pipelineInfo.getPipelineId();
       String rev = pipelineInfo.getLastRev();
       try {
         if (isRemotePipeline(name, rev) && !runtimeInfo.isDPMEnabled()) {

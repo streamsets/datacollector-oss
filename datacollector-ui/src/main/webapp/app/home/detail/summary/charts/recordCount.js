@@ -26,7 +26,7 @@ angular
   .module('dataCollectorApp.home')
   .controller('RecordCountBarChartController', function($scope, $rootScope, pipelineConstant, api, $filter) {
     var color = $scope.recordsColor,
-      baseQuery = "select count,metric from meters where (pipeline='" + $scope.pipelineConfig.info.name + "') and ";
+      baseQuery = "select count,metric from meters where (pipeline='" + $scope.pipelineConfig.info.pipelineId + "') and ";
 
     var getColor = function(d) {
       if(d && d.key && color[d.key]) {

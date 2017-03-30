@@ -693,7 +693,7 @@ public class ClusterProviderImpl implements ClusterProvider {
         }
       }
       PipelineInfo pipelineInfo = Utils.checkNotNull(pipelineConfiguration.getInfo(), "Pipeline Info");
-      String pipelineName = pipelineInfo.getName();
+      String pipelineName = pipelineInfo.getPipelineId();
       File rootDataDir = new File(etcDir, "data");
       File pipelineBaseDir = new File(rootDataDir, PipelineDirectoryUtil.PIPELINE_INFO_BASE_DIR);
       File pipelineDir = new File(pipelineBaseDir, PipelineUtils.escapedPipelineName(pipelineName));

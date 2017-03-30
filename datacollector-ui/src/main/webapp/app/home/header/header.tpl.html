@@ -34,7 +34,7 @@
 
           <li role="presentation"
               ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && !common.isSlaveNode"
-              ng-hide="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'">
+              ng-hide="common.pipelineStatusMap[pipeline.pipelineId].status === 'RUNNING'">
             <a href="#" dropdown-toggle ng-click="deletePipelineConfig(activeConfigInfo, $event)">
               <i class="fa fa-trash-o"></i>
               <span>{{'global.form.delete' | translate}}</span>
@@ -164,7 +164,7 @@
          tooltip-popup-delay="500"
          ng-hide="previewMode || snapshotMode"
          ng-if="isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])"
-         ng-href="/collector/logs/{{pipelineConfig.info.title + '/' + pipelineConfig.info.name}}">
+         ng-href="/collector/logs/{{pipelineConfig.info.title + '/' + pipelineConfig.info.pipelineId}}">
         <span class="fa fa-file-text fa-14x"></span>
       </a>
 
@@ -345,12 +345,12 @@
         <h3 class="pull-left" translate="home.header.uptime">Uptime</h3>
 
         <h3 class="pull-left"
-            ng-if="!common.pipelineStatusMap[pipelineConfig.info.name].attributes || !common.pipelineStatusMap[pipelineConfig.info.name].attributes['cluster.application.startTime']"
-            am-time-ago="common.pipelineStatusMap[pipelineConfig.info.name].timeStamp - common.serverTimeDifference"></h3>
+            ng-if="!common.pipelineStatusMap[pipelineConfig.info.pipelineId].attributes || !common.pipelineStatusMap[pipelineConfig.info.pipelineId].attributes['cluster.application.startTime']"
+            am-time-ago="common.pipelineStatusMap[pipelineConfig.info.pipelineId].timeStamp - common.serverTimeDifference"></h3>
 
         <h3 class="pull-left"
-            ng-if="common.pipelineStatusMap[pipelineConfig.info.name].attributes && common.pipelineStatusMap[pipelineConfig.info.name].attributes['cluster.application.startTime']"
-            am-time-ago="common.pipelineStatusMap[pipelineConfig.info.name].attributes['cluster.application.startTime'] - common.serverTimeDifference"></h3>
+            ng-if="common.pipelineStatusMap[pipelineConfig.info.pipelineId].attributes && common.pipelineStatusMap[pipelineConfig.info.pipelineId].attributes['cluster.application.startTime']"
+            am-time-ago="common.pipelineStatusMap[pipelineConfig.info.pipelineId].attributes['cluster.application.startTime'] - common.serverTimeDifference"></h3>
 
         <span class="pipeline-status {{activeConfigStatus.status}}">{{activeConfigStatus.status}}</span>
       </div>

@@ -33,7 +33,7 @@ import java.util.Collections;
 public class RunPreviewCommand extends BaseCommand {
   @Option(
     name = {"-n", "--name"},
-    description = "Pipeline Name",
+    description = "Pipeline ID",
     required = true
   )
   public String pipelineName;

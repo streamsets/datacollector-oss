@@ -90,13 +90,13 @@ public class AclPipelineStoreTask implements PipelineStoreTask {
   @Override
   public PipelineConfiguration create(
       String user,
-      String name,
-      String label,
+      String pipelineId,
+      String pipelineTitle,
       String description,
       boolean isRemote
   ) throws PipelineException {
-    PipelineConfiguration pipelineConf = pipelineStore.create(user, name, label, description, isRemote);
-    aclStore.createAcl(name, ResourceType.PIPELINE, System.currentTimeMillis(), user);
+    PipelineConfiguration pipelineConf = pipelineStore.create(user, pipelineId, pipelineTitle, description, isRemote);
+    aclStore.createAcl(pipelineId, ResourceType.PIPELINE, System.currentTimeMillis(), user);
     return pipelineConf;
   }
 
@@ -196,7 +196,7 @@ public class AclPipelineStoreTask implements PipelineStoreTask {
       @Override
       public boolean apply(PipelineInfo pipelineInfo) {
         try {
-          return aclStore.isPermissionGranted(pipelineInfo.getName(), EnumSet.of(Action.READ), currentUser);
+          return aclStore.isPermissionGranted(pipelineInfo.getPipelineId(), EnumSet.of(Action.READ), currentUser);
         } catch (PipelineException e) {
           LOG.warn("Failed to validate ACL");
         }

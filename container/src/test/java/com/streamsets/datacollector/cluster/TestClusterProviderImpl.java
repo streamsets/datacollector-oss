@@ -142,6 +142,7 @@ public class TestClusterProviderImpl {
     pipelineConf = new PipelineConfiguration(
         PipelineStoreTask.SCHEMA_VERSION,
         PipelineConfigBean.VERSION,
+        "pipelineId",
         UUID.randomUUID(),
         "label",
         null,
@@ -242,6 +243,7 @@ public class TestClusterProviderImpl {
     PipelineConfiguration pipelineConf = new PipelineConfiguration(
         PipelineStoreTask.SCHEMA_VERSION,
         PipelineConfigBean.VERSION,
+        "pipelineId",
         UUID.randomUUID(),
         "label",
         null,
@@ -275,6 +277,7 @@ public class TestClusterProviderImpl {
     PipelineConfiguration pipelineConf = new PipelineConfiguration(
         PipelineStoreTask.SCHEMA_VERSION,
         PipelineConfigBean.VERSION,
+        "pipelineId",
         UUID.randomUUID(),
         "label",
         null,
@@ -306,6 +309,7 @@ public class TestClusterProviderImpl {
     list.add(new Config("executionMode", ExecutionMode.CLUSTER_YARN_STREAMING.name()));
     PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
         PipelineConfigBean.VERSION,
+        "pipelineId",
         UUID.randomUUID(),
         "label",
         null,
@@ -371,6 +375,7 @@ public class TestClusterProviderImpl {
     PipelineConfiguration pipelineConf = new PipelineConfiguration(
         PipelineStoreTask.SCHEMA_VERSION,
         PipelineConfigBean.VERSION,
+        "pipelineId",
         UUID.randomUUID(),
         "label",
         null,

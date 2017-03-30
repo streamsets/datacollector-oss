@@ -34,7 +34,7 @@ angular
        * Refresh the History by fetching from server.
        */
       refreshHistory: function() {
-        updateHistory($scope.activeConfigInfo.name);
+        updateHistory($scope.activeConfigInfo.pipelineId);
       },
 
       /**
@@ -97,7 +97,7 @@ angular
         }
 
         modalInstance.result.then(function () {
-          updateHistory($scope.pipelineConfig.info.name);
+          updateHistory($scope.pipelineConfig.info.pipelineId);
         }, function () {
 
         });
@@ -123,13 +123,13 @@ angular
 
     $scope.$on('onPipelineConfigSelect', function(event, configInfo) {
       if(configInfo) {
-        updateHistory(configInfo.name);
+        updateHistory(configInfo.pipelineId);
       }
     });
 
     $scope.$watch('isPipelineRunning', function(newValue) {
       if($scope.pipelineConfig) {
-        updateHistory($scope.pipelineConfig.info.name);
+        updateHistory($scope.pipelineConfig.info.pipelineId);
       }
     });
 

@@ -206,9 +206,9 @@ public class TestFileAclStoreTask {
     aclStore.updateSubjectsInAcls(oldUsersToNewUsers);
 
     for (PipelineInfo pipelineInfo : store.getPipelines()) {
-      Acl acl = aclStore.getAcl(pipelineInfo.getName());
+      Acl acl = aclStore.getAcl(pipelineInfo.getPipelineId());
       //Pipeline with no acl
-      if (pipelineInfo.getName().equals(TestFilePipelineStoreTask.DEFAULT_PIPELINE_NAME)) {
+      if (pipelineInfo.getPipelineId().equals(TestFilePipelineStoreTask.DEFAULT_PIPELINE_NAME)) {
         // Updated code to create ACL for pipelines with no ACL to help upgraded pipelines
         Assert.assertNotNull(acl);
       }

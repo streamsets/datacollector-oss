@@ -189,7 +189,7 @@ angular
     var updateFieldDataForStage = function(edge) {
       if(edge) {
 
-        previewService.getEdgeInputRecordsFromPreview($scope.activeConfigInfo.name, edge, 1).
+        previewService.getEdgeInputRecordsFromPreview($scope.activeConfigInfo.pipelineId, edge, 1).
           then(function (inputRecords) {
             if(_.isArray(inputRecords) && inputRecords.length) {
               var fieldPaths = [],

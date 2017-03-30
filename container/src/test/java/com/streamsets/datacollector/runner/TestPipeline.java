@@ -78,7 +78,7 @@ public class TestPipeline {
     pipelineConfigs.add(new Config("stopPipelineOnError", false));
     pipelineConfigs.add(new Config("executionMode", ExecutionMode.STANDALONE));
     PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
-      PipelineConfigBean.VERSION, UUID.randomUUID(),
+      PipelineConfigBean.VERSION, "pipelineId", UUID.randomUUID(),
         "label", null, pipelineConfigs, null, stageDefs, MockStages.getErrorStageConfig(), MockStages.getStatsAggregatorStageConfig());
     Pipeline.Builder builder = new Pipeline.Builder(lib, new Configuration(), "name", "name", "0", MockStages.userContext(), pipelineConf);
 
@@ -171,7 +171,7 @@ public class TestPipeline {
     pipelineConfigs.add(new Config("stopPipelineOnError", false));
     pipelineConfigs.add(new Config("executionMode", ExecutionMode.STANDALONE));
     PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
-      PipelineConfigBean.VERSION, UUID.randomUUID(),"label",
+      PipelineConfigBean.VERSION, "pipelineId", UUID.randomUUID(),"label",
         null, pipelineConfigs, null, stageDefs, MockStages.getErrorStageConfig(), MockStages.getStatsAggregatorStageConfig());
     Pipeline.Builder builder = new Pipeline.Builder(lib, new Configuration(), "name", "name", "0", MockStages.userContext(), pipelineConf);
 
@@ -220,7 +220,7 @@ public class TestPipeline {
     pipelineConfigs.add(new Config("stopPipelineOnError", false));
     pipelineConfigs.add(new Config("executionMode", ExecutionMode.STANDALONE));
     PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
-       PipelineConfigBean.VERSION, UUID.randomUUID(),
+       PipelineConfigBean.VERSION, "pipelineId", UUID.randomUUID(),
         "label", null, pipelineConfigs, null, stageDefs, MockStages.getErrorStageConfig(), MockStages.getStatsAggregatorStageConfig());
     Pipeline.Builder builder = new Pipeline.Builder(lib, new Configuration(), "name", "name", "0", MockStages.userContext(), pipelineConf);
 
@@ -283,7 +283,7 @@ public class TestPipeline {
     pipelineConfigs.add(new Config("executionMode", ExecutionMode.STANDALONE));
 
     PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
-       PipelineConfigBean.VERSION, UUID.randomUUID(),
+       PipelineConfigBean.VERSION, "pipelineId", UUID.randomUUID(),
         "label", null, pipelineConfigs, null, stageDefs, MockStages.getErrorStageConfig(), MockStages.getStatsAggregatorStageConfig());
     Pipeline.Builder builder = new Pipeline.Builder(lib, new Configuration(), "name", "name", "0", MockStages.userContext(), pipelineConf);
 
@@ -345,7 +345,7 @@ public class TestPipeline {
     pipelineConfigs.add(new Config("executionMode", ExecutionMode.STANDALONE));
 
     PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
-       PipelineConfigBean.VERSION, UUID.randomUUID(),
+       PipelineConfigBean.VERSION, "pipelineId", UUID.randomUUID(),
         "label", null, pipelineConfigs, null, stageDefs, MockStages.getErrorStageConfig(), MockStages.getStatsAggregatorStageConfig());
     Pipeline.Builder builder = new Pipeline.Builder(lib, new Configuration(), "name", "name", "0", MockStages.userContext(), pipelineConf);
 
@@ -434,6 +434,7 @@ public class TestPipeline {
     PipelineConfiguration pipelineConf = new PipelineConfiguration(
       PipelineStoreTask.SCHEMA_VERSION,
       PipelineConfigBean.VERSION,
+        "pipelineId",
       UUID.randomUUID(),
       null,
       "",
@@ -486,6 +487,7 @@ public class TestPipeline {
     PipelineConfiguration pipelineConf = new PipelineConfiguration(
       PipelineStoreTask.SCHEMA_VERSION,
       PipelineConfigBean.VERSION,
+        "pipelineId",
       UUID.randomUUID(),
       null,
       "",

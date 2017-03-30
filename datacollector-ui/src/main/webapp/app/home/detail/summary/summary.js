@@ -261,7 +261,7 @@ angular
 
       if(pipelineMetrics.counters) {
         var persistedCounters = ['memoryConsumed'],
-          pipelineCounterKey = 'pipeline.' + pipelineConfig.info.name,
+          pipelineCounterKey = 'pipeline.' + pipelineConfig.info.pipelineId,
           currentTime = new Date().getTime(),
           counterValue;
 

@@ -70,7 +70,7 @@ public class ProductionPipelineRunnable implements Runnable {
     try {
       PipelineInfo info = pipeline.getPipelineConf().getInfo();
       if(info != null) {
-        Thread.currentThread().setName(Utils.format("{}-{}-{}", RUNNABLE_NAME, info.getName(), info.getTitle()));
+        Thread.currentThread().setName(Utils.format("{}-{}-{}", RUNNABLE_NAME, info.getPipelineId(), info.getTitle()));
       } else {
         Thread.currentThread().setName(Utils.format("{}-UNKNOWN_ID-{}", RUNNABLE_NAME, name));
       }

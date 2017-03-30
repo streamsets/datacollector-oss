@@ -124,7 +124,7 @@ angular
 
 
             angular.forEach(statusList, function (status) {
-              $rootScope.common.pipelineStatusMap[status.name] = status;
+              $rootScope.common.pipelineStatusMap[status.pipelineId] = status;
             });
 
             $scope.totalCount = res.headers('TOTAL_COUNT');
@@ -182,12 +182,12 @@ angular
         var selectedPipelineInfoList = [];
         var validationIssues = [];
         angular.forEach($scope.filteredPipelines, function(pipelineInfo) {
-          if (selectedPipelineList.indexOf(pipelineInfo.name) !== -1) {
-            var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
-            if (pipelineStatus && pipelineStatus.name === pipelineInfo.name &&
+          if (selectedPipelineList.indexOf(pipelineInfo.pipelineId) !== -1) {
+            var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.pipelineId];
+            if (pipelineStatus && pipelineStatus.pipelineId === pipelineInfo.pipelineId &&
               _.contains(['RUNNING', 'STARTING', 'CONNECT_ERROR', 'RETRY', 'STOPPING'], pipelineStatus.status)) {
               validationIssues.push('Delete operation is not supported for Pipeline "' +
-                pipelineInfo.name + '" with state ' +  pipelineStatus.status );
+                pipelineInfo.pipelineId + '" with state ' +  pipelineStatus.status );
             }
             selectedPipelineInfoList.push(pipelineInfo);
           }
@@ -224,7 +224,7 @@ angular
       duplicatePipelines: function() {
         if ($scope.selectedPipelineList && $scope.selectedPipelineList.length > 0) {
           var selectedPipeline = _.find($scope.filteredPipelines, function(pipeline) {
-            return $scope.selectedPipelineList[0] === pipeline.name
+            return $scope.selectedPipelineList[0] === pipeline.pipelineId
           });
           pipelineService.duplicatePipelineConfigCommand(selectedPipeline)
             .then(function(pipelines) {
@@ -246,7 +246,7 @@ angular
       shareSelectedPipelineConfig: function () {
         if ($scope.selectedPipelineList && $scope.selectedPipelineList.length > 0) {
           var selectedPipeline = _.find($scope.filteredPipelines, function(pipeline) {
-            return $scope.selectedPipelineList[0] === pipeline.name
+            return $scope.selectedPipelineList[0] === pipeline.pipelineId
           });
           pipelineService.sharePipelineConfigCommand(selectedPipeline);
         }
@@ -267,12 +267,12 @@ angular
         var selectedPipelineInfoList = [];
         var validationIssues = [];
         angular.forEach($scope.filteredPipelines, function(pipelineInfo) {
-          if (selectedPipelineList.indexOf(pipelineInfo.name) !== -1) {
-            var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
-            if (pipelineStatus && pipelineStatus.name === pipelineInfo.name &&
+          if (selectedPipelineList.indexOf(pipelineInfo.pipelineId) !== -1) {
+            var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.pipelineId];
+            if (pipelineStatus && pipelineStatus.pipelineId === pipelineInfo.pipelineId &&
                 _.contains(PIPELINE_ACTIVE_STATUSES, pipelineStatus.status)) {
               validationIssues.push('Reset Origin operation is not supported for Pipeline "' +
-                  pipelineInfo.name + '" with state ' +  pipelineStatus.status);
+                  pipelineInfo.pipelineId + '" with state ' +  pipelineStatus.status);
             }
             selectedPipelineInfoList.push(pipelineInfo);
           }
@@ -315,12 +315,12 @@ angular
         var selectedPipelineInfoList = [];
         var validationIssues = [];
         angular.forEach($scope.filteredPipelines, function(pipelineInfo) {
-          if (selectedPipelineList.indexOf(pipelineInfo.name) !== -1) {
-            var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
-            if (pipelineStatus && pipelineStatus.name === pipelineInfo.name &&
+          if (selectedPipelineList.indexOf(pipelineInfo.pipelineId) !== -1) {
+            var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.pipelineId];
+            if (pipelineStatus && pipelineStatus.pipelineId === pipelineInfo.pipelineId &&
                 _.contains(PIPELINE_ACTIVE_STATUSES, pipelineStatus.status)) {
               validationIssues.push('Add Label is not supported for Pipeline "' +
-                  pipelineInfo.name + '" with state ' +  pipelineStatus.status );
+                  pipelineInfo.pipelineId + '" with state ' +  pipelineStatus.status );
             }
             selectedPipelineInfoList.push(pipelineInfo);
           }
@@ -346,7 +346,7 @@ angular
 
         modalInstance.result.then(function(res) {
           angular.forEach(res.successEntities, function(pipelineName) {
-            var pipeline = _.find($scope.filteredPipelines, function(p) { return p.name === pipelineName });
+            var pipeline = _.find($scope.filteredPipelines, function(p) { return p.pipelineId === pipelineName });
             var mergedLabels = (pipeline.metadata.labels || []).concat(res.labels);
             pipeline.metadata.labels = _(mergedLabels).uniq();
           });
@@ -358,7 +358,7 @@ angular
        */
       exportPipelineConfig: function(pipelineInfo, includeDefinitions, $event) {
         $event.stopPropagation();
-        api.pipelineAgent.exportPipelineConfig(pipelineInfo.name, includeDefinitions);
+        api.pipelineAgent.exportPipelineConfig(pipelineInfo.pipelineId, includeDefinitions);
       },
 
       /**
@@ -370,8 +370,8 @@ angular
           // Export for DPM supports only for valid pipelines
           var validationIssues = [];
           angular.forEach($scope.filteredPipelines, function(pipelineInfo) {
-            if (selectedPipelineList.indexOf(pipelineInfo.name) !== -1 && !pipelineInfo.valid) {
-              validationIssues.push('Pipeline "' + pipelineInfo.name + '" is not valid');
+            if (selectedPipelineList.indexOf(pipelineInfo.pipelineId) !== -1 && !pipelineInfo.valid) {
+              validationIssues.push('Pipeline "' + pipelineInfo.pipelineId + '" is not valid');
             }
           });
 
@@ -406,7 +406,7 @@ angular
        * @param pipeline
        */
       openPipeline: function(pipeline) {
-        $location.path('/collector/pipeline/' + pipeline.name);
+        $location.path('/collector/pipeline/' + pipeline.pipelineId);
       },
 
       /**
@@ -425,13 +425,13 @@ angular
           1
         );
 
-        if ($rootScope.common.pipelineStatusMap[pipelineInfo.name].state !== 'RUNNING') {
-          api.pipelineAgent.startPipeline(pipelineInfo.name, 0).
+        if ($rootScope.common.pipelineStatusMap[pipelineInfo.pipelineId].state !== 'RUNNING') {
+          api.pipelineAgent.startPipeline(pipelineInfo.pipelineId, 0).
           then(
             function (res) {
-              var currentStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
+              var currentStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.pipelineId];
               if (!currentStatus || (res.data && currentStatus.timeStamp < res.data.timeStamp)) {
-                $rootScope.common.pipelineStatusMap[pipelineInfo.name] = res.data;
+                $rootScope.common.pipelineStatusMap[pipelineInfo.pipelineId] = res.data;
               }
             },
             function (res) {
@@ -440,7 +440,7 @@ angular
           );
         } else {
           $translate('home.graphPane.startErrorMessage', {
-            name: pipelineInfo.name
+            name: pipelineInfo.pipelineId
           }).then(function(translation) {
             $rootScope.common.errors = [translation];
           });
@@ -464,9 +464,9 @@ angular
 
         api.pipelineAgent.startPipelines(selectedPipelineList).success(function(res) {
           angular.forEach(res.successEntities, function(pipelineState) {
-            var currentStatus = $rootScope.common.pipelineStatusMap[pipelineState.name];
+            var currentStatus = $rootScope.common.pipelineStatusMap[pipelineState.pipelineId];
             if (!currentStatus || currentStatus.timeStamp < pipelineState.timeStamp) {
-              $rootScope.common.pipelineStatusMap[pipelineState.name] = pipelineState;
+              $rootScope.common.pipelineStatusMap[pipelineState.pipelineId] = pipelineState;
             }
           });
 
@@ -507,15 +507,15 @@ angular
         });
 
         modalInstance.result.then(function(status) {
-          var currentStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
+          var currentStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.pipelineId];
           if (!currentStatus || (status && currentStatus.timeStamp < status.timeStamp)) {
-            $rootScope.common.pipelineStatusMap[pipelineInfo.name] = status;
+            $rootScope.common.pipelineStatusMap[pipelineInfo.pipelineId] = status;
           }
 
-          var alerts = $rootScope.common.alertsMap[pipelineInfo.name];
+          var alerts = $rootScope.common.alertsMap[pipelineInfo.pipelineId];
 
           if (alerts) {
-            delete $rootScope.common.alertsMap[pipelineInfo.name];
+            delete $rootScope.common.alertsMap[pipelineInfo.pipelineId];
             $rootScope.common.alertsTotalCount -= alerts.length;
           }
         }, function () {
@@ -538,7 +538,7 @@ angular
         var selectedPipelineInfoList = [];
 
         angular.forEach($scope.filteredPipelines, function(pipelineInfo) {
-          if (selectedPipelineList.indexOf(pipelineInfo.name) !== -1) {
+          if (selectedPipelineList.indexOf(pipelineInfo.pipelineId) !== -1) {
             selectedPipelineInfoList.push(pipelineInfo);
           }
         });
@@ -561,13 +561,13 @@ angular
 
         modalInstance.result.then(function(res) {
           angular.forEach(res.successEntities, function(pipelineState) {
-            var currentStatus = $rootScope.common.pipelineStatusMap[pipelineState.name];
+            var currentStatus = $rootScope.common.pipelineStatusMap[pipelineState.pipelineId];
             if (!currentStatus || currentStatus.timeStamp < pipelineState.timeStamp) {
-              $rootScope.common.pipelineStatusMap[pipelineState.name] = pipelineState;
+              $rootScope.common.pipelineStatusMap[pipelineState.pipelineId] = pipelineState;
             }
-            var alerts = $rootScope.common.alertsMap[pipelineState.name];
+            var alerts = $rootScope.common.alertsMap[pipelineState.pipelineId];
             if (alerts) {
-              delete $rootScope.common.alertsMap[pipelineState.name];
+              delete $rootScope.common.alertsMap[pipelineState.pipelineId];
               $rootScope.common.alertsTotalCount -= alerts.length;
             }
           });
@@ -589,13 +589,13 @@ angular
         var selectedPipelineInfoList = [];
         var validationIssues = [];
         angular.forEach($scope.filteredPipelines, function(pipelineInfo) {
-          if (selectedPipelineList.indexOf(pipelineInfo.name) !== -1) {
-            var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
-            if (pipelineStatus && pipelineStatus.name === pipelineInfo.name) {
+          if (selectedPipelineList.indexOf(pipelineInfo.pipelineId) !== -1) {
+            var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.pipelineId];
+            if (pipelineStatus && pipelineStatus.pipelineId === pipelineInfo.pipelineId) {
               if (!pipelineInfo.valid) {
-                validationIssues.push('Publish operation is not supported for Invalid Pipeline - ' + pipelineInfo.name);
+                validationIssues.push('Publish operation is not supported for Invalid Pipeline - ' + pipelineInfo.pipelineId);
               } else if (pipelineStatus.attributes && pipelineStatus.attributes.IS_REMOTE_PIPELINE) {
-                validationIssues.push('Publish operation is not supported for Remote Pipeline "' + pipelineInfo.name);
+                validationIssues.push('Publish operation is not supported for Remote Pipeline "' + pipelineInfo.pipelineId);
               }
               selectedPipelineInfoList.push(pipelineInfo);
             }
@@ -645,8 +645,8 @@ angular
         $scope.selectedPipelineList = [];
         $scope.selectedPipelineMap = {};
         angular.forEach($scope.filteredPipelines, function(pipelineInfo) {
-          $scope.selectedPipelineList.push(pipelineInfo.name);
-          $scope.selectedPipelineMap[pipelineInfo.name] = true;
+          $scope.selectedPipelineList.push(pipelineInfo.pipelineId);
+          $scope.selectedPipelineMap[pipelineInfo.pipelineId] = true;
         });
         $scope.allSelected = true;
       },
@@ -667,21 +667,21 @@ angular
        * @param $event
        */
       selectPipeline: function(pipeline, $event) {
-        $scope.selectedPipelineMap[pipeline.name] = true;
-        $scope.selectedPipelineList.push(pipeline.name);
+        $scope.selectedPipelineMap[pipeline.pipelineId] = true;
+        $scope.selectedPipelineList.push(pipeline.pipelineId);
         if ($event.shiftKey) {
           var filteredPipelines = $scope.filteredPipelines;
           var index = _.findIndex(filteredPipelines, function(p) {
-            return pipeline.name === p.name;
+            return pipeline.pipelineId === p.pipelineId;
           });
           if (index != -1) {
             while (index > 0) {
               var prevPipeline = $scope.filteredPipelines[--index];
-              if ($scope.selectedPipelineMap[prevPipeline.name]) {
+              if ($scope.selectedPipelineMap[prevPipeline.pipelineId]) {
                 break;
               }
-              $scope.selectedPipelineMap[prevPipeline.name] = true;
-              $scope.selectedPipelineList.push(prevPipeline.name);
+              $scope.selectedPipelineMap[prevPipeline.pipelineId] = true;
+              $scope.selectedPipelineList.push(prevPipeline.pipelineId);
             }
           }
 
@@ -694,8 +694,8 @@ angular
        * @param pipeline
        */
       unSelectPipeline: function(pipeline) {
-        $scope.selectedPipelineMap[pipeline.name] = false;
-        var index = $scope.selectedPipelineList.indexOf(pipeline.name);
+        $scope.selectedPipelineMap[pipeline.pipelineId] = false;
+        var index = $scope.selectedPipelineList.indexOf(pipeline.pipelineId);
         if (index != -1) {
           $scope.selectedPipelineList.splice(index, 1);
         }
@@ -744,10 +744,10 @@ angular
        * @param pipelineInfo
        */
       isSystemPipeline: function(pipelineInfo) {
-        var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.name];
+        var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.pipelineId];
         return (
-          pipelineStatus && pipelineStatus.name === pipelineInfo.name &&
-          pipelineInfo.name.indexOf('System Pipeline for Job') === 0 &&
+          pipelineStatus && pipelineStatus.pipelineId === pipelineInfo.pipelineId &&
+          pipelineInfo.pipelineId.indexOf('System Pipeline for Job') === 0 &&
           pipelineStatus.attributes && pipelineStatus.attributes.IS_REMOTE_PIPELINE
         );
       },

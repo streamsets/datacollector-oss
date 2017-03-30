@@ -170,22 +170,22 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   @Override
   public PipelineConfiguration create(
       String user,
-      String name,
-      String label,
+      String pipelineId,
+      String pipelineTitle,
       String description,
       boolean isRemote
   ) throws PipelineStoreException {
-    synchronized (lockCache.getLock(name)) {
-      if (hasPipeline(name)) {
-        throw new PipelineStoreException(ContainerError.CONTAINER_0201, name);
+    synchronized (lockCache.getLock(pipelineId)) {
+      if (hasPipeline(pipelineId)) {
+        throw new PipelineStoreException(ContainerError.CONTAINER_0201, pipelineId);
       }
       try {
-        Files.createDirectory(getPipelineDir(name));
+        Files.createDirectory(getPipelineDir(pipelineId));
       } catch (IOException e) {
         throw new PipelineStoreException(
             ContainerError.CONTAINER_0202,
-            name,
-            Utils.format("'{}' mkdir failed", getPipelineDir(name)),
+            pipelineId,
+            Utils.format("'{}' mkdir failed", getPipelineDir(pipelineId)),
             e
         );
       }
@@ -193,8 +193,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       Date date = new Date();
       UUID uuid = UUID.randomUUID();
       PipelineInfo info = new PipelineInfo(
-          name,
-          label,
+          pipelineId,
+          pipelineTitle,
           description,
           date,
           date,
@@ -209,8 +209,9 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       PipelineConfiguration pipeline = new PipelineConfiguration(
           SCHEMA_VERSION,
           PipelineConfigBean.VERSION,
+          pipelineId,
           uuid,
-          label,
+          pipelineTitle,
           description,
           stageLibrary.getPipeline().getPipelineDefaultConfigs(),
           Collections.<String, Object>emptyMap(),
@@ -220,17 +221,17 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       );
 
       try (
-          OutputStream infoFile = Files.newOutputStream(getInfoFile(name));
-          OutputStream pipelineFile = Files.newOutputStream(getPipelineFile(name));
+          OutputStream infoFile = Files.newOutputStream(getInfoFile(pipelineId));
+          OutputStream pipelineFile = Files.newOutputStream(getPipelineFile(pipelineId));
       ){
         json.writeValue(infoFile, BeanHelper.wrapPipelineInfo(info));
         json.writeValue(pipelineFile, BeanHelper.wrapPipelineConfiguration(pipeline));
       } catch (Exception ex) {
-        throw new PipelineStoreException(ContainerError.CONTAINER_0202, name, ex.toString(), ex);
+        throw new PipelineStoreException(ContainerError.CONTAINER_0202, pipelineId, ex.toString(), ex);
       }
       pipeline.setPipelineInfo(info);
       if (pipelineStateStore != null) {
-        pipelineStateStore.edited(user, name, REV, ExecutionMode.STANDALONE, isRemote);
+        pipelineStateStore.edited(user, pipelineId, REV, ExecutionMode.STANDALONE, isRemote);
       }
       return pipeline;
     }
@@ -264,7 +265,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         }
         PipelineState latestState = new PipelineStateImpl(
             currentState.getUser(),
-            currentState.getName(),
+            currentState.getPipelineId(),
             currentState.getRev(),
             PipelineStatus.DELETED,
             "Pipeline is deleted",

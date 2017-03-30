@@ -48,7 +48,7 @@ angular
         var snapshotName = 'snapshot' + (new Date()).getTime();
         var snapshotLabel = getNewSnapshotName();
         api.pipelineAgent.captureSnapshot(
-          pipelineConfig.info.name,
+          pipelineConfig.info.pipelineId,
           0,
           snapshotName,
           snapshotLabel,
@@ -63,7 +63,7 @@ angular
             $scope.isPipelineRunning = true;
           }
           $scope.snapshotsInfo.push({
-            name: pipelineConfig.info.name,
+            name: pipelineConfig.info.pipelineId,
             id: snapshotName,
             label: snapshotLabel,
             inProgress: true
@@ -93,7 +93,7 @@ angular
        */
       deleteSnapshot: function(snapshotName, index) {
         $scope.snapshotsInfo.splice(index, 1);
-        api.pipelineAgent.deleteSnapshot(pipelineConfig.info.name, 0, snapshotName).
+        api.pipelineAgent.deleteSnapshot(pipelineConfig.info.pipelineId, 0, snapshotName).
           then(function() {
 
           }, function(res) {
@@ -111,7 +111,7 @@ angular
         $scope.snapshotsInfo.splice(index, 1);
         $timeout.cancel(captureSnapshotStatusTimer);
         $scope.snapshotInProgress = false;
-        api.pipelineAgent.deleteSnapshot(pipelineConfig.info.name, 0, snapshotName).
+        api.pipelineAgent.deleteSnapshot(pipelineConfig.info.pipelineId, 0, snapshotName).
           then(function() {
 
           }, function(res) {
@@ -131,7 +131,7 @@ angular
        * @param snapshotInfo
        */
       snapshotInfoLabelUpdated: function(snapshotInfo) {
-        api.pipelineAgent.updateSnapshotLabel(pipelineConfig.info.name, 0, snapshotInfo.id, snapshotInfo.label).
+        api.pipelineAgent.updateSnapshotLabel(pipelineConfig.info.pipelineId, 0, snapshotInfo.id, snapshotInfo.label).
         then(function() {
 
         }, function(res) {
@@ -147,7 +147,7 @@ angular
 
           $scope.snapshotsInfo = _.chain(res.data)
             .filter(function(snapshotInfo) {
-              return snapshotInfo.name === pipelineConfig.info.name;
+              return snapshotInfo.name === pipelineConfig.info.pipelineId;
             })
             .sortBy('timeStamp')
             .value();
@@ -196,7 +196,7 @@ angular
 
       captureSnapshotStatusTimer.then(
         function() {
-          api.pipelineAgent.getSnapshotStatus(pipelineConfig.info.name, 0, snapshotName)
+          api.pipelineAgent.getSnapshotStatus(pipelineConfig.info.pipelineId, 0, snapshotName)
             .success(function(data) {
               if(data && data.inProgress === false) {
                 $scope.snapshotInProgress = false;

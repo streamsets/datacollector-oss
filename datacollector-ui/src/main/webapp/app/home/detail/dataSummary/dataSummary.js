@@ -200,7 +200,7 @@ angular
 
     function updateSamplingRecords() {
       $scope.showRecordsLoading = true;
-      api.pipelineAgent.getSampledRecords($scope.pipelineConfig.info.name, $scope.dataRuleDefn.id,
+      api.pipelineAgent.getSampledRecords($scope.pipelineConfig.info.pipelineId, $scope.dataRuleDefn.id,
         $scope.dataRuleDefn.samplingRecordsToRetain)
         .success(function(res) {
           $scope.showRecordsLoading = false;

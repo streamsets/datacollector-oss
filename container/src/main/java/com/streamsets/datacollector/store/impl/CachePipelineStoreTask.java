@@ -63,7 +63,7 @@ public class CachePipelineStoreTask implements PipelineStoreTask {
     pipelineStore.init();
     try {
       for (PipelineInfo info: pipelineStore.getPipelines()) {
-        pipelineInfoMap.put(info.getName(), info);
+        pipelineInfoMap.put(info.getPipelineId(), info);
       }
     } catch (PipelineStoreException e) {
       throw new RuntimeException(Utils.format("Cannot fetch list of pipelines due to: '{}'", e), e);
@@ -92,11 +92,16 @@ public class CachePipelineStoreTask implements PipelineStoreTask {
   }
 
   @Override
-  public PipelineConfiguration create(String user, String name, String label, String description, boolean isRemote)
-      throws PipelineException {
-    synchronized (lockCache.getLock(name)) {
-      PipelineConfiguration pipelineConf = pipelineStore.create(user, name, label, description, isRemote);
-      pipelineInfoMap.put(pipelineConf.getInfo().getName(), pipelineConf.getInfo());
+  public PipelineConfiguration create(
+      String user,
+      String pipelineId,
+      String pipelineTitle,
+      String description,
+      boolean isRemote
+  ) throws PipelineException {
+    synchronized (lockCache.getLock(pipelineId)) {
+      PipelineConfiguration pipelineConf = pipelineStore.create(user, pipelineId, pipelineTitle, description, isRemote);
+      pipelineInfoMap.put(pipelineConf.getInfo().getPipelineId(), pipelineConf.getInfo());
       return pipelineConf;
     }
   }

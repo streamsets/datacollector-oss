@@ -593,13 +593,13 @@ angular.module('dataCollectorApp')
 
           $rootScope.$apply(function() {
             var parsedStatus = JSON.parse(received_msg);
-            $rootScope.common.pipelineStatusMap[parsedStatus.name] = parsedStatus;
+            $rootScope.common.pipelineStatusMap[parsedStatus.pipelineId] = parsedStatus;
 
             if(parsedStatus.status !== 'RUNNING') {
-              var alerts = $rootScope.common.alertsMap[parsedStatus.name];
+              var alerts = $rootScope.common.alertsMap[parsedStatus.pipelineId];
 
               if(alerts) {
-                delete $rootScope.common.alertsMap[parsedStatus.name];
+                delete $rootScope.common.alertsMap[parsedStatus.pipelineId];
                 $rootScope.common.alertsTotalCount -= alerts.length;
               }
             }

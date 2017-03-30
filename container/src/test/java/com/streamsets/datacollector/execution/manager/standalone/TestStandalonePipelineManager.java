@@ -273,7 +273,7 @@ public class TestStandalonePipelineManager {
     pipelineStoreTask.create("user", "aaaa", "label","blah", false);
     List<PipelineState> pipelineStates = pipelineManager.getPipelines();
 
-    assertEquals("aaaa", pipelineStates.get(0).getName());
+    assertEquals("aaaa", pipelineStates.get(0).getPipelineId());
     assertEquals("0", pipelineStates.get(0).getRev());
 
     pipelineStoreTask.create("user", "bbbb", "label","blah", false);

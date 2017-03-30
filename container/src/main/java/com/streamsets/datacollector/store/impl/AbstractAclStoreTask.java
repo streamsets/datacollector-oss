@@ -115,7 +115,7 @@ public abstract class AbstractAclStoreTask extends AbstractTask implements AclSt
   @Override
   public void updateSubjectsInAcls(Map<String, String> subjectToSubjectMapping) throws PipelineException {
     for (PipelineInfo pipelineInfo : pipelineStore.getPipelines()) {
-      String pipelineName = pipelineInfo.getName();
+      String pipelineName = pipelineInfo.getPipelineId();
       synchronized (lockCache.getLock(pipelineName)) {
         updateSubjectsInAcls(pipelineName, subjectToSubjectMapping);
       }
@@ -131,7 +131,7 @@ public abstract class AbstractAclStoreTask extends AbstractTask implements AclSt
       // If ACL file doesn't exist create default one
       PipelineInfo pipelineInfo = pipelineStore.getInfo(pipelineName);
       acl = createAcl(
-          pipelineInfo.getName(),
+          pipelineInfo.getPipelineId(),
           ResourceType.PIPELINE,
           pipelineInfo.getCreated().getTime(),
           pipelineInfo.getCreator()
@@ -200,7 +200,7 @@ public abstract class AbstractAclStoreTask extends AbstractTask implements AclSt
     Set<String> users = new HashSet<>();
     Set<String> groups = new HashSet<>();
     for (PipelineInfo pipelineInfo : pipelineStore.getPipelines()) {
-      Acl acl = getAcl(pipelineInfo.getName());
+      Acl acl = getAcl(pipelineInfo.getPipelineId());
       if (acl != null) {
         users.add(acl.getResourceOwner());
         for (Permission permission: acl.getPermissions()) {

@@ -38,6 +38,7 @@ public class PipelineConfigurationJson   {
 
   private Integer schemaVersion = null;
   private Integer version = null;
+  private String pipelineId = null;
   private String uuid = null;
   private String title = null;
   private String description = null;
@@ -72,6 +73,17 @@ public class PipelineConfigurationJson   {
   }
   public void setVersion(Integer version) {
     this.version = version;
+  }
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("pipelineId")
+  public String getPipelineId() {
+    return pipelineId;
+  }
+  public void setPipelineId(String pipelineId) {
+    this.pipelineId = pipelineId;
   }
 
   /**

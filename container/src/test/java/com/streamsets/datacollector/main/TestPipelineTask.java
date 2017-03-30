@@ -37,7 +37,7 @@ public class TestPipelineTask {
     WebServerTask webServer = Mockito.mock(WebServerTask.class);
     Manager pipelineManager = Mockito.mock(Manager.class);
     /*PipelineTask task = new PipelineTask(library, store, pipelineManager, webServer);
-    Assert.assertEquals("pipelineNode", task.getName());*/
+    Assert.assertEquals("pipelineNode", task.getPipelineId());*/
   }
 
 }

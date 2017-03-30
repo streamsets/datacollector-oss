@@ -39,6 +39,7 @@ public class PipelineConfigurationJson implements Serializable {
   public PipelineConfigurationJson(
     @JsonProperty("schemaVersion") int schemaVersion,
     @JsonProperty("version") int version,
+    @JsonProperty("pipelineId") String pipelineId,
     @JsonProperty("uuid") UUID uuid,
     @JsonProperty("title") String title,
     @JsonProperty("description") String description,
@@ -54,6 +55,7 @@ public class PipelineConfigurationJson implements Serializable {
     this.pipelineConfiguration = new PipelineConfiguration(
         schemaVersion,
         version,
+        pipelineId,
         uuid,
         title,
         description,
@@ -76,13 +78,17 @@ public class PipelineConfigurationJson implements Serializable {
     return pipelineConfiguration.getSchemaVersion();
   }
 
+  public String getPipelineId() {
+    return pipelineConfiguration.getPipelineId();
+  }
+
   public int getVersion() {
     return pipelineConfiguration.getVersion();
   }
 
   public String getTitle() {
     if (pipelineConfiguration.getTitle() == null) {
-      return pipelineConfiguration.getInfo().getName();
+      return pipelineConfiguration.getInfo().getPipelineId();
     }
     return pipelineConfiguration.getTitle();
   }

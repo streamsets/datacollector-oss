@@ -55,22 +55,22 @@
               translate="home.detailPane.restURL">REST URL</li>
 
           <li role="presentation" ng-if="isPipelineRunning && !$storage.dontShowRESTResponseMenu">
-            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline/{{pipelineConfig.info.name}}/metrics?rev=0"
+            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline/{{pipelineConfig.info.pipelineId}}/metrics?rev=0"
                target="_blank">{{'home.detailPane.monitoringJSONData' | translate}}</a>
           </li>
 
           <li role="presentation" ng-if="!$storage.dontShowRESTResponseMenu">
-            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline/{{pipelineConfig.info.name}}"
+            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline/{{pipelineConfig.info.pipelineId}}"
                target="_blank">{{'home.detailPane.pipelineConfigJSONData' | translate}}</a>
           </li>
 
           <li role="presentation" ng-if="!$storage.dontShowRESTResponseMenu">
-            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline/{{pipelineConfig.info.name}}/rules"
+            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline/{{pipelineConfig.info.pipelineId}}/rules"
                target="_blank">{{'home.detailPane.pipelineRulesJSONData' | translate}}</a>
           </li>
 
           <li role="presentation" ng-if="!$storage.dontShowRESTResponseMenu">
-            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline/{{pipelineConfig.info.name}}/status?rev=0"
+            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline/{{pipelineConfig.info.pipelineId}}/status?rev=0"
                target="_blank">{{'home.detailPane.pipelineStatusJSONData' | translate}}</a>
           </li>
 
@@ -80,7 +80,7 @@
           </li>
 
           <li role="presentation" ng-if="!$storage.dontShowRESTResponseMenu">
-            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline/{{pipelineConfig.info.name}}/committedOffsets"
+            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline/{{pipelineConfig.info.pipelineId}}/committedOffsets"
                target="_blank">{{'home.detailPane.committedOffsets' | translate}}</a>
           </li>
 

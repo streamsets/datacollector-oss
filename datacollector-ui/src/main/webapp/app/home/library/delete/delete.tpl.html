@@ -9,7 +9,7 @@
   <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
 
   <p ng-if="!isList"
-    translate="home.library.deleteConfirmationMessage" translate-values="{name: pipelineInfo.name}"></p>
+    translate="home.library.deleteConfirmationMessage" translate-values="{name: pipelineInfo.pipelineId}"></p>
 
   <div ng-if="isList">
     <p ng-if="isList"

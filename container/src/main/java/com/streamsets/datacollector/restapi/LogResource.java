@@ -136,7 +136,7 @@ public class LogResource {
     if (!StringUtils.isEmpty(pipeline)) {
       // Validates Pipeline ACL Permission
       PipelineInfo pipelineInfo = store.getInfo(pipeline);
-      pipeline = pipelineInfo.getTitle() + "/" + pipelineInfo.getName();
+      pipeline = pipelineInfo.getTitle() + "/" + pipelineInfo.getPipelineId();
     }
 
     String logFile = LogUtils.getLogFile(runtimeInfo);

@@ -27,7 +27,7 @@ public interface PipelineState {
 
   public String getUser();
 
-  public String getName();
+  public String getPipelineId();
 
   public String getRev();
 

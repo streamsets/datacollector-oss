@@ -35,6 +35,7 @@ public class PipelineStateJson   {
 
   private String user = null;
   private String name = null;
+  private String pipelineId = null;
   private String rev = null;
 
   public enum StatusEnum {
@@ -108,7 +109,6 @@ public class PipelineStateJson   {
     this.user = user;
   }
 
-
   /**
    **/
   @ApiModelProperty(value = "")
@@ -120,6 +120,17 @@ public class PipelineStateJson   {
     this.name = name;
   }
 
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("pipelineId")
+  public String getPipelineId() {
+    return pipelineId;
+  }
+  public void setPipelineId(String pipelineId) {
+    this.pipelineId = pipelineId;
+  }
 
   /**
    **/

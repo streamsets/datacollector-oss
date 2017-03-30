@@ -91,14 +91,14 @@ angular
           message: pipelineValidationInProgress
         });
 
-        api.pipelineAgent.validatePipeline($scope.activeConfigInfo.name).
+        api.pipelineAgent.validatePipeline($scope.activeConfigInfo.pipelineId).
           then(
           function (res) {
             var defer = $q.defer();
             checkForValidateConfigStatus(res.data.previewerId, defer);
 
             defer.promise.then(function(previewData) {
-              if (pipelineBeingValidated.name !== $rootScope.$storage.activeConfigInfo.name) {
+              if (pipelineBeingValidated.pipelineId !== $rootScope.$storage.activeConfigInfo.pipelineId) {
                 return;
               }
               $rootScope.common.infoList = [];
@@ -124,7 +124,7 @@ angular
 
           },
           function (res) {
-            if (pipelineBeingValidated.name !== $rootScope.$storage.activeConfigInfo.name) {
+            if (pipelineBeingValidated.pipelineId !== $rootScope.$storage.activeConfigInfo.pipelineId) {
               return;
             }
             $rootScope.common.infoList = [];
@@ -139,20 +139,20 @@ angular
        */
       startPipeline: function() {
         $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Start Pipeline', 1);
-        if ($rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.name].status !== 'RUNNING') {
+        if ($rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.pipelineId].status !== 'RUNNING') {
           $scope.$storage.maximizeDetailPane = false;
           $scope.$storage.minimizeDetailPane = false;
           $scope.$storage.readNotifications = [];
           $rootScope.common.pipelineMetrics = {};
-          api.pipelineAgent.startPipeline($scope.activeConfigInfo.name, 0).
+          api.pipelineAgent.startPipeline($scope.activeConfigInfo.pipelineId, 0).
             then(
             function (res) {
               $scope.clearTabSelectionCache();
               $scope.selectPipelineConfig();
 
-              var currentStatus = $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.name];
+              var currentStatus = $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.pipelineId];
               if (!currentStatus || (res.data && currentStatus.timeStamp < res.data.timeStamp)) {
-                $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.name] = res.data;
+                $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.pipelineId] = res.data;
               }
 
               $timeout(function() {
@@ -166,7 +166,7 @@ angular
           );
         } else {
           $translate('home.graphPane.startErrorMessage', {
-            name: $scope.activeConfigInfo.name
+            name: $scope.activeConfigInfo.pipelineId
           }).then(function(translation) {
             $rootScope.common.errors = [translation];
           });
@@ -178,7 +178,7 @@ angular
        */
       startPipelineWithParameters: function() {
         $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Start Pipeline', 1);
-        if ($rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.name].status !== 'RUNNING') {
+        if ($rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.pipelineId].status !== 'RUNNING') {
           $scope.$storage.maximizeDetailPane = false;
           $scope.$storage.minimizeDetailPane = false;
           $scope.$storage.readNotifications = [];
@@ -200,9 +200,9 @@ angular
             $scope.clearTabSelectionCache();
             $scope.selectPipelineConfig();
 
-            var currentStatus = $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.name];
+            var currentStatus = $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.pipelineId];
             if (!currentStatus || (res.data && currentStatus.timeStamp < res.data.timeStamp)) {
-              $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.name] = res.data;
+              $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.pipelineId] = res.data;
             }
 
             $timeout(function() {
@@ -244,15 +244,15 @@ angular
           $scope.clearTabSelectionCache();
           $scope.selectPipelineConfig();
 
-          var currentStatus = $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.name];
+          var currentStatus = $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.pipelineId];
           if (!currentStatus || (status && currentStatus.timeStamp < status.timeStamp)) {
-            $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.name] = status;
+            $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.pipelineId] = status;
           }
 
-          var alerts = $rootScope.common.alertsMap[$scope.activeConfigInfo.name];
+          var alerts = $rootScope.common.alertsMap[$scope.activeConfigInfo.pipelineId];
 
           if (alerts) {
-            delete $rootScope.common.alertsMap[$scope.activeConfigInfo.name];
+            delete $rootScope.common.alertsMap[$scope.activeConfigInfo.pipelineId];
             $rootScope.common.alertsTotalCount -= alerts.length;
           }
 
@@ -379,9 +379,9 @@ angular
         pipelineService.duplicatePipelineConfigCommand(pipelineInfo, $event)
           .then(function(newPipelineConfig) {
             if (!angular.isArray(newPipelineConfig)) {
-              $location.path('/collector/pipeline/' + newPipelineConfig.info.name);
+              $location.path('/collector/pipeline/' + newPipelineConfig.info.pipelineId);
             } else {
-              $location.path('/collector/pipeline/' + newPipelineConfig[0].info.name);
+              $location.path('/collector/pipeline/' + newPipelineConfig[0].info.pipelineId);
             }
           });
       },
@@ -399,7 +399,7 @@ angular
        */
       exportPipelineConfig: function(pipelineInfo, includeDefinitions, $event) {
         $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Export Pipeline', 1);
-        api.pipelineAgent.exportPipelineConfig(pipelineInfo.name, includeDefinitions);
+        api.pipelineAgent.exportPipelineConfig(pipelineInfo.pipelineId, includeDefinitions);
       },
 
       publishPipeline: function (pipelineInfo, $event) {

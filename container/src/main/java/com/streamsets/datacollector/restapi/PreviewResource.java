@@ -111,7 +111,7 @@ public class PreviewResource {
     }
   }
 
-  @Path("/pipeline/{pipelineName}/preview")
+  @Path("/pipeline/{pipelineId}/preview")
   @POST
   @ApiOperation(value = "Run Pipeline preview",
     response = PreviewInfoJson.class, authorizations = @Authorization(value = "basic"))
@@ -120,7 +120,7 @@ public class PreviewResource {
       AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
   })
   public Response previewWithOverride(
-      @PathParam("pipelineName") String pipelineName,
+      @PathParam("pipelineId") String pipelineId,
       @QueryParam("rev") String rev,
       @QueryParam("batchSize") @DefaultValue("" + Integer.MAX_VALUE) int batchSize,
       @QueryParam("batches") @DefaultValue("1") int batches,
@@ -133,14 +133,14 @@ public class PreviewResource {
     if (stageOutputsToOverrideJson == null) {
       stageOutputsToOverrideJson = Collections.emptyList();
     }
-    PipelineInfo pipelineInfo = store.getInfo(pipelineName);
-    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
+    PipelineInfo pipelineInfo = store.getInfo(pipelineId);
+    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     int maxBatchSize = configuration.get(MAX_BATCH_SIZE_KEY, MAX_BATCH_SIZE_DEFAULT);
     batchSize = Math.min(maxBatchSize, batchSize);
     int maxBatches = configuration.get(MAX_BATCHES_KEY, MAX_BATCHES_DEFAULT);
     batches = Math.min(maxBatches, batches);
 
-    Previewer previewer = manager.createPreviewer(this.user, pipelineName, rev);
+    Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev);
     try {
       previewer.start(batches, batchSize, skipTargets, endStageInstanceName,
         BeanHelper.unwrapStageOutput(stageOutputsToOverrideJson), timeout);
@@ -156,7 +156,7 @@ public class PreviewResource {
     }
   }
 
-  @Path("/pipeline/{pipelineName}/preview/{previewerId}/status")
+  @Path("/pipeline/{pipelineId}/preview/{previewerId}/status")
   @GET
   @ApiOperation(value = "Return Preview status by previewer ID", response = PreviewInfoJson.class,
     authorizations = @Authorization(value = "basic"))
@@ -165,7 +165,7 @@ public class PreviewResource {
       AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
   })
   public Response getPreviewStatus(
-      @PathParam("pipelineName") String pipelineName,
+      @PathParam("pipelineId") String pipelineId,
       @PathParam("previewerId") String previewerId
   ) throws PipelineException, StageException {
     Previewer previewer = manager.getPreviewer(previewerId);
@@ -173,12 +173,12 @@ public class PreviewResource {
       return Response.status(Response.Status.NOT_FOUND).entity("Cannot find previewer with id " + previewerId).build();
     }
     PipelineInfo pipelineInfo = store.getInfo(previewer.getName());
-    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
+    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     PreviewInfoJson previewInfoJson = new PreviewInfoJson(previewer.getId(), previewer.getStatus());
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewInfoJson).build();
   }
 
-  @Path("/pipeline/{pipelineName}/preview/{previewerId}")
+  @Path("/pipeline/{pipelineId}/preview/{previewerId}")
   @GET
   @ApiOperation(value = "Return Preview Data by previewer ID", response = PreviewOutputJson.class,
     authorizations = @Authorization(value = "basic"))
@@ -187,7 +187,7 @@ public class PreviewResource {
       AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
   })
   public Response getPreviewData(
-      @PathParam("pipelineName") String pipelineName,
+      @PathParam("pipelineId") String pipelineId,
       @PathParam("previewerId") String previewerId
   ) throws PipelineException, StageException {
     Previewer previewer = manager.getPreviewer(previewerId);
@@ -195,12 +195,12 @@ public class PreviewResource {
       return Response.status(Response.Status.NOT_FOUND).entity("Cannot find previewer with id " + previewerId).build();
     }
     PipelineInfo pipelineInfo = store.getInfo(previewer.getName());
-    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
+    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     PreviewOutput previewOutput = previewer.getOutput();
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapPreviewOutput(previewOutput)).build();
   }
 
-  @Path("/pipeline/{pipelineName}/preview/{previewerId}")
+  @Path("/pipeline/{pipelineId}/preview/{previewerId}")
   @DELETE
   @ApiOperation(value = "Stop Preview by previewer ID", response = PreviewInfoJson.class,
     authorizations = @Authorization(value = "basic"))
@@ -209,7 +209,7 @@ public class PreviewResource {
       AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
   })
   public Response stopPreview(
-      @PathParam("pipelineName") String pipelineName,
+      @PathParam("pipelineId") String pipelineId,
       @PathParam("previewerId") String previewerId
   ) throws PipelineException, StageException {
     Previewer previewer = manager.getPreviewer(previewerId);
@@ -217,13 +217,13 @@ public class PreviewResource {
       return Response.status(Response.Status.NOT_FOUND).entity("Cannot find previewer with id " + previewerId).build();
     }
     PipelineInfo pipelineInfo = store.getInfo(previewer.getName());
-    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
+    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     previewer.stop();
     PreviewInfoJson previewInfoJson = new PreviewInfoJson(previewer.getId(), previewer.getStatus());
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewInfoJson).build();
   }
 
-  @Path("/pipeline/{pipelineName}/rawSourcePreview")
+  @Path("/pipeline/{pipelineId}/rawSourcePreview")
   @GET
   @ApiOperation(value = "Get raw source preview data for pipeline name and revision", response = RawPreview.class,
     authorizations = @Authorization(value = "basic"))
@@ -232,19 +232,19 @@ public class PreviewResource {
       AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
   })
   public Response rawSourcePreview(
-      @PathParam("pipelineName") String pipelineName,
+      @PathParam("pipelineId") String pipelineId,
       @QueryParam("rev") String rev,
       @Context UriInfo uriInfo
   ) throws PipelineException, IOException {
-    PipelineInfo pipelineInfo = store.getInfo(pipelineName);
-    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
+    PipelineInfo pipelineInfo = store.getInfo(pipelineId);
+    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     MultivaluedMap<String, String> previewParams = uriInfo.getQueryParameters();
-    Previewer previewer = manager.createPreviewer(this.user, pipelineName, rev);
+    Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev);
     RawPreview rawPreview = previewer.getRawSource(4 * 1024, previewParams);
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(rawPreview).build();
   }
 
-  @Path("/pipeline/{pipelineName}/validate")
+  @Path("/pipeline/{pipelineId}/validate")
   @GET
   @ApiOperation(value = "Validate pipeline configuration and return validation status and issues",
     response = PreviewInfoJson.class, authorizations = @Authorization(value = "basic"))
@@ -258,14 +258,14 @@ public class PreviewResource {
       AuthzRole.ADMIN_REMOTE
   })
   public Response validateConfigs(
-      @PathParam("pipelineName") String pipelineName,
+      @PathParam("pipelineId") String pipelineId,
       @QueryParam("rev") String rev,
       @QueryParam("timeout") @DefaultValue("2000") long timeout
   ) throws PipelineException, StageException {
-    PipelineInfo pipelineInfo = store.getInfo(pipelineName);
-    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
+    PipelineInfo pipelineInfo = store.getInfo(pipelineId);
+    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     try {
-      Previewer previewer = manager.createPreviewer(this.user, pipelineName, rev);
+      Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev);
       previewer.validateConfigs(timeout);
       PreviewStatus previewStatus = previewer.getStatus();
       if(previewStatus == null) {

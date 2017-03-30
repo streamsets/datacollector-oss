@@ -94,7 +94,7 @@ public class AclStoreResource {
     this.aclStore = aclStore;
   }
 
-  @Path("/{pipelineName}")
+  @Path("/{pipelineId}")
   @GET
   @ApiOperation(value ="Get Pipeline ACL", authorizations = @Authorization(value = "basic"))
   @Consumes(MediaType.APPLICATION_JSON)
@@ -102,11 +102,11 @@ public class AclStoreResource {
   @PermitAll
   @SuppressWarnings("unchecked")
   public Response getAcl(
-      @PathParam("pipelineName") String name,
+      @PathParam("pipelineId") String name,
       @Context SecurityContext context
   ) throws PipelineException, URISyntaxException {
     PipelineInfo pipelineInfo = store.getInfo(name);
-    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
+    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
 
     Acl acl = aclStore.getAcl(name);
     if (acl == null && currentUser != null &&
@@ -133,7 +133,7 @@ public class AclStoreResource {
     return Response.ok(AclDtoJsonMapper.INSTANCE.toAclJson(acl)).build();
   }
 
-  @Path("/{pipelineName}")
+  @Path("/{pipelineId}")
   @POST
   @ApiOperation(value ="Update Pipeline ACL", authorizations = @Authorization(value = "basic"))
   @Consumes(MediaType.APPLICATION_JSON)
@@ -141,12 +141,12 @@ public class AclStoreResource {
   @PermitAll
   @SuppressWarnings("unchecked")
   public Response saveAcl(
-      @PathParam("pipelineName") String name,
+      @PathParam("pipelineId") String name,
       @Context SecurityContext context,
       AclJson aclJson
   ) throws PipelineException, URISyntaxException {
     PipelineInfo pipelineInfo = store.getInfo(name);
-    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
+    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
 
     Acl existingAcl = aclStore.getAcl(name);
     if (existingAcl != null) {
@@ -167,7 +167,7 @@ public class AclStoreResource {
     return Response.ok().build();
   }
 
-  @Path("/{pipelineName}/permissions")
+  @Path("/{pipelineId}/permissions")
   @GET
   @ApiOperation(
       value ="Return pipeline permissions for given pipeline ID",
@@ -180,10 +180,10 @@ public class AclStoreResource {
   @PermitAll
   @SuppressWarnings("unchecked")
   public Response getPermissions(
-      @PathParam("pipelineName") String name
+      @PathParam("pipelineId") String name
   ) throws PipelineException {
     PipelineInfo pipelineInfo = store.getInfo(name);
-    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getName());
+    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     List<Permission> permissionList = new ArrayList<>();
     Acl acl = aclStore.getAcl(name);
     if (acl != null && currentUser != null) {

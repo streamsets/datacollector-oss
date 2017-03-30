@@ -571,6 +571,7 @@ public class TestPipelineBeanCreator {
     PipelineConfiguration pipelineConf = new PipelineConfiguration(
         1,
         PipelineConfigBean.VERSION,
+        "pipelineId",
         UUID.randomUUID(),
         "label",
         "D",
@@ -649,6 +650,7 @@ public class TestPipelineBeanCreator {
     PipelineConfiguration pipelineConf = new PipelineConfiguration(
         1,
         PipelineConfigBean.VERSION,
+        "pipelineId",
         UUID.randomUUID(),
         "label",
         "D",
@@ -741,6 +743,7 @@ public class TestPipelineBeanCreator {
     PipelineConfiguration pipelineConf = new PipelineConfiguration(
         1,
         PipelineConfigBean.VERSION,
+        "pipelineId",
         UUID.randomUUID(),
         "label",
         "D",

@@ -101,7 +101,7 @@ public class MiniITDataCollector implements DataCollector {
       throw new IllegalStateException("Data collector has not been started");
     }
     pipelineTask = (PipelineTask) ((TaskWrapper)task).getTask();
-    this.pipelineName = Utils.checkNotNull(realPipelineConfig.getInfo(), "Pipeline Info").getName();
+    this.pipelineName = Utils.checkNotNull(realPipelineConfig.getInfo(), "Pipeline Info").getPipelineId();
     this.pipelineRev = Utils.checkNotNull(realPipelineConfig.getInfo(), "Pipeline Info").getLastRev();
     createAndSave(pipelineName);
     runner = pipelineManager.getRunner(realPipelineConfig.getInfo().getCreator(), pipelineName, pipelineRev);
@@ -118,7 +118,7 @@ public class MiniITDataCollector implements DataCollector {
       throw new IllegalStateException("Data collector has not been started");
     }
     pipelineTask = (PipelineTask) ((TaskWrapper)task).getTask();
-    this.pipelineName = Utils.checkNotNull(realPipelineConfig.getInfo(), "Pipeline Info").getName();
+    this.pipelineName = Utils.checkNotNull(realPipelineConfig.getInfo(), "Pipeline Info").getPipelineId();
     this.pipelineRev = Utils.checkNotNull(realPipelineConfig.getInfo(), "Pipeline Info").getLastRev();
     createAndSave(pipelineName);
   }

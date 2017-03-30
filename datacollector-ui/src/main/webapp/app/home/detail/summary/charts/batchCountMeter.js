@@ -26,7 +26,7 @@ angular
   .module('dataCollectorApp.home')
   .controller('BatchCountBarChartController', function($scope, $translate, api, pipelineConstant) {
     var color = $scope.recordsColor,
-      baseQuery = "select m1_rate,metric from meters where (pipeline='" + $scope.pipelineConfig.info.name + "') and ",
+      baseQuery = "select m1_rate,metric from meters where (pipeline='" + $scope.pipelineConfig.info.pipelineId + "') and ",
       yAxisLabel = '( batches / sec )';
 
     $translate('home.detailPane.batchesPerSecond').then(function(translation) {
