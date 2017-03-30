@@ -32,8 +32,8 @@
   <packaging>jar</packaging>
 
   <properties>
-    <kafka.version>0.10.0-kafka-2.1.0</kafka.version>
-    <zookeeper.version>3.4.5-cdh5.10.0</zookeeper.version>
+    <kafka.version>0.10.0-kafka-2.1.1</kafka.version>
+    <zookeeper.version>3.4.5-cdh5.10.1</zookeeper.version>
   </properties>
 
   <dependencies>

@@ -32,15 +32,15 @@
     <packaging>jar</packaging>
 
     <properties>
-        <flume.version>1.6.0-cdh5.10.0</flume.version>
-        <hadoop.version>2.6.0-cdh5.10.0</hadoop.version>
-        <hbase.version>1.2.0-cdh5.10.0</hbase.version>
-        <hive.version>1.1.0-cdh5.10.0</hive.version>
-        <solr.version>4.10.3-cdh5.10.0</solr.version>
+        <flume.version>1.6.0-cdh5.10.1</flume.version>
+        <hadoop.version>2.6.0-cdh5.10.1</hadoop.version>
+        <hbase.version>1.2.0-cdh5.10.1</hbase.version>
+        <hive.version>1.1.0-cdh5.10.1</hive.version>
+        <solr.version>4.10.3-cdh5.10.1</solr.version>
         <solr.test.jetty.version>8.1.10.v20130312</solr.test.jetty.version>
         <thrift.version>0.9.3</thrift.version>
         <avro.version>1.7.7</avro.version>
-        <spark.version>1.6.0-cdh5.10.0</spark.version>
+        <spark.version>1.6.0-cdh5.10.1</spark.version>
     </properties>
 
     <repositories>
