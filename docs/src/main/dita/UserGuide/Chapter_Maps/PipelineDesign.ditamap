@@ -52,7 +52,12 @@
     <topicref href="../Pipeline_Design/RecordbasedWrites-GeneratingAtts.dita"/>
    </topicref>
   </topicref>
-  <topicref href="../Pipeline_Design/FieldAttributes.dita"/>
+  <topicref href="../Pipeline_Design/FieldAttributes.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Pipeline_Design/FieldAttributeGeneratingStages.dita"/>
+  </topicref>
   <topicref href="../Pipeline_Design/CDC-Overview.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

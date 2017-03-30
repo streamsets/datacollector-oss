@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ih1_3f1_2z">
- <title>Attribute-Generating Stages</title>
+ <title>Header Attribute-Generating Stages</title>
  <conbody>
   <p>The following table lists the stages that generate record header attributes to enable special
                 processing:<table frame="all" rowsep="1" colsep="1" id="table_hzf_lf1_2z">

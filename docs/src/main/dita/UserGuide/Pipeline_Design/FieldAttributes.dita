@@ -15,11 +15,15 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_xfm_wtp_1z">
  <title>Field Attributes</title>
+    <shortdesc>Field attributes are attributes that provide additional information about each field
+        that you can use in pipeline logic, as needed.</shortdesc>
  <conbody>
-  <p><indexterm>field attributes<indexterm>overview</indexterm></indexterm>You can create, modify,
-            and evaluate field attributes in the pipeline. The Expression Evaluator enables creating
-            and modifying field-level attributes. You can use field attribute functions to evaluate
-            field attributes.</p>
+  <p><indexterm>field attributes<indexterm>overview</indexterm></indexterm>Some stages generate
+            field attributes. For example, the Salesforce origin includes the original Salesforce
+            data type in the <codeph>salesforce.salesforceType</codeph> attribute for every field. </p>
+        <p>You can create, modify, and evaluate field attributes in the pipeline. The Expression
+            Evaluator enables creating and modifying field-level attributes. You can use field
+            attribute functions to evaluate field attributes.</p>
         <p>For example, you can use an Expression Evaluator to create a field attribute based on
             record data, then pass the record to a Stream Selector that routes data based on the
             value of the attribute. </p>

@@ -21,13 +21,11 @@
                 Analytics destination<indexterm>configuring</indexterm></indexterm>Configure a Wave
             Analytics destination to write data to Salesforce Wave Analytics.</context>
         <steps>
-            <step
-                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-NoStageLib">
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-NoStageLib">
                 <cmd/>
             </step>
             <step>
-                <cmd>On the <wintitle>Wave</wintitle> tab, configure the following
-                    properties:</cmd>
+                <cmd>On the <wintitle>Wave</wintitle> tab, configure the following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_qyk_lmj_tx">
                         <tgroup cols="2">
@@ -53,18 +51,18 @@
                                     <entry/>
                                 </row>
                                 <row>
-                                    <entry>API Version
-                                        <xref href="WaveAnalytics-APIVersion.dita">
+                                    <entry>API Version <xref href="WaveAnalytics-APIVersion.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_weh_nch_er" placement="inline"
-                                            /></xref></entry>
+                                        /></xref></entry>
                                     <entry
-                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/SalesforceAPIVersion"/>
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/SalesforceAPIVersion"
+                                    />
                                 </row>
                                 <row>
                                     <entry>Edgemart Alias</entry>
                                     <entry>Dataset name. The alias must be unique across an
-                                        organization.  <p>Each dataset is named with the edgemart
+                                        organization. <p>Each dataset is named with the edgemart
                                             alias and appended with the timestamp of when the
                                             dataset is uploaded. If you use a dataflow to combine
                                             multiple datasets, the destination uses the edgemart
@@ -81,12 +79,10 @@
                                             pipeline.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Use Dataflow
-                                        <xref
-                                            href="WaveAnalytics-Dataflow.dita">
+                                    <entry>Use Dataflow <xref href="WaveAnalytics-Dataflow.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_wjh_ycl_br" placement="inline"
-                                            /></xref></entry>
+                                        /></xref></entry>
                                     <entry>Determines whether to use a Wave Analytics dataflow to
                                         combine multiple datasets together. </entry>
                                 </row>
@@ -116,23 +112,31 @@
                     </table>
                 </info>
             </step>
-            <step>
-                <cmd>On the <wintitle>Advanced</wintitle> tab, configure the following
-                    properties:</cmd>
-                <info>
-                    <table
-                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Salesforce_Proxy"
-                        id="table_gsp_hxn_jz">
-                        <tgroup cols="1">
-                            <tbody>
-                                <row>
-                                    <entry/>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </info>
-            </step>
-        </steps>
-    </taskbody>
+                <step>
+                    <cmd>On the <wintitle>Advanced</wintitle> tab, configure the following
+                        properties:</cmd>
+                    <info>
+                        <table frame="all" rowsep="1" colsep="1" id="table_qgc_5l2_kz">
+                            <tgroup cols="2">
+                                <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                                <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+                                <thead>
+                                    <row>
+                                        <entry>Advanced Property</entry>
+                                        <entry>Description</entry>
+                                    </row>
+                                </thead>
+                                <tbody>
+                                    <row
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row_SalesforceProxy"
+                                        conrefend="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row_SalesforceProxyPassword">
+                                        <entry/>
+                                    </row>
+                                </tbody>
+                            </tgroup>
+                        </table>
+                    </info>
+                </step>
+            </steps>
+        </taskbody>
 </task>

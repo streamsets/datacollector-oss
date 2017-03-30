@@ -291,8 +291,11 @@
     <topicref href="../Origins/Salesforce-SubscribeRecordFormat.dita"/>
    </topicref>
    <topicref href="../Origins/Salesforce-CustomFields.dita"/>
-   <topicref href="../Origins/Salesforce-HeaderAttributes.dita"/>
-   <topicref href="../Origins/Salesforce-CRUDHeaderAttribute.dita"/>
+   <topicref href="../Origins/Salesforce-Attributes.dita">
+    <topicref href="../Origins/Salesforce-HeaderAttributes.dita"/>
+    <topicref href="../Origins/Salesforce-CRUDHeaderAttribute.dita"/>
+    <topicref href="../Origins/Salesforce-FieldAttributes.dita"/>
+   </topicref>
    <topicref href="../Origins/Salesforce-APIVersion.dita"/>
    <topicref href="../Origins/Salesforce-Configuring.dita"/>
   </topicref>

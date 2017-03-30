@@ -22,8 +22,8 @@
         <p><indexterm>Salesforce origin<indexterm>Salesforce header
                 attributes</indexterm></indexterm><indexterm>Salesforce header
                     attributes<indexterm>Salesforce origin</indexterm></indexterm>You can use the
-            record:attribute or record:attributeOrDefault functions to access the information in the
-            attribute. </p>
+                <codeph>record:attribute</codeph> or <codeph>record:attributeOrDefault</codeph>
+            functions to access the information in the attribute. </p>
         <p>The Salesforce origin can provide the following Salesforce header attributes:</p>
         <p>
             <table frame="all" rowsep="1" colsep="1" id="table_w4g_kqh_cy">
@@ -38,19 +38,19 @@
                     </thead>
                     <tbody>
                         <row>
-                            <entry>salesforce.sobjectType</entry>
+                            <entry>&lt;Salesforce prefix>.sobjectType</entry>
                             <entry>Provides the Salesforce source object for the record.
                                     <p>Generated when the origin executes a query or subscribes to
                                     notifications.</p></entry>
                         </row>
                         <row>
-                            <entry>salesforce.cdc.createdDate</entry>
+                            <entry>&lt;Salesforce prefix>.cdc.createdDate</entry>
                             <entry>Provides the date that the Salesforce PushTopic encountered the
                                 change event.<p>Generated when the origin subscribes to
                                     notifications.</p></entry>
                         </row>
                         <row>
-                            <entry>salesforce.cdc.type</entry>
+                            <entry>&lt;Salesforce prefix>.cdc.type</entry>
                             <entry>Provides the type of change that the Salesforce PushTopic
                                 encountered - created, updated, deleted, or undeleted.<p>Generated
                                     when the origin subscribes to notifications.</p></entry>

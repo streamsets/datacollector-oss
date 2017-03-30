@@ -234,6 +234,7 @@
     <shortdesc/>
    </topicmeta>
    <topicref href="../Processors/SalesforceLookup-Cache.dita"/>
+   <topicref href="../Processors/SalesforceLookup-Attributes.dita"/>
    <topicref href="../Processors/SalesforceLookup-APIVersion.dita"/>
    <topicref href="../Processors/SalesforceLookup-Configuring.dita"/>
   </topicref>

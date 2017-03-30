@@ -31,8 +31,8 @@
         <p>When processing existing data, you can configure the origin to query Salesforce at
             regular intervals. You cannot use repeating queries when subscribed to notifications.
             When repeating a query, the origin can perform a full or incremental read. </p>
-        <p>The origin creates Salesforce header attributes to provide information about the source
-            data in record headers. The origin also <ph
+        <p>The origin generates Salesforce record header attributes and Salesforce field attributes
+            that provide additional information about each record and field. The origin also <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-CDCoverview"
             /></p>
         <p>You can optionally use an HTTP proxy to connect to Salesforce.</p>

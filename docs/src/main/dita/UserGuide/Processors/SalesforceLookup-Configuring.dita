@@ -145,12 +145,33 @@
                 <cmd>On the <wintitle>Advanced</wintitle> tab, configure the following
                     properties:</cmd>
                 <info>
-                    <table
-                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Salesforce_Proxy"
-                        id="table_gsp_hxn_jz">
-                        <tgroup cols="1">
+                    <table frame="all" rowsep="1" colsep="1" id="table_qgc_5l2_kz">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+                            <thead>
+                                <row>
+                                    <entry>Advanced Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
                             <tbody>
                                 <row>
+                                    <entry>Create Salesforce Attributes <xref
+                                            href="SalesforceLookup-Attributes.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_wsg_gwh_er" placement="inline"
+                                        /></xref></entry>
+                                    <entry>Adds Salesforce field attributes to fields. The origin
+                                        creates Salesforce attributes by default. </entry>
+                                </row>
+                                <row>
+                                    <entry>Salesforce Attribute Prefix</entry>
+                                    <entry>Prefix for Salesforce attributes.</entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row_SalesforceProxy"
+                                    conrefend="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row_SalesforceProxyPassword">
                                     <entry/>
                                 </row>
                             </tbody>

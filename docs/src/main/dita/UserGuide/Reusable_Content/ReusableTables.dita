@@ -1337,7 +1337,8 @@
     </tbody>
    </tgroup>
   </table>
-  <draft-comment author="alisontaylor">All Salesforce stages use this table</draft-comment>
+  <draft-comment author="alisontaylor">All  Salesforce stages use the rows in this
+   table</draft-comment>
   <table frame="all" rowsep="1" colsep="1" id="Salesforce_Proxy">
    <tgroup cols="2">
     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -1349,7 +1350,7 @@
      </row>
     </thead>
     <tbody>
-     <row>
+     <row id="row_SalesforceProxy">
       <entry>Use Proxy</entry>
       <entry>Specifies whether to use an HTTP proxy to connect to Salesforce.</entry>
      </row>
@@ -1357,19 +1358,19 @@
       <entry>Proxy Hostname</entry>
       <entry>Proxy host.</entry>
      </row>
-     <row>
+     <row id="row_SalesforceProxyPort">
       <entry>Proxy Port</entry>
       <entry>Proxy port.</entry>
      </row>
-     <row>
+     <row id="row_SalesforceProxyCredentials">
       <entry>Proxy Requires Credentials</entry>
       <entry>Specifies whether the proxy requires a user name and password.</entry>
      </row>
-     <row>
+     <row id="row_SalesforceProxyUser">
       <entry>Proxy Username</entry>
       <entry>User name for proxy credentials.</entry>
      </row>
-     <row>
+     <row id="row_SalesforceProxyPassword">
       <entry>Proxy Password</entry>
       <entry>Password for proxy credentials.<note
         conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"/></entry>
@@ -1557,6 +1558,47 @@
          <codeph>/&lt;table path></codeph>. For tables in a specific cluster, specify the absolute
         path as <codeph>/mapr/&lt;cluster name>/&lt;table path></codeph>.</p>
       </entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
+  <draft-comment author="alisontaylor">The following table is used by the Salesforce origin and the
+   Salesforce Lookup processor</draft-comment>
+  <table
+   frame="all" rowsep="1" colsep="1" id="table_SalesforceFieldAtts">
+   <tgroup cols="2">
+    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+    <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+    <thead>
+     <row>
+      <entry>Salesforce Field Attribute</entry>
+      <entry>Description</entry>
+     </row>
+    </thead>
+    <tbody>
+     <row>
+      <entry>&lt;Salesforce prefix>salesforceType</entry>
+      <entry id="entry_JDBCType">Provides the original Salesforce data type
+       for the field.</entry>
+     </row>
+     <row>
+      <entry>&lt;Salesforce prefix>length</entry>
+      <entry id="entry_JDBCprecision">Provides the original length for all
+       string and textarea fields. </entry>
+     </row>
+     <row>
+      <entry>&lt;Salesforce prefix>precision</entry>
+      <entry>Provides the original precision for all double fields. </entry>
+     </row>
+     <row>
+      <entry>&lt;Salesforce prefix>scale</entry>
+      <entry id="entry_JDBCscale">Provides the original scale for all double
+       fields. </entry>
+     </row>
+     <row>
+      <entry>&lt;Salesforce prefix>digits</entry>
+      <entry>Provides the maximum number of digits for all integer
+       fields.</entry>
      </row>
     </tbody>
    </tgroup>
