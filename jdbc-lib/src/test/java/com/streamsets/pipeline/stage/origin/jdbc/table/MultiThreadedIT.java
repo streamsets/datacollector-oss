@@ -34,6 +34,8 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.reflect.Whitebox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -292,5 +294,29 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
         .build();
 
     testMultiThreadedRead(tableJdbcSource);
+  }
+
+  @Test
+  public void testNumThreadsMoreThanNumTables() throws Exception {
+    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+        .tablePattern("%")
+        .schema(database)
+        .build();
+    TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
+        .tableConfigBeans(ImmutableList.of(tableConfigBean))
+        // 20 threads in config but there are only 10 tables
+        .numberOfThreads(NUMBER_OF_TABLES + 10)
+        .batchTableStrategy(BatchTableStrategy.SWITCH_TABLES)
+        .build();
+    tableJdbcSource = PowerMockito.spy(tableJdbcSource);
+    PushSourceRunner runner = new PushSourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
+        .addOutputLane("a").build();
+    runner.runInit();
+    try {
+      int numberOfThreads = Whitebox.getInternalState(tableJdbcSource, "numberOfThreads");
+      Assert.assertEquals(NUMBER_OF_TABLES, numberOfThreads);
+    } finally {
+      runner.runDestroy();
+    }
   }
 }

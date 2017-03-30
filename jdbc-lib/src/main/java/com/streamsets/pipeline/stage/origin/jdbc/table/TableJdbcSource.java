@@ -61,14 +61,14 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class TableJdbcSource extends BasePushSource {
-  public static final String JDBC_NO_MORE_DATA= "jdbc-no-more-data";
+  public static final String OFFSET_VERSION =
+      "$com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcSource.offset.version$";
+  public static final String OFFSET_VERSION_1 = "1";
 
   private static final Logger LOG = LoggerFactory.getLogger(TableJdbcSource.class);
   private static final Joiner NEW_LINE_JOINER = Joiner.on("\n");
   private static final String HIKARI_CONFIG_PREFIX = "hikariConfigBean.";
   private static final String CONNECTION_STRING = HIKARI_CONFIG_PREFIX + "connectionString";
-  private static final String OFFSET_VERSION = "$com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcSource.offset.version$";
-  private static final String OFFSET_VERSION_1 = "1";
 
   private final HikariPoolConfigBean hikariConfigBean;
   private final CommonSourceConfigBean commonSourceConfigBean;
@@ -349,7 +349,8 @@ public class TableJdbcSource extends BasePushSource {
     });
   }
 
-  private void handleLastOffset(Map<String, String> lastOffsets) throws StageException {
+  @VisibleForTesting
+  void handleLastOffset(Map<String, String> lastOffsets) throws StageException {
     if (lastOffsets != null) {
       if (lastOffsets.containsKey(Source.POLL_SOURCE_OFFSET_KEY)) {
         String innerTableOffsetsAsString = lastOffsets.get(Source.POLL_SOURCE_OFFSET_KEY);
@@ -364,11 +365,13 @@ public class TableJdbcSource extends BasePushSource {
         //Do this at last so as not to lose the offsets if there is failure in the middle
         //when we call commitOffset above
         getContext().commitOffset(Source.POLL_SOURCE_OFFSET_KEY, null);
-
-        //Version the offset so as to allow for future evolution.
-        getContext().commitOffset(OFFSET_VERSION, OFFSET_VERSION_1);
       } else {
         offsets.putAll(lastOffsets);
+      }
+      //Only if it is not already committed
+      if (!lastOffsets.containsKey(OFFSET_VERSION)) {
+        //Version the offset so as to allow for future evolution.
+        getContext().commitOffset(OFFSET_VERSION, OFFSET_VERSION_1);
       }
     }
 

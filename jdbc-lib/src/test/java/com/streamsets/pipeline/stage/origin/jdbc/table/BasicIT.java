@@ -22,19 +22,23 @@ package com.streamsets.pipeline.stage.origin.jdbc.table;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
+import com.streamsets.pipeline.stage.origin.jdbc.table.util.OffsetQueryUtil;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 
 import java.sql.SQLException;
@@ -660,7 +664,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
     );
   }
 
-   private void runSourceForInitialOffset(List<Record> expectedRecords, int batchSize, Map<String, String> lastOffsets) throws Exception {
+  private void runSourceForInitialOffset(List<Record> expectedRecords, int batchSize, Map<String, String> lastOffsets) throws Exception {
     TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern("TENNIS_STARS")
         .schema(database)
@@ -693,5 +697,99 @@ public class BasicIT extends BaseTableJdbcSourceIT {
     //Now the origin is started again with initial offset 5 but we pass the last offset, which means
     //we should read from id 9
     runSourceForInitialOffset(EXPECTED_TENNIS_STARS_RECORDS.subList(8, 15), 100, lastOffsets);
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testUpgradeOffsetsToV1() throws Exception {
+    Map<String, String> lastOffsets = Maps.newLinkedHashMap(
+        Collections.singletonMap(
+            Source.POLL_SOURCE_OFFSET_KEY, OffsetQueryUtil.serializeOffsetMap(
+                Maps.newLinkedHashMap(
+                    ImmutableMap.of(
+                        "TEST.CRICKET_STARS", "P_ID=5",
+                        "TEST.TENNIS_STARS", "P_ID=7"
+                    )
+                )
+            )
+        )
+    );
+    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+        .tablePattern("%_STARS")
+        .schema(database)
+        .build();
+
+    TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
+        .tableConfigBeans(ImmutableList.of(tableConfigBean))
+        .build();
+
+    tableJdbcSource = Mockito.spy(tableJdbcSource);
+
+    PushSourceRunner runner = Mockito.spy(
+        new PushSourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
+            .addOutputLane("a")
+            .setOnRecordError(OnRecordError.TO_ERROR)
+            .build()
+    );
+
+    //Check offset upgrade
+    Mockito.doAnswer(invocationOnMock -> {
+      Map<String, String> lastOffsetStringMap = (Map<String, String>) invocationOnMock.getArguments()[0];
+
+      Assert.assertTrue(lastOffsetStringMap.containsKey(Source.POLL_SOURCE_OFFSET_KEY));
+
+      Map<String, String> oldOffsetMap =
+          OffsetQueryUtil.deserializeOffsetMap(lastOffsetStringMap.get(Source.POLL_SOURCE_OFFSET_KEY));
+
+
+      TableJdbcSource source = (TableJdbcSource) invocationOnMock.getMock();
+
+      Object returnVal = invocationOnMock.callRealMethod();
+
+      //Check the local offsets variable from the TableJdbcSource
+      Map<String, String> upgradedOffset = (Map<String, String>) Whitebox.getInternalState(source, "offsets");
+
+      //Should not contain poll source offset key
+      Assert.assertFalse(upgradedOffset.containsKey(Source.POLL_SOURCE_OFFSET_KEY));
+
+      //Contain all other table values
+      for (Map.Entry<String, String> oldOffsetEntry : oldOffsetMap.entrySet()) {
+        Assert.assertTrue(upgradedOffset.containsKey(oldOffsetEntry.getKey()));
+        Assert.assertEquals(oldOffsetEntry.getValue(), upgradedOffset.get(oldOffsetEntry.getKey()));
+      }
+      //Call the real method, thus upgrading
+      return returnVal;
+    }).when(tableJdbcSource).handleLastOffset(Mockito.anyMapOf(String.class, String.class));
+
+    runner.runInit();
+
+    JdbcPushSourceTestCallback callback = new JdbcPushSourceTestCallback(runner, 2);
+
+    try {
+      runner.runProduce(lastOffsets, 10, callback);
+      List<List<Record>> batches = callback.waitForAllBatchesAndReset();
+      Assert.assertEquals(2, batches.size());
+
+      checkRecords(EXPECTED_CRICKET_STARS_RECORDS.subList(5, EXPECTED_CRICKET_STARS_RECORDS.size()), batches.get(0));
+      checkRecords(EXPECTED_TENNIS_STARS_RECORDS.subList(7, EXPECTED_TENNIS_STARS_RECORDS.size()), batches.get(1));
+
+      Map<String, String> runnerOffsets = runner.getOffsets();
+
+      //Check the offsets after upgraded offsets are used by the runner
+      Assert.assertEquals(3, runnerOffsets.size());
+      Assert.assertFalse(runnerOffsets.containsKey(Source.POLL_SOURCE_OFFSET_KEY));
+      Assert.assertTrue(runnerOffsets.containsKey(TableJdbcSource.OFFSET_VERSION));
+
+      Assert.assertEquals(TableJdbcSource.OFFSET_VERSION_1, runnerOffsets.get(TableJdbcSource.OFFSET_VERSION));
+
+
+      Assert.assertTrue(runnerOffsets.containsKey("TEST.CRICKET_STARS"));
+      Assert.assertTrue(runnerOffsets.containsKey("TEST.TENNIS_STARS"));
+
+      Assert.assertEquals("P_ID=10", runnerOffsets.get("TEST.CRICKET_STARS"));
+      Assert.assertEquals("P_ID=15", runnerOffsets.get("TEST.TENNIS_STARS"));
+    } finally {
+      runner.runDestroy();
+    }
   }
 }
