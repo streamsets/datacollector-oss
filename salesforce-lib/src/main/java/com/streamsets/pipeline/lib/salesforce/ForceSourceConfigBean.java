@@ -170,8 +170,8 @@ public class ForceSourceConfigBean extends ForceConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Create Salesforce Header Attributes",
-      description = "Generates record header attributes that provide additional details about source data, such as the original data type or source object.",
+      label = "Create Salesforce Attributes",
+      description = "Generates record header and field attributes that provide additional details about source data, such as the source object and original data type.",
       defaultValue = "true",
       displayPosition = 130,
       group = "ADVANCED"
@@ -181,8 +181,8 @@ public class ForceSourceConfigBean extends ForceConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
-      label = "Salesforce Header Prefix",
-      description = "Prefix for the header attributes, used as follows: <prefix>.<field name>.<type of information>. For example: salesforce.<field name>.precision and salesforce.<field name>.scale",
+      label = "Salesforce Attribute Prefix",
+      description = "Prefix for the header and field attributes, used as follows: <prefix>.<type of information>. For example: salesforce.precision and salesforce.scale",
       defaultValue = "salesforce.",
       displayPosition = 140,
       group = "ADVANCED",

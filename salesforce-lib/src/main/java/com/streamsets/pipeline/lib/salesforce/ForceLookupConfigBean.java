@@ -73,8 +73,8 @@ public class ForceLookupConfigBean extends ForceConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Create Salesforce Header Attributes",
-      description = "Generates record header attributes that provide additional details about source data, such as the original data type or source object.",
+      label = "Create Salesforce Attributes",
+      description = "Generate field attributes that provide additional details about source data, such as the original data type.",
       defaultValue = "true",
       displayPosition = 70,
       group = "ADVANCED"
@@ -84,8 +84,8 @@ public class ForceLookupConfigBean extends ForceConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
-      label = "Salesforce Header Prefix",
-      description = "Prefix for the header attributes, used as follows: <prefix>.<field name>.<type of information>. For example: salesforce.<field name>.precision and salesforce.<field name>.scale",
+      label = "Salesforce Attribute Prefix",
+      description = "Prefix for the field attributes, used as follows: <prefix>.<type of information>. For example: salesforce.precision and salesforce.scale",
       defaultValue = "salesforce.",
       displayPosition = 80,
       group = "ADVANCED",
