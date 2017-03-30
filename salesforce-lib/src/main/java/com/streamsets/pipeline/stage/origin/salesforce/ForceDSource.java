@@ -37,6 +37,7 @@ import com.streamsets.pipeline.lib.salesforce.ForceSourceConfigBean;
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     resetOffset = true,
+    producesEvents = true,
     onlineHelpRefUrl = "index.html#Origins/Salesforce.html#task_h1n_bs3_rx"
 )
 @ConfigGroups(value = Groups.class)

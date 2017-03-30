@@ -37,6 +37,7 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.event.CommonEvents;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.salesforce.ForceConfigBean;
 import com.streamsets.pipeline.lib.salesforce.ForceRepeatQuery;
@@ -116,6 +117,7 @@ public class ForceSource extends BaseSource {
   private ForceStreamConsumer forceConsumer;
 
   private Map<String, Map<String, com.sforce.soap.partner.Field>> metadataMap;
+  private boolean shouldSendNoMoreDataEvent = false;
 
   private class FieldTree {
     String offset;
@@ -311,6 +313,13 @@ public class ForceSource extends BaseSource {
 
     LOG.debug("lastSourceOffset: {}", lastSourceOffset);
 
+    // send event only once for each time we run out of data.
+    if(shouldSendNoMoreDataEvent) {
+      CommonEvents.NO_MORE_DATA.create(getContext()).createAndSend();
+      shouldSendNoMoreDataEvent = false;
+      return lastSourceOffset;
+    }
+
     int batchSize = Math.min(conf.basicConfig.maxBatchSize, maxBatchSize);
 
     if (!conf.queryExistingData ||
@@ -330,6 +339,7 @@ public class ForceSource extends BaseSource {
           // Sleep in one second increments so we don't tie up the app.
           LOG.info("{}ms remaining until next fetch.", delay);
           ThreadUtil.sleep(Math.min(delay, 1000));
+
           return lastSourceOffset;
         }
       }
@@ -456,6 +466,7 @@ public class ForceSource extends BaseSource {
               queryResultList = null;
               batch = null;
               job = null;
+              shouldSendNoMoreDataEvent = true;
               if (conf.subscribeToStreaming) {
                 // Switch to processing events
                 nextSourceOffset = READ_EVENTS_FROM_NOW;
@@ -558,9 +569,11 @@ public class ForceSource extends BaseSource {
     if (recordIndex == records.length) {
       try {
         if (queryResult.isDone()) {
+          // We're out of results
           queryResult = null;
           lastQueryCompletedTime = System.currentTimeMillis();
           LOG.info("Query completed at: {}", lastQueryCompletedTime);
+          shouldSendNoMoreDataEvent = true;
           if (conf.subscribeToStreaming) {
             // Switch to processing events
             nextSourceOffset = READ_EVENTS_FROM_NOW;
