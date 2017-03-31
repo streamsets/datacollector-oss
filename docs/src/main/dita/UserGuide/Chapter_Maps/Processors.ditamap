@@ -251,6 +251,8 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Processors/Spark-Standalone.dita"/>
+   <topicref href="../Processors/Spark-Cluster.dita"/>
    <topicref href="../Processors/Spark-WriteApplication.dita"/>
    <topicref href="../Processors/Spark-StoreJar.dita"/>
    <topicref href="../Processors/Spark-Configuring.dita"/>

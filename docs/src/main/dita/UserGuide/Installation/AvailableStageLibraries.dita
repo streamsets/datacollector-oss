@@ -555,6 +555,7 @@
                                             mode pipelines</li>
                                         <li>HBase Lookup processor</li>
                                         <li>Hive Metadata processor</li>
+                                        <li>Spark Evaluator processor</li>
                                         <li>HBase destination</li>
                                         <li>Hive Metastore destination</li>
                                         <li>Hive Streaming destination using the MapR library</li>

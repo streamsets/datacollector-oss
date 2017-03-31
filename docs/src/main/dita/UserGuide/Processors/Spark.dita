@@ -16,35 +16,24 @@
 <concept id="concept_cpx_1lm_zx">
  <title>Spark Evaluator</title>
  <shortdesc>The Spark Evaluator performs custom processing within a pipeline based on a Spark
-        application that you develop. Use the Spark Evaluator processor in standalone pipelines
-        only. </shortdesc>
+        application that you develop. Use the Spark Evaluator in pipelines configured for standalone
+        or cluster execution mode. </shortdesc>
  <conbody>
-  <p><indexterm>Spark Evaluator
+        <p><indexterm>Spark Evaluator
                     processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Spark
-                    Evaluator</indexterm></indexterm>The Spark Evaluator starts a local Spark
-            application. The Spark application - or <codeph>SparkContext</codeph> - runs as long as
-            the pipeline runs. The Spark application submits a job for each batch of records,
-            processing the batch and then returning the results and errors back to the pipeline for
-            further processing. </p>
-        <p>You can configure a parallelism value for the Spark Evaluator. The Spark application
-            creates this number of partitions for each batch of records. Each partition is processed
-            in parallel. Set the parallelism value based on the number of available processors on
-            the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-            /> machine. Because the Spark Evaluator can use multiple threads to process a batch, the
-            processor is especially useful when you need to perform heavy custom processing within a
-            pipeline, such as image classification.</p>
-        <note>The stage libraries that include the Spark Evaluator include all dependencies required
-            for the processor. The Spark Evaluator does not require any installation
-            prerequisites.</note>
-        <p>Complete the following tasks to use the Spark Evaluator:<ol id="ol_pmh_33p_zx">
+                    Evaluator</indexterm></indexterm>The Spark Evaluator processor is especially
+            useful when you need to perform heavy custom processing within a pipeline, such as image
+            classification.</p>
+        <p>Complete the following general tasks to use the Spark Evaluator:<ol id="ol_pmh_33p_zx">
                 <li>Write the Spark application using Java or Scala. Then, package a JAR file
                     containing the application.</li>
                 <li>Install the application and its dependencies.</li>
                 <li>Configure the Spark Evaluator processor to submit the Spark application.<p>When
-                        you configure the processor, you define the parallelism value to use during
-                        processing. You also define the name of the custom Spark class that you
-                        developed and define the arguments to pass to the <codeph>init</codeph>
-                        method in the custom Spark class.</p></li>
-            </ol></p>
- </conbody>
+                        you configure the processor, you define the name of the custom Spark class
+                        that you developed and define the arguments to pass to the
+                            <codeph>init</codeph> method in the custom Spark class.</p></li>
+            </ol><note>The stage libraries that include the Spark Evaluator include all dependencies
+                required for the processor. The Spark Evaluator does not require any installation
+                prerequisites.</note></p>
+    </conbody>
 </concept>

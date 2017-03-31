@@ -30,9 +30,10 @@
             <p>To install an external library for the Spark Evaluator, see <xref
                     href="../Configuration/ExternalLibs.dita#concept_pdv_qlw_ft"/>.</p>
             <p>
-                <note>The Spark Evaluator processor is included in the Cloudera CDH stage libraries.
-                    When you install external libraries for the processor, you must make them
-                    accessible to the appropriate Cloudera CDH stage library.</note>
+                <note>The Spark Evaluator processor is included in the Cloudera CDH and the MapR 5.2
+                    stage libraries. When you install external libraries for the processor, you must
+                    make them accessible to the appropriate Cloudera CDH stage library or to the
+                    MapR 5.2 stage library.</note>
             </p>
         </context>
     </taskbody>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_b1l_5lv_jz">
+ <title>Cluster Pipelines</title>
+    <shortdesc>You can use the Spark Evaluator processor in pipelines that process data from a Kafka
+        cluster in cluster streaming mode. You cannot use the processor in cluster pipelines that
+        process data from a MapR cluster or from HDFS.</shortdesc>
+ <conbody>
+        <p><indexterm>Spark Evaluator processor<indexterm>cluster
+            pipelines</indexterm></indexterm>In a cluster pipeline, the cluster manager spawns a <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            worker for each topic partition in the Kafka cluster. Spark Streaming generates a batch
+            for the pipeline every few seconds. Then each <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            worker processes the batches from a single partition.</p>
+        <p>When each Spark Evaluator processor running on a <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            worker receives a batch of data, it generates and sends a Resilient Distributed Dataset
+            (RDD) to the Spark Transformer running on the driver. </p>
+        <p>The RDD passed to the Spark Transformer points to data across the cluster. The Spark
+            Transformer processes all of the data received across all <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            workers in the cluster, processing multiple batches at the same time. Data moves from
+            one node to another only if your custom Spark code shuffles the data. The Spark
+            Transformer returns the results and errors back to each Spark Evaluator processor
+            running on the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            workers. The <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            workers process the remaining pipeline stages in parallel.</p>
+        <p>The following image shows how the Spark Transformer processes data received across all
+            workers in the cluster:</p>
+        <p><image href="../Graphics/SparkEvaluatorCluster.png" scale="65" id="image_swx_xwv_jz"
+            /></p>
+        <p>Use the following rules and guidelines when you write the Spark application and configure
+            the processor for a cluster pipeline:<ul id="ul_dg5_nmv_jz">
+                <li>To maintain the state of each RDD, use the <codeph>RDD.checkpoint()</codeph>
+                    method in your custom Spark application. When you checkpoint the RDDs, the Spark
+                    Transformer can access the RDDs from previous batches.</li>
+                <li>When you configure the processor, do not define a parallelism value for the
+                    processor. The number of partitions defined in the Kafka Consumer origin
+                    determines the number of partitions used throughout the cluster pipeline.</li>
+                <li>When you configure the processor, use constant values for <codeph>init</codeph>
+                    method arguments. In a cluster pipeline, the Spark Evaluator processor cannot
+                    evaluate <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> expressions in <codeph>init</codeph> method arguments.</li>
+                <li>When you monitor the running pipeline, the record throughput for intervals less
+                    than 15 minutes might show a higher throughput than what the pipeline is
+                    actually processing. To accurately monitor the throughput rate, evaluate the
+                    throughputs for 15 minutes or more.</li>
+            </ul></p>
+    </conbody>
+    <related-links>
+        <link href="../Cluster_Mode/ClusterPipelines.dita#concept_hmh_kfn_1s"/>
+    </related-links>
+</concept>
