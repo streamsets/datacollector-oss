@@ -37,7 +37,7 @@ public class PipelineStatusEvent implements Event {
   private boolean isRemote;
   private boolean isClusterMode;
   private String offset;
-  private int offsetProtocolVersion = 1;
+  private int offsetProtocolVersion;
   private Acl acl;
 
   public PipelineStatusEvent() {
