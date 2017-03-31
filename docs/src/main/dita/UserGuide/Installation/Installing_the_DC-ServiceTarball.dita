@@ -40,8 +40,8 @@
                     typically <codeph>/opt/local/</codeph>:</cmd>
                 <info>
                     <codeblock>tar -xzf streamsets-datacollector-all-&lt;version>.tgz</codeblock>
-                    <p>For example, to extract version 2.4.0.0, use the following
-                        command:<codeblock>tar -xzf streamsets-datacollector-all-2.4.0.0.tgz</codeblock></p>
+                    <p>For example, to extract version 2.5.0.0, use the following
+                        command:<codeblock>tar -xzf streamsets-datacollector-all-2.5.0.0.tgz</codeblock></p>
                 </info>
             </step>
             <step>

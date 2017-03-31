@@ -28,9 +28,5 @@
             from the pipeline to Cloud Bigtable columns.</p>
         <p>When necessary, you can configure a time basis and specify the number of records to
             buffer in each commit to Cloud Bigtable.</p>
-        <note type="important">Verify that Java 8 is installed on the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            machine. The minimum supported version of Java for the Google Bigtable destination is
-            Java 8.</note>
  </conbody>
 </concept>

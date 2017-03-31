@@ -30,9 +30,5 @@
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Dest-CRUDoverview"/><ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/CDC-xref"/></p>
     <p>You can also add advanced Elasticsearch properties as needed. </p>
-        <note type="important">Verify that Java 8 is installed on the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            machine. The minimum supported version of Java for the Elasticsearch destination is Java
-            8.</note>
  </conbody>
 </concept>

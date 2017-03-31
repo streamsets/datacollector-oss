@@ -27,9 +27,9 @@
         new files as needed with the same customized property values.</shortdesc>
     <taskbody>
         <context>
-            <p>For example, we'll compare the files in the /etc/sdc2200 directory with the files in
+            <p>For example, we'll compare the files in the /etc/sdc2300 directory with the files in
                 the /etc/sdc directory. We'll update the new files in the /etc/sdc directory with
-                any customizations made in the previous files in the /etc/sdc2200 directory.</p>
+                any customizations made in the previous files in the /etc/sdc2300 directory.</p>
         </context>
         <steps>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/MainConfigFile">

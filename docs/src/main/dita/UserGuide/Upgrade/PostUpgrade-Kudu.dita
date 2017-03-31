@@ -17,8 +17,10 @@
  <title>Update Kudu Pipelines</title>
  <shortdesc><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         version 2.2.0.0 provides support for Apache Kudu version 1.0.x and no longer supports
-        earlier Kudu versions. To upgrade pipelines that contain a Kudu destination, upgrade your
-        Kudu cluster and then add a stage alias for the earlier Kudu version to the <ph
+        earlier Kudu versions. To upgrade pipelines that contain a Kudu destination from <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        versions earlier than 2.2.0.0, upgrade your Kudu cluster and then add a stage alias for the
+        earlier Kudu version to the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>. </shortdesc>
  <conbody>

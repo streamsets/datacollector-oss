@@ -22,9 +22,9 @@
                 <li>Run the following command to list all stage libraries used by the previous Data
                     Collector
                         version:<codeblock>yum list installed | grep "datacollector" | grep "&lt;version>"</codeblock><p>For
-                        example, to list all stage libraries used by Data Collector version 2.0.0.0,
+                        example, to list all stage libraries used by Data Collector version 2.3.0.0,
                         run the following
-                        command:<codeblock>yum list installed | grep "datacollector" | grep "2.0.0.0"</codeblock></p></li>
+                        command:<codeblock>yum list installed | grep "datacollector" | grep "2.3.0.0"</codeblock></p></li>
                 <li>Run the following command to uninstall all stage libraries used by the previous
                         version:<codeblock>yum remove &lt;library package name>,&lt;library package name>,...</codeblock><p>Where
                             <codeph>library package name</codeph> is the full name of the libraries

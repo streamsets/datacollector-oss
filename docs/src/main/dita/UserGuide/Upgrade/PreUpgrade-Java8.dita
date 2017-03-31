@@ -20,8 +20,9 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         version ran on Java 7, you must migrate to Java 8 with version 2.5.0.0.</shortdesc>
  <conbody>
-        <p>To migrate to Java 8, complete the following steps before upgrading to version
-            2.5.0.0:</p>
+        <p>To migrate to Java 8, complete the following steps before upgrading to <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            version 2.5.0.0:</p>
         <ol id="ol_h33_fhp_hz">
             <li>Shut down <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -35,7 +36,7 @@
             <li>Restart <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> and verify that it works as expected.</li>
-            <li>If any pipelines include the Java Script Evaluator processor, open the pipelines and
+            <li>If any pipelines include the JavaScript Evaluator processor, open the pipelines and
                 validate the scripts on Java 8. </li>
         </ol>
  </conbody>

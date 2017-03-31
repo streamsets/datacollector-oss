@@ -32,8 +32,8 @@
                     previous version:</cmd>
                 <info>
                     <codeblock>tar -xzf streamsets-datacollector-&lt;version>-all-rpms.tgz</codeblock>
-                    <p>For example, to extract version 2.4.0.0, use the following
-                        command:<codeblock>tar -xzf streamsets-datacollector-2.4.0.0-all-rpms.tgz</codeblock></p>
+                    <p>For example, to extract version 2.5.0.0, use the following
+                        command:<codeblock>tar -xzf streamsets-datacollector-2.5.0.0-all-rpms.tgz</codeblock></p>
                 </info>
             </step>
             <step>
@@ -47,8 +47,8 @@
                 <cmd>Or, to install the core RPM package and then install individual stage libraries
                     as needed, use the following command:</cmd>
                 <info><codeblock>yum localinstall streamsets-datacollector-&lt;version>-1.noarch.rpm</codeblock>For
-                    example, to install version 2.4.0.0, use the following
-                    command:<codeblock>yum localinstall streamsets-datacollector-2.4.0.0-1.noarch.rpm</codeblock></info>
+                    example, to install version 2.5.0.0, use the following
+                    command:<codeblock>yum localinstall streamsets-datacollector-2.5.0.0-1.noarch.rpm</codeblock></info>
             </step>
         </steps>
     </taskbody>

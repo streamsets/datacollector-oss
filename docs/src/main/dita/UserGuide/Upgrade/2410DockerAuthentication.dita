@@ -16,10 +16,9 @@
 <concept id="concept_czx_bbn_gz">
  <title>Authentication for Docker Image</title>
  <conbody>
-  <p>The Docker image for <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            version 2.4.1.0 now uses the form type of file-based authentication by default. As a
-            result, you must use a <ph
+  <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> version
+            2.4.1.0, the Docker image now uses the form type of file-based authentication by
+            default. As a result, you must use a <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             user account to log in to the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
