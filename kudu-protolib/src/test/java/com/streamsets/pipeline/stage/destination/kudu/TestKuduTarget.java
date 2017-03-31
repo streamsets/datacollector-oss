@@ -31,6 +31,7 @@ import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import junit.framework.Assert;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.api.support.membermodification.MemberMatcher;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.apache.kudu.ColumnSchema;
@@ -60,6 +61,7 @@ import com.google.common.collect.ImmutableList;
     KuduSession.class,
     Operation.class
     })
+@PowerMockIgnore({ "javax.net.ssl.*" })
 public class TestKuduTarget {
 
   private static final String KUDU_MASTER = "localhost:7051";
@@ -69,6 +71,7 @@ public class TestKuduTarget {
   public void setup() {
 
     final KuduClient client = new KuduClient.KuduClientBuilder(KUDU_MASTER).build();
+
     // Create a dummy kuduSession
     PowerMockito.replace(
         MemberMatcher.method(

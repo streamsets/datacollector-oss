@@ -321,6 +321,10 @@
       <directory>${basedir}/../${apache-kudu_1_2-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
+    <fileSet>
+      <directory>${basedir}/../${apache-kudu_1_3-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
 
     <!-- Apache Kafka libs -->
     <fileSet>

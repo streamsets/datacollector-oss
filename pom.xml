@@ -381,6 +381,7 @@
         <apache-kudu_1_0-lib>apache-kudu_1_0-lib</apache-kudu_1_0-lib>
         <apache-kudu_1_1-lib>apache-kudu_1_1-lib</apache-kudu_1_1-lib>
         <apache-kudu_1_2-lib>apache-kudu_1_2-lib</apache-kudu_1_2-lib>
+        <apache-kudu_1_3-lib>apache-kudu_1_3-lib</apache-kudu_1_3-lib>
         <apache-solr_6_1_0-lib>apache-solr_6_1_0-lib</apache-solr_6_1_0-lib>
         <cassandra_3-lib>cassandra_3-lib</cassandra_3-lib>
         <cdh_5_2-lib>cdh_5_2-lib</cdh_5_2-lib>
@@ -427,6 +428,7 @@
         <module>apache-kudu_1_0-lib</module>
         <module>apache-kudu_1_1-lib</module>
         <module>apache-kudu_1_2-lib</module>
+        <module>apache-kudu_1_3-lib</module>
         <module>apache-solr_6_1_0-lib</module>
         <module>cassandra_3-lib</module>
         <module>cdh_5_2-lib</module>
@@ -479,7 +481,7 @@
              for all the sample dev stage libraries here with the directory name as value
         -->
         <apache-kafka_0_10-lib>apache-kafka_0_10-lib</apache-kafka_0_10-lib>
-        <apache-kudu_1_2-lib>apache-kudu_1_2-lib</apache-kudu_1_2-lib>
+        <apache-kudu_1_3-lib>apache-kudu_1_3-lib</apache-kudu_1_3-lib>
         <apache-solr_6_1_0-lib>apache-solr_6_1_0-lib</apache-solr_6_1_0-lib>
         <cassandra_3-lib>cassandra_3-lib</cassandra_3-lib>
         <cdh_5_10-cluster-cdh_kafka_2_1-lib>cdh_5_10-cluster-cdh_kafka_2_1-lib</cdh_5_10-cluster-cdh_kafka_2_1-lib>
@@ -502,7 +504,7 @@
              IMPORTANT: the modules for the sample dev stage libraries
         -->
         <module>apache-kafka_0_10-lib</module>
-        <module>apache-kudu_1_2-lib</module>
+        <module>apache-kudu_1_3-lib</module>
         <module>apache-solr_6_1_0-lib</module>
         <module>cassandra_3-lib</module>
         <module>cdh_5_10-cluster-cdh_kafka_2_1-lib</module>
