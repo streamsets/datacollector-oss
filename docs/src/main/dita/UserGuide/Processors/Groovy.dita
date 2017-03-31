@@ -20,12 +20,12 @@
           Evaluator</indexterm></indexterm>The Groovy Evaluator processes data based on Groovy code.
       Use the Groovy Evaluator processor to use Groovy code to perform custom processing. The Groovy
       Evaluator supports Groovy version 2.4.</p>
-    <p>The Groovy Evaluator can process data one record at a time or one batch at a time. </p>
+    <p
+      conref="../Reusable_Content/Reusable_Topics/ScriptingProcessorContent.dita#concept_oxj_vbh_cy/OverviewScriptTypes"/>
   <p>When you use a Groovy Evaluator in a pipeline, the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> passes a batch
-   of data to the processor and converts the data to a scripting-friendly data structure for
-   processing.</p>
-    <p>You can configure the processor to use the invokedynamic bytecode instruction. </p>
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> passes a
+      batch of data to the processor and converts the data to a scripting-friendly data structure
+      for processing. You can configure the processor to use the invokedynamic bytecode instruction. </p>
     <p>The processor provides extensive sample code that you can use to develop your script. You can
       also call external Java code from the script.</p>
  </conbody>

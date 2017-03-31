@@ -16,9 +16,19 @@
 <concept id="concept_oxj_vbh_cy">
  <title>Scripting Processor Content</title>
  <conbody>
-  <p>
+        <draft-comment author="alisontaylor">Overview conref</draft-comment>
+     <p id="OverviewScriptTypes">You can develop the following scripts for the processor:
+         <ul id="ul_azr_v3r_kz">
+             <li>Initialization script - Optional initialization script that sets up resources or
+                    connections required by the processor. The initialization script is run once
+                    when the pipeline starts. </li>
+             <li>Main processing script - Main script that processes data. The main script is run for each
+                 record or each batch of data, based on the configured processing mode.</li>
+             <li>Destroy script - Optional destroy script that closes any resources or connections opened
+                 by the processor. The destroy script is run once when the pipeline stops.</li>
+         </ul>
+     </p>
             <draft-comment author="Loretta">Event generation topic conrefs. </draft-comment>
-        </p>
         <p>You can use the &lt;&lt;processor name>> <ph id="Event-ph-1st">to generate event records
                 for an event stream. Enable event generation when you want the processor to generate
                 an event record based on scripting logic. </ph></p>

@@ -95,9 +95,10 @@
                                                 Requires error handling code in the script.</li>
                                         </ul><p>Default is Batch by Batch.</p></entry>
                                 </row>
-                                <row>
-                                    <entry>Script</entry>
-                                    <entry>JavaScript code to use in the processor.</entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-InitScript"
+                                    conrefend="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-DestroyScript">
+                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>

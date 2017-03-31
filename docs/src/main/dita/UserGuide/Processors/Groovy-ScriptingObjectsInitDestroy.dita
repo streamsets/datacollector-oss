@@ -13,12 +13,17 @@
   limitations under the License.
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_hzt_zjt_gv">
- <title>Groovy Scripting Objects</title>
+<concept id="concept_bml_rql_kz">
+ <title>Init and Destroy Scripts</title>
  <conbody>
-    <p><indexterm>Groovy Evaluator processor<indexterm>scripting
-        objects</indexterm></indexterm><indexterm>scripting objects<indexterm>Groovy
-          Evaluator</indexterm></indexterm>You can use different scripting objects in the Groovy
-      Evaluator, based on the type of script.</p>
-  </conbody>
+  <p>You can use the following scripting objects in the initialization and destroy scripts:</p>
+        <dl
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/P-DL-InitDestroyScriptObjects">
+            <dlentry>
+                <dt/>
+                <dd/>
+            </dlentry>
+        </dl>
+        
+ </conbody>
 </concept>

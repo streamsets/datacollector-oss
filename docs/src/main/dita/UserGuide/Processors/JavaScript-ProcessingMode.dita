@@ -15,14 +15,14 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_zsj_jxt_lv">
  <title>Processing Mode</title>
- <shortdesc>You can choose the processing mode to use with the JavaScript Evaluator. You can use the
-        same script in each processing mode. However, you should include error handling in the
-        script before you run in batch mode.</shortdesc>
+ <shortdesc>You can choose the processing mode that the JavaScript Evaluator uses to process the
+        main script. You can use the same script in each processing mode. However, you should
+        include error handling in the main script before you run in batch mode.</shortdesc>
  <conbody>
         <p><indexterm>JavaScript Evaluator processor<indexterm>processing
                 mode</indexterm></indexterm><indexterm>processing modes<indexterm>JavaScript
                     Evaluator</indexterm></indexterm>The JavaScript Evaluator provides the following
-            processing modes: </p>
+            processing modes for the main script: </p>
         <p>
             <dl>
                 <dlentry

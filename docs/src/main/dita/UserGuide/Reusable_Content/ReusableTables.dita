@@ -1603,5 +1603,36 @@
     </tbody>
    </tgroup>
   </table>
+  <draft-comment author="alisontaylor">These rows are used by the Groovy, JavaScript, Jython
+   Evaluators</draft-comment>
+  <table frame="all" rowsep="1" colsep="1" id="table_sgr_tmr_kz">
+   <tgroup cols="2">
+    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+    <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+    <thead>
+     <row>
+      <entry>Property</entry>
+      <entry>Description</entry>
+     </row>
+    </thead>
+    <tbody>
+     <row id="row-InitScript">
+      <entry>Init Script</entry>
+      <entry>Optional initialization script to use in the processor.<p>Use to set up connections or
+       resources required by the processor. Runs once when the pipeline starts.</p></entry>
+     </row>
+    <row id="row-Script">
+     <entry>Script</entry>
+     <entry>Main processing script to use in the processor.<p>Runs for each record or each batch of
+       data, based on the configured processing mode.</p></entry>
+    </row>
+    <row id="row-DestroyScript">
+     <entry>Destroy Script</entry>
+     <entry>Optional destroy script to use in the processor.<p>Use to close any connections or
+       resources required by the processor. Runs once when the pipeline stops.</p></entry>
+    </row>
+    </tbody>
+   </tgroup>
+  </table>
  </conbody>
 </concept>

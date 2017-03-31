@@ -15,13 +15,14 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_n2p_jgf_lr">
  <title>JavaScript Evaluator</title>
- <shortdesc>The JavaScript Evaluator processes data based on JavaScript code. Use the JavaScript
-        processor to use JavaScript code to perform custom processing.</shortdesc>
  <conbody>
   <p><indexterm>JavaScript Evaluator
                     processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>JavaScript
-                    Evaluator</indexterm></indexterm>The JavaScript Evaluator can process data one
-            record at a time or one batch at a time. </p>
+                    Evaluator</indexterm></indexterm>The JavaScript Evaluator processes data based
+            on JavaScript code. Use the JavaScript processor to use JavaScript code to perform
+            custom processing.</p>
+        <p
+            conref="../Reusable_Content/Reusable_Topics/ScriptingProcessorContent.dita#concept_oxj_vbh_cy/OverviewScriptTypes"/>
   <p>When you use a JavaScript Evaluator in a pipeline, the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             passes a batch of data to the processor and converts the data to a scripting-friendly

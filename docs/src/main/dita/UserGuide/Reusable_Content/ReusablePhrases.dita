@@ -100,10 +100,10 @@
             <draft-comment author="Loretta">Core install includes all processors except... </draft-comment>
             <p><ph id="CoreNotProcessor">except the Groovy Evaluator, Jython Evaluator, HBase
                         Lookup, Redis Lookup, and Spark Evaluator.</ph></p>
-           
             <p>
                   <draft-comment author="Loretta">List of destinations that are part of the Core
-                        installation. Used in CoreInstall_Overview and CoreInstall-LibList. </draft-comment>
+                        installation. Used in CoreInstall_Overview and CoreInstall-LibList.
+                  </draft-comment>
             </p>
             <p>
                   <ul id="BasicDestinations">
@@ -346,7 +346,7 @@
             </p>
             <p>
                   <draft-comment author="Loretta">AVRO-HadoopFS - used by Hadoop FS origin - Not
-                        adding the non-avro-compression-codec  compression info</draft-comment>
+                        adding the non-avro-compression-codec compression info</draft-comment>
             </p>
             <p>
                   <dl>
@@ -751,8 +751,9 @@
                   When you use another prefix, enter the prefix. When you use another bucket, enter
                   a prefix and bucket.</p>
             <p id="S3origin-CopyMove2">Copying the object leaves the original object in place. </p>
-            <p>                  <draft-comment author="Loretta"><uicontrol>ul-S3-custSSE</uicontrol> is used by
-                  Amazon S3 origin and destination in the SSE topic:</draft-comment>
+            <p>
+                  <draft-comment author="Loretta"><uicontrol>ul-S3-custSSE</uicontrol> is used by
+                        Amazon S3 origin and destination in the SSE topic:</draft-comment>
             </p>
             <p>
                   <ul id="ul-S3-custSSE">
@@ -872,7 +873,6 @@ web-0011.log</codeblock></dd>
                               href="../Origins/Origins-HTTPComparison.dita#concept_rsz_cnw_qy"
                         />.</note>
             </p>
-            
             <p>
                   <draft-comment author="Loretta"><uicontrol>O-EventHandling-overview</uicontrol> -
                         used by Directory and File Tail</draft-comment>
@@ -896,7 +896,7 @@ web-0011.log</codeblock></dd>
                         href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"
                   />.</p>
             <p>
-                  <draft-comment author="Loretta">Event Generation topic.  Hadoop FS and MapR FS use
+                  <draft-comment author="Loretta">Event Generation topic. Hadoop FS and MapR FS use
                         ph and ul. Local FS uses ph and some bullets in the list.</draft-comment>
             </p>
             <p><ph id="D-ph-EventGen1">can generate events that you can use in an event stream. When
@@ -961,7 +961,7 @@ web-0011.log</codeblock></dd>
                   time. When incoming data slows, the pipeline runners sit idle, available for use
                   as soon as the data flow increases.</p>
             <p>
-                  <draft-comment author="Loretta">JDBC Consumer,  Oracle CDC Client origin, and JDBC
+                  <draft-comment author="Loretta">JDBC Consumer, Oracle CDC Client origin, and JDBC
                         Query executor use these in the overview:</draft-comment>
             </p>
             <p id="JDBC-legacyInfo"><ph id="ph-JDBC-legacyInfo">To use a JDBC version older than
@@ -1022,7 +1022,7 @@ web-0011.log</codeblock></dd>
                   requirements.</p>
             <p>
                   <draft-comment author="Loretta">Use din SDC to Kafka > Batch Request Size, Kafka
-                        Message Size... > Important:  and also in HTTP to Kafka > Request Message
+                        Message Size... > Important: and also in HTTP to Kafka > Request Message
                         Size > Important</draft-comment>
             </p>
             <p><ph id="ph-ToKafka-DefKafkaMessageSize">By default, the maximum message size in a
@@ -1112,21 +1112,22 @@ web-0011.log</codeblock></dd>
             </p>
             <p>
                   <draft-comment author="Loretta"><uicontrol>P-DL-ScriptObjects</uicontrol> -
-                        Groovy, JavaScript, Jython Processor scripting objects. All three use these,
-                        and they each have their own Record object versions:</draft-comment>
+                        Groovy, JavaScript, Jython Processor main scripting objects. All three use
+                        these, and they each have their own Record object versions. Make any updates
+                        to state and log dlentries to the same ones below for the init/destroy
+                        scripts</draft-comment>
             </p>
             <p>
                   <dl id="P-DL-ScriptObjects">
                         <dlentry>
                               <dt>state</dt>
-                              <dd>An object to store information between invocations of this script.
-                                    A state is a map object that includes a collection of key/value
-                                    pairs. You can use the state object to cache data such as
-                                    lookups or counters.</dd>
-                              <dd>The state object functions much like an instance variable: <ul
-                                          id="ul_bh4_1yr_kv">
-                                          <li>You need to populate the object - it has no default
-                                                value.</li>
+                              <dd>An object to store information between
+                                    invocations of the init, main, and destroy scripts. A state is a
+                                    map object that includes a collection of key/value pairs. You
+                                    can use the state object to cache data such as lookups,
+                                    counters, or a connection to an external system.</dd>
+                              <dd>The state object functions much like a
+                                    member variable: <ul id="ul_bh4_1yr_kv">
                                           <li>The information is transient and is lost when the
                                                 pipeline stops or restarts.</li>
                                           <li>The state object is available only for the instance of
@@ -1134,6 +1135,13 @@ web-0011.log</codeblock></dd>
                                                 pipeline executes in cluster mode, the state object
                                                 is not shared across nodes.</li>
                                     </ul></dd>
+                              <dd>The same instance of the state object
+                                    is available to all three scripts. For example, you might use
+                                    the init script to open a connection to a database and then
+                                    store a reference to that connection in the state object. In the
+                                    main script, you can access the open connection using the state
+                                    object. Then in the destroy script, you can close the connection
+                                    using the state object.</dd>
                               <dd>
                                     <note type="warning">The state object is best used for a fixed
                                           or static set of data. Adding to the cache on every record
@@ -1189,7 +1197,7 @@ web-0011.log</codeblock></dd>
                                                 event generation in the stage before implementing
                                                 event methods. </li>
                                           <li><codeph>toEvent(Record)</codeph> - Method that sends
-                                                an event record to the Event output stream.  Be sure
+                                                an event record to the Event output stream. Be sure
                                                 to enable event generation in the stage before
                                                 implementing event methods. </li>
                                     </ul>
@@ -1197,18 +1205,60 @@ web-0011.log</codeblock></dd>
                         </dlentry>
                   </dl>
             </p>
+            <draft-comment author="alisontaylor"
+                        ><uicontrol>P-DL-InitDestroyScriptObjects</uicontrol> - Groovy, JavaScript,
+                  Jython Processor init and destroy scripting objects. Same text as above, minus the
+                  warning for the state dlentry. Make same updates both places.</draft-comment>
+            <dl id="P-DL-InitDestroyScriptObjects">
+                  <dlentry>
+                        <dt>state</dt>
+                        <dd>An object to store information between invocations of the init, main,
+                              and destroy scripts. A state is a map object that includes a
+                              collection of key/value pairs. You can use the state object to cache
+                              data such as lookups, counters, or a connection to an external
+                              system.</dd>
+                        <dd>The state object functions much like a member variable: <ul
+                                    id="ul_jfv_p5q_kz">
+                                    <li>The information is transient and is lost when the pipeline
+                                          stops or restarts.</li>
+                                    <li>The state object is available only for the instance of the
+                                          processor stage it is defined in. If the pipeline executes
+                                          in cluster mode, the state object is not shared across
+                                          nodes.</li>
+                              </ul></dd>
+                        <dd>The same instance of the state object is available to all three scripts.
+                              For example, you might use the init script to open a connection to a
+                              database and then store a reference to that connection in the state
+                              object. In the main script, you can access the open connection using
+                              the state object. Then in the destroy script, you can close the
+                              connection using the state object.</dd>
+                  </dlentry>
+                  <dlentry>
+                        <dt>log</dt>
+                        <dd>An object to write messages to the log. Includes four methods:
+                              <codeph>info()</codeph>, <codeph>warn()</codeph>,
+                              <codeph>debug()</codeph>, and <codeph>trace()</codeph>. </dd>
+                        <dd>The signature of the four methods is as follows:
+                              <codeblock>(message-template, arguments...) </codeblock>The
+                              message template can have positional variables denoted by curly
+                              brackets: { }. The arguments are replaced in the message
+                              template curly brackets in positional manner, i.e., this is the
+                              first argument in the first { } occurrence, and so on.</dd>
+                  </dlentry>
+            </dl>
             <draft-comment author="alisontaylor">Groovy, JavaScript, Jython Evaluators use this text
                   in Accessing Whole Files topic</draft-comment>
-            <p id="Script-WholeFile">The processor can access the fileref field in a whole file record by creating an
-                  input stream using the getInputStream() API. For example, you might use the
-                  processor to read the file data in the fileref field and then create new records
-                  with the data. The processor can access the fileref field, but cannot modify
-                  information in the field.</p>
+            <p id="Script-WholeFile">The processor can access the fileref field in a whole file
+                  record by creating an input stream using the getInputStream() API. For example,
+                  you might use the processor to read the file data in the fileref field and then
+                  create new records with the data. The processor can access the fileref field, but
+                  cannot modify information in the field.</p>
             <p id="Script-CreateStream">Use the following lines to create and then read the input
                   stream:<codeblock>input_stream = record.value['fileRef'].getInputStream()
 input_stream.read()</codeblock></p>
-            <p id="Script-CloseStream">After the processor reads the input stream, include the following line in the code to
-                  close the input stream:<codeblock>input_stream.close()</codeblock></p>
+            <p id="Script-CloseStream">After the processor reads the input stream, include the
+                  following line in the code to close the input
+                  stream:<codeblock>input_stream.close()</codeblock></p>
             <p>
                   <draft-comment author="Loretta">DESTINATION DATA FORMATS. Individual items are
                         conrefed, not the whole list. (8/10/16) </draft-comment>
@@ -1660,7 +1710,8 @@ input_stream.read()</codeblock></p>
                   Hive, you can alternatively use record header attributes to perform record-based
                   writes. You can write records to the specified directory, use the defined Avro
                   schema, and roll files based on record header attributes. For more information,
-                  see <xref href="../Pipeline_Design/RecordBasedWrites-overview.dita#concept_lmn_gdc_1w"
+                  see <xref
+                        href="../Pipeline_Design/RecordBasedWrites-overview.dita#concept_lmn_gdc_1w"
                   />.</p>
             <p id="D-HM-Overview2">You can define a file prefix and suffix, the data time zone, and
                   properties that define when the destination closes a file. You can specify the
@@ -1878,7 +1929,8 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   those files were not written by that pipeline. So if you happen to have another
                   file whose name begins with the same pattern - <codeph>_tmp_&lt;prefix></codeph> -
                   the destination renames that file also.</note>
-            <p id="RecoveryExceptions">The destination might not rename all temporary files in the following situations:<dl>
+            <p id="RecoveryExceptions">The destination might not rename all temporary files in the
+                  following situations:<dl>
                         <dlentry>
                               <dt>The directory template includes an expression with the
                                     record:value or record:valueOrDefault function.</dt>
@@ -1893,7 +1945,8 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                               <dd>If the expression <codeph>${record:value('/b')}</codeph> evaluates
                                     to an empty string or to a subdirectory such as
                                           <codeph>/folder1/folder2</codeph>, then the destination
-                                    cannot determine those locations when the pipeline restarts. </dd>
+                                    cannot determine those locations when the pipeline restarts.
+                              </dd>
                         </dlentry>
                         <dlentry>
                               <dt>The directory is defined in the targetDirectory record header
@@ -1904,9 +1957,10 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                                     cannot rename the temporary files.</dd>
                         </dlentry>
                   </dl></p>
-            <p id="RecoveryManual">In either of these situations, you must manually rename the temporary files.</p>
-            <p id="RecoveryDisable">File recovery can slow down the pipeline as it restarts. If needed, you can configure
-                  the destination to skip file recovery.</p>
+            <p id="RecoveryManual">In either of these situations, you must manually rename the
+                  temporary files.</p>
+            <p id="RecoveryDisable">File recovery can slow down the pipeline as it restarts. If
+                  needed, you can configure the destination to skip file recovery.</p>
             <p>
                   <draft-comment author="Loretta">Record Header Attributes - Hadoop FS, Local FS,
                         MapR FS. But Local and MapR FS don't have full functionality yet
@@ -2299,30 +2353,35 @@ ${YY()}_${MM()}_${DD()}</codeblock>
             <note type="tip" id="Tip_Passwords">To secure sensitive information such as passwords,
                   you can use runtime resources or Hashicorp Vault secrets. For more information,
                   see <xref href="../Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/> or
-                        <xref href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
-            <note type="tip" id="Tip_ConsumerKey">To secure sensitive information such as the consumer key and secret,
-                  you can use runtime resources or Hashicorp Vault secrets. For more information,
-                  see <xref href="../Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/> or
-                  <xref href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
-            <note type="tip" id="Tip_ClientID">To secure sensitive information such as the client ID and secret,
-                  you can use runtime resources or Hashicorp Vault secrets. For more information,
-                  see <xref href="../Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/> or
-                  <xref href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
-            <note type="tip" id="Tip_JWTKey">To secure sensitive information such as the JWT signing key,
-                  you can use runtime resources or Hashicorp Vault secrets. For more information,
-                  see <xref href="../Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/> or
-                  <xref href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note><p>
-                        <draft-comment author="Loretta">Cluster mode: MapR Streaming mode and Kafka
-                              (Yarn) requirements:</draft-comment>
-                  </p><p>
-                        <ol id="ol-Clust-Stream-loglevel">
-                              <li>Edit the log4j.properties file, located in the following
-                                    directory:
-                                    <codeblock>&lt;spark-home>/conf/log4j.properties</codeblock></li>
-                              <li>Set the <uicontrol>log4j.rootCategory</uicontrol> property to a
-                                    severity of INFO or lower, such as DEBUG or TRACE.</li>
-                        </ol>
-                  </p>
+                        <xref href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"
+                  />.</note>
+            <note type="tip" id="Tip_ConsumerKey">To secure sensitive information such as the
+                  consumer key and secret, you can use runtime resources or Hashicorp Vault secrets.
+                  For more information, see <xref
+                        href="../Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/> or <xref
+                        href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
+            <note type="tip" id="Tip_ClientID">To secure sensitive information such as the client ID
+                  and secret, you can use runtime resources or Hashicorp Vault secrets. For more
+                  information, see <xref
+                        href="../Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/> or <xref
+                        href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
+            <note type="tip" id="Tip_JWTKey">To secure sensitive information such as the JWT signing
+                  key, you can use runtime resources or Hashicorp Vault secrets. For more
+                  information, see <xref
+                        href="../Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/> or <xref
+                        href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
+            <p>
+                  <draft-comment author="Loretta">Cluster mode: MapR Streaming mode and Kafka (Yarn)
+                        requirements:</draft-comment>
+            </p>
+            <p>
+                  <ol id="ol-Clust-Stream-loglevel">
+                        <li>Edit the log4j.properties file, located in the following directory:
+                              <codeblock>&lt;spark-home>/conf/log4j.properties</codeblock></li>
+                        <li>Set the <uicontrol>log4j.rootCategory</uicontrol> property to a severity
+                              of INFO or lower, such as DEBUG or TRACE.</li>
+                  </ol>
+            </p>
             <p>
                   <draft-comment author="Loretta">EXECUTORS</draft-comment>
             </p>
@@ -2379,7 +2438,7 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                         <dt>Record header attribute ** dlentries not used ** </dt>
                         <dd id="RecordHeaderAtt">You can define the CRUD operation in a CRUD
                               operation record header attribute. The destination looks for the CRUD
-                              operation to use in the sdc.operation.type record header attribute.  </dd>
+                              operation to use in the sdc.operation.type record header attribute. </dd>
                         <dd id="DefineRecordHeaderAtt">If your pipeline includes a CRUD-enabled
                               origin that processes changed data, the destination simply reads the
                               operation type from the sdc.operation.type header attribute that the
@@ -2397,7 +2456,7 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                               properties. The destination uses the default operation when the
                               sdc.operation.type record header attribute is not set.</dd>
                         <dd id="UnsupportedOp">You can also define how to handle records with
-                              unsupported operations defined in the sdc.operation.type  header
+                              unsupported operations defined in the sdc.operation.type header
                               attribute. The destination can discard them, send them to error, or
                               use the default operation. </dd>
                   </dlentry>
@@ -2469,16 +2528,16 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                               </dd>
                         </dlentry>
                   </dl></p>
-            <p id="OAuth2_Examples">Let’s look at some examples of how to configure authentication and OAuth 2 authorization
-                  to read Twitter, Microsoft Azure AD, and Google APIs.</p>
+            <p id="OAuth2_Examples">Let’s look at some examples of how to configure authentication
+                  and OAuth 2 authorization to read Twitter, Microsoft Azure AD, and Google
+                  APIs.</p>
             <draft-comment author="alisontaylor">Note used 2 times in Aggregated Statistics for
                   Pipelines in DPM chapter</draft-comment>
             <note type="important" id="AggStatsNote">For a production environment, use a Kafka
                   cluster or Amazon Kinesis Streams to aggregate statistics. Using SDC RPC to
                   aggregate statistics is not highly available and might cause the loss of some
                   data. It should be used for development purposes only.</note>
-
-           <p>
+            <p>
                   <draft-comment author="Loretta">This ph-PermissionsDisabled is used in Permissions
                         overview and Config the Data Collector.</draft-comment>
             </p>
@@ -2501,15 +2560,15 @@ ${YY()}_${MM()}_${DD()}</codeblock>
             </ul>
             <draft-comment author="alisontaylor">Use this for any location in the help that mentions
                   these environment variable files.</draft-comment>
-            <p id="EnvFileLocation">If you start Data Collector as a service, set the environment variable in the
-                        <systemoutput>$SDC_DIST/libexec/sdcd-env.sh</systemoutput> file. If you
-                  start Data Collector manually, set the variable in the
+            <p id="EnvFileLocation">If you start Data Collector as a service, set the environment
+                  variable in the <systemoutput>$SDC_DIST/libexec/sdcd-env.sh</systemoutput> file.
+                  If you start Data Collector manually, set the variable in the
                         <systemoutput>$SDC_DIST/libexec/sdc-env.sh</systemoutput> file.</p>
             <draft-comment author="alisontaylor">Use this for the pipeline --name option for any
                   commands in the CLI docs</draft-comment>
-            <p id="CliPipelineName">The name is automatically generated when the pipeline is created and is used by <ph
+            <p id="CliPipelineName">The name is automatically generated when the pipeline is created
+                  and is used by <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                   /> to identify the pipeline. The pipeline name cannot be changed.</p>
-
       </conbody>
 </concept>
