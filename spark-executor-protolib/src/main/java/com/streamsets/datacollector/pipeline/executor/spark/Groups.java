@@ -22,8 +22,8 @@ package com.streamsets.datacollector.pipeline.executor.spark;
 import com.streamsets.pipeline.api.Label;
 
 public enum Groups implements Label {
-  SPARK ("Spark"),
-  APPLICATION ("Application Details"),
+  SPARK("Spark"),
+  APPLICATION("Application"),
   CREDENTIALS("Credentials"),
   SSL("SSL"),
   PROXY("Proxy"),

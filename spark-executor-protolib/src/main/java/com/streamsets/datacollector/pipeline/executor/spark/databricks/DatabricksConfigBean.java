@@ -48,7 +48,7 @@ public class DatabricksConfigBean {
   @ConfigDef(
       type = ConfigDef.Type.STRING,
       required = true,
-      label = "Cluster base URL",
+      label = "Cluster Base URL",
       group = "SPARK",
       dependsOn = "clusterManager^",
       triggeredByValue = "DATABRICKS",

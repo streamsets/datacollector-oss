@@ -80,6 +80,7 @@ public class YarnConfigBean {
       required = true,
       defaultValue = "true",
       label = "Dynamic Allocation",
+      description = "Enable the dynamic allocation of Spark worker nodes",
       group = "SPARK",
       dependsOn = "clusterManager^",
       triggeredByValue = "YARN",
@@ -91,7 +92,7 @@ public class YarnConfigBean {
       type = ConfigDef.Type.NUMBER,
       required = true,
       min = 0,
-      label = "Initial/Minimum Number of Executors",
+      label = "Minimum Number of Worker Nodes",
       group = "SPARK",
       dependsOn = "dynamicAllocation",
       triggeredByValue = "true",
@@ -104,7 +105,7 @@ public class YarnConfigBean {
       type = ConfigDef.Type.NUMBER,
       required = true,
       min = 0,
-      label = "Maximum Number of Executors",
+      label = "Maximum Number of Worker Nodes",
       group = "SPARK",
       dependsOn = "dynamicAllocation",
       triggeredByValue = "true",
@@ -116,8 +117,7 @@ public class YarnConfigBean {
       type = ConfigDef.Type.NUMBER,
       required = true,
       min = 1,
-      label = "Number of Executors",
-      elDefs = RecordEL.class,
+      label = "Number of Worker Nodes",
       group = "SPARK",
       dependsOn = "dynamicAllocation",
       triggeredByValue = "false",
@@ -139,7 +139,7 @@ public class YarnConfigBean {
   @ConfigDef(
       type = ConfigDef.Type.LIST,
       required = false,
-      label = "Arguments to Pass to Spark",
+      label = "Additional Spark Arguments",
       description = "Use this to pass any additional arguments to Spark Launcher/Spark Submit. Overrides other parameters",
       group = "SPARK",
       dependsOn = "clusterManager^",
@@ -151,7 +151,7 @@ public class YarnConfigBean {
   @ConfigDef(
       type = ConfigDef.Type.MAP,
       required = false,
-      label = "Arguments with Values to Pass to Spark",
+      label = "Additional Spark Arguments and Values",
       description = "Use this to pass any additional arguments to Spark Launcher/Spark Submit. Overrides other parameters",
       group = "SPARK",
       dependsOn = "clusterManager^",
@@ -163,7 +163,7 @@ public class YarnConfigBean {
   @ConfigDef(
       type = ConfigDef.Type.MAP,
       required = false,
-      label = "Environment Variables to Set",
+      label = "Environment Variables",
       group = "SPARK",
       dependsOn = "clusterManager^",
       triggeredByValue = "YARN",
@@ -175,20 +175,32 @@ public class YarnConfigBean {
    * APPLICATION group.
    */
   @ConfigDef(
+      type = ConfigDef.Type.MODEL,
+      required = true,
+      label = "Language",
+      dependsOn = "clusterManager^",
+      triggeredByValue = "YARN", // Applies only to YARN, not Databricks
+      group = "APPLICATION",
+      displayPosition = 10
+  )
+  @ValueChooserModel(LanguageChooserValues.class)
+  public Language language;
+
+  @ConfigDef(
       type = ConfigDef.Type.STRING,
-      required = false,
-      label = "Main Class for the Spark Application",
+      required = true,
+      label = "Application Name",
       group = "APPLICATION",
       dependsOn = "clusterManager^",
       triggeredByValue = "YARN",
       displayPosition = 20
   )
-  public String mainClass = "";
+  public String appName = "";
 
   @ConfigDef(
       type = ConfigDef.Type.STRING,
       required = true,
-      label = "App Resource",
+      label = "Application Resource",
       group = "APPLICATION",
       dependsOn = "clusterManager^",
       triggeredByValue = "YARN",
@@ -198,14 +210,14 @@ public class YarnConfigBean {
 
   @ConfigDef(
       type = ConfigDef.Type.STRING,
-      required = true,
-      label = "App Name",
+      required = false,
+      label = "Main Class",
       group = "APPLICATION",
-      dependsOn = "clusterManager^",
-      triggeredByValue = "YARN",
+      dependsOn = "language",
+      triggeredByValue = "JVM",
       displayPosition = 40
   )
-  public String appName = "";
+  public String mainClass = "";
 
   @ConfigDef(
       type = ConfigDef.Type.LIST,
@@ -223,10 +235,10 @@ public class YarnConfigBean {
   @ConfigDef(
       type = ConfigDef.Type.LIST,
       required = false,
-      label = "Additional Jars",
+      label = "Additional JARs",
       group = "APPLICATION",
-      dependsOn = "clusterManager^",
-      triggeredByValue = "YARN",
+      dependsOn = "language",
+      triggeredByValue = "JVM",
       displayPosition = 60
   )
   public List<String> additionalJars = new ArrayList<>();
@@ -234,24 +246,25 @@ public class YarnConfigBean {
   @ConfigDef(
       type = ConfigDef.Type.LIST,
       required = false,
-      label = "Additional File(s) for the Spark Application",
+      label = "Dependencies",
+      description = "Full path to additional Python files required by the application resource",
       group = "APPLICATION",
-      dependsOn = "clusterManager^",
-      triggeredByValue = "YARN",
+      dependsOn = "language",
+      triggeredByValue = "PYTHON",
       displayPosition = 70
   )
-  public List<String> additionalFiles = new ArrayList<>();
+  public List<String> pyFiles = new ArrayList<>();
 
   @ConfigDef(
       type = ConfigDef.Type.LIST,
       required = false,
-      label = "Python File(s) for the Spark Application",
+      label = "Additional Files",
       group = "APPLICATION",
       dependsOn = "clusterManager^",
       triggeredByValue = "YARN",
       displayPosition = 80
   )
-  public List<String> pyFiles = new ArrayList<>();
+  public List<String> additionalFiles = new ArrayList<>();
 
   @ConfigDef(
       type = ConfigDef.Type.BOOLEAN,
