@@ -107,7 +107,10 @@
   </topicref>
   <topicref href="../Origins/HTTPServer.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
-   <topicref href="../Origins/HTTPServer-Prerequisites.dita"/>
+   <topicref href="../Origins/HTTPServer-Prerequisites.dita">
+    <topicref href="../Origins/HTTPServer-PrerequisitesPort.dita"/>
+    <topicref href="../Origins/HTTPServer-PrerequisitesAppID.dita"/>
+   </topicref>
    <topicref href="../Origins/HTTPServer-MultithreadProcessing.dita"/>
    <topicref href="../Origins/HTTPServer-DataFormat.dita"/>
    <topicref href="../Origins/HTTPServer-Configuring.dita"/>

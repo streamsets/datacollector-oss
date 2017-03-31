@@ -78,9 +78,10 @@
                                 </row>
                                 <row>
                                     <entry>Allow Application ID through Query Param</entry>
-                                    <entry>Allows WebSocket clients to include the application ID in
-                                        the URL query parameter used to pass data to the WebSocket
-                                        Server origin.<p>For more information, see <xref
+                                    <entry>Enables reading the application ID from the URL. Use when
+                                        WebSocket clients include the application ID in the URL
+                                        query parameter instead of in the request header.<p>For more
+                                            information, see <xref
                                                 href="WebSocketServer-Prerequisites.dita#concept_thh_3rd_3z"
                                             />.</p></entry>
                                 </row>
@@ -91,11 +92,12 @@
                                 </row>
                                 <row>
                                     <entry>Idle Timeout (ms)</entry>
-                                    <entry>Maximum time in milliseconds to allow the connection to
-                                        the WebSocket Server origin to remain idle. After no
-                                        messages are sent to the origin for this amount of time, the
-                                        connection is closed. <p>Default is 20,000
-                                        milliseconds.</p></entry>
+                                    <entry>Maximum time in milliseconds to allow a WebSocket client
+                                        connection to the WebSocket Server origin to remain idle.
+                                        After no messages are sent to the origin for this amount of
+                                        time, the connection is closed. The WebSocket client must
+                                        reconnect to the WebSocket Server origin.<p>Default is
+                                            20,000 milliseconds.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Use WSS</entry>
@@ -158,17 +160,17 @@
                     </info>
                 </step>
                 <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-Binary">
-                    <cmd/>
-                </step>
+                <cmd/>
+            </step>
                 <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-Datagram">
-                    <cmd/>
-                </step>
+                <cmd/>
+            </step>
                 <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/DelimFILE">
-                    <cmd/>
-                </step>
+                <cmd/>
+            </step>
                 <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JSON-2props">
-                    <cmd/>
-                </step>
+                <cmd/>
+            </step>
             <step>
                 <cmd>For log data, on the <wintitle>Data Format</wintitle> tab, configure the
                     following properties:</cmd>
@@ -215,11 +217,11 @@
                 </info>
             </step>
                 <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-PROTO-File">
-                    <cmd/>
-                </step>
+                <cmd/>
+            </step>
                 <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-SDCRecord">
-                    <cmd/>
-                </step>
+                <cmd/>
+            </step>
             <step id="Text">
                 <cmd>For text data, on the <wintitle>Data Format</wintitle> tab, configure the
                     following properties:</cmd>
@@ -265,8 +267,8 @@
                 </info>
             </step>
                 <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/XMLprops">
-                    <cmd/>
-                </step>
+                <cmd/>
+            </step>
             </steps>
         </taskbody>
     </task>

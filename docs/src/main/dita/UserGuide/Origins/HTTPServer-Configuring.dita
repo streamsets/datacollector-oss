@@ -67,8 +67,19 @@
                                 <row>
                                     <entry>Application ID</entry>
                                     <entry>Application ID used to pass requests to the HTTP Server
-                                        origin. The Application ID must be included in the header of
-                                        the HTTP POST request. <p>For more information, see <xref
+                                        origin. The application ID must be included in the header of
+                                        the HTTP POST request or in a query parameter of the URL
+                                        that the HTTP client uses to pass data.<p>For more
+                                            information, see <xref
+                                                href="HTTPServer-Prerequisites.dita#concept_hgb_br4_qy"
+                                            />.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Allow Application ID through Query Param</entry>
+                                    <entry>Enables reading the application ID from the URL. Use when
+                                        HTTP clients include the application ID in the URL query
+                                        parameter instead of in the request header.<p>For more
+                                            information, see <xref
                                                 href="HTTPServer-Prerequisites.dita#concept_hgb_br4_qy"
                                             />.</p></entry>
                                 </row>

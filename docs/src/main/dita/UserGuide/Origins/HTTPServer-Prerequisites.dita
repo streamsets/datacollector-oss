@@ -19,35 +19,6 @@
         <p><indexterm>HTTP Server
                     origin<indexterm>prerequisites</indexterm></indexterm><indexterm>prerequisites<indexterm>HTTP
                     Server origin</indexterm></indexterm>Before you run a pipeline with the HTTP
-            Server origin, complete the following prerequisites:<dl>
-                <dlentry>
-                    <dt>Configure HTTP clients to send data to the HTTP Server listening port</dt>
-                    <dd>When you configure the origin, you define a listening port number where the
-                        origin listens for data. </dd>
-                    <dd>To pass data to the pipeline, configure each HTTP client to send data to a
-                        URL that includes the listening port number. </dd>
-                    <dd>Use the following format for the
-                        URL:<codeblock>&lt;http | https>://&lt;sdc_hostname>:&lt;listening_port>/</codeblock></dd>
-                    <dd>The URL includes the following components:<ul id="ul_ml5_ljq_4y">
-                            <li>&lt;http | https> - Use https for secure HTTP connections. </li>
-                            <li>&lt;sdc_hostname> - The <ph
-                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                /> host name.</li>
-                            <li>&lt;listening_port> - The port number where the origin listens for
-                                data. </li>
-                        </ul></dd>
-                    <dd>For example: <codeph>https://localhost:8000/</codeph></dd>
-                </dlentry>
-                <dlentry>
-                    <dt>Include the application ID in request headers</dt>
-                    <dd>When you configure the origin, you define an application ID. All messages
-                        sent to the HTTP Server origin must include the application ID in the
-                        request header. </dd>
-                    <dd>Add the following information to the request header for all HTTP POST
-                        requests that you want the origin to
-                        process:<codeblock>X-SDC-APPLICATION-ID: &lt;applicationID></codeblock></dd>
-                    <dd>For example:<codeblock>X-SDC-APPLICATION-ID: sdc_http2kafka</codeblock></dd>
-                </dlentry>
-            </dl></p>
+            Server origin, complete the following prerequisites to configure the HTTP clients.</p>
     </conbody>
 </concept>
