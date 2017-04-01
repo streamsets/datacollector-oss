@@ -70,8 +70,8 @@ public class RawHttpConfigs extends HttpConfigs {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
-      label = "Allow Application ID through Query Param",
-      description = "Allow Application ID through Query Param - http://localhost:8000?sdcApplicationId=<Application ID>",
+      label = "Application ID in URL",
+      description = "Use when the application ID is included in a query parameter in the URL instead of in the request header - http://localhost:8000?sdcApplicationId=<Application ID>",
       displayPosition = 21,
       group = "HTTP"
   )
