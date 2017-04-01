@@ -64,6 +64,7 @@ public class TestRandomDataGenerator {
       .addConfiguration("delay", 0)
       .addConfiguration("batchSize", 1000)
       .addConfiguration("numThreads", 1)
+      .addConfiguration("eventName", "secret-name")
       .addOutputLane("a")
       .build();
     runner.runInit();
@@ -102,6 +103,7 @@ public class TestRandomDataGenerator {
       .addConfiguration("delay", 0)
       .addConfiguration("batchSize", 1000)
       .addConfiguration("numThreads", 1)
+      .addConfiguration("eventName", "secret-name")
       .addOutputLane("a")
       .build();
     runner.runInit();
@@ -180,6 +182,7 @@ public class TestRandomDataGenerator {
       .addConfiguration("delay", 0)
       .addConfiguration("batchSize", 1)
       .addConfiguration("numThreads", 1)
+      .addConfiguration("eventName", "secret-name")
       .addOutputLane("a")
       .build();
     runner.runInit();
