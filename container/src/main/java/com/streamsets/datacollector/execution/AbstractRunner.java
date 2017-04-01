@@ -60,7 +60,7 @@ public abstract  class AbstractRunner implements Runner {
   @Inject protected StageLibraryTask stageLibrary;
   @Inject protected RuntimeInfo runtimeInfo;
   @Inject protected Configuration configuration;
-  protected Map<String, Object> runtimeConstants;
+  protected Map<String, Object> runtimeParameters;
 
 
   protected PipelineConfiguration getPipelineConf(String name, String rev) throws PipelineException {
@@ -128,7 +128,7 @@ public abstract  class AbstractRunner implements Runner {
       public Void call() throws StageException, PipelineException {
         LOG.info("Starting the runner now");
         prepareForStart();
-        start(runtimeConstants);
+        start(runtimeParameters);
         return null;
       }
     }, delay, TimeUnit.MILLISECONDS);

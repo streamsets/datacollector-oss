@@ -104,7 +104,7 @@ public abstract class PipelineBeanCreator {
       StageLibraryTask library,
       PipelineConfiguration pipelineConf,
       List<Issue> errors,
-      Map<String, Object> runtimeConstants
+      Map<String, Object> runtimeParameters
   ) {
     int priorErrors = errors.size();
     PipelineConfigBean pipelineConfigBean = create(pipelineConf, errors);
@@ -116,10 +116,10 @@ public abstract class PipelineBeanCreator {
 
       // Merge constant and runtime Constants
       Map<String, Object> resolvedConstants = pipelineConfigBean.constants;
-      if (runtimeConstants != null) {
-        for (String key: runtimeConstants.keySet()) {
+      if (runtimeParameters != null) {
+        for (String key: runtimeParameters.keySet()) {
           if (resolvedConstants.containsKey(key)) {
-            resolvedConstants.put(key, runtimeConstants.get(key));
+            resolvedConstants.put(key, runtimeParameters.get(key));
           }
         }
       }

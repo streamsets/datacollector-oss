@@ -151,9 +151,9 @@ public class PipelineConfigBean implements Stage {
       required = false,
       defaultValue = "{}",
       type = ConfigDef.Type.MAP,
-      label = "Constants",
+      label = "Parameters",
       displayPosition = 80,
-      group = "CONSTANTS"
+      group = "PARAMETERS"
   )
   public Map<String, Object> constants;
 

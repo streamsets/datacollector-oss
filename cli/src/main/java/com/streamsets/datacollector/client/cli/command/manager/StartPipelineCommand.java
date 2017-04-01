@@ -48,30 +48,30 @@ public class StartPipelineCommand extends BaseCommand {
   public String pipelineRev;
 
   @Option(
-      name = {"-c", "--runtimeConstants"},
-      description = "Runtime Constants",
+      name = {"-R", "--runtimeParameters"},
+      description = "Runtime Parameters",
       required = false
   )
-  public String runtimeConstantsString;
+  public String runtimeParametersString;
 
   @Override
   public void run() {
     if(pipelineRev == null) {
       pipelineRev = "0";
     }
-    Map<String, Object> runtimeConstants = null;
+    Map<String, Object> runtimeParameters = null;
     try {
       ApiClient apiClient = getApiClient();
       ManagerApi managerApi = new ManagerApi(apiClient);
-      if (runtimeConstantsString != null && runtimeConstantsString.trim().length() > 0) {
+      if (runtimeParametersString != null && runtimeParametersString.trim().length() > 0) {
         JSON json = apiClient.getJson();
         TypeRef returnType = new TypeRef<Map<String, Object>>() {};
-        runtimeConstants = json.deserialize(runtimeConstantsString, returnType);
+        runtimeParameters = json.deserialize(runtimeParametersString, returnType);
       }
       ObjectMapper mapper = new ObjectMapper();
       mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
       System.out.println(mapper.writeValueAsString(
-          managerApi.startPipeline(pipelineName, pipelineRev, runtimeConstants))
+          managerApi.startPipeline(pipelineName, pipelineRev, runtimeParameters))
       );
     } catch (Exception ex) {
       if(printStackTrace) {

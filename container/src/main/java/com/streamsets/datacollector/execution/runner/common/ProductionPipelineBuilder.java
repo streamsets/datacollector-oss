@@ -83,7 +83,7 @@ public class ProductionPipelineBuilder {
   public ProductionPipeline build(
       UserContext userContext,
       PipelineConfiguration pipelineConf,
-      Map<String, Object> runtimeConstants
+      Map<String, Object> runtimeParameters
   ) throws PipelineRuntimeException, StageException {
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, name, pipelineConf);
     pipelineConf = validator.validate();
@@ -99,7 +99,7 @@ public class ProductionPipelineBuilder {
         rev,
         userContext,
         pipelineConf
-    ).setObserver(observer).build(runner, runtimeConstants);
+    ).setObserver(observer).build(runner, runtimeParameters);
 
     SourceOffsetTracker sourceOffsetTracker;
     if (pipeline.getSource() instanceof OffsetCommitter) {

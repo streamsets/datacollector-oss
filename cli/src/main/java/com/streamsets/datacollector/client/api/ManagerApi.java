@@ -878,15 +878,15 @@ public class ManagerApi {
    *
    * @param pipelineName
    * @param rev
-   * @param runtimeConstants
+   * @param runtimeParameters
    * @return PipelineStateJson
    */
   public PipelineStateJson startPipeline (
       String pipelineName,
       String rev,
-      Map<String, Object> runtimeConstants
+      Map<String, Object> runtimeParameters
   ) throws ApiException {
-    Object postBody = runtimeConstants;
+    Object postBody = runtimeParameters;
     byte[] postBinaryBody = null;
 
     // verify the required parameter 'pipelineName' is set

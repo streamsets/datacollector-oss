@@ -169,9 +169,9 @@ public class ManagerResource {
       @PathParam("pipelineId") String pipelineId,
       @QueryParam("rev") @DefaultValue("0") String rev,
       @ApiParam(
-          name = "runtimeConstants",
-          value = "Runtime Constants to override Pipeline constants value"
-      ) Map<String, Object> runtimeConstants
+          name = "runtimeParameters",
+          value = "Runtime Parameters to override Pipeline Parameters value"
+      ) Map<String, Object> runtimeParameters
   ) throws StageException, PipelineException {
     if(pipelineId != null) {
       PipelineInfo pipelineInfo = store.getInfo(pipelineId);
@@ -184,10 +184,10 @@ public class ManagerResource {
         Utils.checkState(runner.getState().getExecutionMode() != ExecutionMode.SLAVE,
             "This operation is not supported in SLAVE mode");
 
-        if (runtimeConstants != null && !runtimeConstants.isEmpty()) {
+        if (runtimeParameters != null && !runtimeParameters.isEmpty()) {
           Utils.checkState(runner.getState().getExecutionMode() == ExecutionMode.STANDALONE,
               Utils.format("Using runtime constants is not supported in {} mode", runner.getState().getExecutionMode()));
-          runner.start(runtimeConstants);
+          runner.start(runtimeParameters);
         } else {
           runner.start();
         }
@@ -510,13 +510,13 @@ public class ManagerResource {
       @QueryParam("batches") @DefaultValue("1") int batches,
       @QueryParam("batchSize") @DefaultValue("10") int batchSize,
       @QueryParam("startPipeline") @DefaultValue("false") boolean startPipeline,
-      Map<String, Object> runtimeConstants
+      Map<String, Object> runtimeParameters
   ) throws PipelineException, StageException {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     Runner runner = manager.getRunner(user, pipelineId, rev);
     if (startPipeline && runner != null) {
-      runner.startAndCaptureSnapshot(runtimeConstants, snapshotName, snapshotLabel, batches, batchSize);
+      runner.startAndCaptureSnapshot(runtimeParameters, snapshotName, snapshotLabel, batches, batchSize);
     } else {
       Utils.checkState(runner != null && runner.getState().getStatus() == PipelineStatus.RUNNING,
           "Pipeline doesn't exist or it is not running currently");

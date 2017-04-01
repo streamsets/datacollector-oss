@@ -99,11 +99,11 @@ public interface Runner {
   public void start() throws PipelineException, StageException;
 
   // starts the pipeline with parameterization support
-  public void start(Map<String, Object> runtimeConstants) throws PipelineException, StageException;
+  public void start(Map<String, Object> runtimeParameters) throws PipelineException, StageException;
 
   // starts the pipeline and then triggers a snapshot request
   public void startAndCaptureSnapshot(
-      Map<String, Object> runtimeConstants,
+      Map<String, Object> runtimeParameters,
       String snapshotName,
       String snapshotLabel,
       int batches,

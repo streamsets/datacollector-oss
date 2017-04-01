@@ -124,21 +124,21 @@ public class AclRunner implements Runner {
   }
 
   @Override
-  public void start(Map<String, Object> runtimeConstants) throws PipelineException, StageException {
+  public void start(Map<String, Object> runtimeParameters) throws PipelineException, StageException {
     aclStore.validateExecutePermission(this.getName(), currentUser);
-    runner.start(runtimeConstants);
+    runner.start(runtimeParameters);
   }
 
   @Override
   public void startAndCaptureSnapshot(
-      Map<String, Object> runtimeConstants,
+      Map<String, Object> runtimeParameters,
       String snapshotName,
       String snapshotLabel,
       int batches,
       int batchSize
   ) throws PipelineException, StageException {
     aclStore.validateExecutePermission(this.getName(), currentUser);
-    runner.startAndCaptureSnapshot(runtimeConstants, snapshotName, snapshotLabel, batches, batchSize);
+    runner.startAndCaptureSnapshot(runtimeParameters, snapshotName, snapshotLabel, batches, batchSize);
   }
 
   @Override

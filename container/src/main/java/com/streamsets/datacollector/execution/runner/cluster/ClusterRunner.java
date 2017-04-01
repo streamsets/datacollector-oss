@@ -415,8 +415,8 @@ public class ClusterRunner extends AbstractRunner {
   }
 
   @Override
-  public synchronized void start(Map<String, Object> runtimeConstants) throws PipelineException, StageException {
-    // runtimeConstants is not used in Cluster Mode for now
+  public synchronized void start(Map<String, Object> runtimeParameters) throws PipelineException, StageException {
+    // runtimeParameters is not used in Cluster Mode for now
     try {
       Utils.checkState(!isClosed,
         Utils.formatL("Cannot start the pipeline '{}::{}' as the runner is already closed", name, rev));
@@ -441,7 +441,7 @@ public class ClusterRunner extends AbstractRunner {
 
   @Override
   public void startAndCaptureSnapshot(
-      Map<String, Object> runtimeConstants,
+      Map<String, Object> runtimeParameters,
       String snapshotName,
       String snapshotLabel,
       int batches,

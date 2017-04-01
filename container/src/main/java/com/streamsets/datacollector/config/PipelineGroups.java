@@ -22,7 +22,7 @@ package com.streamsets.datacollector.config;
 import com.streamsets.pipeline.api.Label;
 
 public enum PipelineGroups implements Label {
-  CONSTANTS("Constants"),
+  PARAMETERS("Parameters"),
   BAD_RECORDS("Error Records"),
   CLUSTER("Cluster"),
   STATS("Statistics")

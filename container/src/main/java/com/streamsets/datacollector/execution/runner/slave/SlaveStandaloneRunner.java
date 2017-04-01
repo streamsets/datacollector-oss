@@ -142,7 +142,7 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
   }
 
   @Override
-  public void start(Map<String, Object> runtimeConstants) throws PipelineException, StageException {
+  public void start(Map<String, Object> runtimeParameters) throws PipelineException, StageException {
     String callbackServerURL = configuration.get(Constants.CALLBACK_SERVER_URL_KEY, Constants.CALLBACK_SERVER_URL_DEFAULT);
     String clusterToken = configuration.get(Constants.PIPELINE_CLUSTER_TOKEN_KEY, null);
     if (callbackServerURL != null) {
@@ -154,12 +154,12 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
       throw new RuntimeException(
         "No callback server URL is passed. SDC in Slave mode requires callback server URL (callback.server.url).");
     }
-    standaloneRunner.start(runtimeConstants);
+    standaloneRunner.start(runtimeParameters);
   }
 
   @Override
   public void startAndCaptureSnapshot(
-      Map<String, Object> runtimeConstants,
+      Map<String, Object> runtimeParameters,
       String snapshotName,
       String snapshotLabel,
       int batches,
