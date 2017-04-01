@@ -20,7 +20,6 @@
 package com.streamsets.pipeline.stage.devtest;
 
 import com.streamsets.pipeline.api.BatchContext;
-import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -68,7 +67,6 @@ public class RandomDataGeneratorSource extends BasePushSource {
 
   private static final Logger LOG = LoggerFactory.getLogger(RandomDataGeneratorSource.class);
 
-  private final String EVENT_TYPE = "generated-event";
   private final int EVENT_VERSION = 1;
 
 
@@ -122,6 +120,15 @@ public class RandomDataGeneratorSource extends BasePushSource {
     min = 1,
     max = Integer.MAX_VALUE)
   public int numThreads;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    defaultValue = "generated-event",
+    label = "Event name",
+    description = "Name of event that should be used when generating events."
+  )
+  public String eventName;
 
   /**
    * Counter for LONG_SEQUENCE type
@@ -218,8 +225,8 @@ public class RandomDataGeneratorSource extends BasePushSource {
     fillRecord(record, map);
     batchContext.getBatchMaker().addRecord(record);
 
-    String recordSourceId = Utils.format("event:{}:{}:{}", EVENT_TYPE, EVENT_VERSION, batchOffset);
-    EventRecord event = getContext().createEventRecord(EVENT_TYPE, EVENT_VERSION, recordSourceId);
+    String recordSourceId = Utils.format("event:{}:{}:{}", eventName, EVENT_VERSION, batchOffset);
+    EventRecord event = getContext().createEventRecord(eventName, EVENT_VERSION, recordSourceId);
     fillRecord(event, map);
     batchContext.toEvent(event);
   }

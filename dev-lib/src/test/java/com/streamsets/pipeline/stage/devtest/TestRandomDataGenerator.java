@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.devtest;
 
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
@@ -140,22 +141,24 @@ public class TestRandomDataGenerator {
       .addConfiguration("delay", 0)
       .addConfiguration("batchSize", 1000)
       .addConfiguration("numThreads", 1)
+      .addConfiguration("eventName", "secret-name")
       .addOutputLane("a")
       .build();
     runner.runInit();
     try {
-      runner.runProduce(Collections.<String, String>emptyMap(), 1000, new PushSourceRunner.Callback() {
-        @Override
-        public void processBatch(StageRunner.Output output) {
-          runner.setStop();
-        }
-      });
+      runner.runProduce(Collections.<String, String>emptyMap(), 1000, output -> runner.setStop());
       runner.waitOnProduce();
 
       List<Record> records = runner.getEventRecords();
       Assert.assertTrue(records.size() > 1);
       for(long i = 0; i < records.size(); i++) {
-        Field field = records.get((int)i).get().getValueAsMap().get("event");
+        Record r = records.get((int)i);
+
+        // Validate header
+        Assert.assertEquals("secret-name", r.getHeader().getAttribute(EventRecord.TYPE));
+
+        // Validate field
+        Field field = r.get().getValueAsMap().get("event");
         Assert.assertNotNull(field);
         Assert.assertEquals(Field.Type.LONG, field.getType());
         Assert.assertEquals(i, field.getValueAsLong());
