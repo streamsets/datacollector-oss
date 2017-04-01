@@ -177,7 +177,7 @@ public class Pipeline {
     }
   }
 
-  public Map<String, Object> getRuntimeConstants() {
+  public Map<String, Object> getRuntimeParameters() {
     return runtimeParameters;
   }
 

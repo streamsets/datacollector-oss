@@ -260,8 +260,8 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
           String msg = "Pipeline was in DISCONNECTED state, changing it to CONNECTING";
           LOG.debug(msg);
           // Ger Runtime Constants from Pipeline State
-          if (attributes != null && attributes.containsKey(ProductionPipeline.RUNTIME_CONSTANTS_ATTR)) {
-            runtimeParameters = (Map<String, Object>) attributes.get(ProductionPipeline.RUNTIME_CONSTANTS_ATTR);
+          if (attributes != null && attributes.containsKey(ProductionPipeline.RUNTIME_PARAMETERS_ATTR)) {
+            runtimeParameters = (Map<String, Object>) attributes.get(ProductionPipeline.RUNTIME_PARAMETERS_ATTR);
           }
           validateAndSetStateTransition(PipelineStatus.CONNECTING, msg, null);
           retryOrStart();

@@ -347,7 +347,7 @@ public class TestRemoteDataCollector {
 
     @Override
     public void startAndCaptureSnapshot(
-        Map<String, Object> runtimeConstants,
+        Map<String, Object> runtimeParameters,
         String snapshotName,
         String snapshotLabel,
         int batches,

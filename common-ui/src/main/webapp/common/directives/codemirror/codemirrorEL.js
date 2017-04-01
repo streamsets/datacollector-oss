@@ -76,7 +76,7 @@ angular.module('commonUI.codemirrorDirectives')
                       displayText: pipelineConstant.key,
                       className: 'CodeMirror-EL-completion CodeMirror-EL-completion-user-constant',
                       data: {
-                        description: 'Pipeline Constant with value - ' + pipelineConstant.value
+                        description: 'Pipeline Parameter with value - ' + pipelineConstant.value
                       }
                     });
                   }

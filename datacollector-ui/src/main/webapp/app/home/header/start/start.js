@@ -30,13 +30,13 @@ angular
         errors: []
       },
       pipelineConfig: pipelineConfig,
-      runtimeConstants: {},
+      runtimeParameters: {},
       constantsConfig: undefined,
       starting: false,
 
       start: function() {
         $scope.starting = true;
-        api.pipelineAgent.startPipeline(pipelineConfig.info.pipelineId, 0, $scope.runtimeConstants)
+        api.pipelineAgent.startPipeline(pipelineConfig.info.pipelineId, 0, $scope.runtimeParameters)
           .then(
             function(res) {
               $modalInstance.close(res);
@@ -55,7 +55,7 @@ angular
 
 
 
-    $scope.runtimeConstants = {};
+    $scope.runtimeParameters = {};
     var constantsConfig = _.find(pipelineConfig.configuration, function (config) {
       return config.name === 'constants';
     });
@@ -63,7 +63,7 @@ angular
     if (constantsConfig) {
       $scope.constantsConfig = constantsConfig;
       angular.forEach(constantsConfig.value, function (constant) {
-        $scope.runtimeConstants[constant.key] = constant.value;
+        $scope.runtimeParameters[constant.key] = constant.value;
       });
     }
 

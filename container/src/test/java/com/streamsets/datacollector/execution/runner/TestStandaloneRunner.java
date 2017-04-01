@@ -130,15 +130,15 @@ public class TestStandaloneRunner {
   @Test(timeout = 20000)
   public void testPipelineStartWithParameters() throws Exception {
     Runner runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
-    Map<String, Object> runtimeConstants = new HashMap<>();
-    runtimeConstants.put("param1", "Param1 Value");
-    runner.start(runtimeConstants);
+    Map<String, Object> runtimeParameters = new HashMap<>();
+    runtimeParameters.put("param1", "Param1 Value");
+    runner.start(runtimeParameters);
     waitForState(runner, PipelineStatus.RUNNING);
     PipelineState pipelineState = runner.getState();
     Map<String, Object> runtimeConstantsInState = (Map<String, Object>) pipelineState.getAttributes()
-        .get(ProductionPipeline.RUNTIME_CONSTANTS_ATTR);
+        .get(ProductionPipeline.RUNTIME_PARAMETERS_ATTR);
     assertNotNull(runtimeConstantsInState);
-    assertEquals(runtimeConstants.get("param1"), runtimeConstantsInState.get("param1"));
+    assertEquals(runtimeParameters.get("param1"), runtimeConstantsInState.get("param1"));
     ((AsyncRunner)runner).getRunner().prepareForStop();
     ((AsyncRunner)runner).getRunner().stop();
     waitForState(runner, PipelineStatus.STOPPED);

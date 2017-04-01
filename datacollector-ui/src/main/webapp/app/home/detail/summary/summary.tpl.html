@@ -513,18 +513,18 @@ activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_YARN_STREAMING && 
 
 <script type="text/ng-template" id="summaryRuntimeConstantsTemplate">
   <div class="col-sm-4"
-       ng-if="selectedType === pipelineConstant.PIPELINE && activeConfigStatus.attributes && activeConfigStatus.attributes['RUNTIME_CONSTANTS']">
+       ng-if="selectedType === pipelineConstant.PIPELINE && activeConfigStatus.attributes && activeConfigStatus.attributes['RUNTIME_PARAMETERS']">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <span title="{{'home.detailPane.summaryTab.runtimeConstants' | translate}}"
-              translate="home.detailPane.summaryTab.runtimeConstants">Runtime Constants</span>
+        <span title="{{'home.detailPane.summaryTab.runtimeParameters' | translate}}"
+              translate="home.detailPane.summaryTab.runtimeParameters">Runtime Parameters</span>
         <button type="button" class="close" aria-label="Close" ng-click="removeChart(chart, chartIndex)">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="panel-body">
         <ul class="table-properties">
-          <li ng-repeat="(key, value) in activeConfigStatus.attributes['RUNTIME_CONSTANTS']">
+          <li ng-repeat="(key, value) in activeConfigStatus.attributes['RUNTIME_PARAMETERS']">
             <span class="properties-label last-batch">{{key}}:</span>
             <span class="properties-value">{{value}}</span>
           </li>
