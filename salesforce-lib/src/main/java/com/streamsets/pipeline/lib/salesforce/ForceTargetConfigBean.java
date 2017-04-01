@@ -21,9 +21,12 @@ package com.streamsets.pipeline.lib.salesforce;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ListBeanModel;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
+import com.streamsets.pipeline.lib.operation.UnsupportedOperationActionChooserValues;
 
 import java.util.List;
 
@@ -43,7 +46,7 @@ public class ForceTargetConfigBean extends ForceConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
+      elDefs = {RecordEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       defaultValue = "${record:attribute('salesforce.sobjectType')}",
       label = "SObject Type",
@@ -52,6 +55,43 @@ public class ForceTargetConfigBean extends ForceConfigBean {
       group = "FORCE"
   )
   public String sObjectNameTemplate;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "INSERT",
+      label = "Default Operation",
+      description = "Default operation to perform if sdc.operation.type is not set in record header.",
+      displayPosition = 65,
+      group = "FORCE"
+  )
+  @ValueChooserModel(SalesforceOperationChooserValues.class)
+  public SalesforceOperationType defaultOperation;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue= "DISCARD",
+      label = "Unsupported Operation Handling",
+      description = "Action to take when operation type is not supported",
+      displayPosition = 67,
+      group = "FORCE"
+  )
+  @ValueChooserModel(UnsupportedOperationActionChooserValues.class)
+  public UnsupportedOperationAction unsupportedAction;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      elDefs = {RecordEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      defaultValue = "",
+      label = "External Id Field",
+      description = "External Id for Upsert Operations",
+      displayPosition = 68,
+      group = "FORCE"
+  )
+  public String externalIdField;
 
   @ConfigDef(
       required = true,

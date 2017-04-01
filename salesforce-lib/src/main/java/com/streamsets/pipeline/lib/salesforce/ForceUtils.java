@@ -29,8 +29,14 @@ import com.sforce.ws.ConnectorConfig;
 import com.sforce.ws.SessionRenewer;
 import com.sforce.ws.bind.XmlObject;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.lib.operation.OperationType;
+import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -49,6 +55,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ForceUtils {
+  private static final Logger LOG = LoggerFactory.getLogger(ForceUtils.class);
+
   private static final String SOBJECT_TYPE_FROM_QUERY = "^SELECT.*FROM\\s*(\\S*)\\b.*";
   private static final String WILDCARD_SELECT_QUERY = "^SELECT\\s*\\*\\s*FROM\\s*.*";
   public static final Pattern WILDCARD_SELECT_PATTERN = Pattern.compile(WILDCARD_SELECT_QUERY, Pattern.DOTALL);
@@ -363,5 +371,42 @@ public class ForceUtils {
       query = query.replaceFirst("\\*", fieldsString.toString());
     }
     return query;
+  }
+
+  public static int getOperationFromRecord(Record record,
+      SalesforceOperationType defaultOp,
+      UnsupportedOperationAction unsupportedAction,
+      List<OnRecordErrorException> errorRecords) {
+    String op = record.getHeader().getAttribute(OperationType.SDC_OPERATION_TYPE);
+    int opCode = -1; // unsupported
+    // Check if the operation code from header attribute is valid
+    if (op != null && !op.isEmpty()) {
+      try {
+        opCode = SalesforceOperationType.convertToIntCode(op);
+      } catch (NumberFormatException | UnsupportedOperationException ex) {
+        LOG.debug(
+            "Operation obtained from record is not supported. Handle by UnsupportedOpertaionAction {}. {}",
+            unsupportedAction.getLabel(),
+            ex
+        );
+        switch (unsupportedAction) {
+          case DISCARD:
+            LOG.debug("Discarding record with unsupported operation {}", op);
+            break;
+          case SEND_TO_ERROR:
+            LOG.debug("Sending record to error due to unsupported operation {}", op);
+            errorRecords.add(new OnRecordErrorException(record, Errors.FORCE_23, op));
+            break;
+          case USE_DEFAULT:
+            opCode = defaultOp.code;
+            break;
+          default: //unknown action
+            LOG.debug("Sending record to error due to unknown operation {}", op);
+        }
+      }
+    } else {
+      opCode = defaultOp.code;
+    }
+    return opCode;
   }
 }

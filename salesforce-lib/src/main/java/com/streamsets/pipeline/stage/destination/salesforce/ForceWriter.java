@@ -22,6 +22,9 @@ package com.streamsets.pipeline.stage.destination.salesforce;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
+import com.streamsets.pipeline.lib.salesforce.ForceTargetConfigBean;
+import com.streamsets.pipeline.lib.salesforce.SalesforceOperationType;
 
 import java.util.Collection;
 import java.util.List;
@@ -54,6 +57,7 @@ public abstract class ForceWriter {
    */
   abstract List<OnRecordErrorException> writeBatch(
       String sObjectName,
-      Collection<Record> records
+      Collection<Record> records,
+      ForceTarget target
   ) throws StageException;
 }

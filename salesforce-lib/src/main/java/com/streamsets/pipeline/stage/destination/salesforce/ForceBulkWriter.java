@@ -19,7 +19,9 @@
  */
 package com.streamsets.pipeline.stage.destination.salesforce;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Multimap;
 import com.sforce.async.AsyncApiException;
 import com.sforce.async.BatchInfo;
 import com.sforce.async.BatchStateEnum;
@@ -34,11 +36,14 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
+import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.lib.generator.delimited.DelimitedCharDataGenerator;
+import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.salesforce.Errors;
 import com.streamsets.pipeline.lib.salesforce.ForceUtils;
 import org.slf4j.Logger;
@@ -58,7 +63,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
 
 public class ForceBulkWriter extends ForceWriter {
   private static final Logger LOG = LoggerFactory.getLogger(ForceBulkWriter.class);
@@ -66,6 +70,24 @@ public class ForceBulkWriter extends ForceWriter {
   private static final int MAX_ROWS_PER_BATCH = 10000; // 10 thousand rows per batch
   private final BulkConnection bulkConnection;
   private final Target.Context context;
+  private Map<Integer, OperationEnum> opcodeToOperation = ImmutableMap.of(
+      OperationType.INSERT_CODE, OperationEnum.insert,
+      OperationType.DELETE_CODE, OperationEnum.delete,
+      OperationType.UPDATE_CODE, OperationEnum.update,
+      OperationType.UPSERT_CODE, OperationEnum.upsert
+  );
+
+  class JobBatches {
+    final JobInfo job;
+    final List<BatchInfo> batchInfoList;
+    final Collection<Record> records;
+
+    JobBatches(JobInfo job, List<BatchInfo> batchInfoList, Collection<Record> records) {
+      this.job = job;
+      this.batchInfoList = batchInfoList;
+      this.records = records;
+    }
+  }
 
   public ForceBulkWriter(Map<String, String> fieldMappings, BulkConnection bulkConnection, Target.Context context) {
     super(fieldMappings);
@@ -74,30 +96,102 @@ public class ForceBulkWriter extends ForceWriter {
   }
 
   @Override
-  public List<OnRecordErrorException> writeBatch(
+  List<OnRecordErrorException> writeBatch(
       String sObjectName,
-      Collection<Record> records
+      Collection<Record> records,
+      ForceTarget target
   ) throws StageException {
+    Iterator<Record> batchIterator = records.iterator();
     List<OnRecordErrorException> errorRecords = new LinkedList<>();
+    Map<Integer, List<Record>> recordsByOp = new HashMap<>();
 
-    try {
-      JobInfo job = createJob(sObjectName);
-      List<BatchInfo> batchInfoList = createBatchesFromRecordCollection(job, records);
-      closeJob(job.getId());
-      awaitCompletion(job, batchInfoList);
-      checkResults(job, batchInfoList, records, errorRecords);
-    } catch (AsyncApiException | IOException e) {
-      throw new StageException(Errors.FORCE_13, ForceUtils.getExceptionCode(e) + ", " + ForceUtils.getExceptionMessage(e));
+    // Build a list of records by operation code
+    while (batchIterator.hasNext()) {
+      Record record = batchIterator.next();
+
+      int opCode = ForceUtils.getOperationFromRecord(record, target.conf.defaultOperation,
+          target.conf.unsupportedAction, errorRecords);
+
+      recordsByOp.computeIfAbsent(opCode, k -> new ArrayList<>()).add(record);
+    }
+
+    List<JobBatches> jobs = new ArrayList<>(recordsByOp.size());
+
+    // Do one (or more!) jobs per operation
+    for (Map.Entry<Integer, List<Record>> entry : recordsByOp.entrySet()) {
+      List<Record> recordList = entry.getValue();
+      OperationEnum op = opcodeToOperation.get(entry.getKey());
+
+      // Special handling - may be any number of External Id Fields
+      if (op == OperationEnum.upsert) {
+        // Partition by External Id Field
+        Multimap<String, Record> partitions = ArrayListMultimap.create();
+
+        for (Record record : recordList) {
+          RecordEL.setRecordInContext(target.externalIdFieldVars, record);
+          try {
+            String partitionName = target.externalIdFieldEval.eval(target.externalIdFieldVars,
+                target.conf.externalIdField, String.class);
+            LOG.debug("Expression '{}' is evaluated to '{}' : ", target.conf.externalIdField, partitionName);
+            partitions.put(partitionName, record);
+          } catch (ELEvalException e) {
+            LOG.error("Failed to evaluate expression '{}' : ", target.conf.externalIdField, e.toString(), e);
+            errorRecords.add(new OnRecordErrorException(record, e.getErrorCode(), e.getParams()));
+          }
+        }
+
+        for (String externalIdField : partitions.keySet()) {
+          jobs.add(processJob(sObjectName, op, recordList, externalIdField));
+        }
+      } else {
+        jobs.add(processJob(sObjectName, op, recordList, null));
+      }
+    }
+
+    // Now wait for all the results
+    for (JobBatches jb : jobs) {
+      getJobResults(jb, errorRecords);
     }
 
     return errorRecords;
   }
 
-  private JobInfo createJob(String sobjectType)
+  private JobBatches processJob(
+      String sObjectName, OperationEnum operation, List<Record> records, String externalIdField
+  ) throws
+      StageException {
+    try {
+      JobInfo job = createJob(sObjectName, operation, externalIdField);
+      List<BatchInfo> batchInfoList = createBatchesFromRecordCollection(job, records, operation);
+      closeJob(job.getId());
+      return new JobBatches(job, batchInfoList, records);
+    } catch (AsyncApiException | IOException e) {
+      throw new StageException(Errors.FORCE_13,
+          ForceUtils.getExceptionCode(e) + ", " + ForceUtils.getExceptionMessage(e)
+      );
+    }
+  }
+
+  private void getJobResults(JobBatches jb, List<OnRecordErrorException> errorRecords) throws
+      StageException {
+    try {
+      awaitCompletion(jb);
+      checkResults(jb, errorRecords);
+    } catch (AsyncApiException | IOException e) {
+      throw new StageException(Errors.FORCE_13,
+          ForceUtils.getExceptionCode(e) + ", " + ForceUtils.getExceptionMessage(e)
+      );
+    }
+  }
+
+  private JobInfo createJob(String sobjectType, OperationEnum operation, String externalIdField)
       throws AsyncApiException {
     JobInfo job = new JobInfo();
     job.setObject(sobjectType);
-    job.setOperation(OperationEnum.insert);
+    job.setOperation(operation);
+    if (externalIdField != null) {
+      job.setExternalIdFieldName(externalIdField);
+    }
     job.setContentType(ContentType.CSV);
     job = bulkConnection.createJob(job);
     LOG.info("Created Bulk API job {}", job.getId());
@@ -112,7 +206,7 @@ public class ForceBulkWriter extends ForceWriter {
     }
   }
 
-  private List<BatchInfo> createBatchesFromRecordCollection(JobInfo jobInfo, Collection<Record> records)
+  private List<BatchInfo> createBatchesFromRecordCollection(JobInfo jobInfo, Collection<Record> records, OperationEnum op)
       throws IOException, AsyncApiException, StageException {
     List<BatchInfo> batchInfos = new ArrayList<>();
 
@@ -129,7 +223,7 @@ public class ForceBulkWriter extends ForceWriter {
 
     while (batchIterator.hasNext()) {
       Record record = batchIterator.next();
-      writeAndFlushRecord(gen, record);
+      writeAndFlushRecord(gen, record, op);
       currentBytes = baos.size();
 
       // Create a new batch when our batch size limit is reached
@@ -144,7 +238,7 @@ public class ForceBulkWriter extends ForceWriter {
         gen = createDelimitedCharDataGenerator(writer);
 
         // Rewrite the record in hand, since we chopped it off the end of the buffer
-        writeAndFlushRecord(gen, record);
+        writeAndFlushRecord(gen, record, op);
         currentBytes = baos.size();
         currentLines = 1;
       }
@@ -165,19 +259,22 @@ public class ForceBulkWriter extends ForceWriter {
     return batchInfos;
   }
 
-  private void writeAndFlushRecord(DataGenerator gen, Record record) throws IOException, DataGeneratorException {
+  private void writeAndFlushRecord(DataGenerator gen, Record record, OperationEnum op) throws IOException, DataGeneratorException {
     // Make a record with just the fields we need
     Record outRecord = context.createRecord(record.getHeader().getSourceId());
     LinkedHashMap<String, Field> map = new LinkedHashMap<>();
 
-    SortedSet<String> columnsPresent = Sets.newTreeSet(fieldMappings.keySet());
     for (Map.Entry<String, String> mapping : fieldMappings.entrySet()) {
       String sFieldName = mapping.getKey();
       String fieldPath = mapping.getValue();
 
       // If we're missing fields, skip them.
       if (!record.has(fieldPath)) {
-        columnsPresent.remove(sFieldName);
+        continue;
+      }
+
+      // We only need Id for deletes
+      if (op == OperationEnum.delete && !("Id".equalsIgnoreCase(sFieldName))) {
         continue;
       }
 
@@ -205,12 +302,11 @@ public class ForceBulkWriter extends ForceWriter {
     bulkConnection.updateJob(job);
   }
 
-  private void awaitCompletion(JobInfo job,
-      List<BatchInfo> batchInfoList)
+  private void awaitCompletion(JobBatches jb)
       throws AsyncApiException {
     long sleepTime = 0L;
     Set<String> incomplete = new HashSet<>();
-    for (BatchInfo bi : batchInfoList) {
+    for (BatchInfo bi : jb.batchInfoList) {
       incomplete.add(bi.getId());
     }
     while (!incomplete.isEmpty()) {
@@ -220,7 +316,7 @@ public class ForceBulkWriter extends ForceWriter {
       LOG.info("Awaiting Bulk API results... {}", incomplete.size());
       sleepTime = 1000L;
       BatchInfo[] statusList =
-          bulkConnection.getBatchInfoList(job.getId()).getBatchInfo();
+          bulkConnection.getBatchInfoList(jb.job.getId()).getBatchInfo();
       for (BatchInfo b : statusList) {
         if (b.getState() == BatchStateEnum.Completed
             || b.getState() == BatchStateEnum.Failed) {
@@ -233,13 +329,13 @@ public class ForceBulkWriter extends ForceWriter {
   }
 
   private void checkResults(
-      JobInfo job, List<BatchInfo> batchInfoList, Collection<Record> records, List<OnRecordErrorException> errorRecords
+      JobBatches jb, List<OnRecordErrorException> errorRecords
   ) throws AsyncApiException, IOException {
-    Record[] recordArray = records.toArray(new Record[0]);
+    Record[] recordArray = jb.records.toArray(new Record[0]);
     int recordIndex = 0;
-    for (BatchInfo b : batchInfoList) {
+    for (BatchInfo b : jb.batchInfoList) {
       CSVReader rdr =
-          new CSVReader(bulkConnection.getBatchResultStream(job.getId(), b.getId()));
+          new CSVReader(bulkConnection.getBatchResultStream(jb.job.getId(), b.getId()));
       List<String> resultHeader = rdr.nextRecord();
       int resultCols = resultHeader.size();
 
@@ -249,7 +345,7 @@ public class ForceBulkWriter extends ForceWriter {
         for (int i = 0; i < resultCols; i++) {
           resultInfo.put(resultHeader.get(i), row.get(i));
         }
-        boolean success = Boolean.valueOf(resultInfo.get("Success"));
+        boolean success = Boolean.parseBoolean(resultInfo.get("Success"));
         String error = resultInfo.get("Error");
         if (!success) {
           Record record = recordArray[recordIndex];

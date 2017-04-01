@@ -58,9 +58,13 @@ public class ForceTarget extends BaseTarget {
 
   private static final Logger LOG = LoggerFactory.getLogger(ForceTarget.class);
   private static final String SOBJECT_NAME = "sObjectNameTemplate";
+  private static final String EXTERNAL_ID_NAME = "externalIdField";
   private ErrorRecordHandler errorRecordHandler;
 
-  private final ForceTargetConfigBean conf;
+  public final ForceTargetConfigBean conf;
+  public ELVars externalIdFieldVars;
+  public ELEval externalIdFieldEval;
+
   private final boolean useCompression;
   private final boolean showTrace;
 
@@ -70,7 +74,7 @@ public class ForceTarget extends BaseTarget {
   private BulkConnection bulkConnection;
   private ELVars sObjectNameVars;
   private ELEval sObjectNameEval;
-
+  
   public ForceTarget(
       ForceTargetConfigBean conf, boolean useCompression, boolean showTrace
   ) {
@@ -112,6 +116,19 @@ public class ForceTarget extends BaseTarget {
         Groups.FORCE.getLabel(),
         SOBJECT_NAME,
         Errors.FORCE_12,
+        String.class,
+        issues
+    );
+
+    externalIdFieldVars = getContext().createELVars();
+    externalIdFieldEval = context.createELEval(EXTERNAL_ID_NAME);
+    ELUtils.validateExpression(externalIdFieldEval,
+        externalIdFieldVars,
+        conf.externalIdField,
+        context,
+        Groups.FORCE.getLabel(),
+        EXTERNAL_ID_NAME,
+        Errors.FORCE_24,
         String.class,
         issues
     );
@@ -166,7 +183,11 @@ public class ForceTarget extends BaseTarget {
     );
     Set<String> sObjectNames = partitions.keySet();
     for (String sObjectName : sObjectNames) {
-      List<OnRecordErrorException> errors = writer.writeBatch(sObjectName, partitions.get(sObjectName));
+      List<OnRecordErrorException> errors = writer.writeBatch(
+          sObjectName,
+          partitions.get(sObjectName),
+          this
+      );
       for (OnRecordErrorException error : errors) {
         errorRecordHandler.onError(error);
       }

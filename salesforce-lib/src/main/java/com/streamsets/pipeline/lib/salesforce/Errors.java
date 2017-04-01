@@ -48,6 +48,8 @@ public enum Errors implements ErrorCode {
   FORCE_20("Failed to parse Salesforce field '{}' to SDC field with value {}."),
   FORCE_21("Can't get metadata for object: {}"),
   FORCE_22("Can't find offset column {} in the returned data. Ensure it is present in the query."),
+  FORCE_23("Unsupported operation in record header: {}"),
+  FORCE_24("Invalid External ID Field expression '{}': {}"),
   ;
   private final String msg;
 

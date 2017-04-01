@@ -91,7 +91,7 @@ public class ForceSource extends BaseSource {
       .put("created", OperationType.INSERT_CODE)
       .put("updated", OperationType.UPDATE_CODE)
       .put("deleted", OperationType.DELETE_CODE)
-      .put("undeleted", OperationType.UNSUPPORTED_CODE)
+      .put("undeleted", OperationType.UNDELETE_CODE)
       .build();
   private final ForceSourceConfigBean conf;
 
