@@ -147,6 +147,10 @@ public class FieldFlattenerProcessor extends SingleLaneRecordProcessor {
   }
 
   private void flattenMap(String prefix, Map<String, Field> valueAsMap, Map<String, Field> ret) {
+    if(valueAsMap == null) {
+      return;
+    }
+
     for(Map.Entry<String, Field> entry : valueAsMap.entrySet()) {
       String name = entry.getKey();
       Field value = entry.getValue();

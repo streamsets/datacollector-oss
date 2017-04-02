@@ -199,4 +199,30 @@ public class TestFieldFlattenerEntireRecordProcessor {
     runner.runDestroy();
   }
 
+  // SDC-5766
+  @Test
+  public void tesFlattenNullMap() throws Exception {
+    FieldFlattenerConfig config = new FieldFlattenerConfig();
+    config.nameSeparator = ".";
+    config.flattenType = FlattenType.ENTIRE_RECORD;
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldFlattenerDProcessor.class, new FieldFlattenerProcessor(config))
+      .addOutputLane("a").build();
+    runner.runInit();
+
+    Record record = RecordCreator.create();
+    record.set(Field.create(Field.Type.MAP, ImmutableMap.of(
+      "a", Field.create(Field.Type.MAP, null),
+      "b", Field.create(Field.Type.MAP, null)
+    )));
+
+    StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+    assertEquals(1, output.getRecords().get("a").size());
+
+    Field field = output.getRecords().get("a").get(0).get();
+    assertEquals(Field.Type.MAP, field.getType());
+
+    runner.runDestroy();
+  }
+
 }
