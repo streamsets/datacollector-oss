@@ -190,7 +190,23 @@
               "dpm.remote.control.job.labels",
               "dpm.remote.control.ping.frequency",
               "dpm.remote.control.events.recipient",
-              "pipeline.access.control.enabled"
+              "pipeline.access.control.enabled",
+              "vault.addr",
+              "vault.app.id",
+              "vault.ssl.enabled.protocols",
+              "vault.ssl.truststore.file",
+              "vault.ssl.truststore.password",
+              "vault.ssl.verify",
+              "vault.ssl.timeout",
+              "vault.timeout",
+              "vault.lease.renewal.interval.sec",
+              "vault.lease.expiration.buffer.sec",
+              "vault.open.timeout",
+              "vault.proxy.address",
+              "vault.proxy.port",
+              "vault.proxy.username",
+              "vault.proxy.password",
+              "vault.read.timeout"
             ],
             "excludedParams": [
               "datacollector.users",
@@ -797,8 +813,8 @@
         {
           "name": "vault.ssl.enabled.protocols",
           "type":  "string",
-          "label": "Vault App ID",
-          "description": "App ID to use for authentication",
+          "label": "Vault SSL/TLS Protocols Enabled",
+          "description": "TLS versions to allow when connecting to Vault.",
           "default": "TLSv1.2,TLSv1.3",
           "required": "false"
         },
