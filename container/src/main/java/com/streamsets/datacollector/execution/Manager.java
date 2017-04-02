@@ -44,7 +44,7 @@ public interface Manager extends Task {
   public Previewer getPreviewer(String previewerId);
 
   // creates a runner for a given pipeline, the runner will have the current state of the pipeline.
-  public Runner getRunner(String user, String name, String rev) throws PipelineException;
+  public Runner getRunner(String name, String rev) throws PipelineException;
 
   public List<PipelineState> getPipelines() throws PipelineException;
 

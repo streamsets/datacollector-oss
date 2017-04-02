@@ -114,6 +114,7 @@ public abstract  class AbstractRunner implements Runner {
   }
 
   protected ScheduledFuture<Void> scheduleForRetries(
+      String user,
       ScheduledExecutorService runnerExecutor
   ) throws PipelineStoreException {
     long delay = 0;
@@ -123,19 +124,16 @@ public abstract  class AbstractRunner implements Runner {
       delay = retryTimeStamp - currentTime;
     }
     LOG.info("Scheduling retry in '{}' milliseconds", delay);
-    return runnerExecutor.schedule(new Callable<Void>() {
-      @Override
-      public Void call() throws StageException, PipelineException {
-        LOG.info("Starting the runner now");
-        prepareForStart();
-        start(runtimeParameters);
-        return null;
-      }
+    return runnerExecutor.schedule(() -> {
+      LOG.info("Starting the runner now");
+      prepareForStart(user);
+      start(user, runtimeParameters);
+      return null;
     }, delay, TimeUnit.MILLISECONDS);
   }
 
   @Override
-  public void start() throws PipelineException, StageException {
-    start(null);
+  public void start(String user) throws PipelineException, StageException {
+    start(user, null);
   }
 }

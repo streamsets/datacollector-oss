@@ -94,7 +94,7 @@ public class TestPipelineManagerModule {
     pipelineStoreTask.save("user", pc.getInfo().getPipelineId(), "0", "description", pc);
 
     //create Runner
-    Runner runner = pipelineManager.getRunner("user", pc.getInfo().getPipelineId(), "0");
+    Runner runner = pipelineManager.getRunner(pc.getInfo().getPipelineId(), "0");
     Assert.assertTrue(runner instanceof AsyncRunner);
 
     runner = ((AsyncRunner)runner).getRunner();
@@ -139,7 +139,7 @@ public class TestPipelineManagerModule {
 
     }
 
-    Runner runner = pipelineManager.getRunner("user", "p1", "0");
+    Runner runner = pipelineManager.getRunner("p1", "0");
     Assert.assertTrue(runner instanceof AsyncRunner);
 
     AsyncRunner asyncRunner = (AsyncRunner)runner;

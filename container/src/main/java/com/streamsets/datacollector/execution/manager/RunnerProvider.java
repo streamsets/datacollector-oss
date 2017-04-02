@@ -29,6 +29,5 @@ import dagger.ObjectGraph;
  */
 public interface RunnerProvider {
 
-  public Runner createRunner( String user, String name, String rev, ObjectGraph objectGraph,
-                              ExecutionMode executionMode);
+  public Runner createRunner(String name, String rev, ObjectGraph objectGraph, ExecutionMode executionMode);
 }

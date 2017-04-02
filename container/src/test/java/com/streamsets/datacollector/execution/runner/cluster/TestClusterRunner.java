@@ -192,7 +192,6 @@ public class TestClusterRunner {
     public RetryRunner(
         String name,
         String rev,
-        String user,
         RuntimeInfo runtimeInfo,
         Configuration configuration,
         PipelineStoreTask pipelineStore,
@@ -207,7 +206,6 @@ public class TestClusterRunner {
       super(
           name,
           rev,
-          user,
           runtimeInfo,
           configuration,
           pipelineStore,
@@ -223,10 +221,10 @@ public class TestClusterRunner {
     }
 
     @Override
-    protected ScheduledFuture<Void> scheduleForRetries(ScheduledExecutorService runnerExecutor) throws
+    protected ScheduledFuture<Void> scheduleForRetries(String user, ScheduledExecutorService runnerExecutor) throws
         PipelineStoreException {
       retryInvocation = System.nanoTime();
-      return super.scheduleForRetries(runnerExecutor);
+      return super.scheduleForRetries(user, runnerExecutor);
     }
   }
 
@@ -244,51 +242,51 @@ public class TestClusterRunner {
         conf
     ), conf), conf);
     Runner clusterRunner = createRunnerForRetryTest(pipelineStateStore);
-    clusterRunner.prepareForStart();
+    clusterRunner.prepareForStart("admin");
     Assert.assertEquals(PipelineStatus.STARTING, clusterRunner.getState().getStatus());
-    clusterRunner.start();
+    clusterRunner.start("admin");
     Assert.assertEquals(PipelineStatus.RUNNING, clusterRunner.getState().getStatus());
-    ((ClusterRunner)clusterRunner).validateAndSetStateTransition(PipelineStatus.RUN_ERROR, "a", attributes);
+    ((ClusterRunner)clusterRunner).validateAndSetStateTransition("admin", PipelineStatus.RUN_ERROR, "a", attributes);
     assertEquals(PipelineStatus.RETRY, clusterRunner.getState().getStatus());
     long saveStateTime = ((RetryPipelineStateStore)pipelineStateStore).retrySaveStateTime;
     long retryInvocationTime = ((RetryRunner)clusterRunner).retryInvocation;
     Assert.assertTrue("Retry should be schedule after state is saved", retryInvocationTime > saveStateTime);
     pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.RUNNING, null, attributes, ExecutionMode.CLUSTER_MESOS_STREAMING, null, 1, 0);
-    ((ClusterRunner)clusterRunner).validateAndSetStateTransition(PipelineStatus.RUN_ERROR, "a", attributes);
+    ((ClusterRunner)clusterRunner).validateAndSetStateTransition("admin", PipelineStatus.RUN_ERROR, "a", attributes);
     assertEquals(PipelineStatus.RETRY, clusterRunner.getState().getStatus());
     pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.RUNNING, null, attributes, ExecutionMode.CLUSTER_MESOS_STREAMING, null, 2, 0);
-    ((ClusterRunner)clusterRunner).validateAndSetStateTransition(PipelineStatus.RUN_ERROR, "a", attributes);
+    ((ClusterRunner)clusterRunner).validateAndSetStateTransition("admin", PipelineStatus.RUN_ERROR, "a", attributes);
     assertEquals(PipelineStatus.RETRY, clusterRunner.getState().getStatus());
     pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.RUNNING, null, attributes, ExecutionMode.CLUSTER_MESOS_STREAMING, null, 3, 0);
-    ((ClusterRunner)clusterRunner).validateAndSetStateTransition(PipelineStatus.RUN_ERROR, "a", attributes);
+    ((ClusterRunner)clusterRunner).validateAndSetStateTransition("admin", PipelineStatus.RUN_ERROR, "a", attributes);
     assertEquals(PipelineStatus.RUN_ERROR, clusterRunner.getState().getStatus());
   }
 
   @Test
   public void testPipelinePrepareDataCollectorStart() throws Exception {
     Runner clusterRunner = createClusterRunner();
-    clusterRunner.prepareForDataCollectorStart();
+    clusterRunner.prepareForDataCollectorStart("admin");
     assertEquals(PipelineStatus.EDITED, clusterRunner.getState().getStatus());
     pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.RUNNING, null, attributes, ExecutionMode.CLUSTER_BATCH, null, 0, 0);
-    clusterRunner.prepareForDataCollectorStart();
+    clusterRunner.prepareForDataCollectorStart("admin");
     assertEquals(PipelineStatus.DISCONNECTED, clusterRunner.getState().getStatus());
     pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.STARTING, null, attributes, ExecutionMode.CLUSTER_BATCH, null, 0, 0);
-    clusterRunner.prepareForDataCollectorStart();
+    clusterRunner.prepareForDataCollectorStart("admin");
     assertEquals(PipelineStatus.DISCONNECTED, clusterRunner.getState().getStatus());
     pipelineStateStore
       .saveState("admin", NAME, "0", PipelineStatus.CONNECTING, null, attributes, ExecutionMode.CLUSTER_BATCH, null, 0, 0);
-    clusterRunner.prepareForDataCollectorStart();
+    clusterRunner.prepareForDataCollectorStart("admin");
     assertEquals(PipelineStatus.DISCONNECTED, clusterRunner.getState().getStatus());
     pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.STOPPING, null, attributes, ExecutionMode.CLUSTER_BATCH, null, 0, 0);
-    clusterRunner.prepareForDataCollectorStart();
+    clusterRunner.prepareForDataCollectorStart("admin");
     assertEquals(PipelineStatus.DISCONNECTED, clusterRunner.getState().getStatus());
     pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.STOPPED, null, attributes, ExecutionMode.CLUSTER_BATCH, null, 0, 0);
-    clusterRunner.prepareForDataCollectorStart();
+    clusterRunner.prepareForDataCollectorStart("admin");
     assertEquals(PipelineStatus.STOPPED, clusterRunner.getState().getStatus());
     pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.RUNNING_ERROR, null, attributes,
       ExecutionMode.CLUSTER_BATCH, null, 0, 0);
     try {
-      clusterRunner.prepareForDataCollectorStart();
+      clusterRunner.prepareForDataCollectorStart("admin");
       fail("Expected exception but didn't get any");
     } catch (IllegalStateException ex) {
       // expected
@@ -299,17 +297,17 @@ public class TestClusterRunner {
   public void testMetricsInStore() throws Exception {
     eventListenerManager = new EventListenerManager();
     MyClusterRunner clusterRunner =
-      new MyClusterRunner(NAME, "0", "admin", runtimeInfo, conf, pipelineStoreTask, pipelineStateStore,
+      new MyClusterRunner(NAME, "0", runtimeInfo, conf, pipelineStoreTask, pipelineStateStore,
         stageLibraryTask, executorService, clusterHelper, new ResourceManager(conf), eventListenerManager);
     assertEquals("My_dummy_metrics", clusterRunner.getMetrics().toString());
     assertNull(clusterRunner.getState().getMetrics());
     pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.RUNNING, null, attributes, ExecutionMode.CLUSTER_BATCH,
       null, 0, 0);
-    clusterRunner.prepareForDataCollectorStart();
+    clusterRunner.prepareForDataCollectorStart("admin");
     assertEquals("\"My_dummy_metrics\"", clusterRunner.getState().getMetrics());
     pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.CONNECTING, null, attributes,
       ExecutionMode.CLUSTER_BATCH, null, 0, 0);
-    clusterRunner.prepareForStart();
+    clusterRunner.prepareForStart("admin");
     assertNull(clusterRunner.getState().getMetrics());
   }
 
@@ -323,9 +321,9 @@ public class TestClusterRunner {
     clusterProvider.isRunning = false;
     setState(PipelineStatus.RUNNING);
     Runner clusterRunner = createClusterRunner();
-    clusterRunner.prepareForDataCollectorStart();
+    clusterRunner.prepareForDataCollectorStart("admin");
     Assert.assertEquals(PipelineStatus.DISCONNECTED, clusterRunner.getState().getStatus());
-    clusterRunner.onDataCollectorStart();
+    clusterRunner.onDataCollectorStart("admin");
     Assert.assertEquals(PipelineStatus.RUN_ERROR, clusterRunner.getState().getStatus());
   }
 
@@ -336,7 +334,7 @@ public class TestClusterRunner {
     clusterProvider.isRunning = true;
     setState(PipelineStatus.DISCONNECTED);
     Runner clusterRunner = createClusterRunner();
-    clusterRunner.onDataCollectorStart();
+    clusterRunner.onDataCollectorStart("admin");
     Assert.assertEquals(PipelineStatus.RUNNING, clusterRunner.getState().getStatus());
   }
 
@@ -347,7 +345,7 @@ public class TestClusterRunner {
     clusterProvider.isRunningTimesOut = true;
     setState(PipelineStatus.DISCONNECTED);
     Runner clusterRunner = createClusterRunner();
-    clusterRunner.onDataCollectorStart();
+    clusterRunner.onDataCollectorStart("admin");
     Assert.assertEquals(PipelineStatus.CONNECT_ERROR, clusterRunner.getState().getStatus());
   }
 
@@ -357,8 +355,8 @@ public class TestClusterRunner {
     setState(PipelineStatus.RUNNING);
     clusterProvider.isSucceeded = true;
     Runner clusterRunner = createClusterRunner();
-    clusterRunner.prepareForDataCollectorStart();
-    clusterRunner.onDataCollectorStart();
+    clusterRunner.prepareForDataCollectorStart("admin");
+    clusterRunner.onDataCollectorStart("admin");
     Assert.assertEquals(PipelineStatus.FINISHED, clusterRunner.getState().getStatus());
   }
 
@@ -367,8 +365,8 @@ public class TestClusterRunner {
     attributes.put(ClusterRunner.APPLICATION_STATE, APPLICATION_STATE.getMap());
     setState(PipelineStatus.RUNNING);
     Runner clusterRunner = createClusterRunner();
-    clusterRunner.prepareForDataCollectorStart();
-    clusterRunner.onDataCollectorStop();
+    clusterRunner.prepareForDataCollectorStart("admin");
+    clusterRunner.onDataCollectorStop("stop");
     Assert.assertEquals(PipelineStatus.DISCONNECTED, clusterRunner.getState().getStatus());
   }
 
@@ -377,8 +375,8 @@ public class TestClusterRunner {
     attributes.put(ClusterRunner.APPLICATION_STATE, APPLICATION_STATE.getMap());
     setState(PipelineStatus.RUNNING);
     Runner clusterRunner = createClusterRunner();
-    clusterRunner.prepareForStop();
-    clusterRunner.stop();
+    clusterRunner.prepareForStop("admin");
+    clusterRunner.stop("admin");
     Assert.assertEquals(PipelineStatus.STOPPED, clusterRunner.getState().getStatus());
   }
 
@@ -388,12 +386,12 @@ public class TestClusterRunner {
     setState(PipelineStatus.RUNNING);
     Runner clusterRunner = createClusterRunner();
     clusterProvider.killTimesOut = true;
-    clusterRunner.prepareForStop();
-    clusterRunner.stop();
+    clusterRunner.prepareForStop("admin");
+    clusterRunner.stop("admin");
     Assert.assertEquals(PipelineStatus.CONNECT_ERROR, clusterRunner.getState().getStatus());
     clusterProvider.killTimesOut = false;
-    clusterRunner.prepareForStop();
-    clusterRunner.stop();
+    clusterRunner.prepareForStop("admin");
+    clusterRunner.stop("admin");
     Assert.assertEquals(PipelineStatus.STOPPED, clusterRunner.getState().getStatus());
   }
 
@@ -401,17 +399,17 @@ public class TestClusterRunner {
   public void testPipelineStatusStart() throws Exception {
     setState(PipelineStatus.EDITED);
     Runner clusterRunner = createClusterRunner();
-    clusterRunner.prepareForStart();
+    clusterRunner.prepareForStart("admin");
     Assert.assertEquals(PipelineStatus.STARTING, clusterRunner.getState().getStatus());
     try {
-      clusterRunner.prepareForStart();
+      clusterRunner.prepareForStart("admin");
       Assert.fail("Expected exception but didn't get any");
     } catch (PipelineRunnerException e) {
       assertEquals(ContainerError.CONTAINER_0102, e.getErrorCode());
     } catch (Exception e) {
       Assert.fail("Expected PipelineRunnerException but got " + e);
     }
-    clusterRunner.start();
+    clusterRunner.start("admin");
     Assert.assertEquals(PipelineStatus.RUNNING, clusterRunner.getState().getStatus());
   }
 
@@ -419,14 +417,14 @@ public class TestClusterRunner {
   public void testPipelineStartMultipleTimes() throws Exception {
     setState(PipelineStatus.EDITED);
     Runner clusterRunner = createClusterRunner();
-    clusterRunner.prepareForStart();
-    clusterRunner.start();
+    clusterRunner.prepareForStart("admin");
+    clusterRunner.start("admin");
     Assert.assertEquals(PipelineStatus.RUNNING, clusterRunner.getState().getStatus());
 
     // call start on the already running pipeline and make sure it doesn't request new resource each time
     for (int counter =0; counter < 10; counter++) {
       try {
-        clusterRunner.prepareForStart();
+        clusterRunner.prepareForStart("admin");
         Assert.fail("Expected exception but didn't get any");
       } catch (PipelineRunnerException ex) {
         Assert.assertTrue(ex.getMessage().contains("CONTAINER_0102"));
@@ -440,19 +438,19 @@ public class TestClusterRunner {
     setState(PipelineStatus.EDITED);
     Runner clusterRunner = createClusterRunner();
     clusterProvider.submitTimesOut = true;
-    clusterRunner.prepareForStart();
-    clusterRunner.start();
+    clusterRunner.prepareForStart("admin");
+    clusterRunner.start("admin");
     Assert.assertEquals(PipelineStatus.START_ERROR, clusterRunner.getState().getStatus());
     clusterProvider.submitTimesOut = false;
     clusterProvider.appId = APPID;
-    clusterRunner.prepareForStart();
-    clusterRunner.start();
+    clusterRunner.prepareForStart("admin");
+    clusterRunner.start("admin");
     Assert.assertEquals(PipelineStatus.RUNNING, clusterRunner.getState().getStatus());
     ApplicationState appState = new ApplicationState((Map)pipelineStateStore.getState(NAME, REV).getAttributes().
       get(ClusterRunner.APPLICATION_STATE));
     assertEquals(APPID, appState.getId());
-    clusterRunner.prepareForStop();
-    clusterRunner.stop();
+    clusterRunner.prepareForStop("admin");
+    clusterRunner.stop("admin");
     assertEquals(PipelineStatus.STOPPED, clusterRunner.getState().getStatus());
     appState = new ApplicationState((Map)pipelineStateStore.getState(NAME, REV).getAttributes().
       get(ClusterRunner.APPLICATION_STATE));
@@ -463,9 +461,9 @@ public class TestClusterRunner {
   public void testPipelineStatusRunningOnDataCollectorStart() throws Exception {
     setState(PipelineStatus.STARTING);
     Runner clusterRunner = createClusterRunner();
-    clusterRunner.prepareForDataCollectorStart();
+    clusterRunner.prepareForDataCollectorStart("admin");
     clusterProvider.submitTimesOut = true;
-    clusterRunner.onDataCollectorStart();
+    clusterRunner.onDataCollectorStart("admin");
     Assert.assertEquals(PipelineStatus.START_ERROR, clusterRunner.getState().getStatus());
   }
 
@@ -481,8 +479,8 @@ public class TestClusterRunner {
     assertEquals("slaveToken", slaves.get(0).getSdcSlaveToken());
     assertEquals("myToken", slaves.get(0).getSdcClusterToken());
     assertEquals("sdc_id", slaves.get(0).getSlaveSdcId());
-    clusterRunner.prepareForStart();
-    clusterRunner.start();
+    clusterRunner.prepareForStart("admin");
+    clusterRunner.start("admin");
     slaves = new ArrayList<>(clusterRunner.getSlaveCallbackList(CallbackObjectType.METRICS));
     assertTrue(slaves.isEmpty());
   }
@@ -500,14 +498,14 @@ public class TestClusterRunner {
     assertFalse(errorCallbacks.isEmpty());
     assertEquals(1, errorCallbacks.size());
 
-    clusterRunner.validateAndSetStateTransition(PipelineStatus.STARTING, "Starting", Collections.<String, Object>emptyMap());
-    clusterRunner.validateAndSetStateTransition(PipelineStatus.RUNNING, "Running", Collections.<String, Object>emptyMap());
+    clusterRunner.validateAndSetStateTransition("user", PipelineStatus.STARTING, "Starting", Collections.<String, Object>emptyMap());
+    clusterRunner.validateAndSetStateTransition("user", PipelineStatus.RUNNING, "Running", Collections.<String, Object>emptyMap());
 
     Mockito.verify(clusterRunner, Mockito.never()).handleErrorCallbackFromSlaves(Matchers.anyMap());
     assertFalse(errorCallbacks.isEmpty());
     assertEquals(1, errorCallbacks.size());
 
-    clusterRunner.validateAndSetStateTransition(PipelineStatus.RUN_ERROR, "Run Error", new HashMap<String, Object>());
+    clusterRunner.validateAndSetStateTransition("user", PipelineStatus.RUN_ERROR, "Run Error", new HashMap<String, Object>());
     //Check the handleErrorCallbackFromSlaves is called.
     Mockito.verify(clusterRunner, Mockito.times(1)).handleErrorCallbackFromSlaves(Matchers.anyMap());
 
@@ -536,9 +534,9 @@ public class TestClusterRunner {
     assertFalse(errorCallbacks.isEmpty());
     assertEquals(2, errorCallbacks.size());
 
-    clusterRunner.validateAndSetStateTransition(PipelineStatus.STARTING, "Starting", Collections.<String, Object>emptyMap());
+    clusterRunner.validateAndSetStateTransition("user", PipelineStatus.STARTING, "Starting", Collections.<String, Object>emptyMap());
 
-    clusterRunner.validateAndSetStateTransition(PipelineStatus.RUNNING, "Running", Collections.<String, Object>emptyMap());
+    clusterRunner.validateAndSetStateTransition("user", PipelineStatus.RUNNING, "Running", Collections.<String, Object>emptyMap());
 
     Mockito.verify(clusterRunner, Mockito.never()).handleErrorCallbackFromSlaves(Matchers.anyMap());
     assertFalse(errorCallbacks.isEmpty());
@@ -546,7 +544,7 @@ public class TestClusterRunner {
 
     final Map<String, Object> attributeMap = new HashMap<>();
 
-    clusterRunner.validateAndSetStateTransition(PipelineStatus.RUN_ERROR, "Run Error", attributeMap);
+    clusterRunner.validateAndSetStateTransition("user", PipelineStatus.RUN_ERROR, "Run Error", attributeMap);
 
     assertFalse(attributeMap.isEmpty());
     assertTrue(attributeMap.containsKey(ClusterRunner.SLAVE_ERROR_ATTRIBUTE));
@@ -563,7 +561,7 @@ public class TestClusterRunner {
   public void testGetParallelism() throws PipelineException, StageException {
     ClusterRunner clusterRunner = (ClusterRunner) createClusterRunner();
     ClusterSourceInfo clusterSourceInfo =
-      clusterRunner.getClusterSourceInfo(NAME, REV,
+      clusterRunner.getClusterSourceInfo("admin", NAME, REV,
         MockStages.createPipelineConfigurationWithClusterOnlyStage(ExecutionMode.CLUSTER_BATCH) // creates ClusterMSource
                                                                                           // which
         // has parallelism 25
@@ -578,7 +576,7 @@ public class TestClusterRunner {
       null, 0, 0);
     try {
       MockStages.ClusterMSource.MOCK_VALIDATION_ISSUES = true;
-      clusterRunner.getClusterSourceInfo(NAME, REV,
+      clusterRunner.getClusterSourceInfo("admin", NAME, REV,
         MockStages.createPipelineConfigurationWithClusterOnlyStage(ExecutionMode.CLUSTER_BATCH));
       fail("Expected PipelineRuntimeException but didn't get any");
     } catch (PipelineRuntimeException pe) {
@@ -596,7 +594,7 @@ public class TestClusterRunner {
     Runner runner = createClusterRunnerForUnsupportedPipeline();
     pipelineStateStore.saveState("admin", TestUtil.HIGHER_VERSION_PIPELINE, REV, PipelineStatus.EDITED, null, attributes, ExecutionMode.CLUSTER_BATCH,
       null, 0, 0);
-    runner.start();
+    runner.start("admin");
     await().until(desiredPipelineState(runner, PipelineStatus.START_ERROR));
     PipelineState state = runner.getState();
     Assert.assertTrue(state.getStatus() == PipelineStatus.START_ERROR);
@@ -608,9 +606,9 @@ public class TestClusterRunner {
     pipelineStateStore.saveState("admin", TestUtil.HIGHER_VERSION_PIPELINE, "0", PipelineStatus.STARTING, null,
       attributes, ExecutionMode.CLUSTER_BATCH, null, 0, 0);
     Runner clusterRunner = createClusterRunnerForUnsupportedPipeline();
-    clusterRunner.prepareForDataCollectorStart();
+    clusterRunner.prepareForDataCollectorStart("admin");
     clusterProvider.submitTimesOut = true;
-    clusterRunner.onDataCollectorStart();
+    clusterRunner.onDataCollectorStart("admin");
     await().until(desiredPipelineState(clusterRunner, PipelineStatus.START_ERROR));
     PipelineState state = clusterRunner.getState();
     Assert.assertTrue(state.getStatus() == PipelineStatus.START_ERROR);
@@ -622,9 +620,9 @@ public class TestClusterRunner {
     pipelineStateStore.saveState("admin", TestUtil.HIGHER_VERSION_PIPELINE, "0", PipelineStatus.RUNNING, null,
       attributes, ExecutionMode.CLUSTER_BATCH, null, 0, 0);
     Runner clusterRunner = createClusterRunnerForUnsupportedPipeline();
-    clusterRunner.prepareForDataCollectorStart();
+    clusterRunner.prepareForDataCollectorStart("admin");
     clusterProvider.submitTimesOut = true;
-    clusterRunner.onDataCollectorStart();
+    clusterRunner.onDataCollectorStart("admin");
     await().until(desiredPipelineState(clusterRunner, PipelineStatus.START_ERROR));
     PipelineState state = clusterRunner.getState();
     Assert.assertTrue(state.getStatus() == PipelineStatus.START_ERROR);
@@ -661,40 +659,40 @@ public class TestClusterRunner {
 
     //Only one runner can start pipeline at the max since the runner thread pool size is 3
     Runner runner1 = createClusterRunner("a", pipelineStoreTask, resourceManager);
-    runner1.prepareForStart();
+    runner1.prepareForStart("admin");
 
     Runner runner2 = createClusterRunner("b", pipelineStoreTask, resourceManager);
-    runner2.prepareForStart();
+    runner2.prepareForStart("admin");
 
     Runner runner3 = createClusterRunner("c", pipelineStoreTask, resourceManager);
-    runner3.prepareForStart();
+    runner3.prepareForStart("admin");
 
     Runner runner4 = createClusterRunner("d", pipelineStoreTask, resourceManager);
-    runner4.prepareForStart();
+    runner4.prepareForStart("admin");
 
     Runner runner5 = createClusterRunner("e", pipelineStoreTask, resourceManager);
-    runner5.prepareForStart();
+    runner5.prepareForStart("admin");
 
     Runner runner6 = createClusterRunner("f", pipelineStoreTask, resourceManager);
 
     try {
-      runner6.prepareForStart();
+      runner6.prepareForStart("admin");
       Assert.fail("PipelineRunnerException expected as sdc is out of runner thread resources");
     } catch (PipelineRunnerException e) {
       Assert.assertEquals(ContainerError.CONTAINER_0166, e.getErrorCode());
     }
 
     try {
-      runner5.start();
+      runner5.start("admin");
       Assert.fail("Expected exception as pipeline is empty");
     } catch (PipelineRunnerException e) {
       Assert.assertEquals(ContainerError.CONTAINER_0158, e.getErrorCode());
     }
 
-    runner6.prepareForStart();
+    runner6.prepareForStart("admin");
 
     try {
-      runner5.prepareForStart();
+      runner5.prepareForStart("admin");
       Assert.fail("PipelineRunnerException expected as sdc is out of runner thread resources");
     } catch (PipelineRunnerException e) {
       Assert.assertEquals(ContainerError.CONTAINER_0166, e.getErrorCode());
@@ -703,7 +701,7 @@ public class TestClusterRunner {
 
   private Runner createClusterRunner() {
     eventListenerManager = new EventListenerManager();
-    return new ClusterRunner(NAME, "0", "admin", runtimeInfo, conf, pipelineStoreTask, pipelineStateStore,
+    return new ClusterRunner(NAME, "0", runtimeInfo, conf, pipelineStoreTask, pipelineStateStore,
       stageLibraryTask, executorService, clusterHelper, new ResourceManager(conf), eventListenerManager, "myToken",
       aclStoreTask);
   }
@@ -711,14 +709,14 @@ public class TestClusterRunner {
   private Runner createRunnerForRetryTest(PipelineStateStore pipelineStateStore) {
     eventListenerManager = new EventListenerManager();
     pipelineStateStore.init();
-    return new RetryRunner(NAME, "0", "admin", runtimeInfo, conf, pipelineStoreTask, pipelineStateStore,
+    return new RetryRunner(NAME, "0", runtimeInfo, conf, pipelineStoreTask, pipelineStateStore,
         stageLibraryTask, executorService, clusterHelper, new ResourceManager(conf), eventListenerManager, "myToken");
   }
 
 
   private Runner createClusterRunner(String name, PipelineStoreTask pipelineStoreTask, ResourceManager resourceManager) {
     eventListenerManager = new EventListenerManager();
-    Runner runner = new ClusterRunner(name, "0", "a", runtimeInfo, conf, pipelineStoreTask, pipelineStateStore,
+    Runner runner = new ClusterRunner(name, "0", runtimeInfo, conf, pipelineStoreTask, pipelineStateStore,
       stageLibraryTask, executorService, clusterHelper, resourceManager, eventListenerManager, "myToken", aclStoreTask);
     eventListenerManager.addStateEventListener(resourceManager);
     return runner;
@@ -726,7 +724,7 @@ public class TestClusterRunner {
 
   private Runner createClusterRunnerForUnsupportedPipeline() {
     eventListenerManager = new EventListenerManager();
-    return new AsyncRunner(new ClusterRunner(TestUtil.HIGHER_VERSION_PIPELINE, "0", "admin", runtimeInfo, conf,
+    return new AsyncRunner(new ClusterRunner(TestUtil.HIGHER_VERSION_PIPELINE, "0", runtimeInfo, conf,
       pipelineStoreTask, pipelineStateStore, stageLibraryTask, executorService, clusterHelper,
       new ResourceManager(conf), eventListenerManager, "myToken", aclStoreTask), new SafeScheduledExecutorService(1, "runner"));
   }
@@ -735,11 +733,11 @@ public class TestClusterRunner {
 
     private static final boolean METRICS_TEST = true;
 
-    MyClusterRunner(String name, String rev, String user, RuntimeInfo runtimeInfo, Configuration configuration,
+    MyClusterRunner(String name, String rev, RuntimeInfo runtimeInfo, Configuration configuration,
       PipelineStoreTask pipelineStore, PipelineStateStore pipelineStateStore, StageLibraryTask stageLibrary,
       SafeScheduledExecutorService executorService, ClusterHelper clusterHelper, ResourceManager resourceManager, EventListenerManager
       eventListenerManager) {
-      super(name, rev, user, runtimeInfo, configuration, pipelineStore, pipelineStateStore, stageLibrary, executorService,
+      super(name, rev, runtimeInfo, configuration, pipelineStore, pipelineStateStore, stageLibrary, executorService,
         clusterHelper, resourceManager, eventListenerManager, "myToken",
         new FileAclStoreTask(runtimeInfo, pipelineStore, new LockCache<String>()));
     }

@@ -109,89 +109,84 @@ public class TestStandaloneRunner {
     }
     TestUtil.EMPTY_OFFSET = false;
     System.getProperties().remove(DATA_DIR_KEY);
-    await().atMost(Duration.ONE_MINUTE).until(new Callable<Boolean>() {
-      @Override
-      public Boolean call() throws Exception {
-        return FileUtils.deleteQuietly(dataDir);
-      }
-    });
+    await().atMost(Duration.ONE_MINUTE).until(() -> FileUtils.deleteQuietly(dataDir));
   }
 
   @Test(timeout = 20000)
   public void testPipelineStart() throws Exception {
-    Runner runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
-    runner.start();
+    Runner runner = pipelineManager.getRunner( TestUtil.MY_PIPELINE, "0");
+    runner.start("admin");
     waitForState(runner, PipelineStatus.RUNNING);
-    ((AsyncRunner)runner).getRunner().prepareForStop();
-    ((AsyncRunner)runner).getRunner().stop();
+    ((AsyncRunner)runner).getRunner().prepareForStop("admin");
+    ((AsyncRunner)runner).getRunner().stop("admin");
     waitForState(runner, PipelineStatus.STOPPED);
   }
 
   @Test(timeout = 20000)
   public void testPipelineStartWithParameters() throws Exception {
-    Runner runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
+    Runner runner = pipelineManager.getRunner(TestUtil.MY_PIPELINE, "0");
     Map<String, Object> runtimeParameters = new HashMap<>();
     runtimeParameters.put("param1", "Param1 Value");
-    runner.start(runtimeParameters);
+    runner.start("admin", runtimeParameters);
     waitForState(runner, PipelineStatus.RUNNING);
     PipelineState pipelineState = runner.getState();
     Map<String, Object> runtimeConstantsInState = (Map<String, Object>) pipelineState.getAttributes()
         .get(ProductionPipeline.RUNTIME_PARAMETERS_ATTR);
     assertNotNull(runtimeConstantsInState);
     assertEquals(runtimeParameters.get("param1"), runtimeConstantsInState.get("param1"));
-    ((AsyncRunner)runner).getRunner().prepareForStop();
-    ((AsyncRunner)runner).getRunner().stop();
+    ((AsyncRunner)runner).getRunner().prepareForStop("admin");
+    ((AsyncRunner)runner).getRunner().stop("admin");
     waitForState(runner, PipelineStatus.STOPPED);
   }
 
   @Test(timeout = 50000)
   public void testPipelinePrepare() throws Exception {
-    Runner runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
+    Runner runner = pipelineManager.getRunner( TestUtil.MY_PIPELINE, "0");
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.FINISHING, null, null,
       ExecutionMode.STANDALONE, null, 0, 0);
-    runner.prepareForDataCollectorStart();
+    runner.prepareForDataCollectorStart("admin");
     assertEquals(PipelineStatus.FINISHED, runner.getState().getStatus());
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.STOPPING, null, null,
       ExecutionMode.STANDALONE, null, 0, 0);
-    runner.prepareForDataCollectorStart();
+    runner.prepareForDataCollectorStart("admin");
     assertEquals(PipelineStatus.STOPPED, runner.getState().getStatus());
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.DISCONNECTING, null, null,
       ExecutionMode.STANDALONE, null, 0, 0);
-    runner.prepareForDataCollectorStart();
+    runner.prepareForDataCollectorStart("admin");
     assertEquals(PipelineStatus.DISCONNECTED, runner.getState().getStatus());
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.CONNECTING, null, null,
       ExecutionMode.STANDALONE, null, 0, 0);
-    runner.prepareForDataCollectorStart();
+    runner.prepareForDataCollectorStart("admin");
     assertEquals(PipelineStatus.DISCONNECTED, runner.getState().getStatus());
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.STARTING, null, null,
       ExecutionMode.STANDALONE, null, 0, 0);
-    runner.prepareForDataCollectorStart();
+    runner.prepareForDataCollectorStart("admin");
     assertEquals(PipelineStatus.DISCONNECTED, runner.getState().getStatus());
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RUNNING, null, null,
       ExecutionMode.STANDALONE, null, 0, 0);
-    runner.prepareForDataCollectorStart();
+    runner.prepareForDataCollectorStart("admin");
     assertEquals(PipelineStatus.DISCONNECTED, runner.getState().getStatus());
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.DISCONNECTED, null, null,
       ExecutionMode.STANDALONE, null, 0, 0);
-    runner.prepareForDataCollectorStart();
+    runner.prepareForDataCollectorStart("admin");
     assertEquals(PipelineStatus.DISCONNECTED, runner.getState().getStatus());
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.STOPPED, null, null,
       ExecutionMode.STANDALONE, null, 0, 0);
-    runner.start();
+    runner.start("admin");
     assertEquals(PipelineStatus.STARTING, runner.getState().getStatus());
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.STOPPED, null, null,
       ExecutionMode.STANDALONE, null, 0, 0);
     assertNull(runner.getState().getMetrics());
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RETRY, null, null,
       ExecutionMode.STANDALONE, null, 0, 0);
-    runner.start();
+    runner.start("admin");
     assertEquals(PipelineStatus.STARTING, runner.getState().getStatus());
   }
 
   @Test
   public void testPipelineRetry() throws Exception {
-    Runner runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
-    runner.start();
+    Runner runner = pipelineManager.getRunner( TestUtil.MY_PIPELINE, "0");
+    runner.start("admin");
     waitForState(runner, PipelineStatus.RUNNING);
     TestUtil.EMPTY_OFFSET = true;
     waitForState(runner, PipelineStatus.FINISHED);
@@ -222,27 +217,27 @@ public class TestStandaloneRunner {
 
   @Test(timeout = 20000)
   public void testPipelineStartMultipleTimes() throws Exception {
-    Runner runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
-    runner.start();
+    Runner runner = pipelineManager.getRunner( TestUtil.MY_PIPELINE, "0");
+    runner.start("admin");
     waitForState(runner, PipelineStatus.RUNNING);
     // call start on the already running pipeline and make sure it doesn't request new resource each time
     for (int counter =0; counter < 10; counter++) {
       try {
-        runner.start();
+        runner.start("admin");
         Assert.fail("Expected exception but didn't get any");
       } catch (PipelineRunnerException ex) {
         Assert.assertTrue(ex.getMessage().contains("CONTAINER_0102"));
       }
     }
-    ((AsyncRunner)runner).getRunner().prepareForStop();
-    ((AsyncRunner)runner).getRunner().stop();
+    ((AsyncRunner)runner).getRunner().prepareForStop("admin");
+    ((AsyncRunner)runner).getRunner().stop("admin");
     waitForState(runner, PipelineStatus.STOPPED);
   }
 
   @Test(timeout = 20000)
   public void testPipelineFinish() throws Exception {
-    Runner runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
-    runner.start();
+    Runner runner = pipelineManager.getRunner( TestUtil.MY_PIPELINE, "0");
+    runner.start("admin");
     waitForState(runner, PipelineStatus.RUNNING);
     assertNull(runner.getState().getMetrics());
     TestUtil.EMPTY_OFFSET = true;
@@ -252,10 +247,10 @@ public class TestStandaloneRunner {
 
   @Test(timeout = 20000)
   public void testLoadingUnsupportedPipeline() throws Exception {
-    Runner runner = pipelineManager.getRunner("user2", TestUtil.HIGHER_VERSION_PIPELINE, "0");
-    runner.start();
+    Runner runner = pipelineManager.getRunner(TestUtil.HIGHER_VERSION_PIPELINE, "0");
+    runner.start("user2");
     waitForState(runner, PipelineStatus.START_ERROR);
-    PipelineState state = pipelineManager.getRunner("user2", TestUtil.HIGHER_VERSION_PIPELINE, "0").getState();
+    PipelineState state = pipelineManager.getRunner(TestUtil.HIGHER_VERSION_PIPELINE, "0").getState();
     Assert.assertTrue(state.getStatus() == PipelineStatus.START_ERROR);
     Assert.assertTrue(state.getMessage().contains("CONTAINER_0158"));
     assertNull(runner.getState().getMetrics());
@@ -263,8 +258,8 @@ public class TestStandaloneRunner {
 
   @Test(timeout = 20000)
   public void testDisconnectedPipelineStartedAgain() throws Exception {
-    Runner runner = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
-    runner.start();
+    Runner runner = pipelineManager.getRunner( TestUtil.MY_PIPELINE, "0");
+    runner.start("admin");
     waitForState(runner, PipelineStatus.RUNNING);
     // sdc going down
     pipelineManager.stop();
@@ -276,18 +271,18 @@ public class TestStandaloneRunner {
     pipelineManager.init();
     pipelineManager.run();
 
-    runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
+    runner = pipelineManager.getRunner( TestUtil.MY_PIPELINE, "0");
     waitForState(runner, PipelineStatus.RUNNING);
-    ((AsyncRunner)runner).getRunner().prepareForStop();
-    ((AsyncRunner)runner).getRunner().stop();
+    ((AsyncRunner)runner).getRunner().prepareForStop("admin");
+    ((AsyncRunner)runner).getRunner().stop("admin");
     Assert.assertTrue(runner.getState().getStatus() == PipelineStatus.STOPPED);
     assertNotNull(runner.getState().getMetrics());
   }
 
   @Test(timeout = 20000)
   public void testFinishedPipelineNotStartingAgain() throws Exception {
-    Runner runner = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
-    runner.start();
+    Runner runner = pipelineManager.getRunner( TestUtil.MY_PIPELINE, "0");
+    runner.start("admin");
     waitForState(runner, PipelineStatus.RUNNING);
 
     TestUtil.EMPTY_OFFSET = true;
@@ -306,26 +301,26 @@ public class TestStandaloneRunner {
     pipelineManager.run();
 
     //Since SDC went down we need to get the runner again
-    runner = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
+    runner = pipelineManager.getRunner( TestUtil.MY_PIPELINE, "0");
     waitForState(runner, PipelineStatus.FINISHED);
     assertNotNull(runner.getState().getMetrics());
   }
 
   @Test(timeout = 20000)
   public void testMultiplePipelineStartStop() throws Exception {
-    Runner runner1 = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
-    Runner runner2 = pipelineManager.getRunner("admin2", TestUtil.MY_SECOND_PIPELINE, "0");
+    Runner runner1 = pipelineManager.getRunner( TestUtil.MY_PIPELINE, "0");
+    Runner runner2 = pipelineManager.getRunner( TestUtil.MY_SECOND_PIPELINE, "0");
 
-    runner1.start();
-    runner2.start();
+    runner1.start("admin");
+    runner2.start("admin2");
     waitForState(runner1, PipelineStatus.RUNNING);
     waitForState(runner2, PipelineStatus.RUNNING);
 
-    ((AsyncRunner)runner1).getRunner().prepareForStop();
-    ((AsyncRunner)runner1).getRunner().stop();
+    ((AsyncRunner)runner1).getRunner().prepareForStop("admin");
+    ((AsyncRunner)runner1).getRunner().stop("admin");
     waitForState(runner1, PipelineStatus.STOPPED);
-    ((AsyncRunner)runner2).getRunner().prepareForStop();
-    ((AsyncRunner)runner2).getRunner().stop();
+    ((AsyncRunner)runner2).getRunner().prepareForStop("admin2");
+    ((AsyncRunner)runner2).getRunner().stop("admin2");
     Assert.assertTrue(runner2.getState().getStatus() == PipelineStatus.STOPPED);
     assertNotNull(runner1.getState().getMetrics());
     assertNotNull(runner2.getState().getMetrics());
@@ -333,11 +328,11 @@ public class TestStandaloneRunner {
 
   @Test(timeout = 20000)
   public void testMultiplePipelineFinish() throws Exception {
-    Runner runner1 = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
-    Runner runner2 = pipelineManager.getRunner("admin2", TestUtil.MY_SECOND_PIPELINE, "0");
+    Runner runner1 = pipelineManager.getRunner( TestUtil.MY_PIPELINE, "0");
+    Runner runner2 = pipelineManager.getRunner( TestUtil.MY_SECOND_PIPELINE, "0");
 
-    runner1.start();
-    runner2.start();
+    runner1.start("admin");
+    runner2.start("admin2");
     waitForState(runner1, PipelineStatus.RUNNING);
     waitForState(runner2, PipelineStatus.RUNNING);
 
@@ -351,10 +346,10 @@ public class TestStandaloneRunner {
 
   @Test(timeout = 20000)
   public void testDisconnectedPipelinesStartedAgain() throws Exception {
-    Runner runner1 = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
-    Runner runner2 = pipelineManager.getRunner("admin2", TestUtil.MY_SECOND_PIPELINE, "0");
-    runner1.start();
-    runner2.start();
+    Runner runner1 = pipelineManager.getRunner( TestUtil.MY_PIPELINE, "0");
+    Runner runner2 = pipelineManager.getRunner( TestUtil.MY_SECOND_PIPELINE, "0");
+    runner1.start("admin");
+    runner2.start("admin2");
     waitForState(runner1, PipelineStatus.RUNNING);
     waitForState(runner2, PipelineStatus.RUNNING);
 
@@ -369,16 +364,16 @@ public class TestStandaloneRunner {
     pipelineManager.init();
     pipelineManager.run();
 
-    runner1 = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
-    runner2 = pipelineManager.getRunner("admin2", TestUtil.MY_SECOND_PIPELINE, "0");
+    runner1 = pipelineManager.getRunner( TestUtil.MY_PIPELINE, "0");
+    runner2 = pipelineManager.getRunner( TestUtil.MY_SECOND_PIPELINE, "0");
 
     waitForState(runner1, PipelineStatus.RUNNING);
     waitForState(runner2, PipelineStatus.RUNNING);
 
-    ((AsyncRunner)runner1).getRunner().prepareForStop();
-    ((AsyncRunner)runner1).getRunner().stop();
-    ((AsyncRunner)runner2).getRunner().prepareForStop();
-    ((AsyncRunner)runner2).getRunner().stop();
+    ((AsyncRunner)runner1).getRunner().prepareForStop("admin");
+    ((AsyncRunner)runner1).getRunner().stop("admin");
+    ((AsyncRunner)runner2).getRunner().prepareForStop("admin2");
+    ((AsyncRunner)runner2).getRunner().stop("admin2");
     waitForState(runner1, PipelineStatus.STOPPED);
     waitForState(runner2, PipelineStatus.STOPPED);
     assertNotNull(runner1.getState().getMetrics());
@@ -392,24 +387,24 @@ public class TestStandaloneRunner {
   @Test(timeout = 20000)
   public void testPipelineStopTimeout() throws Exception {
     TestUtil.captureMockStagesLongWait();
-    Runner runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
-    runner.start();
+    Runner runner = pipelineManager.getRunner( TestUtil.MY_PIPELINE, "0");
+    runner.start("admin");
     waitForState(runner, PipelineStatus.RUNNING);
-    ((AsyncRunner)runner).getRunner().prepareForStop();
-    ((AsyncRunner)runner).getRunner().stop();
-    ((AsyncRunner)runner).getRunner().forceQuit();
+    ((AsyncRunner)runner).getRunner().prepareForStop("admin");
+    ((AsyncRunner)runner).getRunner().stop("admin");
+    ((AsyncRunner)runner).getRunner().forceQuit("admin");
     waitForState(runner, PipelineStatus.STOPPED);
   }
 
   @Test
   public void testSnapshot() throws Exception {
-    Runner runner = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
-    runner.start();
+    Runner runner = pipelineManager.getRunner( TestUtil.MY_PIPELINE, "0");
+    runner.start("admin");
     waitForState(runner, PipelineStatus.RUNNING);
 
     //request to capture snapshot and check the status
     final String snapshotName = UUID.randomUUID().toString();
-    String snapshotId = runner.captureSnapshot(snapshotName, "snapshot label", 5, 10);
+    String snapshotId = runner.captureSnapshot("admin", snapshotName, "snapshot label", 5, 10);
     assertNotNull(snapshotId);
 
     Snapshot snapshot = runner.getSnapshot(snapshotId);
@@ -454,16 +449,16 @@ public class TestStandaloneRunner {
     assertNull(snapshot.getInfo());
     assertNull(snapshot.getOutput());
 
-    ((AsyncRunner)runner).getRunner().prepareForStop();
-    ((AsyncRunner)runner).getRunner().stop();
+    ((AsyncRunner)runner).getRunner().prepareForStop("admin");
+    ((AsyncRunner)runner).getRunner().stop("admin");
     waitForState(runner, PipelineStatus.STOPPED);
   }
 
   @Test (timeout = 60000)
   public void testStartAndCaptureSnapshot() throws Exception {
-    Runner runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
+    Runner runner = pipelineManager.getRunner( TestUtil.MY_PIPELINE, "0");
     String snapshotId = UUID.randomUUID().toString();
-    runner.startAndCaptureSnapshot(null, snapshotId, "snapshot label", 1, 10);
+    runner.startAndCaptureSnapshot("admin", null, snapshotId, "snapshot label", 1, 10);
     waitForState(runner, PipelineStatus.RUNNING);
 
     Snapshot snapshot = runner.getSnapshot(snapshotId);
@@ -478,14 +473,14 @@ public class TestStandaloneRunner {
     assertEquals("0", info.getRev());
     assertEquals(1, info.getBatchNumber());
 
-    ((AsyncRunner)runner).getRunner().prepareForStop();
-    ((AsyncRunner)runner).getRunner().stop();
+    ((AsyncRunner)runner).getRunner().prepareForStop("admin");
+    ((AsyncRunner)runner).getRunner().stop("admin");
     waitForState(runner, PipelineStatus.STOPPED);
 
     // try with batch size less than 0
     snapshotId = UUID.randomUUID().toString();
     try {
-      runner.startAndCaptureSnapshot(null, snapshotId, "snapshot label", 1, 0);
+      runner.startAndCaptureSnapshot("admin",null, snapshotId, "snapshot label", 1, 0);
       Assert.fail("Expected PipelineRunnerException");
     } catch (PipelineRunnerException e) {
       Assert.assertEquals(ContainerError.CONTAINER_0107, e.getErrorCode());
@@ -501,44 +496,44 @@ public class TestStandaloneRunner {
     pipelineManager.run();
 
     //Only one runner can start pipeline at the max since the runner thread pool size is 3
-    Runner runner1 = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
-    runner1.start();
+    Runner runner1 = pipelineManager.getRunner( TestUtil.MY_PIPELINE, "0");
+    runner1.start("admin");
     waitForState(runner1, PipelineStatus.RUNNING);
 
-    Runner runner2 = pipelineManager.getRunner("admin2", TestUtil.MY_SECOND_PIPELINE, "0");
+    Runner runner2 = pipelineManager.getRunner( TestUtil.MY_SECOND_PIPELINE, "0");
     try {
-      runner2.start();
+      runner2.start("admin2");
       Assert.fail("Expected PipelineRunnerException");
     } catch (PipelineRunnerException e) {
       Assert.assertEquals(ContainerError.CONTAINER_0166, e.getErrorCode());
     }
 
-    ((AsyncRunner)runner1).getRunner().prepareForStop();
-    ((AsyncRunner)runner1).getRunner().stop();
+    ((AsyncRunner)runner1).getRunner().prepareForStop("admin");
+    ((AsyncRunner)runner1).getRunner().stop("admin");
     waitForState(runner1, PipelineStatus.STOPPED);
 
-    runner2.start();
+    runner2.start("admin2");
     waitForState(runner2, PipelineStatus.RUNNING);
 
     try {
-      runner1.start();
+      runner1.start("admin");
       Assert.fail("Expected PipelineRunnerException");
     } catch (PipelineRunnerException e) {
       Assert.assertEquals(ContainerError.CONTAINER_0166, e.getErrorCode());
     }
 
-    ((AsyncRunner)runner2).getRunner().prepareForStop();
-    ((AsyncRunner)runner2).getRunner().stop();
+    ((AsyncRunner)runner2).getRunner().prepareForStop("admin");
+    ((AsyncRunner)runner2).getRunner().stop("admin2");
     waitForState(runner2, PipelineStatus.STOPPED);
   }
 
   @Test(timeout = 20000)
   public void testPipelineStoppedWithMail() throws Exception {
-    Runner runner = pipelineManager.getRunner("admin", TestUtil.PIPELINE_WITH_EMAIL, "0");
-    runner.start();
+    Runner runner = pipelineManager.getRunner( TestUtil.PIPELINE_WITH_EMAIL, "0");
+    runner.start("admin");
     waitForState(runner, PipelineStatus.RUNNING);
-    ((AsyncRunner)runner).getRunner().prepareForStop();
-    ((AsyncRunner)runner).getRunner().stop();
+    ((AsyncRunner)runner).getRunner().prepareForStop("admin");
+    ((AsyncRunner)runner).getRunner().stop("admin");
     waitForState(runner, PipelineStatus.STOPPED);
     //wait for email
     GreenMail mailServer = TestUtil.TestRuntimeModule.getMailServer();
@@ -557,8 +552,8 @@ public class TestStandaloneRunner {
 
   @Test(timeout = 20000)
   public void testPipelineFinishWithMail() throws Exception {
-    Runner runner = pipelineManager.getRunner( "admin", TestUtil.PIPELINE_WITH_EMAIL, "0");
-    runner.start();
+    Runner runner = pipelineManager.getRunner( TestUtil.PIPELINE_WITH_EMAIL, "0");
+    runner.start("admin");
     waitForState(runner, PipelineStatus.RUNNING);
     assertNull(runner.getState().getMetrics());
     TestUtil.EMPTY_OFFSET = true;

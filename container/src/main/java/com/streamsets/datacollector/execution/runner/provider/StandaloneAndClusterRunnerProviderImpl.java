@@ -47,8 +47,7 @@ public class StandaloneAndClusterRunnerProviderImpl implements RunnerProvider {
   }
 
   @Override
-  public Runner createRunner(String user, String name, String rev, ObjectGraph objectGraph,
-                             ExecutionMode executionMode) {
+  public Runner createRunner(String name, String rev, ObjectGraph objectGraph, ExecutionMode executionMode) {
     List<Object> modules = new ArrayList<>();
     LOG.info(Utils.format("Pipeline execution mode is: {} ", executionMode));
     switch (executionMode) {
@@ -57,11 +56,11 @@ public class StandaloneAndClusterRunnerProviderImpl implements RunnerProvider {
       case CLUSTER_YARN_STREAMING:
       case CLUSTER_MESOS_STREAMING:
         objectGraph = objectGraph.plus(ClusterRunnerInjectorModule.class);
-        modules.add(new ClusterRunnerModule(user, name, rev, objectGraph));
+        modules.add(new ClusterRunnerModule(name, rev, objectGraph));
         break;
       case STANDALONE:
         objectGraph = objectGraph.plus(StandaloneRunnerInjectorModule.class);
-        modules.add(new StandaloneRunnerModule(user, name, rev, objectGraph));
+        modules.add(new StandaloneRunnerModule(name, rev, objectGraph));
         break;
       default:
         throw new IllegalArgumentException(Utils.format("Invalid execution mode '{}'", executionMode));

@@ -145,7 +145,6 @@ public class TestRemoteDataCollector {
 
     @Override
     public Runner getRunner(
-        String user,
         String name,
         String rev
     ) throws PipelineStoreException, PipelineManagerException {
@@ -268,13 +267,7 @@ public class TestRemoteDataCollector {
     }
 
     @Override
-    public String getUser() {
-      // TODO Auto-generated method stub
-      return null;
-    }
-
-    @Override
-    public void resetOffset() throws PipelineStoreException, PipelineRunnerException {
+    public void resetOffset(String user) throws PipelineStoreException, PipelineRunnerException {
       // TODO Auto-generated method stub
 
     }
@@ -292,53 +285,54 @@ public class TestRemoteDataCollector {
     }
 
     @Override
-    public void prepareForDataCollectorStart() throws PipelineStoreException, PipelineRunnerException {
+    public void prepareForDataCollectorStart(String user) throws PipelineStoreException, PipelineRunnerException {
       // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void onDataCollectorStart() throws PipelineException, StageException {
+    public void onDataCollectorStart(String user) throws PipelineException, StageException {
       // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void onDataCollectorStop() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException {
+    public void onDataCollectorStop(String user) throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException {
       // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void stop() throws PipelineException {
+    public void stop(String user) throws PipelineException {
       stopCalled++;
     }
 
     @Override
-    public void forceQuit() throws PipelineException {
+    public void forceQuit(String user) throws PipelineException {
       // No-op
     }
 
     @Override
-    public void prepareForStart() throws PipelineStoreException, PipelineRunnerException {
+    public void prepareForStart(String user) throws PipelineStoreException, PipelineRunnerException {
       // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void prepareForStop() throws PipelineStoreException, PipelineRunnerException {
+    public void prepareForStop(String user) throws PipelineStoreException, PipelineRunnerException {
       // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void start() throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException,
+    public void start(String user) throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException,
         StageException {
       // TODO Auto-generated method stub
     }
 
     @Override
     public void start(
+        String user,
         Map<String, Object> runtimeParameters
     ) throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException,
         StageException {
@@ -347,6 +341,7 @@ public class TestRemoteDataCollector {
 
     @Override
     public void startAndCaptureSnapshot(
+        String user,
         Map<String, Object> runtimeParameters,
         String snapshotName,
         String snapshotLabel,
@@ -358,6 +353,7 @@ public class TestRemoteDataCollector {
 
     @Override
     public String captureSnapshot(
+        String user,
         String snapshotName,
         String snapshotLabel,
         int batches,

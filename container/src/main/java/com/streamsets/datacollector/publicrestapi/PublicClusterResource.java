@@ -47,7 +47,7 @@ public class PublicClusterResource {
   @Path("/callback")
   @PermitAll
   public Response callback(CallbackInfoJson callbackInfoJson) throws PipelineException {
-    Runner runner = manager.getRunner(callbackInfoJson.getUser(), callbackInfoJson.getName(), callbackInfoJson.getRev());
+    Runner runner = manager.getRunner(callbackInfoJson.getName(), callbackInfoJson.getRev());
     if (!runner.getState().getStatus().isActive()) {
       throw new RuntimeException(Utils.format("Pipeline '{}::{}' is not active, but is '{}'",
         callbackInfoJson.getName(), callbackInfoJson.getRev(), runner.getState().getStatus()));

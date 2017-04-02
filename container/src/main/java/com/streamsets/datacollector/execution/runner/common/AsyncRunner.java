@@ -69,13 +69,8 @@ public class AsyncRunner implements Runner, PipelineInfo {
   }
 
   @Override
-  public String getUser() {
-    return runner.getUser();
-  }
-
-  @Override
-  public void resetOffset() throws PipelineException {
-    runner.resetOffset();
+  public void resetOffset(String user) throws PipelineException {
+    runner.resetOffset(user);
   }
 
   @Override
@@ -89,82 +84,71 @@ public class AsyncRunner implements Runner, PipelineInfo {
   }
 
   @Override
-  public void prepareForDataCollectorStart() throws PipelineStoreException, PipelineRunnerException {
-    runner.prepareForDataCollectorStart();
+  public void prepareForDataCollectorStart(String user) throws PipelineStoreException, PipelineRunnerException {
+    runner.prepareForDataCollectorStart(user);
   }
 
   @Override
-  public void onDataCollectorStart() throws PipelineException, StageException {
-    Callable<Object> callable = new Callable<Object>() {
-      @Override
-      public Object call() throws PipelineException, StageException {
-         runner.onDataCollectorStart();
-         return null;
-      }
+  public void onDataCollectorStart(String user) throws PipelineException, StageException {
+    Callable<Object> callable = () -> {
+       runner.onDataCollectorStart(user);
+       return null;
     };
     runnerExecutor.submit(callable);
   }
 
   @Override
-  public void onDataCollectorStop() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException {
-    runner.onDataCollectorStop();
+  public void onDataCollectorStop(String user) throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException {
+    runner.onDataCollectorStop(user);
   }
 
   @Override
-  public void stop() throws PipelineException {
-    runner.prepareForStop();
-    Callable<Object> callable = new Callable<Object>() {
-      @Override
-      public Object call() throws PipelineException {
-        runner.stop();
-        return null;
-      }
+  public void stop(String user) throws PipelineException {
+    runner.prepareForStop(user);
+    Callable<Object> callable = () -> {
+      runner.stop(user);
+      return null;
     };
     runnerExecutor.submit(callable);
   }
 
   @Override
-  public void forceQuit() throws PipelineException {
+  public void forceQuit(String user) throws PipelineException {
     if (getState().getStatus() != PipelineStatus.STOPPING){
       // Should not call force quit when pipeline is not stopping. No-op
       return;
     }
-    Callable<Object> callable = new Callable<Object>() {
-      @Override
-      public Object call() throws PipelineException {
-        runner.forceQuit();
-        return null;
-      }
+    Callable<Object> callable = () -> {
+      runner.forceQuit(user);
+      return null;
     };
     runnerExecutor.submit(callable);
   }
 
   @Override
-  public void prepareForStart() throws PipelineStoreException, PipelineRunnerException {
+  public void prepareForStart(String user) throws PipelineStoreException, PipelineRunnerException {
     throw new UnsupportedOperationException("This method is not supported for AsyncRunner. Call start() instead.");
   }
 
   @Override
-  public void start() throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException, StageException {
-    start(null);
+  public void start(String user) throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException, StageException {
+    start(user, null);
   }
 
   @Override
-  public synchronized void start(Map<String, Object> runtimeParameters)
+  public synchronized void start(String user, Map<String, Object> runtimeParameters)
       throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException, StageException {
-    runner.prepareForStart();
-    Callable<Object> callable = new Callable<Object>() {
-      @Override
-      public Object call() throws PipelineException, StageException {
-         runner.start(runtimeParameters);
-         return null;
-      }
+    runner.prepareForStart(user);
+    Callable<Object> callable = () -> {
+       runner.start(user, runtimeParameters);
+       return null;
     };
     runnerExecutor.submit(callable);
   }
 
   @Override
   public void startAndCaptureSnapshot(
+      String user,
       Map<String, Object> runtimeParameters,
       String snapshotName,
       String snapshotLabel,
@@ -174,20 +158,17 @@ public class AsyncRunner implements Runner, PipelineInfo {
     if(batchSize <= 0) {
       throw new PipelineRunnerException(ContainerError.CONTAINER_0107, batchSize);
     }
-    runner.prepareForStart();
-    Callable<Object> callable = new Callable<Object>() {
-      @Override
-      public Object call() throws PipelineException, StageException {
-        runner.startAndCaptureSnapshot(runtimeParameters, snapshotName, snapshotLabel, batches, batchSize);
-        return null;
-      }
+    runner.prepareForStart(user);
+    Callable<Object> callable = () -> {
+      runner.startAndCaptureSnapshot(user, runtimeParameters, snapshotName, snapshotLabel, batches, batchSize);
+      return null;
     };
     runnerExecutor.submit(callable);
   }
 
   @Override
-  public String captureSnapshot(String name, String label, int batches, int batchSize) throws PipelineException {
-    return runner.captureSnapshot(name, label, batches, batchSize);
+  public String captureSnapshot(String user, String name, String label, int batches, int batchSize) throws PipelineException {
+    return runner.captureSnapshot(user, name, label, batches, batchSize);
   }
 
   @Override
@@ -293,7 +274,7 @@ public class AsyncRunner implements Runner, PipelineInfo {
   }
 
   @Override
-  public void prepareForStop() {
+  public void prepareForStop(String user) {
     throw new UnsupportedOperationException("This method is not supported for AsyncRunner. Call stop() instead.");
   }
 }

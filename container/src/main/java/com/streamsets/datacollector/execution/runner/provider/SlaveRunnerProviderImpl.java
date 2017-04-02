@@ -36,10 +36,10 @@ public class SlaveRunnerProviderImpl implements RunnerProvider {
   }
 
   @Override
-  public Runner createRunner( String user, String name, String rev, ObjectGraph objectGraph,
+  public Runner createRunner(String name, String rev, ObjectGraph objectGraph,
       ExecutionMode executionMode) {
     objectGraph = objectGraph.plus(StandaloneRunnerInjectorModule.class);
-    ObjectGraph plus =  objectGraph.plus(new SlaveRunnerModule(user, name, rev, objectGraph));
+    ObjectGraph plus =  objectGraph.plus(new SlaveRunnerModule(name, rev, objectGraph));
     return plus.get(Runner.class);
   }
 }

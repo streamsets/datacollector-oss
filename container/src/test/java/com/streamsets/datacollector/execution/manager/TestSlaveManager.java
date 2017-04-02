@@ -181,19 +181,19 @@ public class TestSlaveManager {
 
   @Test
   public void testGetRunner() throws Exception {
-    Runner runner = manager.getRunner(TestUtil.USER, TestUtil.MY_PIPELINE, TestUtil.ZERO_REV);
+    Runner runner = manager.getRunner(TestUtil.MY_PIPELINE, TestUtil.ZERO_REV);
     try {
-      runner.resetOffset();
+      runner.resetOffset("admin");
       fail("Expected exception but didn't get any");
     } catch (UnsupportedOperationException e) {
       //expected
     }
     assertTrue(!manager.isPipelineActive(TestUtil.MY_PIPELINE, TestUtil.ZERO_REV));
-    Runner runner2 = manager.getRunner(TestUtil.USER, TestUtil.MY_PIPELINE, TestUtil.ZERO_REV);
+    Runner runner2 = manager.getRunner(TestUtil.MY_PIPELINE, TestUtil.ZERO_REV);
     assertTrue (runner == runner2);
 
     try {
-      manager.getRunner(TestUtil.USER, "pipe2", TestUtil.ZERO_REV);
+      manager.getRunner("pipe2", TestUtil.ZERO_REV);
       fail("Expected exception but didn't get any");
     } catch (IllegalStateException e) {
       //expected

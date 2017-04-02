@@ -80,12 +80,7 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
   }
 
   @Override
-  public String getUser() {
-    return standaloneRunner.getUser();
-  }
-
-  @Override
-  public void resetOffset() {
+  public void resetOffset(String user) {
     throw new UnsupportedOperationException();
   }
 
@@ -100,78 +95,79 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
   }
 
   @Override
-  public void prepareForDataCollectorStart() throws PipelineStoreException, PipelineRunnerException {
+  public void prepareForDataCollectorStart(String user) throws PipelineStoreException, PipelineRunnerException {
     throw new UnsupportedOperationException();
 
   }
 
   @Override
-  public void onDataCollectorStart() throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException,
+  public void onDataCollectorStart(String user) throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException,
     StageException {
     throw new UnsupportedOperationException();
 
   }
 
   @Override
-  public void onDataCollectorStop() throws PipelineStoreException, PipelineRunnerException {
-    standaloneRunner.onDataCollectorStop();
+  public void onDataCollectorStop(String user) throws PipelineStoreException, PipelineRunnerException {
+    standaloneRunner.onDataCollectorStop(user);
   }
 
   @Override
-  public void stop() throws PipelineException {
-    standaloneRunner.stop();
+  public void stop(String user) throws PipelineException {
+    standaloneRunner.stop(user);
   }
 
   @Override
-  public void forceQuit() throws PipelineException {
+  public void forceQuit(String user) throws PipelineException {
     throw new UnsupportedOperationException("ForceQuit is not supported in Slave Standalone mode");
   }
 
 
   @Override
-  public void prepareForStart() throws PipelineStoreException, PipelineRunnerException {
+  public void prepareForStart(String user) throws PipelineStoreException, PipelineRunnerException {
     // no need for clear since slaves never run more than one pipeline
-    MDC.put(LogConstants.USER, getUser());
+    MDC.put(LogConstants.USER, user);
     MDC.put(LogConstants.ENTITY, getName());
-    standaloneRunner.prepareForStart();
+    standaloneRunner.prepareForStart(user);
   }
 
   @Override
-  public void start() throws PipelineException, StageException {
-    start(null);
+  public void start(String user) throws PipelineException, StageException {
+    start(user, null);
   }
 
   @Override
-  public void start(Map<String, Object> runtimeParameters) throws PipelineException, StageException {
+  public void start(String user, Map<String, Object> runtimeParameters) throws PipelineException, StageException {
     String callbackServerURL = configuration.get(Constants.CALLBACK_SERVER_URL_KEY, Constants.CALLBACK_SERVER_URL_DEFAULT);
     String clusterToken = configuration.get(Constants.PIPELINE_CLUSTER_TOKEN_KEY, null);
     if (callbackServerURL != null) {
-      eventListenerManager.addMetricsEventListener(this.getName(), new CallbackServerMetricsEventListener(getUser(),
+      eventListenerManager.addMetricsEventListener(this.getName(), new CallbackServerMetricsEventListener(user,
         getName(), getRev(), runtimeInfo, callbackServerURL, clusterToken, standaloneRunner.getToken()));
-      standaloneRunner.addErrorListener(new CallbackServerErrorEventListener(getUser(),
+      standaloneRunner.addErrorListener(new CallbackServerErrorEventListener(user,
           getName(), getRev(), runtimeInfo, callbackServerURL, clusterToken, standaloneRunner.getToken()));
     } else {
       throw new RuntimeException(
         "No callback server URL is passed. SDC in Slave mode requires callback server URL (callback.server.url).");
     }
-    standaloneRunner.start(runtimeParameters);
+    standaloneRunner.start(user, runtimeParameters);
   }
 
   @Override
   public void startAndCaptureSnapshot(
+      String user,
       Map<String, Object> runtimeParameters,
       String snapshotName,
       String snapshotLabel,
       int batches,
       int batchSize
   ) throws PipelineException, StageException {
-    standaloneRunner.captureSnapshot(snapshotName, snapshotLabel, batches, batchSize);
+    standaloneRunner.captureSnapshot(user, snapshotName, snapshotLabel, batches, batchSize);
   }
 
   @Override
-  public String captureSnapshot(String snapshotName, String snapshotLabel, int batches, int batchSize)
+  public String captureSnapshot(String user, String snapshotName, String snapshotLabel, int batches, int batchSize)
       throws PipelineException {
-    return standaloneRunner.captureSnapshot(snapshotName, snapshotLabel, batches, batchSize);
+    return standaloneRunner.captureSnapshot(user, snapshotName, snapshotLabel, batches, batchSize);
   }
 
   @Override
@@ -266,11 +262,11 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
   }
 
   @Override
-  public void prepareForStop() throws PipelineStoreException, PipelineRunnerException {
+  public void prepareForStop(String user) throws PipelineStoreException, PipelineRunnerException {
     // no need for clear since slaves never run more than one pipeline
-    MDC.put(LogConstants.USER, getUser());
+    MDC.put(LogConstants.USER, user);
     MDC.put(LogConstants.ENTITY, getName());
-    standaloneRunner.prepareForStop();
+    standaloneRunner.prepareForStop(user);
   }
 
 

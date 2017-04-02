@@ -59,14 +59,9 @@ public class AclRunner implements Runner {
   }
 
   @Override
-  public String getUser() {
-    return runner.getUser();
-  }
-
-  @Override
-  public void resetOffset() throws PipelineException {
+  public void resetOffset(String user) throws PipelineException {
     aclStore.validateExecutePermission(this.getName(), currentUser);
-    runner.resetOffset();
+    runner.resetOffset(user);
   }
 
   @Override
@@ -81,56 +76,57 @@ public class AclRunner implements Runner {
   }
 
   @Override
-  public void prepareForDataCollectorStart() throws PipelineStoreException, PipelineRunnerException {
-    runner.prepareForDataCollectorStart();
+  public void prepareForDataCollectorStart(String user) throws PipelineStoreException, PipelineRunnerException {
+    runner.prepareForDataCollectorStart(user);
   }
 
   @Override
-  public void onDataCollectorStart() throws PipelineException, StageException {
-    runner.onDataCollectorStart();
+  public void onDataCollectorStart(String user) throws PipelineException, StageException {
+    runner.onDataCollectorStart(user);
   }
 
   @Override
-  public void onDataCollectorStop() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException {
-    runner.onDataCollectorStop();
+  public void onDataCollectorStop(String user) throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException {
+    runner.onDataCollectorStop(user);
   }
 
   @Override
-  public void stop() throws PipelineException {
+  public void stop(String user) throws PipelineException {
     aclStore.validateExecutePermission(this.getName(), currentUser);
-    runner.stop();
+    runner.stop(user);
   }
 
   @Override
-  public void forceQuit() throws PipelineException {
+  public void forceQuit(String user) throws PipelineException {
     aclStore.validateExecutePermission(this.getName(), currentUser);
-    runner.forceQuit();
+    runner.forceQuit(user);
   }
 
   @Override
-  public void prepareForStart() throws PipelineStoreException, PipelineRunnerException {
-    runner.prepareForStart();
+  public void prepareForStart(String user) throws PipelineStoreException, PipelineRunnerException {
+    runner.prepareForStart(user);
   }
 
   @Override
-  public void prepareForStop() throws PipelineStoreException, PipelineRunnerException {
-    runner.prepareForStop();
+  public void prepareForStop(String user) throws PipelineStoreException, PipelineRunnerException {
+    runner.prepareForStop(user);
   }
 
   @Override
-  public void start() throws PipelineException, StageException {
+  public void start(String user) throws PipelineException, StageException {
     aclStore.validateExecutePermission(this.getName(), currentUser);
-    runner.start();
+    runner.start(user);
   }
 
   @Override
-  public void start(Map<String, Object> runtimeParameters) throws PipelineException, StageException {
+  public void start(String user, Map<String, Object> runtimeParameters) throws PipelineException, StageException {
     aclStore.validateExecutePermission(this.getName(), currentUser);
-    runner.start(runtimeParameters);
+    runner.start(user, runtimeParameters);
   }
 
   @Override
   public void startAndCaptureSnapshot(
+      String user,
       Map<String, Object> runtimeParameters,
       String snapshotName,
       String snapshotLabel,
@@ -138,18 +134,19 @@ public class AclRunner implements Runner {
       int batchSize
   ) throws PipelineException, StageException {
     aclStore.validateExecutePermission(this.getName(), currentUser);
-    runner.startAndCaptureSnapshot(runtimeParameters, snapshotName, snapshotLabel, batches, batchSize);
+    runner.startAndCaptureSnapshot(user, runtimeParameters, snapshotName, snapshotLabel, batches, batchSize);
   }
 
   @Override
   public String captureSnapshot(
+      String user,
       String snapshotName,
       String snapshotLabel,
       int batches,
       int batchSize
   ) throws PipelineException {
     aclStore.validateExecutePermission(this.getName(), currentUser);
-    return runner.captureSnapshot(snapshotName, snapshotLabel, batches, batchSize);
+    return runner.captureSnapshot(user, snapshotName, snapshotLabel, batches, batchSize);
   }
 
   @Override

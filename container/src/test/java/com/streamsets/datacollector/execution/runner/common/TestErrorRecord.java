@@ -100,7 +100,7 @@ public class TestErrorRecord {
     manager = new StandaloneAndClusterPipelineManager(objectGraph);
     manager.init();
     manager.run();
-    runner = manager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
+    runner = manager.getRunner(TestUtil.MY_PIPELINE, "0");
     runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
     Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());

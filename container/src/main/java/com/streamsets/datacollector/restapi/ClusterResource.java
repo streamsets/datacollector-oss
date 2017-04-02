@@ -66,7 +66,7 @@ public class ClusterResource {
     @QueryParam("sdcURL") String sdcURL,
     @Context final HttpServletResponse response,
     @Context SecurityContext context) throws IOException, PipelineException {
-    Runner runner = manager.getRunner(user, name, rev);
+    Runner runner = manager.getRunner(name, rev);
     Collection<CallbackInfo> callbackInfoCollection = runner.getSlaveCallbackList(CallbackObjectType.METRICS);
     CallbackInfo slaveCallbackInfo = null;
 

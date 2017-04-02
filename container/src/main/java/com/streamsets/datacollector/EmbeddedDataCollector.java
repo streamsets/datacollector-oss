@@ -101,8 +101,8 @@ public class EmbeddedDataCollector implements DataCollector {
         String pipelineName = Utils.checkNotNull(properties.getProperty("cluster.pipeline.name"), "Pipeline name");
         String pipelineUser = Utils.checkNotNull(properties.getProperty("cluster.pipeline.user"), "Pipeline user");
         String pipelineRev = Utils.checkNotNull(properties.getProperty("cluster.pipeline.rev"), "Pipeline revision");
-        runner = pipelineManager.getRunner(pipelineUser, pipelineName, pipelineRev);
-        runner.start();
+        runner = pipelineManager.getRunner(pipelineName, pipelineRev);
+        runner.start(pipelineUser);
         return null;
       }
     });

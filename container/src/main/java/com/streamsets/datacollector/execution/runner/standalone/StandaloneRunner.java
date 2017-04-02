@@ -135,7 +135,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   private final ObjectGraph objectGraph;
   private final String name;
   private final String rev;
-  private final UserContext userContext;
+  // User context for the user who started the pipeline
   private String token;
 
   /*Mutex objects to synchronize start and stop pipeline methods*/
@@ -172,10 +172,9 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     .put(PipelineStatus.CONNECTING, ImmutableSet.of(PipelineStatus.STARTING, PipelineStatus.DISCONNECTING, PipelineStatus.RETRY))
     .build();
 
-  public StandaloneRunner(String user, String name, String rev, ObjectGraph objectGraph) {
+  public StandaloneRunner(String name, String rev, ObjectGraph objectGraph) {
     this.name = name;
     this.rev = rev;
-    this.userContext = new UserContext(user);
     this.objectGraph = objectGraph;
     this.errorListeners = new ArrayList<>();
     objectGraph.inject(this);
@@ -186,10 +185,10 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
-  public void prepareForDataCollectorStart() throws PipelineStoreException, PipelineRunnerException {
+  public void prepareForDataCollectorStart(String user) throws PipelineStoreException, PipelineRunnerException {
     PipelineStatus status = getState().getStatus();
     try {
-      MDC.put(LogConstants.USER, userContext.getUser());
+      MDC.put(LogConstants.USER, user);
       MDC.put(LogConstants.ENTITY, name);
       LOG.info("Pipeline " + name + " with rev " + rev + " is in state: " + status);
       String msg = null;
@@ -203,27 +202,27 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         case RUNNING:
           msg = (msg == null) ? "Pipeline was in RUNNING state, forcing it to DISCONNECTING" : msg;
           LOG.debug(msg);
-          validateAndSetStateTransition(PipelineStatus.DISCONNECTING, msg, null);
+          validateAndSetStateTransition(user, PipelineStatus.DISCONNECTING, msg, null);
         case DISCONNECTING:
           msg = "Pipeline was in DISCONNECTING state, forcing it to DISCONNECTED";
           LOG.debug(msg);
-          validateAndSetStateTransition(PipelineStatus.DISCONNECTED, msg, null);
+          validateAndSetStateTransition(user, PipelineStatus.DISCONNECTED, msg, null);
         case DISCONNECTED:
           break;
         case RUNNING_ERROR:
           msg = "Pipeline was in RUNNING_ERROR state, forcing it to terminal state of RUN_ERROR";
           LOG.debug(msg);
-          validateAndSetStateTransition(PipelineStatus.RUN_ERROR, msg, null);
+          validateAndSetStateTransition(user, PipelineStatus.RUN_ERROR, msg, null);
           break;
         case STOPPING:
           msg = "Pipeline was in STOPPING state, forcing it to terminal state of STOPPED";
           LOG.debug(msg);
-          validateAndSetStateTransition(PipelineStatus.STOPPED, msg, null);
+          validateAndSetStateTransition(user, PipelineStatus.STOPPED, msg, null);
           break;
         case FINISHING:
           msg = "Pipeline was in FINISHING state, forcing it to terminal state of FINISHED";
           LOG.debug(msg);
-          validateAndSetStateTransition(PipelineStatus.FINISHED, null, null);
+          validateAndSetStateTransition(user, PipelineStatus.FINISHED, null, null);
           break;
         case RUN_ERROR:
         case EDITED:
@@ -241,9 +240,9 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
-  public void onDataCollectorStart() throws PipelineException, StageException {
+  public void onDataCollectorStart(String user) throws PipelineException, StageException {
     try {
-      MDC.put(LogConstants.USER, userContext.getUser());
+      MDC.put(LogConstants.USER, user);
       MDC.put(LogConstants.ENTITY, name);
       PipelineState pipelineState = getState();
       PipelineStatus status = pipelineState.getStatus();
@@ -263,8 +262,8 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
           if (attributes != null && attributes.containsKey(ProductionPipeline.RUNTIME_PARAMETERS_ATTR)) {
             runtimeParameters = (Map<String, Object>) attributes.get(ProductionPipeline.RUNTIME_PARAMETERS_ATTR);
           }
-          validateAndSetStateTransition(PipelineStatus.CONNECTING, msg, null);
-          retryOrStart();
+          validateAndSetStateTransition(user, PipelineStatus.CONNECTING, msg, null);
+          retryOrStart(user);
           break;
         default:
           LOG.error(Utils.format("Pipeline cannot start with status: '{}'", status));
@@ -274,28 +273,28 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     }
   }
 
-  private void retryOrStart() throws PipelineException, StageException {
+  private void retryOrStart(String user) throws PipelineException, StageException {
     PipelineState pipelineState = getState();
     if (pipelineState.getRetryAttempt() == 0) {
-      prepareForStart();
-      start(runtimeParameters);
+      prepareForStart(user);
+      start(user, runtimeParameters);
     } else {
-      validateAndSetStateTransition(PipelineStatus.RETRY, "Changing the state to RETRY on startup", null);
+      validateAndSetStateTransition(user, PipelineStatus.RETRY, "Changing the state to RETRY on startup", null);
       isRetrying = true;
       metricsForRetry = getState().getMetrics();
     }
   }
 
   @Override
-  public void onDataCollectorStop() throws PipelineStoreException, PipelineRunnerException {
+  public void onDataCollectorStop(String user) throws PipelineStoreException, PipelineRunnerException {
     try {
-      MDC.put(LogConstants.USER, userContext.getUser());
+      MDC.put(LogConstants.USER, user);
       MDC.put(LogConstants.ENTITY, name);
       if (getState().getStatus() == PipelineStatus.RETRY) {
         LOG.info("Pipeline '{}'::'{}' is in retry", name, rev);
         retryFuture.cancel(true);
-        validateAndSetStateTransition(PipelineStatus.DISCONNECTING, null, null);
-        validateAndSetStateTransition(PipelineStatus.DISCONNECTED, "Disconnected as SDC is shutting down", null);
+        validateAndSetStateTransition(user, PipelineStatus.DISCONNECTING, null, null);
+        validateAndSetStateTransition(user, PipelineStatus.DISCONNECTED, "Disconnected as SDC is shutting down", null);
         return;
       }
       if (!getState().getStatus().isActive() || getState().getStatus() == PipelineStatus.DISCONNECTED) {
@@ -305,7 +304,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
       LOG.info("Stopping pipeline {}::{}", name, rev);
       try {
         try {
-          validateAndSetStateTransition(PipelineStatus.DISCONNECTING, "Stopping the pipeline as SDC is shutting down",
+          validateAndSetStateTransition(user, PipelineStatus.DISCONNECTING, "Stopping the pipeline as SDC is shutting down",
                                         null);
         } catch (PipelineRunnerException ex) {
           // its ok if state validation fails - we will still try to stop pipeline if active
@@ -331,12 +330,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
-  public String getUser() {
-    return userContext.getUser();
-  }
-
-  @Override
-  public synchronized void resetOffset() throws PipelineStoreException, PipelineRunnerException {
+  public synchronized void resetOffset(String user) throws PipelineStoreException, PipelineRunnerException {
     PipelineStatus status = getState().getStatus();
     LOG.debug("Resetting offset for pipeline {}, {}", name, rev);
     if (RESET_OFFSET_DISALLOWED_STATUSES.contains(status)) {
@@ -361,12 +355,12 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
-  public void stop() throws PipelineException {
+  public void stop(String user) throws PipelineException {
     stopPipeline(false);
   }
 
   @Override
-  public void forceQuit() throws PipelineException {
+  public void forceQuit(String user) throws PipelineException {
     LOG.debug("Force Quit the pipeline '{}'::'{}'", name,  rev);
     if (pipelineRunnable != null && pipelineRunnable.isStopped() && getState().getStatus() == PipelineStatus.STOPPING ) {
       pipelineRunnable.forceQuit();
@@ -389,6 +383,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
 
   @Override
   public String captureSnapshot(
+      String user,
       String snapshotName,
       String snapshotLabel,
       int batches,
@@ -397,10 +392,11 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     if(batchSize <= 0) {
       throw new PipelineRunnerException(ContainerError.CONTAINER_0107, batchSize);
     }
-    return captureSnapshot(snapshotName, snapshotLabel, batches, batchSize, true);
+    return captureSnapshot(user, snapshotName, snapshotLabel, batches, batchSize, true);
   }
 
   public String captureSnapshot(
+      String user,
       String snapshotName,
       String snapshotLabel,
       int batches,
@@ -417,7 +413,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     if (checkState) {
       checkState(getState().getStatus().equals(PipelineStatus.RUNNING), ContainerError.CONTAINER_0105);
     }
-    SnapshotInfo snapshotInfo = snapshotStore.create(userContext.getUser(), name, rev, snapshotName, snapshotLabel);
+    SnapshotInfo snapshotInfo = snapshotStore.create(user, name, rev, snapshotName, snapshotLabel);
     prodPipeline.captureSnapshot(snapshotName, batchSize, batches);
     return snapshotInfo.getId();
   }
@@ -528,13 +524,13 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         allAttributes.putAll(getState().getAttributes());
         allAttributes.putAll(attributes);
       }
-      validateAndSetStateTransition(pipelineStatus, message, allAttributes);
+      validateAndSetStateTransition(getState().getUser(), pipelineStatus, message, allAttributes);
     } catch (PipelineStoreException | PipelineRunnerException ex) {
       throw new PipelineRuntimeException(ex.getErrorCode(), ex);
     }
   }
 
-  private void validateAndSetStateTransition(PipelineStatus toStatus, String message, Map<String, Object> attributes)
+  private void validateAndSetStateTransition(String user, PipelineStatus toStatus, String message, Map<String, Object> attributes)
     throws PipelineStoreException, PipelineRunnerException {
     PipelineState fromState;
     PipelineState pipelineState;
@@ -578,10 +574,10 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         }
       }
       pipelineState =
-        pipelineStateStore.saveState(userContext.getUser(), name, rev, toStatus, message, attributes, ExecutionMode.STANDALONE,
+        pipelineStateStore.saveState(user, name, rev, toStatus, message, attributes, ExecutionMode.STANDALONE,
           metricString, retryAttempt, nextRetryTimeStamp);
       if (toStatus == PipelineStatus.RETRY) {
-        retryFuture = scheduleForRetries(runnerExecutor);
+        retryFuture = scheduleForRetries(user, runnerExecutor);
       }
     }
     eventListenerManager.broadcastStateChange(
@@ -617,7 +613,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
-  public void prepareForStart() throws PipelineStoreException, PipelineRunnerException {
+  public void prepareForStart(String user) throws PipelineStoreException, PipelineRunnerException {
     PipelineState fromState = getState();
     checkState(VALID_TRANSITIONS.get(fromState.getStatus()).contains(PipelineStatus.STARTING), ContainerError.CONTAINER_0102,
         fromState.getStatus(), PipelineStatus.STARTING);
@@ -626,38 +622,39 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
       throw new PipelineRunnerException(ContainerError.CONTAINER_0166, name);
     }
     LOG.info("Preparing to start pipeline '{}::{}'", name, rev);
-    validateAndSetStateTransition(PipelineStatus.STARTING, null, null);
+    validateAndSetStateTransition(user, PipelineStatus.STARTING, null, null);
     token = UUID.randomUUID().toString();
   }
 
   @Override
-  public void prepareForStop() throws PipelineStoreException, PipelineRunnerException {
+  public void prepareForStop(String user) throws PipelineStoreException, PipelineRunnerException {
     LOG.info("Preparing to stop pipeline");
     if (getState().getStatus() == PipelineStatus.RETRY) {
       retryFuture.cancel(true);
-      validateAndSetStateTransition(PipelineStatus.STOPPING, null, null);
-      validateAndSetStateTransition(PipelineStatus.STOPPED, "Stopped while the pipeline was in RETRY state", null);
+      validateAndSetStateTransition(user, PipelineStatus.STOPPING, null, null);
+      validateAndSetStateTransition(user, PipelineStatus.STOPPED, "Stopped while the pipeline was in RETRY state", null);
     } else {
-      validateAndSetStateTransition(PipelineStatus.STOPPING, null, null);
+      validateAndSetStateTransition(user, PipelineStatus.STOPPING, null, null);
     }
   }
 
   @Override
-  public void start(Map<String, Object> runtimeParameters) throws PipelineException, StageException {
-    startPipeline(runtimeParameters);
+  public void start(String user, Map<String, Object> runtimeParameters) throws PipelineException, StageException {
+    startPipeline(user, runtimeParameters);
     LOG.debug("Starting the runnable for pipeline {} {}", name, rev);
     if(!pipelineRunnable.isStopped()) {
       pipelineRunnable.run();
     }
   }
 
-  private void startPipeline(Map<String, Object> runtimeParameters) throws PipelineException, StageException {
+  private void startPipeline(String user, Map<String, Object> runtimeParameters) throws PipelineException, StageException {
     Utils.checkState(!isClosed,
         Utils.formatL("Cannot start the pipeline '{}::{}' as the runner is already closed", name, rev));
 
     synchronized (this) {
       try {
         LOG.info("Starting pipeline {} {}", name, rev);
+        UserContext runningUser = new UserContext(user);
       /*
        * Implementation Notes: --------------------- What are the different threads and runnables created? - - - - - - - -
        * - - - - - - - - - - - - - - - - - - - RulesConfigLoader ProductionObserver MetricObserver
@@ -742,8 +739,8 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         runner.setDeliveryGuarantee(pipelineConfigBean.deliveryGuarantee);
         runner.setMemoryLimitConfiguration(memoryLimitConfiguration);
 
-        PipelineEL.setConstantsInContext(pipelineConfiguration, userContext);
-        prodPipeline = builder.build(userContext, pipelineConfiguration, runtimeParameters);
+        PipelineEL.setConstantsInContext(pipelineConfiguration, runningUser);
+        prodPipeline = builder.build(runningUser, pipelineConfiguration, runtimeParameters);
         prodPipeline.registerStatusListener(this);
 
         ScheduledFuture<?> metricsFuture = null;
@@ -788,21 +785,23 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         }
         pipelineRunnable = new ProductionPipelineRunnable(threadHealthReporter, this, prodPipeline, name, rev, list);
       } catch (Exception e) {
-        validateAndSetStateTransition(PipelineStatus.START_ERROR, e.toString(), null);
+        validateAndSetStateTransition(user, PipelineStatus.START_ERROR, e.toString(), null);
         throw e;
       }
     }
   }
 
+  @Override
   public void startAndCaptureSnapshot(
+      String user,
       Map<String, Object> runtimeParameters,
       String snapshotName,
       String snapshotLabel,
       int batches,
       int batchSize
   ) throws PipelineException, StageException {
-    startPipeline(runtimeParameters);
-    captureSnapshot(snapshotName, snapshotLabel, batches, batchSize, false);
+    startPipeline(user, runtimeParameters);
+    captureSnapshot(user, snapshotName, snapshotLabel, batches, batchSize, false);
     LOG.debug("Starting the runnable for pipeline {} {}", name, rev);
     if(!pipelineRunnable.isStopped()) {
       pipelineRunnable.run();

@@ -104,8 +104,8 @@ public class MiniITDataCollector implements DataCollector {
     this.pipelineName = Utils.checkNotNull(realPipelineConfig.getInfo(), "Pipeline Info").getPipelineId();
     this.pipelineRev = Utils.checkNotNull(realPipelineConfig.getInfo(), "Pipeline Info").getLastRev();
     createAndSave(pipelineName);
-    runner = pipelineManager.getRunner(realPipelineConfig.getInfo().getCreator(), pipelineName, pipelineRev);
-    runner.start();
+    runner = pipelineManager.getRunner(pipelineName, pipelineRev);
+    runner.start(realPipelineConfig.getInfo().getCreator());
   }
 
   @Override
@@ -126,14 +126,14 @@ public class MiniITDataCollector implements DataCollector {
   @Override
   public void startPipeline() throws Exception {
     Utils.checkNotNull(pipelineName, "No pipeline to run");
-    runner = pipelineManager.getRunner(realPipelineConfig.getInfo().getCreator(), pipelineName, pipelineRev);
-    runner.start();
+    runner = pipelineManager.getRunner(pipelineName, pipelineRev);
+    runner.start(realPipelineConfig.getInfo().getCreator());
   }
 
   @Override
   public void stopPipeline() throws Exception {
     Utils.checkNotNull(pipelineName, "No pipeline to stop");
-    runner.stop();
+    runner.stop(realPipelineConfig.getInfo().getCreator());
   }
 
   @Override

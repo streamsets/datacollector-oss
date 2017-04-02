@@ -136,7 +136,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
 
   @Override
   @SuppressWarnings("deprecation")
-  public Runner getRunner(final String user, final String name, final String rev) throws PipelineException {
+  public Runner getRunner(final String name, final String rev) throws PipelineException {
     if (!pipelineStore.hasPipeline(name)) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
     }
@@ -145,7 +145,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
     try {
       runnerInfo = runnerCache.get(nameAndRevString, () -> {
         ExecutionMode executionMode = pipelineStateStore.getState(name, rev).getExecutionMode();
-        Runner runner = getRunner(user, name, rev, executionMode);
+        Runner runner = getRunner(name, rev, executionMode);
         return new RunnerInfo(runner, executionMode);
       });
       ExecutionMode cachedExecutionMode = runnerInfo.executionMode;
@@ -161,7 +161,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
           throw new PipelineManagerException(ValidationError.VALIDATION_0082, pipelineStateStore.getState(name, rev).getExecutionMode(),
             runnerInfo.executionMode);
         } else {
-          return getRunner(user, name, rev);
+          return getRunner(name, rev);
         }
       }
     } catch (ExecutionException ex) {
@@ -237,11 +237,11 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
         // Create runner if active
         if (pipelineState.getStatus().isActive()) {
           ExecutionMode executionMode = pipelineState.getExecutionMode();
-          Runner runner = getRunner(pipelineState.getUser(), name, rev, executionMode);
-          runner.prepareForDataCollectorStart();
+          Runner runner = getRunner(name, rev, executionMode);
+          runner.prepareForDataCollectorStart(pipelineState.getUser());
           if (runner.getState().getStatus() == PipelineStatus.DISCONNECTED) {
             runnerCache.put(getNameAndRevString(name, rev), new RunnerInfo(runner, executionMode));
-            runner.onDataCollectorStart();
+            runner.onDataCollectorStart(pipelineState.getUser());
           }
         }
       } catch (Exception ex) {
@@ -292,7 +292,8 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
       Runner runner = runnerInfo.runner;
       try {
         runner.close();
-        runner.onDataCollectorStop();
+        PipelineState pipelineState = pipelineStateStore.getState(runner.getName(), runner.getRev());
+        runner.onDataCollectorStop(pipelineState.getUser());
       } catch (Exception e) {
         LOG.warn("Failed to stop the runner for pipeline: {} and rev: {} due to: {}", runner.getName(),
           runner.getRev(), e.toString(), e);
@@ -330,11 +331,11 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
     return (isRemote == null) ? false : (boolean) isRemote;
   }
 
-  private Runner getRunner(String user, String name, String rev, ExecutionMode executionMode) throws PipelineStoreException {
+  private Runner getRunner(String name, String rev, ExecutionMode executionMode) throws PipelineStoreException {
     if(executionMode == null) {
       executionMode = ExecutionMode.STANDALONE;
     }
-    Runner runner = runnerProvider.createRunner(user, name, rev, objectGraph, executionMode);
+    Runner runner = runnerProvider.createRunner(name, rev, objectGraph, executionMode);
     return runner;
   }
 

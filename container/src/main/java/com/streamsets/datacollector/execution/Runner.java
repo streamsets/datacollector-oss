@@ -59,12 +59,9 @@ public interface Runner {
   // pipeline revision
   public String getRev();
 
-  // user that is operating the runner
-  public String getUser();
-
   // resets the pipeline offset, only if the pipeline is not running
   // it must assert the current status
-  public void resetOffset() throws PipelineException;
+  public void resetOffset(String user) throws PipelineException;
 
   public Map<String, String> getCommittedOffsets() throws PipelineException;
 
@@ -72,37 +69,38 @@ public interface Runner {
   public PipelineState getState() throws PipelineStoreException;
 
   // called on startup, moves runner to disconnected state if necessary
-  void prepareForDataCollectorStart() throws PipelineStoreException, PipelineRunnerException;
+  void prepareForDataCollectorStart(String user) throws PipelineStoreException, PipelineRunnerException;
 
   // called for all existing pipelines when the data collector starts
   // it should reconnect/reset-status of all pipelines
   // returns whether to start the pipeline on sdc start
-  public void onDataCollectorStart() throws PipelineException, StageException;
+  public void onDataCollectorStart(String user) throws PipelineException, StageException;
 
   // called for all existing pipelines when the data collector is shutting down
   // it should disconnect/reset-status of all pipelines
-  public void onDataCollectorStop() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException;
+  public void onDataCollectorStop(String user) throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException;
 
   // stops the pipeline
-  public void stop() throws PipelineException;
+  public void stop(String user) throws PipelineException;
 
   // Force quit the pipeline that's already in STOPPING state
-  public void forceQuit() throws PipelineException;
+  public void forceQuit(String user) throws PipelineException;
 
   // Sets the state to STARTING. Should be called before doing a start on async runners.
-  public void prepareForStart() throws PipelineStoreException, PipelineRunnerException;
+  public void prepareForStart(String user) throws PipelineStoreException, PipelineRunnerException;
 
   // Sets the state to STOPPING. Should be called before doing a stop on async runners.
-  public void prepareForStop() throws PipelineStoreException, PipelineRunnerException;
+  public void prepareForStop(String user) throws PipelineStoreException, PipelineRunnerException;
 
   // starts the pipeline
-  public void start() throws PipelineException, StageException;
+  public void start(String user) throws PipelineException, StageException;
 
   // starts the pipeline with parameterization support
-  public void start(Map<String, Object> runtimeParameters) throws PipelineException, StageException;
+  public void start(String user, Map<String, Object> runtimeParameters) throws PipelineException, StageException;
 
   // starts the pipeline and then triggers a snapshot request
   public void startAndCaptureSnapshot(
+      String user,
       Map<String, Object> runtimeParameters,
       String snapshotName,
       String snapshotLabel,
@@ -112,7 +110,7 @@ public interface Runner {
 
   // triggers a snapshot request
   // delegates to SnapshotStore
-  public String captureSnapshot(String snapshotName, String snapshotLabel, int batches, int batchSize)
+  public String captureSnapshot(String user, String snapshotName, String snapshotLabel, int batches, int batchSize)
       throws PipelineException;
 
   // Update Snapshot label

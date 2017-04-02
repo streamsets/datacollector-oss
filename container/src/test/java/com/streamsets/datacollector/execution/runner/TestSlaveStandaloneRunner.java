@@ -79,10 +79,10 @@ public class TestSlaveStandaloneRunner {
 
     Manager manager = new SlavePipelineManager(plus);
     manager.init();
-    Runner runner = manager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
-    runner.start();
+    Runner runner = manager.getRunner(TestUtil.MY_PIPELINE, "0");
+    runner.start("admin");
     await().until(desiredPipelineState(runner, PipelineStatus.RUNNING));
-    runner.stop();
+    runner.stop("admin");
     await().until(desiredPipelineState(runner, PipelineStatus.STOPPED));
   }
 
@@ -92,9 +92,9 @@ public class TestSlaveStandaloneRunner {
     ObjectGraph plus = objectGraph.plus(new TestSlaveManager.TestSlaveManagerModule());
     Manager pipelineManager = new SlavePipelineManager(plus);
     pipelineManager.init();
-    Runner runner = pipelineManager.getRunner("user2", TestUtil.HIGHER_VERSION_PIPELINE, "0");
-    runner.start();
-    final Runner newerPipelineRunner = pipelineManager.getRunner("user2", TestUtil.HIGHER_VERSION_PIPELINE, "0");
+    Runner runner = pipelineManager.getRunner(TestUtil.HIGHER_VERSION_PIPELINE, "0");
+    runner.start("admin");
+    final Runner newerPipelineRunner = pipelineManager.getRunner(TestUtil.HIGHER_VERSION_PIPELINE, "0");
     await().until(desiredPipelineState(newerPipelineRunner, PipelineStatus.START_ERROR));
     PipelineState state = newerPipelineRunner.getState();
     Assert.assertTrue(state.getStatus() == PipelineStatus.START_ERROR);
@@ -107,10 +107,10 @@ public class TestSlaveStandaloneRunner {
     ObjectGraph plus = objectGraph.plus(new TestSlaveManager.TestSlaveManagerModule());
     Manager manager = new SlavePipelineManager(plus);
     manager.init();
-    Runner runner = manager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
-    runner.start();
+    Runner runner = manager.getRunner(TestUtil.MY_PIPELINE, "0");
+    runner.start("admin");
     await().until(desiredPipelineState(runner, PipelineStatus.RUNNING));
-    runner.onDataCollectorStop();
+    runner.onDataCollectorStop("admin");
     await().until(desiredPipelineState(runner, PipelineStatus.DISCONNECTED));
   }
 
@@ -120,8 +120,8 @@ public class TestSlaveStandaloneRunner {
     ObjectGraph plus = objectGraph.plus(new TestSlaveManager.TestSlaveManagerModule());
     Manager manager = new SlavePipelineManager(plus);
     manager.init();
-    Runner runner = manager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
-    runner.start();
+    Runner runner = manager.getRunner(TestUtil.MY_PIPELINE, "0");
+    runner.start("admin");
     await().until(desiredPipelineState(runner, PipelineStatus.RUNNING));
     TestUtil.EMPTY_OFFSET = true;
     await().until(desiredPipelineState(runner, PipelineStatus.FINISHED));

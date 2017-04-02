@@ -35,21 +35,19 @@ public class ClusterRunnerModule {
 
   private final String name;
   private final String rev;
-  private final String user;
 
   private ObjectGraph objectGraph;
 
-  public ClusterRunnerModule(String user, String name, String rev, ObjectGraph objectGraph) {
+  public ClusterRunnerModule(String name, String rev, ObjectGraph objectGraph) {
     this.name = name;
     this.rev = rev;
-    this.user = user;
     this.objectGraph = objectGraph;
   }
 
   @Provides
   public ClusterRunner provideRunner() {
     objectGraph = objectGraph.plus(new ClusterMetricEventRunnableModule(name, rev));
-    return new ClusterRunner(user, name, rev, objectGraph);
+    return new ClusterRunner(name, rev, objectGraph);
   }
 
   @Provides

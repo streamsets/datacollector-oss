@@ -622,19 +622,17 @@ public class TestUtil {
 
     private final String name;
     private final String rev;
-    private final String user;
     private final ObjectGraph objectGraph;
 
-    public TestRunnerModule(String user, String name, String rev, ObjectGraph objectGraph) {
+    public TestRunnerModule(String name, String rev, ObjectGraph objectGraph) {
       this.name = name;
       this.rev = rev;
-      this.user = user;
       this.objectGraph = objectGraph;
     }
 
     @Provides
     public Runner provideRunner(@Named("runnerExecutor") SafeScheduledExecutorService runnerExecutor) {
-      return new AsyncRunner(new StandaloneRunner(user, name, rev, objectGraph), runnerExecutor);
+      return new AsyncRunner(new StandaloneRunner(name, rev, objectGraph), runnerExecutor);
     }
   }
 
@@ -677,14 +675,10 @@ public class TestUtil {
 
     @Provides @Singleton
     public RunnerProvider provideRunnerProvider() {
-      return new RunnerProvider() {
-        @Override
-        public Runner createRunner(String user, String name, String rev, ObjectGraph objectGraph,
-                                   ExecutionMode executionMode) {
-          ObjectGraph plus = objectGraph.plus(new TestPipelineProviderModule(name, rev));
-          TestRunnerModule testRunnerModule = new TestRunnerModule(user, name, rev, plus);
-          return testRunnerModule.provideRunner(new SafeScheduledExecutorService(1, "runnerExecutor"));
-        }
+      return (name, rev, objectGraph, executionMode) -> {
+        ObjectGraph plus = objectGraph.plus(new TestPipelineProviderModule(name, rev));
+        TestRunnerModule testRunnerModule = new TestRunnerModule(name, rev, plus);
+        return testRunnerModule.provideRunner(new SafeScheduledExecutorService(1, "runnerExecutor"));
       };
     }
 

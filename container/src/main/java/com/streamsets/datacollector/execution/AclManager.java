@@ -89,9 +89,9 @@ public class AclManager implements Manager {
   }
 
   @Override
-  public Runner getRunner(String user, String name, String rev) throws PipelineException {
+  public Runner getRunner(String name, String rev) throws PipelineException {
     aclStore.validateReadPermission(name, currentUser);
-    Runner runner = manager.getRunner(user, name, rev);
+    Runner runner = manager.getRunner(name, rev);
     return new AclRunner(runner, aclStore, currentUser);
   }
 

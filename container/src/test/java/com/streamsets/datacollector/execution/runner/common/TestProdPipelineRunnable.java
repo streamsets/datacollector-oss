@@ -81,7 +81,7 @@ public class TestProdPipelineRunnable {
     manager = new StandaloneAndClusterPipelineManager(objectGraph);
     manager.init();
     manager.run();
-    runner = manager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
+    runner = manager.getRunner(TestUtil.MY_PIPELINE, "0");
   }
 
   @After

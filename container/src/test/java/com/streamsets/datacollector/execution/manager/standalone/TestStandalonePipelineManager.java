@@ -252,7 +252,7 @@ public class TestStandalonePipelineManager {
   @Test
   public void testPipelineNotExist() {
     try {
-      pipelineManager.getRunner("user", "none_existing_pipeline", "0");
+      pipelineManager.getRunner("none_existing_pipeline", "0");
       fail("Expected PipelineStoreException but didn't get any");
     } catch (PipelineStoreException ex) {
       LOG.debug("Ignoring exception", ex);
@@ -264,7 +264,7 @@ public class TestStandalonePipelineManager {
   @Test
   public void testRunner() throws Exception {
     pipelineStoreTask.create("user", "aaaa", "label","blah", false);
-    Runner runner = pipelineManager.getRunner("user1", "aaaa", "0");
+    Runner runner = pipelineManager.getRunner("aaaa", "0");
     assertNotNull(runner);
   }
 
@@ -358,7 +358,7 @@ public class TestStandalonePipelineManager {
   @Test
   public void testExpiry() throws Exception {
     pipelineStoreTask.create("user", "aaaa", "label","blah", false);
-    Runner runner = pipelineManager.getRunner("user1", "aaaa", "0");
+    Runner runner = pipelineManager.getRunner("aaaa", "0");
     pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.RUNNING_ERROR, "blah", null, ExecutionMode.STANDALONE, null, 0, 0);
     assertEquals(PipelineStatus.RUNNING_ERROR, runner.getState().getStatus());
     pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.RUN_ERROR, "blah", null, ExecutionMode.STANDALONE, null, 0, 0);
@@ -385,7 +385,7 @@ public class TestStandalonePipelineManager {
     pipelineStoreTask.create("user", "bbbb", "label","blah", false);
     setUpManager(100, 0, false);
 
-    pipelineManager.getRunner("user1", "aaaa", "0");
+    pipelineManager.getRunner("aaaa", "0");
     pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.STOPPED, "blah", null, ExecutionMode.STANDALONE, null, 0, 0);
 
     await().atMost(Duration.FIVE_SECONDS).until(new Callable<Boolean>() {
@@ -395,7 +395,7 @@ public class TestStandalonePipelineManager {
       }
     });
 
-    pipelineManager.getRunner("user1", "aaaa", "0");
+    pipelineManager.getRunner( "aaaa", "0");
     pipelineStateStore.saveState("user", "bbbb", "0", PipelineStatus.STOPPED, "blah", null, ExecutionMode.STANDALONE, null, 0, 0);
 
     pipelineManager.stop();
@@ -415,15 +415,15 @@ public class TestStandalonePipelineManager {
   public void testChangeExecutionModes() throws Exception {
     pipelineStoreTask.create("user1", "pipeline2", "label","blah", false);
     pipelineStateStore.saveState("user", "pipeline2", "0", PipelineStatus.EDITED, "blah", null, ExecutionMode.STANDALONE, null, 0, 0);
-    Runner runner1 = pipelineManager.getRunner("user1", "pipeline2", "0");
+    Runner runner1 = pipelineManager.getRunner("pipeline2", "0");
     pipelineStateStore.saveState("user", "pipeline2", "0", PipelineStatus.EDITED, "blah", null, ExecutionMode.CLUSTER_BATCH, null, 0, 0);
-    Runner runner2 = pipelineManager.getRunner("user1", "pipeline2", "0");
+    Runner runner2 = pipelineManager.getRunner("pipeline2", "0");
     assertTrue(runner1 != runner2);
     pipelineStateStore.saveState("user", "pipeline2", "0", PipelineStatus.STARTING, "blah", null, ExecutionMode.CLUSTER_BATCH, null, 0, 0);
-    pipelineManager.getRunner("user1", "pipeline2", "0");
+    pipelineManager.getRunner("pipeline2", "0");
     pipelineStateStore.saveState("user", "pipeline2", "0", PipelineStatus.STARTING, "blah", null, ExecutionMode.STANDALONE, null, 0, 0);
     try {
-      pipelineManager.getRunner("user1", "pipeline2", "0");
+      pipelineManager.getRunner("pipeline2", "0");
       fail("Expected exception but didn't get any");
     } catch (PipelineManagerException pme) {
       // Expected

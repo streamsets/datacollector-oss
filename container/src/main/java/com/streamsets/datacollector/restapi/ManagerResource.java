@@ -144,7 +144,7 @@ public class ManagerResource {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     if(pipelineId != null) {
-      Runner runner = manager.getRunner(user, pipelineId, rev);
+      Runner runner = manager.getRunner(pipelineId, rev);
       if(runner != null) {
         return Response.ok()
             .type(MediaType.APPLICATION_JSON)
@@ -180,16 +180,16 @@ public class ManagerResource {
         throw new PipelineException(ContainerError.CONTAINER_01101, "START_PIPELINE", pipelineId);
       }
       try {
-        Runner runner = manager.getRunner(user, pipelineId, rev);
+        Runner runner = manager.getRunner(pipelineId, rev);
         Utils.checkState(runner.getState().getExecutionMode() != ExecutionMode.SLAVE,
             "This operation is not supported in SLAVE mode");
 
         if (runtimeParameters != null && !runtimeParameters.isEmpty()) {
           Utils.checkState(runner.getState().getExecutionMode() == ExecutionMode.STANDALONE,
               Utils.format("Using runtime constants is not supported in {} mode", runner.getState().getExecutionMode()));
-          runner.start(runtimeParameters);
+          runner.start(user, runtimeParameters);
         } else {
-          runner.start();
+          runner.start(user);
         }
         return Response.ok()
             .type(MediaType.APPLICATION_JSON)
@@ -232,12 +232,12 @@ public class ManagerResource {
           continue;
         }
 
-        Runner runner = manager.getRunner(user, pipelineId, "0");
+        Runner runner = manager.getRunner( pipelineId, "0");
         try {
           Utils.checkState(runner.getState().getExecutionMode() != ExecutionMode.SLAVE,
               "This operation is not supported in SLAVE mode");
 
-          runner.start();
+          runner.start(user);
           successEntities.add(runner.getState());
 
         } catch (Exception ex) {
@@ -273,10 +273,10 @@ public class ManagerResource {
         !context.isUserInRole(AuthzRole.ADMIN_REMOTE)) {
       throw new PipelineException(ContainerError.CONTAINER_01101, "STOP_PIPELINE", pipelineId);
     }
-    Runner runner = manager.getRunner(user, pipelineId, rev);
+    Runner runner = manager.getRunner(pipelineId, rev);
     Utils.checkState(runner.getState().getExecutionMode() != ExecutionMode.SLAVE,
       "This operation is not supported in SLAVE mode");
-    runner.stop();
+    runner.stop(user);
     return Response.ok()
         .type(MediaType.APPLICATION_JSON)
         .entity(BeanHelper.wrapPipelineState(runner.getState())).build();
@@ -310,11 +310,11 @@ public class ManagerResource {
           errorMessages.add("Cannot stop a remote pipeline: " + pipelineId);
           continue;
         }
-        Runner runner = manager.getRunner(user, pipelineId, "0");
+        Runner runner = manager.getRunner(pipelineId, "0");
         try {
           Utils.checkState(runner.getState().getExecutionMode() != ExecutionMode.SLAVE,
               "This operation is not supported in SLAVE mode");
-          runner.stop();
+          runner.stop(user);
           successEntities.add(runner.getState());
 
         } catch (Exception ex) {
@@ -350,10 +350,10 @@ public class ManagerResource {
         throw new PipelineException(ContainerError.CONTAINER_01101, "FORCE_QUIT_PIPELINE", pipelineId);
       }
     }
-    Runner runner = manager.getRunner(user, pipelineId, rev);
+    Runner runner = manager.getRunner(pipelineId, rev);
     Utils.checkState(runner.getState().getExecutionMode() == ExecutionMode.STANDALONE,
         Utils.format("This operation is not supported in {} mode", runner.getState().getExecutionMode()));
-    runner.forceQuit();
+    runner.forceQuit(user);
     return Response.ok()
         .type(MediaType.APPLICATION_JSON)
         .entity(BeanHelper.wrapPipelineState(runner.getState())).build();
@@ -386,11 +386,11 @@ public class ManagerResource {
           }
         }
 
-        Runner runner = manager.getRunner(user, pipelineId, "0");
+        Runner runner = manager.getRunner(pipelineId, "0");
         try {
           Utils.checkState(runner.getState().getExecutionMode() == ExecutionMode.STANDALONE,
               Utils.format("This operation is not supported in {} mode", runner.getState().getExecutionMode()));
-          runner.forceQuit();
+          runner.forceQuit(user);
           successEntities.add(runner.getState());
 
         } catch (Exception ex) {
@@ -421,7 +421,7 @@ public class ManagerResource {
   ) throws PipelineException {
     PipelineInfo pipelineInfo = store.getInfo(name);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
-    Runner runner = manager.getRunner(user, name, rev);
+    Runner runner = manager.getRunner(name, rev);
     return Response.ok(runner.getCommittedOffsets()).build();
   }
 
@@ -444,8 +444,8 @@ public class ManagerResource {
     if (manager.isRemotePipeline(name, rev)) {
       throw new PipelineException(ContainerError.CONTAINER_01101, "RESET_OFFSET", name);
     }
-    Runner runner = manager.getRunner(user, name, rev);
-    runner.resetOffset();
+    Runner runner = manager.getRunner(name, rev);
+    runner.resetOffset("user");
     return Response.ok().build();
   }
 
@@ -466,8 +466,8 @@ public class ManagerResource {
       if (manager.isRemotePipeline(pipelineId, "0")) {
         throw new PipelineException(ContainerError.CONTAINER_01101, "RESET_OFFSETS", pipelineId);
       }
-      Runner runner = manager.getRunner(user, pipelineId, "0");
-      runner.resetOffset();
+      Runner runner = manager.getRunner(pipelineId, "0");
+      runner.resetOffset(user);
     }
     return Response.ok().build();
   }
@@ -485,7 +485,7 @@ public class ManagerResource {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     if(pipelineId != null) {
-      Runner runner = manager.getRunner(user, pipelineId, rev);
+      Runner runner = manager.getRunner(pipelineId, rev);
       if (runner != null && runner.getState().getStatus().isActive()) {
         return Response.ok().type(MediaType.APPLICATION_JSON).entity(runner.getMetrics()).build();
       }
@@ -514,13 +514,13 @@ public class ManagerResource {
   ) throws PipelineException, StageException {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
-    Runner runner = manager.getRunner(user, pipelineId, rev);
+    Runner runner = manager.getRunner(pipelineId, rev);
     if (startPipeline && runner != null) {
-      runner.startAndCaptureSnapshot(runtimeParameters, snapshotName, snapshotLabel, batches, batchSize);
+      runner.startAndCaptureSnapshot(user, runtimeParameters, snapshotName, snapshotLabel, batches, batchSize);
     } else {
       Utils.checkState(runner != null && runner.getState().getStatus() == PipelineStatus.RUNNING,
           "Pipeline doesn't exist or it is not running currently");
-      runner.captureSnapshot(snapshotName, snapshotLabel, batches, batchSize);
+      runner.captureSnapshot(user, snapshotName, snapshotLabel, batches, batchSize);
     }
     return Response.ok().build();
   }
@@ -538,7 +538,7 @@ public class ManagerResource {
   ) throws PipelineException {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
-    Runner runner = manager.getRunner(user, pipelineId, rev);
+    Runner runner = manager.getRunner(pipelineId, rev);
     runner.updateSnapshotLabel(snapshotName, snapshotLabel);
     return Response.ok().build();
   }
@@ -559,7 +559,7 @@ public class ManagerResource {
     RestAPIUtils.injectPipelineInMDC("*");
     List<SnapshotInfo> snapshotInfoList = new ArrayList<>();
     for(PipelineState pipelineState: manager.getPipelines()) {
-      Runner runner = manager.getRunner(user, pipelineState.getPipelineId(), pipelineState.getRev());
+      Runner runner = manager.getRunner(pipelineState.getPipelineId(), pipelineState.getRev());
       if(runner != null) {
         snapshotInfoList.addAll(runner.getSnapshotsInfo());
       }
@@ -586,7 +586,7 @@ public class ManagerResource {
   ) throws PipelineException {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
-    Runner runner = manager.getRunner(user, pipelineId, rev);
+    Runner runner = manager.getRunner(pipelineId, rev);
     if(runner != null) {
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapSnapshotInfoNewAPI(
         runner.getSnapshotsInfo())).build();
@@ -612,7 +612,7 @@ public class ManagerResource {
   ) throws PipelineException {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
-    Runner runner = manager.getRunner(user, pipelineId, rev);
+    Runner runner = manager.getRunner(pipelineId, rev);
     if(runner != null) {
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(
         BeanHelper.wrapSnapshotInfoNewAPI(runner.getSnapshot(snapshotName).getInfo())).build();
@@ -640,7 +640,7 @@ public class ManagerResource {
   ) throws PipelineException {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
-    Runner runner = manager.getRunner(user, pipelineId, rev);
+    Runner runner = manager.getRunner(pipelineId, rev);
     if(runner != null) {
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(runner.getSnapshot(snapshotName).getOutput()).build();
     }
@@ -664,7 +664,7 @@ public class ManagerResource {
   ) throws PipelineException {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
-    Runner runner = manager.getRunner(user, pipelineId, rev);
+    Runner runner = manager.getRunner(pipelineId, rev);
     if(runner != null) {
       runner.deleteSnapshot(snapshotName);
     }
@@ -690,7 +690,7 @@ public class ManagerResource {
     if (manager.isRemotePipeline(pipelineId, rev)) {
       throw new PipelineException(ContainerError.CONTAINER_01101, "DELETE_HISTORY", pipelineId);
     }
-    Runner runner = manager.getRunner(user, pipelineId, rev);
+    Runner runner = manager.getRunner(pipelineId, rev);
     if(runner != null) {
       runner.deleteHistory();
     }
@@ -718,7 +718,7 @@ public class ManagerResource {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     size = size > 100 ? 100 : size;
-    Runner runner = manager.getRunner(user, pipelineId, rev);
+    Runner runner = manager.getRunner(pipelineId, rev);
     if(runner != null) {
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(
         BeanHelper.wrapRecords(runner.getErrorRecords(stageInstanceName, size))).build();
@@ -746,7 +746,7 @@ public class ManagerResource {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     size = size > 100 ? 100 : size;
-    Runner runner = manager.getRunner(user, pipelineId, rev);
+    Runner runner = manager.getRunner(pipelineId, rev);
     if(runner != null) {
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(
         BeanHelper.wrapErrorMessages(runner.getErrorMessages(stageInstanceName, size))).build();
@@ -766,7 +766,7 @@ public class ManagerResource {
     @QueryParam("fromBeginning") @DefaultValue("false") boolean fromBeginning) throws PipelineException {
     PipelineInfo pipelineInfo = store.getInfo(name);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
-    Runner runner = manager.getRunner(user, name, rev);
+    Runner runner = manager.getRunner(name, rev);
     if(runner != null) {
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(
         BeanHelper.wrapPipelineStatesNewAPI(runner.getHistory(), false)).build();
@@ -794,7 +794,7 @@ public class ManagerResource {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     sampleSize = sampleSize > 100 ? 100 : sampleSize;
-    Runner runner = manager.getRunner(user, pipelineId, rev);
+    Runner runner = manager.getRunner(pipelineId, rev);
     if(runner != null) {
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(
         BeanHelper.wrapSampledRecords(runner.getSampledRecords(sampleId, sampleSize))).build();
@@ -814,7 +814,7 @@ public class ManagerResource {
     if (store.getPipelines().size() < 100) {
       // get alerts for all pipelines only if number of pipelines is less than 100
       for(PipelineState pipelineState: manager.getPipelines()) {
-        Runner runner = manager.getRunner(user, pipelineState.getPipelineId(), pipelineState.getRev());
+        Runner runner = manager.getRunner(pipelineState.getPipelineId(), pipelineState.getRev());
         if(runner != null && runner.getState().getStatus().isActive()) {
           alertInfoList.addAll(runner.getAlerts());
         }
@@ -844,7 +844,7 @@ public class ManagerResource {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(
-      manager.getRunner(user, pipelineId, rev).deleteAlert(alertId)).build();
+      manager.getRunner(pipelineId, rev).deleteAlert(alertId)).build();
   }
 
 }

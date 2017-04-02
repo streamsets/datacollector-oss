@@ -83,7 +83,7 @@ public class SlavePipelineManager extends AbstractTask implements Manager {
   }
 
   @Override
-  public Runner getRunner(String user, String name, String rev) throws PipelineStoreException {
+  public Runner getRunner(String name, String rev) throws PipelineStoreException {
     if (runner != null && runner.getName().equals(name) && runner.getRev().equals(rev)) {
       return runner;
     }
@@ -91,11 +91,12 @@ public class SlavePipelineManager extends AbstractTask implements Manager {
       throw new IllegalStateException(Utils.format("Cannot create runner for '{}::{}', only one "
         + "runner allowed in a slave SDC", name, rev));
     }
-    runner = runnerProvider.createRunner(user, name, rev, objectGraph, null);
+    runner = runnerProvider.createRunner(name, rev, objectGraph, null);
     // Set the initial state
     Map<String, Object> attributes = new HashMap<>();
     attributes.put(RemoteDataCollector.IS_REMOTE_PIPELINE, ((SlaveRuntimeInfo) runtimeInfo).isRemotePipeline());
-    pipelineStateStore.saveState(user, name, rev, PipelineStatus.EDITED, null, attributes, ExecutionMode.SLAVE, null, 0, 0);
+    // This is setting initial state on a slave node and hence we use empty user
+    pipelineStateStore.saveState("", name, rev, PipelineStatus.EDITED, null, attributes, ExecutionMode.SLAVE, null, 0, 0);
     return runner;
   }
 
@@ -121,7 +122,8 @@ public class SlavePipelineManager extends AbstractTask implements Manager {
   public void stopTask() {
     if (runner != null) {
       try {
-        runner.onDataCollectorStop();
+        // This is ephemeral copy of pipeline on a worker slave, so we run the stop with empty user name
+        runner.onDataCollectorStop("");
       } catch (Exception ex) {
         LOG.error(
           Utils.format("Cannot stop runner for pipeline '{}::{}' due to '{}'", runner.getName(), runner.getRev(), ex),

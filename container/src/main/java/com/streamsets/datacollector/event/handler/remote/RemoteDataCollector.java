@@ -120,14 +120,14 @@ public class RemoteDataCollector implements DataCollector {
       LOG.warn("Pipeline {}:{} is already in active state {}", pipelineState.getPipelineId(), pipelineState.getRev(),
           pipelineState.getStatus());
     } else {
-      manager.getRunner(user, name, rev).start();
+      manager.getRunner(name, rev).start(user);
     }
   }
 
   @Override
   public void stop(String user, String name, String rev) throws PipelineException {
     validateIfRemote(name, rev, "STOP");
-    manager.getRunner(user, name, rev).stop();
+    manager.getRunner(name, rev).stop(user);
   }
 
   @Override
@@ -140,7 +140,7 @@ public class RemoteDataCollector implements DataCollector {
   @Override
   public void deleteHistory(String user, String name, String rev) throws PipelineException {
     validateIfRemote(name, rev, "DELETE_HISTORY");
-    manager.getRunner(user, name, rev).deleteHistory();
+    manager.getRunner(name, rev).deleteHistory();
   }
 
   @Override
@@ -198,7 +198,7 @@ public class RemoteDataCollector implements DataCollector {
   @Override
   public void resetOffset(String user, String name, String rev) throws PipelineException {
     validateIfRemote(name, rev, "RESET_OFFSET");
-    manager.getRunner(user, name, rev).resetOffset();
+    manager.getRunner(name, rev).resetOffset(user);
   }
 
   @Override
@@ -217,7 +217,7 @@ public class RemoteDataCollector implements DataCollector {
     } else {
       PipelineState pipelineState = pipelineStateStore.getState(name, rev);
       if (pipelineState.getStatus().isActive()) {
-        manager.getRunner(user, name, rev).stop();
+        manager.getRunner(name, rev).stop(user);
       }
       long now = System.currentTimeMillis();
       // wait for 10 secs for a graceful stop
@@ -263,7 +263,7 @@ public class RemoteDataCollector implements DataCollector {
       String title;
       if (pipelineStore.hasPipeline(name)) {
         title = pipelineStore.getInfo(name).getTitle();
-        Runner runner = manager.getRunner(pipelineState.getUser(), name, rev);
+        Runner runner = manager.getRunner(name, rev);
         latestState = runner.getState();
         if (isClusterMode) {
           workerInfos = getWorkers(runner.getSlaveCallbackList(CallbackObjectType.METRICS));
@@ -338,7 +338,7 @@ public class RemoteDataCollector implements DataCollector {
         List<WorkerInfo> workerInfos = new ArrayList<>();
         boolean isClusterMode = (pipelineState.getExecutionMode() != ExecutionMode.STANDALONE) ? true: false;
         if (isClusterMode) {
-          for (CallbackInfo callbackInfo : manager.getRunner(user, name, rev).getSlaveCallbackList(CallbackObjectType.METRICS)) {
+          for (CallbackInfo callbackInfo : manager.getRunner(name, rev).getSlaveCallbackList(CallbackObjectType.METRICS)) {
             WorkerInfo workerInfo = new WorkerInfo();
             workerInfo.setWorkerURL(callbackInfo.getSdcURL());
             workerInfo.setWorkerId(callbackInfo.getSlaveSdcId());
