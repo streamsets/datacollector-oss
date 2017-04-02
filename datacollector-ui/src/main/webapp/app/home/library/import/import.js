@@ -36,7 +36,7 @@ angular
       createNewPipeline: (!pipelineInfo),
       pipelineInfo: pipelineInfo,
       newConfig : {
-        name: '',
+        title: '',
         description: ''
       },
 
@@ -46,7 +46,7 @@ angular
       import: function () {
         var reader = new FileReader();
 
-        if ($scope.createNewPipeline && !$scope.newConfig.pipelineId) {
+        if ($scope.createNewPipeline && !$scope.newConfig.title) {
           $translate('home.library.nameRequiredValidation').then(function(translation) {
             $scope.common.errors = [translation];
           });
@@ -109,7 +109,7 @@ angular
                   description;
 
                 if ($scope.createNewPipeline) {
-                  label = $scope.newConfig.pipelineId;
+                  label = $scope.newConfig.title;
                   description = $scope.newConfig.description;
                 } else {
                   label = jsonConfigObj.info.label || jsonConfigObj.info.pipelineId;
