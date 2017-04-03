@@ -540,6 +540,7 @@
         "timeOfLastReceivedRecord": "Last Record Received",
         "threadLastRun": "Thread Health Report (Last Run Time)",
         "batchStartTime": "Batch Start Time",
+        "runnersHistogram": "Pipeline Runners Histogram (5 minutes decay)",
         "stageBatchProcessingTimer": "Stage Batch Processing Timer (in seconds)",
         "stageBatchProcessingTimerYAxis": "( Mean Timer Percentiles )",
         "stageMemoryConsumed": "Stage Heap Memory Usage (in MB)",

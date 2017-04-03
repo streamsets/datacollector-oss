@@ -100,7 +100,7 @@
   </div>
 
   <div class="chartPanels" ng-if="summaryDataLoaded">
-    <ng-include ng-repeat="(chartIndex, chart) in $storage.summaryPanelList" src="chart.templateId">
+    <ng-include ng-repeat="(chartIndex, chart) in $storage.summaryPanelList_v1" src="chart.templateId">
     </ng-include>
   </div>
 
@@ -219,7 +219,7 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <span title="{{'global.form.histogram' | translate}}"
-          translate="global.form.histogram">Record Histogram (5 minutes decay)</span>
+          translate="global.form.histogram">Records Per Batch Histogram (5 minutes decay)</span>
         <button type="button" class="close" aria-label="Close" ng-click="removeChart(chart, chartIndex)">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -227,6 +227,27 @@
       <div class="panel-body">
         <nvd3 ng-if="timeRange === 'latest'"
               options="chartOptions" data="timerData" config="{ refreshDataOnly: true }"></nvd3>
+      </div>
+    </div>
+  </div>
+</script>
+
+
+<script type="text/ng-template" id="summaryPipelineRunnersTemplate">
+  <div class="col-sm-4"
+       ng-if="selectedType === pipelineConstant.PIPELINE && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_BATCH &&
+       activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_YARN_STREAMING && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_MESOS_STREAMING && timeRange === 'latest'"
+       ng-controller="RunnersHistogramChartController">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span title="{{'home.detailPane.summaryTab.runnersHistogram' | translate}}"
+              translate="home.detailPane.summaryTab.runnersHistogram">Pipeline Runners Histogram (5 minutes decay)</span>
+        <button type="button" class="close" aria-label="Close" ng-click="removeChart(chart, chartIndex)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="panel-body">
+        <nvd3 options="chartOptions" data="timerData" config="{ refreshDataOnly: true }"></nvd3>
       </div>
     </div>
   </div>
@@ -383,21 +404,6 @@
             <span class="properties-label">{{'home.detailPane.summaryTab.metricsEventRunnable' | translate}}:</span>
             <span class="properties-value">{{common.pipelineMetrics.gauges['health.MetricsEventRunnable.gauge'].value.timestamp  | date:'medium'}}</span>
           </li>
-
-          <li>
-            <span class="properties-value">{{'home.detailPane.summaryTab.runners' | translate}}</span>
-          </li>
-
-          <li>
-            <span class="properties-label">{{'home.detailPane.summaryTab.totalRunners' | translate}}:</span>
-            <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.totalRunners}}</span>
-          </li>
-
-          <li>
-            <span class="properties-label">{{'home.detailPane.summaryTab.availableRunners' | translate}}:</span>
-            <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.availableRunners}}</span>
-          </li>
-
         </ul>
 
       </div>
