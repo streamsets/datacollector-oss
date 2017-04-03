@@ -33,7 +33,7 @@ import com.streamsets.pipeline.stage.origin.websocketserver.Groups;
     description = "Uses an WebSocket client to write data.",
     icon = "websockets.png",
     recordsByRef = true,
-    onlineHelpRefUrl = "index.html#Processors/HTTPClient.html#task_z54_1qr_fw"
+    onlineHelpRefUrl = "index.html#Destinations/WebSocketClient.html#task_erb_pjn_lz"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
