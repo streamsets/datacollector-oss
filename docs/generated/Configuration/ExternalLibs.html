@@ -29,7 +29,8 @@
  <h1 class="title topictitle1">Install External Libraries </h1>
 
   
- <div class="body conbody"><p class="shortdesc">Install external libraries to make them available to Data Collector stages. </p>
+ <div class="body conbody"><p class="shortdesc">Install external libraries to make them available to <span class="ph">Data
+                  Collector</span> stages. </p>
 
     <p class="p">Before you use the following stages, install
       JDBC drivers for the implementation that you want to use: </p>
@@ -61,205 +62,182 @@
     <p class="p" id="concept_pdv_qlw_ft__AdditionalDrivers_optional">You can also install external Java libraries to call external
       Java code from the Groovy, Java, and Jython Evaluator processors.</p>
 
-    <p class="p">To install external libraries, complete the following general steps:</p>
-
-    <ol class="ol" id="concept_pdv_qlw_ft__ol_acn_swz_bz">
-      <li class="li">Set up an external directory to store the libraries.</li>
-
-      <li class="li">Use the Package Manager within <span class="ph">Data
-                  Collector</span> to
-        install the external libraries.</li>
-
-    </ol>
+    <p class="p">You can install external libraries using the Package Manager in the <span class="ph">Data
+                  Collector</span> user
+      interface, or you can install them manually.</p>
 
   </div>
 
 <div class="related-links"></div>
-<div class="topic concept nested1" id="concept_hhl_nxz_bz">
- <h2 class="title topictitle2">Step 1. Set Up an External Directory</h2>
+<div class="topic concept nested1" id="concept_amy_pzs_gz">
+ <h2 class="title topictitle2">Install Using the Package Manager</h2>
 
- 
- <div class="body conbody"><p class="shortdesc">Before you install external libraries, set up a local directory external to the <span class="ph">Data
-                  Collector</span>
-        installation directory for the libraries. Use an external directory to enable use of the
-        libraries after <span class="ph">Data
-                  Collector</span>
-        upgrades.</p>
+ <div class="body conbody">
+        <p class="p">To install external libraries using the Package Manager, complete the following general
+            steps:</p>
 
-  <p class="p">Use the required procedure for your installation type: <a class="xref" href="ExternalLibs.html#task_zhz_5s5_bz">Setting Up for RPM and Tarball</a> or <a class="xref" href="ExternalLibs.html#task_yhv_1pn_25">Setting Up for Cloudera Manager</a>.</p>
+        <ol class="ol" id="concept_amy_pzs_gz__ol_acn_swz_bz">
+            <li class="li">Set up an external directory to store the libraries.</li>
+
+            <li class="li">Use the Package Manager within <span class="ph">Data
+                  Collector</span> to install the external libraries.</li>
+
+        </ol>
 
  </div>
 
-<div class="topic task nested2" id="task_zhz_5s5_bz">
-    <h3 class="title topictitle3">Setting Up for RPM and Tarball</h3>
+<div class="topic concept nested2" id="concept_hhl_nxz_bz">
+ <h3 class="title topictitle3">Step 1. Set Up an External Directory</h3>
 
-    <div class="body taskbody">
-        <div class="section context">
-            <p class="p">Before
-                you install external libraries for an RPM or tarball installation, set up an
+ <div class="body conbody">
+  <p class="p">Before
+            you install external libraries, set up a local directory external to the <span class="ph">Data
+                  Collector</span>
+            installation directory for the libraries. Use an external directory to enable use of the
+            libraries after <span class="ph">Data
+                  Collector</span>
+            upgrades. Use the required procedure for your installation type.</p>
+
+        <div class="section" id="concept_hhl_nxz_bz__section_xhc_52t_gz"><h4 class="title sectiontitle">Setting Up for RPM and Tarball</h4>
+            
+            <p class="p">Before you install external libraries for an RPM or tarball installation, set up an
                 external directory to store the libraries. </p>
 
-        </div>
+            <ol class="ol" id="concept_hhl_nxz_bz__ol_sw2_w2t_gz">
+                <li class="li">Create a local directory external to the <span class="ph">Data
+                  Collector</span> installation
+                    directory.<div class="p">For example, if you installed <span class="ph">Data
+                  Collector</span> in the
+                    following directory: <pre class="pre codeblock">/opt/sdc/</pre>
+you might create the
+                    external directory at: <pre class="pre codeblock">/opt/sdc-extras</pre>
+</div>
+</li>
 
-        <ol class="ol steps"><li class="li step stepexpand">
-                <span class="ph cmd">Create a local directory external to the <span class="ph">Data
-                  Collector</span> installation directory.</span>
-                <div class="itemgroup info">For example, if you installed <span class="ph">Data
-                  Collector</span> in the following directory: <pre class="pre codeblock">/opt/sdc/</pre>
-<div class="p">you might
-                        create the external directory at:
-                    <pre class="pre codeblock">/opt/sdc-extras</pre>
+                <li class="li">Grant the user who starts <span class="ph">Data
+                  Collector</span> ownership on the external directory.<div class="p">For example, if you use the default
+                        system user and group named <samp class="ph codeph">sdc</samp> to run <span class="ph">Data
+                  Collector</span> as a service, use the following command to change the owner of the
+                        external directory and all files in the directory to
+                            <samp class="ph codeph">sdc:sdc</samp>:<pre class="pre codeblock">chown -R sdc:sdc /opt/sdc-extras</pre>
 </div>
-</div>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">Grant the user who starts <span class="ph">Data
-                  Collector</span> ownership on the external directory.</span>
-                <div class="itemgroup info">For example, if you use the default system user and group named
-                        <samp class="ph codeph">sdc</samp> to run <span class="ph">Data
-                  Collector</span> as a service, use the following command to change the owner of the external
-                    directory and all files in the directory to
-                    <samp class="ph codeph">sdc:sdc</samp>:<pre class="pre codeblock">chown -R sdc:sdc /opt/sdc-extras</pre>
-</div>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">In the <span class="ph">Data
-                  Collector</span> environment configuration file, add the STREAMSETS_LIBRARIES_EXTRA_DIR
-                    environment variable and point it to the external directory.</span>
-                <div class="itemgroup info">
-                    <p class="p">If you start Data Collector as a service, set the environment variable in the
-                        <samp class="ph systemoutput">$SDC_DIST/libexec/sdcd-env.sh</samp> file. If you
-                  start Data Collector manually, set the variable in the
+</li>
+
+                <li class="li">In the <span class="ph">Data
+                  Collector</span>
+                environment configuration file, add the STREAMSETS_LIBRARIES_EXTRA_DIR environment
+                variable and point it to the external directory. <p class="p">If you start Data Collector as a service, set the environment
+                  variable in the <samp class="ph systemoutput">$SDC_DIST/libexec/sdcd-env.sh</samp> file.
+                  If you start Data Collector manually, set the variable in the
                         <samp class="ph systemoutput">$SDC_DIST/libexec/sdc-env.sh</samp> file.</p>
+<p class="p">Set the environment variable as
+                    follows:</p>
+<pre class="pre codeblock">export STREAMSETS_LIBRARIES_EXTRA_DIR="&lt;external directory&gt;"</pre>
+<p class="p">For
+                    example:
+                </p>
+<pre class="pre codeblock">export STREAMSETS_LIBRARIES_EXTRA_DIR="/opt/sdc-extras/"</pre>
+</li>
 
-                    <p class="p">Set the environment variable as follows:</p>
+                <li class="li">When using the Java Security Manager, which is enabled by default, update the <span class="ph">Data
+                  Collector</span> security policy
+                to include the external directory as follows:<ol class="ol" type="a" id="concept_hhl_nxz_bz__d3666e53">
+                    <li class="li">In the <span class="ph">Data
+                  Collector</span>
+                        configuration directory, open the security policy file,
+                            <samp class="ph codeph">$SDC_CONF/sdc-security.policy</samp>.</li>
 
-                    <pre class="pre codeblock">export STREAMSETS_LIBRARIES_EXTRA_DIR="&lt;external directory&gt;"</pre>
-
-                    <p class="p">For example: </p>
-
-                    <pre class="pre codeblock">export STREAMSETS_LIBRARIES_EXTRA_DIR="/opt/sdc-extras/"</pre>
-
-                </div>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">When using the Java Security Manager, which is enabled by default, update the
-                        <span class="ph">Data
-                  Collector</span> security policy to include the external directory as follows:</span>
-                <ol type="a" class="ol substeps" id="task_zhz_5s5_bz__substeps_vpt_nlr_cy">
-                    <li class="li substep substepexpand">
-                        <span class="ph cmd">In the <span class="ph">Data
-                  Collector</span> configuration directory, open the security policy file,
-                                <samp class="ph codeph">$SDC_CONF/sdc-security.policy</samp>.</span>
-                    </li>
-
-                    <li class="li substep substepexpand">
-                        <span class="ph cmd">Add the following lines to the file:</span>
-                        <div class="itemgroup info"><pre class="pre codeblock">// user-defined external directory
+                    <li class="li">Add the following lines to the
+                        file:<pre class="pre codeblock">// user-defined external directory
 grant codebase "file://&lt;external directory&gt;-" {
   permission java.security.AllPermission;
 };</pre>
 For
-                            example:
-                            <pre class="pre codeblock">// user-defined external directory
+                        example:
+                        <pre class="pre codeblock">// user-defined external directory
 grant codebase "file:///opt/sdc-extras/-" {
   permission java.security.AllPermission;
 };</pre>
-</div>
-                    </li>
+</li>
 
                 </ol>
+</li>
 
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">Restart <span class="ph">Data
-                  Collector</span>.</span>
-            </li>
-</ol>
+                <li class="li">Restart <span class="ph">Data
+                  Collector</span>.</li>
 
-    </div>
+            </ol>
 
-    <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. To enable remote debugging, define debugging options in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file.You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.When you use Data Collector with Java 7, Data Collector is configured to use TLS versions 1.1 and 1.2. To connect to a system that uses an earlier version of TLS, modify the Dhttps.protocols option in the SDC_JAVA7_OPTS environment variable in the Data Collector environment configuration file.When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
-</div>
-</div>
-</div>
-<div class="topic task nested2" id="task_yhv_1pn_25">
-    <h3 class="title topictitle3">Setting Up for Cloudera Manager</h3>
+        </div>
 
-    <div class="body taskbody">
-        <div class="section context"><p class="p">Before you install external
-                libraries for a Cloudera Manager installation, set up an external directory to store
-                the libraries. </p>
-</div>
+        <div class="section" id="concept_hhl_nxz_bz__section_pkh_kft_gz"><h4 class="title sectiontitle">Setting Up for Cloudera Manager</h4>
+            
+            <p class="p">Before you install external libraries for a Cloudera Manager installation, set up an
+                external directory to store the libraries. </p>
 
-        <ol class="ol steps" id="task_yhv_1pn_25__steps_bwr_g3v_bz"><li class="li step stepexpand">
-                <span class="ph cmd">In Cloudera Manager, select the <span class="ph uicontrol">StreamSets</span> service and
-                    then click <span class="ph uicontrol">Configuration</span>.</span>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">On the <span class="keyword wintitle">Configuration</span> page, in the <span class="ph uicontrol">Data
-                        Collector Advanced Configuration Snippet (Safety Valve) for
-                        sdc-env.sh</span> field, add the STREAMSETS_LIBRARIES_EXTRA_DIR
-                    environment variable and point it to the external directory, as follows:</span>
-                <div class="itemgroup info"><pre class="pre codeblock">export STREAMSETS_LIBRARIES_EXTRA_DIR="&lt;external directory&gt;"</pre>
+            <ol class="ol" id="concept_hhl_nxz_bz__ol_pwj_4ft_gz">
+                <li class="li">In Cloudera Manager, select the <span class="ph uicontrol">StreamSets</span> service and then
+                click <span class="ph uicontrol">Configuration</span>.</li>
+
+                <li class="li">On the <span class="keyword wintitle">Configuration</span> page, in the <span class="ph uicontrol">Data Collector
+                    Advanced Configuration Snippet (Safety Valve) for sdc-env.sh</span> field,
+                add the STREAMSETS_LIBRARIES_EXTRA_DIR environment variable and point it to the
+                external directory, as
+                    follows:<pre class="pre codeblock">export STREAMSETS_LIBRARIES_EXTRA_DIR="&lt;external directory&gt;"</pre>
 <p class="p">For
-                        example:
-                    </p>
+                    example:
+                </p>
 <pre class="pre codeblock">export STREAMSETS_LIBRARIES_EXTRA_DIR="/opt/sdc-extras/"</pre>
 By
-                    default, the path is <samp class="ph codeph">/var/lib/sdc</samp>. </div>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">Create the <samp class="ph codeph">/opt/sdc-extras/</samp> directory on every node that runs
+                default, the path is <samp class="ph codeph">/var/lib/sdc</samp>. </li>
+
+                <li class="li">Create the <samp class="ph codeph">/opt/sdc-extras/</samp> directory on every node that runs
                         <span class="ph">Data
-                  Collector</span>.</span>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">Grant the user who starts <span class="ph">Data
-                  Collector</span> ownership on the external directory added to every node.</span>
-                <div class="itemgroup info">For example, if you use the default system user and group named
-                        <samp class="ph codeph">sdc</samp> to run <span class="ph">Data
-                  Collector</span> as a service, use the following command to change the owner of the external
-                    directory and all files in the directory to
-                    <samp class="ph codeph">sdc:sdc</samp>:<pre class="pre codeblock">chown -R sdc:sdc /opt/sdc-extras</pre>
+                  Collector</span>.</li>
+
+                <li class="li">Grant the user who starts <span class="ph">Data
+                  Collector</span> ownership on the external directory added to every node.<div class="p">For example, if
+                        you use the default system user and group named <samp class="ph codeph">sdc</samp> to run
+                            <span class="ph">Data
+                  Collector</span> as a service, use the following command to change the owner of the
+                        external directory and all files in the directory to
+                            <samp class="ph codeph">sdc:sdc</samp>:<pre class="pre codeblock">chown -R sdc:sdc /opt/sdc-extras</pre>
 </div>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">When using the Java Security Manager, which is enabled by default, update the
-                        <span class="ph uicontrol">Data Collector Advanced Configuration Snippet (Safety Valve) for
-                        sdc-security.policy</span> property to include the external directory
-                    as follows:</span>
-                <div class="itemgroup info">
-                    <div class="p">
-                        <pre class="pre codeblock">// user-defined external directory
+</li>
+
+                <li class="li">When using the Java Security Manager, which is enabled by default, update the
+                    <span class="ph uicontrol">Data Collector Advanced Configuration Snippet (Safety Valve) for
+                    sdc-security.policy</span> property to include the external directory as follows:<div class="p">
+                    <pre class="pre codeblock">// user-defined external directory
 grant codebase "file://&lt;external directory&gt;-" {
   permission java.security.AllPermission;
 };</pre>
 
-                    </div>
-
-                    <div class="p">For example:
-                        <pre class="pre codeblock">// user-defined external directory
+                </div>
+<div class="p">For example:
+                    <pre class="pre codeblock">// user-defined external directory
 grant codebase "file:///opt/sdc-extras/-" {
   permission java.security.AllPermission;
 };</pre>
 </div>
+</li>
 
-                </div>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">Restart <span class="ph">Data
-                  Collector</span>.</span>
-            </li>
-</ol>
+                <li class="li">Restart <span class="ph">Data
+                  Collector</span>.</li>
 
-    </div>
+            </ol>
 
+        </div>
+
+ </div>
+
+    <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
+<div class="related_link"><a class="navheader_parent_path" href="DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. To enable remote debugging, define debugging options in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file.You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
 </div>
 </div>
-<div class="topic task nested1" id="task_jng_dkt_bz">
-    <h2 class="title topictitle2">Step 2. Install External Libraries</h2>
+</div>
+<div class="topic task nested2" id="task_jng_dkt_bz">
+    <h3 class="title topictitle3">Step 2. Install External Libraries</h3>
 
     
     <div class="body taskbody"><p class="shortdesc">After you've set up the external directory, use the Package Manager within <span class="ph">Data
@@ -313,6 +291,177 @@ grant codebase "file:///opt/sdc-extras/-" {
     </div>
 
     
+</div>
+</div>
+<div class="topic concept nested1" id="concept_bft_qzs_gz">
+ <h2 class="title topictitle2">Install Manually</h2>
+
+ <div class="body conbody">
+        <p class="p">To manually install external libraries, use the required procedure for your installation
+            type.</p>
+
+    </div>
+
+<div class="topic concept nested2" id="concept_chn_2mt_gz">
+ <h3 class="title topictitle3">Installing Manually for RPM and Tarball</h3>
+
+ <div class="body conbody">
+  <p class="p">To manually install external libraries for an RPM or tarball installation, perform the
+            following steps:</p>
+
+        <ol class="ol" id="concept_chn_2mt_gz__ol_wxv_jmt_gz">
+            <li class="li">Create a local directory external to the <span class="ph">Data
+                  Collector</span> installation
+                    directory.<div class="p">For example, if you installed <span class="ph">Data
+                  Collector</span> in the
+                    following directory: <pre class="pre codeblock">/opt/sdc/</pre>
+you might create the
+                    external directory at: <pre class="pre codeblock">/opt/sdc-extras</pre>
+</div>
+</li>
+
+            <li class="li">Create subdirectories for each set of external libraries based on the stage library
+                name as
+                    follows:<pre class="pre codeblock">/opt/sdc-extras/&lt;stage library name&gt;/lib/</pre>
+<div class="p">For
+                    example, to install drivers for stages included with the JDBC stage library,
+                    create the following subdirectory:
+                    <pre class="pre codeblock">/opt/sdc-extras/streamsets-datacollector-jdbc-lib/lib/</pre>
+</div>
+<p class="p">To
+                    also install drivers for stages included with the JMS stage library, create the
+                    following subdirectory:
+                    </p>
+<pre class="pre codeblock">/opt/sdc-extras/streamsets-datacollector-jms-lib/lib/</pre>
+<p class="p">To
+                    also install drivers for stages included with the MySQL binary logs stage
+                    library, create the following subdirectory:
+                </p>
+<pre class="pre codeblock">/opt/sdc-extras/streamsets-datacollector-mysql-binlog-lib/lib/</pre>
+</li>
+
+            <li class="li">Copy the external libraries to the appropriate subdirectories.</li>
+
+            <li class="li">In the <span class="ph">Data
+                  Collector</span>
+                environment configuration file, add the STREAMSETS_LIBRARIES_EXTRA_DIR environment
+                variable and point it to the external directory. <p class="p">If you start Data Collector as a service, set the environment
+                  variable in the <samp class="ph systemoutput">$SDC_DIST/libexec/sdcd-env.sh</samp> file.
+                  If you start Data Collector manually, set the variable in the
+                        <samp class="ph systemoutput">$SDC_DIST/libexec/sdc-env.sh</samp> file.</p>
+<p class="p">Set the environment variable as
+                    follows:</p>
+<pre class="pre codeblock">export STREAMSETS_LIBRARIES_EXTRA_DIR="&lt;external directory&gt;"</pre>
+<p class="p">For
+                    example:
+                </p>
+<pre class="pre codeblock">export STREAMSETS_LIBRARIES_EXTRA_DIR="/opt/sdc-extras/"</pre>
+</li>
+
+            <li class="li">When using the Java Security Manager, which is enabled by default, update the <span class="ph">Data
+                  Collector</span> security policy
+                to include the external directory as follows:<ol class="ol" type="a" id="concept_chn_2mt_gz__d3666e53">
+                    <li class="li">In the <span class="ph">Data
+                  Collector</span>
+                        configuration directory, open the security policy file,
+                            <samp class="ph codeph">$SDC_CONF/sdc-security.policy</samp>.</li>
+
+                    <li class="li">Add the following lines to the
+                        file:<pre class="pre codeblock">// user-defined external directory
+grant codebase "file://&lt;external directory&gt;-" {
+  permission java.security.AllPermission;
+};</pre>
+For
+                        example:
+                        <pre class="pre codeblock">// user-defined external directory
+grant codebase "file:///opt/sdc-extras/-" {
+  permission java.security.AllPermission;
+};</pre>
+</li>
+
+                </ol>
+</li>
+
+            <li class="li">Restart <span class="ph">Data
+                  Collector</span>.</li>
+
+        </ol>
+
+ </div>
+
+    <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
+<div class="related_link"><a class="navheader_parent_path" href="DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. To enable remote debugging, define debugging options in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file.You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+</div>
+</div>
+</div>
+<div class="topic concept nested2" id="concept_mbl_snt_gz">
+ <h3 class="title topictitle3">Installing Manually for Cloudera Manager</h3>
+
+ <div class="body conbody">
+  <p class="p">To manually install external libraries for an installation with Cloudera Manager, perform the
+            following steps:</p>
+
+        <ol class="ol" id="concept_mbl_snt_gz__ol_q5w_tnt_gz">
+            <li class="li">In Cloudera Manager, select the <span class="ph uicontrol">StreamSets</span> service and then
+                click <span class="ph uicontrol">Configuration</span>.</li>
+
+            <li class="li">On the <span class="keyword wintitle">Configuration</span> page, in the <span class="ph uicontrol">Data Collector
+                    Advanced Configuration Snippet (Safety Valve) for sdc-env.sh</span> field,
+                add the STREAMSETS_LIBRARIES_EXTRA_DIR environment variable and point it to the
+                external directory, as
+                    follows:<pre class="pre codeblock">export STREAMSETS_LIBRARIES_EXTRA_DIR="&lt;external directory&gt;"</pre>
+<p class="p">For
+                    example:
+                </p>
+<pre class="pre codeblock">export STREAMSETS_LIBRARIES_EXTRA_DIR="/opt/sdc-extras/"</pre>
+By
+                default, the path is <samp class="ph codeph">/var/lib/sdc</samp>. </li>
+
+            <li class="li">On every node that runs Data Collector, create subdirectories for each set of
+                external libraries based on the stage library name as
+                    follows:<pre class="pre codeblock">$STREAMSETS_LIBRARIES_EXTRA_DIR/&lt;stage library name&gt;/lib/</pre>
+<div class="p">For
+                    example, to install drivers for JDBC, create the following subdirectory on every
+                    node:
+                    <pre class="pre codeblock">/opt/sdc-extras/streamsets-datacollector-jdbc-lib/lib/</pre>
+</div>
+<div class="p">To
+                    also install drivers for JMS, create the following subdirectory on every node:
+                    <pre class="pre codeblock">/opt/sdc-extras/streamsets-datacollector-jms-lib/lib/</pre>
+</div>
+</li>
+
+            <li class="li">Copy the external libraries to the appropriate subdirectories on every node.</li>
+
+            <li class="li">When using the Java Security Manager, which is enabled by default, update the
+                    <span class="ph uicontrol">Data Collector Advanced Configuration Snippet (Safety Valve) for
+                    sdc-security.policy</span> property to include the external directory as follows:<div class="p">
+                    <pre class="pre codeblock">// user-defined external directory
+grant codebase "file://&lt;external directory&gt;-" {
+  permission java.security.AllPermission;
+};</pre>
+
+                </div>
+<div class="p">For example:
+                    <pre class="pre codeblock">// user-defined external directory
+grant codebase "file:///opt/sdc-extras/-" {
+  permission java.security.AllPermission;
+};</pre>
+</div>
+</li>
+
+            <li class="li">Restart <span class="ph">Data
+                  Collector</span>.</li>
+
+        </ol>
+
+ </div>
+
+    <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
+<div class="related_link"><a class="navheader_parent_path" href="DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. To enable remote debugging, define debugging options in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file.You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="navfooter"><!---->

@@ -45,8 +45,20 @@
             to the pipeline and <span class="ph">Data
                   Collector</span>.</p>
 
-        <p class="p">At this time, you can use the HTTP Server origin to create a multithreaded pipeline. You
-            can also use the Dev Data Generator development origin to test a multithreaded pipeline. </p>
+        <div class="p">At this time, you can use the following origins to create a multithreaded pipeline:<ul class="ul" id="concept_zpp_2xc_py__ul_oql_bym_3z">
+                <li class="li">Elasticsearch origin</li>
+
+                <li class="li">HTTP Server origin</li>
+
+                <li class="li">JDBC Multitable Consumer origin</li>
+
+                <li class="li">WebSocket Server origin</li>
+
+            </ul>
+</div>
+
+        <p class="p">You can also use the Dev Data Generator development origin to test a multithreaded
+            pipeline. </p>
 
         <p class="p">A multithreaded pipeline honors the configured delivery guarantee for the pipeline, but
             does not guarantee the order in which batches of data are processed. </p>
@@ -113,9 +125,19 @@
     <div class="body conbody">
         <div class="p">You can use the following origins
             to create multithreaded pipelines:<ul class="ul" id="concept_wcz_tpd_py__ul_d2v_vpd_py">
-                <li class="li"><a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y">HTTP Server</a> -
+                <li class="li"><a class="xref" href="../Origins/Elasticsearch.html#concept_f1q_vpm_2z" title="The Elasticsearch origin is a multithreaded origin that reads data from an Elasticsearch cluster, including Elastic Cloud clusters (formerly Found clusters). The origin generates a record for each Elasticsearch document.">Elasticsearch</a> - Reads data from an Elasticsearch cluster.</li>
+
+                <li class="li"><a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y" title="Configure the HTTP clients to send data to the HTTP Server listening port.Configure the HTTP clients to include the HTTP Server application ID in each request.">HTTP Server</a> -
                     Listens on a HTTP endpoint and processes the contents of all authorized HTTP
                     POST requests. </li>
+
+                <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="The JDBC Multitable Consumer origin reads database data from multiple tables through a JDBC connection. The origin returns data as a map with column names and field values.">JDBC
+                        Multitable Consumer</a> - Reads database data from multiple tables
+                    through a JDBC connection.</li>
+
+                <li class="li"><a class="xref" href="../Origins/WebSocketServer.html#concept_u2r_gpc_3z" title="The WebSocket Server origin is a multithreaded origin that listens on a WebSocket endpoint and processes the contents of all authorized WebSocket requests. Use the WebSocket Server origin to read high volumes of WebSocket requests using multiple threads.">WebSocket
+                        Server</a> - Listens on a WebSocket endpoint and processes the contents
+                    of all authorized WebSocket requests. </li>
 
                 <li class="li"><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Dev Data
                         Generator</a> - Generates random data for development and testing.</li>
@@ -213,9 +235,21 @@
   <div class="p">
             <ul class="ul" id="concept_sfp_1nd_py__ul_igl_q4d_py">
                 <li class="li">Use multithreaded origins to create a multithreaded pipeline. You can use the
-                        <a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y">HTTP
-                        Server</a> origin or the <a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht"> Dev Data
-                        Generator</a> origin at this time. </li>
+                    following origins at this time:<ul class="ul" id="concept_sfp_1nd_py__ul_exg_jym_3z">
+                        <li class="li"><a class="xref" href="../Origins/Elasticsearch.html#concept_f1q_vpm_2z" title="The Elasticsearch origin is a multithreaded origin that reads data from an Elasticsearch cluster, including Elastic Cloud clusters (formerly Found clusters). The origin generates a record for each Elasticsearch document.">Elasticsearch</a></li>
+
+                        <li class="li"><a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y" title="Configure the HTTP clients to send data to the HTTP Server listening port.Configure the HTTP clients to include the HTTP Server application ID in each request.">HTTP
+                                Server</a></li>
+
+                        <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="The JDBC Multitable Consumer origin reads database data from multiple tables through a JDBC connection. The origin returns data as a map with column names and field values.">JDBC Multitable Consumer</a></li>
+
+                        <li class="li"><a class="xref" href="../Origins/WebSocketServer.html#concept_u2r_gpc_3z" title="The WebSocket Server origin is a multithreaded origin that listens on a WebSocket endpoint and processes the contents of all authorized WebSocket requests. Use the WebSocket Server origin to read high volumes of WebSocket requests using multiple threads.">WebSocket Server</a></li>
+
+                        <li class="li"><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht"> Dev
+                                Data Generator</a></li>
+
+                    </ul>
+</li>
 
                 <li class="li">Unlike a basic, single-threaded pipeline, a multithreaded pipeline cannot
                     guarantee the order of data. <p class="p">Data within a batch is processed in order, but

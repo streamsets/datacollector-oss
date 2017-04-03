@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The Groovy Evaluator processes data based on Groovy code. Use the Groovy Evaluator processor to use Groovy code to perform custom processing. The Groovy Evaluator supports Groovy version 2.4. The ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Groovy Evaluator" /><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_ldh_sct_gv" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Groovy Evaluator</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The Groovy Evaluator processes data based on Groovy code. Use the Groovy Evaluator processor to use Groovy code to perform custom processing. The Groovy Evaluator supports Groovy version 2.4. You can ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Groovy Evaluator" /><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_ldh_sct_gv" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Groovy Evaluator</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
             
             var prefix = "../index.html";
             
@@ -31,14 +31,26 @@
       Use the Groovy Evaluator processor to use Groovy code to perform custom processing. The Groovy
       Evaluator supports Groovy version 2.4.</p>
 
-    <p class="p">The Groovy Evaluator can process data one record at a time or one batch at a time. </p>
+    <div class="p">You can develop the following scripts for the processor:
+         <ul class="ul" id="concept_ldh_sct_gv__d44402e18">
+             <li class="li">Initialization script - Optional initialization script that sets up resources or
+                    connections required by the processor. The initialization script is run once
+                    when the pipeline starts. </li>
+
+             <li class="li">Main processing script - Main script that processes data. The main script is run for each
+                 record or each batch of data, based on the configured processing mode.</li>
+
+             <li class="li">Destroy script - Optional destroy script that closes any resources or connections opened
+                 by the processor. The destroy script is run once when the pipeline stops.</li>
+
+         </ul>
+
+     </div>
 
   <p class="p">When you use a Groovy Evaluator in a pipeline, the <span class="ph">Data
-                  Collector</span> passes a batch
-   of data to the processor and converts the data to a scripting-friendly data structure for
-   processing.</p>
-
-    <p class="p">You can configure the processor to use the invokedynamic bytecode instruction. </p>
+                  Collector</span> passes a
+      batch of data to the processor and converts the data to a scripting-friendly data structure
+      for processing. You can configure the processor to use the invokedynamic bytecode instruction. </p>
 
     <p class="p">The processor provides extensive sample code that you can use to develop your script. You can
       also call external Java code from the script.</p>
@@ -50,12 +62,12 @@
  <h2 class="title topictitle2">Processing Mode</h2>
 
  
- <div class="body conbody"><p class="shortdesc">You can choose the processing mode to use with the Groovy Evaluator. You can use the
-  same script in each processing mode. However, you should include error handling in the script
-  before you run in batch mode.</p>
+ <div class="body conbody"><p class="shortdesc">You can choose the processing mode that the Groovy Evaluator uses to process the main
+    script. You can use the same script in each processing mode. However, you should include error
+    handling in the main script before you run in batch mode.</p>
 
   <div class="p">The Groovy Evaluator provides the following processing
-      modes: <dl class="dl">
+      modes for the main script: <dl class="dl">
         
                               <dt class="dt dlterm">Record by Record</dt>
 
@@ -99,42 +111,49 @@
  <h2 class="title topictitle2">Groovy Scripting Objects</h2>
 
  <div class="body conbody">
-  <p class="p">You can use the following scripting objects in the Groovy
-        Evaluator:</p>
+    <p class="p">You can use different scripting objects in the Groovy
+      Evaluator, based on the type of script.</p>
 
-  <dl class="dl">
-      
-        <dt class="dt dlterm">records</dt>
+  </div>
 
-        <dd class="dd">A collection of records to process. The records object includes different elements based
-          on the processing mode that you use:<ul class="ul" id="concept_hzt_zjt_gv__ul_fdm_5yk_sr">
-            <li class="li">Record by Record - The records array includes one record element. A record includes
-              a single <samp class="ph codeph">value</samp> element. The <samp class="ph codeph">value</samp> element contains
-              the data for the record.</li>
+<div class="topic concept nested2" id="concept_t4n_mql_kz">
+ <h3 class="title topictitle3">Main Script</h3>
 
-            <li class="li">Batch by Batch - The records array includes all records in the batch.</li>
+ <div class="body conbody">
+     <p class="p">You can use the following scripting objects in the main script:</p>
 
-          </ul>
+     <dl class="dl">
+         
+             <dt class="dt dlterm">records</dt>
+
+             <dd class="dd">A collection of records to process. The records object includes different elements based
+                 on the processing mode that you use:<ul class="ul" id="concept_t4n_mql_kz__ul_fdm_5yk_sr">
+                     <li class="li">Record by Record - The records array includes one record element. A record includes
+                         a single <samp class="ph codeph">value</samp> element. The <samp class="ph codeph">value</samp> element contains
+                         the data for the record.</li>
+
+                     <li class="li">Batch by Batch - The records array includes all records in the batch.</li>
+
+                 </ul>
 </dd>
 
-        <dd class="dd">Map and list record fields are mapped to Groovy maps and lists, respectively.</dd>
+             <dd class="dd">Map and list record fields are mapped to Groovy maps and lists, respectively.</dd>
 
-      
-    </dl>
+         
+     </dl>
 
-    <dl class="dl">
+     <dl class="dl">
                         
                               <dt class="dt dlterm">state</dt>
 
-                              <dd class="dd">An object to store information between invocations of this script.
-                                    A state is a map object that includes a collection of key/value
-                                    pairs. You can use the state object to cache data such as
-                                    lookups or counters.</dd>
+                              <dd class="dd">An object to store information between
+                                    invocations of the init, main, and destroy scripts. A state is a
+                                    map object that includes a collection of key/value pairs. You
+                                    can use the state object to cache data such as lookups,
+                                    counters, or a connection to an external system.</dd>
 
-                              <dd class="dd">The state object functions much like an instance variable: <ul class="ul" id="concept_hzt_zjt_gv__d41316e1741">
-                                          <li class="li">You need to populate the object - it has no default
-                                                value.</li>
-
+                              <dd class="dd">The state object functions much like a
+                                    member variable: <ul class="ul" id="concept_t4n_mql_kz__d43858e1756">
                                           <li class="li">The information is transient and is lost when the
                                                 pipeline stops or restarts.</li>
 
@@ -145,6 +164,14 @@
 
                                     </ul>
 </dd>
+
+                              <dd class="dd">The same instance of the state object
+                                    is available to all three scripts. For example, you might use
+                                    the init script to open a connection to a database and then
+                                    store a reference to that connection in the state object. In the
+                                    main script, you can access the open connection using the state
+                                    object. Then in the destroy script, you can close the connection
+                                    using the state object.</dd>
 
                               <dd class="dd">
                                     <div class="note warning"><span class="warningtitle">Warning:</span> The state object is best used for a fixed
@@ -194,7 +221,7 @@ The
                                     Includes the following methods: </dd>
 
                               <dd class="dd">
-                                    <ul class="ul" id="concept_hzt_zjt_gv__d41316e1823">
+                                    <ul class="ul" id="concept_t4n_mql_kz__d43858e1838">
                                           <li class="li"><samp class="ph codeph">getFieldNull(Record, 'field path')</samp> -
                                                 Method that checks if a field is assigned a constant
                                                 such as NULL_INTEGER or NULL_STRING.</li>
@@ -217,7 +244,7 @@ The
                                                 event methods. </li>
 
                                           <li class="li"><samp class="ph codeph">toEvent(Record)</samp> - Method that sends
-                                                an event record to the Event output stream.  Be sure
+                                                an event record to the Event output stream. Be sure
                                                 to enable event generation in the stage before
                                                 implementing event methods. </li>
 
@@ -230,6 +257,65 @@ The
 
  </div>
 
+</div>
+<div class="topic concept nested2" id="concept_bml_rql_kz">
+ <h3 class="title topictitle3">Init and Destroy Scripts</h3>
+
+ <div class="body conbody">
+  <p class="p">You can use the following scripting objects in the initialization and destroy scripts:</p>
+
+        <dl class="dl">
+                  
+                        <dt class="dt dlterm">state</dt>
+
+                        <dd class="dd">An object to store information between invocations of the init, main,
+                              and destroy scripts. A state is a map object that includes a
+                              collection of key/value pairs. You can use the state object to cache
+                              data such as lookups, counters, or a connection to an external
+                              system.</dd>
+
+                        <dd class="dd">The state object functions much like a member variable: <ul class="ul" id="concept_bml_rql_kz__d43858e1887">
+                                    <li class="li">The information is transient and is lost when the pipeline
+                                          stops or restarts.</li>
+
+                                    <li class="li">The state object is available only for the instance of the
+                                          processor stage it is defined in. If the pipeline executes
+                                          in cluster mode, the state object is not shared across
+                                          nodes.</li>
+
+                              </ul>
+</dd>
+
+                        <dd class="dd">The same instance of the state object is available to all three scripts.
+                              For example, you might use the init script to open a connection to a
+                              database and then store a reference to that connection in the state
+                              object. In the main script, you can access the open connection using
+                              the state object. Then in the destroy script, you can close the
+                              connection using the state object.</dd>
+
+                  
+                  
+                        <dt class="dt dlterm">log</dt>
+
+                        <dd class="dd">An object to write messages to the log. Includes four methods:
+                              <samp class="ph codeph">info()</samp>, <samp class="ph codeph">warn()</samp>,
+                              <samp class="ph codeph">debug()</samp>, and <samp class="ph codeph">trace()</samp>. </dd>
+
+                        <dd class="dd">The signature of the four methods is as follows:
+                              <pre class="pre codeblock">(message-template, arguments...) </pre>
+The
+                              message template can have positional variables denoted by curly
+                              brackets: { }. The arguments are replaced in the message
+                              template curly brackets in positional manner, i.e., this is the
+                              first argument in the first { } occurrence, and so on.</dd>
+
+                  
+            </dl>
+
+        
+ </div>
+
+</div>
 </div>
 <div class="topic concept nested1" id="concept_rmp_xlt_gv">
  <h2 class="title topictitle2">Processing List-Map Data</h2>
@@ -315,13 +401,13 @@ for (record in records) {
             destination for event storage or to any executor that can be configured to use the
             event. For more information about events and the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Event Framework Overview</a>.</p>
 
-        <div class="p">To generate events:<ol class="ol" id="concept_qcz_ssq_1y__d41850e31">
+        <div class="p">To generate events:<ol class="ol" id="concept_qcz_ssq_1y__d44402e47">
                 <li class="li">On the <span class="keyword wintitle">General</span> tab, select the <span class="ph uicontrol">Produce
                         Events</span> property.<p class="p">This enables the event output stream for use.
                     </p>
 </li>
 
-                <li class="li">In the script, include both of the following scripting objects:<ul class="ul" id="concept_qcz_ssq_1y__d41850e46">
+                <li class="li">In the script, include both of the following scripting objects:<ul class="ul" id="concept_qcz_ssq_1y__d44402e62">
                         <li class="li"> sdcFunctions.createEvent(String type, int version) - Creates an event
                             record with the specified event type and version number. You can create
                             a new event type or use an existing event type. Existing event types are
@@ -365,7 +451,7 @@ for (record in records) {
                 <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_wn2_jcz_dz">Record Header Attributes</a>.</p>
 
         <div class="p">The processor provides the following record header variables to work with
-            header attributes:<ul class="ul" id="concept_uw4_kqw_1y__d41850e85">
+            header attributes:<ul class="ul" id="concept_uw4_kqw_1y__d44402e101">
                 <li class="li"><samp class="ph codeph">record.&lt;header name&gt;</samp> - Use to return the value of a
                     read-only header attribute.</li>
 
@@ -391,14 +477,14 @@ for (record in records) {
         <p class="p">For example, the following image shows a record generated by the
             Directory origin in data preview. </p>
 
-        <p class="p"><img class="image" id="concept_jsz_qdy_1y__d41850e116" src="../Reusable_Content/Reusable_Topics/../../Graphics/HeaderAttribute-Preview.png" height="241" width="335" /></p>
+        <p class="p"><img class="image" id="concept_jsz_qdy_1y__d44402e132" src="../Reusable_Content/Reusable_Topics/../../Graphics/HeaderAttribute-Preview.png" height="241" width="335" /></p>
 
-        <p class="p"><span class="ph" id="concept_jsz_qdy_1y__d41850e119">The "Record Header" list displays the set of
+        <p class="p"><span class="ph" id="concept_jsz_qdy_1y__d44402e135">The "Record Header" list displays the set of
                 read-only internal attributes in the record at this point of the pipeline.</span> You
             can use the <samp class="ph codeph">record.&lt;header name&gt;</samp> variable to return values for these
             attributes. </p>
 
-        <p class="p"><span class="ph" id="concept_jsz_qdy_1y__d41850e128">The header attributes under "values" are the
+        <p class="p"><span class="ph" id="concept_jsz_qdy_1y__d44402e143">The header attributes under "values" are the
                 attributes created by the Directory origin.</span> You can use the
                 <samp class="ph codeph">record.attributes</samp> variable to return or modify these attributes.
             When you use the <samp class="ph codeph">record.attributes</samp> variable to create a header
@@ -415,19 +501,20 @@ for (record in records) {
         <p class="p">In a pipeline that processes the whole file
             data format, you can use a Groovy Evaluator to read the whole file data.</p>
 
-        <p class="p">The processor can access the fileref field in a whole file record by creating an
-                  input stream using the getInputStream() API. For example, you might use the
-                  processor to read the file data in the fileref field and then create new records
-                  with the data. The processor can access the fileref field, but cannot modify
-                  information in the field.</p>
+        <p class="p">The processor can access the fileref field in a whole file
+                  record by creating an input stream using the getInputStream() API. For example,
+                  you might use the processor to read the file data in the fileref field and then
+                  create new records with the data. The processor can access the fileref field, but
+                  cannot modify information in the field.</p>
 
         <div class="p">Use the following lines to create and then read the input
                   stream:<pre class="pre codeblock">input_stream = record.value['fileRef'].getInputStream()
 input_stream.read()</pre>
 </div>
 
-        <div class="p">After the processor reads the input stream, include the following line in the code to
-                  close the input stream:<pre class="pre codeblock">input_stream.close()</pre>
+        <div class="p">After the processor reads the input stream, include the
+                  following line in the code to close the input
+                  stream:<pre class="pre codeblock">input_stream.close()</pre>
 </div>
 
  </div>
@@ -537,9 +624,9 @@ grant codebase "file:///groovy/script" {
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d255978e745">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d269022e839">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d255978e748">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d269022e842">Description</th>
 
                                 </tr>
 
@@ -547,34 +634,34 @@ grant codebase "file:///groovy/script" {
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d255978e745 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d269022e839 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d255978e748 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d255978e745 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d255978e748 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d269022e842 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d255978e745 ">Produce Events <a class="xref" href="Groovy.html#concept_qcz_ssq_1y">
+                                    <td class="entry" valign="top" width="30%" headers="d269022e839 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d269022e842 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d269022e839 ">Produce Events <a class="xref" href="Groovy.html#concept_qcz_ssq_1y">
                                             <img class="image" id="task_asl_bpt_gv__image_fnz_31h_cy" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d255978e748 ">Generates event records when
+                                    <td class="entry" valign="top" width="70%" headers="d269022e842 ">Generates event records when
                                         events occur. Use for event handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
-                                            <img class="image" id="task_asl_bpt_gv__d41254e4284" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                            <img class="image" id="task_asl_bpt_gv__d43796e4284" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d255978e745 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_asl_bpt_gv__d41254e4293" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d269022e839 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_asl_bpt_gv__d43796e4293" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d255978e748 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d269022e842 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -582,10 +669,10 @@ grant codebase "file:///groovy/script" {
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d255978e745 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_asl_bpt_gv__d41254e4307" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d269022e839 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_asl_bpt_gv__d43796e4307" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d255978e748 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d269022e842 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -593,10 +680,10 @@ grant codebase "file:///groovy/script" {
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d255978e745 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_asl_bpt_gv__d41254e4323" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d269022e839 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_asl_bpt_gv__d43796e4323" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d255978e748 ">Error record handling for the stage: <ul class="ul" id="task_asl_bpt_gv__d41254e4327">
+                                    <td class="entry" valign="top" width="70%" headers="d269022e842 ">Error record handling for the stage: <ul class="ul" id="task_asl_bpt_gv__d43796e4327">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -627,9 +714,9 @@ grant codebase "file:///groovy/script" {
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d255978e885">Groovy Evaluator Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d269022e979">Groovy Evaluator Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d255978e888">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d269022e982">Description</th>
 
                                 </tr>
 
@@ -637,9 +724,12 @@ grant codebase "file:///groovy/script" {
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d255978e885 ">Record Processing Mode</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d269022e979 ">Record Processing Mode
+                                        <a class="xref" href="Groovy.html#concept_ljq_z2t_gv" title="You can choose the processing mode that the Groovy Evaluator uses to process the main script. You can use the same script in each processing mode. However, you should include error handling in the main script before you run in batch mode.">
+                                            <img class="image" id="task_asl_bpt_gv__image_jet_15l_hw" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d255978e888 ">Determines how the Groovy Evaluator processes data: <ul class="ul" id="task_asl_bpt_gv__ul_vqy_kqt_gv">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d269022e982 ">Determines how the Groovy Evaluator processes the main
+                                        script: <ul class="ul" id="task_asl_bpt_gv__ul_vqy_kqt_gv">
                                             <li class="li">Record by Record - Processes records individually.
                                                 Performs error handling.</li>
 
@@ -653,16 +743,34 @@ grant codebase "file:///groovy/script" {
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d255978e885 ">Script</td>
+      <td class="entry" valign="top" width="22.22222222222222%" headers="d269022e979 ">Init Script</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d255978e888 ">Groovy code to use in the processor.</td>
+      <td class="entry" valign="top" width="77.77777777777779%" headers="d269022e982 ">Optional initialization script to use in the processor.<p class="p">Use to set up connections or
+       resources required by the processor. Runs once when the pipeline starts.</p>
+</td>
 
-                                </tr>
+     </tr>
+<tr>
+     <td class="entry" valign="top" width="22.22222222222222%" headers="d269022e979 ">Script</td>
+
+     <td class="entry" valign="top" width="77.77777777777779%" headers="d269022e982 ">Main processing script to use in the processor.<p class="p">Runs for each record or each batch of
+       data, based on the configured processing mode.</p>
+</td>
+
+    </tr>
+<tr>
+     <td class="entry" valign="top" width="22.22222222222222%" headers="d269022e979 ">Destroy Script</td>
+
+     <td class="entry" valign="top" width="77.77777777777779%" headers="d269022e982 ">Optional destroy script to use in the processor.<p class="p">Use to close any connections or
+       resources required by the processor. Runs once when the pipeline stops.</p>
+</td>
+
+    </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d255978e885 ">Enable invokedynamic Compiler Option</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d269022e979 ">Enable invokedynamic Compiler Option</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d255978e888 ">Enables the use of the invokedynamic bytecode
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d269022e982 ">Enables the use of the invokedynamic bytecode
                                         instruction. <p class="p">This can affect performance differently
                                             depending on the use case. For more information about
                                             Groovy invokedynamic support, see <a class="xref" href="http://groovy-lang.org/indy.html" target="_blank">http://groovy-lang.org/indy.html</a>.</p>

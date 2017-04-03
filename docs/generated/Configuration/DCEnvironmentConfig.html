@@ -113,9 +113,9 @@
                 
                 <thead class="thead" align="left">
                     <tr>
-                        <th class="entry" valign="top" width="35%" id="d33237e190">Environment Variable</th>
+                        <th class="entry" valign="top" width="35%" id="d34531e190">Environment Variable</th>
 
-                        <th class="entry" valign="top" width="65%" id="d33237e193">Description</th>
+                        <th class="entry" valign="top" width="65%" id="d34531e193">Description</th>
 
                     </tr>
 
@@ -123,11 +123,11 @@
 
                 <tbody class="tbody">
                     <tr>
-                        <td class="entry" valign="top" width="35%" headers="d33237e190 ">SDC_CONF<a class="xref" href="DCConfig.html#concept_pq5_xjq_kr" title="You can edit the Data Collector configuration file, $SDC_CONF/sdc.properties, to configure properties such as the host name and port number and account information for email alerts.">
+                        <td class="entry" valign="top" width="35%" headers="d34531e190 ">SDC_CONF<a class="xref" href="DCConfig.html#concept_pq5_xjq_kr" title="You can edit the Data Collector configuration file, $SDC_CONF/sdc.properties, to configure properties such as the host name and port number and account information for email alerts.">
                                 <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                         </td>
 
-                        <td class="entry" valign="top" width="65%" headers="d33237e193 ">
+                        <td class="entry" valign="top" width="65%" headers="d34531e193 ">
                             <p class="p">Defines the configuration directory for the Data Collector
                                 configuration file, <samp class="ph codeph">sdc.properties</samp>, and related
                                 realm properties files and keystore files. Also includes the logj4
@@ -147,9 +147,9 @@
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="35%" headers="d33237e190 ">SDC_DATA</td>
+                        <td class="entry" valign="top" width="35%" headers="d34531e190 ">SDC_DATA</td>
 
-                        <td class="entry" valign="top" width="65%" headers="d33237e193 ">
+                        <td class="entry" valign="top" width="65%" headers="d34531e193 ">
                             <p class="p">Defines the data directory for pipeline configuration and run
                                 details. </p>
 
@@ -167,9 +167,9 @@
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="35%" headers="d33237e190 ">SDC_LOG</td>
+                        <td class="entry" valign="top" width="35%" headers="d34531e190 ">SDC_LOG</td>
 
-                        <td class="entry" valign="top" width="65%" headers="d33237e193 ">
+                        <td class="entry" valign="top" width="65%" headers="d34531e193 ">
                             <p class="p">Defines the log directory. </p>
 
                             <p class="p">Default values:</p>
@@ -186,11 +186,11 @@
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="35%" headers="d33237e190 ">SDC_RESOURCES <a class="xref" href="RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">
+                        <td class="entry" valign="top" width="35%" headers="d34531e190 ">SDC_RESOURCES <a class="xref" href="RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">
                                 <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                         </td>
 
-                        <td class="entry" valign="top" width="65%" headers="d33237e193 ">Defines the directory for runtime resource files. <p class="p">Default
+                        <td class="entry" valign="top" width="65%" headers="d34531e193 ">Defines the directory for runtime resource files. <p class="p">Default
                                 values:</p>
 <ul class="ul">
                                 <li class="li">Manual start: <samp class="ph codeph">$SDC_DIST/resources</samp></li>
@@ -246,26 +246,16 @@
     <p class="p">You can update Java configuration options in the following environment variables:</p>
 
     <ul class="ul" id="concept_vrx_4fg_qr__ul_xfx_q33_vx">
-      <li class="li">SDC_JAVA_OPTS - Includes configuration options for both Java 7 and 8.</li>
+      <li class="li">SDC_JAVA_OPTS - Includes configuration options for Java.</li>
 
-      <li class="li">SDC_JAVA7_OPTS - Includes configuration options for Java 7. </li>
-
-      <li class="li">SDC_JAVA8_OPTS - Includes configuration options for Java 8.</li>
+      <li class="li">SDC_JAVA8_OPTS - Includes configuration options specific to Java 8.</li>
 
     </ul>
 
-    <p class="p">Based on the Java version installed on the <span class="ph">Data
-                  Collector</span> machine,
-        <span class="ph">Data
+    <p class="p"><span class="ph">Data
                   Collector</span> loads
       the value of the version-specific environment variable and adds it to the SDC_JAVA_OPTS
       environment variable.</p>
-
-   <div class="note note"><span class="notetitle">Note:</span> Java 7 is supported but deprecated. Oracle announced the end of public
-                  updates for Java 7 in April 2015. StreamSets highly recommends migrating to Java 8
-                  with this version of <span class="ph">Data
-                  Collector</span>. <span class="ph">Data
-                  Collector</span> will no longer run on Java 7 starting with version 2.5.0.0.</div>
 
     <p class="p">To modify Java configuration options for the <span class="ph">Data
                   Collector</span> command
@@ -371,13 +361,11 @@
             performance before making the same change in a production environment. Garbage collector
             performance depends on each particular use case.</p>
 
-        <p class="p">Define the garbage collector in the SDC_JAVA7_OPTS or SDC_JAVA8_OPTS environment variable
-            in the <span class="ph">Data
+        <p class="p">Define the garbage collector in the SDC_JAVA8_OPTS environment variable in the <span class="ph">Data
                   Collector</span>
-            environment configuration file, based on the Java version that you are using. </p>
+            environment configuration file. </p>
 
-        <p class="p">For example, if you are using Java 8, the default garbage collector is defined as
-            follows:</p>
+        <p class="p">For example, the default garbage collector is defined as follows:</p>
 
         <pre class="pre codeblock">SDC_JAVA8_OPTS=${SDC_JAVA8_OPTS:-"<span class="ph uicontrol">-XX:+UseConcMarkSweepGC -XX:+UseParNewGC</span>"}</pre>
 
@@ -400,61 +388,6 @@
         </div>
 
     </div>
-
-</div>
-<div class="topic concept nested2" id="concept_txl_qyc_ww">
- <h3 class="title topictitle3">TLS Protocol Versions</h3>
-
- 
- <div class="body conbody"><p class="shortdesc">When you use <span class="ph">Data
-                  Collector</span> with
-        Java 7, <span class="ph">Data
-                  Collector</span> is configured to use TLS versions 1.1 and 1.2. To connect to a system that uses an
-        earlier version of TLS, modify the <samp class="ph codeph">Dhttps.protocols</samp> option in the
-        SDC_JAVA7_OPTS environment variable in the <span class="ph">Data
-                  Collector</span>
-        environment configuration file.</p>
-  
-     <div class="p">By default, the option is defined as
-            follows:<pre class="pre codeblock">SDC_JAVA7_OPTS=${SDC_JAVA7_OPTS:-"<span class="ph uicontrol">-Dhttps.protocols=TLSv1.2,TLSv1.1</span> -XX:PermSize=256m -XX:MaxPermSize=512m -XX:+UseConcMarkSweepGC -XX:+UseParNewGC"}</pre>
-</div>
-
-        <div class="p">To connect to an HTTP server that uses TLS version 1.0, set the option as
-            follows:<pre class="pre codeblock">SDC_JAVA7_OPTS=${SDC_JAVA7_OPTS:-"<span class="ph uicontrol">-Dhttps.protocols=TLSv1.2,TLSv1.1,TLSv1</span> -XX:PermSize=256m -XX:MaxPermSize=512m -XX:+UseConcMarkSweepGC -XX:+UseParNewGC"}</pre>
-</div>
-
- </div>
-
-</div>
-<div class="topic concept nested2" id="concept_kxf_y2m_sr">
-  <h3 class="title topictitle3">Permanent Generation Size</h3>
-
-  
-  <div class="body conbody"><p class="shortdesc">When you use <span class="ph">Data
-                  Collector</span> with Java 7,
-    you can define the Java Permanent Generation size, also known as the PermGen size.</p>
-
-    <p class="p">The PermGen size determines the amount of
-      memory that the <span class="ph">Data
-                  Collector</span> web
-      application server uses. Define the PermGen size as part of the SDC_JAVA7_OPTS environment
-      variable in the <span class="ph">Data
-                  Collector</span>
-      environment configuration file.</p>
-
-    <div class="p">Use the following properties to define the PermGen size:<ul class="ul" id="concept_kxf_y2m_sr__ul_qjd_33m_sr">
-        <li class="li">PermSize - Initial and minimum size of the permanent generation space.</li>
-
-        <li class="li">MaxPermSize - Maximum size of the permanent generation space.</li>
-
-      </ul>
-</div>
-
-    <div class="p">By default, the PermGen size is defined as
-      follows:<pre class="pre codeblock">SDC_JAVA7_OPTS=${SDC_JAVA7_OPTS:-"-Dhttps.protocols=TLSv1.2,TLSv1.1 <span class="ph uicontrol">-XX:PermSize=256m -XX:MaxPermSize=512m</span> -XX:+UseConcMarkSweepGC -XX:+UseParNewGC"}</pre>
-</div>
-
-  </div>
 
 </div>
 </div>

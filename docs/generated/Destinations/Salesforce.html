@@ -33,13 +33,13 @@
 
   <p class="p">When
             you configure the Salesforce destination, you define connection information, including
-            the API type that the destination uses to connect to Salesforce. By default, the
-            destination uses Salesforce API version 36.0. You can change the API version if
-            needed.</p>
+            the API type and version that the destination uses to connect to Salesforce. </p>
 
         <p class="p">You specify the Salesforce object to write to by entering the object name or by defining
             an expression that evaluates to the object name. You also map incoming fields in the
             record to existing fields in the Salesforce object.</p>
+
+        <p class="p">You can optionally use an HTTP proxy to connect to Salesforce.</p>
 
  </div>
 
@@ -50,21 +50,21 @@
     <div class="body taskbody">
         <div class="section context">
             <p class="p"><span class="ph">Data
-                  Collector</span> ships with version 36.0 of the Salesforce Web Services Connector libraries. You
+                  Collector</span> ships with version 38.0 of the Salesforce Web Services Connector libraries. You
                 can use a different Salesforce API version if you need to access functionality not
-                present in version 36.0.</p>
+                present in version 38.0.</p>
 
         </div>
 
         <ol class="ol steps" id="task_es3_25d_dy__steps_imt_zck_dy"><li class="li step stepexpand">
                 <span class="ph cmd">On the <span class="ph uicontrol">Salesforce</span> tab, set the <span class="ph uicontrol">API
-                    Version</span> property to the version that you want to use, for
-                    example 38.0.</span>
+                        Version</span> property to the version that you want to use, for
+                    example 36.0.</span>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Download the relevant version of the following JAR files from Salesforce Web
                     Services Connector (WSC):</span>
-                <ul class="ul choices" id="task_es3_25d_dy__d20314e41">
+                <ul class="ul choices" id="task_es3_25d_dy__d21112e41">
                     <li class="li choice">
                         <p class="p">WSC JAR file - force-wsc-&lt;version&gt;.0.0.jar </p>
 
@@ -78,7 +78,7 @@
                 </ul>
 
                 <div class="itemgroup info">
-                    <p class="p">Where &lt;version&gt; is the API version number, for example, 38.</p>
+                    <p class="p">Where &lt;version&gt; is the API version number, for example, 36.</p>
  
                     <p class="p">For information about downloading libraries from Salesforce WSC, see <a class="xref" href="https://developer.salesforce.com/page/Introduction_to_the_Force.com_Web_Services_Connector" target="_blank">https://developer.salesforce.com/page/Introduction_to_the_Force.com_Web_Services_Connector</a>.</p>
 
@@ -87,7 +87,7 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">In the following <span class="ph">Data
                   Collector</span> directory,
-                    replace the default force-wsc-36.0.0.jar and force-partner-api-36.0.0.jar files
+                    replace the default force-wsc-38.0.0.jar and force-partner-api-38.0.0.jar files
                     with the versioned JAR files that you downloaded:</span>
                 <div class="itemgroup info">
                     <pre class="pre codeblock">$SDC_DIST/streamsets-libs/streamsets-datacollector-salesforce-lib/lib/</pre>
@@ -117,14 +117,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ncv_153_rx__d11387e4470" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ncv_153_rx__d12211e4470" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d112053e179">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d113421e182">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d112053e182">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d113421e185">Description</th>
 
                                 </tr>
 
@@ -132,24 +132,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d112053e179 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d113421e182 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d112053e182 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d112053e179 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d112053e182 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d113421e185 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d112053e179 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_ncv_153_rx__d11387e4516" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d113421e182 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d112053e182 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d113421e185 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d113421e182 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_ncv_153_rx__d12211e4516" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d113421e185 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -157,10 +157,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d112053e179 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_ncv_153_rx__d11387e4530" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d113421e182 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_ncv_153_rx__d12211e4530" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d112053e182 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d113421e185 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -168,10 +168,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d112053e179 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_ncv_153_rx__d11387e4545" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d113421e182 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_ncv_153_rx__d12211e4545" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d112053e182 ">Error record handling for the stage: <ul class="ul" id="task_ncv_153_rx__d11387e4549">
+                                    <td class="entry" valign="top" width="70%" headers="d113421e185 ">Error record handling for the stage: <ul class="ul" id="task_ncv_153_rx__d12211e4549">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -201,9 +201,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d112053e301">Salesforce Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d113421e304">Salesforce Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d112053e304">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d113421e307">Description</th>
 
                                 </tr>
 
@@ -211,17 +211,17 @@
 
                             <tbody class="tbody">
                                 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d112053e301 ">Username</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d113421e304 ">Username</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d112053e304 ">Salesforce username in the following email format:
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d113421e307 ">Salesforce username in the following email format:
        <samp class="ph codeph">&lt;text&gt;@&lt;text&gt;.com</samp>. </td>
 
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d112053e301 ">Password</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d113421e304 ">Password</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d112053e304 ">Salesforce password. <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d113421e307 ">Salesforce password. <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
                   and passwords, you can use runtime resources or Hashicorp Vault secrets. For more
                   information, see <a class="xref" href="../Configuration/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
 </td>
@@ -229,13 +229,13 @@
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d112053e301 ">Auth Endpoint</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d113421e304 ">Auth Endpoint</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d112053e304 ">Salesforce SOAP API authentication endpoint. Enter one of the following values:<ul class="ul" id="task_ncv_153_rx__d11249e2561">
-        <li class="li">login.salesforce.com - To connect to a Production or Developer Edition
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d113421e307 ">Salesforce SOAP API authentication endpoint. Enter one of the following values:<ul class="ul" id="task_ncv_153_rx__d12073e2561">
+        <li class="li">login.salesforce.com - Use to connect to a Production or Developer Edition
          organization.</li>
 
-        <li class="li">test.salesforce.com - To connect to a sandbox organization.</li>
+        <li class="li">test.salesforce.com - Use to connect to a sandbox organization.</li>
 
        </ul>
 <p class="p">Default is login.salesforce.com.</p>
@@ -244,21 +244,21 @@
      </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d112053e301 ">API Version
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d113421e304 ">API Version
                                         <a class="xref" href="Salesforce.html#task_es3_25d_dy">
                                             <img class="image" id="task_ncv_153_rx__image_weh_nch_er" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d112053e304 ">Salesforce API version to use to connect to Salesforce.
-        <p class="p">Default is 36.0. If you change the version, you also must download the relevant JAR files
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d113421e307 ">Salesforce API version to use to connect to Salesforce.
+        <p class="p">Default is 38.0. If you change the version, you also must download the relevant JAR files
         from Salesforce Web Services Connector (WSC).</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d112053e301 ">Use Bulk API</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d113421e304 ">Use Bulk API</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d112053e304 ">Determines whether the stage uses the Salesforce Bulk API
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d113421e307 ">Determines whether the stage uses the Salesforce Bulk API
                                         or SOAP API to write to Salesforce. Select to use the Bulk
                                         API. Clear to use the SOAP API.<p class="p">The Bulk API is optimized
                                             to process large sets of data. The SOAP API supports
@@ -271,9 +271,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d112053e301 ">SObject Type</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d113421e304 ">SObject Type</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d112053e304 ">Salesforce object to write to. <p class="p">Enter the name of an
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d113421e307 ">Salesforce object to write to. <p class="p">Enter the name of an
                                             object, such as Account. Or define an expression that
                                             evaluates to the object name.</p>
 <div class="p">For example, if the
@@ -290,9 +290,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d112053e301 ">Field Mapping</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d113421e304 ">Field Mapping</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d112053e304 ">Map fields in the record to existing fields in the
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d113421e307 ">Map fields in the record to existing fields in the
                                         Salesforce object. Enter the following:<ul class="ul" id="task_ncv_153_rx__ul_zgb_wlw_tw">
                                             <li class="li">SDC Field - Name of the field in the record that
                                                 contains the data to be written. </li>
@@ -308,6 +308,72 @@
 </td>
 
                                 </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Advanced</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ncv_153_rx__table_qgc_5l2_kz" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d113421e472">Advanced Property</th>
+
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d113421e475">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d113421e472 ">Use Proxy</td>
+
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d113421e475 ">Specifies whether to use an HTTP proxy to connect to Salesforce.</td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d113421e472 ">Proxy Hostname</td>
+
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d113421e475 ">Proxy host.</td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d113421e472 ">Proxy Port</td>
+
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d113421e475 ">Proxy port.</td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d113421e472 ">Proxy Requires Credentials</td>
+
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d113421e475 ">Specifies whether the proxy requires a user name and password.</td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d113421e472 ">Proxy Username</td>
+
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d113421e475 ">User name for proxy credentials.</td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d113421e472 ">Proxy Password</td>
+
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d113421e475 ">Password for proxy credentials.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
+                  and passwords, you can use runtime resources or Hashicorp Vault secrets. For more
+                  information, see <a class="xref" href="../Configuration/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
+</td>
+
+     </tr>
 
                             </tbody>
 

@@ -1,0 +1,1145 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The Spark executor starts a Spark application each time it receives an event. You can use the Spark executor with Spark on YARN or Spark on Databricks. The executor is not compatible with Spark on ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Spark Executor" /><meta name="DC.Relation" scheme="URI" content="../Executors/Executors-title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_cvy_vxb_1z" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Spark Executor</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+            
+            var prefix = "../index.html";
+            
+            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../Executors/Executors-title.html" title="Executors">Executors</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../Executors/Executors-title.html" title="Executors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Executors</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_cvy_vxb_1z">
+ <h1 class="title topictitle1">Spark Executor</h1>
+
+ <div class="body conbody">
+        <p class="p">The
+            Spark executor starts a Spark application each time it receives an event. You can use
+            the Spark executor with Spark on YARN or Spark on Databricks. The executor is not
+            compatible with Spark on Mesos at this time. </p>
+
+        <p class="p">Use the Spark executor to start a Spark application as part of an event stream. You would
+            generally use the executor to process events from the Hadoop FS, MapR FS, and Amazon S3
+            destinations. For example, you might use the executor to start a Spark application that
+            converts Avro files to Parquet each time the Hadoop FS destination closes a file. </p>
+
+        <p class="p">Note that the Spark executor starts an application in an external system. It does not
+            monitor the application or wait for it to complete. The executor becomes available for
+            additional processing as soon as it successfully submits an application. </p>
+
+        <p class="p">When you configure the Spark executor, you specify the cluster manager used with Spark:
+            YARN or Databricks. The cluster manager that you select determines the additional
+            cluster manager properties, application details, and security options that you can
+            configure. </p>
+
+        <p class="p">Regardless of the cluster manager type, you can configure the executor to generate events
+            for another event stream. For more information about the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Event Framework Overview</a>.</p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_ckt_vcv_jz">
+ <h2 class="title topictitle2">Spark on YARN</h2>
+
+ <div class="body conbody">
+  <p class="p">When using the
+            Spark executor with YARN, the executor can run the application in client or cluster
+            mode. Run the application in client mode only when resource use is not a concern.</p>
+
+        <p class="p">When you configure the Spark executor, you can specify the number of worker nodes Spark
+            should use, or you can enable dynamic allocation and specify the minimum and maximum
+            number of worker nodes. Dynamic allocation allows Spark to use additional worker nodes as
+            needed, within the specified range.</p>
+
+        <p class="p">You can specify additional cluster manager properties to pass to Spark, such as the
+            maximum amount of memory that the application driver and executor can use.</p>
+
+        <p class="p">You can also configure additional Spark arguments and environment variables. Any
+            arguments and variables that you enter override any previous definitions, including
+            those in the Spark application, elsewhere in the Spark executor, and the <span class="ph">Data
+                  Collector</span>
+            machine.</p>
+
+        <p class="p">You can specify a custom Spark and Java home directory, and a Hadoop proxy user. You can
+            also enter Kerberos credentials if needed.</p>
+
+        <p class="p">When you configure the application details, you specify the language used to write the
+            application and then define language-specific properties. </p>
+
+        <p class="p">Before you use the Spark executor, make sure to perform the prerequisite task.</p>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_pyb_gsg_gz">
+ <h3 class="title topictitle3">YARN Prerequisite</h3>
+
+    <div class="body conbody">
+        <p class="p">Before you run a Spark executor pipeline that
+            starts applications on YARN, you must enable the Spark executor to submit an
+            application. </p>
+
+        <div class="p">You can enable the Spark executor to submit an application in several different ways.
+            Perform <u class="ph u">one</u> of the following tasks to enable the executor to submit applications: <dl class="dl">
+                
+                              <dt class="dt dlterm">Configure the YARN Minimum User ID property, min.user.id</dt>
+
+                              <dd class="dd">The min.user.id property is set to 1000 by default. To allow job
+                                          submission:<ol class="ol" id="concept_pyb_gsg_gz__d21686e3668">
+                                          <li class="li">Verify the user ID being used by the <span class="ph">Data
+                  Collector</span> user, typically named "sdc".</li>
+
+                                          <li class="li">In Hadoop, configure the YARN min.user.id property.
+                                                  <p class="p"> Set the property to equal to or lower than the
+                                                  <span class="ph">Data
+                  Collector</span> user ID.</p>
+</li>
+
+                                    </ol>
+</dd>
+
+                        
+                
+                              <dt class="dt dlterm">Configure the YARN Allowed System Users property,
+                                    allowed.system.users</dt>
+
+                              <dd class="dd">The allowed.system.users property lists allowed user names. To
+                                    allow job submission: <ol class="ol" id="concept_pyb_gsg_gz__d21686e3691">
+                                          <li class="li"> In Hadoop, configure the YARN allowed.system.users
+                                                property. <p class="p">Add the <span class="ph">Data
+                  Collector</span> user name, typically "sdc", to the list of
+                                                  allowed users.</p>
+</li>
+
+                                    </ol>
+</dd>
+
+                        
+                
+                    <dt class="dt dlterm">Configure the Spark executor Proxy User property</dt>
+
+                    <dd class="dd">In the Spark executor, the Proxy User property allows you to enter a user
+                        name for the stage to use when submitting applications. To allow application
+                            submission:<ol class="ol" id="concept_pyb_gsg_gz__ol_f3h_f2w_cy">
+                            <li class="li">In the Spark executor stage, on the <span class="keyword wintitle">Spark</span> tab,
+                                configure the <span class="ph uicontrol">Proxy User</span> property. <p class="p">Enter a
+                                    user with an ID that is higher than the min.user.id property, or
+                                    with a user name that is listed in the allowed.system.users
+                                    property. </p>
+</li>
+
+                        </ol>
+</dd>
+
+                    <dd class="dd">For information about using a Hadoop User, see <a class="xref" href="Spark.html#concept_twh_wsg_gz">Using a Proxy Hadoop User</a>.</dd>
+
+                
+            </dl>
+</div>
+
+    </div>
+
+</div>
+<div class="topic concept nested2" id="concept_lkk_rwx_jz">
+ <h3 class="title topictitle3">Application Properties</h3>
+
+ <div class="body conbody">
+  <p class="p">When using the Spark executor with
+            YARN, you specify an application name. The application name displays in the cluster
+            manager and Spark server logs, so use a distinctive name to enable distinguishing the
+            Spark application from others. For example, <span class="ph">SDC_&lt;pipeline name&gt;_&lt;app_type&gt;</span>. </p>
+
+        <p class="p">In the executor, you can enable verbose logging to help test the pipeline and debug the
+            application. </p>
+
+        <div class="p">Configure additional application details based on the language used to write the application:<dl class="dl">
+                
+                    <dt class="dt dlterm">Java or Scala</dt>
+
+                    <dd class="dd">For applications written in Java or Scala, you specify the main class and
+                        application resource - the full path to the primary JAR or file.</dd>
+
+                    <dd class="dd">You can specify additional arguments and JARs to use. You can also pass
+                        additional files to the application using the <samp class="ph codeph">--files</samp>
+                        protocol. </dd>
+
+                
+                
+                    <dt class="dt dlterm">Python</dt>
+
+                    <dd class="dd">For applications written in Python, you specify the application resource -
+                        the full path to the primary Python file - and any required dependencies.
+                        You can define application arguments and pass additional files to the
+                        application using the <samp class="ph codeph">--files</samp> protocol. </dd>
+
+                
+            </dl>
+</div>
+
+        <div class="p">
+            <div class="note note"><span class="notetitle">Note:</span> Make sure the user that runs <span class="ph">Data
+                  Collector</span> - or the Hadoop proxy user, if configured - has read permission on all required
+                paths.</div>
+
+        </div>
+
+ </div>
+
+</div>
+<div class="topic concept nested2" id="concept_twh_wsg_gz">
+ <h3 class="title topictitle3">Using a Proxy Hadoop User</h3>
+
+    <div class="body conbody">
+        <p class="p">You can configure the Spark executor to use a Hadoop user as
+            a proxy user to submit applications to Spark on YARN. </p>
+
+        <p class="p">By default, the <span class="ph">Data
+                  Collector</span>
+            uses the user account who started it to connect to external systems. When using
+            Kerberos, the <span class="ph">Data
+                  Collector</span>
+            can use the Kerberos principal specified in the executor.</p>
+
+        <div class="p">To use a Hadoop user, perform the following tasks:<ol class="ol" id="concept_twh_wsg_gz__ol_vmj_jtg_gz">
+                <li class="li">On the external system, configure the <span class="ph">Data
+                  Collector</span> user as a proxy user and authorize the <span class="ph">Data
+                  Collector</span> user to impersonate the Hadoop user. <p class="p">For more information, see the Hadoop
+                        documentation. </p>
+</li>
+
+                <li class="li">In the Spark executor, on the <span class="ph uicontrol">Spark</span> tab, configure the
+                        <span class="ph uicontrol">Proxy User</span> property to use the Hadoop user name.</li>
+
+            </ol>
+</div>
+
+    </div>
+
+</div>
+<div class="topic concept nested2" id="concept_bhk_fhg_gz">
+ <h3 class="title topictitle3">Kerberos Authentication</h3>
+
+    <div class="body conbody">
+        <p class="p">You can use Kerberos authentication to
+            connect to the destination system where output files are written. To enable this, on the
+            Credentials tab of the Spark executor, enter the Kerberos principal and keytab for the
+            YARN cluster where the application runs. </p>
+
+    </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_fdc_qrx_jz">
+ <h2 class="title topictitle2">Spark on Databricks</h2>
+
+ <div class="body conbody">
+  <p class="p">When using
+            the Spark executor with Databricks, you can run jobs based on notebooks or JARs.</p>
+
+        <p class="p">Before you use the Spark executor, perform the necessary prerequisites. </p>
+
+        <p class="p">When you configure the executor, you specify the cluster base URL, job type, job ID, and
+            user credentials. You can optionally configure job parameters. And you can configure an
+            HTTP proxy and SSL/TLS details.</p>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_esz_x3d_kz">
+    <h3 class="title topictitle3">Databricks Prerequisites</h3>
+
+    <div class="body conbody">
+        <div class="p">Before you run a
+            Spark executor pipeline that starts jobs on Databricks, perform the following tasks:<ol class="ol" id="concept_esz_x3d_kz__ol_rxc_rld_kz">
+                <li class="li">Create the job. <p class="p">The Spark executor can start jobs based on notebooks or
+                        JARs.</p>
+</li>
+
+                <li class="li"> Optionally configure the job to allow concurrent runs.<p class="p">By default, Databricks
+                        does not allow running multiple instances of a job at the same time. With
+                        the default, if the Spark executor receives multiple events in quick
+                        succession, it starts multiple instances of the job but Databricks queues
+                        those instances and runs them one by one. </p>
+<p class="p">To enable parallel
+                        processing, in Databricks, configure the job to allow concurrent runs. You
+                        can configure the maximum number of concurrent runs through the Databricks
+                        API with the max_concurrent_runs parameter, or through the UI using the Jobs
+                        &gt; Advanced menu and the Maximum Concurrent Runs property.</p>
+</li>
+
+                <li class="li">Submit the job and note the job ID.<p class="p">When you submit the job, Databricks
+                        generates a job ID. Use the job ID when you configure the Spark
+                        executor.</p>
+</li>
+
+            </ol>
+</div>
+
+    </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_xmx_1wg_gz">
+ <h2 class="title topictitle2">Event Generation</h2>
+
+    <div class="body conbody">
+        <p class="p">The Spark executor can generate events that you
+            can use in an event stream. When you enable event generation, the executor generates
+            events each time it starts a Spark application. </p>
+
+        <p class="p">Spark executor <span class="ph">events can be used with a destination to store
+                        file processing information for later use. For an example, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_ocb_nnl_px">Case Study: Event Storage</a>.</span></p>
+
+        <p class="p">Since Spark executor events include the application ID for each application that it
+            starts, you might generate events to keep a log of the application IDs.</p>
+
+        <p class="p">For more information about the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Event Framework Overview</a>.</p>
+
+    </div>
+
+<div class="topic concept nested2" id="concept_qk2_3wg_gz">
+ <h3 class="title topictitle3">Event Records</h3>
+
+    <div class="body conbody">
+        <div class="p">Event records generated
+            by the Spark executor have the following event-related record header attributes. Record
+            header attributes are stored as String values:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_qk2_3wg_gz__table_smk_gp5_sx" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="30%" id="d126882e485">Record Header Attribute</th>
+
+                            <th class="entry" valign="top" width="70%" id="d126882e488">Description</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d126882e485 ">sdc.event.type</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d126882e488 ">Event type. Uses one of the following types:<ul class="ul" id="concept_qk2_3wg_gz__ul_tmk_gp5_sx">
+                                    <li class="li">AppSubmittedEvent - Generated when the executor starts a
+                                        Spark application.</li>
+
+                                </ul>
+</td>
+
+                        </tr>
+
+                        <tr>
+       <td class="entry" valign="top" width="30%" headers="d126882e485 ">sdc.event.version</td>
+
+       <td class="entry" valign="top" width="70%" headers="d126882e488 ">An integer that indicates the version of the event record type.</td>
+
+      </tr>
+
+                        <tr>
+       <td class="entry" valign="top" width="30%" headers="d126882e485 ">sdc.event.creation_timestamp</td>
+
+       <td class="entry" id="concept_qk2_3wg_gz__d21608e1385" valign="top" width="70%" headers="d126882e488 ">Epoch timestamp when the stage created the event.
+       </td>
+
+      </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+</div>
+
+        <div class="p">Event records generated by the Spark executor have the following fields:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_qk2_3wg_gz__table_umk_gp5_sx" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="30%" id="d126882e544">Event Field Name</th>
+
+                            <th class="entry" valign="top" width="70%" id="d126882e547">Description</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d126882e544 ">APP_ID</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d126882e547 ">Application ID for the Spark application:<ul class="ul" id="concept_qk2_3wg_gz__ul_g53_4wg_gz">
+                                    <li class="li">For Databricks, returns the run ID of the job.</li>
+
+                                    <li class="li">For YARN, returns the YARN application ID.</li>
+
+                                </ul>
+</td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+</div>
+
+    </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_ibt_1tx_jz">
+ <h2 class="title topictitle2">Monitoring</h2>
+
+ <div class="body conbody">
+        <p class="p"><span class="ph">Data
+                  Collector</span>
+            does not monitor Spark applications. Use your regular cluster monitor application to
+            view the status of applications. </p>
+
+        <p class="p">Applications started by the Spark executor display using the application name specified
+            in the stage. The application name is the same for all instances of the application. You
+            can find the application ID for a particular instance in the <span class="ph">Data
+                  Collector</span>
+            log.</p>
+
+        <p class="p">The Spark executor also writes the application ID to the event record. To keep a record
+            of all application IDs, enable event generation for the stage. </p>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_cdw_wxb_1z">
+    <h2 class="title topictitle2">Configuring a Spark Executor</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Configure a
+                Spark executor to start Spark applications each time the executor receives an event
+                record. </p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_cdw_wxb_1z__table_yxz_pvs_5x" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d126882e649">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d126882e652">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d126882e649 ">Name</td>
+
+       <td class="entry" valign="top" width="70%" headers="d126882e652 ">Stage name.</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d126882e649 ">Description</td>
+
+       <td class="entry" valign="top" width="70%" headers="d126882e652 ">Optional description.</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d126882e649 ">Stage Library</td>
+
+       <td class="entry" valign="top" width="70%" headers="d126882e652 ">Library version that you want to use. </td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e649 ">Produce Events <a class="xref" href="Spark.html#concept_xmx_1wg_gz">
+                                            <img class="image" id="task_cdw_wxb_1z__image_qqz_cxs_5x" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e652 ">Generates event records when events occur. Use for event
+        handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
+         <img class="image" id="task_cdw_wxb_1z__d21608e1258" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d126882e649 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+         <img class="image" id="task_cdw_wxb_1z__d21608e1267" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+       <td class="entry" valign="top" width="70%" headers="d126882e652 ">Fields that must include data to be passed into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields that the stage uses.</div>
+</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d126882e649 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+         <img class="image" id="task_cdw_wxb_1z__d21608e1282" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+       <td class="entry" valign="top" width="70%" headers="d126882e652 ">Conditions that must evaluate to TRUE to allow a record to enter the stage for
+        processing. Click <span class="ph uicontrol">Add</span> to create additional preconditions. </td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Spark</span> tab, configure the <span class="ph uicontrol">Cluster
+                        Manager</span> property.</span>
+                <div class="itemgroup info">Then, when using a <span class="ph uicontrol">Databricks</span> cluster manager,
+                    configure the following property and continue to the next step.
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_cdw_wxb_1z__table_p1f_ytl_gz" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d126882e774">Databricks Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d126882e777">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e774 ">Cluster Base URL</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e777 ">The Databricks URL for your company. The URL uses the
+                                        following format:
+                                        <pre class="pre codeblock">https://&lt;your domain&gt;.cloud.databricks.com</pre>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+</div>
+                <div class="itemgroup info">Then, when using a <span class="ph uicontrol">YARN</span> cluster manager, configure the
+                    following properties:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_cdw_wxb_1z__table_f4s_j5l_gz" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d126882e815">YARN Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d126882e818">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e815 ">Deploy Mode</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e818 ">Deploy mode for the application:<ul class="ul" id="task_cdw_wxb_1z__ul_swj_n5l_gz">
+                                            <li class="li">Client - Runs the application in Spark client mode.
+                                                Use only when resources are not a concern.</li>
+
+                                            <li class="li">Cluster - Runs the application in Spark cluster
+                                                mode. Cluster mode deploys the application on the
+                                                YARN cluster.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e815 ">Driver Memory</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e818 ">Maximum amount of memory the driver can use for the
+                                            application.<p class="p">Enter the number and a standard Java unit
+                                            of measure without additional spaces. For example, 10m.
+                                            </p>
+<p class="p">You can use k or K, m or M, or g or G.
+                                        </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e815 ">Executor Memory</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e818 ">Maximum amount of memory the executor can use. <p class="p">Enter
+                                            the number and a standard Java unit of measure without
+                                            additional spaces. For example, 100k. </p>
+<p class="p">You can use
+                                            k or K, m or M, or g or G. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e815 ">Dynamic Allocation</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e818 ">Enables the dynamic allocation of executors to start an
+                                        applications.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e815 ">Number of Worker Nodes</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e818 ">The exact number of worker nodes for Spark to use.
+                                        Configure when not using dynamic allocation.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e815 ">Minimum Number of Worker Nodes</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e818 ">The minimum number of worker nodes for Spark to use.
+                                        Configure when using dynamic allocation.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e815 ">Maximum Number of Worker Nodes</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e818 ">The maximum number of worker nodes for Spark to use.
+                                        Configure when using dynamic allocation.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e815 ">Proxy User <a class="xref" href="Spark.html#concept_twh_wsg_gz">
+                                            <img class="image" id="task_cdw_wxb_1z__image_xqm_fjm_zx" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e818 ">Hadoop user to connect to the external system and run the
+                                        application. When using this property, make sure the
+                                        external system is configured appropriately. <p class="p">By default,
+                                            the pipeline uses the Data Collector user. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e815 ">Custom Spark Home</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e818 ">Use to enter a custom Spark home directory. By default,
+                                        the origin uses the directory specified in the SPARK_HOME
+                                        environment variable on the <span class="ph">Data
+                  Collector</span> machine. <p class="p">This property overrides the <span class="ph">Data
+                  Collector</span> environment variable.</p>
+<p class="p">Required if the
+                                            environment variable is not set for the <span class="ph">Data
+                  Collector</span> machine.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e815 ">Custom Java Home</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e818 ">Use to enter a custom Java home directory. By default,
+                                        the origin uses the directory specified in the JAVA_HOME
+                                        environment variable on the <span class="ph">Data
+                  Collector</span> machine. <p class="p">This property overrides the <span class="ph">Data
+                  Collector</span> environment variable.</p>
+<p class="p">Required if the
+                                            environment variable is not set for the <span class="ph">Data
+                  Collector</span> machine.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e815 ">Additional Spark Arguments</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e818 ">Additional arguments to pass to Spark. Overrides any
+                                        previous configuration for the specified arguments. For a
+                                        list of available arguments, see the Spark documentation.
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e815 ">Additional Spark Arguments and Values</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e818 ">Additional arguments with values to pass to Spark.
+                                        Overrides any previous configuration for the specified
+                                        arguments. For a list of available arguments, see the Spark
+                                        documentation.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e815 ">Environment Variables</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e818 ">Additional environment variables to use. Overrides any
+                                        previous configuration for the specified arguments. For a
+                                        list of valid environment variables, see the Spark
+                                        documentation.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">When using a Databricks cluster manager, click the
+                        <span class="keyword wintitle">Application</span> tab and configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_cdw_wxb_1z__table_uvj_jxm_gz" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d126882e1018">Databricks Application Details Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d126882e1021">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e1018 ">Job Type</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e1021 ">Job type to run: Notebook or JAR.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e1018 ">Job ID <a class="xref" href="Spark.html#concept_esz_x3d_kz">
+                                            <img class="image" id="task_cdw_wxb_1z__image_tw4_jn2_kz" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e1021 ">Job ID generated by Databricks after the job was
+                                        submitted.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e1018 ">Parameters</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e1021 ">Parameters to pass to the job. Enter the parameters
+                                        exactly as expected, and in the expected order. The executor
+                                        does not validate the parameters.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">When using a YARN cluster manager, click the <span class="keyword wintitle">Application
+                        Details</span> tab, select the <span class="ph uicontrol">Language</span> used to
+                    write the application, and then configure the following properties:</span>
+                <div class="itemgroup info">For applications written in Java or Scala, configure the following
+                        properties:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_cdw_wxb_1z__table_udj_yyx_jz" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d126882e1093">Java/Scala Application Properties</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d126882e1096">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e1093 ">Application Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e1096 ">Name to display in YARN resource manager and logs. Also
+                                        displays in Spark server history pages.<div class="p">
+                  <div class="note tip"><span class="tiptitle">Tip:</span> Use a name that distinguishes the application from those started
+                        by other processes and other pipelines, such as <span class="ph" id="task_cdw_wxb_1z__d21686e3736">SDC_&lt;pipeline name&gt;_&lt;app_type&gt;</span>.</div>
+
+            </div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e1093 ">Application Resource</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e1096 ">The full path to the JAR that contains the main
+                                        class.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e1093 ">Main Class</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e1096 ">The full path to the main class for the Spark
+                                        application. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e1093 ">Application Arguments</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e1096 ">You can add additional arguments to pass to the
+                                        application. <p class="p">Enter the arguments exactly as expected, and
+                                            in the expected order. The executor does not validate
+                                            the arguments.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e1093 ">Additional JARs</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e1096 ">You can specify additional JARs to use. Enter the full
+                                        path to the JAR.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e1093 ">Additional Files</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e1096 ">Additional files to pass to the application using the
+                                            <samp class="ph codeph">--files</samp> protocol. Enter the full path
+                                        to the files. <p class="p">For information about the protocol, see the
+                                            Spark documentation.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e1093 ">Enable Verbose Logging</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e1096 ">Enables logging additional information to the <span class="ph">Data
+                  Collector</span> log. <p class="p">To avoid filling the log with unnecessary
+                                            information, enable this property only when testing the
+                                            pipeline. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+</div>
+                <div class="itemgroup info">For applications written in Python, configure the following
+                        properties:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_cdw_wxb_1z__table_uzz_qr2_kz" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d126882e1208">Python Application Properties </th>
+
+                                    <th class="entry" valign="top" width="70%" id="d126882e1211">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e1208 ">Application Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e1211 ">Name to display in YARN resource manager and logs. Also
+                                        displays in Spark server history pages.<div class="p">
+                  <div class="note tip"><span class="tiptitle">Tip:</span> Use a name that distinguishes the application from those started
+                        by other processes and other pipelines, such as <span class="ph" id="task_cdw_wxb_1z__d21686e3736">SDC_&lt;pipeline name&gt;_&lt;app_type&gt;</span>.</div>
+
+            </div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e1208 ">Application Resource</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e1211 ">The full path to the Python file to run. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e1208 ">Application Arguments</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e1211 ">You can add additional arguments to pass to the
+                                        application. <p class="p">Enter the arguments exactly as expected, and
+                                            in the expected order. The executor does not validate
+                                            the arguments.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e1208 ">Dependencies</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e1211 ">Full path to any files the Python application resource
+                                        requires. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e1208 ">Additional Files</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e1211 ">Additional files to pass to the application using the
+                                            <samp class="ph codeph">--files</samp> protocol. Enter the full path
+                                        to the files. <p class="p">For information about the protocol, see the
+                                            Spark documentation.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e1208 ">Enable Verbose Logging</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e1211 ">Enables logging additional information to the <span class="ph">Data
+                  Collector</span> log. <p class="p">To avoid filling the log with unnecessary
+                                            information, enable this property only when testing the
+                                            pipeline. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Optionally, click the <span class="keyword wintitle">Credentials</span> tab and configure the
+                    following properties:</span>
+                <div class="itemgroup info">To enter Databricks credentials, configure the following properties:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_cdw_wxb_1z__table_e4n_jyj_kz" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d126882e1319">Databricks Credentials</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d126882e1322">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e1319 ">Username</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e1322 ">Databricks user name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e1319 ">Password</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e1322 ">Password for the account.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+</div>
+                <div class="itemgroup info">To use Kerberos authentication to access a destination system from YARN,
+                    configure the following properties:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_cdw_wxb_1z__table_hxn_syj_kz" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d126882e1364">YARN Kerberos Properties <a class="xref" href="Spark.html#concept_bhk_fhg_gz">
+                                            <img class="image" id="task_cdw_wxb_1z__image_hlh_jzj_kz" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></th>
+
+                                    <th class="entry" valign="top" width="70%" id="d126882e1371">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e1364 ">Kerberos Principal</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e1371 ">Kerberos principal for the YARN cluster where the
+                                        application runs. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e1364 ">Kerberos Keytab</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e1371 ">Kerberos keytab for the YARN cluster where the
+                                        application runs. </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To use SSL/TLS with Databricks, click the <span class="keyword wintitle">SSL</span> tab and
+                    configure the following properties:</span>
+                <div class="itemgroup info">
+                    <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as passwords,
+                  you can use runtime resources or Hashicorp Vault secrets. For more information,
+                  see <a class="xref" href="../Configuration/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or
+                        <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
+
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_cdw_wxb_1z__table_b5p_p1k_kz" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d126882e1448">SSL/TLS Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d126882e1451">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e1448 ">Path to Truststore</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e1451 ">Absolute path to the truststore. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e1448 ">Password</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e1451 ">Truststore password.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e1448 ">Path to Keystore</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e1451 ">Absolute path to the keystore. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e1448 ">Password</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e1451 ">Keystore password.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To use an HTTP proxy, on the <span class="keyword wintitle">Proxy</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_cdw_wxb_1z__table_vy5_dbk_kz" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d126882e1521">HTTP Proxy Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d126882e1524">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e1521 ">Proxy URI</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e1524 ">Proxy URI.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e1521 ">Username</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e1524 ">Proxy user name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d126882e1521 ">Password</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d126882e1524 ">Proxy password.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
+                  and passwords, you can use runtime resources or Hashicorp Vault secrets. For more
+                  information, see <a class="xref" href="../Configuration/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Executors/Executors-title.html" title="Executors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Executors</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

@@ -77,7 +77,7 @@
         <li class="li"><a class="xref" href="GeoIP.html#concept_fch_fc3_ms">Geo IP</a>- Returns geolocation and IP
           intelligence information for a specified IP address. </li>
 
-        <li class="li"><a class="xref" href="Groovy.html#concept_ldh_sct_gv" title="You can choose the processing mode to use with the Groovy Evaluator. You can use the same script in each processing mode. However, you should include error handling in the script before you run in batch mode.In scripts that process list-map data, treat the data as maps. You can call external Java code from the Groovy Evaluator. Simply install the external Java library to make it available to the Groovy Evaluator. Then, call the external Java code from the Groovy script that you develop for the processor. If Data Collector is using the Java Security Manager and the Groovy code needs to access network resources, you must update the Data Collector security policy to include Groovy scripts. The Java Security Manager is enabled by default.">Groovy Evaluator</a> - Processes records
+        <li class="li"><a class="xref" href="Groovy.html#concept_ldh_sct_gv" title="You can choose the processing mode that the Groovy Evaluator uses to process the main script. You can use the same script in each processing mode. However, you should include error handling in the main script before you run in batch mode.In scripts that process list-map data, treat the data as maps. You can call external Java code from the Groovy Evaluator. Simply install the external Java library to make it available to the Groovy Evaluator. Then, call the external Java code from the Groovy script that you develop for the processor. If Data Collector is using the Java Security Manager and the Groovy code needs to access network resources, you must update the Data Collector security policy to include Groovy scripts. The Java Security Manager is enabled by default.">Groovy Evaluator</a> - Processes records
           based on custom Groovy code.</li>
 
         <li class="li"><a class="xref" href="HBaseLookup.html#concept_mnj_zhq_bw" title="The HBase Lookup processor performs key-value lookups in HBase and passes the lookup values to fields. Use the HBase Lookup to enrich records with additional data.">HBase Lookup</a> - Performs
@@ -89,7 +89,7 @@
         <li class="li"><a class="xref" href="HTTPClient.html#concept_ghx_ypr_fw">HTTP Client</a> - The HTTP Client
           processor sends requests to an HTTP resource URL and writes the results to a field.</li>
 
-        <li class="li"><a class="xref" href="JavaScript.html#concept_n2p_jgf_lr" title="The JavaScript Evaluator processes data based on JavaScript code. Use the JavaScript processor to use JavaScript code to perform custom processing.">JavaScript Evaluator</a> - Processes
+        <li class="li"><a class="xref" href="JavaScript.html#concept_n2p_jgf_lr" title="You can choose the processing mode that the JavaScript Evaluator uses to process the main script. You can use the same script in each processing mode. However, you should include error handling in the main script before you run in batch mode.In scripts that process list-map data, treat the data as maps. You can call external Java code from the JavaScript Evaluator. Simply install the external Java library to make it available to the JavaScript Evaluator. Then, call the external Java code from the script that you develop for the processor.">JavaScript Evaluator</a> - Processes
           records based on custom JavaScript code. </li>
 
         <li class="li"><a class="xref" href="JDBCLookup.html#concept_ysc_ccy_hw" title="The JDBC Lookup processor uses a JDBC connection to perform lookups in a database table and pass the lookup values to fields. Use the JDBC Lookup to enrich records with additional data.">JDBC Lookup</a> - Performs lookups in
@@ -102,7 +102,7 @@
         <li class="li"><a class="xref" href="JSONParser.html#concept_bs1_4t3_yq" title="Configure a JSON Parser to parse a JSON object in a String field.">JSON Parser</a> - Parses a JSON
           object embedded in a string field.</li>
 
-        <li class="li"><a class="xref" href="Jython.html#concept_a1h_lkf_lr" title="The Jython Evaluator processes data based on custom Jython code. Use the Jython Evaluator to incorporate custom Jython code in a pipeline. The Jython Evaluator supports Jython version 2.7.">Jython Evaluator</a> - Processes records
+        <li class="li"><a class="xref" href="Jython.html#concept_a1h_lkf_lr" title="You can choose the processing mode that the Jython Evaluator uses to process the main script. You can use the same script in each processing mode. However, you should include error handling in the main script before you run in batch mode.In scripts that process list-map data, treat the data as maps. You can call external Java code from the Jython Evaluator. Simply install the external Java library to make it available to the Jython Evaluator. Then, call the external Java code from the Jython script that you develop for the processor.">Jython Evaluator</a> - Processes records
           based on custom Jython code.</li>
 
         <li class="li"><a class="xref" href="LogParser.html#concept_ulm_qdq_fs" title="The Log Parser processor parses log data in a field based on the specified log format. Use the Log Parser to process log data within the pipeline. To read log data directly from an origin system, you can use an origin that processes the log data format, such as File Tail or Kafka Consumer.">Log Parser</a> - Parses log data in a
@@ -117,7 +117,7 @@
         <li class="li"><a class="xref" href="SalesforceLookup.html#concept_k23_3rk_yx" title="The Salesforce Lookup processor performs lookups in a Salesforce object and passes the lookup values to fields. Use the Salesforce Lookup to enrich records with additional data.">Salesforce Lookup</a> -
           Performs lookups in Salesforce to enrich records with data.</li>
 
-        <li class="li"><a class="xref" href="Spark.html#concept_cpx_1lm_zx" title="The Spark Evaluator performs custom processing within a pipeline based on a Spark application that you develop. Use the Spark Evaluator processor in standalone pipelines only.">Spark Evaluator</a> - Processes data based
+        <li class="li"><a class="xref" href="Spark.html#concept_cpx_1lm_zx" title="The Spark Evaluator performs custom processing within a pipeline based on a Spark application that you develop. Use the Spark Evaluator in pipelines configured for standalone or cluster execution mode.">Spark Evaluator</a> - Processes data based
           on a custom Spark application.</li>
 
         <li class="li"><a class="xref" href="StaticLookup.html#concept_aqz_t4r_pv" title="The Static Lookup processor performs lookups of key-value pairs that are stored in local memory and passes the lookup values to fields. Use the Static Lookup to store String values in memory that the pipeline can look up at runtime to enrich records with additional data.">Static Lookup</a> - Performs

@@ -33,6 +33,26 @@
         you upgrade.</p>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_czx_bbn_gz">
+ <h2 class="title topictitle2">Authentication for Docker Image</h2>
+
+ <div class="body conbody">
+  <p class="p"><span class="ph">Data
+                  Collector</span> version
+            2.4.1.0, the Docker image now uses the form type of file-based authentication by
+            default. As a result, you must use a <span class="ph">Data
+                  Collector</span>
+            user account to log in to the <span class="ph">Data
+                  Collector</span>.
+            If you haven't set up custom user accounts, you can use the admin account shipped with
+            the <span class="ph">Data
+                  Collector</span>. The default login is: <samp class="ph codeph">admin / admin</samp>.</p>
+
+        <p class="p">Earlier versions of the Docker image used no authentication.</p>
+
+ </div>
+
+</div>
 <div class="topic concept nested1" id="concept_zbn_fpw_xy">
  <h2 class="title topictitle2">Configure Pipeline Permissions</h2>
 
@@ -79,24 +99,6 @@
     </div>
 
 </div>
-<div class="topic concept nested1" id="concept_id5_lkk_yy">
- <h2 class="title topictitle2">Enable Users to Access Data Collector Logs</h2>
-
- <div class="body conbody">
-  <p class="p">With the 2.4.0.0
-            release, only users with the Admin role can view <span class="ph">Data
-                  Collector</span>
-            log data. If necessary, grant the Admin role to users who require log access. </p>
-
-        <p class="p">Note that the Admin role enables performing any <span class="ph">Data
-                  Collector</span>
-            task and access to all pipelines, so avoid granting the Admin role unless necessary.</p>
-
-        <p class="p">For more information about roles, see <a class="xref" href="../Configuration/RolesandPermissions.html#concept_zyl_qld_yy">Roles</a>.</p>
-
- </div>
-
-</div>
 <div class="topic task nested1" id="task_afy_k12_ry">
     <h2 class="title topictitle2">Update Elasticsearch Pipelines</h2>
 
@@ -104,41 +106,29 @@
     <div class="body taskbody"><p class="shortdesc"><span class="ph">Data
                   Collector</span>
         version 2.3.0.0 includes an enhanced Elasticsearch destination that uses the Elasticsearch
-        HTTP API. To upgrade pipelines that use the Elasticsearch destination, you must verify that
-        Java 8 is installed and review the value of the Default Operation property.</p>
+        HTTP API. To upgrade pipelines that use the Elasticsearch destination from <span class="ph">Data
+                  Collector</span>
+        versions earlier than 2.3.0.0, you must review the value of the Default Operation
+        property.</p>
 
         <div class="section context">
+            <p class="p">Review all upgraded Elasticsearch destinations to ensure that the <span class="ph uicontrol">Default
+                    Operation</span> property is set to the correct operation. Upgraded
+                Elasticsearch destinations have the Default Operation property set based on the
+                configuration for the Enable Upsert property:</p>
+
+            <ul class="ul" id="task_afy_k12_ry__ul_hyw_pvt_5y">
+                <li class="li">With upsert enabled, the default operation is set to INDEX.</li>
+
+                <li class="li">With upsert not enabled, the default operation is set to CREATE which requires a
+                    DocumentId.</li>
+
+            </ul>
+
             <div class="note note"><span class="notetitle">Note:</span> The Elasticsearch version 5 stage library is compatible with all versions of
                 Elasticsearch. Earlier stage library versions have been removed.</div>
 
         </div>
-
-        <ol class="ol steps"><li class="li step stepexpand">
-                <span class="ph cmd">Verify that Java 8 is installed on the Data Collector machine.</span>
-                <div class="itemgroup info">
-                    <p class="p">The minimum supported version of Java for the Elasticsearch destination is
-                        Java 8.</p>
-
-                </div>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">Review all upgraded Elasticsearch destinations to ensure that the
-                        <span class="ph uicontrol">Default Operation</span> property is set to the correct
-                    operation.</span>
-                <div class="itemgroup info">
-                    <div class="p">Upgraded Elasticsearch destinations have the Default Operation property set
-                        based on the configuration for the Enable Upsert property:<ul class="ul" id="task_afy_k12_ry__ul_hyw_pvt_5y">
-                            <li class="li">With upsert enabled, the default operation is set to INDEX.</li>
-
-                            <li class="li">With upsert not enabled, the default operation is set to CREATE
-                                which requires a DocumentId.</li>
-
-                        </ul>
-</div>
-
-                </div>
-            </li>
-</ol>
 
     </div>
 
@@ -150,8 +140,10 @@
  <div class="body conbody"><p class="shortdesc"><span class="ph">Data
                   Collector</span>
         version 2.2.0.0 provides support for Apache Kudu version 1.0.x and no longer supports
-        earlier Kudu versions. To upgrade pipelines that contain a Kudu destination, upgrade your
-        Kudu cluster and then add a stage alias for the earlier Kudu version to the <span class="ph">Data
+        earlier Kudu versions. To upgrade pipelines that contain a Kudu destination from <span class="ph">Data
+                  Collector</span>
+        versions earlier than 2.2.0.0, upgrade your Kudu cluster and then add a stage alias for the
+        earlier Kudu version to the <span class="ph">Data
                   Collector</span>
         configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>. </p>
 

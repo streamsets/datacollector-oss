@@ -1,0 +1,96 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Pre Upgrade Tasks" /><meta name="abstract" content="In some situations, you must complete tasks before you upgrade." /><meta name="description" content="In some situations, you must complete tasks before you upgrade." /><meta name="DC.Relation" scheme="URI" content="../Upgrade/Upgrade_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_vyy_sfp_hz" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Pre Upgrade Tasks</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+            
+            var prefix = "../index.html";
+            
+            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../Upgrade/Upgrade_title.html" title="Upgrade">Upgrade</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../Upgrade/Upgrade_title.html" title="Upgrade"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Upgrade</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_vyy_sfp_hz">
+ <h1 class="title topictitle1">Pre Upgrade Tasks</h1>
+
+ <p class="shortdesc">In some situations, you must complete tasks before you upgrade.</p>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_ip1_dgp_hz">
+ <h2 class="title topictitle2">Verify Installation Requirements</h2>
+
+ <div class="body conbody">
+  <p class="p">The minimum requirements for <span class="ph">Data
+                  Collector</span>
+            can change with each version. Before you upgrade to a new <span class="ph">Data
+                  Collector</span>
+            version, verify that the machine meets the latest minimum requirements as described in
+                <a class="xref" href="../Installation/InstallationAndConfig.html#concept_vzg_n2p_kq" title="Install Data Collector on a machine that meets the following minimum requirements. To run pipelines in cluster execution mode, each node in the cluster must meet the minimum requirements.">Installation Requirements</a>.</p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_vsr_jgp_hz">
+ <h2 class="title topictitle2">Migrate to Java 8</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc"><span class="ph">Data
+                  Collector</span>
+        version 2.5.0.0 requires Java 8. If your previous <span class="ph">Data
+                  Collector</span>
+        version ran on Java 7, you must migrate to Java 8 with version 2.5.0.0.</p>
+
+        <p class="p">To migrate to Java 8, complete the following steps before upgrading to <span class="ph">Data
+                  Collector</span>
+            version 2.5.0.0:</p>
+
+        <ol class="ol" id="concept_vsr_jgp_hz__ol_h33_fhp_hz">
+            <li class="li">Shut down <span class="ph">Data
+                  Collector</span>.</li>
+
+            <li class="li">Install Java 8 on the <span class="ph">Data
+                  Collector</span> machine.</li>
+
+            <li class="li">If you customized Java configuration options in the SDC_JAVA7_OPTS environment
+                variable and if those options are valid in Java 8, migrate those customizations to
+                the SDC_JAVA8_OPTS environment variable.</li>
+
+            <li class="li">Restart <span class="ph">Data
+                  Collector</span> and verify that it works as expected.</li>
+
+            <li class="li">If any pipelines include the JavaScript Evaluator processor, open the pipelines and
+                validate the scripts on Java 8. </li>
+
+        </ol>
+
+ </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Upgrade/Upgrade_title.html" title="Upgrade"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Upgrade</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

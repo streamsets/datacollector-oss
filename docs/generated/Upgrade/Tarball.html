@@ -119,14 +119,14 @@
             </ul>
 </div>
 
-        <p class="p">For example, if you are upgrading version 2.2.0.0, copy the <span class="ph">Data
+        <p class="p">For example, if you are upgrading version 2.3.0.0, copy the <span class="ph">Data
                   Collector</span>
-            configuration directory and rename it as follows: <samp class="ph codeph">/etc/sdc2200</samp>.</p>
+            configuration directory and rename it as follows: <samp class="ph codeph">/etc/sdc2300</samp>.</p>
 
     </div>
 
     <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. To enable remote debugging, define debugging options in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file.You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.When you use Data Collector with Java 7, Data Collector is configured to use TLS versions 1.1 and 1.2. To connect to a system that uses an earlier version of TLS, modify the Dhttps.protocols option in the SDC_JAVA7_OPTS environment variable in the Data Collector environment configuration file.When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. To enable remote debugging, define debugging options in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file.You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
 </div>
 </div>
 </div>
@@ -157,7 +157,7 @@
                     <pre class="pre codeblock">export SDC_DIST=&lt;extraction directory&gt;</pre>
 
                     <div class="p">For
-                        example:<pre class="pre codeblock">export SDC_DIST=/sdc/streamsets-datacollector-2.4.0.0</pre>
+                        example:<pre class="pre codeblock">export SDC_DIST=/sdc/streamsets-datacollector-2.5.0.0</pre>
 </div>
 
                 </div>
@@ -263,9 +263,9 @@ chown sdc:sdc /etc/init.d/sdc</pre>
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d294799e585">Environment Variable</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d309198e569">Environment Variable</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d294799e588">Value</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d309198e572">Value</th>
 
                                 </tr>
 
@@ -273,9 +273,9 @@ chown sdc:sdc /etc/init.d/sdc</pre>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d294799e585 ">SDC_CONF</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d309198e569 ">SDC_CONF</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d294799e588 ">New location outside of the base <span class="ph">Data
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d309198e572 ">New location outside of the base <span class="ph">Data
                   Collector</span> runtime directory and unique from the previous renamed
                                         directory. For example, if you renamed the previous
                                         configuration directory to <samp class="ph codeph">/etc/sdc2200</samp>,
@@ -284,23 +284,23 @@ chown sdc:sdc /etc/init.d/sdc</pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d294799e585 ">SDC_DATA</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d309198e569 ">SDC_DATA</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d294799e588 ">Same directory that the previous version used.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d294799e585 ">SDC_LOG</td>
-
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d294799e588 ">Same directory that the previous version used.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d309198e572 ">Same directory that the previous version used.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d294799e585 ">SDC_RESOURCES</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d309198e569 ">SDC_LOG</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d294799e588 ">Same directory that the previous version used.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d309198e572 ">Same directory that the previous version used.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d309198e569 ">SDC_RESOURCES</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d309198e572 ">Same directory that the previous version used.</td>
 
                                 </tr>
 
@@ -360,7 +360,7 @@ chown sdc:sdc /etc/init.d/sdc</pre>
     </div>
 
     <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. To enable remote debugging, define debugging options in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file.You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.When you use Data Collector with Java 7, Data Collector is configured to use TLS versions 1.1 and 1.2. To connect to a system that uses an earlier version of TLS, modify the Dhttps.protocols option in the SDC_JAVA7_OPTS environment variable in the Data Collector environment configuration file.When you use Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. To enable remote debugging, define debugging options in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file.You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
 </div>
 </div>
 </div>
@@ -380,9 +380,9 @@ chown sdc:sdc /etc/init.d/sdc</pre>
         new files as needed with the same customized property values.</p>
 
         <div class="section context">
-            <p class="p">For example, we'll compare the files in the /etc/sdc2200 directory with the files in
+            <p class="p">For example, we'll compare the files in the /etc/sdc2300 directory with the files in
                 the /etc/sdc directory. We'll update the new files in the /etc/sdc directory with
-                any customizations made in the previous files in the /etc/sdc2200 directory.</p>
+                any customizations made in the previous files in the /etc/sdc2300 directory.</p>
 
         </div>
 
