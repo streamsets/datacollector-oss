@@ -799,8 +799,6 @@ angular
         if ($scope.$storage.pipelineListState.searchInput) {
           $scope.header.searchInput = $scope.$storage.pipelineListState.searchInput;
         }
-
-        $scope.updateFilteredPipelines(0);
       },
       function () {
         $scope.loaded = true;
@@ -829,6 +827,8 @@ angular
         } else {
           $scope.selectedPipelineLabel = 'system:allPipelines';
         }
+
+        $scope.updateFilteredPipelines(0);
       },
       function () {
         $scope.selectedPipelineLabel = 'system:allPipelines';
