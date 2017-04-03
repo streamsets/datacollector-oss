@@ -42,6 +42,7 @@
     <joda.version>2.8</joda.version>
     <xerces.version>2.11.0</xerces.version>
     <jetty.version>9.4.2.v20170220</jetty.version>
+    <paho.version>1.0.2</paho.version>
     <snappy.version>0.4</snappy.version>
   </properties>
 
@@ -202,6 +203,12 @@
       <artifactId>websocket-client</artifactId>
       <version>${jetty.version}</version>
       <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.eclipse.paho</groupId>
+      <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
+      <version>${paho.version}</version>
     </dependency>
 
     <dependency>
