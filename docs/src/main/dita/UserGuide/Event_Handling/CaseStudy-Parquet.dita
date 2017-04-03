@@ -22,8 +22,9 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             doesn't have a Parquet data format. How do you do it? </p>
         <p>The event framework was created for exactly this purpose. The simple addition of an event
-            stream to the pipeline generates automatic conversion of Avro files to Parquet using a
-            MapReduce job. </p>
+            stream to the pipeline enables the automatic conversion of Avro files to Parquet. </p>
+        <p>You can use the Spark executor to trigger a Spark application or the MapReduce executor
+            to trigger a MapReduce job. This case study uses the MapReduce executor.</p>
         <p>It's just a few simple steps:</p>
         <p>
             <ol id="ol_oh1_4gm_lx">

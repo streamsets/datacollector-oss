@@ -76,6 +76,8 @@
                             <entry>
                                 <ul id="ul_tyv_24p_1y">
                                     <li>Any destination for event storage.</li>
+                                    <li>Spark executor to run a Spark application after closing a
+                                        file. </li>
                                 </ul>
                             </entry>
                         </row>
@@ -90,6 +92,8 @@
                                             Synchronization Solution for Hive with Impala. </p></li>
                                     <li>MapReduce executor to run a MapReduce job after closing a
                                         file.</li>
+                                    <li>Spark executor to run a Spark application after closing a
+                                        file. </li>
                                     <li>Any destination for event storage.</li>
                                 </ul>
                             </entry>
@@ -124,6 +128,8 @@
                                         closed files.</li>
                                     <li>MapReduce executor to run a MapReduce job after closing a
                                         file.</li>
+                                    <li>Spark executor to run a Spark application after closing a
+                                        file. </li>
                                     <li>Any destination for event storage.</li>
                                 </ul>
                             </entry>
@@ -151,6 +157,10 @@
                         </row>
                         <row>
                             <entry>MapReduce executor</entry>
+                            <entry>Any destination for event storage.</entry>
+                        </row>
+                        <row>
+                            <entry>Spark executor</entry>
                             <entry>Any destination for event storage.</entry>
                         </row>
                     </tbody>

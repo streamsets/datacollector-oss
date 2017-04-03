@@ -16,36 +16,23 @@
 <concept id="concept_yjr_q1m_zx">
  <title>Prerequisites</title>
  <conbody>
-  <p>Before you run a pipeline that includes MapReduce executor, you must enable MapReduce executor
-            to submit a job. </p>
+  <p><indexterm>MapReduce executor<indexterm>prerequisites</indexterm></indexterm>Before you run a
+            pipeline that includes MapReduce executor, you must enable MapReduce executor to submit
+            a job. </p>
         <p>You can enable MapReduce executor to submit a job in several different ways. Perform
                 <u>one</u> of the following tasks to enable the executor to submit jobs: <dl>
-                <dlentry>
-                    <dt>Configure the Minimum User ID property, min.user.id</dt>
-                    <dd>The min.user.id property is set to 1000 by default. To allow job
-                            submission:<ol id="ol_wpb_bcm_zx">
-                            <li>Verify the user ID being used by the <ph
-                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                /> user, typically named "sdc".</li>
-                            <li>In Hadoop, configure the YARN min.user.id property. <p> Set the
-                                    property to equal to or lower than the <ph
-                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    /> user ID.</p></li>
-                        </ol></dd>
+                <dlentry
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/YARNminUserID-DLentry">
+                    <dt/>
+                    <dd/>
+                </dlentry>
+                <dlentry
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/YARNallowedSysUser-DLentry">
+                    <dt/>
+                    <dd/>
                 </dlentry>
                 <dlentry>
-                    <dt>Configure the Allowed System Users property, allowed.system.users</dt>
-                    <dd>The allowed.system.users property lists allowed user names. To allow job
-                        submission: <ol id="ol_hyg_zdw_cy">
-                            <li> In Hadoop, configure the YARN allowed.system.users property. <p>Add
-                                    the <ph
-                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    /> user name, typically "sdc", to the list of allowed
-                                users.</p></li>
-                        </ol></dd>
-                </dlentry>
-                <dlentry>
-                    <dt>In the MapReduce executor stage, configure the MapReduce User property</dt>
+                    <dt>Configure the  MapReduce executor MapReduce User property</dt>
                     <dd>In the MapReduce executor, the MapReduce User property allows you to enter a
                         user name for the stage to use when submitting jobs. To allow job
                             submission:<ol id="ol_f3h_f2w_cy">

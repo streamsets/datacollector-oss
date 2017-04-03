@@ -60,6 +60,15 @@
                         destination to convert Avro files to Parquet when Hadoop FS closes a file.
                     </dd>
                 </dlentry>
+                <dlentry>
+                    <dt>Spark executor</dt>
+                    <dd>Connects to Spark on YARN or Databricks and starts a Spark application for
+                        each event.</dd>
+                    <dd>Use with the Hadoop FS, MapR FS, or Amazon S3 destination to run Spark
+                        applications on closed files.</dd>
+                    <dd>For example, you can use the Spark executor with the Hadoop FS destination
+                        to convert Avro files to Parquet when Hadoop FS closes a file. </dd>
+                </dlentry>
             </dl></p>
  </conbody>
 </concept>

@@ -33,6 +33,8 @@
                     user-defined SQL query upon receiving an event record.</li>
                 <li><xref href="MapReduce.dita#concept_bj2_zlk_fx">MapReduce</xref> - Starts the
                     specified MapReduce job upon receiving an event record. </li>
+                <li><xref href="Spark.dita#concept_cvy_vxb_1z">Spark</xref> - Starts the specified
+                    Spark application upon receiving an event record.</li>
             </ul></p>
  </conbody>
 </concept>

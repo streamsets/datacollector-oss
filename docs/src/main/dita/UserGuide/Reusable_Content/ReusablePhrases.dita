@@ -2401,6 +2401,62 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                               starting the queries for the next event record. Depending on the speed
                               of the pipeline and the complexity of the queries, the wait for query
                               completion can slow pipeline performance.</ph></note>
+                  <draft-comment author="Loretta">YARN prerequisites - Conref the first two
+                        DLentries - and adopt the 3rd as needed.</draft-comment>
+            </p>
+            <p>
+                  <dl>
+                        <dlentry id="YARNminUserID-DLentry">
+                              <dt>Configure the YARN Minimum User ID property, min.user.id</dt>
+                              <dd>The min.user.id property is set to 1000 by default. To allow job
+                                          submission:<ol id="ol_wpb_bcm_zx">
+                                          <li>Verify the user ID being used by the <ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                                /> user, typically named "sdc".</li>
+                                          <li>In Hadoop, configure the YARN min.user.id property.
+                                                  <p> Set the property to equal to or lower than the
+                                                  <ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                                  /> user ID.</p></li>
+                                    </ol></dd>
+                        </dlentry>
+                        <dlentry id="YARNallowedSysUser-DLentry">
+                              <dt>Configure the YARN Allowed System Users property,
+                                    allowed.system.users</dt>
+                              <dd>The allowed.system.users property lists allowed user names. To
+                                    allow job submission: <ol id="ol_hyg_zdw_cy">
+                                          <li> In Hadoop, configure the YARN allowed.system.users
+                                                property. <p>Add the <ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                                  /> user name, typically "sdc", to the list of
+                                                  allowed users.</p></li>
+                                    </ol></dd>
+                        </dlentry>
+                        <dlentry>
+                              <dt id="YarnMinUserID-DLentry">Configure the &lt;&lt;executor
+                                    stage>>Proxy User property</dt>
+                              <dd>In the &lt;&lt;executor stage>>, the Proxy User property allows
+                                    you to enter a user name for the stage to use when submitting
+                                    applications. To allow application submission:<ol
+                                          id="ol_f3h_f2w_cy">
+                                          <li>In the Spark executor stage, on the
+                                                  <wintitle>Spark</wintitle> tab, configure the
+                                                  <uicontrol>Proxy User</uicontrol> property.
+                                                  <p>Enter a user with an ID that is higher than the
+                                                  min.user.id property, or with a user name that is
+                                                  listed in the allowed.system.users property.
+                                                </p></li>
+                                    </ol></dd>
+                              <dd>For information about using a Hadoop User, see &lt;&lt;x-ref to
+                                    local topic>></dd>
+                        </dlentry>
+                  </dl>
+            </p>
+            <draft-comment author="Loretta">Spark executor tip</draft-comment>
+            <p id="SparkAppName-Tip">
+                  <note type="tip">Use a name that distinguishes the application from those started
+                        by other processes and other pipelines, such as <ph id="SparkAppName-ph"
+                              >SDC_&lt;pipeline name>_&lt;app_type></ph>.</note>
             </p>
             <p>
                   <draft-comment author="Loretta">Using CDCoverview in CDC origin

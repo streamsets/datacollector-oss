@@ -61,5 +61,22 @@
             <topicref href="../Executors/MapReduce-User.dita"/>
             <topicref href="../Executors/MapReduce-Configuring.dita"/>
         </topicref>
+        <topicref href="../Executors/Spark.dita" chunk="to-content">
+            <topicmeta><shortdesc></shortdesc></topicmeta>
+            <topicref href="../Executors/Spark-YARN.dita">
+                <topicref href="../Executors/Spark-YarnPrereq.dita"/>
+                <topicref href="../Executors/Spark-YARN-AppDetails.dita"/>
+                <topicref href="../Executors/Spark-User.dita"/>
+                <topicref href="../Executors/Spark-Kerberos.dita"/>
+            </topicref>
+            <topicref href="../Executors/Spark-Databricks.dita">
+                <topicref href="../Executors/Spark-Databricks-Prereq.dita"/>
+            </topicref>
+            <topicref href="../Executors/Spark-EventGeneration.dita">
+                <topicref href="../Executors/Spark-EventRecords.dita"/>
+            </topicref>
+            <topicref href="../Executors/Spark-Monitoring.dita"/>
+            <topicref href="../Executors/Spark-Configuring.dita"/>
+        </topicref>
     </topicref>
 </map>

@@ -153,6 +153,14 @@
                                 </ul>
                             </entry>
                         </row>
+                        <row>
+                            <entry>Spark executor</entry>
+                            <entry>
+                                <ul id="ul_xyc_hyg_gz">
+                                    <li>Starts a Spark application.</li>
+                                </ul>
+                            </entry>
+                        </row>
                     </tbody>
                 </tgroup>
             </table></p>
