@@ -27,10 +27,10 @@ import com.streamsets.pipeline.configurablestage.DExecutor;
 @GenerateResourceBundle
 @StageDef(
     version = 1,
-    label = "Pipeline Finished Executor",
+    label = "Pipeline Finisher Executor",
     description = "Forces pipeline to transition to Finished after receiving an event.",
-//    icon = "rdbms-executor.png",
-    onlineHelpRefUrl = "index.html#Executors/PipelineFinished.html#task_lrm_pws_3z"
+    icon = "finisher.png",
+    onlineHelpRefUrl = "index.html#Executors/PipelineFinisher.html#task_lrm_pws_3z"
 )
 
 public class PipelineFinisherDExecutor extends DExecutor {
