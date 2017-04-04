@@ -349,4 +349,22 @@ public class TestStringEL {
     ELVariables variables = new ELVariables();
     Assert.assertEquals("\n", eval.eval(variables, "${str:unescapeJava(\"\\\\n\")}", String.class));
   }
+
+  @Test
+  public void testUuid() throws Exception {
+    final String UUID_FORMAT = "^[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}$";
+    ELEvaluator eval = new ELEvaluator("testUuid", StringEL.class);
+    ELVariables variables = new ELVariables();
+
+    String uuid = eval.eval(variables, "${uuid:uuid()}", String.class);
+    Assert.assertNotNull(uuid);
+    Assert.assertTrue("UUID does not match expected format: " + uuid, uuid.matches(UUID_FORMAT));
+
+    String uuid2 = eval.eval(variables, "${uuid:uuid()}", String.class);
+    Assert.assertNotNull(uuid);
+    Assert.assertTrue("UUID does not match expected format: " + uuid, uuid.matches(UUID_FORMAT));
+
+    Assert.assertNotEquals(uuid, uuid2);
+  }
+
 }

@@ -30,7 +30,13 @@ import org.slf4j.LoggerFactory;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.security.SecureRandom;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -299,6 +305,35 @@ public class StringEL {
   )
   public static String java(@ElParam("string") String string) {
     return StringEscapeUtils.unescapeJava(string);
+  }
+
+  /*
+   * As generating UUID is expensive operation, we spawn a thread that will pre-generate them
+   */
+  static private SecureRandom randomGenerator = new SecureRandom();
+  static private BlockingQueue<String> uuidQueue =
+    new ArrayBlockingQueue<>(Integer.parseInt(System.getProperty("com.streamsets.pipeline.lib.el.StringEL.uuid_queue_max", "10000")));
+  static private ExecutorService executor = Executors.newFixedThreadPool(1);
+  static {
+    executor.submit(() -> {
+      Thread.currentThread().setName("UUID Pre generation thread");
+      while(true) {
+        try {
+          uuidQueue.put(UUID.nameUUIDFromBytes(randomGenerator.generateSeed(16)).toString());
+        } catch (InterruptedException e) {
+          // Ignored
+        }
+      }
+    });
+  }
+
+  @ElFunction(
+      prefix = "uuid",
+      name = "uuid",
+      description = "Returns a randomly generated UUID."
+  )
+  public static String uuid() throws InterruptedException {
+    return uuidQueue.take();
   }
 
 }
