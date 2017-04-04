@@ -19,11 +19,13 @@
  */
 package com.streamsets.datacollector.vault;
 
+import com.google.common.base.Splitter;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.vault.api.VaultException;
+import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Executors;
@@ -47,6 +50,7 @@ public class Vault {
   private static final ConcurrentMap<String, Long> LEASES = new ConcurrentHashMap<>();
   private static final ScheduledExecutorService EXECUTOR = Executors.newSingleThreadScheduledExecutor();
   private static final String VAULT_ADDR = "vault.addr";
+  private static final Splitter mapSplitter = Splitter.on('/').trimResults().omitEmptyStrings();
 
   private String appId;
   private VaultConfiguration config;
@@ -271,10 +275,27 @@ public class Vault {
       }
     }
 
-    Object secret = SECRETS.get(path).getData().get(key);
-    String value = secret != null ? secret.toString() : "";
+    Map<String, Object> data = SECRETS.get(path).getData();
+    String value = getSecretValue(data, key).orElseThrow(() -> new VaultRuntimeException("Value not found for key"));
     LOG.trace("Retrieved value for key '{}'", key);
     return value;
+  }
+
+  private Optional<String> getSecretValue(Object base, String key) {
+    Object data = base;
+    for (String part : mapSplitter.split(key)) {
+      if (data instanceof Map) {
+        data = ((Map) data).get(part);
+      } else {
+        throw new IllegalStateException(Utils.format("Unsupported data element type '{}'", data.getClass().getName()));
+      }
+    }
+
+    if (!(data instanceof String)) {
+      return Optional.empty();
+    } else {
+      return Optional.of(data.toString());
+    }
   }
 
   private VaultConfiguration getConfig() {

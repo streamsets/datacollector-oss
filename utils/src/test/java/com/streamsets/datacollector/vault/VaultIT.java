@@ -19,7 +19,9 @@
  */
 package com.streamsets.datacollector.vault;
 
+import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.io.Resources;
 import com.streamsets.datacollector.util.Configuration;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -27,6 +29,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.GenericContainer;
+
+import java.net.URL;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -42,7 +46,7 @@ public class VaultIT {
   private static Vault vault;
 
   @ClassRule
-  public static GenericContainer vaultContainer = new GenericContainer("cgswong/vault:" + VAULT_VERSION)
+  public static GenericContainer vaultContainer = new GenericContainer("kunickiaj/vault:" + VAULT_VERSION)
       .withExposedPorts(VAULT_PORT)
       .withEnv("VAULT_DEV_ROOT_TOKEN_ID", VAULT_DEV_ROOT_TOKEN_ID)
       .withEnv("VAULT_DEV_LISTEN_ADDRESS", VAULT_DEV_LISTEN_ADDRESS)
@@ -50,6 +54,9 @@ public class VaultIT {
 
   @BeforeClass
   public static void setUpClass() throws Exception {
+    URL url = Resources.getResource("all_policy.json");
+    String allPolicy = Resources.toString(url, Charsets.UTF_8);
+
     VaultConfiguration conf = VaultConfigurationBuilder.newVaultConfiguration()
         .withAddress(
             "http://" + vaultContainer.getContainerIpAddress() + ":" + vaultContainer.getMappedPort(VAULT_PORT)
@@ -60,12 +67,17 @@ public class VaultIT {
     VaultClient client = new VaultClient(conf);
     boolean enabled = client.sys().auth().enable("app-id", "app-id");
     LOG.info("Enabled app-id: {}", enabled);
-    client.logical().write("auth/app-id/map/app-id/foo", ImmutableMap.<String, Object>of("value", "root"));
+    // Mount transit back end for testing nested maps
+    client.sys().mounts().mount("transit", "transit");
+    LOG.info("Mounted back-end 'transit' to 'transit'");
+    client.sys().policy().create("all", allPolicy);
+    client.logical().write("auth/app-id/map/app-id/foo", ImmutableMap.of("value", "all"));
     client.logical()
-        .write("auth/app-id/map/user-id/" + Vault.calculateUserId(), ImmutableMap.<String, Object>of("value", "foo"));
+        .write("auth/app-id/map/user-id/" + Vault.calculateUserId(), ImmutableMap.of("value", "foo"));
 
-    client.logical().write("secret/hello", ImmutableMap.<String, Object>of("value", "world!"));
-
+    client.logical().write("secret/hello", ImmutableMap.of("value", "world!"));
+    client.logical().write("transit/keys/sdc", ImmutableMap.of("exportable", true));
+    Secret key = client.logical().read("transit/keys/sdc");
     Configuration sdcProperties = new Configuration();
     sdcProperties.set("vault.addr", conf.getAddress());
     sdcProperties.set("vault.app.id", "foo");
@@ -80,5 +92,10 @@ public class VaultIT {
   @Test
   public void testRead() throws Exception {
     assertEquals("world!", vault.read("secret/hello", "value"));
+  }
+
+  @Test
+  public void testNestedKeys() throws Exception {
+    vault.read("transit/export/encryption-key/sdc", "keys/1");
   }
 }

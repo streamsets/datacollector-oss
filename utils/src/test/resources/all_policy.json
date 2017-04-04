@@ -1,0 +1,8 @@
+{
+  "name": "all",
+  "path": {
+    "*": {
+      "policy": "sudo"
+    }
+  }
+}

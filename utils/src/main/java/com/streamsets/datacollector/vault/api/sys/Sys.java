@@ -26,10 +26,14 @@ import com.streamsets.datacollector.vault.api.VaultException;
 public class Sys {
   private final Lease lease;
   private final Auth auth;
+  private final Mounts mounts;
+  private final Policy policy;
 
   public Sys(VaultConfiguration conf, HttpTransport httpTransport) throws VaultException {
     this.lease = new Lease(conf, httpTransport);
     this.auth = new Auth(conf, httpTransport);
+    this.mounts = new Mounts(conf, httpTransport);
+    this.policy = new Policy(conf, httpTransport);
   }
 
   public Lease lease() {
@@ -37,5 +41,11 @@ public class Sys {
   }
   public Auth auth() {
     return auth;
+  }
+  public Mounts mounts() {
+    return mounts;
+  }
+  public Policy policy() {
+    return policy;
   }
 }
