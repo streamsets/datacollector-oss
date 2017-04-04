@@ -554,7 +554,8 @@
         "memoryConsumed": "Heap Memory Usage",
         "recordCount": "Record Count (since last startup)",
         "recordThroughput": "Record Throughput"
-      }
+      },
+      "webhook": "Webhook"
     },
     "previewPane": {
       "batchSize": "Preview Batch Size",

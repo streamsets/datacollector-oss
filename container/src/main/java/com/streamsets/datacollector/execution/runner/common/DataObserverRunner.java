@@ -23,6 +23,8 @@ import com.codahale.metrics.MetricRegistry;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.EvictingQueue;
 import com.streamsets.datacollector.config.DataRuleDefinition;
+import com.streamsets.datacollector.creation.PipelineBeanCreator;
+import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
 import com.streamsets.datacollector.execution.alerts.AlertManager;
 import com.streamsets.datacollector.execution.alerts.DataRuleEvaluator;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
@@ -32,10 +34,12 @@ import com.streamsets.datacollector.runner.production.PipelineErrorNotificationR
 import com.streamsets.datacollector.runner.production.RulesConfigurationChangeRequest;
 import com.streamsets.datacollector.util.AggregatorUtil;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.Record;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -89,12 +93,18 @@ public class DataObserverRunner {
           List<Record> sampledRecords = ruleIdToSampledRecords.get(dataRuleDefinition.getId());
           if(dataRuleDefinition.isEnabled()  && sampledRecords != null && sampledRecords.size() > 0) {
             //evaluate rule only if it is enabled and there are sampled records.
+            RuleDefinitionsConfigBean ruleDefinitionsConfigBean = PipelineBeanCreator.get()
+                .createRuleDefinitionsConfigBean(
+                    rulesConfigurationChangeRequest.getRuleDefinitions(),
+                    new ArrayList<Issue>()
+                );
             DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(
                 name,
                 rev,
                 metrics,
                 alertManager,
                 rulesConfigurationChangeRequest.getRuleDefinitions().getEmailIds(),
+                ruleDefinitionsConfigBean,
                 pipelineELContext,
                 dataRuleDefinition,
                 configuration,

@@ -1,0 +1,181 @@
+/**
+ * Copyright 2017 StreamSets Inc.
+ *
+ * Licensed under the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Controller for WebHooks tab.
+ */
+
+angular
+  .module('dataCollectorApp.home')
+  .controller('WebHookController', function ($scope, pipelineService) {
+    angular.extend($scope, {
+      pipelineRulesConfigDefinition: pipelineService.getPipelineRulesConfigDefinition(),
+      detailPaneConfig: $scope.pipelineRules,
+
+      verifyDependsOnMap: function(stageInstance, configDefinition) {
+        var returnValue = true,
+          valueMap = _.object(_.map(stageInstance.configuration, function(configuration) {
+            return [configuration.name, configuration.value];
+          }));
+
+        angular.forEach(configDefinition.dependsOnMap, function(triggeredByValues, dependsOn) {
+          var dependsOnConfigValue = valueMap[dependsOn];
+          if (dependsOnConfigValue === undefined ||
+            !_.contains(triggeredByValues, dependsOnConfigValue)) {
+            returnValue = false;
+          }
+        });
+
+        return returnValue;
+      },
+
+      getConfigIndex: function(stageInstance, configDefinition) {
+        if (stageInstance && configDefinition) {
+          var configIndex;
+
+          angular.forEach(stageInstance.configuration, function (config, index) {
+            if (configDefinition.name === config.name) {
+              configIndex = index;
+            }
+          });
+
+          if (configIndex === undefined) {
+            //No configuration found, added the configuration with default value
+            stageInstance.configuration.push(pipelineService.setDefaultValueForConfig(configDefinition, stageInstance));
+            configIndex = stageInstance.configuration.length - 1;
+          }
+
+          return configIndex;
+        }
+      },
+
+      getCodeMirrorOptions: function(options, configDefinition) {
+        var codeMirrorOptions = {};
+
+        if (configDefinition.type !== 'TEXT') {
+          codeMirrorOptions = {
+            dictionary: $scope.getCodeMirrorHints(configDefinition)
+          };
+        } else {
+          codeMirrorOptions = {
+            dictionary: $scope.getTextCodeMirrorHints(configDefinition)
+          };
+        }
+
+        return angular.extend(codeMirrorOptions, pipelineService.getDefaultELEditorOptions(), options);
+      },
+
+      getCodeMirrorHints: function(configDefinition) {
+        return {
+          elFunctionDefinitions: [],
+          elConstantDefinitions: [],
+          pipelineConstants: [],
+          runtimeConfigs: [],
+          regex: 'wordColonSlash'
+        };
+      },
+
+      getTextCodeMirrorHints: function(configDefinition) {
+        var hints = $scope.getCodeMirrorHints(configDefinition);
+
+        return {
+          elFunctionDefinitions: hints.elFunctionDefinitions,
+          elConstantDefinitions: hints.elConstantDefinitions,
+          pipelineConstants: hints.pipelineConstants,
+          textMode: configDefinition.mode,
+          regex: "wordColonSlashBracket"
+        };
+      },
+
+      addToList: function(stageInstance, configValue) {
+        configValue.push('');
+      },
+
+      removeFromList: function(stageInstance, configValue, $index) {
+        configValue.splice($index, 1);
+      },
+
+      addToMap: function(stageInstance, configValue) {
+        configValue.push({
+          key: '',
+          value: ''
+        });
+      },
+
+      removeFromMap: function(stageInstance, configValue, mapObject, $index) {
+        configValue.splice($index, 1);
+      },
+
+      /**
+       * Add Object to Custom Field Configuration.
+       *
+       * @param stageInstance
+       * @param config
+       * @param configDefinitions
+       */
+      addToCustomField: function(stageInstance, config, configDefinitions) {
+        console.log('addToCustomField');
+        var complexFieldObj = {};
+        angular.forEach(configDefinitions, function (complexFiledConfigDefinition) {
+          var complexFieldConfig = pipelineService.setDefaultValueForConfig(complexFiledConfigDefinition, stageInstance);
+          complexFieldObj[complexFieldConfig.name] = (complexFieldConfig.value !== undefined && complexFieldConfig.value !== null) ? complexFieldConfig.value : undefined;
+        });
+        if (config.value) {
+          config.value.push(complexFieldObj);
+        } else {
+          config.value = [complexFieldObj];
+        }
+      },
+
+
+      /**
+       * Remove Object from Custom Field Configuration.
+       *
+       * @param stageInstance
+       * @param configValue
+       * @param $index
+       */
+      removeFromCustomField: function(stageInstance, configValue, $index) {
+        configValue.splice($index, 1);
+      },
+
+      /**
+       * Returns true if dependsOn Custom Field configuration contains value in triggeredByValues.
+       *
+       * @param stageInstance
+       * @param customFieldConfigValue
+       * @param customConfiguration
+       * @returns {*}
+       */
+      verifyCustomFieldDependsOn: function(stageInstance, customFieldConfigValue, customConfiguration) {
+        var returnValue = true;
+
+        angular.forEach(customConfiguration.dependsOnMap, function(triggeredByValues, dependsOn) {
+          var dependsOnConfigValue = customFieldConfigValue[dependsOn];
+          if (dependsOnConfigValue === undefined ||
+            !_.contains(triggeredByValues, dependsOnConfigValue)) {
+            returnValue = false;
+          }
+        });
+
+        return returnValue;
+      }
+    });
+  });

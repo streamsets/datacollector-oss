@@ -30,6 +30,7 @@ import com.streamsets.datacollector.config.MetricElement;
 import com.streamsets.datacollector.config.MetricType;
 import com.streamsets.datacollector.config.MetricsRuleDefinition;
 import com.streamsets.datacollector.config.RuleDefinitions;
+import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.alerts.AlertManager;
 import com.streamsets.datacollector.execution.alerts.TestDataRuleEvaluator;
@@ -39,6 +40,7 @@ import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.runner.production.RulesConfigurationChangeRequest;
 
+import com.streamsets.datacollector.store.PipelineStoreTask;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,6 +59,7 @@ TestMetricObserverRunner {
   private static final String LANE = "lane";
   private static final String ID = "myId";
   private static final String PIPELINE_NAME = "myPipeline";
+  private static final String PIPELINE_TITLE = "myPipelineTitle";
   private static final String REVISION = "1.0";
   private MetricsObserverRunner metricObserverRunner;
   private final MetricRegistry metrics = new MetricRegistry();
@@ -67,7 +70,7 @@ TestMetricObserverRunner {
     runtimeInfo = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
       Arrays.asList(TestDataRuleEvaluator.class.getClassLoader()));
     metricObserverRunner = new MetricsObserverRunner(PIPELINE_NAME, REVISION, false, metrics,
-      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()));
+      new AlertManager(PIPELINE_NAME, PIPELINE_TITLE, REVISION, null, metrics, runtimeInfo, new EventListenerManager()));
   }
 
   @Test
@@ -92,9 +95,16 @@ TestMetricObserverRunner {
 
     List<MetricsRuleDefinition> metricsRuleDefinitions = new ArrayList<>();
     metricsRuleDefinitions.add(metricsRuleDefinition);
-    RuleDefinitions ruleDefinitions = new RuleDefinitions(metricsRuleDefinitions,
-      Collections.<DataRuleDefinition>emptyList(), Collections.<DriftRuleDefinition>emptyList(),
-        Collections.<String>emptyList(), UUID.randomUUID());
+    RuleDefinitions ruleDefinitions = new RuleDefinitions(
+        PipelineStoreTask.RULE_DEFINITIONS_SCHEMA_VERSION,
+        RuleDefinitionsConfigBean.VERSION,
+        metricsRuleDefinitions,
+        Collections.<DataRuleDefinition>emptyList(),
+        Collections.<DriftRuleDefinition>emptyList(),
+        Collections.<String>emptyList(),
+        UUID.randomUUID(),
+        Collections.emptyList()
+    );
     RulesConfigurationChangeRequest rulesConfigurationChangeRequest =
       new RulesConfigurationChangeRequest(ruleDefinitions, Collections.<String, String>emptyMap(),
         Collections.<String>emptySet(), null, null);
@@ -109,9 +119,16 @@ TestMetricObserverRunner {
     Assert.assertEquals((long)3, ((Map<String, Object>) gauge.getValue()).get("currentValue"));
 
     //modify metric alert and add it to the list of alerts to be removed
-    ruleDefinitions = new RuleDefinitions(Collections.<MetricsRuleDefinition>emptyList(),
-      Collections.<DataRuleDefinition>emptyList(), Collections.<DriftRuleDefinition>emptyList(),
-        Collections.<String>emptyList(), UUID.randomUUID());
+    ruleDefinitions = new RuleDefinitions(
+        PipelineStoreTask.RULE_DEFINITIONS_SCHEMA_VERSION,
+        RuleDefinitionsConfigBean.VERSION,
+        Collections.<MetricsRuleDefinition>emptyList(),
+        Collections.<DataRuleDefinition>emptyList(),
+        Collections.<DriftRuleDefinition>emptyList(),
+        Collections.<String>emptyList(),
+        UUID.randomUUID(),
+        Collections.emptyList()
+    );
     rulesConfigurationChangeRequest =
       new RulesConfigurationChangeRequest(ruleDefinitions, Collections.<String, String>emptyMap(),
         ImmutableSet.of(metricsRuleDefinition.getId()), null, null);

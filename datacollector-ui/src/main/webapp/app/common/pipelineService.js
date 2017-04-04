@@ -60,6 +60,7 @@ angular.module('dataCollectorApp.common')
 
             //Definitions
             self.pipelineConfigDefinition = definitions.pipeline[0];
+            self.pipelineRulesConfigDefinition = definitions.pipelineRules[0];
             self.stageDefinitions = definitions.stages;
             self.elCatalog = definitions.elCatalog;
 
@@ -161,6 +162,15 @@ angular.module('dataCollectorApp.common')
      */
     this.getPipelineConfigDefinition = function() {
       return self.pipelineConfigDefinition;
+    };
+
+    /**
+     * Returns Pipeline Rules Config Definition.
+     *
+     * @returns {*|pipelineRulesConfigDefinition|$scope.pipelineRulesConfigDefinition}
+     */
+    this.getPipelineRulesConfigDefinition = function() {
+      return self.pipelineRulesConfigDefinition;
     };
 
     /**

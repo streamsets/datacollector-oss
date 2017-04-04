@@ -20,6 +20,7 @@
 package com.streamsets.datacollector.stagelibrary;
 
 import com.streamsets.datacollector.config.PipelineDefinition;
+import com.streamsets.datacollector.config.PipelineRulesDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.task.Task;
 import com.streamsets.pipeline.api.impl.annotationsprocessor.PipelineAnnotationsProcessor;
@@ -34,6 +35,8 @@ public interface StageLibraryTask extends Task, ClassLoaderReleaser {
   public static final String EL_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.ELDEFS_FILE;
 
   public PipelineDefinition getPipeline();
+
+  public PipelineRulesDefinition getPipelineRules();
 
   public List<StageDefinition> getStages();
 

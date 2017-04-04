@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,26 +17,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.restapi.bean;
 
-import com.streamsets.datacollector.config.PipelineDefinition;
+/**
+ * Controller for WebHooks tab.
+ */
 
-import java.util.List;
+angular
+  .module('dataCollectorApp.home')
+  .controller('RulesController', function ($scope, pipelineService, $timeout) {
+    angular.extend($scope, {
+      onTabSelect: function(tab) {
+        refreshCodemirrorWidget();
+      }
+    });
 
-public class PipelineDefinitionJson {
+    var refreshCodemirrorWidget = function() {
+      $scope.refreshCodemirror = true;
+      $timeout(function () {
+        $scope.refreshCodemirror = false;
+      }, 100);
+    };
 
-  private final PipelineDefinition pipelineDefinition;
-
-  PipelineDefinitionJson(PipelineDefinition pipelineDefinition) {
-    this.pipelineDefinition = pipelineDefinition;
-  }
-
-  public List<ConfigDefinitionJson> getConfigDefinitions() {
-    return BeanHelper.wrapConfigDefinitions(pipelineDefinition.getConfigDefinitions());
-  }
-
-  public ConfigGroupDefinitionJson getConfigGroupDefinition() {
-    return BeanHelper.wrapConfigGroupDefinition(pipelineDefinition.getConfigGroupDefinition());
-  }
-
-}
+  });

@@ -102,7 +102,7 @@ public class PipelineEL {
     if (null != pipelineConfiguration.getInfo() && null != pipelineConfiguration.getInfo().getTitle()) {
       title = pipelineConfiguration.getInfo().getTitle();
     }
-    if (null != pipelineConfiguration.getInfo() && null != pipelineConfiguration.getInfo().getUuid()) {
+    if (null != pipelineConfiguration.getInfo() && null != pipelineConfiguration.getInfo().getPipelineId()) {
       id = pipelineConfiguration.getInfo().getPipelineId();
     }
     if (null != pipelineConfiguration.getMetadata() &&

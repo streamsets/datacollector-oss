@@ -26,6 +26,7 @@ import com.streamsets.datacollector.alerts.AlertsUtil;
 import com.streamsets.datacollector.config.DataRuleDefinition;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.ThresholdType;
+import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.alerts.AlertManager;
 import com.streamsets.datacollector.execution.alerts.TestDataRuleEvaluator;
@@ -36,6 +37,7 @@ import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.runner.production.DataRulesEvaluationRequest;
 import com.streamsets.datacollector.runner.production.RulesConfigurationChangeRequest;
+import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
 import org.junit.Assert;
 import org.junit.Before;
@@ -55,6 +57,7 @@ public class TestDataObserverRunner {
   private static final String LANE = "lane";
   private static final String ID = "myId";
   private static final String PIPELINE_NAME = "myPipeline";
+  private static final String PIPELINE_TITLE = "myPipelineTitle";
   private static final String REVISION = "1.0";
   private DataObserverRunner dataObserverRunner;
   private final MetricRegistry metrics = new MetricRegistry();
@@ -65,7 +68,7 @@ public class TestDataObserverRunner {
     runtimeInfo = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
       Arrays.asList(TestDataRuleEvaluator.class.getClassLoader()));
     dataObserverRunner = new DataObserverRunner(PIPELINE_NAME, REVISION, metrics,
-      new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), new Configuration());
+      new AlertManager(PIPELINE_NAME, PIPELINE_TITLE, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), new Configuration());
   }
 
   @Test
@@ -138,8 +141,16 @@ public class TestDataObserverRunner {
             System.currentTimeMillis()
         )
     );
-    RuleDefinitions ruleDefinitions = new RuleDefinitions(null, dataRuleDefinitions, null, Collections.<String>emptyList(),
-      UUID.randomUUID());
+    RuleDefinitions ruleDefinitions = new RuleDefinitions(
+        PipelineStoreTask.RULE_DEFINITIONS_SCHEMA_VERSION,
+        RuleDefinitionsConfigBean.VERSION,
+        null,
+        dataRuleDefinitions,
+        null,
+        Collections.<String>emptyList(),
+        UUID.randomUUID(),
+        Collections.emptyList()
+    );
     Map<String, List<DataRuleDefinition>> laneToRuleDefinition = new HashMap<>();
     Map<String, Integer> ruleIdToSampledRecordsSize = new HashMap<>();
     laneToRuleDefinition.put(LANE + "::s", dataRuleDefinitions);

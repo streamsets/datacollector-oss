@@ -34,6 +34,7 @@ import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.json.PipelineConfigAndRulesJson;
 import com.streamsets.datacollector.config.json.PipelineStatusJson;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
 import com.streamsets.datacollector.event.binding.MessagingJsonToFromDto;
 import com.streamsets.datacollector.event.client.api.EventClient;
 import com.streamsets.datacollector.event.client.api.EventException;
@@ -311,11 +312,15 @@ public class TestRemoteEventHandler {
             true,
             System.currentTimeMillis()
         ));
-        RuleDefinitions ruleDefinitions = new RuleDefinitions(metricRulesList,
+        RuleDefinitions ruleDefinitions = new RuleDefinitions(
+            PipelineStoreTask.RULE_DEFINITIONS_SCHEMA_VERSION,
+            RuleDefinitionsConfigBean.VERSION,
+            metricRulesList,
             new ArrayList<DataRuleDefinition>(),
             new ArrayList<DriftRuleDefinition>(),
             new ArrayList<String>(),
-            id1
+            id1,
+            Collections.emptyList()
         );
         configRulesJson.setPipelineRules(MessagingJsonToFromDto.INSTANCE.serialize(BeanHelper.wrapRuleDefinitions(
             ruleDefinitions)));

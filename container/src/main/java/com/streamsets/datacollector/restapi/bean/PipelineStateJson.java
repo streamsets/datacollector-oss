@@ -36,10 +36,9 @@ public class PipelineStateJson {
 
   @JsonCreator
   public PipelineStateJson(
-    @JsonProperty("user") String user,
-    @JsonProperty("name") String name,
     @JsonProperty("pipelineId") String pipelineId,
     @JsonProperty("rev") String rev,
+    @JsonProperty("user") String user,
     @JsonProperty("status") StatusJson statusJson,
     @JsonProperty("message") String message,
     @JsonProperty("timeStamp") long timeStamp,
@@ -47,7 +46,9 @@ public class PipelineStateJson {
     @JsonProperty("executionMode") ExecutionModeJson executionModeJson,
     @JsonProperty("metrics") String metrics,
     @JsonProperty("retryAttempt") int retryAttempt,
-    @JsonProperty("nextRetryTimeStamp") long nextRetryTimeStamp) {
+    @JsonProperty("nextRetryTimeStamp") long nextRetryTimeStamp,
+    @JsonProperty("name") String name
+  ) {
     if (pipelineId == null) {
       pipelineId = name;
     }

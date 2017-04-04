@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2015 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
@@ -19,7 +19,6 @@
  */
 package com.streamsets.datacollector.creation;
 
-import com.streamsets.datacollector.config.StatsTargetChooserValues;
 import com.streamsets.datacollector.config.DeliveryGuaranteeChooserValues;
 import com.streamsets.datacollector.config.ErrorHandlingChooserValues;
 import com.streamsets.datacollector.config.ExecutionModeChooserValues;
@@ -28,11 +27,14 @@ import com.streamsets.datacollector.config.MemoryLimitExceededChooserValues;
 import com.streamsets.datacollector.config.PipelineGroups;
 import com.streamsets.datacollector.config.PipelineState;
 import com.streamsets.datacollector.config.PipelineStateChooserValues;
+import com.streamsets.datacollector.config.PipelineWebhookConfig;
+import com.streamsets.datacollector.config.StatsTargetChooserValues;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
-import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.MultiValueChooserModel;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageDef;
@@ -55,7 +57,7 @@ import java.util.Map;
 @ConfigGroups(PipelineGroups.class)
 public class PipelineConfigBean implements Stage {
 
-  public static final int VERSION = 5;
+  public static final int VERSION = 6;
 
   @ConfigDef(
       required = true,
@@ -131,7 +133,7 @@ public class PipelineConfigBean implements Stage {
     label = "Notify on Pipeline State Changes",
     description = "Notifies via email when pipeline gets to the specified states",
     displayPosition = 75,
-    group = ""
+    group = "NOTIFICATIONS"
   )
   @MultiValueChooserModel(PipelineStateChooserValues.class)
   public List<PipelineState> notifyOnStates;
@@ -143,7 +145,7 @@ public class PipelineConfigBean implements Stage {
     label = "Email IDs",
     description = "Email Addresses",
     displayPosition = 76,
-    group = ""
+    group = "NOTIFICATIONS"
   )
   public List<String> emailIDs;
 
@@ -264,6 +266,17 @@ public class PipelineConfigBean implements Stage {
       displayPosition = 190
   )
   public int maxRunners = 0;
+
+  @ConfigDef(required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "[]",
+      label = "Webhooks",
+      description = "Webhooks",
+      displayPosition = 200,
+      group = "NOTIFICATIONS"
+  )
+  @ListBeanModel
+  public List<PipelineWebhookConfig> webhookConfigs;
 
   @Override
   public List<ConfigIssue> init(Info info, Context context) {

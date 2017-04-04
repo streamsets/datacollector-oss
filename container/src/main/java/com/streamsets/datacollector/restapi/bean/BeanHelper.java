@@ -30,6 +30,7 @@ import com.streamsets.datacollector.config.ModelDefinition;
 import com.streamsets.datacollector.config.ModelType;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.PipelineDefinition;
+import com.streamsets.datacollector.config.PipelineRulesDefinition;
 import com.streamsets.datacollector.config.RawSourceDefinition;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.StageConfiguration;
@@ -600,12 +601,20 @@ public class BeanHelper {
     return new PreviewOutputJson(previewOutput);
   }
 
-  public static PipelineDefinitionJson wrapPipelineDefinition(
-    PipelineDefinition pipelineDefinition) {
+  public static PipelineDefinitionJson wrapPipelineDefinition(PipelineDefinition pipelineDefinition) {
     if(pipelineDefinition == null) {
       return null;
     }
     return new PipelineDefinitionJson(pipelineDefinition);
+  }
+
+  public static PipelineRulesDefinitionJson wrapPipelineRulesDefinition(
+      PipelineRulesDefinition pipelineRulesDefinition
+  ) {
+    if(pipelineRulesDefinition == null) {
+      return null;
+    }
+    return new PipelineRulesDefinitionJson(pipelineRulesDefinition);
   }
 
   public static SourceOffset unwrapSourceOffset(SourceOffsetJson sourceOffsetJson) {

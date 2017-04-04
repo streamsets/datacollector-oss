@@ -33,7 +33,6 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Named;
 import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -47,16 +46,25 @@ public class EmailNotifier implements StateEventListener {
 
   private static final Logger LOG = LoggerFactory.getLogger(EmailNotifier.class);
 
-  private final String name;
+  private final String pipelineId;
+  private final String pipelineTitle;
   private final String rev;
   private final RuntimeInfo runtimeInfo;
   private final EmailSender emailSender;
   private final List<String> emails;
   private final Set<String> pipelineStates;
 
-  public EmailNotifier(@Named("name") String name, @Named("rev") String rev, RuntimeInfo runtimeInfo,
-                       EmailSender emailSender, List<String> emails, Set<String> pipelineStates) {
-    this.name = name;
+  public EmailNotifier(
+      String pipelineId,
+      String pipelineTitle,
+      String rev,
+      RuntimeInfo runtimeInfo,
+      EmailSender emailSender,
+      List<String> emails,
+      Set<String> pipelineStates
+  ) {
+    this.pipelineId = pipelineId;
+    this.pipelineTitle = pipelineTitle;
     this.rev = rev;
     this.runtimeInfo = runtimeInfo;
     this.emailSender = emailSender;
@@ -64,8 +72,8 @@ public class EmailNotifier implements StateEventListener {
     this.pipelineStates = pipelineStates;
   }
 
-  public String getName() {
-    return name;
+  public String getPipelineId() {
+    return pipelineId;
   }
 
   public String getRev() {
@@ -81,7 +89,7 @@ public class EmailNotifier implements StateEventListener {
       Map<String, String> offset
   ) throws PipelineRuntimeException {
     //should not be active in slave mode
-    if(toState.getExecutionMode() != ExecutionMode.SLAVE && name.equals(toState.getPipelineId())) {
+    if(toState.getExecutionMode() != ExecutionMode.SLAVE && pipelineId.equals(toState.getPipelineId())) {
       if (pipelineStates != null && pipelineStates.contains(toState.getStatus().name())) {
         //pipeline switched to a terminal state. Send email
         String emailBody = null;
@@ -94,37 +102,37 @@ public class EmailNotifier implements StateEventListener {
               url = Resources.getResource(EmailConstants.NOTIFY_ERROR_EMAIL_TEMPLATE);
               emailBody = Resources.toString(url, Charsets.UTF_8);
               emailBody = emailBody.replace(EmailConstants.DESCRIPTION_KEY, toState.getMessage());
-              subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + toState.getPipelineId() + " - ERROR";
+              subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + pipelineTitle + " - ERROR";
               break;
             case STOPPED:
               url = Resources.getResource(EmailConstants.PIPELINE_STATE_CHANGE__EMAIL_TEMPLATE);
               emailBody = Resources.toString(url, Charsets.UTF_8);
               emailBody = emailBody.replace(EmailConstants.MESSAGE_KEY, "was stopped");
-              subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + toState.getPipelineId() + " - STOPPED";
+              subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + pipelineTitle + " - STOPPED";
               break;
             case FINISHED:
               url = Resources.getResource(EmailConstants.PIPELINE_STATE_CHANGE__EMAIL_TEMPLATE);
               emailBody = Resources.toString(url, Charsets.UTF_8);
               emailBody = emailBody.replace(EmailConstants.MESSAGE_KEY, "finished executing");
-              subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + toState.getPipelineId() + " - FINISHED";
+              subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + pipelineTitle + " - FINISHED";
               break;
             case RUNNING:
               url = Resources.getResource(EmailConstants.PIPELINE_STATE_CHANGE__EMAIL_TEMPLATE);
               emailBody = Resources.toString(url, Charsets.UTF_8);
               emailBody = emailBody.replace(EmailConstants.MESSAGE_KEY, "started executing");
-              subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + toState.getPipelineId() + " - RUNNING";
+              subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + pipelineTitle + " - RUNNING";
               break;
             case DISCONNECTED:
               url = Resources.getResource(EmailConstants.SDC_STATE_CHANGE__EMAIL_TEMPLATE);
               emailBody = Resources.toString(url, Charsets.UTF_8);
               emailBody = emailBody.replace(EmailConstants.MESSAGE_KEY, "was shut down");
-              subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + toState.getPipelineId() + " - DISCONNECTED";
+              subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + pipelineTitle + " - DISCONNECTED";
               break;
             case CONNECTING:
               url = Resources.getResource(EmailConstants.SDC_STATE_CHANGE__EMAIL_TEMPLATE);
               emailBody = Resources.toString(url, Charsets.UTF_8);
               emailBody = emailBody.replace(EmailConstants.MESSAGE_KEY, "was started");
-              subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + toState.getPipelineId() + " - CONNECTING";
+              subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + pipelineTitle + " - CONNECTING";
               break;
             default:
               throw new IllegalStateException("Unexpected PipelineState " + toState);
@@ -134,7 +142,7 @@ public class EmailNotifier implements StateEventListener {
         }
         java.text.DateFormat dateTimeFormat = new SimpleDateFormat(EmailConstants.DATE_MASK, Locale.ENGLISH);
         emailBody = emailBody.replace(EmailConstants.TIME_KEY, dateTimeFormat.format(new Date(toState.getTimeStamp())))
-          .replace(EmailConstants.PIPELINE_NAME_KEY, toState.getPipelineId())
+          .replace(EmailConstants.PIPELINE_NAME_KEY, pipelineTitle)
           .replace(EmailConstants.URL_KEY, runtimeInfo.getBaseHttpUrl() + EmailConstants.PIPELINE_URL +
             toState.getPipelineId().replaceAll(" ", "%20"));
         try {

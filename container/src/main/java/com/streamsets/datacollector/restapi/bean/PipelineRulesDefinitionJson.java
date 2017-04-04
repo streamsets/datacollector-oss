@@ -1,5 +1,5 @@
-/**
- * Copyright 2015 StreamSets Inc.
+/*
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,24 +19,24 @@
  */
 package com.streamsets.datacollector.restapi.bean;
 
-import com.streamsets.datacollector.config.PipelineDefinition;
+import com.streamsets.datacollector.config.PipelineRulesDefinition;
 
 import java.util.List;
 
-public class PipelineDefinitionJson {
+public class PipelineRulesDefinitionJson {
 
-  private final PipelineDefinition pipelineDefinition;
+  private final PipelineRulesDefinition pipelineRulesDefinition;
 
-  PipelineDefinitionJson(PipelineDefinition pipelineDefinition) {
-    this.pipelineDefinition = pipelineDefinition;
+  PipelineRulesDefinitionJson(PipelineRulesDefinition pipelineRulesDefinition) {
+    this.pipelineRulesDefinition = pipelineRulesDefinition;
   }
 
   public List<ConfigDefinitionJson> getConfigDefinitions() {
-    return BeanHelper.wrapConfigDefinitions(pipelineDefinition.getConfigDefinitions());
+    return BeanHelper.wrapConfigDefinitions(pipelineRulesDefinition.getConfigDefinitions());
   }
 
   public ConfigGroupDefinitionJson getConfigGroupDefinition() {
-    return BeanHelper.wrapConfigGroupDefinition(pipelineDefinition.getConfigGroupDefinition());
+    return BeanHelper.wrapConfigGroupDefinition(pipelineRulesDefinition.getConfigGroupDefinition());
   }
 
 }

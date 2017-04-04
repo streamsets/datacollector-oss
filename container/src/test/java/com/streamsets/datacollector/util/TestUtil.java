@@ -28,6 +28,7 @@ import com.streamsets.datacollector.config.MetricsRuleDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.ThresholdType;
+import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.PipelineStateStore;
@@ -105,6 +106,7 @@ public class TestUtil {
   public static final String MY_SECOND_PIPELINE = "my second pipeline";
   public static final String HIGHER_VERSION_PIPELINE = "higher version pipeline";
   public static final String PIPELINE_WITH_EMAIL = "Pipeline with Email";
+  public static final String PIPELINE_TITLE_WITH_EMAIL = "label";
   public static final String PIPELINE_REV = "2.0";
   public static final String ZERO_REV = "0";
   public volatile static boolean EMPTY_OFFSET = false;
@@ -340,9 +342,16 @@ public class TestUtil {
           dataRuleDefinitions.add(dataRuleDefinition);
 
           RuleDefinitions ruleDefinitions =
-            new RuleDefinitions(Collections.<MetricsRuleDefinition> emptyList(), dataRuleDefinitions,
+            new RuleDefinitions(
+                PipelineStoreTask.RULE_DEFINITIONS_SCHEMA_VERSION,
+                RuleDefinitionsConfigBean.VERSION,
+                Collections.<MetricsRuleDefinition> emptyList(),
+                dataRuleDefinitions,
                 Collections.<DriftRuleDefinition>emptyList(),
-                Collections.<String> emptyList(), UUID.randomUUID());
+                Collections.<String> emptyList(),
+                UUID.randomUUID(),
+                Collections.emptyList()
+            );
           pipelineStoreTask.storeRules(MY_PIPELINE, ZERO_REV, ruleDefinitions);
         }
 

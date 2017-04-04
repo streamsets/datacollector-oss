@@ -22,10 +22,15 @@ package com.streamsets.datacollector.execution.runner.common;
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.datacollector.alerts.AlertsUtil;
 import com.streamsets.datacollector.config.MetricsRuleDefinition;
+import com.streamsets.datacollector.creation.PipelineBeanCreator;
+import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
 import com.streamsets.datacollector.execution.alerts.AlertManager;
 import com.streamsets.datacollector.execution.alerts.MetricRuleEvaluator;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.runner.production.RulesConfigurationChangeRequest;
+import com.streamsets.datacollector.validation.Issue;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class MetricsObserverRunner {
@@ -73,10 +78,19 @@ public class MetricsObserverRunner {
       List<MetricsRuleDefinition> metricsRuleDefinitions =
         currentChangeRequest.getRuleDefinitions().getMetricsRuleDefinitions();
       if (metricsRuleDefinitions != null) {
+        RuleDefinitionsConfigBean ruleDefinitionsConfigBean = PipelineBeanCreator.get()
+            .createRuleDefinitionsConfigBean(
+                currentChangeRequest.getRuleDefinitions(),
+                new ArrayList<Issue>()
+            );
         for (MetricsRuleDefinition metricsRuleDefinition : metricsRuleDefinitions) {
-          MetricRuleEvaluator metricAlertsHelper =
-            new MetricRuleEvaluator(metricsRuleDefinition, metrics, alertManager, currentChangeRequest
-              .getRuleDefinitions().getEmailIds());
+          MetricRuleEvaluator metricAlertsHelper = new MetricRuleEvaluator(
+              metricsRuleDefinition,
+              metrics,
+              alertManager,
+              currentChangeRequest.getRuleDefinitions().getEmailIds(),
+              ruleDefinitionsConfigBean
+          );
           metricAlertsHelper.checkForAlerts();
         }
       }

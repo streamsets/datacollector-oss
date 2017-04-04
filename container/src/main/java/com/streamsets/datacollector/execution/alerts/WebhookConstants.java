@@ -1,5 +1,5 @@
-/**
- * Copyright 2015 StreamSets Inc.
+/*
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,26 +17,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.restapi.bean;
+package com.streamsets.datacollector.execution.alerts;
 
-import com.streamsets.datacollector.config.PipelineDefinition;
 
-import java.util.List;
+public class WebhookConstants {
 
-public class PipelineDefinitionJson {
-
-  private final PipelineDefinition pipelineDefinition;
-
-  PipelineDefinitionJson(PipelineDefinition pipelineDefinition) {
-    this.pipelineDefinition = pipelineDefinition;
-  }
-
-  public List<ConfigDefinitionJson> getConfigDefinitions() {
-    return BeanHelper.wrapConfigDefinitions(pipelineDefinition.getConfigDefinitions());
-  }
-
-  public ConfigGroupDefinitionJson getConfigGroupDefinition() {
-    return BeanHelper.wrapConfigGroupDefinition(pipelineDefinition.getConfigGroupDefinition());
-  }
+  public static final String PIPELINE_TITLE_KEY = "{{PIPELINE_TITLE}}";
+  public static final String PIPELINE_URL_KEY = "{{PIPELINE_URL}}";
+  public static final String PIPELINE_STATE_KEY = "{{PIPELINE_STATE}}";
+  public static final String TIME_KEY = "{{TIME}}";
+  public static final String ALERT_TEXT_KEY = "{{ALERT_TEXT}}";
+  public static final String ALERT_NAME_KEY = "{{ALERT_NAME}}";
+  public static final String ALERT_VALUE_KEY = "{{ALERT_VALUE}}";
+  public static final String ALERT_CONDITION_KEY = "{{ALERT_CONDITION}}";
 
 }

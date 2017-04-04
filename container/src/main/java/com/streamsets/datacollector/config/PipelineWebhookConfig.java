@@ -1,5 +1,5 @@
-/**
- * Copyright 2015 StreamSets Inc.
+/*
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,26 +17,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.restapi.bean;
 
-import com.streamsets.datacollector.config.PipelineDefinition;
+package com.streamsets.datacollector.config;
 
-import java.util.List;
+import com.streamsets.pipeline.api.ConfigDef;
 
-public class PipelineDefinitionJson {
-
-  private final PipelineDefinition pipelineDefinition;
-
-  PipelineDefinitionJson(PipelineDefinition pipelineDefinition) {
-    this.pipelineDefinition = pipelineDefinition;
-  }
-
-  public List<ConfigDefinitionJson> getConfigDefinitions() {
-    return BeanHelper.wrapConfigDefinitions(pipelineDefinition.getConfigDefinitions());
-  }
-
-  public ConfigGroupDefinitionJson getConfigGroupDefinition() {
-    return BeanHelper.wrapConfigGroupDefinition(pipelineDefinition.getConfigGroupDefinition());
-  }
-
+public class PipelineWebhookConfig extends WebhookCommonConfig {
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.TEXT,
+      label = "Payload",
+      defaultValue = "{\n  \"text\" : \"Pipeline '{{PIPELINE_TITLE}}' state changed to {{PIPELINE_STATE}} at " +
+          "{{TIME}}. \\n <{{PIPELINE_URL}}|Click here> for details!\"\n}",
+      description = "Data that should be included as a part of the Webhook request",
+      displayPosition = 240,
+      lines = 2,
+      dependsOn = "httpMethod",
+      triggeredByValue = { "POST", "PUT", "DELETE" },
+      group = "NOTIFICATIONS",
+      mode = ConfigDef.Mode.JSON
+  )
+  public String payload = "";
 }

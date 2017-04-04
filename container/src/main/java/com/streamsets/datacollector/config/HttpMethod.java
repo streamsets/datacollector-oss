@@ -1,5 +1,5 @@
-/**
- * Copyright 2015 StreamSets Inc.
+/*
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -9,7 +9,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,26 +17,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.restapi.bean;
+package com.streamsets.datacollector.config;
 
-import com.streamsets.datacollector.config.PipelineDefinition;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 
-import java.util.List;
+/**
+ * Enum for representing possible HTTP methods
+ */
+@GenerateResourceBundle
+public enum HttpMethod implements Label {
+  GET("GET"),
+  PUT("PUT"),
+  POST("POST"),
+  DELETE("DELETE"),
+  HEAD("HEAD"),
+  ;
 
-public class PipelineDefinitionJson {
+  private final String label;
 
-  private final PipelineDefinition pipelineDefinition;
-
-  PipelineDefinitionJson(PipelineDefinition pipelineDefinition) {
-    this.pipelineDefinition = pipelineDefinition;
+  HttpMethod(String label) {
+    this.label = label;
   }
 
-  public List<ConfigDefinitionJson> getConfigDefinitions() {
-    return BeanHelper.wrapConfigDefinitions(pipelineDefinition.getConfigDefinitions());
+  @Override
+  public String getLabel() {
+    return label;
   }
-
-  public ConfigGroupDefinitionJson getConfigGroupDefinition() {
-    return BeanHelper.wrapConfigGroupDefinition(pipelineDefinition.getConfigGroupDefinition());
-  }
-
 }

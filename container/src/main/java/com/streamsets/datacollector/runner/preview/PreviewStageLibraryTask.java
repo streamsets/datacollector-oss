@@ -21,6 +21,7 @@ package com.streamsets.datacollector.runner.preview;
 
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.PipelineDefinition;
+import com.streamsets.datacollector.config.PipelineRulesDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.config.StageType;
@@ -58,6 +59,11 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
   @Override
   public PipelineDefinition getPipeline() {
     return library.getPipeline();
+  }
+
+  @Override
+  public PipelineRulesDefinition getPipelineRules() {
+    return library.getPipelineRules();
   }
 
   @Override

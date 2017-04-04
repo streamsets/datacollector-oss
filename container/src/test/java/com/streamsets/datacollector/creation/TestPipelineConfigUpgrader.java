@@ -35,7 +35,7 @@ public class TestPipelineConfigUpgrader {
     PipelineConfigUpgrader pipelineConfigUpgrader = new PipelineConfigUpgrader();
 
     List<Config> upgrade = pipelineConfigUpgrader.upgrade("x", "y", "z", 1, 3, new ArrayList<Config>());
-    Assert.assertEquals(6, upgrade.size());
+    Assert.assertEquals(7, upgrade.size());
     Assert.assertEquals("executionMode", upgrade.get(0).getName());
     Assert.assertEquals(ExecutionMode.STANDALONE, upgrade.get(0).getValue());
 

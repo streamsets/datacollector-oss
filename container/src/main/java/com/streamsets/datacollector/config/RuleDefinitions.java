@@ -20,6 +20,7 @@
 package com.streamsets.datacollector.config;
 
 import com.streamsets.datacollector.validation.RuleIssue;
+import com.streamsets.pipeline.api.Config;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,30 +28,46 @@ import java.util.List;
 import java.util.UUID;
 
 public class RuleDefinitions {
-
+  private int schemaVersion;
+  private int version;
   private final List<MetricsRuleDefinition> metricsRuleDefinitions;
   private final List<DataRuleDefinition> dataRuleDefinitions;
   private final List<DriftRuleDefinition> driftRuleDefinitions;
   private final List<String> emailIds;
   private List<RuleIssue> ruleIssues;
   private UUID uuid = null;
+  private List<Config> configuration;
 
   public RuleDefinitions(
+      int schemaVersion,
+      int version,
       List<MetricsRuleDefinition> metricsRuleDefinitions,
       List<DataRuleDefinition> dataRuleDefinitions,
       List<DriftRuleDefinition> driftRuleDefinitions,
       List<String> emailIds,
-      UUID uuid
+      UUID uuid,
+      List<Config> configuration
   ) {
+    this.schemaVersion = schemaVersion;
+    this.version = version;
     this.metricsRuleDefinitions = emptyListIfNull(metricsRuleDefinitions);
     this.dataRuleDefinitions = emptyListIfNull(dataRuleDefinitions);
     this.driftRuleDefinitions = emptyListIfNull(driftRuleDefinitions);
     this.emailIds = emailIds;
     this.uuid = uuid;
+    this.configuration = configuration;
   }
 
   private static <T> List<T> emptyListIfNull(List<T> list) {
     return (list != null) ? list :Collections.<T>emptyList();
+  }
+
+  public int getSchemaVersion() {
+    return schemaVersion;
+  }
+
+  public int getVersion() {
+    return version;
   }
 
   public List<MetricsRuleDefinition> getMetricsRuleDefinitions() {
@@ -92,4 +109,11 @@ public class RuleDefinitions {
     return uuid;
   }
 
+  public List<Config> getConfiguration() {
+    return configuration;
+  }
+
+  public void setConfiguration(List<Config> configuration) {
+    this.configuration = configuration;
+  }
 }

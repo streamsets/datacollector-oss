@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2015 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
@@ -35,22 +35,37 @@ public class RuleDefinitionsJson {
 
   @JsonCreator
   public RuleDefinitionsJson(
-    @JsonProperty("metricsRuleDefinitions") List<MetricsRuleDefinitionJson> metricsRuleDefinitionJsons,
-    @JsonProperty("dataRuleDefinitions") List<DataRuleDefinitionJson> dataRuleDefinitionJsons,
-    @JsonProperty("driftRuleDefinitions") List<DriftRuleDefinitionJson> driftRuleDefinitionJsons,
-    @JsonProperty("emailIds") List<String> emailIds,
-    @JsonProperty("uuid") UUID uuid) {
-    this.ruleDefinitions = new com.streamsets.datacollector.config.RuleDefinitions(
-      BeanHelper.unwrapMetricRuleDefinitions(metricsRuleDefinitionJsons),
-      BeanHelper.unwrapDataRuleDefinitions(dataRuleDefinitionJsons),
-      BeanHelper.unwrapDriftRuleDefinitions(driftRuleDefinitionJsons),
-      emailIds,
-      uuid
+      @JsonProperty("schemaVersion") int schemaVersion,
+      @JsonProperty("version") int version,
+      @JsonProperty("metricsRuleDefinitions") List<MetricsRuleDefinitionJson> metricsRuleDefinitionJsons,
+      @JsonProperty("dataRuleDefinitions") List<DataRuleDefinitionJson> dataRuleDefinitionJsons,
+      @JsonProperty("driftRuleDefinitions") List<DriftRuleDefinitionJson> driftRuleDefinitionJsons,
+      @JsonProperty("emailIds") List<String> emailIds,
+      @JsonProperty("uuid") UUID uuid,
+      @JsonProperty("configuration") List<ConfigConfigurationJson> configuration
+  ) {
+    this.ruleDefinitions = new RuleDefinitions(
+        schemaVersion,
+        version,
+        BeanHelper.unwrapMetricRuleDefinitions(metricsRuleDefinitionJsons),
+        BeanHelper.unwrapDataRuleDefinitions(dataRuleDefinitionJsons),
+        BeanHelper.unwrapDriftRuleDefinitions(driftRuleDefinitionJsons),
+        emailIds,
+        uuid,
+        BeanHelper.unwrapConfigConfiguration(configuration)
     );
   }
 
-  public RuleDefinitionsJson(com.streamsets.datacollector.config.RuleDefinitions ruleDefinitions) {
+  public RuleDefinitionsJson(RuleDefinitions ruleDefinitions) {
     this.ruleDefinitions = ruleDefinitions;
+  }
+
+  public int getSchemaVersion() {
+    return ruleDefinitions.getSchemaVersion();
+  }
+
+  public int getVersion() {
+    return ruleDefinitions.getVersion();
   }
 
   public List<MetricsRuleDefinitionJson> getMetricsRuleDefinitions() {
@@ -81,8 +96,12 @@ public class RuleDefinitionsJson {
     return ruleDefinitions.getUuid();
   }
 
+  public List<ConfigConfigurationJson> getConfiguration() {
+    return BeanHelper.wrapConfigConfiguration(ruleDefinitions.getConfiguration());
+  }
+
   @JsonIgnore
-  public com.streamsets.datacollector.config.RuleDefinitions getRuleDefinitions() {
+  public RuleDefinitions getRuleDefinitions() {
     return ruleDefinitions;
   }
 }

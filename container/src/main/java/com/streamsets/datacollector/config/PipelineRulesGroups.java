@@ -1,5 +1,5 @@
-/**
- * Copyright 2015 StreamSets Inc.
+/*
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,26 +17,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.restapi.bean;
+package com.streamsets.datacollector.config;
 
-import com.streamsets.datacollector.config.PipelineDefinition;
+import com.streamsets.pipeline.api.Label;
 
-import java.util.List;
+public enum PipelineRulesGroups implements Label {
+  WEBHOOK("Webhook"),
+  ;
 
-public class PipelineDefinitionJson {
+  private final String label;
 
-  private final PipelineDefinition pipelineDefinition;
-
-  PipelineDefinitionJson(PipelineDefinition pipelineDefinition) {
-    this.pipelineDefinition = pipelineDefinition;
+  PipelineRulesGroups(String label) {
+    this.label = label;
   }
 
-  public List<ConfigDefinitionJson> getConfigDefinitions() {
-    return BeanHelper.wrapConfigDefinitions(pipelineDefinition.getConfigDefinitions());
+  @Override
+  public String getLabel() {
+    return label;
   }
-
-  public ConfigGroupDefinitionJson getConfigGroupDefinition() {
-    return BeanHelper.wrapConfigGroupDefinition(pipelineDefinition.getConfigGroupDefinition());
-  }
-
 }

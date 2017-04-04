@@ -826,7 +826,8 @@ public class ClusterRunner extends AbstractRunner {
       maxRetries = pipelineConfigBean.retryAttempts;
       shouldRetry = pipelineConfigBean.shouldRetry;
       rateLimit = pipelineConfigBean.rateLimit;
-      registerEmailNotifierIfRequired(pipelineConfigBean, name, rev);
+      registerEmailNotifierIfRequired(pipelineConfigBean, name, pipelineConf.getTitle(),rev);
+      registerWebhookNotifierIfRequired(pipelineConfigBean, name, pipelineConf.getTitle(), rev);
 
       Map<String, String> environment = new HashMap<>(pipelineConfigBean.clusterLauncherEnv);
       Map<String, String> sourceInfo = new HashMap<>();

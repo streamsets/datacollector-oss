@@ -50,6 +50,11 @@
     <ng-include src="'mapComplexConfigurationTemplate'"></ng-include>
   </div>
 
+  <div ng-switch-when="TEXT"
+       ng-click="onFieldSelectorFocus(detailPaneConfig)">
+    <ng-include src="'textComplexConfigurationTemplate'"></ng-include>
+  </div>
+
   <div ng-switch-when="MODEL"
        ng-switch="customFieldConfigDefinition.model.modelType">
 

@@ -36,7 +36,6 @@ public class PipelineInfoJson {
 
   @JsonCreator
   public PipelineInfoJson(
-    @JsonProperty("name") String name,
     @JsonProperty("pipelineId") String pipelineId,
     @JsonProperty("title") String title,
     @JsonProperty("description") String description,
@@ -47,7 +46,8 @@ public class PipelineInfoJson {
     @JsonProperty("lastRev") String lastRev,
     @JsonProperty("uuid") UUID uuid,
     @JsonProperty("valid") boolean valid,
-    @JsonProperty("metadata") Map<String, Object> metadata
+    @JsonProperty("metadata") Map<String, Object> metadata,
+    @JsonProperty("name") String name
   ) {
     if (pipelineId == null) {
       pipelineId = name;

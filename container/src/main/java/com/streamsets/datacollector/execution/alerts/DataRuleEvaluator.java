@@ -27,6 +27,7 @@ import com.google.common.collect.EvictingQueue;
 import com.streamsets.datacollector.alerts.AlertsUtil;
 import com.streamsets.datacollector.config.DataRuleDefinition;
 import com.streamsets.datacollector.config.DriftRuleDefinition;
+import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
 import com.streamsets.datacollector.definition.ELDefinitionExtractor;
 import com.streamsets.datacollector.el.ELEvaluator;
 import com.streamsets.datacollector.el.ELVariables;
@@ -104,6 +105,7 @@ public class DataRuleEvaluator {
 
   private final MetricRegistry metrics;
   private final List<String> emailIds;
+  private final RuleDefinitionsConfigBean ruleDefinitionsConfigBean;
   private final Configuration configuration;
   private final Map<String, Object> pipelineELContext;
   private final DataRuleDefinition dataRuleDefinition;
@@ -119,6 +121,7 @@ public class DataRuleEvaluator {
       MetricRegistry metrics,
       AlertManager alertManager,
       List<String> emailIds,
+      RuleDefinitionsConfigBean ruleDefinitionsConfigBean,
       Map<String, Object> pipelineELContext,
       DataRuleDefinition dataRuleDefinition,
       Configuration configuration,
@@ -129,6 +132,7 @@ public class DataRuleEvaluator {
     this.rev = rev;
     this.metrics = metrics;
     this.emailIds = emailIds;
+    this.ruleDefinitionsConfigBean = ruleDefinitionsConfigBean;
     this.pipelineELContext = pipelineELContext;
     this.dataRuleDefinition = dataRuleDefinition;
     this.configuration = configuration;
@@ -231,6 +235,7 @@ public class DataRuleEvaluator {
                     alertManager.alert(
                         matchingRecordCounter.getCount(),
                         emailIds,
+                        ruleDefinitionsConfigBean,
                         AlertManagerHelper.cloneRuleWithResolvedAlertText(dataRuleDefinition, alertText)
                     );
                   }
@@ -247,6 +252,7 @@ public class DataRuleEvaluator {
                   alertManager.alert(
                       matchingRecordCounter.getCount(),
                       emailIds,
+                      ruleDefinitionsConfigBean,
                       AlertManagerHelper.cloneRuleWithResolvedAlertText(
                           dataRuleDefinition,
                           alertTextForMatchRecords.get(0)
@@ -275,6 +281,7 @@ public class DataRuleEvaluator {
                 alertManager.alert(
                   matchingRecordCounter.getCount(),
                   emailIds,
+                  ruleDefinitionsConfigBean,
                   AlertManagerHelper.cloneRuleWithResolvedAlertText(
                       dataRuleDefinition,
                       alertTextForMatchRecords.get(0)

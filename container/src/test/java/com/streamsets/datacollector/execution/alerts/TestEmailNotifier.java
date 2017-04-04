@@ -81,7 +81,7 @@ public class TestEmailNotifier {
   @Test
   public void testEmailNotifierRunError() throws Exception {
 
-    EmailNotifier emailNotifier = new EmailNotifier("x", "0", runtimeInfo, emailSender, ImmutableList.of("foo", "bar"),
+    EmailNotifier emailNotifier = new EmailNotifier("x", "x", "0", runtimeInfo, emailSender, ImmutableList.of("foo", "bar"),
       ImmutableSet.of("RUN_ERROR"));
 
     PipelineState runningState = new PipelineStateImpl("x", "x", "0", PipelineStatus.RUNNING, "Running",
@@ -101,7 +101,7 @@ public class TestEmailNotifier {
   @Test
   public void testEmailNotifierStartError() throws Exception {
 
-    EmailNotifier emailNotifier = new EmailNotifier("x", "0", runtimeInfo, emailSender, ImmutableList.of("foo", "bar")
+    EmailNotifier emailNotifier = new EmailNotifier("x", "x","0", runtimeInfo, emailSender, ImmutableList.of("foo", "bar")
       , ImmutableSet.of("START_ERROR"));
 
     PipelineState startingState = new PipelineStateImpl("x", "x", "0", PipelineStatus.STARTING, "Starting",
@@ -121,7 +121,7 @@ public class TestEmailNotifier {
   @Test
   public void testEmailNotifierFinished() throws Exception {
 
-    EmailNotifier emailNotifier = new EmailNotifier("x", "0", runtimeInfo, emailSender, ImmutableList.of("foo", "bar"),
+    EmailNotifier emailNotifier = new EmailNotifier("x", "x","0", runtimeInfo, emailSender, ImmutableList.of("foo", "bar"),
       ImmutableSet.of("FINISHED"));
 
     PipelineState runningState = new PipelineStateImpl("x", "x", "0", PipelineStatus.RUNNING, "Running",
@@ -141,7 +141,7 @@ public class TestEmailNotifier {
   @Test
   public void testEmailNotifierStopped() throws Exception {
 
-    EmailNotifier emailNotifier = new EmailNotifier("x", "0", runtimeInfo, emailSender, ImmutableList.of("foo", "bar"),
+    EmailNotifier emailNotifier = new EmailNotifier("x", "x","0", runtimeInfo, emailSender, ImmutableList.of("foo", "bar"),
       ImmutableSet.of("STOPPED"));
 
     PipelineState stoppingState = new PipelineStateImpl("x", "x", "0", PipelineStatus.STOPPING, "Stopping",
@@ -161,7 +161,7 @@ public class TestEmailNotifier {
   @Test
   public void testEmailNotifierDisconnected() throws Exception {
 
-    EmailNotifier emailNotifier = new EmailNotifier("x", "0", runtimeInfo, emailSender, ImmutableList.of("foo", "bar"),
+    EmailNotifier emailNotifier = new EmailNotifier("x", "x","0", runtimeInfo, emailSender, ImmutableList.of("foo", "bar"),
       ImmutableSet.of("DISCONNECTED"));
 
     PipelineState disconnectingState = new PipelineStateImpl("x", "x", "0", PipelineStatus.DISCONNECTING, "Disconnecting",
@@ -181,7 +181,7 @@ public class TestEmailNotifier {
   @Test
   public void testEmailNotifierConnecting() throws Exception {
 
-    EmailNotifier emailNotifier = new EmailNotifier("x", "0", runtimeInfo, emailSender, ImmutableList.of("foo", "bar"),
+    EmailNotifier emailNotifier = new EmailNotifier("x", "x","0", runtimeInfo, emailSender, ImmutableList.of("foo", "bar"),
       ImmutableSet.of("CONNECTING"));
 
     PipelineState disconnectedState = new PipelineStateImpl("x", "x", "0", PipelineStatus.DISCONNECTED, "Disconnected",
@@ -202,7 +202,7 @@ public class TestEmailNotifier {
   @Test
   public void testEmailNotifierWrongPipeline() throws Exception {
 
-    EmailNotifier emailNotifier = new EmailNotifier("y", "0", runtimeInfo, emailSender, ImmutableList.of("foo", "bar"),
+    EmailNotifier emailNotifier = new EmailNotifier("y", "x","0", runtimeInfo, emailSender, ImmutableList.of("foo", "bar"),
       ImmutableSet.of("RUN_ERROR"));
 
     PipelineState runningState = new PipelineStateImpl("x", "x", "0", PipelineStatus.RUNNING, "Running",

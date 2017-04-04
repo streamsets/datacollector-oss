@@ -26,6 +26,7 @@ import com.streamsets.datacollector.config.MetricsRuleDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.runner.MockStages;
@@ -58,6 +59,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -230,9 +232,17 @@ public class TestClusterProviderImpl {
     MockSystemProcess.output.add(" application_1429587312661_0025 ");
     Assert.assertNotNull(sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
       providerTemp, env, sourceInfo, pipelineConf, stageLibrary, etcDir, resourcesDir, webDir,
-      bootstrapLibDir, classLoader, classLoader,  60, new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(),
-        new ArrayList<DataRuleDefinition>(), new ArrayList<DriftRuleDefinition>(), new ArrayList<String>(),
-            UUID.randomUUID()), null).getId());
+      bootstrapLibDir, classLoader, classLoader,  60,
+        new RuleDefinitions(
+            PipelineStoreTask.RULE_DEFINITIONS_SCHEMA_VERSION,
+            RuleDefinitionsConfigBean.VERSION,
+            new ArrayList<MetricsRuleDefinition>(),
+            new ArrayList<DataRuleDefinition>(),
+            new ArrayList<DriftRuleDefinition>(),
+            new ArrayList<String>(),
+            UUID.randomUUID(),
+            Collections.emptyList()
+        ), null).getId());
   }
 
   @Test
@@ -258,8 +268,16 @@ public class TestClusterProviderImpl {
     Assert.assertNotNull(sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
       providerTemp, env, sourceInfo, pipelineConf, MockStages.createClusterStreamingStageLibrary(classLoader), etcDir, resourcesDir,
       webDir, bootstrapLibDir, classLoader, classLoader,  60,
-      new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(), new ArrayList<DataRuleDefinition>(),
-          new ArrayList<DriftRuleDefinition>(), new ArrayList<String>(), UUID.randomUUID()), null).getId());
+      new RuleDefinitions(
+          PipelineStoreTask.RULE_DEFINITIONS_SCHEMA_VERSION,
+          RuleDefinitionsConfigBean.VERSION,
+          Collections.<MetricsRuleDefinition>emptyList(),
+          Collections.<DataRuleDefinition>emptyList(),
+          Collections.<DriftRuleDefinition>emptyList(),
+          Collections.<String>emptyList(),
+          UUID.randomUUID(),
+          Collections.<Config>emptyList()
+      ), null).getId());
     Assert.assertEquals(ClusterProviderImpl.CLUSTER_TYPE_YARN,
       MockSystemProcess.env.get(ClusterProviderImpl.CLUSTER_TYPE));
     Assert.assertTrue(MockSystemProcess.args.contains(
@@ -292,8 +310,16 @@ public class TestClusterProviderImpl {
     ApplicationState appState = sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
       providerTemp, env, sourceInfo, pipelineConf, MockStages.createClusterStreamingStageLibrary(classLoader), etcDir, resourcesDir,
       webDir, bootstrapLibDir, classLoader, classLoader,  60,
-      new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(), new ArrayList<DataRuleDefinition>(),
-          new ArrayList<DriftRuleDefinition>(), new ArrayList<String>(), UUID.randomUUID()), null);
+      new RuleDefinitions(
+          PipelineStoreTask.RULE_DEFINITIONS_SCHEMA_VERSION,
+          RuleDefinitionsConfigBean.VERSION,
+          Collections.<MetricsRuleDefinition>emptyList(),
+          Collections.<DataRuleDefinition>emptyList(),
+          Collections.<DriftRuleDefinition>emptyList(),
+          Collections.<String>emptyList(),
+          UUID.randomUUID(),
+          Collections.<Config>emptyList()
+      ), null);
     Assert.assertNotNull(appState.getId());
     Assert.assertNotNull(appState.getDirId());
     Assert.assertEquals(ClusterProviderImpl.CLUSTER_TYPE_MESOS,
@@ -340,11 +366,15 @@ public class TestClusterProviderImpl {
         classLoader,
         classLoader,
         60,
-        new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(),
-            new ArrayList<DataRuleDefinition>(),
-            new ArrayList<DriftRuleDefinition>(),
-            new ArrayList<String>(),
-            UUID.randomUUID()
+        new RuleDefinitions(
+            PipelineStoreTask.RULE_DEFINITIONS_SCHEMA_VERSION,
+            RuleDefinitionsConfigBean.VERSION,
+            Collections.<MetricsRuleDefinition>emptyList(),
+            Collections.<DataRuleDefinition>emptyList(),
+            Collections.<DriftRuleDefinition>emptyList(),
+            Collections.<String>emptyList(),
+            UUID.randomUUID(),
+            Collections.<Config>emptyList()
         ),
         null
     ).getId());
@@ -389,9 +419,17 @@ public class TestClusterProviderImpl {
       "aaa", null, null, null, true, null));
     Assert.assertNotNull(sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
       providerTemp, env, sourceInfo, pipelineConf, MockStages.createClusterBatchStageLibrary(classLoader), etcDir, resourcesDir, webDir,
-      bootstrapLibDir, classLoader, classLoader,  60, new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(),
-        new ArrayList<DataRuleDefinition>(), new ArrayList<DriftRuleDefinition>(), new ArrayList<String>(),
-            UUID.randomUUID()), null).getId());
+      bootstrapLibDir, classLoader, classLoader,  60,
+        new RuleDefinitions(
+            PipelineStoreTask.RULE_DEFINITIONS_SCHEMA_VERSION,
+            RuleDefinitionsConfigBean.VERSION,
+            Collections.<MetricsRuleDefinition>emptyList(),
+            Collections.<DataRuleDefinition>emptyList(),
+            Collections.<DriftRuleDefinition>emptyList(),
+            Collections.<String>emptyList(),
+            UUID.randomUUID(),
+            Collections.<Config>emptyList()
+        ), null).getId());
     Assert.assertEquals(ClusterProviderImpl.CLUSTER_TYPE_MAPREDUCE, MockSystemProcess.env.get(ClusterProviderImpl.CLUSTER_TYPE));
     Assert.assertTrue(MockSystemProcess.args.contains(
         "<masked>/bootstrap-lib/main/streamsets-datacollector-bootstrap-1.7.0.0-SNAPSHOT.jar," + "<masked>/avro-1.7.7" +
@@ -409,9 +447,17 @@ public class TestClusterProviderImpl {
     try {
       sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
       providerTemp, env, sourceInfo, pipelineConf, stageLibrary, etcDir, resourcesDir, webDir,
-      bootstrapLibDir, classLoader, classLoader,  60, new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(),
-        new ArrayList<DataRuleDefinition>(), new ArrayList<DriftRuleDefinition>(), new ArrayList<String>(),
-              UUID.randomUUID()), null).getId();
+      bootstrapLibDir, classLoader, classLoader,  60,
+          new RuleDefinitions(
+              PipelineStoreTask.RULE_DEFINITIONS_SCHEMA_VERSION,
+              RuleDefinitionsConfigBean.VERSION,
+              Collections.<MetricsRuleDefinition>emptyList(),
+              Collections.<DataRuleDefinition>emptyList(),
+              Collections.<DriftRuleDefinition>emptyList(),
+              Collections.<String>emptyList(),
+              UUID.randomUUID(),
+              Collections.<Config>emptyList()
+          ), null).getId();
       Assert.fail("Expected IO Exception");
     } catch (IOException ex) {
       Assert.assertTrue("Incorrect message: " + ex, ex.getMessage().contains("No valid credentials provided"));
@@ -425,9 +471,16 @@ public class TestClusterProviderImpl {
     MockSystemProcess.output.add(" " + id + " ");
     Assert.assertEquals(id, sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
       providerTemp, env, sourceInfo, pipelineConf, stageLibrary, etcDir, resourcesDir, webDir,
-      bootstrapLibDir, classLoader, classLoader, 60, new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(),
-        new ArrayList<DataRuleDefinition>(), new ArrayList<DriftRuleDefinition>(), new ArrayList<String>(),
-            UUID.randomUUID()), null).getId());
+      bootstrapLibDir, classLoader, classLoader, 60, new RuleDefinitions(
+            PipelineStoreTask.RULE_DEFINITIONS_SCHEMA_VERSION,
+            RuleDefinitionsConfigBean.VERSION,
+            Collections.<MetricsRuleDefinition>emptyList(),
+            Collections.<DataRuleDefinition>emptyList(),
+            Collections.<DriftRuleDefinition>emptyList(),
+            Collections.<String>emptyList(),
+            UUID.randomUUID(),
+            Collections.<Config>emptyList()
+        ), null).getId());
       Assert.assertArrayEquals(
         new String[]{"<masked>/_cluster-manager", "start", "--master", "yarn-cluster", "--executor-memory", "512m",
             "--executor-cores", "1", "--num-executors", "64", "--archives", "<masked>/provider-temp/staging/libs.tar" +

@@ -28,6 +28,7 @@ import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
 import com.streamsets.datacollector.creation.StageConfigBean;
 import com.streamsets.pipeline.api.OffsetCommitTrigger;
 import com.streamsets.pipeline.api.OffsetCommitter;
@@ -351,7 +352,8 @@ public abstract class StageDefinitionExtractor {
       type = StageType.EXECUTOR;
     } else if (Target.class.isAssignableFrom(klass)) {
       type = StageType.TARGET;
-    } else if (PipelineConfigBean.class.isAssignableFrom(klass)) {
+    } else if (PipelineConfigBean.class.isAssignableFrom(klass) ||
+        RuleDefinitionsConfigBean.class.isAssignableFrom(klass)) {
       type = StageType.PIPELINE;
     } else {
       type = null;

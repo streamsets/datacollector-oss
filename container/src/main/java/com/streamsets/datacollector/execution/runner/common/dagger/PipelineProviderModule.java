@@ -61,11 +61,13 @@ import javax.inject.Singleton;
 public class PipelineProviderModule {
 
   private final String name;
+  private final String title;
   private final String rev;
   private final boolean statsAggregationEnabled;
 
-  public PipelineProviderModule(String name, String rev, boolean statsAggregationEnabled) {
+  public PipelineProviderModule(String name, String title, String rev, boolean statsAggregationEnabled) {
     this.name = name;
+    this.title = title;
     this.rev = rev;
     this.statsAggregationEnabled = statsAggregationEnabled;
   }
@@ -86,10 +88,15 @@ public class PipelineProviderModule {
   }
 
   @Provides @Singleton
-  public AlertManager provideAlertManager(@Named("name") String name, @Named("rev") String rev, EmailSender emailSender,
-                                          MetricRegistry metricRegistry, RuntimeInfo runtimeInfo,
-                                          EventListenerManager eventListenerManager) {
-    return new AlertManager(name, rev, emailSender, metricRegistry, runtimeInfo, eventListenerManager);
+  public AlertManager provideAlertManager(
+      @Named("name") String name,
+      @Named("rev") String rev,
+      EmailSender emailSender,
+      MetricRegistry metricRegistry,
+      RuntimeInfo runtimeInfo,
+      EventListenerManager eventListenerManager
+  ) {
+    return new AlertManager(name, title, rev, emailSender, metricRegistry, runtimeInfo, eventListenerManager);
   }
 
   @Provides @Singleton

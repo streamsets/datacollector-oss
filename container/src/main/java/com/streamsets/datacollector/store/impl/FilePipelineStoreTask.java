@@ -30,6 +30,7 @@ import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
 import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStateStore;
@@ -55,6 +56,7 @@ import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.LogUtil;
 import com.streamsets.datacollector.util.PipelineDirectoryUtil;
 import com.streamsets.datacollector.validation.Issue;
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.PipelineUtils;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -454,9 +456,16 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
           ruleDefinitions = null;
         }
         if(ruleDefinitions == null) {
-          ruleDefinitions = new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(),
-            new ArrayList<DataRuleDefinition>(), new ArrayList<DriftRuleDefinition>(),
-              new ArrayList<String>(), UUID.randomUUID());
+          ruleDefinitions = new RuleDefinitions(
+              PipelineStoreTask.RULE_DEFINITIONS_SCHEMA_VERSION,
+              RuleDefinitionsConfigBean.VERSION,
+              new ArrayList<MetricsRuleDefinition>(),
+              new ArrayList<DataRuleDefinition>(),
+              new ArrayList<DriftRuleDefinition>(),
+              new ArrayList<String>(),
+              UUID.randomUUID(),
+              new ArrayList<Config>()
+          );
         }
         pipelineToRuleDefinitionMap.put(getPipelineKey(name, tagOrRev), ruleDefinitions);
       }

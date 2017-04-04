@@ -29,6 +29,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.ErrorHandlingChooserValues;
 import com.streamsets.datacollector.config.PipelineDefinition;
+import com.streamsets.datacollector.config.PipelineRulesDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.config.StatsTargetChooserValues;
@@ -385,6 +386,11 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   @Override
   public PipelineDefinition getPipeline() {
     return PipelineDefinition.getPipelineDef();
+  }
+
+  @Override
+  public PipelineRulesDefinition getPipelineRules() {
+    return PipelineRulesDefinition.getPipelineRulesDef();
   }
 
   @Override

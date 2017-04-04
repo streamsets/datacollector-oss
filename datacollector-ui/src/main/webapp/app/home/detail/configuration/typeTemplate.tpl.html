@@ -629,3 +629,26 @@
     <ng-include src="'configurationIssuesTemplate'"></ng-include>
   </div>
 </script>
+
+
+<script type="text/ng-template" id="textComplexConfigurationTemplate">
+  <div ui-codemirror
+       class="codemirror-editor"
+       ng-class="{'codemirror-read-only': isPipelineReadOnly || isPipelineRunning}"
+       focus-me="{{autoFocusConfigName === customFieldConfigDefinition.name}}"
+       ng-model="customFieldValue[customFieldConfigDefinition.name]"
+       ui-refresh="refreshCodemirror"
+       ui-codemirror-opts="getCodeMirrorOptions({
+                readOnly: (isPipelineReadOnly || isPipelineRunning),
+                mode: {
+                  name: customFieldConfigDefinition.mode
+                },
+                lineNumbers: true,
+                lineWrapping: true
+              }, customFieldConfigDefinition)"
+       codemirror-el
+       field-paths="fieldPaths"
+       d-field-paths="dFieldPaths">
+  </div>
+  <ng-include src="'configurationIssuesTemplate'"></ng-include>
+</script>

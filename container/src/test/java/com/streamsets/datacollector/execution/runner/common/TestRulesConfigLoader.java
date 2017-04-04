@@ -24,6 +24,7 @@ import com.streamsets.datacollector.config.DriftRuleDefinition;
 import com.streamsets.datacollector.config.MetricsRuleDefinition;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.ThresholdType;
+import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.runner.production.RulesConfigurationChangeRequest;
@@ -120,9 +121,16 @@ public class TestRulesConfigLoader {
 
     driftRuleDefinitions.add(driftRuleDefinition);
 
-    RuleDefinitions prevRuleDef = new RuleDefinitions(Collections.<MetricsRuleDefinition>emptyList(),
-      dataRuleDefinitions, driftRuleDefinitions, Collections.<String>emptyList(),
-        UUID.randomUUID());
+    RuleDefinitions prevRuleDef = new RuleDefinitions(
+        PipelineStoreTask.RULE_DEFINITIONS_SCHEMA_VERSION,
+        RuleDefinitionsConfigBean.VERSION,
+        Collections.<MetricsRuleDefinition>emptyList(),
+        dataRuleDefinitions,
+        driftRuleDefinitions,
+        Collections.<String>emptyList(),
+        UUID.randomUUID(),
+        Collections.emptyList()
+    );
     //The latest rule definition has just one data rule definition.
     //The old one had 2 data and 1 drift rule
     //Also there is a change in the condition of the data rule definition

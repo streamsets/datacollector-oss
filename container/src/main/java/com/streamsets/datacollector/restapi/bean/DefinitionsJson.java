@@ -24,12 +24,13 @@ import java.util.Map;
 import java.util.Set;
 
 public class DefinitionsJson {
-  List<PipelineDefinitionJson> pipeline;
-  List<StageDefinitionJson> stages;
-  Map<String,Map<String, List<String>>> rulesDefinitions;
-  Map<String, Object> elCatalog;
-  Set<Object> runtimeConfigs;
-  Map<String, String> stageIcons;
+  private List<PipelineDefinitionJson> pipeline;
+  private List<PipelineRulesDefinitionJson> pipelineRules;
+  private List<StageDefinitionJson> stages;
+  private Map<String,Map<String, List<String>>> rulesElMetadata;
+  private Map<String, Object> elCatalog;
+  private Set<Object> runtimeConfigs;
+  private Map<String, String> stageIcons;
 
   public List<PipelineDefinitionJson> getPipeline() {
     return pipeline;
@@ -43,16 +44,24 @@ public class DefinitionsJson {
     return stages;
   }
 
+  public List<PipelineRulesDefinitionJson> getPipelineRules() {
+    return pipelineRules;
+  }
+
+  public void setPipelineRules(List<PipelineRulesDefinitionJson> pipelineRules) {
+    this.pipelineRules = pipelineRules;
+  }
+
   public void setStages(List<StageDefinitionJson> stages) {
     this.stages = stages;
   }
 
   public Map<String,Map<String, List<String>>> getRulesElMetadata() {
-    return rulesDefinitions;
+    return rulesElMetadata;
   }
 
-  public void setRulesElMetadata(Map<String,Map<String, List<String>>> rulesDefinitions) {
-    this.rulesDefinitions = rulesDefinitions;
+  public void setRulesElMetadata(Map<String,Map<String, List<String>>> rulesElMetadata) {
+    this.rulesElMetadata = rulesElMetadata;
   }
 
   public Map<String, Object> getElCatalog() {

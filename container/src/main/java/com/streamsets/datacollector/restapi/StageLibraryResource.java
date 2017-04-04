@@ -30,6 +30,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.DefinitionsJson;
 import com.streamsets.datacollector.restapi.bean.PipelineDefinitionJson;
+import com.streamsets.datacollector.restapi.bean.PipelineRulesDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.StageDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.StageLibraryExtrasJson;
 import com.streamsets.datacollector.restapi.bean.StageLibraryJson;
@@ -143,6 +144,11 @@ public class StageLibraryResource {
     List<PipelineDefinitionJson> pipeline = new ArrayList<>(1);
     pipeline.add(BeanHelper.wrapPipelineDefinition(stageLibrary.getPipeline()));
     definitions.setPipeline(pipeline);
+
+    //Populate the definitions with the PipelineRulesDefinition
+    List<PipelineRulesDefinitionJson> pipelineRules = new ArrayList<>(1);
+    pipelineRules.add(BeanHelper.wrapPipelineRulesDefinition(stageLibrary.getPipelineRules()));
+    definitions.setPipelineRules(pipelineRules);
 
     definitions.setRulesElMetadata(DataRuleEvaluator.getELDefinitions());
 

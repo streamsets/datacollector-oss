@@ -20,8 +20,17 @@
 package com.streamsets.datacollector.restapi;
 
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
 import com.streamsets.datacollector.main.RuntimeInfo;
-import com.streamsets.datacollector.restapi.bean.*;
+import com.streamsets.datacollector.restapi.bean.BeanHelper;
+import com.streamsets.datacollector.restapi.bean.ConfigConfigurationJson;
+import com.streamsets.datacollector.restapi.bean.DataRuleDefinitionJson;
+import com.streamsets.datacollector.restapi.bean.DriftRuleDefinitionJson;
+import com.streamsets.datacollector.restapi.bean.MetricElementJson;
+import com.streamsets.datacollector.restapi.bean.MetricTypeJson;
+import com.streamsets.datacollector.restapi.bean.MetricsRuleDefinitionJson;
+import com.streamsets.datacollector.restapi.bean.RuleDefinitionsJson;
+import com.streamsets.datacollector.restapi.bean.ThresholdTypeJson;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreException;
@@ -30,7 +39,6 @@ import com.streamsets.datacollector.store.impl.SlavePipelineStoreTask;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.validation.RuleIssue;
 import com.streamsets.datacollector.validation.ValidationError;
-
 import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -47,7 +55,6 @@ import javax.inject.Singleton;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
-
 import java.net.URI;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -174,8 +181,16 @@ public class TestPipelineStoreResourceForSlaveMode extends JerseyTest {
         dataRuleDefinitionJsons.add(new DataRuleDefinitionJson("c", "c", "c", 20, 300, "x", true, "c", ThresholdTypeJson.COUNT, "200",
           1000, true, false, true, timestamp));
 
-        RuleDefinitionsJson rules = new RuleDefinitionsJson(metricsRuleDefinitionJsons, dataRuleDefinitionJsons,
-            Collections.<DriftRuleDefinitionJson>emptyList(), Collections.<String>emptyList(), UUID.randomUUID());
+        RuleDefinitionsJson rules = new RuleDefinitionsJson(
+            PipelineStoreTask.RULE_DEFINITIONS_SCHEMA_VERSION,
+            RuleDefinitionsConfigBean.VERSION,
+            metricsRuleDefinitionJsons,
+            dataRuleDefinitionJsons,
+            Collections.<DriftRuleDefinitionJson>emptyList(),
+            Collections.<String>emptyList(),
+            UUID.randomUUID(),
+            Collections.<ConfigConfigurationJson>emptyList()
+        );
         List<RuleIssue> ruleIssues = new ArrayList<>();
         ruleIssues.add(RuleIssue.createRuleIssue("a", ValidationError.VALIDATION_0000));
         ruleIssues.add(RuleIssue.createRuleIssue("b", ValidationError.VALIDATION_0000));

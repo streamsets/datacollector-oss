@@ -28,6 +28,7 @@ import com.streamsets.datacollector.config.MetricsRuleDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.ThresholdType;
+import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.MockStages;
@@ -50,6 +51,7 @@ import org.mockito.Mockito;
 
 import javax.inject.Singleton;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -317,9 +319,16 @@ public class TestFilePipelineStoreTask {
     RuleDefinitions tempRuleDef = store.retrieveRules(DEFAULT_PIPELINE_NAME,
       FilePipelineStoreTask.REV);
     //Mimick two different clients [browsers] retrieving from the store
-    RuleDefinitions ruleDefinitions2 = new RuleDefinitions(tempRuleDef.getMetricsRuleDefinitions(),
-      tempRuleDef.getDataRuleDefinitions(), new ArrayList<DriftRuleDefinition>(), tempRuleDef.getEmailIds(),
-        tempRuleDef.getUuid());
+    RuleDefinitions ruleDefinitions2 = new RuleDefinitions(
+        PipelineStoreTask.RULE_DEFINITIONS_SCHEMA_VERSION,
+        RuleDefinitionsConfigBean.VERSION,
+        tempRuleDef.getMetricsRuleDefinitions(),
+        tempRuleDef.getDataRuleDefinitions(),
+        new ArrayList<DriftRuleDefinition>(),
+        tempRuleDef.getEmailIds(),
+        tempRuleDef.getUuid(),
+        Collections.emptyList()
+    );
 
     long timestamp = System.currentTimeMillis();
     List<MetricsRuleDefinition> metricsRuleDefinitions = ruleDefinitions1.getMetricsRuleDefinitions();

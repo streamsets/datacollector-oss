@@ -22,6 +22,7 @@ package com.streamsets.datacollector.execution.alerts;
 import com.codahale.metrics.Metric;
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.datacollector.config.MetricsRuleDefinition;
+import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
 import com.streamsets.datacollector.util.ObserverException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,13 +36,20 @@ public class MetricRuleEvaluator {
   private final MetricsRuleDefinition metricsRuleDefinition;
   private final MetricRegistry metrics;
   private final List<String> emailIds;
+  private final RuleDefinitionsConfigBean ruleDefinitionsConfigBean;
   private final AlertManager alertManager;
 
-  public MetricRuleEvaluator(MetricsRuleDefinition metricsRuleDefinition, MetricRegistry metricRegistry,
-                             AlertManager alertManager, List<String> emailIds) {
+  public MetricRuleEvaluator(
+      MetricsRuleDefinition metricsRuleDefinition,
+      MetricRegistry metricRegistry,
+      AlertManager alertManager,
+      List<String> emailIds,
+      RuleDefinitionsConfigBean ruleDefinitionsConfigBean
+  ) {
     this.metricsRuleDefinition = metricsRuleDefinition;
     this.metrics = metricRegistry;
     this.emailIds = emailIds;
+    this.ruleDefinitionsConfigBean = ruleDefinitionsConfigBean;
     this.alertManager = alertManager;
   }
 
@@ -60,7 +68,7 @@ public class MetricRuleEvaluator {
             metric
           );
           if (MetricRuleEvaluatorHelper.evaluate(value, metricsRuleDefinition.getCondition())) {
-            alertManager.alert(value, emailIds, metricsRuleDefinition);
+            alertManager.alert(value, emailIds, ruleDefinitionsConfigBean, metricsRuleDefinition);
           }
         } catch (ObserverException e) {
           //A faulty condition should not take down rest of the alerts with it.

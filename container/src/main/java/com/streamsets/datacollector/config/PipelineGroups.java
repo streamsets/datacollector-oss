@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.Label;
 
 public enum PipelineGroups implements Label {
   PARAMETERS("Parameters"),
+  NOTIFICATIONS("Notifications"),
   BAD_RECORDS("Error Records"),
   CLUSTER("Cluster"),
   STATS("Statistics")
