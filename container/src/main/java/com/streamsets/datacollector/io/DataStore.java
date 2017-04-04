@@ -349,12 +349,13 @@ public class DataStore {
         Files.move(fileOld, file);
         LOG.warn("File '{}', rolled back during verification", file);
       } else if (Files.exists(fileOld)) {
-        LOG.warn("File '{}', write incomplete while starting write, rolling back", file);
         if (Files.exists(file)) {
-          throw new IOException(Utils.format("File '{}' exists, '{}' should not exist", fileOld, file));
+          LOG.warn("Both file {} and old file '{}' exists, deleting old file during verification", file, fileOld);
+          Files.delete(fileOld);
+        } else {
+          Files.move(fileOld, file);
+          LOG.warn("File '{}', rolled back during verification", file);
         }
-        Files.move(fileOld, file);
-        LOG.warn("File '{}', rolled back during verification", file);
       }
     } else {
       LOG.trace("File '{}' no recovery needed", file);

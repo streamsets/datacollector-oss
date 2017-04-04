@@ -29,6 +29,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.UUID;
 
 public class TestDataStore {
@@ -302,11 +303,12 @@ public class TestDataStore {
     }
   }
 
-  @Test(expected = IOException.class)
+  @Test
   public void testVerifyAndRecoverInvalidOldFile() throws IOException {
     byte[] arr = new byte[]{1, 2, 3};
     File file = new File(createTestDir(), "x");
-    createFile(new File(file.getAbsolutePath() + "-old"), arr);
+    File oldFile = new File(file.getAbsolutePath() + "-old");
+    createFile(oldFile, arr);
     createFile(new File(file.getAbsolutePath()), arr);
     DataStore ds = new DataStore(file);
     try {
@@ -314,6 +316,8 @@ public class TestDataStore {
     } finally {
       ds.close();
     }
+    Assert.assertTrue(Files.exists(file.getAbsoluteFile().toPath()));
+    Assert.assertTrue(!Files.exists(oldFile.getAbsoluteFile().toPath()));
   }
 
 }
