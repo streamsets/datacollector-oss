@@ -221,6 +221,7 @@ public class SpoolDirSource extends BaseSource {
       if (conf.errorArchiveDir != null && !conf.errorArchiveDir.isEmpty()) {
         builder.setErrorArchiveDir(conf.errorArchiveDir);
       }
+      builder.setPathMatcherMode(conf.pathMatcherMode);
       builder.setContext(getContext());
       this.useLastModified = conf.useLastModified == FileOrdering.TIMESTAMP;
       builder.setUseLastModifiedTimestamp(useLastModified);
