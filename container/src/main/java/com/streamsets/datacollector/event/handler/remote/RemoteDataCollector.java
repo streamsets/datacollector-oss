@@ -217,7 +217,11 @@ public class RemoteDataCollector implements DataCollector {
     } else {
       PipelineState pipelineState = pipelineStateStore.getState(name, rev);
       if (pipelineState.getStatus().isActive()) {
-        manager.getRunner(name, rev).stop(user);
+        try {
+          manager.getRunner(name, rev).stop(user);
+        } catch (Exception e) {
+          LOG.warn("Error while stopping the pipeline {}", e, e);
+        }
       }
       long now = System.currentTimeMillis();
       // wait for 10 secs for a graceful stop
