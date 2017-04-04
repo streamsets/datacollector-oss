@@ -25,9 +25,13 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.http.Errors;
+import com.streamsets.pipeline.lib.http.SslConfigBean;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.origin.websocketserver.Groups;
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jetty.util.resource.Resource;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
@@ -50,6 +54,7 @@ public class WebSocketTarget extends BaseTarget {
   private DataGeneratorFactory generatorFactory;
   private ErrorRecordHandler errorRecordHandler;
   private WebSocketClient webSocketClient = null;
+
   WebSocketTarget(WebSocketTargetConfig conf) {
     this.conf = conf;
   }
@@ -78,8 +83,7 @@ public class WebSocketTarget extends BaseTarget {
           Errors.HTTP_52, e.toString()
       ));
     }
-
-    webSocketClient = new WebSocketClient();
+    createWebSocketClient();
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
     if (issues.isEmpty()) {
       conf.dataGeneratorFormatConfig.init(
@@ -94,6 +98,29 @@ public class WebSocketTarget extends BaseTarget {
       }
     }
     return issues;
+  }
+
+  private void createWebSocketClient() {
+    try {
+      String resourceUrl = conf.resourceUrl.toLowerCase();
+      if (resourceUrl.startsWith("wss")) {
+        SslConfigBean sslConf = conf.sslConfig;
+        SslContextFactory sslContextFactory = new SslContextFactory();
+        if (!StringUtils.isEmpty(sslConf.trustStorePath) && !StringUtils.isEmpty(sslConf.trustStorePassword)) {
+          sslContextFactory.setTrustStoreResource(Resource.newResource(sslConf.trustStorePath));
+          sslContextFactory.setTrustStorePassword(sslConf.trustStorePassword);
+        }
+        if (!StringUtils.isEmpty(sslConf.keyStorePath) && !StringUtils.isEmpty(sslConf.keyStorePassword)) {
+          sslContextFactory.setKeyStoreResource(Resource.newResource(sslConf.keyStorePath));
+          sslContextFactory.setKeyStorePassword(sslConf.keyStorePassword);
+        }
+        webSocketClient = new WebSocketClient(sslContextFactory);
+      } else {
+        webSocketClient = new WebSocketClient();
+      }
+    } catch (Exception e) {
+      throw new IllegalArgumentException(conf.resourceUrl, e);
+    }
   }
 
   @Override

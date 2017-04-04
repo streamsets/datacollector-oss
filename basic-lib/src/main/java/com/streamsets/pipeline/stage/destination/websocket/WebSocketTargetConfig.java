@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.VaultEL;
+import com.streamsets.pipeline.lib.http.SslConfigBean;
 import com.streamsets.pipeline.stage.destination.http.DataFormatChooserValues;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 
@@ -83,4 +84,7 @@ public class WebSocketTargetConfig {
       group = "WEB_SOCKET"
   )
   public long maxRequestCompletionSecs = 60L;
+
+  @ConfigDefBean(groups = "SSL")
+  public SslConfigBean sslConfig = new SslConfigBean();
 }

@@ -19,30 +19,24 @@
  */
 package com.streamsets.pipeline.stage.destination.websocket;
 
-import com.streamsets.pipeline.api.ConfigDefBean;
-import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.configurablestage.DTarget;
+import com.streamsets.pipeline.api.Label;
 
-@StageDef(
-    version = 1,
-    label = "WebSocket Client",
-    description = "Uses an WebSocket client to write data.",
-    icon = "websockets.png",
-    recordsByRef = true,
-    onlineHelpRefUrl = "index.html#Destinations/WebSocketClient.html#task_erb_pjn_lz"
-)
-@ConfigGroups(Groups.class)
 @GenerateResourceBundle
-public class WebSocketDTarget extends DTarget {
+public enum Groups implements Label {
+  WEB_SOCKET("WebSocket"),
+  SSL("SSL/TLS"),
+  DATA_FORMAT("Data Format"),
+  ;
 
-  @ConfigDefBean
-  public WebSocketTargetConfig conf;
+  private final String label;
+
+  private Groups(String label) {
+    this.label = label;
+  }
 
   @Override
-  protected Target createTarget() {
-    return new WebSocketTarget(conf);
+  public String getLabel() {
+    return this.label;
   }
 }
