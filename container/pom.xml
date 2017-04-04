@@ -302,11 +302,6 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>org.glassfish.jersey.media</groupId>
-      <artifactId>jersey-media-multipart</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
       <groupId>org.glassfish.jersey.test-framework.providers</groupId>
       <artifactId>jersey-test-framework-provider-inmemory</artifactId>
       <scope>test</scope>

@@ -189,6 +189,12 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
+<!-- crypto-lib -->
+    <fileSet>
+      <directory>${basedir}/../crypto-lib/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
     <!-- stats-lib -->
     <fileSet>
       <directory>${basedir}/../stats-lib/target/streamsets-libs/</directory>

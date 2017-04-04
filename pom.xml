@@ -67,6 +67,7 @@
     <azure-keyvault-credentialstore-lib>azure-keyvault-credentialstore-lib</azure-keyvault-credentialstore-lib>
     <basic-lib>basic-lib</basic-lib>
     <bigtable-lib>bigtable-lib</bigtable-lib>
+    <crypto-lib>crypto-lib</crypto-lib>
     <cyberark-credentialstore-lib>cyberark-credentialstore-lib</cyberark-credentialstore-lib>
     <dev-lib>dev-lib</dev-lib>
     <dataformats-lib>dataformats-lib</dataformats-lib>
@@ -226,6 +227,7 @@
     <module>azure-keyvault-credentialstore-lib</module>
     <module>basic-lib</module>
     <module>bigtable-lib</module>
+    <module>crypto-lib</module>
     <module>cyberark-credentialstore-lib</module>
     <module>dev-lib</module>
     <module>dataformats-lib</module>

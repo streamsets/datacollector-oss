@@ -152,6 +152,11 @@
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
+        <artifactId>streamsets-datacollector-crypto-lib</artifactId>
+        <version>3.0.0.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-stats-lib</artifactId>
         <version>${project.version}</version>
       </dependency>
