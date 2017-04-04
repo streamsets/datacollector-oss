@@ -37,7 +37,7 @@ import com.streamsets.pipeline.lib.mqtt.MqttClientConfigBean;
     icon = "mqtt.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
-    onlineHelpRefUrl = "index.html#Origins/HTTPClient.html#task_akl_rkz_5r"
+    onlineHelpRefUrl = "index.html#Origins/MQTTSubscriber.html#task_wnz_mxt_lz"
 )
 @HideConfigs(value = {"subscriberConf.dataFormatConfig.jsonContent"})
 @ConfigGroups(Groups.class)

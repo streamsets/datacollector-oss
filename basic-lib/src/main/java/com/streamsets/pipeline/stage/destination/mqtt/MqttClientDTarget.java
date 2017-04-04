@@ -36,7 +36,7 @@ import com.streamsets.pipeline.lib.mqtt.MqttClientConfigBean;
     icon = "mqtt.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
-    onlineHelpRefUrl = "index.html#Origins/HTTPClient.html#task_akl_rkz_5r"
+    onlineHelpRefUrl = "index.html#Destinations/MQTTPublisher.html#task_vbn_cyt_lz"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
