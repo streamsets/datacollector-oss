@@ -33,7 +33,7 @@ import com.streamsets.pipeline.lib.http.Groups;
     description = "Uses an HTTP client to write data.",
     icon = "httpclient.png",
     recordsByRef = true,
-    onlineHelpRefUrl = "index.html#Processors/HTTPClient.html#task_z54_1qr_fw"
+    onlineHelpRefUrl = "index.html#Destinations/HTTPClient.html#task_bdf_fk5_lz"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
