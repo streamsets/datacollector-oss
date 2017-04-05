@@ -133,6 +133,7 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
         } catch (ParseException | IllegalArgumentException e) {
           throw new OnRecordErrorException(Errors.CONVERTER_00,
               matchingField,
+              field.getType(),
               field.getValueAsString(),
               converterConfig.targetType.name(),
               e
@@ -205,7 +206,7 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
       // Use the built in type conversion provided by TypeSupport
       return Field.create(converterConfig.targetType, field.getValue());
     } catch (IllegalArgumentException e) {
-      throw new OnRecordErrorException(Errors.CONVERTER_02,
+      throw new OnRecordErrorException(Errors.CONVERTER_00,
           matchingField,
           field.getType(),
           field.getValue(),

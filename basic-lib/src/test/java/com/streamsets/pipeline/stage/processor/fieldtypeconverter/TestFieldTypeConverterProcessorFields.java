@@ -1631,7 +1631,7 @@ public class TestFieldTypeConverterProcessorFields {
       Assert.assertEquals(records.size(), errorRecords.size());
 
       for (Record record : errorRecords) {
-        Assert.assertEquals(Errors.CONVERTER_02.name(), record.getHeader().getErrorCode());
+        Assert.assertEquals(Errors.CONVERTER_00.name(), record.getHeader().getErrorCode());
       }
 
     } finally {
