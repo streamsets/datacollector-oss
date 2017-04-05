@@ -22,19 +22,17 @@ package com.streamsets.pipeline.lib.parser.net.netflow;
 
 import com.google.common.primitives.Bytes;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.lib.parser.net.NetTestUtils;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.embedded.EmbeddedChannel;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.RandomUtils;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -64,7 +62,7 @@ public class TestNetflowDecoder {
     byte[] bytes = get10MessagesBytes();
 
     long bytesWritten = 0;
-    List<List<Byte>> slices = getRandomByteSlices(bytes);
+    List<List<Byte>> slices = NetTestUtils.getRandomByteSlices(bytes);
     for (int s = 0; s<slices.size(); s++) {
       List<Byte> slice = slices.get(s);
       byte[] sliceBytes = Bytes.toArray(slice);
@@ -108,27 +106,4 @@ public class TestNetflowDecoder {
     return records;
   }
 
-  List<List<Byte>> getRandomByteSlices(byte[] bytes) {
-    List<Byte> byteList = Bytes.asList(bytes);
-
-    int numSlices = RandomUtils.nextInt(2, 10);
-    List<Integer> sliceIndexes = new ArrayList<>();
-    for (int i=1; i<=numSlices; i++) {
-      sliceIndexes.add(RandomUtils.nextInt(0, bytes.length));
-    }
-    Collections.sort(sliceIndexes);
-
-    List<List<Byte>> slices = new LinkedList<>();
-
-    int byteInd = 0;
-    for (int sliceIndex : sliceIndexes) {
-      // System.out.println(String.format("Slice from %d through %d", byteInd, sliceIndex));
-      slices.add(byteList.subList(byteInd, sliceIndex));
-      byteInd = sliceIndex;
-    }
-    // System.out.println(String.format("Slice from %d through %d", byteInd, byteList.size()));
-    slices.add(byteList.subList(byteInd, byteList.size()));
-
-    return slices;
-  }
 }
