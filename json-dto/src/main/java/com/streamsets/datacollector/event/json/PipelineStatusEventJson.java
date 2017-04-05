@@ -40,6 +40,7 @@ public class PipelineStatusEventJson implements EventJson {
   private String offset;
   private int offsetProtocolVersion = 1;
   private AclJson acl;
+  private int runnerCount;
 
   public PipelineStatusJson getPipelineStatus() {
     return pipelineStatus;
@@ -143,5 +144,13 @@ public class PipelineStatusEventJson implements EventJson {
 
   public void setOffsetProtocolVersion(int offsetProtocolVersion) {
     this.offsetProtocolVersion = offsetProtocolVersion;
+  }
+
+  public int getRunnerCount() {
+    return runnerCount;
+  }
+
+  public void setRunnerCount(int runnerCount) {
+    this.runnerCount = runnerCount;
   }
 }

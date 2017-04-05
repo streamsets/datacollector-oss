@@ -468,7 +468,8 @@ public class TestRemoteEventHandler {
             null,
             false,
             null,
-            null
+            null,
+            10
         ));
         list.add(new PipelineAndValidationStatus(
             "name2",
@@ -480,7 +481,8 @@ public class TestRemoteEventHandler {
             null,
             false,
             null,
-            null
+            null,
+            10
         ));
       }
       return list;
@@ -500,7 +502,8 @@ public class TestRemoteEventHandler {
             null,
             false,
             null,
-            null
+            null,
+            10
         ));
       }
       return list;
@@ -744,6 +747,7 @@ public class TestRemoteEventHandler {
     assertEquals("title1", pipelineStateInfoList.get(0).getTitle());
     assertEquals("rev1", pipelineStateInfoList.get(0).getRev());
     assertEquals(PipelineStatusJson.RUNNING, pipelineStateInfoList.get(0).getPipelineStatus());
+    assertEquals(10, pipelineStateInfoList.get(0).getRunnerCount());
 
     assertEquals("name2", pipelineStateInfoList.get(1).getName());
     assertEquals("title2", pipelineStateInfoList.get(1).getTitle());

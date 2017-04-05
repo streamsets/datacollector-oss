@@ -40,6 +40,7 @@ public class PipelineAndValidationStatus {
   private boolean isClusterMode;
   private String offset;
   private Acl acl;
+  private int runnerCount;
 
   public PipelineAndValidationStatus(
       String name,
@@ -51,7 +52,8 @@ public class PipelineAndValidationStatus {
       Collection<WorkerInfo> workerInfos,
       boolean isClusterMode,
       String offset,
-      Acl acl
+      Acl acl,
+      int runnerCount
   ) {
     this.name = name;
     this.title = title;
@@ -63,6 +65,7 @@ public class PipelineAndValidationStatus {
     this.isClusterMode = isClusterMode;
     this.offset = offset;
     this.acl = acl;
+    this.runnerCount = runnerCount;
   }
 
   public void setValidationStatus(ValidationStatus validationStatus) {
@@ -123,6 +126,10 @@ public class PipelineAndValidationStatus {
 
   public Acl getAcl() {
     return acl;
+  }
+
+  public int getRunnerCount() {
+    return runnerCount;
   }
 }
 

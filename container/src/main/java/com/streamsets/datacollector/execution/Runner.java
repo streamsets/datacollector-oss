@@ -162,4 +162,6 @@ public interface Runner {
 
   String getToken();
 
+  int getRunnerCount();
+
 }

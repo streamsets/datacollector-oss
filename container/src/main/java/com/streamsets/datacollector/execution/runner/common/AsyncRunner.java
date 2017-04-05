@@ -274,6 +274,11 @@ public class AsyncRunner implements Runner, PipelineInfo {
   }
 
   @Override
+  public int getRunnerCount() {
+    return runner.getRunnerCount();
+  }
+
+  @Override
   public void prepareForStop(String user) {
     throw new UnsupportedOperationException("This method is not supported for AsyncRunner. Call stop() instead.");
   }
