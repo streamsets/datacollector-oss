@@ -206,7 +206,8 @@
               "vault.proxy.port",
               "vault.proxy.username",
               "vault.proxy.password",
-              "vault.read.timeout"
+              "vault.read.timeout",
+              "runner.thread.pool.size"
             ],
             "excludedParams": [
               "datacollector.users",
