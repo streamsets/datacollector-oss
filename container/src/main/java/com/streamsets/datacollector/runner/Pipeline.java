@@ -142,6 +142,10 @@ public class Pipeline {
     return pipes;
   }
 
+  public int getNumOfRunners() {
+    return pipes.size();
+  }
+
   private boolean calculateShouldStopOnStageError() {
     // Check origin
     StageContext stageContext = originPipe.getStage().getContext();

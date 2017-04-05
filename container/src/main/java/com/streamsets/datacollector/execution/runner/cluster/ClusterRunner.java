@@ -947,4 +947,10 @@ public class ClusterRunner extends AbstractRunner {
     return slaveCallbackManager.getClusterToken();
   }
 
+  @Override
+  public int getRunnerCount() {
+    // as cluster runner is only used for managing the slave pipelines, report 1
+    return 1;
+  }
+
 }

@@ -867,4 +867,9 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   public String getToken() {
     return token;
   }
+
+  @Override
+  public int getRunnerCount() {
+    return prodPipeline != null ? prodPipeline.getPipeline().getNumOfRunners() : 0;
+  }
 }

@@ -262,6 +262,11 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
   }
 
   @Override
+  public int getRunnerCount() {
+    return standaloneRunner.getRunnerCount();
+  }
+
+  @Override
   public void prepareForStop(String user) throws PipelineStoreException, PipelineRunnerException {
     // no need for clear since slaves never run more than one pipeline
     MDC.put(LogConstants.USER, user);

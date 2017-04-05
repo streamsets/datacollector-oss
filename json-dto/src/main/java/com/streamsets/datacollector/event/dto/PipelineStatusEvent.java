@@ -39,6 +39,7 @@ public class PipelineStatusEvent implements Event {
   private String offset;
   private int offsetProtocolVersion;
   private Acl acl;
+  private int runnerCount;
 
   public PipelineStatusEvent() {
   }
@@ -56,7 +57,8 @@ public class PipelineStatusEvent implements Event {
       boolean isClusterMode,
       String offset,
       int offsetProtocolVersion,
-      Acl acl
+      Acl acl,
+      int runnerCount
   ) {
     this.name = name;
     this.title = title;
@@ -71,6 +73,7 @@ public class PipelineStatusEvent implements Event {
     this.offset = offset;
     this.acl = acl;
     this.offsetProtocolVersion = offsetProtocolVersion;
+    this.runnerCount = runnerCount;
   }
 
   public boolean isRemote() {
@@ -176,5 +179,13 @@ public class PipelineStatusEvent implements Event {
 
   public void setOffsetProtocolVersion(int offsetProtocolVersion) {
     this.offsetProtocolVersion = offsetProtocolVersion;
+  }
+
+  public int getRunnerCount() {
+    return runnerCount;
+  }
+
+  public void setRunnerCount(int runnerCount) {
+    this.runnerCount = runnerCount;
   }
 }

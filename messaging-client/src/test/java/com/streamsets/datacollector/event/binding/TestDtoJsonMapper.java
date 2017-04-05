@@ -123,20 +123,23 @@ public class TestDtoJsonMapper {
         true,
         "offset",
         2,
-        acl
+        acl,
+        10
     );
     PipelineStatusEvents pipelineStatusEvents = new PipelineStatusEvents();
     pipelineStatusEvents.setPipelineStatusEventList(Arrays.asList(pipelineStatusEvent));
     PipelineStatusEventsJson pseJson = MessagingDtoJsonMapper.INSTANCE.toPipelineStatusEventsJson(pipelineStatusEvents);
-    PipelineStatusEventJson pipelineStateInfoJson = pseJson.getPipelineStatusEventList().get(0);
-    assertEquals("name", pipelineStateInfoJson.getName());
-    assertEquals("rev", pipelineStateInfoJson.getRev());
-    assertEquals("offset", pipelineStateInfoJson.getOffset());
-    assertEquals(acl.getResourceId(), pipelineStateInfoJson.getAcl().getResourceId());
-    assertTrue(pipelineStateInfoJson.isClusterMode());
-    WorkerInfoJson workerInfoJson = pipelineStateInfoJson.getWorkerInfos().iterator().next();
+    PipelineStatusEventJson pipelineStatusEventJson = pseJson.getPipelineStatusEventList().get(0);
+    assertEquals("name", pipelineStatusEventJson.getName());
+    assertEquals("rev", pipelineStatusEventJson.getRev());
+    assertEquals("offset", pipelineStatusEventJson.getOffset());
+    assertEquals(acl.getResourceId(), pipelineStatusEventJson.getAcl().getResourceId());
+    assertTrue(pipelineStatusEventJson.isClusterMode());
+    assertEquals(10, pipelineStatusEventJson.getRunnerCount());
+    WorkerInfoJson workerInfoJson = pipelineStatusEventJson.getWorkerInfos().iterator().next();
     assertEquals("workerURL", workerInfoJson.getWorkerURL());
     assertEquals("slaveId", workerInfoJson.getWorkerId());
+
 
     pipelineStatusEvents = MessagingDtoJsonMapper.INSTANCE.asPipelineStatusEventsDto(pseJson);
     pipelineStatusEvent = pipelineStatusEvents.getPipelineStatusEventList().get(0);

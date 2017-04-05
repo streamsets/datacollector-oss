@@ -310,7 +310,8 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
           pipelineAndValidationStatus.isClusterMode(),
           pipelineAndValidationStatus.getOffset(),
           OFFSET_PROTOCOL_VERSION,
-          pipelineAndValidationStatus.getAcl()
+          pipelineAndValidationStatus.getAcl(),
+          pipelineAndValidationStatus.getRunnerCount()
       );
       return pipelineStatusEvent;
     }

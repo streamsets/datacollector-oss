@@ -243,4 +243,9 @@ public class AclRunner implements Runner {
   public String getToken() {
     return runner.getToken();
   }
+
+  @Override
+  public int getRunnerCount() {
+    return runner.getRunnerCount();
+  }
 }
