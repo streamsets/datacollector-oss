@@ -774,7 +774,7 @@
           "label": "Pipeline runner thread pool",
           "description": "Number of threads that are used for running pipelines.",
           "type": "long",
-          "default": 20
+          "default": 50
         },
         {
           "name": "xmail.from.address",
