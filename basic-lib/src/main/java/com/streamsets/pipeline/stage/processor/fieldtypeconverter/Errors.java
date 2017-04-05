@@ -24,9 +24,8 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
-  CONVERTER_00("Failed to convert field '{}' of type '{}' with value '{}' to type '{}': {}"),
+  CONVERTER_00("Failed to convert field '{}' of type '{}' with value '{}' to type '{}'"),
   CONVERTER_01("Invalid Encoding '{}'"),
-  CONVERTER_02("Failed to convert field '{}' of type '{}' with value '{}' to type '{}'"),
   ;
 
   private final String msg;
