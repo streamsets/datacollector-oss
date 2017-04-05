@@ -24,6 +24,7 @@ import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.ModelType;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.PipelineGroups;
+import com.streamsets.datacollector.config.PipelineWebhookConfig;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
@@ -42,6 +43,7 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -215,8 +217,29 @@ public abstract class PipelineBeanCreator {
             errors
         );
       } else {
-        errors.add(IssueCreator.getPipeline().create(PipelineGroups.BAD_RECORDS.name(), "badRecordsHandling",
-                                                     CreationError.CREATION_009));
+        errors.add(IssueCreator.getPipeline().create(
+            PipelineGroups.BAD_RECORDS.name(),
+            "badRecordsHandling",
+            CreationError.CREATION_009
+        ));
+      }
+
+      // Validate Webhook Configs
+      if (pipelineConfigBean.webhookConfigs != null && !pipelineConfigBean.webhookConfigs.isEmpty()) {
+        int index = 0;
+        for (PipelineWebhookConfig webhookConfig: pipelineConfigBean.webhookConfigs) {
+          if (StringUtils.isEmpty(webhookConfig.webhookUrl)) {
+            Issue issue = IssueCreator.getPipeline().create(
+                PipelineGroups.NOTIFICATIONS.name(),
+                "webhookUrl",
+                CreationError.CREATION_080
+            );
+            issue.setAdditionalInfo("index", index);
+            errors.add(issue);
+            break;
+          }
+          index++;
+        }
       }
     }
 

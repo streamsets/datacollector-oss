@@ -29,6 +29,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.dc.execution.manager.standalone.ThreadUsage;
 import com.streamsets.pipeline.api.ExecutionMode;
+import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,36 +96,38 @@ public class WebHookNotifier implements StateEventListener {
     if(toState.getExecutionMode() != ExecutionMode.SLAVE && pipelineId.equals(toState.getPipelineId())) {
       if (pipelineStates != null && pipelineStates.contains(toState.getStatus().name())) {
         for (PipelineWebhookConfig webhookConfig : pipelineConfigBean.webhookConfigs) {
-          Response response = null;
-          try {
-            DateFormat dateTimeFormat = new SimpleDateFormat(EmailConstants.DATE_MASK, Locale.ENGLISH);
-            String payload = webhookConfig.payload
-                .replace(WebhookConstants.PIPELINE_TITLE_KEY, pipelineTitle)
-                .replace(WebhookConstants.PIPELINE_URL_KEY, runtimeInfo.getBaseHttpUrl() +
-                    EmailConstants.PIPELINE_URL + toState.getPipelineId().replaceAll(" ", "%20"))
-                .replace(WebhookConstants.PIPELINE_STATE_KEY, toState.getStatus().toString())
-                .replace(WebhookConstants.TIME_KEY, dateTimeFormat.format(new Date(toState.getTimeStamp())));
+          if (!StringUtils.isEmpty(webhookConfig.webhookUrl)) {
+            Response response = null;
+            try {
+              DateFormat dateTimeFormat = new SimpleDateFormat(EmailConstants.DATE_MASK, Locale.ENGLISH);
+              String payload = webhookConfig.payload
+                  .replace(WebhookConstants.PIPELINE_TITLE_KEY, pipelineTitle)
+                  .replace(WebhookConstants.PIPELINE_URL_KEY, runtimeInfo.getBaseHttpUrl() +
+                      EmailConstants.PIPELINE_URL + toState.getPipelineId().replaceAll(" ", "%20"))
+                  .replace(WebhookConstants.PIPELINE_STATE_KEY, toState.getStatus().toString())
+                  .replace(WebhookConstants.TIME_KEY, dateTimeFormat.format(new Date(toState.getTimeStamp())));
 
-            WebTarget webTarget = ClientBuilder.newClient().target(webhookConfig.webhookUrl);
-            configurePasswordAuth(webhookConfig, webTarget);
-            Invocation.Builder builder = webTarget.request();
-            for (String headerKey: webhookConfig.headers.keySet()) {
-              builder.header(headerKey, webhookConfig.headers.get(headerKey));
-            }
-            response = builder.post(Entity.entity(payload, webhookConfig.contentType));
+              WebTarget webTarget = ClientBuilder.newClient().target(webhookConfig.webhookUrl);
+              configurePasswordAuth(webhookConfig, webTarget);
+              Invocation.Builder builder = webTarget.request();
+              for (String headerKey: webhookConfig.headers.keySet()) {
+                builder.header(headerKey, webhookConfig.headers.get(headerKey));
+              }
+              response = builder.post(Entity.entity(payload, webhookConfig.contentType));
 
-            if (response.getStatus() != Response.Status.OK.getStatusCode()) {
-              LOG.error(
-                  "Error calling Webhook URL, status code '{}': {}",
-                  response.getStatus(),
-                  response.readEntity(String.class)
-              );
-            }
-          } catch (Exception e) {
-            LOG.error("Error calling Webhook URL : {}", e.toString(), e);
-          } finally {
-            if (response != null) {
-              response.close();
+              if (response.getStatus() != Response.Status.OK.getStatusCode()) {
+                LOG.error(
+                    "Error calling Webhook URL, status code '{}': {}",
+                    response.getStatus(),
+                    response.readEntity(String.class)
+                );
+              }
+            } catch (Exception e) {
+              LOG.error("Error calling Webhook URL : {}", e.toString(), e);
+            } finally {
+              if (response != null) {
+                response.close();
+              }
             }
           }
         }

@@ -25,8 +25,10 @@
 angular
   .module('dataCollectorApp.home')
 
-  .controller('ConfigurationController', function ($scope, $rootScope, $q, $modal, _, $timeout,
-                                                   api, previewService, pipelineConstant, pipelineService) {
+  .controller('ConfigurationController', function (
+    $scope, $rootScope, $q, $modal, _, $timeout, api, previewService, pipelineConstant, pipelineService
+  ) {
+
     var getIssues = function(config, issues, instanceName, configDefinition) {
       if (instanceName && issues.stageIssues && issues.stageIssues[instanceName]) {
         issues = issues.stageIssues[instanceName];
